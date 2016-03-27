@@ -1,6 +1,6 @@
 [submodule "libs/glfw"]
 	path = libs/glfw
-	url = https://github.com/wjakob/glfw
+	url = git@github.com:djowel/glfw.git
 [submodule "libs/nanovg"]
 	path = libs/nanovg
-	url = https://github.com/djowel/nanovg.git
+	url = git@github.com:djowel/nanovg.git

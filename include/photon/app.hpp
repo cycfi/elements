@@ -8,10 +8,24 @@
 #define PHOTON_GUI_LIB_APP_APRIL_11_2016
 
 #include <photon/support.hpp>
+#include <photon/color.hpp>
 #include <type_traits>
 
 namespace photon
 {
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	// Theme
+	////////////////////////////////////////////////////////////////////////////////////////////////
+   struct app_theme
+   {
+      // Panels
+      float panel_corner_radius = 3.0f;
+      color panel_color = { 28, 30, 34, 192 };
+
+      // Shadows
+      color shadow_color = { 0, 0, 0, 0 };
+   };
+
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// The Application
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +43,9 @@ namespace photon
 
       template <typename App, typename... Args>
       friend App& make_app(Args const&... args);
+
+      // The default theme
+      app_theme theme = {};
 
    protected:
 

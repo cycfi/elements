@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/window.hpp>
+#include <photon/draw_utils.hpp>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
@@ -19,27 +20,18 @@ namespace photon
    // $$$ testing $$$
    void drawWindow(NVGcontext* vg, float x, float y, float w, float h)
    {
-      float cornerRadius = 3.0f;
-      NVGpaint shadowPaint;
-
       nvgSave(vg);
-
-      // Window
-      nvgBeginPath(vg);
-      nvgRoundedRect(vg, x,y, w,h, cornerRadius);
-      nvgFillColor(vg, nvgRGBA(28,30,34,192));
-      nvgFill(vg);
-
-      // Drop shadow
-      shadowPaint = nvgBoxGradient(vg, x,y+2, w,h, cornerRadius*2, 10, nvgRGBA(0,0,0,128), nvgRGBA(0,0,0,0));
-      nvgBeginPath(vg);
-      nvgRect(vg, x-10,y-10, w+20,h+30);
-      nvgRoundedRect(vg, x,y, w,h, cornerRadius);
-      nvgPathWinding(vg, NVG_HOLE);
-      nvgFillPaint(vg, shadowPaint);
-      nvgFill(vg);
+      
+      draw::round_rect_fill(vg, rect{ x, y, x+w, y+h }, color{ 28, 30, 34, 192 }, 3.0f);
+      draw::round_rect_shadow(vg, rect{ x, y, x+w, y+h }, color{ 0, 0, 0, 0 }, 3.0f);
 
       nvgRestore(vg);
+   }
+
+   void window_refresh(GLFWwindow* window_ptr)
+   {
+      auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+      wp->draw();
    }
 
    window::window(
@@ -58,6 +50,7 @@ namespace photon
 
       glfwSetWindowUserPointer(window_ptr, this);
       glfwSetKeyCallback(window_ptr, key_press);
+      glfwSetWindowRefreshCallback(window_ptr, window_refresh);
       glfwMakeContextCurrent(window_ptr);
 
       vg_context_ptr = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
@@ -85,27 +78,26 @@ namespace photon
       double mx, my;
       glfwGetCursorPos(window_ptr, &mx, &my);
 
-      int winWidth, winHeight;
-      glfwGetWindowSize(window_ptr, &winWidth, &winHeight);
+      int w_width, w_height;
+      glfwGetWindowSize(window_ptr, &w_width, &w_height);
 
-      int fbWidth, fbHeight;
-      glfwGetFramebufferSize(window_ptr, &fbWidth, &fbHeight);
+      int fb_width, fb_height;
+      glfwGetFramebufferSize(window_ptr, &fb_width, &fb_height);
 
       // Update and render
-      glViewport(0, 0, fbWidth, fbHeight);
+      glViewport(0, 0, fb_width, fb_height);
       glClearColor(bkd_color.red, bkd_color.green, bkd_color.blue, bkd_color.alpha);
       glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
       // Calculate pixel ration for hi-dpi devices.
-      float pxRatio = (float)fbWidth / (float)winWidth;
+      float px_ratio = (float)fb_width / (float)w_width;
 
-      nvgBeginFrame(vg_context_ptr, winWidth, winHeight, pxRatio);
+      nvgBeginFrame(vg_context_ptr, w_width, w_height, px_ratio);
 
       // $$$ testing $$$
       drawWindow(vg_context_ptr, 50, 50, 300, 400);
 
       nvgEndFrame(vg_context_ptr);
-
       glfwSwapBuffers(window_ptr);
    }
 

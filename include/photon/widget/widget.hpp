@@ -28,16 +28,16 @@ namespace photon
 
    // image
 
-      virtual size_limits  limits() const;
-      virtual widget*      hit_test(layout_info& l, point const& p);
-      virtual void         draw(layout_info& l);
-      virtual void         layout(rect const& bounds);
+      virtual rect      limits() const;
+      virtual widget*   hit_test(layout_info const& l, point const& p);
+      virtual void      draw(layout_info const& l);
+      virtual void      layout(rect const& bounds);
 
    // control
 
-      virtual widget*      click(layout_info& l, point const& p);
-      virtual bool         key(layout_info& l, key_info const& k);
-      virtual bool         cursor(layout_info& l, point const& p);
+      virtual widget*   click(layout_info const& l, point const& p);
+      virtual bool      key(layout_info const& l, key_info const& k);
+      virtual bool      cursor(layout_info const& l, point const& p);
    };
 }
 

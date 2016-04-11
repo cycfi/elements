@@ -72,11 +72,7 @@ namespace photon
    void app::run()
    {
       while (windows_open())
-      {
-         for (auto p : windows)
-            p.second->draw();
          glfwPollEvents();
-      }
    }
 
    void key_press(GLFWwindow* window_ptr, int key, int scancode, int action, int mods)

@@ -18,7 +18,7 @@
 #include <GLFW/glfw3.h>
 #include "nanovg.h"
 
-#include <photon/widget.hpp>
+#include <photon/widget/widget.hpp>
 #include <photon/color.hpp>
 
 #include <memory>
@@ -47,9 +47,11 @@ namespace photon
       virtual void key(key_info const& k);
       virtual void close();
 
+      NVGcontext* context() const { return vg_context_ptr; }
+
    private:
 
-      std::shared_ptr<widget> widget_ptr;
+      std::shared_ptr<widget> subject;
       GLFWwindow* window_ptr;
       NVGcontext* vg_context_ptr;
       color bkd_color;

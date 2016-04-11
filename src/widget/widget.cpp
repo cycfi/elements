@@ -4,21 +4,21 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <photon/widget.hpp>
+#include <photon/widget/widget.hpp>
 
 namespace photon
 {
-   size_limits widget::limits() const
+   rect widget::limits() const
    {
       return full_limits;
    }
 
-   widget* widget::hit_test(layout_info& l, point const& p)
+   widget* widget::hit_test(layout_info const& l, point const& p)
    {
       return (l.bounds.includes(p)) ? this : 0;
    }
 
-   void widget::draw(layout_info& l)
+   void widget::draw(layout_info const& l)
    {
    }
 
@@ -26,17 +26,17 @@ namespace photon
    {
    }
 
-   widget* widget::click(layout_info& l, point const& p)
+   widget* widget::click(layout_info const& l, point const& p)
    {
       return 0;
    }
 
-   bool widget::key(layout_info& l, key_info const& k)
+   bool widget::key(layout_info const& l, key_info const& k)
    {
    	return false;
    }
 
-   bool widget::cursor(layout_info& l, point const& p)
+   bool widget::cursor(layout_info const& l, point const& p)
    {
    	return false;
    }

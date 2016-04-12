@@ -5,7 +5,6 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/window.hpp>
-#include <photon/draw_utils.hpp>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
@@ -17,17 +16,6 @@ namespace photon
    extern std::map<GLFWwindow*, window*> windows;
    void key_press(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-   // $$$ testing $$$
-   void drawWindow(NVGcontext* vg, float x, float y, float w, float h)
-   {
-      nvgSave(vg);
-      
-      draw::round_rect_fill(vg, rect{ x, y, x+w, y+h }, color{ 28, 30, 34, 192 }, 3.0f);
-      draw::round_rect_shadow(vg, rect{ x, y, x+w, y+h }, color{ 0, 0, 0, 0 }, 3.0f);
-
-      nvgRestore(vg);
-   }
-
    void window_refresh(GLFWwindow* window_ptr)
    {
       auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
@@ -36,12 +24,16 @@ namespace photon
 
    window::window(
       char const* title
-    , double width
-    , double height
-    , color bkd_color)
+    , point const& size
+    , color const& bkd_color
+    , app& app_
+    , widget_ptr subject
+   )
     : bkd_color(bkd_color)
+    , app_(app_)
+    , subject(subject)
    {
-      window_ptr = glfwCreateWindow(width, height, title, 0, 0);
+      window_ptr = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (window_ptr == 0)
       {
          glfwTerminate();
@@ -90,12 +82,12 @@ namespace photon
       glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
       // Calculate pixel ration for hi-dpi devices.
-      float px_ratio = (float)fb_width / (float)w_width;
+      float px_ratio = float(fb_width) / float(w_width);
 
       nvgBeginFrame(vg_context_ptr, w_width, w_height, px_ratio);
 
-      // $$$ testing $$$
-      drawWindow(vg_context_ptr, 50, 50, 300, 400);
+      rect subj_bounds = { 0, 0, double(w_height), double(w_width) };
+      subject->draw(layout_info{ app_, *this, 0, subj_bounds });
 
       nvgEndFrame(vg_context_ptr);
       glfwSwapBuffers(window_ptr);

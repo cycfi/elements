@@ -8,9 +8,6 @@
 #define PHOTON_GUI_LIB_WINDOW_APRIL_10_2016
 
 #include <stdio.h>
-#ifdef NANOVG_GLEW
-# include <GL/glew.h>
-#endif
 #ifdef __APPLE__
 # define GLFW_INCLUDE_GLCOREARB
 #endif
@@ -20,11 +17,14 @@
 
 #include <photon/widget/widget.hpp>
 #include <photon/color.hpp>
+#include <photon/point.hpp>
 
 #include <memory>
 
 namespace photon
 {
+   class app;
+
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// Windows
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +34,11 @@ namespace photon
 
       window(
          char const* title
-       , double width
-       , double height
-       , color bkd_color = colors::white);
+       , point const& size
+       , color const& bkd_color
+       , app& app_
+       , widget_ptr subject
+      );
 
       ~window();
 
@@ -51,10 +53,11 @@ namespace photon
 
    private:
 
-      std::shared_ptr<widget> subject;
+      color bkd_color;
+      app& app_;
+      widget_ptr subject;
       GLFWwindow* window_ptr;
       NVGcontext* vg_context_ptr;
-      color bkd_color;
    };
 }
 

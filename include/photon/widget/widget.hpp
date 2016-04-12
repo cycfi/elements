@@ -10,6 +10,7 @@
 #include <photon/support.hpp>
 #include <photon/rect.hpp>
 #include <photon/point.hpp>
+#include <memory>
 
 namespace photon
 {
@@ -39,6 +40,8 @@ namespace photon
       virtual bool      key(layout_info const& l, key_info const& k);
       virtual bool      cursor(layout_info const& l, point const& p);
    };
+
+   using widget_ptr = std::shared_ptr<widget>;
 }
 
 #endif

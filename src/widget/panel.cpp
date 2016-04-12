@@ -12,7 +12,7 @@
 
 namespace photon
 {
-   void panel::draw(layout_info const& l)
+   void panel_widget::draw(layout_info const& l)
    {
       auto const& theme = l.app.theme;
       auto ctx = l.window.context();

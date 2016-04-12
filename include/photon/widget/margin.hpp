@@ -12,19 +12,19 @@
 
 namespace photon
 {
-	////////////////////////////////////////////////////////////////////////////////////////////////
-	// Margins
-	////////////////////////////////////////////////////////////////////////////////////////////////
-   class margin : public widget
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Margins
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class margin_widget : public widget
    {
    public:
 
-      margin(rect const& margin_, std::shared_ptr<widget> subject)
+      margin_widget(rect const& margin_, std::shared_ptr<widget> subject)
        : subject(subject)
        , margin_(margin_)
       {}
 
-      ~margin() {}
+      ~margin_widget() {}
 
       virtual rect   limits() const;
       virtual void   draw(layout_info const& l);
@@ -34,6 +34,12 @@ namespace photon
       std::shared_ptr<widget> subject;
       rect margin_;
    };
+
+   inline widget_ptr
+   margin(rect const& margin_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new margin_widget{ margin_, subject } };
+   }
 }
 
 #endif

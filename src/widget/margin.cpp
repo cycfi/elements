@@ -8,7 +8,7 @@
 
 namespace photon
 {
-   rect margin::limits() const
+   rect margin_widget::limits() const
    {
       auto r = subject->limits();
 
@@ -20,7 +20,7 @@ namespace photon
       return r;
    }
 
-   void margin::draw(layout_info const& l)
+   void margin_widget::draw(layout_info const& l)
    {
       auto bounds = l.bounds;
       bounds.top += margin_.top;

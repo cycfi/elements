@@ -55,6 +55,9 @@ namespace photon
       glfwSwapInterval(0);
       glfwSetTime(0);
 
+      rect limits = subject->limits();
+      glfwSetWindowSizeLimits(window_ptr, limits.left, limits.top, limits.right, limits.bottom);
+
       windows[window_ptr] = this;
    }
 

@@ -15,24 +15,23 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Margins
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class margin_widget : public widget
+   class margin_widget : public proxy
    {
    public:
 
       margin_widget(rect const& margin_, std::shared_ptr<widget> subject)
-       : subject(subject)
-       , margin_(margin_)
+       : proxy(subject)
+       , _margin(margin_)
       {}
 
       ~margin_widget() {}
 
       virtual rect   limits() const;
-      virtual void   draw(layout_info const& l);
+      virtual void   subject_bounds(rect& b);
 
    private:
 
-      std::shared_ptr<widget> subject;
-      rect margin_;
+      rect _margin;
    };
 
    inline widget_ptr

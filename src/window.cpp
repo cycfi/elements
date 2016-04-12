@@ -23,30 +23,30 @@ namespace photon
    }
 
    window::window(
-      char const* title
-    , point const& size
-    , color const& bkd_color
-    , app& app_
-    , widget_ptr subject
+      char const*    title
+    , point const&   size
+    , color const&   bkd_color
+    , app&           app_
+    , widget_ptr     subject
    )
-    : bkd_color(bkd_color)
-    , app_(app_)
-    , subject(subject)
+    : _bkd_color(bkd_color)
+    , _app(app_)
+    , _subject(subject)
    {
-      window_ptr = glfwCreateWindow(size.x, size.y, title, 0, 0);
-      if (window_ptr == 0)
+      _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
+      if (_window == 0)
       {
          glfwTerminate();
          return; // $$$ throw $$
       }
 
-      glfwSetWindowUserPointer(window_ptr, this);
-      glfwSetKeyCallback(window_ptr, key_press);
-      glfwSetWindowRefreshCallback(window_ptr, window_refresh);
-      glfwMakeContextCurrent(window_ptr);
+      glfwSetWindowUserPointer(_window, this);
+      glfwSetKeyCallback(_window, key_press);
+      glfwSetWindowRefreshCallback(_window, window_refresh);
+      glfwMakeContextCurrent(_window);
 
-      vg_context_ptr = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-      if (vg_context_ptr == 0)
+      _context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+      if (_context == 0)
       {
          printf("Could not init nanovg.\n");
          return; // $$$ throw $$
@@ -55,45 +55,45 @@ namespace photon
       glfwSwapInterval(0);
       glfwSetTime(0);
 
-      rect limits = subject->limits();
-      glfwSetWindowSizeLimits(window_ptr, limits.left, limits.top, limits.right, limits.bottom);
+      rect limits = _subject->limits();
+      glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
 
-      windows[window_ptr] = this;
+      windows[_window] = this;
    }
 
    window::~window()
    {
-      windows.erase(window_ptr);
-      glfwDestroyWindow(window_ptr);
-      nvgDeleteGL3(vg_context_ptr);
+      windows.erase(_window);
+      glfwDestroyWindow(_window);
+      nvgDeleteGL3(_context);
    }
 
    void window::draw()
    {
       double mx, my;
-      glfwGetCursorPos(window_ptr, &mx, &my);
+      glfwGetCursorPos(_window, &mx, &my);
 
       int w_width, w_height;
-      glfwGetWindowSize(window_ptr, &w_width, &w_height);
+      glfwGetWindowSize(_window, &w_width, &w_height);
 
       int fb_width, fb_height;
-      glfwGetFramebufferSize(window_ptr, &fb_width, &fb_height);
+      glfwGetFramebufferSize(_window, &fb_width, &fb_height);
 
       // Update and render
       glViewport(0, 0, fb_width, fb_height);
-      glClearColor(bkd_color.red, bkd_color.green, bkd_color.blue, bkd_color.alpha);
+      glClearColor(_bkd_color.red, _bkd_color.green, _bkd_color.blue, _bkd_color.alpha);
       glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
       // Calculate pixel ration for hi-dpi devices.
       float px_ratio = float(fb_width) / float(w_width);
 
-      nvgBeginFrame(vg_context_ptr, w_width, w_height, px_ratio);
+      nvgBeginFrame(_context, w_width, w_height, px_ratio);
 
       rect subj_bounds = { 0, 0, double(w_height), double(w_width) };
-      subject->draw(layout_info{ app_, *this, 0, subj_bounds });
+      _subject->draw(layout_info{ _app, *this, 0, 0, subj_bounds });
 
-      nvgEndFrame(vg_context_ptr);
-      glfwSwapBuffers(window_ptr);
+      nvgEndFrame(_context);
+      glfwSwapBuffers(_window);
    }
 
    void window::key(key_info const& k)

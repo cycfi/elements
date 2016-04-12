@@ -33,11 +33,11 @@ namespace photon
    public:
 
       window(
-         char const* title
-       , point const& size
-       , color const& bkd_color
-       , app& app_
-       , widget_ptr subject
+         char const*    title
+       , point const&   size
+       , color const&   bkd_color
+       , app&           app_
+       , widget_ptr     subject
       );
 
       ~window();
@@ -45,19 +45,19 @@ namespace photon
       window(window const&) = delete;
       window& operator=(window const&) = delete;
 
-      virtual void draw();
-      virtual void key(key_info const& k);
-      virtual void close();
+      virtual void   draw();
+      virtual void   key(key_info const& k);
+      virtual void   close();
 
-      NVGcontext* context() const { return vg_context_ptr; }
+      NVGcontext*    context() const { return _context; }
 
    private:
 
-      color bkd_color;
-      app& app_;
-      widget_ptr subject;
-      GLFWwindow* window_ptr;
-      NVGcontext* vg_context_ptr;
+      color       _bkd_color;
+      app&        _app;
+      widget_ptr  _subject;
+      GLFWwindow* _window;
+      NVGcontext* _context;
    };
 }
 

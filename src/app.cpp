@@ -20,7 +20,6 @@ namespace photon
    app* app_ptr = 0; // singleton
 
    app::app()
-    : is_running(true)
    {
       if (!glfwInit())
       {

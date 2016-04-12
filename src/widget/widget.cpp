@@ -40,5 +40,76 @@ namespace photon
    {
    	return false;
    }
-}
 
+   bool
+   widget::focus(focus_request r)
+   {
+      return r == focus_request::end_focus;
+   }
+
+   widget const* widget::focus() const
+   {
+      return this;
+   }
+
+   rect proxy::limits() const
+   {
+      return _subject->limits();
+   }
+
+   widget* proxy::hit_test(layout_info const& l, point const& p)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      return _subject->hit_test(l, p);
+   }
+
+   void proxy::draw(layout_info const& l)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      return _subject->draw(l);
+   }
+
+   void proxy::layout(rect const& bounds_)
+   {
+      rect bounds = bounds_;
+      subject_bounds(bounds);
+      return _subject->layout(bounds);
+   }
+
+   void proxy::subject_bounds(rect& b)
+   {
+   }
+
+   widget* proxy::click(layout_info const& l, point const& p)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      return _subject->click(l, p);
+   }
+
+   bool proxy::key(layout_info const& l, key_info const& k)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      return _subject->key(l, k);
+   }
+
+   bool proxy::cursor(layout_info const& l, point const& p)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      return _subject->cursor(l, p);
+   }
+
+   bool proxy::focus(focus_request r)
+   {
+      return _subject->focus(r);
+   }
+
+   widget const* proxy::focus() const
+   {
+      return _subject->focus();
+   }
+}

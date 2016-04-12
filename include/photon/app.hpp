@@ -38,11 +38,11 @@ namespace photon
       app(app const&) = delete;
       app& operator=(app const&) = delete;
 
-      virtual void key(key_info const& k);
-      virtual void run();
+      virtual void   key(key_info const& k);
+      virtual void   run();
 
       template <typename App, typename... Args>
-      friend App& make_app(Args const&... args);
+      friend App&    make_app(Args const&... args);
 
       // The default theme
       app_theme theme = {};
@@ -50,7 +50,6 @@ namespace photon
    protected:
 
       app();
-      bool is_running;
    };
 
    template <typename App, typename... Args>

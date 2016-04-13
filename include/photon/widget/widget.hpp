@@ -110,8 +110,8 @@ namespace photon
    // image
 
       virtual rect            limits() const = 0;
-      virtual widget*         hit_test(layout_info const& l, point const& p) = 0;
-      virtual void            draw(layout_info const& l) = 0;
+      virtual widget*         hit_test(layout_info const& l, point const& p);
+      virtual void            draw(layout_info const& l);
       virtual void            layout(rect const& bounds) = 0;
 
    // control

@@ -56,12 +56,12 @@ namespace photon
 
    private:
 
-      color       _bkd_color;
-      app&        _app;
-      widget_ptr  _subject;
-      GLFWwindow* _window;
-      NVGcontext* _context;
-      rect        _current_bounds;
+      color          _bkd_color;
+      app&           _app;
+      widget_ptr     _subject;
+      GLFWwindow*    _window;
+      NVGcontext*    _context;
+      rect           _current_bounds;
    };
 }
 

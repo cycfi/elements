@@ -133,6 +133,20 @@ namespace photon
       }
    }
 
+   widget* composite::hit_test(layout_info const& l, point const& p)
+   {
+      if (!_elements.empty())
+      {
+         hit_info info = hit_element(p);
+         if (info.element)
+         {
+            layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
+            return info.element->hit_test(elem_layout, p);
+         }
+      }
+      return 0;
+   }
+
    void composite::draw(layout_info const& l)
    {
       auto w_bounds = window_bounds(l.window);

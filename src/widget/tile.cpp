@@ -8,6 +8,9 @@
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Vertical Tiles
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    rect vtile_widget::limits() const
    {
       rect limits{ 0.0, 0.0, full_extent, 0.0 };
@@ -54,5 +57,56 @@ namespace photon
    rect vtile_widget::bounds_of(std::size_t index) const
    {
       return rect{ _left, _tiles[index], _right, _tiles[index+1] };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Horizontal Tiles
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   rect htile_widget::limits() const
+   {
+      rect limits{ 0.0, 0.0, 0.0, full_extent };
+      for (auto const& elem : elements())
+      {
+         rect  el = elem->limits();
+
+         limits.left += el.left;
+         limits.right += el.right;
+         min_limit(limits.top, el.top);
+         max_limit(limits.bottom, el.bottom);
+      }
+
+      return limits;
+   }
+
+   void htile_widget::layout(rect const& b)
+   {
+      _top = b.top;
+      _bottom = b.bottom;
+
+      _tiles.resize(elements().size()+1);
+
+      rect  limits   = this->limits();
+      float width    = b.width();
+      float extra    = limits.right - width;
+      float m_size   = limits.right - limits.left;
+      float curr     = b.left;
+      auto  i        = _tiles.begin();
+
+      for (auto const& elem : elements())
+      {
+         rect  limits = elem->limits();
+
+         *i++ = curr;
+         curr += limits.right;
+
+         if ((extra != 0) && (m_size != 0))
+            curr -= extra * (limits.right - limits.left) / m_size;
+      }
+      *i = curr;
+   }
+
+   rect htile_widget::bounds_of(std::size_t index) const
+   {
+      return rect{ _tiles[index], _top, _tiles[index + 1], _bottom };
    }
 }

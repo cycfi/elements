@@ -9,15 +9,16 @@ int main()
     using namespace photon;
 
     auto& my_app = make_app<app>();
+    
     {
-        auto m = margin(
-            { 20, 20, 20, 20 }
+        auto m = top_margin(
+            { 20 }
           , panel()
         );
         
 //        auto e = m;
         
-        auto e = vtile(m, m, m, m);
+        auto e = margin({ 20, 0, 20, 20 }, vtile(m, m, m, m));
 
         window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, e);
         my_app.run();

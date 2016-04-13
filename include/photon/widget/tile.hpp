@@ -41,6 +41,36 @@ namespace photon
       std::swap(v, p->elements());
       return widget_ptr{ p };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Horizontal Tiles
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class htile_widget : public composite
+   {
+   public:
+
+      htile_widget() {}
+      ~htile_widget() {}
+
+      virtual rect         limits() const;
+      virtual void         layout(rect const& b);
+      virtual rect         bounds_of(std::size_t index) const;
+
+   private:
+
+      std::vector<float>   _tiles;
+      float                _top;
+      float                _bottom;
+   };
+
+   template <typename... W>
+   inline widget_ptr htile(W const&... elements)
+   {
+      auto p = new htile_widget{};
+      std::vector<widget_ptr> v = { elements... };
+      std::swap(v, p->elements());
+      return widget_ptr{ p };
+   }
 }
 
 #endif

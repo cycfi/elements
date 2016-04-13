@@ -17,7 +17,7 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // widget class
+   // Widgets
    //
    // This is the class that deals with the graphic representation of fine-grained
    // elements inside a window which may be static images or active controls.
@@ -55,7 +55,7 @@ namespace photon
    using widget_const_ptr = std::shared_ptr<widget const>;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // proxy class
+   // Proxies
    //
    // A widget that encapsulates another widget. The proxy delegates its methods
    // to an enlosed widget. The proxy acts as a single atomic element instead
@@ -96,7 +96,7 @@ namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // composite class
+   // Composites
    //
    // Class for a widget that is composed of other widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -10,7 +10,9 @@
 #include <photon/support.hpp>
 #include <photon/rect.hpp>
 #include <photon/point.hpp>
+
 #include <memory>
+#include <vector>
 
 namespace photon
 {
@@ -91,6 +93,55 @@ namespace photon
    private:
 
       widget_ptr              _subject;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // composite class
+   //
+   // Class for a widget that is composed of other widgets
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class composite : public widget
+   {
+   public:
+
+      composite() : _focus(-1) {}
+      ~composite() {}
+
+   // image
+
+      virtual rect            limits() const = 0;
+      virtual widget*         hit_test(layout_info const& l, point const& p) = 0;
+      virtual void            draw(layout_info const& l) = 0;
+      virtual void            layout(rect const& bounds) = 0;
+
+   // control
+
+      virtual widget*         click(layout_info const& l, point const& p);
+      virtual bool            key(layout_info const& l, key_info const& k);
+      virtual bool            cursor(layout_info const& l, point const& p);
+      virtual bool            focus(focus_request r);
+      virtual widget const*   focus() const;
+
+   // composite
+
+      using composite_type = std::vector<widget_ptr>;
+
+      struct hit_info
+      {
+         widget*   element;
+         rect      bounds;
+         int       index;
+      };
+
+      composite_type&         elements() { return _elements; }
+      composite_type const&   elements() const { return _elements; }
+      virtual hit_info        hit_element(point const& p) const;
+      virtual rect            bounds_of(std::size_t index) const = 0;
+
+   private:
+
+      composite_type          _elements;
+   	int			            _focus;
    };
 
 }

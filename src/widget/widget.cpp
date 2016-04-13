@@ -5,9 +5,14 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/widget.hpp>
+#include <photon/window.hpp>
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // widget class implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+
    rect widget::limits() const
    {
       return full_limits;
@@ -33,16 +38,15 @@ namespace photon
 
    bool widget::key(layout_info const& l, key_info const& k)
    {
-   	return false;
+      return false;
    }
 
    bool widget::cursor(layout_info const& l, point const& p)
    {
-   	return false;
+      return false;
    }
 
-   bool
-   widget::focus(focus_request r)
+   bool widget::focus(focus_request r)
    {
       return r == focus_request::end_focus;
    }
@@ -51,6 +55,10 @@ namespace photon
    {
       return this;
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // proxy class implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
 
    rect proxy::limits() const
    {
@@ -68,14 +76,14 @@ namespace photon
    {
       l.widget = _subject.get();
       subject_bounds(l.bounds);
-      return _subject->draw(l);
+      _subject->draw(l);
    }
 
    void proxy::layout(rect const& bounds_)
    {
       rect bounds = bounds_;
       subject_bounds(bounds);
-      return _subject->layout(bounds);
+      _subject->layout(bounds);
    }
 
    void proxy::subject_bounds(rect& b)
@@ -111,5 +119,130 @@ namespace photon
    widget const* proxy::focus() const
    {
       return _subject->focus();
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // composite class implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      rect window_bounds(window const& w)
+      {
+         auto size = w.size();
+         return rect{ 0, 0, size.x, size.y };
+      }
+   }
+
+   void composite::draw(layout_info const& l)
+   {
+      auto w_bounds = window_bounds(l.window);
+      for (std::size_t i = 0; i < _elements.size(); ++i)
+      {
+         rect bounds = bounds_of(i);
+         if (intersects(bounds, w_bounds))
+         {
+            auto elem = _elements[i];
+            layout_info elem_layout{ l.app, l.window, elem.get(), &l, bounds };
+            elem->draw(elem_layout);
+         }
+      }
+   }
+
+   widget* composite::click(layout_info const& l, point const& p)
+   {
+      if (!_elements.empty())
+      {
+         hit_info info = hit_element(p);
+
+         if (info.element && focus(focus_request::wants_focus))
+         {
+            if (_focus != info.index)
+            {
+               // end the previous focus
+               if (_focus != -1)
+                  _elements[_focus]->focus(focus_request::end_focus);
+
+               // start a new focus
+               _focus = info.index;
+               if (_focus != -1)
+                  _elements[_focus]->focus(focus_request::begin_focus);
+            }
+         }
+
+         if (info.element)
+         {
+            layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
+            if (info.element->click(elem_layout, p))
+               return info.element;
+         }
+      }
+      return 0;
+   }
+
+   bool composite::key(layout_info const& l, key_info const& k)
+   {
+      if (_focus != -1)
+      {
+         rect bounds = bounds_of(_focus);
+         widget* focus_ptr = _elements[_focus].get();
+         layout_info elem_layout{ l.app, l.window, focus_ptr, &l, bounds };
+         return focus_ptr->key(elem_layout, k);
+      };
+
+      return false;
+   }
+
+   bool composite::cursor(layout_info const& l, point const& p)
+   {
+      if (!_elements.empty())
+      {
+         hit_info info = hit_element(p);
+         if (info.element && photon::intersects(info.bounds, window_bounds(l.window)))
+         {
+            layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
+            return info.element->cursor(elem_layout, p);
+         }
+      }
+      return false;
+   }
+
+   bool composite::focus(focus_request r)
+   {
+      switch (r) {
+
+         case focus_request::wants_focus:
+            for (auto element : _elements)
+               if (element->focus(focus_request::wants_focus))
+                  return true;
+            return false;
+
+         case focus_request::begin_focus:
+            if (_focus != -1)
+               _elements[_focus]->focus(focus_request::begin_focus);
+            return true;
+
+         case focus_request::end_focus:
+            if (_focus != -1)
+               _elements[_focus]->focus(focus_request::end_focus);
+            return true;
+      }
+
+      return false;
+   }
+
+   widget const* composite::focus() const
+   {
+      return _elements.empty()? 0 : _elements[_focus].get();
+   }
+
+   composite::hit_info composite::hit_element(point const& p) const
+   {
+      for (std::size_t i = 0; i < _elements.size(); ++i)
+      {
+         rect bounds = bounds_of(i);
+         if (bounds.includes(p))
+            return hit_info{ _elements[i].get(), bounds, int(i) };
+      }
+      return hit_info{ 0, rect{}, -1 };
    }
 }

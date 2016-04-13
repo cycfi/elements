@@ -31,7 +31,7 @@ namespace photon
 
    private:
 
-      rect _margin;
+      rect           _margin;
    };
 
    inline widget_ptr

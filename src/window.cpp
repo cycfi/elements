@@ -68,6 +68,18 @@ namespace photon
       nvgDeleteGL3(_context);
    }
 
+   point window::size() const
+   {
+      int width, height;
+      glfwGetWindowSize(_window, &width, &height);
+      return { double(width), double(height) };
+   }
+
+   void window::size(point const& s)
+   {
+      glfwSetWindowSize(_window, s.x, s.y);
+   }
+
    void window::draw()
    {
       double mx, my;
@@ -90,6 +102,14 @@ namespace photon
       nvgBeginFrame(_context, w_width, w_height, px_ratio);
 
       rect subj_bounds = { 0, 0, double(w_height), double(w_width) };
+
+      // layout the subject only if the window bounds changes
+      if (subj_bounds != _current_bounds)
+      {
+         _current_bounds = subj_bounds;
+         _subject->layout(subj_bounds);
+      }
+
       _subject->draw(layout_info{ _app, *this, 0, 0, subj_bounds });
 
       nvgEndFrame(_context);

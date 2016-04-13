@@ -45,6 +45,9 @@ namespace photon
       window(window const&) = delete;
       window& operator=(window const&) = delete;
 
+      point          size() const;
+      void           size(point const& s);
+
       virtual void   draw();
       virtual void   key(key_info const& k);
       virtual void   close();
@@ -58,6 +61,7 @@ namespace photon
       widget_ptr  _subject;
       GLFWwindow* _window;
       NVGcontext* _context;
+      rect        _current_bounds;
    };
 }
 

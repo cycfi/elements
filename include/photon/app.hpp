@@ -41,11 +41,14 @@ namespace photon
       virtual void   key(key_info const& k);
       virtual void   run();
 
-      template <typename App, typename... Args>
-      friend App&    make_app(Args const&... args);
-
       // The default theme
-      app_theme theme = {};
+      app_theme      theme = {};
+
+      template <typename App, typename... Args>
+      friend typename std::enable_if<
+         std::is_base_of<App, app>::value, App&
+      >::type
+      make_app(Args const&... args);
 
    protected:
 
@@ -53,11 +56,12 @@ namespace photon
    };
 
    template <typename App, typename... Args>
-   inline App& make_app(Args const&... args)
+   inline typename std::enable_if<
+         std::is_base_of<App, app>::value, App&
+      >::type
+   make_app(Args const&... args)
    {
-      static_assert(std::is_base_of<App, app>::value, "Error. App is not a subclass of class app.");
       extern app* app_ptr;
-
       static App app_obj{ args... };
       app_ptr = &app_obj;
       return app_obj;

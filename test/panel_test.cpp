@@ -13,7 +13,7 @@ int main()
    auto& my_app = make_app<app>();
 
    {
-      auto elem = top_margin(
+      auto helem = top_margin(
          { 20 },
          hsize(64, panel())
       );
@@ -21,23 +21,35 @@ int main()
       auto rows = margin(
          { 20, 0, 20, 20 },
          vtile(
-            halign(0.0,  elem),
-            halign(0.1,  elem),
-            halign(0.2,  elem),
-            halign(0.3,  elem),
-            halign(0.4,  elem),
-            halign(0.5,  elem),
-            halign(0.6,  elem),
-            halign(0.7,  elem),
-            halign(0.8,  elem),
-            halign(0.9,  elem),
-            halign(1.0,  elem)
+            halign(0.0,  helem),
+            halign(0.2,  helem),
+            halign(0.4,  helem),
+            halign(0.6,  helem),
+            halign(0.8,  helem),
+            halign(1.0,  helem)
+         )
+      );
+
+      auto velem = left_margin(
+         { 20 },
+         vsize(64, panel())
+      );
+
+      auto columns = margin(
+         { 0, 20, 20, 20 },
+         htile(
+            valign(0.0,  velem),
+            valign(0.2,  velem),
+            valign(0.4,  velem),
+            valign(0.6,  velem),
+            valign(0.8,  velem),
+            valign(1.0,  velem)
          )
       );
 
       //auto columns = htile();
 
-      auto main_widget = rows;
+      auto main_widget = columns;
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);
       my_app.run();

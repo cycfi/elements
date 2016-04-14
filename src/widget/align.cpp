@@ -9,6 +9,9 @@
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // halign
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    rect halign_widget::limits() const
    {
       rect e_limits = subject()->limits();
@@ -26,5 +29,27 @@ namespace photon
 
       b.left += (available_width - elem_width) * _align;
       b.width(elem_width);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // valign
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   rect valign_widget::limits() const
+   {
+      rect e_limits = subject()->limits();
+      return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
+   }
+
+   void valign_widget::subject_bounds(rect& b)
+   {
+      rect     e_limits          = subject()->limits();
+      double   elem_height       = e_limits.top;
+      double   available_height  = b.height();
+
+      if (available_height > elem_height)
+         elem_height = std::min(available_height, e_limits.right);
+
+      b.top += (available_height - elem_height) * _align;
+      b.height(elem_height);
    }
 }

@@ -35,10 +35,10 @@ namespace photon
       _tiles.resize(elements().size()+1);
 
       rect  limits   = this->limits();
-      float height   = b.height();
-      float extra    = limits.bottom - height;
-      float m_size   = limits.bottom - limits.top;
-      float curr     = b.top;
+      double height  = b.height();
+      double extra   = limits.bottom - height;
+      double m_size  = limits.bottom - limits.top;
+      double curr    = b.top;
       auto  i        = _tiles.begin();
 
       for (auto const& elem : elements())
@@ -46,10 +46,13 @@ namespace photon
          rect  limits = elem->limits();
 
          *i++ = curr;
+         auto prev = curr;
          curr += limits.bottom;
 
          if ((extra != 0) && (m_size != 0))
             curr -= extra * (limits.bottom - limits.top) / m_size;
+
+         elem->layout({ _left, prev, _right, curr });
       }
       *i = curr;
    }
@@ -86,10 +89,10 @@ namespace photon
       _tiles.resize(elements().size()+1);
 
       rect  limits   = this->limits();
-      float width    = b.width();
-      float extra    = limits.right - width;
-      float m_size   = limits.right - limits.left;
-      float curr     = b.left;
+      double width   = b.width();
+      double extra   = limits.right - width;
+      double m_size  = limits.right - limits.left;
+      double curr    = b.left;
       auto  i        = _tiles.begin();
 
       for (auto const& elem : elements())
@@ -97,10 +100,13 @@ namespace photon
          rect  limits = elem->limits();
 
          *i++ = curr;
+         auto prev = curr;
          curr += limits.right;
 
          if ((extra != 0) && (m_size != 0))
             curr -= extra * (limits.right - limits.left) / m_size;
+
+         elem->layout({ prev, _top, curr, _bottom });
       }
       *i = curr;
    }

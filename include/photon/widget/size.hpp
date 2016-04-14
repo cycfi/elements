@@ -38,6 +38,31 @@ namespace photon
    {
       return widget_ptr{ new hsize_widget{ width, subject } };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class vsize_widget : public proxy
+   {
+   public:
+
+      vsize_widget(double height, std::shared_ptr<widget> subject)
+       : proxy(subject)
+       , _height(height)
+      {}
+
+      ~vsize_widget() {}
+
+      virtual rect   limits() const;
+      virtual void   subject_bounds(rect& b);
+
+   private:
+
+      double         _height;
+   };
+
+   inline widget_ptr vsize(double height, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new vsize_widget{ height, subject } };
+   }
 }
 
 #endif

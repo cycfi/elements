@@ -38,6 +38,31 @@ namespace photon
    {
       return widget_ptr{ new halign_widget{ align, subject } };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class valign_widget : public proxy
+   {
+   public:
+
+      valign_widget(double align, std::shared_ptr<widget> subject)
+       : proxy(subject)
+       , _align(align)
+      {}
+
+      ~valign_widget() {}
+
+      virtual rect   limits() const;
+      virtual void   subject_bounds(rect& b);
+
+   private:
+
+      double         _align;
+   };
+
+   inline widget_ptr valign(double align, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new valign_widget{ align, subject } };
+   }
 }
 
 #endif

@@ -15,12 +15,12 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Margins
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Margin>
+   template <typename Rect>
    class margin_widget : public proxy
    {
    public:
 
-      margin_widget(Margin const& margin_, std::shared_ptr<widget> subject)
+      margin_widget(Rect const& margin_, std::shared_ptr<widget> subject)
        : proxy(subject)
        , _margin(margin_)
       {}
@@ -32,14 +32,14 @@ namespace photon
 
    private:
 
-      Margin         _margin;
+      Rect           _margin;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Margins
+   // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Margin>
-   inline rect margin_widget<Margin>::limits() const
+   template <typename Rect>
+   inline rect margin_widget<Rect>::limits() const
    {
       auto r = subject()->limits();
 
@@ -51,8 +51,8 @@ namespace photon
       return r;
    }
 
-   template <typename Margin>
-   inline void margin_widget<Margin>::subject_bounds(rect& b)
+   template <typename Rect>
+   inline void margin_widget<Rect>::subject_bounds(rect& b)
    {
       b.top += _margin.top;
       b.left += _margin.left;
@@ -80,39 +80,11 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Top Margin
-   struct top_margin_rect : static_empty_rect
-   {
-      top_margin_rect(float top) : top(top) {}
-      float top = 0.0f;
-   };
-
-   inline widget_ptr
-   top_margin(top_margin_rect const& margin_, std::shared_ptr<widget> subject)
-   {
-      return widget_ptr{ new margin_widget<top_margin_rect>{ margin_, subject } };
-   }
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Bottom Margin
-   struct bottom_margin_rect : static_empty_rect
-   {
-      bottom_margin_rect(float bottom) : bottom(bottom) {}
-      float bottom = 0.0f;
-   };
-
-   inline widget_ptr
-   bottom_margin(bottom_margin_rect const& margin_, std::shared_ptr<widget> subject)
-   {
-      return widget_ptr{ new margin_widget<bottom_margin_rect>{ margin_, subject } };
-   }
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Left Margin
    struct left_margin_rect : static_empty_rect
    {
       left_margin_rect(float left) : left(left) {}
-      float left = 0.0f;
+      double left;
    };
 
    inline widget_ptr
@@ -126,7 +98,7 @@ namespace photon
    struct right_margin_rect : static_empty_rect
    {
       right_margin_rect(float right) : right(right) {}
-      float right = 0.0f;
+      double right;
    };
 
    inline widget_ptr
@@ -136,13 +108,41 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Top Margin
+   struct top_margin_rect : static_empty_rect
+   {
+      top_margin_rect(float top) : top(top) {}
+      double top;
+   };
+
+   inline widget_ptr
+   top_margin(top_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new margin_widget<top_margin_rect>{ margin_, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Bottom Margin
+   struct bottom_margin_rect : static_empty_rect
+   {
+      bottom_margin_rect(float bottom) : bottom(bottom) {}
+      double bottom;
+   };
+
+   inline widget_ptr
+   bottom_margin(bottom_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new margin_widget<bottom_margin_rect>{ margin_, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // X-Side Margin
    struct xside_margin_rect : static_empty_rect
    {
       xside_margin_rect(float left, float right) : left(left), right(right) {}
       xside_margin_rect(float left_right) : left(left_right), right(left_right) {}
-      float left = 0.0f;
-      float right = 0.0f;
+      double left;
+      double right;
    };
 
    inline widget_ptr
@@ -157,8 +157,8 @@ namespace photon
    {
       yside_margin_rect(float top, float bottom) : top(top), bottom(bottom) {}
       yside_margin_rect(float top_bottom) : top(top_bottom), bottom(top_bottom) {}
-      float top = 0.0f;
-      float bottom = 0.0f;
+      double top;
+      double bottom;
    };
 
    inline widget_ptr

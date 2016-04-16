@@ -18,14 +18,17 @@ namespace photon
    {
    public:
 
-                     slider_widget() : pos(0.5) {}
+                        slider_widget() : pos(0.5) {}
 
-      virtual rect   limits() const;
-      virtual void   draw(layout_info const& l);
+      virtual rect      limits() const;
+      virtual void      draw(layout_info const& l);
+      virtual widget*   click(layout_info const& l, mouse_button btn);
+      virtual void      drag(layout_info const& l, mouse_button btn);
 
    private:
 
-      double         pos;
+      void              reposition(layout_info const& l);
+      double            pos;
    };
 
    inline widget_ptr slider()

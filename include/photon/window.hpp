@@ -47,9 +47,12 @@ namespace photon
 
       point          size() const;
       void           size(point const& s);
+      point          cursor_pos() const;
 
       virtual void   draw();
       virtual void   key(key_info const& k);
+      virtual void   click(bool down, mouse_button btn);
+      virtual void   cursor(point const& p);
       virtual void   close();
 
       NVGcontext*    context() const { return _context; }
@@ -62,6 +65,8 @@ namespace photon
       GLFWwindow*    _window;
       NVGcontext*    _context;
       rect           _current_bounds;
+      bool           _mouse_down;
+      mouse_button   _btn;
    };
 }
 

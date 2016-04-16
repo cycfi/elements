@@ -14,6 +14,6 @@ namespace photon
 {
    void panel_widget::draw(layout_info const& l)
    {
-      l.app.theme()->draw_panel(l.window.context(), l.bounds);
+      l.theme()->draw_panel(l.context(), l.bounds);
    }
 }

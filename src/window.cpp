@@ -22,6 +22,35 @@ namespace photon
       wp->draw();
    }
 
+   void mouse_button(GLFWwindow* window_ptr, int button, int action, int mods)
+   {
+      enum mouse_button btn;
+      switch (mods)
+      {
+         default:
+         case GLFW_MOUSE_BUTTON_LEFT:
+            btn = mouse_button::left;
+            break;
+
+         case GLFW_MOUSE_BUTTON_MIDDLE:
+            btn = mouse_button::middle;
+            break;
+
+         case GLFW_MOUSE_BUTTON_RIGHT:
+            btn = mouse_button::right;
+            break;
+      };
+
+      auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+      wp->click(action == GLFW_PRESS, btn);
+   }
+
+   void cursor_position(GLFWwindow* window_ptr, double xpos, double ypos)
+   {
+      auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+      wp->cursor(point(xpos, ypos));
+   }
+
    window::window(
       char const*    title
     , point const&   size
@@ -32,6 +61,7 @@ namespace photon
     : _bkd_color(bkd_color)
     , _app(app_)
     , _subject(subject)
+    , _mouse_down(false)
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (_window == 0)
@@ -43,6 +73,8 @@ namespace photon
       glfwSetWindowUserPointer(_window, this);
       glfwSetKeyCallback(_window, key_press);
       glfwSetWindowRefreshCallback(_window, window_refresh);
+      glfwSetMouseButtonCallback(_window, mouse_button);
+      glfwSetCursorPosCallback(_window, cursor_position);
       glfwMakeContextCurrent(_window);
 
       _context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
@@ -80,11 +112,15 @@ namespace photon
       glfwSetWindowSize(_window, s.x, s.y);
    }
 
-   void window::draw()
+   point window::cursor_pos() const
    {
       double mx, my;
       glfwGetCursorPos(_window, &mx, &my);
+      return { mx, my };
+   }
 
+   void window::draw()
+   {
       int w_width, w_height;
       glfwGetWindowSize(_window, &w_width, &w_height);
 
@@ -119,6 +155,26 @@ namespace photon
 
    void window::key(key_info const& k)
    {
+   }
+
+   void window::click(bool down, enum mouse_button btn)
+   {
+      _btn = btn;
+      _mouse_down = down;
+
+      rect subj_bounds = _current_bounds;
+      layout_info l_info { _app, *this, 0, 0, subj_bounds };
+      _subject->click(l_info, btn);
+   }
+
+   void window::cursor(point const& p)
+   {
+      if (_mouse_down)
+      {
+         rect subj_bounds = _current_bounds;
+         layout_info l_info { _app, *this, 0, 0, subj_bounds };
+         _subject->drag(l_info, _btn);
+      }
    }
 
    void window::close()

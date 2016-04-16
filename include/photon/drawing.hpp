@@ -16,26 +16,36 @@ struct NVGcontext;
 
 namespace photon
 {
-   struct theme
+   class theme
    {
+   public:
+
                      theme() {}
       virtual        ~theme() {}
 
-      // Panels
-      double         panel_corner_radius        = 3.0f;
-      color          panel_color                = { 28, 30, 34, 192 };
-      rect           panel_shadow_offset        = { -10, -10, +20, +30 };
+      struct circle
+      {
+         double   cx;
+         double   cy;
+         double   radius;
+      };
 
-      virtual void   draw_panel(NVGcontext* vg, rect const& b);
+      // Panels
+      double            panel_corner_radius        = 3.0f;
+      color             panel_color                = { 28, 30, 34, 192 };
+      rect              panel_shadow_offset        = { -10, -10, +20, +30 };
+
+      virtual void      draw_panel(NVGcontext* vg, rect const& b);
 
       // Sliders
-      double         slider_knob_radius         = 0.25;  // fraction of size (width or height)
-      double         slider_slot_size           = 0.2;   // fraction of size (width or height)
-      color          slider_knob_fill_color     = { 40, 43, 48, 255 };
-      color          slider_knob_outline_color  = { 0, 0, 0, 92 };
+      double            slider_knob_radius         = 0.25;  // fraction of size (width or height)
+      double            slider_slot_size           = 0.2;   // fraction of size (width or height)
+      color             slider_knob_fill_color     = { 40, 43, 48, 255 };
+      color             slider_knob_outline_color  = { 0, 0, 0, 92 };
 
-      virtual void   draw_slider(NVGcontext* vg, double pos, rect const& b);
-      virtual void   draw_slider_knob(NVGcontext* vg, double pos, rect const& b);
+      virtual void      draw_slider(NVGcontext* vg, double pos, rect const& b);
+      virtual void      draw_slider_knob(NVGcontext* vg, double pos, rect const& b);
+      virtual circle    slider_knob_position(double pos, rect const& b);
    };
 
    using theme_ptr = std::shared_ptr<theme>;

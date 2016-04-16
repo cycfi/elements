@@ -31,6 +31,19 @@ namespace photon
          elements()[i]->layout(bounds_of(i));
    }
 
+   layer_widget::hit_info layer_widget::hit_element(point const& p) const
+   {
+      // we test from the highest index (topmost element)
+      for (int i = elements().size()-1; i >= 0; --i)
+      {
+         rect bounds = bounds_of(i);
+         if (bounds.includes(p))
+            return hit_info{ elements()[i].get(), bounds, int(i) };
+      }
+      return hit_info{ 0, rect{}, -1 };
+   }
+
+
    rect layer_widget::bounds_of(std::size_t index) const
    {
       double   width = bounds.width();
@@ -43,6 +56,5 @@ namespace photon
       max_limit(height, limits.bottom);
 
       return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
-
    }
 }

@@ -31,9 +31,13 @@ namespace photon
    {
    }
 
-   widget* widget::click(layout_info const& l, point const& p)
+   widget* widget::click(layout_info const& l, mouse_button btn)
    {
       return 0;
+   }
+
+   void widget::drag(layout_info const& l, mouse_button btn)
+   {
    }
 
    bool widget::key(layout_info const& l, key_info const& k)
@@ -90,11 +94,18 @@ namespace photon
    {
    }
 
-   widget* proxy::click(layout_info const& l, point const& p)
+   widget* proxy::click(layout_info const& l, mouse_button btn)
    {
       l.widget = _subject.get();
       subject_bounds(l.bounds);
-      return _subject->click(l, p);
+      return _subject->click(l, btn);
+   }
+
+   void proxy::drag(layout_info const& l, mouse_button btn)
+   {
+      l.widget = _subject.get();
+      subject_bounds(l.bounds);
+      _subject->drag(l, btn);
    }
 
    bool proxy::key(layout_info const& l, key_info const& k)
@@ -162,8 +173,10 @@ namespace photon
       }
    }
 
-   widget* composite::click(layout_info const& l, point const& p)
+   widget* composite::click(layout_info const& l, mouse_button btn)
    {
+      point p = l.cursor_pos();
+
       if (!_elements.empty())
       {
          hit_info info = hit_element(p);
@@ -186,11 +199,21 @@ namespace photon
          if (info.element)
          {
             layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
-            if (info.element->click(elem_layout, p))
+            if (info.element->click(elem_layout, btn))
                return info.element;
          }
       }
       return 0;
+   }
+
+   void composite::drag(layout_info const& l, mouse_button btn)
+   {
+      hit_info info = hit_element(l.cursor_pos());
+      if (info.element)
+      {
+         layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
+         info.element->drag(elem_layout, btn);
+      }
    }
 
    bool composite::key(layout_info const& l, key_info const& k)

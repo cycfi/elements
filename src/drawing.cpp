@@ -139,6 +139,15 @@ namespace photon
 
    void theme::draw_slider_knob(NVGcontext* vg, double pos, rect const& b)
    {
+      circle cp = get_slider_knob_position(pos, b);
+      draw_knob(
+         vg, cp.cx, cp.cy, cp.radius,
+         slider_knob_fill_color, slider_knob_outline_color
+      );
+   }
+
+   theme::circle theme::get_slider_knob_position(double pos, rect const& b)
+   {
       double   x = b.left;
       double   y = b.top;
       double   w = b.width();
@@ -154,10 +163,7 @@ namespace photon
          w -= kr * 2;
          x += kr;
 
-         draw_knob(
-            vg, x + (pos * w), cy, kr,
-            slider_knob_fill_color, slider_knob_outline_color
-         );
+         return { x+(pos*w), cy, kr };
       }
       else
       {
@@ -169,11 +175,7 @@ namespace photon
          h -= kr * 2;
          y += kr;
 
-         draw_knob(
-            vg, cx, y + (pos * h), kr,
-            slider_knob_fill_color, slider_knob_outline_color
-         );
+         return { cx, y+(pos*h), kr };
       }
-
     }
 }

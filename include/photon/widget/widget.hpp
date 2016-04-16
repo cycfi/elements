@@ -44,7 +44,8 @@ namespace photon
 
    // control
 
-      virtual widget*         click(layout_info const& l, point const& p);
+      virtual widget*         click(layout_info const& l, mouse_button btn);
+      virtual void            drag(layout_info const& l, mouse_button btn);
       virtual bool            key(layout_info const& l, key_info const& k);
       virtual bool            cursor(layout_info const& l, point const& p);
       virtual bool            focus(focus_request r);
@@ -79,7 +80,8 @@ namespace photon
 
    // control
 
-      virtual widget*         click(layout_info const& l, point const& p);
+      virtual widget*         click(layout_info const& l, mouse_button btn);
+      virtual void            drag(layout_info const& l, mouse_button btn);
       virtual bool            key(layout_info const& l, key_info const& k);
       virtual bool            cursor(layout_info const& l, point const& p);
       virtual bool            focus(focus_request r);
@@ -116,7 +118,8 @@ namespace photon
 
    // control
 
-      virtual widget*         click(layout_info const& l, point const& p);
+      virtual widget*         click(layout_info const& l, mouse_button btn);
+      virtual void            drag(layout_info const& l, mouse_button btn);
       virtual bool            key(layout_info const& l, key_info const& k);
       virtual bool            cursor(layout_info const& l, point const& p);
       virtual bool            focus(focus_request r);

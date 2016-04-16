@@ -19,7 +19,36 @@ namespace photon
 
    void slider_widget::draw(layout_info const& l)
    {
-      //pos = 0;
-      l.app.theme()->draw_slider(l.window.context(), pos, l.bounds);
+      l.theme()->draw_slider(l.context(), pos, l.bounds);
+   }
+
+   widget* slider_widget::click(layout_info const& l, mouse_button btn)
+   {
+      reposition(l);
+      return this;
+   }
+
+   void slider_widget::drag(layout_info const& l, mouse_button btn)
+   {
+      reposition(l);
+   }
+
+   void slider_widget::reposition(layout_info const& l)
+   {
+      point    p = l.cursor_pos();
+      double   x = l.bounds.left;
+      double   y = l.bounds.top;
+      double   w = l.bounds.width();
+      double   h = l.bounds.height();
+
+      if (w > h)
+         pos = (p.x-x) / w;
+      else
+         pos = (p.y-y) / h;
+
+      min_limit(pos, 0.0);
+      max_limit(pos, 1.0);
+
+      l.window.draw();
    }
 }

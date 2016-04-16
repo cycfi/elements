@@ -19,7 +19,6 @@ namespace photon
    class app
    {
    public:
-
                            ~app();
                            app(app const&) = delete;
                            app& operator=(app const&) = delete;

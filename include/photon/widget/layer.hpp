@@ -24,6 +24,7 @@ namespace photon
 
       virtual rect         limits() const;
       virtual void         layout(rect const& b);
+      virtual hit_info     hit_element(point const& p) const;
       virtual rect         bounds_of(std::size_t index) const;
 
    private:

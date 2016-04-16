@@ -40,15 +40,24 @@ namespace photon
       double   y = l.bounds.top;
       double   w = l.bounds.width();
       double   h = l.bounds.height();
+      auto     cp = l.theme()->slider_knob_position(pos, l.bounds);
 
       if (w > h)
+      {
+         // inset by radius;
+         w -= cp.radius * 2;
+         x += cp.radius;
          pos = (p.x-x) / w;
+      }
       else
+      {
+         // inset by radius;
+         h -= cp.radius * 2;
+         y += cp.radius;
          pos = (p.y-y) / h;
+      }
 
-      min_limit(pos, 0.0);
-      max_limit(pos, 1.0);
-
+      limit(pos, 0.0, 1.0);
       l.window.draw();
    }
 }

@@ -30,6 +30,7 @@ namespace photon
          double   radius;
       };
 
+      /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels
       double            panel_corner_radius        = 3.0f;
       color             panel_color                = { 28, 30, 34, 192 };
@@ -37,6 +38,7 @@ namespace photon
 
       virtual void      draw_panel(NVGcontext* vg, rect const& b);
 
+      /////////////////////////////////////////////////////////////////////////////////////////////
       // Sliders
       double            slider_knob_radius         = 0.25;  // fraction of size (width or height)
       double            slider_slot_size           = 0.2;   // fraction of size (width or height)

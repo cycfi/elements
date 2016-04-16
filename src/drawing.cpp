@@ -139,14 +139,14 @@ namespace photon
 
    void theme::draw_slider_knob(NVGcontext* vg, double pos, rect const& b)
    {
-      circle cp = get_slider_knob_position(pos, b);
+      circle cp = slider_knob_position(pos, b);
       draw_knob(
          vg, cp.cx, cp.cy, cp.radius,
          slider_knob_fill_color, slider_knob_outline_color
       );
    }
 
-   theme::circle theme::get_slider_knob_position(double pos, rect const& b)
+   theme::circle theme::slider_knob_position(double pos, rect const& b)
    {
       double   x = b.left;
       double   y = b.top;

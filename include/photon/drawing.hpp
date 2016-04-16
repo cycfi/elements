@@ -25,6 +25,8 @@ namespace photon
 
       struct circle
       {
+         rect     bounds() const { return { cx-radius, cy-radius, cx+radius, cy+radius }; }
+
          double   cx;
          double   cy;
          double   radius;

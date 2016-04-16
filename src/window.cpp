@@ -162,9 +162,12 @@ namespace photon
       _btn = btn;
       _mouse_down = down;
 
-      rect subj_bounds = _current_bounds;
-      layout_info l_info { _app, *this, 0, 0, subj_bounds };
-      _subject->click(l_info, btn);
+      if (_mouse_down)
+      {
+         rect subj_bounds = _current_bounds;
+         layout_info l_info { _app, *this, 0, 0, subj_bounds };
+         _subject->click(l_info, btn);
+      }
    }
 
    void window::cursor(point const& p)

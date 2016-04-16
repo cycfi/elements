@@ -18,7 +18,7 @@ namespace photon
    {
    public:
 
-                        slider_widget() : pos(0.5) {}
+                        slider_widget() : _pos(0.5) {}
 
       virtual rect      limits() const;
       virtual void      draw(layout_info const& l);
@@ -28,7 +28,8 @@ namespace photon
    private:
 
       void              reposition(layout_info const& l);
-      double            pos;
+      double            _pos;
+      point             _offset;
    };
 
    inline widget_ptr slider()

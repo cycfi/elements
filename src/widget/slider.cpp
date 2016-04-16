@@ -4,7 +4,7 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <photon/widget/panel.hpp>
+#include <photon/widget/slider.hpp>
 #include <photon/drawing.hpp>
 #include <photon/support.hpp>
 #include <photon/app.hpp>
@@ -12,8 +12,14 @@
 
 namespace photon
 {
-   void panel_widget::draw(layout_info const& l)
+   rect slider_widget::limits() const
    {
-      l.app.theme()->draw_panel(l.window.context(), l.bounds);
+      return { 16, 16, full_extent, full_extent };
+   }
+
+   void slider_widget::draw(layout_info const& l)
+   {
+      pos = 0;
+      l.app.theme()->draw_slider(l.window.context(), pos, l.bounds);
    }
 }

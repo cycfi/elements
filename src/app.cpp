@@ -19,7 +19,8 @@ namespace photon
    std::map<GLFWwindow*, window*> windows;
    app* app_ptr = 0; // singleton
 
-   app::app()
+   app::app(theme_ptr theme)
+    : _theme(theme)
    {
       if (!glfwInit())
       {

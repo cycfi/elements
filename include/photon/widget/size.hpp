@@ -15,6 +15,31 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Fixed sizing widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class size_widget : public proxy
+   {
+   public:
+
+      size_widget(point size, std::shared_ptr<widget> subject)
+       : proxy(subject)
+       , _size(size)
+      {}
+
+      ~size_widget() {}
+
+      virtual rect   limits() const;
+      virtual void   subject_bounds(rect& b);
+
+   private:
+
+      point          _size;
+   };
+
+   inline widget_ptr hsize(point size, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new size_widget{ size, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class hsize_widget : public proxy
    {
    public:

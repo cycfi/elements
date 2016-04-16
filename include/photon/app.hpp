@@ -20,16 +20,19 @@ namespace photon
    {
    public:
 
-      ~app();
+                           ~app();
+                           app(app const&) = delete;
+                           app& operator=(app const&) = delete;
 
-      app(app const&) = delete;
-      app& operator=(app const&) = delete;
+      virtual void         key(key_info const& k);
+      virtual void         run();
+      theme_ptr            theme() { return _theme; }
 
-      virtual void   key(key_info const& k);
-      virtual void   run();
+   protected:
 
-      // The default theme
-      photon::theme  theme = {};
+                           app(theme_ptr theme = theme_ptr{ new photon::theme{} });
+
+   private:
 
       template <typename App, typename... Args>
       friend typename std::enable_if<
@@ -37,9 +40,7 @@ namespace photon
       >::type
       make_app(Args const&... args);
 
-   protected:
-
-      app();
+      theme_ptr _theme;
    };
 
    template <typename App, typename... Args>

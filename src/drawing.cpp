@@ -19,15 +19,15 @@ namespace photon
       return color;
    }
 
-   void draw_panel(NVGcontext* vg, rect const& b, theme const& t)
+   void theme::draw_panel(NVGcontext* vg, rect const& b)
    {
       double   x = b.left;
       double   y = b.top;
       double   w = b.width();
       double   h = b.height();
-      color    c = t.panel_color;
-      double   r = t.panel_corner_radius;
-      rect     sh = t.panel_shadow_offset;
+      color    c = panel_color;
+      double   r = panel_corner_radius;
+      rect     sh = panel_shadow_offset;
 
       // Round Rectangle
       nvgBeginPath(vg);
@@ -44,9 +44,90 @@ namespace photon
       NVGpaint shadow_paint
          = nvgBoxGradient(
                vg, x, y+2, w, h, r*2, 10
-             , ::nvgRGBA(0,0,0,128), ::nvgRGBA(0,0,0,0));
+             , ::nvgRGBA(0, 0, 0, 128), ::nvgRGBA(0, 0, 0, 0)
+            );
 
       nvgFillPaint(vg, shadow_paint);
       nvgFill(vg);
+   }
+
+   void theme::draw_slider(NVGcontext* vg, double pos, rect const& b)
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+
+      double   cy = y + h * 0.5;
+      double   sl = h * slider_slot_size;
+
+      nvgSave(vg);
+
+      // Slot
+      NVGpaint bg
+         = nvgBoxGradient(
+               vg, x, cy-(sl/2)+1, w, sl, 2, 2,
+               ::nvgRGBA(0, 0, 0, 32), ::nvgRGBA(0, 0, 0, 128)
+            );
+
+      nvgBeginPath(vg);
+      nvgRoundedRect(vg, x, cy-(sl/2), w, sl, sl/3);
+      nvgFillPaint(vg, bg);
+      nvgFill(vg);
+
+      draw_slider_knob(vg, pos, b);
+
+      nvgRestore(vg);
+   }
+
+   void theme::draw_slider_knob(NVGcontext* vg, double pos, rect const& b)
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+
+      double   cy = y + h * 0.5;
+      double   kr = h * slider_knob_radius;
+      
+      // inset by radius;
+      w -= kr * 2;
+      x += kr;
+
+      // change pos from fraction to actual pixel coord
+      pos = x + (pos * w);
+
+      // Knob Shadow
+      NVGpaint bg
+         = nvgRadialGradient(
+               vg, pos, cy+1, kr-3, kr+3,
+               ::nvgRGBA(0, 0, 0, 64), ::nvgRGBA(0, 0, 0, 0)
+            );
+
+      nvgBeginPath(vg);
+      nvgRect(vg, pos-kr-5, cy-kr-5, kr*2+5+5, kr*2+5+5+3);
+      nvgCircle(vg, pos, cy, kr);
+      nvgPathWinding(vg, NVG_HOLE);
+      nvgFillPaint(vg, bg);
+      nvgFill(vg);
+
+      // Knob
+      NVGpaint knob
+         = nvgLinearGradient(
+               vg, x, cy-kr, x, cy+kr,
+               ::nvgRGBA(255, 255, 255, 16), ::nvgRGBA(0, 0, 0, 16)
+            );
+
+      nvgBeginPath(vg);
+      nvgCircle(vg, pos, cy, kr-1);
+      nvgFillColor(vg, nvgRGBA(slider_knob_fill_color));
+      nvgFill(vg);
+      nvgFillPaint(vg, knob);
+      nvgFill(vg);
+
+      nvgBeginPath(vg);
+      nvgCircle(vg, pos, cy, kr-0.5f);
+      nvgStrokeColor(vg, nvgRGBA(slider_knob_outline_color));
+      nvgStroke(vg);
    }
 }

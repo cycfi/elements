@@ -19,7 +19,7 @@ namespace photon
 
    void slider_widget::draw(layout_info const& l)
    {
-      pos = 0;
+      //pos = 0;
       l.app.theme()->draw_slider(l.window.context(), pos, l.bounds);
    }
 }

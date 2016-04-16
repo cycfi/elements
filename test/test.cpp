@@ -64,7 +64,7 @@ int main()
             { 20, 20, 20, 20 },
             layer(
                 panel(),
-                xside_margin({ 20, 20 }, slider(123))
+                margin({ 20, 20, 20, 20 }, slider())
             )
          );
 

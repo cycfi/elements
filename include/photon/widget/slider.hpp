@@ -18,7 +18,7 @@ namespace photon
    {
    public:
 
-                     slider_widget(double pos) : pos(pos) {}
+                     slider_widget() : pos(0.5) {}
 
       virtual rect   limits() const;
       virtual void   draw(layout_info const& l);
@@ -28,9 +28,9 @@ namespace photon
       double         pos;
    };
 
-   inline widget_ptr slider(double pos)
+   inline widget_ptr slider()
    {
-      return widget_ptr{ new slider_widget{ pos } };
+      return widget_ptr{ new slider_widget{} };
    }
 }
 

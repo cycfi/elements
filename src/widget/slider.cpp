@@ -5,7 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/slider.hpp>
-#include <photon/drawing.hpp>
+#include <photon/theme.hpp>
 #include <photon/support.hpp>
 #include <photon/app.hpp>
 #include <photon/window.hpp>
@@ -54,9 +54,8 @@ namespace photon
       double   h = l.bounds.height();
       auto     cp = l.theme()->slider_knob_position(_pos, l.bounds);
 
-      // See comment in the click function. We'll use the offset to
-      // compensate for mouse tracking in the reposition function to
-      // avoid sudden knob movements.
+      // See comment in the click function. We subtract the offset to
+      // compensate for mouse tracking to avoid sudden knob movements.
       p.x -= _offset.x;
       p.y -= _offset.y;
 

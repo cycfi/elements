@@ -8,7 +8,7 @@
 #define PHOTON_GUI_LIB_APP_APRIL_11_2016
 
 #include <photon/support.hpp>
-#include <photon/drawing.hpp>
+#include <photon/theme.hpp>
 #include <type_traits>
 
 namespace photon

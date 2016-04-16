@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/window.hpp>
+#include <photon/app.hpp>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
@@ -89,6 +90,8 @@ namespace photon
 
       rect limits = _subject->limits();
       glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
+
+      _app.theme()->load_fonts(_context);
 
       windows[_window] = this;
    }

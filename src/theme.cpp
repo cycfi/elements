@@ -4,7 +4,7 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <photon/drawing.hpp>
+#include <photon/theme.hpp>
 #include <nanovg.h>
 
 namespace photon
@@ -146,7 +146,7 @@ namespace photon
       );
    }
 
-   theme::circle theme::slider_knob_position(double pos, rect const& b)
+   circle theme::slider_knob_position(double pos, rect const& b)
    {
       double   x = b.left;
       double   y = b.top;
@@ -177,5 +177,26 @@ namespace photon
 
          return { cx, y+(pos*h), kr };
       }
-    }
+   }
+
+   void theme::load_fonts(NVGcontext* vg)
+   {
+      if (nvgCreateFont(vg, "icons", "./assets/fonts/entypo.ttf") == -1)
+      {
+         printf("Could not add font icons.\n");
+          // $$$ throw $$;
+      }
+
+      if (nvgCreateFont(vg, "sans", "./assets/fonts/Roboto-Regular.ttf") == -1)
+      {
+         printf("Could not add font italic.\n");
+          // $$$ throw $$;
+      }
+
+      if (nvgCreateFont(vg, "sans-bold", "./assets/fonts/Roboto-Bold.ttf") == -1)
+      {
+         printf("Could not add font bold.\n");
+          // $$$ throw $$;
+      }
+   }
 }

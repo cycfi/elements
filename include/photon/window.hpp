@@ -56,6 +56,7 @@ namespace photon
       virtual void   close();
 
       NVGcontext*    context() const { return _context; }
+      app&           app() const { return _app; }
 
    private:
 

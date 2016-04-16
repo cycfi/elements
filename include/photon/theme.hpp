@@ -4,11 +4,12 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#if !defined(PHOTON_GUI_LIB_DRAWING_APRIL_15_2016)
-#define PHOTON_GUI_LIB_DRAWING_APRIL_15_2016
+#if !defined(PHOTON_GUI_LIB_THEME_APRIL_15_2016)
+#define PHOTON_GUI_LIB_THEME_APRIL_15_2016
 
 #include <photon/rect.hpp>
 #include <photon/color.hpp>
+#include <photon/circle.hpp>
 #include <memory>
 
 // forward
@@ -22,15 +23,6 @@ namespace photon
 
                      theme() {}
       virtual        ~theme() {}
-
-      struct circle
-      {
-         rect     bounds() const { return { cx-radius, cy-radius, cx+radius, cy+radius }; }
-
-         double   cx;
-         double   cy;
-         double   radius;
-      };
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels
@@ -50,6 +42,15 @@ namespace photon
       virtual void      draw_slider(NVGcontext* vg, double pos, rect const& b);
       virtual void      draw_slider_knob(NVGcontext* vg, double pos, rect const& b);
       virtual circle    slider_knob_position(double pos, rect const& b);
+
+      /////////////////////////////////////////////////////////////////////////////////////////////
+      // Fonts
+
+      char const*       icons       = "icons";
+      char const*       sans        = "sans";
+      char const*       sans_bold   = "sans-bold";
+
+      virtual void      load_fonts(NVGcontext* vg);
    };
 
    using theme_ptr = std::shared_ptr<theme>;

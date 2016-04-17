@@ -153,7 +153,7 @@ namespace photon
          }
 
          // draw the subject
-         _subject->draw(layout_info{ _app, *this, 0, 0, subj_bounds });
+         _subject->draw(context{ _app, *this, 0, 0, subj_bounds });
       }
       nvgEndFrame(_context);
       glfwSwapBuffers(_window);
@@ -171,7 +171,7 @@ namespace photon
       if (_mouse_down)
       {
          rect subj_bounds = _current_bounds;
-         layout_info l_info { _app, *this, 0, 0, subj_bounds };
+         context l_info { _app, *this, 0, 0, subj_bounds };
          _subject->click(l_info, btn);
       }
    }
@@ -181,7 +181,7 @@ namespace photon
       if (_mouse_down)
       {
          rect subj_bounds = _current_bounds;
-         layout_info l_info { _app, *this, 0, 0, subj_bounds };
+         context l_info { _app, *this, 0, 0, subj_bounds };
          _subject->drag(l_info, _btn);
       }
    }

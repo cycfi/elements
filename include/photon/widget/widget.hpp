@@ -39,16 +39,16 @@ namespace photon
    // image
 
       virtual rect            limits(theme const& th) const;
-      virtual widget*         hit_test(layout_info const& l, point const& p);
-      virtual void            draw(layout_info const& l);
+      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual void            draw(context const& ctx);
       virtual void            layout(theme const& th, rect const& bounds);
 
    // control
 
-      virtual widget*         click(layout_info const& l, mouse_button btn);
-      virtual void            drag(layout_info const& l, mouse_button btn);
-      virtual bool            key(layout_info const& l, key_info const& k);
-      virtual bool            cursor(layout_info const& l, point const& p);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
    };
@@ -74,17 +74,17 @@ namespace photon
    // image
 
       virtual rect            limits(theme const& th) const;
-      virtual widget*         hit_test(layout_info const& l, point const& p);
-      virtual void            draw(layout_info const& l);
+      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual void            draw(context const& ctx);
       virtual void            layout(theme const& th, rect const& bounds);
       virtual void            subject_bounds(theme const& th, rect& b);
 
    // control
 
-      virtual widget*         click(layout_info const& l, mouse_button btn);
-      virtual void            drag(layout_info const& l, mouse_button btn);
-      virtual bool            key(layout_info const& l, key_info const& k);
-      virtual bool            cursor(layout_info const& l, point const& p);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
 
@@ -113,16 +113,16 @@ namespace photon
    // image
 
       virtual rect            limits(theme const& th) const = 0;
-      virtual widget*         hit_test(layout_info const& l, point const& p);
-      virtual void            draw(layout_info const& l);
+      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual void            draw(context const& ctx);
       virtual void            layout(theme const& th, rect const& bounds) = 0;
 
    // control
 
-      virtual widget*         click(layout_info const& l, mouse_button btn);
-      virtual void            drag(layout_info const& l, mouse_button btn);
-      virtual bool            key(layout_info const& l, key_info const& k);
-      virtual bool            cursor(layout_info const& l, point const& p);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
 

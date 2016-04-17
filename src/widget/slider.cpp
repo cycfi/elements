@@ -17,15 +17,15 @@ namespace photon
       return { 16, 16, full_extent, full_extent };
    }
 
-   void slider_widget::draw(layout_info const& l)
+   void slider_widget::draw(context const& ctx)
    {
-      l.theme().draw_slider(_pos, l.bounds);
+      ctx.theme().draw_slider(_pos, ctx.bounds);
    }
 
-   widget* slider_widget::click(layout_info const& l, mouse_button btn)
+   widget* slider_widget::click(context const& ctx, mouse_button btn)
    {
-      point p = l.cursor_pos();
-      auto  cp = l.theme().slider_knob_position(_pos, l.bounds);
+      point p = ctx.cursor_pos();
+      auto  cp = ctx.theme().slider_knob_position(_pos, ctx.bounds);
 
       // If the mouse is inside the knob, record the offset from
       // the knob's center. We'll use this offset to compensate for
@@ -36,23 +36,23 @@ namespace photon
       else
          _offset = point{};
 
-      reposition(l);
+      reposition(ctx);
       return this;
    }
 
-   void slider_widget::drag(layout_info const& l, mouse_button btn)
+   void slider_widget::drag(context const& ctx, mouse_button btn)
    {
-      reposition(l);
+      reposition(ctx);
    }
 
-   void slider_widget::reposition(layout_info const& l)
+   void slider_widget::reposition(context const& ctx)
    {
-      point    p = l.cursor_pos();
-      double   x = l.bounds.left;
-      double   y = l.bounds.top;
-      double   w = l.bounds.width();
-      double   h = l.bounds.height();
-      auto     cp = l.theme().slider_knob_position(_pos, l.bounds);
+      point    p = ctx.cursor_pos();
+      double   x = ctx.bounds.left;
+      double   y = ctx.bounds.top;
+      double   w = ctx.bounds.width();
+      double   h = ctx.bounds.height();
+      auto     cp = ctx.theme().slider_knob_position(_pos, ctx.bounds);
 
       // See comment in the click function. We subtract the offset to
       // compensate for mouse tracking to avoid sudden knob movements.
@@ -75,6 +75,6 @@ namespace photon
       }
 
       limit(_pos, 0.0, 1.0);
-      l.window.draw();
+      ctx.window.draw();
    }
 }

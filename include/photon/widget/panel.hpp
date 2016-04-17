@@ -18,7 +18,7 @@ namespace photon
    {
    public:
 
-      virtual void draw(layout_info const& l);
+      virtual void draw(context const& ctx);
    };
 
    inline widget_ptr panel()

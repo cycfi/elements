@@ -12,8 +12,8 @@
 
 namespace photon
 {
-   void panel_widget::draw(layout_info const& l)
+   void panel_widget::draw(context const& ctx)
    {
-      l.theme()->draw_panel(l.canvas(), l.bounds);
+      ctx.theme()->draw_panel(ctx.canvas(), ctx.bounds);
    }
 }

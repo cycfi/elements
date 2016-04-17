@@ -20,7 +20,7 @@ namespace photon
                         label_widget(std::string const& text, double size, bool bold);
 
       virtual rect      limits() const;
-      virtual void      draw(layout_info const& l);
+      virtual void      draw(context const& ctx);
 
    private:
 

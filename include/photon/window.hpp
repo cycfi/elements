@@ -57,7 +57,7 @@ namespace photon
       virtual void   cursor(point const& p);
       virtual void   close();
 
-      NVGcontext*    context() const { return _context; }
+      NVGcontext*    canvas() const { return _context; }
       app&           app() const { return _app; }
       theme const&   theme() const { return *_theme.get(); }
 

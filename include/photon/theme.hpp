@@ -24,8 +24,8 @@ namespace photon
                         theme() : _vg(0) {}
       virtual           ~theme() {}
 
-      void              context(NVGcontext* vg_)   { _vg = vg_; }
-      NVGcontext*       context() const { return _vg; }
+      void              canvas(NVGcontext* vg_)   { _vg = vg_; }
+      NVGcontext*       canvas() const { return _vg; }
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels

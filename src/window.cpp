@@ -93,7 +93,7 @@ namespace photon
       rect limits = _subject->limits(*theme.get());
       glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
 
-      _theme->context(_context);
+      _theme->canvas(_context);
       _theme->load_fonts();
 
       windows[_window] = this;

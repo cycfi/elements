@@ -10,6 +10,7 @@
 #include <photon/support.hpp>
 #include <photon/rect.hpp>
 #include <photon/point.hpp>
+#include <photon/context.hpp>
 
 #include <memory>
 #include <vector>

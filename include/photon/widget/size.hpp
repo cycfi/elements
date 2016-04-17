@@ -26,8 +26,8 @@ namespace photon
 
       ~size_widget() {}
 
-      virtual rect   limits() const;
-      virtual void   subject_bounds(rect& b);
+      virtual rect   limits(theme const& th) const;
+      virtual void   subject_bounds(theme const& th, rect& b);
 
    private:
 
@@ -51,8 +51,8 @@ namespace photon
 
       ~hsize_widget() {}
 
-      virtual rect   limits() const;
-      virtual void   subject_bounds(rect& b);
+      virtual rect   limits(theme const& th) const;
+      virtual void   subject_bounds(theme const& th, rect& b);
 
    private:
 
@@ -76,8 +76,8 @@ namespace photon
 
       ~vsize_widget() {}
 
-      virtual rect   limits() const;
-      virtual void   subject_bounds(rect& b);
+      virtual rect   limits(theme const& th) const;
+      virtual void   subject_bounds(theme const& th, rect& b);
 
    private:
 

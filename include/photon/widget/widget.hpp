@@ -37,10 +37,10 @@ namespace photon
 
    // image
 
-      virtual rect            limits() const;
+      virtual rect            limits(theme const& th) const;
       virtual widget*         hit_test(layout_info const& l, point const& p);
       virtual void            draw(layout_info const& l);
-      virtual void            layout(rect const& bounds);
+      virtual void            layout(theme const& th, rect const& bounds);
 
    // control
 
@@ -72,11 +72,11 @@ namespace photon
 
    // image
 
-      virtual rect            limits() const;
+      virtual rect            limits(theme const& th) const;
       virtual widget*         hit_test(layout_info const& l, point const& p);
       virtual void            draw(layout_info const& l);
-      virtual void            layout(rect const& bounds);
-      virtual void            subject_bounds(rect& b);
+      virtual void            layout(theme const& th, rect const& bounds);
+      virtual void            subject_bounds(theme const& th, rect& b);
 
    // control
 
@@ -111,10 +111,10 @@ namespace photon
 
    // image
 
-      virtual rect            limits() const = 0;
+      virtual rect            limits(theme const& th) const = 0;
       virtual widget*         hit_test(layout_info const& l, point const& p);
       virtual void            draw(layout_info const& l);
-      virtual void            layout(rect const& bounds) = 0;
+      virtual void            layout(theme const& th, rect const& bounds) = 0;
 
    // control
 
@@ -138,8 +138,8 @@ namespace photon
 
       composite_type&         elements() { return _elements; }
       composite_type const&   elements() const { return _elements; }
-      virtual hit_info        hit_element(point const& p) const;
-      virtual rect            bounds_of(std::size_t index) const = 0;
+      virtual hit_info        hit_element(theme const& th, point const& p) const;
+      virtual rect            bounds_of(theme const& th, std::size_t index) const = 0;
 
    private:
 

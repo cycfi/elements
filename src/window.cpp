@@ -56,13 +56,15 @@ namespace photon
       char const*    title
     , point const&   size
     , color const&   bkd_color
-    , app&           app_
+    , class app&     app_
     , widget_ptr     subject
+    , theme_ptr      theme
    )
     : _bkd_color(bkd_color)
     , _app(app_)
     , _subject(subject)
     , _mouse_down(false)
+    , _theme(theme)
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (_window == 0)
@@ -88,10 +90,11 @@ namespace photon
       glfwSwapInterval(0);
       glfwSetTime(0);
 
-      rect limits = _subject->limits();
+      rect limits = _subject->limits(*theme.get());
       glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
 
-      _app.theme()->load_fonts(_context);
+      _theme->context(_context);
+      _theme->load_fonts();
 
       windows[_window] = this;
    }
@@ -146,7 +149,7 @@ namespace photon
          if (subj_bounds != _current_bounds)
          {
             _current_bounds = subj_bounds;
-            _subject->layout(subj_bounds);
+            _subject->layout(*_theme.get(), subj_bounds);
          }
 
          // draw the subject

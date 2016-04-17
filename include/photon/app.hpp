@@ -25,11 +25,10 @@ namespace photon
 
       virtual void         key(key_info const& k);
       virtual void         run();
-      theme_ptr            theme() { return _theme; }
 
    protected:
 
-                           app(theme_ptr theme = theme_ptr{ new photon::theme{} });
+                           app();
 
    private:
 
@@ -38,8 +37,6 @@ namespace photon
          std::is_base_of<App, app>::value, App&
       >::type
       make_app(Args const&... args);
-
-      theme_ptr _theme;
    };
 
    template <typename App, typename... Args>

@@ -12,15 +12,15 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // halign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect halign_widget::limits() const
+   rect halign_widget::limits(theme const& th) const
    {
-      rect e_limits = subject()->limits();
+      rect e_limits = subject()->limits(th);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void halign_widget::subject_bounds(rect& b)
+   void halign_widget::subject_bounds(theme const& th, rect& b)
    {
-      rect     e_limits          = subject()->limits();
+      rect     e_limits          = subject()->limits(th);
       double   elem_width        = e_limits.left;
       double   available_width   = b.width();
 
@@ -34,15 +34,15 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // valign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect valign_widget::limits() const
+   rect valign_widget::limits(theme const& th) const
    {
-      rect e_limits = subject()->limits();
+      rect e_limits = subject()->limits(th);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void valign_widget::subject_bounds(rect& b)
+   void valign_widget::subject_bounds(theme const& th, rect& b)
    {
-      rect     e_limits          = subject()->limits();
+      rect     e_limits          = subject()->limits(th);
       double   elem_height       = e_limits.top;
       double   available_height  = b.height();
 

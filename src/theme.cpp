@@ -19,7 +19,7 @@ namespace photon
       return color;
    }
 
-   void theme::draw_panel(NVGcontext* vg, rect const& b)
+   void theme::draw_panel(rect const& b) const
    {
       double   x = b.left;
       double   y = b.top;
@@ -30,25 +30,25 @@ namespace photon
       rect     sh = panel_shadow_offset;
 
       // Round Rectangle
-      nvgBeginPath(vg);
-      nvgRoundedRect(vg, x, y, w, h, r);
-      nvgFillColor(vg, nvgRGBA(c));
-      nvgFill(vg);
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x, y, w, h, r);
+      nvgFillColor(_vg, nvgRGBA(c));
+      nvgFill(_vg);
 
       // Drop shadow
-      nvgBeginPath(vg);
-      nvgRect(vg, x+sh.left, y+sh.top, w+sh.right, h+sh.bottom);
-      nvgRoundedRect(vg, x, y, w, h, r);
-      nvgPathWinding(vg, NVG_HOLE);
+      nvgBeginPath(_vg);
+      nvgRect(_vg, x+sh.left, y+sh.top, w+sh.right, h+sh.bottom);
+      nvgRoundedRect(_vg, x, y, w, h, r);
+      nvgPathWinding(_vg, NVG_HOLE);
 
       NVGpaint shadow_paint
          = nvgBoxGradient(
-               vg, x, y+2, w, h, r*2, 10
+               _vg, x, y+2, w, h, r*2, 10
              , ::nvgRGBA(0, 0, 0, 128), ::nvgRGBA(0, 0, 0, 0)
             );
 
-      nvgFillPaint(vg, shadow_paint);
-      nvgFill(vg);
+      nvgFillPaint(_vg, shadow_paint);
+      nvgFill(_vg);
    }
 
    namespace
@@ -109,44 +109,44 @@ namespace photon
       }
    }
 
-   void theme::draw_slider(NVGcontext* vg, double pos, rect const& b)
+   void theme::draw_slider(double pos, rect const& b) const
    {
       double   x = b.left;
       double   y = b.top;
       double   w = b.width();
       double   h = b.height();
 
-      nvgSave(vg);
+      nvgSave(_vg);
 
       if (w > h)
       {
          // horizontal
          double   cy = y + h * 0.5;
          double   sl = h * slider_slot_size;
-         draw_slot(vg, x, cy-(sl/2), w, sl, sl/3);
+         draw_slot(_vg, x, cy-(sl/2), w, sl, sl/3);
       }
       else
       {
          // vertical
          double   cx = x + w * 0.5;
          double   sl = w * slider_slot_size;
-         draw_slot(vg, cx-(sl/2), y, sl, h, sl/3);
+         draw_slot(_vg, cx-(sl/2), y, sl, h, sl/3);
       }
 
-      draw_slider_knob(vg, pos, b);
-      nvgRestore(vg);
+      draw_slider_knob(pos, b);
+      nvgRestore(_vg);
    }
 
-   void theme::draw_slider_knob(NVGcontext* vg, double pos, rect const& b)
+   void theme::draw_slider_knob(double pos, rect const& b) const
    {
       circle cp = slider_knob_position(pos, b);
       draw_knob(
-         vg, cp.cx, cp.cy, cp.radius,
+         _vg, cp.cx, cp.cy, cp.radius,
          slider_knob_fill_color, slider_knob_outline_color
       );
    }
 
-   circle theme::slider_knob_position(double pos, rect const& b)
+   circle theme::slider_knob_position(double pos, rect const& b) const
    {
       double   x = b.left;
       double   y = b.top;
@@ -179,21 +179,21 @@ namespace photon
       }
    }
 
-   void theme::load_fonts(NVGcontext* vg)
+   void theme::load_fonts() const
    {
-      if (nvgCreateFont(vg, "icons", "./assets/fonts/entypo.ttf") == -1)
+      if (nvgCreateFont(_vg, "icons", "./assets/fonts/entypo.ttf") == -1)
       {
          printf("Could not add font icons.\n");
           // $$$ throw $$;
       }
 
-      if (nvgCreateFont(vg, "sans", "./assets/fonts/Roboto-Regular.ttf") == -1)
+      if (nvgCreateFont(_vg, "sans", "./assets/fonts/Roboto-Regular.ttf") == -1)
       {
          printf("Could not add font italic.\n");
           // $$$ throw $$;
       }
 
-      if (nvgCreateFont(vg, "sans-bold", "./assets/fonts/Roboto-Bold.ttf") == -1)
+      if (nvgCreateFont(_vg, "sans-bold", "./assets/fonts/Roboto-Bold.ttf") == -1)
       {
          printf("Could not add font bold.\n");
           // $$$ throw $$;

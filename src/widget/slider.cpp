@@ -12,20 +12,20 @@
 
 namespace photon
 {
-   rect slider_widget::limits() const
+   rect slider_widget::limits(theme const& th) const
    {
       return { 16, 16, full_extent, full_extent };
    }
 
    void slider_widget::draw(layout_info const& l)
    {
-      l.theme()->draw_slider(l.context(), _pos, l.bounds);
+      l.theme().draw_slider(_pos, l.bounds);
    }
 
    widget* slider_widget::click(layout_info const& l, mouse_button btn)
    {
       point p = l.cursor_pos();
-      auto  cp = l.theme()->slider_knob_position(_pos, l.bounds);
+      auto  cp = l.theme().slider_knob_position(_pos, l.bounds);
 
       // If the mouse is inside the knob, record the offset from
       // the knob's center. We'll use this offset to compensate for
@@ -52,7 +52,7 @@ namespace photon
       double   y = l.bounds.top;
       double   w = l.bounds.width();
       double   h = l.bounds.height();
-      auto     cp = l.theme()->slider_knob_position(_pos, l.bounds);
+      auto     cp = l.theme().slider_knob_position(_pos, l.bounds);
 
       // See comment in the click function. We subtract the offset to
       // compensate for mouse tracking to avoid sudden knob movements.

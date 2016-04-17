@@ -18,6 +18,7 @@
 #include <photon/widget/widget.hpp>
 #include <photon/color.hpp>
 #include <photon/point.hpp>
+#include <photon/theme.hpp>
 
 #include <memory>
 
@@ -38,6 +39,7 @@ namespace photon
        , color const&   bkd_color
        , app&           app_
        , widget_ptr     subject
+       , theme_ptr      theme = theme_ptr{ new photon::theme{} }
       );
 
       ~window();
@@ -57,17 +59,19 @@ namespace photon
 
       NVGcontext*    context() const { return _context; }
       app&           app() const { return _app; }
+      theme const&   theme() const { return *_theme.get(); }
 
    private:
 
       color          _bkd_color;
-      app&           _app;
+      class app&     _app;
       widget_ptr     _subject;
       GLFWwindow*    _window;
       NVGcontext*    _context;
       rect           _current_bounds;
       bool           _mouse_down;
       mouse_button   _btn;
+      theme_ptr      _theme;
    };
 }
 

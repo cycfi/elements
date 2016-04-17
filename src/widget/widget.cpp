@@ -13,7 +13,7 @@ namespace photon
    // widget class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect widget::limits() const
+   rect widget::limits(theme const& th) const
    {
       return full_limits;
    }
@@ -27,7 +27,7 @@ namespace photon
    {
    }
 
-   void widget::layout(rect const& bounds)
+   void widget::layout(theme const& th, rect const& bounds)
    {
    }
 
@@ -64,61 +64,61 @@ namespace photon
    // proxy class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect proxy::limits() const
+   rect proxy::limits(theme const& th) const
    {
-      return _subject->limits();
+      return _subject->limits(th);
    }
 
    widget* proxy::hit_test(layout_info const& l, point const& p)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       return _subject->hit_test(l, p);
    }
 
    void proxy::draw(layout_info const& l)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       _subject->draw(l);
    }
 
-   void proxy::layout(rect const& bounds_)
+   void proxy::layout(theme const& th, rect const& bounds_)
    {
       rect bounds = bounds_;
-      subject_bounds(bounds);
-      _subject->layout(bounds);
+      subject_bounds(th, bounds);
+      _subject->layout(th, bounds);
    }
 
-   void proxy::subject_bounds(rect& b)
+   void proxy::subject_bounds(theme const& th, rect& b)
    {
    }
 
    widget* proxy::click(layout_info const& l, mouse_button btn)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       return _subject->click(l, btn);
    }
 
    void proxy::drag(layout_info const& l, mouse_button btn)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       _subject->drag(l, btn);
    }
 
    bool proxy::key(layout_info const& l, key_info const& k)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       return _subject->key(l, k);
    }
 
    bool proxy::cursor(layout_info const& l, point const& p)
    {
       l.widget = _subject.get();
-      subject_bounds(l.bounds);
+      subject_bounds(l.theme(), l.bounds);
       return _subject->cursor(l, p);
    }
 
@@ -148,7 +148,7 @@ namespace photon
    {
       if (!_elements.empty())
       {
-         hit_info info = hit_element(p);
+         hit_info info = hit_element(l.theme(), p);
          if (info.element)
          {
             layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
@@ -163,7 +163,7 @@ namespace photon
       auto w_bounds = window_bounds(l.window);
       for (std::size_t i = 0; i < _elements.size(); ++i)
       {
-         rect bounds = bounds_of(i);
+         rect bounds = bounds_of(l.theme(), i);
          if (intersects(bounds, w_bounds))
          {
             auto elem = _elements[i];
@@ -179,7 +179,7 @@ namespace photon
 
       if (!_elements.empty())
       {
-         hit_info info = hit_element(p);
+         hit_info info = hit_element(l.theme(), p);
 
          if (info.element && focus(focus_request::wants_focus))
          {
@@ -208,7 +208,7 @@ namespace photon
 
    void composite::drag(layout_info const& l, mouse_button btn)
    {
-      hit_info info = hit_element(l.cursor_pos());
+      hit_info info = hit_element(l.theme(), l.cursor_pos());
       if (info.element)
       {
          layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
@@ -220,7 +220,7 @@ namespace photon
    {
       if (_focus != -1)
       {
-         rect bounds = bounds_of(_focus);
+         rect bounds = bounds_of(l.theme(), _focus);
          widget* focus_ptr = _elements[_focus].get();
          layout_info elem_layout{ l.app, l.window, focus_ptr, &l, bounds };
          return focus_ptr->key(elem_layout, k);
@@ -233,7 +233,7 @@ namespace photon
    {
       if (!_elements.empty())
       {
-         hit_info info = hit_element(p);
+         hit_info info = hit_element(l.theme(), p);
          if (info.element && photon::intersects(info.bounds, window_bounds(l.window)))
          {
             layout_info elem_layout{ l.app, l.window, info.element, &l, info.bounds };
@@ -272,11 +272,11 @@ namespace photon
       return _elements.empty()? 0 : _elements[_focus].get();
    }
 
-   composite::hit_info composite::hit_element(point const& p) const
+   composite::hit_info composite::hit_element(theme const& th, point const& p) const
    {
       for (std::size_t i = 0; i < _elements.size(); ++i)
       {
-         rect bounds = bounds_of(i);
+         rect bounds = bounds_of(th, i);
          if (bounds.includes(p))
             return hit_info{ _elements[i].get(), bounds, int(i) };
       }

@@ -12,12 +12,12 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // size
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect size_widget::limits() const
+   rect size_widget::limits(theme const& th) const
    {
       return rect{ _size.x, _size.y, _size.x, _size.y };
    }
 
-   void size_widget::subject_bounds(rect& b)
+   void size_widget::subject_bounds(theme const& th, rect& b)
    {
       b.right = b.left + _size.x;
       b.bottom = b.top + _size.y;
@@ -26,13 +26,13 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // hsize
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect hsize_widget::limits() const
+   rect hsize_widget::limits(theme const& th) const
    {
-      rect e_limits = subject()->limits();
+      rect e_limits = subject()->limits(th);
       return rect{ _width, e_limits.top, _width, e_limits.bottom };
    }
 
-   void hsize_widget::subject_bounds(rect& b)
+   void hsize_widget::subject_bounds(theme const& th, rect& b)
    {
       b.right = b.left + _width;
    }
@@ -40,13 +40,13 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // vsize
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect vsize_widget::limits() const
+   rect vsize_widget::limits(theme const& th) const
    {
-      rect e_limits = subject()->limits();
+      rect e_limits = subject()->limits(th);
       return rect{ _height, e_limits.top, _height, e_limits.bottom };
    }
 
-   void vsize_widget::subject_bounds(rect& b)
+   void vsize_widget::subject_bounds(theme const& th, rect& b)
    {
       b.bottom = b.top + _height;
    }

@@ -18,7 +18,7 @@ namespace photon
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void halign_widget::prepare_subject(context const& ctx)
+   void halign_widget::prepare_subject(context& ctx)
    {
       rect     e_limits          = subject()->limits(ctx);
       double   elem_width        = e_limits.left;
@@ -40,7 +40,7 @@ namespace photon
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void valign_widget::prepare_subject(context const& ctx)
+   void valign_widget::prepare_subject(context& ctx)
    {
       rect     e_limits          = subject()->limits(ctx);
       double   elem_height       = e_limits.top;

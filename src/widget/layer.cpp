@@ -29,15 +29,14 @@ namespace photon
       bounds = ctx.bounds;
       for (std::size_t i = 0; i != elements().size(); ++i)
       {
-         rect ebounds = bounds_of(ctx, i);
-         elements()[i]->layout(context{ ctx, elements()[i].get(), ebounds });
+         elements()[i]->layout(context{ ctx, elements()[i].get(), bounds_of(ctx, i) });
       }
    }
 
    layer_widget::hit_info layer_widget::hit_element(context const& ctx, point const& p) const
    {
       // we test from the highest index (topmost element)
-      for (int i = elements().size()-1; i >= 0; --i)
+      for (int i = int(elements().size())-1; i >= 0; --i)
       {
          rect bounds = bounds_of(ctx, i);
          if (bounds.includes(p))

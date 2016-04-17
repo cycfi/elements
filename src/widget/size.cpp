@@ -17,7 +17,7 @@ namespace photon
       return rect{ _size.x, _size.y, _size.x, _size.y };
    }
 
-   void size_widget::prepare_subject(context const& ctx)
+   void size_widget::prepare_subject(context& ctx)
    {
       ctx.bounds.right = ctx.bounds.left + _size.x;
       ctx.bounds.bottom = ctx.bounds.top + _size.y;
@@ -32,7 +32,7 @@ namespace photon
       return rect{ _width, e_limits.top, _width, e_limits.bottom };
    }
 
-   void hsize_widget::prepare_subject(context const& ctx)
+   void hsize_widget::prepare_subject(context& ctx)
    {
       ctx.bounds.right = ctx.bounds.left + _width;
    }
@@ -46,7 +46,7 @@ namespace photon
       return rect{ _height, e_limits.top, _height, e_limits.bottom };
    }
 
-   void vsize_widget::prepare_subject(context const& ctx)
+   void vsize_widget::prepare_subject(context& ctx)
    {
       ctx.bounds.bottom = ctx.bounds.top + _height;
    }

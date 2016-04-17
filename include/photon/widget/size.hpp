@@ -5,7 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #if !defined(PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016)
-#define PHOTON_GUI_LIB_WIDGET_FIX_APRIL_14_2016
+#define PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016
 
 #include <photon/widget/widget.hpp>
 #include <memory>
@@ -27,7 +27,7 @@ namespace photon
       ~size_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context const& ctx);
+      virtual void   prepare_subject(context& ctx);
 
    private:
 
@@ -52,7 +52,7 @@ namespace photon
       ~hsize_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context const& ctx);
+      virtual void   prepare_subject(context& ctx);
 
    private:
 
@@ -77,7 +77,7 @@ namespace photon
       ~vsize_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context const& ctx);
+      virtual void   prepare_subject(context& ctx);
 
    private:
 

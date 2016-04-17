@@ -60,8 +60,7 @@ namespace photon
    // Proxies
    //
    // A widget that encapsulates another widget. The proxy delegates its methods
-   // to an enlosed widget. The proxy acts as a single atomic element instead
-   // of a composite.
+   // to an enlosed widget.
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class proxy : public widget {
 
@@ -77,7 +76,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual void            prepare_subject(context const& ctx);
+      virtual void            prepare_subject(context& ctx);
 
    // control
 

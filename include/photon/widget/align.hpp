@@ -27,7 +27,7 @@ namespace photon
       ~halign_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context const& ctx);
+      virtual void   prepare_subject(context& ctx);
 
    private:
 
@@ -52,7 +52,7 @@ namespace photon
       ~valign_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context const& ctx);
+      virtual void   prepare_subject(context& ctx);
 
    private:
 

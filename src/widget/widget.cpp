@@ -71,54 +71,55 @@ namespace photon
 
    widget* proxy::hit_test(context const& ctx, point const& p)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      return _subject->hit_test(ctx, p);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->hit_test(sctx, p);
    }
 
    void proxy::draw(context const& ctx)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      _subject->draw(ctx);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      _subject->draw(sctx);
    }
 
    void proxy::layout(context const& ctx)
    {
-      prepare_subject(ctx);
-      _subject->layout(ctx);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      _subject->layout(sctx);
    }
 
-   void proxy::prepare_subject(context const& ctx)
+   void proxy::prepare_subject(context& ctx)
    {
    }
 
    widget* proxy::click(context const& ctx, mouse_button btn)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      return _subject->click(ctx, btn);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->click(sctx, btn);
    }
 
    void proxy::drag(context const& ctx, mouse_button btn)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      _subject->drag(ctx, btn);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      _subject->drag(sctx, btn);
    }
 
    bool proxy::key(context const& ctx, key_info const& k)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      return _subject->key(ctx, k);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->key(sctx, k);
    }
 
    bool proxy::cursor(context const& ctx, point const& p)
    {
-      ctx.widget = _subject.get();
-      prepare_subject(ctx);
-      return _subject->cursor(ctx, p);
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->cursor(sctx, p);
    }
 
    bool proxy::focus(focus_request r)

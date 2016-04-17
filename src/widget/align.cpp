@@ -12,7 +12,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // halign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect halign_widget::limits(context const& ctx) const
+   rect halign_widget::limits(basic_context const& ctx) const
    {
       rect e_limits = subject()->limits(ctx);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
@@ -34,7 +34,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // valign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect valign_widget::limits(context const& ctx) const
+   rect valign_widget::limits(basic_context const& ctx) const
    {
       rect e_limits = subject()->limits(ctx);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };

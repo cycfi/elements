@@ -22,7 +22,7 @@ namespace photon
       layer_widget() {}
       ~layer_widget() {}
 
-      virtual rect         limits(context const& ctx) const;
+      virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
       virtual hit_info     hit_element(context const& ctx, point const& p) const;
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;

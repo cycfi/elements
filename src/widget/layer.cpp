@@ -8,7 +8,7 @@
 
 namespace photon
 {
-   rect layer_widget::limits(context const& ctx) const
+   rect layer_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, full_extent };
       for (auto const& elem : elements())

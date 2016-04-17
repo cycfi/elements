@@ -13,7 +13,7 @@ namespace photon
    // widget class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect widget::limits(context const& ctx) const
+   rect widget::limits(basic_context const& ctx) const
    {
       return full_limits;
    }
@@ -64,7 +64,7 @@ namespace photon
    // proxy class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect proxy::limits(context const& ctx) const
+   rect proxy::limits(basic_context const& ctx) const
    {
       return _subject->limits(ctx);
    }

@@ -27,7 +27,7 @@ namespace photon
 
       ~margin_widget() {}
 
-      virtual rect   limits(context const& ctx) const;
+      virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context const& ctx);
 
    private:
@@ -39,7 +39,7 @@ namespace photon
    // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Rect>
-   inline rect margin_widget<Rect>::limits(context const& ctx) const
+   inline rect margin_widget<Rect>::limits(basic_context const& ctx) const
    {
       auto r = subject()->limits(ctx);
 

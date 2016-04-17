@@ -38,7 +38,7 @@ namespace photon
 
    // image
 
-      virtual rect            limits(context const& ctx) const;
+      virtual rect            limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
@@ -73,7 +73,7 @@ namespace photon
 
    // image
 
-      virtual rect            limits(context const& ctx) const;
+      virtual rect            limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
@@ -112,7 +112,7 @@ namespace photon
 
    // image
 
-      virtual rect            limits(context const& ctx) const = 0;
+      virtual rect            limits(basic_context const& ctx) const = 0;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;

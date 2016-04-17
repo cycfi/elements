@@ -22,7 +22,7 @@ namespace photon
       vtile_widget() {}
       ~vtile_widget() {}
 
-      virtual rect         limits(context const& ctx) const;
+      virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
 
@@ -52,7 +52,7 @@ namespace photon
       htile_widget() {}
       ~htile_widget() {}
 
-      virtual rect         limits(context const& ctx) const;
+      virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
 

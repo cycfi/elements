@@ -20,7 +20,7 @@ namespace photon
 
                         slider_widget() : _pos(0.5) {}
 
-      virtual rect      limits(theme const& th) const;
+      virtual rect      limits(context const& ctx) const;
       virtual void      draw(context const& ctx);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);

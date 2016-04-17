@@ -38,10 +38,10 @@ namespace photon
 
    // image
 
-      virtual rect            limits(theme const& th) const;
+      virtual rect            limits(context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
-      virtual void            layout(theme const& th, rect const& bounds);
+      virtual void            layout(context const& ctx);
 
    // control
 
@@ -73,11 +73,11 @@ namespace photon
 
    // image
 
-      virtual rect            limits(theme const& th) const;
+      virtual rect            limits(context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
-      virtual void            layout(theme const& th, rect const& bounds);
-      virtual void            subject_bounds(theme const& th, rect& b);
+      virtual void            layout(context const& ctx);
+      virtual void            prepare_subject(context const& ctx);
 
    // control
 
@@ -112,10 +112,10 @@ namespace photon
 
    // image
 
-      virtual rect            limits(theme const& th) const = 0;
+      virtual rect            limits(context const& ctx) const = 0;
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
-      virtual void            layout(theme const& th, rect const& bounds) = 0;
+      virtual void            layout(context const& ctx) = 0;
 
    // control
 
@@ -139,8 +139,8 @@ namespace photon
 
       composite_type&         elements() { return _elements; }
       composite_type const&   elements() const { return _elements; }
-      virtual hit_info        hit_element(theme const& th, point const& p) const;
-      virtual rect            bounds_of(theme const& th, std::size_t index) const = 0;
+      virtual hit_info        hit_element(context const& ctx, point const& p) const;
+      virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
 
    private:
 

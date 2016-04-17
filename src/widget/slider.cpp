@@ -12,7 +12,7 @@
 
 namespace photon
 {
-   rect slider_widget::limits(theme const& th) const
+   rect slider_widget::limits(context const& ctx) const
    {
       return { 16, 16, full_extent, full_extent };
    }

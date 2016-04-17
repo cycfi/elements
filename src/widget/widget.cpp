@@ -13,7 +13,7 @@ namespace photon
    // widget class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect widget::limits(theme const& th) const
+   rect widget::limits(context const& ctx) const
    {
       return full_limits;
    }
@@ -27,7 +27,7 @@ namespace photon
    {
    }
 
-   void widget::layout(theme const& th, rect const& bounds)
+   void widget::layout(context const& ctx)
    {
    }
 
@@ -64,61 +64,60 @@ namespace photon
    // proxy class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-   rect proxy::limits(theme const& th) const
+   rect proxy::limits(context const& ctx) const
    {
-      return _subject->limits(th);
+      return _subject->limits(ctx);
    }
 
    widget* proxy::hit_test(context const& ctx, point const& p)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       return _subject->hit_test(ctx, p);
    }
 
    void proxy::draw(context const& ctx)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       _subject->draw(ctx);
    }
 
-   void proxy::layout(theme const& th, rect const& bounds_)
+   void proxy::layout(context const& ctx)
    {
-      rect bounds = bounds_;
-      subject_bounds(th, bounds);
-      _subject->layout(th, bounds);
+      prepare_subject(ctx);
+      _subject->layout(ctx);
    }
 
-   void proxy::subject_bounds(theme const& th, rect& b)
+   void proxy::prepare_subject(context const& ctx)
    {
    }
 
    widget* proxy::click(context const& ctx, mouse_button btn)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       return _subject->click(ctx, btn);
    }
 
    void proxy::drag(context const& ctx, mouse_button btn)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       _subject->drag(ctx, btn);
    }
 
    bool proxy::key(context const& ctx, key_info const& k)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       return _subject->key(ctx, k);
    }
 
    bool proxy::cursor(context const& ctx, point const& p)
    {
       ctx.widget = _subject.get();
-      subject_bounds(ctx.theme(), ctx.bounds);
+      prepare_subject(ctx);
       return _subject->cursor(ctx, p);
    }
 
@@ -148,11 +147,11 @@ namespace photon
    {
       if (!_elements.empty())
       {
-         hit_info info = hit_element(ctx.theme(), p);
+         hit_info info = hit_element(ctx, p);
          if (info.element)
          {
-            context elem_layout{ ctx.app, ctx.window, info.element, &ctx, info.bounds };
-            return info.element->hit_test(elem_layout, p);
+            context ectx{ ctx, info.element, info.bounds };
+            return info.element->hit_test(ectx, p);
          }
       }
       return 0;
@@ -163,12 +162,12 @@ namespace photon
       auto w_bounds = window_bounds(ctx.window);
       for (std::size_t i = 0; i < _elements.size(); ++i)
       {
-         rect bounds = bounds_of(ctx.theme(), i);
+         rect bounds = bounds_of(ctx, i);
          if (intersects(bounds, w_bounds))
          {
             auto elem = _elements[i];
-            context elem_layout{ ctx.app, ctx.window, elem.get(), &ctx, bounds };
-            elem->draw(elem_layout);
+            context ectx{ ctx, elem.get(), bounds };
+            elem->draw(ectx);
          }
       }
    }
@@ -179,7 +178,7 @@ namespace photon
 
       if (!_elements.empty())
       {
-         hit_info info = hit_element(ctx.theme(), p);
+         hit_info info = hit_element(ctx, p);
 
          if (info.element && focus(focus_request::wants_focus))
          {
@@ -198,8 +197,8 @@ namespace photon
 
          if (info.element)
          {
-            context elem_layout{ ctx.app, ctx.window, info.element, &ctx, info.bounds };
-            if (info.element->click(elem_layout, btn))
+            context ectx{ ctx, info.element, info.bounds };
+            if (info.element->click(ectx, btn))
                return info.element;
          }
       }
@@ -208,11 +207,11 @@ namespace photon
 
    void composite::drag(context const& ctx, mouse_button btn)
    {
-      hit_info info = hit_element(ctx.theme(), ctx.cursor_pos());
+      hit_info info = hit_element(ctx, ctx.cursor_pos());
       if (info.element)
       {
-         context elem_layout{ ctx.app, ctx.window, info.element, &ctx, info.bounds };
-         info.element->drag(elem_layout, btn);
+         context ectx{ ctx, info.element, info.bounds };
+         info.element->drag(ectx, btn);
       }
    }
 
@@ -220,10 +219,10 @@ namespace photon
    {
       if (_focus != -1)
       {
-         rect bounds = bounds_of(ctx.theme(), _focus);
+         rect bounds = bounds_of(ctx, _focus);
          widget* focus_ptr = _elements[_focus].get();
-         context elem_layout{ ctx.app, ctx.window, focus_ptr, &ctx, bounds };
-         return focus_ptr->key(elem_layout, k);
+         context ectx{ ctx, focus_ptr, bounds };
+         return focus_ptr->key(ectx, k);
       };
 
       return false;
@@ -233,11 +232,11 @@ namespace photon
    {
       if (!_elements.empty())
       {
-         hit_info info = hit_element(ctx.theme(), p);
+         hit_info info = hit_element(ctx, p);
          if (info.element && photon::intersects(info.bounds, window_bounds(ctx.window)))
          {
-            context elem_layout{ ctx.app, ctx.window, info.element, &ctx, info.bounds };
-            return info.element->cursor(elem_layout, p);
+            context ectx{ ctx, info.element, info.bounds };
+            return info.element->cursor(ectx, p);
          }
       }
       return false;
@@ -272,11 +271,11 @@ namespace photon
       return _elements.empty()? 0 : _elements[_focus].get();
    }
 
-   composite::hit_info composite::hit_element(theme const& th, point const& p) const
+   composite::hit_info composite::hit_element(context const& ctx, point const& p) const
    {
       for (std::size_t i = 0; i < _elements.size(); ++i)
       {
-         rect bounds = bounds_of(th, i);
+         rect bounds = bounds_of(ctx, i);
          if (bounds.includes(p))
             return hit_info{ _elements[i].get(), bounds, int(i) };
       }

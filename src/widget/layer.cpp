@@ -8,12 +8,12 @@
 
 namespace photon
 {
-   rect layer_widget::limits(theme const& th) const
+   rect layer_widget::limits(context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, full_extent };
       for (auto const& elem : elements())
       {
-         rect  el = elem->limits(th);
+         rect  el = elem->limits(ctx);
 
          min_limit(limits.left, el.left);
          min_limit(limits.top, el.top);
@@ -24,19 +24,22 @@ namespace photon
       return limits;
    }
 
-   void layer_widget::layout(theme const& th, rect const& b)
+   void layer_widget::layout(context const& ctx)
    {
-      bounds = b;
+      bounds = ctx.bounds;
       for (std::size_t i = 0; i != elements().size(); ++i)
-         elements()[i]->layout(th, bounds_of(th, i));
+      {
+         rect ebounds = bounds_of(ctx, i);
+         elements()[i]->layout(context{ ctx, elements()[i].get(), ebounds });
+      }
    }
 
-   layer_widget::hit_info layer_widget::hit_element(theme const& th, point const& p) const
+   layer_widget::hit_info layer_widget::hit_element(context const& ctx, point const& p) const
    {
       // we test from the highest index (topmost element)
       for (int i = elements().size()-1; i >= 0; --i)
       {
-         rect bounds = bounds_of(th, i);
+         rect bounds = bounds_of(ctx, i);
          if (bounds.includes(p))
             return hit_info{ elements()[i].get(), bounds, int(i) };
       }
@@ -44,11 +47,11 @@ namespace photon
    }
 
 
-   rect layer_widget::bounds_of(theme const& th, std::size_t index) const
+   rect layer_widget::bounds_of(context const& ctx, std::size_t index) const
    {
-      double   width = bounds.width();
-      double   height = bounds.height();
-      rect     limits = elements()[index]->limits(th);
+      double   width = ctx.bounds.width();
+      double   height = ctx.bounds.height();
+      rect     limits = elements()[index]->limits(ctx);
 
       min_limit(width, limits.left);
       max_limit(width, limits.right);

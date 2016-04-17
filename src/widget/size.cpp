@@ -12,42 +12,42 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // size
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect size_widget::limits(theme const& th) const
+   rect size_widget::limits(context const& ctx) const
    {
       return rect{ _size.x, _size.y, _size.x, _size.y };
    }
 
-   void size_widget::subject_bounds(theme const& th, rect& b)
+   void size_widget::prepare_subject(context const& ctx)
    {
-      b.right = b.left + _size.x;
-      b.bottom = b.top + _size.y;
+      ctx.bounds.right = ctx.bounds.left + _size.x;
+      ctx.bounds.bottom = ctx.bounds.top + _size.y;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // hsize
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect hsize_widget::limits(theme const& th) const
+   rect hsize_widget::limits(context const& ctx) const
    {
-      rect e_limits = subject()->limits(th);
+      rect e_limits = subject()->limits(ctx);
       return rect{ _width, e_limits.top, _width, e_limits.bottom };
    }
 
-   void hsize_widget::subject_bounds(theme const& th, rect& b)
+   void hsize_widget::prepare_subject(context const& ctx)
    {
-      b.right = b.left + _width;
+      ctx.bounds.right = ctx.bounds.left + _width;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // vsize
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect vsize_widget::limits(theme const& th) const
+   rect vsize_widget::limits(context const& ctx) const
    {
-      rect e_limits = subject()->limits(th);
+      rect e_limits = subject()->limits(ctx);
       return rect{ _height, e_limits.top, _height, e_limits.bottom };
    }
 
-   void vsize_widget::subject_bounds(theme const& th, rect& b)
+   void vsize_widget::prepare_subject(context const& ctx)
    {
-      b.bottom = b.top + _height;
+      ctx.bounds.bottom = ctx.bounds.top + _height;
    }
 }

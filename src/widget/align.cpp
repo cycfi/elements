@@ -12,44 +12,44 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // halign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect halign_widget::limits(theme const& th) const
+   rect halign_widget::limits(context const& ctx) const
    {
-      rect e_limits = subject()->limits(th);
+      rect e_limits = subject()->limits(ctx);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void halign_widget::subject_bounds(theme const& th, rect& b)
+   void halign_widget::prepare_subject(context const& ctx)
    {
-      rect     e_limits          = subject()->limits(th);
+      rect     e_limits          = subject()->limits(ctx);
       double   elem_width        = e_limits.left;
-      double   available_width   = b.width();
+      double   available_width   = ctx.bounds.width();
 
       if (available_width > elem_width)
          elem_width = std::min(available_width, e_limits.right);
 
-      b.left += (available_width - elem_width) * _align;
-      b.width(elem_width);
+      ctx.bounds.left += (available_width - elem_width) * _align;
+      ctx.bounds.width(elem_width);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // valign
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect valign_widget::limits(theme const& th) const
+   rect valign_widget::limits(context const& ctx) const
    {
-      rect e_limits = subject()->limits(th);
+      rect e_limits = subject()->limits(ctx);
       return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
    }
 
-   void valign_widget::subject_bounds(theme const& th, rect& b)
+   void valign_widget::prepare_subject(context const& ctx)
    {
-      rect     e_limits          = subject()->limits(th);
+      rect     e_limits          = subject()->limits(ctx);
       double   elem_height       = e_limits.top;
-      double   available_height  = b.height();
+      double   available_height  = ctx.bounds.height();
 
       if (available_height > elem_height)
          elem_height = std::min(available_height, e_limits.right);
 
-      b.top += (available_height - elem_height) * _align;
-      b.height(elem_height);
+      ctx.bounds.top += (available_height - elem_height) * _align;
+      ctx.bounds.height(elem_height);
    }
 }

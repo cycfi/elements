@@ -90,7 +90,9 @@ namespace photon
       glfwSwapInterval(0);
       glfwSetTime(0);
 
-      rect limits = _subject->limits(*theme.get());
+      rect bounds = { 0, 0, size.x, size.y };
+      context ctx{ *this, _subject.get(), bounds };
+      rect limits = _subject->limits(ctx);
       glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
 
       _theme->canvas(_context);
@@ -146,14 +148,15 @@ namespace photon
          rect subj_bounds = { 0, 0, double(w_width), double(w_height) };
 
          // layout the subject only if the window bounds changes
+         context ctx{ *this, _subject.get(), subj_bounds };
          if (subj_bounds != _current_bounds)
          {
             _current_bounds = subj_bounds;
-            _subject->layout(*_theme.get(), subj_bounds);
+            _subject->layout(ctx);
          }
 
          // draw the subject
-         _subject->draw(context{ _app, *this, 0, 0, subj_bounds });
+         _subject->draw(ctx);
       }
       nvgEndFrame(_context);
       glfwSwapBuffers(_window);
@@ -171,8 +174,8 @@ namespace photon
       if (_mouse_down)
       {
          rect subj_bounds = _current_bounds;
-         context l_info { _app, *this, 0, 0, subj_bounds };
-         _subject->click(l_info, btn);
+         context ctx { *this, _subject.get(), subj_bounds };
+         _subject->click(ctx, btn);
       }
    }
 
@@ -181,8 +184,8 @@ namespace photon
       if (_mouse_down)
       {
          rect subj_bounds = _current_bounds;
-         context l_info { _app, *this, 0, 0, subj_bounds };
-         _subject->drag(l_info, _btn);
+         context ctx { *this, _subject.get(), subj_bounds };
+         _subject->drag(ctx, _btn);
       }
    }
 

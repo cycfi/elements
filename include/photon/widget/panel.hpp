@@ -25,6 +25,21 @@ namespace photon
    {
       return widget_ptr{ new panel_widget{} };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Frames
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class frame_widget : public widget
+   {
+   public:
+
+      virtual void draw(context const& ctx);
+   };
+
+   inline widget_ptr frame()
+   {
+      return widget_ptr{ new frame_widget{} };
+   }
 }
 
 #endif

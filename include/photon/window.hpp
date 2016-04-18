@@ -69,6 +69,7 @@ namespace photon
       GLFWwindow*    _window;
       NVGcontext*    _context;
       rect           _current_bounds;
+      rect           _current_limits;
       bool           _mouse_down;
       mouse_button   _btn;
       theme_ptr      _theme;

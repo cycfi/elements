@@ -9,6 +9,7 @@
 
 #include <photon/widget/widget.hpp>
 #include <memory>
+#include <algorithm>
 
 namespace photon
 {
@@ -37,6 +38,7 @@ namespace photon
    {
       auto p = new layer_widget{};
       std::vector<widget_ptr> v = { elements... };
+      std::reverse(v.begin(), v.end());
       std::swap(v, p->elements());
       return widget_ptr{ p };
    }

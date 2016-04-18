@@ -90,10 +90,6 @@ namespace photon
       glfwSwapInterval(0);
       glfwSetTime(0);
 
-      basic_context ctx{ *this };
-      rect limits = _subject->limits(ctx);
-      glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
-
       _theme->canvas(_context);
       _theme->load_fonts();
 
@@ -144,6 +140,25 @@ namespace photon
 
       nvgBeginFrame(_context, w_width, w_height, px_ratio);
       {
+         basic_context bctx{ *this };
+         rect limits = _subject->limits(bctx);
+         if (limits != _current_limits)
+         {
+            _current_limits = limits;
+            glfwSetWindowSizeLimits(_window, limits.left, limits.top, limits.right, limits.bottom);
+
+            int w = w_width;
+            int h = w_height;
+            limit(w, limits.left, limits.right);
+            limit(h, limits.top, limits.bottom);
+
+            if ((w_width != w) || (w_height != h))
+            {
+               glfwSetWindowSize(_window, w, h);
+               return; // return early to refresh/redraw window
+            }
+         }
+
          rect subj_bounds = { 0, 0, double(w_width), double(w_height) };
 
          // layout the subject only if the window bounds changes

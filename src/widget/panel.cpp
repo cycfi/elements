@@ -16,4 +16,9 @@ namespace photon
    {
       ctx.theme().draw_panel(ctx.bounds);
    }
+
+   void frame_widget::draw(context const& ctx)
+   {
+      ctx.theme().draw_frame(ctx.bounds);
+   }
 }

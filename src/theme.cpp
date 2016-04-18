@@ -25,14 +25,13 @@ namespace photon
       double   y = b.top;
       double   w = b.width();
       double   h = b.height();
-      color    c = panel_color;
       double   r = panel_corner_radius;
       rect     sh = panel_shadow_offset;
 
       // Round Rectangle
       nvgBeginPath(_vg);
       nvgRoundedRect(_vg, x, y, w, h, r);
-      nvgFillColor(_vg, nvgRGBA(c));
+      nvgFillColor(_vg, nvgRGBA(panel_color));
       nvgFill(_vg);
 
       // Drop shadow
@@ -49,6 +48,22 @@ namespace photon
 
       nvgFillPaint(_vg, shadow_paint);
       nvgFill(_vg);
+   }
+
+   void theme::draw_frame(rect const& b) const
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+      double   r = frame_corner_radius;
+
+      // Round Rectangle
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x, y, w, h, r);
+      nvgStrokeColor(_vg, nvgRGBA(frame_color));
+      nvgStrokeWidth(_vg, frame_stroke_width);
+      nvgStroke(_vg);
    }
 
    namespace
@@ -177,6 +192,94 @@ namespace photon
 
          return { cx, y+(pos*h), kr };
       }
+   }
+
+   namespace
+   {
+      void draw_text(
+         NVGcontext* vg, rect const& b, char const* text
+       , char const* font, double font_size, color const& color
+      )
+      {
+         float x = b.left;
+         float y = b.top;
+         float h = b.height();
+         float cy = y+(h/2);
+         float sh = h/16;
+
+         nvgFontSize(vg, font_size);
+         nvgFontFace(vg, font);
+         nvgTextAlign(vg, NVG_ALIGN_MIDDLE);
+
+         // Shadow
+         nvgFontBlur(vg, 2);
+         nvgFillColor(vg, ::nvgRGBA(0, 0, 0, 128));
+         nvgText(vg, x, cy+sh, text, 0);
+
+         // Text
+         nvgFontBlur(vg, 0);
+         nvgFillColor(vg, nvgRGBA(color));
+         nvgText(vg, x, cy, text, 0);
+      }
+
+      point measure_text(
+         NVGcontext* vg, char const* text
+       , char const* font, double font_size
+      )
+      {
+         nvgFontSize(vg, font_size);
+         nvgFontFace(vg, font);
+
+         float w = nvgTextBounds(vg, 0, 0, text, 0, 0);
+         float h = font_size;
+         return { w, h };
+      }
+
+      void draw_text_box(
+         NVGcontext* vg, rect const& b, char const* text
+       , char const* font, double font_size, color const& color
+      )
+      {
+         float x = b.left;
+         float y = b.top;
+         float w = b.width();
+         float h = b.height();
+
+         nvgSave(vg);
+         nvgScissor(vg, x, y, w, h);
+
+         nvgFontSize(vg, font_size);
+         nvgFontFace(vg, font);
+         nvgFillColor(vg, nvgRGBA(color));
+
+         nvgTextBox(vg, x, y+font_size, w, text, 0);
+         nvgRestore(vg);
+      }
+   }
+
+   void theme::draw_label(rect const& b, char const* text) const
+   {
+      draw_text(_vg, b, text, label_font, label_font_size, label_color);
+   }
+
+   point theme::measure_label(char const* text) const
+   {
+      return measure_text(_vg, text, label_font, label_font_size);
+   }
+
+   void theme::draw_heading(rect const& b, char const* text) const
+   {
+      draw_text(_vg, b, text, heading_font, heading_font_size, heading_color);
+   }
+
+   point theme::measure_heading(char const* text) const
+   {
+      return measure_text(_vg, text, heading_font, heading_font_size);
+   }
+
+   void theme::draw_text_box(rect const& b, char const* text) const
+   {
+      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_color);
    }
 
    void theme::load_fonts() const

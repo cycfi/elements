@@ -35,9 +35,9 @@ int main()
 
          //main_widget = rows;
       }
-      
-            {
-         auto velem = left_margin(
+
+         {
+            auto velem = left_margin(
             { 20 },
             vsize(64, panel())
          );

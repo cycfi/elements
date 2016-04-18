@@ -24,6 +24,7 @@ namespace photon
          max_limit(limits.right, el.right);
       }
 
+      min_limit(limits.right, limits.left);
       return limits;
    }
 
@@ -79,6 +80,7 @@ namespace photon
          max_limit(limits.bottom, el.bottom);
       }
 
+      min_limit(limits.bottom, limits.top);
       return limits;
    }
 

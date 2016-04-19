@@ -8,6 +8,7 @@
 #include <photon/widget/slider.hpp>
 #include <photon/widget/layer.hpp>
 #include <photon/widget/text.hpp>
+#include <photon/widget/icon.hpp>
 
 int main()
 {
@@ -138,7 +139,16 @@ int main()
             )
          );
 
-         main_widget = txbx;
+         //main_widget = txbx;
+      }
+      
+      {
+         auto icn = margin(
+            { 20, 20, 20, 20 },
+            icon<0x1F50D, 300>()
+         );
+         
+         main_widget = icn;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

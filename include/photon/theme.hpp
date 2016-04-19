@@ -71,6 +71,12 @@ namespace photon
       virtual void      draw_heading(rect const& b, char const* text) const;
       virtual point     measure_heading(char const* text) const;
 
+      color             icon_color                 = { 220, 220, 220, 160 };
+      char const*       icon_font                  = "icons";
+
+      virtual void      draw_icon(rect const& b, uint32_t code, int size) const;
+      virtual point     measure_icon(uint32_t code, int size) const;
+
       color             text_box_color             = { 220, 220, 220, 160 };
       char const*       text_box_font              = "sans";
       double            text_box_font_size         = 18.0;

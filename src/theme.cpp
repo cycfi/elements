@@ -42,6 +42,12 @@ namespace photon
       return str;
    }
 
+   // Returns true if col.rgba is 0.0f, 0.0f, 0.0f, 0.0f, false otherwise
+   inline bool is_black(NVGcolor col)
+   {
+      return (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f && col.a == 0.0f);
+   }
+
    void theme::draw_panel(rect const& b) const
    {
       double   x = b.left;
@@ -315,6 +321,37 @@ namespace photon
    void theme::draw_text_box(rect const& b, char const* text) const
    {
       photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_color);
+   }
+
+   void theme::draw_button(rect const& b, color const& button_color) const
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+      NVGcolor col = nvgRGBA(button_color);
+      bool     black = is_black(col);
+
+      NVGpaint bg =
+         nvgLinearGradient(
+            _vg, x, y, x, y+h,
+            ::nvgRGBA(255, 255, 255, black ? 16 : 32),
+            ::nvgRGBA(0, 0, 0, black ? 16 : 32));
+
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x+1, y+1, w-2, h-2, button_corner_radius-1);
+      if (!black)
+      {
+         nvgFillColor(_vg, col);
+         nvgFill(_vg);
+      }
+      nvgFillPaint(_vg, bg);
+      nvgFill(_vg);
+
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x+0.5, y+0.5, w-1, h-1, button_corner_radius-0.5);
+      nvgStrokeColor(_vg, ::nvgRGBA(0, 0, 0, 48));
+      nvgStroke(_vg);
    }
 
    void theme::load_fonts() const

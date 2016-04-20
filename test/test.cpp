@@ -70,7 +70,7 @@ int main()
             )
          );
 
-         //main_widget = sl;
+         main_widget = sl;
       }
 
       {
@@ -120,14 +120,14 @@ int main()
             "We can no longer afford to live with stagnation. Suffering is born "
             "in the gap where stardust has been excluded. You must take a stand "
             "against discontinuity.\n\n"
-          
+
             "Without complexity, one cannot dream. Stagnation is the antithesis of "
             "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
             "Yes, it is possible to eliminate the things that can destroy us, but not "
             "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
             "You may be ruled by desire without realizing it. Do not let it eliminate "
             "the growth of your journey.\n\n"
-          
+
             "--New-Age Bullshit Generator"
             ;
 
@@ -141,14 +141,21 @@ int main()
 
          //main_widget = txbx;
       }
-      
+
       {
          auto icn = margin(
             { 20, 20, 20, 20 },
-            icon<0x1F50D, 300>()
+            htile(
+               icon<0x1F50D, 48>()
+             , icon<0x2716, 48>()
+             , icon<0xE75E, 48>()
+             , icon<0x2713, 48>()
+             , icon<0xE740, 48>()
+             , icon<0xE729, 48>()
+            )
          );
-         
-         main_widget = icn;
+
+         //main_widget = icn;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

@@ -77,4 +77,9 @@ namespace photon
       limit(_pos, 0.0, 1.0);
       ctx.window.draw();
    }
+
+   bool slider_widget::is_control() const
+   {
+      return true;
+   }
 }

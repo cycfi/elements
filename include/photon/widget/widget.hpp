@@ -49,8 +49,10 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            cursor(context const& ctx, point const& p);
+
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual bool            is_control() const;
    };
 
    using widget_ptr = std::shared_ptr<widget>;
@@ -84,8 +86,10 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            cursor(context const& ctx, point const& p);
+
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual bool            is_control() const;
 
    // proxy
 
@@ -122,8 +126,10 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            cursor(context const& ctx, point const& p);
+
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual bool            is_control() const;
 
    // composite
 

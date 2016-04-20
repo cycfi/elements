@@ -60,6 +60,11 @@ namespace photon
       return this;
    }
 
+   bool widget::is_control() const
+   {
+      return false;
+   }
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // proxy class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +135,11 @@ namespace photon
    widget const* proxy::focus() const
    {
       return _subject->focus();
+   }
+
+   bool proxy::is_control() const
+   {
+      return _subject->is_control();
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,10 +286,22 @@ namespace photon
    {
       for (std::size_t i = 0; i < _elements.size(); ++i)
       {
-         rect bounds = bounds_of(ctx, i);
-         if (bounds.includes(p))
-            return hit_info{ _elements[i].get(), bounds, int(i) };
+         widget_ptr e = elements()[i];
+         if (e->is_control())
+         {
+            rect bounds = bounds_of(ctx, i);
+            if (bounds.includes(p))
+               return hit_info{ e.get(), bounds, int(i) };
+         }
       }
       return hit_info{ 0, rect{}, -1 };
+   }
+
+   bool composite::is_control() const
+   {
+      for (auto const& e : _elements)
+         if (e->is_control())
+            return true;
+      return false;
    }
 }

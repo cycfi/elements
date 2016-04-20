@@ -84,6 +84,13 @@ namespace photon
       virtual void      draw_text_box(rect const& b, char const* text) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
+      // Buttons
+
+      double            button_corner_radius        = 4.0;
+
+      virtual void      draw_button(rect const& b, color const& button_color) const;
+
+      /////////////////////////////////////////////////////////////////////////////////////////////
       // Fonts
 
       char const*       icons       = "icons";

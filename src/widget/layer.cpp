@@ -38,9 +38,13 @@ namespace photon
       // we test from the highest index (topmost element)
       for (int i = int(elements().size())-1; i >= 0; --i)
       {
-         rect bounds = bounds_of(ctx, i);
-         if (bounds.includes(p))
-            return hit_info{ elements()[i].get(), bounds, int(i) };
+         widget_ptr e = elements()[i];
+         if (e->is_control())
+         {
+            rect bounds = bounds_of(ctx, i);
+            if (bounds.includes(p))
+               return hit_info{ e.get(), bounds, int(i) };
+         }
       }
       return hit_info{ 0, rect{}, -1 };
    }

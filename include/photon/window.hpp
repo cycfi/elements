@@ -47,32 +47,31 @@ namespace photon
       window(window const&) = delete;
       window& operator=(window const&) = delete;
 
-      point          size() const;
-      void           size(point const& s);
-      point          cursor_pos() const;
+      point             size() const;
+      void              size(point const& s);
+      point             cursor_pos() const;
 
-      virtual void   draw();
-      virtual void   key(key_info const& k);
-      virtual void   click(bool down, mouse_button btn);
-      virtual void   cursor(point const& p);
-      virtual void   close();
+      virtual void      draw();
+      virtual void      key(key_info const& k);
+      virtual void      click(mouse_button btn);
+      virtual void      cursor(point const& p);
+      virtual void      close();
 
-      NVGcontext*    canvas() const { return _context; }
-      app&           app() const { return _app; }
-      theme const&   theme() const { return *_theme.get(); }
+      NVGcontext*       canvas() const { return _context; }
+      app&              app() const { return _app; }
+      theme const&      theme() const { return *_theme.get(); }
 
    private:
 
-      color          _bkd_color;
-      class app&     _app;
-      widget_ptr     _subject;
-      GLFWwindow*    _window;
-      NVGcontext*    _context;
-      rect           _current_bounds;
-      rect           _current_limits;
-      bool           _mouse_down;
-      mouse_button   _btn;
-      theme_ptr      _theme;
+      color             _bkd_color;
+      class app&        _app;
+      widget_ptr        _subject;
+      GLFWwindow*       _window;
+      NVGcontext*       _context;
+      rect              _current_bounds;
+      rect              _current_limits;
+      mouse_button      _btn;
+      theme_ptr         _theme;
    };
 }
 

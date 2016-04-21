@@ -25,25 +25,26 @@ namespace photon
 
    void mouse_button(GLFWwindow* window_ptr, int button, int action, int mods)
    {
-      enum mouse_button btn;
+      struct mouse_button btn;
+      btn.is_pressed = (action == GLFW_PRESS);
       switch (mods)
       {
          default:
          case GLFW_MOUSE_BUTTON_LEFT:
-            btn = mouse_button::left;
+            btn.state = mouse_button::left;
             break;
 
          case GLFW_MOUSE_BUTTON_MIDDLE:
-            btn = mouse_button::middle;
+            btn.state = mouse_button::middle;
             break;
 
          case GLFW_MOUSE_BUTTON_RIGHT:
-            btn = mouse_button::right;
+            btn.state = mouse_button::right;
             break;
       };
 
       auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
-      wp->click(action == GLFW_PRESS, btn);
+      wp->click(btn);
    }
 
    void cursor_position(GLFWwindow* window_ptr, double xpos, double ypos)
@@ -63,7 +64,6 @@ namespace photon
     : _bkd_color(bkd_color)
     , _app(app_)
     , _subject(subject)
-    , _mouse_down(false)
     , _theme(theme)
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
@@ -180,21 +180,16 @@ namespace photon
    {
    }
 
-   void window::click(bool down, enum mouse_button btn)
+   void window::click(struct mouse_button btn)
    {
       _btn = btn;
-      _mouse_down = down;
-
-      if (_mouse_down)
-      {
-         context ctx { *this, _subject.get(), _current_bounds };
-         _subject->click(ctx, btn);
-      }
+      context ctx { *this, _subject.get(), _current_bounds };
+      _subject->click(ctx, btn);
    }
 
    void window::cursor(point const& p)
    {
-      if (_mouse_down)
+      if (_btn.is_pressed)
       {
          context ctx { *this, _subject.get(), _current_bounds };
          _subject->drag(ctx, _btn);

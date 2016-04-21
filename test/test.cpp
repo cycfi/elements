@@ -9,6 +9,7 @@
 #include <photon/widget/layer.hpp>
 #include <photon/widget/text.hpp>
 #include <photon/widget/icon.hpp>
+#include <photon/widget/button.hpp>
 
 int main()
 {
@@ -70,7 +71,7 @@ int main()
             )
          );
 
-         main_widget = sl;
+         //main_widget = sl;
       }
 
       {
@@ -156,6 +157,20 @@ int main()
          );
 
          //main_widget = icn;
+      }
+
+      {
+        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Button")));
+
+         auto btn = margin(
+            { 20, 20, 20, 20 },
+            layer(
+                margin({ 100, 200, 100, 20 }, button(color{ 0, 0, 0, 0 }, txt)),
+                panel()
+            )
+         );
+
+         main_widget = btn;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

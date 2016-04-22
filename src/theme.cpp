@@ -6,6 +6,7 @@
 =================================================================================================*/
 #include <photon/theme.hpp>
 #include <nanovg.h>
+#include <vector>
 
 namespace photon
 {
@@ -284,11 +285,94 @@ namespace photon
          nvgTextBox(vg, x, y+font_size, w, text, 0);
          nvgRestore(vg);
       }
+
+      void draw_edit_text_box(
+         NVGcontext* vg, rect const& b, theme::text_info const& text
+       , char const* font, double font_size, color const& font_color
+       , color const& hilite_color
+      )
+      {
+         float   x = b.left;
+         float   y = b.top;
+         float   w = b.width();
+         float   h = b.height();
+
+         char const* sstart = text.select_first;
+         char const* send = text.select_last;
+
+         nvgSave(vg);
+         nvgScissor(vg, x, y, w, h);
+
+         nvgFontSize(vg, font_size);
+         nvgFontFace(vg, font);
+         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+         float lineh;
+         nvgTextMetrics(vg, 0, 0, &lineh);
+
+         NVGtextRow rows[3];
+
+         char const* start = text.first;
+         char const* end = text.last;
+         int lnum = 0;
+
+         while (int nrows = nvgTextBreakLines(vg, start, end, w, rows, 3))
+         {
+            for (int i = 0; i < nrows; i++)
+            {
+               NVGtextRow* row = &rows[i];
+               char const* rstart = row->start;
+               char const* rend = row->end;
+
+               bool  start_hilite = sstart >= rstart && sstart <= rend;
+               bool  end_hilite = text.select_last >= rstart && send <= rend;
+               bool  mid_hilite = sstart <= rstart && send >= rend;
+
+               if (start_hilite || end_hilite || mid_hilite)
+               {
+                  float x_hilite = x;
+                  float width_hilite = w;
+                  if (start_hilite || end_hilite)
+                  {
+                     std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
+                     int nglyphs =
+                        nvgTextGlyphPositions(
+                           vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
+                        );
+
+                     for (int i = 0; i < nglyphs; ++i)
+                     {
+                        auto const& glyph = glyphs[i];
+                        if (sstart == glyph.str)
+                           x_hilite = glyph.minx;
+                        else if (send == glyph.str)
+                           width_hilite = glyphs[i].maxx - x_hilite;
+                     }
+                  }
+
+                  nvgBeginPath(vg);
+                  nvgFillColor(vg, nvgRGBA(hilite_color));
+                  nvgRect(vg, x_hilite, y, width_hilite, lineh);
+                  nvgFill(vg);
+               }
+
+               nvgFillColor(vg, nvgRGBA(font_color));
+               nvgText(vg, x, y, row->start, row->end);
+
+               lnum++;
+               y += lineh;
+            }
+            // Keep going...
+            start = rows[nrows-1].next;
+         }
+
+         nvgRestore(vg);
+      }
    }
 
    void theme::draw_label(rect const& b, char const* text) const
    {
-      draw_text(_vg, b, text, label_font, label_font_size, label_color);
+      draw_text(_vg, b, text, label_font, label_font_size, label_font_color);
    }
 
    point theme::measure_label(char const* text) const
@@ -298,7 +382,7 @@ namespace photon
 
    void theme::draw_heading(rect const& b, char const* text) const
    {
-      draw_text(_vg, b, text, heading_font, heading_font_size, heading_color);
+      draw_text(_vg, b, text, heading_font, heading_font_size, heading_font_color);
    }
 
    point theme::measure_heading(char const* text) const
@@ -320,7 +404,14 @@ namespace photon
 
    void theme::draw_text_box(rect const& b, char const* text) const
    {
-      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_color);
+      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_font_color);
+   }
+
+   void theme::draw_edit_text_box(rect const& b, text_info const& text) const
+   {
+      photon::draw_edit_text_box(
+         _vg, b, text, text_box_font, text_box_font_size
+       , text_box_font_color, text_box_hilite_color);
    }
 
    void theme::draw_button(rect const& b, color const& button_color) const

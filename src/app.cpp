@@ -36,11 +36,23 @@ namespace photon
       glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
       glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
+
+      cursors.push_back(cursor{ cursor::arrow });
+      cursors.push_back(cursor{ cursor::ibeam });
+      cursors.push_back(cursor{ cursor::cross_hair });
+      cursors.push_back(cursor{ cursor::hand });
+      cursors.push_back(cursor{ cursor::h_resize });
+      cursors.push_back(cursor{ cursor::v_resize });
    }
 
    app::~app()
    {
       glfwTerminate();
+   }
+
+   cursor& app::get_cursor(cursor::type t)
+   {
+      return cursors[t];
    }
 
    void app::key(key_info const& k)

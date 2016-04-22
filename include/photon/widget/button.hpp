@@ -28,6 +28,7 @@ namespace photon
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
+
    private:
 
       color             _color;

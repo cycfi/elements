@@ -8,8 +8,9 @@
 #define PHOTON_GUI_LIB_APP_APRIL_11_2016
 
 #include <photon/support.hpp>
-#include <photon/theme.hpp>
+#include <photon/cursor.hpp>
 #include <type_traits>
+#include <vector>
 
 namespace photon
 {
@@ -25,11 +26,10 @@ namespace photon
 
       virtual void         key(key_info const& k);
       virtual void         run();
+      cursor&              get_cursor(cursor::type t);
 
    protected:
-
                            app();
-
    private:
 
       template <typename App, typename... Args>
@@ -37,6 +37,8 @@ namespace photon
          std::is_base_of<App, app>::value, App&
       >::type
       make_app(Args const&... args);
+
+      std::vector<cursor>  cursors;
    };
 
    template <typename App, typename... Args>

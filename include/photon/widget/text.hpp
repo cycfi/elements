@@ -61,6 +61,27 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Text Boxes
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class static_text_box_widget : public widget
+   {
+   public:
+                        static_text_box_widget(std::string const& text)
+                         : text(text)
+                        {}
+
+      virtual rect      limits(basic_context const& ctx) const;
+      virtual void      draw(context const& ctx);
+
+   private:
+
+      std::string       text;
+   };
+
+   inline widget_ptr static_text_box(std::string const& text)
+   {
+      return widget_ptr{ new static_text_box_widget{ text } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class text_box_widget : public widget
    {
    public:
@@ -70,6 +91,8 @@ namespace photon
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
+      virtual bool      cursor(context const& ctx, point const& p);
+      virtual bool      is_control() const;
 
    private:
 

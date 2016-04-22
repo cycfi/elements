@@ -17,8 +17,13 @@ namespace photon
       auto c = _color;
       if (_is_active)
          c.alpha = 0.5;
+
       ctx.theme().draw_button(ctx.bounds, c);
-      subject()->draw(ctx);
+
+      if (_is_active)
+         subject()->draw({ ctx, rect{ ctx.bounds }.move(1, 1) });
+      else
+         subject()->draw(ctx);
    }
 
    widget* button_widget::click(context const& ctx, mouse_button btn)

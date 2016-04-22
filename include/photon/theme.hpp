@@ -57,14 +57,14 @@ namespace photon
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Text
 
-      color             heading_color              = { 220, 220, 220, 160 };
+      color             heading_font_color         = { 220, 220, 220, 160 };
       char const*       heading_font               = "sans-bold";
       double            heading_font_size          = 20.0;
 
       virtual void      draw_label(rect const& b, char const* text) const;
       virtual point     measure_label(char const* text) const;
 
-      color             label_color                = { 220, 220, 220, 160 };
+      color             label_font_color           = { 220, 220, 220, 160 };
       char const*       label_font                 = "sans";
       double            label_font_size            = 18.0;
 
@@ -77,11 +77,22 @@ namespace photon
       virtual void      draw_icon(rect const& b, uint32_t code, int size) const;
       virtual point     measure_icon(uint32_t code, int size) const;
 
-      color             text_box_color             = { 220, 220, 220, 160 };
+      color             text_box_font_color        = { 220, 220, 220, 230 };
       char const*       text_box_font              = "sans";
       double            text_box_font_size         = 18.0;
+      color             text_box_hilite_color      = { 50, 90, 220, 90 };
 
       virtual void      draw_text_box(rect const& b, char const* text) const;
+
+      struct text_info
+      {
+         char const*    first;
+         char const*    last;
+         char const*    select_first;
+         char const*    select_last;
+      };
+
+      virtual void      draw_edit_text_box(rect const& b, text_info const& text) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Buttons

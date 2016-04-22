@@ -13,14 +13,16 @@
 #endif
 
 #include <GLFW/glfw3.h>
-#include "nanovg.h"
+#include <nanovg.h>
 
 #include <photon/widget/widget.hpp>
 #include <photon/color.hpp>
 #include <photon/point.hpp>
 #include <photon/theme.hpp>
+#include <photon/cursor.hpp>
 
 #include <memory>
+#include <vector>
 
 namespace photon
 {
@@ -53,9 +55,12 @@ namespace photon
 
       virtual void      draw();
       virtual void      key(key_info const& k);
-      virtual void      click(mouse_button btn);
-      virtual void      cursor(point const& p);
+      virtual void      click(mouse_button const& btn);
+      virtual void      mouse(point const& p);
       virtual void      close();
+
+      void              set_cursor(cursor::type t) const;
+      void              reset_cursor() const;
 
       NVGcontext*       canvas() const { return _context; }
       app&              app() const { return _app; }

@@ -135,7 +135,7 @@ int main()
          auto txbx = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin({ 20, 20, 20, 20 }, text_box(text)),
+                margin({ 20, 20, 20, 20 }, static_text_box(text)),
                 panel()
             )
          );
@@ -170,7 +170,40 @@ int main()
             )
          );
 
-         main_widget = btn;
+         //main_widget = btn;
+      }
+      
+      {
+         char const* text =
+            "We are in the midst of an intergalatic condensing of beauty that will "
+            "clear a path toward the planet itself. The quantum leap of rebirth is "
+            "now happening worldwide. It is time to take healing to the next level. "
+            "Soon there will be a deepening of chi the likes of which the infinite "
+            "has never seen. The universe is approaching a tipping point. This "
+            "vision quest never ends. Imagine a condensing of what could be. "
+            "We can no longer afford to live with stagnation. Suffering is born "
+            "in the gap where stardust has been excluded. You must take a stand "
+            "against discontinuity.\n\n"
+
+            "Without complexity, one cannot dream. Stagnation is the antithesis of "
+            "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
+            "Yes, it is possible to eliminate the things that can destroy us, but not "
+            "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
+            "You may be ruled by desire without realizing it. Do not let it eliminate "
+            "the growth of your journey.\n\n"
+
+            "--New-Age Bullshit Generator"
+            ;
+
+         auto txbx = margin(
+            { 20, 20, 20, 20 },
+            layer(
+                margin({ 20, 20, 20, 20 }, text_box(text)),
+                panel()
+            )
+         );
+
+         main_widget = txbx;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

@@ -43,6 +43,18 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Text Boxes
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   rect static_text_box_widget::limits(basic_context const& ctx) const
+   {
+      double text_box_font_size = ctx.theme().text_box_font_size;
+      return { 50, text_box_font_size, full_extent, full_extent };
+   }
+
+   void static_text_box_widget::draw(context const& ctx)
+   {
+      ctx.theme().draw_text_box(ctx.bounds, text.c_str());
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    rect text_box_widget::limits(basic_context const& ctx) const
    {
       double text_box_font_size = ctx.theme().text_box_font_size;
@@ -51,6 +63,28 @@ namespace photon
 
    void text_box_widget::draw(context const& ctx)
    {
-      ctx.theme().draw_text_box(ctx.bounds, text.c_str());
+      char const* first = &text[0];
+      theme::text_info info = {
+         first,
+         first + text.size(),
+         first + 101,
+         first + 299
+      };
+      ctx.theme().draw_edit_text_box(ctx.bounds, info);
+   }
+
+   bool text_box_widget::cursor(context const& ctx, point const& p)
+   {
+      if (ctx.bounds.includes(p))
+      {
+         ctx.window.set_cursor(cursor::ibeam);
+         return true;
+      }
+      return false;
+   }
+
+   bool text_box_widget::is_control() const
+   {
+      return true;
    }
 }

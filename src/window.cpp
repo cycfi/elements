@@ -50,7 +50,7 @@ namespace photon
    void cursor_position(GLFWwindow* window_ptr, double xpos, double ypos)
    {
       auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
-      wp->cursor(point(xpos, ypos));
+      wp->mouse(point(xpos, ypos));
    }
 
    window::window(
@@ -180,23 +180,33 @@ namespace photon
    {
    }
 
-   void window::click(struct mouse_button btn)
+   void window::click(struct mouse_button const& btn)
    {
       _btn = btn;
       context ctx { *this, _subject.get(), _current_bounds };
       _subject->click(ctx, btn);
    }
 
-   void window::cursor(point const& p)
+   void window::mouse(point const& p)
    {
+      context ctx { *this, _subject.get(), _current_bounds };
       if (_btn.is_pressed)
-      {
-         context ctx { *this, _subject.get(), _current_bounds };
          _subject->drag(ctx, _btn);
-      }
+      else if (!_subject->cursor(ctx, cursor_pos()))
+         reset_cursor();
    }
 
    void window::close()
    {
+   }
+
+   void window::set_cursor(cursor::type t) const
+   {
+      _app.get_cursor(t).set(_window);
+   }
+
+   void window::reset_cursor() const
+   {
+      glfwSetCursor(_window, 0);
    }
 }

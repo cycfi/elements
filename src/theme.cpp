@@ -297,9 +297,6 @@ namespace photon
          float   w = b.width();
          float   h = b.height();
 
-         char const* sstart = text.select_first;
-         char const* send = text.select_last;
-
          nvgSave(vg);
          nvgScissor(vg, x, y, w, h);
 
@@ -311,18 +308,20 @@ namespace photon
          nvgTextMetrics(vg, 0, 0, &lineh);
 
          NVGtextRow rows[3];
+         int lnum = 0;
 
          char const* start = text.first;
          char const* end = text.last;
-         int lnum = 0;
+         char const* sstart = text.select_first;
+         char const* send = text.select_last;
 
          while (int nrows = nvgTextBreakLines(vg, start, end, w, rows, 3))
          {
-            for (int i = 0; i < nrows; i++)
+            for (std::size_t i = 0; i < nrows; ++i)
             {
-               NVGtextRow* row = &rows[i];
-               char const* rstart = row->start;
-               char const* rend = row->end;
+               auto const& row = rows[i];
+               char const* rstart = row.start;
+               char const* rend = row.end;
 
                bool  start_hilite = sstart >= rstart && sstart <= rend;
                bool  end_hilite = text.select_last >= rstart && send <= rend;
@@ -331,7 +330,7 @@ namespace photon
                if (start_hilite || end_hilite || mid_hilite)
                {
                   float x_hilite = x;
-                  float width_hilite = w;
+                  float w_hilite = w;
                   if (start_hilite || end_hilite)
                   {
                      std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
@@ -346,18 +345,18 @@ namespace photon
                         if (sstart == glyph.str)
                            x_hilite = glyph.minx;
                         else if (send == glyph.str)
-                           width_hilite = glyphs[i].maxx - x_hilite;
+                           w_hilite = glyphs[i].maxx - x_hilite;
                      }
                   }
 
                   nvgBeginPath(vg);
                   nvgFillColor(vg, nvgRGBA(hilite_color));
-                  nvgRect(vg, x_hilite, y, width_hilite, lineh);
+                  nvgRect(vg, x_hilite, y, w_hilite, lineh);
                   nvgFill(vg);
                }
 
                nvgFillColor(vg, nvgRGBA(font_color));
-               nvgText(vg, x, y, row->start, row->end);
+               nvgText(vg, x, y, rstart, rend);
 
                lnum++;
                y += lineh;

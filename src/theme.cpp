@@ -288,11 +288,13 @@ namespace photon
 
       struct edit_text_box_renderer
       {
+         float const right_pad = 5;
+
          edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
           : vg(th.canvas())
-          , x(b.left+2)
+          , x(b.left)
           , y(b.top)
-          , w(b.width()-4)
+          , w(b.width())
           , h(b.height())
           , font(th.text_box_font)
           , font_size(th.text_box_font_size)
@@ -305,6 +307,8 @@ namespace photon
           , caret_color(th.text_box_caret_color)
           , is_focus(text.is_focus)
          {
+            if (sstart > send)
+               std::swap(sstart, send);
          }
 
          void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const
@@ -353,7 +357,7 @@ namespace photon
                   {
                      auto const& glyph = glyphs[i];
                      if (sstart == glyph.str)
-                        x_hilite = glyph.minx;
+                        x_hilite = glyph.x;
                      else if (send == glyph.str)
                         w_hilite = glyphs[i].maxx - x_hilite;
                   }
@@ -373,7 +377,7 @@ namespace photon
             char const* cp = start;
 
             nvgSave(vg);
-            nvgScissor(vg, x-2, y, w+4, h);
+            nvgScissor(vg, x, y, w, h);
 
             nvgFontSize(vg, font_size);
             nvgFontFace(vg, font);
@@ -384,7 +388,7 @@ namespace photon
 
             NVGtextRow rows[3];
 
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w, rows, 3))
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
             {
                for (std::size_t i = 0; i < nrows; ++i)
                {
@@ -431,23 +435,21 @@ namespace photon
 
             NVGtextRow rows[3];
 
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w, rows, 3))
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
             {
                for (std::size_t i = 0; i < nrows; ++i)
                {
                   auto const& row = rows[i];
-                  if (mx > x-2 && mx < (x+w+4) && my >= y && my < (y+lineh))
+                  if (mx > x && mx < (x+w) && my >= y && my < (y+lineh))
                   {
-                     std::vector<NVGglyphPosition> glyphs{1000}; // { std::size_t(row.end-row.start) };
+                     std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
                      int nglyphs =
                         nvgTextGlyphPositions(
-                           vg, x, y, row.start, row.end, &glyphs[0], 1000 /*int(glyphs.size())*/
+                           vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
                         );
 
                      if (nglyphs == 0)
-                     {
                         return row.start;
-                     }
 
                      float px = x;
                      for (int i = 0; i < nglyphs; ++i)

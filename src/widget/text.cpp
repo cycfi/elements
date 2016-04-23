@@ -76,16 +76,34 @@ namespace photon
 
    widget* text_box_widget::click(context const& ctx, mouse_button btn)
    {
+      if (!btn.is_pressed) // released? return early
+         return this;
+
       char const* first = &text[0];
       theme::text_info info = {
          first,
          first + text.size()
       };
-      auto        mp = ctx.cursor_pos();
-      char const* pos = ctx.theme().caret_position(ctx.bounds, info, mp);
-      select_start = select_end = pos-first;
-      ctx.window.draw();
+      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
+      {
+         select_start = select_end = pos-first;
+         ctx.window.draw();
+      }
       return this;
+   }
+
+   void text_box_widget::drag(context const& ctx, mouse_button btn)
+   {
+      char const* first = &text[0];
+      theme::text_info info = {
+         first,
+         first + text.size()
+      };
+      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
+      {
+         select_end = pos-first;
+         ctx.window.draw();
+      }
    }
 
    bool text_box_widget::cursor(context const& ctx, point const& p)

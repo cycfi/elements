@@ -57,10 +57,12 @@ namespace photon
       virtual void      key(key_info const& k);
       virtual void      click(mouse_button const& btn);
       virtual void      mouse(point const& p);
+      virtual void      focus(bool is_focus);
       virtual void      close();
 
       void              set_cursor(cursor::type t) const;
       void              reset_cursor() const;
+      bool              is_focus() const;
 
       NVGcontext*       canvas() const { return _context; }
       app&              app() const { return _app; }

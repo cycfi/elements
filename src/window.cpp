@@ -53,6 +53,12 @@ namespace photon
       wp->mouse(point(xpos, ypos));
    }
 
+   void window_focus(GLFWwindow* window_ptr, int is_focus)
+   {
+      auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+      wp->focus(is_focus);
+    }
+
    window::window(
       char const*    title
     , point const&   size
@@ -77,6 +83,7 @@ namespace photon
       glfwSetKeyCallback(_window, key_press);
       glfwSetWindowRefreshCallback(_window, window_refresh);
       glfwSetMouseButtonCallback(_window, mouse_button);
+      glfwSetWindowFocusCallback(_window, window_focus);
       glfwSetCursorPosCallback(_window, cursor_position);
       glfwMakeContextCurrent(_window);
 
@@ -208,5 +215,15 @@ namespace photon
    void window::reset_cursor() const
    {
       glfwSetCursor(_window, 0);
+   }
+
+   bool window::is_focus() const
+   {
+      return glfwGetWindowAttrib(_window, GLFW_FOCUSED);
+   }
+
+   void window::focus(bool is_focus)
+   {
+      draw();
    }
 }

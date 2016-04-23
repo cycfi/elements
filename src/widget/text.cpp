@@ -67,10 +67,25 @@ namespace photon
       theme::text_info info = {
          first,
          first + text.size(),
-         first + 101,
-         first + 299
+         (select_start == -1)? 0 : first+select_start,
+         (select_end == -1)? 0 : first+select_end,
+         ctx.window.is_focus()
       };
       ctx.theme().draw_edit_text_box(ctx.bounds, info);
+   }
+
+   widget* text_box_widget::click(context const& ctx, mouse_button btn)
+   {
+      char const* first = &text[0];
+      theme::text_info info = {
+         first,
+         first + text.size()
+      };
+      auto        mp = ctx.cursor_pos();
+      char const* pos = ctx.theme().caret_position(ctx.bounds, info, mp);
+      select_start = select_end = pos-first;
+      ctx.window.draw();
+      return this;
    }
 
    bool text_box_widget::cursor(context const& ctx, point const& p)

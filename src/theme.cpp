@@ -286,87 +286,214 @@ namespace photon
          nvgRestore(vg);
       }
 
-      void draw_edit_text_box(
-         NVGcontext* vg, rect const& b, theme::text_info const& text
-       , char const* font, double font_size, color const& font_color
-       , color const& hilite_color
-      )
+      struct edit_text_box_renderer
       {
-         float   x = b.left;
-         float   y = b.top;
-         float   w = b.width();
-         float   h = b.height();
-
-         nvgSave(vg);
-         nvgScissor(vg, x, y, w, h);
-
-         nvgFontSize(vg, font_size);
-         nvgFontFace(vg, font);
-         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-
-         float lineh;
-         nvgTextMetrics(vg, 0, 0, &lineh);
-
-         NVGtextRow rows[3];
-         int lnum = 0;
-
-         char const* start = text.first;
-         char const* end = text.last;
-         char const* sstart = text.select_first;
-         char const* send = text.select_last;
-
-         while (int nrows = nvgTextBreakLines(vg, start, end, w, rows, 3))
+         edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
+          : vg(th.canvas())
+          , x(b.left+2)
+          , y(b.top)
+          , w(b.width()-4)
+          , h(b.height())
+          , font(th.text_box_font)
+          , font_size(th.text_box_font_size)
+          , font_color(th.text_box_font_color)
+          , start(text.first)
+          , end(text.last)
+          , sstart(text.select_first)
+          , send(text.select_last)
+          , hilite_color(th.text_box_hilite_color)
+          , caret_color(th.text_box_caret_color)
+          , is_focus(text.is_focus)
          {
-            for (std::size_t i = 0; i < nrows; ++i)
+         }
+
+         void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const
+         {
+            if (sstart >= rstart && sstart <= rend)
             {
-               auto const& row = rows[i];
-               char const* rstart = row.start;
-               char const* rend = row.end;
+               std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
+               int nglyphs =
+                  nvgTextGlyphPositions(
+                     vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
+                  );
 
-               bool  start_hilite = sstart >= rstart && sstart <= rend;
-               bool  end_hilite = text.select_last >= rstart && send <= rend;
-               bool  mid_hilite = sstart <= rstart && send >= rend;
-
-               if (start_hilite || end_hilite || mid_hilite)
+               float caretx = x+row_width;
+               for (int i = 0; i < nglyphs; ++i)
                {
-                  float x_hilite = x;
-                  float w_hilite = w;
-                  if (start_hilite || end_hilite)
-                  {
-                     std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
-                     int nglyphs =
-                        nvgTextGlyphPositions(
-                           vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
-                        );
+                  auto const& glyph = glyphs[i];
+                  if (sstart == glyph.str)
+                     caretx = glyphs[i].x;
+               }
+               nvgBeginPath(vg);
+               nvgFillColor(vg, nvgRGBA(caret_color));
+               nvgRect(vg, caretx, y, 1, lineh);
+               nvgFill(vg);
+            }
+         }
 
-                     for (int i = 0; i < nglyphs; ++i)
+         void draw_selection(float lineh, float y, char const* rstart, char const* rend) const
+         {
+            bool  start_hilite = sstart >= rstart && sstart <= rend;
+            bool  end_hilite = send >= rstart && send <= rend;
+            bool  mid_hilite = sstart <= rstart && send >= rend;
+
+            if (start_hilite || end_hilite || mid_hilite)
+            {
+               float x_hilite = x;
+               float w_hilite = w;
+               if (start_hilite || end_hilite)
+               {
+                  std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
+                  int nglyphs =
+                     nvgTextGlyphPositions(
+                        vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
+                     );
+
+                  for (int i = 0; i < nglyphs; ++i)
+                  {
+                     auto const& glyph = glyphs[i];
+                     if (sstart == glyph.str)
+                        x_hilite = glyph.minx;
+                     else if (send == glyph.str)
+                        w_hilite = glyphs[i].maxx - x_hilite;
+                  }
+               }
+
+               nvgBeginPath(vg);
+               nvgRect(vg, x_hilite, y, w_hilite, lineh);
+               auto color = is_focus? nvgRGBA(hilite_color) : ::nvgRGBA(255, 255, 255, 16);
+               nvgFillColor(vg, color);
+               nvgFill(vg);
+            }
+         }
+
+         void draw() const
+         {
+            float       y = this->y;
+            char const* cp = start;
+
+            nvgSave(vg);
+            nvgScissor(vg, x-2, y, w+4, h);
+
+            nvgFontSize(vg, font_size);
+            nvgFontFace(vg, font);
+            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+            float lineh;
+            nvgTextMetrics(vg, 0, 0, &lineh);
+
+            NVGtextRow rows[3];
+
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w, rows, 3))
+            {
+               for (std::size_t i = 0; i < nrows; ++i)
+               {
+                  auto const& row = rows[i];
+                  if (sstart != 0)
+                  {
+                     if (sstart == send)
                      {
-                        auto const& glyph = glyphs[i];
-                        if (sstart == glyph.str)
-                           x_hilite = glyph.minx;
-                        else if (send == glyph.str)
-                           w_hilite = glyphs[i].maxx - x_hilite;
+                        if (is_focus)
+                           draw_caret(lineh, y, row.width, row.start, row.end);
+                     }
+                     else
+                     {
+                        draw_selection(lineh, y, row.start, row.end);
                      }
                   }
 
-                  nvgBeginPath(vg);
-                  nvgFillColor(vg, nvgRGBA(hilite_color));
-                  nvgRect(vg, x_hilite, y, w_hilite, lineh);
-                  nvgFill(vg);
+                  nvgFillColor(vg, nvgRGBA(font_color));
+                  nvgText(vg, x, y, row.start, row.end);
+
+                  y += lineh;
                }
-
-               nvgFillColor(vg, nvgRGBA(font_color));
-               nvgText(vg, x, y, rstart, rend);
-
-               lnum++;
-               y += lineh;
+               // Keep going...
+               cp = rows[nrows-1].next;
             }
-            // Keep going...
-            start = rows[nrows-1].next;
+
+            nvgRestore(vg);
          }
 
-         nvgRestore(vg);
-      }
+         char const* caret_position(point const& p) const
+         {
+            float       mx = p.x;
+            float       my = p.y;
+            float       y = this->y;
+            char const* cp = start;
+
+            nvgSave(vg);
+            nvgFontSize(vg, font_size);
+            nvgFontFace(vg, font);
+            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+            float lineh;
+            nvgTextMetrics(vg, 0, 0, &lineh);
+
+            NVGtextRow rows[3];
+
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w, rows, 3))
+            {
+               for (std::size_t i = 0; i < nrows; ++i)
+               {
+                  auto const& row = rows[i];
+                  if (mx > x-2 && mx < (x+w+4) && my >= y && my < (y+lineh))
+                  {
+                     std::vector<NVGglyphPosition> glyphs{1000}; // { std::size_t(row.end-row.start) };
+                     int nglyphs =
+                        nvgTextGlyphPositions(
+                           vg, x, y, row.start, row.end, &glyphs[0], 1000 /*int(glyphs.size())*/
+                        );
+
+                     if (nglyphs == 0)
+                     {
+                        return row.start;
+                     }
+
+                     float px = x;
+                     for (int i = 0; i < nglyphs; ++i)
+                     {
+                        bool  last = i+1 >= nglyphs;
+                        float x0 = glyphs[i].x;
+                        float x1 = !last? glyphs[i+1].x : x+row.width;
+                        float gx = x0 * 0.3f + x1 * 0.7f;
+                        if (mx >= px)
+                        {
+                           if (mx < gx)
+                              return glyphs[i].str;
+                           else if (last)
+                              return row.end;
+                        }
+                        px = gx;
+                     }
+                  }
+                  y += lineh;
+               }
+               // Keep going...
+               cp = rows[nrows-1].next;
+            }
+
+            nvgRestore(vg);
+            return 0;
+         }
+
+         NVGcontext*    vg;
+         float          x;
+         float          y;
+         float          w;
+         float          h;
+
+         char const*    font;
+         float          font_size;
+         color          font_color;
+
+         char const*    start;
+         char const*    end;
+         char const*    sstart;
+         char const*    send;
+         color          hilite_color;
+         color          caret_color;
+         bool           is_focus;
+      };
    }
 
    void theme::draw_label(rect const& b, char const* text) const
@@ -408,9 +535,14 @@ namespace photon
 
    void theme::draw_edit_text_box(rect const& b, text_info const& text) const
    {
-      photon::draw_edit_text_box(
-         _vg, b, text, text_box_font, text_box_font_size
-       , text_box_font_color, text_box_hilite_color);
+      edit_text_box_renderer r{ *this, b, text };
+      r.draw();
+   }
+
+   char const*  theme::caret_position(rect const& b, text_info const& text, point const& p) const
+   {
+      edit_text_box_renderer r{ *this, b, text };
+      return r.caret_position(p);
    }
 
    void theme::draw_button(rect const& b, color const& button_color) const

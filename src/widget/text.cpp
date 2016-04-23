@@ -9,6 +9,7 @@
 #include <photon/support.hpp>
 #include <photon/app.hpp>
 #include <photon/window.hpp>
+#include <cctype>
 
 namespace photon
 {
@@ -86,7 +87,39 @@ namespace photon
       };
       if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
       {
-         select_start = select_end = pos-first;
+         if (btn.num_clicks != 1)
+         {
+            char const* last = pos;
+            char const* first = pos;
+
+            if (btn.num_clicks == 2)
+            {
+               // $$$ TODO: Make this UTF8 friendly $$$
+               auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
+
+               while (last < info.last && !wordch(*last))
+                  last++;
+               while (first > info.first && !wordch(*first))
+                  first--;
+            }
+            else if (btn.num_clicks == 3)
+            {
+               auto parach = [](char ch) { return ch == '\n' || ch == '\r'; };
+
+               while (last < info.last && !parach(*last))
+                  last++;
+               while (first > info.first && !parach(*first))
+                  first--;
+            }
+            if (first != info.first)
+                ++first;
+            select_start = int(first-info.first);
+            select_end = int(last-info.first);
+         }
+         else
+         {
+            select_start = select_end = int(pos-first);
+         }
          ctx.window.draw();
       }
       return this;
@@ -101,7 +134,7 @@ namespace photon
       };
       if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
       {
-         select_end = pos-first;
+         select_end = int(pos-first);
          ctx.window.draw();
       }
    }

@@ -28,6 +28,8 @@ namespace photon
       virtual void         run();
       cursor&              get_cursor(cursor::type t);
 
+      double const         multi_click_speed = 0.25;
+
    protected:
                            app();
    private:

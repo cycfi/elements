@@ -79,6 +79,8 @@ namespace photon
       rect              _current_limits;
       mouse_button      _btn;
       theme_ptr         _theme;
+      double            _click_time;
+      int               _num_clicks;
    };
 }
 

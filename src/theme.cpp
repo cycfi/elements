@@ -359,7 +359,7 @@ namespace photon
                      if (sstart == glyph.str)
                         x_hilite = glyph.x;
                      else if (send == glyph.str)
-                        w_hilite = glyphs[i].maxx - x_hilite;
+                        w_hilite = glyphs[i].x - x_hilite;
                   }
                }
 

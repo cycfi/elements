@@ -31,6 +31,11 @@ namespace photon
       virtual void   prepare_subject(context& ctx);
       virtual void   draw(context const& ctx);
 
+      double         halign() const { return _halign; }
+      void           halign(double val) { _halign = val; }
+      double         valign() const { return _valign; }
+      void           valign(double val) { _valign = val; }
+
    private:
 
       double         _halign;
@@ -40,6 +45,29 @@ namespace photon
    inline widget_ptr port(std::shared_ptr<widget> subject)
    {
       return widget_ptr{ new port_widget{ subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class scroller_widget : public port_widget
+   {
+   public:
+
+
+      scroller_widget(std::shared_ptr<widget> subject)
+       : port_widget(subject)
+      {}
+
+      ~scroller_widget() {}
+
+      virtual void   draw(context const& ctx);
+      virtual bool   focus(focus_request r);
+      virtual bool   scroll(context const& ctx, point const& p);
+      virtual bool   is_control() const;
+   };
+
+   inline widget_ptr scroller(std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new scroller_widget{ subject } };
    }
 }
 

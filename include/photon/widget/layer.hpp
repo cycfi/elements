@@ -27,9 +27,12 @@ namespace photon
       virtual void         layout(context const& ctx);
       virtual hit_info     hit_element(context const& ctx, point const& p) const;
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
+      virtual bool         scroll(context const& ctx, point const& p);
+      virtual bool         focus(focus_request r);
 
    private:
 
+      void                 focus_top();
       rect                 bounds;
    };
 

@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/port.hpp>
+#include <photon/window.hpp>
 #include <algorithm>
 #include <nanovg.h>
 
@@ -38,27 +39,66 @@ namespace photon
       nvgSave(ctx.canvas());
       nvgScissor(ctx.canvas(), ctx.bounds.left, ctx.bounds.top, ctx.bounds.width(), ctx.bounds.height());
       proxy::draw(ctx);
+   }
 
-      rect e_limits = subject()->limits(ctx);
+   void scroller_widget::draw(context const& ctx)
+   {
+      port_widget::draw(ctx);
+      rect  e_limits = subject()->limits(ctx);
 
-      rect vscroll_bounds = {
-         ctx.bounds.left + ctx.bounds.width() - 10,
-         ctx.bounds.top,
-         ctx.bounds.right,
-         ctx.bounds.bottom
-      };
+      bool     has_h = e_limits.left > ctx.bounds.width();
+      bool     has_v = e_limits.top > ctx.bounds.height();
+      double   scroll_bar_width = ctx.theme().scroll_bar_width;
 
-      ctx.theme().draw_scroll_bar(_valign, e_limits.top, vscroll_bounds);
+      if (has_v)
+      {
+         rect vscroll_bounds = {
+            ctx.bounds.left + ctx.bounds.width() - scroll_bar_width,
+            ctx.bounds.top,
+            ctx.bounds.right,
+            ctx.bounds.bottom - (has_h ? scroll_bar_width : 0)
+         };
 
-      rect hscroll_bounds = {
-         ctx.bounds.left,
-         ctx.bounds.top + ctx.bounds.height() - 10,
-         ctx.bounds.right,
-         ctx.bounds.bottom
-      };
+         ctx.theme().draw_scroll_bar(valign(), e_limits.top, vscroll_bounds);
+      }
 
-      ctx.theme().draw_scroll_bar(_halign, e_limits.left, hscroll_bounds);
+      if (has_h)
+      {
+         rect hscroll_bounds = {
+            ctx.bounds.left,
+            ctx.bounds.top + ctx.bounds.height() - scroll_bar_width,
+            ctx.bounds.right - (has_v ? scroll_bar_width : 0),
+            ctx.bounds.bottom
+         };
 
-      nvgRestore(ctx.canvas());
+         ctx.theme().draw_scroll_bar(halign(), e_limits.left, hscroll_bounds);
+      }
+   }
+
+   bool scroller_widget::focus(focus_request r)
+   {
+      return true;
+   }
+
+   bool scroller_widget::scroll(context const& ctx, point const& p)
+   {
+      rect     e_limits = subject()->limits(ctx);
+      double   dx = (-p.x / e_limits.left) * ctx.theme().scroll_bar_speed;
+      double   dy = (-p.y / e_limits.top) * ctx.theme().scroll_bar_speed;
+      double   alx = halign() + dx;
+      double   aly = valign() + dy;
+
+      limit(alx, 0.0, 1.0);
+      limit(aly, 0.0, 1.0);
+
+      halign(alx);
+      valign(aly);
+      ctx.window.draw();
+      return true;
+   }
+
+   bool scroller_widget::is_control() const
+   {
+      return true;
    }
 }

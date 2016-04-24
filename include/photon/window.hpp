@@ -57,8 +57,11 @@ namespace photon
       virtual void      key(key_info const& k);
       virtual void      click(mouse_button const& btn);
       virtual void      mouse(point const& p);
+      virtual void      scroll(point const& p);
       virtual void      focus(bool is_focus);
       virtual void      close();
+      virtual void      idle();
+      virtual void      refresh();
 
       void              set_cursor(cursor::type t) const;
       void              reset_cursor() const;
@@ -81,6 +84,7 @@ namespace photon
       theme_ptr         _theme;
       double            _click_time;
       int               _num_clicks;
+      bool              _refresh;
    };
 }
 

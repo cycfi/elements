@@ -63,4 +63,29 @@ namespace photon
 
       return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
    }
+
+   bool layer_widget::focus(focus_request r)
+   {
+      focus_top();
+      return composite::focus(r);
+   }
+
+   bool layer_widget::scroll(context const& ctx, point const& p)
+   {
+      focus_top();
+      return composite::scroll(ctx, p);
+   }
+
+   void layer_widget::focus_top()
+   {
+      if (!composite::focus())
+      {
+         for (int i = int(elements().size())-1; i >= 0; --i)
+         {
+            widget_ptr e = elements()[i];
+            if (e->is_control() && e->focus(focus_request::wants_focus))
+               composite::focus(i);
+         }
+      }
+   }
 }

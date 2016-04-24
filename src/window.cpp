@@ -57,7 +57,13 @@ namespace photon
    {
       auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
       wp->focus(is_focus);
-    }
+   }
+
+   void window_scroll(GLFWwindow* window_ptr, double x, double y)
+   {
+      auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+      wp->scroll(point{ x, y });
+   }
 
    window::window(
       char const*    title
@@ -73,6 +79,7 @@ namespace photon
     , _theme(theme)
     , _click_time(0)
     , _num_clicks(0)
+    , _refresh(false)
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (_window == 0)
@@ -87,6 +94,7 @@ namespace photon
       glfwSetMouseButtonCallback(_window, mouse_button);
       glfwSetWindowFocusCallback(_window, window_focus);
       glfwSetCursorPosCallback(_window, cursor_position);
+      glfwSetScrollCallback(_window, window_scroll);
       glfwMakeContextCurrent(_window);
 
       _context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
@@ -215,6 +223,12 @@ namespace photon
          reset_cursor();
    }
 
+   void window::scroll(point const& p)
+   {
+      context ctx { *this, _subject.get(), _current_bounds };
+      _subject->scroll(ctx, p);
+   }
+
    void window::close()
    {
    }
@@ -236,6 +250,20 @@ namespace photon
 
    void window::focus(bool is_focus)
    {
+      if (_subject->focus(focus_request::wants_focus))
+         _subject->focus(is_focus? focus_request::begin_focus : focus_request::end_focus);
       draw();
+   }
+   
+   void window::idle()
+   {
+      //if (_refresh)
+      //   draw();
+   }
+   
+   void window::refresh()
+   {
+      _refresh = true;
+      glfwPostEmptyEvent();
    }
 }

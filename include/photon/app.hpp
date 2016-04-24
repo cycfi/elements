@@ -28,7 +28,8 @@ namespace photon
       virtual void         run();
       cursor&              get_cursor(cursor::type t);
 
-      double const         multi_click_speed = 0.25;
+      double const         multi_click_speed = 0.5;
+      double const         idle_time = 0.25;
 
    protected:
                            app();
@@ -40,7 +41,8 @@ namespace photon
       >::type
       make_app(Args const&... args);
 
-      std::vector<cursor>  cursors;
+      std::vector<cursor>  _cursors;
+      double               _idle_time;
    };
 
    template <typename App, typename... Args>

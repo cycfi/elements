@@ -50,6 +50,11 @@ namespace photon
       return false;
    }
 
+   bool widget::scroll(context const& ctx, point const& p)
+   {
+      return false;
+   }
+
    bool widget::focus(focus_request r)
    {
       return r == focus_request::end_focus;
@@ -125,6 +130,13 @@ namespace photon
       context sctx { ctx, _subject.get(), ctx.bounds };
       prepare_subject(sctx);
       return _subject->cursor(sctx, p);
+   }
+
+   bool proxy::scroll(context const& ctx, point const& p)
+   {
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->scroll(sctx, p);
    }
 
    bool proxy::focus(focus_request r)
@@ -253,6 +265,13 @@ namespace photon
       return false;
    }
 
+   bool composite::scroll(context const& ctx, point const& p)
+   {
+      if (_focus != -1)
+         _elements[_focus]->scroll(ctx, p);
+      return false;
+   }
+
    bool composite::focus(focus_request r)
    {
       switch (r) {
@@ -279,7 +298,13 @@ namespace photon
 
    widget const* composite::focus() const
    {
-      return _elements.empty()? 0 : _elements[_focus].get();
+      return (_elements.empty() || (_focus == -1))? 0 : _elements[_focus].get();
+   }
+
+   void composite::focus(std::size_t index)
+   {
+      if (index < _elements.size())
+         _focus = int(index);
    }
 
    composite::hit_info composite::hit_element(context const& ctx, point const& p) const

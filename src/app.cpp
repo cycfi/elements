@@ -20,6 +20,7 @@ namespace photon
    app* app_ptr = 0; // singleton
 
    app::app()
+    : _idle_time(0)
    {
       if (!glfwInit())
       {
@@ -37,12 +38,12 @@ namespace photon
 #endif
       glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 
-      cursors.push_back(cursor{ cursor::arrow });
-      cursors.push_back(cursor{ cursor::ibeam });
-      cursors.push_back(cursor{ cursor::cross_hair });
-      cursors.push_back(cursor{ cursor::hand });
-      cursors.push_back(cursor{ cursor::h_resize });
-      cursors.push_back(cursor{ cursor::v_resize });
+      _cursors.push_back(cursor{ cursor::arrow });
+      _cursors.push_back(cursor{ cursor::ibeam });
+      _cursors.push_back(cursor{ cursor::cross_hair });
+      _cursors.push_back(cursor{ cursor::hand });
+      _cursors.push_back(cursor{ cursor::h_resize });
+      _cursors.push_back(cursor{ cursor::v_resize });
    }
 
    app::~app()
@@ -52,7 +53,7 @@ namespace photon
 
    cursor& app::get_cursor(cursor::type t)
    {
-      return cursors[t];
+      return _cursors[t];
    }
 
    void app::key(key_info const& k)
@@ -78,12 +79,26 @@ namespace photon
 
          return !windows.empty();
       }
+      
+      void windows_idle()
+      {
+         for (auto i = windows.cbegin(); i != windows.cend(); ++i)
+            i->second->idle();
+      }
    }
 
    void app::run()
    {
       while (windows_open())
+      {
          glfwWaitEvents();
+         double time = glfwGetTime();
+         if (time - _idle_time > idle_time)
+         {
+            windows_idle();
+            _idle_time = time;
+         }
+      }
    }
 
    void key_press(GLFWwindow* window_ptr, int key, int scancode, int action, int mods)

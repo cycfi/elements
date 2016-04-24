@@ -211,7 +211,7 @@ int main()
       {
          widget_ptr img =
             size(
-               point{ 3000, 2000 }
+               point{ 1500, 1000 }
              , image("./assets/images/space.jpg")
             );
 
@@ -222,7 +222,7 @@ int main()
                   layer(
                      margin(
                         { 20, 20, 20, 20 },
-                        port(img)
+                        scroller(img)
                      ),
                      panel()
                   )

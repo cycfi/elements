@@ -435,9 +435,14 @@ namespace photon
                   {
                      auto const& glyph = glyphs[i];
                      if (sstart == glyph.str)
+                     {
                         x_hilite = glyph.x;
+                        w_hilite -= glyph.x-x;
+                     }
                      else if (send == glyph.str)
+                     {
                         w_hilite = glyphs[i].x - x_hilite;
+                     }
                   }
                }
 
@@ -455,7 +460,7 @@ namespace photon
             char const* cp = start;
 
             nvgSave(vg);
-            nvgScissor(vg, x, y, w, h);
+            //nvgScissor(vg, x, y, w, h);
 
             nvgFontSize(vg, font_size);
             nvgFontFace(vg, font);

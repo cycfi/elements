@@ -32,6 +32,8 @@ namespace photon
       ctx.bounds.width(elem_width);
       ctx.bounds.top -= (elem_height - available_height) * _valign;
       ctx.bounds.height(elem_height);
+
+      subject()->layout(ctx);
    }
 
    void port_widget::draw(context const& ctx)
@@ -119,7 +121,8 @@ namespace photon
 
    void scroller_widget::drag(context const& ctx, mouse_button btn)
    {
-      reposition(ctx);
+      if (!reposition(ctx))
+         port_widget::drag(ctx, btn);
    }
 
    bool scroller_widget::reposition(context const& ctx)

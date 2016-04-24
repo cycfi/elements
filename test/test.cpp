@@ -68,8 +68,8 @@ int main()
          auto sl = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin({ 20, 20, 20, 20 }, slider()),
-                panel()
+               margin({ 20, 20, 20, 20 }, slider()),
+               panel()
             )
          );
 
@@ -95,54 +95,54 @@ int main()
          auto txt = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin(
-                    { 20, 20, 20, 20 },
-                    vtile(
-                        eh("Photon UI"),
-                        el(1.0, "Hello, World. I am Photon."),
-                        el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
-                        el(0.0, "I used to be called Pica in the mid 90s."),
-                        el(0.5, "Now, Joel rewrote my code using modern C++14.")
-                    )
-                ),
-                panel()
+               margin(
+                  { 20, 20, 20, 20 },
+                  vtile(
+                     eh("Photon UI"),
+                     el(1.0, "Hello, World. I am Photon."),
+                     el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
+                     el(0.0, "I used to be called Pica in the mid 90s."),
+                     el(0.5, "Now, Joel rewrote my code using modern C++14.")
+                  )
+               ),
+               panel()
             )
          );
 
          //main_widget = txt;
       }
 
+      char const* text =
+         "We are in the midst of an intergalatic condensing of beauty that will "
+         "clear a path toward the planet itself. The quantum leap of rebirth is "
+         "now happening worldwide. It is time to take healing to the next level. "
+         "Soon there will be a deepening of chi the likes of which the infinite "
+         "has never seen. The universe is approaching a tipping point. This "
+         "vision quest never ends. Imagine a condensing of what could be. "
+         "We can no longer afford to live with stagnation. Suffering is born "
+         "in the gap where stardust has been excluded. You must take a stand "
+         "against discontinuity.\n\n"
+
+         "Without complexity, one cannot dream. Stagnation is the antithesis of "
+         "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
+         "Yes, it is possible to eliminate the things that can destroy us, but not "
+         "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
+         "You may be ruled by desire without realizing it. Do not let it eliminate "
+         "the growth of your journey.\n\n"
+
+         "--New-Age Bullshit Generator"
+         ;
+
       {
-         char const* text =
-            "We are in the midst of an intergalatic condensing of beauty that will "
-            "clear a path toward the planet itself. The quantum leap of rebirth is "
-            "now happening worldwide. It is time to take healing to the next level. "
-            "Soon there will be a deepening of chi the likes of which the infinite "
-            "has never seen. The universe is approaching a tipping point. This "
-            "vision quest never ends. Imagine a condensing of what could be. "
-            "We can no longer afford to live with stagnation. Suffering is born "
-            "in the gap where stardust has been excluded. You must take a stand "
-            "against discontinuity.\n\n"
-
-            "Without complexity, one cannot dream. Stagnation is the antithesis of "
-            "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
-            "Yes, it is possible to eliminate the things that can destroy us, but not "
-            "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
-            "You may be ruled by desire without realizing it. Do not let it eliminate "
-            "the growth of your journey.\n\n"
-
-            "--New-Age Bullshit Generator"
-            ;
-
          auto txbx = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin({ 20, 20, 20, 20 }, static_text_box(text)),
-                panel()
+               margin({ 20, 20, 20, 20 }, static_text_box(text)),
+               panel()
             )
          );
 
-         //main_widget = txbx;
+         // main_widget = txbx;
       }
 
       {
@@ -167,8 +167,8 @@ int main()
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin({ 100, 200, 100, 20 }, button(color{ 0, 0, 0, 0 }, txt)),
-                panel()
+               margin({ 100, 200, 100, 20 }, button(color{ 0, 0, 0, 0 }, txt)),
+               panel()
             )
          );
 
@@ -176,32 +176,11 @@ int main()
       }
 
       {
-         char const* text =
-            "We are in the midst of an intergalatic condensing of beauty that will "
-            "clear a path toward the planet itself. The quantum leap of rebirth is "
-            "now happening worldwide. It is time to take healing to the next level. "
-            "Soon there will be a deepening of chi the likes of which the infinite "
-            "has never seen. The universe is approaching a tipping point. This "
-            "vision quest never ends. Imagine a condensing of what could be. "
-            "We can no longer afford to live with stagnation. Suffering is born "
-            "in the gap where stardust has been excluded. You must take a stand "
-            "against discontinuity.\n\n"
-
-            "Without complexity, one cannot dream. Stagnation is the antithesis of "
-            "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
-            "Yes, it is possible to eliminate the things that can destroy us, but not "
-            "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
-            "You may be ruled by desire without realizing it. Do not let it eliminate "
-            "the growth of your journey.\n\n"
-
-            "--New-Age Bullshit Generator"
-            ;
-
          auto txbx = margin(
             { 20, 20, 20, 20 },
             layer(
-                margin({ 20, 20, 20, 20 }, text_box(text)),
-                panel()
+               margin({ 20, 20, 20, 20 }, text_box(text)),
+               panel()
             )
          );
 
@@ -229,7 +208,24 @@ int main()
                )
             ;
 
-         main_widget = p;
+         // main_widget = p;
+      }
+
+      {
+         auto txbx = margin(
+            { 20, 20, 20, 20 },
+            scroller(
+               layer(
+                  margin(
+                     { 20, 20, 20, 20 },
+                     size({ 800, 3000 }, text_box(text))
+                  ),
+                  panel()
+               )
+            )
+         );
+
+         main_widget = txbx;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

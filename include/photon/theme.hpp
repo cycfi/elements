@@ -43,7 +43,7 @@ namespace photon
       virtual void         draw_frame(rect const& b) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
-      // Sliders
+      // Sliders and Scrollbars
 
       double               slider_knob_radius         = 0.25;  // fraction of size (width or height)
       double               slider_slot_size           = 0.2;   // fraction of size (width or height)
@@ -53,6 +53,11 @@ namespace photon
       virtual void         draw_slider(double pos, rect const& b) const;
       virtual void         draw_slider_knob(double pos, rect const& b) const;
       virtual circle       slider_knob_position(double pos, rect const& b) const;
+
+      color                scroll_bar_outline_color   = { 200, 200, 200, 50 };
+      color                scroll_bar_fill_color      = { 0, 0, 0, 120 };
+
+      virtual void         draw_scroll_bar(double pos, double ext, rect const& b) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Text

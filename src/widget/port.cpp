@@ -38,6 +38,27 @@ namespace photon
       nvgSave(ctx.canvas());
       nvgScissor(ctx.canvas(), ctx.bounds.left, ctx.bounds.top, ctx.bounds.width(), ctx.bounds.height());
       proxy::draw(ctx);
+
+      rect e_limits = subject()->limits(ctx);
+
+      rect vscroll_bounds = {
+         ctx.bounds.left + ctx.bounds.width() - 10,
+         ctx.bounds.top,
+         ctx.bounds.right,
+         ctx.bounds.bottom
+      };
+
+      ctx.theme().draw_scroll_bar(_valign, e_limits.top, vscroll_bounds);
+
+      rect hscroll_bounds = {
+         ctx.bounds.left,
+         ctx.bounds.top + ctx.bounds.height() - 10,
+         ctx.bounds.right,
+         ctx.bounds.bottom
+      };
+
+      ctx.theme().draw_scroll_bar(_halign, e_limits.left, hscroll_bounds);
+
       nvgRestore(ctx.canvas());
    }
 }

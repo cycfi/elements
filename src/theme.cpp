@@ -152,6 +152,32 @@ namespace photon
          nvgStrokeColor(vg, nvgRGBA(outline_color));
          nvgStroke(vg);
       }
+
+      void draw_scrollbar(
+         NVGcontext* vg, double x, double y, double w, double h, double r,
+         color const& outline_color_, color const& fill_color_
+      )
+      {
+         auto outline_color = nvgRGBA(outline_color_);
+         auto fill_color = nvgRGBA(fill_color_);
+         auto gradient_color = outline_color;
+         gradient_color.a /= 2;
+
+         NVGpaint sp
+            = nvgBoxGradient(
+                  vg, x+2, y+2, w-2, h-2, 3, 4,
+                  fill_color, gradient_color
+               );
+
+         nvgBeginPath(vg);
+         nvgRoundedRect(vg, x, y, w, h, r);
+         nvgFillPaint(vg, sp);
+         nvgFill(vg);
+
+         nvgStrokeColor(vg, outline_color);
+         nvgStroke(vg);
+
+      }
    }
 
    void theme::draw_slider(double pos, rect const& b) const
@@ -222,6 +248,28 @@ namespace photon
 
          return { cx, y+(pos*h), kr };
       }
+   }
+
+   void theme::draw_scroll_bar(double pos, double ext, rect const& b) const
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+
+      if (w > h)
+      {
+         w *= w/ext;
+         x += pos * (b.width()-w);
+      }
+      else
+      {
+         h *= h/ext;
+         y += pos * (b.height()-h);
+      }
+
+      draw_scrollbar(_vg, x, y, w, h, 5,
+         scroll_bar_outline_color, scroll_bar_fill_color);
    }
 
    namespace

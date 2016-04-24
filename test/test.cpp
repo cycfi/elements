@@ -211,7 +211,7 @@ int main()
       {
          widget_ptr img =
             size(
-               point{ 1200, 800 }
+               point{ 3000, 2000 }
              , image("./assets/images/space.jpg")
             );
 

@@ -21,8 +21,8 @@ namespace photon
 
       port_widget(std::shared_ptr<widget> subject)
        : proxy(subject)
-       , _halign(0.5)
-       , _valign(0.5)
+       , _halign(0.0)
+       , _valign(0.0)
       {}
 
       ~port_widget() {}

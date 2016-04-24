@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/theme.hpp>
+#include <photon/support.hpp>
 #include <nanovg.h>
 #include <vector>
 
@@ -265,11 +266,13 @@ namespace photon
       if (w > h)
       {
          w *= w/ext;
+         min_limit(w, 20);
          x += pos * (b.width()-w);
       }
       else
       {
          h *= h/ext;
+         min_limit(h, 20);
          y += pos * (b.height()-h);
       }
 
@@ -287,11 +290,13 @@ namespace photon
       if (w > h)
       {
          w *= w/ext;
+         min_limit(w, 20);
          x += pos * (b.width()-w);
       }
       else
       {
          h *= h/ext;
+         min_limit(h, 20);
          y += pos * (b.height()-h);
       }
       return rect{ x, y, x+w, y+h };

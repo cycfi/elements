@@ -112,7 +112,7 @@ namespace photon
    widget* scroller_widget::click(context const& ctx, mouse_button btn)
    {
       _tracking = start;
-      if (reposition(ctx))
+      if (btn.is_pressed && reposition(ctx))
          return this;
       return port_widget::click(ctx, btn);
    }
@@ -128,22 +128,50 @@ namespace photon
       scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
       rect              e_limits = subject()->limits(ctx);
 
+      auto valign_ = [&](double align)
+      {
+         limit(align, 0.0, 1.0);
+         valign(align);
+         ctx.window.draw();
+      };
+
+      auto halign_ = [&](double align)
+      {
+         limit(align, 0.0, 1.0);
+         halign(align);
+         ctx.window.draw();
+      };
+
       if (sb.has_v)
       {
          rect b = ctx.theme().scroll_bar_position(valign(), e_limits.top, sb.vscroll_bounds);
-         if (_tracking == start && b.includes(p))
+         if (_tracking == start)
          {
-            _offset = point{ p.x-b.left, p.y-b.top };
-            _tracking = tracking_v;
+            if (b.includes(p))
+            {
+               _offset = point{ p.x-b.left, p.y-b.top };
+               _tracking = tracking_v;
+            }
+            else if (sb.vscroll_bounds.includes(p))
+            {
+               double page = b.height() / sb.vscroll_bounds.height();
+               if (p.y < b.top)
+               {
+                  valign_(valign() - page);
+                  return true;
+               }
+               else if (p.y > b.bottom)
+               {
+                  valign_(valign() + page);
+                  return true;
+               }
+            }
          }
 
          if (_tracking == tracking_v)
          {
             p.y -= _offset.y + ctx.bounds.top;
-            double align = p.y / (sb.vscroll_bounds.height() - b.height());
-            limit(align, 0.0, 1.0);
-            valign(align);
-            ctx.window.draw();
+            valign_(p.y / (sb.vscroll_bounds.height() - b.height()));
             return true;
          }
       }
@@ -151,19 +179,33 @@ namespace photon
       if (sb.has_h)
       {
          rect b = ctx.theme().scroll_bar_position(halign(), e_limits.left, sb.hscroll_bounds);
-         if (_tracking == start && b.includes(p))
+         if (_tracking == start)
          {
-            _offset = point{ p.x-b.left, p.y-b.top };
-            _tracking = tracking_h;
+            if (b.includes(p))
+            {
+               _offset = point{ p.x-b.left, p.y-b.top };
+               _tracking = tracking_h;
+            }
+            else if (sb.hscroll_bounds.includes(p))
+            {
+               double page = b.width() / sb.vscroll_bounds.width();
+               if (p.x < b.left)
+               {
+                  halign_(valign() - page);
+                  return true;
+               }
+               else if (p.x > b.right)
+               {
+                  halign_(valign() + page);
+                  return true;
+               }
+            }
          }
 
          if (_tracking == tracking_h)
          {
             p.x -= _offset.x + ctx.bounds.left;
-            double align = p.x / (sb.hscroll_bounds.width() - b.width());
-            limit(align, 0.0, 1.0);
-            halign(align);
-            ctx.window.draw();
+            halign_(p.x / (sb.hscroll_bounds.width() - b.width()));
             return true;
          }
       }

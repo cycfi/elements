@@ -34,7 +34,7 @@ namespace photon
       point          _size;
    };
 
-   inline widget_ptr hsize(point size, std::shared_ptr<widget> subject)
+   inline widget_ptr size(point size, std::shared_ptr<widget> subject)
    {
       return widget_ptr{ new size_widget{ size, subject } };
    }

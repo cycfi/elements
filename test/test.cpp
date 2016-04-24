@@ -10,6 +10,8 @@
 #include <photon/widget/text.hpp>
 #include <photon/widget/icon.hpp>
 #include <photon/widget/button.hpp>
+#include <photon/widget/image.hpp>
+#include <photon/widget/port.hpp>
 
 int main()
 {
@@ -172,7 +174,7 @@ int main()
 
          //main_widget = btn;
       }
-      
+
       {
          char const* text =
             "We are in the midst of an intergalatic condensing of beauty that will "
@@ -203,7 +205,31 @@ int main()
             )
          );
 
-         main_widget = txbx;
+         //main_widget = txbx;
+      }
+
+      {
+         widget_ptr img =
+            size(
+               point{ 1200, 800 }
+             , image("./assets/images/space.jpg")
+            );
+
+
+         widget_ptr p =
+               margin(
+                  { 20, 20, 20, 20 },
+                  layer(
+                     margin(
+                        { 20, 20, 20, 20 },
+                        port(img)
+                     ),
+                     panel()
+                  )
+               )
+            ;
+
+         main_widget = p;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

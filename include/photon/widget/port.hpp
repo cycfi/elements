@@ -27,19 +27,19 @@ namespace photon
 
       ~port_widget() {}
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
-      virtual void   draw(context const& ctx);
+      virtual rect      limits(basic_context const& ctx) const;
+      virtual void      prepare_subject(context& ctx);
+      virtual void      draw(context const& ctx);
 
-      double         halign() const { return _halign; }
-      void           halign(double val) { _halign = val; }
-      double         valign() const { return _valign; }
-      void           valign(double val) { _valign = val; }
+      double            halign() const { return _halign; }
+      void              halign(double val) { _halign = val; }
+      double            valign() const { return _valign; }
+      void              valign(double val) { _valign = val; }
 
    private:
 
-      double         _halign;
-      double         _valign;
+      double            _halign;
+      double            _valign;
    };
 
    inline widget_ptr port(std::shared_ptr<widget> subject)
@@ -59,10 +59,35 @@ namespace photon
 
       ~scroller_widget() {}
 
-      virtual void   draw(context const& ctx);
-      virtual bool   focus(focus_request r);
-      virtual bool   scroll(context const& ctx, point const& p);
-      virtual bool   is_control() const;
+      virtual void      draw(context const& ctx);
+      virtual bool      focus(focus_request r);
+      virtual widget*   click(context const& ctx, mouse_button btn);
+      virtual void      drag(context const& ctx, mouse_button btn);
+      virtual bool      scroll(context const& ctx, point const& p);
+      virtual bool      is_control() const;
+
+   private:
+
+      struct scrollbar_bounds
+      {
+         rect vscroll_bounds;
+         rect hscroll_bounds;
+         bool has_v = false;
+         bool has_h = false;
+      };
+
+      enum tracking_status
+      {
+         start,
+         tracking_v,
+         tracking_h
+      };
+
+      scrollbar_bounds  get_scrollbar_bounds(context const& ctx);
+      bool              reposition(context const& ctx);
+
+      point             _offset;
+      tracking_status  _tracking;
    };
 
    inline widget_ptr scroller(std::shared_ptr<widget> subject)

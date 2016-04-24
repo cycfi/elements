@@ -41,38 +41,50 @@ namespace photon
       proxy::draw(ctx);
    }
 
-   void scroller_widget::draw(context const& ctx)
+   scroller_widget::scrollbar_bounds
+   scroller_widget::get_scrollbar_bounds(context const& ctx)
    {
-      port_widget::draw(ctx);
-      rect  e_limits = subject()->limits(ctx);
+      scrollbar_bounds r;
 
-      bool     has_h = e_limits.left > ctx.bounds.width();
-      bool     has_v = e_limits.top > ctx.bounds.height();
+      rect     e_limits = subject()->limits(ctx);
       double   scroll_bar_width = ctx.theme().scroll_bar_width;
 
-      if (has_v)
+      r.has_h = e_limits.left > ctx.bounds.width();
+      r.has_v = e_limits.top > ctx.bounds.height();
+
+      if (r.has_v)
       {
-         rect vscroll_bounds = {
+         r.vscroll_bounds = rect{
             ctx.bounds.left + ctx.bounds.width() - scroll_bar_width,
             ctx.bounds.top,
             ctx.bounds.right,
-            ctx.bounds.bottom - (has_h ? scroll_bar_width : 0)
+            ctx.bounds.bottom - (r.has_h ? scroll_bar_width : 0)
          };
-
-         ctx.theme().draw_scroll_bar(valign(), e_limits.top, vscroll_bounds);
       }
 
-      if (has_h)
+      if (r.has_h)
       {
-         rect hscroll_bounds = {
+         r.hscroll_bounds = rect{
             ctx.bounds.left,
             ctx.bounds.top + ctx.bounds.height() - scroll_bar_width,
-            ctx.bounds.right - (has_v ? scroll_bar_width : 0),
+            ctx.bounds.right - (r.has_v ? scroll_bar_width : 0),
             ctx.bounds.bottom
          };
-
-         ctx.theme().draw_scroll_bar(halign(), e_limits.left, hscroll_bounds);
       }
+      return r;
+   }
+
+   void scroller_widget::draw(context const& ctx)
+   {
+      port_widget::draw(ctx);
+      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+      rect              e_limits = subject()->limits(ctx);
+
+      if (sb.has_v)
+         ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds);
+
+      if (sb.has_h)
+         ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds);
    }
 
    bool scroller_widget::focus(focus_request r)
@@ -95,6 +107,68 @@ namespace photon
       valign(aly);
       ctx.window.draw();
       return true;
+   }
+
+   widget* scroller_widget::click(context const& ctx, mouse_button btn)
+   {
+      _tracking = start;
+      if (reposition(ctx))
+         return this;
+      return port_widget::click(ctx, btn);
+   }
+
+   void scroller_widget::drag(context const& ctx, mouse_button btn)
+   {
+      reposition(ctx);
+   }
+
+   bool scroller_widget::reposition(context const& ctx)
+   {
+      point             p = ctx.cursor_pos();
+      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+      rect              e_limits = subject()->limits(ctx);
+
+      if (sb.has_v)
+      {
+         rect b = ctx.theme().scroll_bar_position(valign(), e_limits.top, sb.vscroll_bounds);
+         if (_tracking == start && b.includes(p))
+         {
+            _offset = point{ p.x-b.left, p.y-b.top };
+            _tracking = tracking_v;
+         }
+
+         if (_tracking == tracking_v)
+         {
+            p.y -= _offset.y + ctx.bounds.top;
+            double align = p.y / (sb.vscroll_bounds.height() - b.height());
+            limit(align, 0.0, 1.0);
+            valign(align);
+            ctx.window.draw();
+            return true;
+         }
+      }
+
+      if (sb.has_h)
+      {
+         rect b = ctx.theme().scroll_bar_position(halign(), e_limits.left, sb.hscroll_bounds);
+         if (_tracking == start && b.includes(p))
+         {
+            _offset = point{ p.x-b.left, p.y-b.top };
+            _tracking = tracking_h;
+         }
+
+         if (_tracking == tracking_h)
+         {
+            p.x -= _offset.x + ctx.bounds.left;
+            double align = p.x / (sb.hscroll_bounds.width() - b.width());
+            limit(align, 0.0, 1.0);
+            halign(align);
+            ctx.window.draw();
+            return true;
+         }
+      }
+
+      return false;
    }
 
    bool scroller_widget::is_control() const

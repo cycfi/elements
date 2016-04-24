@@ -276,7 +276,7 @@ namespace photon
          y += pos * (b.height()-h);
       }
 
-      draw_scrollbar(_vg, x, y, w, h, 5,
+      draw_scrollbar(_vg, x, y, w, h, scroll_bar_width/3,
          scroll_bar_outline_color, scroll_bar_fill_color);
    }
 

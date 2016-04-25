@@ -460,8 +460,6 @@ namespace photon
             char const* cp = start;
 
             nvgSave(vg);
-            //nvgScissor(vg, x, y, w, h);
-
             nvgFontSize(vg, font_size);
             nvgFontFace(vg, font);
             nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
@@ -499,6 +497,33 @@ namespace photon
             }
 
             nvgRestore(vg);
+         }
+
+         double height() const
+         {
+            float       y = this->y;
+            char const* cp = start;
+
+            nvgSave(vg);
+            nvgFontSize(vg, font_size);
+            nvgFontFace(vg, font);
+            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+            float lineh;
+            nvgTextMetrics(vg, 0, 0, &lineh);
+
+            NVGtextRow rows[3];
+
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
+            {
+               for (std::size_t i = 0; i < nrows; ++i)
+                  y += lineh;
+               // Keep going...
+               cp = rows[nrows-1].next;
+            }
+
+            nvgRestore(vg);
+            return y + lineh;
          }
 
          char const* caret_position(point const& p) const
@@ -624,10 +649,16 @@ namespace photon
       r.draw();
    }
 
-   char const*  theme::caret_position(rect const& b, text_info const& text, point const& p) const
+   char const* theme::caret_position(rect const& b, text_info const& text, point const& p) const
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.caret_position(p);
+   }
+
+   double theme::edit_text_box_height(rect const& b, text_info const& text) const
+   {
+      edit_text_box_renderer r{ *this, b, text };
+      return r.height();
    }
 
    void theme::draw_button(rect const& b, color const& button_color) const

@@ -85,8 +85,11 @@ namespace photon
    class text_box_widget : public widget
    {
    public:
-                        text_box_widget(std::string const& text)
-                         : text(text), select_start(-1), select_end(-1)
+                        text_box_widget(std::string const& text, double width)
+                         : text(text)
+                         , select_start(-1)
+                         , select_end(-1)
+                         , width(width)
                         {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -101,11 +104,12 @@ namespace photon
       std::string       text;
       int               select_start;
       int               select_end;
+      double            width;
    };
 
-   inline widget_ptr text_box(std::string const& text)
+   inline widget_ptr text_box(std::string const& text, double width)
    {
-      return widget_ptr{ new text_box_widget{ text } };
+      return widget_ptr{ new text_box_widget{ text, width } };
    }
 }
 

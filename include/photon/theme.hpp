@@ -110,6 +110,7 @@ namespace photon
 
       virtual void         draw_edit_text_box(rect const& b, text_info const& text) const;
       virtual char const*  caret_position(rect const& b, text_info const& text, point const& p) const;
+      virtual double       edit_text_box_height(rect const& b, text_info const& text) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Buttons

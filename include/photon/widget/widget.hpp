@@ -112,7 +112,11 @@ namespace photon
    {
    public:
 
-      composite() : _focus(-1) {}
+      composite()
+       : _focus(-1)
+       , _drag_tracking(-1)
+      {}
+
       ~composite() {}
 
    // image
@@ -155,6 +159,7 @@ namespace photon
 
       composite_type          _elements;
    	int			            _focus;
+      int                     _drag_tracking;
    };
 
 }

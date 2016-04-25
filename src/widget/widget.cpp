@@ -220,21 +220,24 @@ namespace photon
 
          if (info.element)
          {
+            _drag_tracking = info.index;
             context ectx{ ctx, info.element, info.bounds };
             if (info.element->click(ectx, btn))
                return info.element;
          }
       }
+      _drag_tracking = -1;
       return 0;
    }
 
    void composite::drag(context const& ctx, mouse_button btn)
    {
-      hit_info info = hit_element(ctx, ctx.cursor_pos());
-      if (info.element)
+      if (_drag_tracking != -1)
       {
-         context ectx{ ctx, info.element, info.bounds };
-         info.element->drag(ectx, btn);
+         rect bounds = bounds_of(ctx, _drag_tracking);
+         widget* element = _elements[_drag_tracking].get();
+         context ectx{ ctx, element, bounds };
+         element->drag(ectx, btn);
       }
    }
 

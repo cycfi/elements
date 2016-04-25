@@ -10,6 +10,7 @@
 #include <photon/app.hpp>
 #include <photon/window.hpp>
 #include <cctype>
+#include <cmath>
 
 namespace photon
 {
@@ -58,8 +59,15 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect text_box_widget::limits(basic_context const& ctx) const
    {
-      double text_box_font_size = ctx.theme().text_box_font_size;
-      return { 50, text_box_font_size, full_extent, full_extent };
+      char const* first = &text[0];
+      theme::text_info info = {
+         first,
+         first + text.size()
+      };
+
+      rect bounds = { 0, 0, width, full_extent };
+      double height = ctx.theme().edit_text_box_height(bounds, info);
+      return { width, height, width, height };
    }
 
    void text_box_widget::draw(context const& ctx)

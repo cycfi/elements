@@ -8,6 +8,7 @@
 #include <photon/window.hpp>
 #include <algorithm>
 #include <nanovg.h>
+#include <cmath>
 
 namespace photon
 {
@@ -63,6 +64,10 @@ namespace photon
             ctx.bounds.bottom - (r.has_h ? scroll_bar_width : 0)
          };
       }
+      else
+      {
+         valign(0.0);
+      }
 
       if (r.has_h)
       {
@@ -72,6 +77,10 @@ namespace photon
             ctx.bounds.right - (r.has_v ? scroll_bar_width : 0),
             ctx.bounds.bottom
          };
+      }
+      else
+      {
+         halign(0.0);
       }
       return r;
    }
@@ -96,19 +105,41 @@ namespace photon
 
    bool scroller_widget::scroll(context const& ctx, point const& p)
    {
-      rect     e_limits = subject()->limits(ctx);
-      double   dx = (-p.x / e_limits.left) * ctx.theme().scroll_bar_speed;
-      double   dy = (-p.y / e_limits.top) * ctx.theme().scroll_bar_speed;
-      double   alx = halign() + dx;
-      double   aly = valign() + dy;
+      rect              e_limits = subject()->limits(ctx);
+      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
 
-      limit(alx, 0.0, 1.0);
-      limit(aly, 0.0, 1.0);
+      if (!sb.has_h && !sb.has_v)
+         return false;
 
-      halign(alx);
-      valign(aly);
-      ctx.window.draw();
-      return true;
+      bool redraw = false;
+
+      if (sb.has_h)
+      {
+         double dx = (-p.x / e_limits.left) * ctx.theme().scroll_bar_speed;
+         if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
+         {
+            double alx = halign() + dx;
+            limit(alx, 0.0, 1.0);
+            halign(alx);
+            redraw = true;
+         }
+      }
+
+      if (sb.has_v)
+      {
+         double dy = (-p.y / e_limits.top) * ctx.theme().scroll_bar_speed;
+         if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
+         {
+            double aly = valign() + dy;
+            limit(aly, 0.0, 1.0);
+            valign(aly);
+            redraw = true;
+         }
+      }
+
+      if (redraw)
+         ctx.window.draw();
+      return redraw;
    }
 
    widget* scroller_widget::click(context const& ctx, mouse_button btn)
@@ -214,6 +245,17 @@ namespace photon
       }
 
       return false;
+   }
+
+   bool scroller_widget::cursor(context const& ctx, point const& p)
+   {
+      scrollbar_bounds sb = get_scrollbar_bounds(ctx);
+      if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
+      {
+         ctx.window.set_cursor(cursor::arrow);
+         return true;
+      }
+      return port_widget::cursor(ctx, p);
    }
 
    bool scroller_widget::is_control() const

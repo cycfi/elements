@@ -144,16 +144,37 @@ namespace photon
 
    widget* scroller_widget::click(context const& ctx, mouse_button btn)
    {
-      _tracking = start;
-      if (btn.is_pressed && reposition(ctx))
-         return this;
+      if (btn.is_pressed)
+      {
+         _tracking = start;
+         if (reposition(ctx))
+            return this;
+      }
+      _tracking = none;
       return port_widget::click(ctx, btn);
    }
 
    void scroller_widget::drag(context const& ctx, mouse_button btn)
    {
-      if (!reposition(ctx))
+      if (_tracking == none || !reposition(ctx))
+      {
+         // scroll cursor into view:
+         auto mp = ctx.cursor_pos();
+         if (!ctx.bounds.includes(mp))
+         {
+            point dp;
+            if (mp.x > ctx.bounds.right)
+               dp.x = ctx.bounds.right - mp.x;
+            else if (mp.x < ctx.bounds.left)
+               dp.x = ctx.bounds.left - mp.x;
+            if (mp.y > ctx.bounds.bottom)
+               dp.y = ctx.bounds.bottom - mp.y;
+            else if (mp.y < ctx.bounds.top)
+               dp.y = ctx.bounds.top - mp.y;
+            scroll(ctx, dp);
+         }
          port_widget::drag(ctx, btn);
+      }
    }
 
    bool scroller_widget::reposition(context const& ctx)
@@ -178,16 +199,19 @@ namespace photon
 
       if (sb.has_v)
       {
+         // vertical scroll
          rect b = ctx.theme().scroll_bar_position(valign(), e_limits.top, sb.vscroll_bounds);
          if (_tracking == start)
          {
             if (b.includes(p))
             {
+               // start tracking scroll-box
                _offset = point{ p.x-b.left, p.y-b.top };
                _tracking = tracking_v;
             }
             else if (sb.vscroll_bounds.includes(p))
             {
+               // page up or down
                double page = b.height() / sb.vscroll_bounds.height();
                if (p.y < b.top)
                {
@@ -202,6 +226,7 @@ namespace photon
             }
          }
 
+         // continue tracking scroll-box
          if (_tracking == tracking_v)
          {
             p.y -= _offset.y + ctx.bounds.top;
@@ -212,9 +237,11 @@ namespace photon
 
       if (sb.has_h)
       {
+         // horizontal scroll
          rect b = ctx.theme().scroll_bar_position(halign(), e_limits.left, sb.hscroll_bounds);
          if (_tracking == start)
          {
+            // start tracking scroll-box
             if (b.includes(p))
             {
                _offset = point{ p.x-b.left, p.y-b.top };
@@ -222,6 +249,7 @@ namespace photon
             }
             else if (sb.hscroll_bounds.includes(p))
             {
+               // page left or right
                double page = b.width() / sb.vscroll_bounds.width();
                if (p.x < b.left)
                {
@@ -236,6 +264,7 @@ namespace photon
             }
          }
 
+         // continue tracking scroll-box
          if (_tracking == tracking_h)
          {
             p.x -= _offset.x + ctx.bounds.left;

@@ -60,6 +60,10 @@ namespace photon
    {
    }
 
+   void app::text(uint32_t codepoint, int modifiers)
+   {
+   }
+
    namespace
    {
       bool windows_open()
@@ -79,7 +83,7 @@ namespace photon
 
          return !windows.empty();
       }
-      
+
       void windows_idle()
       {
          for (auto i = windows.cbegin(); i != windows.cend(); ++i)
@@ -101,11 +105,21 @@ namespace photon
       }
    }
 
+   void text_entry(GLFWwindow* window_ptr, unsigned int codepoint, int mods)
+   {
+      if (app_ptr)
+      {
+         app_ptr->text(codepoint, mods);
+         auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
+         wp->text(codepoint, mods);
+      }
+   }
+
    void key_press(GLFWwindow* window_ptr, int key, int scancode, int action, int mods)
    {
       if (app_ptr)
       {
-         key_info k = { key, scancode, action, mods };
+         key_info k = { key_code(key), key_action(action), mods };
          app_ptr->key(k);
          auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
          wp->key(k);

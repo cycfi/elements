@@ -55,6 +55,7 @@ namespace photon
 
       virtual void      draw();
       virtual void      key(key_info const& k);
+      virtual void      text(uint32_t codepoint, int modifiers);
       virtual void      click(mouse_button const& btn);
       virtual void      mouse(point const& p);
       virtual void      scroll(point const& p);

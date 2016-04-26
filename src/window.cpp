@@ -15,7 +15,10 @@ namespace photon
 {
    // Internal API
    extern std::map<GLFWwindow*, window*> windows;
+
+   // defined in app.cpp
    void key_press(GLFWwindow* window, int key, int scancode, int action, int mods);
+   void text_entry(GLFWwindow* window, unsigned int codepoint, int mods);
 
    void window_refresh(GLFWwindow* window_ptr)
    {
@@ -90,6 +93,7 @@ namespace photon
 
       glfwSetWindowUserPointer(_window, this);
       glfwSetKeyCallback(_window, key_press);
+      glfwSetCharModsCallback(_window, text_entry);
       glfwSetWindowRefreshCallback(_window, window_refresh);
       glfwSetMouseButtonCallback(_window, mouse_button);
       glfwSetWindowFocusCallback(_window, window_focus);
@@ -195,6 +199,14 @@ namespace photon
 
    void window::key(key_info const& k)
    {
+      context ctx { *this, _subject.get(), _current_bounds };
+      _subject->key(ctx, k);
+   }
+
+   void window::text(uint32_t codepoint, int modifiers)
+   {
+      context ctx { *this, _subject.get(), _current_bounds };
+      _subject->text(ctx, codepoint, modifiers);
    }
 
    void window::click(struct mouse_button const& btn_)
@@ -254,13 +266,13 @@ namespace photon
          _subject->focus(is_focus? focus_request::begin_focus : focus_request::end_focus);
       draw();
    }
-   
+
    void window::idle()
    {
       //if (_refresh)
       //   draw();
    }
-   
+
    void window::refresh()
    {
       _refresh = true;

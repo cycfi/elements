@@ -55,6 +55,7 @@ namespace photon
 
       scroller_widget(std::shared_ptr<widget> subject)
        : port_widget(subject)
+       , _tracking(none)
       {}
 
       ~scroller_widget() {}
@@ -79,6 +80,7 @@ namespace photon
 
       enum tracking_status
       {
+         none,
          start,
          tracking_v,
          tracking_h

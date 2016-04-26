@@ -9,6 +9,7 @@
 
 #include <photon/support.hpp>
 #include <photon/cursor.hpp>
+#include <photon/key.hpp>
 #include <type_traits>
 #include <vector>
 
@@ -25,6 +26,7 @@ namespace photon
                            app& operator=(app const&) = delete;
 
       virtual void         key(key_info const& k);
+      virtual void         text(uint32_t codepoint, int modifiers);
       virtual void         run();
       cursor&              get_cursor(cursor::type t);
 

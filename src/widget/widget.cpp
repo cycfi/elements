@@ -45,6 +45,11 @@ namespace photon
       return false;
    }
 
+   bool widget::text(context const& ctx, uint32_t codepoint, int modifiers)
+   {
+      return false;
+   }
+
    bool widget::cursor(context const& ctx, point const& p)
    {
       return false;
@@ -123,6 +128,13 @@ namespace photon
       context sctx { ctx, _subject.get(), ctx.bounds };
       prepare_subject(sctx);
       return _subject->key(sctx, k);
+   }
+
+   bool proxy::text(context const& ctx, uint32_t codepoint, int modifiers)
+   {
+      context sctx { ctx, _subject.get(), ctx.bounds };
+      prepare_subject(sctx);
+      return _subject->text(sctx, codepoint, modifiers);
    }
 
    bool proxy::cursor(context const& ctx, point const& p)
@@ -249,6 +261,19 @@ namespace photon
          widget* focus_ptr = _elements[_focus].get();
          context ectx{ ctx, focus_ptr, bounds };
          return focus_ptr->key(ectx, k);
+      };
+
+      return false;
+   }
+
+   bool composite::text(context const& ctx, uint32_t codepoint, int modifiers)
+   {
+      if (_focus != -1)
+      {
+         rect bounds = bounds_of(ctx, _focus);
+         widget* focus_ptr = _elements[_focus].get();
+         context ectx{ ctx, focus_ptr, bounds };
+         return focus_ptr->text(ectx, codepoint, modifiers);
       };
 
       return false;

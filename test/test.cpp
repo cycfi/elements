@@ -216,7 +216,7 @@ int main()
       {
          widget_ptr img =
             size(
-               point{ 1500, 1000 }
+               point{ 1920, 1080 }
              , image("./assets/images/space.jpg")
             );
 
@@ -234,7 +234,7 @@ int main()
                )
             ;
 
-         main_widget = p;
+         // main_widget = p;
       }
 
       {
@@ -251,7 +251,7 @@ int main()
             )
          );
 
-         //main_widget = txbx;
+         main_widget = txbx;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

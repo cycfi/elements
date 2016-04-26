@@ -203,10 +203,10 @@ namespace photon
       _subject->key(ctx, k);
    }
 
-   void window::text(uint32_t codepoint, int modifiers)
+   void window::text(text_info const& info)
    {
       context ctx { *this, _subject.get(), _current_bounds };
-      _subject->text(ctx, codepoint, modifiers);
+      _subject->text(ctx, info);
    }
 
    void window::click(struct mouse_button const& btn_)

@@ -86,10 +86,10 @@ namespace photon
    {
    public:
                         text_box_widget(std::string const& text, double width)
-                         : text(text)
-                         , select_start(-1)
-                         , select_end(-1)
-                         , width(width)
+                         : _text(text)
+                         , _select_start(-1)
+                         , _select_end(-1)
+                         , _width(width)
                         {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -97,14 +97,15 @@ namespace photon
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      cursor(context const& ctx, point const& p);
+      virtual bool      text(context const& ctx, text_info const& info);
       virtual bool      is_control() const;
 
    private:
 
-      std::string       text;
-      int               select_start;
-      int               select_end;
-      double            width;
+      std::string       _text;
+      int               _select_start;
+      int               _select_end;
+      double            _width;
    };
 
    inline widget_ptr text_box(std::string const& text, double width)

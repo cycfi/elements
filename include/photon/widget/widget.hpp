@@ -49,12 +49,13 @@ namespace photon
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
-      virtual bool            text(context const& ctx, uint32_t codepoint, int modifiers);
+      virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual widget*         focus();
       virtual bool            is_control() const;
    };
 
@@ -88,12 +89,13 @@ namespace photon
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
-      virtual bool            text(context const& ctx, uint32_t codepoint, int modifiers);
+      virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual widget*         focus();
       virtual bool            is_control() const;
 
    // proxy
@@ -134,12 +136,13 @@ namespace photon
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
-      virtual bool            text(context const& ctx, uint32_t codepoint, int modifiers);
+      virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
       virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
+      virtual widget*         focus();
       virtual void            focus(std::size_t index);
       virtual bool            is_control() const;
 

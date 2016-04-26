@@ -59,25 +59,25 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect text_box_widget::limits(basic_context const& ctx) const
    {
-      char const* first = &text[0];
+      char const* first = &_text[0];
       theme::text_info info = {
          first,
-         first + text.size()
+         first + _text.size()
       };
 
-      rect bounds = { 0, 0, width, full_extent };
+      rect bounds = { 0, 0, _width, full_extent };
       double height = ctx.theme().edit_text_box_height(bounds, info);
-      return { width, height, width, height };
+      return { _width, height, _width, height };
    }
 
    void text_box_widget::draw(context const& ctx)
    {
-      char const* first = &text[0];
+      char const* first = &_text[0];
       theme::text_info info = {
          first,
-         first + text.size(),
-         (select_start == -1)? 0 : first+select_start,
-         (select_end == -1)? 0 : first+select_end,
+         first + _text.size(),
+         (_select_start == -1)? 0 : first+_select_start,
+         (_select_end == -1)? 0 : first+_select_end,
          ctx.window.is_focus()
       };
       ctx.theme().draw_edit_text_box(ctx.bounds, info);
@@ -88,10 +88,10 @@ namespace photon
       if (!btn.is_pressed) // released? return early
          return this;
 
-      char const* first = &text[0];
+      char const* first = &_text[0];
       theme::text_info info = {
          first,
-         first + text.size()
+         first + _text.size()
       };
       if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
       {
@@ -121,12 +121,12 @@ namespace photon
             }
             if (first != info.first)
                 ++first;
-            select_start = int(first-info.first);
-            select_end = int(last-info.first);
+            _select_start = int(first-info.first);
+            _select_end = int(last-info.first);
          }
          else
          {
-            select_start = select_end = int(pos-first);
+            _select_start = _select_end = int(pos-first);
          }
          ctx.window.draw();
       }
@@ -135,14 +135,14 @@ namespace photon
 
    void text_box_widget::drag(context const& ctx, mouse_button btn)
    {
-      char const* first = &text[0];
+      char const* first = &_text[0];
       theme::text_info info = {
          first,
-         first + text.size()
+         first + _text.size()
       };
       if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
       {
-         select_end = int(pos-first);
+         _select_end = int(pos-first);
          ctx.window.draw();
       }
    }
@@ -155,6 +155,20 @@ namespace photon
          return true;
       }
       return false;
+   }
+
+   bool text_box_widget::text(context const& ctx, text_info const& info)
+   {
+      char text[8];
+      codepoint_to_UTF8(info.codepoint, text);
+
+      if (_select_start == _select_end)
+         _text.insert(_select_start, text);
+      else
+         _text.replace(_select_start, _select_end-_select_start, text);
+      _select_end = ++_select_start;
+      ctx.window.draw();
+      return true;
    }
 
    bool text_box_widget::is_control() const

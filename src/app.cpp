@@ -60,7 +60,7 @@ namespace photon
    {
    }
 
-   void app::text(uint32_t codepoint, int modifiers)
+   void app::text(text_info const& info)
    {
    }
 
@@ -109,9 +109,10 @@ namespace photon
    {
       if (app_ptr)
       {
-         app_ptr->text(codepoint, mods);
+         text_info info{ codepoint, mods };
+         app_ptr->text(info);
          auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
-         wp->text(codepoint, mods);
+         wp->text(info);
       }
    }
 

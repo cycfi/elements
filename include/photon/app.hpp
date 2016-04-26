@@ -26,7 +26,7 @@ namespace photon
                            app& operator=(app const&) = delete;
 
       virtual void         key(key_info const& k);
-      virtual void         text(uint32_t codepoint, int modifiers);
+      virtual void         text(text_info const& info);
       virtual void         run();
       cursor&              get_cursor(cursor::type t);
 

@@ -45,7 +45,7 @@ namespace photon
       return false;
    }
 
-   bool widget::text(context const& ctx, uint32_t codepoint, int modifiers)
+   bool widget::text(context const& ctx, text_info const& info)
    {
       return false;
    }
@@ -66,6 +66,11 @@ namespace photon
    }
 
    widget const* widget::focus() const
+   {
+      return this;
+   }
+
+   widget* widget::focus()
    {
       return this;
    }
@@ -130,11 +135,11 @@ namespace photon
       return _subject->key(sctx, k);
    }
 
-   bool proxy::text(context const& ctx, uint32_t codepoint, int modifiers)
+   bool proxy::text(context const& ctx, text_info const& info)
    {
       context sctx { ctx, _subject.get(), ctx.bounds };
       prepare_subject(sctx);
-      return _subject->text(sctx, codepoint, modifiers);
+      return _subject->text(sctx, info);
    }
 
    bool proxy::cursor(context const& ctx, point const& p)
@@ -157,6 +162,11 @@ namespace photon
    }
 
    widget const* proxy::focus() const
+   {
+      return _subject->focus();
+   }
+
+   widget* proxy::focus()
    {
       return _subject->focus();
    }
@@ -266,14 +276,14 @@ namespace photon
       return false;
    }
 
-   bool composite::text(context const& ctx, uint32_t codepoint, int modifiers)
+   bool composite::text(context const& ctx, text_info const& info)
    {
       if (_focus != -1)
       {
          rect bounds = bounds_of(ctx, _focus);
          widget* focus_ptr = _elements[_focus].get();
          context ectx{ ctx, focus_ptr, bounds };
-         return focus_ptr->text(ectx, codepoint, modifiers);
+         return focus_ptr->text(ectx, info);
       };
 
       return false;
@@ -325,6 +335,11 @@ namespace photon
    }
 
    widget const* composite::focus() const
+   {
+      return (_elements.empty() || (_focus == -1))? 0 : _elements[_focus].get();
+   }
+
+   widget* composite::focus()
    {
       return (_elements.empty() || (_focus == -1))? 0 : _elements[_focus].get();
    }

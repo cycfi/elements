@@ -97,19 +97,30 @@ namespace photon
       {
          char const*       first;
          char const*       last;
+      };
+
+      struct text_draw_info
+      {
+         char const*       first;
+         char const*       last;
          char const*       select_first;
          char const*       select_last;
          bool              is_focus;
       };
 
-      struct caret_info
+      struct glyph_info
       {
-         char const*       pos;
-         bool              before; // before or after glyph
+         char const* str;
+         float x;
+         float y;
+         float lineh;
+         float minx;
+         float maxx;
       };
 
-      virtual void         draw_edit_text_box(rect const& b, text_info const& text) const;
+      virtual void         draw_edit_text_box(rect const& b, text_draw_info const& text) const;
       virtual char const*  caret_position(rect const& b, text_info const& text, point const& p) const;
+      virtual glyph_info   glyph_bounds(rect const& b, text_info const& text, char const* cp) const;
       virtual double       edit_text_box_height(rect const& b, text_info const& text) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////

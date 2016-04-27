@@ -340,12 +340,52 @@ namespace photon
          nvgTextBox(vg, x, y+font_size, w, text, 0);
          nvgRestore(vg);
       }
+   }
 
+   void theme::draw_label(rect const& b, char const* text) const
+   {
+      draw_text(_vg, b, text, label_font, label_font_size, label_font_color);
+   }
+
+   point theme::measure_label(char const* text) const
+   {
+      return measure_text(_vg, text, label_font, label_font_size);
+   }
+
+   void theme::draw_heading(rect const& b, char const* text) const
+   {
+      draw_text(_vg, b, text, heading_font, heading_font_size, heading_font_color);
+   }
+
+   point theme::measure_heading(char const* text) const
+   {
+      return measure_text(_vg, text, heading_font, heading_font_size);
+   }
+
+   void theme::draw_icon(rect const& b, uint32_t code, int size) const
+   {
+      char icon[8];
+      draw_text(_vg, b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
+   }
+
+   point theme::measure_icon(uint32_t code, int size) const
+   {
+      char icon[8];
+      return measure_text(_vg, codepoint_to_UTF8(code,icon), icon_font, size);
+   }
+
+   void theme::draw_text_box(rect const& b, char const* text) const
+   {
+      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_font_color);
+   }
+
+   namespace
+   {
       struct edit_text_box_renderer
       {
          float const right_pad = 5;
 
-         edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
+         edit_text_box_renderer(theme const& th, rect const& b, theme::text_draw_info const& text)
           : vg(th.canvas())
           , x(b.left)
           , y(b.top)
@@ -364,6 +404,51 @@ namespace photon
          {
             if (sstart > send)
                std::swap(sstart, send);
+         }
+
+         edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
+          : vg(th.canvas())
+          , x(b.left)
+          , y(b.top)
+          , w(b.width())
+          , h(b.height())
+          , font(th.text_box_font)
+          , font_size(th.text_box_font_size)
+          , font_color(th.text_box_font_color)
+          , start(text.first)
+          , end(text.last)
+         {
+            if (sstart > send)
+               std::swap(sstart, send);
+         }
+
+         template <typename F>
+         void for_each_row(F f, float& y, float& lineh) const
+         {
+            y = this->y;
+            char const* cp = start;
+
+            nvgSave(vg);
+            nvgFontSize(vg, font_size);
+            nvgFontFace(vg, font);
+            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+            nvgTextMetrics(vg, 0, 0, &lineh);
+
+            NVGtextRow rows[3];
+
+            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
+            {
+               for (std::size_t i = 0; i < nrows; ++i)
+               {
+                  if (!f(rows[i], i, y, lineh))
+                     return;
+                  y += lineh;
+               }
+               // Keep going...
+               cp = rows[nrows-1].next;
+            }
+
+            nvgRestore(vg);
          }
 
          void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const
@@ -433,73 +518,38 @@ namespace photon
 
          void draw() const
          {
-            float       y = this->y;
-            char const* cp = start;
-
-            nvgSave(vg);
-            nvgFontSize(vg, font_size);
-            nvgFontFace(vg, font);
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-
-            float lineh;
-            nvgTextMetrics(vg, 0, 0, &lineh);
-
-            NVGtextRow rows[3];
-
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
+            auto draw_f = [&](auto& row, auto i, auto y, auto lineh)
             {
-               for (std::size_t i = 0; i < nrows; ++i)
+               if (sstart != 0)
                {
-                  auto const& row = rows[i];
-                  if (sstart != 0)
+                  if (sstart == send)
                   {
-                     if (sstart == send)
-                     {
-                        if (is_focus)
-                           draw_caret(lineh, y, row.width, row.start, row.end);
-                     }
-                     else
-                     {
-                        draw_selection(lineh, y, row.start, row.end);
-                     }
+                     if (is_focus)
+                        draw_caret(lineh, y, row.width, row.start, row.end);
                   }
-
-                  nvgFillColor(vg, nvgRGBA(font_color));
-                  nvgText(vg, x, y, row.start, row.end);
-
-                  y += lineh;
+                  else
+                  {
+                     draw_selection(lineh, y, row.start, row.end);
+                  }
                }
-               // Keep going...
-               cp = rows[nrows-1].next;
-            }
 
-            nvgRestore(vg);
+               nvgFillColor(vg, nvgRGBA(font_color));
+               nvgText(vg, x, y, row.start, row.end);
+               return true;
+            };
+
+            float y;
+            float lineh;
+            for_each_row(draw_f, y, lineh);
          }
 
          double height() const
          {
-            float       y = this->y;
-            char const* cp = start;
+            auto height_f = [&](auto& row, auto i, auto y, auto lineh) { return true; };
 
-            nvgSave(vg);
-            nvgFontSize(vg, font_size);
-            nvgFontFace(vg, font);
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-
+            float y;
             float lineh;
-            nvgTextMetrics(vg, 0, 0, &lineh);
-
-            NVGtextRow rows[3];
-
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
-            {
-               for (std::size_t i = 0; i < nrows; ++i)
-                  y += lineh;
-               // Keep going...
-               cp = rows[nrows-1].next;
-            }
-
-            nvgRestore(vg);
+            for_each_row(height_f, y, lineh);
             return y + lineh;
          }
 
@@ -507,60 +557,95 @@ namespace photon
          {
             float       mx = p.x;
             float       my = p.y;
-            float       y = this->y;
-            char const* cp = start;
+            char const* result = 0;
 
-            nvgSave(vg);
-            nvgFontSize(vg, font_size);
-            nvgFontFace(vg, font);
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-
-            float lineh;
-            nvgTextMetrics(vg, 0, 0, &lineh);
-
-            NVGtextRow rows[3];
-
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
+            auto caret_f = [&](auto& row, auto i, auto y, auto lineh)
             {
-               for (std::size_t i = 0; i < nrows; ++i)
+               if (mx >= x && mx < (x+w) && my >= y && my < (y+lineh))
                {
-                  auto const& row = rows[i];
-                  if (mx > x && mx < (x+w) && my >= y && my < (y+lineh))
+                  std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
+                  int nglyphs =
+                     nvgTextGlyphPositions(
+                        vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
+                     );
+
+                  if (nglyphs == 0)
                   {
-                     std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
-                     int nglyphs =
-                        nvgTextGlyphPositions(
-                           vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
-                        );
-
-                     if (nglyphs == 0)
-                        return row.start;
-
-                     float px = x;
-                     for (int i = 0; i < nglyphs; ++i)
-                     {
-                        bool  last = i+1 >= nglyphs;
-                        float x0 = glyphs[i].x;
-                        float x1 = !last? glyphs[i+1].x : x+row.width;
-                        float gx = x0 * 0.3f + x1 * 0.7f;
-                        if (mx >= px)
-                        {
-                           if (mx < gx)
-                              return glyphs[i].str;
-                           else if (last)
-                              return row.end;
-                        }
-                        px = gx;
-                     }
+                     result = row.start;
+                     return false;
                   }
-                  y += lineh;
-               }
-               // Keep going...
-               cp = rows[nrows-1].next;
-            }
 
-            nvgRestore(vg);
-            return 0;
+                  float px = x;
+                  for (int i = 0; i < nglyphs; ++i)
+                  {
+                     bool  last = i+1 >= nglyphs;
+                     float x0 = glyphs[i].x;
+                     float x1 = !last? glyphs[i+1].x : x+row.width;
+                     float gx = x0 * 0.3f + x1 * 0.7f;
+                     if (mx >= px)
+                     {
+                        if (mx < gx)
+                        {
+                           result = glyphs[i].str;
+                           return false;
+                        }
+                        else if (last)
+                        {
+                           result = row.end;
+                           return false;
+                        }
+                     }
+                     px = gx;
+                  }
+               }
+               return true;
+            };
+
+            float y;
+            float lineh;
+            for_each_row(caret_f, y, lineh);
+            return result;
+         }
+
+         theme::glyph_info glyph_bounds(char const* cp) const
+         {
+            theme::glyph_info result;
+            auto glyph_f = [&](auto& row, auto i, auto y, auto lineh)
+            {
+               std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
+               int nglyphs =
+                  nvgTextGlyphPositions(
+                     vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
+                  );
+
+               if (nglyphs == 0 && row.start == cp)
+               {
+                  result = { row.start, x, y, lineh, row.minx, row.maxx };
+                  return false;
+               }
+               else if (row.end == cp)
+               {
+                  result = { row.end, row.maxx, y, lineh, row.maxx, row.maxx };
+                  return false;
+               }
+
+               for (int i = 0; i < nglyphs; ++i)
+               {
+                  auto const& glyph = glyphs[i];
+                  if (cp == glyph.str)
+                  {
+                     auto& glyph = glyphs[i];
+                     result = { glyph.str, glyph.x, y, lineh, glyph.minx, glyph.maxx };
+                     return false;
+                  }
+               }
+               return true;
+            };
+
+            float y;
+            float lineh;
+            for_each_row(glyph_f, y, lineh);
+            return result;
          }
 
          NVGcontext*    vg;
@@ -583,44 +668,7 @@ namespace photon
       };
    }
 
-   void theme::draw_label(rect const& b, char const* text) const
-   {
-      draw_text(_vg, b, text, label_font, label_font_size, label_font_color);
-   }
-
-   point theme::measure_label(char const* text) const
-   {
-      return measure_text(_vg, text, label_font, label_font_size);
-   }
-
-   void theme::draw_heading(rect const& b, char const* text) const
-   {
-      draw_text(_vg, b, text, heading_font, heading_font_size, heading_font_color);
-   }
-
-   point theme::measure_heading(char const* text) const
-   {
-      return measure_text(_vg, text, heading_font, heading_font_size);
-   }
-
-   void theme::draw_icon(rect const& b, uint32_t code, int size) const
-   {
-      char icon[8];
-      draw_text(_vg, b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
-   }
-
-   point theme::measure_icon(uint32_t code, int size) const
-   {
-      char icon[8];
-      return measure_text(_vg, codepoint_to_UTF8(code,icon), icon_font, size);
-   }
-
-   void theme::draw_text_box(rect const& b, char const* text) const
-   {
-      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_font_color);
-   }
-
-   void theme::draw_edit_text_box(rect const& b, text_info const& text) const
+   void theme::draw_edit_text_box(rect const& b, text_draw_info const& text) const
    {
       edit_text_box_renderer r{ *this, b, text };
       r.draw();
@@ -636,6 +684,12 @@ namespace photon
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.height();
+   }
+
+   theme::glyph_info theme::glyph_bounds(rect const& b, text_info const& text, char const* cp) const
+   {
+      edit_text_box_renderer r{ *this, b, text };
+      return r.glyph_bounds(cp);
    }
 
    void theme::draw_button(rect const& b, color const& button_color) const

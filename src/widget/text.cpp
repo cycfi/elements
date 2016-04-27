@@ -73,7 +73,7 @@ namespace photon
    void text_box_widget::draw(context const& ctx)
    {
       char const* first = &_text[0];
-      theme::text_info info = {
+      theme::text_draw_info info = {
          first,
          first + _text.size(),
          (_select_start == -1)? 0 : first+_select_start,
@@ -93,7 +93,9 @@ namespace photon
          first,
          first + _text.size()
       };
-      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
+
+      auto mp = ctx.cursor_pos();
+      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, mp))
       {
          if (btn.num_clicks != 1)
          {
@@ -129,6 +131,7 @@ namespace photon
             _select_start = _select_end = int(pos-first);
          }
          ctx.window.draw();
+         _current_x = mp.x;
       }
       return this;
    }
@@ -168,6 +171,110 @@ namespace photon
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
       ctx.window.draw();
+      return true;
+   }
+
+   bool text_box_widget::key(context const& ctx, key_info const& k)
+   {
+      if (k.action == key_action::release || k.action == key_action::unknown)
+         return false;
+
+      bool caret_pos = false;
+      bool save_x = false;
+
+      char const* first = &_text[0];
+      theme::text_info info = {
+         first,
+         first + _text.size()
+      };
+
+      switch (k.key)
+      {
+         case key_code::key_backspace:
+         case key_code::key_delete:
+            if (_select_start == _select_end)
+            {
+               if (_select_start > 0)
+                  _text.erase(--_select_start, 1);
+            }
+            else
+            {
+               _text.erase(_select_start, _select_end-_select_start);
+            }
+            _select_end = _select_start;
+            save_x = true;
+            break;
+
+         case key_code::key_right:
+            if (_select_start != -1 && _select_start < _text.size())
+               ++_select_start;
+            caret_pos = true;
+            save_x = true;
+            break;
+
+         case key_code::key_left:
+            if (_select_start != -1 && _select_start > 0)
+               --_select_start;
+            caret_pos = true;
+            save_x = true;
+            break;
+
+         case key_code::key_down:
+            if (_select_start != -1 && _select_start < _text.size())
+            {
+               auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+               char const* cp = ctx.theme().caret_position(ctx.bounds, info, point{ _current_x, b.y+b.lineh });
+               if (cp)
+               {
+                  _select_start = int(cp - &_text[0]);
+                  caret_pos = true;
+               }
+            }
+            break;
+
+         case key_code::key_up:
+            if (_select_start != -1 && _select_start > 0)
+            {
+               auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+               char const* cp = ctx.theme().caret_position(ctx.bounds, info, point{ _current_x, b.y-b.lineh });
+               if (cp)
+               {
+                  _select_start = int(cp - &_text[0]);
+                  caret_pos = true;
+               }
+            }
+            break;
+
+         case key_code::key_home:
+            _select_start = 0;
+            caret_pos = true;
+            save_x = true;
+            break;
+
+         case key_code::key_end:
+            _select_start = int(_text.size());
+            caret_pos = true;
+            save_x = true;
+            break;
+
+         default:
+            break;
+      }
+
+      if (caret_pos)
+      {
+         if (!(k.modifiers & key_shift))
+            _select_end = _select_start;
+      }
+
+      ctx.window.draw();
+
+      if (save_x)
+      {
+         auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+         _current_x = b.x;
+      }
+
       return true;
    }
 

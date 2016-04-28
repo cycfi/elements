@@ -372,4 +372,21 @@ namespace photon
             return true;
       return false;
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // scrollable class implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   scrollable::scrollable_context scrollable::find(context const& ctx_)
+   {
+      auto const* ctx = &ctx_;
+      while (ctx->widget)
+      {
+         auto* sp = dynamic_cast<scrollable*>(ctx->widget);
+         if (sp)
+            return { ctx, sp };
+         else
+            ctx = ctx->parent;
+      }
+      return { 0, 0 };
+   }
 }

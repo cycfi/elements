@@ -131,7 +131,7 @@ namespace photon
             _select_start = _select_end = int(pos-first);
          }
          ctx.window.draw();
-         _current_x = mp.x;
+         _current_x = mp.x-ctx.bounds.left;
       }
       return this;
    }
@@ -223,7 +223,8 @@ namespace photon
             if (_select_start != -1 && _select_start < _text.size())
             {
                auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-               char const* cp = ctx.theme().caret_position(ctx.bounds, info, point{ _current_x, b.y+b.lineh });
+               char const* cp = ctx.theme()
+                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+b.lineh });
                if (cp)
                {
                   _select_start = int(cp - &_text[0]);
@@ -236,7 +237,8 @@ namespace photon
             if (_select_start != -1 && _select_start > 0)
             {
                auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-               char const* cp = ctx.theme().caret_position(ctx.bounds, info, point{ _current_x, b.y-b.lineh });
+               char const* cp = ctx.theme()
+                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y-b.lineh });
                if (cp)
                {
                   _select_start = int(cp - &_text[0]);
@@ -267,13 +269,13 @@ namespace photon
             _select_end = _select_start;
       }
 
-      ctx.window.draw();
+      auto glyph_info = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+
+      if (!scrollable::find(ctx).scroll_into_view(glyph_info.bounds()))
+         ctx.window.draw();
 
       if (save_x)
-      {
-         auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-         _current_x = b.x;
-      }
+         _current_x = glyph_info.x-ctx.bounds.left;
 
       return true;
    }

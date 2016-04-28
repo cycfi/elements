@@ -43,6 +43,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
+      virtual bool            scroll(context const& ctx, point const& p);
 
    // control
 
@@ -51,7 +52,6 @@ namespace photon
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
-      virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -82,6 +82,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
+      virtual bool            scroll(context const& ctx, point const& p);
       virtual void            prepare_subject(context& ctx);
 
    // control
@@ -91,7 +92,6 @@ namespace photon
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
-      virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -130,6 +130,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point const& p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;
+      virtual bool            scroll(context const& ctx, point const& p);
 
    // control
 
@@ -138,7 +139,6 @@ namespace photon
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point const& p);
-      virtual bool            scroll(context const& ctx, point const& p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -169,6 +169,38 @@ namespace photon
       int                     _drag_tracking;
    };
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Scrollable Views
+   //
+   // Mixin class for a widget that is scrollable
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class scrollable
+   {
+   public:
+                              scrollable() {}
+      virtual                 ~scrollable() {};
+      virtual bool            scroll_into_view(context const& ctx, rect const& r) = 0;
+
+      struct scrollable_context
+      {
+         context const* context_ptr;
+         scrollable*    scrollable_ptr;
+
+         bool scroll_into_view(rect const& r_)
+         {
+            if (scrollable_ptr && context_ptr)
+            {
+               rect r = r_;
+               return scrollable_ptr->scroll_into_view(*context_ptr, r);
+            }
+            return false;
+         }
+      };
+
+      static scrollable_context
+      find(context const& ctx);
+   };
 }
+
 
 #endif

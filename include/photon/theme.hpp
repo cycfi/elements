@@ -57,7 +57,6 @@ namespace photon
       color                scroll_bar_outline_color   = { 200, 200, 200, 50 };
       color                scroll_bar_fill_color      = { 0, 0, 0, 120 };
       double               scroll_bar_width           = 10;
-      double               scroll_bar_speed           = 10;
 
       virtual void         draw_scroll_bar(double pos, double ext, rect const& b) const;
       virtual rect         scroll_bar_position(double pos, double ext, rect const& b) const;
@@ -116,6 +115,8 @@ namespace photon
          float lineh;
          float minx;
          float maxx;
+
+         rect bounds() const { return { minx, y, maxx, y+lineh }; }
       };
 
       virtual void         draw_edit_text_box(rect const& b, text_draw_info const& text) const;

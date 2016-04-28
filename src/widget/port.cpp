@@ -115,7 +115,7 @@ namespace photon
 
       if (sb.has_h)
       {
-         double dx = (-p.x / e_limits.left) * ctx.theme().scroll_bar_speed;
+         double dx = (-p.x / (e_limits.left-ctx.bounds.width()));
          if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
          {
             double alx = halign() + dx;
@@ -127,7 +127,7 @@ namespace photon
 
       if (sb.has_v)
       {
-         double dy = (-p.y / e_limits.top) * ctx.theme().scroll_bar_speed;
+         double dy = (-p.y / (e_limits.top-ctx.bounds.height()));
          if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
          {
             double aly = valign() + dy;
@@ -290,5 +290,34 @@ namespace photon
    bool scroller_widget::is_control() const
    {
       return true;
+   }
+
+   bool scroller_widget::scroll_into_view(context const& ctx, rect const& r)
+   {
+      rect              bounds = ctx.bounds;
+      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+
+      if (sb.has_h)
+         bounds.right -= ctx.theme().scroll_bar_width;
+      if (sb.has_v)
+         bounds.bottom -= ctx.theme().scroll_bar_width;
+
+      if (!bounds.includes(r))
+      {
+         // r is not in view, we need to scroll
+         point dp;
+         if (r.top < bounds.top)
+            dp.y = bounds.top-r.top;
+         else if (r.bottom > bounds.bottom)
+            dp.y = bounds.bottom-r.bottom;
+
+         if (r.left < bounds.left)
+            dp.x = bounds.left-r.left;
+         else if (r.right > bounds.right)
+            dp.x = bounds.right-r.right;
+
+         return scroll(ctx, dp);
+      }
+      return false;
    }
 }

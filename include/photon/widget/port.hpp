@@ -48,7 +48,7 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class scroller_widget : public port_widget
+   class scroller_widget : public port_widget, public scrollable
    {
    public:
 
@@ -65,6 +65,7 @@ namespace photon
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      scroll(context const& ctx, point const& p);
+      virtual bool      scroll_into_view(context const& ctx, rect const& r);
       virtual bool      cursor(context const& ctx, point const& p);
       virtual bool      is_control() const;
 

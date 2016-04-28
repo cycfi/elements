@@ -620,7 +620,7 @@ namespace photon
 
                if (nglyphs == 0 && row.start == cp)
                {
-                  result = { row.start, x, y, lineh, row.minx, row.maxx };
+                  result = { row.start, x, y, lineh, x, x };
                   return false;
                }
                else if (row.end == cp)

@@ -12,6 +12,8 @@
 #include <photon/key.hpp>
 #include <type_traits>
 #include <vector>
+#include <stack>
+#include <functional>
 
 namespace photon
 {
@@ -33,6 +35,18 @@ namespace photon
       double const         multi_click_speed = 0.5;
       double const         idle_time = 0.25;
 
+      struct undo_redo_task
+      {
+         std::function<void()> undo;
+         std::function<void()> redo;
+      };
+
+      void                 add_undo(undo_redo_task t);
+      bool                 has_undo() { return !undo_stack.empty(); }
+      bool                 has_redo() { return !redo_stack.empty(); }
+      bool                 undo();
+      bool                 redo();
+
    protected:
                            app();
    private:
@@ -43,8 +57,12 @@ namespace photon
       >::type
       make_app(Args const&... args);
 
+      using undo_stack_type = std::stack<undo_redo_task>;
+
       std::vector<cursor>  _cursors;
       double               _idle_time;
+      undo_stack_type      undo_stack;
+      undo_stack_type      redo_stack;
    };
 
    template <typename App, typename... Args>

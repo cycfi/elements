@@ -105,6 +105,43 @@ namespace photon
       }
    }
 
+   void app::add_undo(undo_redo_task f)
+   {
+      undo_stack.push(f);
+      if (has_redo())
+      {
+         // clear the redo stack
+         undo_stack_type empty{};
+         redo_stack.swap(empty);
+      }
+   }
+
+   bool app::undo()
+   {
+      if (has_undo())
+      {
+         auto t = undo_stack.top();
+         undo_stack.pop();
+         redo_stack.push(t);
+         t.undo();  // execute undo function
+         return true;
+      }
+      return false;
+   }
+
+   bool app::redo()
+   {
+      if (has_redo())
+      {
+         auto t = redo_stack.top();
+         undo_stack.push(t);
+         redo_stack.pop();
+         t.redo();  // execute redo function
+         return true;
+      }
+      return false;
+   }
+
    void text_entry(GLFWwindow* window_ptr, unsigned int codepoint, int mods)
    {
       if (app_ptr)

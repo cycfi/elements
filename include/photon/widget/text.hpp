@@ -9,6 +9,7 @@
 
 #include <photon/widget/widget.hpp>
 #include <string>
+#include <functional>
 
 namespace photon
 {
@@ -104,11 +105,22 @@ namespace photon
 
    private:
 
+      void              delete_();
+      void              cut(window& w, int start, int end);
+      void              copy(window& w, int start, int end);
+      void              paste(window& w, int start, int end);
+
+      struct state_saver;
+      using state_saver_f = std::function<void()>;
+
+      state_saver_f     capture_state();
+
       std::string       _text;
       int               _select_start;
       int               _select_end;
       double            _width;
       double            _current_x;
+      state_saver_f     _typing_state;
    };
 
    inline widget_ptr text_box(std::string const& text, double width)

@@ -172,7 +172,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Scrollable Views
    //
-   // Mixin class for a widget that is scrollable
+   // Mixin class for a widget that is scrollable// scroll the rectangle, r into view
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class scrollable
    {
@@ -186,6 +186,7 @@ namespace photon
          context const* context_ptr;
          scrollable*    scrollable_ptr;
 
+         // scroll the rectangle, r into view
          bool scroll_into_view(rect const& r_)
          {
             if (scrollable_ptr && context_ptr)
@@ -197,6 +198,7 @@ namespace photon
          }
       };
 
+      // find the innermost scrollable class in the context.
       static scrollable_context
       find(context const& ctx);
    };

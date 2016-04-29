@@ -128,7 +128,9 @@ namespace photon
          }
          else
          {
-            _select_start = _select_end = int(pos-first);
+            _select_start = int(pos-first);
+            if (ctx.window.key().modifiers != key_shift)
+               _select_end = _select_start;
          }
          ctx.window.draw();
          _current_x = mp.x-ctx.bounds.left;
@@ -160,16 +162,38 @@ namespace photon
       return false;
    }
 
+   namespace
+   {
+      void add_undo(
+         context const& ctx
+       , std::function<void()>& typing_state
+       , std::function<void()> undo_f
+       , std::function<void()> redo_f
+      )
+      {
+         if (typing_state)
+         {
+            ctx.window.app().add_undo({ typing_state, undo_f });
+            typing_state = {}; // reset
+         }
+         ctx.window.app().add_undo({ undo_f, redo_f });
+      };
+   }
+
    bool text_box_widget::text(context const& ctx, text_info const& info)
    {
       char text[8];
       codepoint_to_UTF8(info.codepoint, text);
+
+      if (!_typing_state)
+         _typing_state = capture_state();
 
       if (_select_start == _select_end)
          _text.insert(_select_start, text);
       else
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
+
       ctx.window.draw();
       return true;
    }
@@ -188,57 +212,46 @@ namespace photon
          first + _text.size()
       };
 
+      int start = std::min(_select_end, _select_start);
+      int end = std::max(_select_end, _select_start);
+      std::function<void()> undo_f = capture_state();
+
       switch (k.key)
       {
-         case key_code::key_backspace:
-         case key_code::key_delete:
-            if (_select_start == _select_end)
+         case key_code::key_enter:
             {
-               if (_select_start > 0)
-                  _text.erase(--_select_start, 1);
+               _text.replace(start, end-start, "\n");
+               _select_start += 1;
+               _select_end = _select_start;
+               save_x = true;
+               add_undo(ctx, _typing_state, undo_f, capture_state());
             }
-            else
-            {
-               _text.erase(_select_start, _select_end-_select_start);
-            }
-            _select_end = _select_start;
-            save_x = true;
             break;
 
-         case key_code::key_right:
-            if (_select_start != -1 && _select_start < _text.size())
-               ++_select_start;
-            caret_pos = true;
+         case key_code::key_backspace:
+         case key_code::key_delete:
+            delete_();
             save_x = true;
+            add_undo(ctx, _typing_state, undo_f, capture_state());
             break;
 
          case key_code::key_left:
-            if (_select_start != -1 && _select_start > 0)
-               --_select_start;
+         case key_code::key_right:
+            if (_select_start != -1 && _select_start > 0 && _select_start < _text.size())
+               _select_start += (k.key == key_code::key_left) ? -1 : +1;
             caret_pos = true;
             save_x = true;
             break;
 
-         case key_code::key_down:
-            if (_select_start != -1 && _select_start < _text.size())
-            {
-               auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-               char const* cp = ctx.theme()
-                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+b.lineh });
-               if (cp)
-               {
-                  _select_start = int(cp - &_text[0]);
-                  caret_pos = true;
-               }
-            }
-            break;
-
          case key_code::key_up:
-            if (_select_start != -1 && _select_start > 0)
+         case key_code::key_down:
+            if (_select_start != -1 && _select_start > 0 && _select_start < _text.size())
             {
                auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+               auto y = (k.key == key_code::key_up) ? -b.lineh : +b.lineh;
+
                char const* cp = ctx.theme()
-                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y-b.lineh });
+                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+y });
                if (cp)
                {
                   _select_start = int(cp - &_text[0]);
@@ -257,6 +270,53 @@ namespace photon
             _select_start = int(_text.size());
             caret_pos = true;
             save_x = true;
+            break;
+
+         case key_code::key_a:
+            if (k.modifiers & key_super)
+            {
+               _select_start = 0;
+               _select_end = int(_text.size());
+            }
+            break;
+
+         case key_code::key_x:
+            if (k.modifiers & key_super)
+            {
+               cut(ctx.window, start, end);
+               save_x = true;
+               add_undo(ctx, _typing_state, undo_f, capture_state());
+            }
+            break;
+
+         case key_code::key_c:
+            if (k.modifiers & key_super)
+               copy(ctx.window, start, end);
+            break;
+
+         case key_code::key_v:
+            if (k.modifiers & key_super)
+            {
+               paste(ctx.window, start, end);
+               save_x = true;
+               add_undo(ctx, _typing_state, undo_f, capture_state());
+            }
+            break;
+
+         case key_code::key_z:
+            if (k.modifiers & key_super)
+            {
+               if (_typing_state)
+               {
+                  ctx.window.app().add_undo({ _typing_state, undo_f });
+                  _typing_state = {}; // reset
+               }
+
+               if (k.modifiers & key_shift)
+                  ctx.window.app().redo();
+               else
+                  ctx.window.app().undo();
+            }
             break;
 
          default:
@@ -283,5 +343,78 @@ namespace photon
    bool text_box_widget::is_control() const
    {
       return true;
+   }
+
+   void text_box_widget::delete_()
+   {
+      int start = std::min(_select_end, _select_start);
+      if (start == _select_end)
+      {
+         if (start > 0)
+            _text.erase(--start, 1);
+      }
+      else
+      {
+         int end = std::max(_select_end, _select_start);
+         _text.erase(start, end-start);
+      }
+      _select_end = _select_start = start;
+   }
+
+   void text_box_widget::cut(window& w, int start, int end)
+   {
+      if (start != end)
+      {
+         w.clipboard(_text.substr(start, end-start));
+         delete_();
+      }
+   }
+
+   void text_box_widget::copy(window& w, int start, int end)
+   {
+      if (start != end)
+         w.clipboard(_text.substr(start, end-start));
+   }
+
+   void text_box_widget::paste(window& w, int start, int end)
+   {
+      std::string ins = w.clipboard();
+      _text.replace(start, end-start, ins);
+      start += ins.size();
+      _select_start = start;
+      _select_end = end = start;
+   }
+
+   struct text_box_widget::state_saver
+   {
+      state_saver(text_box_widget* this_)
+       : text(this_->_text)
+       , save_text(this_->_text)
+       , select_start(this_->_select_start)
+       , save_select_start(this_->_select_start)
+       , select_end(this_->_select_end)
+       , save_select_end(this_->_select_end)
+      {}
+
+      void operator()()
+      {
+         text = save_text;
+         select_start = save_select_start;
+         select_end = save_select_end;
+      }
+
+      std::string&   text;
+      int&           select_start;
+      int&           select_end;
+
+      std::string    save_text;
+      int            save_select_start;
+      int            save_select_end;
+   };
+
+   std::function<void()>
+   text_box_widget::capture_state()
+   {
+      return state_saver(this);
    }
 }

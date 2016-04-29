@@ -10,6 +10,7 @@
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
 #include <map>
+#include <string>
 
 namespace photon
 {
@@ -83,6 +84,7 @@ namespace photon
     , _click_time(0)
     , _num_clicks(0)
     , _refresh(false)
+    , _current_key({ key_code::key_unknown, key_action::unknown, 0 })
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (_window == 0)
@@ -199,6 +201,7 @@ namespace photon
 
    void window::key(key_info const& k)
    {
+      _current_key = k;
       context ctx { *this, _subject.get(), _current_bounds };
       _subject->key(ctx, k);
    }
@@ -277,5 +280,15 @@ namespace photon
    {
       _refresh = true;
       glfwPostEmptyEvent();
+   }
+
+   std::string window::clipboard() const
+   {
+      return glfwGetClipboardString(_window);
+   }
+
+   void window::clipboard(std::string const& text) const
+   {
+      glfwSetClipboardString(_window, text.c_str());
    }
 }

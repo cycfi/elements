@@ -68,6 +68,10 @@ namespace photon
       void              reset_cursor() const;
       bool              is_focus() const;
 
+      std::string       clipboard() const;
+      void              clipboard(std::string const& text) const;
+      key_info          key() const { return _current_key; }
+
       NVGcontext*       canvas() const { return _context; }
       app&              app() const { return _app; }
       theme const&      theme() const { return *_theme.get(); }
@@ -86,6 +90,7 @@ namespace photon
       double            _click_time;
       int               _num_clicks;
       bool              _refresh;
+      key_info          _current_key;
    };
 }
 

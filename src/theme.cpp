@@ -561,7 +561,9 @@ namespace photon
 
             auto caret_f = [&](auto& row, auto i, auto y, auto lineh)
             {
-               if (mx >= x && mx < (x+w) && my >= y && my < (y+lineh))
+               // note: we compare the point against x-1...x+w+2. i.e. the row bounds
+               // expanded by 1 pixel in the x axis. This allows for roundoff errors.
+               if (mx >= x-1 && mx < (x+w+2) && my >= y && my < (y+lineh))
                {
                   std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
                   int nglyphs =

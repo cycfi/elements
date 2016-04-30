@@ -48,14 +48,21 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   enum
+   {
+      no_scrollbars  = 1,
+      no_hscroll     = 1 << 1,
+      no_vscroll     = 1 << 2
+   };
+
    class scroller_widget : public port_widget, public scrollable
    {
    public:
 
-
-      scroller_widget(std::shared_ptr<widget> subject)
+      scroller_widget(std::shared_ptr<widget> subject, int traits = 0)
        : port_widget(subject)
        , _tracking(none)
+       , _traits(traits)
       {}
 
       ~scroller_widget() {}
@@ -90,13 +97,18 @@ namespace photon
       scrollbar_bounds  get_scrollbar_bounds(context const& ctx);
       bool              reposition(context const& ctx);
 
+      bool              has_scrollbars() const { return !(_traits & no_scrollbars); }
+      bool              allow_hscroll() const { return !(_traits & no_hscroll); }
+      bool              allow_vscroll() const { return !(_traits & no_vscroll); }
+
       point             _offset;
-      tracking_status  _tracking;
+      tracking_status   _tracking;
+      int               _traits;
    };
 
-   inline widget_ptr scroller(std::shared_ptr<widget> subject)
+   inline widget_ptr scroller(std::shared_ptr<widget> subject, int traits = 0)
    {
-      return widget_ptr{ new scroller_widget{ subject } };
+      return widget_ptr{ new scroller_widget{ subject, traits } };
    }
 }
 

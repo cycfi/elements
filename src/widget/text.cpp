@@ -78,7 +78,8 @@ namespace photon
          first + _text.size(),
          (_select_start == -1)? 0 : first+_select_start,
          (_select_end == -1)? 0 : first+_select_end,
-         ctx.window.is_focus()
+         _select_start != -1 && ctx.window.is_focus(),
+         true
       };
       ctx.theme().draw_edit_text_box(ctx.bounds, info);
    }
@@ -93,6 +94,13 @@ namespace photon
          first,
          first + _text.size()
       };
+
+      if (_text.empty())
+      {
+         _select_start = _select_end = 0;
+         scroll_into_view(ctx, false);
+         return this;
+      }
 
       auto mp = ctx.cursor_pos();
       if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, mp))
@@ -132,7 +140,7 @@ namespace photon
             if (ctx.window.key().modifiers != key_shift)
                _select_end = _select_start;
          }
-         ctx.window.draw();
+         scroll_into_view(ctx, false);
          _current_x = mp.x-ctx.bounds.left;
       }
       return this;
@@ -180,10 +188,13 @@ namespace photon
       };
    }
 
-   bool text_box_widget::text(context const& ctx, text_info const& info)
+   bool text_box_widget::text(context const& ctx, text_info const& info_)
    {
+      if (_select_start == -1)
+         return false;
+
       char text[8];
-      codepoint_to_UTF8(info.codepoint, text);
+      codepoint_to_UTF8(info_.codepoint, text);
 
       if (!_typing_state)
          _typing_state = capture_state();
@@ -194,13 +205,16 @@ namespace photon
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
 
-      ctx.window.draw();
+      scroll_into_view(ctx, true);
       return true;
    }
 
    bool text_box_widget::key(context const& ctx, key_info const& k)
    {
-      if (k.action == key_action::release || k.action == key_action::unknown)
+      if (_select_start == -1
+         || k.action == key_action::release
+         || k.action == key_action::unknown
+         )
          return false;
 
       bool caret_pos = false;
@@ -215,6 +229,20 @@ namespace photon
       int start = std::min(_select_end, _select_start);
       int end = std::max(_select_end, _select_start);
       std::function<void()> undo_f = capture_state();
+
+      auto up_down = [this, &info, &ctx, &k, &caret_pos]()
+      {
+         auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+         auto y = (k.key == key_code::key_up) ? -b.lineh : +b.lineh;
+
+         char const* cp = ctx.theme()
+            .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+y });
+         if (cp)
+         {
+            _select_start = int(cp - &_text[0]);
+            caret_pos = true;
+         }
+      };
 
       switch (k.key)
       {
@@ -236,28 +264,27 @@ namespace photon
             break;
 
          case key_code::key_left:
+            if (_select_start != -1 && _select_start > 0)
+               --_select_start;
+            caret_pos = true;
+            save_x = true;
+            break;
+
          case key_code::key_right:
-            if (_select_start != -1 && _select_start > 0 && _select_start < _text.size())
-               _select_start += (k.key == key_code::key_left) ? -1 : +1;
+            if (_select_start != -1 && _select_start < _text.size())
+               ++_select_start;
             caret_pos = true;
             save_x = true;
             break;
 
          case key_code::key_up:
-         case key_code::key_down:
-            if (_select_start != -1 && _select_start > 0 && _select_start < _text.size())
-            {
-               auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-               auto y = (k.key == key_code::key_up) ? -b.lineh : +b.lineh;
+            if (_select_start != -1 && _select_start > 0)
+               up_down();
+            break;
 
-               char const* cp = ctx.theme()
-                  .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+y });
-               if (cp)
-               {
-                  _select_start = int(cp - &_text[0]);
-                  caret_pos = true;
-               }
-            }
+         case key_code::key_down:
+            if (_select_start != -1 && _select_start < _text.size())
+               up_down();
             break;
 
          case key_code::key_home:
@@ -329,14 +356,7 @@ namespace photon
             _select_end = _select_start;
       }
 
-      auto glyph_info = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
-
-      if (!scrollable::find(ctx).scroll_into_view(glyph_info.bounds()))
-         ctx.window.draw();
-
-      if (save_x)
-         _current_x = glyph_info.x-ctx.bounds.left;
-
+      scroll_into_view(ctx, save_x);
       return true;
    }
 
@@ -416,5 +436,63 @@ namespace photon
    text_box_widget::capture_state()
    {
       return state_saver(this);
+   }
+
+   void text_box_widget::scroll_into_view(context const& ctx, bool save_x)
+   {
+      char const* first = &_text[0];
+      theme::text_info info = {
+         first,
+         first + _text.size()
+      };
+
+      auto glyph_info = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+      if (!scrollable::find(ctx).scroll_into_view(glyph_info.bounds()))
+         ctx.window.draw();
+
+      if (save_x)
+         _current_x = glyph_info.x-ctx.bounds.left;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   rect input_box_widget::limits(basic_context const& ctx) const
+   {
+      double height = ctx.theme().text_box_font_size;
+      return { width(), height, width(), height };
+   }
+
+   void input_box_widget::draw(context const& ctx)
+   {
+      if (text().empty())
+      {
+         char const* first = &_placeholder[0];
+         theme::text_draw_info info = {
+            first, first + _placeholder.size(),
+            first, first, select_start() != -1 && ctx.window.is_focus(), false
+         };
+         ctx.theme().draw_edit_text_box(ctx.bounds, info);
+      }
+      else
+      {
+         text_box_widget::draw(ctx);
+      }
+   }
+
+   bool input_box_widget::key(context const& ctx, key_info const& k)
+   {
+      switch (k.key)
+      {
+         case key_code::key_enter:
+            // $$$ do something $$$
+         case key_code::key_up:
+         case key_code::key_down:
+            return false;
+      }
+      return text_box_widget::key(ctx, k);
+   }
+
+   void input_panel_widget::draw(context const& ctx)
+   {
+      ctx.theme().draw_edit_box_base(ctx.bounds);
    }
 }

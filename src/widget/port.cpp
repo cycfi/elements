@@ -44,6 +44,7 @@ namespace photon
       proxy::draw(ctx);
    }
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    scroller_widget::scrollbar_bounds
    scroller_widget::get_scrollbar_bounds(context const& ctx)
    {
@@ -52,8 +53,8 @@ namespace photon
       rect     e_limits = subject()->limits(ctx);
       double   scroll_bar_width = ctx.theme().scroll_bar_width;
 
-      r.has_h = e_limits.left > ctx.bounds.width();
-      r.has_v = e_limits.top > ctx.bounds.height();
+      r.has_h = e_limits.left > ctx.bounds.width() && allow_hscroll();
+      r.has_v = e_limits.top > ctx.bounds.height() && allow_vscroll();
 
       if (r.has_v)
       {
@@ -88,14 +89,18 @@ namespace photon
    void scroller_widget::draw(context const& ctx)
    {
       port_widget::draw(ctx);
-      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-      rect              e_limits = subject()->limits(ctx);
 
-      if (sb.has_v)
-         ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds);
+      if (has_scrollbars())
+      {
+         scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+         rect              e_limits = subject()->limits(ctx);
 
-      if (sb.has_h)
-         ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds);
+         if (sb.has_v)
+            ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds);
+
+         if (sb.has_h)
+            ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds);
+      }
    }
 
    bool scroller_widget::focus(focus_request r)
@@ -105,15 +110,11 @@ namespace photon
 
    bool scroller_widget::scroll(context const& ctx, point const& p)
    {
-      rect              e_limits = subject()->limits(ctx);
-      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-
-      if (!sb.has_h && !sb.has_v)
-         return false;
+      rect  e_limits = subject()->limits(ctx);
 
       bool redraw = false;
 
-      if (sb.has_h)
+      if (allow_hscroll())
       {
          double dx = (-p.x / (e_limits.left-ctx.bounds.width()));
          if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
@@ -125,7 +126,7 @@ namespace photon
          }
       }
 
-      if (sb.has_v)
+      if (allow_vscroll())
       {
          double dy = (-p.y / (e_limits.top-ctx.bounds.height()));
          if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
@@ -144,13 +145,16 @@ namespace photon
 
    widget* scroller_widget::click(context const& ctx, mouse_button btn)
    {
-      if (btn.is_pressed)
+      if (has_scrollbars())
       {
-         _tracking = start;
-         if (reposition(ctx))
-            return this;
+         if (btn.is_pressed)
+         {
+            _tracking = start;
+            if (reposition(ctx))
+               return this;
+         }
+         _tracking = none;
       }
-      _tracking = none;
       return port_widget::click(ctx, btn);
    }
 
@@ -179,6 +183,9 @@ namespace photon
 
    bool scroller_widget::reposition(context const& ctx)
    {
+      if (!has_scrollbars())
+         return false;
+
       point             p = ctx.cursor_pos();
       scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
       rect              e_limits = subject()->limits(ctx);
@@ -278,11 +285,14 @@ namespace photon
 
    bool scroller_widget::cursor(context const& ctx, point const& p)
    {
-      scrollbar_bounds sb = get_scrollbar_bounds(ctx);
-      if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
+      if (has_scrollbars())
       {
-         ctx.window.set_cursor(cursor::arrow);
-         return true;
+         scrollbar_bounds sb = get_scrollbar_bounds(ctx);
+         if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
+         {
+            ctx.window.set_cursor(cursor::arrow);
+            return true;
+         }
       }
       return port_widget::cursor(ctx, p);
    }
@@ -294,27 +304,39 @@ namespace photon
 
    bool scroller_widget::scroll_into_view(context const& ctx, rect const& r)
    {
-      rect              bounds = ctx.bounds;
-      scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+      constexpr auto scroll_clearance = 20;
+      rect bounds = ctx.bounds;
 
-      if (sb.has_h)
-         bounds.right -= ctx.theme().scroll_bar_width;
-      if (sb.has_v)
-         bounds.bottom -= ctx.theme().scroll_bar_width;
+      if (has_scrollbars())
+      {
+         scrollbar_bounds sb = get_scrollbar_bounds(ctx);
+
+         if (sb.has_h)
+            bounds.right -= ctx.theme().scroll_bar_width;
+         if (sb.has_v)
+            bounds.bottom -= ctx.theme().scroll_bar_width;
+      }
 
       if (!bounds.includes(r))
       {
          // r is not in view, we need to scroll
          point dp;
-         if (r.top < bounds.top)
-            dp.y = bounds.top-r.top;
-         else if (r.bottom > bounds.bottom)
-            dp.y = bounds.bottom-r.bottom;
 
-         if (r.left < bounds.left)
-            dp.x = bounds.left-r.left;
-         else if (r.right > bounds.right)
-            dp.x = bounds.right-r.right;
+         if (allow_vscroll())
+         {
+            if (r.top < bounds.top)
+               dp.y = bounds.top-r.top;
+            else if (r.bottom > bounds.bottom)
+               dp.y = (bounds.bottom-r.bottom) - scroll_clearance;
+         }
+
+         if (allow_hscroll())
+         {
+            if (r.left < bounds.left)
+               dp.x = bounds.left-r.left;
+            else if (r.right > bounds.right)
+               dp.x = bounds.right-r.right - scroll_clearance;
+         }
 
          return scroll(ctx, dp);
       }

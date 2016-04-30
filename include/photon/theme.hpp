@@ -87,10 +87,13 @@ namespace photon
       color                text_box_font_color        = { 220, 220, 220, 230 };
       char const*          text_box_font              = "sans";
       double               text_box_font_size         = 18.0;
-      color                text_box_hilite_color      = { 255, 192, 0, 80 }; // { 50, 110, 220, 90 };
+      color                text_box_hilite_color      = { 255, 192, 0, 80 };
       color                text_box_caret_color       = { 255, 192, 0, 255 };
+      color                edit_box_fill_color        = { 32, 32, 32, 32 };
+      color                inactive_font_color        = { 127, 127, 127, 150 };
 
       virtual void         draw_text_box(rect const& b, char const* text) const;
+      virtual void         draw_edit_box_base(rect const& b) const;
 
       struct text_info
       {
@@ -105,6 +108,7 @@ namespace photon
          char const*       select_first;
          char const*       select_last;
          bool              is_focus;
+         bool              is_active;
       };
 
       struct glyph_info

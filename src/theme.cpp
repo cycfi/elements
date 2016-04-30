@@ -394,6 +394,7 @@ namespace photon
           , font(th.text_box_font)
           , font_size(th.text_box_font_size)
           , font_color(th.text_box_font_color)
+          , inactive_font_color(th.inactive_font_color)
           , start(text.first)
           , end(text.last)
           , sstart(text.select_first)
@@ -401,6 +402,7 @@ namespace photon
           , hilite_color(th.text_box_hilite_color)
           , caret_color(th.text_box_caret_color)
           , is_focus(text.is_focus)
+          , is_active(text.is_active)
          {
             if (sstart > send)
                std::swap(sstart, send);
@@ -533,13 +535,13 @@ namespace photon
                   }
                }
 
-               nvgFillColor(vg, nvgRGBA(font_color));
+               nvgFillColor(vg, nvgRGBA(is_active ? font_color : inactive_font_color));
                nvgText(vg, x, y, row.start, row.end);
                return true;
             };
 
-            float y;
             float lineh;
+            float y;
             for_each_row(draw_f, y, lineh);
          }
 
@@ -627,7 +629,8 @@ namespace photon
                }
                else if (row.end == cp)
                {
-                  result = { row.end, row.maxx, y, lineh, row.maxx, row.maxx };
+                  float rightmost = x+row.width;
+                  result = { row.end, rightmost, y, lineh, rightmost, rightmost };
                   return false;
                }
 
@@ -659,6 +662,7 @@ namespace photon
          char const*    font;
          float          font_size;
          color          font_color;
+         color          inactive_font_color;
 
          char const*    start;
          char const*    end;
@@ -667,6 +671,7 @@ namespace photon
          color          hilite_color;
          color          caret_color;
          bool           is_focus;
+         bool           is_active;
       };
    }
 
@@ -692,6 +697,30 @@ namespace photon
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.glyph_bounds(cp);
+   }
+
+   void theme::draw_edit_box_base(rect const& b) const
+   {
+      double   x = b.left;
+      double   y = b.top;
+      double   w = b.width();
+      double   h = b.height();
+
+      // Edit
+      NVGpaint bg
+         = nvgBoxGradient(
+               _vg, x+1,y+1+1.5f, w-2,h-2, 3,4,
+               ::nvgRGBA(255, 255, 255, 32), nvgRGBA(edit_box_fill_color));
+
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x+1,y+1, w-2,h-2, 4-1);
+      nvgFillPaint(_vg, bg);
+      nvgFill(_vg);
+
+      nvgBeginPath(_vg);
+      nvgRoundedRect(_vg, x+0.5f, y+0.5f, w-1, h-1, 4-0.5f);
+      nvgStrokeColor(_vg, ::nvgRGBA(0, 0, 0, 48));
+      nvgStroke(_vg);
    }
 
    void theme::draw_button(rect const& b, color const& button_color) const

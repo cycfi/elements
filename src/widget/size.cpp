@@ -43,7 +43,7 @@ namespace photon
    rect vsize_widget::limits(basic_context const& ctx) const
    {
       rect e_limits = subject()->limits(ctx);
-      return rect{ _height, e_limits.top, _height, e_limits.bottom };
+      return rect{ e_limits.left, _height, e_limits.right, _height };
    }
 
    void vsize_widget::prepare_subject(context& ctx)

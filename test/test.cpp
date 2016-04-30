@@ -251,7 +251,36 @@ int main()
             )
          );
 
-         main_widget = txbx;
+         // main_widget = txbx;
+      }
+
+      {
+         auto txbx = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin(
+                  { 10, 10, 10, 5 },
+                  vsize(
+                     20,
+                     scroller(
+                        input_box("Placeholder"),
+                        no_scrollbars | no_vscroll
+                     )
+                  )
+               ),
+               input_panel()
+            )
+         );
+         
+         auto frm = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               txbx,
+               panel()
+            )
+         );
+
+         main_widget = frm;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

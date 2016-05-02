@@ -14,36 +14,29 @@ namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
-   void button_widget::draw(context const& ctx)
-   {
-      auto c = _color;
-      if (_state)
-         c.alpha /= 0.5;
-
-      ctx.theme().draw_button(ctx.bounds, c);
-
-      if (_state)
-         subject()->draw({ ctx, rect{ ctx.bounds }.move(1, 1) });
-      else
-         subject()->draw(ctx);
-   }
-
    widget* button_widget::click(context const& ctx, mouse_button btn)
    {
-      _state = btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos());
-      ctx.window.draw();
+      if (state(btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos())))
+         ctx.window.draw();
       return this;
    }
 
    void button_widget::drag(context const& ctx, mouse_button btn)
    {
-      _state = ctx.bounds.includes(ctx.cursor_pos());
-      ctx.window.draw();
+      if (state(ctx.bounds.includes(ctx.cursor_pos())))
+         ctx.window.draw();
    }
 
    bool button_widget::is_control() const
    {
       return true;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Button Body
+   void botton_body_widget::draw(context const& ctx)
+   {
+      ctx.theme().draw_button(ctx.bounds, body_color);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,9 +48,11 @@ namespace photon
 
       if (btn.is_pressed)
       {
-         state(!state());
-         ctx.window.draw();
-         state(!state());
+         if (state(!state()))
+         {
+            ctx.window.draw();
+            state(!state());
+         }
       }
       else
       {
@@ -69,9 +64,11 @@ namespace photon
    void toggle_button_widget::drag(context const& ctx, mouse_button btn)
    {
       bool curr_state = state();
-      state(curr_state ^ ctx.bounds.includes(ctx.cursor_pos()));
-      ctx.window.draw();
-      state(curr_state);
+      if (state(curr_state ^ ctx.bounds.includes(ctx.cursor_pos())))
+      {
+         ctx.window.draw();
+         state(curr_state);
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

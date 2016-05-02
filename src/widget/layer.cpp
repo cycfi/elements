@@ -108,12 +108,18 @@ namespace photon
    void deck_widget::draw(context const& ctx)
    {
       auto w_bounds = window_bounds(ctx.window);
-      rect bounds = bounds_of(ctx, 0);
+      rect bounds = bounds_of(ctx, _selected_index);
       if (intersects(bounds, w_bounds))
       {
-         auto elem = elements()[0];
+         auto elem = elements()[_selected_index];
          context ectx{ ctx, elem.get(), bounds };
          elem->draw(ectx);
       }
+   }
+
+   void deck_widget::select(std::size_t index)
+   {
+      if (index <  elements().size())
+         _selected_index = index;
    }
 }

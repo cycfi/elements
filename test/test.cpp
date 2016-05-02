@@ -187,11 +187,31 @@ int main()
          //main_widget = icn;
       }
 
+
       {
         auto mtxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Momentary Button")));
         auto ttxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Toggle Button")));
         auto ltxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Latching Button")));
+        
+        
+        auto btn_body_on = botton_body(color{ 0, 0, 0, 0 });
+        auto btn_body_off = botton_body(color{ 0, 0, 0, 127 });
+        
+        auto mbtn_img_on = layer(mtxt, btn_body_on);
+        auto mbtn_img_off = left_top_margin({1, 1}, layer(mtxt, btn_body_off));
+        auto mbtn = button(mbtn_img_on, mbtn_img_off);
 
+         auto btn = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 100, 20, 100, 20 }, mbtn),
+               panel()
+            )
+         );
+         
+         main_widget = btn;
+         
+/*
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
@@ -205,36 +225,10 @@ int main()
          );
 
          main_widget = btn;
+*/
       }
-      
-      {
-        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Toggle Button")));
 
-         auto btn = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 100, 200, 100, 20 }, toggle_button(color{ 0, 0, 0, 0 }, txt)), 
-               panel()
-            )
-         );
-      
-         // main_widget = btn;
-      }
-      
-      {
-        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Latching Button")));
 
-         auto btn = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 100, 200, 100, 20 }, latching_button(color{ 0, 0, 0, 0 }, txt)),
-               panel()
-            )
-         );
-         
-         // main_widget = btn;
-      }
-       
 
       {
          auto txbx = margin(

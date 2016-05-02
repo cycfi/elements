@@ -153,9 +153,9 @@ namespace photon
       std::string       _placeholder;
    };
 
-   inline widget_ptr input_box(std::string const& text)
+   inline widget_ptr input_box(std::string const& placeholder)
    {
-      return widget_ptr{ new input_box_widget{ text } };
+      return widget_ptr{ new input_box_widget{ placeholder } };
    }
 
    class input_panel_widget : public widget

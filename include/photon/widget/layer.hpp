@@ -53,10 +53,15 @@ namespace photon
    {
    public:
 
-      deck_widget() {}
+      deck_widget() : _selected_index(0) {}
       ~deck_widget() {}
 
-      virtual void      draw(context const& ctx);
+      virtual void         draw(context const& ctx);
+      void                 select(std::size_t index);
+
+   private:
+
+      std::size_t          _selected_index;
    };
 
    template <typename... W>

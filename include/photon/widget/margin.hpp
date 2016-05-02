@@ -136,6 +136,21 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Left Top Margin
+   struct left_top_margin_rect : static_empty_rect
+   {
+      left_top_margin_rect(float left, float top) : left(left), top(top) {}
+      double left;
+      double top;
+   };
+
+   inline widget_ptr
+   left_top_margin(left_top_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new margin_widget<left_top_margin_rect>{ margin_, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // X-Side Margin
    struct xside_margin_rect : static_empty_rect
    {

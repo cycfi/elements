@@ -188,18 +188,53 @@ int main()
       }
 
       {
-        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Button")));
+        auto mtxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Momentary Button")));
+        auto ttxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Toggle Button")));
+        auto ltxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Latching Button")));
 
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 100, 200, 100, 20 }, button(color{ 0, 0, 0, 0 }, txt)),
+               vtile(
+                  margin({ 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, mtxt)),
+                  margin({ 100, 20, 100, 20 }, toggle_button(color{ 0, 0, 0, 0 }, ttxt)),
+                  margin({ 100, 20, 100, 20 }, latching_button(color{ 0, 0, 0, 0 }, ltxt))
+               ),
                panel()
             )
          );
 
-         //main_widget = btn;
+         main_widget = btn;
       }
+      
+      {
+        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Toggle Button")));
+
+         auto btn = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 100, 200, 100, 20 }, toggle_button(color{ 0, 0, 0, 0 }, txt)), 
+               panel()
+            )
+         );
+      
+         // main_widget = btn;
+      }
+      
+      {
+        auto txt = yside_margin({ 8, 8 }, halign(0.5,  heading("Latching Button")));
+
+         auto btn = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 100, 200, 100, 20 }, latching_button(color{ 0, 0, 0, 0 }, txt)),
+               panel()
+            )
+         );
+         
+         // main_widget = btn;
+      }
+       
 
       {
          auto txbx = margin(
@@ -280,7 +315,7 @@ int main()
             )
          );
 
-         main_widget = frm;
+         // main_widget = frm;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

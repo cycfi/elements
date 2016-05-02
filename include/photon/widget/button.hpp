@@ -14,6 +14,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Momentary Button
    class button_widget : public proxy
    {
    public:
@@ -21,7 +24,7 @@ namespace photon
       button_widget(color const& color_, std::shared_ptr<widget> subject)
        : proxy(subject)
        , _color(color_)
-       , _is_active(false)
+       , _state(false)
       {}
 
       virtual void      draw(context const& ctx);
@@ -29,15 +32,55 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
+      bool              state() const { return _state; }
+      void              state(bool active) { _state = active; }
+
    private:
 
       color             _color;
-      bool              _is_active;
+      bool              _state;
    };
 
    inline widget_ptr button(color const& color_, std::shared_ptr<widget> subject)
    {
       return widget_ptr{ new button_widget{ color_, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Toggle Button
+   class toggle_button_widget : public button_widget
+   {
+   public:
+
+      toggle_button_widget(color const& color, std::shared_ptr<widget> subject)
+       : button_widget(color, subject)
+      {}
+
+      virtual widget*   click(context const& ctx, mouse_button btn);
+      virtual void      drag(context const& ctx, mouse_button btn);
+   };
+
+   inline widget_ptr toggle_button(color const& color_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new toggle_button_widget{ color_, subject } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Latching Button
+   class latching_button_widget : public button_widget
+   {
+   public:
+
+      latching_button_widget(color const& color, std::shared_ptr<widget> subject)
+       : button_widget(color, subject)
+      {}
+
+      virtual widget*   click(context const& ctx, mouse_button btn);
+   };
+
+   inline widget_ptr latching_button(color const& color_, std::shared_ptr<widget> subject)
+   {
+      return widget_ptr{ new latching_button_widget{ color_, subject } };
    }
 }
 

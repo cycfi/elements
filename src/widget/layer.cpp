@@ -5,9 +5,13 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/layer.hpp>
+#include <photon/window.hpp>
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Layer
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    rect layer_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, full_extent };
@@ -86,6 +90,30 @@ namespace photon
             if (e->is_control() && e->focus(focus_request::wants_focus))
                composite::focus(i);
          }
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Deck
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      rect window_bounds(window const& w)
+      {
+         auto size = w.size();
+         return rect{ 0, 0, size.x, size.y };
+      }
+   }
+
+   void deck_widget::draw(context const& ctx)
+   {
+      auto w_bounds = window_bounds(ctx.window);
+      rect bounds = bounds_of(ctx, 0);
+      if (intersects(bounds, w_bounds))
+      {
+         auto elem = elements()[0];
+         context ectx{ ctx, elem.get(), bounds };
+         elem->draw(ectx);
       }
    }
 }

@@ -45,6 +45,29 @@ namespace photon
       std::swap(v, p->elements());
       return widget_ptr{ p };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Deck
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class deck_widget : public layer_widget
+   {
+   public:
+
+      deck_widget() {}
+      ~deck_widget() {}
+
+      virtual void      draw(context const& ctx);
+   };
+
+   template <typename... W>
+   inline widget_ptr deck(W const&... elements)
+   {
+      auto p = new deck_widget{};
+      std::vector<widget_ptr> v = { elements... };
+      std::reverse(v.begin(), v.end());
+      std::swap(v, p->elements());
+      return widget_ptr{ p };
+   }
 }
 
 #endif

@@ -19,9 +19,10 @@ namespace photon
    class heading_widget : public widget
    {
    public:
-                        heading_widget(std::string const& text)
-                         : text(text)
-                        {}
+
+      heading_widget(std::string const& text)
+       : text(text)
+      {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
@@ -42,9 +43,10 @@ namespace photon
    class label_widget : public widget
    {
    public:
-                        label_widget(std::string const& text)
-                         : text(text)
-                        {}
+
+      label_widget(std::string const& text)
+       : text(text)
+      {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
@@ -65,9 +67,10 @@ namespace photon
    class static_text_box_widget : public widget
    {
    public:
-                        static_text_box_widget(std::string const& text)
-                         : text(text)
-                        {}
+
+      static_text_box_widget(std::string const& text)
+       : text(text)
+      {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
@@ -83,16 +86,18 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class text_box_widget : public widget
+   class basic_text_box_widget : public widget
    {
    public:
-                           text_box_widget(std::string const& text, double width)
-                           : _text(text)
-                           , _select_start(-1)
-                           , _select_end(-1)
-                           , _width(width)
-                           , _current_x(0)
-                           {}
+
+      basic_text_box_widget(std::string const& text, double width)
+      : _text(text)
+      , _select_start(-1)
+      , _select_end(-1)
+      , _width(width)
+      , _current_x(0)
+      , _is_focus(false)
+      {}
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
@@ -101,6 +106,7 @@ namespace photon
       virtual bool         cursor(context const& ctx, point const& p);
       virtual bool         text(context const& ctx, text_info const& info);
       virtual bool         key(context const& ctx, key_info const& k);
+      virtual bool         focus(focus_request r);
       virtual bool         is_control() const;
 
       int                  select_start() const { return _select_start; }
@@ -128,21 +134,23 @@ namespace photon
       double               _width;
       double               _current_x;
       state_saver_f        _typing_state;
+      bool                 _is_focus;
    };
 
-   inline widget_ptr text_box(std::string const& text, double width)
+   inline widget_ptr basic_text_box(std::string const& text, double width)
    {
-      return widget_ptr{ new text_box_widget{ text, width } };
+      return widget_ptr{ new basic_text_box_widget{ text, width } };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class input_box_widget : public text_box_widget
+   class basic_input_box_widget : public basic_text_box_widget
    {
    public:
-                        input_box_widget(std::string const& placeholder)
-                         : text_box_widget("", full_extent)
-                         , _placeholder(placeholder)
-                        {}
+
+      basic_input_box_widget(std::string const& placeholder)
+       : basic_text_box_widget("", full_extent)
+       , _placeholder(placeholder)
+      {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
@@ -153,10 +161,15 @@ namespace photon
       std::string       _placeholder;
    };
 
-   inline widget_ptr input_box(std::string const& placeholder)
+   inline widget_ptr basic_input_box(std::string const& placeholder)
    {
-      return widget_ptr{ new input_box_widget{ placeholder } };
+      return widget_ptr{ new basic_input_box_widget{ placeholder } };
    }
+
+   widget_ptr input_box(
+      std::string const& placeholder
+    , rect const& pad = rect{ 7, 7, 7, 4 }
+   );
 
    class input_panel_widget : public widget
    {

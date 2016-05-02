@@ -189,43 +189,15 @@ int main()
 
 
       {
-        auto mtxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Momentary Button")));
-        auto ttxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Toggle Button")));
-        auto ltxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading("Latching Button")));
-        
-        
-        auto btn_body_on = botton_body(color{ 0, 0, 0, 0 });
-        auto btn_body_off = botton_body(color{ 0, 0, 0, 127 });
-        
-        auto mbtn_img_on = layer(mtxt, btn_body_on);
-        auto mbtn_img_off = left_top_margin({1, 1}, layer(mtxt, btn_body_off));
-        auto mbtn = button(mbtn_img_on, mbtn_img_off);
-
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 100, 20, 100, 20 }, mbtn),
+               margin({ 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, "Button")),
                panel()
             )
          );
          
-         main_widget = btn;
-         
-/*
-         auto btn = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               vtile(
-                  margin({ 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, mtxt)),
-                  margin({ 100, 20, 100, 20 }, toggle_button(color{ 0, 0, 0, 0 }, ttxt)),
-                  margin({ 100, 20, 100, 20 }, latching_button(color{ 0, 0, 0, 0 }, ltxt))
-               ),
-               panel()
-            )
-         );
-
-         main_widget = btn;
-*/
+         // main_widget = btn;
       }
 
 
@@ -234,12 +206,15 @@ int main()
          auto txbx = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 20, 20, 20, 20 }, text_box(text, 800)),
+               margin(
+                  { 20, 20, 20, 20 },
+                  basic_text_box(text, 800)
+               ),
                panel()
             )
          );
 
-         //main_widget = txbx;
+         // main_widget = txbx;
       }
 
       {
@@ -273,7 +248,7 @@ int main()
                scroller(
                   margin(
                      { 20, 20, 20, 20 },
-                     text_box(text2+text, 800)
+                     basic_text_box(text2+text, 800)
                   )
                ),
                panel()
@@ -284,32 +259,20 @@ int main()
       }
 
       {
-         auto txbx = margin(
+         auto ixbx = margin(
             { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 10, 10, 10, 5 },
-                  vsize(
-                     20,
-                     scroller(
-                        input_box("Placeholder"),
-                        no_scrollbars | no_vscroll
-                     )
-                  )
-               ),
-               input_panel()
-            )
+            input_box("Placeholder")
          );
          
          auto frm = margin(
             { 20, 20, 20, 20 },
             layer(
-               txbx,
+               ixbx,
                panel()
             )
          );
 
-         // main_widget = frm;
+         main_widget = frm;
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

@@ -379,7 +379,7 @@ namespace photon
    scrollable::scrollable_context scrollable::find(context const& ctx_)
    {
       auto const* ctx = &ctx_;
-      while (ctx->widget)
+      while (ctx && ctx->widget)
       {
          auto* sp = dynamic_cast<scrollable*>(ctx->widget);
          if (sp)

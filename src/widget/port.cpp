@@ -45,6 +45,17 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   rect scroller_widget::limits(basic_context const& ctx) const
+   {
+      rect e_limits = subject()->limits(ctx);
+      return rect{
+         allow_hscroll()? 0 : e_limits.left,
+         allow_vscroll()? 0 : e_limits.top,
+         e_limits.right,
+         e_limits.bottom
+      };
+   }
+   
    scroller_widget::scrollbar_bounds
    scroller_widget::get_scrollbar_bounds(context const& ctx)
    {
@@ -101,11 +112,6 @@ namespace photon
          if (sb.has_h)
             ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds);
       }
-   }
-
-   bool scroller_widget::focus(focus_request r)
-   {
-      return true;
    }
 
    bool scroller_widget::scroll(context const& ctx, point const& p)

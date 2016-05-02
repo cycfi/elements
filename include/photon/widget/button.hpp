@@ -17,15 +17,15 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
-   class button_widget : public deck_widget
+   class basic_button_widget : public deck_widget
    {
    public:
 
-      button_widget(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
+      basic_button_widget(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
        : _state(false)
       {
-         deck_widget::elements().push_back(on);
          deck_widget::elements().push_back(off);
+         deck_widget::elements().push_back(on);
       }
 
       virtual widget*   click(context const& ctx, mouse_button btn);
@@ -40,17 +40,17 @@ namespace photon
       bool              _state;
    };
 
-   inline widget_ptr button(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
+   inline widget_ptr basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
    {
-      return widget_ptr{ new button_widget{ on, off } };
+      return widget_ptr{ new basic_button_widget{ off, on } };
    }
 
-   inline bool button_widget::state() const
+   inline bool basic_button_widget::state() const
    {
       return _state;
    }
 
-   inline bool button_widget::state(bool new_state)
+   inline bool basic_button_widget::state(bool new_state)
    {
       if (new_state != _state)
       {
@@ -61,13 +61,15 @@ namespace photon
       return false;
    }
 
+   widget_ptr button(color const& body_color, std::string const& text);
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Button Body
-   class botton_body_widget : public widget
+   // Basic Button Body
+   class basic_botton_body_widget : public widget
    {
    public:
 
-      botton_body_widget(color const& body_color)
+      basic_botton_body_widget(color const& body_color)
        : body_color(body_color)
       {}
 
@@ -78,46 +80,46 @@ namespace photon
       color          body_color;
    };
 
-   inline widget_ptr botton_body(color const& body_color)
+   inline widget_ptr basic_botton_body(color const& body_color)
    {
-      return widget_ptr{ new botton_body_widget{ body_color } };
+      return widget_ptr{ new basic_botton_body_widget{ body_color } };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Toggle Button
-   class toggle_button_widget : public button_widget
+   class basic_toggle_button_widget : public basic_button_widget
    {
    public:
 
-      toggle_button_widget(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
-       : button_widget(on, off)
+      basic_toggle_button_widget(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
+       : basic_button_widget(off, on)
       {}
 
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
    };
 
-   inline widget_ptr toggle_button(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
+   inline widget_ptr basic_toggle_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
    {
-      return widget_ptr{ new toggle_button_widget{ on, off } };
+      return widget_ptr{ new basic_toggle_button_widget{ off, on } };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Latching Button
-   class latching_button_widget : public button_widget
+   class basic_latching_button_widget : public basic_button_widget
    {
    public:
 
-      latching_button_widget(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
-       : button_widget(on, off)
+      basic_latching_button_widget(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
+       : basic_button_widget(off, on)
       {}
 
       virtual widget*   click(context const& ctx, mouse_button btn);
    };
 
-   inline widget_ptr latching_button(std::shared_ptr<widget> on, std::shared_ptr<widget> off)
+   inline widget_ptr basic_latching_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
    {
-      return widget_ptr{ new latching_button_widget{ on, off } };
+      return widget_ptr{ new basic_latching_button_widget{ off, on } };
    }
 }
 

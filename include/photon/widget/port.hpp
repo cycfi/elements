@@ -67,8 +67,8 @@ namespace photon
 
       ~scroller_widget() {}
 
+      virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
-      virtual bool      focus(focus_request r);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      scroll(context const& ctx, point const& p);

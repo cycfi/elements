@@ -43,15 +43,9 @@ namespace photon
    };
 
    template <typename Subject>
-   inline size_widget<Subject> size(point size, Subject&& subject)
+   inline size_widget<typename std::decay<Subject>::type> size(point size, Subject&& subject)
    {
-      return size_widget<Subject>{ size, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline size_widget<Subject> size(point size, Subject const& subject)
-   {
-      return size_widget<Subject>{ size, subject };
+      return { size, std::move(subject) };
    }
 
    template <typename Subject>
@@ -91,15 +85,9 @@ namespace photon
    };
 
    template <typename Subject>
-   inline hsize_widget<Subject> hsize(double width, Subject&& subject)
+   inline hsize_widget<typename std::decay<Subject>::type> hsize(double width, Subject&& subject)
    {
-      return hsize_widget<Subject>{ width, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline hsize_widget<Subject> hsize(double width, Subject const& subject)
-   {
-      return hsize_widget<Subject>{ width, subject };
+      return { width, std::move(subject) };
    }
 
    template <typename Subject>
@@ -139,15 +127,9 @@ namespace photon
    };
 
    template <typename Subject>
-   inline widget_ptr vsize(double height, Subject&& subject)
+   inline vsize_widget<typename std::decay<Subject>::type> vsize(double height, Subject&& subject)
    {
-      return vsize_widget<Subject>{ height, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline widget_ptr vsize(double height, Subject const& subject)
-   {
-      return vsize_widget<Subject>{ height, subject };
+      return { height, std::move(subject) };
    }
 
    template <typename Subject>

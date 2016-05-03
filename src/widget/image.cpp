@@ -29,12 +29,12 @@ namespace photon
    {
       if (!_handle)
       {
-         _canvas = ctx.canvas();
+         _canvas = ctx.canvas().context();
          _handle = nvgCreateImage(_canvas, _filename, 0);
       }
 
       int w, h;
-      nvgImageSize(ctx.canvas(), _handle, &w, &h);
+      nvgImageSize(ctx.canvas().context(), _handle, &w, &h);
       return { double(w), double(h) };
    }
 
@@ -42,7 +42,7 @@ namespace photon
    {
       if (!_handle)
       {
-         _canvas = ctx.canvas();
+         _canvas = ctx.canvas().context();
          _handle = nvgCreateImage(_canvas, _filename, 0);
       }
 

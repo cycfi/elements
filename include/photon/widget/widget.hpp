@@ -62,15 +62,8 @@ namespace photon
    template <typename Widget>
    inline widget_ptr new_(Widget&& w)
    {
-      using widget_type = typename std::remove_reference<Widget>::type;
+      using widget_type = typename std::decay<Widget>::type;
       return widget_ptr{ new widget_type(std::forward<widget_type>(w)) };
-   }
-
-   template <typename Widget>
-   inline widget_ptr new_(Widget const& w)
-   {
-      using widget_type = typename std::remove_reference<Widget>::type;
-      return widget_ptr{ new widget_type(w) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,6 +217,37 @@ namespace photon
       static scrollable_context
       find(context const& ctx);
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Basic Widget
+   //
+   // The basic widget takes in a function that draws something
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   class basic_widget : public widget
+   {
+   public:
+
+      basic_widget(F f)
+       : f(f)
+      {}
+
+      virtual void
+      draw(context const& ctx)
+      {
+         f(ctx);
+      }
+
+   private:
+
+      F f;
+   };
+
+   template <typename F>
+   inline basic_widget<F> basic(F f)
+   {
+      return { f };
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // proxy class implementation

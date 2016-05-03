@@ -86,17 +86,10 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Full Margin
    template <typename Subject>
-   inline margin_widget<rect, Subject>
+   inline margin_widget<rect, typename std::decay<Subject>::type>
    margin(rect const& margin_, Subject&& subject)
    {
-      return margin_widget<rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<rect, Subject>
-   margin(rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,17 +101,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<left_margin_rect, Subject>
+   inline margin_widget<left_margin_rect, typename std::decay<Subject>::type>
    left_margin(left_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<left_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<left_margin_rect, Subject>
-   left_margin(left_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<left_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,17 +116,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<right_margin_rect, Subject>
+   inline margin_widget<right_margin_rect, typename std::decay<Subject>::type>
    right_margin(right_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<right_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<right_margin_rect, Subject>
-   right_margin(right_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<right_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,17 +131,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<top_margin_rect, Subject>
+   inline margin_widget<top_margin_rect, typename std::decay<Subject>::type>
    top_margin(top_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<top_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<top_margin_rect, Subject>
-   top_margin(top_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<top_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,17 +146,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<bottom_margin_rect, Subject>
+   inline margin_widget<bottom_margin_rect, typename std::decay<Subject>::type>
    bottom_margin(bottom_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<bottom_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<bottom_margin_rect, Subject>
-   bottom_margin(bottom_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<bottom_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,17 +162,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<left_top_margin_rect, Subject>
+   inline margin_widget<left_top_margin_rect, typename std::decay<Subject>::type>
    left_top_margin(left_top_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<left_top_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<left_top_margin_rect, Subject>
-   left_top_margin(left_top_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<left_top_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,19 +179,11 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<xside_margin_rect, Subject>
+   inline margin_widget<xside_margin_rect, typename std::decay<Subject>::type>
    xside_margin(xside_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<xside_margin_rect, Subject>{ margin_, std::move(subject) };
+      return { margin_, std::move(subject) };
    }
-
-   template <typename Subject>
-   inline margin_widget<xside_margin_rect, Subject>
-   xside_margin(xside_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<xside_margin_rect, Subject>{ margin_, subject };
-   }
-
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Y-Side Margin
@@ -246,17 +196,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline margin_widget<yside_margin_rect, Subject>
+   inline margin_widget<yside_margin_rect, typename std::decay<Subject>::type>
    yside_margin(yside_margin_rect const& margin_, Subject&& subject)
    {
-      return margin_widget<yside_margin_rect, Subject>{ margin_, std::move(subject) };
-   }
-
-   template <typename Subject>
-   inline margin_widget<yside_margin_rect, Subject>
-   yside_margin(yside_margin_rect const& margin_, Subject const& subject)
-   {
-      return margin_widget<yside_margin_rect, Subject>{ margin_, subject };
+      return { margin_, std::move(subject) };
    }
 }
 

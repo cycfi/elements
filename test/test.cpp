@@ -21,22 +21,36 @@ int main()
 
    {
       widget_ptr main_widget;
+      
+      auto box = basic(
+         [](context const& ctx)
+         {
+            auto& c = ctx.canvas();
+
+            c.begin_path();
+            c.round_rect(ctx.bounds, 4);
+            c.fill_color(colors::gold);
+            c.fill();
+         }
+      );
+      
+      auto gold_box = top_margin(
+         { 20 },
+         hsize(64, box)
+      );
 
       {
-         auto helem = top_margin(
-            { 20 },
-            hsize(64, panel_widget())
-         );
+
 
          auto rows = margin(
             { 20, 0, 20, 20 },
             vtile(
-               halign(0.0,  helem),
-               halign(0.2,  helem),
-               halign(0.4,  helem),
-               halign(0.6,  helem),
-               halign(0.8,  helem),
-               halign(1.0,  helem)
+               halign(0.0,  gold_box),
+               halign(0.2,  gold_box),
+               halign(0.4,  gold_box),
+               halign(0.6,  gold_box),
+               halign(0.8,  gold_box),
+               halign(1.0,  gold_box)
             )
          );
 
@@ -196,7 +210,7 @@ int main()
 //               panel()
 //            )
 //         );
-//         
+//
 //         // main_widget = btn;
 //      }
 //
@@ -263,7 +277,7 @@ int main()
 //            { 20, 20, 20, 20 },
 //            input_box("Placeholder")
 //         );
-//         
+//
 //         auto frm = margin(
 //            { 20, 20, 20, 20 },
 //            layer(

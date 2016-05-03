@@ -7,7 +7,6 @@
 #include <photon/widget/text.hpp>
 #include <photon/widget/margin.hpp>
 #include <photon/widget/layer.hpp>
-//#include <photon/widget/port.hpp>
 
 #include <photon/theme.hpp>
 #include <photon/support.hpp>
@@ -475,16 +474,16 @@ namespace photon
       }
       return false;
    }
-/*
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect basic_input_box_widget::limits(basic_context const& ctx) const
+   rect basic_input_box::limits(basic_context const& ctx) const
    {
       double height = ctx.theme().text_box_font_size;
       height += height / 10;
       return { width(), height, width(), height };
    }
 
-   void basic_input_box_widget::draw(context const& ctx)
+   void basic_input_box::draw(context const& ctx)
    {
       if (text().empty())
       {
@@ -501,7 +500,7 @@ namespace photon
       }
    }
 
-   bool basic_input_box_widget::key(context const& ctx, key_info const& k)
+   bool basic_input_box::key(context const& ctx, key_info const& k)
    {
       switch (k.key)
       {
@@ -514,25 +513,8 @@ namespace photon
       return basic_text_box::key(ctx, k);
    }
 
-   void input_panel_widget::draw(context const& ctx)
+   void input_panel::draw(context const& ctx)
    {
       ctx.theme().draw_edit_box_base(ctx.bounds);
    }
-
-   widget_ptr input_box(std::string const& placeholder, rect const& pad)
-   {
-      return layer(
-         margin(
-            pad,
-            scroller(
-               basic_input_box(placeholder),
-               no_scrollbars | no_vscroll
-            )
-         ),
-         input_panel()
-      );
-   }
-
-   */
-
 }

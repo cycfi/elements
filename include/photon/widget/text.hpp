@@ -8,6 +8,9 @@
 #define PHOTON_GUI_LIB_WIDGET_LABEL_APRIL_17_2016
 
 #include <photon/widget/widget.hpp>
+#include <photon/widget/port.hpp>
+#include <photon/widget/margin.hpp>
+#include <photon/widget/layer.hpp>
 #include <string>
 #include <functional>
 
@@ -125,11 +128,11 @@ namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_input_box_widget : public basic_text_box
+   class basic_input_box : public basic_text_box
    {
    public:
 
-      basic_input_box_widget(std::string const& placeholder)
+      basic_input_box(std::string const& placeholder)
        : basic_text_box("", full_extent)
        , _placeholder(placeholder)
       {}
@@ -143,26 +146,28 @@ namespace photon
       std::string       _placeholder;
    };
 
-   inline widget_ptr basic_input_box(std::string const& placeholder)
-   {
-      return widget_ptr{ new basic_input_box_widget{ placeholder } };
-   }
-
-   widget_ptr input_box(
-      std::string const& placeholder
-    , rect const& pad = rect{ 7, 7, 7, 4 }
-   );
-
-   class input_panel_widget : public widget
+   class input_panel : public widget
    {
    public:
 
       virtual void draw(context const& ctx);
    };
 
-   inline widget_ptr input_panel()
+   inline auto input_box(
+      std::string const& placeholder
+    , rect const& pad  = rect{ 7, 7, 7, 4 }
+   )
    {
-      return widget_ptr{ new input_panel_widget{} };
+      return layer(
+         margin(
+            pad,
+            scroller(
+               basic_input_box{ placeholder },
+               no_scrollbars | no_vscroll
+            )
+         ),
+         input_panel()
+      );
    }
 }
 

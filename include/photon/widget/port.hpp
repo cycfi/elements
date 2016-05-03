@@ -15,7 +15,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Port widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class port_base
+   class port_base : public virtual widget
    {
    public:
 
@@ -28,8 +28,6 @@ namespace photon
 
       virtual widget const&   subject() const = 0;
       virtual widget&         subject() = 0;
-      virtual widget const&   self() const = 0;
-      virtual widget&         self() = 0;
 
       virtual rect            limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -69,8 +67,6 @@ namespace photon
 
       virtual widget const&   subject() const { return base_type::subject(); }
       virtual widget&         subject() { return base_type::subject(); }
-      virtual widget const&   self() const { return *this; }
-      virtual widget&         self() { return *this; }
    };
 
    template <typename Subject>
@@ -177,12 +173,14 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      scroller_widget(Subject&& subject)
+      scroller_widget(Subject&& subject, int traits = 0)
        : base_type(std::move(subject))
+       , scroller_base(traits)
       {}
 
-      scroller_widget(Subject const& subject)
+      scroller_widget(Subject const& subject, int traits = 0)
        : base_type(subject)
+       , scroller_base(traits)
       {}
 
       virtual rect            limits(basic_context const& ctx) const;
@@ -201,8 +199,6 @@ namespace photon
 
       virtual widget const&   subject() const { return base_type::subject(); }
       virtual widget&         subject() { return base_type::subject(); }
-      virtual widget const&   self() const { return *this; }
-      virtual widget&         self() { return *this; }
    };
 
    template <typename Subject>
@@ -291,9 +287,9 @@ namespace photon
 
    template <typename Subject>
    inline scroller_widget<typename std::decay<Subject>::type>
-   scroller(Subject&& subject)
+   scroller(Subject&& subject, int traits = 0)
    {
-      return { std::forward<Subject>(subject) };
+      return { std::forward<Subject>(subject), traits };
    }
 }
 

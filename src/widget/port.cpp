@@ -157,7 +157,7 @@ namespace photon
          {
             _tracking = start;
             if (reposition(ctx))
-               return &self();
+               return this;
          }
          _tracking = none;
       }

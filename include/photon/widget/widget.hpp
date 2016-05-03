@@ -78,7 +78,7 @@ namespace photon
    // to an enlosed widget.
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class proxy : public widget
+   class proxy : public virtual widget
    {
    public:
 

@@ -280,7 +280,7 @@ int main()
                )
             ;
 
-         // main_widget = new_(p);
+         //main_widget = new_(p);
       }
 
       {
@@ -304,7 +304,7 @@ int main()
                )
             ;
 
-         // main_widget = new_(p);
+         //main_widget = new_(p);
       }
 
       {
@@ -321,25 +321,25 @@ int main()
             )
          );
 
-         main_widget = new_(txbx);
+         //main_widget = new_(txbx);
       }
 
-//      {
-//         auto ixbx = margin(
-//            { 20, 20, 20, 20 },
-//            input_box("Placeholder")
-//         );
-//
-//         auto frm = margin(
-//            { 20, 20, 20, 20 },
-//            layer(
-//               ixbx,
-//               panel()
-//            )
-//         );
-//
-//         main_widget = frm;
-//      }
+      {
+         auto ixbx = margin(
+            { 20, 20, 20, 20 },
+            input_box("Placeholder")
+         );
+
+         auto frm = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               ixbx,
+               panel()
+            )
+         );
+
+         main_widget = new_(frm);
+      }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);
       my_app.run();

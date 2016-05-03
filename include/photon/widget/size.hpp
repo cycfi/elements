@@ -15,12 +15,20 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Fixed sizing widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class size_widget : public proxy
+   template <typename Subject>
+   class size_widget : public proxy<Subject>
    {
    public:
 
-      size_widget(point size, std::shared_ptr<widget> subject)
-       : proxy(subject)
+      using base_type = proxy<Subject>;
+
+      size_widget(point size, Subject&& subject)
+       : base_type(std::move(subject))
+       , _size(size)
+      {}
+
+      size_widget(point size, Subject const& subject)
+       : base_type(subject)
        , _size(size)
       {}
 
@@ -34,18 +42,41 @@ namespace photon
       point          _size;
    };
 
-   inline widget_ptr size(point size, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline size_widget<Subject> size(point size, Subject&& subject)
    {
-      return widget_ptr{ new size_widget{ size, subject } };
+      return size_widget<Subject>{ size, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline size_widget<Subject> size(point size, Subject const& subject)
+   {
+      return size_widget<Subject>{ size, subject };
+   }
+
+   template <typename Subject>
+   inline rect size_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      return rect{ _size.x, _size.y, _size.x, _size.y };
+   }
+
+   template <typename Subject>
+   inline void size_widget<Subject>::prepare_subject(context& ctx)
+   {
+      ctx.bounds.right = ctx.bounds.left + _size.x;
+      ctx.bounds.bottom = ctx.bounds.top + _size.y;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class hsize_widget : public proxy
+   template <typename Subject>
+   class hsize_widget : public proxy<Subject>
    {
    public:
 
-      hsize_widget(double width, std::shared_ptr<widget> subject)
-       : proxy(subject)
+      using base_type = proxy<Subject>;
+
+      hsize_widget(double width, Subject&& subject)
+       : base_type(std::move(subject))
        , _width(width)
       {}
 
@@ -59,18 +90,41 @@ namespace photon
       double         _width;
    };
 
-   inline widget_ptr hsize(double width, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline hsize_widget<Subject> hsize(double width, Subject&& subject)
    {
-      return widget_ptr{ new hsize_widget{ width, subject } };
+      return hsize_widget<Subject>{ width, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline hsize_widget<Subject> hsize(double width, Subject const& subject)
+   {
+      return hsize_widget<Subject>{ width, subject };
+   }
+
+   template <typename Subject>
+   inline rect hsize_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect e_limits = this->subject().limits(ctx);
+      return rect{ _width, e_limits.top, _width, e_limits.bottom };
+   }
+
+   template <typename Subject>
+   inline void hsize_widget<Subject>::prepare_subject(context& ctx)
+   {
+      ctx.bounds.right = ctx.bounds.left + _width;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class vsize_widget : public proxy
+   template <typename Subject>
+   class vsize_widget : public proxy<Subject>
    {
    public:
 
-      vsize_widget(double height, std::shared_ptr<widget> subject)
-       : proxy(subject)
+      using base_type = proxy<Subject>;
+
+      vsize_widget(double height, Subject&& subject)
+       : base_type(std::move(subject))
        , _height(height)
       {}
 
@@ -84,9 +138,29 @@ namespace photon
       double         _height;
    };
 
-   inline widget_ptr vsize(double height, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline widget_ptr vsize(double height, Subject&& subject)
    {
-      return widget_ptr{ new vsize_widget{ height, subject } };
+      return vsize_widget<Subject>{ height, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline widget_ptr vsize(double height, Subject const& subject)
+   {
+      return vsize_widget<Subject>{ height, subject };
+   }
+
+   template <typename Subject>
+   inline rect vsize_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect e_limits = this->subject().limits(ctx);
+      return rect{ e_limits.left, _height, e_limits.right, _height };
+   }
+
+   template <typename Subject>
+   inline void vsize_widget<Subject>::prepare_subject(context& ctx)
+   {
+      ctx.bounds.bottom = ctx.bounds.top + _height;
    }
 }
 

@@ -15,17 +15,29 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Margins
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Rect>
-   class margin_widget : public proxy
+   template <typename Rect, typename Subject>
+   class margin_widget : public proxy<Subject>
    {
    public:
 
-      margin_widget(Rect const& margin_, std::shared_ptr<widget> subject)
-       : proxy(subject)
+      using base_type = proxy<Subject>;
+
+      margin_widget(Rect const& margin_, Subject&& subject)
+       : base_type(std::move(subject))
+       , _margin(margin_)
+      {}
+
+      margin_widget(Rect const& margin_, Subject const& subject)
+       : base_type(subject)
        , _margin(margin_)
       {}
 
       ~margin_widget() {}
+
+      margin_widget(margin_widget&&) = default;
+      margin_widget(margin_widget const&) = default;
+      margin_widget& operator=(margin_widget&&) = default;
+      margin_widget& operator=(margin_widget const&) = default;
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -38,10 +50,10 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Rect>
-   inline rect margin_widget<Rect>::limits(basic_context const& ctx) const
+   template <typename Rect, typename Subject>
+   inline rect margin_widget<Rect, Subject>::limits(basic_context const& ctx) const
    {
-      auto r = subject()->limits(ctx);
+      auto r = this->subject().limits(ctx);
 
       r.left += _margin.left + _margin.right;
       r.right += _margin.left + _margin.right;
@@ -51,8 +63,8 @@ namespace photon
       return r;
    }
 
-   template <typename Rect>
-   inline void margin_widget<Rect>::prepare_subject(context& ctx)
+   template <typename Rect, typename Subject>
+   inline void margin_widget<Rect, Subject>::prepare_subject(context& ctx)
    {
       ctx.bounds.top += _margin.top;
       ctx.bounds.left += _margin.left;
@@ -73,10 +85,18 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Full Margin
-   inline widget_ptr
-   margin(rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<rect, Subject>
+   margin(rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<rect>{ margin_, subject } };
+      return margin_widget<rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<rect, Subject>
+   margin(rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,10 +107,18 @@ namespace photon
       double left;
    };
 
-   inline widget_ptr
-   left_margin(left_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<left_margin_rect, Subject>
+   left_margin(left_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<left_margin_rect>{ margin_, subject } };
+      return margin_widget<left_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<left_margin_rect, Subject>
+   left_margin(left_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<left_margin_rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,10 +129,18 @@ namespace photon
       double right;
    };
 
-   inline widget_ptr
-   right_margin(right_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<right_margin_rect, Subject>
+   right_margin(right_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<right_margin_rect>{ margin_, subject } };
+      return margin_widget<right_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<right_margin_rect, Subject>
+   right_margin(right_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<right_margin_rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,10 +151,18 @@ namespace photon
       double top;
    };
 
-   inline widget_ptr
-   top_margin(top_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<top_margin_rect, Subject>
+   top_margin(top_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<top_margin_rect>{ margin_, subject } };
+      return margin_widget<top_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<top_margin_rect, Subject>
+   top_margin(top_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<top_margin_rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,10 +173,18 @@ namespace photon
       double bottom;
    };
 
-   inline widget_ptr
-   bottom_margin(bottom_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<bottom_margin_rect, Subject>
+   bottom_margin(bottom_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<bottom_margin_rect>{ margin_, subject } };
+      return margin_widget<bottom_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<bottom_margin_rect, Subject>
+   bottom_margin(bottom_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<bottom_margin_rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,10 +196,18 @@ namespace photon
       double top;
    };
 
-   inline widget_ptr
-   left_top_margin(left_top_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<left_top_margin_rect, Subject>
+   left_top_margin(left_top_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<left_top_margin_rect>{ margin_, subject } };
+      return margin_widget<left_top_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<left_top_margin_rect, Subject>
+   left_top_margin(left_top_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<left_top_margin_rect, Subject>{ margin_, subject };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,11 +220,20 @@ namespace photon
       double right;
    };
 
-   inline widget_ptr
-   xside_margin(xside_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<xside_margin_rect, Subject>
+   xside_margin(xside_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<xside_margin_rect>{ margin_, subject } };
+      return margin_widget<xside_margin_rect, Subject>{ margin_, std::move(subject) };
    }
+
+   template <typename Subject>
+   inline margin_widget<xside_margin_rect, Subject>
+   xside_margin(xside_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<xside_margin_rect, Subject>{ margin_, subject };
+   }
+
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Y-Side Margin
@@ -176,10 +245,18 @@ namespace photon
       double bottom;
    };
 
-   inline widget_ptr
-   yside_margin(yside_margin_rect const& margin_, std::shared_ptr<widget> subject)
+   template <typename Subject>
+   inline margin_widget<yside_margin_rect, Subject>
+   yside_margin(yside_margin_rect const& margin_, Subject&& subject)
    {
-      return widget_ptr{ new margin_widget<yside_margin_rect>{ margin_, subject } };
+      return margin_widget<yside_margin_rect, Subject>{ margin_, std::move(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_widget<yside_margin_rect, Subject>
+   yside_margin(yside_margin_rect const& margin_, Subject const& subject)
+   {
+      return margin_widget<yside_margin_rect, Subject>{ margin_, subject };
    }
 }
 

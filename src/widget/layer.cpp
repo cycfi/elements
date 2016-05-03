@@ -74,12 +74,6 @@ namespace photon
       return composite::focus(r);
    }
 
-   bool layer_widget::scroll(context const& ctx, point const& p)
-   {
-      focus_top();
-      return composite::scroll(ctx, p);
-   }
-
    void layer_widget::focus_top()
    {
       if (!composite::focus())

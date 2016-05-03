@@ -280,50 +280,50 @@ int main()
                )
             ;
 
-         main_widget = new_(p);
+         // main_widget = new_(p);
       }
 
-//      {
-//         widget_ptr img =
-//            size(
-//               point{ 1920, 1080 }
-//             , image("./assets/images/space.jpg")
-//            );
-//
-//
-//         widget_ptr p =
-//               margin(
-//                  { 20, 20, 20, 20 },
-//                  layer(
-//                     margin(
-//                        { 20, 20, 20, 20 },
-//                        scroller(img)
-//                     ),
-//                     panel()
-//                  )
-//               )
-//            ;
-//
-//         // main_widget = p;
-//      }
-//
-//      {
-//         auto txbx = margin(
-//            { 20, 20, 20, 20 },
-//            layer(
-//               scroller(
-//                  margin(
-//                     { 20, 20, 20, 20 },
-//                     basic_text_box(text2+text, 800)
-//                  )
-//               ),
-//               panel()
-//            )
-//         );
-//
-//         // main_widget = txbx;
-//      }
-//
+      {
+         auto img =
+            size(
+               point{ 1920, 1080 }
+             , image("./assets/images/space.jpg")
+            );
+
+
+         auto p =
+               margin(
+                  { 20, 20, 20, 20 },
+                  layer(
+                     margin(
+                        { 20, 20, 20, 20 },
+                        scroller(img)
+                     ),
+                     panel()
+                  )
+               )
+            ;
+
+         // main_widget = new_(p);
+      }
+
+      {
+         auto txbx = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               scroller(
+                  margin(
+                     { 20, 20, 20, 20 },
+                     basic_text_box(text2+text, 800)
+                  )
+               ),
+               panel()
+            )
+         );
+
+         main_widget = new_(txbx);
+      }
+
 //      {
 //         auto ixbx = margin(
 //            { 20, 20, 20, 20 },

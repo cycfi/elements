@@ -209,8 +209,15 @@ namespace photon
 
    bool composite::scroll(context const& ctx, point const& p)
    {
-      if (_focus != -1)
-         _elements[_focus]->scroll(ctx, p);
+      if (!_elements.empty())
+      {
+         hit_info info = hit_element(ctx, ctx.cursor_pos());
+         if (info.element && photon::intersects(info.bounds, window_bounds(ctx.window)))
+         {
+            context ectx{ ctx, info.element, info.bounds };
+            return info.element->scroll(ectx, p);
+         }
+      }
       return false;
    }
 

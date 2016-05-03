@@ -80,6 +80,7 @@ namespace photon
     : _bkd_color(bkd_color)
     , _app(app_)
     , _subject(subject)
+    , _canvas(0)
     , _theme(theme)
     , _click_time(0)
     , _num_clicks(0)
@@ -109,6 +110,7 @@ namespace photon
          printf("Could not init nanovg.\n");
          return; // $$$ throw $$
       }
+      _canvas = { _context };
 
       glfwSwapInterval(0);
       glfwSetTime(0);

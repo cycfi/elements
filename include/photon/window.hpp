@@ -20,6 +20,7 @@
 #include <photon/point.hpp>
 #include <photon/theme.hpp>
 #include <photon/cursor.hpp>
+#include <photon/canvas.hpp>
 
 #include <memory>
 #include <vector>
@@ -72,7 +73,7 @@ namespace photon
       void              clipboard(std::string const& text) const;
       key_info          key() const { return _current_key; }
 
-      NVGcontext*       canvas() const { return _context; }
+      class canvas&     canvas() { return _canvas; }
       app&              app() const { return _app; }
       theme const&      theme() const { return *_theme.get(); }
 
@@ -83,6 +84,7 @@ namespace photon
       widget_ptr        _subject;
       GLFWwindow*       _window;
       NVGcontext*       _context;
+      class canvas      _canvas;
       rect              _current_bounds;
       rect              _current_limits;
       mouse_button      _btn;

@@ -9,6 +9,7 @@
 #include <photon/support.hpp>
 #include <photon/app.hpp>
 #include <photon/window.hpp>
+#include <nanovg.h>
 
 namespace photon
 {

@@ -21,7 +21,6 @@ namespace photon
    public:
 
       layer_widget() {}
-      ~layer_widget() {}
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
@@ -30,6 +29,8 @@ namespace photon
       virtual bool         scroll(context const& ctx, point const& p);
       virtual bool         focus(focus_request r);
 
+      using composite::focus;
+
    private:
 
       void                 focus_top();
@@ -37,13 +38,13 @@ namespace photon
    };
 
    template <typename... W>
-   inline widget_ptr layer(W const&... elements)
+   inline layer_widget layer(W&&... elements)
    {
-      auto p = new layer_widget{};
-      std::vector<widget_ptr> v = { elements... };
+      layer_widget r{};
+      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
       std::reverse(v.begin(), v.end());
-      std::swap(v, p->elements());
-      return widget_ptr{ p };
+      std::swap(v, r.elements());
+      return r;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,6 @@ namespace photon
    public:
 
       deck_widget() : _selected_index(0) {}
-      ~deck_widget() {}
 
       virtual void         draw(context const& ctx);
       void                 select(std::size_t index);
@@ -65,13 +65,13 @@ namespace photon
    };
 
    template <typename... W>
-   inline widget_ptr deck(W const&... elements)
+   inline deck_widget deck(W&&... elements)
    {
-      auto p = new deck_widget{};
-      std::vector<widget_ptr> v = { elements... };
+      deck_widget r{};
+      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
       std::reverse(v.begin(), v.end());
-      std::swap(v, p->elements());
-      return widget_ptr{ p };
+      std::swap(v, r.elements());
+      return r;
    }
 }
 

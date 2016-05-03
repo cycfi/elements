@@ -17,25 +17,25 @@ namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
-   widget* basic_button_widget::click(context const& ctx, mouse_button btn)
+   widget* basic_button::click(context const& ctx, mouse_button btn)
    {
       if (state(btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos())))
          ctx.window.draw();
       return this;
    }
 
-   void basic_button_widget::drag(context const& ctx, mouse_button btn)
+   void basic_button::drag(context const& ctx, mouse_button btn)
    {
       if (state(ctx.bounds.includes(ctx.cursor_pos())))
          ctx.window.draw();
    }
 
-   bool basic_button_widget::is_control() const
+   bool basic_button::is_control() const
    {
       return true;
    }
 
-   widget_ptr button(color const& body_color, std::string const& text)
+   basic_button button(color const& body_color, std::string const& text)
    {
       color c = body_color;
 
@@ -47,19 +47,19 @@ namespace photon
       auto btn_img_off = layer(btxt, btn_body_off);
       auto btn_img_on = left_top_margin({1, 1}, layer(btxt, btn_body_on));
 
-      return basic_button(btn_img_off, btn_img_on);
+      return basic_button(new_(btn_img_off), new_(btn_img_on));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Button Body
-   void basic_botton_body_widget::draw(context const& ctx)
+   void basic_botton_body::draw(context const& ctx)
    {
       ctx.theme().draw_button(ctx.bounds, body_color);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Toggle Button
-   widget* basic_toggle_button_widget::click(context const& ctx, mouse_button btn)
+   widget* basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(ctx.cursor_pos()))
          return this;
@@ -79,7 +79,7 @@ namespace photon
       return this;
    }
 
-   void basic_toggle_button_widget::drag(context const& ctx, mouse_button btn)
+   void basic_toggle_button::drag(context const& ctx, mouse_button btn)
    {
       bool curr_state = state();
       if (state(curr_state ^ ctx.bounds.includes(ctx.cursor_pos())))
@@ -91,10 +91,10 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Latching Button
-   widget* basic_latching_button_widget::click(context const& ctx, mouse_button btn)
+   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    {
       if (btn.is_pressed)
-         return basic_button_widget::click(ctx, btn);
+         return basic_button::click(ctx, btn);
       return this;
    }
 }

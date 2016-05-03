@@ -28,11 +28,16 @@ namespace photon
    {
    public:
 
+      widget() {}
+      virtual ~widget() {}
+
+      widget(widget&&) = default;
+      widget(widget const&) = default;
+      widget& operator=(widget&&) = default;
+      widget& operator=(widget const&) = default;
+
       using widget_ptr = std::shared_ptr<widget>;
       using widget_const_ptr = std::shared_ptr<widget const>;
-
-      widget() {}
-      ~widget() {}
 
    // image
 
@@ -63,7 +68,7 @@ namespace photon
    inline widget_ptr new_(Widget&& w)
    {
       using widget_type = typename std::decay<Widget>::type;
-      return widget_ptr{ new widget_type(std::forward<widget_type>(w)) };
+      return widget_ptr{ new widget_type(std::forward<Widget>(w)) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +80,6 @@ namespace photon
    template <typename Subject>
    class proxy : public widget
    {
-
    public:
 
       proxy(Subject&& subject_)
@@ -83,13 +87,6 @@ namespace photon
 
       proxy(Subject const& subject_)
        : _subject(subject_) {}
-
-      ~proxy() {}
-
-      proxy(proxy&&) = default;
-      proxy(proxy const&) = default;
-      proxy& operator=(proxy&&) = default;
-      proxy& operator=(proxy const&) = default;
 
    // image
 
@@ -132,13 +129,6 @@ namespace photon
    {
    public:
 
-      composite()
-       : _focus(-1)
-       , _drag_tracking(-1)
-      {}
-
-      ~composite() {}
-
    // image
 
       virtual rect            limits(basic_context const& ctx) const = 0;
@@ -180,8 +170,8 @@ namespace photon
    private:
 
       composite_type          _elements;
-   	int			            _focus;
-      int                     _drag_tracking;
+   	int			            _focus = -1;
+      int                     _drag_tracking = -1;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,8 +182,7 @@ namespace photon
    class scrollable
    {
    public:
-                              scrollable() {}
-      virtual                 ~scrollable() {};
+
       virtual bool            scroll_into_view(context const& ctx, rect const& r) = 0;
 
       struct scrollable_context

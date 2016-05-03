@@ -13,19 +13,19 @@
 
 namespace photon
 {
-   image_widget::image_widget(char const* filename)
+   image::image(char const* filename)
     : _filename(filename)
     , _handle(0)
     , _canvas(0)
    {}
 
-   image_widget::~image_widget()
+   image::~image()
    {
       if (_canvas && _handle)
          nvgDeleteImage(_canvas, _handle);
    }
 
-   point image_widget::size(context const& ctx) const
+   point image::size(context const& ctx) const
    {
       if (!_handle)
       {
@@ -38,7 +38,7 @@ namespace photon
       return { double(w), double(h) };
    }
 
-   void image_widget::draw(context const& ctx)
+   void image::draw(context const& ctx)
    {
       if (!_handle)
       {

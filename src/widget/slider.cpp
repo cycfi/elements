@@ -12,17 +12,17 @@
 
 namespace photon
 {
-   rect slider_widget::limits(basic_context const& ctx) const
+   rect slider::limits(basic_context const& ctx) const
    {
       return { 16, 16, full_extent, full_extent };
    }
 
-   void slider_widget::draw(context const& ctx)
+   void slider::draw(context const& ctx)
    {
       ctx.theme().draw_slider(_pos, ctx.bounds);
    }
 
-   widget* slider_widget::click(context const& ctx, mouse_button btn)
+   widget* slider::click(context const& ctx, mouse_button btn)
    {
       point p = ctx.cursor_pos();
       auto  cp = ctx.theme().slider_knob_position(_pos, ctx.bounds);
@@ -40,12 +40,12 @@ namespace photon
       return this;
    }
 
-   void slider_widget::drag(context const& ctx, mouse_button btn)
+   void slider::drag(context const& ctx, mouse_button btn)
    {
       reposition(ctx);
    }
 
-   void slider_widget::reposition(context const& ctx)
+   void slider::reposition(context const& ctx)
    {
       point    p = ctx.cursor_pos();
       double   x = ctx.bounds.left;
@@ -78,7 +78,7 @@ namespace photon
       ctx.window.draw();
    }
 
-   bool slider_widget::is_control() const
+   bool slider::is_control() const
    {
       return true;
    }

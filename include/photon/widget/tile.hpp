@@ -22,9 +22,6 @@ namespace photon
       vtile_widget() {}
       ~vtile_widget() {}
 
-      vtile_widget(vtile_widget&&) = default;
-      vtile_widget& operator=(vtile_widget&&) = default;
-
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
@@ -41,15 +38,6 @@ namespace photon
    {
       vtile_widget r{};
       std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::swap(v, r.elements());
-      return r;
-   }
-
-   template <typename... W>
-   inline vtile_widget vtile(W const&... elements)
-   {
-      vtile_widget r{};
-      std::vector<widget_ptr> v = { new_(elements)... };
       std::swap(v, r.elements());
       return r;
    }
@@ -76,12 +64,12 @@ namespace photon
    };
 
    template <typename... W>
-   inline widget_ptr htile(W const&... elements)
+   inline htile_widget htile(W&&... elements)
    {
-      auto p = new htile_widget{};
-      std::vector<widget_ptr> v = { elements... };
-      std::swap(v, p->elements());
-      return widget_ptr{ p };
+      htile_widget r{};
+      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
+      std::swap(v, r.elements());
+      return r;
    }
 }
 

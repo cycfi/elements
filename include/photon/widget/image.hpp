@@ -15,12 +15,17 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Images
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class image_widget : public widget
+   class image : public widget
    {
    public:
 
-                           image_widget(char const* filename);
-                           ~image_widget();
+      image(char const* filename);
+      ~image();
+
+      image(image&&) = default;
+      image(image const&) = default;
+      image& operator=(image&&) = default;
+      image& operator=(image const&) = default;
 
       point                size(context const& ctx) const;
       virtual void         draw(context const& ctx);
@@ -31,14 +36,6 @@ namespace photon
       mutable int          _handle;
       mutable NVGcontext*  _canvas;
    };
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Inlines
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   inline widget_ptr image(char const* filename)
-   {
-      return widget_ptr{ new image_widget{ filename } };
-   }
 }
 
 #endif

@@ -16,7 +16,7 @@ namespace photon
    // Icons
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <uint32_t code, int size>
-   class icon_widget : public widget
+   class icon : public widget
    {
    public:
 
@@ -28,20 +28,14 @@ namespace photon
    // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <uint32_t code, int size>
-   inline widget_ptr icon()
-   {
-      return widget_ptr{ new icon_widget<code, size>{} };
-   }
-
-   template <uint32_t code, int size>
-   inline rect icon_widget<code, size>::limits(basic_context const& ctx) const
+   inline rect icon<code, size>::limits(basic_context const& ctx) const
    {
       point s = ctx.theme().measure_icon(code, size);
       return { s.x, s.y, s.x, s.y };
    }
 
    template <uint32_t code, int size>
-   inline void icon_widget<code, size>::draw(context const& ctx)
+   inline void icon<code, size>::draw(context const& ctx)
    {
       ctx.theme().draw_icon(ctx.bounds, code, size);
    }

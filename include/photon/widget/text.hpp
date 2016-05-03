@@ -16,12 +16,12 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Headings
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class heading_widget : public widget
+   class heading : public widget
    {
    public:
 
-      heading_widget(std::string const& text)
-       : text(text)
+      heading(std::string const& text)
+       : _text(text)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -29,23 +29,18 @@ namespace photon
 
    private:
 
-      std::string       text;
+      std::string       _text;
    };
-
-   inline widget_ptr heading(std::string const& text)
-   {
-      return widget_ptr{ new heading_widget{ text } };
-   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class label_widget : public widget
+   class label : public widget
    {
    public:
 
-      label_widget(std::string const& text)
-       : text(text)
+      label(std::string const& text)
+       : _text(text)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -53,23 +48,18 @@ namespace photon
 
    private:
 
-      std::string       text;
+      std::string       _text;
    };
-
-   inline widget_ptr label(std::string const& text)
-   {
-      return widget_ptr{ new label_widget{ text } };
-   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Text Boxes
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class static_text_box_widget : public widget
+   class static_text_box : public widget
    {
    public:
 
-      static_text_box_widget(std::string const& text)
-       : text(text)
+      static_text_box(std::string const& text)
+       : _text(text)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -77,20 +67,15 @@ namespace photon
 
    private:
 
-      std::string       text;
+      std::string       _text;
    };
 
-   inline widget_ptr static_text_box(std::string const& text)
-   {
-      return widget_ptr{ new static_text_box_widget{ text } };
-   }
-
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_text_box_widget : public widget
+   class basic_text_box : public widget
    {
    public:
 
-      basic_text_box_widget(std::string const& text, double width)
+      basic_text_box(std::string const& text, double width)
       : _text(text)
       , _select_start(-1)
       , _select_end(-1)
@@ -108,6 +93,8 @@ namespace photon
       virtual bool         key(context const& ctx, key_info const& k);
       virtual bool         focus(focus_request r);
       virtual bool         is_control() const;
+
+      using widget::focus;
 
       int                  select_start() const { return _select_start; }
       int                  select_end() const { return _select_end; }
@@ -137,18 +124,13 @@ namespace photon
       bool                 _is_focus;
    };
 
-   inline widget_ptr basic_text_box(std::string const& text, double width)
-   {
-      return widget_ptr{ new basic_text_box_widget{ text, width } };
-   }
-
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_input_box_widget : public basic_text_box_widget
+   class basic_input_box_widget : public basic_text_box
    {
    public:
 
       basic_input_box_widget(std::string const& placeholder)
-       : basic_text_box_widget("", full_extent)
+       : basic_text_box("", full_extent)
        , _placeholder(placeholder)
       {}
 

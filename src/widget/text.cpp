@@ -7,7 +7,7 @@
 #include <photon/widget/text.hpp>
 #include <photon/widget/margin.hpp>
 #include <photon/widget/layer.hpp>
-#include <photon/widget/port.hpp>
+//#include <photon/widget/port.hpp>
 
 #include <photon/theme.hpp>
 #include <photon/support.hpp>
@@ -21,47 +21,47 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Headings
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect heading_widget::limits(basic_context const& ctx) const
+   rect heading::limits(basic_context const& ctx) const
    {
-      point s = ctx.theme().measure_heading(text.c_str());
+      point s = ctx.theme().measure_heading(_text.c_str());
       return { s.x, s.y, s.x, s.y };
    }
 
-   void heading_widget::draw(context const& ctx)
+   void heading::draw(context const& ctx)
    {
-      ctx.theme().draw_heading(ctx.bounds, text.c_str());
+      ctx.theme().draw_heading(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect label_widget::limits(basic_context const& ctx) const
+   rect label::limits(basic_context const& ctx) const
    {
-      point s = ctx.theme().measure_label(text.c_str());
+      point s = ctx.theme().measure_label(_text.c_str());
       return { s.x, s.y, s.x, s.y };
    }
 
-   void label_widget::draw(context const& ctx)
+   void label::draw(context const& ctx)
    {
-      ctx.theme().draw_label(ctx.bounds, text.c_str());
+      ctx.theme().draw_label(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Text Boxes
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect static_text_box_widget::limits(basic_context const& ctx) const
+   rect static_text_box::limits(basic_context const& ctx) const
    {
       double text_box_font_size = ctx.theme().text_box_font_size;
       return { 50, text_box_font_size, full_extent, full_extent };
    }
 
-   void static_text_box_widget::draw(context const& ctx)
+   void static_text_box::draw(context const& ctx)
    {
-      ctx.theme().draw_text_box(ctx.bounds, text.c_str());
+      ctx.theme().draw_text_box(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect basic_text_box_widget::limits(basic_context const& ctx) const
+   rect basic_text_box::limits(basic_context const& ctx) const
    {
       char const* first = &_text[0];
       theme::text_info info = {
@@ -74,7 +74,7 @@ namespace photon
       return { _width, height, _width, height };
    }
 
-   void basic_text_box_widget::draw(context const& ctx)
+   void basic_text_box::draw(context const& ctx)
    {
       char const* first = &_text[0];
       theme::text_draw_info info = {
@@ -88,7 +88,7 @@ namespace photon
       ctx.theme().draw_edit_text_box(ctx.bounds, info);
    }
 
-   widget* basic_text_box_widget::click(context const& ctx, mouse_button btn)
+   widget* basic_text_box::click(context const& ctx, mouse_button btn)
    {
       if (!btn.is_pressed) // released? return early
          return this;
@@ -150,7 +150,7 @@ namespace photon
       return this;
    }
 
-   void basic_text_box_widget::drag(context const& ctx, mouse_button btn)
+   void basic_text_box::drag(context const& ctx, mouse_button btn)
    {
       char const* first = &_text[0];
       theme::text_info info = {
@@ -164,7 +164,7 @@ namespace photon
       }
    }
 
-   bool basic_text_box_widget::cursor(context const& ctx, point const& p)
+   bool basic_text_box::cursor(context const& ctx, point const& p)
    {
       if (ctx.bounds.includes(p))
       {
@@ -192,7 +192,7 @@ namespace photon
       };
    }
 
-   bool basic_text_box_widget::text(context const& ctx, text_info const& info_)
+   bool basic_text_box::text(context const& ctx, text_info const& info_)
    {
       if (_select_start == -1)
          return false;
@@ -213,7 +213,7 @@ namespace photon
       return true;
    }
 
-   bool basic_text_box_widget::key(context const& ctx, key_info const& k)
+   bool basic_text_box::key(context const& ctx, key_info const& k)
    {
       if (_select_start == -1
          || k.action == key_action::release
@@ -364,12 +364,12 @@ namespace photon
       return true;
    }
 
-   bool basic_text_box_widget::is_control() const
+   bool basic_text_box::is_control() const
    {
       return true;
    }
 
-   void basic_text_box_widget::delete_()
+   void basic_text_box::delete_()
    {
       int start = std::min(_select_end, _select_start);
       if (start == _select_end)
@@ -385,7 +385,7 @@ namespace photon
       _select_end = _select_start = start;
    }
 
-   void basic_text_box_widget::cut(window& w, int start, int end)
+   void basic_text_box::cut(window& w, int start, int end)
    {
       if (start != end)
       {
@@ -394,13 +394,13 @@ namespace photon
       }
    }
 
-   void basic_text_box_widget::copy(window& w, int start, int end)
+   void basic_text_box::copy(window& w, int start, int end)
    {
       if (start != end)
          w.clipboard(_text.substr(start, end-start));
    }
 
-   void basic_text_box_widget::paste(window& w, int start, int end)
+   void basic_text_box::paste(window& w, int start, int end)
    {
       std::string ins = w.clipboard();
       _text.replace(start, end-start, ins);
@@ -409,9 +409,9 @@ namespace photon
       _select_end = end = start;
    }
 
-   struct basic_text_box_widget::state_saver
+   struct basic_text_box::state_saver
    {
-      state_saver(basic_text_box_widget* this_)
+      state_saver(basic_text_box* this_)
        : text(this_->_text)
        , save_text(this_->_text)
        , select_start(this_->_select_start)
@@ -437,12 +437,12 @@ namespace photon
    };
 
    std::function<void()>
-   basic_text_box_widget::capture_state()
+   basic_text_box::capture_state()
    {
       return state_saver(this);
    }
 
-   void basic_text_box_widget::scroll_into_view(context const& ctx, bool save_x)
+   void basic_text_box::scroll_into_view(context const& ctx, bool save_x)
    {
       char const* first = &_text[0];
       theme::text_info info = {
@@ -458,7 +458,7 @@ namespace photon
          _current_x = glyph_info.x-ctx.bounds.left;
    }
 
-   bool basic_text_box_widget::focus(focus_request r)
+   bool basic_text_box::focus(focus_request r)
    {
       switch (r) {
 
@@ -475,7 +475,7 @@ namespace photon
       }
       return false;
    }
-
+/*
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect basic_input_box_widget::limits(basic_context const& ctx) const
    {
@@ -497,7 +497,7 @@ namespace photon
       }
       else
       {
-         basic_text_box_widget::draw(ctx);
+         basic_text_box::draw(ctx);
       }
    }
 
@@ -511,7 +511,7 @@ namespace photon
          case key_code::key_down:
             return false;
       }
-      return basic_text_box_widget::key(ctx, k);
+      return basic_text_box::key(ctx, k);
    }
 
    void input_panel_widget::draw(context const& ctx)
@@ -532,4 +532,7 @@ namespace photon
          input_panel()
       );
    }
+
+   */
+
 }

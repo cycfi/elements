@@ -32,13 +32,6 @@ namespace photon
        , _margin(margin_)
       {}
 
-      ~margin_widget() {}
-
-      margin_widget(margin_widget&&) = default;
-      margin_widget(margin_widget const&) = default;
-      margin_widget& operator=(margin_widget&&) = default;
-      margin_widget& operator=(margin_widget const&) = default;
-
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
 
@@ -89,7 +82,7 @@ namespace photon
    inline margin_widget<rect, typename std::decay<Subject>::type>
    margin(rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,7 +97,7 @@ namespace photon
    inline margin_widget<left_margin_rect, typename std::decay<Subject>::type>
    left_margin(left_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +112,7 @@ namespace photon
    inline margin_widget<right_margin_rect, typename std::decay<Subject>::type>
    right_margin(right_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +127,7 @@ namespace photon
    inline margin_widget<top_margin_rect, typename std::decay<Subject>::type>
    top_margin(top_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +142,7 @@ namespace photon
    inline margin_widget<bottom_margin_rect, typename std::decay<Subject>::type>
    bottom_margin(bottom_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +158,7 @@ namespace photon
    inline margin_widget<left_top_margin_rect, typename std::decay<Subject>::type>
    left_top_margin(left_top_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +175,7 @@ namespace photon
    inline margin_widget<xside_margin_rect, typename std::decay<Subject>::type>
    xside_margin(xside_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +192,7 @@ namespace photon
    inline margin_widget<yside_margin_rect, typename std::decay<Subject>::type>
    yside_margin(yside_margin_rect const& margin_, Subject&& subject)
    {
-      return { margin_, std::move(subject) };
+      return { margin_, std::forward<Subject>(subject) };
    }
 }
 

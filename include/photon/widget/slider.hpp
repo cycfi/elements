@@ -14,11 +14,11 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class slider_widget : public widget
+   class slider : public widget
    {
    public:
 
-                        slider_widget() : _pos(0.5) {}
+                        slider() : _pos(0.5) {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
@@ -32,11 +32,6 @@ namespace photon
       double            _pos;
       point             _offset;
    };
-
-   inline widget_ptr slider()
-   {
-      return widget_ptr{ new slider_widget{} };
-   }
 }
 
 #endif

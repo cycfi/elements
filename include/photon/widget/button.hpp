@@ -17,15 +17,17 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
-   class basic_button : public deck_widget
+   class basic_button : public array_composite<2, deck_widget>
    {
    public:
+   
+      using base_type = array_composite<2, deck_widget>;
 
       basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
        : _state(false)
       {
-         deck_widget::elements.push_back(off);
-         deck_widget::elements.push_back(on);
+         elements[0] = off;
+         elements[1] = on;
       }
 
       virtual widget*   click(context const& ctx, mouse_button btn);

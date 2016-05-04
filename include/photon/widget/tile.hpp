@@ -15,7 +15,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class vtile_widget : public composite
+   class vtile_widget : public composite_base
    {
    public:
 
@@ -34,18 +34,17 @@ namespace photon
    };
 
    template <typename... W>
-   inline vtile_widget vtile(W&&... elements)
+   inline auto vtile(W&&... elements)
    {
-      vtile_widget r{};
-      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::swap(v, r.elements);
+      array_composite<sizeof...(elements), vtile_widget> r{};
+      r.elements = { new_(std::forward<W>(elements))... };
       return r;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Horizontal Tiles
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class htile_widget : public composite
+   class htile_widget : public composite_base
    {
    public:
 
@@ -64,11 +63,10 @@ namespace photon
    };
 
    template <typename... W>
-   inline htile_widget htile(W&&... elements)
+   inline auto htile(W&&... elements)
    {
-      htile_widget r{};
-      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::swap(v, r.elements);
+      array_composite<sizeof...(elements), htile_widget> r{};
+      r.elements = { new_(std::forward<W>(elements))... };
       return r;
    }
 }

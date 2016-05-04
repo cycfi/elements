@@ -70,18 +70,18 @@ namespace photon
    bool layer_widget::focus(focus_request r)
    {
       focus_top();
-      return composite::focus(r);
+      return composite_base::focus(r);
    }
 
    void layer_widget::focus_top()
    {
-      if (!composite::focus())
+      if (!composite_base::focus())
       {
          for (int i = int(size())-1; i >= 0; --i)
          {
             widget_ptr e = (*this)[i];
             if (e->is_control() && e->focus(focus_request::wants_focus))
-               composite::focus(i);
+               composite_base::focus(i);
          }
       }
    }

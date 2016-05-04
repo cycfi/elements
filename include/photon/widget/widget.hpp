@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 
 namespace photon
 {
@@ -194,16 +195,23 @@ namespace photon
       int                     _drag_tracking = -1;
    };
 
-   class composite : public composite_base
+   template <typename Container, typename Base>
+   class composite : public Base
    {
    public:
 
-      virtual std::size_t     size() const { return elements.size(); };
-      virtual iterator        begin() { return &elements[0]; }
-      virtual const_iterator  begin() const { return &elements[0]; }
+      using iterator = typename Base::iterator;
+      using const_iterator = typename Base::const_iterator;
 
-      std::vector<widget_ptr> elements;
+      virtual std::size_t     size() const   { return elements.size(); };
+      virtual iterator        begin()        { return &elements[0]; }
+      virtual const_iterator  begin() const  { return &elements[0]; }
+
+      Container               elements;
    };
+
+   template <size_t N, typename Base>
+   using array_composite = composite<std::array<widget_ptr, N>, Base>;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Scrollable Views

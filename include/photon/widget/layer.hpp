@@ -10,17 +10,16 @@
 #include <photon/widget/widget.hpp>
 #include <memory>
 #include <algorithm>
+#include <array>
 
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Layer
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class layer_widget : public composite
+   class layer_widget : public composite_base
    {
    public:
-
-      layer_widget() {}
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
@@ -28,7 +27,7 @@ namespace photon
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
       virtual bool         focus(focus_request r);
 
-      using composite::focus;
+      using composite_base::focus;
 
    private:
 
@@ -37,12 +36,11 @@ namespace photon
    };
 
    template <typename... W>
-   inline layer_widget layer(W&&... elements)
+   inline auto layer(W&&... elements)
    {
-      layer_widget r{};
-      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::reverse(v.begin(), v.end());
-      std::swap(v, r.elements);
+      array_composite<sizeof...(elements), layer_widget> r{};
+      r.elements = { new_(std::forward<W>(elements))... };
+      std::reverse(r.begin(), r.end());
       return r;
    }
 
@@ -64,12 +62,11 @@ namespace photon
    };
 
    template <typename... W>
-   inline deck_widget deck(W&&... elements)
+   inline auto deck(W&&... elements)
    {
-      deck_widget r{};
-      std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::reverse(v.begin(), v.end());
-      std::swap(v, r.elements);
+      array_composite<sizeof...(elements), deck_widget> r{};
+      r.elements = { new_(std::forward<W>(elements))... };
+      std::reverse(r.begin(), r.end());
       return r;
    }
 }

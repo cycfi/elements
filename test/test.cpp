@@ -1,17 +1,6 @@
 #include <photon/window.hpp>
 #include <photon/app.hpp>
-#include <photon/widget/panel.hpp>
-#include <photon/widget/margin.hpp>
-#include <photon/widget/align.hpp>
-#include <photon/widget/size.hpp>
-#include <photon/widget/tile.hpp>
-#include <photon/widget/slider.hpp>
-#include <photon/widget/layer.hpp>
-#include <photon/widget/text.hpp>
-#include <photon/widget/icon.hpp>
-#include <photon/widget/button.hpp>
-#include <photon/widget/image.hpp>
-#include <photon/widget/port.hpp>
+#include <photon/widget.hpp>
 
 int main()
 {
@@ -85,7 +74,7 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
 
       {
@@ -121,7 +110,7 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(txt));
+         main_widget = new_(std::move(txt));
       }
 
       std::string text =
@@ -306,7 +295,7 @@ int main()
             )
          );
 
-         main_widget = new_(frm);
+         //main_widget = new_(frm);
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

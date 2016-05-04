@@ -10,10 +10,8 @@
 #include <photon/rect.hpp>
 #include <photon/color.hpp>
 #include <photon/circle.hpp>
+#include <photon/canvas.hpp>
 #include <memory>
-
-// forward
-struct NVGcontext;
 
 namespace photon
 {
@@ -21,11 +19,12 @@ namespace photon
    {
    public:
 
-                           theme() : _vg(0) {}
+                           theme() {}
       virtual              ~theme() {}
 
-      void                 canvas(NVGcontext* vg_)   { _vg = vg_; }
-      NVGcontext*          canvas() const { return _vg; }
+      void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
+      class canvas&        canvas()                               { return _canvas; }
+      class canvas const&  canvas() const                         { return _canvas; }
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels and Frames
@@ -34,13 +33,13 @@ namespace photon
       color                panel_color                = { 28, 30, 34, 192 };
       rect                 panel_shadow_offset        = { -10, -10, +20, +30 };
 
-      virtual void         draw_panel(rect const& b) const;
+      virtual void         draw_panel(rect const& b);
 
       double               frame_corner_radius        = 3.0;
       double               frame_stroke_width         = 0.8;
       color                frame_color                = { 220, 220, 220, 70 };
 
-      virtual void         draw_frame(rect const& b) const;
+      virtual void         draw_frame(rect const& b);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Sliders and Scrollbars
@@ -142,11 +141,11 @@ namespace photon
       char const*       sans        = "sans";
       char const*       sans_bold   = "sans-bold";
 
-      virtual void      load_fonts() const;
+      virtual void      load_fonts();
 
    private:
 
-      NVGcontext*       _vg;
+      class canvas      _canvas;
    };
 
    using theme_ptr = std::shared_ptr<theme>;

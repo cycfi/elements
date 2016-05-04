@@ -11,67 +11,45 @@
 
 namespace photon
 {
-   inline NVGcolor nvgRGBA(color const& c)
-   {
-      NVGcolor color;
-      color.r = c.red;
-      color.g = c.green;
-      color.b = c.blue;
-      color.a = c.alpha;
-      return color;
-   }
-
    // Returns true if col.rgba is 0.0f, 0.0f, 0.0f, 0.0f, false otherwise
    inline bool is_black(NVGcolor col)
    {
       return (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f && col.a == 0.0f);
    }
 
-   void theme::draw_panel(rect const& b) const
+   void theme::draw_panel(rect const& b)
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
-      double   r = panel_corner_radius;
-      rect     sh = panel_shadow_offset;
-
       // Round Rectangle
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x, y, w, h, r);
-      nvgFillColor(_vg, nvgRGBA(panel_color));
-      nvgFill(_vg);
+      _canvas.begin_path();
+      _canvas.round_rect(b, panel_corner_radius);
+      _canvas.fill_color(panel_color);
+      _canvas.fill();
 
       // Drop shadow
-      nvgBeginPath(_vg);
-      nvgRect(_vg, x+sh.left, y+sh.top, w+sh.right, h+sh.bottom);
-      nvgRoundedRect(_vg, x, y, w, h, r);
-      nvgPathWinding(_vg, NVG_HOLE);
+      rect const& offs = panel_shadow_offset;
+      _canvas.begin_path();
+      _canvas.rect({ b.left+offs.left, b.top+offs.top, b.right+offs.right, b.bottom+offs.bottom });
+      _canvas.round_rect(b, panel_corner_radius);
+      _canvas.path_winding(canvas::hole);
 
-      NVGpaint shadow_paint
-         = nvgBoxGradient(
-               _vg, x, y+2, w, h, r*2, 10
-             , ::nvgRGBA(0, 0, 0, 128), ::nvgRGBA(0, 0, 0, 0)
-            );
+      rect  sh_fillr = b;
+      sh_fillr.top += 2;
+      paint shadow_paint
+         = _canvas.box_gradient(sh_fillr, panel_corner_radius*2, 10
+          , color(0, 0, 0, 128), color(0, 0, 0, 0)
+         );
 
-      nvgFillPaint(_vg, shadow_paint);
-      nvgFill(_vg);
+      _canvas.fill_paint(shadow_paint);
+      _canvas.fill();
    }
 
-   void theme::draw_frame(rect const& b) const
+   void theme::draw_frame(rect const& b)
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
-      double   r = frame_corner_radius;
-
-      // Round Rectangle
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x, y, w, h, r);
-      nvgStrokeColor(_vg, nvgRGBA(frame_color));
-      nvgStrokeWidth(_vg, frame_stroke_width);
-      nvgStroke(_vg);
+      _canvas.begin_path();
+      _canvas.round_rect(b, frame_corner_radius);
+      _canvas.stroke_color(frame_color);
+      _canvas.stroke_width(frame_stroke_width);
+      _canvas.stroke();
    }
 
    namespace
@@ -134,10 +112,11 @@ namespace photon
 
    void theme::draw_slider(double pos, rect const& b) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
+      NVGcontext* _vg = _canvas.context();
+      double      x = b.left;
+      double      y = b.top;
+      double      w = b.width();
+      double      h = b.height();
 
       nvgSave(_vg);
 
@@ -162,7 +141,8 @@ namespace photon
 
    void theme::draw_slider_knob(double pos, rect const& b) const
    {
-      circle cp = slider_knob_position(pos, b);
+      NVGcontext* _vg = _canvas.context();
+      circle      cp = slider_knob_position(pos, b);
       draw_knob(
          _vg, cp.cx, cp.cy, cp.radius,
          slider_knob_fill_color, slider_knob_outline_color
@@ -233,10 +213,11 @@ namespace photon
 
    void theme::draw_scroll_bar(double pos, double ext, rect const& b) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
+      NVGcontext* _vg = _canvas.context();
+      double      x = b.left;
+      double      y = b.top;
+      double      w = b.width();
+      double      h = b.height();
 
       draw_scrollbar_fill(_vg, x, y, w, h);
 
@@ -344,39 +325,39 @@ namespace photon
 
    void theme::draw_label(rect const& b, char const* text) const
    {
-      draw_text(_vg, b, text, label_font, label_font_size, label_font_color);
+      draw_text(_canvas.context(), b, text, label_font, label_font_size, label_font_color);
    }
 
    point theme::measure_label(char const* text) const
    {
-      return measure_text(_vg, text, label_font, label_font_size);
+      return measure_text(_canvas.context(), text, label_font, label_font_size);
    }
 
    void theme::draw_heading(rect const& b, char const* text) const
    {
-      draw_text(_vg, b, text, heading_font, heading_font_size, heading_font_color);
+      draw_text(_canvas.context(), b, text, heading_font, heading_font_size, heading_font_color);
    }
 
    point theme::measure_heading(char const* text) const
    {
-      return measure_text(_vg, text, heading_font, heading_font_size);
+      return measure_text(_canvas.context(), text, heading_font, heading_font_size);
    }
 
    void theme::draw_icon(rect const& b, uint32_t code, int size) const
    {
       char icon[8];
-      draw_text(_vg, b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
+      draw_text(_canvas.context(), b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
    }
 
    point theme::measure_icon(uint32_t code, int size) const
    {
       char icon[8];
-      return measure_text(_vg, codepoint_to_UTF8(code,icon), icon_font, size);
+      return measure_text(_canvas.context(), codepoint_to_UTF8(code,icon), icon_font, size);
    }
 
    void theme::draw_text_box(rect const& b, char const* text) const
    {
-      photon::draw_text_box(_vg, b, text, text_box_font, text_box_font_size, text_box_font_color);
+      photon::draw_text_box(_canvas.context(), b, text, text_box_font, text_box_font_size, text_box_font_color);
    }
 
    namespace
@@ -386,7 +367,7 @@ namespace photon
          float const right_pad = 5;
 
          edit_text_box_renderer(theme const& th, rect const& b, theme::text_draw_info const& text)
-          : vg(th.canvas())
+          : vg(th.canvas().context())
           , x(b.left)
           , y(b.top)
           , w(b.width())
@@ -409,7 +390,7 @@ namespace photon
          }
 
          edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
-          : vg(th.canvas())
+          : vg(th.canvas().context())
           , x(b.left)
           , y(b.top)
           , w(b.width())
@@ -701,10 +682,11 @@ namespace photon
 
    void theme::draw_edit_box_base(rect const& b) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
+      NVGcontext* _vg = _canvas.context();
+      double      x = b.left;
+      double      y = b.top;
+      double      w = b.width();
+      double      h = b.height();
 
       // Edit
       NVGpaint bg
@@ -725,12 +707,13 @@ namespace photon
 
    void theme::draw_button(rect const& b, color const& button_color) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
-      NVGcolor col = nvgRGBA(button_color);
-      bool     black = is_black(col);
+      NVGcontext* _vg = _canvas.context();
+      double      x = b.left;
+      double      y = b.top;
+      double      w = b.width();
+      double      h = b.height();
+      NVGcolor    col = nvgRGBA(button_color);
+      bool        black = is_black(col);
 
       NVGpaint bg =
          nvgLinearGradient(
@@ -754,24 +737,10 @@ namespace photon
       nvgStroke(_vg);
    }
 
-   void theme::load_fonts() const
+   void theme::load_fonts()
    {
-      if (nvgCreateFont(_vg, "icons", "./assets/fonts/entypo.ttf") == -1)
-      {
-         printf("Could not add font icons.\n");
-          // $$$ throw $$;
-      }
-
-      if (nvgCreateFont(_vg, "sans", "./assets/fonts/Roboto-Regular.ttf") == -1)
-      {
-         printf("Could not add font italic.\n");
-          // $$$ throw $$;
-      }
-
-      if (nvgCreateFont(_vg, "sans-bold", "./assets/fonts/Roboto-Bold.ttf") == -1)
-      {
-         printf("Could not add font bold.\n");
-          // $$$ throw $$;
-      }
+      _canvas.new_font("icons", "./assets/fonts/entypo.ttf");
+      _canvas.new_font("sans", "./assets/fonts/Roboto-Regular.ttf");
+      _canvas.new_font("sans-bold", "./assets/fonts/Roboto-Bold.ttf");
    }
 }

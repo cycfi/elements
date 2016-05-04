@@ -213,6 +213,9 @@ namespace photon
    template <size_t N, typename Base>
    using array_composite = composite<std::array<widget_ptr, N>, Base>;
 
+   template <typename Base>
+   using vector_composite = composite<std::vector<widget_ptr>, Base>;
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Scrollable Views
    //
@@ -221,8 +224,6 @@ namespace photon
    class scrollable
    {
    public:
-
-      virtual bool            scroll_into_view(context const& ctx, rect const& r) = 0;
 
       struct scrollable_context
       {
@@ -241,9 +242,8 @@ namespace photon
          }
       };
 
-      // find the innermost scrollable class in the context.
-      static scrollable_context
-      find(context const& ctx);
+      virtual bool               scroll_into_view(context const& ctx, rect const& r) = 0;
+      static scrollable_context  find(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

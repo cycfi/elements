@@ -15,7 +15,7 @@ namespace photon
    rect layer_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, full_extent };
-      for (auto const& elem : elements())
+      for (auto const& elem : *this)
       {
          rect  el = elem->limits(ctx);
 
@@ -31,18 +31,18 @@ namespace photon
    void layer_widget::layout(context const& ctx)
    {
       bounds = ctx.bounds;
-      for (std::size_t i = 0; i != elements().size(); ++i)
+      for (std::size_t i = 0; i != size(); ++i)
       {
-         elements()[i]->layout(context{ ctx, elements()[i].get(), bounds_of(ctx, i) });
+         (*this)[i]->layout(context{ ctx, (*this)[i].get(), bounds_of(ctx, i) });
       }
    }
 
    layer_widget::hit_info layer_widget::hit_element(context const& ctx, point const& p) const
    {
       // we test from the highest index (topmost element)
-      for (int i = int(elements().size())-1; i >= 0; --i)
+      for (int i = int(size())-1; i >= 0; --i)
       {
-         widget_ptr e = elements()[i];
+         widget_ptr e = (*this)[i];
          if (e->is_control())
          {
             rect bounds = bounds_of(ctx, i);
@@ -53,12 +53,11 @@ namespace photon
       return hit_info{ 0, rect{}, -1 };
    }
 
-
    rect layer_widget::bounds_of(context const& ctx, std::size_t index) const
    {
       double   width = ctx.bounds.width();
       double   height = ctx.bounds.height();
-      rect     limits = elements()[index]->limits(ctx);
+      rect     limits = (*this)[index]->limits(ctx);
 
       min_limit(width, limits.left);
       max_limit(width, limits.right);
@@ -78,9 +77,9 @@ namespace photon
    {
       if (!composite::focus())
       {
-         for (int i = int(elements().size())-1; i >= 0; --i)
+         for (int i = int(size())-1; i >= 0; --i)
          {
-            widget_ptr e = elements()[i];
+            widget_ptr e = (*this)[i];
             if (e->is_control() && e->focus(focus_request::wants_focus))
                composite::focus(i);
          }
@@ -105,7 +104,7 @@ namespace photon
       rect bounds = bounds_of(ctx, _selected_index);
       if (intersects(bounds, w_bounds))
       {
-         auto elem = elements()[_selected_index];
+         auto elem = (*this)[_selected_index];
          context ectx{ ctx, elem.get(), bounds };
          elem->draw(ectx);
       }
@@ -113,7 +112,7 @@ namespace photon
 
    void deck_widget::select(std::size_t index)
    {
-      if (index <  elements().size())
+      if (index < size())
          _selected_index = index;
    }
 }

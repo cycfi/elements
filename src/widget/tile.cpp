@@ -14,7 +14,7 @@ namespace photon
    rect vtile_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, 0.0 };
-      for (auto const& elem : elements())
+      for (auto const& elem : *this)
       {
          rect  el = elem->limits(ctx);
 
@@ -33,7 +33,7 @@ namespace photon
       _left = ctx.bounds.left;
       _right = ctx.bounds.right;
 
-      _tiles.resize(elements().size()+1);
+      _tiles.resize(size()+1);
 
       rect  limits   = this->limits(ctx);
       double height  = ctx.bounds.height();
@@ -42,7 +42,7 @@ namespace photon
       double curr    = ctx.bounds.top;
       auto  i        = _tiles.begin();
 
-      for (auto const& elem : elements())
+      for (auto const& elem : *this)
       {
          rect  limits = elem->limits(ctx);
 
@@ -70,7 +70,7 @@ namespace photon
    rect htile_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, 0.0, full_extent };
-      for (auto const& elem : elements())
+      for (auto const& elem : *this)
       {
          rect  el = elem->limits(ctx);
 
@@ -89,7 +89,7 @@ namespace photon
       _top = ctx.bounds.top;
       _bottom = ctx.bounds.bottom;
 
-      _tiles.resize(elements().size()+1);
+      _tiles.resize(size()+1);
 
       rect  limits   = this->limits(ctx);
       double width   = ctx.bounds.width();
@@ -98,7 +98,7 @@ namespace photon
       double curr    = ctx.bounds.left;
       auto  i        = _tiles.begin();
 
-      for (auto const& elem : elements())
+      for (auto const& elem : *this)
       {
          rect  limits = elem->limits(ctx);
 

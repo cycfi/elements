@@ -42,7 +42,7 @@ namespace photon
       layer_widget r{};
       std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
       std::reverse(v.begin(), v.end());
-      std::swap(v, r.elements());
+      std::swap(v, r.elements);
       return r;
    }
 
@@ -69,7 +69,7 @@ namespace photon
       deck_widget r{};
       std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
       std::reverse(v.begin(), v.end());
-      std::swap(v, r.elements());
+      std::swap(v, r.elements);
       return r;
    }
 }

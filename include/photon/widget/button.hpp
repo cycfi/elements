@@ -24,8 +24,8 @@ namespace photon
       basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
        : _state(false)
       {
-         deck_widget::elements().push_back(off);
-         deck_widget::elements().push_back(on);
+         deck_widget::elements.push_back(off);
+         deck_widget::elements.push_back(on);
       }
 
       virtual widget*   click(context const& ctx, mouse_button btn);

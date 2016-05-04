@@ -177,7 +177,7 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // composite class implementation
+   // composite_base class implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
    namespace
    {
@@ -188,9 +188,9 @@ namespace photon
       }
    }
 
-   widget* composite::hit_test(context const& ctx, point const& p)
+   widget* composite_base::hit_test(context const& ctx, point const& p)
    {
-      if (!_elements.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, p);
          if (info.element)
@@ -202,26 +202,26 @@ namespace photon
       return 0;
    }
 
-   void composite::draw(context const& ctx)
+   void composite_base::draw(context const& ctx)
    {
       auto w_bounds = window_bounds(ctx.window);
-      for (std::size_t i = 0; i < _elements.size(); ++i)
+      for (std::size_t i = 0; i < size(); ++i)
       {
          rect bounds = bounds_of(ctx, i);
          if (intersects(bounds, w_bounds))
          {
-            auto elem = _elements[i];
+            auto elem = (*this)[i];
             context ectx{ ctx, elem.get(), bounds };
             elem->draw(ectx);
          }
       }
    }
 
-   widget* composite::click(context const& ctx, mouse_button btn)
+   widget* composite_base::click(context const& ctx, mouse_button btn)
    {
       point p = ctx.cursor_pos();
 
-      if (!_elements.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, p);
 
@@ -231,12 +231,12 @@ namespace photon
             {
                // end the previous focus
                if (_focus != -1)
-                  _elements[_focus]->focus(focus_request::end_focus);
+                  (*this)[_focus]->focus(focus_request::end_focus);
 
                // start a new focus
                _focus = info.index;
                if (_focus != -1)
-                  _elements[_focus]->focus(focus_request::begin_focus);
+                  (*this)[_focus]->focus(focus_request::begin_focus);
             }
          }
 
@@ -252,23 +252,23 @@ namespace photon
       return 0;
    }
 
-   void composite::drag(context const& ctx, mouse_button btn)
+   void composite_base::drag(context const& ctx, mouse_button btn)
    {
       if (_drag_tracking != -1)
       {
          rect bounds = bounds_of(ctx, _drag_tracking);
-         widget* element = _elements[_drag_tracking].get();
+         widget* element = (*this)[_drag_tracking].get();
          context ectx{ ctx, element, bounds };
          element->drag(ectx, btn);
       }
    }
 
-   bool composite::key(context const& ctx, key_info const& k)
+   bool composite_base::key(context const& ctx, key_info const& k)
    {
       if (_focus != -1)
       {
          rect bounds = bounds_of(ctx, _focus);
-         widget* focus_ptr = _elements[_focus].get();
+         widget* focus_ptr = (*this)[_focus].get();
          context ectx{ ctx, focus_ptr, bounds };
          return focus_ptr->key(ectx, k);
       };
@@ -276,12 +276,12 @@ namespace photon
       return false;
    }
 
-   bool composite::text(context const& ctx, text_info const& info)
+   bool composite_base::text(context const& ctx, text_info const& info)
    {
       if (_focus != -1)
       {
          rect bounds = bounds_of(ctx, _focus);
-         widget* focus_ptr = _elements[_focus].get();
+         widget* focus_ptr = (*this)[_focus].get();
          context ectx{ ctx, focus_ptr, bounds };
          return focus_ptr->text(ectx, info);
       };
@@ -289,9 +289,9 @@ namespace photon
       return false;
    }
 
-   bool composite::cursor(context const& ctx, point const& p)
+   bool composite_base::cursor(context const& ctx, point const& p)
    {
-      if (!_elements.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, p);
          if (info.element && photon::intersects(info.bounds, window_bounds(ctx.window)))
@@ -303,9 +303,9 @@ namespace photon
       return false;
    }
 
-   bool composite::scroll(context const& ctx, point const& p)
+   bool composite_base::scroll(context const& ctx, point const& p)
    {
-      if (!_elements.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, ctx.cursor_pos());
          if (info.element && photon::intersects(info.bounds, window_bounds(ctx.window)))
@@ -317,51 +317,51 @@ namespace photon
       return false;
    }
 
-   bool composite::focus(focus_request r)
+   bool composite_base::focus(focus_request r)
    {
       switch (r) {
 
          case focus_request::wants_focus:
-            for (auto element : _elements)
+            for (auto element : *this)
                if (element->focus(focus_request::wants_focus))
                   return true;
             return false;
 
          case focus_request::begin_focus:
             if (_focus != -1)
-               _elements[_focus]->focus(focus_request::begin_focus);
+               (*this)[_focus]->focus(focus_request::begin_focus);
             return true;
 
          case focus_request::end_focus:
             if (_focus != -1)
-               _elements[_focus]->focus(focus_request::end_focus);
+               (*this)[_focus]->focus(focus_request::end_focus);
             return true;
       }
 
       return false;
    }
 
-   widget const* composite::focus() const
+   widget const* composite_base::focus() const
    {
-      return (_elements.empty() || (_focus == -1))? 0 : _elements[_focus].get();
+      return (empty() || (_focus == -1))? 0 : (*this)[_focus].get();
    }
 
-   widget* composite::focus()
+   widget* composite_base::focus()
    {
-      return (_elements.empty() || (_focus == -1))? 0 : _elements[_focus].get();
+      return (empty() || (_focus == -1))? 0 : (*this)[_focus].get();
    }
 
-   void composite::focus(std::size_t index)
+   void composite_base::focus(std::size_t index)
    {
-      if (index < _elements.size())
+      if (index < size())
          _focus = int(index);
    }
 
-   composite::hit_info composite::hit_element(context const& ctx, point const& p) const
+   composite_base::hit_info composite_base::hit_element(context const& ctx, point const& p) const
    {
-      for (std::size_t i = 0; i < _elements.size(); ++i)
+      for (std::size_t i = 0; i < size(); ++i)
       {
-         widget_ptr e = elements()[i];
+         widget_ptr e = (*this)[i];
          if (e->is_control())
          {
             rect bounds = bounds_of(ctx, i);
@@ -372,9 +372,9 @@ namespace photon
       return hit_info{ 0, rect{}, -1 };
    }
 
-   bool composite::is_control() const
+   bool composite_base::is_control() const
    {
-      for (auto const& e : _elements)
+      for (auto const& e : *this)
          if (e->is_control())
             return true;
       return false;

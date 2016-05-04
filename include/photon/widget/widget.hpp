@@ -137,7 +137,7 @@ namespace photon
    //
    // Class for a widget that is composed of other widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class composite : public widget
+   class composite_base : public widget
    {
    public:
 
@@ -165,8 +165,6 @@ namespace photon
 
    // composite
 
-      using composite_type = std::vector<widget_ptr>;
-
       struct hit_info
       {
          widget*   element;
@@ -174,16 +172,37 @@ namespace photon
          int       index;
       };
 
-      composite_type&         elements() { return _elements; }
-      composite_type const&   elements() const { return _elements; }
+      using iterator = widget_ptr*;
+      using const_iterator = widget_ptr const*;
+
       virtual hit_info        hit_element(context const& ctx, point const& p) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
 
+      virtual std::size_t     size() const = 0;
+      virtual iterator        begin() = 0;
+      virtual const_iterator  begin() const = 0;
+
+      iterator                end()                            { return begin()+size(); }
+      const_iterator          end() const                      { return begin()+size(); }
+      bool                    empty() const                    { return size() == 0; }
+      widget_ptr&             operator[](std::size_t ix)       { return begin()[ix]; }
+      widget_ptr const&       operator[](std::size_t ix) const { return begin()[ix]; }
+
    private:
 
-      composite_type          _elements;
    	int			            _focus = -1;
       int                     _drag_tracking = -1;
+   };
+
+   class composite : public composite_base
+   {
+   public:
+
+      virtual std::size_t     size() const { return elements.size(); };
+      virtual iterator        begin() { return &elements[0]; }
+      virtual const_iterator  begin() const { return &elements[0]; }
+
+      std::vector<widget_ptr> elements;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@ namespace photon
    {
       vtile_widget r{};
       std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::swap(v, r.elements());
+      std::swap(v, r.elements);
       return r;
    }
 
@@ -68,7 +68,7 @@ namespace photon
    {
       htile_widget r{};
       std::vector<widget_ptr> v = { new_(std::forward<W>(elements))... };
-      std::swap(v, r.elements());
+      std::swap(v, r.elements);
       return r;
    }
 }

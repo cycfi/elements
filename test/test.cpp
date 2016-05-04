@@ -13,40 +13,8 @@
 #include <photon/widget/image.hpp>
 #include <photon/widget/port.hpp>
 
-
-//   template <typename Widget>
-//   inline Widget new_xx(Widget&& w)
-//   {
-//      return Widget(std::forward<Widget>(w));
-//   }
-//
-//#include <iostream>
-
 int main()
 {
-
-/*
-   struct xx
-   {
-      xx() {}
-
-      xx(xx&&)
-      {
-         std::cout << "move" << std::endl;
-      }
-
-      xx(xx const&)
-      {
-         std::cout << "copy" << std::endl;
-      }
-   };
-   
-   xx v;
-   xx vv{v};
-   xx vvv{new_xx(v)};
-*/
-
-
    using namespace photon;
 
    auto& my_app = make_app<app>();
@@ -84,7 +52,7 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(rows));
+         main_widget = new_(std::move(rows));
       }
 
       {
@@ -338,7 +306,7 @@ int main()
             )
          );
 
-         main_widget = new_(frm);
+         //main_widget = new_(frm);
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

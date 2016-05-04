@@ -77,16 +77,9 @@ namespace photon
    // A widget that encapsulates another widget. The proxy delegates its methods
    // to an enlosed widget.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
-   class proxy : public virtual widget
+   class proxy_base : public widget
    {
    public:
-
-      proxy(Subject&& subject_)
-       : _subject(std::move(subject_)) {}
-
-      proxy(Subject const& subject_)
-       : _subject(subject_) {}
 
    // image
 
@@ -112,8 +105,27 @@ namespace photon
 
    // proxy
 
-      Subject const&          subject() const { return _subject; }
-      Subject&                subject() { return _subject; }
+      virtual widget const&  subject() const = 0;
+      virtual widget&        subject() = 0;
+   };
+
+   template <typename Subject, typename Base = proxy_base>
+   class proxy : public Base
+   {
+   public:
+
+      template <typename... T>
+      proxy(Subject&& subject_, T const&... args)
+       : Base(args...)
+       , _subject(std::move(subject_)) {}
+
+      template <typename... T>
+      proxy(Subject const& subject_, T const&... args)
+       : Base(args...)
+       , _subject(subject_) {}
+
+      virtual widget const&   subject() const { return _subject; }
+      virtual widget&         subject() { return _subject; }
 
    private:
 
@@ -236,116 +248,6 @@ namespace photon
    inline basic_widget<F> basic(F f)
    {
       return { f };
-   }
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // proxy class implementation
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
-   inline rect proxy<Subject>::limits(basic_context const& ctx) const
-   {
-      return _subject.limits(ctx);
-   }
-
-   template <typename Subject>
-   inline widget* proxy<Subject>::hit_test(context const& ctx, point const& p)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.hit_test(sctx, p);
-   }
-
-   template <typename Subject>
-   inline void proxy<Subject>::draw(context const& ctx)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      _subject.draw(sctx);
-   }
-
-   template <typename Subject>
-   inline void proxy<Subject>::layout(context const& ctx)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      _subject.layout(sctx);
-   }
-
-   template <typename Subject>
-   inline void proxy<Subject>::prepare_subject(context& ctx)
-   {
-   }
-
-   template <typename Subject>
-   inline widget* proxy<Subject>::click(context const& ctx, mouse_button btn)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.click(sctx, btn);
-   }
-
-   template <typename Subject>
-   inline void proxy<Subject>::drag(context const& ctx, mouse_button btn)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      _subject.drag(sctx, btn);
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::key(context const& ctx, key_info const& k)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.key(sctx, k);
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::text(context const& ctx, text_info const& info)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.text(sctx, info);
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::cursor(context const& ctx, point const& p)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.cursor(sctx, p);
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::scroll(context const& ctx, point const& p)
-   {
-      context sctx { ctx, &_subject, ctx.bounds };
-      prepare_subject(sctx);
-      return _subject.scroll(sctx, p);
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::focus(focus_request r)
-   {
-      return _subject.focus(r);
-   }
-
-   template <typename Subject>
-   inline widget const* proxy<Subject>::focus() const
-   {
-      return _subject.focus();
-   }
-
-   template <typename Subject>
-   inline widget* proxy<Subject>::focus()
-   {
-      return _subject.focus();
-   }
-
-   template <typename Subject>
-   inline bool proxy<Subject>::is_control() const
-   {
-      return _subject.is_control();
    }
 }
 

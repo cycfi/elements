@@ -23,7 +23,7 @@ namespace photon
       using base_type = proxy<Subject>;
 
       size_widget(point size, Subject&& subject)
-       : base_type(std::move(subject))
+       : base_type(std::forward<Subject>(subject))
        , _size(size)
       {}
 
@@ -31,8 +31,6 @@ namespace photon
        : base_type(subject)
        , _size(size)
       {}
-
-      ~size_widget() {}
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -43,9 +41,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline size_widget<typename std::decay<Subject>::type> size(point size, Subject&& subject)
+   inline size_widget<typename std::decay<Subject>::type>
+   size(point size, Subject&& subject)
    {
-      return { size, std::move(subject) };
+      return { size, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
@@ -70,11 +69,14 @@ namespace photon
       using base_type = proxy<Subject>;
 
       hsize_widget(double width, Subject&& subject)
-       : base_type(std::move(subject))
+       : base_type(std::forward<Subject>(subject))
        , _width(width)
       {}
-
-      ~hsize_widget() {}
+      
+      hsize_widget(double width, Subject const& subject)
+       : base_type(subject)
+       , _width(width)
+      {}
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -85,9 +87,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline hsize_widget<typename std::decay<Subject>::type> hsize(double width, Subject&& subject)
+   inline hsize_widget<typename std::decay<Subject>::type>
+   hsize(double width, Subject&& subject)
    {
-      return { width, std::move(subject) };
+      return { width, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
@@ -112,11 +115,14 @@ namespace photon
       using base_type = proxy<Subject>;
 
       vsize_widget(double height, Subject&& subject)
-       : base_type(std::move(subject))
+       : base_type(std::forward<Subject>(subject))
        , _height(height)
       {}
-
-      ~vsize_widget() {}
+      
+      vsize_widget(double height, Subject const& subject)
+       : base_type(subject)
+       , _height(height)
+      {}
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -127,9 +133,10 @@ namespace photon
    };
 
    template <typename Subject>
-   inline vsize_widget<typename std::decay<Subject>::type> vsize(double height, Subject&& subject)
+   inline vsize_widget<typename std::decay<Subject>::type>
+   vsize(double height, Subject&& subject)
    {
-      return { height, std::move(subject) };
+      return { height, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>

@@ -41,7 +41,7 @@ namespace photon
    {
       nvgSave(ctx.canvas().context());
       nvgScissor(ctx.canvas().context(), ctx.bounds.left, ctx.bounds.top, ctx.bounds.width(), ctx.bounds.height());
-      proxy_draw(ctx);
+      proxy_base::draw(ctx);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,11 +157,11 @@ namespace photon
          {
             _tracking = start;
             if (reposition(ctx))
-               return this;
+               return ctx.widget;
          }
          _tracking = none;
       }
-      return proxy_click(ctx, btn);
+      return port_base::click(ctx, btn);
    }
 
    void scroller_base::drag(context const& ctx, mouse_button btn)
@@ -183,7 +183,7 @@ namespace photon
                dp.y = ctx.bounds.top - mp.y;
             scroll(ctx, dp);
          }
-         proxy_drag(ctx, btn);
+         port_base::drag(ctx, btn);
       }
    }
 
@@ -300,7 +300,7 @@ namespace photon
             return true;
          }
       }
-      return proxy_cursor(ctx, p);
+      return port_base::cursor(ctx, p);
    }
 
    bool scroller_base::is_control() const

@@ -68,12 +68,12 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      hsize_widget(double width, Subject&& subject)
+      hsize_widget(float width, Subject&& subject)
        : base_type(std::forward<Subject>(subject))
        , _width(width)
       {}
       
-      hsize_widget(double width, Subject const& subject)
+      hsize_widget(float width, Subject const& subject)
        : base_type(subject)
        , _width(width)
       {}
@@ -83,12 +83,12 @@ namespace photon
 
    private:
 
-      double         _width;
+      float          _width;
    };
 
    template <typename Subject>
    inline hsize_widget<typename std::decay<Subject>::type>
-   hsize(double width, Subject&& subject)
+   hsize(float width, Subject&& subject)
    {
       return { width, std::forward<Subject>(subject) };
    }
@@ -114,12 +114,12 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      vsize_widget(double height, Subject&& subject)
+      vsize_widget(float height, Subject&& subject)
        : base_type(std::forward<Subject>(subject))
        , _height(height)
       {}
       
-      vsize_widget(double height, Subject const& subject)
+      vsize_widget(float height, Subject const& subject)
        : base_type(subject)
        , _height(height)
       {}
@@ -129,12 +129,12 @@ namespace photon
 
    private:
 
-      double         _height;
+      float          _height;
    };
 
    template <typename Subject>
    inline vsize_widget<typename std::decay<Subject>::type>
-   vsize(double height, Subject&& subject)
+   vsize(float height, Subject&& subject)
    {
       return { height, std::forward<Subject>(subject) };
    }

@@ -22,12 +22,12 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      margin_widget(Rect const& margin_, Subject&& subject)
+      margin_widget(Rect margin_, Subject&& subject)
        : base_type(std::move(subject))
        , _margin(margin_)
       {}
 
-      margin_widget(Rect const& margin_, Subject const& subject)
+      margin_widget(Rect margin_, Subject const& subject)
        : base_type(subject)
        , _margin(margin_)
       {}
@@ -80,7 +80,7 @@ namespace photon
    // Full Margin
    template <typename Subject>
    inline margin_widget<rect, typename std::decay<Subject>::type>
-   margin(rect const& margin_, Subject&& subject)
+   margin(rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -90,12 +90,12 @@ namespace photon
    struct left_margin_rect : static_empty_rect
    {
       left_margin_rect(float left) : left(left) {}
-      double left;
+      float left;
    };
 
    template <typename Subject>
    inline margin_widget<left_margin_rect, typename std::decay<Subject>::type>
-   left_margin(left_margin_rect const& margin_, Subject&& subject)
+   left_margin(left_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -105,12 +105,12 @@ namespace photon
    struct right_margin_rect : static_empty_rect
    {
       right_margin_rect(float right) : right(right) {}
-      double right;
+      float right;
    };
 
    template <typename Subject>
    inline margin_widget<right_margin_rect, typename std::decay<Subject>::type>
-   right_margin(right_margin_rect const& margin_, Subject&& subject)
+   right_margin(right_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -120,12 +120,12 @@ namespace photon
    struct top_margin_rect : static_empty_rect
    {
       top_margin_rect(float top) : top(top) {}
-      double top;
+      float top;
    };
 
    template <typename Subject>
    inline margin_widget<top_margin_rect, typename std::decay<Subject>::type>
-   top_margin(top_margin_rect const& margin_, Subject&& subject)
+   top_margin(top_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -135,12 +135,12 @@ namespace photon
    struct bottom_margin_rect : static_empty_rect
    {
       bottom_margin_rect(float bottom) : bottom(bottom) {}
-      double bottom;
+      float bottom;
    };
 
    template <typename Subject>
    inline margin_widget<bottom_margin_rect, typename std::decay<Subject>::type>
-   bottom_margin(bottom_margin_rect const& margin_, Subject&& subject)
+   bottom_margin(bottom_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -150,13 +150,13 @@ namespace photon
    struct left_top_margin_rect : static_empty_rect
    {
       left_top_margin_rect(float left, float top) : left(left), top(top) {}
-      double left;
-      double top;
+      float left;
+      float top;
    };
 
    template <typename Subject>
    inline margin_widget<left_top_margin_rect, typename std::decay<Subject>::type>
-   left_top_margin(left_top_margin_rect const& margin_, Subject&& subject)
+   left_top_margin(left_top_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -167,13 +167,13 @@ namespace photon
    {
       xside_margin_rect(float left, float right) : left(left), right(right) {}
       xside_margin_rect(float left_right) : left(left_right), right(left_right) {}
-      double left;
-      double right;
+      float left;
+      float right;
    };
 
    template <typename Subject>
    inline margin_widget<xside_margin_rect, typename std::decay<Subject>::type>
-   xside_margin(xside_margin_rect const& margin_, Subject&& subject)
+   xside_margin(xside_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
@@ -184,13 +184,13 @@ namespace photon
    {
       yside_margin_rect(float top, float bottom) : top(top), bottom(bottom) {}
       yside_margin_rect(float top_bottom) : top(top_bottom), bottom(top_bottom) {}
-      double top;
-      double bottom;
+      float top;
+      float bottom;
    };
 
    template <typename Subject>
    inline margin_widget<yside_margin_rect, typename std::decay<Subject>::type>
-   yside_margin(yside_margin_rect const& margin_, Subject&& subject)
+   yside_margin(yside_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }

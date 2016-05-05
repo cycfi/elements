@@ -58,7 +58,7 @@ namespace photon
       return false;
    }
 
-   basic_button button(color const& body_color, std::string const& text);
+   basic_button button(color body_color, std::string const& text);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Basic Button Body
@@ -66,7 +66,7 @@ namespace photon
    {
    public:
 
-      basic_botton_body(color const& body_color)
+      basic_botton_body(color body_color)
        : body_color(body_color)
       {}
 

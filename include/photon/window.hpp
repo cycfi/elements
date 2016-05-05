@@ -38,8 +38,8 @@ namespace photon
 
       window(
          char const*    title
-       , point const&   size
-       , color const&   bkd_color
+       , point          size
+       , color          bkd_color
        , app&           app_
        , widget_ptr     subject
        , theme_ptr      theme = theme_ptr{ new photon::theme{} }
@@ -51,15 +51,15 @@ namespace photon
       window& operator=(window const&) = delete;
 
       point             size() const;
-      void              size(point const& s);
+      void              size(point s);
       point             cursor_pos() const;
 
       virtual void      draw();
       virtual void      key(key_info const& k);
       virtual void      text(text_info const& info);
       virtual void      click(mouse_button const& btn);
-      virtual void      mouse(point const& p);
-      virtual void      scroll(point const& p);
+      virtual void      mouse(point p);
+      virtual void      scroll(point p);
       virtual void      focus(bool is_focus);
       virtual void      close();
       virtual void      idle();

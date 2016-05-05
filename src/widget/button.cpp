@@ -35,7 +35,7 @@ namespace photon
       return true;
    }
 
-   basic_button button(color const& body_color, std::string const& text)
+   basic_button button(color body_color, std::string const& text)
    {
       color c = body_color;
 

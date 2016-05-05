@@ -22,12 +22,12 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      halign_widget(double align, Subject&& subject)
+      halign_widget(float align, Subject&& subject)
        : base_type(std::forward<Subject>(subject))
        , _align(align)
       {}
 
-      halign_widget(double align, Subject const& subject)
+      halign_widget(float align, Subject const& subject)
        : base_type(subject)
        , _align(align)
       {}
@@ -37,12 +37,12 @@ namespace photon
 
    private:
 
-      double         _align;
+      float          _align;
    };
 
    template <typename Subject>
    inline halign_widget<typename std::decay<Subject>::type>
-   halign(double align, Subject&& subject)
+   halign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
@@ -57,9 +57,9 @@ namespace photon
    template <typename Subject>
    inline void halign_widget<Subject>::prepare_subject(context& ctx)
    {
-      rect     e_limits          = this->subject().limits(ctx);
-      double   elem_width        = e_limits.left;
-      double   available_width   = ctx.bounds.width();
+      rect  e_limits          = this->subject().limits(ctx);
+      float elem_width        = e_limits.left;
+      float available_width   = ctx.bounds.width();
 
       if (available_width > elem_width)
          elem_width = std::min(available_width, e_limits.right);
@@ -76,12 +76,12 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      valign_widget(double align, Subject&& subject)
+      valign_widget(float align, Subject&& subject)
        : base_type(std::move(subject))
        , _align(align)
       {}
 
-      valign_widget(double align, Subject const& subject)
+      valign_widget(float align, Subject const& subject)
        : base_type(subject)
        , _align(align)
       {}
@@ -96,12 +96,12 @@ namespace photon
 
    private:
 
-      double         _align;
+      float          _align;
    };
 
    template <typename Subject>
    inline valign_widget<typename std::decay<Subject>::type>
-   valign(double align, Subject&& subject)
+   valign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
@@ -116,9 +116,9 @@ namespace photon
    template <typename Subject>
    inline void valign_widget<Subject>::prepare_subject(context& ctx)
    {
-      rect     e_limits          = this->subject().limits(ctx);
-      double   elem_height       = e_limits.top;
-      double   available_height  = ctx.bounds.height();
+      rect  e_limits          = this->subject().limits(ctx);
+      float elem_height       = e_limits.top;
+      float available_height  = ctx.bounds.height();
 
       if (available_height > elem_height)
          elem_height = std::min(available_height, e_limits.bottom);

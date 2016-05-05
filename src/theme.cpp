@@ -11,7 +11,7 @@
 
 namespace photon
 {
-   void theme::draw_panel(rect const& b)
+   void theme::draw_panel(rect b) const
    {
       // Round Rectangle
       _canvas.begin_path();
@@ -20,7 +20,7 @@ namespace photon
       _canvas.fill();
 
       // Drop shadow
-      rect const& offs = panel_shadow_offset;
+      rect offs = panel_shadow_offset;
       _canvas.begin_path();
       _canvas.rect({ b.left+offs.left, b.top+offs.top, b.right+offs.right, b.bottom+offs.bottom });
       _canvas.round_rect(b, panel_corner_radius);
@@ -37,7 +37,7 @@ namespace photon
       _canvas.fill();
    }
 
-   void theme::draw_frame(rect const& b)
+   void theme::draw_frame(rect b) const
    {
       _canvas.begin_path();
       _canvas.round_rect(b, frame_corner_radius);
@@ -48,7 +48,7 @@ namespace photon
 
    namespace
    {
-      void draw_slot(NVGcontext* vg, double x, double y, double w, double h, double r)
+      void draw_slot(NVGcontext* vg, float x, float y, float w, float h, float r)
       {
          // Slot
          NVGpaint bg
@@ -64,9 +64,9 @@ namespace photon
       }
 
       void draw_knob(
-         NVGcontext* vg, double cx, double cy, double r,
-         color const& fill_color,
-         color const& outline_color
+         NVGcontext* vg, float cx, float cy, float r,
+         color fill_color,
+         color outline_color
       )
       {
          // Knob Shadow
@@ -104,28 +104,28 @@ namespace photon
       }
    }
 
-   void theme::draw_slider(double pos, rect const& b) const
+   void theme::draw_slider(float pos, rect b) const
    {
       NVGcontext* _vg = _canvas.context();
-      double      x = b.left;
-      double      y = b.top;
-      double      w = b.width();
-      double      h = b.height();
+      float       x = b.left;
+      float       y = b.top;
+      float       w = b.width();
+      float       h = b.height();
 
       nvgSave(_vg);
 
       if (w > h)
       {
          // horizontal
-         double   cy = y + h * 0.5;
-         double   sl = h * slider_slot_size;
+         float    cy = y + h * 0.5;
+         float    sl = h * slider_slot_size;
          draw_slot(_vg, x, cy-(sl/2), w, sl, sl/3);
       }
       else
       {
          // vertical
-         double   cx = x + w * 0.5;
-         double   sl = w * slider_slot_size;
+         float    cx = x + w * 0.5;
+         float    sl = w * slider_slot_size;
          draw_slot(_vg, cx-(sl/2), y, sl, h, sl/3);
       }
 
@@ -133,7 +133,7 @@ namespace photon
       nvgRestore(_vg);
    }
 
-   void theme::draw_slider_knob(double pos, rect const& b) const
+   void theme::draw_slider_knob(float pos, rect b) const
    {
       NVGcontext* _vg = _canvas.context();
       circle      cp = slider_knob_position(pos, b);
@@ -143,18 +143,18 @@ namespace photon
       );
    }
 
-   circle theme::slider_knob_position(double pos, rect const& b) const
+   circle theme::slider_knob_position(float pos, rect b) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
+      float x = b.left;
+      float y = b.top;
+      float w = b.width();
+      float h = b.height();
 
       if (w > h)
       {
          // horizontal
-         double   cy = y + h * 0.5;
-         double   kr = h * slider_knob_radius;
+         float    cy = y + h * 0.5;
+         float    kr = h * slider_knob_radius;
 
          // inset by radius;
          w -= kr * 2;
@@ -165,8 +165,8 @@ namespace photon
       else
       {
          // vertical
-         double   cx = x + w * 0.5;
-         double   kr = w * slider_knob_radius;
+         float    cx = x + w * 0.5;
+         float    kr = w * slider_knob_radius;
 
          // inset by radius;
          h -= kr * 2;
@@ -178,7 +178,7 @@ namespace photon
 
    namespace
    {
-      void draw_scrollbar_fill(NVGcontext* vg, double x, double y, double w, double h)
+      void draw_scrollbar_fill(NVGcontext* vg, float x, float y, float w, float h)
       {
          nvgBeginPath(vg);
          nvgRect(vg, x, y, w, h);
@@ -187,8 +187,8 @@ namespace photon
       }
 
       void draw_scrollbar(
-         NVGcontext* vg, double x, double y, double w, double h, double r,
-         color const& outline_color_, color const& fill_color_
+         NVGcontext* vg, float x, float y, float w, float h, float r,
+         color outline_color_, color fill_color_
       )
       {
          auto outline_color = nvgRGBA(outline_color_);
@@ -205,13 +205,13 @@ namespace photon
       }
    }
 
-   void theme::draw_scroll_bar(double pos, double ext, rect const& b) const
+   void theme::draw_scroll_bar(float pos, float ext, rect b) const
    {
       NVGcontext* _vg = _canvas.context();
-      double      x = b.left;
-      double      y = b.top;
-      double      w = b.width();
-      double      h = b.height();
+      float       x = b.left;
+      float       y = b.top;
+      float       w = b.width();
+      float       h = b.height();
 
       draw_scrollbar_fill(_vg, x, y, w, h);
 
@@ -232,12 +232,12 @@ namespace photon
          scroll_bar_outline_color, scroll_bar_fill_color);
    }
 
-   rect theme::scroll_bar_position(double pos, double ext, rect const& b) const
+   rect theme::scroll_bar_position(float pos, float ext, rect b) const
    {
-      double   x = b.left;
-      double   y = b.top;
-      double   w = b.width();
-      double   h = b.height();
+      float x = b.left;
+      float y = b.top;
+      float w = b.width();
+      float h = b.height();
 
       if (w > h)
       {
@@ -257,8 +257,8 @@ namespace photon
    namespace
    {
       void draw_text(
-         NVGcontext* vg, rect const& b, char const* text
-       , char const* font, double font_size, color const& color
+         NVGcontext* vg, rect b, char const* text
+       , char const* font, float font_size, color color
       )
       {
          float x = b.left;
@@ -284,7 +284,7 @@ namespace photon
 
       point measure_text(
          NVGcontext* vg, char const* text
-       , char const* font, double font_size
+       , char const* font, float font_size
       )
       {
          nvgFontSize(vg, font_size);
@@ -296,8 +296,8 @@ namespace photon
       }
 
       void draw_text_box(
-         NVGcontext* vg, rect const& b, char const* text
-       , char const* font, double font_size, color const& color
+         NVGcontext* vg, rect b, char const* text
+       , char const* font, float font_size, color color
       )
       {
          float x = b.left;
@@ -317,7 +317,7 @@ namespace photon
       }
    }
 
-   void theme::draw_label(rect const& b, char const* text) const
+   void theme::draw_label(rect b, char const* text) const
    {
       draw_text(_canvas.context(), b, text, label_font, label_font_size, label_font_color);
    }
@@ -327,7 +327,7 @@ namespace photon
       return measure_text(_canvas.context(), text, label_font, label_font_size);
    }
 
-   void theme::draw_heading(rect const& b, char const* text) const
+   void theme::draw_heading(rect b, char const* text) const
    {
       draw_text(_canvas.context(), b, text, heading_font, heading_font_size, heading_font_color);
    }
@@ -337,7 +337,7 @@ namespace photon
       return measure_text(_canvas.context(), text, heading_font, heading_font_size);
    }
 
-   void theme::draw_icon(rect const& b, uint32_t code, int size) const
+   void theme::draw_icon(rect b, uint32_t code, int size) const
    {
       char icon[8];
       draw_text(_canvas.context(), b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
@@ -349,7 +349,7 @@ namespace photon
       return measure_text(_canvas.context(), codepoint_to_UTF8(code,icon), icon_font, size);
    }
 
-   void theme::draw_text_box(rect const& b, char const* text) const
+   void theme::draw_text_box(rect b, char const* text) const
    {
       photon::draw_text_box(_canvas.context(), b, text, text_box_font, text_box_font_size, text_box_font_color);
    }
@@ -360,7 +360,7 @@ namespace photon
       {
          float const right_pad = 5;
 
-         edit_text_box_renderer(theme const& th, rect const& b, theme::text_draw_info const& text)
+         edit_text_box_renderer(theme const& th, rect b, theme::text_draw_info const& text)
           : vg(th.canvas().context())
           , x(b.left)
           , y(b.top)
@@ -383,7 +383,7 @@ namespace photon
                std::swap(sstart, send);
          }
 
-         edit_text_box_renderer(theme const& th, rect const& b, theme::text_info const& text)
+         edit_text_box_renderer(theme const& th, rect b, theme::text_info const& text)
           : vg(th.canvas().context())
           , x(b.left)
           , y(b.top)
@@ -520,7 +520,7 @@ namespace photon
             for_each_row(draw_f, y, lineh);
          }
 
-         double height() const
+         float height() const
          {
             auto height_f = [&](auto& row, auto i, auto y, auto lineh) { return true; };
 
@@ -530,7 +530,7 @@ namespace photon
             return y + lineh;
          }
 
-         char const* caret_position(point const& p) const
+         char const* caret_position(point p) const
          {
             float       mx = p.x;
             float       my = p.y;
@@ -650,37 +650,37 @@ namespace photon
       };
    }
 
-   void theme::draw_edit_text_box(rect const& b, text_draw_info const& text) const
+   void theme::draw_edit_text_box(rect b, text_draw_info const& text) const
    {
       edit_text_box_renderer r{ *this, b, text };
       r.draw();
    }
 
-   char const* theme::caret_position(rect const& b, text_info const& text, point const& p) const
+   char const* theme::caret_position(rect b, text_info const& text, point p) const
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.caret_position(p);
    }
 
-   double theme::edit_text_box_height(rect const& b, text_info const& text) const
+   float theme::edit_text_box_height(rect b, text_info const& text) const
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.height();
    }
 
-   theme::glyph_info theme::glyph_bounds(rect const& b, text_info const& text, char const* cp) const
+   theme::glyph_info theme::glyph_bounds(rect b, text_info const& text, char const* cp) const
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.glyph_bounds(cp);
    }
 
-   void theme::draw_edit_box_base(rect const& b) const
+   void theme::draw_edit_box_base(rect b) const
    {
       NVGcontext* _vg = _canvas.context();
-      double      x = b.left;
-      double      y = b.top;
-      double      w = b.width();
-      double      h = b.height();
+      float      x = b.left;
+      float      y = b.top;
+      float      w = b.width();
+      float      h = b.height();
 
       // Edit
       NVGpaint bg
@@ -699,7 +699,7 @@ namespace photon
       nvgStroke(_vg);
    }
 
-   void theme::draw_button(rect const& b, color const& button_color)
+   void theme::draw_button(rect b, color button_color) const
    {
       bool  black = button_color == colors::black;
       paint bg
@@ -709,8 +709,7 @@ namespace photon
          );
 
       _canvas.begin_path();
-      rect b_inset = b;
-      inset(b_inset, 1, 1);
+      rect b_inset = inset(b, 1, 1);
       _canvas.round_rect(b_inset, button_corner_radius-1);
 
       if (!black)
@@ -722,14 +721,13 @@ namespace photon
       _canvas.fill();
 
       _canvas.begin_path();
-      b_inset = b;
-      inset(b_inset, 0.5, 0.5);
+      b_inset = inset(b, 0.5, 0.5);
       _canvas.round_rect(b_inset, button_corner_radius-0.5);
       _canvas.stroke_color(color{ 0, 0, 0, 48 });
       _canvas.stroke();
    }
 
-   void theme::load_fonts()
+   void theme::load_fonts() const
    {
       _canvas.new_font("icons", "./assets/fonts/entypo.ttf");
       _canvas.new_font("sans", "./assets/fonts/Roboto-Regular.ttf");

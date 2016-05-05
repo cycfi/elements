@@ -66,13 +66,13 @@ namespace photon
    void window_scroll(GLFWwindow* window_ptr, double x, double y)
    {
       auto wp = static_cast<window*>(glfwGetWindowUserPointer(window_ptr));
-      wp->scroll(point{ x, y });
+      wp->scroll(point{ float(x), float(y) });
    }
 
    window::window(
       char const*    title
-    , point const&   size
-    , color const&   bkd_color
+    , point   size
+    , color          bkd_color
     , class app&     app_
     , widget_ptr     subject
     , theme_ptr      theme
@@ -132,10 +132,10 @@ namespace photon
    {
       int width, height;
       glfwGetWindowSize(_window, &width, &height);
-      return { double(width), double(height) };
+      return { float(width), float(height) };
    }
 
-   void window::size(point const& s)
+   void window::size(point s)
    {
       glfwSetWindowSize(_window, s.x, s.y);
    }
@@ -144,7 +144,7 @@ namespace photon
    {
       double mx, my;
       glfwGetCursorPos(_window, &mx, &my);
-      return { mx, my };
+      return { float(mx), float(my) };
    }
 
    void window::draw()
@@ -184,7 +184,7 @@ namespace photon
             }
          }
 
-         rect subj_bounds = { 0, 0, double(w_width), double(w_height) };
+         rect subj_bounds = { 0, 0, float(w_width), float(w_height) };
 
          // layout the subject only if the window bounds changes
          context ctx{ *this, _subject.get(), subj_bounds };
@@ -231,7 +231,7 @@ namespace photon
       _subject->click(ctx, btn);
    }
 
-   void window::mouse(point const& p)
+   void window::mouse(point p)
    {
       context ctx { *this, _subject.get(), _current_bounds };
       if (_btn.is_pressed)
@@ -240,7 +240,7 @@ namespace photon
          reset_cursor();
    }
 
-   void window::scroll(point const& p)
+   void window::scroll(point p)
    {
       context ctx { *this, _subject.get(), _current_bounds };
       _subject->scroll(ctx, p);

@@ -23,7 +23,7 @@ namespace photon
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         layout(context const& ctx);
-      virtual hit_info     hit_element(context const& ctx, point const& p) const;
+      virtual hit_info     hit_element(context const& ctx, point p) const;
       virtual rect         bounds_of(context const& ctx, std::size_t index) const;
       virtual bool         focus(focus_request r);
 

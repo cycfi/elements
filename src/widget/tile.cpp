@@ -36,10 +36,10 @@ namespace photon
       _tiles.resize(size()+1);
 
       rect  limits   = this->limits(ctx);
-      double height  = ctx.bounds.height();
-      double extra   = limits.bottom - height;
-      double m_size  = limits.bottom - limits.top;
-      double curr    = ctx.bounds.top;
+      float height   = ctx.bounds.height();
+      float extra    = limits.bottom - height;
+      float m_size   = limits.bottom - limits.top;
+      float curr     = ctx.bounds.top;
       auto  i        = _tiles.begin();
 
       for (auto const& elem : *this)
@@ -92,10 +92,10 @@ namespace photon
       _tiles.resize(size()+1);
 
       rect  limits   = this->limits(ctx);
-      double width   = ctx.bounds.width();
-      double extra   = limits.right - width;
-      double m_size  = limits.right - limits.left;
-      double curr    = ctx.bounds.left;
+      float width    = ctx.bounds.width();
+      float extra    = limits.right - width;
+      float m_size   = limits.right - limits.left;
+      float curr     = ctx.bounds.left;
       auto  i        = _tiles.begin();
 
       for (auto const& elem : *this)

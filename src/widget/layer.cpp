@@ -37,7 +37,7 @@ namespace photon
       }
    }
 
-   layer_widget::hit_info layer_widget::hit_element(context const& ctx, point const& p) const
+   layer_widget::hit_info layer_widget::hit_element(context const& ctx, point p) const
    {
       // we test from the highest index (topmost element)
       for (int i = int(size())-1; i >= 0; --i)
@@ -55,9 +55,9 @@ namespace photon
 
    rect layer_widget::bounds_of(context const& ctx, std::size_t index) const
    {
-      double   width = ctx.bounds.width();
-      double   height = ctx.bounds.height();
-      rect     limits = (*this)[index]->limits(ctx);
+      float width = ctx.bounds.width();
+      float height = ctx.bounds.height();
+      rect  limits = (*this)[index]->limits(ctx);
 
       min_limit(width, limits.left);
       max_limit(width, limits.right);

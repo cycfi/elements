@@ -43,10 +43,10 @@ namespace photon
    // image
 
       virtual rect            limits(basic_context const& ctx) const;
-      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point const& p);
+      virtual bool            scroll(context const& ctx, point p);
 
    // control
 
@@ -54,7 +54,7 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
-      virtual bool            cursor(context const& ctx, point const& p);
+      virtual bool            cursor(context const& ctx, point p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -85,10 +85,10 @@ namespace photon
    // image
 
       virtual rect            limits(basic_context const& ctx) const;
-      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point const& p);
+      virtual bool            scroll(context const& ctx, point p);
       virtual void            prepare_subject(context& ctx);
 
    // control
@@ -97,7 +97,7 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
-      virtual bool            cursor(context const& ctx, point const& p);
+      virtual bool            cursor(context const& ctx, point p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -145,10 +145,10 @@ namespace photon
    // image
 
       virtual rect            limits(basic_context const& ctx) const = 0;
-      virtual widget*         hit_test(context const& ctx, point const& p);
+      virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;
-      virtual bool            scroll(context const& ctx, point const& p);
+      virtual bool            scroll(context const& ctx, point p);
 
    // control
 
@@ -156,7 +156,7 @@ namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
-      virtual bool            cursor(context const& ctx, point const& p);
+      virtual bool            cursor(context const& ctx, point p);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -176,7 +176,7 @@ namespace photon
       using iterator = widget_ptr*;
       using const_iterator = widget_ptr const*;
 
-      virtual hit_info        hit_element(context const& ctx, point const& p) const;
+      virtual hit_info        hit_element(context const& ctx, point p) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
 
       virtual std::size_t     size() const = 0;
@@ -231,7 +231,7 @@ namespace photon
          scrollable*    scrollable_ptr;
 
          // scroll the rectangle, r into view
-         bool scroll_into_view(rect const& r_)
+         bool scroll_into_view(rect r_)
          {
             if (scrollable_ptr && context_ptr)
             {
@@ -242,7 +242,7 @@ namespace photon
          }
       };
 
-      virtual bool               scroll_into_view(context const& ctx, rect const& r) = 0;
+      virtual bool               scroll_into_view(context const& ctx, rect r) = 0;
       static scrollable_context  find(context const& ctx);
    };
 

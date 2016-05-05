@@ -61,8 +61,8 @@ namespace photon
    {
       scrollbar_bounds r;
 
-      rect     e_limits = subject().limits(ctx);
-      double   scroll_bar_width = ctx.theme().scroll_bar_width;
+      rect  e_limits = subject().limits(ctx);
+      float scroll_bar_width = ctx.theme().scroll_bar_width;
 
       r.has_h = e_limits.left > ctx.bounds.width() && allow_hscroll();
       r.has_v = e_limits.top > ctx.bounds.height() && allow_vscroll();
@@ -114,7 +114,7 @@ namespace photon
       }
    }
 
-   bool scroller_base::scroll(context const& ctx, point const& p)
+   bool scroller_base::scroll(context const& ctx, point p)
    {
       rect  e_limits = subject().limits(ctx);
 
@@ -289,7 +289,7 @@ namespace photon
       return false;
    }
 
-   bool scroller_base::cursor(context const& ctx, point const& p)
+   bool scroller_base::cursor(context const& ctx, point p)
    {
       if (has_scrollbars())
       {
@@ -308,7 +308,7 @@ namespace photon
       return true;
    }
 
-   bool scroller_base::scroll_into_view(context const& ctx, rect const& r)
+   bool scroller_base::scroll_into_view(context const& ctx, rect r)
    {
       constexpr auto scroll_clearance = 20;
       rect bounds = ctx.bounds;

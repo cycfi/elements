@@ -91,7 +91,7 @@ namespace photon
       virtual void         draw(context const& ctx);
       virtual widget*      click(context const& ctx, mouse_button btn);
       virtual void         drag(context const& ctx, mouse_button btn);
-      virtual bool         cursor(context const& ctx, point const& p);
+      virtual bool         cursor(context const& ctx, point p);
       virtual bool         text(context const& ctx, text_info const& info);
       virtual bool         key(context const& ctx, key_info const& k);
       virtual bool         focus(focus_request r);
@@ -101,7 +101,7 @@ namespace photon
 
       int                  select_start() const { return _select_start; }
       int                  select_end() const { return _select_end; }
-      double               width() const { return _width; }
+      float                width() const { return _width; }
       std::string const&   text() const { return _text; }
       void                 text(std::string const& text_) { _text = text_; }
 
@@ -121,8 +121,8 @@ namespace photon
       std::string          _text;
       int                  _select_start;
       int                  _select_end;
-      double               _width;
-      double               _current_x;
+      float                _width;
+      float                _current_x;
       state_saver_f        _typing_state;
       bool                 _is_focus;
    };
@@ -155,7 +155,7 @@ namespace photon
 
    inline auto input_box(
       std::string const& placeholder
-    , rect const& pad  = rect{ 7, 7, 7, 4 }
+    , rect pad  = rect{ 7, 7, 7, 4 }
    )
    {
       return layer(

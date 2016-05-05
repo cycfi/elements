@@ -18,7 +18,7 @@ namespace photon
       return full_limits;
    }
 
-   widget* widget::hit_test(context const& ctx, point const& p)
+   widget* widget::hit_test(context const& ctx, point p)
    {
       return (ctx.bounds.includes(p)) ? this : 0;
    }
@@ -50,12 +50,12 @@ namespace photon
       return false;
    }
 
-   bool widget::cursor(context const& ctx, point const& p)
+   bool widget::cursor(context const& ctx, point p)
    {
       return false;
    }
 
-   bool widget::scroll(context const& ctx, point const& p)
+   bool widget::scroll(context const& ctx, point p)
    {
       return false;
    }
@@ -88,7 +88,7 @@ namespace photon
       return subject().limits(ctx);
    }
 
-   widget* proxy_base::hit_test(context const& ctx, point const& p)
+   widget* proxy_base::hit_test(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
@@ -141,14 +141,14 @@ namespace photon
       return subject().text(sctx, info);
    }
 
-   bool proxy_base::cursor(context const& ctx, point const& p)
+   bool proxy_base::cursor(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
       return subject().cursor(sctx, p);
    }
 
-   bool proxy_base::scroll(context const& ctx, point const& p)
+   bool proxy_base::scroll(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
@@ -187,7 +187,7 @@ namespace photon
       }
    }
 
-   widget* composite_base::hit_test(context const& ctx, point const& p)
+   widget* composite_base::hit_test(context const& ctx, point p)
    {
       if (!empty())
       {
@@ -288,7 +288,7 @@ namespace photon
       return false;
    }
 
-   bool composite_base::cursor(context const& ctx, point const& p)
+   bool composite_base::cursor(context const& ctx, point p)
    {
       if (!empty())
       {
@@ -302,7 +302,7 @@ namespace photon
       return false;
    }
 
-   bool composite_base::scroll(context const& ctx, point const& p)
+   bool composite_base::scroll(context const& ctx, point p)
    {
       if (!empty())
       {
@@ -356,7 +356,7 @@ namespace photon
          _focus = int(index);
    }
 
-   composite_base::hit_info composite_base::hit_element(context const& ctx, point const& p) const
+   composite_base::hit_info composite_base::hit_element(context const& ctx, point p) const
    {
       for (std::size_t i = 0; i < size(); ++i)
       {

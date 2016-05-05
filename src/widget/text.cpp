@@ -50,7 +50,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect static_text_box::limits(basic_context const& ctx) const
    {
-      double text_box_font_size = ctx.theme().text_box_font_size;
+      float text_box_font_size = ctx.theme().text_box_font_size;
       return { 50, text_box_font_size, full_extent, full_extent };
    }
 
@@ -68,8 +68,8 @@ namespace photon
          first + _text.size()
       };
 
-      rect bounds = { 0, 0, _width, full_extent };
-      double height = ctx.theme().edit_text_box_height(bounds, info);
+      rect  bounds = { 0, 0, _width, full_extent };
+      float height = ctx.theme().edit_text_box_height(bounds, info);
       return { _width, height, _width, height };
    }
 
@@ -163,7 +163,7 @@ namespace photon
       }
    }
 
-   bool basic_text_box::cursor(context const& ctx, point const& p)
+   bool basic_text_box::cursor(context const& ctx, point p)
    {
       if (ctx.bounds.includes(p))
       {
@@ -478,7 +478,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect basic_input_box::limits(basic_context const& ctx) const
    {
-      double height = ctx.theme().text_box_font_size;
+      float height = ctx.theme().text_box_font_size;
       height += height / 10;
       return { width(), height, width(), height };
    }

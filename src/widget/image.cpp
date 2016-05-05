@@ -35,7 +35,7 @@ namespace photon
 
       int w, h;
       nvgImageSize(ctx.canvas().context(), _handle, &w, &h);
-      return { double(w), double(h) };
+      return { float(w), float(h) };
    }
 
    void image::draw(context const& ctx)

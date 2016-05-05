@@ -676,27 +676,20 @@ namespace photon
 
    void theme::draw_edit_box_base(rect b) const
    {
-      NVGcontext* _vg = _canvas.context();
-      float      x = b.left;
-      float      y = b.top;
-      float      w = b.width();
-      float      h = b.height();
+      paint bg
+         = _canvas.box_gradient(b.inset(1, 1).move(0, 1.5), 3, 4
+          , color(255, 255, 255, 32), edit_box_fill_color
+         );
 
-      // Edit
-      NVGpaint bg
-         = nvgBoxGradient(
-               _vg, x+1,y+1+1.5f, w-2,h-2, 3,4,
-               ::nvgRGBA(255, 255, 255, 32), nvgRGBA(edit_box_fill_color));
+      _canvas.begin_path();
+      _canvas.round_rect(b.inset(1, 1), 4-1);
+      _canvas.fill_paint(bg);
+      _canvas.fill();
 
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x+1,y+1, w-2,h-2, 4-1);
-      nvgFillPaint(_vg, bg);
-      nvgFill(_vg);
-
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x+0.5f, y+0.5f, w-1, h-1, 4-0.5f);
-      nvgStrokeColor(_vg, ::nvgRGBA(0, 0, 0, 48));
-      nvgStroke(_vg);
+      _canvas.begin_path();
+      _canvas.round_rect(b.inset(0.5, 0.5), 4-0.5f);
+      _canvas.stroke_color(color{ 0, 0, 0, 48 });
+      _canvas.stroke();
    }
 
    void theme::draw_button(rect b, color button_color) const
@@ -709,8 +702,7 @@ namespace photon
          );
 
       _canvas.begin_path();
-      rect b_inset = inset(b, 1, 1);
-      _canvas.round_rect(b_inset, button_corner_radius-1);
+      _canvas.round_rect(b.inset(1, 1), button_corner_radius-1);
 
       if (!black)
       {
@@ -721,8 +713,7 @@ namespace photon
       _canvas.fill();
 
       _canvas.begin_path();
-      b_inset = inset(b, 0.5, 0.5);
-      _canvas.round_rect(b_inset, button_corner_radius-0.5);
+      _canvas.round_rect(b.inset(0.5, 0.5), button_corner_radius-0.5);
       _canvas.stroke_color(color{ 0, 0, 0, 48 });
       _canvas.stroke();
    }

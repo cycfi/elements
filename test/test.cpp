@@ -110,7 +110,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(txt));
+         //main_widget = new_(std::move(txt));
       }
 
       std::string text =
@@ -198,7 +198,7 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(btn));
+         main_widget = new_(std::move(btn));
       }
 
       {

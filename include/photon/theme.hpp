@@ -132,7 +132,7 @@ namespace photon
 
       double            button_corner_radius        = 4.0;
 
-      virtual void      draw_button(rect const& b, color const& button_color) const;
+      virtual void      draw_button(rect const& b, color const& button_color);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Fonts

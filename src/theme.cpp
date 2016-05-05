@@ -11,12 +11,6 @@
 
 namespace photon
 {
-   // Returns true if col.rgba is 0.0f, 0.0f, 0.0f, 0.0f, false otherwise
-   inline bool is_black(NVGcolor col)
-   {
-      return (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f && col.a == 0.0f);
-   }
-
    void theme::draw_panel(rect const& b)
    {
       // Round Rectangle
@@ -705,36 +699,34 @@ namespace photon
       nvgStroke(_vg);
    }
 
-   void theme::draw_button(rect const& b, color const& button_color) const
+   void theme::draw_button(rect const& b, color const& button_color)
    {
-      NVGcontext* _vg = _canvas.context();
-      double      x = b.left;
-      double      y = b.top;
-      double      w = b.width();
-      double      h = b.height();
-      NVGcolor    col = nvgRGBA(button_color);
-      bool        black = is_black(col);
+      bool  black = button_color == colors::black;
+      paint bg
+         = _canvas.linear_gradient(b.top_left(), point{ b.left, b.bottom }
+          , color(255, 255, 255, black ? 16 : 32)
+          , color(0, 0, 0, black ? 16 : 32)
+         );
 
-      NVGpaint bg =
-         nvgLinearGradient(
-            _vg, x, y, x, y+h,
-            ::nvgRGBA(255, 255, 255, black ? 16 : 32),
-            ::nvgRGBA(0, 0, 0, black ? 16 : 32));
+      _canvas.begin_path();
+      rect b_inset = b;
+      inset(b_inset, 1, 1);
+      _canvas.round_rect(b_inset, button_corner_radius-1);
 
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x+1, y+1, w-2, h-2, button_corner_radius-1);
       if (!black)
       {
-         nvgFillColor(_vg, col);
-         nvgFill(_vg);
+         _canvas.fill_color(button_color);
+         _canvas.fill();
       }
-      nvgFillPaint(_vg, bg);
-      nvgFill(_vg);
+      _canvas.fill_paint(bg);
+      _canvas.fill();
 
-      nvgBeginPath(_vg);
-      nvgRoundedRect(_vg, x+0.5, y+0.5, w-1, h-1, button_corner_radius-0.5);
-      nvgStrokeColor(_vg, ::nvgRGBA(0, 0, 0, 48));
-      nvgStroke(_vg);
+      _canvas.begin_path();
+      b_inset = b;
+      inset(b_inset, 0.5, 0.5);
+      _canvas.round_rect(b_inset, button_corner_radius-0.5);
+      _canvas.stroke_color(color{ 0, 0, 0, 48 });
+      _canvas.stroke();
    }
 
    void theme::load_fonts()

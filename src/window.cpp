@@ -6,6 +6,7 @@
 =================================================================================================*/
 #include <photon/window.hpp>
 #include <photon/app.hpp>
+#include <photon/exception.hpp>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
@@ -91,7 +92,7 @@ namespace photon
       if (_window == 0)
       {
          glfwTerminate();
-         return; // $$$ throw $$
+         throw glfw_exception(-1, "Failed to create window.");
       }
 
       glfwSetWindowUserPointer(_window, this);
@@ -106,10 +107,7 @@ namespace photon
 
       _context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
       if (_context == 0)
-      {
-         printf("Could not init nanovg.\n");
-         return; // $$$ throw $$
-      }
+         throw nanovg_exception("Could not init nanovg.");
       _canvas = { _context };
 
       glfwSwapInterval(0);

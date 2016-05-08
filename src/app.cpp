@@ -7,13 +7,14 @@
 #include <GLFW/glfw3.h>
 #include <photon/app.hpp>
 #include <photon/window.hpp>
+#include <photon/exception.hpp>
 #include <map>
 
 namespace photon
 {
    void on_error(int error, const char* desc)
    {
-      // $$$ printf("GLFW error %d: %s\n", error, desc);
+      throw glfw_exception(error, desc);
    }
 
    std::map<GLFWwindow*, window*> windows;
@@ -23,10 +24,7 @@ namespace photon
     : _idle_time(0)
    {
       if (!glfwInit())
-      {
-         // $$$ printf("Failed to init GLFW.");
-         return; // $$$ throw $$
-      }
+         throw glfw_exception(-1, "Failed to init GLFW.");
 
       glfwSetErrorCallback(on_error);
 
@@ -48,6 +46,7 @@ namespace photon
 
    app::~app()
    {
+      _cursors.clear();
       glfwTerminate();
    }
 

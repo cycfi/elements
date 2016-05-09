@@ -45,7 +45,7 @@ namespace photon
       // Sliders and Scrollbars
 
       float                slider_knob_radius         = 0.25;  // fraction of size (width or height)
-      float                slider_slot_size           = 0.2;   // fraction of size (width or height)
+      float                slider_slot_size           = 0.15;  // fraction of size (width or height)
       color                slider_knob_fill_color     = { 40, 43, 48, 255 };
       color                slider_knob_outline_color  = { 0, 0, 0, 92 };
 

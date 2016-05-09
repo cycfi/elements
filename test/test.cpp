@@ -74,7 +74,7 @@ int main()
             )
          );
 
-         //main_widget = new_(std::move(sl));
+         main_widget = new_(std::move(sl));
       }
 
       {
@@ -295,7 +295,7 @@ int main()
             )
          );
 
-         main_widget = new_(frm);
+         //main_widget = new_(frm);
       }
 
       window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);

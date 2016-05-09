@@ -48,97 +48,85 @@ namespace photon
 
    namespace
    {
-      void draw_slot(NVGcontext* vg, float x, float y, float w, float h, float r)
+      void draw_slot(canvas& _canvas, rect b, float r)
       {
-         // Slot
-         NVGpaint bg
-            = nvgBoxGradient(
-                  vg, x, y+1, w, h, 2, 2,
-                  ::nvgRGBA(0, 0, 0, 32), ::nvgRGBA(0, 0, 0, 128)
-               );
+         paint bg
+            = _canvas.box_gradient(b.inset(0.5, 0.5).move(1, 1), r, 2
+             , color(0, 0, 0, 32), color(0, 0, 0, 128)
+            );
 
-         nvgBeginPath(vg);
-         nvgRoundedRect(vg, x, y, w, h, r);
-         nvgFillPaint(vg, bg);
-         nvgFill(vg);
+         _canvas.begin_path();
+         _canvas.round_rect(b, r);
+         _canvas.fill_paint(bg);
+         _canvas.fill();
       }
 
-      void draw_knob(
-         NVGcontext* vg, float cx, float cy, float r,
-         color fill_color,
-         color outline_color
-      )
+      void draw_knob(canvas& _canvas, circle cp, color fill_color, color outline_color)
       {
          // Knob Shadow
-         NVGpaint bg
-            = nvgRadialGradient(
-                  vg, cx, cy+1, r-3, r+3,
-                  ::nvgRGBA(0, 0, 0, 64), ::nvgRGBA(0, 0, 0, 0)
+         paint bg
+            = _canvas.radial_gradient(
+                  point{ cp.cx, cp.cy+1 }, cp.radius-3, cp.radius+3,
+                  color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
                );
-
-         nvgBeginPath(vg);
-         nvgRect(vg, cx-r-5, cy-r-5, r*2+5+5, r*2+5+5+3);
-         nvgCircle(vg, cx, cy, r);
-         nvgPathWinding(vg, NVG_HOLE);
-         nvgFillPaint(vg, bg);
-         nvgFill(vg);
-
+         
+         _canvas.begin_path();
+         _canvas.rect(cp.bounds().inset(-5, -5).move(0, 3));
+         _canvas.circle(cp);
+         _canvas.path_winding(canvas::hole);
+         _canvas.fill_paint(bg);
+         _canvas.fill();
+         
          // Knob
-         NVGpaint knob
-            = nvgLinearGradient(
-                  vg, cx, cy-r, cx, cy+r,
-                  ::nvgRGBA(255, 255, 255, 16), ::nvgRGBA(0, 0, 0, 16)
+         paint knob
+            = _canvas.linear_gradient(
+                  point{ cp.cx, cp.cy-cp.radius }, point{ cp.cx, cp.cy+cp.radius },
+                  color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
                );
+         
+         _canvas.begin_path();
+         _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-1 });
+         _canvas.fill_color(fill_color);
+         _canvas.fill();
+         _canvas.fill_paint(knob);
+         _canvas.fill();
 
-         nvgBeginPath(vg);
-         nvgCircle(vg, cx, cy, r-1);
-         nvgFillColor(vg, nvgRGBA(fill_color));
-         nvgFill(vg);
-         nvgFillPaint(vg, knob);
-         nvgFill(vg);
-
-         nvgBeginPath(vg);
-         nvgCircle(vg, cx, cy, r-0.5);
-         nvgStrokeColor(vg, nvgRGBA(outline_color));
-         nvgStroke(vg);
+         _canvas.begin_path();
+         _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-0.5f });
+         _canvas.stroke_color(outline_color);
+         _canvas.stroke();
       }
    }
 
    void theme::draw_slider(float pos, rect b) const
    {
-      NVGcontext* _vg = _canvas.context();
-      float       x = b.left;
-      float       y = b.top;
-      float       w = b.width();
-      float       h = b.height();
+      float w = b.width();
+      float h = b.height();
 
-      nvgSave(_vg);
+      _canvas.save();
 
       if (w > h)
       {
          // horizontal
-         float    cy = y + h * 0.5;
-         float    sl = h * slider_slot_size;
-         draw_slot(_vg, x, cy-(sl/2), w, sl, sl/3);
+         float sl = h * slider_slot_size;
+         draw_slot(_canvas, b.inset(0, (h-sl)/2), sl/2);
+
       }
       else
       {
          // vertical
-         float    cx = x + w * 0.5;
-         float    sl = w * slider_slot_size;
-         draw_slot(_vg, cx-(sl/2), y, sl, h, sl/3);
+         float sl = w * slider_slot_size;
+         draw_slot(_canvas, b.inset((w-sl)/2, 0), sl/2);
       }
 
       draw_slider_knob(pos, b);
-      nvgRestore(_vg);
+      _canvas.restore();
    }
 
    void theme::draw_slider_knob(float pos, rect b) const
    {
-      NVGcontext* _vg = _canvas.context();
-      circle      cp = slider_knob_position(pos, b);
       draw_knob(
-         _vg, cp.cx, cp.cy, cp.radius,
+         _canvas, slider_knob_position(pos, b),
          slider_knob_fill_color, slider_knob_outline_color
       );
    }

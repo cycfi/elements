@@ -23,8 +23,7 @@ namespace photon
       virtual              ~theme() {}
 
       void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
-      class canvas&        canvas()                               { return _canvas; }
-      class canvas const&  canvas() const                         { return _canvas; }
+      class canvas&        canvas() const                         { return _canvas; }
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels and Frames

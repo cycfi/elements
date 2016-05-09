@@ -344,21 +344,16 @@ namespace photon
          float const right_pad = 5;
 
          edit_text_box_renderer(theme const& th, rect b, theme::text_draw_info const& text)
-          : vg(th.canvas().context())
+          : th(th)
+          , _canvas(th.canvas())
           , x(b.left)
           , y(b.top)
           , w(b.width())
           , h(b.height())
-          , font(th.text_box_font)
-          , font_size(th.text_box_font_size)
-          , font_color(th.text_box_font_color)
-          , inactive_font_color(th.inactive_font_color)
           , start(text.first)
           , end(text.last)
           , sstart(text.select_first)
           , send(text.select_last)
-          , hilite_color(th.text_box_hilite_color)
-          , caret_color(th.text_box_caret_color)
           , is_focus(text.is_focus)
           , is_active(text.is_active)
          {
@@ -367,14 +362,12 @@ namespace photon
          }
 
          edit_text_box_renderer(theme const& th, rect b, theme::text_info const& text)
-          : vg(th.canvas().context())
+          : th(th)
+          , _canvas(th.canvas())
           , x(b.left)
           , y(b.top)
           , w(b.width())
           , h(b.height())
-          , font(th.text_box_font)
-          , font_size(th.text_box_font_size)
-          , font_color(th.text_box_font_color)
           , start(text.first)
           , end(text.last)
          {
@@ -388,50 +381,42 @@ namespace photon
             y = this->y;
             char const* cp = start;
 
-            nvgSave(vg);
-            nvgFontSize(vg, font_size);
-            nvgFontFace(vg, font);
-            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-            nvgTextMetrics(vg, 0, 0, &lineh);
+            _canvas.save();
+            _canvas.font_size(th.text_box_font_size);
+            _canvas.font_face(th.text_box_font);
+            _canvas.text_align(canvas::align_left | canvas::align_top);
+            lineh = _canvas.line_height();
 
-            NVGtextRow rows[3];
-
-            while (int nrows = nvgTextBreakLines(vg, cp, end, w-right_pad, rows, 3))
+            auto line_f = [&y, &lineh, f](auto& row, auto i)
             {
-               for (std::size_t i = 0; i < nrows; ++i)
-               {
-                  if (!f(rows[i], i, y, lineh))
-                     return;
-                  y += lineh;
-               }
-               // Keep going...
-               cp = rows[nrows-1].next;
-            }
+               if (!f(row, i, y, lineh))
+                  return false;
+               y += lineh;
+               return true;
+            };
 
-            nvgRestore(vg);
+            _canvas.for_each_line(line_f, cp, end, w-right_pad);
+            _canvas.restore();
          }
 
          void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const
          {
             if (sstart >= rstart && sstart <= rend)
             {
-               std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
-               int nglyphs =
-                  nvgTextGlyphPositions(
-                     vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
-                  );
+               std::vector<glyph_position>
+                  glyphs = _canvas.glyphs(point{ x, y }, rstart, rend);
 
                float caretx = x+row_width;
-               for (int i = 0; i < nglyphs; ++i)
+               for (int i = 0; i < glyphs.size(); ++i)
                {
                   auto const& glyph = glyphs[i];
                   if (sstart == glyph.str)
                      caretx = glyphs[i].x;
                }
-               nvgBeginPath(vg);
-               nvgFillColor(vg, nvgRGBA(caret_color));
-               nvgRect(vg, caretx, y, 1, lineh);
-               nvgFill(vg);
+               _canvas.begin_path();
+               _canvas.fill_color(th.text_box_caret_color);
+               _canvas.rect(rect{ caretx, y, caretx+1, y+lineh });
+               _canvas.fill();
             }
          }
 
@@ -447,13 +432,10 @@ namespace photon
                float w_hilite = w;
                if (start_hilite || end_hilite)
                {
-                  std::vector<NVGglyphPosition> glyphs{ std::size_t(rend-rstart) };
-                  int nglyphs =
-                     nvgTextGlyphPositions(
-                        vg, x, y, rstart, rend, &glyphs[0], int(glyphs.size())
-                     );
+                  std::vector<glyph_position>
+                     glyphs = _canvas.glyphs(point{ x, y }, rstart, rend);
 
-                  for (int i = 0; i < nglyphs; ++i)
+                  for (int i = 0; i < glyphs.size(); ++i)
                   {
                      auto const& glyph = glyphs[i];
                      if (sstart == glyph.str)
@@ -468,11 +450,11 @@ namespace photon
                   }
                }
 
-               nvgBeginPath(vg);
-               nvgRect(vg, x_hilite, y, w_hilite, lineh);
-               auto color = is_focus? nvgRGBA(hilite_color) : ::nvgRGBA(255, 255, 255, 16);
-               nvgFillColor(vg, color);
-               nvgFill(vg);
+               _canvas.begin_path();
+               _canvas.rect(rect{ x_hilite, y, x_hilite+w_hilite, y+lineh });
+               auto c = is_focus? th.text_box_hilite_color : color{ 255, 255, 255, 16 };
+               _canvas.fill_color(c);
+               _canvas.fill();
             }
          }
 
@@ -493,8 +475,8 @@ namespace photon
                   }
                }
 
-               nvgFillColor(vg, nvgRGBA(is_active ? font_color : inactive_font_color));
-               nvgText(vg, x, y, row.start, row.end);
+               _canvas.fill_color(is_active ? th.text_box_font_color : th.inactive_font_color);
+               _canvas.text(point{ x, y }, row.start, row.end);
                return true;
             };
 
@@ -525,22 +507,19 @@ namespace photon
                // expanded by 1 pixel in the x axis. This allows for roundoff errors.
                if (mx >= x-1 && mx < (x+w+2) && my >= y && my < (y+lineh))
                {
-                  std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
-                  int nglyphs =
-                     nvgTextGlyphPositions(
-                        vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
-                     );
+                  std::vector<glyph_position>
+                     glyphs = _canvas.glyphs(point{ x, y }, row.start, row.end);
 
-                  if (nglyphs == 0)
+                  if (glyphs.size() == 0)
                   {
                      result = row.start;
                      return false;
                   }
 
                   float px = x;
-                  for (int i = 0; i < nglyphs; ++i)
+                  for (int i = 0; i < glyphs.size(); ++i)
                   {
-                     bool  last = i+1 >= nglyphs;
+                     bool  last = i+1 >= glyphs.size();
                      float x0 = glyphs[i].x;
                      float x1 = !last? glyphs[i+1].x : x+row.width;
                      float gx = x0 * 0.3f + x1 * 0.7f;
@@ -574,13 +553,10 @@ namespace photon
             theme::glyph_info result;
             auto glyph_f = [&](auto& row, auto i, auto y, auto lineh)
             {
-               std::vector<NVGglyphPosition> glyphs{ std::size_t(row.end-row.start) };
-               int nglyphs =
-                  nvgTextGlyphPositions(
-                     vg, x, y, row.start, row.end, &glyphs[0], int(glyphs.size())
-                  );
+               std::vector<glyph_position>
+                  glyphs = _canvas.glyphs(point{ x, y }, row.start, row.end);
 
-               if (nglyphs == 0 && row.start == cp)
+               if (glyphs.size() == 0 && row.start == cp)
                {
                   result = { row.start, x, y, lineh, x, x };
                   return false;
@@ -592,7 +568,7 @@ namespace photon
                   return false;
                }
 
-               for (int i = 0; i < nglyphs; ++i)
+               for (int i = 0; i < glyphs.size(); ++i)
                {
                   auto const& glyph = glyphs[i];
                   if (cp == glyph.str)
@@ -611,23 +587,17 @@ namespace photon
             return result;
          }
 
-         NVGcontext*    vg;
+         theme const&   th;
+         canvas&        _canvas;
          float          x;
          float          y;
          float          w;
          float          h;
 
-         char const*    font;
-         float          font_size;
-         color          font_color;
-         color          inactive_font_color;
-
          char const*    start;
          char const*    end;
          char const*    sstart;
          char const*    send;
-         color          hilite_color;
-         color          caret_color;
          bool           is_focus;
          bool           is_active;
       };

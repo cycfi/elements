@@ -69,21 +69,21 @@ namespace photon
                   point{ cp.cx, cp.cy+1 }, cp.radius-3, cp.radius+3,
                   color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
                );
-         
+
          _canvas.begin_path();
          _canvas.rect(cp.bounds().inset(-5, -5).move(0, 3));
          _canvas.circle(cp);
          _canvas.path_winding(canvas::hole);
          _canvas.fill_paint(bg);
          _canvas.fill();
-         
+
          // Knob
          paint knob
             = _canvas.linear_gradient(
                   point{ cp.cx, cp.cy-cp.radius }, point{ cp.cx, cp.cy+cp.radius },
                   color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
                );
-         
+
          _canvas.begin_path();
          _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-1 });
          _canvas.fill_color(fill_color);
@@ -166,42 +166,38 @@ namespace photon
 
    namespace
    {
-      void draw_scrollbar_fill(NVGcontext* vg, float x, float y, float w, float h)
+      void draw_scrollbar_fill(canvas& _canvas, rect r)
       {
-         nvgBeginPath(vg);
-         nvgRect(vg, x, y, w, h);
-         nvgFillColor(vg, ::nvgRGBA(200, 200, 200, 30));
-         nvgFill(vg);
+         _canvas.begin_path();
+         _canvas.rect(r);
+         _canvas.fill_color(color{ 200, 200, 200, 30 });
+         _canvas.fill();
       }
 
       void draw_scrollbar(
-         NVGcontext* vg, float x, float y, float w, float h, float r,
-         color outline_color_, color fill_color_
+         canvas& _canvas, rect b, float radius,
+         color outline_color, color fill_color
       )
       {
-         auto outline_color = nvgRGBA(outline_color_);
-         auto fill_color = nvgRGBA(fill_color_);
+         _canvas.begin_path();
+         _canvas.round_rect(b, radius);
 
-         nvgBeginPath(vg);
-         nvgRoundedRect(vg, x, y, w, h, r);
+         _canvas.fill_color(fill_color);
+         _canvas.fill();
 
-         nvgFillColor(vg, fill_color);
-         nvgFill(vg);
-
-         nvgStrokeColor(vg, outline_color);
-         nvgStroke(vg);
+         _canvas.stroke_color(outline_color);
+         _canvas.stroke();
       }
    }
 
    void theme::draw_scroll_bar(float pos, float ext, rect b) const
    {
-      NVGcontext* _vg = _canvas.context();
-      float       x = b.left;
-      float       y = b.top;
-      float       w = b.width();
-      float       h = b.height();
+      float x = b.left;
+      float y = b.top;
+      float w = b.width();
+      float h = b.height();
 
-      draw_scrollbar_fill(_vg, x, y, w, h);
+      draw_scrollbar_fill(_canvas, b);
 
       if (w > h)
       {
@@ -216,7 +212,7 @@ namespace photon
          y += pos * (b.height()-h);
       }
 
-      draw_scrollbar(_vg, x, y, w, h, scroll_bar_width/3,
+      draw_scrollbar(_canvas, rect{ x, y, x+w, y+h }, scroll_bar_width/3,
          scroll_bar_outline_color, scroll_bar_fill_color);
    }
 

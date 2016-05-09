@@ -241,8 +241,8 @@ namespace photon
    namespace
    {
       void draw_text(
-         NVGcontext* vg, rect b, char const* text
-       , char const* font, float font_size, color color
+         canvas& _canvas, rect b, char const* text
+       , char const* font, float font_size, color color_
       )
       {
          float x = b.left;
@@ -251,91 +251,90 @@ namespace photon
          float cy = y+(h/2);
          float sh = h/16;
 
-         nvgFontSize(vg, font_size);
-         nvgFontFace(vg, font);
-         nvgTextAlign(vg, NVG_ALIGN_MIDDLE);
+         _canvas.font_size(font_size);
+         _canvas.font_face(font);
+         _canvas.text_align(canvas::align_middle);
 
          // Shadow
-         nvgFontBlur(vg, 2);
-         nvgFillColor(vg, ::nvgRGBA(0, 0, 0, 128));
-         nvgText(vg, x, cy+sh, text, 0);
+         _canvas.font_blur(2);
+         _canvas.fill_color(color{ 0, 0, 0, 128 });
+         _canvas.text(point{ x, cy+sh }, text, 0);
 
          // Text
-         nvgFontBlur(vg, 0);
-         nvgFillColor(vg, nvgRGBA(color));
-         nvgText(vg, x, cy, text, 0);
+         _canvas.font_blur(0);
+         _canvas.fill_color(color_);
+         _canvas.text(point{ x, cy }, text);
       }
 
       point measure_text(
-         NVGcontext* vg, char const* text
+         canvas& _canvas, char const* text
        , char const* font, float font_size
       )
       {
-         nvgFontSize(vg, font_size);
-         nvgFontFace(vg, font);
+         _canvas.font_size(font_size);
+         _canvas.font_face(font);
 
-         float w = nvgTextBounds(vg, 0, 0, text, 0, 0);
+         float w = _canvas.text_width(text);
          float h = font_size;
          return { w, h };
       }
 
       void draw_text_box(
-         NVGcontext* vg, rect b, char const* text
+         canvas& _canvas, rect b, char const* text
        , char const* font, float font_size, color color
       )
       {
          float x = b.left;
          float y = b.top;
          float w = b.width();
-         float h = b.height();
 
-         nvgSave(vg);
-         nvgScissor(vg, x, y, w, h);
+         _canvas.save();
+         _canvas.clip(b);
 
-         nvgFontSize(vg, font_size);
-         nvgFontFace(vg, font);
-         nvgFillColor(vg, nvgRGBA(color));
+         _canvas.font_size(font_size);
+         _canvas.font_face(font);
+         _canvas.fill_color(color);
 
-         nvgTextBox(vg, x, y+font_size, w, text, 0);
-         nvgRestore(vg);
+         _canvas.text_box(point{ x, y+font_size }, w, text);
+         _canvas.restore();
       }
    }
 
    void theme::draw_label(rect b, char const* text) const
    {
-      draw_text(_canvas.context(), b, text, label_font, label_font_size, label_font_color);
+      draw_text(_canvas, b, text, label_font, label_font_size, label_font_color);
    }
 
    point theme::measure_label(char const* text) const
    {
-      return measure_text(_canvas.context(), text, label_font, label_font_size);
+      return measure_text(_canvas, text, label_font, label_font_size);
    }
 
    void theme::draw_heading(rect b, char const* text) const
    {
-      draw_text(_canvas.context(), b, text, heading_font, heading_font_size, heading_font_color);
+      draw_text(_canvas, b, text, heading_font, heading_font_size, heading_font_color);
    }
 
    point theme::measure_heading(char const* text) const
    {
-      return measure_text(_canvas.context(), text, heading_font, heading_font_size);
+      return measure_text(_canvas, text, heading_font, heading_font_size);
    }
 
    void theme::draw_icon(rect b, uint32_t code, int size) const
    {
       char icon[8];
-      draw_text(_canvas.context(), b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
+      draw_text(_canvas, b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
    }
 
    point theme::measure_icon(uint32_t code, int size) const
    {
       char icon[8];
-      return measure_text(_canvas.context(), codepoint_to_UTF8(code,icon), icon_font, size);
+      return measure_text(_canvas, codepoint_to_UTF8(code,icon), icon_font, size);
    }
 
    void theme::draw_text_box(rect b, char const* text) const
    {
-      photon::draw_text_box(_canvas.context(), b, text, text_box_font, text_box_font_size, text_box_font_color);
+      photon::draw_text_box(_canvas, b, text, text_box_font, text_box_font_size, text_box_font_color);
    }
 
    namespace

@@ -15,48 +15,19 @@ namespace photon
 {
    image::image(char const* filename)
     : _filename(filename)
-    , _handle(0)
-    , _canvas(0)
    {}
-
-   image::~image()
-   {
-      if (_canvas && _handle)
-         nvgDeleteImage(_canvas, _handle);
-   }
 
    point image::size(context const& ctx) const
    {
-      if (!_handle)
-      {
-         _canvas = ctx.canvas().context();
-         _handle = nvgCreateImage(_canvas, _filename, 0);
-      }
-
-      int w, h;
-      nvgImageSize(ctx.canvas().context(), _handle, &w, &h);
-      return { float(w), float(h) };
+      if (!_img)
+         _img.reset(new canvas::image{ ctx.canvas(), _filename });
+      return _img->size();
    }
 
    void image::draw(context const& ctx)
    {
-      if (!_handle)
-      {
-         _canvas = ctx.canvas().context();
-         _handle = nvgCreateImage(_canvas, _filename, 0);
-      }
-
-      float x = ctx.bounds.left;
-      float y = ctx.bounds.top;
-      float w = ctx.bounds.width();
-      float h = ctx.bounds.height();
-
-      nvgSave(_canvas);
-      NVGpaint image = nvgImagePattern(_canvas, x, y, w, h, 0.0, _handle, 1.0);
-      nvgBeginPath(_canvas);
-      nvgRect(_canvas, x, y, w, h);
-      nvgFillPaint(_canvas, image);
-      nvgFill(_canvas);
-      nvgRestore(_canvas);
+      if (!_img)
+         _img.reset(new canvas::image{ ctx.canvas(), _filename });
+      _img->draw(ctx.bounds);
    }
 }

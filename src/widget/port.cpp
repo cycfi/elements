@@ -39,8 +39,7 @@ namespace photon
 
    void port_base::draw(context const& ctx)
    {
-      nvgSave(ctx.canvas().context());
-      nvgScissor(ctx.canvas().context(), ctx.bounds.left, ctx.bounds.top, ctx.bounds.width(), ctx.bounds.height());
+      ctx.canvas().clip(ctx.bounds);
       proxy_base::draw(ctx);
    }
 

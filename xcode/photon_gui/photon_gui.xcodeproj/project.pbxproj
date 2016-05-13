@@ -31,7 +31,6 @@
 		5D83CFE61CE353200009D9F3 /* cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D03A3691CC994B700329057 /* cursor.cpp */; };
 		5D83CFE71CE353260009D9F3 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D809D241CC3BA7E005EE2D2 /* text.cpp */; };
 		5D83CFE81CE353260009D9F3 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8733F61CBB8B5C0003E9DD /* widget.cpp */; };
-		5D83CFE91CE353260009D9F3 /* panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC9C0F81CBBB71700EAF9F3 /* panel.cpp */; };
 		5D83CFEA1CE353260009D9F3 /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E99031CBE63BA009B943D /* tile.cpp */; };
 		5D83CFED1CE353260009D9F3 /* slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E9F091CC1BFEB00239DAE /* slider.cpp */; };
 		5D83CFEE1CE353260009D9F3 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E9F0B1CC1C87600239DAE /* layer.cpp */; };
@@ -41,7 +40,6 @@
 		5D8733F71CBB8B5C0003E9DD /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8733F61CBB8B5C0003E9DD /* widget.cpp */; };
 		5DAE365D1CC047CE0077B3D4 /* theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DAE365C1CC047CE0077B3D4 /* theme.cpp */; };
 		5DAFFF3C1CCC220B00C94683 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DAFFF3B1CCC220B00C94683 /* image.cpp */; };
-		5DC9C0F91CBBB71700EAF9F3 /* panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC9C0F81CBBB71700EAF9F3 /* panel.cpp */; };
 		5DE7F50E1CC06586009293EB /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB938A1CB9C42B001DFB55 /* test.cpp */; };
 		5DEB936D1CB9B98A001DFB55 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DEB936C1CB9B98A001DFB55 /* OpenGL.framework */; };
 		5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB93851CB9BFAD001DFB55 /* nanovg.c */; };
@@ -106,7 +104,6 @@
 		5DAFFF3D1CCC221500C94683 /* image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		5DAFFF3E1CCC2BEC00C94683 /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = port.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5DB082F91CD239C600C12B80 /* key.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = key.hpp; sourceTree = "<group>"; };
-		5DC9C0F81CBBB71700EAF9F3 /* panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = panel.cpp; sourceTree = "<group>"; };
 		5DEB93601CB9B84D001DFB55 /* photon_gui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = photon_gui; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DEB936C1CB9B98A001DFB55 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		5DEB93851CB9BFAD001DFB55 /* nanovg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nanovg.c; path = ../../libs/nanovg/src/nanovg.c; sourceTree = "<group>"; };
@@ -228,7 +225,6 @@
 			children = (
 				5D809D241CC3BA7E005EE2D2 /* text.cpp */,
 				5D8733F61CBB8B5C0003E9DD /* widget.cpp */,
-				5DC9C0F81CBBB71700EAF9F3 /* panel.cpp */,
 				5D0E99031CBE63BA009B943D /* tile.cpp */,
 				5D4E9F091CC1BFEB00239DAE /* slider.cpp */,
 				5D4E9F0B1CC1C87600239DAE /* layer.cpp */,
@@ -375,7 +371,6 @@
 				5D83CFE41CE353200009D9F3 /* theme.cpp in Sources */,
 				5D83CFED1CE353260009D9F3 /* slider.cpp in Sources */,
 				5D83CFE51CE353200009D9F3 /* context.cpp in Sources */,
-				5D83CFE91CE353260009D9F3 /* panel.cpp in Sources */,
 				5D83CFEE1CE353260009D9F3 /* layer.cpp in Sources */,
 				5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */,
 				5D83CFF01CE353260009D9F3 /* image.cpp in Sources */,
@@ -389,7 +384,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5DC9C0F91CBBB71700EAF9F3 /* panel.cpp in Sources */,
 				5DAE365D1CC047CE0077B3D4 /* theme.cpp in Sources */,
 				5D4E9F0E1CC2319000239DAE /* context.cpp in Sources */,
 				5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */,
@@ -421,6 +415,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -430,6 +425,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

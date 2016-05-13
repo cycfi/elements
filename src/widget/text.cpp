@@ -509,6 +509,8 @@ namespace photon
          case key_code::key_up:
          case key_code::key_down:
             return false;
+         default:
+            break;
       }
       return basic_text_box::key(ctx, k);
    }

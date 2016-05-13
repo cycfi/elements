@@ -39,6 +39,7 @@ namespace photon
       color                frame_color                = { 220, 220, 220, 70 };
 
       virtual void         draw_frame(rect b) const;
+      virtual void         draw_title_bar(rect b) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Sliders and Scrollbars

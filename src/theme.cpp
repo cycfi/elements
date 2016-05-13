@@ -46,6 +46,27 @@ namespace photon
       _canvas.stroke();
    }
 
+   void theme::draw_title_bar(rect b) const
+   {
+      auto bg = _canvas.linear_gradient(
+          point{ b.left, b.top },
+          point{ b.left, b.bottom },
+          color{ 255, 255, 255, 16 },
+          color{ 0, 0, 0, 16 }
+      );
+
+      _canvas.begin_path();
+      _canvas.round_rect(b.inset(1, 1), panel_corner_radius);
+      _canvas.fill_paint(bg);
+      _canvas.fill();
+
+      _canvas.begin_path();
+      _canvas.move_to(point{ b.left+0.5f, b.bottom-0.5f });
+      _canvas.line_to(point{ b.right-0.5f, b.bottom-0.5f });
+      _canvas.stroke_color(color{ 0, 0, 0, 32 });
+      _canvas.stroke();
+   }
+
    namespace
    {
       void draw_slot(canvas& _canvas, rect b, float r)

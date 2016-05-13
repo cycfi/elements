@@ -18,7 +18,10 @@ namespace photon
    {
    public:
 
-      virtual void draw(context const& ctx);
+      virtual void draw(context const& ctx)
+      {
+         ctx.theme().draw_panel(ctx.bounds);
+      }
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +31,23 @@ namespace photon
    {
    public:
 
-      virtual void draw(context const& ctx);
+      virtual void draw(context const& ctx)
+      {
+         ctx.theme().draw_frame(ctx.bounds);
+      }
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Title Bars
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class title_bar : public widget
+   {
+   public:
+
+      virtual void draw(context const& ctx)
+      {
+         ctx.theme().draw_title_bar(ctx.bounds);
+      }
    };
 }
 

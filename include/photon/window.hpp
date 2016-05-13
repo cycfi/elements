@@ -50,49 +50,50 @@ namespace photon
       window(window const&) = delete;
       window& operator=(window const&) = delete;
 
-      point             size() const;
-      void              size(point s);
-      point             cursor_pos() const;
+      point                size() const;
+      void                 size(point s);
+      point                cursor_pos() const;
 
-      virtual void      draw();
-      virtual void      key(key_info const& k);
-      virtual void      text(text_info const& info);
-      virtual void      click(mouse_button const& btn);
-      virtual void      mouse(point p);
-      virtual void      scroll(point p);
-      virtual void      focus(bool is_focus);
-      virtual void      close();
-      virtual void      idle();
-      virtual void      refresh();
+      virtual void         draw();
+      virtual void         key(key_info const& k);
+      virtual void         text(text_info const& info);
+      virtual void         click(mouse_button const& btn);
+      virtual void         mouse(point p);
+      virtual void         scroll(point p);
+      virtual void         focus(bool is_focus);
+      virtual void         close();
+      virtual void         idle();
+      virtual void         refresh();
 
-      void              set_cursor(cursor::type t) const;
-      void              reset_cursor() const;
-      bool              is_focus() const;
+      void                 set_cursor(cursor::type t) const;
+      void                 reset_cursor() const;
+      bool                 is_focus() const;
 
-      std::string       clipboard() const;
-      void              clipboard(std::string const& text) const;
-      key_info          key() const { return _current_key; }
+      std::string          clipboard() const;
+      void                 clipboard(std::string const& text) const;
+      key_info             key() const { return _current_key; }
 
-      class canvas&     canvas() { return _canvas; }
-      app&              app() const { return _app; }
-      theme const&      theme() const { return *_theme.get(); }
+      class canvas&        canvas() { return _canvas; }
+      app&                 app() const { return _app; }
+      class theme const&   theme() const { return *_theme.get(); }
+      class theme&         theme() { return *_theme.get(); }
 
    private:
 
-      color             _bkd_color;
-      class app&        _app;
-      widget_ptr        _subject;
-      GLFWwindow*       _window;
-      NVGcontext*       _context;
-      class canvas      _canvas;
-      rect              _current_bounds;
-      rect              _current_limits;
-      mouse_button      _btn;
-      theme_ptr         _theme;
-      double            _click_time;
-      int               _num_clicks;
-      bool              _refresh;
-      key_info          _current_key;
+      color                _bkd_color;
+      class app&           _app;
+      widget_ptr           _subject;
+      GLFWwindow*          _window;
+      NVGcontext*          _context;
+      class canvas         _canvas;
+      rect                 _current_bounds;
+      rect                 _current_limits;
+      mouse_button         _btn;
+      theme_ptr            _theme;
+      double               _click_time;
+      int                  _num_clicks;
+      bool                 _refresh;
+      key_info             _current_key;
    };
 }
 

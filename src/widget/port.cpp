@@ -104,12 +104,13 @@ namespace photon
       {
          scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
          rect              e_limits = subject().limits(ctx);
+         point             mp = ctx.cursor_pos();
 
          if (sb.has_v)
-            ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds);
+            ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds, mp);
 
          if (sb.has_h)
-            ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds);
+            ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds, mp);
       }
    }
 

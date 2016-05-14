@@ -197,21 +197,26 @@ namespace photon
 
       void draw_scrollbar(
          canvas& _canvas, rect b, float radius,
-         color outline_color, color fill_color
+         color outline_color, color fill_color, point mp
       )
       {
          _canvas.begin_path();
          _canvas.round_rect(b, radius);
-
          _canvas.fill_color(fill_color);
          _canvas.fill();
+
+         if (_canvas.on_fill(mp))
+         {
+            _canvas.fill_color(fill_color.transparency(0.2));
+            _canvas.fill();
+         }
 
          _canvas.stroke_color(outline_color);
          _canvas.stroke();
       }
    }
 
-   void theme::draw_scroll_bar(float pos, float ext, rect b) const
+   void theme::draw_scroll_bar(float pos, float ext, rect b, point mp) const
    {
       float x = b.left;
       float y = b.top;
@@ -234,7 +239,7 @@ namespace photon
       }
 
       draw_scrollbar(_canvas, rect{ x, y, x+w, y+h }, scroll_bar_width/3,
-         scroll_bar_outline_color, scroll_bar_fill_color);
+         scroll_bar_outline_color, scroll_bar_fill_color, mp);
    }
 
    rect theme::scroll_bar_position(float pos, float ext, rect b) const

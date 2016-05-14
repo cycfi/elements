@@ -57,7 +57,7 @@ namespace photon
       color                scroll_bar_fill_color      = { 0, 0, 0, 120 };
       float                scroll_bar_width           = 10;
 
-      virtual void         draw_scroll_bar(float pos, float ext, rect b) const;
+      virtual void         draw_scroll_bar(float pos, float ext, rect b, point mp) const;
       virtual rect         scroll_bar_position(float pos, float ext, rect b) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////

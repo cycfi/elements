@@ -231,11 +231,20 @@ namespace photon
 
    void window::mouse(point p)
    {
+      if (!_current_bounds.includes(p))
+         return;
+
       context ctx { *this, _subject.get(), _current_bounds };
       if (_btn.is_pressed)
+      {
          _subject->drag(ctx, _btn);
-      else if (!_subject->cursor(ctx, cursor_pos()))
-         reset_cursor();
+      }
+      else
+      {
+         if (!_subject->cursor(ctx, cursor_pos()))
+            reset_cursor();
+         draw();
+      }
    }
 
    void window::scroll(point p)

@@ -192,11 +192,7 @@ namespace photon
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (info.element)
-         {
-            context ectx{ ctx, info.element, info.bounds };
-            return info.element->hit_test(ectx, p);
-         }
+         return info.element;
       }
       return 0;
    }
@@ -365,7 +361,11 @@ namespace photon
          {
             rect bounds = bounds_of(ctx, i);
             if (bounds.includes(p))
-               return hit_info{ e.get(), bounds, int(i) };
+            {
+               context ectx{ ctx, e.get(), bounds };
+               if (e->hit_test(ectx, p))
+                  return hit_info{ e.get(), bounds, int(i) };
+            }
          }
       }
       return hit_info{ 0, rect{}, -1 };

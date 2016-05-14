@@ -47,7 +47,11 @@ namespace photon
          {
             rect bounds = bounds_of(ctx, i);
             if (bounds.includes(p))
-               return hit_info{ e.get(), bounds, int(i) };
+            {
+               context ectx{ ctx, e.get(), bounds };
+               if (e->hit_test(ectx, p))
+                  return hit_info{ e.get(), bounds, int(i) };
+            }
          }
       }
       return hit_info{ 0, rect{}, -1 };

@@ -268,8 +268,7 @@ namespace photon
    {
       void draw_text(
          canvas& _canvas, rect b, char const* text
-       , char const* font, float font_size, color color_
-      )
+       , char const* font, float font_size, color color_)
       {
          float x = b.left;
          float y = b.top;
@@ -349,7 +348,29 @@ namespace photon
    void theme::draw_icon(rect b, uint32_t code, int size) const
    {
       char icon[8];
-      draw_text(_canvas, b, codepoint_to_UTF8(code, icon), icon_font, size, icon_color);
+      char const* text = codepoint_to_UTF8(code, icon);
+
+      float x = b.left;
+      float y = b.top;
+      float h = b.height();
+      float w = b.width();
+      float cx = x+(w/2);
+      float cy = y+(h/2);
+      float sh = h/16;
+
+      _canvas.font_size(size);
+      _canvas.font_face(icon_font);
+      _canvas.text_align(canvas::align_middle | canvas::align_center);
+
+      // Shadow
+      _canvas.font_blur(2);
+      _canvas.fill_color(color{ 0, 0, 0, 128 });
+      _canvas.text(point{ cx, cy+sh }, text, 0);
+
+      // Text
+      _canvas.font_blur(0);
+      _canvas.fill_color(icon_color);
+      _canvas.text(point{ cx, cy }, text);
    }
 
    point theme::measure_icon(uint32_t code, int size) const

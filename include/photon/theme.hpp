@@ -42,11 +42,18 @@ namespace photon
       virtual void         draw_title_bar(rect b) const;
 
       /////////////////////////////////////////////////////////////////////////////////////////////
-      // Sliders and Scrollbars
+      // Knobs, Sliders and Scrollbars
+
+      color                knob_fill_color            = { 60, 60, 60, 255 };
+      color                knob_outline_color         = { 0, 0, 0, 92 };
+      color                knob_indicator_color       = { 200, 200, 200, 255 };
+
+      virtual void         draw_knob(float pos, rect b) const;
+      virtual bool         knob_hit_test(rect b, point p) const;
 
       float                slider_knob_radius         = 0.25;  // fraction of size (width or height)
       float                slider_slot_size           = 0.15;  // fraction of size (width or height)
-      color                slider_knob_fill_color     = { 40, 43, 48, 255 };
+      color                slider_knob_fill_color     = { 60, 60, 60, 255 };
       color                slider_knob_outline_color  = { 0, 0, 0, 92 };
 
       virtual void         draw_slider(float pos, rect b) const;

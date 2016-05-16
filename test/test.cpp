@@ -74,7 +74,19 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 20, 20, 20, 20 }, knob()),
+               panel{}
+            )
+         );
+
+         main_widget = new_(std::move(sl));
       }
 
       {
@@ -278,7 +290,7 @@ int main()
             )
          );
 
-         main_widget = new_(txbx);
+         //main_widget = new_(txbx);
       }
 
       {

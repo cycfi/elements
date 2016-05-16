@@ -8,6 +8,7 @@
 #include <photon/support.hpp>
 #include <nanovg.h>
 #include <vector>
+#include <cmath>
 
 namespace photon
 {
@@ -69,7 +70,7 @@ namespace photon
 
    namespace
    {
-      void draw_slot(canvas& _canvas, rect b, float r)
+      void draw_slider_slot(canvas& _canvas, rect b, float r)
       {
          paint bg
             = _canvas.box_gradient(b.inset(0.5, 0.5).move(1, 1), r, 2
@@ -130,23 +131,61 @@ namespace photon
       {
          // horizontal
          float sl = h * slider_slot_size;
-         draw_slot(_canvas, b.inset(0, (h-sl)/2), sl/2);
+         draw_slider_slot(_canvas, b.inset(0, (h-sl)/2), sl/2);
 
       }
       else
       {
          // vertical
          float sl = w * slider_slot_size;
-         draw_slot(_canvas, b.inset((w-sl)/2, 0), sl/2);
+         draw_slider_slot(_canvas, b.inset((w-sl)/2, 0), sl/2);
       }
 
-      draw_slider_knob(pos, b);
+      draw_knob(pos, b);
       _canvas.restore();
+   }
+
+   void theme::draw_knob(float pos, rect b) const
+   {
+      _canvas.save();
+
+      auto  c = center_point(b);
+      auto  r = std::min(b.width(), b.height())/2;
+      photon::draw_knob(
+         _canvas, { c.x, c.y, r },
+         knob_fill_color, knob_outline_color);
+
+      _canvas.translate({ c.x, c.y });
+
+      float const travel = 0.82;
+      float const rng = (2 * M_PI) * travel;
+      float const offs = (2 * M_PI) * (1-travel)/2;
+      _canvas.rotate(offs + (pos * rng));
+
+      rect ind_r = { -r/16, -r/8, r/16, r/8 };
+      _canvas.begin_path();
+      _canvas.round_rect(ind_r.move(0, r*0.75), r/16);
+      _canvas.fill_color(knob_indicator_color);
+      _canvas.fill();
+
+      _canvas.restore();
+   }
+
+   bool theme::knob_hit_test(rect b, point p) const
+   {
+      auto  c = center_point(b);
+      auto  r = std::min(b.width(), b.height())/2;
+
+      _canvas.begin_path();
+      _canvas.circle(circle{ c.x, c.y, r });
+      _canvas.fill_color({ 0, 0, 0, 0 });
+      _canvas.fill();
+      return _canvas.on_fill(p);
    }
 
    void theme::draw_slider_knob(float pos, rect b) const
    {
-      draw_knob(
+      photon::draw_knob(
          _canvas, slider_knob_position(pos, b),
          slider_knob_fill_color, slider_knob_outline_color
       );

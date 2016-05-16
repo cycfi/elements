@@ -13,6 +13,7 @@
 #include <photon/widget/size.hpp>
 #include <photon/widget/tile.hpp>
 #include <photon/widget/slider.hpp>
+#include <photon/widget/knob.hpp>
 #include <photon/widget/layer.hpp>
 #include <photon/widget/text.hpp>
 #include <photon/widget/icon.hpp>

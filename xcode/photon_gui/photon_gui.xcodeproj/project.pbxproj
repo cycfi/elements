@@ -43,6 +43,8 @@
 		5DE7F50E1CC06586009293EB /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB938A1CB9C42B001DFB55 /* test.cpp */; };
 		5DEB936D1CB9B98A001DFB55 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DEB936C1CB9B98A001DFB55 /* OpenGL.framework */; };
 		5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB93851CB9BFAD001DFB55 /* nanovg.c */; };
+		5DF8A6511CE9DD6E00EBF7CC /* knob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */; };
+		5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -110,6 +112,8 @@
 		5DEB938A1CB9C42B001DFB55 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test.cpp; sourceTree = "<group>"; };
 		5DEBD3E51CC8494F00B3EA86 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = button.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5DF6B0261CDA9B6500B1C2EA /* canvas.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; lineEnding = 1; path = canvas.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knob.cpp; sourceTree = "<group>"; };
+		5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = knob.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +216,7 @@
 				5D809D1E1CC3AA97005EE2D2 /* panel.hpp */,
 				5D809D1F1CC3AA97005EE2D2 /* size.hpp */,
 				5D809D201CC3AA97005EE2D2 /* slider.hpp */,
+				5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */,
 				5D809D211CC3AA97005EE2D2 /* tile.hpp */,
 				5D809D221CC3AA97005EE2D2 /* widget.hpp */,
 				5DAFFF3D1CCC221500C94683 /* image.hpp */,
@@ -227,6 +232,7 @@
 				5D8733F61CBB8B5C0003E9DD /* widget.cpp */,
 				5D0E99031CBE63BA009B943D /* tile.cpp */,
 				5D4E9F091CC1BFEB00239DAE /* slider.cpp */,
+				5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */,
 				5D4E9F0B1CC1C87600239DAE /* layer.cpp */,
 				5DEBD3E51CC8494F00B3EA86 /* button.cpp */,
 				5DAFFF3B1CCC220B00C94683 /* image.cpp */,
@@ -283,6 +289,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +405,7 @@
 				5D2EC9F21CBB1AA300ACB621 /* app.cpp in Sources */,
 				5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */,
 				5D1DFFFF1CD8B01600B4C91B /* port.cpp in Sources */,
+				5DF8A6511CE9DD6E00EBF7CC /* knob.cpp in Sources */,
 				5DAFFF3C1CCC220B00C94683 /* image.cpp in Sources */,
 				5D3EC3A61CD81F0900BE5E6B /* tile.cpp in Sources */,
 			);

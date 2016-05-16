@@ -20,14 +20,14 @@ namespace photon
    point image::size(context const& ctx) const
    {
       if (!_img)
-         _img.reset(new canvas::image{ ctx.canvas(), _filename });
+         _img = std::make_shared<canvas::image>(ctx.canvas(), _filename);
       return _img->size();
    }
 
    void image::draw(context const& ctx)
    {
       if (!_img)
-         _img.reset(new canvas::image{ ctx.canvas(), _filename });
+         _img = std::make_shared<canvas::image>(ctx.canvas(), _filename);
       _img->draw(ctx.bounds);
    }
 }

@@ -42,7 +42,7 @@ namespace photon
        , color          bkd_color
        , app&           app_
        , widget_ptr     subject
-       , theme_ptr      theme = theme_ptr{ new photon::theme{} }
+       , theme_ptr      theme = std::make_shared<photon::theme>()
       );
 
       ~window();

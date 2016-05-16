@@ -145,7 +145,7 @@ namespace photon
       _canvas.restore();
    }
 
-   void theme::draw_knob(float pos, rect b) const
+   point theme::draw_knob(float pos, rect b) const
    {
       _canvas.save();
 
@@ -162,13 +162,20 @@ namespace photon
       float const offs = (2 * M_PI) * (1-travel)/2;
       _canvas.rotate(offs + (pos * rng));
 
-      rect ind_r = { -r/16, -r/8, r/16, r/8 };
+      rect ind_r = { -r/16, -r/6, r/16, r/6 };
+      ind_r = ind_r.move(0, r*0.7);
+
       _canvas.begin_path();
-      _canvas.round_rect(ind_r.move(0, r*0.75), r/16);
+      _canvas.round_rect(ind_r, r/16);
       _canvas.fill_color(knob_indicator_color);
       _canvas.fill();
 
+      point ind_pos = _canvas.transform_point(center_point(ind_r));
       _canvas.restore();
+
+      //draw_frame({ ind_pos.x-10, ind_pos.y-10, ind_pos.x+10, ind_pos.y+10 });
+
+      return ind_pos;
    }
 
    bool theme::knob_hit_test(rect b, point p) const

@@ -20,14 +20,16 @@ namespace photon
 
    void knob::draw(context const& ctx)
    {
-      ctx.theme().draw_knob(_pos, ctx.bounds);
+      _indicator_pos = ctx.theme().draw_knob(_pos, ctx.bounds);
    }
 
    widget* knob::click(context const& ctx, mouse_button btn)
    {
-      if (ctx.theme().knob_hit_test(ctx.bounds, ctx.cursor_pos()))
+      point mp = ctx.cursor_pos();
+      if (ctx.theme().knob_hit_test(ctx.bounds, mp))
       {
          _tracking = true;
+         _offset = point{ mp.x-_indicator_pos.x, mp.y-_indicator_pos.y };
          reposition(ctx);
       }
       return this;
@@ -42,6 +44,10 @@ namespace photon
    void knob::reposition(context const& ctx)
    {
       point mp = ctx.cursor_pos();
+      mp = mp.move(-_offset.x, -_offset.y);
+      _offset.x *= 0.95;
+      _offset.y *= 0.95;
+
       point center = center_point(ctx.bounds);
       float angle = -std::atan2(mp.x-center.x, mp.y-center.y);
       if (angle < 0.0f)
@@ -52,7 +58,7 @@ namespace photon
       float const offs = (2 * M_PI) * (1-travel)/2;
 
       float val = (angle-offs) / rng;
-      if (std::abs(val - _pos) < 0.25)
+      if (std::abs(val - _pos) < 0.6)
          limit(_pos = val, 0.0f, 1.0f);
       ctx.window.draw();
    }

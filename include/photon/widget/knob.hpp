@@ -35,6 +35,7 @@ namespace photon
       double            _pos;
       point             _offset;
       bool              _tracking;
+      point             _indicator_pos;
    };
 }
 

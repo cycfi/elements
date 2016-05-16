@@ -48,7 +48,7 @@ namespace photon
       color                knob_outline_color         = { 0, 0, 0, 92 };
       color                knob_indicator_color       = { 200, 200, 200, 255 };
 
-      virtual void         draw_knob(float pos, rect b) const;
+      virtual point        draw_knob(float pos, rect b) const;
       virtual bool         knob_hit_test(rect b, point p) const;
 
       float                slider_knob_radius         = 0.25;  // fraction of size (width or height)

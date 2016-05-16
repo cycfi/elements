@@ -69,7 +69,7 @@ namespace photon
    inline widget_ptr new_(Widget&& w)
    {
       using widget_type = typename std::decay<Widget>::type;
-      return widget_ptr{ new widget_type(std::forward<Widget>(w)) };
+      return std::make_shared<widget_type>(std::forward<Widget>(w));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

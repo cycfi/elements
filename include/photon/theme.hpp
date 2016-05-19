@@ -44,9 +44,9 @@ namespace photon
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Knobs, Sliders and Scrollbars
 
-      color                knob_fill_color            = { 60, 60, 60, 255 };
-      color                knob_outline_color         = { 0, 0, 0, 92 };
-      color                knob_indicator_color       = { 200, 200, 200, 255 };
+      color                knob_fill_color            = { 60, 60, 60, 50 };
+      color                knob_outline_color         = { 20, 20, 20, 92 };
+      color                knob_indicator_color       = { 200, 200, 200, 128 };
 
       virtual point        draw_knob(float pos, rect b) const;
       virtual bool         knob_hit_test(rect b, point p) const;

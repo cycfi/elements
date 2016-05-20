@@ -82,7 +82,7 @@ namespace photon
          _canvas.fill_paint(bg);
          _canvas.fill();
       }
-      
+
       void draw_slider_knob(canvas& _canvas, circle cp, color fill_color, color outline_color)
       {
          // Knob Shadow
@@ -152,7 +152,6 @@ namespace photon
          _canvas.fill_color(fill_color);
          _canvas.fill();
          _canvas.fill_paint(knob);
-         _canvas.fill();
 
          // Knob bevel
          paint bvc
@@ -167,6 +166,13 @@ namespace photon
          _canvas.path_winding(canvas::hole);
          _canvas.fill_paint(bvc);
          _canvas.fill();
+
+         // Knob Outline
+         _canvas.begin_path();
+         _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
+         _canvas.stroke_width(2);
+         _canvas.stroke_color(outline_color);
+         _canvas.stroke();
       }
 
       point draw_knob_indicator(canvas& _canvas, circle cp, float pos, color indicator_color)
@@ -181,7 +187,7 @@ namespace photon
          float r = cp.radius;
          rect  ind_r = { -r/12, -r/5, r/12, r/5 };
          ind_r = ind_r.move(0, r*0.7);
-         
+
          paint gr
             = _canvas.linear_gradient(
                   ind_r.top_right(), ind_r.bottom_right(),
@@ -193,7 +199,6 @@ namespace photon
          _canvas.fill_color(indicator_color);
          _canvas.fill();
          _canvas.fill_paint(gr);
-         _canvas.fill();
 
          point ind_pos = _canvas.transform_point(center_point(ind_r));
          _canvas.restore();
@@ -238,7 +243,7 @@ namespace photon
       photon::draw_knob(
          _canvas, cp,
          knob_fill_color, knob_outline_color);
-      
+
       return draw_knob_indicator(_canvas, cp, pos, knob_indicator_color);
    }
 

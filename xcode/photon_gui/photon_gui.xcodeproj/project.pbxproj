@@ -13,6 +13,7 @@
 		5D1DFFFC1CD892E300B4C91B /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D809D241CC3BA7E005EE2D2 /* text.cpp */; };
 		5D1DFFFE1CD8958E00B4C91B /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBD3E51CC8494F00B3EA86 /* button.cpp */; };
 		5D1DFFFF1CD8B01600B4C91B /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DAFFF3E1CCC2BEC00C94683 /* port.cpp */; };
+		5D23FF881CEE848D0053FE7A /* knob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */; };
 		5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */; };
 		5D2EC9F01CBB0D1A00ACB621 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */; };
 		5D2EC9F21CBB1AA300ACB621 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9F11CBB1AA300ACB621 /* app.cpp */; };
@@ -378,6 +379,7 @@
 				5D83CFE41CE353200009D9F3 /* theme.cpp in Sources */,
 				5D83CFED1CE353260009D9F3 /* slider.cpp in Sources */,
 				5D83CFE51CE353200009D9F3 /* context.cpp in Sources */,
+				5D23FF881CEE848D0053FE7A /* knob.cpp in Sources */,
 				5D83CFEE1CE353260009D9F3 /* layer.cpp in Sources */,
 				5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */,
 				5D83CFF01CE353260009D9F3 /* image.cpp in Sources */,

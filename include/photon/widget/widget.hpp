@@ -193,6 +193,7 @@ namespace photon
 
    	int			            _focus = -1;
       int                     _drag_tracking = -1;
+      hit_info                _click_info;
    };
 
    template <typename Container, typename Base>

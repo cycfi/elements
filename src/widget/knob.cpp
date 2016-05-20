@@ -17,6 +17,13 @@ namespace photon
    {
       return { 16, 16, full_extent, full_extent };
    }
+   
+   widget* knob::hit_test(context const& ctx, point p)
+   {
+      if (ctx.theme().knob_hit_test(ctx.bounds, p))
+         return this;
+      return 0;
+   }
 
    void knob::draw(context const& ctx)
    {
@@ -25,13 +32,18 @@ namespace photon
 
    widget* knob::click(context const& ctx, mouse_button btn)
    {
+      _tracking = btn.is_pressed;
       point mp = ctx.cursor_pos();
       if (ctx.theme().knob_hit_test(ctx.bounds, mp))
       {
-         _tracking = true;
-         _offset = point{ mp.x-_indicator_pos.x, mp.y-_indicator_pos.y };
-         reposition(ctx);
+         if (_tracking)
+         {
+            _offset = point{ mp.x-_indicator_pos.x, mp.y-_indicator_pos.y };
+            reposition(ctx);
+         }
       }
+      ctx.window.draw();
+
       return this;
    }
 

@@ -218,7 +218,7 @@ namespace photon
 
       if (!empty())
       {
-         hit_info info = hit_element(ctx, p);
+         hit_info info = (btn.is_pressed)? hit_element(ctx, p) : _click_info;
 
          if (info.element && focus(focus_request::wants_focus))
          {
@@ -240,7 +240,11 @@ namespace photon
             _drag_tracking = info.index;
             context ectx{ ctx, info.element, info.bounds };
             if (info.element->click(ectx, btn))
+            {
+               if (btn.is_pressed)
+                  _click_info = info;
                return info.element;
+            }
          }
       }
       _drag_tracking = -1;

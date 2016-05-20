@@ -24,6 +24,7 @@ namespace photon
 
       void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
       class canvas&        canvas() const                         { return _canvas; }
+      virtual void         override()                             {}
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels and Frames

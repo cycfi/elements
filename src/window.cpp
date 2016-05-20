@@ -115,6 +115,7 @@ namespace photon
 
       _theme->canvas(_context);
       _theme->load_fonts();
+      _theme->override();
 
       windows[_window] = this;
    }

@@ -177,6 +177,8 @@ namespace photon
 
       point draw_knob_indicator(canvas& _canvas, circle cp, float pos, color indicator_color)
       {
+         auto state = _canvas.new_state();
+         
          _canvas.translate({ cp.cx, cp.cy });
 
          float const travel = 0.82;
@@ -200,10 +202,7 @@ namespace photon
          _canvas.fill();
          _canvas.fill_paint(gr);
 
-         point ind_pos = _canvas.transform_point(center_point(ind_r));
-         _canvas.restore();
-
-         return ind_pos;
+         return _canvas.transform_point(center_point(ind_r));
       }
    }
 
@@ -212,7 +211,7 @@ namespace photon
       float w = b.width();
       float h = b.height();
 
-      _canvas.save();
+      auto state = _canvas.new_state();
 
       if (w > h)
       {
@@ -229,13 +228,10 @@ namespace photon
       }
 
       draw_slider_knob(pos, b);
-      _canvas.restore();
    }
 
    point theme::draw_knob(float pos, rect b) const
    {
-      _canvas.save();
-
       auto     c = center_point(b);
       auto     r = std::min(b.width(), b.height())/2;
       circle   cp = { c.x, c.y, r };
@@ -424,11 +420,12 @@ namespace photon
        , char const* font, float font_size, color color
       )
       {
+         auto state = _canvas.new_state();
+
          float x = b.left;
          float y = b.top;
          float w = b.width();
 
-         _canvas.save();
          _canvas.clip(b);
 
          _canvas.font_size(font_size);
@@ -436,7 +433,6 @@ namespace photon
          _canvas.fill_color(color);
 
          _canvas.text_box(point{ x, y+font_size }, w, text);
-         _canvas.restore();
       }
    }
 
@@ -540,10 +536,11 @@ namespace photon
          template <typename F>
          void for_each_row(F f, float& y, float& lineh) const
          {
+            auto state = _canvas.new_state();
+            
             y = this->y;
             char const* cp = start;
 
-            _canvas.save();
             _canvas.font_size(th.text_box_font_size);
             _canvas.font_face(th.text_box_font);
             _canvas.text_align(canvas::align_left | canvas::align_top);
@@ -558,7 +555,6 @@ namespace photon
             };
 
             _canvas.for_each_line(line_f, cp, end, w-right_pad);
-            _canvas.restore();
          }
 
          void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const

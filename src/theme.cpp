@@ -12,7 +12,7 @@
 
 namespace photon
 {
-   void theme::draw_panel(rect b) const
+   void theme::draw_panel(rect b)
    {
       // Round Rectangle
       _canvas.begin_path();
@@ -38,7 +38,7 @@ namespace photon
       _canvas.fill();
    }
 
-   void theme::draw_frame(rect b) const
+   void theme::draw_frame(rect b)
    {
       _canvas.begin_path();
       _canvas.round_rect(b, frame_corner_radius);
@@ -47,7 +47,7 @@ namespace photon
       _canvas.stroke();
    }
 
-   void theme::draw_title_bar(rect b) const
+   void theme::draw_title_bar(rect b)
    {
       auto bg = _canvas.linear_gradient(
           point{ b.left, b.top },
@@ -178,7 +178,7 @@ namespace photon
       point draw_knob_indicator(canvas& _canvas, circle cp, float pos, color indicator_color)
       {
          auto state = _canvas.new_state();
-         
+
          _canvas.translate({ cp.cx, cp.cy });
 
          float const travel = 0.82;
@@ -206,7 +206,7 @@ namespace photon
       }
    }
 
-   void theme::draw_slider(float pos, rect b) const
+   void theme::draw_slider(float pos, rect b)
    {
       float w = b.width();
       float h = b.height();
@@ -230,20 +230,27 @@ namespace photon
       draw_slider_knob(pos, b);
    }
 
-   point theme::draw_knob(float pos, rect b) const
+   void theme::draw_knob(float pos, rect b)
    {
       auto     c = center_point(b);
       auto     r = std::min(b.width(), b.height())/2;
       circle   cp = { c.x, c.y, r };
 
       photon::draw_knob(
-         _canvas, cp,
-         knob_fill_color, knob_outline_color);
-
-      return draw_knob_indicator(_canvas, cp, pos, knob_indicator_color);
+         _canvas, cp, knob_fill_color, knob_outline_color);
    }
 
-   bool theme::knob_hit_test(rect b, point p) const
+   point theme::draw_knob_indicator(float pos, rect b)
+   {
+      auto     c = center_point(b);
+      auto     r = std::min(b.width(), b.height())/2;
+      circle   cp = { c.x, c.y, r };
+
+      return photon::draw_knob_indicator(
+         _canvas, cp, pos, knob_indicator_color);
+   }
+
+   bool theme::knob_hit_test(rect b, point p)
    {
       auto  c = center_point(b);
       auto  r = std::min(b.width(), b.height())/2;
@@ -255,15 +262,15 @@ namespace photon
       return _canvas.on_fill(p);
    }
 
-   void theme::draw_slider_knob(float pos, rect b) const
+   void theme::draw_slider_knob(float pos, rect b)
    {
-      photon::draw_knob(
+      photon::draw_slider_knob(
          _canvas, slider_knob_position(pos, b),
          slider_knob_fill_color, slider_knob_outline_color
       );
    }
 
-   circle theme::slider_knob_position(float pos, rect b) const
+   circle theme::slider_knob_position(float pos, rect b)
    {
       float x = b.left;
       float y = b.top;
@@ -327,7 +334,7 @@ namespace photon
       }
    }
 
-   void theme::draw_scroll_bar(float pos, float ext, rect b, point mp) const
+   void theme::draw_scroll_bar(float pos, float ext, rect b, point mp)
    {
       float x = b.left;
       float y = b.top;
@@ -353,7 +360,7 @@ namespace photon
          scroll_bar_outline_color, scroll_bar_fill_color, mp);
    }
 
-   rect theme::scroll_bar_position(float pos, float ext, rect b) const
+   rect theme::scroll_bar_position(float pos, float ext, rect b)
    {
       float x = b.left;
       float y = b.top;
@@ -436,27 +443,27 @@ namespace photon
       }
    }
 
-   void theme::draw_label(rect b, char const* text) const
+   void theme::draw_label(rect b, char const* text)
    {
       draw_text(_canvas, b, text, label_font, label_font_size, label_font_color);
    }
 
-   point theme::measure_label(char const* text) const
+   point theme::measure_label(char const* text)
    {
       return measure_text(_canvas, text, label_font, label_font_size);
    }
 
-   void theme::draw_heading(rect b, char const* text) const
+   void theme::draw_heading(rect b, char const* text)
    {
       draw_text(_canvas, b, text, heading_font, heading_font_size, heading_font_color);
    }
 
-   point theme::measure_heading(char const* text) const
+   point theme::measure_heading(char const* text)
    {
       return measure_text(_canvas, text, heading_font, heading_font_size);
    }
 
-   void theme::draw_icon(rect b, uint32_t code, int size) const
+   void theme::draw_icon(rect b, uint32_t code, int size)
    {
       char icon[8];
       char const* text = codepoint_to_UTF8(code, icon);
@@ -484,13 +491,13 @@ namespace photon
       _canvas.text(point{ cx, cy }, text);
    }
 
-   point theme::measure_icon(uint32_t code, int size) const
+   point theme::measure_icon(uint32_t code, int size)
    {
       char icon[8];
       return measure_text(_canvas, codepoint_to_UTF8(code,icon), icon_font, size);
    }
 
-   void theme::draw_text_box(rect b, char const* text) const
+   void theme::draw_text_box(rect b, char const* text)
    {
       photon::draw_text_box(_canvas, b, text, text_box_font, text_box_font_size, text_box_font_color);
    }
@@ -534,10 +541,10 @@ namespace photon
          }
 
          template <typename F>
-         void for_each_row(F f, float& y, float& lineh) const
+         void for_each_row(F f, float& y, float& lineh)
          {
             auto state = _canvas.new_state();
-            
+
             y = this->y;
             char const* cp = start;
 
@@ -557,7 +564,7 @@ namespace photon
             _canvas.for_each_line(line_f, cp, end, w-right_pad);
          }
 
-         void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend) const
+         void draw_caret(float lineh, float y, float row_width, char const* rstart, char const* rend)
          {
             if (sstart >= rstart && sstart <= rend)
             {
@@ -578,7 +585,7 @@ namespace photon
             }
          }
 
-         void draw_selection(float lineh, float y, char const* rstart, char const* rend) const
+         void draw_selection(float lineh, float y, char const* rstart, char const* rend)
          {
             bool  start_hilite = sstart >= rstart && sstart <= rend;
             bool  end_hilite = send >= rstart && send <= rend;
@@ -616,7 +623,7 @@ namespace photon
             }
          }
 
-         void draw() const
+         void draw()
          {
             auto draw_f = [&](auto& row, auto i, auto y, auto lineh)
             {
@@ -643,7 +650,7 @@ namespace photon
             for_each_row(draw_f, y, lineh);
          }
 
-         float height() const
+         float height()
          {
             auto height_f = [&](auto& row, auto i, auto y, auto lineh) { return true; };
 
@@ -653,7 +660,7 @@ namespace photon
             return y + lineh;
          }
 
-         char const* caret_position(point p) const
+         char const* caret_position(point p)
          {
             float       mx = p.x;
             float       my = p.y;
@@ -706,7 +713,7 @@ namespace photon
             return result;
          }
 
-         theme::glyph_info glyph_bounds(char const* cp) const
+         theme::glyph_info glyph_bounds(char const* cp)
          {
             theme::glyph_info result;
             auto glyph_f = [&](auto& row, auto i, auto y, auto lineh)
@@ -761,31 +768,31 @@ namespace photon
       };
    }
 
-   void theme::draw_edit_text_box(rect b, text_draw_info const& text) const
+   void theme::draw_edit_text_box(rect b, text_draw_info const& text)
    {
       edit_text_box_renderer r{ *this, b, text };
       r.draw();
    }
 
-   char const* theme::caret_position(rect b, text_info const& text, point p) const
+   char const* theme::caret_position(rect b, text_info const& text, point p)
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.caret_position(p);
    }
 
-   float theme::edit_text_box_height(rect b, text_info const& text) const
+   float theme::edit_text_box_height(rect b, text_info const& text)
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.height();
    }
 
-   theme::glyph_info theme::glyph_bounds(rect b, text_info const& text, char const* cp) const
+   theme::glyph_info theme::glyph_bounds(rect b, text_info const& text, char const* cp)
    {
       edit_text_box_renderer r{ *this, b, text };
       return r.glyph_bounds(cp);
    }
 
-   void theme::draw_edit_box_base(rect b) const
+   void theme::draw_edit_box_base(rect b)
    {
       paint bg
          = _canvas.box_gradient(b.inset(1, 1).move(0, 1.5), 3, 4
@@ -803,7 +810,7 @@ namespace photon
       _canvas.stroke();
    }
 
-   void theme::draw_button(rect b, color button_color) const
+   void theme::draw_button(rect b, color button_color)
    {
       bool  black = button_color == colors::black;
       paint bg
@@ -829,7 +836,7 @@ namespace photon
       _canvas.stroke();
    }
 
-   void theme::load_fonts() const
+   void theme::load_fonts()
    {
       _canvas.new_font("icons", "./assets/fonts/entypo.ttf");
       _canvas.new_font("sans", "./assets/fonts/Roboto-Regular.ttf");

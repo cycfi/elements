@@ -27,7 +27,8 @@ namespace photon
 
    void knob::draw(context const& ctx)
    {
-      _indicator_pos = ctx.theme().draw_knob(_pos, ctx.bounds);
+      ctx.theme().draw_knob(_pos, ctx.bounds);
+      _indicator_pos = ctx.theme().draw_knob_indicator(_pos, ctx.bounds);
    }
 
    widget* knob::click(context const& ctx, mouse_button btn)

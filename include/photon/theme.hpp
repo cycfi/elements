@@ -33,14 +33,14 @@ namespace photon
       color                panel_color                = { 28, 30, 34, 192 };
       rect                 panel_shadow_offset        = { -10, -10, +20, +30 };
 
-      virtual void         draw_panel(rect b) const;
+      virtual void         draw_panel(rect b);
 
       float                frame_corner_radius        = 3.0;
       float                frame_stroke_width         = 0.8;
       color                frame_color                = { 220, 220, 220, 70 };
 
-      virtual void         draw_frame(rect b) const;
-      virtual void         draw_title_bar(rect b) const;
+      virtual void         draw_frame(rect b);
+      virtual void         draw_title_bar(rect b);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Knobs, Sliders and Scrollbars
@@ -49,24 +49,25 @@ namespace photon
       color                knob_outline_color         = { 20, 20, 20, 92 };
       color                knob_indicator_color       = { 200, 200, 200, 128 };
 
-      virtual point        draw_knob(float pos, rect b) const;
-      virtual bool         knob_hit_test(rect b, point p) const;
+      virtual void         draw_knob(float pos, rect b);
+      virtual point        draw_knob_indicator(float pos, rect b);
+      virtual bool         knob_hit_test(rect b, point p);
 
       float                slider_knob_radius         = 0.25;  // fraction of size (width or height)
       float                slider_slot_size           = 0.15;  // fraction of size (width or height)
       color                slider_knob_fill_color     = { 60, 60, 60, 255 };
       color                slider_knob_outline_color  = { 0, 0, 0, 92 };
 
-      virtual void         draw_slider(float pos, rect b) const;
-      virtual void         draw_slider_knob(float pos, rect b) const;
-      virtual circle       slider_knob_position(float pos, rect b) const;
+      virtual void         draw_slider(float pos, rect b);
+      virtual void         draw_slider_knob(float pos, rect b);
+      virtual circle       slider_knob_position(float pos, rect b);
 
       color                scroll_bar_outline_color   = { 200, 200, 200, 50 };
       color                scroll_bar_fill_color      = { 0, 0, 0, 120 };
       float                scroll_bar_width           = 10;
 
-      virtual void         draw_scroll_bar(float pos, float ext, rect b, point mp) const;
-      virtual rect         scroll_bar_position(float pos, float ext, rect b) const;
+      virtual void         draw_scroll_bar(float pos, float ext, rect b, point mp);
+      virtual rect         scroll_bar_position(float pos, float ext, rect b);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Text
@@ -75,21 +76,21 @@ namespace photon
       char const*          heading_font               = "sans-bold";
       float                heading_font_size          = 20.0;
 
-      virtual void         draw_label(rect b, char const* text) const;
-      virtual point        measure_label(char const* text) const;
+      virtual void         draw_label(rect b, char const* text);
+      virtual point        measure_label(char const* text);
 
       color                label_font_color           = { 220, 220, 220, 160 };
       char const*          label_font                 = "sans";
       float                label_font_size            = 18.0;
 
-      virtual void         draw_heading(rect b, char const* text) const;
-      virtual point        measure_heading(char const* text) const;
+      virtual void         draw_heading(rect b, char const* text);
+      virtual point        measure_heading(char const* text);
 
       color                icon_color                 = { 220, 220, 220, 160 };
       char const*          icon_font                  = "icons";
 
-      virtual void         draw_icon(rect b, uint32_t code, int size) const;
-      virtual point        measure_icon(uint32_t code, int size) const;
+      virtual void         draw_icon(rect b, uint32_t code, int size);
+      virtual point        measure_icon(uint32_t code, int size);
 
       color                text_box_font_color        = { 220, 220, 220, 230 };
       char const*          text_box_font              = "sans";
@@ -99,8 +100,8 @@ namespace photon
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
 
-      virtual void         draw_text_box(rect b, char const* text) const;
-      virtual void         draw_edit_box_base(rect b) const;
+      virtual void         draw_text_box(rect b, char const* text);
+      virtual void         draw_edit_box_base(rect b);
 
       struct text_info
       {
@@ -130,17 +131,17 @@ namespace photon
          rect bounds() const { return { minx, y, maxx, y+lineh }; }
       };
 
-      virtual void         draw_edit_text_box(rect b, text_draw_info const& text) const;
-      virtual char const*  caret_position(rect b, text_info const& text, point p) const;
-      virtual glyph_info   glyph_bounds(rect b, text_info const& text, char const* cp) const;
-      virtual float        edit_text_box_height(rect b, text_info const& text) const;
+      virtual void         draw_edit_text_box(rect b, text_draw_info const& text);
+      virtual char const*  caret_position(rect b, text_info const& text, point p);
+      virtual glyph_info   glyph_bounds(rect b, text_info const& text, char const* cp);
+      virtual float        edit_text_box_height(rect b, text_info const& text);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Buttons
 
       float                button_corner_radius        = 4.0;
 
-      virtual void         draw_button(rect b, color button_color) const ;
+      virtual void         draw_button(rect b, color button_color);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Fonts
@@ -149,7 +150,7 @@ namespace photon
       char const*          sans        = "sans";
       char const*          sans_bold   = "sans-bold";
 
-      virtual void         load_fonts() const;
+      virtual void         load_fonts();
 
    private:
 

@@ -129,7 +129,24 @@ int main()
          auto sl = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 20, 20, 20, 20 }, slider()),
+               margin(
+                  { 20, 20, 20, 20},
+                  htile(
+                     xside_margin(10, slider{}),
+                     xside_margin(10, slider{}),
+                     xside_margin(10, slider{}),
+                     xside_margin(10, slider{}),
+                     xside_margin(10, slider{}),
+                     xside_margin(10, slider{}),
+                     xside_margin(10,
+                        vtile(
+                           yside_margin(10, knob{}),
+                           yside_margin(10, knob{}),
+                           yside_margin(10, knob{})
+                        )
+                     )
+                  )
+               ),
                panel{}
             )
          );

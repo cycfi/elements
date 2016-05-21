@@ -21,7 +21,9 @@ namespace photon
       static float     knob_radius;    // fraction of size (width or height)
       static float     slot_size;      // fraction of size (width or height)
 
-                        slider() : _pos(0) {}
+                        slider()
+                         : _pos(0), _tracking(false)
+                        {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual widget*   hit_test(context const& ctx, point p);

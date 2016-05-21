@@ -64,6 +64,48 @@ int main()
 
          // main_widget = new_(std::move(columns));
       }
+      
+      {
+         auto _box = top_margin(
+            { 20 },
+            hsize(64, box)
+         );
+      
+         auto rows = margin(
+            { 20, 0, 20, 20 },
+            vtile(
+               top_margin(10, box),
+               top_margin(10, box),
+               top_margin(10, box),
+               top_margin(10, box),
+               top_margin(10, box),
+               top_margin(10, box)
+            )
+         );
+
+         main_widget = new_(std::move(rows));
+      }
+      
+      {
+         auto _box = left_margin(
+            { 20 },
+            vsize(64, box)
+         );
+
+         auto columns = margin(
+            { 0, 20, 20, 20 },
+            htile(
+               left_margin(10, box),
+               left_margin(10, box),
+               left_margin(10, box),
+               left_margin(10, box),
+               left_margin(10, box),
+               left_margin(10, box)
+            )
+         );
+
+         //main_widget = new_(std::move(columns));
+      }
 
       {
          auto sl = margin(
@@ -86,7 +128,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
 
       {

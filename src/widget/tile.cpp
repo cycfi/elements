@@ -35,12 +35,12 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      rect  limits   = this->limits(ctx);
-      float height   = ctx.bounds.height();
-      float extra    = limits.bottom - height;
-      float m_size   = limits.bottom - limits.top;
-      float curr     = ctx.bounds.top;
-      auto  i        = _tiles.begin();
+      rect     limits   = this->limits(ctx);
+      double   height   = ctx.bounds.height();
+      double   extra    = limits.bottom - height;
+      double   m_size   = limits.bottom - limits.top;
+      double   curr     = ctx.bounds.top;
+      auto     i        = _tiles.begin();
 
       for (auto const& elem : *this)
       {
@@ -53,7 +53,7 @@ namespace photon
          if ((extra != 0) && (m_size != 0))
             curr -= extra * (limits.bottom - limits.top) / m_size;
 
-         rect ebounds = { _left, prev, _right, curr };
+         rect ebounds = { _left, float(prev), _right, float(curr) };
          elem->layout(context{ ctx, elem.get(), ebounds });
       }
       *i = curr;
@@ -91,12 +91,12 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      rect  limits   = this->limits(ctx);
-      float width    = ctx.bounds.width();
-      float extra    = limits.right - width;
-      float m_size   = limits.right - limits.left;
-      float curr     = ctx.bounds.left;
-      auto  i        = _tiles.begin();
+      rect     limits   = this->limits(ctx);
+      double   width    = ctx.bounds.width();
+      double   extra    = limits.right - width;
+      double   m_size   = limits.right - limits.left;
+      double   curr     = ctx.bounds.left;
+      auto     i        = _tiles.begin();
 
       for (auto const& elem : *this)
       {
@@ -109,7 +109,7 @@ namespace photon
          if ((extra != 0) && (m_size != 0))
             curr -= extra * (limits.right - limits.left) / m_size;
 
-         rect ebounds = { prev, _top, curr, _bottom };
+         rect ebounds = { float(prev), _top, float(curr), _bottom };
          elem->layout(context{ ctx, elem.get(), ebounds });
       }
       *i = curr;

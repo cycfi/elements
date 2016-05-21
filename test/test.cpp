@@ -11,6 +11,24 @@ int main()
    {
       widget_ptr main_widget;
       
+      {  // basics
+      
+         auto rows = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 30, 60, 30, 30 }, frame{}),
+               margin({ 10, 10, 10, 10 },
+                  layer(
+                     valign(0, vsize(30, title_bar{})),
+                     panel{}
+                  )
+               )
+            )
+         );
+         
+         main_widget = new_(std::move(rows));
+      }
+      
       auto box = basic(
          [](context const& ctx)
          {
@@ -83,7 +101,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(rows));
+         //main_widget = new_(std::move(rows));
       }
       
       {
@@ -352,7 +370,9 @@ int main()
          //main_widget = new_(frm);
       }
 
-      window main_window("Photon", { 1000, 600 }, colors::gray[30], my_app, main_widget);
+      window main_window("Photon",
+         { 1000, 600 }, color{ 62, 91, 102, 255 },
+         my_app, main_widget);
       my_app.run();
    }
 

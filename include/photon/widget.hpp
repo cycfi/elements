@@ -7,7 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_MAY_4_2016)
 #define PHOTON_GUI_LIB_WIDGET_MAY_4_2016
 
-#include <photon/widget/panel.hpp>
+#include <photon/widget/basic.hpp>
 #include <photon/widget/margin.hpp>
 #include <photon/widget/align.hpp>
 #include <photon/widget/size.hpp>

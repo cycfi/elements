@@ -12,32 +12,6 @@
 
 namespace photon
 {
-   void theme::draw_panel(rect b)
-   {
-      // Round Rectangle
-      _canvas.begin_path();
-      _canvas.round_rect(b, panel_corner_radius);
-      _canvas.fill_color(panel_color);
-      _canvas.fill();
-
-      // Drop shadow
-      rect offs = panel_shadow_offset;
-      _canvas.begin_path();
-      _canvas.rect({ b.left+offs.left, b.top+offs.top, b.right+offs.right, b.bottom+offs.bottom });
-      _canvas.round_rect(b, panel_corner_radius);
-      _canvas.path_winding(canvas::hole);
-
-      rect  sh_fillr = b;
-      sh_fillr.top += 2;
-      paint shadow_paint
-         = _canvas.box_gradient(sh_fillr, panel_corner_radius*2, 10
-          , color(0, 0, 0, 128), color(0, 0, 0, 0)
-         );
-
-      _canvas.fill_paint(shadow_paint);
-      _canvas.fill();
-   }
-
    void theme::draw_frame(rect b)
    {
       _canvas.begin_path();
@@ -57,7 +31,7 @@ namespace photon
       );
 
       _canvas.begin_path();
-      _canvas.round_rect(b.inset(1, 1), panel_corner_radius);
+      _canvas.round_rect(b.inset(1, 1), 3.0 /*fix me*/);
       _canvas.fill_paint(bg);
       _canvas.fill();
 
@@ -814,32 +788,6 @@ namespace photon
 
       _canvas.begin_path();
       _canvas.round_rect(b.inset(0.5, 0.5), 4-0.5f);
-      _canvas.stroke_color(color{ 0, 0, 0, 48 });
-      _canvas.stroke();
-   }
-
-   void theme::draw_button(rect b, color button_color)
-   {
-      bool  black = button_color == colors::black;
-      paint bg
-         = _canvas.linear_gradient(b.top_left(), point{ b.left, b.bottom }
-          , color(255, 255, 255, black ? 16 : 32)
-          , color(0, 0, 0, black ? 16 : 32)
-         );
-
-      _canvas.begin_path();
-      _canvas.round_rect(b.inset(1, 1), button_corner_radius-1);
-
-      if (!black)
-      {
-         _canvas.fill_color(button_color);
-         _canvas.fill();
-      }
-      _canvas.fill_paint(bg);
-      _canvas.fill();
-
-      _canvas.begin_path();
-      _canvas.round_rect(b.inset(0.5, 0.5), button_corner_radius-0.5);
       _canvas.stroke_color(color{ 0, 0, 0, 48 });
       _canvas.stroke();
    }

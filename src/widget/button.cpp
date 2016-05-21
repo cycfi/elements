@@ -5,18 +5,20 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/button.hpp>
-#include <photon/widget/margin.hpp>
 #include <photon/widget/align.hpp>
 #include <photon/widget/text.hpp>
-#include <photon/theme.hpp>
-#include <photon/support.hpp>
-#include <photon/app.hpp>
 #include <photon/window.hpp>
 
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
+   widget* basic_button::hit_test(context const& ctx, point p)
+   {
+      if (ctx.bounds.includes(ctx.cursor_pos()))
+         return this;
+      return 0;
+   }
    widget* basic_button::click(context const& ctx, mouse_button btn)
    {
       if (state(btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos())))
@@ -52,9 +54,35 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Button Body
+   float basic_botton_body::corner_radius = 4.0;
+
    void basic_botton_body::draw(context const& ctx)
    {
-      ctx.theme().draw_button(ctx.bounds, body_color);
+      auto&       _canvas = ctx.theme().canvas();
+      bool        black = body_color == colors::black;
+      auto const& b = ctx.bounds;
+
+      paint bg
+         = _canvas.linear_gradient(b.top_left(), b.bottom_left()
+          , color(255, 255, 255, black ? 16 : 32)
+          , color(0, 0, 0, black ? 16 : 32)
+         );
+
+      _canvas.begin_path();
+      _canvas.round_rect(b.inset(1, 1), corner_radius-1);
+
+      if (!black)
+      {
+         _canvas.fill_color(body_color);
+         _canvas.fill();
+      }
+      _canvas.fill_paint(bg);
+      _canvas.fill();
+
+      _canvas.begin_path();
+      _canvas.round_rect(b.inset(0.5, 0.5), corner_radius-0.5);
+      _canvas.stroke_color(color{ 0, 0, 0, 48 });
+      _canvas.stroke();
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

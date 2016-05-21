@@ -29,11 +29,8 @@ namespace photon
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Panels and Frames
 
-      float                panel_corner_radius        = 3.0;
       color                panel_color                = { 28, 30, 34, 192 };
-      rect                 panel_shadow_offset        = { -10, -10, +20, +30 };
 
-      virtual void         draw_panel(rect b);
 
       float                frame_corner_radius        = 3.0;
       float                frame_stroke_width         = 0.8;
@@ -137,13 +134,6 @@ namespace photon
       virtual char const*  caret_position(rect b, text_info const& text, point p);
       virtual glyph_info   glyph_bounds(rect b, text_info const& text, char const* cp);
       virtual float        edit_text_box_height(rect b, text_info const& text);
-
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      // Buttons
-
-      float                button_corner_radius        = 4.0;
-
-      virtual void         draw_button(rect b, color button_color);
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Fonts

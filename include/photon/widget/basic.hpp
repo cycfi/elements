@@ -4,8 +4,8 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_PANEL_APRIL_11_2016)
-#define PHOTON_GUI_LIB_WIDGET_PANEL_APRIL_11_2016
+#if !defined(PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016)
+#define PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
 
 #include <photon/widget/widget.hpp>
 
@@ -18,10 +18,10 @@ namespace photon
    {
    public:
 
-      virtual void draw(context const& ctx)
-      {
-         ctx.theme().draw_panel(ctx.bounds);
-      }
+      static float   corner_radius;
+      static rect    shadow_offset;
+
+      virtual void draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,10 +31,7 @@ namespace photon
    {
    public:
 
-      virtual void draw(context const& ctx)
-      {
-         ctx.theme().draw_frame(ctx.bounds);
-      }
+      virtual void draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,10 +41,7 @@ namespace photon
    {
    public:
 
-      virtual void draw(context const& ctx)
-      {
-         ctx.theme().draw_title_bar(ctx.bounds);
-      }
+      virtual void draw(context const& ctx);
    };
 }
 

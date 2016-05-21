@@ -20,7 +20,7 @@ namespace photon
    class basic_button : public array_composite<2, deck_widget>
    {
    public:
-   
+
       using base_type = array_composite<2, deck_widget>;
 
       basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
@@ -30,6 +30,7 @@ namespace photon
          elements[1] = on;
       }
 
+      virtual widget*   hit_test(context const& ctx, point p);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
@@ -65,6 +66,8 @@ namespace photon
    class basic_botton_body : public widget
    {
    public:
+
+      static float corner_radius;
 
       basic_botton_body(color body_color)
        : body_color(body_color)

@@ -246,6 +246,10 @@ namespace photon
                return info.element;
             }
          }
+         else
+         {
+            _click_info.element = 0;
+         }
       }
       _drag_tracking = -1;
       return 0;

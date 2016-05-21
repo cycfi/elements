@@ -83,7 +83,8 @@ namespace photon
          _canvas.fill();
       }
 
-      void draw_slider_knob(canvas& _canvas, circle cp, color fill_color, color outline_color)
+      void draw_slider_knob(
+         canvas& _canvas, circle cp, color fill_color, color outline_color, float outline_width)
       {
          // Knob Shadow
          paint bg
@@ -93,7 +94,7 @@ namespace photon
                );
 
          _canvas.begin_path();
-         _canvas.rect(cp.bounds().inset(-5, -5).move(0, 3));
+         _canvas.rect(cp.bounds().inset(-5, -5).move(-3, -3));
          _canvas.circle(cp);
          _canvas.path_winding(canvas::hole);
          _canvas.fill_paint(bg);
@@ -116,6 +117,7 @@ namespace photon
          _canvas.begin_path();
          _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-0.5f });
          _canvas.stroke_color(outline_color);
+         _canvas.stroke_width(outline_width);
          _canvas.stroke();
       }
 
@@ -206,30 +208,6 @@ namespace photon
       }
    }
 
-   void theme::draw_slider(float pos, rect b)
-   {
-      float w = b.width();
-      float h = b.height();
-
-      auto state = _canvas.new_state();
-
-      if (w > h)
-      {
-         // horizontal
-         float sl = h * slider_slot_size;
-         draw_slider_slot(_canvas, b.inset(0, (h-sl)/2), sl/2);
-
-      }
-      else
-      {
-         // vertical
-         float sl = w * slider_slot_size;
-         draw_slider_slot(_canvas, b.inset((w-sl)/2, 0), sl/2);
-      }
-
-      draw_slider_knob(pos, b);
-   }
-
    void theme::draw_knob(float pos, rect b)
    {
       auto     c = center_point(b);
@@ -262,11 +240,41 @@ namespace photon
       return _canvas.on_fill(p);
    }
 
+   void theme::draw_slider(float pos, rect b)
+   {
+      float w = b.width();
+      float h = b.height();
+
+      auto state = _canvas.new_state();
+
+      if (w > h)
+      {
+         // horizontal
+         float sl = h * slider_slot_size;
+         draw_slider_slot(b.inset(0, (h-sl)/2), sl/2);
+
+      }
+      else
+      {
+         // vertical
+         float sl = w * slider_slot_size;
+         draw_slider_slot(b.inset((w-sl)/2, 0), sl/2);
+      }
+
+      draw_slider_knob(pos, b);
+   }
+
+   void theme::draw_slider_slot(rect b, float radius)
+   {
+      photon::draw_slider_slot(_canvas, b, radius);
+   }
+
    void theme::draw_slider_knob(float pos, rect b)
    {
       photon::draw_slider_knob(
          _canvas, slider_knob_position(pos, b),
-         slider_knob_fill_color, slider_knob_outline_color
+         slider_knob_fill_color, slider_knob_outline_color,
+         slider_knob_outline_width
       );
    }
 
@@ -299,7 +307,7 @@ namespace photon
          h -= kr * 2;
          y += kr;
 
-         return { cx, y+(pos*h), kr };
+         return { cx, y+h-(pos*h), kr };
       }
    }
 

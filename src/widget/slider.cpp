@@ -16,6 +16,13 @@ namespace photon
    {
       return { 16, 16, full_extent, full_extent };
    }
+   
+   widget* slider::hit_test(context const& ctx, point p)
+   {
+      if (ctx.bounds.includes(p))
+         return this;
+      return 0;
+   }
 
    void slider::draw(context const& ctx)
    {
@@ -26,6 +33,7 @@ namespace photon
    {
       point p = ctx.cursor_pos();
       auto  cp = ctx.theme().slider_knob_position(_pos, ctx.bounds);
+      _tracking = btn.is_pressed;
 
       // If the mouse is inside the knob, record the offset from
       // the knob's center. We'll use this offset to compensate for
@@ -42,7 +50,8 @@ namespace photon
 
    void slider::drag(context const& ctx, mouse_button btn)
    {
-      reposition(ctx);
+      if (_tracking)
+         reposition(ctx);
    }
 
    void slider::reposition(context const& ctx)
@@ -71,7 +80,7 @@ namespace photon
          // inset by radius;
          h -= cp.radius * 2;
          y += cp.radius;
-         _pos = (p.y-y) / h;
+         _pos = 1.0f-((p.y-y) / h);
       }
 
       limit(_pos, 0.0, 1.0);

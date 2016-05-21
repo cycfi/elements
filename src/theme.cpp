@@ -12,36 +12,6 @@
 
 namespace photon
 {
-   void theme::draw_frame(rect b)
-   {
-      _canvas.begin_path();
-      _canvas.round_rect(b, frame_corner_radius);
-      _canvas.stroke_color(frame_color);
-      _canvas.stroke_width(frame_stroke_width);
-      _canvas.stroke();
-   }
-
-   void theme::draw_title_bar(rect b)
-   {
-      auto bg = _canvas.linear_gradient(
-          point{ b.left, b.top },
-          point{ b.left, b.bottom },
-          color{ 255, 255, 255, 16 },
-          color{ 0, 0, 0, 16 }
-      );
-
-      _canvas.begin_path();
-      _canvas.round_rect(b.inset(1, 1), 3.0 /*fix me*/);
-      _canvas.fill_paint(bg);
-      _canvas.fill();
-
-      _canvas.begin_path();
-      _canvas.move_to(point{ b.left+0.5f, b.bottom-0.5f });
-      _canvas.line_to(point{ b.right-0.5f, b.bottom-0.5f });
-      _canvas.stroke_color(color{ 0, 0, 0, 32 });
-      _canvas.stroke();
-   }
-
    namespace
    {
       void draw_slider_slot(canvas& _canvas, rect b, float r)
@@ -68,7 +38,7 @@ namespace photon
                );
 
          _canvas.begin_path();
-         _canvas.rect(cp.bounds().inset(-5, -5).move(-3, -3));
+         _canvas.rect(cp.bounds().inset(-3, -3).move(-3, -3));
          _canvas.circle(cp);
          _canvas.path_winding(canvas::hole);
          _canvas.fill_paint(bg);
@@ -94,124 +64,6 @@ namespace photon
          _canvas.stroke_width(outline_width);
          _canvas.stroke();
       }
-
-      void draw_knob(canvas& _canvas, circle cp, color fill_color, color outline_color)
-      {
-         float radius = cp.radius;
-         float shadow = radius/8;
-
-         // Knob Shadow
-         paint shc
-            = _canvas.radial_gradient(
-                  point{ cp.cx, cp.cy }, radius, radius+shadow,
-                  color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
-               );
-
-         _canvas.begin_path();
-         _canvas.circle({ cp.cx, cp.cy, radius+shadow });
-         _canvas.circle(cp);
-         _canvas.path_winding(canvas::hole);
-         _canvas.fill_paint(shc);
-         _canvas.fill();
-
-         // Knob
-         float    bevel = radius/8;
-
-         paint knob
-            = _canvas.linear_gradient(
-                  point{ cp.cx, cp.cy-(radius-bevel) }, point{ cp.cx, cp.cy+(radius-bevel) },
-                  color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
-               );
-
-         _canvas.begin_path();
-         _canvas.circle({ cp.cx, cp.cy, radius });
-         _canvas.fill_color(fill_color);
-         _canvas.fill();
-         _canvas.fill_paint(knob);
-
-         // Knob bevel
-         paint bvc
-            = _canvas.radial_gradient(
-                  point{ cp.cx, cp.cy }, radius-bevel, radius,
-                  color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
-               );
-
-         _canvas.begin_path();
-         _canvas.circle(cp);
-         _canvas.circle({ cp.cx, cp.cy, radius-bevel });
-         _canvas.path_winding(canvas::hole);
-         _canvas.fill_paint(bvc);
-         _canvas.fill();
-
-         // Knob Outline
-         _canvas.begin_path();
-         _canvas.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
-         _canvas.stroke_width(2);
-         _canvas.stroke_color(outline_color);
-         _canvas.stroke();
-      }
-
-      point draw_knob_indicator(canvas& _canvas, circle cp, float pos, color indicator_color)
-      {
-         auto state = _canvas.new_state();
-
-         _canvas.translate({ cp.cx, cp.cy });
-
-         float const travel = 0.82;
-         float const rng = (2 * M_PI) * travel;
-         float const offs = (2 * M_PI) * (1-travel)/2;
-         _canvas.rotate(offs + (pos * rng));
-
-         float r = cp.radius;
-         rect  ind_r = { -r/12, -r/5, r/12, r/5 };
-         ind_r = ind_r.move(0, r*0.7);
-
-         paint gr
-            = _canvas.linear_gradient(
-                  ind_r.top_right(), ind_r.bottom_right(),
-                  color{ 0, 0, 0, 90 }, color{ 127, 127, 127, 90 }
-               );
-
-         _canvas.begin_path();
-         _canvas.round_rect(ind_r, r/16);
-         _canvas.fill_color(indicator_color);
-         _canvas.fill();
-         _canvas.fill_paint(gr);
-
-         return _canvas.transform_point(center_point(ind_r));
-      }
-   }
-
-   void theme::draw_knob(float pos, rect b)
-   {
-      auto     c = center_point(b);
-      auto     r = std::min(b.width(), b.height())/2;
-      circle   cp = { c.x, c.y, r };
-
-      photon::draw_knob(
-         _canvas, cp, knob_fill_color, knob_outline_color);
-   }
-
-   point theme::draw_knob_indicator(float pos, rect b)
-   {
-      auto     c = center_point(b);
-      auto     r = std::min(b.width(), b.height())/2;
-      circle   cp = { c.x, c.y, r };
-
-      return photon::draw_knob_indicator(
-         _canvas, cp, pos, knob_indicator_color);
-   }
-
-   bool theme::knob_hit_test(rect b, point p)
-   {
-      auto  c = center_point(b);
-      auto  r = std::min(b.width(), b.height())/2;
-
-      _canvas.begin_path();
-      _canvas.circle(circle{ c.x, c.y, r });
-      _canvas.fill_color({ 0, 0, 0, 0 });
-      _canvas.fill();
-      return _canvas.on_fill(p);
    }
 
    void theme::draw_slider(float pos, rect b)
@@ -307,7 +159,7 @@ namespace photon
 
          if (_canvas.on_fill(mp))
          {
-            _canvas.fill_color(fill_color.transparency(0.2));
+            _canvas.fill_color(fill_color.opacity(0.2));
             _canvas.fill();
          }
 

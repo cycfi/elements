@@ -26,7 +26,7 @@ int main()
             )
          );
          
-         main_widget = new_(std::move(rows));
+         //main_widget = new_(std::move(rows));
       }
       
       auto box = basic(
@@ -146,7 +146,7 @@ int main()
             )
          );
 
-         //main_widget = new_(std::move(sl));
+         main_widget = new_(std::move(sl));
       }
 
       {

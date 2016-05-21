@@ -26,29 +26,14 @@ namespace photon
       class canvas&        canvas() const                         { return _canvas; }
       virtual void         override()                             {}
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      // Panels and Frames
-
       color                panel_color                = { 28, 30, 34, 192 };
-
-
-      float                frame_corner_radius        = 3.0;
-      float                frame_stroke_width         = 0.8;
       color                frame_color                = { 220, 220, 220, 70 };
 
-      virtual void         draw_frame(rect b);
-      virtual void         draw_title_bar(rect b);
+      color                controls_color             = color{ 18, 49, 85, 200 };
+      color                indicator_color            = color{ 0, 127, 255, 200 };
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       // Knobs, Sliders and Scrollbars
-
-      color                knob_fill_color            = { 60, 60, 60, 50 };
-      color                knob_outline_color         = { 20, 20, 20, 92 };
-      color                knob_indicator_color       = { 200, 200, 200, 128 };
-
-      virtual void         draw_knob(float pos, rect b);
-      virtual point        draw_knob_indicator(float pos, rect b);
-      virtual bool         knob_hit_test(rect b, point p);
 
       float                slider_knob_radius         = 0.25;  // fraction of size (width or height)
       float                slider_slot_size           = 0.15;  // fraction of size (width or height)

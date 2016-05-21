@@ -30,12 +30,9 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
-   protected:
-
-      double            position() const           { return _pos; }
-      point             indicator_pos() const      { return _indicator_pos; }
-      void              indicator_pos(point pos)   { _indicator_pos = pos; }
-      bool              tracking() const           { return _tracking; }
+      virtual void      draw_knob(theme& thm, float pos, rect b, bool hilite);
+      virtual point     draw_indicator(theme& thm, float pos, rect b, bool hilite);
+      virtual void      draw_gauge(theme& thm, float pos, rect b, bool hilite);
 
    private:
 
@@ -48,4 +45,3 @@ namespace photon
 }
 
 #endif
-

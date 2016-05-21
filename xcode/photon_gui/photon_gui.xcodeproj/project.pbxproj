@@ -24,10 +24,9 @@
 		5D50AAFD1CBCA61C00C53185 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAFC1CBCA61C00C53185 /* IOKit.framework */; };
 		5D50AAFE1CBCA62400C53185 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAF61CBCA35100C53185 /* CoreVideo.framework */; };
 		5D50AB001CBCA6C200C53185 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAFF1CBCA6C100C53185 /* Carbon.framework */; };
-		5D52EE111CF03C030004CC61 /* drawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE101CF03C030004CC61 /* drawing.cpp */; };
-		5D52EE131CF03C120004CC61 /* drawing.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5D52EE121CF03C120004CC61 /* drawing.hpp */; };
 		5D52EE151CF03EAD0004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE141CF03EAD0004CC61 /* basic.cpp */; };
 		5D52EE161CF03EB20004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE141CF03EAD0004CC61 /* basic.cpp */; };
+		5D52EE181CF057B70004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE171CF057B70004CC61 /* basic.cpp */; };
 		5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */; };
 		5D83CFE21CE353200009D9F3 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */; };
 		5D83CFE31CE353200009D9F3 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9F11CBB1AA300ACB621 /* app.cpp */; };
@@ -83,9 +82,8 @@
 		5D50AAFA1CBCA60C00C53185 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5D50AAFC1CBCA61C00C53185 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		5D50AAFF1CBCA6C100C53185 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		5D52EE101CF03C030004CC61 /* drawing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = drawing.cpp; sourceTree = "<group>"; };
-		5D52EE121CF03C120004CC61 /* drawing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawing.hpp; sourceTree = "<group>"; };
 		5D52EE141CF03EAD0004CC61 /* basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic.cpp; path = ../../../src/widget/basic.cpp; sourceTree = "<group>"; };
+		5D52EE171CF057B70004CC61 /* basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic.cpp; sourceTree = "<group>"; };
 		5D6B28071CC8E0CA0034248D /* button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = button.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D736D9A1CCF8C4D006A2B3E /* port.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = port.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D809D111CC3AA97005EE2D2 /* app.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = app.hpp; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 		5D809D191CC3AA97005EE2D2 /* widget */ = {
 			isa = PBXGroup;
 			children = (
-				5D52EE121CF03C120004CC61 /* drawing.hpp */,
 				5D52EE141CF03EAD0004CC61 /* basic.cpp */,
 				5D6B28071CC8E0CA0034248D /* button.hpp */,
 				5D809D1A1CC3AA97005EE2D2 /* align.hpp */,
@@ -238,7 +235,7 @@
 		5D8733F51CBB8B5C0003E9DD /* widget */ = {
 			isa = PBXGroup;
 			children = (
-				5D52EE101CF03C030004CC61 /* drawing.cpp */,
+				5D52EE171CF057B70004CC61 /* basic.cpp */,
 				5D809D241CC3BA7E005EE2D2 /* text.cpp */,
 				5D8733F61CBB8B5C0003E9DD /* widget.cpp */,
 				5D0E99031CBE63BA009B943D /* tile.cpp */,
@@ -301,7 +298,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */,
-				5D52EE131CF03C120004CC61 /* drawing.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D52EE181CF057B70004CC61 /* basic.cpp in Sources */,
 				5D83CFE71CE353260009D9F3 /* text.cpp in Sources */,
 				5D83CFEF1CE353260009D9F3 /* button.cpp in Sources */,
 				5D83CFE31CE353200009D9F3 /* app.cpp in Sources */,
@@ -409,7 +406,6 @@
 				5D4E9F0E1CC2319000239DAE /* context.cpp in Sources */,
 				5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */,
 				5D03A36A1CC994B700329057 /* cursor.cpp in Sources */,
-				5D52EE111CF03C030004CC61 /* drawing.cpp in Sources */,
 				5D2EC9F01CBB0D1A00ACB621 /* window.cpp in Sources */,
 				5D1DFFFA1CD88FEB00B4C91B /* slider.cpp in Sources */,
 				5D1DFFFE1CD8958E00B4C91B /* button.cpp in Sources */,

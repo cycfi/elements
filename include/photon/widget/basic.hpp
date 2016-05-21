@@ -31,6 +31,9 @@ namespace photon
    {
    public:
 
+      static float   corner_radius;
+      static float   stroke_width;
+
       virtual void draw(context const& ctx);
    };
 
@@ -40,6 +43,8 @@ namespace photon
    class title_bar : public widget
    {
    public:
+
+      static float   corner_radius;
 
       virtual void draw(context const& ctx);
    };

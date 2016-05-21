@@ -17,6 +17,10 @@ namespace photon
    class slider : public widget
    {
    public:
+
+      static float     knob_radius;    // fraction of size (width or height)
+      static float     slot_size;      // fraction of size (width or height)
+
                         slider() : _pos(0) {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -26,8 +30,10 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
-      double            position() const  { return _pos; }
-      bool              tracking() const  { return _tracking; }
+      virtual void      draw_slot(theme& thm, rect bounds, float radius);
+      virtual void      draw_knob(theme& thm, float pos, rect bounds, bool hilite);
+      virtual circle    knob_position(theme& thm, float pos, rect bounds);
+      virtual void      draw_gauge(theme& thm, rect bounds, float radius, bool hilite);
 
    private:
 

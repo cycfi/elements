@@ -134,7 +134,7 @@ int main()
             )
          );
 
-         //main_widget = new_(std::move(sl));
+         main_widget = new_(std::move(sl));
       }
       
       {
@@ -146,7 +146,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
 
       {

@@ -350,7 +350,7 @@ int main()
                )
             ;
 
-         main_widget = new_(p);
+         //main_widget = new_(p);
       }
 
       {
@@ -367,7 +367,7 @@ int main()
             )
          );
 
-         //main_widget = new_(txbx);
+         main_widget = new_(txbx);
       }
 
       {

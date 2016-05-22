@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_ICON_APRIL_19_2016
 
 #include <photon/widget/widget.hpp>
+#include <photon/widget/text_utils.hpp>
 #include <memory>
 
 namespace photon
@@ -30,14 +31,14 @@ namespace photon
    template <uint32_t code, int size>
    inline rect icon<code, size>::limits(basic_context const& ctx) const
    {
-      point s = ctx.theme().measure_icon(code, size);
+      point s = text_utils(ctx.theme()).measure_icon(code, size);
       return { s.x, s.y, s.x, s.y };
    }
 
    template <uint32_t code, int size>
    inline void icon<code, size>::draw(context const& ctx)
    {
-      ctx.theme().draw_icon(ctx.bounds, code, size);
+      text_utils(ctx.theme()).draw_icon(ctx.bounds, code, size);
    }
 }
 

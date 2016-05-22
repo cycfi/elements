@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/text.hpp>
+#include <photon/widget/text_utils.hpp>
 #include <photon/widget/margin.hpp>
 #include <photon/widget/layer.hpp>
 
@@ -22,13 +23,13 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect heading::limits(basic_context const& ctx) const
    {
-      point s = ctx.theme().measure_heading(_text.c_str());
+      point s = text_utils(ctx.theme()).measure_heading(_text.c_str());
       return { s.x, s.y, s.x, s.y };
    }
 
    void heading::draw(context const& ctx)
    {
-      ctx.theme().draw_heading(ctx.bounds, _text.c_str());
+      text_utils(ctx.theme()).draw_heading(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,13 +37,13 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect label::limits(basic_context const& ctx) const
    {
-      point s = ctx.theme().measure_label(_text.c_str());
+      point s = text_utils(ctx.theme()).measure_label(_text.c_str());
       return { s.x, s.y, s.x, s.y };
    }
 
    void label::draw(context const& ctx)
    {
-      ctx.theme().draw_label(ctx.bounds, _text.c_str());
+      text_utils(ctx.theme()).draw_label(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,27 +57,27 @@ namespace photon
 
    void static_text_box::draw(context const& ctx)
    {
-      ctx.theme().draw_text_box(ctx.bounds, _text.c_str());
+      text_utils(ctx.theme()).draw_text_box(ctx.bounds, _text.c_str());
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect basic_text_box::limits(basic_context const& ctx) const
    {
       char const* first = &_text[0];
-      theme::text_info info = {
+      text_utils::text_info info = {
          first,
          first + _text.size()
       };
 
       rect  bounds = { 0, 0, _width, full_extent };
-      float height = ctx.theme().edit_text_box_height(bounds, info);
+      float height = text_utils(ctx.theme()).edit_text_box_height(bounds, info);
       return { _width, height, _width, height };
    }
 
    void basic_text_box::draw(context const& ctx)
    {
       char const* first = &_text[0];
-      theme::text_draw_info info = {
+      text_utils::text_draw_info info = {
          first,
          first + _text.size(),
          (_select_start == -1)? 0 : first+_select_start,
@@ -84,7 +85,7 @@ namespace photon
          _select_start != -1 && ctx.window.is_focus(),
          true
       };
-      ctx.theme().draw_edit_text_box(ctx.bounds, info);
+      text_utils(ctx.theme()).draw_edit_text_box(ctx.bounds, info);
    }
 
    widget* basic_text_box::click(context const& ctx, mouse_button btn)
@@ -93,7 +94,7 @@ namespace photon
          return this;
 
       char const* first = &_text[0];
-      theme::text_info info = {
+      text_utils::text_info info = {
          first,
          first + _text.size()
       };
@@ -106,7 +107,8 @@ namespace photon
       }
 
       auto mp = ctx.cursor_pos();
-      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, mp))
+      if (char const* pos =
+         text_utils(ctx.theme()).caret_position(ctx.bounds, info, mp))
       {
          if (btn.num_clicks != 1)
          {
@@ -152,11 +154,12 @@ namespace photon
    void basic_text_box::drag(context const& ctx, mouse_button btn)
    {
       char const* first = &_text[0];
-      theme::text_info info = {
+      text_utils::text_info info = {
          first,
          first + _text.size()
       };
-      if (char const* pos = ctx.theme().caret_position(ctx.bounds, info, ctx.cursor_pos()))
+      if (char const* pos =
+         text_utils(ctx.theme()).caret_position(ctx.bounds, info, ctx.cursor_pos()))
       {
          _select_end = int(pos-first);
          ctx.window.draw();
@@ -224,7 +227,7 @@ namespace photon
       bool save_x = false;
 
       char const* first = &_text[0];
-      theme::text_info info = {
+      text_utils::text_info info = {
          first,
          first + _text.size()
       };
@@ -235,10 +238,11 @@ namespace photon
 
       auto up_down = [this, &info, &ctx, &k, &caret_pos]()
       {
-         auto b = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+         auto b = text_utils(ctx.theme()).glyph_bounds(
+                     ctx.bounds, info, &_text[_select_start]);
          auto y = (k.key == key_code::key_up) ? -b.lineh : +b.lineh;
 
-         char const* cp = ctx.theme()
+         char const* cp = text_utils(ctx.theme())
             .caret_position(ctx.bounds, info, point{ ctx.bounds.left+_current_x, b.y+y });
          if (cp)
          {
@@ -444,12 +448,14 @@ namespace photon
    void basic_text_box::scroll_into_view(context const& ctx, bool save_x)
    {
       char const* first = &_text[0];
-      theme::text_info info = {
+      text_utils::text_info info = {
          first,
          first + _text.size()
       };
 
-      auto glyph_info = ctx.theme().glyph_bounds(ctx.bounds, info, &_text[_select_start]);
+      auto glyph_info =
+         text_utils(ctx.theme()).glyph_bounds(
+            ctx.bounds, info, &_text[_select_start]);
       if (!scrollable::find(ctx).scroll_into_view(glyph_info.bounds()))
          ctx.window.draw();
 
@@ -488,11 +494,11 @@ namespace photon
       if (text().empty())
       {
          char const* first = &_placeholder[0];
-         theme::text_draw_info info = {
+         text_utils::text_draw_info info = {
             first, first + _placeholder.size(),
             first, first, select_start() != -1 && ctx.window.is_focus(), false
          };
-         ctx.theme().draw_edit_text_box(ctx.bounds, info);
+         text_utils(ctx.theme()).draw_edit_text_box(ctx.bounds, info);
       }
       else
       {
@@ -517,6 +523,6 @@ namespace photon
 
    void input_panel::draw(context const& ctx)
    {
-      ctx.theme().draw_edit_box_base(ctx.bounds);
+      text_utils(ctx.theme()).draw_edit_box_base(ctx.bounds);
    }
 }

@@ -60,6 +60,8 @@ namespace photon
    {
    public:
 
+      static float            width;
+
       scroller_base(int traits = 0)
        : _tracking(none)
        , _traits(traits)
@@ -75,6 +77,16 @@ namespace photon
       virtual bool            scroll_into_view(context const& ctx, rect r);
       virtual bool            cursor(context const& ctx, point p);
       virtual bool            is_control() const;
+
+      struct scrollbar_info
+      {
+         double   pos;
+         float    extent;
+         rect     bounds;
+      };
+
+      virtual void            draw_scroll_bar(theme& thm, scrollbar_info const& info, point mp);
+      virtual rect            scroll_bar_position(theme& thm, scrollbar_info const& info);
 
    private:
 

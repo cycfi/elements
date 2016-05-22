@@ -34,16 +34,6 @@ namespace photon
       color                indicator_color            = color{ 0, 127, 255, 200 };
 
       /////////////////////////////////////////////////////////////////////////////////////////////
-      // Knobs, Sliders and Scrollbars
-
-      color                scroll_bar_outline_color   = { 200, 200, 200, 50 };
-      color                scroll_bar_fill_color      = { 0, 0, 0, 120 };
-      float                scroll_bar_width           = 10;
-
-      virtual void         draw_scroll_bar(float pos, float ext, rect b, point mp);
-      virtual rect         scroll_bar_position(float pos, float ext, rect b);
-
-      /////////////////////////////////////////////////////////////////////////////////////////////
       // Text
 
       color                heading_font_color         = { 220, 220, 220, 160 };

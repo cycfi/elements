@@ -44,6 +44,87 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   float scroller_base::width = 10;
+
+   namespace
+   {
+      void draw_scrollbar_fill(canvas& _canvas, rect r)
+      {
+         _canvas.begin_path();
+         _canvas.rect(r);
+         _canvas.fill_color(color{ 200, 200, 200, 30 });
+         _canvas.fill();
+      }
+
+      void draw_scrollbar(
+         canvas& _canvas, rect b, float radius,
+         color outline_color, color fill_color, point mp
+      )
+      {
+         _canvas.begin_path();
+         _canvas.round_rect(b, radius);
+         _canvas.fill_color(fill_color);
+         _canvas.fill();
+
+         if (_canvas.on_fill(mp))
+         {
+            _canvas.fill_color(fill_color.opacity(0.2));
+            _canvas.fill();
+         }
+
+         _canvas.stroke_color(outline_color);
+         _canvas.stroke();
+      }
+   }
+
+   void scroller_base::draw_scroll_bar(theme& thm, scrollbar_info const& info, point mp)
+   {
+      float x = info.bounds.left;
+      float y = info.bounds.top;
+      float w = info.bounds.width();
+      float h = info.bounds.height();
+
+      draw_scrollbar_fill(thm.canvas(), info.bounds);
+
+      if (w > h)
+      {
+         w *= w / info.extent;
+         min_limit(w, 20);
+         x += info.pos * (info.bounds.width()-w);
+      }
+      else
+      {
+         h *= h / info.extent;
+         min_limit(h, 20);
+         y += info.pos * (info.bounds.height()-h);
+      }
+
+      draw_scrollbar(thm.canvas(), rect{ x, y, x+w, y+h }, scroller_base::width/3,
+         thm.frame_color, { 0, 0, 0, 120 }, mp);
+   }
+
+   rect scroller_base::scroll_bar_position(theme& thm, scrollbar_info const& info)
+   {
+      float x = info.bounds.left;
+      float y = info.bounds.top;
+      float w = info.bounds.width();
+      float h = info.bounds.height();
+
+      if (w > h)
+      {
+         w *= w  / info.extent;
+         min_limit(w, 20);
+         x += info.pos * (info.bounds.width()-w);
+      }
+      else
+      {
+         h *= h / info.extent;
+         min_limit(h, 20);
+         y += info.pos * (info.bounds.height()-h);
+      }
+      return rect{ x, y, x+w, y+h };
+   }
+
    rect scroller_base::limits(basic_context const& ctx) const
    {
       rect e_limits = subject().limits(ctx);
@@ -61,7 +142,6 @@ namespace photon
       scrollbar_bounds r;
 
       rect  e_limits = subject().limits(ctx);
-      float scroll_bar_width = ctx.theme().scroll_bar_width;
 
       r.has_h = e_limits.left > ctx.bounds.width() && allow_hscroll();
       r.has_v = e_limits.top > ctx.bounds.height() && allow_vscroll();
@@ -69,10 +149,10 @@ namespace photon
       if (r.has_v)
       {
          r.vscroll_bounds = rect{
-            ctx.bounds.left + ctx.bounds.width() - scroll_bar_width,
+            ctx.bounds.left + ctx.bounds.width() - width,
             ctx.bounds.top,
             ctx.bounds.right,
-            ctx.bounds.bottom - (r.has_h ? scroll_bar_width : 0)
+            ctx.bounds.bottom - (r.has_h ? scroller_base::width : 0)
          };
       }
       else
@@ -84,8 +164,8 @@ namespace photon
       {
          r.hscroll_bounds = rect{
             ctx.bounds.left,
-            ctx.bounds.top + ctx.bounds.height() - scroll_bar_width,
-            ctx.bounds.right - (r.has_v ? scroll_bar_width : 0),
+            ctx.bounds.top + ctx.bounds.height() - scroller_base::width,
+            ctx.bounds.right - (r.has_v ? scroller_base::width : 0),
             ctx.bounds.bottom
          };
       }
@@ -107,10 +187,10 @@ namespace photon
          point             mp = ctx.cursor_pos();
 
          if (sb.has_v)
-            ctx.theme().draw_scroll_bar(valign(), e_limits.top, sb.vscroll_bounds, mp);
+            draw_scroll_bar(ctx.theme(), { valign(), e_limits.top, sb.vscroll_bounds }, mp);
 
          if (sb.has_h)
-            ctx.theme().draw_scroll_bar(halign(), e_limits.left, sb.hscroll_bounds, mp);
+            draw_scroll_bar(ctx.theme(), { halign(), e_limits.left, sb.hscroll_bounds }, mp);
       }
    }
 
@@ -213,7 +293,9 @@ namespace photon
       if (sb.has_v)
       {
          // vertical scroll
-         rect b = ctx.theme().scroll_bar_position(valign(), e_limits.top, sb.vscroll_bounds);
+         rect b = scroll_bar_position(
+            ctx.theme(), { valign(), e_limits.top, sb.vscroll_bounds });
+
          if (_tracking == start)
          {
             if (b.includes(p))
@@ -251,7 +333,9 @@ namespace photon
       if (sb.has_h)
       {
          // horizontal scroll
-         rect b = ctx.theme().scroll_bar_position(halign(), e_limits.left, sb.hscroll_bounds);
+         rect b = scroll_bar_position(
+            ctx.theme(), { halign(), e_limits.left, sb.hscroll_bounds });
+
          if (_tracking == start)
          {
             // start tracking scroll-box
@@ -318,9 +402,9 @@ namespace photon
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
 
          if (sb.has_h)
-            bounds.right -= ctx.theme().scroll_bar_width;
+            bounds.right -= scroller_base::width;
          if (sb.has_v)
-            bounds.bottom -= ctx.theme().scroll_bar_width;
+            bounds.bottom -= scroller_base::width;
       }
 
       if (!bounds.includes(r))

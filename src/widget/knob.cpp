@@ -13,140 +13,142 @@
 
 namespace photon
 {
-   void draw_knob(
-      canvas& canvas_, circle cp, color fill_color)
+   namespace
    {
-      float radius = cp.radius;
-      float shadow = radius/8;
+      void draw_knob(canvas& canvas_, circle cp, color fill_color)
+      {
+         float radius = cp.radius;
+         float shadow = radius/8;
 
-      // Knob Shadow
-      paint shc
-         = canvas_.radial_gradient(
-               point{ cp.cx, cp.cy }, radius, radius+shadow,
-               color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
+         // Knob Shadow
+         paint shc
+            = canvas_.radial_gradient(
+                  point{ cp.cx, cp.cy }, radius, radius+shadow,
+                  color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
+               );
+
+         canvas_.begin_path();
+         canvas_.circle({ cp.cx, cp.cy, radius+shadow });
+         canvas_.circle(cp);
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(shc);
+         canvas_.fill();
+
+         // Knob
+         float    bevel = radius/5;
+
+         paint knob
+            = canvas_.linear_gradient(
+                  point{ cp.cx, cp.cy-(radius-bevel) },
+                  point{ cp.cx, cp.cy+(radius-bevel) },
+                  color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
+               );
+
+         canvas_.begin_path();
+         canvas_.circle({ cp.cx, cp.cy, radius });
+         canvas_.fill_color(fill_color);
+         canvas_.fill();
+         canvas_.fill_paint(knob);
+
+         // Knob bevel
+         paint bvc
+            = canvas_.radial_gradient(
+                  point{ cp.cx, cp.cy }, radius-bevel, radius,
+                  color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
+               );
+
+         canvas_.begin_path();
+         canvas_.circle(cp);
+         canvas_.circle({ cp.cx, cp.cy, radius-bevel });
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(bvc);
+         canvas_.fill();
+
+         // Knob Outline
+         canvas_.begin_path();
+         canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
+         canvas_.stroke_width(2);
+         canvas_.stroke_color(fill_color.level(0.6));
+         canvas_.stroke();
+      }
+
+      point draw_knob_indicator(
+         canvas& canvas_, circle cp, float pos, color indicator_color)
+      {
+         auto state = canvas_.new_state();
+
+         canvas_.translate({ cp.cx, cp.cy });
+
+         float const travel = 0.82;
+         float const rng = (2 * M_PI) * travel;
+         float const offs = (2 * M_PI) * (1-travel)/2;
+         canvas_.rotate(offs + (pos * rng));
+
+         float r = cp.radius;
+         float ind_w = r/8;
+         float ind_h = r/2.5;
+         rect  ind_r = { -ind_w/2, -ind_h/2, ind_w/2, ind_h/2 };
+         ind_r = ind_r.move(0, r*0.7);
+
+         paint gr
+            = canvas_.linear_gradient(
+                  ind_r.top_right(), ind_r.bottom_right(),
+                  color{ 0, 0, 0, 90 }, color{ 127, 127, 127, 90 }
+               );
+
+         canvas_.begin_path();
+         canvas_.round_rect(ind_r, ind_w/3);
+         canvas_.fill_color(indicator_color);
+         canvas_.fill();
+         canvas_.fill_paint(gr);
+
+         float ind_glow = r/12;
+         paint glow_paint
+            = canvas_.box_gradient(ind_r.inset(-ind_glow/4, -ind_glow/4)
+             , ind_glow, ind_glow, indicator_color, color(0, 0, 0, 0)
             );
 
-      canvas_.begin_path();
-      canvas_.circle({ cp.cx, cp.cy, radius+shadow });
-      canvas_.circle(cp);
-      canvas_.path_winding(canvas::hole);
-      canvas_.fill_paint(shc);
-      canvas_.fill();
+         canvas_.begin_path();
+         canvas_.rect(ind_r.inset(-ind_glow, -ind_glow));
+         canvas_.round_rect(ind_r, ind_w/3);
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(glow_paint);
+         canvas_.fill();
 
-      // Knob
-      float    bevel = radius/5;
+         return canvas_.transform_point(center_point(ind_r));
+      }
 
-      paint knob
-         = canvas_.linear_gradient(
-               point{ cp.cx, cp.cy-(radius-bevel) },
-               point{ cp.cx, cp.cy+(radius-bevel) },
-               color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
-            );
+      void draw_knob_gauge(
+         canvas& canvas_, float pos, circle cp
+       , color fill_color, color controls_color, color indicator_color)
+      {
+         auto state = canvas_.new_state();
 
-      canvas_.begin_path();
-      canvas_.circle({ cp.cx, cp.cy, radius });
-      canvas_.fill_color(fill_color);
-      canvas_.fill();
-      canvas_.fill_paint(knob);
+         float const travel = 0.82;
+         float const rng = (2 * M_PI) * travel;
+         float const offs = (M_PI/2) + ((2 * M_PI) * (1-travel)/2);
+         float const pos_ = offs + (pos * rng);
 
-      // Knob bevel
-      paint bvc
-         = canvas_.radial_gradient(
-               point{ cp.cx, cp.cy }, radius-bevel, radius,
-               color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
-            );
+         paint grad
+            = canvas_.linear_gradient(
+                  point{ cp.cx-cp.radius, cp.cy }, point{ cp.cx+cp.radius, cp.cy },
+                  fill_color.level(1.5), indicator_color.level(1.5)
+               );
 
-      canvas_.begin_path();
-      canvas_.circle(cp);
-      canvas_.circle({ cp.cx, cp.cy, radius-bevel });
-      canvas_.path_winding(canvas::hole);
-      canvas_.fill_paint(bvc);
-      canvas_.fill();
+         canvas_.begin_path();
+         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, offs +  rng);
+         canvas_.stroke_width(cp.radius/5);
+         canvas_.stroke_color(controls_color.opacity(0.2));
+         canvas_.stroke();
 
-      // Knob Outline
-      canvas_.begin_path();
-      canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
-      canvas_.stroke_width(2);
-      canvas_.stroke_color(fill_color.level(0.6));
-      canvas_.stroke();
-   }
-
-   point draw_knob_indicator(
-      canvas& canvas_, circle cp, float pos, color indicator_color)
-   {
-      auto state = canvas_.new_state();
-
-      canvas_.translate({ cp.cx, cp.cy });
-
-      float const travel = 0.82;
-      float const rng = (2 * M_PI) * travel;
-      float const offs = (2 * M_PI) * (1-travel)/2;
-      canvas_.rotate(offs + (pos * rng));
-
-      float r = cp.radius;
-      float ind_w = r/8;
-      float ind_h = r/2.5;
-      rect  ind_r = { -ind_w/2, -ind_h/2, ind_w/2, ind_h/2 };
-      ind_r = ind_r.move(0, r*0.7);
-
-      paint gr
-         = canvas_.linear_gradient(
-               ind_r.top_right(), ind_r.bottom_right(),
-               color{ 0, 0, 0, 90 }, color{ 127, 127, 127, 90 }
-            );
-
-      canvas_.begin_path();
-      canvas_.round_rect(ind_r, ind_w/3);
-      canvas_.fill_color(indicator_color);
-      canvas_.fill();
-      canvas_.fill_paint(gr);
-
-      float ind_glow = r/12;
-      paint glow_paint
-         = canvas_.box_gradient(ind_r.inset(-ind_glow/4, -ind_glow/4)
-          , ind_glow, ind_glow, indicator_color, color(0, 0, 0, 0)
-         );
-
-      canvas_.begin_path();
-      canvas_.rect(ind_r.inset(-ind_glow, -ind_glow));
-      canvas_.round_rect(ind_r, ind_w/3);
-      canvas_.path_winding(canvas::hole);
-      canvas_.fill_paint(glow_paint);
-      canvas_.fill();
-
-      return canvas_.transform_point(center_point(ind_r));
-   }
-
-   void draw_knob_gauge(
-      canvas& canvas_, float pos, circle cp
-    , color fill_color, color controls_color, color indicator_color)
-   {
-      auto state = canvas_.new_state();
-
-      float const travel = 0.82;
-      float const rng = (2 * M_PI) * travel;
-      float const offs = (M_PI/2) + ((2 * M_PI) * (1-travel)/2);
-      float const pos_ = offs + (pos * rng);
-
-      paint grad
-         = canvas_.linear_gradient(
-               point{ cp.cx-cp.radius, cp.cy }, point{ cp.cx+cp.radius, cp.cy },
-               fill_color.level(1.5), indicator_color.level(1.5)
-            );
-
-      canvas_.begin_path();
-      canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, offs +  rng);
-      canvas_.stroke_width(cp.radius/5);
-      canvas_.stroke_color(controls_color.opacity(0.2));
-      canvas_.stroke();
-
-      canvas_.begin_path();
-      canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, pos_);
-      canvas_.stroke_width(cp.radius/5);
-      canvas_.stroke_color(controls_color);
-      canvas_.stroke();
-      canvas_.stroke_paint(grad);
-      canvas_.stroke();
+         canvas_.begin_path();
+         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, pos_);
+         canvas_.stroke_width(cp.radius/5);
+         canvas_.stroke_color(controls_color);
+         canvas_.stroke();
+         canvas_.stroke_paint(grad);
+         canvas_.stroke();
+      }
    }
 
    void knob::draw_knob(theme& thm, float pos, rect b, bool hilite)
@@ -154,12 +156,12 @@ namespace photon
       auto     c = center_point(b);
       auto     r = std::min(b.width(), b.height())/2;
       circle   cp = { c.x, c.y, r };
-      auto     controls_color_ = thm.controls_color;
+      auto     controls_color = thm.controls_color;
 
       if (hilite)
-         controls_color_ = controls_color_.opacity(0.5).level(1.5);
+         controls_color = controls_color.opacity(0.5).level(1.5);
 
-      photon::draw_knob(thm.canvas(), cp, controls_color_);
+      photon::draw_knob(thm.canvas(), cp, controls_color);
    }
 
    point knob::draw_indicator(theme& thm, float pos, rect b, bool hilite)
@@ -167,12 +169,12 @@ namespace photon
       auto     c = center_point(b);
       auto     r = std::min(b.width(), b.height())/2;
       circle   cp = { c.x, c.y, r };
-      auto     indicator_color_ = thm.indicator_color.level(1.5);
+      auto     indicator_color = thm.indicator_color.level(1.5);
 
       if (hilite)
-         indicator_color_ = indicator_color_.opacity(1).level(2.0f);
+         indicator_color = indicator_color.opacity(1).level(2.0);
 
-      return draw_knob_indicator(thm.canvas(), cp, pos, indicator_color_);
+      return draw_knob_indicator(thm.canvas(), cp, pos, indicator_color);
    }
 
    void knob::draw_gauge(theme& thm, float pos, rect b, bool hilite)
@@ -181,12 +183,12 @@ namespace photon
       auto  r = std::min(b.width(), b.height())/2;
       auto  cp = circle{ c.x, c.y, r };
 
-      auto  controls_color = thm.controls_color.opacity(1).level(2);
-      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  controls_color = thm.controls_color.opacity(1);
+      auto  indicator_color = thm.indicator_color;
 
       if (hilite)
       {
-         controls_color = controls_color.opacity(1).level(1.5);
+         controls_color = controls_color.opacity(1).level(2.0);
          indicator_color = indicator_color.opacity(1).level(1.3);
       }
 

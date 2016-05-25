@@ -158,7 +158,34 @@ int main()
          auto sl = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 20, 20, 20, 20 }, knob()),
+               htile(
+                  margin({ 20, 20, 20, 20 }, slider{}),
+                  margin({ 20, 20, 20, 20 }, knob{})
+               ),
+               panel{}
+            )
+         );
+
+         main_widget = new_(std::move(sl));
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 20, 20, 20, 20 }, slider{}),
+               panel{}
+            )
+         );
+
+         //main_widget = new_(std::move(sl));
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 20, 20, 20, 20 }, knob{}),
                panel{}
             )
          );
@@ -367,7 +394,7 @@ int main()
             )
          );
 
-         main_widget = new_(txbx);
+         //main_widget = new_(txbx);
       }
 
       {

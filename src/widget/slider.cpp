@@ -15,133 +15,157 @@ namespace photon
    float slider::knob_radius  = 0.25;  // fraction of size (width or height)
    float slider::slot_size    = 0.15;  // fraction of size (width or height)
 
-   void draw_slider_slot(canvas& canvas_, rect bounds, float r)
+   namespace
    {
-      paint bg
-         = canvas_.box_gradient(bounds.inset(0.5, 0.5).move(1, 1), r, 2
-          , color(0, 0, 0, 32), color(0, 0, 0, 128)
-         );
-
-      canvas_.begin_path();
-      canvas_.round_rect(bounds, r);
-      canvas_.fill_paint(bg);
-      canvas_.fill();
-   }
-
-   void draw_slider_knob(canvas& canvas_, circle cp, color color_)
-   {
-      // Knob Shadow
-      paint bg
-         = canvas_.radial_gradient(
-               point{ cp.cx, cp.cy+1 }, cp.radius-3, cp.radius+3,
-               color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
-            );
-
-      canvas_.begin_path();
-      canvas_.rect(cp.bounds().inset(-3, -3).move(-3, -3));
-      canvas_.circle(cp);
-      canvas_.path_winding(canvas::hole);
-      canvas_.fill_paint(bg);
-      canvas_.fill();
-
-      // Knob
-      paint knob
-         = canvas_.linear_gradient(
-               point{ cp.cx, cp.cy-cp.radius }, point{ cp.cx, cp.cy+cp.radius },
-               color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
-            );
-
-      canvas_.begin_path();
-      canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1 });
-      canvas_.fill_color(color_);
-      canvas_.fill();
-      canvas_.fill_paint(knob);
-      canvas_.fill();
-
-      canvas_.begin_path();
-      canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-0.5f });
-      canvas_.stroke_color(color_.level(0.6));
-      canvas_.stroke_width(1.0f);
-      canvas_.stroke();
-   }
-
-   void draw_slider_knob_dot(canvas& canvas_, circle cp, color color_)
-   {
-      canvas_.begin_path();
-      canvas_.circle(cp);
-      canvas_.fill_color(color_.level(1.5));
-      canvas_.fill();
-
-      float glow = 1.4;
-      paint glow_paint
-         = canvas_.radial_gradient({ cp.cx, cp.cy }
-          , cp.radius, cp.radius*glow, color_, color(0, 0, 0, 0)
-         );
-
-      canvas_.begin_path();
-      canvas_.circle({ cp.cx, cp.cy, cp.radius*glow });
-      canvas_.circle(cp);
-      canvas_.path_winding(canvas::hole);
-      canvas_.fill_paint(glow_paint);
-      canvas_.fill();
-   }
-
-   void draw_slider_gauge(
-      canvas& canvas_, circle pos, rect bounds,
-      float r, color color_, color indicator_color)
-   {
-      auto  from = (bounds.width() > bounds.height())
-         ? bounds.top_left() : bounds.bottom_left();
-      auto  to = (bounds.width() > bounds.height())
-         ? bounds.top_right() : bounds.top_left();
-
-      paint grad
-         = canvas_.linear_gradient(
-               from, to,
-               color_.level(1.5), indicator_color.level(1.5)
-            );
-
-      if (bounds.width() > bounds.height())
-         bounds.right = pos.cx;
-      else
-         bounds.top = pos.cy;
-
-      canvas_.begin_path();
-      canvas_.round_rect(bounds, r);
-      canvas_.fill_paint(grad);
-      canvas_.fill();
-   }
-
-   circle slider_knob_position(canvas& canvas_, float pos, rect bounds, float radius)
-   {
-      float x = bounds.left;
-      float y = bounds.top;
-      float w = bounds.width();
-      float h = bounds.height();
-
-      if (w > h)
+      void draw_knob(canvas& canvas_, circle cp, color fill_color)
       {
-         // horizontal
-         float    cy = y + h * 0.5;
-         float    kr = h * radius;
+         float radius = cp.radius;
+         float shadow = radius/8;
 
-         // inset by radius;
-         w -= kr * 2;
-         x += kr;
+         // Knob Shadow
+         paint shc
+            = canvas_.radial_gradient(
+                  point{ cp.cx, cp.cy }, radius, radius+shadow,
+                  color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
+               );
 
-         return { x+(pos*w), cy, kr };
+         canvas_.begin_path();
+         canvas_.circle({ cp.cx, cp.cy, radius+shadow });
+         canvas_.circle(cp);
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(shc);
+         canvas_.fill();
+
+         // Knob
+         float    bevel = radius/5;
+
+         paint knob
+            = canvas_.linear_gradient(
+                  point{ cp.cx, cp.cy-(radius-bevel) },
+                  point{ cp.cx, cp.cy+(radius-bevel) },
+                  color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
+               );
+
+         canvas_.begin_path();
+         canvas_.circle({ cp.cx, cp.cy, radius });
+         canvas_.fill_color(fill_color);
+         canvas_.fill();
+         canvas_.fill_paint(knob);
+
+         // Knob bevel
+         paint bvc
+            = canvas_.radial_gradient(
+                  point{ cp.cx, cp.cy }, radius-bevel, radius,
+                  color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
+               );
+
+         canvas_.begin_path();
+         canvas_.circle(cp);
+         canvas_.circle({ cp.cx, cp.cy, radius-bevel });
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(bvc);
+         canvas_.fill();
+
+         // Knob Outline
+         canvas_.begin_path();
+         canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
+         canvas_.stroke_width(2);
+         canvas_.stroke_color(fill_color.level(0.6));
+         canvas_.stroke();
       }
-      else
+
+      void draw_slider_slot(canvas& canvas_, rect bounds, float r)
       {
-         // vertical
-         float    cx = x + w * 0.5;
-         float    kr = w * radius;
+         paint bg
+            = canvas_.box_gradient(bounds.inset(0.5, 0.5).move(1, 1), r, 2
+             , color(0, 0, 0, 32), color(0, 0, 0, 128)
+            );
 
-         // inset by radius;
-         h -= kr * 2;
-         y += kr;
+         canvas_.begin_path();
+         canvas_.round_rect(bounds, r);
+         canvas_.fill_paint(bg);
+         canvas_.fill();
+      }
 
-         return { cx, y+h-(pos*h), kr };
+      void draw_slider_knob_dot(canvas& canvas_, circle cp, color color_)
+      {
+         canvas_.begin_path();
+         canvas_.circle(cp);
+         canvas_.fill_color(color_);
+         canvas_.fill();
+
+         float glow = 1.4;
+         paint glow_paint
+            = canvas_.radial_gradient({ cp.cx, cp.cy }
+             , cp.radius, cp.radius*glow, color_, color(0, 0, 0, 0)
+            );
+
+         canvas_.begin_path();
+         canvas_.circle({ cp.cx, cp.cy, cp.radius*glow });
+         canvas_.circle(cp);
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(glow_paint);
+         canvas_.fill();
+      }
+
+      void draw_slider_gauge(
+         canvas& canvas_, circle pos, rect bounds,
+         float r, color color_, color indicator_color)
+      {
+         auto  from = (bounds.width() > bounds.height())
+            ? bounds.top_left() : bounds.bottom_left();
+         auto  to = (bounds.width() > bounds.height())
+            ? bounds.top_right() : bounds.top_left();
+
+         paint grad
+            = canvas_.linear_gradient(
+                  from, to,
+                  color_, indicator_color.level(1.5)
+               );
+
+         if (bounds.width() > bounds.height())
+            bounds.right = pos.cx;
+         else
+            bounds.top = pos.cy;
+
+         canvas_.begin_path();
+         canvas_.round_rect(bounds, r);
+         canvas_.fill_paint(grad);
+         canvas_.fill();
+      }
+
+      circle slider_knob_position(
+         canvas& canvas_, float pos, rect bounds, float radius)
+      {
+         float x = bounds.left;
+         float y = bounds.top;
+         float w = bounds.width();
+         float h = bounds.height();
+
+         if (w > h)
+         {
+            // horizontal
+            float    cy = y + h * 0.5;
+            float    kr = h * radius;
+
+            // inset by radius;
+            w -= kr * 2;
+            x += kr;
+
+            return { x+(pos*w), cy, kr };
+         }
+         else
+         {
+            // vertical
+            float    cx = x + w * 0.5;
+            float    kr = w * radius;
+
+            // inset by radius;
+            h -= kr * 2;
+            y += kr;
+
+            return { cx, y+h-(pos*h), kr };
+         }
       }
    }
 
@@ -164,18 +188,18 @@ namespace photon
 
    void slider::draw_knob(theme& thm, float pos, rect bounds, bool hilite)
    {
-      circle   c = knob_position(thm, pos, bounds);
-      circle   dotc = { c.cx, c.cy, c.radius / 3 };
-      auto     indicator_color = thm.indicator_color;
-      auto     controls_color = thm.controls_color.opacity(1.0f).level(1.5);
+      circle   cp = knob_position(thm, pos, bounds);
+      circle   dotc = { cp.cx, cp.cy, cp.radius / 3 };
+      auto     indicator_color = thm.indicator_color.level(1.5);
+      auto     controls_color = thm.controls_color.opacity(1.0);
 
       if (hilite)
       {
-         controls_color = controls_color.opacity(1).level(1.5);
-         indicator_color = indicator_color.opacity(1).level(1.5);
+         controls_color = controls_color.level(1.5);
+         indicator_color = indicator_color.opacity(1).level(2.0);
       }
 
-      draw_slider_knob(thm.canvas(), c, controls_color);
+      photon::draw_knob(thm.canvas(), cp, controls_color);
       draw_slider_knob_dot(thm.canvas(), dotc, indicator_color);
    }
 
@@ -187,13 +211,13 @@ namespace photon
    void slider::draw_gauge(theme& thm, rect bounds, float radius, bool hilite)
    {
       auto     indicator_color = thm.indicator_color;
-      auto     controls_color = thm.controls_color.opacity(1.0f);
+      auto     controls_color = thm.controls_color.opacity(1.0);
       circle   pos = knob_position(thm, _pos, bounds);
 
       if (hilite)
       {
          controls_color = controls_color.opacity(1).level(1.5);
-         indicator_color = indicator_color.opacity(1).level(1.5);
+         indicator_color = indicator_color.opacity(1).level(1.3);
       }
 
       draw_slider_gauge(

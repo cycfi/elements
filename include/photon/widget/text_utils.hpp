@@ -20,8 +20,6 @@ namespace photon
                             : _theme(theme_)
                            {}
 
-      virtual              ~text_utils() {}
-
       class theme const&   theme() const { return _theme; }
       class canvas&        canvas() const { return _theme.canvas(); }
 

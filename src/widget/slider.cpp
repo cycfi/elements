@@ -12,67 +12,278 @@
 
 namespace photon
 {
-   float slider::knob_radius  = 0.25;  // fraction of size (width or height)
+   float slider::aspect_ratio    = 0.2;   // the slider's aspect ratio
+   float slider::slot_size       = 0.3;   // fraction of width
+   float slider::knob_size       = 0.6;   // fraction of size (width or height)
+
+   namespace
+   {
+      void draw_em(canvas& canvas_, rect bounds)
+      {
+         canvas_.begin_path();
+         canvas_.rect(bounds);
+         canvas_.stroke_color(colors::white.opacity(0.5));
+         canvas_.stroke_width(1);
+         canvas_.stroke();
+      }
+   }
+
+   rect slider::limits(basic_context const& ctx) const
+   {
+      return { 32, 32, full_extent, full_extent };
+   }
+
+   namespace
+   {
+      // calculates the slider rectangles for its bounds, slot and knob
+      struct slider_bounds
+      {
+         slider_bounds(context const& ctx, double _pos)
+          : bounds(ctx.bounds)
+          , slot_r(ctx.bounds)
+         {
+            auto  w = bounds.width();
+            auto  h = bounds.height();
+
+            if (w > h)
+            {
+               bounds.height(std::min(w * slider::aspect_ratio, h));
+               bounds = center_v(bounds, ctx.bounds);
+
+               slot_r.height(bounds.height() * slider::slot_size);
+               slot_r = center_v(slot_r, ctx.bounds);
+
+               knob_r = bounds;
+               knob_r.width(bounds.height() * slider::knob_size);
+               knob_r = align_h(knob_r, ctx.bounds, _pos);
+            }
+            else
+            {
+               bounds.width(std::min(h * slider::aspect_ratio, w));
+               bounds = center_h(bounds, ctx.bounds);
+
+               slot_r.width(bounds.width() * slider::slot_size);
+               slot_r = center_h(slot_r, ctx.bounds);
+
+               knob_r = bounds;
+               knob_r.height(bounds.width() * slider::knob_size);
+               knob_r = align_v(knob_r, ctx.bounds, 1.0-_pos);
+            }
+         }
+
+         rect  bounds;
+         rect  slot_r;
+         rect  knob_r;
+      };
+
+      void draw_slider_slot(
+         canvas& canvas_, point pos, rect bounds,
+         color controls_color, color indicator_color)
+      {
+         bool  h = bounds.width() > bounds.height();
+         auto  from = h ? bounds.top_left() : bounds.bottom_left();
+         auto  to = h ? bounds.top_right() : bounds.top_left();
+
+         paint grad
+            = canvas_.linear_gradient(
+                  from, to,
+                  controls_color, indicator_color.level(1.5)
+               );
+
+         //auto state = canvas_.new_state();
+
+
+         canvas_.begin_path();
+         canvas_.rect(bounds);
+         canvas_.fill_color(controls_color.opacity(0.6));
+         canvas_.fill();
+
+         rect  ind_r = bounds;
+         if (h)
+            ind_r.right = pos.x;
+         else
+            ind_r.top = pos.y;
+
+         //canvas_.clip(ind_r);
+         canvas_.begin_path();
+         canvas_.rect(ind_r);
+         canvas_.fill_paint(grad);
+         canvas_.fill();
+      }
+   }
+
+   void slider::draw(context const& ctx)
+   {
+      bool           hilite = _tracking || hit_test(ctx, ctx.cursor_pos());
+      slider_bounds  sl_pos{ ctx, _pos };
+
+      //draw_em(ctx.theme().canvas(), bounds);
+      draw_slot(ctx.theme(), _pos, sl_pos.knob_r, sl_pos.slot_r, hilite);
+      draw_knob(ctx.theme(), _pos, sl_pos.knob_r, hilite);
+   }
+
+   void slider::draw_slot(theme& thm, float pos, rect knob_r, rect bounds, bool hilite)
+   {
+      auto  indicator_color = thm.indicator_color;
+      auto  controls_color = thm.controls_color.opacity(1.0);
+
+      if (hilite)
+      {
+         controls_color = controls_color.level(1.5);
+         indicator_color = indicator_color.level(1.3);
+      }
+
+      draw_slider_slot(
+         thm.canvas(), center_point(knob_r), bounds,
+         controls_color, indicator_color
+      );
+
+      //draw_em(thm.canvas(), bounds);
+   }
+
+   void slider::draw_knob(theme& thm, float pos, rect bounds, bool hilite)
+   {
+      draw_em(thm.canvas(), bounds);
+   }
+
+   widget* slider::hit_test(context const& ctx, point p)
+   {
+      if (ctx.bounds.includes(p))
+      {
+         slider_bounds  sl_pos{ ctx, _pos };
+         if (sl_pos.bounds.includes(p))
+            return this;
+      }
+      return 0;
+   }
+
+   widget* slider::click(context const& ctx, mouse_button btn)
+   {
+      point          p = ctx.cursor_pos();
+      slider_bounds  sl_pos{ ctx, _pos };
+      _tracking = btn.is_pressed;
+
+      // If the mouse is inside the knob, record the offset from
+      // the knob's center. We'll use this offset to compensate for
+      // mouse tracking in the reposition function to avoid sudden knob
+      // movements.
+      if (sl_pos.knob_r.includes(p))
+      {
+         auto cp = center_point(sl_pos.knob_r);
+         _offset = point{ p.x-cp.x, p.y-cp.y };
+      }
+      else
+      {
+         _offset = point{};
+      }
+
+      reposition(ctx);
+      return this;
+   }
+
+   void slider::drag(context const& ctx, mouse_button btn)
+   {
+      if (_tracking)
+         reposition(ctx);
+   }
+
+   bool slider::is_control() const
+   {
+      return true;
+   }
+
+   void slider::reposition(context const& ctx)
+   {
+      slider_bounds  sl_pos{ ctx, _pos };
+      double         w = ctx.bounds.width();
+      double         h = ctx.bounds.height();
+
+      // See comment in the click function. We subtract the offset to
+      // compensate for mouse tracking to avoid sudden knob movements.
+      point mp = ctx.cursor_pos();
+      mp = mp.move(-_offset.x, -_offset.y);
+
+      if (w > h)
+      {
+         // inset by knob size;
+         double kw = sl_pos.knob_r.width();
+         w -= kw;
+         _pos = (mp.x - (sl_pos.bounds.left + kw/2)) / w;
+      }
+      else
+      {
+         // inset by knob size;
+         double kh = sl_pos.knob_r.height();
+         h -= kh;
+         _pos = 1.0-((mp.y - (sl_pos.bounds.top + kh/2)) / h);
+      }
+
+      limit(_pos, 0.0, 1.0);
+      ctx.window.draw();
+   }
+
+/*
+   float slider::knob_size  = 0.25;  // fraction of size (width or height)
    float slider::slot_size    = 0.15;  // fraction of size (width or height)
 
    namespace
    {
-      void draw_knob(canvas& canvas_, circle cp, color fill_color)
-      {
-         float radius = cp.radius;
-         float shadow = radius/8;
-
-         // Knob Shadow
-         paint shc
-            = canvas_.radial_gradient(
-                  point{ cp.cx, cp.cy }, radius, radius+shadow,
-                  color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
-               );
-
-         canvas_.begin_path();
-         canvas_.circle({ cp.cx, cp.cy, radius+shadow });
-         canvas_.circle(cp);
-         canvas_.path_winding(canvas::hole);
-         canvas_.fill_paint(shc);
-         canvas_.fill();
-
-         // Knob
-         float    bevel = radius/5;
-
-         paint knob
-            = canvas_.linear_gradient(
-                  point{ cp.cx, cp.cy-(radius-bevel) },
-                  point{ cp.cx, cp.cy+(radius-bevel) },
-                  color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
-               );
-
-         canvas_.begin_path();
-         canvas_.circle({ cp.cx, cp.cy, radius });
-         canvas_.fill_color(fill_color);
-         canvas_.fill();
-         canvas_.fill_paint(knob);
-
-         // Knob bevel
-         paint bvc
-            = canvas_.radial_gradient(
-                  point{ cp.cx, cp.cy }, radius-bevel, radius,
-                  color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
-               );
-
-         canvas_.begin_path();
-         canvas_.circle(cp);
-         canvas_.circle({ cp.cx, cp.cy, radius-bevel });
-         canvas_.path_winding(canvas::hole);
-         canvas_.fill_paint(bvc);
-         canvas_.fill();
-
-         // Knob Outline
-         canvas_.begin_path();
-         canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
-         canvas_.stroke_width(2);
-         canvas_.stroke_color(fill_color.level(0.6));
-         canvas_.stroke();
-      }
+      //void draw_slider_knob(canvas& canvas_, circle cp, color fill_color)
+      //{
+      //   float radius = cp.radius;
+      //   float shadow = radius/8;
+      //
+      //   // Knob Shadow
+      //   paint shc
+      //      = canvas_.radial_gradient(
+      //            point{ cp.cx, cp.cy }, radius, radius+shadow,
+      //            color{ 0, 0, 0, 64 }, color{ 0, 0, 0, 0 }
+      //         );
+      //
+      //   canvas_.begin_path();
+      //   canvas_.circle({ cp.cx, cp.cy, radius+shadow });
+      //   canvas_.circle(cp);
+      //   canvas_.path_winding(canvas::hole);
+      //   canvas_.fill_paint(shc);
+      //   canvas_.fill();
+      //
+      //   // Knob
+      //   float    bevel = radius/5;
+      //
+      //   paint knob
+      //      = canvas_.linear_gradient(
+      //            point{ cp.cx, cp.cy-(radius-bevel) },
+      //            point{ cp.cx, cp.cy+(radius-bevel) },
+      //            color{ 255, 255, 255, 16 }, color{ 0, 0, 0, 16 }
+      //         );
+      //
+      //   canvas_.begin_path();
+      //   canvas_.circle({ cp.cx, cp.cy, radius });
+      //   canvas_.fill_color(fill_color);
+      //   canvas_.fill();
+      //   canvas_.fill_paint(knob);
+      //
+      //   // Knob bevel
+      //   paint bvc
+      //      = canvas_.radial_gradient(
+      //            point{ cp.cx, cp.cy }, radius-bevel, radius,
+      //            color{ 0, 0, 0, 0 }, color{ 0, 0, 0, 64 }
+      //         );
+      //
+      //   canvas_.begin_path();
+      //   canvas_.circle(cp);
+      //   canvas_.circle({ cp.cx, cp.cy, radius-bevel });
+      //   canvas_.path_winding(canvas::hole);
+      //   canvas_.fill_paint(bvc);
+      //   canvas_.fill();
+      //
+      //   // Knob Outline
+      //   canvas_.begin_path();
+      //   canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
+      //   canvas_.stroke_width(2);
+      //   canvas_.stroke_color(fill_color.level(0.6));
+      //   canvas_.stroke();
+      //}
 
       void draw_slider_slot(canvas& canvas_, rect bounds, float r)
       {
@@ -87,29 +298,29 @@ namespace photon
          canvas_.fill();
       }
 
-      void draw_slider_knob_dot(canvas& canvas_, circle cp, color color_)
-      {
-         canvas_.begin_path();
-         canvas_.circle(cp);
-         canvas_.fill_color(color_);
-         canvas_.fill();
-
-         float glow = 1.4;
-         paint glow_paint
-            = canvas_.radial_gradient({ cp.cx, cp.cy }
-             , cp.radius, cp.radius*glow, color_, color(0, 0, 0, 0)
-            );
-
-         canvas_.begin_path();
-         canvas_.circle({ cp.cx, cp.cy, cp.radius*glow });
-         canvas_.circle(cp);
-         canvas_.path_winding(canvas::hole);
-         canvas_.fill_paint(glow_paint);
-         canvas_.fill();
-      }
+      //void draw_slider_knob_dot(canvas& canvas_, circle cp, color color_)
+      //{
+      //   canvas_.begin_path();
+      //   canvas_.circle(cp);
+      //   canvas_.fill_color(color_);
+      //   canvas_.fill();
+      //
+      //   float glow = 1.4;
+      //   paint glow_paint
+      //      = canvas_.radial_gradient({ cp.cx, cp.cy }
+      //       , cp.radius, cp.radius*glow, color_, color(0, 0, 0, 0)
+      //      );
+      //
+      //   canvas_.begin_path();
+      //   canvas_.circle({ cp.cx, cp.cy, cp.radius*glow });
+      //   canvas_.circle(cp);
+      //   canvas_.path_winding(canvas::hole);
+      //   canvas_.fill_paint(glow_paint);
+      //   canvas_.fill();
+      //}
 
       void draw_slider_gauge(
-         canvas& canvas_, circle pos, rect bounds,
+         canvas& canvas_, point pos, rect bounds,
          float r, color color_, color indicator_color)
       {
          auto  from = (bounds.width() > bounds.height())
@@ -123,10 +334,20 @@ namespace photon
                   color_, indicator_color.level(1.5)
                );
 
+         //if (bounds.width() > bounds.height())
+         //   bounds.right = pos.x;
+         //else
+         //   bounds.top = pos.y;
+
+         auto state = canvas_.new_state();
+         rect  clip_r = bounds;
+
          if (bounds.width() > bounds.height())
-            bounds.right = pos.cx;
+            clip_r.left = pos.x;
          else
-            bounds.top = pos.cy;
+            clip_r.top = pos.y;
+
+         canvas_.clip(clip_r);
 
          canvas_.begin_path();
          canvas_.round_rect(bounds, r);
@@ -135,7 +356,7 @@ namespace photon
       }
 
       circle slider_knob_position(
-         canvas& canvas_, float pos, rect bounds, float radius)
+         canvas& canvas_, float pos, rect bounds, float size)
       {
          float x = bounds.left;
          float y = bounds.top;
@@ -146,9 +367,9 @@ namespace photon
          {
             // horizontal
             float    cy = y + h * 0.5;
-            float    kr = h * radius;
+            float    kr = h * size;
 
-            // inset by radius;
+            // inset by size;
             w -= kr * 2;
             x += kr;
 
@@ -158,9 +379,9 @@ namespace photon
          {
             // vertical
             float    cx = x + w * 0.5;
-            float    kr = w * radius;
+            float    kr = w * size;
 
-            // inset by radius;
+            // inset by size;
             h -= kr * 2;
             y += kr;
 
@@ -199,20 +420,20 @@ namespace photon
          indicator_color = indicator_color.opacity(1).level(2.0);
       }
 
-      photon::draw_knob(thm.canvas(), cp, controls_color);
-      draw_slider_knob_dot(thm.canvas(), dotc, indicator_color);
+      //draw_slider_knob(thm.canvas(), cp, controls_color);
+      //draw_slider_knob_dot(thm.canvas(), dotc, indicator_color);
    }
 
    circle slider::knob_position(theme& thm, float pos, rect bounds)
    {
-      return slider_knob_position(thm.canvas(), pos, bounds, knob_radius);
+      return slider_knob_position(thm.canvas(), pos, bounds, knob_size);
    }
 
    void slider::draw_gauge(theme& thm, rect bounds, float radius, bool hilite)
    {
-      auto     indicator_color = thm.indicator_color;
-      auto     controls_color = thm.controls_color.opacity(1.0);
-      circle   pos = knob_position(thm, _pos, bounds);
+      auto  indicator_color = thm.indicator_color;
+      auto  controls_color = thm.controls_color.opacity(1.0);
+      auto  pos = knob_position(thm, _pos, bounds);
 
       if (hilite)
       {
@@ -221,7 +442,7 @@ namespace photon
       }
 
       draw_slider_gauge(
-         thm.canvas(), pos, bounds, radius,
+         thm.canvas(), { pos.cx, pos.cy }, bounds, radius,
          controls_color, indicator_color
       );
    }
@@ -319,4 +540,7 @@ namespace photon
    {
       return true;
    }
+*/
+
+
 }

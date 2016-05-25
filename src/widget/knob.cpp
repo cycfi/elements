@@ -120,7 +120,7 @@ namespace photon
 
       void draw_knob_gauge(
          canvas& canvas_, float pos, circle cp
-       , color fill_color, color controls_color, color indicator_color)
+       , color controls_color, color indicator_color)
       {
          auto state = canvas_.new_state();
 
@@ -132,20 +132,20 @@ namespace photon
          paint grad
             = canvas_.linear_gradient(
                   point{ cp.cx-cp.radius, cp.cy }, point{ cp.cx+cp.radius, cp.cy },
-                  fill_color.level(1.5), indicator_color.level(1.5)
+                  controls_color, indicator_color.level(1.5)
                );
 
          canvas_.begin_path();
          canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, offs +  rng);
          canvas_.stroke_width(cp.radius/5);
-         canvas_.stroke_color(controls_color.opacity(0.2));
+         canvas_.stroke_color(controls_color.opacity(0.6));
          canvas_.stroke();
 
          canvas_.begin_path();
          canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, pos_);
          canvas_.stroke_width(cp.radius/5);
-         canvas_.stroke_color(controls_color);
-         canvas_.stroke();
+         //canvas_.stroke_color(controls_color);
+         //canvas_.stroke();
          canvas_.stroke_paint(grad);
          canvas_.stroke();
       }
@@ -188,13 +188,12 @@ namespace photon
 
       if (hilite)
       {
-         controls_color = controls_color.opacity(1).level(2.0);
-         indicator_color = indicator_color.opacity(1).level(1.3);
+         controls_color = controls_color.level(1.5);
+         indicator_color = indicator_color.level(1.3);
       }
 
       draw_knob_gauge(
-         thm.canvas(), pos, cp
-       , thm.controls_color, controls_color, indicator_color
+         thm.canvas(), pos, cp, controls_color, indicator_color
       );
    }
 

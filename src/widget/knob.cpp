@@ -146,8 +146,6 @@ namespace photon
          canvas_.begin_path();
          canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, pos_);
          canvas_.stroke_width(cp.radius/5);
-         //canvas_.stroke_color(controls_color);
-         //canvas_.stroke();
          canvas_.stroke_paint(grad);
          canvas_.stroke();
       }
@@ -185,8 +183,8 @@ namespace photon
       auto  r = std::min(bounds.width(), bounds.height())/2;
       auto  cp = circle{ c.x, c.y, r };
 
-      auto  indicator_color = thm.indicator_color;
-      auto  controls_color = thm.controls_color.opacity(1.0).level(1.2);
+      auto  indicator_color = thm.indicator_color.level(1.2);
+      auto  controls_color = thm.controls_color.opacity(1.0).level(1.5);
 
       if (hilite)
       {
@@ -275,12 +273,20 @@ namespace photon
 
       float val = (angle-offs) / rng;
       if (std::abs(val - _pos) < 0.6)
-         limit(_pos = val, 0.0f, 1.0f);
+         limit(_pos = val, 0.0, 1.0);
       ctx.window.draw();
    }
 
    bool knob::is_control() const
    {
+      return true;
+   }
+
+   bool knob::scroll(context const& ctx, point p)
+   {
+      _pos += p.y * 0.01;
+      limit(_pos, 0.0, 1.0);
+      ctx.window.draw();
       return true;
    }
 }

@@ -191,8 +191,8 @@ namespace photon
 
    void slider::draw_slot(theme& thm, float pos, rect knob_r, rect bounds, bool hilite)
    {
-      auto  indicator_color = thm.indicator_color;
-      auto  controls_color = thm.controls_color.opacity(1.0).level(1.2);
+      auto  indicator_color = thm.indicator_color.level(1.2);
+      auto  controls_color = thm.controls_color.opacity(1.0).level(1.6);
 
       if (hilite)
       {
@@ -288,33 +288,47 @@ namespace photon
       return true;
    }
 
+   bool slider::scroll(context const& ctx, point p)
+   {
+      slider_bounds  sl_pos{ ctx, _pos };
+      point mp = center_point(sl_pos.knob_r).move(-p.x, -p.y);
+      reposition(sl_pos.bounds, sl_pos.knob_r, mp);
+      ctx.window.draw();
+      return true;
+   }
+
    void slider::reposition(context const& ctx)
    {
       slider_bounds  sl_pos{ ctx, _pos };
-      double         w = ctx.bounds.width();
-      double         h = ctx.bounds.height();
 
       // See comment in the click function. We subtract the offset to
       // compensate for mouse tracking to avoid sudden knob movements.
       point mp = ctx.cursor_pos();
       mp = mp.move(-_offset.x, -_offset.y);
+      reposition(sl_pos.bounds, sl_pos.knob_r, mp);
+      ctx.window.draw();
+   }
+
+   void slider::reposition(rect bounds, rect knob_r, point mp)
+   {
+      double   w = bounds.width();
+      double   h = bounds.height();
 
       if (w > h)
       {
          // inset by knob size;
-         double kw = sl_pos.knob_r.width();
+         double kw = knob_r.width();
          w -= kw;
-         _pos = (mp.x - (sl_pos.bounds.left + kw/2)) / w;
+         _pos = (mp.x - (bounds.left + kw/2)) / w;
       }
       else
       {
          // inset by knob size;
-         double kh = sl_pos.knob_r.height();
+         double kh = knob_r.height();
          h -= kh;
-         _pos = 1.0-((mp.y - (sl_pos.bounds.top + kh/2)) / h);
+         _pos = 1.0-((mp.y - (bounds.top + kh/2)) / h);
       }
 
       limit(_pos, 0.0, 1.0);
-      ctx.window.draw();
    }
 }

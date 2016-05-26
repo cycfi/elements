@@ -22,10 +22,6 @@ namespace photon
       static float      slot_size;        // fraction of width (or height)
       static float      knob_size;        // fraction of width (or height)
 
-
-      //static float     knob_size;      // fraction of size (width or height)
-      //static float     slot_size;      // fraction of size (width or height)
-
                         slider()
                          : _pos(0.0), _tracking(false)
                         {}
@@ -39,16 +35,14 @@ namespace photon
       virtual widget*   hit_test(context const& ctx, point p);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
+      virtual bool      scroll(context const& ctx, point p);
       virtual bool      is_control() const;
-
-      //virtual void      draw_slot(theme& thm, rect bounds, float radius);
-      //virtual void      draw_knob(theme& thm, float pos, rect bounds, bool hilite);
-      //virtual circle    knob_position(theme& thm, float pos, rect bounds);
-      //virtual void      draw_gauge(theme& thm, rect bounds, float radius, bool hilite);
 
    private:
 
       void              reposition(context const& ctx);
+      void              reposition(rect bounds, rect knob_r, point mp);
+
       double            _pos;
       point             _offset;
       bool              _tracking;

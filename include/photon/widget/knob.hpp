@@ -28,6 +28,7 @@ namespace photon
       virtual void      draw(context const& ctx);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
+      virtual bool      scroll(context const& ctx, point p);
       virtual bool      is_control() const;
 
       virtual void      draw_knob(theme& thm, float pos, rect b, bool hilite);

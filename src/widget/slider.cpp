@@ -184,12 +184,12 @@ namespace photon
       bool           hilite = _tracking || hit_test(ctx, ctx.cursor_pos());
       slider_bounds  sl_pos{ ctx, _pos };
 
-      draw_slot(ctx.theme(), _pos, sl_pos.knob_r, sl_pos.slot_r, hilite);
-      draw_knob(ctx.theme(), _pos, sl_pos.knob_r, hilite);
-      draw_indicator(ctx.theme(), _pos, sl_pos.knob_r, hilite);
+      draw_slot(ctx.theme(), sl_pos.knob_r, sl_pos.slot_r, hilite);
+      draw_knob(ctx.theme(), sl_pos.knob_r, hilite);
+      draw_indicator(ctx.theme(), sl_pos.knob_r, hilite);
    }
 
-   void slider::draw_slot(theme& thm, float pos, rect knob_r, rect bounds, bool hilite)
+   void slider::draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite)
    {
       auto  indicator_color = thm.indicator_color.level(1.2);
       auto  controls_color = thm.controls_color.opacity(1.0).level(1.6);
@@ -206,7 +206,7 @@ namespace photon
       );
    }
 
-   void slider::draw_knob(theme& thm, float pos, rect bounds, bool hilite)
+   void slider::draw_knob(theme& thm, rect bounds, bool hilite)
    {
       auto  controls_color = thm.controls_color.opacity(1.0);
 
@@ -216,7 +216,7 @@ namespace photon
       photon::draw_knob(thm.canvas(), bounds, controls_color);
    }
 
-   void slider::draw_indicator(theme& thm, float pos, rect bounds, bool hilite)
+   void slider::draw_indicator(theme& thm, rect bounds, bool hilite)
    {
       auto  indicator_color = thm.indicator_color.level(1.5);
       float w = bounds.width();

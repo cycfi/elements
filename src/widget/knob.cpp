@@ -151,7 +151,7 @@ namespace photon
       }
    }
 
-   void knob::draw_knob(theme& thm, float pos, rect bounds, bool hilite)
+   void knob::draw_knob(theme& thm, rect bounds, bool hilite)
    {
       auto     c = center_point(bounds);
       auto     r = std::min(bounds.width(), bounds.height())/2;
@@ -164,7 +164,7 @@ namespace photon
       photon::draw_knob(thm.canvas(), cp, controls_color);
    }
 
-   point knob::draw_indicator(theme& thm, float pos, rect bounds, bool hilite)
+   point knob::draw_indicator(theme& thm, rect bounds, bool hilite)
    {
       auto     c = center_point(bounds);
       auto     r = std::min(bounds.width(), bounds.height())/2;
@@ -174,10 +174,10 @@ namespace photon
       if (hilite)
          indicator_color = indicator_color.opacity(1).level(2.0);
 
-      return draw_knob_indicator(thm.canvas(), cp, pos, indicator_color);
+      return draw_knob_indicator(thm.canvas(), cp, _pos, indicator_color);
    }
 
-   void knob::draw_gauge(theme& thm, float pos, rect bounds, bool hilite)
+   void knob::draw_gauge(theme& thm, rect bounds, bool hilite)
    {
       auto  c = center_point(bounds);
       auto  r = std::min(bounds.width(), bounds.height())/2;
@@ -193,7 +193,7 @@ namespace photon
       }
 
       draw_knob_gauge(
-         thm.canvas(), pos, cp, controls_color, indicator_color
+         thm.canvas(), _pos, cp, controls_color, indicator_color
       );
    }
 
@@ -230,9 +230,9 @@ namespace photon
       b.height(b.height() * 0.72);
       b = center(b, ctx.bounds);
 
-      draw_knob(thm, _pos, b, hilite);
-      draw_gauge(thm, _pos, b, hilite);
-      _indicator_pos = draw_indicator(thm, _pos, b, hilite);
+      draw_knob(thm, b, hilite);
+      draw_gauge(thm, b, hilite);
+      _indicator_pos = draw_indicator(thm, b, hilite);
    }
 
    widget* knob::click(context const& ctx, mouse_button btn)

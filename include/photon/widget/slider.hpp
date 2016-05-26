@@ -27,16 +27,19 @@ namespace photon
                         {}
 
       virtual rect      limits(basic_context const& ctx) const;
-      virtual void      draw(context const& ctx);
-      virtual void      draw_slot(theme& thm, float pos, rect knob_r, rect bounds, bool hilite);
-      virtual void      draw_knob(theme& thm, float pos, rect bounds, bool hilite);
-      virtual void      draw_indicator(theme& thm, float pos, rect bounds, bool hilite);
-
       virtual widget*   hit_test(context const& ctx, point p);
+      virtual void      draw(context const& ctx);
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      scroll(context const& ctx, point p);
       virtual bool      is_control() const;
+
+      virtual void      draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite);
+      virtual void      draw_knob(theme& thm, rect bounds, bool hilite);
+      virtual void      draw_indicator(theme& thm, rect bounds, bool hilite);
+
+      double            position() const { return _pos; }
+      void              position(double pos) { _pos = pos; }
 
    private:
 

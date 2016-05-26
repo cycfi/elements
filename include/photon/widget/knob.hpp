@@ -17,11 +17,9 @@ namespace photon
    class knob : public widget
    {
    public:
-
-      knob()
-       : _pos(0)
-       , _tracking(false)
-      {}
+                        knob()
+                         : _pos(0), _tracking(false)
+                        {}
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual widget*   hit_test(context const& ctx, point p);
@@ -31,13 +29,17 @@ namespace photon
       virtual bool      scroll(context const& ctx, point p);
       virtual bool      is_control() const;
 
-      virtual void      draw_knob(theme& thm, float pos, rect b, bool hilite);
-      virtual point     draw_indicator(theme& thm, float pos, rect b, bool hilite);
-      virtual void      draw_gauge(theme& thm, float pos, rect b, bool hilite);
+      virtual void      draw_knob(theme& thm, rect bounds, bool hilite);
+      virtual point     draw_indicator(theme& thm, rect bounds, bool hilite);
+      virtual void      draw_gauge(theme& thm, rect bounds, bool hilite);
+
+      double            position() const { return _pos; }
+      void              position(double pos) { _pos = pos; }
 
    private:
 
       void              reposition(context const& ctx);
+
       double            _pos;
       point             _offset;
       bool              _tracking;

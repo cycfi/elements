@@ -90,6 +90,7 @@ namespace photon
          rect  ind_r = { -ind_w/2, -ind_h/2, ind_w/2, ind_h/2 };
          ind_r = ind_r.move(0, r*0.7);
 
+         // Fill
          paint gr
             = canvas_.linear_gradient(
                   ind_r.top_right(), ind_r.bottom_right(),
@@ -102,9 +103,10 @@ namespace photon
          canvas_.fill();
          canvas_.fill_paint(gr);
 
+         // Glow
          float ind_glow = ind_w * 0.7;
          paint glow_paint
-            = canvas_.box_gradient(ind_r.inset(-ind_glow/4, -ind_glow/4)
+            = canvas_.box_gradient(ind_r.inset(-ind_glow * 0.25, -ind_glow * 0.25)
              , ind_glow, ind_glow, indicator_color, color(0, 0, 0, 0)
             );
 

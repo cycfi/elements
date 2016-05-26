@@ -41,7 +41,6 @@ namespace photon
    private:
 
       void              reposition(context const& ctx);
-      void              reposition(rect bounds, rect knob_r, point mp);
 
       double            _pos;
       point             _offset;

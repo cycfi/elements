@@ -67,7 +67,7 @@ namespace photon
          // Knob Outline
          canvas_.begin_path();
          canvas_.circle(circle{ cp.cx, cp.cy, cp.radius-1.0f });
-         canvas_.stroke_width(2);
+         canvas_.stroke_width(1);
          canvas_.stroke_color(fill_color.level(0.6));
          canvas_.stroke();
       }
@@ -97,12 +97,12 @@ namespace photon
                );
 
          canvas_.begin_path();
-         canvas_.round_rect(ind_r, ind_w/3);
+         canvas_.round_rect(ind_r, ind_w * 0.3);
          canvas_.fill_color(indicator_color);
          canvas_.fill();
          canvas_.fill_paint(gr);
 
-         float ind_glow = r/12;
+         float ind_glow = ind_w * 0.7;
          paint glow_paint
             = canvas_.box_gradient(ind_r.inset(-ind_glow/4, -ind_glow/4)
              , ind_glow, ind_glow, indicator_color, color(0, 0, 0, 0)
@@ -110,7 +110,7 @@ namespace photon
 
          canvas_.begin_path();
          canvas_.rect(ind_r.inset(-ind_glow, -ind_glow));
-         canvas_.round_rect(ind_r, ind_w/3);
+         canvas_.round_rect(ind_r, ind_w * 0.3);
          canvas_.path_winding(canvas::hole);
          canvas_.fill_paint(glow_paint);
          canvas_.fill();
@@ -151,10 +151,10 @@ namespace photon
       }
    }
 
-   void knob::draw_knob(theme& thm, float pos, rect b, bool hilite)
+   void knob::draw_knob(theme& thm, float pos, rect bounds, bool hilite)
    {
-      auto     c = center_point(b);
-      auto     r = std::min(b.width(), b.height())/2;
+      auto     c = center_point(bounds);
+      auto     r = std::min(bounds.width(), bounds.height())/2;
       circle   cp = { c.x, c.y, r };
       auto     controls_color = thm.controls_color;
 
@@ -164,10 +164,10 @@ namespace photon
       photon::draw_knob(thm.canvas(), cp, controls_color);
    }
 
-   point knob::draw_indicator(theme& thm, float pos, rect b, bool hilite)
+   point knob::draw_indicator(theme& thm, float pos, rect bounds, bool hilite)
    {
-      auto     c = center_point(b);
-      auto     r = std::min(b.width(), b.height())/2;
+      auto     c = center_point(bounds);
+      auto     r = std::min(bounds.width(), bounds.height())/2;
       circle   cp = { c.x, c.y, r };
       auto     indicator_color = thm.indicator_color.level(1.5);
 
@@ -177,14 +177,14 @@ namespace photon
       return draw_knob_indicator(thm.canvas(), cp, pos, indicator_color);
    }
 
-   void knob::draw_gauge(theme& thm, float pos, rect b, bool hilite)
+   void knob::draw_gauge(theme& thm, float pos, rect bounds, bool hilite)
    {
-      auto  c = center_point(b);
-      auto  r = std::min(b.width(), b.height())/2;
+      auto  c = center_point(bounds);
+      auto  r = std::min(bounds.width(), bounds.height())/2;
       auto  cp = circle{ c.x, c.y, r };
 
-      auto  controls_color = thm.controls_color.opacity(1);
       auto  indicator_color = thm.indicator_color;
+      auto  controls_color = thm.controls_color.opacity(1.0).level(1.2);
 
       if (hilite)
       {

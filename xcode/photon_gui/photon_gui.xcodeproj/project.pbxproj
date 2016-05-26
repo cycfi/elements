@@ -24,9 +24,8 @@
 		5D50AAFD1CBCA61C00C53185 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAFC1CBCA61C00C53185 /* IOKit.framework */; };
 		5D50AAFE1CBCA62400C53185 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAF61CBCA35100C53185 /* CoreVideo.framework */; };
 		5D50AB001CBCA6C200C53185 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAFF1CBCA6C100C53185 /* Carbon.framework */; };
-		5D52EE151CF03EAD0004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE141CF03EAD0004CC61 /* basic.cpp */; };
-		5D52EE161CF03EB20004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE141CF03EAD0004CC61 /* basic.cpp */; };
 		5D52EE181CF057B70004CC61 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE171CF057B70004CC61 /* basic.cpp */; };
+		5D7ADC331CF675D900DD3F54 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D52EE171CF057B70004CC61 /* basic.cpp */; };
 		5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */; };
 		5D83CFE21CE353200009D9F3 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */; };
 		5D83CFE31CE353200009D9F3 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9F11CBB1AA300ACB621 /* app.cpp */; };
@@ -85,7 +84,6 @@
 		5D50AAFA1CBCA60C00C53185 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5D50AAFC1CBCA61C00C53185 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		5D50AAFF1CBCA6C100C53185 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		5D52EE141CF03EAD0004CC61 /* basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic.cpp; path = ../../../src/widget/basic.cpp; sourceTree = "<group>"; };
 		5D52EE171CF057B70004CC61 /* basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic.cpp; sourceTree = "<group>"; };
 		5D6B28071CC8E0CA0034248D /* button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = button.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D736D9A1CCF8C4D006A2B3E /* port.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = port.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -219,7 +217,6 @@
 			isa = PBXGroup;
 			children = (
 				5D809D1A1CC3AA97005EE2D2 /* align.hpp */,
-				5D52EE141CF03EAD0004CC61 /* basic.cpp */,
 				5D809D1E1CC3AA97005EE2D2 /* basic.hpp */,
 				5D6B28071CC8E0CA0034248D /* button.hpp */,
 				5D1DFFFD1CD8946E00B4C91B /* icon.hpp */,
@@ -400,7 +397,6 @@
 				5D83CFEE1CE353260009D9F3 /* layer.cpp in Sources */,
 				5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */,
 				5D83CFF01CE353260009D9F3 /* image.cpp in Sources */,
-				5D52EE151CF03EAD0004CC61 /* basic.cpp in Sources */,
 				5D83CFF11CE353260009D9F3 /* port.cpp in Sources */,
 				5D83CFE21CE353200009D9F3 /* window.cpp in Sources */,
 				5D83CFE81CE353260009D9F3 /* widget.cpp in Sources */,
@@ -421,8 +417,8 @@
 				5D8733F71CBB8B5C0003E9DD /* widget.cpp in Sources */,
 				5D1DFFFC1CD892E300B4C91B /* text.cpp in Sources */,
 				5DE7F50E1CC06586009293EB /* test.cpp in Sources */,
-				5D52EE161CF03EB20004CC61 /* basic.cpp in Sources */,
 				5D1DFFFB1CD8901500B4C91B /* layer.cpp in Sources */,
+				5D7ADC331CF675D900DD3F54 /* basic.cpp in Sources */,
 				5D2EC9F21CBB1AA300ACB621 /* app.cpp in Sources */,
 				5DC6FEBB1CF1D51400C4253C /* text_utils.cpp in Sources */,
 				5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */,

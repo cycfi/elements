@@ -34,6 +34,7 @@ namespace photon
       virtual void      draw(context const& ctx);
       virtual void      draw_slot(theme& thm, float pos, rect knob_r, rect bounds, bool hilite);
       virtual void      draw_knob(theme& thm, float pos, rect bounds, bool hilite);
+      virtual void      draw_indicator(theme& thm, float pos, rect bounds, bool hilite);
 
       virtual widget*   hit_test(context const& ctx, point p);
       virtual widget*   click(context const& ctx, mouse_button btn);

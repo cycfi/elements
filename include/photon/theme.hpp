@@ -23,7 +23,6 @@ namespace photon
 
       void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
       class canvas&        canvas() const                         { return _canvas; }
-      virtual void         override()                             {}
 
       /////////////////////////////////////////////////////////////////////////////////////////////
       color                panel_color                = { 28, 30, 34, 192 };
@@ -59,7 +58,7 @@ namespace photon
 
    private:
 
-      mutable class canvas _canvas;
+      class canvas         _canvas;
    };
 
    using theme_ptr = std::shared_ptr<theme>;

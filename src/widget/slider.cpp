@@ -12,8 +12,8 @@
 
 namespace photon
 {
-   float slider::aspect_ratio    = 0.25;  // the slider's aspect ratio
-   float slider::slot_size       = 0.3;   // fraction of width
+   float slider::aspect_ratio    = 0.2;   // the slider's aspect ratio
+   float slider::slot_size       = 0.25;  // fraction of width
    float slider::knob_size       = 0.6;   // fraction of size (width or height)
 
    rect slider::limits(basic_context const& ctx) const
@@ -71,16 +71,18 @@ namespace photon
          bool  horiz = bounds.width() > bounds.height();
          auto  from  = horiz ? bounds.top_left() : bounds.bottom_left();
          auto  to    = horiz ? bounds.top_right() : bounds.top_left();
+         auto  radius = (horiz ? bounds.height() : bounds.width()) * 0.4;
 
-         paint grad
-            = canvas_.linear_gradient(
-                  from, to,
-                  controls_color, indicator_color.level(1.5)
-               );
+         paint bg
+            = canvas_.box_gradient(bounds.inset(0.5, 0.5).move(1, 1), radius, 2
+             , color(0, 0, 0, 32), color(0, 0, 0, 128)
+            );
 
          canvas_.begin_path();
-         canvas_.rect(bounds);
-         canvas_.fill_color(controls_color.opacity(0.6));
+         canvas_.round_rect(bounds, radius);
+         //canvas_.fill_color(controls_color.opacity(0.6));
+         //canvas_.fill();
+         canvas_.fill_paint(bg);
          canvas_.fill();
 
          rect  ind_r = bounds;
@@ -88,9 +90,15 @@ namespace photon
             ind_r.right = pos.x;
          else
             ind_r.top = pos.y;
+         
+         paint grad
+            = canvas_.linear_gradient(
+                  from, to,
+                  controls_color, indicator_color.level(1.5)
+               );
 
          canvas_.begin_path();
-         canvas_.rect(ind_r);
+         canvas_.round_rect(ind_r, radius);
          canvas_.fill_paint(grad);
          canvas_.fill();
       }

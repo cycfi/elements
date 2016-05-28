@@ -58,7 +58,7 @@ namespace photon
 
    private:
 
-      class canvas         _canvas;
+      mutable class canvas _canvas;
    };
 
    using theme_ptr = std::shared_ptr<theme>;

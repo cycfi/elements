@@ -41,8 +41,8 @@ namespace photon
       void              reposition(context const& ctx);
 
       double            _pos;
-      point             _offset;
       bool              _tracking;
+      point             _offset;
       point             _indicator_pos;
    };
 }

@@ -4,3 +4,6 @@
 [submodule "libs/nanovg"]
 	path = libs/nanovg
 	url = git@github.com:djowel/nanovg.git
+[submodule "libs/json_spirit"]
+	path = libs/json_spirit
+	url = git@github.com:cierelabs/json_spirit.git

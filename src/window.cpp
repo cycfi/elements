@@ -75,12 +75,10 @@ namespace photon
     , point   size
     , color          bkd_color
     , class app&     app_
-    , widget_ptr     subject
     , theme_ptr      theme
    )
     : _bkd_color(bkd_color)
     , _app(app_)
-    , _subject(subject)
     , _canvas(0)
     , _theme(theme)
     , _click_time(0)

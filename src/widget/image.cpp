@@ -13,21 +13,38 @@
 
 namespace photon
 {
-   image::image(char const* filename)
-    : _filename(filename)
+   image::image(image_ptr img_)
+    : _img(img_)
    {}
 
    point image::size(context const& ctx) const
    {
-      if (!_img)
-         _img = std::make_shared<canvas::image>(ctx.canvas(), _filename);
       return _img->size();
    }
 
    void image::draw(context const& ctx)
    {
-      if (!_img)
-         _img = std::make_shared<canvas::image>(ctx.canvas(), _filename);
       _img->draw(ctx.bounds);
+   }
+
+   sprite::sprite(image_ptr img_, point size_)
+    : image(img_)
+    , _size(size_)
+    , _index(10)
+   {}
+
+   rect sprite::limits(basic_context const& ctx) const
+   {
+      return { _size.x, _size.y, _size.x, _size.y };
+   }
+
+   void sprite::draw(context const& ctx)
+   {
+      get_image()->draw(ctx.bounds, { 0.0f, _size.y * _index });
+   }
+
+   point sprite::size(context const& ctx) const
+   {
+      return _size;
    }
 }

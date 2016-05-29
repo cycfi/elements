@@ -41,7 +41,6 @@ namespace photon
        , point          size
        , color          bkd_color
        , app&           app_
-       , widget_ptr     subject
        , theme_ptr      theme = std::make_shared<photon::theme>()
       );
 
@@ -71,12 +70,16 @@ namespace photon
 
       std::string          clipboard() const;
       void                 clipboard(std::string const& text) const;
-      key_info             key() const { return _current_key; }
 
-      class canvas&        canvas() { return _canvas; }
-      app&                 app() const { return _app; }
-      class theme const&   theme() const { return *_theme.get(); }
-      class theme&         theme() { return *_theme.get(); }
+      key_info             key() const                   { return _current_key; }
+
+      class canvas&        canvas()                      { return _canvas; }
+      app&                 app() const                   { return _app; }
+      class theme const&   theme() const                 { return *_theme.get(); }
+      class theme&         theme()                       { return *_theme.get(); }
+      
+      widget_ptr           subject() const               { return _subject; }
+      void                 subject(widget_ptr subject_)  { _subject = subject_; }
 
    private:
 

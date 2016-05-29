@@ -6,7 +6,11 @@ int main()
 {
    using namespace photon;
 
-   auto& my_app = make_app<app>();
+   auto&    my_app = make_app<app>();
+   window   main_window("Photon", { 1000, 600 }, color{ 62, 91, 102, 255 }, my_app);
+   canvas&  canvas_ = main_window.canvas();
+   auto     space = std::make_shared<canvas::image>(canvas_, "./assets/images/space.jpg");
+   auto     knob_sprites = std::make_shared<canvas::image>(canvas_, "./assets/images/knob_sprites_150x150.png");
 
    {
       widget_ptr main_widget;
@@ -80,7 +84,7 @@ int main()
             )
          );
 
-         // main_widget = new_(std::move(columns));
+         //main_widget = new_(std::move(columns));
       }
       
       {
@@ -166,7 +170,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
       
       {
@@ -336,7 +340,7 @@ int main()
          auto img =
             size(
                point{ 1920, 1080 }
-             , image("./assets/images/space.jpg")
+             , image(space)
             );
 
 
@@ -355,12 +359,12 @@ int main()
 
          //main_widget = new_(p);
       }
-
+      
       {
          auto img =
             size(
                point{ 1920, 1080 }
-             , image("./assets/images/space.jpg")
+             , image(space)
             );
 
 
@@ -370,14 +374,33 @@ int main()
                   layer(
                      margin(
                         { 20, 20, 20, 20 },
-                        scroller(img)
+                        port(img)
                      ),
-                     panel()
+                     panel{}
                   )
                )
             ;
 
          //main_widget = new_(p);
+      }
+      
+      {
+         auto img = sprite(knob_sprites, { 150, 150 });
+
+         auto p =
+               margin(
+                  { 20, 20, 20, 20 },
+                  layer(
+                     margin(
+                        { 20, 20, 20, 20 },
+                        img
+                     ),
+                     panel{}
+                  )
+               )
+            ;
+
+         main_widget = new_(p);
       }
 
       {
@@ -414,9 +437,7 @@ int main()
          //main_widget = new_(frm);
       }
 
-      window main_window("Photon",
-         { 1000, 600 }, color{ 62, 91, 102, 255 },
-         my_app, main_widget);
+      main_window.subject(main_widget);
       my_app.run();
    }
 

@@ -9,8 +9,11 @@ int main()
    auto&    my_app = make_app<app>();
    window   main_window("Photon", { 1000, 600 }, color{ 62, 91, 102, 255 }, my_app);
    canvas&  canvas_ = main_window.canvas();
-   auto     space = std::make_shared<canvas::image>(canvas_, "./assets/images/space.jpg");
-   auto     knob_sprites = std::make_shared<canvas::image>(canvas_, "./assets/images/knob_sprites_150x150.png");
+   
+   auto     space = std::make_shared<canvas::image>(
+               canvas_, "./assets/images/space.jpg");
+   auto     knob_sprites = std::make_shared<canvas::image>(
+               canvas_, "./assets/images/knob_sprites_150x150_darker.png");
 
    {
       widget_ptr main_widget;

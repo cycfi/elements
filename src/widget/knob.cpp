@@ -294,7 +294,7 @@ namespace photon
 
    rect image_knob::limits(basic_context const& ctx) const
    {
-      return { _size, _size, _size, _size };
+      return { 32, 32, _size, _size };
    }
 
    void image_knob::draw(context const& ctx)
@@ -303,6 +303,11 @@ namespace photon
       auto     mp = ctx.cursor_pos();
       bool     hilite = tracking() || hit_test(ctx, mp);
       rect     bounds = ctx.bounds;
+      auto     dia = std::min(bounds.width(), bounds.height());
+
+      bounds.width(dia);
+      bounds.height(dia);
+      bounds = center(bounds, ctx.bounds);
 
       draw_knob(thm, bounds, hilite);
 
@@ -310,12 +315,13 @@ namespace photon
       float    inset = (radius - (radius * knob_size)) / 2;
       draw_gauge(thm, bounds.inset(inset, inset), hilite);
 
-      _indicator_pos = draw_indicator(thm, bounds, hilite);
+      indicator_pos(draw_indicator(thm, bounds, hilite));
    }
 
    void image_knob::draw_knob(theme& thm, rect bounds, bool hilite)
    {
-      _img->draw(bounds, { 0.0f, float(_size * int(_num_images * position())) });
+      float scale = bounds.width() / _size;
+      _img->draw(bounds, { 0.0f, float(_size * int(_num_images * position())) }, scale);
    }
 
    point image_knob::draw_indicator(theme& thm, rect bounds, bool hilite)
@@ -336,9 +342,4 @@ namespace photon
 
       return canvas_.transform_point(center_point(ind_r));
    }
-
-   //void image_knob::draw_gauge(theme& thm, rect bounds, bool hilite)
-   //{
-   //
-   //}
 }

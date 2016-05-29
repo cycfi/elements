@@ -34,11 +34,16 @@ namespace photon
       virtual point     draw_indicator(theme& thm, rect bounds, bool hilite);
       virtual void      draw_gauge(theme& thm, rect bounds, bool hilite);
 
-      double            position() const     { return _pos; }
-      void              position(double pos) { _pos = pos; }
-      bool              tracking() const     { return _tracking; }
+      double            position() const           { return _pos; }
+      void              position(double pos)       { _pos = pos; }
+      bool              tracking() const           { return _tracking; }
 
-   // for now... private:
+   protected:
+
+      point             indicator_pos() const      { return _indicator_pos; }
+      void              indicator_pos(point pos)   { _indicator_pos = pos; }
+
+   private:
 
       void              reposition(context const& ctx);
 
@@ -62,7 +67,6 @@ namespace photon
       virtual void      draw(context const& ctx);
       virtual void      draw_knob(theme& thm, rect bounds, bool hilite);
       virtual point     draw_indicator(theme& thm, rect bounds, bool hilite);
-      //virtual void      draw_gauge(theme& thm, rect bounds, bool hilite);
 
    private:
 

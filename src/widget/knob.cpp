@@ -15,6 +15,13 @@ namespace photon
 {
    namespace
    {
+      float const travel = 0.83;
+      float const rng = (2 * M_PI) * travel;
+      float const offs = (2 * M_PI) * (1-travel)/2;
+
+      // size of knob, inset with gauge
+      float const knob_size = 0.72;
+
       void draw_knob(canvas& canvas_, circle cp, color fill_color)
       {
          float radius = cp.radius;
@@ -78,10 +85,6 @@ namespace photon
          auto state = canvas_.new_state();
 
          canvas_.translate({ cp.cx, cp.cy });
-
-         float const travel = 0.82;
-         float const rng = (2 * M_PI) * travel;
-         float const offs = (2 * M_PI) * (1-travel)/2;
          canvas_.rotate(offs + (pos * rng));
 
          float r = cp.radius;
@@ -124,10 +127,7 @@ namespace photon
          canvas& canvas_, float pos, circle cp
        , color controls_color, color indicator_color)
       {
-         auto state = canvas_.new_state();
-
-         float const travel = 0.82;
-         float const rng = (2 * M_PI) * travel;
+         auto        state = canvas_.new_state();
          float const offs = (M_PI/2) + ((2 * M_PI) * (1-travel)/2);
          float const pos_ = offs + (pos * rng);
 
@@ -226,8 +226,8 @@ namespace photon
 
       // make the bounds smaller to accomodate the gauge
       rect  b = ctx.bounds;
-      b.width(b.width() * 0.72);
-      b.height(b.height() * 0.72);
+      b.width(b.width() * knob_size);
+      b.height(b.height() * knob_size);
       b = center(b, ctx.bounds);
 
       draw_knob(thm, b, hilite);
@@ -267,10 +267,6 @@ namespace photon
       if (angle < 0.0f)
          angle += 2 * M_PI;
 
-      float const travel = 0.82;
-      float const rng = (2 * M_PI) * travel;
-      float const offs = (2 * M_PI) * (1-travel)/2;
-
       float val = (angle-offs) / rng;
       if (std::abs(val - _pos) < 0.6)
          limit(_pos = val, 0.0, 1.0);
@@ -289,4 +285,60 @@ namespace photon
       ctx.window.draw();
       return true;
    }
+
+   image_knob::image_knob(image_ptr img_, float size_, std::size_t num_images_)
+    : _img(img_)
+    , _size(size_)
+    , _num_images(num_images_)
+   {}
+
+   rect image_knob::limits(basic_context const& ctx) const
+   {
+      return { _size, _size, _size, _size };
+   }
+
+   void image_knob::draw(context const& ctx)
+   {
+      auto&    thm = ctx.theme();
+      auto     mp = ctx.cursor_pos();
+      bool     hilite = tracking() || hit_test(ctx, mp);
+      rect     bounds = ctx.bounds;
+
+      draw_knob(thm, bounds, hilite);
+
+      float    radius = bounds.width();
+      float    inset = (radius - (radius * knob_size)) / 2;
+      draw_gauge(thm, bounds.inset(inset, inset), hilite);
+
+      _indicator_pos = draw_indicator(thm, bounds, hilite);
+   }
+
+   void image_knob::draw_knob(theme& thm, rect bounds, bool hilite)
+   {
+      _img->draw(bounds, { 0.0f, float(_size * int(_num_images * position())) });
+   }
+
+   point image_knob::draw_indicator(theme& thm, rect bounds, bool hilite)
+   {
+      auto&    canvas_ = thm.canvas();
+      auto     state = canvas_.new_state();
+      auto     c = center_point(bounds);
+      circle   cp = { c.x, c.y, bounds.width()/2 };
+
+      canvas_.translate({ cp.cx, cp.cy });
+      canvas_.rotate(offs + (position() * rng));
+
+      float r = cp.radius;
+      float ind_w = r/8;
+      float ind_h = r/2.5;
+      rect  ind_r = { -ind_w/2, -ind_h/2, ind_w/2, ind_h/2 };
+      ind_r = ind_r.move(0, r*0.7);
+
+      return canvas_.transform_point(center_point(ind_r));
+   }
+
+   //void image_knob::draw_gauge(theme& thm, rect bounds, bool hilite)
+   //{
+   //
+   //}
 }

@@ -190,6 +190,7 @@ int main()
             { 20, 20, 20, 20 },
             layer(
                margin({ 20, 20, 20, 20 }, knob{}),
+               margin({ 20, 20, 20, 20 }, frame{}),
                panel{}
             )
          );
@@ -313,7 +314,9 @@ int main()
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, "Button")),
+               margin(
+                  { 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, "Button")
+               ),
                panel()
             )
          );
@@ -400,7 +403,26 @@ int main()
                )
             ;
 
-         main_widget = new_(p);
+         //main_widget = new_(p);
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin(
+                  { 20, 20, 20, 20 },
+                  image_knob{ knob_sprites, 150, 100 }
+               ),
+               margin(
+                  { 20, 20, 20, 20 },
+                  frame{}
+               ),
+               panel{}
+            )
+         );
+
+         main_widget = new_(std::move(sl));
       }
 
       {

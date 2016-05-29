@@ -30,7 +30,7 @@ namespace photon
    sprite::sprite(image_ptr img_, point size_)
     : image(img_)
     , _size(size_)
-    , _index(10)
+    , _index(100)
    {}
 
    rect sprite::limits(basic_context const& ctx) const

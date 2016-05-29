@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_KNOB_MAY_16_2016
 
 #include <photon/widget/widget.hpp>
+#include <photon/canvas.hpp>
 
 namespace photon
 {
@@ -33,10 +34,11 @@ namespace photon
       virtual point     draw_indicator(theme& thm, rect bounds, bool hilite);
       virtual void      draw_gauge(theme& thm, rect bounds, bool hilite);
 
-      double            position() const { return _pos; }
+      double            position() const     { return _pos; }
       void              position(double pos) { _pos = pos; }
+      bool              tracking() const     { return _tracking; }
 
-   private:
+   // for now... private:
 
       void              reposition(context const& ctx);
 
@@ -44,6 +46,29 @@ namespace photon
       bool              _tracking;
       point             _offset;
       point             _indicator_pos;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class image_knob : public knob
+   {
+   public:
+
+      using image_ptr = std::shared_ptr<canvas::image>;
+
+                        image_knob(image_ptr img_, float size_, std::size_t num_images_);
+
+      virtual rect      limits(basic_context const& ctx) const;
+
+      virtual void      draw(context const& ctx);
+      virtual void      draw_knob(theme& thm, rect bounds, bool hilite);
+      virtual point     draw_indicator(theme& thm, rect bounds, bool hilite);
+      //virtual void      draw_gauge(theme& thm, rect bounds, bool hilite);
+
+   private:
+
+      image_ptr         _img;
+      float             _size;
+      std::size_t       _num_images;
    };
 }
 

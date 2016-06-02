@@ -18,9 +18,12 @@ namespace photon
    {
    public:
 
-      static float      aspect_ratio;     // the slider's aspect ratio
-      static float      slot_size;        // fraction of width (or height)
-      static float      knob_size;        // fraction of width (or height)
+      struct constants
+      {
+         float aspect_ratio   = 0.2;   // the slider's aspect ratio
+         float slot_size      = 0.25;  // fraction of width
+         float knob_size      = 0.6;   // fraction of size (width or height)
+      };
 
                         slider()
                          : _pos(0.0), _tracking(false)
@@ -35,10 +38,11 @@ namespace photon
       virtual bool      is_control() const;
 
       virtual void      draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite);
-      virtual void      draw_knob(theme& thm, rect bounds, bool hilite);
-      virtual void      draw_indicator(theme& thm, rect bounds, bool hilite);
+      virtual void      draw_knob(theme& thm, rect bounds, bool horiz, bool hilite);
+      virtual void      draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite);
 
-      double            position() const { return _pos; }
+      virtual constants dimensions() const   { return constants{}; }
+      double            position() const     { return _pos; }
       void              position(double pos) { _pos = pos; }
 
    private:
@@ -48,6 +52,30 @@ namespace photon
       double            _pos;
       point             _offset;
       bool              _tracking;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class image_slider : public slider
+   {
+   public:
+
+      using image_ptr = std::shared_ptr<canvas::image>;
+
+                        image_slider(
+                           image_ptr img_, float aspect_ratio_
+                         , float knob_size_, point oversize_
+                        );
+
+      virtual void      draw_knob(theme& thm, rect bounds, bool horiz, bool hilite);
+      virtual void      draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite);
+      virtual constants dimensions() const;
+
+   private:
+
+      image_ptr         _img;
+      float             _aspect_ratio;
+      float             _knob_size;
+      point             _oversize;
    };
 }
 

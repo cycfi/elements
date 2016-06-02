@@ -9,13 +9,10 @@
 #include <photon/support.hpp>
 #include <photon/app.hpp>
 #include <photon/window.hpp>
+#include <cmath>
 
 namespace photon
 {
-   float slider::aspect_ratio    = 0.2;   // the slider's aspect ratio
-   float slider::slot_size       = 0.25;  // fraction of width
-   float slider::knob_size       = 0.6;   // fraction of size (width or height)
-
    rect slider::limits(basic_context const& ctx) const
    {
       return { 32, 32, full_extent, full_extent };
@@ -26,7 +23,7 @@ namespace photon
       // calculates the slider rectangles for its bounds, slot and knob
       struct slider_bounds
       {
-         slider_bounds(context const& ctx, double _pos)
+         slider_bounds(context const& ctx, double _pos, slider::constants k)
           : bounds(ctx.bounds)
           , slot_r(ctx.bounds)
          {
@@ -35,28 +32,33 @@ namespace photon
 
             if (w > h)
             {
-               bounds.height(std::min(w * slider::aspect_ratio, h));
+               bounds.height(std::min(w * k.aspect_ratio, h));
                bounds = center_v(bounds, ctx.bounds);
 
-               slot_r.height(bounds.height() * slider::slot_size);
+               slot_r.height(bounds.height() * k.slot_size);
                slot_r = center_v(slot_r, ctx.bounds);
 
                knob_r = bounds;
-               knob_r.width(bounds.height() * slider::knob_size);
+               knob_r.width(bounds.height() * k.knob_size);
                knob_r = align_h(knob_r, ctx.bounds, _pos);
             }
             else
             {
-               bounds.width(std::min(h * slider::aspect_ratio, w));
+               bounds.width(std::min(h * k.aspect_ratio, w));
                bounds = center_h(bounds, ctx.bounds);
 
-               slot_r.width(bounds.width() * slider::slot_size);
+               slot_r.width(bounds.width() * k.slot_size);
                slot_r = center_h(slot_r, ctx.bounds);
 
                knob_r = bounds;
-               knob_r.height(bounds.width() * slider::knob_size);
+               knob_r.height(bounds.width() * k.knob_size);
                knob_r = align_v(knob_r, ctx.bounds, 1.0-_pos);
             }
+         }
+
+         bool is_horizontal() const
+         {
+            return bounds.width() > bounds.height();
          }
 
          rect  bounds;
@@ -90,7 +92,7 @@ namespace photon
             ind_r.right = pos.x;
          else
             ind_r.top = pos.y;
-         
+
          paint grad
             = canvas_.linear_gradient(
                   from, to,
@@ -190,11 +192,11 @@ namespace photon
    void slider::draw(context const& ctx)
    {
       bool           hilite = _tracking || hit_test(ctx, ctx.cursor_pos());
-      slider_bounds  sl_pos{ ctx, _pos };
+      slider_bounds  sl_pos{ ctx, _pos, dimensions() };
 
       draw_slot(ctx.theme(), sl_pos.knob_r, sl_pos.slot_r, hilite);
-      draw_knob(ctx.theme(), sl_pos.knob_r, hilite);
-      draw_indicator(ctx.theme(), sl_pos.knob_r, hilite);
+      draw_knob(ctx.theme(), sl_pos.knob_r, sl_pos.is_horizontal(), hilite);
+      draw_indicator(ctx.theme(), sl_pos.knob_r, sl_pos.is_horizontal(), hilite);
    }
 
    void slider::draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite)
@@ -214,7 +216,7 @@ namespace photon
       );
    }
 
-   void slider::draw_knob(theme& thm, rect bounds, bool hilite)
+   void slider::draw_knob(theme& thm, rect bounds, bool horiz, bool hilite)
    {
       auto  controls_color = thm.controls_color.opacity(1.0);
 
@@ -224,7 +226,7 @@ namespace photon
       photon::draw_knob(thm.canvas(), bounds, controls_color);
    }
 
-   void slider::draw_indicator(theme& thm, rect bounds, bool hilite)
+   void slider::draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite)
    {
       auto  indicator_color = thm.indicator_color.level(1.5);
       float w = bounds.width();
@@ -254,7 +256,7 @@ namespace photon
    {
       if (ctx.bounds.includes(p))
       {
-         slider_bounds  sl_pos{ ctx, _pos };
+         slider_bounds  sl_pos{ ctx, _pos, dimensions() };
          if (sl_pos.bounds.includes(p))
             return this;
       }
@@ -264,7 +266,7 @@ namespace photon
    widget* slider::click(context const& ctx, mouse_button btn)
    {
       point          p = ctx.cursor_pos();
-      slider_bounds  sl_pos{ ctx, _pos };
+      slider_bounds  sl_pos{ ctx, _pos, dimensions() };
       _tracking = btn.is_pressed;
 
       // If the mouse is inside the knob, record the offset from
@@ -306,7 +308,7 @@ namespace photon
 
    void slider::reposition(context const& ctx)
    {
-      slider_bounds  sl_pos{ ctx, _pos };
+      slider_bounds  sl_pos{ ctx, _pos, dimensions() };
 
       // See comment in the click function. We subtract the offset to
       // compensate for mouse tracking to avoid sudden knob movements.
@@ -333,5 +335,33 @@ namespace photon
 
       limit(_pos, 0.0, 1.0);
       ctx.window.draw();
+   }
+
+   image_slider::image_slider(
+      image_ptr img_, float aspect_ratio_
+    , float knob_size_, point oversize_)
+    : _img(img_)
+    , _aspect_ratio(aspect_ratio_)
+    , _knob_size(knob_size_)
+    , _oversize(oversize_)
+   {}
+
+   void image_slider::draw_knob(theme& thm, rect bounds, bool horiz, bool hilite)
+   {
+      rect  img_bounds = {
+         0, 0, bounds.width() * _oversize.x, bounds.height() * _oversize.y
+      };
+
+      img_bounds = center(img_bounds, bounds);
+      _img->draw(img_bounds);
+   }
+
+   void image_slider::draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite)
+   {
+   }
+
+   slider::constants image_slider::dimensions() const
+   {
+      return { _aspect_ratio, 0.25, _knob_size };
    }
 }

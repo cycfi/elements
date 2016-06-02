@@ -12,8 +12,12 @@ int main()
    
    auto     space = std::make_shared<canvas::image>(
                canvas_, "./assets/images/space.jpg");
+
    auto     knob_sprites = std::make_shared<canvas::image>(
                canvas_, "./assets/images/knob_sprites_150x150_darker.png");
+
+   auto     slider_img = std::make_shared<canvas::image>(
+               canvas_, "./assets/images/slider.png");
 
    {
       widget_ptr main_widget;
@@ -200,6 +204,38 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
+      
+      
+      {
+         auto img = sprite(knob_sprites, { 150, 150 });
+
+         auto p =
+               margin(
+                  { 20, 20, 20, 20 },
+                  layer(
+                     margin(
+                        { 20, 20, 20, 20 },
+                        img
+                     ),
+                     panel{}
+                  )
+               )
+            ;
+
+         //main_widget = new_(p);
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin({ 20, 20, 20, 20 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } }),
+               panel{}
+            )
+         );
+
+         main_widget = new_(std::move(sl));
+      }
 
       {
          auto fr = [](auto el)
@@ -339,7 +375,7 @@ int main()
             )
          );
 
-         // main_widget = new_(txbx);
+         //main_widget = new_(txbx);
       }
       
       {
@@ -380,28 +416,9 @@ int main()
                   layer(
                      margin(
                         { 20, 20, 20, 20 },
-                        port(img)
+                        scroller(img)
                      ),
-                     panel{}
-                  )
-               )
-            ;
-
-         //main_widget = new_(p);
-      }
-      
-      {
-         auto img = sprite(knob_sprites, { 150, 150 });
-
-         auto p =
-               margin(
-                  { 20, 20, 20, 20 },
-                  layer(
-                     margin(
-                        { 20, 20, 20, 20 },
-                        img
-                     ),
-                     panel{}
+                     panel()
                   )
                )
             ;
@@ -425,7 +442,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
 
       {

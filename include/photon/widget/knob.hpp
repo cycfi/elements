@@ -36,10 +36,10 @@ namespace photon
 
       double            position() const           { return _pos; }
       void              position(double pos)       { _pos = pos; }
-      bool              tracking() const           { return _tracking; }
 
    protected:
 
+      bool              tracking() const           { return _tracking; }
       point             indicator_pos() const      { return _indicator_pos; }
       void              indicator_pos(point pos)   { _indicator_pos = pos; }
 

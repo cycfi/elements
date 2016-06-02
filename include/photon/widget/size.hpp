@@ -72,7 +72,7 @@ namespace photon
        : base_type(std::forward<Subject>(subject))
        , _width(width)
       {}
-      
+
       hsize_widget(float width, Subject const& subject)
        : base_type(subject)
        , _width(width)
@@ -118,7 +118,7 @@ namespace photon
        : base_type(std::forward<Subject>(subject))
        , _height(height)
       {}
-      
+
       vsize_widget(float height, Subject const& subject)
        : base_type(subject)
        , _height(height)
@@ -150,6 +150,88 @@ namespace photon
    inline void vsize_widget<Subject>::prepare_subject(context& ctx)
    {
       ctx.bounds.bottom = ctx.bounds.top + _height;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Percentage sizing widgets
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class hpercent_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+      hpercent_widget(float percent, Subject&& subject)
+       : base_type(std::forward<Subject>(subject))
+       , _percent(percent)
+      {}
+
+      hpercent_widget(float percent, Subject const& subject)
+       : base_type(subject)
+       , _percent(percent)
+      {}
+
+      virtual rect   limits(basic_context const& ctx) const;
+
+   private:
+
+      float          _percent;
+   };
+
+   template <typename Subject>
+   inline hpercent_widget<typename std::decay<Subject>::type>
+   hpercent(float percent, Subject&& subject)
+   {
+      return { percent, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline rect hpercent_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect  e_limits = this->subject().limits(ctx);
+      float max_width = std::max(e_limits.left, e_limits.right * _percent);
+      return rect{ e_limits.left, e_limits.top, max_width, e_limits.bottom };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class vpercent_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+      vpercent_widget(float percent, Subject&& subject)
+       : base_type(std::forward<Subject>(subject))
+       , _percent(percent)
+      {}
+
+      vpercent_widget(float percent, Subject const& subject)
+       : base_type(subject)
+       , _percent(percent)
+      {}
+
+      virtual rect   limits(basic_context const& ctx) const;
+
+   private:
+
+      float          _percent;
+   };
+
+   template <typename Subject>
+   inline vpercent_widget<typename std::decay<Subject>::type>
+   vpercent(float percent, Subject&& subject)
+   {
+      return { percent, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline rect vpercent_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect  e_limits = this->subject().limits(ctx);
+      float max_height = std::max(e_limits.top, e_limits.bottom * _percent);
+      return rect{ e_limits.left, e_limits.top, e_limits.right, max_height };
    }
 }
 

@@ -61,12 +61,12 @@ int main()
          auto rows = margin(
             { 20, 0, 20, 20 },
             vtile(
-               halign(0.0,  _box),
-               halign(0.2,  _box),
-               halign(0.4,  _box),
-               halign(0.6,  _box),
-               halign(0.8,  _box),
-               halign(1.0,  _box)
+               halign(0.0, _box),
+               halign(0.2, _box),
+               halign(0.4, _box),
+               halign(0.6, _box),
+               halign(0.8, _box),
+               halign(1.0, _box)
             )
          );
 
@@ -82,16 +82,56 @@ int main()
          auto columns = margin(
             { 0, 20, 20, 20 },
             htile(
-               valign(0.0,  _box),
-               valign(0.2,  _box),
-               valign(0.4,  _box),
-               valign(0.6,  _box),
-               valign(0.8,  _box),
-               valign(1.0,  _box)
+               valign(0.0, _box),
+               valign(0.2, _box),
+               valign(0.4, _box),
+               valign(0.6, _box),
+               valign(0.8, _box),
+               valign(1.0, _box)
             )
          );
 
          //main_widget = new_(std::move(columns));
+      }
+      
+      {
+         auto _box = left_margin(
+            { 20 },
+            box
+         );
+
+         auto columns = margin(
+            { 0, 20, 20, 20 },
+            htile(
+               hpercent(1.0, _box),
+               hpercent(0.5, _box),
+               hpercent(0.5, _box),
+               hpercent(0.5, _box),
+               hpercent(2.0, _box)
+            )
+         );
+
+         //main_widget = new_(std::move(columns));
+      }
+      
+      {
+         auto _box = top_margin(
+            { 20 },
+            box
+         );
+      
+         auto rows = margin(
+            { 20, 0, 20, 20 },
+            vtile(
+               vpercent(1.0, _box),
+               vpercent(0.5, _box),
+               vpercent(0.5, _box),
+               vpercent(0.5, _box),
+               vpercent(2.0, _box)
+            )
+         );
+
+         main_widget = new_(std::move(rows));
       }
       
       {
@@ -239,7 +279,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(sl));
+         //main_widget = new_(std::move(sl));
       }
       
       {

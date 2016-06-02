@@ -18,8 +18,10 @@ namespace photon
    class knob : public widget
    {
    public:
-                        knob()
-                         : _pos(0), _tracking(false)
+                        knob(bool pan_ = false)
+                         : _pan(pan_)
+                         , _pos(pan_ ? 0.5 : 0)
+                         , _tracking(false)
                         {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -47,6 +49,7 @@ namespace photon
 
       void              reposition(context const& ctx);
 
+      bool              _pan;
       double            _pos;
       bool              _tracking;
       point             _offset;
@@ -60,7 +63,12 @@ namespace photon
 
       using image_ptr = std::shared_ptr<canvas::image>;
 
-                        image_knob(image_ptr img_, float size_, std::size_t num_images_);
+                        image_knob(
+                           image_ptr img_
+                         , float size_
+                         , std::size_t num_images_
+                         , bool pan_ = false
+                        );
 
       virtual rect      limits(basic_context const& ctx) const;
 

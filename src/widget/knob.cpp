@@ -125,26 +125,53 @@ namespace photon
 
       void draw_knob_gauge(
          canvas& canvas_, float pos, circle cp
-       , color controls_color, color indicator_color)
+       , color controls_color, color indicator_color, bool pan)
       {
-         auto        state = canvas_.new_state();
-         float const offs = (M_PI/2) + ((2 * M_PI) * (1-travel)/2);
-         float const pos_ = offs + (pos * rng);
+         auto  state = canvas_.new_state();
+         float start = (M_PI / 2) + ((2 * M_PI) * (1-travel)/2);
+         float ind_start = start;
+         float pos_ = start + (pos * rng);
+         float end = start +  rng;
+         point grad_start;
+         point grad_end;
+
+         if (pan)
+         {
+            if (pos > 0.5)
+            {
+               ind_start += (0.5 * rng);
+               grad_start = point{ cp.cx, cp.cy };
+               grad_end = point{ cp.cx+cp.radius, cp.cy };
+            }
+            else
+            {
+               float new_pos = start + (0.5 * rng);
+               ind_start = pos_;
+               pos_ = new_pos;
+               grad_start = point{ cp.cx, cp.cy };
+               grad_end = point{ cp.cx-cp.radius, cp.cy };
+            }
+         }
+         else
+         {
+            grad_start = point{ cp.cx-cp.radius, cp.cy };
+            grad_end = point{ cp.cx+cp.radius, cp.cy };
+         }
 
          paint grad
             = canvas_.linear_gradient(
-                  point{ cp.cx-cp.radius, cp.cy }, point{ cp.cx+cp.radius, cp.cy },
+                  grad_start, grad_end,
                   controls_color, indicator_color.level(1.5)
                );
 
          canvas_.begin_path();
-         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, offs +  rng);
+         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, start, end);
          canvas_.stroke_width(cp.radius/5);
          canvas_.stroke_color(controls_color.opacity(0.6));
          canvas_.stroke();
 
          canvas_.begin_path();
-         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, offs, pos_);
+         canvas_.arc({ cp.cx, cp.cy, cp.radius*1.25f }, ind_start, pos_);
          canvas_.stroke_width(cp.radius/5);
          canvas_.stroke_paint(grad);
          canvas_.stroke();
@@ -193,7 +220,7 @@ namespace photon
       }
 
       draw_knob_gauge(
-         thm.canvas(), _pos, cp, controls_color, indicator_color
+         thm.canvas(), _pos, cp, controls_color, indicator_color, _pan
       );
    }
 
@@ -286,8 +313,13 @@ namespace photon
       return true;
    }
 
-   image_knob::image_knob(image_ptr img_, float size_, std::size_t num_images_)
-    : _img(img_)
+   image_knob::image_knob(
+      image_ptr img_
+    , float size_
+    , std::size_t num_images_
+    , bool pan_)
+    : knob(pan_)
+    , _img(img_)
     , _size(size_)
     , _num_images(num_images_)
    {}

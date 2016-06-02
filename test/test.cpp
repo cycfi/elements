@@ -207,15 +207,13 @@ int main()
       
       
       {
-         auto img = sprite(knob_sprites, { 150, 150 });
-
          auto p =
                margin(
                   { 20, 20, 20, 20 },
                   layer(
                      margin(
                         { 20, 20, 20, 20 },
-                        img
+                        sprite(knob_sprites, { 150, 150 })
                      ),
                      panel{}
                   )
@@ -229,12 +227,34 @@ int main()
          auto sl = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin({ 20, 20, 20, 20 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } }),
+               margin(
+                  { 20, 20, 20, 20 },
+                  image_knob{ knob_sprites, 150, 100, true }
+               ),
+               margin(
+                  { 20, 20, 20, 20 },
+                  frame{}
+               ),
                panel{}
             )
          );
 
          main_widget = new_(std::move(sl));
+      }
+      
+      {
+         auto sl = margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin(
+                  { 20, 20, 20, 20 },
+                  image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } }
+               ),
+               panel{}
+            )
+         );
+
+         //main_widget = new_(std::move(sl));
       }
 
       {
@@ -424,25 +444,6 @@ int main()
             ;
 
          //main_widget = new_(p);
-      }
-      
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  image_knob{ knob_sprites, 150, 100 }
-               ),
-               margin(
-                  { 20, 20, 20, 20 },
-                  frame{}
-               ),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
       }
 
       {

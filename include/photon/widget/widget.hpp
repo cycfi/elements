@@ -277,6 +277,193 @@ namespace photon
    {
       return { f };
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Widget Holder
+   //
+   // A widget holder holds another widget by (smart) pointer. Widget holders may be
+   // copied and all copies will refer to the same widget being referenced.
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Widget>
+   class widget_holder : public widget
+   {
+   public:
+
+                              widget_holder(Widget&& rhs);
+                              widget_holder(Widget const& rhs);
+
+   // image
+
+      virtual rect            limits(basic_context const& ctx) const;
+      virtual widget*         hit_test(context const& ctx, point p);
+      virtual void            draw(context const& ctx);
+      virtual void            layout(context const& ctx);
+      virtual bool            scroll(context const& ctx, point p);
+
+   // control
+
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            text(context const& ctx, text_info const& info);
+      virtual bool            cursor(context const& ctx, point p);
+
+      virtual bool            focus(focus_request r);
+      virtual widget const*   focus() const;
+      virtual widget*         focus();
+      virtual bool            is_control() const;
+
+      Widget&                 get();
+      Widget const&           get() const;
+
+   private:
+
+      using widget_ptr = std::shared_ptr<Widget>;
+      widget_ptr              ptr;
+   };
+
+   template <typename Widget>
+   widget_holder<Widget> ref(Widget&& rhs);
+
+   template <typename Widget>
+   widget_holder<Widget> ref(Widget const& rhs);
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // widget_holder (inline) implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Widget>
+   inline widget_holder<Widget>::widget_holder(Widget&& rhs)
+    : ptr(std::dynamic_pointer_cast<Widget>(new_(rhs)))
+   {}
+
+   template <typename Widget>
+   inline widget_holder<Widget>::widget_holder(Widget const& rhs)
+    : ptr(std::dynamic_pointer_cast<Widget>(new_(rhs)))
+   {}
+
+   template <typename Widget>
+   inline rect
+   widget_holder<Widget>::limits(basic_context const& ctx) const
+   {
+      return ptr->limits(ctx);
+   }
+
+   template <typename Widget>
+   inline widget*
+   widget_holder<Widget>::hit_test(context const& ctx, point p)
+   {
+      return ptr->hit_test(ctx, p);
+   }
+
+   template <typename Widget>
+   inline void
+   widget_holder<Widget>::draw(context const& ctx)
+   {
+      ptr->draw(ctx);
+   }
+
+   template <typename Widget>
+   inline void
+   widget_holder<Widget>::layout(context const& ctx)
+   {
+      ptr->layout(ctx);
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::scroll(context const& ctx, point p)
+   {
+      return ptr->scroll(ctx, p);
+   }
+
+   template <typename Widget>
+   inline widget*
+   widget_holder<Widget>::click(context const& ctx, mouse_button btn)
+   {
+      return ptr->click(ctx, btn);
+   }
+
+   template <typename Widget>
+   inline void
+   widget_holder<Widget>::drag(context const& ctx, mouse_button btn)
+   {
+      return ptr->drag(ctx, btn);
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::key(context const& ctx, key_info const& k)
+   {
+      return ptr->key(ctx, k);
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::text(context const& ctx, text_info const& info)
+   {
+      return ptr->text(ctx, info);
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::cursor(context const& ctx, point p)
+   {
+      return ptr->cursor(ctx, p);
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::focus(focus_request r)
+   {
+      return ptr->focus(r);
+   }
+
+   template <typename Widget>
+   inline widget const*
+   widget_holder<Widget>::focus() const
+   {
+      return ptr->focus();
+   }
+
+   template <typename Widget>
+   inline widget*
+   widget_holder<Widget>::focus()
+   {
+      return ptr->focus();
+   }
+
+   template <typename Widget>
+   inline bool
+   widget_holder<Widget>::is_control() const
+   {
+      return ptr->is_control();
+   }
+
+   template <typename Widget>
+   Widget&
+   widget_holder<Widget>::get()
+   {
+      return *ptr.get();
+   }
+
+   template <typename Widget>
+   Widget const&
+   widget_holder<Widget>::get() const
+   {
+      return *ptr.get();
+   }
+
+   template <typename Widget>
+   inline widget_holder<Widget> ref(Widget&& rhs)
+   {
+      return { rhs };
+   }
+
+   template <typename Widget>
+   inline widget_holder<Widget> ref(Widget const& rhs)
+   {
+      return { rhs };
+   }
 }
 
 

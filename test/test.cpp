@@ -410,15 +410,30 @@ int main()
 
 
       {
+         auto bred      = colors::red.opacity(0.4);
+         auto bgreen    = colors::green.level(0.7).opacity(0.4);
+         auto bblue     = colors::blue.opacity(0.4);
+         
+         auto mbutton   = button("Momentary Button");
+         auto tbutton   = toggle_button("Toggle Button", bred);
+         auto lbutton   = ref(latching_button("Latching Button", bgreen));
+         auto reset     = button("Clear Latch", bblue);
+         
+         reset.on_click =  [lbutton, &main_window](bool) mutable
+                           {
+                              lbutton.get().state(0);
+                              main_window.draw();
+                           };
+      
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
                xside_margin({ 50, 50 },
                   vtile(
-                     yside_margin({ 20, 0 },    button("Momentary Button")),
-                     yside_margin({ 20, 0 },    toggle_button("Toggle Button", colors::red.opacity(0.4))),
-                     yside_margin({ 20, 0 },    latching_button("Latching Button", colors::green.level(0.7).opacity(0.4))),
-                     yside_margin({ 20, 20 },   button("Clear Latch", colors::blue.opacity(0.4)))
+                     yside_margin({ 20, 0 },    mbutton),
+                     yside_margin({ 20, 0 },    tbutton),
+                     yside_margin({ 20, 0 },    lbutton),
+                     yside_margin({ 20, 20 },   reset)
                   )
                ),
                panel()

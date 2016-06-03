@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016
 
 #include <photon/widget/layer.hpp>
+#include <functional>
 
 namespace photon
 {
@@ -22,6 +23,7 @@ namespace photon
    public:
 
       using base_type = array_composite<2, deck_widget>;
+      using button_function = std::function<void(bool)>;
 
       basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
        : _state(false)
@@ -37,6 +39,8 @@ namespace photon
 
       bool              state() const;
       bool              state(bool new_state);
+
+      button_function   on_click;
 
    private:
 

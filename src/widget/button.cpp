@@ -21,6 +21,8 @@ namespace photon
    }
    widget* basic_button::click(context const& ctx, mouse_button btn)
    {
+      if (!btn.is_pressed && on_click)
+         on_click(true);
       if (state(btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos())))
          ctx.window.draw();
       return this;
@@ -103,6 +105,8 @@ namespace photon
       else
       {
          state(!state());
+         if (on_click)
+            on_click(state());
       }
       return this;
    }
@@ -128,6 +132,8 @@ namespace photon
    {
       if (btn.is_pressed)
          return basic_button::click(ctx, btn);
+      else if (on_click)
+         on_click(true);
       return this;
    }
 

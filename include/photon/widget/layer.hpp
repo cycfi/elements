@@ -50,10 +50,9 @@ namespace photon
    class deck_widget : public layer_widget
    {
    public:
-
-      deck_widget()
-       : _selected_index(0)
-      {}
+                           deck_widget()
+                            : _selected_index(0)
+                           {}
 
       virtual void         draw(context const& ctx);
       void                 select(std::size_t index);

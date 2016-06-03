@@ -23,6 +23,9 @@ namespace photon
          clamp_min(limits.top, el.top);
          clamp_max(limits.right, el.right);
          clamp_max(limits.bottom, el.bottom);
+         
+         limits.right = std::max(limits.right, limits.left);
+         limits.bottom = std::max(limits.bottom, limits.top);
       }
 
       return limits;

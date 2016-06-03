@@ -22,15 +22,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      size_widget(point size, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _size(size)
-      {}
-
-      size_widget(point size, Subject const& subject)
-       : base_type(subject)
-       , _size(size)
-      {}
+                     size_widget(point size, Subject&& subject);
+                     size_widget(point size, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -39,6 +32,18 @@ namespace photon
 
       point          _size;
    };
+
+   template <typename Subject>
+   inline size_widget<Subject>::size_widget(point size, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline size_widget<Subject>::size_widget(point size, Subject const& subject)
+    : base_type(subject)
+    , _size(size)
+   {}
 
    template <typename Subject>
    inline size_widget<typename std::decay<Subject>::type>
@@ -73,15 +78,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      hsize_widget(float width, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _width(width)
-      {}
-
-      hsize_widget(float width, Subject const& subject)
-       : base_type(subject)
-       , _width(width)
-      {}
+                     hsize_widget(float width, Subject&& subject);
+                     hsize_widget(float width, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -90,6 +88,18 @@ namespace photon
 
       float          _width;
    };
+
+   template <typename Subject>
+   inline hsize_widget<Subject>::hsize_widget(float width, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _width(width)
+   {}
+
+   template <typename Subject>
+   inline hsize_widget<Subject>::hsize_widget(float width, Subject const& subject)
+    : base_type(subject)
+    , _width(width)
+   {}
 
    template <typename Subject>
    inline hsize_widget<typename std::decay<Subject>::type>
@@ -121,15 +131,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      vsize_widget(float height, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _height(height)
-      {}
-
-      vsize_widget(float height, Subject const& subject)
-       : base_type(subject)
-       , _height(height)
-      {}
+                     vsize_widget(float height, Subject&& subject);
+                     vsize_widget(float height, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -138,6 +141,18 @@ namespace photon
 
       float          _height;
    };
+
+   template <typename Subject>
+   inline vsize_widget<Subject>::vsize_widget(float height, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _height(height)
+   {}
+
+   template <typename Subject>
+   inline vsize_widget<Subject>::vsize_widget(float height, Subject const& subject)
+    : base_type(subject)
+    , _height(height)
+   {}
 
    template <typename Subject>
    inline vsize_widget<typename std::decay<Subject>::type>
@@ -171,15 +186,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      hpercent_widget(float percent, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _percent(percent)
-      {}
-
-      hpercent_widget(float percent, Subject const& subject)
-       : base_type(subject)
-       , _percent(percent)
-      {}
+                     hpercent_widget(float percent, Subject&& subject);
+                     hpercent_widget(float percent, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
 
@@ -187,6 +195,18 @@ namespace photon
 
       float          _percent;
    };
+
+   template <typename Subject>
+   inline hpercent_widget<Subject>::hpercent_widget(float percent, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _percent(percent)
+   {}
+
+   template <typename Subject>
+   inline hpercent_widget<Subject>::hpercent_widget(float percent, Subject const& subject)
+    : base_type(subject)
+    , _percent(percent)
+   {}
 
    template <typename Subject>
    inline hpercent_widget<typename std::decay<Subject>::type>
@@ -211,15 +231,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      vpercent_widget(float percent, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _percent(percent)
-      {}
-
-      vpercent_widget(float percent, Subject const& subject)
-       : base_type(subject)
-       , _percent(percent)
-      {}
+                     vpercent_widget(float percent, Subject&& subject);
+                     vpercent_widget(float percent, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
 
@@ -227,6 +240,18 @@ namespace photon
 
       float          _percent;
    };
+
+   template <typename Subject>
+   inline vpercent_widget<Subject>::vpercent_widget(float percent, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _percent(percent)
+   {}
+
+   template <typename Subject>
+   inline vpercent_widget<Subject>::vpercent_widget(float percent, Subject const& subject)
+    : base_type(subject)
+    , _percent(percent)
+   {}
 
    template <typename Subject>
    inline vpercent_widget<typename std::decay<Subject>::type>

@@ -111,7 +111,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(columns));
+         //main_widget = new_(std::move(columns));
       }
       
       {
@@ -413,14 +413,19 @@ int main()
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-               margin(
-                  { 100, 20, 100, 20 }, button(color{ 0, 0, 0, 0 }, "Button")
+               xside_margin({ 50, 50 },
+                  vtile(
+                     yside_margin({ 20, 0 },    button("Momentary Button")),
+                     yside_margin({ 20, 0 },    toggle_button("Toggle Button", colors::red.opacity(0.4))),
+                     yside_margin({ 20, 0 },    latching_button("Latching Button", colors::green.level(0.7).opacity(0.4))),
+                     yside_margin({ 20, 20 },   button("Clear Latch", colors::blue.opacity(0.4)))
+                  )
                ),
                panel()
             )
          );
 
-         //main_widget = new_(std::move(btn));
+         main_widget = new_(std::move(btn));
       }
 
       {

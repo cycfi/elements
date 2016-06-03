@@ -59,7 +59,8 @@ namespace photon
       return false;
    }
 
-   basic_button button(color body_color, std::string const& text);
+   basic_button
+   button(std::string const& text, color body_color = color{ 0, 0, 0, 0 });
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Basic Button Body
@@ -94,6 +95,9 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
    };
 
+   basic_toggle_button
+   toggle_button(std::string const& text, color body_color = color{ 0, 0, 0, 0 });
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Latching Button
    class basic_latching_button : public basic_button
@@ -106,6 +110,9 @@ namespace photon
 
       virtual widget*   click(context const& ctx, mouse_button btn);
    };
+
+   basic_latching_button
+   latching_button(std::string const& text, color body_color = color{ 0, 0, 0, 0 });
 }
 
 #endif

@@ -37,19 +37,24 @@ namespace photon
       return true;
    }
 
-   basic_button button(color body_color, std::string const& text)
+   template <typename Button>
+   Button make_button(std::string const& text, color body_color)
    {
       color c = body_color;
 
       auto btxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading(text)));
-      auto btn_body_off = basic_botton_body(c);
-      c.alpha = 0.5;
-      auto btn_body_on = basic_botton_body(c);
+      auto btn_body_off = basic_botton_body(c.level(0.9));
+      auto btn_body_on = basic_botton_body(c.opacity(0.5));
 
       auto btn_img_off = layer(btxt, btn_body_off);
       auto btn_img_on = left_top_margin({1, 1}, layer(btxt, btn_body_on));
 
-      return basic_button(new_(btn_img_off), new_(btn_img_on));
+      return Button(new_(btn_img_off), new_(btn_img_on));
+   }
+
+   basic_button button(std::string const& text, color body_color)
+   {
+      return make_button<basic_button>(text, body_color);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,23 +64,18 @@ namespace photon
    void basic_botton_body::draw(context const& ctx)
    {
       auto&       _canvas = ctx.theme().canvas();
-      bool        black = body_color == colors::black;
       auto const& b = ctx.bounds;
 
       paint bg
          = _canvas.linear_gradient(b.top_left(), b.bottom_left()
-          , color(255, 255, 255, black ? 16 : 32)
-          , color(0, 0, 0, black ? 16 : 32)
+          , color(255, 255, 255, 32)
+          , color(0, 0, 0, 32)
          );
 
       _canvas.begin_path();
       _canvas.round_rect(b.inset(1, 1), corner_radius-1);
-
-      if (!black)
-      {
-         _canvas.fill_color(body_color);
-         _canvas.fill();
-      }
+      _canvas.fill_color(body_color);
+      _canvas.fill();
       _canvas.fill_paint(bg);
       _canvas.fill();
 
@@ -117,6 +117,11 @@ namespace photon
       }
    }
 
+   basic_toggle_button toggle_button(std::string const& text, color body_color)
+   {
+      return make_button<basic_toggle_button>(text, body_color);
+   }
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Latching Button
    widget* basic_latching_button::click(context const& ctx, mouse_button btn)
@@ -124,5 +129,10 @@ namespace photon
       if (btn.is_pressed)
          return basic_button::click(ctx, btn);
       return this;
+   }
+
+   basic_latching_button latching_button(std::string const& text, color body_color)
+   {
+      return make_button<basic_latching_button>(text, body_color);
    }
 }

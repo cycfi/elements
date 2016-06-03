@@ -111,7 +111,7 @@ int main()
             )
          );
 
-         //main_widget = new_(std::move(columns));
+         main_widget = new_(std::move(columns));
       }
       
       {
@@ -131,7 +131,7 @@ int main()
             )
          );
 
-         main_widget = new_(std::move(rows));
+         //main_widget = new_(std::move(rows));
       }
       
       {

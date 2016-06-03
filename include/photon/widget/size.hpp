@@ -50,7 +50,12 @@ namespace photon
    template <typename Subject>
    inline rect size_widget<Subject>::limits(basic_context const& ctx) const
    {
-      return rect{ _size.x, _size.y, _size.x, _size.y };
+      rect  e_limits = this->subject().limits(ctx);
+      float size_x = _size.x;
+      float size_y = _size.y;
+      clamp(size_x, e_limits.left, e_limits.right);
+      clamp(size_y, e_limits.top, e_limits.bottom);
+      return rect{ size_x, size_y, size_x, size_y };
    }
 
    template <typename Subject>

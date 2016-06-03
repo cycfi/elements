@@ -296,7 +296,7 @@ namespace photon
 
       float val = (angle-offs) / rng;
       if (std::abs(val - _pos) < 0.6)
-         limit(_pos = val, 0.0, 1.0);
+         clamp(_pos = val, 0.0, 1.0);
       ctx.window.draw();
    }
 
@@ -308,7 +308,7 @@ namespace photon
    bool knob::scroll(context const& ctx, point p)
    {
       _pos += p.y * 0.01;
-      limit(_pos, 0.0, 1.0);
+      clamp(_pos, 0.0, 1.0);
       ctx.window.draw();
       return true;
    }

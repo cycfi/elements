@@ -89,13 +89,13 @@ namespace photon
       if (w > h)
       {
          w *= w / info.extent;
-         min_limit(w, 20);
+         clamp_min(w, 20);
          x += info.pos * (info.bounds.width()-w);
       }
       else
       {
          h *= h / info.extent;
-         min_limit(h, 20);
+         clamp_min(h, 20);
          y += info.pos * (info.bounds.height()-h);
       }
 
@@ -113,13 +113,13 @@ namespace photon
       if (w > h)
       {
          w *= w  / info.extent;
-         min_limit(w, 20);
+         clamp_min(w, 20);
          x += info.pos * (info.bounds.width()-w);
       }
       else
       {
          h *= h / info.extent;
-         min_limit(h, 20);
+         clamp_min(h, 20);
          y += info.pos * (info.bounds.height()-h);
       }
       return rect{ x, y, x+w, y+h };
@@ -206,7 +206,7 @@ namespace photon
          if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
          {
             double alx = halign() + dx;
-            limit(alx, 0.0, 1.0);
+            clamp(alx, 0.0, 1.0);
             halign(alx);
             redraw = true;
          }
@@ -218,7 +218,7 @@ namespace photon
          if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
          {
             double aly = valign() + dy;
-            limit(aly, 0.0, 1.0);
+            clamp(aly, 0.0, 1.0);
             valign(aly);
             redraw = true;
          }
@@ -278,14 +278,14 @@ namespace photon
 
       auto valign_ = [&](double align)
       {
-         limit(align, 0.0, 1.0);
+         clamp(align, 0.0, 1.0);
          valign(align);
          ctx.window.draw();
       };
 
       auto halign_ = [&](double align)
       {
-         limit(align, 0.0, 1.0);
+         clamp(align, 0.0, 1.0);
          halign(align);
          ctx.window.draw();
       };

@@ -301,7 +301,7 @@ namespace photon
    bool slider::scroll(context const& ctx, point p)
    {
       _pos += ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
-      limit(_pos, 0.0, 1.0);
+      clamp(_pos, 0.0, 1.0);
       ctx.window.draw();
       return true;
    }
@@ -333,7 +333,7 @@ namespace photon
          _pos = 1.0-((mp.y - (sl_pos.bounds.top + kh/2)) / h);
       }
 
-      limit(_pos, 0.0, 1.0);
+      clamp(_pos, 0.0, 1.0);
       ctx.window.draw();
    }
 

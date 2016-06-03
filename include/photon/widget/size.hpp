@@ -96,8 +96,10 @@ namespace photon
    template <typename Subject>
    inline rect hsize_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect e_limits = this->subject().limits(ctx);
-      return rect{ _width, e_limits.top, _width, e_limits.bottom };
+      rect  e_limits = this->subject().limits(ctx);
+      float width = _width;
+      clamp(width, e_limits.left, e_limits.right);
+      return rect{ width, e_limits.top, width, e_limits.bottom };
    }
 
    template <typename Subject>
@@ -142,8 +144,10 @@ namespace photon
    template <typename Subject>
    inline rect vsize_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect e_limits = this->subject().limits(ctx);
-      return rect{ e_limits.left, _height, e_limits.right, _height };
+      rect  e_limits = this->subject().limits(ctx);
+      float height = _height;
+      clamp(height, e_limits.top, e_limits.bottom);
+      return rect{ e_limits.left, height, e_limits.right, height };
    }
 
    template <typename Subject>

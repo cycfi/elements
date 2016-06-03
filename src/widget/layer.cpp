@@ -19,10 +19,10 @@ namespace photon
       {
          rect  el = elem->limits(ctx);
 
-         min_limit(limits.left, el.left);
-         min_limit(limits.top, el.top);
-         max_limit(limits.right, el.right);
-         max_limit(limits.bottom, el.bottom);
+         clamp_min(limits.left, el.left);
+         clamp_min(limits.top, el.top);
+         clamp_max(limits.right, el.right);
+         clamp_max(limits.bottom, el.bottom);
       }
 
       return limits;
@@ -63,10 +63,10 @@ namespace photon
       float height = ctx.bounds.height();
       rect  limits = (*this)[index]->limits(ctx);
 
-      min_limit(width, limits.left);
-      max_limit(width, limits.right);
-      min_limit(height, limits.top);
-      max_limit(height, limits.bottom);
+      clamp_min(width, limits.left);
+      clamp_max(width, limits.right);
+      clamp_min(height, limits.top);
+      clamp_max(height, limits.bottom);
 
       return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
    }

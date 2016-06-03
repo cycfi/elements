@@ -20,11 +20,11 @@ namespace photon
 
          limits.top += el.top;
          limits.bottom += el.bottom;
-         min_limit(limits.left, el.left);
-         max_limit(limits.right, el.right);
+         clamp_min(limits.left, el.left);
+         clamp_max(limits.right, el.right);
       }
 
-      min_limit(limits.right, limits.left);
+      clamp_min(limits.right, limits.left);
       return limits;
    }
 
@@ -76,11 +76,11 @@ namespace photon
 
          limits.left += el.left;
          limits.right += el.right;
-         min_limit(limits.top, el.top);
-         max_limit(limits.bottom, el.bottom);
+         clamp_min(limits.top, el.top);
+         clamp_max(limits.bottom, el.bottom);
       }
 
-      min_limit(limits.bottom, limits.top);
+      clamp_min(limits.bottom, limits.top);
       return limits;
    }
 

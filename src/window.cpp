@@ -170,8 +170,8 @@ namespace photon
 
             int w = w_width;
             int h = w_height;
-            limit(w, limits.left, limits.right);
-            limit(h, limits.top, limits.bottom);
+            clamp(w, limits.left, limits.right);
+            clamp(h, limits.top, limits.bottom);
 
             if ((w_width != w) || (w_height != h))
             {

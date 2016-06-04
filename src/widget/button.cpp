@@ -21,6 +21,8 @@ namespace photon
    }
    widget* basic_button::click(context const& ctx, mouse_button btn)
    {
+      if (!ctx.bounds.includes(ctx.cursor_pos()))
+         return 0;
       if (!btn.is_pressed && on_click)
          on_click(true);
       if (state(btn.is_pressed && ctx.bounds.includes(ctx.cursor_pos())))
@@ -92,7 +94,7 @@ namespace photon
    widget* basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(ctx.cursor_pos()))
-         return this;
+         return 0;
 
       if (btn.is_pressed)
       {
@@ -130,6 +132,8 @@ namespace photon
    // Latching Button
    widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    {
+      if (!ctx.bounds.includes(ctx.cursor_pos()))
+         return 0;
       if (btn.is_pressed)
          return basic_button::click(ctx, btn);
       else if (on_click)

@@ -24,14 +24,17 @@ namespace photon
    public:
 
       using base_type = proxy<Subject>;
+      using menu_item_function = std::function<void()>;
 
-                        basic_menu_item(Subject&& subject);
-                        basic_menu_item(Subject const& subject);
+                           basic_menu_item(Subject&& subject);
+                           basic_menu_item(Subject const& subject);
 
-      virtual void      draw(context const& ctx);
-      virtual widget*   click(context const& ctx, mouse_button btn);
-      virtual bool      cursor(context const& ctx, point p);
-      virtual bool      is_control() const;
+      virtual void         draw(context const& ctx);
+      virtual widget*      click(context const& ctx, mouse_button btn);
+      virtual bool         cursor(context const& ctx, point p);
+      virtual bool         is_control() const;
+
+      menu_item_function   on_click;
    };
 
    inline auto menu_item_text(std::string const& text)
@@ -79,6 +82,8 @@ namespace photon
    template <typename Subject>
    inline widget* basic_menu_item<Subject>::click(context const& ctx, mouse_button btn)
    {
+      if (!btn.is_pressed && on_click)
+         on_click();
       return base_type::click(ctx, btn);
    }
 

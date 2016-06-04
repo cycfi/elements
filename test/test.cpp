@@ -9,7 +9,7 @@ int main()
    auto&    my_app = make_app<app>();
    window   main_window("Photon", { 1000, 600 }, color{ 62, 91, 102, 255 }, my_app);
    canvas&  canvas_ = main_window.canvas();
-   
+
    auto     space = std::make_shared<canvas::image>(
                canvas_, "./assets/images/space.jpg");
 
@@ -21,9 +21,9 @@ int main()
 
    {
       widget_ptr main_widget;
-      
+
       {  // basics
-      
+
          auto rows = margin(
             { 20, 20, 20, 20 },
             layer(
@@ -36,10 +36,10 @@ int main()
                )
             )
          );
-         
+
          //main_widget = new_(std::move(rows));
       }
-      
+
       auto box = basic(
          [](context const& ctx)
          {
@@ -51,13 +51,13 @@ int main()
             c.fill();
          }
       );
-      
+
       {
          auto _box = top_margin(
             { 20 },
             hsize(64, box)
          );
-      
+
          auto rows = margin(
             { 20, 0, 20, 20 },
             vtile(
@@ -93,7 +93,7 @@ int main()
 
          //main_widget = new_(std::move(columns));
       }
-      
+
       {
          auto _box = left_margin(
             { 20 },
@@ -113,13 +113,13 @@ int main()
 
          //main_widget = new_(std::move(columns));
       }
-      
+
       {
          auto _box = top_margin(
             { 20 },
             box
          );
-      
+
          auto rows = margin(
             { 20, 0, 20, 20 },
             vtile(
@@ -133,13 +133,13 @@ int main()
 
          //main_widget = new_(std::move(rows));
       }
-      
+
       {
          auto _box = top_margin(
             { 20 },
             hsize(64, box)
          );
-      
+
          auto rows = margin(
             { 20, 0, 20, 20 },
             vtile(
@@ -154,7 +154,7 @@ int main()
 
          //main_widget = new_(std::move(rows));
       }
-      
+
       {
          auto _box = left_margin(
             { 20 },
@@ -204,7 +204,7 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-      
+
       {
          auto sl = margin(
             { 20, 20, 20, 20 },
@@ -219,7 +219,7 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-      
+
       {
          auto sl = margin(
             { 20, 20, 20, 20 },
@@ -231,7 +231,7 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-      
+
       {
          auto sl = margin(
             { 20, 20, 20, 20 },
@@ -244,8 +244,8 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-      
-      
+
+
       {
          auto p =
                margin(
@@ -262,7 +262,7 @@ int main()
 
          //main_widget = new_(p);
       }
-      
+
       {
          auto sl = margin(
             { 20, 20, 20, 20 },
@@ -281,7 +281,7 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-      
+
       {
          auto sl = margin(
             { 20, 20, 20, 20 },
@@ -393,19 +393,21 @@ int main()
       }
 
       {
+         using namespace icons;
+      
          auto icn = margin(
             { 20, 20, 20, 20 },
             htile(
-               icon<0x1F50D, 48>{}
-             , icon<0x2716, 48>{}
-             , icon<0xE75E, 48>{}
-             , icon<0x2713, 48>{}
-             , icon<0xE740, 48>{}
-             , icon<0xE729, 48>{}
+               align_center(icon<arrowcircledown, 48>{})
+             , align_center(icon<arrowright, 48>{})
+             , align_center(icon<barchart, 48>{})
+             , align_center(icon<batteryfull, 48>{})
+             , align_center(icon<car, 48>{})
+             , align_center(icon<glass, 48>{})
             )
          );
 
-         //main_widget = new_(std::move(icn));
+         main_widget = new_(std::move(icn));
       }
 
 
@@ -413,34 +415,35 @@ int main()
          auto bred      = colors::red.opacity(0.4);
          auto bgreen    = colors::green.level(0.7).opacity(0.4);
          auto bblue     = colors::blue.opacity(0.4);
-         
+
          auto mbutton   = button("Momentary Button");
          auto tbutton   = toggle_button("Toggle Button", bred);
          auto lbutton   = ref(latching_button("Latching Button", bgreen));
          auto reset     = button("Clear Latch", bblue);
-         
-         reset.on_click =  [lbutton, &main_window](bool) mutable
-                           {
-                              lbutton.get().state(0);
-                              main_window.draw();
-                           };
-      
+
+         reset.on_click =
+            [lbutton, &main_window](bool) mutable
+            {
+               lbutton.get().state(0);
+               main_window.draw();
+            };
+
          auto btn = margin(
             { 20, 20, 20, 20 },
             layer(
-               xside_margin({ 50, 50 },
+               margin({ 20, 0, 20, 20 },
                   vtile(
-                     yside_margin({ 20, 0 },    mbutton),
-                     yside_margin({ 20, 0 },    tbutton),
-                     yside_margin({ 20, 0 },    lbutton),
-                     yside_margin({ 20, 20 },   reset)
+                     top_margin(20, mbutton),
+                     top_margin(20, tbutton),
+                     top_margin(20, lbutton),
+                     top_margin(20, reset)
                   )
                ),
                panel()
             )
          );
 
-         main_widget = new_(std::move(btn));
+         //main_widget = new_(std::move(btn));
       }
 
       {
@@ -457,7 +460,7 @@ int main()
 
          //main_widget = new_(txbx);
       }
-      
+
       {
          auto img =
             size(
@@ -481,7 +484,7 @@ int main()
 
          //main_widget = new_(p);
       }
-      
+
       {
          auto img =
             size(

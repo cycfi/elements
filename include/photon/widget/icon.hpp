@@ -9,6 +9,7 @@
 
 #include <photon/widget/widget.hpp>
 #include <photon/widget/text_utils.hpp>
+#include <photon/widget/icon_ids.hpp>
 #include <memory>
 
 namespace photon

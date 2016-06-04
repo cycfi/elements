@@ -13,11 +13,8 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Buttons
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Momentary Button
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_button : public array_composite<2, deck_widget>
    {
    public:
@@ -25,12 +22,10 @@ namespace photon
       using base_type = array_composite<2, deck_widget>;
       using button_function = std::function<void(bool)>;
 
-      basic_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
-       : _state(false)
-      {
-         elements[0] = off;
-         elements[1] = on;
-      }
+                        basic_button(
+                           std::shared_ptr<widget> off
+                         , std::shared_ptr<widget> on
+                        );
 
       virtual widget*   hit_test(context const& ctx, point p);
       virtual widget*   click(context const& ctx, mouse_button btn);
@@ -46,6 +41,14 @@ namespace photon
 
       bool              _state;
    };
+
+   inline basic_button::basic_button(
+      std::shared_ptr<widget> off, std::shared_ptr<widget> on)
+    : _state(false)
+   {
+      elements[0] = off;
+      elements[1] = on;
+   }
 
    inline bool basic_button::state() const
    {
@@ -68,16 +71,14 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Basic Button Body
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_botton_body : public widget
    {
    public:
 
       static float corner_radius;
 
-      basic_botton_body(color body_color)
-       : body_color(body_color)
-      {}
-
+                     basic_botton_body(color body_color);
       virtual void   draw(context const& ctx);
 
    private:
@@ -85,15 +86,20 @@ namespace photon
       color          body_color;
    };
 
+   inline basic_botton_body::basic_botton_body(color body_color)
+    : body_color(body_color)
+   {}
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Toggle Button
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_toggle_button : public basic_button
    {
    public:
-
-      basic_toggle_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
-       : basic_button(off, on)
-      {}
+                        basic_toggle_button(
+                           std::shared_ptr<widget> off
+                         , std::shared_ptr<widget> on
+                        );
 
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
@@ -102,21 +108,32 @@ namespace photon
    basic_toggle_button
    toggle_button(std::string const& text, color body_color = color{ 0, 0, 0, 0 });
 
+   inline basic_toggle_button::basic_toggle_button(
+      std::shared_ptr<widget> off, std::shared_ptr<widget> on)
+    : basic_button(off, on)
+   {}
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Latching Button
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_latching_button : public basic_button
    {
    public:
-
-      basic_latching_button(std::shared_ptr<widget> off, std::shared_ptr<widget> on)
-       : basic_button(off, on)
-      {}
+                        basic_latching_button(
+                           std::shared_ptr<widget> off
+                         , std::shared_ptr<widget> on
+                        );
 
       virtual widget*   click(context const& ctx, mouse_button btn);
    };
 
    basic_latching_button
    latching_button(std::string const& text, color body_color = color{ 0, 0, 0, 0 });
+
+   inline basic_latching_button::basic_latching_button(
+      std::shared_ptr<widget> off, std::shared_ptr<widget> on)
+    : basic_button(off, on)
+   {}
 }
 
 #endif

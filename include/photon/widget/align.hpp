@@ -48,6 +48,27 @@ namespace photon
    }
 
    template <typename Subject>
+   inline halign_widget<typename std::decay<Subject>::type>
+   align_left(Subject&& subject)
+   {
+      return { 0.0, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline halign_widget<typename std::decay<Subject>::type>
+   align_center(Subject&& subject)
+   {
+      return { 0.5, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline halign_widget<typename std::decay<Subject>::type>
+   align_right(Subject&& subject)
+   {
+      return { 1.0, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
    inline rect halign_widget<Subject>::limits(basic_context const& ctx) const
    {
       rect e_limits = this->subject().limits(ctx);
@@ -104,6 +125,27 @@ namespace photon
    valign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline valign_widget<typename std::decay<Subject>::type>
+   align_top(Subject&& subject)
+   {
+      return { 0.0, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline valign_widget<typename std::decay<Subject>::type>
+   align_middle(Subject&& subject)
+   {
+      return { 0.5, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline valign_widget<typename std::decay<Subject>::type>
+   align_bottom(Subject&& subject)
+   {
+      return { 1.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>

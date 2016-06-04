@@ -74,7 +74,7 @@
 		5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 1; path = rect.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = window.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D2EC9F11CBB1AA300ACB621 /* app.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = app.cpp; sourceTree = "<group>"; };
-		5D3470001D027799007BD3B5 /* menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = menu.hpp; path = widget/menu.hpp; sourceTree = "<group>"; };
+		5D3470001D027799007BD3B5 /* menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = menu.hpp; sourceTree = "<group>"; };
 		5D4E9F091CC1BFEB00239DAE /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
 		5D4E9F0B1CC1C87600239DAE /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = layer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D4E9F0D1CC2319000239DAE /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
@@ -203,7 +203,6 @@
 				5D809D141CC3AA97005EE2D2 /* context.hpp */,
 				5D03A36B1CC994C500329057 /* cursor.hpp */,
 				5DB082F91CD239C600C12B80 /* key.hpp */,
-				5D3470001D027799007BD3B5 /* menu.hpp */,
 				5D809D151CC3AA97005EE2D2 /* point.hpp */,
 				5D809D161CC3AA97005EE2D2 /* rect.hpp */,
 				5D809D171CC3AA97005EE2D2 /* support.hpp */,
@@ -227,6 +226,7 @@
 				5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */,
 				5D809D1C1CC3AA97005EE2D2 /* layer.hpp */,
 				5D809D1D1CC3AA97005EE2D2 /* margin.hpp */,
+				5D3470001D027799007BD3B5 /* menu.hpp */,
 				5D736D9A1CCF8C4D006A2B3E /* port.hpp */,
 				5D809D1F1CC3AA97005EE2D2 /* size.hpp */,
 				5D809D201CC3AA97005EE2D2 /* slider.hpp */,

@@ -398,12 +398,12 @@ int main()
          auto icn = margin(
             { 20, 20, 20, 20 },
             htile(
-               align_center(icon<paperclip,        48>{})
-             , align_center(icon<arrowright,       48>{})
-             , align_center(icon<barchart,         48>{})
-             , align_center(icon<batteryfull,      48>{})
-             , align_center(icon<car,              48>{})
-             , align_center(icon<glass,            48>{})
+               align_center(icon{ paperclip,        48 })
+             , align_center(icon{ arrowright,       48 })
+             , align_center(icon{ barchart,         48 })
+             , align_center(icon{ batteryfull,      48 })
+             , align_center(icon{ car,              48 })
+             , align_center(icon{ glass,            48 })
             )
          );
 
@@ -412,6 +412,8 @@ int main()
 
 
       {
+         using namespace icons;
+
          auto bred      = colors::red.opacity(0.4);
          auto bgreen    = colors::green.level(0.7).opacity(0.4);
          auto bblue     = colors::blue.opacity(0.4);
@@ -420,6 +422,7 @@ int main()
          auto tbutton   = toggle_button("Toggle Button", bred);
          auto lbutton   = ref(latching_button("Latching Button", bgreen));
          auto reset     = button("Clear Latch", bblue);
+         auto note      = button(gear, "Setup");
 
          reset.on_click =
             [lbutton, &main_window](bool) mutable
@@ -437,6 +440,7 @@ int main()
                      top_margin(20, tbutton),
                      top_margin(20, lbutton),
                      top_margin(20, reset),
+                     top_margin(20, note),
                      top_margin(20, menu_item("Menu Item 1")),
                      menu_item("Menu Item 2"),
                      menu_item("Menu Item 3")

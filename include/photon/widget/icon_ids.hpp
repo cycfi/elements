@@ -41,7 +41,7 @@
 
 namespace photon { namespace icons
 {
-   enum icon
+   enum
    {
       fa_500px                         = 0xf26e,
       adjust                           = 0xf042,

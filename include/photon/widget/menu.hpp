@@ -72,7 +72,7 @@ namespace photon
          auto& canvas_ = ctx.canvas();
 
          canvas_.begin_path();
-         canvas_.rect(ctx.bounds);
+         canvas_.round_rect(ctx.bounds, 2);
          canvas_.fill_color(ctx.theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }

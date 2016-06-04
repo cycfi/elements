@@ -5,8 +5,6 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/button.hpp>
-#include <photon/widget/align.hpp>
-#include <photon/widget/text.hpp>
 #include <photon/window.hpp>
 
 namespace photon
@@ -41,24 +39,32 @@ namespace photon
       return true;
    }
 
-   template <typename Button>
-   Button make_button(std::string const& text, color body_color)
-   {
-      color c = body_color;
-
-      auto btxt = margin({ 15, 8, 15, 8 }, halign(0.5,  heading(text)));
-      auto btn_body_off = basic_botton_body(c.level(0.9));
-      auto btn_body_on = basic_botton_body(c.opacity(0.5));
-
-      auto btn_img_off = layer(btxt, btn_body_off);
-      auto btn_img_on = left_top_margin({1, 1}, layer(btxt, btn_body_on));
-
-      return Button(new_(btn_img_off), new_(btn_img_on));
-   }
-
    basic_button button(std::string const& text, color body_color)
    {
       return make_button<basic_button>(text, body_color);
+   }
+
+   basic_button button(
+      std::uint32_t icon_code, std::string const& text, color body_color
+   )
+   {
+      return make_button<basic_button>(icon_code, text, body_color);
+   }
+
+   bool basic_button::state() const
+   {
+      return _state;
+   }
+
+   bool basic_button::state(bool new_state)
+   {
+      if (new_state != _state)
+      {
+         _state = new_state;
+         deck_widget::select(_state);
+         return true;
+      }
+      return false;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +132,12 @@ namespace photon
    basic_toggle_button toggle_button(std::string const& text, color body_color)
    {
       return make_button<basic_toggle_button>(text, body_color);
+   }
+
+   basic_toggle_button
+   toggle_button(std::uint32_t icon_code, std::string const& text, color body_color)
+   {
+      return make_button<basic_toggle_button>(icon_code, text, body_color);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

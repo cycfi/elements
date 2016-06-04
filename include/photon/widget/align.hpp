@@ -22,15 +22,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      halign_widget(float align, Subject&& subject)
-       : base_type(std::forward<Subject>(subject))
-       , _align(align)
-      {}
-
-      halign_widget(float align, Subject const& subject)
-       : base_type(subject)
-       , _align(align)
-      {}
+                     halign_widget(float align, Subject&& subject);
+                     halign_widget(float align, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -69,6 +62,18 @@ namespace photon
    }
 
    template <typename Subject>
+   inline halign_widget<Subject>::halign_widget(float align, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _align(align)
+   {}
+
+   template <typename Subject>
+   inline halign_widget<Subject>::halign_widget(float align, Subject const& subject)
+    : base_type(subject)
+    , _align(align)
+   {}
+
+   template <typename Subject>
    inline rect halign_widget<Subject>::limits(basic_context const& ctx) const
    {
       rect e_limits = this->subject().limits(ctx);
@@ -97,20 +102,8 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      valign_widget(float align, Subject&& subject)
-       : base_type(std::move(subject))
-       , _align(align)
-      {}
-
-      valign_widget(float align, Subject const& subject)
-       : base_type(subject)
-       , _align(align)
-      {}
-
-      ~valign_widget() {}
-
-      valign_widget(valign_widget&&) = default;
-      valign_widget& operator=(valign_widget&&) = default;
+                     valign_widget(float align, Subject&& subject);
+                     valign_widget(float align, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
@@ -147,6 +140,18 @@ namespace photon
    {
       return { 1.0, std::forward<Subject>(subject) };
    }
+
+   template <typename Subject>
+   valign_widget<Subject>::valign_widget(float align, Subject&& subject)
+    : base_type(std::move(subject))
+    , _align(align)
+   {}
+
+   template <typename Subject>
+   valign_widget<Subject>::valign_widget(float align, Subject const& subject)
+    : base_type(subject)
+    , _align(align)
+   {}
 
    template <typename Subject>
    inline rect valign_widget<Subject>::limits(basic_context const& ctx) const

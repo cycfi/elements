@@ -17,6 +17,7 @@
 		5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */; };
 		5D2EC9F01CBB0D1A00ACB621 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */; };
 		5D2EC9F21CBB1AA300ACB621 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC9F11CBB1AA300ACB621 /* app.cpp */; };
+		5D3470011D027799007BD3B5 /* menu.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5D3470001D027799007BD3B5 /* menu.hpp */; };
 		5D3EC3A61CD81F0900BE5E6B /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E99031CBE63BA009B943D /* tile.cpp */; };
 		5D4E9F0E1CC2319000239DAE /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E9F0D1CC2319000239DAE /* context.cpp */; };
 		5D50AAF11CBCA21200C53185 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D50AAF01CBCA21200C53185 /* libglfw3.a */; };
@@ -73,6 +74,7 @@
 		5D2EC9EB1CBB0D1A00ACB621 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 1; path = rect.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D2EC9ED1CBB0D1A00ACB621 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = window.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D2EC9F11CBB1AA300ACB621 /* app.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = app.cpp; sourceTree = "<group>"; };
+		5D3470001D027799007BD3B5 /* menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = menu.hpp; path = widget/menu.hpp; sourceTree = "<group>"; };
 		5D4E9F091CC1BFEB00239DAE /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
 		5D4E9F0B1CC1C87600239DAE /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = layer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D4E9F0D1CC2319000239DAE /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				5D809D141CC3AA97005EE2D2 /* context.hpp */,
 				5D03A36B1CC994C500329057 /* cursor.hpp */,
 				5DB082F91CD239C600C12B80 /* key.hpp */,
+				5D3470001D027799007BD3B5 /* menu.hpp */,
 				5D809D151CC3AA97005EE2D2 /* point.hpp */,
 				5D809D161CC3AA97005EE2D2 /* rect.hpp */,
 				5D809D171CC3AA97005EE2D2 /* support.hpp */,
@@ -301,6 +304,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D3470011D027799007BD3B5 /* menu.hpp in Headers */,
 				5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */,
 				5DC6FEB91CF1D4FE00C4253C /* text_utils.hpp in Headers */,
 			);

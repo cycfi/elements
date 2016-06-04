@@ -398,16 +398,16 @@ int main()
          auto icn = margin(
             { 20, 20, 20, 20 },
             htile(
-               align_center(icon<arrowcircledown, 48>{})
-             , align_center(icon<arrowright, 48>{})
-             , align_center(icon<barchart, 48>{})
-             , align_center(icon<batteryfull, 48>{})
-             , align_center(icon<car, 48>{})
-             , align_center(icon<glass, 48>{})
+               align_center(icon<paperclip,        48>{})
+             , align_center(icon<arrowright,       48>{})
+             , align_center(icon<barchart,         48>{})
+             , align_center(icon<batteryfull,      48>{})
+             , align_center(icon<car,              48>{})
+             , align_center(icon<glass,            48>{})
             )
          );
 
-         main_widget = new_(std::move(icn));
+         //main_widget = new_(std::move(icn));
       }
 
 
@@ -436,14 +436,17 @@ int main()
                      top_margin(20, mbutton),
                      top_margin(20, tbutton),
                      top_margin(20, lbutton),
-                     top_margin(20, reset)
+                     top_margin(20, reset),
+                     top_margin(20, menu_item("Menu Item 1")),
+                     menu_item("Menu Item 2"),
+                     menu_item("Menu Item 3")
                   )
                ),
                panel()
             )
          );
 
-         //main_widget = new_(std::move(btn));
+         main_widget = new_(std::move(btn));
       }
 
       {

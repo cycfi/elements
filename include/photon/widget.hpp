@@ -20,5 +20,6 @@
 #include <photon/widget/button.hpp>
 #include <photon/widget/image.hpp>
 #include <photon/widget/port.hpp>
+#include <photon/widget/menu.hpp>
 
 #endif

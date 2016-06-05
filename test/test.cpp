@@ -417,17 +417,49 @@ int main()
          auto bred      = colors::red.opacity(0.4);
          auto bgreen    = colors::green.level(0.7).opacity(0.4);
          auto bblue     = colors::blue.opacity(0.4);
-
+         auto bgold     = colors::gold.opacity(0.4);
+         auto brblue    = colors::royal_blue.opacity(0.4);
+         
          auto mbutton   = button("Momentary Button");
          auto tbutton   = toggle_button("Toggle Button", bred);
          auto lbutton   = ref(latching_button("Latching Button", bgreen));
          auto reset     = button("Clear Latch", bblue);
-         auto note      = button(gear, "Setup");
+         auto note      = button(gear, "Setup", brblue);
+         auto drink     = button("Let's Drink to That!!!", glass, bgold);
+         
+         auto rb1       = ref(radio_button("Radio Button 1"));
+         auto rb2       = ref(radio_button("Radio Button 2"));
+         auto rb3       = ref(radio_button("Radio Button 3"));
 
          reset.on_click =
             [lbutton, &main_window](bool) mutable
             {
                lbutton.get().state(0);
+               main_window.draw();
+            };
+         
+         rb1.get().state(true);
+         rb1.get().on_click =
+            [rb2, rb3, &main_window](bool) mutable
+            {
+               rb2.get().state(0);
+               rb3.get().state(0);
+               main_window.draw();
+            };
+         
+         rb2.get().on_click =
+            [rb1, rb3, &main_window](bool) mutable
+            {
+               rb1.get().state(0);
+               rb3.get().state(0);
+               main_window.draw();
+            };
+         
+         rb3.get().on_click =
+            [rb1, rb2, &main_window](bool) mutable
+            {
+               rb1.get().state(0);
+               rb2.get().state(0);
                main_window.draw();
             };
 
@@ -441,6 +473,16 @@ int main()
                      top_margin(20, lbutton),
                      top_margin(20, reset),
                      top_margin(20, note),
+                     top_margin(20, drink),
+
+                     top_margin(20, check_box("Check Box 1")),
+                     check_box("Check Box 2"),
+                     check_box("Check Box 3"),
+
+                     top_margin(20, rb1),
+                     rb2,
+                     rb3,
+
                      top_margin(20, menu_item("Menu Item 1")),
                      menu_item("Menu Item 2"),
                      menu_item("Menu Item 3")

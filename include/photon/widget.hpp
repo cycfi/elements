@@ -21,5 +21,6 @@
 #include <photon/widget/image.hpp>
 #include <photon/widget/port.hpp>
 #include <photon/widget/menu.hpp>
+#include <photon/widget/gallery.hpp>
 
 #endif

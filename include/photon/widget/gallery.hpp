@@ -161,35 +161,48 @@ namespace photon
     , std::uint32_t icon_code
     , color body_color = color{ 0, 0, 0, 0 }
    );
-   
-   inline auto icon_text(std::uint32_t code, std::string const& text)
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Check Box
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   void draw_check_box(
+      context const& ctx, std::string const& text, bool state, bool hilite
+   );
+
+   template <bool state>
+   class check_box_widget : public widget
    {
-      return
-         xside_margin(
-            { 15, 15 },
-            align_left(
-               layer(
-                  icon(code),
-                  left_margin(25, heading(text))
-               )
-            )
-         )
-      ;
+   public:
+                     check_box_widget(std::string const& text)
+                      : _text(text)
+                     {}
+
+      virtual rect   limits(basic_context const& ctx) const;
+      virtual void   draw(context const& ctx);
+
+   private:
+
+      std::string    _text;
+   };
+
+   template <bool state>
+   rect check_box_widget<state>::limits(basic_context const& ctx) const
+   {
+      point s = text_utils(ctx.theme()).measure_heading(_text.c_str());
+      return { s.x + 45, s.y, s.x + 45, s.y };
+   }
+
+   template <bool state>
+   void check_box_widget<state>::draw(context const& ctx)
+   {
+      draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.cursor_pos()));
    }
 
    inline basic_toggle_button check_box(std::string const& text)
    {
       return basic_toggle_button(
-         icon_text(icons::squareo, text)
-       , icon_text(icons::checksquareo, text)
-      );
-   }
-   
-   inline basic_latching_button radio_button(std::string const& text)
-   {
-      return basic_latching_button(
-         icon_text(icons::circleo, text)
-       , icon_text(icons::dotcircleo, text)
+         check_box_widget<false>{ text }
+       , check_box_widget<true>{ text }
       );
    }
 

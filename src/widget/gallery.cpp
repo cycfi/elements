@@ -120,4 +120,69 @@ namespace photon
    {
       return make_button<basic_latching_button>(text, icon_code, body_color);
    }
+
+   void draw_check_box(
+      context const& ctx, std::string const& text, bool state, bool hilite
+   )
+   {
+      canvas&  canvas_ = ctx.canvas();
+      theme&   theme_ = ctx.theme();
+      color    indicator_color = theme_.indicator_color;
+      rect     box = ctx.bounds.move(15, 0);
+
+      box.width(box.height());
+
+      color c1 = state ? indicator_color.level(1.5) : color(0, 0, 0, 32);
+      color c2 = state ? indicator_color : color(0, 0, 0, 92);
+
+      if (state && hilite)
+      {
+         c1 = c1.level(1.3);
+         c2 = c2.level(1.3);
+      }
+      paint bg = canvas_.box_gradient(box.inset(1, 1).move(0, 1.5), 3, 4, c1, c2);
+
+      canvas_.begin_path();
+      canvas_.round_rect(box.inset(1, 1), 3);
+      canvas_.fill_paint(bg);
+      canvas_.fill();
+
+      if (state || hilite)
+      {
+         float const glow = 2;
+         color glow_color = hilite ? indicator_color : c2;
+
+         paint glow_paint
+            = canvas_.box_gradient(box, 3, 3, glow_color, color(0, 0, 0, 0)
+            );
+
+         canvas_.begin_path();
+         canvas_.rect(box.inset(-glow, -glow));
+         canvas_.round_rect(box.inset(1.5, 1.5), 3);
+         canvas_.path_winding(canvas::hole);
+         canvas_.fill_paint(glow_paint);
+         canvas_.fill();
+      }
+
+      if (state)
+      {
+         auto save = theme_.icon_color;
+         theme_.icon_color = c1.level(2.0);
+         text_utils(theme_).draw_icon(box, icons::check, 14);
+         theme_.icon_color = save;
+      }
+
+      if (!state)
+      {
+         color outline_color = hilite ? theme_.frame_color : color{ 0, 0, 0, 48 };
+         canvas_.begin_path();
+         canvas_.round_rect(box.inset(1, 1), 3);
+         canvas_.stroke_color(outline_color);
+         canvas_.stroke();
+      }
+
+      rect  text_bounds = ctx.bounds.move(45, 0);
+      text_utils(theme_).draw_heading(text_bounds, text.c_str());
+   }
+
 }

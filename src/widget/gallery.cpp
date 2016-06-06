@@ -171,8 +171,7 @@ namespace photon
          text_utils(theme_).draw_icon(box, icons::check, 14);
          theme_.icon_color = save;
       }
-
-      if (!state)
+      else
       {
          color outline_color = hilite ? theme_.frame_color : color{ 0, 0, 0, 48 };
          canvas_.begin_path();

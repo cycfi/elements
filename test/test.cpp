@@ -426,6 +426,7 @@ int main()
          auto reset     = button("Clear Latch", bblue);
          auto note      = button(gear, "Setup", brblue);
          auto drink     = button("Let's Drink to That!!!", glass, bgold);
+         auto dropdown  = toggle_button("Dropdown", caretdown);
          
          reset.on_click =
             [lbutton, &main_window](bool) mutable
@@ -434,30 +435,37 @@ int main()
                main_window.draw();
             };
 
-         auto btn = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 20, 0, 20, 20 },
-                  vtile(
-                     top_margin(20, mbutton),
-                     top_margin(20, tbutton),
-                     top_margin(20, lbutton),
-                     top_margin(20, reset),
-                     top_margin(20, note),
-                     top_margin(20, drink),
+         auto btn =
+            margin({ 20, 20, 20, 20 },
+               pane("Buttons",
+                  htile(
+                     margin({ 20, 0, 20, 20 },
+                        vtile(
+                           top_margin(20, mbutton),
+                           top_margin(20, tbutton),
+                           top_margin(20, lbutton),
+                           top_margin(20, reset),
+                           top_margin(20, note),
+                           top_margin(20, drink)
+                        )
+                     ),
+                     margin({ 20, 0, 20, 20 },
+                        vtile(
+                           top_margin(20, dropdown),
 
-                     top_margin(20, align_left(check_box("Check Box 1"))),
-                     top_margin(10, align_left(check_box("Check Box 2"))),
-                     top_margin(10, align_left(check_box("Check Box 3"))),
+                           top_margin(20, align_left(check_box("Check Box 1"))),
+                           top_margin(10, align_left(check_box("Check Box 2"))),
+                           top_margin(10, align_left(check_box("Check Box 3"))),
 
-                     top_margin(20, menu_item("Menu Item 1")),
-                     menu_item("Menu Item 2"),
-                     menu_item("Menu Item 3")
+                           top_margin(20, menu_item("Menu Item 1")),
+                           menu_item("Menu Item 2"),
+                           menu_item("Menu Item 3")
+                        )
+                     )
                   )
-               ),
-               panel()
+               )
             )
-         );
+         ;
 
          main_widget = new_(std::move(btn));
       }

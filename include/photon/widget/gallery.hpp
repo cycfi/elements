@@ -15,6 +15,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   auto const button_margin = rect{ 12, 6, 12, 6 };
+   auto const default_button_color = color{ 0, 0, 0, 0 };
+
    class basic_button_body : public widget
    {
    public:
@@ -34,7 +37,7 @@ namespace photon
    {}
 
    template <typename Button, typename Label>
-   inline Button make_button(Label&& label, color body_color = color{ 0, 0, 0, 0 })
+   inline Button make_button(Label&& label, color body_color = default_button_color)
    {
       auto btn_body_off = basic_button_body(body_color.level(0.9));
       auto btn_body_on = basic_button_body(body_color.opacity(0.5));
@@ -48,12 +51,12 @@ namespace photon
    template <typename Button>
    inline Button make_button(
       std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    )
    {
       return make_button<Button>(
          margin(
-            { 15, 8, 15, 8 },
+            button_margin,
             align_center(heading(text))
          ),
          body_color
@@ -64,12 +67,12 @@ namespace photon
    inline Button make_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    )
    {
       return make_button<Button>(
          margin(
-            { 15, 8, 15, 8 },
+            button_margin,
             align_center(
                htile(
                   right_margin(8, icon(icon_code)),
@@ -85,12 +88,12 @@ namespace photon
    inline Button make_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    )
    {
       return make_button<Button>(
          margin(
-            { 15, 8, 15, 8 },
+            button_margin,
             align_center(
                htile(
                   heading(text),
@@ -105,61 +108,61 @@ namespace photon
    basic_button
    button(
       std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_button
    button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_button
    button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = color{ 0, 0, 0, 0 }
+    , color body_color = default_button_color
    );
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,6 +227,25 @@ namespace photon
    inline auto menu_item(std::string const& text)
    {
       return make_basic_menu_item(menu_item_text(text));
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Pane
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Content>
+   inline auto pane(std::string const& title, Content&& content)
+   {
+      return
+        layer(
+            align_top(
+                layer(
+                    align_center(margin({10, 4, 10, 4}, heading(title))),
+                    title_bar{}
+                )
+            ),
+            top_margin(30, content),
+            panel{}
+        );
    }
 }
 

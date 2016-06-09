@@ -48,6 +48,8 @@
 		5D8733F71CBB8B5C0003E9DD /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8733F61CBB8B5C0003E9DD /* widget.cpp */; };
 		5DAE365D1CC047CE0077B3D4 /* theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DAE365C1CC047CE0077B3D4 /* theme.cpp */; };
 		5DAFFF3C1CCC220B00C94683 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DAFFF3B1CCC220B00C94683 /* image.cpp */; };
+		5DBCE9761D0A0DDD007E8335 /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCE9751D0A0DDD007E8335 /* menu.cpp */; };
+		5DBCE9771D0A0DDD007E8335 /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCE9751D0A0DDD007E8335 /* menu.cpp */; };
 		5DC6FEB91CF1D4FE00C4253C /* text_utils.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DC6FEB81CF1D4FE00C4253C /* text_utils.hpp */; };
 		5DC6FEBB1CF1D51400C4253C /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */; };
 		5DC6FEBC1CF1D51400C4253C /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */; };
@@ -122,6 +124,7 @@
 		5DAFFF3D1CCC221500C94683 /* image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		5DAFFF3E1CCC2BEC00C94683 /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = port.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5DB082F91CD239C600C12B80 /* key.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = key.hpp; sourceTree = "<group>"; };
+		5DBCE9751D0A0DDD007E8335 /* menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = menu.cpp; sourceTree = "<group>"; };
 		5DC6FEB81CF1D4FE00C4253C /* text_utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = text_utils.hpp; sourceTree = "<group>"; };
 		5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
 		5DEB93601CB9B84D001DFB55 /* photon_gui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = photon_gui; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -256,6 +259,7 @@
 				5DAFFF3B1CCC220B00C94683 /* image.cpp */,
 				5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */,
 				5D4E9F0B1CC1C87600239DAE /* layer.cpp */,
+				5DBCE9751D0A0DDD007E8335 /* menu.cpp */,
 				5DAFFF3E1CCC2BEC00C94683 /* port.cpp */,
 				5D4E9F091CC1BFEB00239DAE /* slider.cpp */,
 				5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */,
@@ -412,6 +416,7 @@
 				5D83CFE51CE353200009D9F3 /* context.cpp in Sources */,
 				5D23FF881CEE848D0053FE7A /* knob.cpp in Sources */,
 				5D83CFEE1CE353260009D9F3 /* layer.cpp in Sources */,
+				5DBCE9771D0A0DDD007E8335 /* menu.cpp in Sources */,
 				5D83CFE11CE353200009D9F3 /* rect.cpp in Sources */,
 				5D83CFF01CE353260009D9F3 /* image.cpp in Sources */,
 				5D83CFF11CE353260009D9F3 /* port.cpp in Sources */,
@@ -438,6 +443,7 @@
 				5D7ADC331CF675D900DD3F54 /* basic.cpp in Sources */,
 				5D2EC9F21CBB1AA300ACB621 /* app.cpp in Sources */,
 				5DC6FEBB1CF1D51400C4253C /* text_utils.cpp in Sources */,
+				5DBCE9761D0A0DDD007E8335 /* menu.cpp in Sources */,
 				5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */,
 				5D1DFFFF1CD8B01600B4C91B /* port.cpp in Sources */,
 				5D7459CF1D03917400CE9E0F /* gallery.cpp in Sources */,

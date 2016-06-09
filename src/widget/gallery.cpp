@@ -120,6 +120,15 @@ namespace photon
    {
       return make_button<basic_latching_button>(text, icon_code, body_color);
    }
+   
+   basic_dropdown_menu
+   dropdown_menu(
+      std::string const& text
+    , color body_color
+   )
+   {
+      return make_button<basic_dropdown_menu>(text, icons::caretdown, body_color);
+   }
 
    void draw_check_box(
       context const& ctx, std::string const& text, bool state, bool hilite

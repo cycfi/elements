@@ -8,10 +8,56 @@
 #define PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016
 
 #include <photon/widget/widget.hpp>
+#include <photon/widget/button.hpp>
+#include <photon/widget/floating.hpp>
 #include <photon/window.hpp>
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Dropdown Menu
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class basic_dropdown_menu : public basic_button
+   {
+   public:
+                           template <typename W1, typename W2>
+                           basic_dropdown_menu(W1&& off, W2&& on);
+
+      virtual widget*      click(context const& ctx, mouse_button btn);
+      virtual void         drag(context const& ctx, mouse_button btn);
+
+                           template <typename Menu>
+      void                 menu(Menu&& menu_);
+
+   private:
+
+      widget_ptr           _menu;
+      bool                 _is_active;
+   };
+
+   template <typename W1, typename W2>
+   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
+    : basic_button(std::forward<W1>(off), std::forward<W2>(on))
+    , _is_active(false)
+   {}
+
+   template <typename Menu>
+   inline void basic_dropdown_menu::menu(Menu&& menu_)
+   {
+      _menu = new_(floating({0, 0, 0, 0}, menu_));
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Menu Background
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class menu_background : public widget
+   {
+   public:
+
+      static rect          shadow_offset;
+      virtual void         draw(context const& ctx);
+   };
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Basic Menu Items
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,6 +80,8 @@ namespace photon
       menu_item_function   on_click;
    };
 
+   void highlight_menu_item(context const& ctx);
+
    template <typename Subject>
    inline basic_menu_item<Subject>::basic_menu_item(Subject&& subject)
     : base_type(std::forward<Subject>(subject))
@@ -47,15 +95,7 @@ namespace photon
    template <typename Subject>
    inline void basic_menu_item<Subject>::draw(context const& ctx)
    {
-      if (ctx.bounds.includes(ctx.cursor_pos()))
-      {
-         auto& canvas_ = ctx.canvas();
-
-         canvas_.begin_path();
-         canvas_.round_rect(ctx.bounds, 2);
-         canvas_.fill_color(ctx.theme().indicator_color.opacity(0.6));
-         canvas_.fill();
-      }
+      highlight_menu_item(ctx);
       base_type::draw(ctx);
    }
 

@@ -14,8 +14,24 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Floating widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class floating_widget_base
+   {
+   public:
+
+                     floating_widget_base(rect bounds)
+                      : _bounds(bounds)
+                     {}
+
+      rect           bounds() const { return _bounds; }
+      void           bounds(rect bounds_) { _bounds = bounds_; }
+
+   private:
+
+      rect           _bounds;
+   };
+
    template <typename Subject>
-   class floating_widget : public proxy<Subject>
+   class floating_widget : public proxy<Subject>, public floating_widget_base
    {
    public:
 
@@ -26,22 +42,18 @@ namespace photon
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
-
-   private:
-
-      rect           _bounds;
    };
 
    template <typename Subject>
    inline floating_widget<Subject>::floating_widget(rect bounds, Subject&& subject)
     : base_type(std::forward<Subject>(subject))
-    , _bounds(bounds)
+    , floating_widget_base(bounds)
    {}
 
    template <typename Subject>
    inline floating_widget<Subject>::floating_widget(rect bounds, Subject const& subject)
     : base_type(subject)
-    , _bounds(bounds)
+    , floating_widget_base(bounds)
    {}
 
    template <typename Subject>
@@ -60,7 +72,20 @@ namespace photon
    template <typename Subject>
    inline void floating_widget<Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds = _bounds;
+      rect  e_limits = this->subject().limits(ctx);
+      ctx.bounds = bounds();
+      float w = ctx.bounds.width();
+      float h = ctx.bounds.height();
+
+      if (w < e_limits.left)
+         ctx.bounds.width(e_limits.left);
+      else if (w > e_limits.right)
+         ctx.bounds.width(e_limits.right);
+
+      if (h < e_limits.top)
+         ctx.bounds.height(e_limits.top);
+      else if (w > e_limits.bottom)
+         ctx.bounds.height(e_limits.bottom);
    }
 }
 

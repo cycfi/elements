@@ -16,6 +16,7 @@
 #include <nanovg.h>
 
 #include <photon/widget/widget.hpp>
+#include <photon/widget/layer.hpp>
 #include <photon/color.hpp>
 #include <photon/point.hpp>
 #include <photon/theme.hpp>
@@ -77,15 +78,13 @@ namespace photon
       app&                 app() const                   { return _app; }
       class theme const&   theme() const                 { return *_theme.get(); }
       class theme&         theme()                       { return *_theme.get(); }
-      
-      widget_ptr           subject() const               { return _subject; }
-      void                 subject(widget_ptr subject_)  { _subject = subject_; }
+
+      layer_composite      content;
 
    private:
 
       color                _bkd_color;
       class app&           _app;
-      widget_ptr           _subject;
       GLFWwindow*          _window;
       NVGcontext*          _context;
       class canvas         _canvas;

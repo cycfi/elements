@@ -34,6 +34,8 @@ namespace photon
       void                 focus_top();
       rect                 bounds;
    };
+   
+   using layer_composite = vector_composite<layer_widget>;
 
    template <typename... W>
    inline auto layer(W&&... elements)
@@ -61,6 +63,8 @@ namespace photon
 
       std::size_t          _selected_index;
    };
+   
+   using deck_composite = vector_composite<deck_widget>;
 
    template <typename... W>
    inline auto deck(W&&... elements)

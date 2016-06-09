@@ -162,7 +162,7 @@ namespace photon
       nvgBeginFrame(_context, w_width, w_height, px_ratio);
       {
          basic_context bctx{ *this };
-         rect limits = _subject->limits(bctx);
+         rect limits = content.limits(bctx);
          if (limits != _current_limits)
          {
             _current_limits = limits;
@@ -183,15 +183,15 @@ namespace photon
          rect subj_bounds = { 0, 0, float(w_width), float(w_height) };
 
          // layout the subject only if the window bounds changes
-         context ctx{ *this, _subject.get(), subj_bounds };
+         context ctx{ *this, &content, subj_bounds };
          if (subj_bounds != _current_bounds)
          {
             _current_bounds = subj_bounds;
-            _subject->layout(ctx);
+            content.layout(ctx);
          }
 
          // draw the subject
-         _subject->draw(ctx);
+         content.draw(ctx);
       }
       nvgEndFrame(_context);
       glfwSwapBuffers(_window);
@@ -200,14 +200,14 @@ namespace photon
    void window::key(key_info const& k)
    {
       _current_key = k;
-      context ctx { *this, _subject.get(), _current_bounds };
-      _subject->key(ctx, k);
+      context ctx { *this, &content, _current_bounds };
+      content.key(ctx, k);
    }
 
    void window::text(text_info const& info)
    {
-      context ctx { *this, _subject.get(), _current_bounds };
-      _subject->text(ctx, info);
+      context ctx { *this, &content, _current_bounds };
+      content.text(ctx, info);
    }
 
    void window::click(struct mouse_button const& btn_)
@@ -223,8 +223,8 @@ namespace photon
          _click_time = time;
       }
       _btn = btn;
-      context ctx { *this, _subject.get(), _current_bounds };
-      _subject->click(ctx, btn);
+      context ctx { *this, &content, _current_bounds };
+      content.click(ctx, btn);
    }
 
    void window::mouse(point p)
@@ -232,14 +232,14 @@ namespace photon
       if (!_current_bounds.includes(p))
          return;
 
-      context ctx { *this, _subject.get(), _current_bounds };
+      context ctx { *this, &content, _current_bounds };
       if (_btn.is_pressed)
       {
-         _subject->drag(ctx, _btn);
+         content.drag(ctx, _btn);
       }
       else
       {
-         if (!_subject->cursor(ctx, cursor_pos()))
+         if (!content.cursor(ctx, cursor_pos()))
             reset_cursor();
          draw();
       }
@@ -247,8 +247,8 @@ namespace photon
 
    void window::scroll(point p)
    {
-      context ctx { *this, _subject.get(), _current_bounds };
-      _subject->scroll(ctx, p);
+      context ctx { *this, &content, _current_bounds };
+      content.scroll(ctx, p);
    }
 
    void window::close()
@@ -272,8 +272,8 @@ namespace photon
 
    void window::focus(bool is_focus)
    {
-      if (_subject->focus(focus_request::wants_focus))
-         _subject->focus(is_focus? focus_request::begin_focus : focus_request::end_focus);
+      if (content.focus(focus_request::wants_focus))
+         content.focus(is_focus? focus_request::begin_focus : focus_request::end_focus);
       draw();
    }
 

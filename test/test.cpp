@@ -434,40 +434,46 @@ int main()
                lbutton.get().state(0);
                main_window.draw();
             };
+         
+         auto  column1 =
+            margin({ 20, 0, 20, 20 },
+               vtile(
+                  top_margin(20, dropdown),
 
-         auto btn =
+                  top_margin(20, align_left(check_box("Check Box 1"))),
+                  top_margin(10, align_left(check_box("Check Box 2"))),
+                  top_margin(10, align_left(check_box("Check Box 3"))),
+
+                  top_margin(20, menu_item("Menu Item 1")),
+                  menu_item("Menu Item 2"),
+                  menu_item("Menu Item 3")
+               )
+            );
+         
+         auto column2 =
+            margin({ 20, 0, 20, 20 },
+               vtile(
+                  top_margin(20, mbutton),
+                  top_margin(20, tbutton),
+                  top_margin(20, lbutton),
+                  top_margin(20, reset),
+                  top_margin(20, note),
+                  top_margin(20, drink)
+               )
+            );
+         
+         auto main_pane =
             margin({ 20, 20, 20, 20 },
                pane("Buttons",
                   htile(
-                     margin({ 20, 0, 20, 20 },
-                        vtile(
-                           top_margin(20, mbutton),
-                           top_margin(20, tbutton),
-                           top_margin(20, lbutton),
-                           top_margin(20, reset),
-                           top_margin(20, note),
-                           top_margin(20, drink)
-                        )
-                     ),
-                     margin({ 20, 0, 20, 20 },
-                        vtile(
-                           top_margin(20, dropdown),
-
-                           top_margin(20, align_left(check_box("Check Box 1"))),
-                           top_margin(10, align_left(check_box("Check Box 2"))),
-                           top_margin(10, align_left(check_box("Check Box 3"))),
-
-                           top_margin(20, menu_item("Menu Item 1")),
-                           menu_item("Menu Item 2"),
-                           menu_item("Menu Item 3")
-                        )
-                     )
+                     column1,
+                     column2
                   )
                )
             )
          ;
 
-         main_widget = new_(std::move(btn));
+         main_widget = new_(std::move(main_pane));
       }
 
       {
@@ -567,7 +573,7 @@ int main()
          //main_widget = new_(frm);
       }
 
-      main_window.subject(main_widget);
+      main_window.content.elements.push_back(main_widget);
       my_app.run();
    }
 

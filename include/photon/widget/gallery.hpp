@@ -243,7 +243,7 @@ namespace photon
                     title_bar{}
                 )
             ),
-            top_margin(30, content),
+            top_margin(30, std::forward<Content>(content)),
             panel{}
         );
    }

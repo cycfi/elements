@@ -33,6 +33,8 @@ namespace photon
       float                _right;
    };
 
+   using vtile_composite = vector_composite<vtile_widget>;
+
    template <typename... W>
    inline auto vtile(W&&... elements)
    {
@@ -61,6 +63,8 @@ namespace photon
       float                _top;
       float                _bottom;
    };
+   
+   using htile_composite = vector_composite<htile_widget>;
 
    template <typename... W>
    inline auto htile(W&&... elements)

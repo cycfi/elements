@@ -59,11 +59,16 @@ namespace photon
 
       virtual widget*   click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
+
+   private:
+
+      bool              _current_state;
    };
 
    template <typename W1, typename W2>
    inline basic_toggle_button::basic_toggle_button(W1&& off, W2&& on)
     : basic_button(std::forward<W1>(off), std::forward<W2>(on))
+    , _current_state(false)
    {}
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -60,19 +60,22 @@ namespace photon
    widget* basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(ctx.cursor_pos()))
+      {
+         ctx.window.draw();
          return 0;
-
+      }
+      
       if (btn.is_pressed)
       {
-         if (state(!state()))
+         if (state(!state()))          // toggle the state
          {
-            ctx.window.draw();
-            state(!state());
-         }
+            ctx.window.draw();         // we need to save the current state, the state
+            _current_state = state();  // can change in the drag function and so we'll
+         }                             // need it later when the button is finally released
       }
       else
       {
-         state(!state());
+         state(_current_state);
          if (on_click)
             on_click(state());
       }
@@ -81,11 +84,10 @@ namespace photon
 
    void basic_toggle_button::drag(context const& ctx, mouse_button btn)
    {
-      bool curr_state = state();
-      if (state(curr_state ^ ctx.bounds.includes(ctx.cursor_pos())))
+      if (state(!_current_state ^ ctx.bounds.includes(ctx.cursor_pos())))
       {
+         //std::cout << state(); //ctx.bounds.includes(ctx.cursor_pos());
          ctx.window.draw();
-         state(curr_state);
       }
    }
 

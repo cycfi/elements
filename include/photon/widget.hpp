@@ -22,5 +22,6 @@
 #include <photon/widget/port.hpp>
 #include <photon/widget/menu.hpp>
 #include <photon/widget/gallery.hpp>
+#include <photon/widget/floating.hpp>
 
 #endif

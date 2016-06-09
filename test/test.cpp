@@ -47,7 +47,7 @@ int main()
 
             c.begin_path();
             c.round_rect(ctx.bounds, 4);
-            c.fill_color(colors::gold);
+            c.fill_color(colors::gold.opacity(0.8));
             c.fill();
          }
       );
@@ -574,6 +574,9 @@ int main()
       }
 
       main_window.content.elements.push_back(main_widget);
+      
+      main_window.content.elements.push_back(new_(floating({ 50, 50, 100, 100 }, box)));
+      
       my_app.run();
    }
 

@@ -41,6 +41,11 @@ namespace photon
     , _is_active(false)
    {}
 
+   //class dropdown_menu_backdrop : public floating_widget
+   //{
+   //   virtual widget*      click(context const& ctx, mouse_button btn);
+   //};
+
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {

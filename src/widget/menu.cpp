@@ -58,7 +58,7 @@ namespace photon
 
       void install_menu(context const& ctx, widget_ptr _menu)
       {
-         if (auto p = std::dynamic_pointer_cast<floating_widget_base>(_menu))
+         if (auto p = std::dynamic_pointer_cast<floating_widget>(_menu))
          {
             p->bounds(
                {

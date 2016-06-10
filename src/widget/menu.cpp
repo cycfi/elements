@@ -18,7 +18,7 @@ namespace photon
       // Panel fill
       canvas_.begin_path();
       canvas_.rect(ctx.bounds);
-      canvas_.fill_color(ctx.theme().panel_color.opacity(0.95));
+      canvas_.fill_color(ctx.theme().panel_color.opacity(1.0));
       canvas_.fill();
 
       // Drop shadow
@@ -51,18 +51,18 @@ namespace photon
          return std::find(f, l, _menu);
       }
 
-      void install_menu(context const& ctx, widget_ptr _menu, basic_dropdown_menu& owner)
+      void install_menu(context const& ctx, widget_ptr _menu, basic_button& button_)
       {
-         if (auto p = std::dynamic_pointer_cast<menu_backdrop_widget>(_menu))
+         if (auto p = std::dynamic_pointer_cast<basic_menu_widget>(_menu))
          {
             ctx.window.content.elements.push_back(_menu);
-            p->owner(&owner);
+            p->button(&button_);
          }
       }
 
       void layout_menu(context const& ctx, widget_ptr _menu)
       {
-         if (auto p = std::dynamic_pointer_cast<menu_backdrop_widget>(_menu))
+         if (auto p = std::dynamic_pointer_cast<basic_menu_widget>(_menu))
          {
             p->bounds(
                {
@@ -95,13 +95,9 @@ namespace photon
    {
       if (btn.is_pressed)
       {
-         if (state(!state()))
+         if (state(true))
          {
-            if (!_is_active)
-            {
-               install_menu(ctx, _menu, *this);
-               _is_active = true;
-            }
+            install_menu(ctx, _menu, *this);
             ctx.window.draw();
          }
       }
@@ -111,7 +107,6 @@ namespace photon
          {
             remove_menu(ctx, _menu);
             state(false);
-            _is_active = false;
             ctx.window.draw();
          }
       }
@@ -129,7 +124,6 @@ namespace photon
       {
          remove_menu(ctx, _menu);
          state(false);
-         _is_active = false;
          ctx.window.draw();
          return true;
       }
@@ -141,17 +135,16 @@ namespace photon
       return true;
    }
 
-   widget* menu_backdrop_widget::hit_test(context const& ctx, point p)
+   widget* basic_menu_widget::hit_test(context const& ctx, point p)
    {
       return widget::hit_test(ctx, p);
    }
 
-   widget* menu_backdrop_widget::click(context const& ctx, mouse_button btn)
+   widget* basic_menu_widget::click(context const& ctx, mouse_button btn)
    {
       auto r = floating_widget::click(ctx, btn);
       remove_menu(ctx, shared_from_this());
-      _owner->state(0);
-      _owner->_is_active = false;
+      _button->state(0);
       ctx.window.draw();
       return r;
    }

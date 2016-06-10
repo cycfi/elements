@@ -15,67 +15,66 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Menu
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class basic_menu_widget : public floating_widget
+   {
+   public:
+                              basic_menu_widget(rect bounds)
+                               : floating_widget(bounds)
+                               , _button(0)
+                              {}
+
+      virtual widget*         hit_test(context const& ctx, point p);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+
+      basic_button*           button() const                { return _button; }
+      void                    button(basic_button* button_) { _button = button_; }
+
+   private:
+
+      basic_button*           _button;
+   };
+
+   template <typename Subject>
+   inline proxy<typename std::decay<Subject>::type, basic_menu_widget>
+   basic_menu(rect bounds, Subject&& subject)
+   {
+      return { std::forward<Subject>(subject), bounds };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_dropdown_menu : public basic_button
    {
    public:
-                           template <typename W1, typename W2>
-                           basic_dropdown_menu(W1&& off, W2&& on);
+                              template <typename W1, typename W2>
+                              basic_dropdown_menu(W1&& off, W2&& on);
 
-      virtual void         layout(context const& ctx);
-      virtual widget*      click(context const& ctx, mouse_button btn);
-      virtual void         drag(context const& ctx, mouse_button btn);
-      virtual bool         key(context const& ctx, key_info const& k);
-      virtual bool         focus(focus_request r);
+      virtual void            layout(context const& ctx);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            focus(focus_request r);
 
-                           template <typename Menu>
-      void                 menu(Menu&& menu_);
+                              template <typename Menu>
+      void                    menu(Menu&& menu_);
 
    private:
 
-      friend class menu_backdrop_widget;
-
-      widget_ptr           _menu;
-      bool                 _is_active;
+      widget_ptr              _menu;
    };
 
    template <typename W1, typename W2>
    inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
     : basic_button(std::forward<W1>(off), std::forward<W2>(on))
-    , _is_active(false)
    {}
-
-   class menu_backdrop_widget : public floating_widget
-   {
-   public:
-                           menu_backdrop_widget(rect bounds)
-                            : floating_widget(bounds)
-                            , _owner(0)
-                           {}
-
-      virtual widget*      hit_test(context const& ctx, point p);
-      virtual widget*      click(context const& ctx, mouse_button btn);
-
-      basic_dropdown_menu* owner() const                       { return _owner; }
-      void                 owner(basic_dropdown_menu* owner_)  { _owner = owner_; }
-
-   private:
-
-      basic_dropdown_menu* _owner;
-   };
-
-   template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, menu_backdrop_widget>
-   menu_backdrop(rect bounds, Subject&& subject)
-   {
-      return { std::forward<Subject>(subject), bounds };
-   }
 
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
-      _menu = new_(menu_backdrop({0, 0, 0, 0}, menu_));
+      _menu = new_(basic_menu({0, 0, 0, 0}, menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,8 +84,8 @@ namespace photon
    {
    public:
 
-      static rect          shadow_offset;
-      virtual void         draw(context const& ctx);
+      static rect             shadow_offset;
+      virtual void            draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,12 +97,12 @@ namespace photon
 
       using menu_item_function = std::function<void()>;
 
-      virtual void         draw(context const& ctx);
-      virtual widget*      click(context const& ctx, mouse_button btn);
-      virtual bool         cursor(context const& ctx, point p);
-      virtual bool         is_control() const;
+      virtual void            draw(context const& ctx);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual bool            cursor(context const& ctx, point p);
+      virtual bool            is_control() const;
 
-      menu_item_function   on_click;
+      menu_item_function      on_click;
    };
 
    template <typename Subject>

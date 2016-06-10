@@ -2,6 +2,98 @@
 #include <photon/app.hpp>
 #include <photon/widget.hpp>
 
+using namespace photon;
+
+auto box = basic(
+   [](context const& ctx)
+   {
+      auto& c = ctx.canvas();
+
+      c.begin_path();
+      c.round_rect(ctx.bounds, 4);
+      c.fill_color(colors::gold.opacity(0.8));
+      c.fill();
+   }
+);
+
+auto make_vtile()
+{
+   auto _box = top_margin(
+      { 20 },
+      hsize(150, box)
+   );
+
+   return margin(
+      { 20, 0, 20, 20 },
+      vtile(
+         halign(0.0, _box),
+         halign(0.2, _box),
+         halign(0.4, _box),
+         halign(0.6, _box),
+         halign(0.8, _box),
+         halign(1.0, _box)
+      )
+   );
+}
+
+auto make_htile()
+{
+   auto _box = left_margin(
+      { 20 },
+      vsize(100, box)
+   );
+
+   return margin(
+      { 0, 20, 20, 20 },
+      htile(
+         valign(0.0, _box),
+         valign(0.2, _box),
+         valign(0.4, _box),
+         valign(0.6, _box),
+         valign(0.8, _box),
+         valign(1.0, _box)
+      )
+   );
+}
+
+auto make_vtile2()
+{
+   auto _box = left_margin(
+      { 20 },
+      box
+   );
+
+   return margin(
+      { 0, 20, 20, 20 },
+      htile(
+         hpercent(1.0, _box),
+         hpercent(0.5, _box),
+         hpercent(0.5, _box),
+         hpercent(0.5, _box),
+         hpercent(2.0, _box)
+      )
+   );
+}
+
+auto make_htile2()
+{
+   auto _box = top_margin(
+      { 20 },
+      box
+   );
+
+   return margin(
+      { 20, 0, 20, 20 },
+      vtile(
+         vpercent(1.0, _box),
+         vpercent(0.5, _box),
+         vpercent(0.5, _box),
+         vpercent(0.5, _box),
+         vpercent(2.0, _box)
+      )
+   );
+}
+
 int main()
 {
    using namespace photon;
@@ -22,8 +114,15 @@ int main()
    {
       widget_ptr main_widget;
       
-      auto  m_item1 = ref(menu_item("Frame"));
-      auto  m_item2 = ref(menu_item("Panel"));
+      auto  m_item1_text = "Vertical Tiles and Aligns";
+      auto  m_item2_text = "Horizontal Tiles and Aligns";
+      auto  m_item3_text = "Vertical Tiles and Percentages";
+      auto  m_item4_text = "Horizontal Tiles and Percentages";
+      
+      auto  m_item1 = ref(menu_item(m_item1_text));
+      auto  m_item2 = ref(menu_item(m_item2_text));
+      auto  m_item3 = ref(menu_item(m_item3_text));
+      auto  m_item4 = ref(menu_item(m_item4_text));
 
       {
          auto menu =
@@ -32,7 +131,8 @@ int main()
                   vtile(
                      m_item1,
                      m_item2,
-                     menu_item("Menu Item 3"),
+                     m_item3,
+                     m_item4,
                      menu_item_spacer(),
                      menu_item("Menu Item 4"),
                      menu_item("Menu Item 5")
@@ -40,32 +140,51 @@ int main()
                   menu_background{}
                )
             );
-
-         auto  sample1 = margin({ 20, 20, 20, 20 }, frame{});
-         auto  sample2 = margin({ 20, 20, 20, 20 }, panel{});
       
          auto content =
             ref(
-               deck(sample1, sample2)
+               deck(
+                  make_vtile(),
+                  make_htile(),
+                  make_vtile2(),
+                  make_htile2()
+               )
             )
          ;
          
-         auto  title = ref(heading("Widgets"));
+         auto  title = ref(heading(m_item1_text));
+         content.get().select(3);
          
          m_item1.get().on_click =
-            [title, content, &main_window]() mutable
+            [title, m_item1_text, content, &main_window]() mutable
             {
-               title.get().text("Frame");
-               content.get().select(1);
-               main_window.draw();
+               title.get().text(m_item1_text);
+               content.get().select(3);
+               main_window.draw(true);
             };
          
          m_item2.get().on_click =
-            [title, content, &main_window]() mutable
+            [title, m_item2_text, content, &main_window]() mutable
             {
-               title.get().text("Panel");
+               title.get().text(m_item2_text);
+               content.get().select(2);
+               main_window.draw(true);
+            };
+         
+         m_item3.get().on_click =
+            [title, m_item3_text, content, &main_window]() mutable
+            {
+               title.get().text(m_item3_text);
+               content.get().select(1);
+               main_window.draw(true);
+            };
+         
+         m_item4.get().on_click =
+            [title, m_item4_text, content, &main_window]() mutable
+            {
+               title.get().text(m_item4_text);
                content.get().select(0);
-               main_window.draw();
+               main_window.draw(true);
             };
 
          auto  dropdown = basic_dropdown_menu(title, title);
@@ -75,122 +194,9 @@ int main()
          main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
       }
       
-      
-
-      {  // basics
-
-         auto rows = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 30, 60, 30, 30 }, frame{}),
-               margin({ 10, 10, 10, 10 },
-                  layer(
-                     valign(0, vsize(30, title_bar{})),
-                     panel{}
-                  )
-               )
-            )
-         );
-
-         //main_widget = new_(std::move(rows));
-      }
-
-      auto box = basic(
-         [](context const& ctx)
-         {
-            auto& c = ctx.canvas();
-
-            c.begin_path();
-            c.round_rect(ctx.bounds, 4);
-            c.fill_color(colors::gold.opacity(0.8));
-            c.fill();
-         }
-      );
-      
-      
 
 
-      {
-         auto _box = top_margin(
-            { 20 },
-            hsize(64, box)
-         );
 
-         auto rows = margin(
-            { 20, 0, 20, 20 },
-            vtile(
-               halign(0.0, _box),
-               halign(0.2, _box),
-               halign(0.4, _box),
-               halign(0.6, _box),
-               halign(0.8, _box),
-               halign(1.0, _box)
-            )
-         );
-
-         //main_widget = new_(std::move(rows));
-      }
-
-      {
-         auto _box = left_margin(
-            { 20 },
-            vsize(64, box)
-         );
-
-         auto columns = margin(
-            { 0, 20, 20, 20 },
-            htile(
-               valign(0.0, _box),
-               valign(0.2, _box),
-               valign(0.4, _box),
-               valign(0.6, _box),
-               valign(0.8, _box),
-               valign(1.0, _box)
-            )
-         );
-
-         //main_widget = new_(std::move(columns));
-      }
-
-      {
-         auto _box = left_margin(
-            { 20 },
-            box
-         );
-
-         auto columns = margin(
-            { 0, 20, 20, 20 },
-            htile(
-               hpercent(1.0, _box),
-               hpercent(0.5, _box),
-               hpercent(0.5, _box),
-               hpercent(0.5, _box),
-               hpercent(2.0, _box)
-            )
-         );
-
-         //main_widget = new_(std::move(columns));
-      }
-
-      {
-         auto _box = top_margin(
-            { 20 },
-            box
-         );
-
-         auto rows = margin(
-            { 20, 0, 20, 20 },
-            vtile(
-               vpercent(1.0, _box),
-               vpercent(0.5, _box),
-               vpercent(0.5, _box),
-               vpercent(0.5, _box),
-               vpercent(2.0, _box)
-            )
-         );
-
-         //main_widget = new_(std::move(rows));
-      }
 
       {
          auto _box = top_margin(

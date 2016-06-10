@@ -54,7 +54,7 @@ namespace photon
       void                 size(point s);
       point                cursor_pos() const;
 
-      virtual void         draw();
+      virtual void         draw(bool relayout = false);
       virtual void         key(key_info const& k);
       virtual void         text(text_info const& info);
       virtual void         click(mouse_button const& btn);

@@ -143,7 +143,7 @@ namespace photon
       return { float(mx), float(my) };
    }
 
-   void window::draw()
+   void window::draw(bool relayout)
    {
       int w_width, w_height;
       glfwGetWindowSize(_window, &w_width, &w_height);
@@ -184,7 +184,7 @@ namespace photon
 
          // layout the subject only if the window bounds changes
          context ctx{ *this, &content, subj_bounds };
-         if (subj_bounds != _current_bounds)
+         if (relayout || (subj_bounds != _current_bounds))
          {
             _current_bounds = subj_bounds;
             content.layout(ctx);

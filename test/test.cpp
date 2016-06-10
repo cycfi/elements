@@ -20,7 +20,7 @@ auto make_vtile()
 {
    auto _box = top_margin(
       { 20 },
-      hsize(150, box)
+      hsize(180, box)
    );
 
    return margin(
@@ -58,25 +58,6 @@ auto make_htile()
 
 auto make_vtile2()
 {
-   auto _box = left_margin(
-      { 20 },
-      box
-   );
-
-   return margin(
-      { 0, 20, 20, 20 },
-      htile(
-         hpercent(1.0, _box),
-         hpercent(0.5, _box),
-         hpercent(0.5, _box),
-         hpercent(0.5, _box),
-         hpercent(2.0, _box)
-      )
-   );
-}
-
-auto make_htile2()
-{
    auto _box = top_margin(
       { 20 },
       box
@@ -90,6 +71,25 @@ auto make_htile2()
          vpercent(0.5, _box),
          vpercent(0.5, _box),
          vpercent(2.0, _box)
+      )
+   );
+}
+
+auto make_htile2()
+{
+   auto _box = left_margin(
+      { 20 },
+      box
+   );
+
+   return margin(
+      { 0, 20, 20, 20 },
+      htile(
+         hpercent(1.0, _box),
+         hpercent(0.5, _box),
+         hpercent(0.5, _box),
+         hpercent(0.5, _box),
+         hpercent(2.0, _box)
       )
    );
 }
@@ -186,8 +186,10 @@ int main()
                content.get().select(0);
                main_window.draw(true);
             };
-
-         auto  dropdown = basic_dropdown_menu(title, title);
+         
+         auto  caret = left_margin(5, icon(icons::caretdown));
+         auto  dropdown = basic_dropdown_menu(htile(title, caret), htile(title, caret));
+         
          dropdown.menu(menu);
          
          auto  main_pane = ref(pane(dropdown, content));

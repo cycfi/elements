@@ -58,6 +58,7 @@ namespace photon
 
       virtual void         draw(context const& ctx);
       void                 select(std::size_t index);
+      std::size_t          selected() const { return _selected_index; }
 
    private:
 

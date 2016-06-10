@@ -21,8 +21,6 @@ namespace photon
                       : _bounds(bounds)
                      {}
 
-      virtual        ~floating_widget() {}
-
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
 

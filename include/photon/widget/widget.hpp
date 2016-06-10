@@ -114,12 +114,12 @@ namespace photon
    {
    public:
                               template <typename... T>
-                              proxy(Subject&& subject_, T const&... args)
+                              proxy(Subject&& subject_, T&&... args)
                                : Base(args...)
                                , _subject(std::move(subject_)) {}
 
                               template <typename... T>
-                              proxy(Subject const& subject_, T const&... args)
+                              proxy(Subject const& subject_, T&&... args)
                                : Base(args...)
                                , _subject(subject_) {}
 

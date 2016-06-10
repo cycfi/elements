@@ -18,7 +18,7 @@ namespace photon
       // Panel fill
       canvas_.begin_path();
       canvas_.rect(ctx.bounds);
-      canvas_.fill_color(ctx.theme().panel_color.opacity(1.0));
+      canvas_.fill_color(ctx.theme().panel_color.opacity(0.95));
       canvas_.fill();
 
       // Drop shadow
@@ -51,14 +51,18 @@ namespace photon
          return std::find(f, l, _menu);
       }
 
-      bool has_menu(context const& ctx, widget_ptr _menu)
+      void install_menu(context const& ctx, widget_ptr _menu, basic_dropdown_menu& owner)
       {
-         return find_menu(ctx, _menu) != ctx.window.content.elements.end();
+         if (auto p = std::dynamic_pointer_cast<menu_backdrop_widget>(_menu))
+         {
+            ctx.window.content.elements.push_back(_menu);
+            p->owner(&owner);
+         }
       }
 
-      void install_menu(context const& ctx, widget_ptr _menu)
+      void layout_menu(context const& ctx, widget_ptr _menu)
       {
-         if (auto p = std::dynamic_pointer_cast<floating_widget>(_menu))
+         if (auto p = std::dynamic_pointer_cast<menu_backdrop_widget>(_menu))
          {
             p->bounds(
                {
@@ -66,7 +70,7 @@ namespace photon
                   ctx.bounds.right-3, full_extent
                }
             );
-            ctx.window.content.elements.push_back(_menu);
+
             rect  bounds = p->bounds();
             context new_ctx{ ctx.window, _menu.get(), bounds };
             _menu->layout(new_ctx);
@@ -81,6 +85,12 @@ namespace photon
       }
    }
 
+   void basic_dropdown_menu::layout(context const& ctx)
+   {
+      basic_button::layout(ctx);
+      layout_menu(ctx, _menu);
+   }
+
    widget* basic_dropdown_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.is_pressed)
@@ -89,7 +99,7 @@ namespace photon
          {
             if (!_is_active)
             {
-               install_menu(ctx, _menu);
+               install_menu(ctx, _menu, *this);
                _is_active = true;
             }
             ctx.window.draw();
@@ -97,9 +107,10 @@ namespace photon
       }
       else
       {
-         if (!state())
+         if (!state() || !hit_test(ctx, ctx.cursor_pos()))
          {
             remove_menu(ctx, _menu);
+            state(false);
             _is_active = false;
             ctx.window.draw();
          }
@@ -110,6 +121,39 @@ namespace photon
    void basic_dropdown_menu::drag(context const& ctx, mouse_button btn)
    {
       ctx.window.draw();
+   }
+
+   bool basic_dropdown_menu::key(context const& ctx, key_info const& k)
+   {
+      if (k.key == key_code::key_escape)
+      {
+         remove_menu(ctx, _menu);
+         state(false);
+         _is_active = false;
+         ctx.window.draw();
+         return true;
+      }
+      return false;
+   }
+
+   bool basic_dropdown_menu::focus(focus_request r)
+   {
+      return true;
+   }
+
+   widget* menu_backdrop_widget::hit_test(context const& ctx, point p)
+   {
+      return widget::hit_test(ctx, p);
+   }
+
+   widget* menu_backdrop_widget::click(context const& ctx, mouse_button btn)
+   {
+      auto r = floating_widget::click(ctx, btn);
+      remove_menu(ctx, shared_from_this());
+      _owner->state(0);
+      _owner->_is_active = false;
+      ctx.window.draw();
+      return r;
    }
 
    void highlight_menu_item(context const& ctx)

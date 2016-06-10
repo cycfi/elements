@@ -23,13 +23,18 @@ namespace photon
                            template <typename W1, typename W2>
                            basic_dropdown_menu(W1&& off, W2&& on);
 
+      virtual void         layout(context const& ctx);
       virtual widget*      click(context const& ctx, mouse_button btn);
       virtual void         drag(context const& ctx, mouse_button btn);
+      virtual bool         key(context const& ctx, key_info const& k);
+      virtual bool         focus(focus_request r);
 
                            template <typename Menu>
       void                 menu(Menu&& menu_);
 
    private:
+
+      friend class menu_backdrop_widget;
 
       widget_ptr           _menu;
       bool                 _is_active;
@@ -41,15 +46,36 @@ namespace photon
     , _is_active(false)
    {}
 
-   //class dropdown_menu_backdrop : public floating_widget
-   //{
-   //   virtual widget*      click(context const& ctx, mouse_button btn);
-   //};
+   class menu_backdrop_widget : public floating_widget
+   {
+   public:
+                           menu_backdrop_widget(rect bounds)
+                            : floating_widget(bounds)
+                            , _owner(0)
+                           {}
+
+      virtual widget*      hit_test(context const& ctx, point p);
+      virtual widget*      click(context const& ctx, mouse_button btn);
+
+      basic_dropdown_menu* owner() const                       { return _owner; }
+      void                 owner(basic_dropdown_menu* owner_)  { _owner = owner_; }
+
+   private:
+
+      basic_dropdown_menu* _owner;
+   };
+
+   template <typename Subject>
+   inline proxy<typename std::decay<Subject>::type, menu_backdrop_widget>
+   menu_backdrop(rect bounds, Subject&& subject)
+   {
+      return { std::forward<Subject>(subject), bounds };
+   }
 
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
-      _menu = new_(floating({0, 0, 0, 0}, menu_));
+      _menu = new_(menu_backdrop({0, 0, 0, 0}, menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -455,11 +455,7 @@ int main()
 
                   top_margin(20, align_left(check_box("Check Box 1"))),
                   top_margin(10, align_left(check_box("Check Box 2"))),
-                  top_margin(10, align_left(check_box("Check Box 3"))),
-
-                  top_margin(20, menu_item("Menu Item 1")),
-                  menu_item("Menu Item 2"),
-                  menu_item("Menu Item 3")
+                  top_margin(10, align_left(check_box("Check Box 3")))
                )
             );
          

@@ -30,6 +30,11 @@ namespace photon
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
 
+      std::string       text() const                     { return _text; }
+      void              text(std::string const& text)    { _text = text; }
+      
+      using widget::text;
+
    private:
 
       std::string       _text;
@@ -48,6 +53,12 @@ namespace photon
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
+      
+      std::string       text() const                     { return _text; }
+      void              text(std::string const& text)    { _text = text; }
+      
+      using widget::text;
+
 
    private:
 
@@ -67,6 +78,12 @@ namespace photon
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
+      
+      std::string       text() const                     { return _text; }
+      void              text(std::string const& text)    { _text = text; }
+      
+      using widget::text;
+
 
    private:
 

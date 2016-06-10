@@ -195,8 +195,7 @@ namespace photon
 
    rect menu_item_spacer_widget::limits(basic_context const& ctx) const
    {
-      point s = text_utils(ctx.theme()).measure_heading("-");
-      return { 0, 0, full_extent, s.y };
+      return { 0, 0, full_extent, ctx.theme().heading_font_size };
    }
 
    void menu_item_spacer_widget::draw(context const& ctx)

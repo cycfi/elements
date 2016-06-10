@@ -21,6 +21,61 @@ int main()
 
    {
       widget_ptr main_widget;
+      
+      auto  m_item1 = ref(menu_item("Frame"));
+      auto  m_item2 = ref(menu_item("Panel"));
+
+      {
+         auto menu =
+            ref(
+               layer(
+                  vtile(
+                     m_item1,
+                     m_item2,
+                     menu_item("Menu Item 3"),
+                     menu_item_spacer(),
+                     menu_item("Menu Item 4"),
+                     menu_item("Menu Item 5")
+                  ),
+                  menu_background{}
+               )
+            );
+
+         auto  sample1 = margin({ 20, 20, 20, 20 }, frame{});
+         auto  sample2 = margin({ 20, 20, 20, 20 }, panel{});
+      
+         auto content =
+            ref(
+               deck(sample1, sample2)
+            )
+         ;
+         
+         auto  title = ref(heading("Widgets"));
+         
+         m_item1.get().on_click =
+            [title, content, &main_window]() mutable
+            {
+               title.get().text("Frame");
+               content.get().select(1);
+               main_window.draw();
+            };
+         
+         m_item2.get().on_click =
+            [title, content, &main_window]() mutable
+            {
+               title.get().text("Panel");
+               content.get().select(0);
+               main_window.draw();
+            };
+
+         auto  dropdown = basic_dropdown_menu(title, title);
+         dropdown.menu(menu);
+         
+         auto  main_pane = ref(pane(dropdown, content));
+         main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
+      }
+      
+      
 
       {  // basics
 
@@ -51,6 +106,9 @@ int main()
             c.fill();
          }
       );
+      
+      
+
 
       {
          auto _box = top_margin(
@@ -485,7 +543,7 @@ int main()
             )
          ;
 
-         main_widget = new_(std::move(main_pane));
+         //main_widget = new_(std::move(main_pane));
       }
 
       {

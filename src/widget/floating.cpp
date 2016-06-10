@@ -27,7 +27,7 @@ namespace photon
 
       if (h < e_limits.top)
          ctx.bounds.height(e_limits.top);
-      else if (w > e_limits.bottom)
+      else if (h > e_limits.bottom)
          ctx.bounds.height(e_limits.bottom);
    }
 }

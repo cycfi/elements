@@ -64,16 +64,25 @@ namespace photon
       {
          if (auto p = std::dynamic_pointer_cast<basic_menu_widget>(_menu))
          {
-            p->bounds(
-               {
+            rect  bounds = {
                   ctx.bounds.left+3, ctx.bounds.bottom,
                   ctx.bounds.right-3, full_extent
-               }
-            );
+               };
 
+            context new_ctx{ ctx.window, _menu.get(), bounds };
+            p->bounds(bounds);
+            p->layout(new_ctx);
+         }
+      }
+      
+      void click_menu(context const& ctx, widget_ptr _menu, mouse_button btn)
+      {
+         if (auto p = std::dynamic_pointer_cast<basic_menu_widget>(_menu))
+         {
+            btn.is_pressed = true;
             rect  bounds = p->bounds();
             context new_ctx{ ctx.window, _menu.get(), bounds };
-            _menu->layout(new_ctx);
+            p->click(new_ctx, btn);
          }
       }
 
@@ -105,9 +114,8 @@ namespace photon
       {
          if (!state() || !hit_test(ctx, ctx.cursor_pos()))
          {
-            remove_menu(ctx, _menu);
-            state(false);
-            ctx.window.draw();
+            // simulate a menu click:
+            click_menu(ctx, _menu, btn);
          }
       }
       return this;
@@ -148,7 +156,7 @@ namespace photon
       ctx.window.draw();
       return r;
    }
-
+   
    void basic_menu_item_widget::draw(context const& ctx)
    {
       if (ctx.bounds.includes(ctx.cursor_pos()))
@@ -162,10 +170,17 @@ namespace photon
       }
       proxy_base::draw(ctx);
    }
+   
+   widget* basic_menu_item_widget::hit_test(context const& ctx, point p)
+   {
+      if (ctx.bounds.includes(ctx.cursor_pos()))
+         return this;
+      return 0;
+   }
 
    widget* basic_menu_item_widget::click(context const& ctx, mouse_button btn)
    {
-      if (!btn.is_pressed && on_click)
+      if (/*btn.is_pressed && */on_click)
          on_click();
       return proxy_base::click(ctx, btn);
    }

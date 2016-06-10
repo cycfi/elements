@@ -98,6 +98,7 @@ namespace photon
       using menu_item_function = std::function<void()>;
 
       virtual void            draw(context const& ctx);
+      virtual widget*         hit_test(context const& ctx, point p);
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual bool            cursor(context const& ctx, point p);
       virtual bool            is_control() const;

@@ -247,20 +247,32 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Pane
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Content>
-   inline auto pane(std::string const& title, Content&& content)
+   template <typename Heading, typename Content>
+   inline auto pane(Heading&& heading, Content&& content)
    {
       return
         layer(
             align_top(
                 layer(
-                    align_center(margin({10, 4, 10, 4}, heading(title))),
+                    align_center(margin({10, 4, 10, 4}, heading)),
                     title_bar{}
                 )
             ),
             top_margin(30, std::forward<Content>(content)),
             panel{}
         );
+   }
+
+   template <typename Content>
+   inline auto pane(std::string const& title, Content&& content)
+   {
+      return pane(heading(title), content);
+   }
+   
+   template <typename Content>
+   inline auto pane(char const* title, Content&& content)
+   {
+      return pane(heading(title), content);
    }
 }
 

@@ -208,7 +208,7 @@ namespace photon
        , check_box_widget<true>{ text }
       );
    }
-   
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,16 +226,22 @@ namespace photon
       return xside_margin({ 20, 20 },  align_left(heading(text)));
    }
 
-   template <typename Subject>
-   inline basic_menu_item<typename std::decay<Subject>::type>
-   make_basic_menu_item(Subject&& subject)
-   {
-      return { std::forward<Subject>(subject) };
-   }
-
    inline auto menu_item(std::string const& text)
    {
-      return make_basic_menu_item(menu_item_text(text));
+      return basic_menu_item(menu_item_text(text));
+   }
+
+   class menu_item_spacer_widget : public widget
+   {
+   public:
+
+      virtual rect   limits(basic_context const& ctx) const;
+      virtual void   draw(context const& ctx);
+   };
+
+   inline auto menu_item_spacer()
+   {
+      return menu_item_spacer_widget{};
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

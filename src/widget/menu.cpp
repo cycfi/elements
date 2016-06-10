@@ -156,7 +156,7 @@ namespace photon
       return r;
    }
 
-   void highlight_menu_item(context const& ctx)
+   void basic_menu_item_widget::draw(context const& ctx)
    {
       if (ctx.bounds.includes(ctx.cursor_pos()))
       {
@@ -167,5 +167,25 @@ namespace photon
          canvas_.fill_color(ctx.theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
+      proxy_base::draw(ctx);
+   }
+
+   widget* basic_menu_item_widget::click(context const& ctx, mouse_button btn)
+   {
+      if (!btn.is_pressed && on_click)
+         on_click();
+      return proxy_base::click(ctx, btn);
+   }
+
+   bool basic_menu_item_widget::cursor(context const& ctx, point p)
+   {
+      if (ctx.bounds.includes(p))
+         ctx.window.draw();
+      return proxy_base::cursor(ctx, p);
+   }
+
+   bool basic_menu_item_widget::is_control() const
+   {
+      return true;
    }
 }

@@ -434,7 +434,10 @@ int main()
                vtile(
                      menu_item("Menu Item 1"),
                      menu_item("Menu Item 2"),
-                     menu_item("Menu Item 3")
+                     menu_item("Menu Item 3"),
+                     menu_item_spacer(),
+                     menu_item("Menu Item 4"),
+                     menu_item("Menu Item 5")
                ),
                menu_background{}
             );

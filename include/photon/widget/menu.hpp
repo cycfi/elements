@@ -92,16 +92,11 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Basic Menu Items
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
-   class basic_menu_item : public proxy<Subject>
+   class basic_menu_item_widget : public proxy_base
    {
    public:
 
-      using base_type = proxy<Subject>;
       using menu_item_function = std::function<void()>;
-
-                           basic_menu_item(Subject&& subject);
-                           basic_menu_item(Subject const& subject);
 
       virtual void         draw(context const& ctx);
       virtual widget*      click(context const& ctx, mouse_button btn);
@@ -111,45 +106,11 @@ namespace photon
       menu_item_function   on_click;
    };
 
-   void highlight_menu_item(context const& ctx);
-
    template <typename Subject>
-   inline basic_menu_item<Subject>::basic_menu_item(Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
-   {}
-
-   template <typename Subject>
-   inline basic_menu_item<Subject>::basic_menu_item(Subject const& subject)
-    : base_type(subject)
-   {}
-
-   template <typename Subject>
-   inline void basic_menu_item<Subject>::draw(context const& ctx)
+   inline proxy<typename std::decay<Subject>::type, basic_menu_item_widget>
+   basic_menu_item(Subject&& subject)
    {
-      highlight_menu_item(ctx);
-      base_type::draw(ctx);
-   }
-
-   template <typename Subject>
-   inline widget* basic_menu_item<Subject>::click(context const& ctx, mouse_button btn)
-   {
-      if (!btn.is_pressed && on_click)
-         on_click();
-      return base_type::click(ctx, btn);
-   }
-
-   template <typename Subject>
-   inline bool basic_menu_item<Subject>::cursor(context const& ctx, point p)
-   {
-      if (ctx.bounds.includes(p))
-         ctx.window.draw();
-      return base_type::cursor(ctx, p);
-   }
-
-   template <typename Subject>
-   inline bool basic_menu_item<Subject>::is_control() const
-   {
-      return true;
+      return { std::forward<Subject>(subject) };
    }
 }
 

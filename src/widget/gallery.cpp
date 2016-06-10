@@ -120,7 +120,7 @@ namespace photon
    {
       return make_button<basic_latching_button>(text, icon_code, body_color);
    }
-   
+
    basic_dropdown_menu
    dropdown_menu(
       std::string const& text
@@ -193,4 +193,22 @@ namespace photon
       text_utils(theme_).draw_heading(text_bounds, text.c_str());
    }
 
+   rect menu_item_spacer_widget::limits(basic_context const& ctx) const
+   {
+      point s = text_utils(ctx.theme()).measure_heading("-");
+      return { 0, 0, full_extent, s.y };
+   }
+
+   void menu_item_spacer_widget::draw(context const& ctx)
+   {
+      auto& canvas_ = ctx.canvas();
+      float y = ctx.bounds.top + ctx.bounds.height() / 2;
+
+      canvas_.begin_path();
+      canvas_.move_to({ ctx.bounds.left, y });
+      canvas_.line_to({ ctx.bounds.right, y });
+      canvas_.stroke_color(ctx.theme().frame_color.opacity(0.15));
+      canvas_.stroke_width(1);
+      canvas_.stroke();
+   }
 }

@@ -175,6 +175,174 @@ namespace photon
    {
       ctx.bounds.bottom = ctx.bounds.top + _height;
    }
+   
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Minumum sizing widgets
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class min_size_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     min_size_widget(point size, Subject&& subject);
+                     min_size_widget(point size, Subject const& subject);
+
+      virtual rect   limits(basic_context const& ctx) const;
+      virtual void   prepare_subject(context& ctx);
+
+   private:
+
+      point          _size;
+   };
+
+   template <typename Subject>
+   inline min_size_widget<Subject>::min_size_widget(point size, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline min_size_widget<Subject>::min_size_widget(point size, Subject const& subject)
+    : base_type(subject)
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline min_size_widget<typename std::decay<Subject>::type>
+   min_size(point size, Subject&& subject)
+   {
+      return { size, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline rect min_size_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect  e_limits = this->subject().limits(ctx);
+      float size_x = _size.x;
+      float size_y = _size.y;
+      clamp(size_x, e_limits.left, e_limits.right);
+      clamp(size_y, e_limits.top, e_limits.bottom);
+      return rect{ size_x, size_y, e_limits.right, e_limits.bottom };
+   }
+
+   template <typename Subject>
+   inline void min_size_widget<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.width() < _size.x)
+         ctx.bounds.width(_size.x);
+      if (ctx.bounds.height() < _size.y)
+         ctx.bounds.height(_size.x);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class hmin_size_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     hmin_size_widget(float width, Subject&& subject);
+                     hmin_size_widget(float width, Subject const& subject);
+
+      virtual rect   limits(basic_context const& ctx) const;
+      virtual void   prepare_subject(context& ctx);
+
+   private:
+
+      float          _width;
+   };
+
+   template <typename Subject>
+   inline hmin_size_widget<Subject>::hmin_size_widget(float width, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _width(width)
+   {}
+
+   template <typename Subject>
+   inline hmin_size_widget<Subject>::hmin_size_widget(float width, Subject const& subject)
+    : base_type(subject)
+    , _width(width)
+   {}
+
+   template <typename Subject>
+   inline hmin_size_widget<typename std::decay<Subject>::type>
+   hmin_size(float width, Subject&& subject)
+   {
+      return { width, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline rect hmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect  e_limits = this->subject().limits(ctx);
+      float width = _width;
+      clamp(width, e_limits.left, e_limits.right);
+      return rect{ width, e_limits.top, e_limits.right, e_limits.bottom };
+   }
+
+   template <typename Subject>
+   inline void hmin_size_widget<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.width() < _width)
+         ctx.bounds.width(_width);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class vmin_size_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     vmin_size_widget(float height, Subject&& subject);
+                     vmin_size_widget(float height, Subject const& subject);
+
+      virtual rect   limits(basic_context const& ctx) const;
+      virtual void   prepare_subject(context& ctx);
+
+   private:
+
+      float          _height;
+   };
+
+   template <typename Subject>
+   inline vmin_size_widget<Subject>::vmin_size_widget(float height, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _height(height)
+   {}
+
+   template <typename Subject>
+   inline vmin_size_widget<Subject>::vmin_size_widget(float height, Subject const& subject)
+    : base_type(subject)
+    , _height(height)
+   {}
+
+   template <typename Subject>
+   inline vmin_size_widget<typename std::decay<Subject>::type>
+   vmin_size(float height, Subject&& subject)
+   {
+      return { height, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline rect vmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      rect  e_limits = this->subject().limits(ctx);
+      float height = _height;
+      clamp(height, e_limits.top, e_limits.bottom);
+      return rect{ e_limits.left, height, e_limits.right, e_limits.bottom };
+   }
+
+   template <typename Subject>
+   inline void vmin_size_widget<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.height() < _height)
+         ctx.bounds.height(_height);
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Percentage sizing widgets

@@ -18,6 +18,8 @@ namespace photon
          canvas& _canvas, rect bounds, char const* text
        , char const* font, float font_size, color color_)
       {
+         auto state = _canvas.new_state();
+
          float x = bounds.left;
          float y = bounds.top;
          float h = bounds.height();

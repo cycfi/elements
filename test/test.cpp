@@ -20,7 +20,7 @@ auto make_vtile()
 {
    auto _box = top_margin(
       { 20 },
-      hsize(180, box)
+      hsize(100, box)
    );
 
    return margin(
@@ -32,26 +32,6 @@ auto make_vtile()
          halign(0.6, _box),
          halign(0.8, _box),
          halign(1.0, _box)
-      )
-   );
-}
-
-auto make_htile()
-{
-   auto _box = left_margin(
-      { 20 },
-      vsize(100, box)
-   );
-
-   return margin(
-      { 0, 20, 20, 20 },
-      htile(
-         valign(0.0, _box),
-         valign(0.2, _box),
-         valign(0.4, _box),
-         valign(0.6, _box),
-         valign(0.8, _box),
-         valign(1.0, _box)
       )
    );
 }
@@ -75,6 +55,34 @@ auto make_vtile2()
    );
 }
 
+auto make_vtile_main()
+{
+   return htile(
+      margin({ 10, 10, 10, 10 }, group("Aligns", make_vtile())),
+      margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2()))
+   );
+}
+
+auto make_htile()
+{
+   auto _box = left_margin(
+      { 20 },
+      vsize(100, box)
+   );
+
+   return margin(
+      { 0, 20, 20, 20 },
+      htile(
+         valign(0.0, _box),
+         valign(0.2, _box),
+         valign(0.4, _box),
+         valign(0.6, _box),
+         valign(0.8, _box),
+         valign(1.0, _box)
+      )
+   );
+}
+
 auto make_htile2()
 {
    auto _box = left_margin(
@@ -92,6 +100,105 @@ auto make_htile2()
          hpercent(2.0, _box)
       )
    );
+}
+
+auto make_htile_main()
+{
+   return htile(
+      margin({ 10, 10, 10, 10 }, group("Aligns", make_htile())),
+      margin({ 10, 10, 10, 10 }, group("Percentages", make_htile2()))
+   );
+}
+
+std::string const text =
+   "We are in the midst of an intergalatic condensing of beauty that will "
+   "clear a path toward the planet itself. The quantum leap of rebirth is "
+   "now happening worldwide. It is time to take healing to the next level. "
+   "Soon there will be a deepening of chi the likes of which the infinite "
+   "has never seen. The universe is approaching a tipping point. This "
+   "vision quest never ends. Imagine a condensing of what could be. "
+   "We can no longer afford to live with stagnation. Suffering is born "
+   "in the gap where stardust has been excluded. You must take a stand "
+   "against discontinuity.\n\n"
+
+   "Without complexity, one cannot dream. Stagnation is the antithesis of "
+   "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
+   "Yes, it is possible to eliminate the things that can destroy us, but not "
+   "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
+   "You may be ruled by desire without realizing it. Do not let it eliminate "
+   "the growth of your journey.\n\n"
+
+   "--New-Age Bullshit Generator"
+   ;
+
+std::string const text2 =
+   "To traverse the quest is to become one with it.\n\n"
+
+   "You and I are adventurers of the quantum cycle. The goal of expanding wave "
+   "functions is to plant the seeds of non-locality rather than pain. "
+   "The complexity of the present time seems to demand a redefining of our "
+   "bodies if we are going to survive. "
+   "We are at a crossroads of will and greed. Humankind has nothing to lose. "
+   "Our conversations with other storytellers have led to an evolving of "
+   "hyper-sentient consciousness. "
+   "If you have never experienced this flow on a cosmic scale, it can be "
+   "difficult to self-actualize. Although you may not realize it, you are "
+   "ancient. Have you found your vision quest?\n\n"
+
+   "Imagine a deepening of what could be. We are being called to explore the "
+   "galaxy itself as an interface between nature and transformation. This "
+   "circuit never ends. Entity, look within and recreate yourself. "
+   "Eons from now, we warriors will exist like never before as we are reborn "
+   "by the universe. We must change ourselves and empower others. The "
+   "wellspring of sharing is now happening worldwide. "
+   "You will soon be awakened by a power deep within yourself - a power "
+   "that is ethereal, dynamic. Astral projection may be the solution to "
+   "what's holding you back from an ecstatic oasis of divinity. As you "
+   "reflect, you will enter into infinite freedom that transcends understanding.\n\n"
+   ;
+
+auto make_basic_text()
+{
+   auto fr = [](auto el)
+   {
+      return margin({ 10, 10, 10, 10 }, layer(margin({ 10, 5, 10, 5 }, el), frame{}));
+   };
+
+   auto eh = [=](char const* txt)
+   {
+      return fr(halign(0.5,  heading{ txt }));
+   };
+
+   auto el = [=](double align, char const* txt)
+   {
+      return fr(halign(align,  label{ txt }));
+   };
+   
+//   auto text_box = margin(
+//      { 20, 20, 20, 20 },
+//      layer(
+//         margin(
+//            { 20, 20, 20, 20 },
+//            basic_text_box(text, 800)
+//         ),
+//         panel{}
+//      )
+//   );
+   
+   auto text_box = margin({ 10, 10, 10, 10 }, static_text_box{ text });
+
+   return
+      margin(
+         { 10, 10, 10, 10 },
+         vtile(
+            eh("Photon UI"),
+            el(1.0, "Hello, World. I am Photon."),
+            el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
+            el(0.0, "I used to be called Pica in the mid 90s."),
+            el(0.5, "Now, Joel rewrote my code using modern C++14."),
+            margin({ 10, 10, 10, 10 }, group("Text Box", text_box))
+         )
+      );
 }
 
 int main()
@@ -114,9 +221,9 @@ int main()
    {
       widget_ptr main_widget;
       
-      auto  m_item1_text = "Vertical Tiles and Aligns";
-      auto  m_item2_text = "Horizontal Tiles and Aligns";
-      auto  m_item3_text = "Vertical Tiles and Percentages";
+      auto  m_item1_text = "Vertical Tiles";
+      auto  m_item2_text = "Horizontal Tiles";
+      auto  m_item3_text = "Static Text";
       auto  m_item4_text = "Horizontal Tiles and Percentages";
       
       auto  m_item1 = ref(menu_item(m_item1_text));
@@ -144,9 +251,9 @@ int main()
          auto content =
             ref(
                deck(
-                  make_vtile(),
-                  make_htile(),
-                  make_vtile2(),
+                  make_vtile_main(),
+                  make_htile_main(),
+                  make_basic_text(),
                   make_htile2()
                )
             )
@@ -195,10 +302,6 @@ int main()
          auto  main_pane = ref(pane(dropdown, content));
          main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
       }
-      
-
-
-
 
       {
          auto _box = top_margin(
@@ -363,100 +466,11 @@ int main()
          //main_widget = new_(std::move(sl));
       }
 
-      {
-         auto fr = [](auto el)
-         {
-            return margin({ 10, 10, 10, 10 }, layer(margin({ 10, 5, 10, 5 }, el), frame{}));
-         };
 
-         auto eh = [=](char const* txt)
-         {
-            return fr(halign(0.5,  heading{ txt }));
-         };
 
-         auto el = [=](double align, char const* txt)
-         {
-            return fr(halign(align,  label{ txt }));
-         };
 
-         auto txt = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  vtile(
-                     eh("Photon UI"),
-                     el(1.0, "Hello, World. I am Photon."),
-                     el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
-                     el(0.0, "I used to be called Pica in the mid 90s."),
-                     el(0.5, "Now, Joel rewrote my code using modern C++14.")
-                  )
-               ),
-               panel()
-            )
-         );
 
-         //main_widget = new_(std::move(txt));
-      }
 
-      std::string text =
-         "We are in the midst of an intergalatic condensing of beauty that will "
-         "clear a path toward the planet itself. The quantum leap of rebirth is "
-         "now happening worldwide. It is time to take healing to the next level. "
-         "Soon there will be a deepening of chi the likes of which the infinite "
-         "has never seen. The universe is approaching a tipping point. This "
-         "vision quest never ends. Imagine a condensing of what could be. "
-         "We can no longer afford to live with stagnation. Suffering is born "
-         "in the gap where stardust has been excluded. You must take a stand "
-         "against discontinuity.\n\n"
-
-         "Without complexity, one cannot dream. Stagnation is the antithesis of "
-         "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
-         "Yes, it is possible to eliminate the things that can destroy us, but not "
-         "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
-         "You may be ruled by desire without realizing it. Do not let it eliminate "
-         "the growth of your journey.\n\n"
-
-         "--New-Age Bullshit Generator"
-         ;
-
-      std::string text2 =
-         "To traverse the quest is to become one with it.\n\n"
-
-         "You and I are adventurers of the quantum cycle. The goal of expanding wave "
-         "functions is to plant the seeds of non-locality rather than pain. "
-         "The complexity of the present time seems to demand a redefining of our "
-         "bodies if we are going to survive. "
-         "We are at a crossroads of will and greed. Humankind has nothing to lose. "
-         "Our conversations with other storytellers have led to an evolving of "
-         "hyper-sentient consciousness. "
-         "If you have never experienced this flow on a cosmic scale, it can be "
-         "difficult to self-actualize. Although you may not realize it, you are "
-         "ancient. Have you found your vision quest?\n\n"
-
-         "Imagine a deepening of what could be. We are being called to explore the "
-         "galaxy itself as an interface between nature and transformation. This "
-         "circuit never ends. Entity, look within and recreate yourself. "
-         "Eons from now, we warriors will exist like never before as we are reborn "
-         "by the universe. We must change ourselves and empower others. The "
-         "wellspring of sharing is now happening worldwide. "
-         "You will soon be awakened by a power deep within yourself - a power "
-         "that is ethereal, dynamic. Astral projection may be the solution to "
-         "what's holding you back from an ecstatic oasis of divinity. As you "
-         "reflect, you will enter into infinite freedom that transcends understanding.\n\n"
-         ;
-
-      {
-         auto txbx = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 20, 20, 20, 20 }, static_text_box{ text }),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(txbx));
-      }
 
       {
          using namespace icons;
@@ -554,20 +568,7 @@ int main()
          //main_widget = new_(std::move(main_pane));
       }
 
-      {
-         auto txbx = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  basic_text_box(text, 800)
-               ),
-               panel{}
-            )
-         );
 
-         //main_widget = new_(txbx);
-      }
 
       {
          auto img =

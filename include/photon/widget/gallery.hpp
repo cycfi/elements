@@ -268,11 +268,37 @@ namespace photon
    {
       return pane(heading(title), content);
    }
-   
+
    template <typename Content>
    inline auto pane(char const* title, Content&& content)
    {
       return pane(heading(title), content);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Groups
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Heading, typename Content>
+   inline auto group(Heading&& heading, Content&& content)
+   {
+      return
+        layer(
+            align_top(align_left(margin({10, 4, 10, 4}, heading))),
+            top_margin(20, std::forward<Content>(content)),
+            frame{}
+        );
+   }
+
+   template <typename Content>
+   inline auto group(std::string const& title, Content&& content)
+   {
+      return group(label(title), content);
+   }
+
+   template <typename Content>
+   inline auto group(char const* title, Content&& content)
+   {
+      return group(label(title), content);
    }
 }
 

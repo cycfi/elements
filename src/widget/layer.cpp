@@ -23,7 +23,7 @@ namespace photon
          clamp_min(limits.top, el.top);
          clamp_max(limits.right, el.right);
          clamp_max(limits.bottom, el.bottom);
-         
+
          limits.right = std::max(limits.right, limits.left);
          limits.bottom = std::max(limits.bottom, limits.top);
       }
@@ -115,6 +115,33 @@ namespace photon
          context ectx{ ctx, elem.get(), bounds };
          elem->draw(ectx);
       }
+   }
+
+   layer_widget::hit_info deck_widget::hit_element(context const& ctx, point p) const
+   {
+      widget_ptr e = (*this)[_selected_index];
+      if (e->is_control())
+      {
+         rect bounds = bounds_of(ctx, _selected_index);
+         if (bounds.includes(p))
+         {
+            context ectx{ ctx, e.get(), bounds };
+            if (e->hit_test(ectx, p))
+               return hit_info{ e.get(), bounds, int(_selected_index) };
+         }
+      }
+      return hit_info{ 0, rect{}, -1 };
+   }
+
+   bool deck_widget::focus(focus_request r)
+   {
+      if (!composite_base::focus())
+      {
+         widget_ptr e = (*this)[_selected_index];
+         if (e->is_control() && e->focus(focus_request::wants_focus))
+            composite_base::focus(_selected_index);
+      }
+      return composite_base::focus(r);
    }
 
    void deck_widget::select(std::size_t index)

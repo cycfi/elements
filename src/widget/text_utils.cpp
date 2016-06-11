@@ -101,6 +101,8 @@ namespace photon
 
    void text_utils::draw_icon(rect bounds, uint32_t code, int size) const
    {
+      auto state = canvas().new_state();
+
       char icon[8];
       char const* text = codepoint_to_UTF8(code, icon);
 

@@ -34,7 +34,7 @@ namespace photon
       void                 focus_top();
       rect                 bounds;
    };
-   
+
    using layer_composite = vector_composite<layer_widget>;
 
    template <typename... W>
@@ -57,6 +57,11 @@ namespace photon
                            {}
 
       virtual void         draw(context const& ctx);
+      virtual hit_info     hit_element(context const& ctx, point p) const;
+      virtual bool         focus(focus_request r);
+
+      using composite_base::focus;
+
       void                 select(std::size_t index);
       std::size_t          selected() const { return _selected_index; }
 
@@ -64,7 +69,7 @@ namespace photon
 
       std::size_t          _selected_index;
    };
-   
+
    using deck_composite = vector_composite<deck_widget>;
 
    template <typename... W>

@@ -174,16 +174,17 @@ auto make_basic_text()
       return fr(halign(align,  label{ txt }));
    };
 
-//   auto text_box = margin(
-//      { 20, 20, 20, 20 },
-//      layer(
-//         margin(
-//            { 20, 20, 20, 20 },
-//            basic_text_box(text, 800)
-//         ),
-//         panel{}
-//      )
-//   );
+   auto icons =
+      margin({ 10, 10, 10, 10 },
+         htile(
+            align_center(icon{ icons::paperclip,      24 }),
+            align_center(icon{ icons::arrowright,     24 }),
+            align_center(icon{ icons::barchart,       24 }),
+            align_center(icon{ icons::batteryfull,    24 }),
+            align_center(icon{ icons::car,            24 }),
+            align_center(icon{ icons::glass,          24 })
+         )
+      );
 
    auto text_box = margin({ 10, 10, 10, 10 }, static_text_box{ text });
 
@@ -196,6 +197,7 @@ auto make_basic_text()
             el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
             el(0.0, "I used to be called Pica in the mid 90s."),
             el(0.5, "Now, Joel rewrote my code using modern C++14."),
+            margin({ 10, 10, 10, 10 }, group("Icons", icons)),
             margin({ 10, 10, 10, 10 }, group("Text Box", text_box))
          )
       );
@@ -323,20 +325,24 @@ auto make_view_port(canvas&  canvas_)
       );
 
    return scroller(img);
-   /*
-         margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  scroller(img)
-               ),
-               panel()
-            )
-         )
-      ;*/
 }
 
+auto make_edit_box()
+{
+   return
+      scroller(
+         margin(
+            { 20, 20, 20, 20 },
+            vtile(
+               htile(
+                  basic_text_box(text2+text, 800),
+                  widget{} // horiontal space
+               ),
+               widget{} // vertical space
+            )
+         )
+      );
+}
 
 int main()
 {
@@ -358,15 +364,17 @@ int main()
 
       auto  m_item1_text = "Vertical Tiles";
       auto  m_item2_text = "Horizontal Tiles";
-      auto  m_item3_text = "Static Text";
+      auto  m_item3_text = "Static Text and Icons";
       auto  m_item4_text = "Controls";
-      auto  m_item5_text = "Viewport";
+      auto  m_item5_text = "Viewport and Scrollers";
+      auto  m_item6_text = "Edit Text";
 
       auto  m_item1 = ref(menu_item(m_item1_text));
       auto  m_item2 = ref(menu_item(m_item2_text));
       auto  m_item3 = ref(menu_item(m_item3_text));
       auto  m_item4 = ref(menu_item(m_item4_text));
       auto  m_item5 = ref(menu_item(m_item5_text));
+      auto  m_item6 = ref(menu_item(m_item6_text));
 
       {
          auto menu =
@@ -378,6 +386,7 @@ int main()
                      m_item3,
                      m_item4,
                      m_item5,
+                     m_item6,
                      menu_item_spacer(),
                      menu_item("Menu Item 4"),
                      menu_item("Menu Item 5")
@@ -393,19 +402,20 @@ int main()
                   make_htile_main(),
                   make_basic_text(),
                   make_controls(main_window),
-                  make_view_port(canvas_)
+                  make_view_port(canvas_),
+                  make_edit_box()
                )
             )
          ;
 
          auto  title = ref(heading(m_item1_text));
-         content.get().select(4);
+         content.get().select(5);
 
          m_item1.get().on_click =
             [title, m_item1_text, content, &main_window]() mutable
             {
                title.get().text(m_item1_text);
-               content.get().select(4);
+               content.get().select(5);
                main_window.draw(true);
             };
 
@@ -413,7 +423,7 @@ int main()
             [title, m_item2_text, content, &main_window]() mutable
             {
                title.get().text(m_item2_text);
-               content.get().select(3);
+               content.get().select(4);
                main_window.draw(true);
             };
 
@@ -421,7 +431,7 @@ int main()
             [title, m_item3_text, content, &main_window]() mutable
             {
                title.get().text(m_item3_text);
-               content.get().select(2);
+               content.get().select(3);
                main_window.draw(true);
             };
 
@@ -429,7 +439,7 @@ int main()
             [title, m_item4_text, content, &main_window]() mutable
             {
                title.get().text(m_item4_text);
-               content.get().select(1);
+               content.get().select(2);
                main_window.draw(true);
             };
          
@@ -437,6 +447,14 @@ int main()
             [title, m_item5_text, content, &main_window]() mutable
             {
                title.get().text(m_item5_text);
+               content.get().select(1);
+               main_window.draw(true);
+            };
+         
+         m_item6.get().on_click =
+            [title, m_item6_text, content, &main_window]() mutable
+            {
+               title.get().text(m_item6_text);
                content.get().select(0);
                main_window.draw(true);
             };
@@ -619,23 +637,7 @@ int main()
 
 
 
-      {
-         using namespace icons;
 
-         auto icn = margin(
-            { 20, 20, 20, 20 },
-            htile(
-               align_center(icon{ paperclip,        48 })
-             , align_center(icon{ arrowright,       48 })
-             , align_center(icon{ barchart,         48 })
-             , align_center(icon{ batteryfull,      48 })
-             , align_center(icon{ car,              48 })
-             , align_center(icon{ glass,            48 })
-            )
-         );
-
-         //main_widget = new_(std::move(icn));
-      }
 
 
 
@@ -667,22 +669,7 @@ int main()
 */
 
 
-      {
-         auto txbx = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               scroller(
-                  margin(
-                     { 20, 20, 20, 20 },
-                     basic_text_box(text2+text, 800)
-                  )
-               ),
-               panel()
-            )
-         );
 
-         //main_widget = new_(txbx);
-      }
 
 
 

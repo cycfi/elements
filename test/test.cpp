@@ -203,12 +203,11 @@ auto make_basic_text()
       );
 }
 
-auto make_controls(window& main_window)
+auto make_buttons(window& main_window)
 {
    auto bred      = colors::red.opacity(0.4);
    auto bgreen    = colors::green.level(0.7).opacity(0.4);
    auto bblue     = colors::blue.opacity(0.4);
-   auto bgold     = colors::gold.opacity(0.4);
    auto brblue    = colors::royal_blue.opacity(0.4);
 
    auto mbutton   = button("Momentary Button");
@@ -216,8 +215,51 @@ auto make_controls(window& main_window)
    auto lbutton   = ref(latching_button("Latching Button", bgreen));
    auto reset     = button("Clear Latch", icons::unlock, bblue);
    auto note      = button(icons::gear, "Setup", brblue);
-   auto drink     = button("Let's Drink to That!!!", icons::glass, bgold);
 
+   reset.on_click =
+      [lbutton, &main_window](bool) mutable
+      {
+         lbutton.get().state(0);
+         main_window.draw();
+      };
+
+   return
+      group("Buttons",
+         margin({ 20, 20, 20, 20 },
+            vtile(
+               top_margin(20, mbutton),
+               top_margin(20, tbutton),
+               top_margin(20, lbutton),
+               top_margin(20, reset),
+               top_margin(20, note)
+            )
+         )
+      );
+}
+
+auto make_knobs_and_sliders()
+{
+   return
+      group("Basic Sliders and Knobs",
+         margin({ 20, 10, 20, 10 },
+            htile(
+               hpercent(1.5,
+                  vsize(80,
+                     vtile(
+                        top_margin(20, slider{}),
+                        top_margin(10, slider{})
+                     )
+                  )
+               ),
+               hpercent(0.3, left_margin(20, knob{})),
+               hpercent(0.3, left_margin(20, knob{}))
+            )
+         )
+      );
+}
+
+auto make_dropdown_menu()
+{
    auto dropdown  = dropdown_menu("Dropdown");
 
    auto menu =
@@ -235,14 +277,12 @@ auto make_controls(window& main_window)
 
    dropdown.menu(menu);
 
-   reset.on_click =
-      [lbutton, &main_window](bool) mutable
-      {
-         lbutton.get().state(0);
-         main_window.draw();
-      };
+   return dropdown;
+}
 
-   auto check_box_ =
+auto make_check_boxes()
+{
+   return
       group("Check boxes",
          margin({ 10, 10, 10, 20},
             vtile(
@@ -252,52 +292,22 @@ auto make_controls(window& main_window)
             )
          )
    );
+}
 
-   auto analog =
-      group("Basic Sliders and Knobs",
-         margin({ 20, 10, 20, 10 },
-            htile(
-               hpercent(1.5,
-                  vsize(120,
-                     vtile(
-                        top_margin(20, slider{}),
-                        top_margin(10, slider{}),
-                        top_margin(10, slider{})
-                     )
-                  )
-               ),
-               hpercent(0.3, left_margin(20, knob{} /*hsize(75, knob{})*/)),
-               hpercent(0.3, left_margin(20, knob{} /*hsize(75, knob{})*/))
-            )
-         )
-      );
-   
+auto make_controls(window& main_window)
+{
    auto inbox = margin(
       { 20, 20, 20, 20 },
       input_box("Placeholder")
    );
-   
-   auto  buttons =
-      group("Buttons",
-         margin({ 20, 20, 20, 20 },
-            vtile(
-               top_margin(20, mbutton),
-               top_margin(20, tbutton),
-               top_margin(20, lbutton),
-               top_margin(20, reset),
-               top_margin(20, note),
-               top_margin(20, drink)
-            )
-         )
-      );
-   
+
    auto  column1 =
       margin({ 20, 0, 20, 20 },
          vtile(
             top_margin(20, input_box("Placeholder")),
-            top_margin(20, dropdown),
-            top_margin(20, check_box_),
-            top_margin(20, analog),
+            top_margin(20, make_dropdown_menu()),
+            top_margin(20, make_check_boxes()),
+            top_margin(20, make_knobs_and_sliders()),
             widget{} // empty space
          )
       );
@@ -305,7 +315,7 @@ auto make_controls(window& main_window)
    auto  column2 =
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, buttons),
+            top_margin(20, make_buttons(main_window)),
             widget{} // empty space
          )
       );
@@ -333,13 +343,7 @@ auto make_edit_box()
       scroller(
          margin(
             { 20, 20, 20, 20 },
-            vtile(
-               htile(
-                  basic_text_box(text2+text, 800),
-                  widget{} // horiontal space
-               ),
-               widget{} // vertical space
-            )
+            align_left(align_top(basic_text_box(text2+text, 800)))
          )
       );
 }
@@ -442,7 +446,7 @@ int main()
                content.get().select(2);
                main_window.draw(true);
             };
-         
+
          m_item5.get().on_click =
             [title, m_item5_text, content, &main_window]() mutable
             {
@@ -450,7 +454,7 @@ int main()
                content.get().select(1);
                main_window.draw(true);
             };
-         
+
          m_item6.get().on_click =
             [title, m_item6_text, content, &main_window]() mutable
             {
@@ -468,116 +472,7 @@ int main()
          main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
       }
 
-      {
-         auto _box = top_margin(
-            { 20 },
-            hsize(64, box)
-         );
 
-         auto rows = margin(
-            { 20, 0, 20, 20 },
-            vtile(
-               top_margin(10, box),
-               top_margin(10, box),
-               top_margin(10, box),
-               top_margin(10, box),
-               top_margin(10, box),
-               top_margin(10, box)
-            )
-         );
-
-         //main_widget = new_(std::move(rows));
-      }
-
-      {
-         auto _box = left_margin(
-            { 20 },
-            vsize(64, box)
-         );
-
-         auto columns = margin(
-            { 0, 20, 20, 20 },
-            htile(
-               left_margin(10, box),
-               left_margin(10, box),
-               left_margin(10, box),
-               left_margin(10, box),
-               left_margin(10, box),
-               left_margin(10, box)
-            )
-         );
-
-         //main_widget = new_(std::move(columns));
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20},
-                  htile(
-                     xside_margin(10, slider{}),
-                     xside_margin(10, slider{}),
-                     xside_margin(10, slider{}),
-                     xside_margin(10, slider{}),
-                     xside_margin(10, slider{}),
-                     xside_margin(10, slider{}),
-                     xside_margin(10,
-                        vtile(
-                           yside_margin(10, knob{}),
-                           yside_margin(10, knob{}),
-                           yside_margin(10, knob{})
-                        )
-                     )
-                  )
-               ),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               htile(
-                  margin({ 20, 20, 20, 20 }, slider{}),
-                  margin({ 20, 20, 20, 20 }, knob{})
-               ),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 20, 20, 20, 20 }, slider{}),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin({ 20, 20, 20, 20 }, knob{}),
-               margin({ 20, 20, 20, 20 }, frame{}),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
 
 
       {
@@ -630,47 +525,6 @@ int main()
 
          //main_widget = new_(std::move(sl));
       }
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-      {
-         auto img =
-            size(
-               point{ 1920, 1080 }
-             , image(space)
-            );
-
-
-         auto p =
-               margin(
-                  { 20, 20, 20, 20 },
-                  layer(
-                     margin(
-                        { 20, 20, 20, 20 },
-                        port(img)
-                     ),
-                     panel{}
-                  )
-               )
-            ;
-
-         //main_widget = new_(p);
-      }
-*/
-
-
-
-
 
 
       main_window.content.elements.push_back(main_widget);

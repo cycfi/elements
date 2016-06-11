@@ -201,6 +201,75 @@ auto make_basic_text()
       );
 }
 
+auto make_buttons(window& main_window)
+{
+   using namespace icons;
+
+   auto bred      = colors::red.opacity(0.4);
+   auto bgreen    = colors::green.level(0.7).opacity(0.4);
+   auto bblue     = colors::blue.opacity(0.4);
+   auto bgold     = colors::gold.opacity(0.4);
+   auto brblue    = colors::royal_blue.opacity(0.4);
+   
+   auto mbutton   = button("Momentary Button");
+   auto tbutton   = toggle_button("Toggle Button", bred);
+   auto lbutton   = ref(latching_button("Latching Button", bgreen));
+   auto reset     = button("Clear Latch", bblue);
+   auto note      = button(gear, "Setup", brblue);
+   auto drink     = button("Let's Drink to That!!!", glass, bgold);
+   
+   auto dropdown  = dropdown_menu("Dropdown");
+   
+   auto menu =
+      layer(
+         vtile(
+               menu_item("Menu Item 1"),
+               menu_item("Menu Item 2"),
+               menu_item("Menu Item 3"),
+               menu_item_spacer(),
+               menu_item("Menu Item 4"),
+               menu_item("Menu Item 5")
+         ),
+         menu_background{}
+      );
+   
+   dropdown.menu(menu);
+   
+   reset.on_click =
+      [lbutton, &main_window](bool) mutable
+      {
+         lbutton.get().state(0);
+         main_window.draw();
+      };
+   
+   auto  column1 =
+      margin({ 20, 0, 20, 20 },
+         vtile(
+            top_margin(20, dropdown),
+
+            top_margin(20, align_left(check_box("Check Box 1"))),
+            top_margin(10, align_left(check_box("Check Box 2"))),
+            top_margin(10, align_left(check_box("Check Box 3"))),
+            widget{} // empty space
+         )
+      );
+   
+   auto column2 =
+      margin({ 20, 0, 20, 20 },
+         vtile(
+            top_margin(20, mbutton),
+            top_margin(20, tbutton),
+            top_margin(20, lbutton),
+            top_margin(20, reset),
+            top_margin(20, note),
+            top_margin(20, drink),
+            widget{} // empty space
+         )
+      );
+   
+   return htile(column1, column2);
+}
+
 int main()
 {
    using namespace photon;
@@ -224,7 +293,7 @@ int main()
       auto  m_item1_text = "Vertical Tiles";
       auto  m_item2_text = "Horizontal Tiles";
       auto  m_item3_text = "Static Text";
-      auto  m_item4_text = "Horizontal Tiles and Percentages";
+      auto  m_item4_text = "Buttons";
       
       auto  m_item1 = ref(menu_item(m_item1_text));
       auto  m_item2 = ref(menu_item(m_item2_text));
@@ -254,7 +323,7 @@ int main()
                   make_vtile_main(),
                   make_htile_main(),
                   make_basic_text(),
-                  make_htile2()
+                  make_buttons(main_window)
                )
             )
          ;
@@ -491,82 +560,6 @@ int main()
       }
 
 
-      {
-         using namespace icons;
-
-         auto bred      = colors::red.opacity(0.4);
-         auto bgreen    = colors::green.level(0.7).opacity(0.4);
-         auto bblue     = colors::blue.opacity(0.4);
-         auto bgold     = colors::gold.opacity(0.4);
-         auto brblue    = colors::royal_blue.opacity(0.4);
-         
-         auto mbutton   = button("Momentary Button");
-         auto tbutton   = toggle_button("Toggle Button", bred);
-         auto lbutton   = ref(latching_button("Latching Button", bgreen));
-         auto reset     = button("Clear Latch", bblue);
-         auto note      = button(gear, "Setup", brblue);
-         auto drink     = button("Let's Drink to That!!!", glass, bgold);
-         
-         auto dropdown  = dropdown_menu("Dropdown");
-         
-         auto menu =
-            layer(
-               vtile(
-                     menu_item("Menu Item 1"),
-                     menu_item("Menu Item 2"),
-                     menu_item("Menu Item 3"),
-                     menu_item_spacer(),
-                     menu_item("Menu Item 4"),
-                     menu_item("Menu Item 5")
-               ),
-               menu_background{}
-            );
-         
-         dropdown.menu(menu);
-         
-         reset.on_click =
-            [lbutton, &main_window](bool) mutable
-            {
-               lbutton.get().state(0);
-               main_window.draw();
-            };
-         
-         auto  column1 =
-            margin({ 20, 0, 20, 20 },
-               vtile(
-                  top_margin(20, dropdown),
-
-                  top_margin(20, align_left(check_box("Check Box 1"))),
-                  top_margin(10, align_left(check_box("Check Box 2"))),
-                  top_margin(10, align_left(check_box("Check Box 3")))
-               )
-            );
-         
-         auto column2 =
-            margin({ 20, 0, 20, 20 },
-               vtile(
-                  top_margin(20, mbutton),
-                  top_margin(20, tbutton),
-                  top_margin(20, lbutton),
-                  top_margin(20, reset),
-                  top_margin(20, note),
-                  top_margin(20, drink)
-               )
-            );
-         
-         auto main_pane =
-            margin({ 20, 20, 20, 20 },
-               pane("Buttons",
-                  htile(
-                     column1,
-                     column2
-                  )
-               )
-            )
-         ;
-
-         //main_widget = new_(std::move(main_pane));
-      }
 
 
 

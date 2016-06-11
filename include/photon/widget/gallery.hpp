@@ -223,7 +223,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    inline auto menu_item_text(std::string const& text)
    {
-      return xside_margin({ 20, 20 },  align_left(heading(text)));
+      return xside_margin({ 20, 20 }, align_left(label(text)));
    }
 
    inline auto menu_item(std::string const& text)

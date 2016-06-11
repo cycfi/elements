@@ -18,7 +18,7 @@ namespace photon
       // Panel fill
       canvas_.begin_path();
       canvas_.rect(ctx.bounds);
-      canvas_.fill_color(ctx.theme().panel_color.opacity(1.0));
+      canvas_.fill_color(ctx.theme().panel_color.opacity(0.95));
       canvas_.fill();
 
       // Drop shadow

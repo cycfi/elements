@@ -31,19 +31,19 @@ namespace photon
       color                controls_color             = color{ 18, 49, 85, 200 };
       color                indicator_color            = color{ 0, 127, 255, 200 };
 
-      color                heading_font_color         = { 220, 220, 220, 160 };
+      color                heading_font_color         = { 220, 220, 220, 200 };
       char const*          heading_font               = "sans-bold";
       float                heading_font_size          = 20.0;
 
-      color                label_font_color           = { 220, 220, 220, 160 };
+      color                label_font_color           = { 220, 220, 220, 200 };
       char const*          label_font                 = "sans";
       float                label_font_size            = 18.0;
 
-      color                icon_color                 = { 220, 220, 220, 160 };
+      color                icon_color                 = { 220, 220, 220, 200 };
       char const*          icon_font                  = "icons";
       float                icon_font_size             = 20.0;
 
-      color                text_box_font_color        = { 220, 220, 220, 230 };
+      color                text_box_font_color        = { 220, 220, 220, 200 };
       char const*          text_box_font              = "sans";
       float                text_box_font_size         = 18.0;
       color                text_box_hilite_color      = { 255, 192, 0, 80 };

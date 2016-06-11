@@ -191,7 +191,7 @@ namespace photon
    template <bool state>
    rect check_box_widget<state>::limits(basic_context const& ctx) const
    {
-      point s = text_utils(ctx.theme()).measure_heading(_text.c_str());
+      point s = text_utils(ctx.theme()).measure_label(_text.c_str());
       return { s.x + 45, s.y, s.x + 45, s.y };
    }
 

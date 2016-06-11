@@ -39,6 +39,7 @@ namespace photon
 
    void port_base::draw(context const& ctx)
    {
+      auto state = ctx.canvas().new_state();
       ctx.canvas().clip(ctx.bounds);
       proxy_base::draw(ctx);
    }

@@ -173,7 +173,7 @@ auto make_basic_text()
    {
       return fr(halign(align,  label{ txt }));
    };
-   
+
 //   auto text_box = margin(
 //      { 20, 20, 20, 20 },
 //      layer(
@@ -184,7 +184,7 @@ auto make_basic_text()
 //         panel{}
 //      )
 //   );
-   
+
    auto text_box = margin({ 10, 10, 10, 10 }, static_text_box{ text });
 
    return
@@ -201,25 +201,23 @@ auto make_basic_text()
       );
 }
 
-auto make_buttons(window& main_window)
+auto make_controls(window& main_window)
 {
-   using namespace icons;
-
    auto bred      = colors::red.opacity(0.4);
    auto bgreen    = colors::green.level(0.7).opacity(0.4);
    auto bblue     = colors::blue.opacity(0.4);
    auto bgold     = colors::gold.opacity(0.4);
    auto brblue    = colors::royal_blue.opacity(0.4);
-   
+
    auto mbutton   = button("Momentary Button");
    auto tbutton   = toggle_button("Toggle Button", bred);
    auto lbutton   = ref(latching_button("Latching Button", bgreen));
    auto reset     = button("Clear Latch", bblue);
-   auto note      = button(gear, "Setup", brblue);
-   auto drink     = button("Let's Drink to That!!!", glass, bgold);
-   
+   auto note      = button(icons::gear, "Setup", brblue);
+   auto drink     = button("Let's Drink to That!!!", icons::glass, bgold);
+
    auto dropdown  = dropdown_menu("Dropdown");
-   
+
    auto menu =
       layer(
          vtile(
@@ -232,28 +230,62 @@ auto make_buttons(window& main_window)
          ),
          menu_background{}
       );
-   
+
    dropdown.menu(menu);
-   
+
    reset.on_click =
       [lbutton, &main_window](bool) mutable
       {
          lbutton.get().state(0);
          main_window.draw();
       };
-   
-   auto  column1 =
-      margin({ 20, 0, 20, 20 },
-         vtile(
-            top_margin(20, dropdown),
 
-            top_margin(20, align_left(check_box("Check Box 1"))),
-            top_margin(10, align_left(check_box("Check Box 2"))),
-            top_margin(10, align_left(check_box("Check Box 3"))),
-            widget{} // empty space
+   auto check_box_ =
+      group("Check boxes",
+         margin({ 10, 10, 10, 20},
+            vtile(
+               top_margin(10, align_left(check_box("Check Box 1"))),
+               top_margin(10, align_left(check_box("Check Box 2"))),
+               top_margin(10, align_left(check_box("Check Box 3")))
+            )
+         )
+   );
+
+   auto analog =
+      group("Basic Sliders and Knobs",
+         margin({ 20, 10, 20, 10 },
+            htile(
+               hpercent(1.5,
+                  vsize(120,
+                     vtile(
+                        top_margin(20, slider{}),
+                        top_margin(10, slider{}),
+                        top_margin(10, slider{})
+                     )
+                  )
+               ),
+               hpercent(0.3, left_margin(20, knob{} /*hsize(75, knob{})*/)),
+               hpercent(0.3, left_margin(20, knob{} /*hsize(75, knob{})*/))
+            )
          )
       );
    
+   auto inbox = margin(
+      { 20, 20, 20, 20 },
+      input_box("Placeholder")
+   );
+
+   auto  column1 =
+      margin({ 20, 0, 20, 20 },
+         vtile(
+            top_margin(20, input_box("Placeholder")),
+            top_margin(20, dropdown),
+            top_margin(20, check_box_),
+            top_margin(20, analog),
+            widget{} // empty space
+         )
+      );
+
    auto column2 =
       margin({ 20, 0, 20, 20 },
          vtile(
@@ -266,7 +298,7 @@ auto make_buttons(window& main_window)
             widget{} // empty space
          )
       );
-   
+
    return htile(column1, column2);
 }
 
@@ -289,12 +321,12 @@ int main()
 
    {
       widget_ptr main_widget;
-      
+
       auto  m_item1_text = "Vertical Tiles";
       auto  m_item2_text = "Horizontal Tiles";
       auto  m_item3_text = "Static Text";
-      auto  m_item4_text = "Buttons";
-      
+      auto  m_item4_text = "Controls";
+
       auto  m_item1 = ref(menu_item(m_item1_text));
       auto  m_item2 = ref(menu_item(m_item2_text));
       auto  m_item3 = ref(menu_item(m_item3_text));
@@ -316,21 +348,21 @@ int main()
                   menu_background{}
                )
             );
-      
+
          auto content =
             ref(
                deck(
                   make_vtile_main(),
                   make_htile_main(),
                   make_basic_text(),
-                  make_buttons(main_window)
+                  make_controls(main_window)
                )
             )
          ;
-         
+
          auto  title = ref(heading(m_item1_text));
          content.get().select(3);
-         
+
          m_item1.get().on_click =
             [title, m_item1_text, content, &main_window]() mutable
             {
@@ -338,7 +370,7 @@ int main()
                content.get().select(3);
                main_window.draw(true);
             };
-         
+
          m_item2.get().on_click =
             [title, m_item2_text, content, &main_window]() mutable
             {
@@ -346,7 +378,7 @@ int main()
                content.get().select(2);
                main_window.draw(true);
             };
-         
+
          m_item3.get().on_click =
             [title, m_item3_text, content, &main_window]() mutable
             {
@@ -354,7 +386,7 @@ int main()
                content.get().select(1);
                main_window.draw(true);
             };
-         
+
          m_item4.get().on_click =
             [title, m_item4_text, content, &main_window]() mutable
             {
@@ -362,12 +394,12 @@ int main()
                content.get().select(0);
                main_window.draw(true);
             };
-         
+
          auto  caret = left_margin(5, icon(icons::caretdown));
          auto  dropdown = basic_dropdown_menu(htile(title, caret), htile(title, caret));
-         
+
          dropdown.menu(menu);
-         
+
          auto  main_pane = ref(pane(dropdown, content));
          main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
       }
@@ -543,7 +575,7 @@ int main()
 
       {
          using namespace icons;
-      
+
          auto icn = margin(
             { 20, 20, 20, 20 },
             htile(
@@ -628,27 +660,12 @@ int main()
          //main_widget = new_(txbx);
       }
 
-      {
-         auto ixbx = margin(
-            { 20, 20, 20, 20 },
-            input_box("Placeholder")
-         );
 
-         auto frm = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               ixbx,
-               panel()
-            )
-         );
-
-         //main_widget = new_(frm);
-      }
 
       main_window.content.elements.push_back(main_widget);
-      
+
       //main_window.content.elements.push_back(new_(floating({ 50, 50, 100, 100 }, knob{})));
-      
+
       my_app.run();
    }
 

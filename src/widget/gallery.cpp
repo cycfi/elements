@@ -190,7 +190,7 @@ namespace photon
       }
 
       rect  text_bounds = ctx.bounds.move(45, 0);
-      text_utils(theme_).draw_heading(text_bounds, text.c_str());
+      text_utils(theme_).draw_label(text_bounds, text.c_str());
    }
 
    rect menu_item_spacer_widget::limits(basic_context const& ctx) const

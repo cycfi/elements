@@ -28,8 +28,8 @@ namespace photon
       color                panel_color                = { 28, 30, 34, 192 };
       color                frame_color                = { 220, 220, 220, 70 };
 
-      color                controls_color             = color{ 18, 49, 85, 200 };
-      color                indicator_color            = color{ 0, 127, 255, 200 };
+      color                controls_color             = { 18, 49, 85, 200 };
+      color                indicator_color            = { 0, 127, 255, 200 };
 
       color                heading_font_color         = { 220, 220, 220, 200 };
       char const*          heading_font               = "sans-bold";
@@ -46,8 +46,8 @@ namespace photon
       color                text_box_font_color        = { 220, 220, 220, 200 };
       char const*          text_box_font              = "sans";
       float                text_box_font_size         = 18.0;
-      color                text_box_hilite_color      = { 255, 192, 0, 80 };
-      color                text_box_caret_color       = { 255, 192, 0, 255 };
+      color                text_box_hilite_color      = { 0, 127, 255, 100 };
+      color                text_box_caret_color       = { 0, 190, 255, 255 };
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
 

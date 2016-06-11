@@ -212,7 +212,7 @@ auto make_controls(window& main_window)
    auto mbutton   = button("Momentary Button");
    auto tbutton   = toggle_button("Toggle Button", bred);
    auto lbutton   = ref(latching_button("Latching Button", bgreen));
-   auto reset     = button("Clear Latch", bblue);
+   auto reset     = button("Clear Latch", icons::unlock, bblue);
    auto note      = button(icons::gear, "Setup", brblue);
    auto drink     = button("Let's Drink to That!!!", icons::glass, bgold);
 
@@ -274,7 +274,21 @@ auto make_controls(window& main_window)
       { 20, 20, 20, 20 },
       input_box("Placeholder")
    );
-
+   
+   auto  buttons =
+      group("Buttons",
+         margin({ 20, 20, 20, 20 },
+            vtile(
+               top_margin(20, mbutton),
+               top_margin(20, tbutton),
+               top_margin(20, lbutton),
+               top_margin(20, reset),
+               top_margin(20, note),
+               top_margin(20, drink)
+            )
+         )
+      );
+   
    auto  column1 =
       margin({ 20, 0, 20, 20 },
          vtile(
@@ -286,21 +300,43 @@ auto make_controls(window& main_window)
          )
       );
 
-   auto column2 =
+   auto  column2 =
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, mbutton),
-            top_margin(20, tbutton),
-            top_margin(20, lbutton),
-            top_margin(20, reset),
-            top_margin(20, note),
-            top_margin(20, drink),
+            top_margin(20, buttons),
             widget{} // empty space
          )
       );
 
-   return htile(column1, column2);
+   return htile(column1, hpercent(0.5, column2));
 }
+
+
+auto make_view_port(canvas&  canvas_)
+{
+   auto  space = std::make_shared<canvas::image>(canvas_, "./assets/images/space.jpg");
+
+   auto  img =
+      size(
+         point{ 1920, 1080 }
+       , image(space)
+      );
+
+   return scroller(img);
+   /*
+         margin(
+            { 20, 20, 20, 20 },
+            layer(
+               margin(
+                  { 20, 20, 20, 20 },
+                  scroller(img)
+               ),
+               panel()
+            )
+         )
+      ;*/
+}
+
 
 int main()
 {
@@ -310,8 +346,6 @@ int main()
    window   main_window("Photon", { 1000, 600 }, color{ 62, 91, 102, 255 }, my_app);
    canvas&  canvas_ = main_window.canvas();
 
-   auto     space = std::make_shared<canvas::image>(
-               canvas_, "./assets/images/space.jpg");
 
    auto     knob_sprites = std::make_shared<canvas::image>(
                canvas_, "./assets/images/knob_sprites_150x150_darker.png");
@@ -326,11 +360,13 @@ int main()
       auto  m_item2_text = "Horizontal Tiles";
       auto  m_item3_text = "Static Text";
       auto  m_item4_text = "Controls";
+      auto  m_item5_text = "Viewport";
 
       auto  m_item1 = ref(menu_item(m_item1_text));
       auto  m_item2 = ref(menu_item(m_item2_text));
       auto  m_item3 = ref(menu_item(m_item3_text));
       auto  m_item4 = ref(menu_item(m_item4_text));
+      auto  m_item5 = ref(menu_item(m_item5_text));
 
       {
          auto menu =
@@ -341,6 +377,7 @@ int main()
                      m_item2,
                      m_item3,
                      m_item4,
+                     m_item5,
                      menu_item_spacer(),
                      menu_item("Menu Item 4"),
                      menu_item("Menu Item 5")
@@ -355,19 +392,20 @@ int main()
                   make_vtile_main(),
                   make_htile_main(),
                   make_basic_text(),
-                  make_controls(main_window)
+                  make_controls(main_window),
+                  make_view_port(canvas_)
                )
             )
          ;
 
          auto  title = ref(heading(m_item1_text));
-         content.get().select(3);
+         content.get().select(4);
 
          m_item1.get().on_click =
             [title, m_item1_text, content, &main_window]() mutable
             {
                title.get().text(m_item1_text);
-               content.get().select(3);
+               content.get().select(4);
                main_window.draw(true);
             };
 
@@ -375,7 +413,7 @@ int main()
             [title, m_item2_text, content, &main_window]() mutable
             {
                title.get().text(m_item2_text);
-               content.get().select(2);
+               content.get().select(3);
                main_window.draw(true);
             };
 
@@ -383,7 +421,7 @@ int main()
             [title, m_item3_text, content, &main_window]() mutable
             {
                title.get().text(m_item3_text);
-               content.get().select(1);
+               content.get().select(2);
                main_window.draw(true);
             };
 
@@ -391,6 +429,14 @@ int main()
             [title, m_item4_text, content, &main_window]() mutable
             {
                title.get().text(m_item4_text);
+               content.get().select(1);
+               main_window.draw(true);
+            };
+         
+         m_item5.get().on_click =
+            [title, m_item5_text, content, &main_window]() mutable
+            {
+               title.get().text(m_item5_text);
                content.get().select(0);
                main_window.draw(true);
             };
@@ -594,7 +640,7 @@ int main()
 
 
 
-
+/*
       {
          auto img =
             size(
@@ -618,30 +664,8 @@ int main()
 
          //main_widget = new_(p);
       }
+*/
 
-      {
-         auto img =
-            size(
-               point{ 1920, 1080 }
-             , image(space)
-            );
-
-
-         auto p =
-               margin(
-                  { 20, 20, 20, 20 },
-                  layer(
-                     margin(
-                        { 20, 20, 20, 20 },
-                        scroller(img)
-                     ),
-                     panel()
-                  )
-               )
-            ;
-
-         //main_widget = new_(p);
-      }
 
       {
          auto txbx = margin(

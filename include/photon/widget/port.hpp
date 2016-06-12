@@ -70,6 +70,7 @@ namespace photon
       ~scroller_base() {}
 
       virtual rect            limits(basic_context const& ctx) const;
+      virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);

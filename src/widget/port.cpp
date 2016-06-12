@@ -137,11 +137,15 @@ namespace photon
       };
    }
 
+   widget* scroller_base::hit_test(context const& ctx, point p)
+   {
+      return widget::hit_test(ctx, p);
+   }
+
    scroller_base::scrollbar_bounds
    scroller_base::get_scrollbar_bounds(context const& ctx)
    {
       scrollbar_bounds r;
-
       rect  e_limits = subject().limits(ctx);
 
       r.has_h = e_limits.left > ctx.bounds.width() && allow_hscroll();

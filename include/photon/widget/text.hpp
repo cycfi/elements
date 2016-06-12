@@ -23,8 +23,9 @@ namespace photon
    {
    public:
 
-      heading(std::string const& text)
+      heading(std::string const& text, float size_ = 1.0)
        : _text(text)
+       , _size(size_)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -38,6 +39,7 @@ namespace photon
    private:
 
       std::string       _text;
+      float             _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,8 +49,9 @@ namespace photon
    {
    public:
 
-      label(std::string const& text)
+      label(std::string const& text, float size_ = 1.0)
        : _text(text)
+       , _size(size_)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -63,6 +66,7 @@ namespace photon
    private:
 
       std::string       _text;
+      float             _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

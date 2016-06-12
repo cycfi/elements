@@ -20,7 +20,6 @@ namespace photon
    class icon : public widget
    {
    public:
-   
                         icon(std::uint32_t code_, float size_ = -1);
 
       virtual rect      limits(basic_context const& ctx) const;

@@ -23,13 +23,21 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect heading::limits(basic_context const& ctx) const
    {
-      point s = text_utils(ctx.theme()).measure_heading(_text.c_str());
+      auto& theme_ = ctx.theme();
+      point s = text_utils(theme_)
+         .measure_text(
+            _text.c_str(), theme_.heading_font, theme_.heading_font_size * _size);
       return { s.x, s.y, s.x, s.y };
    }
 
    void heading::draw(context const& ctx)
    {
-      text_utils(ctx.theme()).draw_heading(ctx.bounds, _text.c_str());
+      auto& theme_ = ctx.theme();
+      text_utils(theme_)
+         .draw_text(
+            ctx.bounds, _text.c_str(), theme_.heading_font,
+            theme_.heading_font_size * _size, theme_.heading_font_color
+         );
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,13 +45,21 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect label::limits(basic_context const& ctx) const
    {
-      point s = text_utils(ctx.theme()).measure_label(_text.c_str());
+      auto& theme_ = ctx.theme();
+      point s = text_utils(theme_)
+         .measure_text(
+            _text.c_str(), theme_.label_font, theme_.label_font_size * _size);
       return { s.x, s.y, s.x, s.y };
    }
 
    void label::draw(context const& ctx)
    {
-      text_utils(ctx.theme()).draw_label(ctx.bounds, _text.c_str());
+      auto& theme_ = ctx.theme();
+      text_utils(theme_)
+         .draw_text(
+            ctx.bounds, _text.c_str(), theme_.label_font,
+            theme_.label_font_size * _size, theme_.label_font_color
+         );
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

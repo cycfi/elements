@@ -14,46 +14,6 @@ namespace photon
 {
    namespace
    {
-      void draw_text(
-         canvas& _canvas, rect bounds, char const* text
-       , char const* font, float font_size, color color_)
-      {
-         auto state = _canvas.new_state();
-
-         float x = bounds.left;
-         float y = bounds.top;
-         float h = bounds.height();
-         float cy = y+(h/2);
-         float sh = h/16;
-
-         _canvas.font_size(font_size);
-         _canvas.font_face(font);
-         _canvas.text_align(canvas::align_middle);
-
-         // Shadow
-         _canvas.font_blur(2);
-         _canvas.fill_color(color{ 0, 0, 0, 128 });
-         _canvas.text(point{ x, cy+sh }, text, 0);
-
-         // Text
-         _canvas.font_blur(0);
-         _canvas.fill_color(color_);
-         _canvas.text(point{ x, cy }, text);
-      }
-
-      point measure_text(
-         canvas& _canvas, char const* text
-       , char const* font, float font_size
-      )
-      {
-         _canvas.font_size(font_size);
-         _canvas.font_face(font);
-
-         float w = _canvas.text_width(text);
-         float h = font_size;
-         return { w, h };
-      }
-
       void draw_text_box(
          canvas& _canvas, rect bounds, char const* text
        , char const* font, float font_size, color color
@@ -75,28 +35,48 @@ namespace photon
       }
    }
 
-   void text_utils::draw_label(rect bounds, char const* text) const
+   void text_utils::text_utils::draw_text(
+      rect bounds, char const* text,
+      char const* font,
+      float font_size,
+      color color_
+   ) const
    {
-      draw_text(canvas(), bounds, text,
-         theme().label_font, theme().label_font_size, theme().label_font_color);
+      auto state = canvas().new_state();
+
+      float x = bounds.left;
+      float y = bounds.top;
+      float h = bounds.height();
+      float cy = y+(h/2);
+      float sh = h/16;
+
+      canvas().font_size(font_size);
+      canvas().font_face(font);
+      canvas().text_align(canvas::align_middle);
+
+      // Shadow
+      canvas().font_blur(2);
+      canvas().fill_color(color{ 0, 0, 0, 128 });
+      canvas().text(point{ x, cy+sh }, text, 0);
+
+      // Text
+      canvas().font_blur(0);
+      canvas().fill_color(color_);
+      canvas().text(point{ x, cy }, text);
    }
 
-   point text_utils::measure_label(char const* text) const
+   point text_utils::text_utils::measure_text(
+      char const* text,
+      char const* font,
+      float font_size
+   ) const
    {
-      return measure_text(canvas(), text,
-         theme().label_font, theme().label_font_size);
-   }
+      canvas().font_size(font_size);
+      canvas().font_face(font);
 
-   void text_utils::draw_heading(rect bounds, char const* text) const
-   {
-      draw_text(canvas(), bounds, text,
-         theme().heading_font, theme().heading_font_size, theme().heading_font_color);
-   }
-
-   point text_utils::measure_heading(char const* text) const
-   {
-      return measure_text(canvas(), text,
-         theme().heading_font, theme().heading_font_size);
+      float w = canvas().text_width(text);
+      float h = font_size;
+      return { w, h };
    }
 
    void text_utils::draw_icon(rect bounds, uint32_t code, int size) const
@@ -133,7 +113,7 @@ namespace photon
    {
       char icon[8];
       return measure_text(
-         canvas(), codepoint_to_UTF8(code,icon), theme().icon_font, size);
+         codepoint_to_UTF8(code,icon), theme().icon_font, size);
    }
 
    void text_utils::draw_text_box(rect bounds, char const* text) const

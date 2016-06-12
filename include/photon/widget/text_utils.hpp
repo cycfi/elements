@@ -23,11 +23,18 @@ namespace photon
       class theme const&   theme() const { return _theme; }
       class canvas&        canvas() const { return _theme.canvas(); }
 
-      void                 draw_label(rect bounds, char const* text) const;
-      point                measure_label(char const* text) const;
+      void                 draw_text(
+                              rect bounds, char const* text,
+                              char const* font,
+                              float font_size,
+                              color color_
+                           ) const;
 
-      void                 draw_heading(rect bounds, char const* text) const;
-      point                measure_heading(char const* text) const;
+      point                measure_text(
+                              char const* text,
+                              char const* font,
+                              float font_size
+                           ) const;
 
       void                 draw_icon(rect bounds, uint32_t code, int size) const;
       point                measure_icon(uint32_t code, int size) const;

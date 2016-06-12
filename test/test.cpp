@@ -351,24 +351,24 @@ auto make_custom_controls(canvas& canvas_)
    auto  slider_img = std::make_shared<canvas::image>(
             canvas_, "./assets/images/slider.png");
    
-   auto  my_knob = hsize(50, image_knob{ knob_sprites, 150, 100, false });
-   auto  my_knob2 = hsize(50, image_knob{ knob_sprites, 150, 100, true });
+   auto  my_knob = size({ 80, 80 }, image_knob{ knob_sprites, 150, 100, false });
+   auto  my_knob2 = align_center(size({ 50, 50 }, image_knob{ knob_sprites, 150, 100, true }));
 
-   auto  my_slider = size({ 200*0.15, 200 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
-   
+   auto  my_slider = size({ 40, 180 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
+
    auto  sprite_controls =
             group("Sprite Knobs and Sliders",
                margin(
                   { 20, 20, 20, 20 },
                      htile(
-                           vtile(
-                              my_knob,
-                              my_knob,
-                              my_knob2
+                        vtile(
+                           caption(my_knob, "Volume"),
+                           top_margin(20, caption(my_knob2, "Balance"))
                         ),
-                        left_margin(20, my_slider),
-                        left_margin(20, my_slider),
-                        left_margin(20, my_slider)
+                        left_margin(10, caption(my_slider, "A")),
+                        caption(my_slider, "D"),
+                        caption(my_slider, "S"),
+                        caption(my_slider, "R")
                      )
                )
             );
@@ -453,7 +453,7 @@ int main()
             )
          ;
 
-         auto  title = ref(label(titles[0]));
+         auto  title = ref(heading(titles[0]));
          
          for (auto& item : menu_items)
          {
@@ -476,65 +476,7 @@ int main()
          main_widget = new_(margin({ 20, 20, 20, 20 }, main_pane));
       }
 
-
-
-
-      {
-         auto p =
-               margin(
-                  { 20, 20, 20, 20 },
-                  layer(
-                     margin(
-                        { 20, 20, 20, 20 },
-                        sprite(knob_sprites, { 150, 150 })
-                     ),
-                     panel{}
-                  )
-               )
-            ;
-
-         //main_widget = new_(p);
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  image_knob{ knob_sprites, 150, 100, true }
-               ),
-               margin(
-                  { 20, 20, 20, 20 },
-                  frame{}
-               ),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
-
-      {
-         auto sl = margin(
-            { 20, 20, 20, 20 },
-            layer(
-               margin(
-                  { 20, 20, 20, 20 },
-                  image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } }
-               ),
-               panel{}
-            )
-         );
-
-         //main_widget = new_(std::move(sl));
-      }
-
-
       main_window.content.elements.push_back(main_widget);
-
-      //main_window.content.elements.push_back(new_(floating({ 50, 50, 100, 100 }, knob{})));
-
       my_app.run();
    }
 

@@ -191,7 +191,10 @@ namespace photon
    template <bool state>
    rect check_box_widget<state>::limits(basic_context const& ctx) const
    {
-      point s = text_utils(ctx.theme()).measure_label(_text.c_str());
+      auto& theme_ = ctx.theme();
+      point s = text_utils(theme_)
+         .measure_text(
+            _text.c_str(), theme_.label_font, theme_.label_font_size);
       return { s.x + 45, s.y, s.x + 45, s.y };
    }
 
@@ -264,15 +267,15 @@ namespace photon
    }
 
    template <typename Content>
-   inline auto pane(std::string const& title, Content&& content)
+   inline auto pane(std::string const& title, Content&& content, float title_size = 1.0)
    {
-      return pane(heading(title), content);
+      return pane(heading(title, title_size), content);
    }
 
    template <typename Content>
-   inline auto pane(char const* title, Content&& content)
+   inline auto pane(char const* title, Content&& content, float title_size = 1.0)
    {
-      return pane(heading(title), content);
+      return pane(heading(title, title_size), content);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -290,15 +293,28 @@ namespace photon
    }
 
    template <typename Content>
-   inline auto group(std::string const& title, Content&& content)
+   inline auto group(std::string const& title, Content&& content, float label_size = 1.0)
    {
-      return group(label(title), content);
+      return group(label(title, label_size), content);
    }
 
    template <typename Content>
-   inline auto group(char const* title, Content&& content)
+   inline auto group(char const* title, Content&& content, float label_size = 1.0)
    {
-      return group(label(title), content);
+      return group(label(title, label_size), content);
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Captions
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Control>
+   inline auto caption(Control&& control, std::string const& title)
+   {
+      return
+         vtile(
+            std::forward<Control>(control),
+            align_center(top_margin(5.0, label(title, 0.8)))
+         );
    }
 }
 

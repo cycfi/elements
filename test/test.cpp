@@ -203,6 +203,28 @@ auto make_basic_text()
       );
 }
 
+auto make_dropdown_menu()
+{
+   auto dropdown  = dropdown_menu("Dropdown");
+
+   auto menu =
+      layer(
+         vtile(
+               menu_item("Menu Item 1"),
+               menu_item("Menu Item 2"),
+               menu_item("Menu Item 3"),
+               menu_item_spacer(),
+               menu_item("Menu Item 4"),
+               menu_item("Menu Item 5")
+         ),
+         menu_background{}
+      );
+
+   dropdown.menu(menu);
+
+   return dropdown;
+}
+
 auto make_buttons(window& main_window)
 {
    auto bred      = colors::red.opacity(0.4);
@@ -227,6 +249,7 @@ auto make_buttons(window& main_window)
       group("Buttons",
          margin({ 20, 20, 20, 20 },
             vtile(
+               top_margin(20, make_dropdown_menu()),
                top_margin(20, mbutton),
                top_margin(20, tbutton),
                top_margin(20, lbutton),
@@ -258,28 +281,6 @@ auto make_knobs_and_sliders()
       );
 }
 
-auto make_dropdown_menu()
-{
-   auto dropdown  = dropdown_menu("Dropdown");
-
-   auto menu =
-      layer(
-         vtile(
-               menu_item("Menu Item 1"),
-               menu_item("Menu Item 2"),
-               menu_item("Menu Item 3"),
-               menu_item_spacer(),
-               menu_item("Menu Item 4"),
-               menu_item("Menu Item 5")
-         ),
-         menu_background{}
-      );
-
-   dropdown.menu(menu);
-
-   return dropdown;
-}
-
 auto make_check_boxes()
 {
    return
@@ -296,16 +297,10 @@ auto make_check_boxes()
 
 auto make_controls(window& main_window)
 {
-   auto inbox = margin(
-      { 20, 20, 20, 20 },
-      input_box("Placeholder")
-   );
-
    auto  column1 =
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, input_box("Placeholder")),
-            top_margin(20, make_dropdown_menu()),
+            top_margin(20, input_box("Text Input Box")),
             top_margin(20, make_check_boxes()),
             top_margin(20, make_knobs_and_sliders()),
             widget{} // empty space
@@ -390,10 +385,7 @@ int main()
                      m_item3,
                      m_item4,
                      m_item5,
-                     m_item6,
-                     menu_item_spacer(),
-                     menu_item("Menu Item 4"),
-                     menu_item("Menu Item 5")
+                     m_item6
                   ),
                   menu_background{}
                )
@@ -412,7 +404,7 @@ int main()
             )
          ;
 
-         auto  title = ref(heading(m_item1_text));
+         auto  title = ref(label(m_item1_text));
          content.get().select(5);
 
          m_item1.get().on_click =

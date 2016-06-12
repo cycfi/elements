@@ -15,7 +15,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   auto const button_margin = rect{ 12, 6, 12, 6 };
+   auto const button_margin = rect{ 10, 5, 10, 5 };
    auto const default_button_color = color{ 0, 0, 0, 0 };
 
    class basic_button_body : public widget
@@ -57,7 +57,7 @@ namespace photon
       return make_button<Button>(
          margin(
             button_margin,
-            align_center(heading(text))
+            align_center(label(text))
          ),
          body_color
       );
@@ -76,7 +76,7 @@ namespace photon
             align_center(
                htile(
                   right_margin(8, icon(icon_code)),
-                  heading(text)
+                  label(text)
                )
             )
          ),
@@ -96,7 +96,7 @@ namespace photon
             button_margin,
             align_center(
                htile(
-                  heading(text),
+                  label(text),
                   left_margin(8, icon(icon_code))
                )
             )

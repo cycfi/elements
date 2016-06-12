@@ -41,7 +41,7 @@ namespace photon
 
       color                icon_color                 = { 220, 220, 220, 200 };
       char const*          icon_font                  = "icons";
-      float                icon_font_size             = 20.0;
+      float                icon_font_size             = 18.0;
 
       color                text_box_font_color        = { 220, 220, 220, 200 };
       char const*          text_box_font              = "sans";

@@ -63,7 +63,7 @@ namespace photon
       float                _top;
       float                _bottom;
    };
-   
+
    using htile_composite = vector_composite<htile_widget>;
 
    template <typename... W>

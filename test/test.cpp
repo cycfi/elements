@@ -275,7 +275,7 @@ auto make_knobs_and_sliders()
                   )
                ),
                hpercent(0.3, left_margin(20, knob{})),
-               hpercent(0.3, left_margin(20, knob{}))
+               hpercent(0.3, left_margin(20, knob{true}))
             )
          )
       );
@@ -343,6 +343,43 @@ auto make_edit_box()
       );
 }
 
+auto make_custom_controls(canvas& canvas_)
+{
+   auto  knob_sprites = std::make_shared<canvas::image>(
+            canvas_, "./assets/images/knob_sprites_150x150_darker.png");
+
+   auto  slider_img = std::make_shared<canvas::image>(
+            canvas_, "./assets/images/slider.png");
+   
+   auto  my_knob = hsize(50, image_knob{ knob_sprites, 150, 100, false });
+   auto  my_knob2 = hsize(50, image_knob{ knob_sprites, 150, 100, true });
+
+   auto  my_slider = size({ 200*0.15, 200 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
+   
+   auto  sprite_controls =
+            group("Sprite Knobs and Sliders",
+               margin(
+                  { 20, 20, 20, 20 },
+                     htile(
+                           vtile(
+                              my_knob,
+                              my_knob,
+                              my_knob2
+                        ),
+                        left_margin(20, my_slider),
+                        left_margin(20, my_slider),
+                        left_margin(20, my_slider)
+                     )
+               )
+            );
+
+   return
+      margin(
+         { 20, 20, 20, 20 },
+         align_left(align_top(sprite_controls))
+      );
+}
+
 int main()
 {
    using namespace photon;
@@ -361,31 +398,42 @@ int main()
    {
       widget_ptr main_widget;
 
-      auto  m_item1_text = "Vertical Tiles";
-      auto  m_item2_text = "Horizontal Tiles";
-      auto  m_item3_text = "Static Text and Icons";
-      auto  m_item4_text = "Controls";
-      auto  m_item5_text = "Viewport and Scrollers";
-      auto  m_item6_text = "Edit Text";
-
-      auto  m_item1 = ref(menu_item(m_item1_text));
-      auto  m_item2 = ref(menu_item(m_item2_text));
-      auto  m_item3 = ref(menu_item(m_item3_text));
-      auto  m_item4 = ref(menu_item(m_item4_text));
-      auto  m_item5 = ref(menu_item(m_item5_text));
-      auto  m_item6 = ref(menu_item(m_item6_text));
-
       {
+         char const* titles[] =
+         {
+            "Vertical Tiles",
+            "Horizontal Tiles",
+            "Static Text and Icons",
+            "Controls",
+            "Custom Controls",
+            "Viewport and Scrollers",
+            "Edit Text"
+         };
+         
+         using menu_item_type = decltype(ref(menu_item("")));
+         
+         menu_item_type menu_items[] =
+         {
+            ref(menu_item(titles[0])),
+            ref(menu_item(titles[1])),
+            ref(menu_item(titles[2])),
+            ref(menu_item(titles[3])),
+            ref(menu_item(titles[4])),
+            ref(menu_item(titles[5])),
+            ref(menu_item(titles[6]))
+         };
+         
          auto menu =
             ref(
                layer(
                   vtile(
-                     m_item1,
-                     m_item2,
-                     m_item3,
-                     m_item4,
-                     m_item5,
-                     m_item6
+                     menu_items[0],
+                     menu_items[1],
+                     menu_items[2],
+                     menu_items[3],
+                     menu_items[4],
+                     menu_items[5],
+                     menu_items[6]
                   ),
                   menu_background{}
                )
@@ -393,67 +441,31 @@ int main()
 
          auto content =
             ref(
-               deck(
+               rdeck(
                   make_vtile_main(),
                   make_htile_main(),
                   make_basic_text(),
                   make_controls(main_window),
+                  make_custom_controls(canvas_),
                   make_view_port(canvas_),
                   make_edit_box()
                )
             )
          ;
 
-         auto  title = ref(label(m_item1_text));
-         content.get().select(5);
-
-         m_item1.get().on_click =
-            [title, m_item1_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item1_text);
-               content.get().select(5);
-               main_window.draw(true);
-            };
-
-         m_item2.get().on_click =
-            [title, m_item2_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item2_text);
-               content.get().select(4);
-               main_window.draw(true);
-            };
-
-         m_item3.get().on_click =
-            [title, m_item3_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item3_text);
-               content.get().select(3);
-               main_window.draw(true);
-            };
-
-         m_item4.get().on_click =
-            [title, m_item4_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item4_text);
-               content.get().select(2);
-               main_window.draw(true);
-            };
-
-         m_item5.get().on_click =
-            [title, m_item5_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item5_text);
-               content.get().select(1);
-               main_window.draw(true);
-            };
-
-         m_item6.get().on_click =
-            [title, m_item6_text, content, &main_window]() mutable
-            {
-               title.get().text(m_item6_text);
-               content.get().select(0);
-               main_window.draw(true);
-            };
+         auto  title = ref(label(titles[0]));
+         
+         for (auto& item : menu_items)
+         {
+            std::size_t i = &item-menu_items;
+            item.get().on_click =
+               [i, title, titles, content, &main_window]() mutable
+               {
+                  title.get().text(titles[i]);
+                  content.get().select(i);
+                  main_window.draw(true);
+               };
+         }
 
          auto  caret = left_margin(5, icon(icons::caretdown));
          auto  dropdown = basic_dropdown_menu(htile(title, caret), htile(title, caret));

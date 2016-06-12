@@ -119,6 +119,7 @@ namespace photon
 
    window::~window()
    {
+      content.elements.clear();
       windows.erase(_window);
       glfwDestroyWindow(_window);
       nvgDeleteGL3(_context);

@@ -80,6 +80,14 @@ namespace photon
       std::reverse(r.begin(), r.end());
       return r;
    }
+   
+   template <typename... W>
+   inline auto rdeck(W&&... elements)
+   {
+      array_composite<sizeof...(elements), deck_widget> r{};
+      r.elements = { new_(std::forward<W>(elements))... };
+      return r;
+   }
 }
 
 #endif

@@ -7,7 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016)
 #define PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016
 
-#include <photon/widget/widget.hpp>
+#include <photon/widget/proxy.hpp>
 #include <memory>
 
 namespace photon

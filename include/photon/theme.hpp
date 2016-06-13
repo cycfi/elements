@@ -24,7 +24,6 @@ namespace photon
       void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
       class canvas&        canvas() const                         { return _canvas; }
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
       color                panel_color                = { 28, 30, 34, 192 };
       color                frame_color                = { 220, 220, 220, 70 };
 

@@ -64,6 +64,8 @@
 		5DFA982A1D0E7E3B004A36BE /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98271D0E7E3B004A36BE /* composite.cpp */; };
 		5DFA982B1D0E7E3B004A36BE /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98281D0E7E3B004A36BE /* proxy.cpp */; };
 		5DFA982C1D0E7E3B004A36BE /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98281D0E7E3B004A36BE /* proxy.cpp */; };
+		5DFA982F1D0E8C77004A36BE /* composite.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DFA982D1D0E8C77004A36BE /* composite.hpp */; };
+		5DFA98301D0E8C77004A36BE /* proxy.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DFA982E1D0E8C77004A36BE /* proxy.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -144,6 +146,8 @@
 		5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = knob.hpp; sourceTree = "<group>"; };
 		5DFA98271D0E7E3B004A36BE /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
 		5DFA98281D0E7E3B004A36BE /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
+		5DFA982D1D0E8C77004A36BE /* composite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = composite.hpp; sourceTree = "<group>"; };
+		5DFA982E1D0E8C77004A36BE /* proxy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = proxy.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,15 +244,17 @@
 				5D809D1A1CC3AA97005EE2D2 /* align.hpp */,
 				5D809D1E1CC3AA97005EE2D2 /* basic.hpp */,
 				5D6B28071CC8E0CA0034248D /* button.hpp */,
-				5D1DFFFD1CD8946E00B4C91B /* icon.hpp */,
-				5D7459D31D03A27F00CE9E0F /* icon_ids.hpp */,
-				5DAFFF3D1CCC221500C94683 /* image.hpp */,
+				5DFA982D1D0E8C77004A36BE /* composite.hpp */,
 				5D7459D11D03918000CE9E0F /* gallery.hpp */,
+				5D7459D31D03A27F00CE9E0F /* icon_ids.hpp */,
+				5D1DFFFD1CD8946E00B4C91B /* icon.hpp */,
+				5DAFFF3D1CCC221500C94683 /* image.hpp */,
 				5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */,
 				5D809D1C1CC3AA97005EE2D2 /* layer.hpp */,
 				5D809D1D1CC3AA97005EE2D2 /* margin.hpp */,
 				5D3470001D027799007BD3B5 /* menu.hpp */,
 				5D736D9A1CCF8C4D006A2B3E /* port.hpp */,
+				5DFA982E1D0E8C77004A36BE /* proxy.hpp */,
 				5D809D1F1CC3AA97005EE2D2 /* size.hpp */,
 				5D809D201CC3AA97005EE2D2 /* slider.hpp */,
 				5DC6FEB81CF1D4FE00C4253C /* text_utils.hpp */,
@@ -264,15 +270,15 @@
 			children = (
 				5D52EE171CF057B70004CC61 /* basic.cpp */,
 				5DEBD3E51CC8494F00B3EA86 /* button.cpp */,
+				5DFA98271D0E7E3B004A36BE /* composite.cpp */,
 				5DBCE9781D0A3AF4007E8335 /* floating.cpp */,
 				5D7459CE1D03917400CE9E0F /* gallery.cpp */,
 				5DAFFF3B1CCC220B00C94683 /* image.cpp */,
 				5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */,
 				5D4E9F0B1CC1C87600239DAE /* layer.cpp */,
-				5DFA98271D0E7E3B004A36BE /* composite.cpp */,
-				5DFA98281D0E7E3B004A36BE /* proxy.cpp */,
 				5DBCE9751D0A0DDD007E8335 /* menu.cpp */,
 				5DAFFF3E1CCC2BEC00C94683 /* port.cpp */,
+				5DFA98281D0E7E3B004A36BE /* proxy.cpp */,
 				5D4E9F091CC1BFEB00239DAE /* slider.cpp */,
 				5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */,
 				5D809D241CC3BA7E005EE2D2 /* text.cpp */,
@@ -332,6 +338,8 @@
 			files = (
 				5D3470011D027799007BD3B5 /* menu.hpp in Headers */,
 				5D7459D21D03918000CE9E0F /* gallery.hpp in Headers */,
+				5DFA98301D0E8C77004A36BE /* proxy.hpp in Headers */,
+				5DFA982F1D0E8C77004A36BE /* composite.hpp in Headers */,
 				5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */,
 				5D7459D41D03A27F00CE9E0F /* icon_ids.hpp in Headers */,
 				5DC6FEB91CF1D4FE00C4253C /* text_utils.hpp in Headers */,

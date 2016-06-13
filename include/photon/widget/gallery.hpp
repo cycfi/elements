@@ -7,7 +7,10 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016)
 #define PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016
 
-#include <photon/widget.hpp>
+#include <photon/widget/text.hpp>
+#include <photon/widget/icon.hpp>
+#include <photon/widget/tile.hpp>
+#include <photon/widget/menu.hpp>
 #include <photon/widget/icon_ids.hpp>
 
 namespace photon

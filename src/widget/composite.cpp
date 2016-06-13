@@ -156,8 +156,8 @@ namespace photon
 
    bool composite_base::focus(focus_request r)
    {
-      switch (r) {
-
+      switch (r)
+      {
          case focus_request::wants_focus:
             for (auto element : *this)
                if (element->focus(focus_request::wants_focus))

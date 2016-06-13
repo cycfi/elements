@@ -23,5 +23,8 @@
 #include <photon/widget/menu.hpp>
 #include <photon/widget/gallery.hpp>
 #include <photon/widget/floating.hpp>
+#include <photon/widget/reference.hpp>
+#include <photon/widget/composite.hpp>
+#include <photon/widget/proxy.hpp>
 
 #endif

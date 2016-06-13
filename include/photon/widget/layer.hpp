@@ -7,10 +7,8 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_LAYER_APRIL_16_2016)
 #define PHOTON_GUI_LIB_WIDGET_LAYER_APRIL_16_2016
 
-#include <photon/widget/widget.hpp>
-#include <memory>
+#include <photon/widget/composite.hpp>
 #include <algorithm>
-#include <array>
 
 namespace photon
 {

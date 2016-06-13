@@ -7,7 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016)
 #define PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016
 
-#include <photon/widget/widget.hpp>
+#include <photon/widget/proxy.hpp>
 #include <memory>
 
 namespace photon
@@ -47,8 +47,37 @@ namespace photon
    {
       return { std::forward<Subject>(subject) };
    }
-
+   
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Scrollers
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // scrollable: Mixin class for a widget that is scrollable// scroll the rectangle, r into view
+   class scrollable
+   {
+   public:
+
+      struct scrollable_context
+      {
+         context const* context_ptr;
+         scrollable*    scrollable_ptr;
+
+         // scroll the rectangle, r into view
+         bool scroll_into_view(rect r_)
+         {
+            if (scrollable_ptr && context_ptr)
+            {
+               rect r = r_;
+               return scrollable_ptr->scroll_into_view(*context_ptr, r);
+            }
+            return false;
+         }
+      };
+
+      virtual bool               scroll_into_view(context const& ctx, rect r) = 0;
+      static scrollable_context  find(context const& ctx);
+   };
+
    enum
    {
       no_scrollbars  = 1,
@@ -56,6 +85,7 @@ namespace photon
       no_vscroll     = 1 << 2
    };
 
+   // Base proxy class for views that are scrollable
    class scroller_base : public port_base, public scrollable
    {
    public:

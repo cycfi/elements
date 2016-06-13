@@ -60,6 +60,10 @@
 		5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB93851CB9BFAD001DFB55 /* nanovg.c */; };
 		5DF8A6511CE9DD6E00EBF7CC /* knob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */; };
 		5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */; };
+		5DFA98291D0E7E3B004A36BE /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98271D0E7E3B004A36BE /* composite.cpp */; };
+		5DFA982A1D0E7E3B004A36BE /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98271D0E7E3B004A36BE /* composite.cpp */; };
+		5DFA982B1D0E7E3B004A36BE /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98281D0E7E3B004A36BE /* proxy.cpp */; };
+		5DFA982C1D0E7E3B004A36BE /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFA98281D0E7E3B004A36BE /* proxy.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -138,6 +142,8 @@
 		5DF6B0261CDA9B6500B1C2EA /* canvas.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; lineEnding = 1; path = canvas.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knob.cpp; sourceTree = "<group>"; };
 		5DF8A6521CE9ED7B00EBF7CC /* knob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = knob.hpp; sourceTree = "<group>"; };
+		5DFA98271D0E7E3B004A36BE /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
+		5DFA98281D0E7E3B004A36BE /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +269,8 @@
 				5DAFFF3B1CCC220B00C94683 /* image.cpp */,
 				5DF8A6501CE9DD6E00EBF7CC /* knob.cpp */,
 				5D4E9F0B1CC1C87600239DAE /* layer.cpp */,
+				5DFA98271D0E7E3B004A36BE /* composite.cpp */,
+				5DFA98281D0E7E3B004A36BE /* proxy.cpp */,
 				5DBCE9751D0A0DDD007E8335 /* menu.cpp */,
 				5DAFFF3E1CCC2BEC00C94683 /* port.cpp */,
 				5D4E9F091CC1BFEB00239DAE /* slider.cpp */,
@@ -407,8 +415,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DFA982C1D0E7E3B004A36BE /* proxy.cpp in Sources */,
 				5D52EE181CF057B70004CC61 /* basic.cpp in Sources */,
 				5D83CFE71CE353260009D9F3 /* text.cpp in Sources */,
+				5DFA982A1D0E7E3B004A36BE /* composite.cpp in Sources */,
 				5D83CFEF1CE353260009D9F3 /* button.cpp in Sources */,
 				5D83CFE31CE353200009D9F3 /* app.cpp in Sources */,
 				5D83CFE61CE353200009D9F3 /* cursor.cpp in Sources */,
@@ -453,6 +463,8 @@
 				5D2EC9EE1CBB0D1A00ACB621 /* rect.cpp in Sources */,
 				5D1DFFFF1CD8B01600B4C91B /* port.cpp in Sources */,
 				5D7459CF1D03917400CE9E0F /* gallery.cpp in Sources */,
+				5DFA98291D0E7E3B004A36BE /* composite.cpp in Sources */,
+				5DFA982B1D0E7E3B004A36BE /* proxy.cpp in Sources */,
 				5DF8A6511CE9DD6E00EBF7CC /* knob.cpp in Sources */,
 				5DAFFF3C1CCC220B00C94683 /* image.cpp in Sources */,
 				5D3EC3A61CD81F0900BE5E6B /* tile.cpp in Sources */,

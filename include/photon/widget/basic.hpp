@@ -48,6 +48,37 @@ namespace photon
 
       virtual void draw(context const& ctx);
    };
+   
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Basic Widget
+   //
+   // The basic widget takes in a function that draws something
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   class basic_widget : public widget
+   {
+   public:
+
+      basic_widget(F f)
+       : f(f)
+      {}
+
+      virtual void
+      draw(context const& ctx)
+      {
+         f(ctx);
+      }
+
+   private:
+
+      F f;
+   };
+
+   template <typename F>
+   inline basic_widget<F> basic(F f)
+   {
+      return { f };
+   }
 }
 
 #endif

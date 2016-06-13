@@ -7,7 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016)
 #define PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016
 
-#include <photon/widget/widget.hpp>
+#include <photon/widget/composite.hpp>
 #include <memory>
 
 namespace photon

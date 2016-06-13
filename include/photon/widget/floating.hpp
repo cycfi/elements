@@ -7,7 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016)
 #define PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016
 
-#include <photon/widget/widget.hpp>
+#include <photon/widget/proxy.hpp>
 
 namespace photon
 {

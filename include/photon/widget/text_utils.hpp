@@ -36,7 +36,7 @@ namespace photon
                               float font_size
                            ) const;
 
-      void                 draw_icon(rect bounds, uint32_t code, int size) const;
+      void                 draw_icon(rect bounds, uint32_t code, int size, bool shadow = true) const;
       point                measure_icon(uint32_t code, int size) const;
 
       void                 draw_text_box(rect bounds, char const* text) const;

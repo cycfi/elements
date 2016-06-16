@@ -281,18 +281,35 @@ auto make_knobs_and_sliders()
       );
 }
 
-auto make_check_boxes()
+auto make_some_buttons()
 {
-   return
-      group("Check boxes",
-         margin({ 10, 10, 10, 20},
-            vtile(
-               top_margin(10, align_left(check_box("Check Box 1"))),
-               top_margin(10, align_left(check_box("Check Box 2"))),
-               top_margin(10, align_left(check_box("Check Box 3")))
+   auto  group1 =
+         group("Check boxes",
+            margin({ 10, 10, 20, 20},
+               vtile(
+                  top_margin(10, align_left(check_box("Check Box 1"))),
+                  top_margin(10, align_left(check_box("Check Box 2"))),
+                  top_margin(10, align_left(check_box("Check Box 3")))
+               )
             )
-         )
-   );
+         );
+      
+   auto  group2 =
+         group("Icon Toggles",
+            margin({ 10, 10, 20, 20},
+               vtile(
+                  align_middle(
+                     htile(
+                        left_margin(20, icon_button(icons::poweroff, 20)),
+                        left_margin(10, icon_button(icons::wifi, 20)),
+                        xside_margin(10, icon_button(icons::bluetooth, 20))
+                     )
+                  )
+               )
+            )
+         );
+   
+   return htile(group1, left_margin(20, group2));
 }
 
 auto make_controls(window& main_window)
@@ -301,7 +318,7 @@ auto make_controls(window& main_window)
       margin({ 20, 0, 20, 20 },
          vtile(
             top_margin(20, input_box("Text Input Box")),
-            top_margin(20, make_check_boxes()),
+            top_margin(20, make_some_buttons()),
             top_margin(20, make_knobs_and_sliders()),
             widget{} // empty space
          )

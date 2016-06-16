@@ -11,6 +11,9 @@
 #include <photon/widget/icon.hpp>
 #include <photon/widget/tile.hpp>
 #include <photon/widget/menu.hpp>
+#include <photon/widget/align.hpp>
+#include <photon/widget/basic.hpp>
+#include <photon/widget/text_utils.hpp>
 #include <photon/widget/icon_ids.hpp>
 
 namespace photon
@@ -213,6 +216,56 @@ namespace photon
          check_box_widget<false>{ text }
        , check_box_widget<true>{ text }
       );
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Icon Button
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   void draw_icon_button(context const& ctx, uint32_t code, float size, bool state, bool hilite);
+
+   template <bool state>
+   class icon_button_widget : public widget
+   {
+   public:
+                        icon_button_widget(uint32_t code, float size)
+                         : _code(code)
+                         , _size(size)
+                        {}
+
+      virtual rect      limits(basic_context const& ctx) const;
+      virtual void      draw(context const& ctx);
+      
+      uint32_t          _code;
+      float             _size;
+   };
+
+   template <bool state>
+   rect icon_button_widget<state>::limits(basic_context const& ctx) const
+   {
+      auto  size = _size * 1.8f;
+      return { size, size, size, size };
+   }
+
+   template <bool state>
+   void icon_button_widget<state>::draw(context const& ctx)
+   {
+      draw_icon_button(ctx, _code, _size, state, ctx.bounds.includes(ctx.cursor_pos()));
+   }
+
+   inline basic_toggle_button icon_button(uint32_t code, float size)
+   {
+      return {
+         icon_button_widget<false>{ code, size }
+       , icon_button_widget<true>{ code, size }
+      };
+   }
+   
+   inline basic_toggle_button icon_button(uint32_t code1, uint32_t code2, float size)
+   {
+      return {
+         icon_button_widget<false>{ code1, size }
+       , icon_button_widget<true>{ code2, size }
+      };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

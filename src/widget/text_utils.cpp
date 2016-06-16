@@ -79,7 +79,7 @@ namespace photon
       return { w, h };
    }
 
-   void text_utils::draw_icon(rect bounds, uint32_t code, int size) const
+   void text_utils::draw_icon(rect bounds, uint32_t code, int size, bool shadow) const
    {
       auto state = canvas().new_state();
 
@@ -98,10 +98,13 @@ namespace photon
       canvas().font_face(theme().icon_font);
       canvas().text_align(canvas::align_middle | canvas::align_center);
 
-      // Shadow
-      canvas().font_blur(2);
-      canvas().fill_color(color{ 0, 0, 0, 128 });
-      canvas().text(point{ cx, cy+sh }, text, 0);
+      if (shadow)
+      {
+         // Shadow
+         canvas().font_blur(2);
+         canvas().fill_color(color{ 0, 0, 0, 128 });
+         canvas().text(point{ cx, cy+sh }, text, 0);
+      }
 
       // Text
       canvas().font_blur(0);

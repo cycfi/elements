@@ -62,6 +62,31 @@ namespace photon
    };
 
    using theme_ptr = std::shared_ptr<theme>;
+   
+   template <typename T>
+   struct setter
+   {
+      setter(T& ref, T const& new_val)
+       : _ref(ref)
+       , _save(ref)
+      {
+         _ref = new_val;
+      }
+      
+      ~setter()
+      {
+         _ref = _save;
+      }
+
+      T& _ref;
+      T  _save;
+   };
+   
+   template <typename T>
+   inline setter<T> set(T& ref, T const& new_val)
+   {
+      return { ref, new_val };
+   };
 }
 
 #endif

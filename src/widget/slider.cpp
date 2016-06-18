@@ -320,10 +320,20 @@ namespace photon
 
    bool slider::scroll(context const& ctx, point p)
    {
-      _pos += ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
-      clamp(_pos, 0.0, 1.0);
-      ctx.window.draw();
-      return true;
+      double   new_pos = _pos + ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
+      clamp(new_pos, 0.0, 1.0);
+      if (_pos != new_pos)
+      {
+         if (on_change)
+            new_pos = on_change(new_pos);
+         _pos = new_pos;
+         if (_pos != new_pos)
+         {
+            ctx.window.draw();
+            return true;
+         }
+      }
+      return false;
    }
 
    void slider::reposition(context const& ctx)
@@ -337,24 +347,34 @@ namespace photon
 
       double   w = sl_pos.bounds.width();
       double   h = sl_pos.bounds.height();
+      double   new_pos;
 
       if (w > h)
       {
          // inset by knob size;
          double kw = sl_pos.knob_r.width();
          w -= kw;
-         _pos = (mp.x - (sl_pos.bounds.left + kw/2)) / w;
+         new_pos = (mp.x - (sl_pos.bounds.left + kw/2)) / w;
       }
       else
       {
          // inset by knob size;
          double kh = sl_pos.knob_r.height();
          h -= kh;
-         _pos = 1.0-((mp.y - (sl_pos.bounds.top + kh/2)) / h);
+         new_pos = 1.0-((mp.y - (sl_pos.bounds.top + kh/2)) / h);
       }
 
-      clamp(_pos, 0.0, 1.0);
-      ctx.window.draw();
+      clamp(new_pos, 0.0, 1.0);
+      if (_pos != new_pos)
+      {
+         if (on_change)
+            new_pos = on_change(new_pos);
+         if (_pos != new_pos)
+         {
+            _pos = new_pos;
+            ctx.window.draw();
+         }
+      }
    }
 
    image_slider::image_slider(

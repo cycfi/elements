@@ -400,17 +400,86 @@ auto make_custom_controls(canvas& canvas_)
                      )
                )
             );
+   
+   auto  linked_slider1 = ref(slider{});
+   auto  linked_slider2 = ref(slider{});
 
+   auto  control_routing =
+            group("Control Routing",
+               margin(
+                  { 20, 20, 20, 20 },
+                  align_left(
+                     caption(
+                        bottom_margin(15,
+                           htile(
+                              hsize(30, linked_slider1),
+                              left_margin(20, hsize(30, linked_slider2))
+                           )
+                        ),
+                     "Linked Sliders"
+                     )
+                  )
+               )
+            );
+
+   return sprite_controls;
+}
+
+auto make_linked_controls(window& main_window)
+{
+   auto  linked_slider1 = ref(slider{});
+   auto  linked_slider2 = ref(slider{});
+   
+   auto  link_sliders =
+      [&main_window](auto slider1, auto slider2)
+      {
+         slider1.get().on_change =
+            [slider2, &main_window](double val) mutable -> double
+            {
+               slider2.get().position(val);
+               main_window.draw();
+               return val;
+            };
+      };
+   
+   link_sliders(linked_slider1, linked_slider2);
+   link_sliders(linked_slider2, linked_slider1);
+
+   auto  control_routing =
+            group("Control Routing",
+               margin(
+                  { 20, 20, 20, 20 },
+                  align_left(
+                     caption(
+                        bottom_margin(10,
+                           htile(
+                              hsize(30, linked_slider1),
+                              left_margin(20, hsize(30, linked_slider2))
+                           )
+                        ),
+                     "Linked Sliders"
+                     )
+                  )
+               )
+            );
+
+   return control_routing;
+
+}
+
+auto make_more_controls(window& main_window)
+{
+   canvas& canvas_ = main_window.canvas();
    return
       margin(
          { 20, 20, 20, 20 },
-         align_left(align_top(sprite_controls))
+         align_top(
+            htile(
+               make_custom_controls(canvas_),
+               left_margin(20, make_linked_controls(main_window))
+            )
+         )
       );
-}
-
-auto make_more_controls(canvas& canvas_)
-{
-   return make_custom_controls(canvas_);
 }
 
 int main()
@@ -479,7 +548,7 @@ int main()
                   make_htile_main(),
                   make_basic_text(),
                   make_controls(main_window),
-                  make_more_controls(canvas_),
+                  make_more_controls(main_window),
                   make_view_port(canvas_),
                   make_edit_box()
                )

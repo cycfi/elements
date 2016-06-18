@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_SLIDER_APRIL_16_2016
 
 #include <photon/widget/widget.hpp>
+#include <functional>
 
 namespace photon
 {
@@ -24,6 +25,8 @@ namespace photon
          float slot_size      = 0.25;  // fraction of width
          float knob_size      = 0.6;   // fraction of size (width or height)
       };
+      
+      using slider_function = std::function<double(double pos)>;
 
                         slider(bool draw_gauge = true)
                          : _draw_gauge(draw_gauge)
@@ -47,6 +50,8 @@ namespace photon
       virtual constants dimensions() const   { return constants{}; }
       double            position() const     { return _pos; }
       void              position(double pos) { _pos = pos; }
+      
+      slider_function   on_change;
 
    private:
 

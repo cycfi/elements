@@ -222,16 +222,16 @@ namespace photon
       // Draw Glow
       if (state)
       {
-         float const glow = 3;
+         float const glow = 7;
          color glow_color = indicator_color.level(2.0);
 
          paint glow_paint
-               = canvas_.box_gradient(bounds, 5, 4, glow_color, color(0, 0, 0, 0)
+               = canvas_.box_gradient(bounds, corner_radius, 8, glow_color, color(0, 0, 0, 0)
             );
 
          canvas_.begin_path();
-         canvas_.round_rect(bounds.inset(-glow, -glow), corner_radius+3);
-         canvas_.round_rect(bounds.inset(1.5, 1.5), corner_radius-2);
+         canvas_.rect(bounds.inset(-glow, -glow));
+         canvas_.round_rect(bounds.inset(1.5, 1.5), corner_radius-1);
          canvas_.path_winding(canvas::hole);
          canvas_.fill_paint(glow_paint);
          canvas_.fill();

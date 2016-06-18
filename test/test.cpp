@@ -275,7 +275,7 @@ auto make_knobs_and_sliders()
                   )
                ),
                hpercent(0.3, left_margin(20, knob{})),
-               hpercent(0.3, left_margin(20, knob{true}))
+               hpercent(0.3, left_margin(20, knob{knob::pan}))
             )
          )
       );
@@ -293,22 +293,22 @@ auto make_some_buttons()
                )
             )
          );
-      
+
    auto  group2 =
          group("Icon Toggles",
             margin({ 10, 10, 20, 20},
                vtile(
                   align_middle(
                      htile(
-                        left_margin(20, icon_button(icons::poweroff, 20)),
-                        left_margin(10, icon_button(icons::wifi, 20)),
-                        xside_margin(10, icon_button(icons::bluetooth, 20))
+                        left_margin(20, icon_button(icons::poweroff, 24)),
+                        left_margin(10, icon_button(icons::wifi, 24)),
+                        xside_margin(10, icon_button(icons::bluetooth, 24))
                      )
                   )
                )
             )
          );
-   
+
    return htile(group1, left_margin(20, group2));
 }
 
@@ -368,9 +368,13 @@ auto make_custom_controls(canvas& canvas_)
    auto  slider_img = std::make_shared<canvas::image>(
             canvas_, "./assets/images/slider.png");
    
-   auto  my_knob = size({ 80, 80 }, image_knob{ knob_sprites, 150, 100, false });
-   auto  my_knob2 = align_center(size({ 50, 50 }, image_knob{ knob_sprites, 150, 100, true }));
+   auto  knob_sprites_white = std::make_shared<canvas::image>(
+            canvas_, "./assets/images/knob_sprites_white_128x128.png");
+   
 
+   auto  my_knob = size({ 80, 80 }, image_knob{ knob_sprites, 150, 100, knob::volume });
+   auto  my_knob2 = align_center(size({ 50, 50 }, image_knob{ knob_sprites, 150, 100, knob::pan }));
+   auto  my_knob3 = size({ 40, 40 }, image_knob{ knob_sprites_white, 128, 99, knob::none });
    auto  my_slider = size({ 40, 180 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
 
    auto  sprite_controls =
@@ -385,7 +389,14 @@ auto make_custom_controls(canvas& canvas_)
                         left_margin(10, caption(my_slider, "A")),
                         caption(my_slider, "D"),
                         caption(my_slider, "S"),
-                        caption(my_slider, "R")
+                        caption(my_slider, "R"),
+                        left_margin(20,
+                           vtile(
+                              caption(my_knob3, "Bass"),
+                              caption(my_knob3, "Mid"),
+                              caption(my_knob3, "Treble")
+                           )
+                        )
                      )
                )
             );
@@ -395,6 +406,11 @@ auto make_custom_controls(canvas& canvas_)
          { 20, 20, 20, 20 },
          align_left(align_top(sprite_controls))
       );
+}
+
+auto make_more_controls(canvas& canvas_)
+{
+   return make_custom_controls(canvas_);
 }
 
 int main()
@@ -422,13 +438,13 @@ int main()
             "Horizontal Tiles",
             "Static Text and Icons",
             "Controls",
-            "Custom Controls",
+            "More Controls",
             "Viewport and Scrollers",
             "Edit Text"
          };
-         
+
          using menu_item_type = decltype(ref(menu_item("")));
-         
+
          menu_item_type menu_items[] =
          {
             ref(menu_item(titles[0])),
@@ -439,7 +455,7 @@ int main()
             ref(menu_item(titles[5])),
             ref(menu_item(titles[6]))
          };
-         
+
          auto menu =
             ref(
                layer(
@@ -463,7 +479,7 @@ int main()
                   make_htile_main(),
                   make_basic_text(),
                   make_controls(main_window),
-                  make_custom_controls(canvas_),
+                  make_more_controls(canvas_),
                   make_view_port(canvas_),
                   make_edit_box()
                )
@@ -471,7 +487,7 @@ int main()
          ;
 
          auto  title = ref(heading(titles[0]));
-         
+
          for (auto& item : menu_items)
          {
             std::size_t i = &item-menu_items;

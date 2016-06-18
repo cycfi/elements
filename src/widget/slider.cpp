@@ -66,28 +66,16 @@ namespace photon
          rect  knob_r;
       };
 
-      void draw_slider_slot(
+      void draw_slider_gauge(
          canvas& canvas_, point pos, rect bounds,
          color controls_color, color indicator_color)
       {
          bool  horiz = bounds.width() > bounds.height();
-         auto  from  = horiz ? bounds.top_left() : bounds.bottom_left();
+         rect  ind_r = bounds;
          auto  to    = horiz ? bounds.top_right() : bounds.top_left();
+         auto  from  = horiz ? bounds.top_left() : bounds.bottom_left();
          auto  radius = (horiz ? bounds.height() : bounds.width()) * 0.4;
 
-         paint bg
-            = canvas_.box_gradient(bounds.inset(0.5, 0.5).move(1, 1), radius, 2
-             , color(0, 0, 0, 32), color(0, 0, 0, 128)
-            );
-
-         canvas_.begin_path();
-         canvas_.round_rect(bounds, radius);
-         //canvas_.fill_color(controls_color.opacity(0.6));
-         //canvas_.fill();
-         canvas_.fill_paint(bg);
-         canvas_.fill();
-
-         rect  ind_r = bounds;
          if (horiz)
             ind_r.right = pos.x;
          else
@@ -102,6 +90,24 @@ namespace photon
          canvas_.begin_path();
          canvas_.round_rect(ind_r, radius);
          canvas_.fill_paint(grad);
+         canvas_.fill();
+      }
+
+      void draw_slider_slot(
+         canvas& canvas_, point pos, rect bounds,
+         color controls_color)
+      {
+         bool  horiz = bounds.width() > bounds.height();
+         auto  radius = (horiz ? bounds.height() : bounds.width()) * 0.4;
+
+         paint bg
+            = canvas_.box_gradient(bounds.inset(0.5, 0.5).move(1, 1), radius, 2
+             , color(0, 0, 0, 32), color(0, 0, 0, 128)
+            );
+
+         canvas_.begin_path();
+         canvas_.round_rect(bounds, radius);
+         canvas_.fill_paint(bg);
          canvas_.fill();
       }
 
@@ -195,11 +201,25 @@ namespace photon
       slider_bounds  sl_pos{ ctx, _pos, dimensions() };
 
       draw_slot(ctx.theme(), sl_pos.knob_r, sl_pos.slot_r, hilite);
+      if (_draw_gauge)
+         draw_gauge(ctx.theme(), sl_pos.knob_r, sl_pos.slot_r, hilite);
       draw_knob(ctx.theme(), sl_pos.knob_r, sl_pos.is_horizontal(), hilite);
       draw_indicator(ctx.theme(), sl_pos.knob_r, sl_pos.is_horizontal(), hilite);
    }
 
    void slider::draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite)
+   {
+      auto  controls_color = thm.controls_color.opacity(1.0).level(1.6);
+
+      if (hilite)
+         controls_color = controls_color.level(1.5);
+
+      draw_slider_slot(
+         thm.canvas(), center_point(knob_r), bounds, controls_color
+      );
+   }
+
+   void slider::draw_gauge(theme& thm, rect knob_r, rect bounds, bool hilite)
    {
       auto  indicator_color = thm.indicator_color.level(1.2);
       auto  controls_color = thm.controls_color.opacity(1.0).level(1.6);
@@ -210,7 +230,7 @@ namespace photon
          indicator_color = indicator_color.level(1.3);
       }
 
-      draw_slider_slot(
+      draw_slider_gauge(
          thm.canvas(), center_point(knob_r), bounds,
          controls_color, indicator_color
       );
@@ -339,8 +359,10 @@ namespace photon
 
    image_slider::image_slider(
       image_ptr img_, float aspect_ratio_
-    , float knob_size_, point oversize_)
-    : _img(img_)
+    , float knob_size_, point oversize_
+    , bool draw_gauge)
+    : slider(draw_gauge)
+    , _img(img_)
     , _aspect_ratio(aspect_ratio_)
     , _knob_size(knob_size_)
     , _oversize(oversize_)

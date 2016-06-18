@@ -25,8 +25,10 @@ namespace photon
          float knob_size      = 0.6;   // fraction of size (width or height)
       };
 
-                        slider()
-                         : _pos(0.0), _tracking(false)
+                        slider(bool draw_gauge = true)
+                         : _draw_gauge(draw_gauge)
+                         , _pos(0.0)
+                         , _tracking(false)
                         {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -38,6 +40,7 @@ namespace photon
       virtual bool      is_control() const;
 
       virtual void      draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite);
+      virtual void      draw_gauge(theme& thm, rect knob_r, rect bounds, bool hilite);
       virtual void      draw_knob(theme& thm, rect bounds, bool horiz, bool hilite);
       virtual void      draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite);
 
@@ -52,6 +55,7 @@ namespace photon
       double            _pos;
       point             _offset;
       bool              _tracking;
+      bool              _draw_gauge;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +68,7 @@ namespace photon
                         image_slider(
                            image_ptr img_, float aspect_ratio_
                          , float knob_size_, point oversize_
+                         , bool draw_gauge = true
                         );
 
       virtual void      draw_knob(theme& thm, rect bounds, bool horiz, bool hilite);

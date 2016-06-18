@@ -219,9 +219,10 @@ namespace photon
          indicator_color = indicator_color.level(1.3);
       }
 
-      draw_knob_gauge(
-         thm.canvas(), _pos, cp, controls_color, indicator_color, _pan
-      );
+      if (_type != none)
+         draw_knob_gauge(
+            thm.canvas(), _pos, cp, controls_color, indicator_color, _type == pan
+         );
    }
 
    rect knob::limits(basic_context const& ctx) const
@@ -317,8 +318,8 @@ namespace photon
       image_ptr img_
     , float size_
     , std::size_t num_images_
-    , bool pan_)
-    : knob(pan_)
+    , gauge_type type_)
+    : knob(type_)
     , _img(img_)
     , _size(size_)
     , _num_images(num_images_)

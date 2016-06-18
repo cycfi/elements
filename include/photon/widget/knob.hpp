@@ -18,9 +18,12 @@ namespace photon
    class knob : public widget
    {
    public:
-                        knob(bool pan_ = false)
-                         : _pan(pan_)
-                         , _pos(pan_ ? 0.5 : 0)
+   
+      enum gauge_type { none, volume, pan };
+   
+                        knob(gauge_type type_ = volume)
+                         : _type(type_)
+                         , _pos(type_ == pan ? 0.5 : 0)
                          , _tracking(false)
                         {}
 
@@ -49,7 +52,7 @@ namespace photon
 
       void              reposition(context const& ctx);
 
-      bool              _pan;
+      gauge_type        _type;
       double            _pos;
       bool              _tracking;
       point             _offset;
@@ -67,7 +70,7 @@ namespace photon
                            image_ptr img_
                          , float size_
                          , std::size_t num_images_
-                         , bool pan_ = false
+                         , gauge_type type_ = volume
                         );
 
       virtual rect      limits(basic_context const& ctx) const;

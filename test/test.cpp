@@ -422,7 +422,7 @@ auto make_custom_controls(canvas& canvas_)
                )
             );
 
-   return sprite_controls;
+   return align_top(sprite_controls);
 }
 
 auto make_linked_controls(window& main_window)
@@ -444,40 +444,70 @@ auto make_linked_controls(window& main_window)
    
    link_sliders(linked_slider1, linked_slider2);
    link_sliders(linked_slider2, linked_slider1);
-
-   auto  control_routing =
-            group("Control Routing",
-               margin(
-                  { 20, 20, 20, 20 },
-                  align_left(
-                     caption(
-                        bottom_margin(10,
-                           htile(
-                              hsize(30, linked_slider1),
-                              left_margin(20, hsize(30, linked_slider2))
-                           )
-                        ),
+   
+   auto  linked_sliders =
+            margin(
+               { 20, 20, 20, 20 },
+               align_left(
+                  caption(
+                     bottom_margin(10,
+                        htile(
+                           hsize(30, linked_slider1),
+                           left_margin(20, hsize(30, linked_slider2))
+                        )
+                     ),
                      "Linked Sliders"
-                     )
                   )
                )
             );
+   
+   auto  number_box = ref(basic_input_box("Number from 1 to 1.0"));
+   
+   number_box.get().on_enter =
+      [&main_window, linked_slider1, linked_slider2](std::string const& text) mutable -> bool
+      {
+         std::size_t pos = 0;
+         double      val = stod(text, &pos);
 
-   return control_routing;
+         if (pos != text.size() || val < 0 || val > 1.0)
+            return false;
+         linked_slider1.get().position(val);
+         linked_slider2.get().position(val);
+         main_window.draw();
+         return true;
+      };
+   
+   auto  linked_number =
+         margin(
+            { 10, 10, 10, 10 },
+            input_box(number_box)
+         );
+
+   auto  control_routing =
+            group("Control Routing",
+               vtile(
+                  linked_sliders,
+                  linked_number
+               )
+            );
+
+   return align_top(vsize(300, control_routing));
 
 }
 
 auto make_more_controls(window& main_window)
 {
    canvas& canvas_ = main_window.canvas();
+   
+   auto  column1 = make_custom_controls(canvas_);
+   auto  column2 = make_linked_controls(main_window);
+
    return
       margin(
          { 20, 20, 20, 20 },
-         align_top(
-            htile(
-               make_custom_controls(canvas_),
-               left_margin(20, make_linked_controls(main_window))
-            )
+         htile(
+            column1,
+            left_margin(20, column2)
          )
       );
 }

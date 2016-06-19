@@ -527,7 +527,8 @@ namespace photon
       switch (k.key)
       {
          case key_code::key_enter:
-            // $$$ do something $$$
+            if (on_enter && !on_enter(text()))
+               ctx.window.draw();
          case key_code::key_up:
          case key_code::key_down:
             return false;

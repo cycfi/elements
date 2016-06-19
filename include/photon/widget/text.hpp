@@ -152,6 +152,8 @@ namespace photon
    class basic_input_box : public basic_text_box
    {
    public:
+   
+      using enter_function = std::function<bool(std::string const& text)>;
 
       basic_input_box(std::string const& placeholder)
        : basic_text_box("", full_extent)
@@ -161,6 +163,8 @@ namespace photon
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
       virtual bool      key(context const& ctx, key_info const& k);
+      
+      enter_function    on_enter;
 
    private:
 
@@ -173,9 +177,10 @@ namespace photon
 
       virtual void draw(context const& ctx);
    };
-
+   
+   template <typename InputBox>
    inline auto input_box(
-      std::string const& placeholder
+      InputBox&& input_box
     , rect pad  = rect{ 7, 7, 7, 4 }
    )
    {
@@ -183,12 +188,28 @@ namespace photon
          margin(
             pad,
             scroller(
-               basic_input_box{ placeholder },
+               std::forward<InputBox>(input_box),
                no_scrollbars | no_vscroll
             )
          ),
          input_panel()
       );
+   }
+
+   inline auto input_box(
+      std::string const& placeholder
+    , rect pad  = rect{ 7, 7, 7, 4 }
+   )
+   {
+      return input_box(basic_input_box{ placeholder }, pad);
+   }
+   
+   inline auto input_box(
+      char const* placeholder
+    , rect pad  = rect{ 7, 7, 7, 4 }
+   )
+   {
+      return input_box(basic_input_box{ placeholder }, pad);
    }
 }
 

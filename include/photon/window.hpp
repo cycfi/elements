@@ -96,6 +96,7 @@ namespace photon
       int                  _num_clicks;
       bool                 _refresh;
       key_info             _current_key;
+      text_info            _current_text;
    };
 }
 

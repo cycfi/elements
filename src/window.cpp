@@ -85,6 +85,7 @@ namespace photon
     , _num_clicks(0)
     , _refresh(false)
     , _current_key({ key_code::key_unknown, key_action::unknown, 0 })
+    , _current_text({ 0, 0 })
    {
       _window = glfwCreateWindow(size.x, size.y, title, 0, 0);
       if (_window == 0)
@@ -200,15 +201,31 @@ namespace photon
 
    void window::key(key_info const& k)
    {
+      // workaround for glfw bug(?). we'll handle repeat ourself.
+      if (_current_key.action == key_action::release)
+         _current_text = { 0, 0 };
+
       _current_key = k;
       context ctx { *this, &content, _current_bounds };
       content.key(ctx, k);
+      
+      // workaround for glfw bug(?). we'll handle repeat ourself.
+      if (_current_key.action == key_action::repeat && _current_text.codepoint != 0)
+      {
+         context ctx { *this, &content, _current_bounds };
+         content.text(ctx, _current_text);
+      }
    }
 
    void window::text(text_info const& info)
    {
-      context ctx { *this, &content, _current_bounds };
-      content.text(ctx, info);
+      // workaround for glfw bug(?). we'll handle repeat ourself (see window::key).
+      if (_current_key.action != key_action::repeat)
+      {
+         _current_text = info;
+         context ctx { *this, &content, _current_bounds };
+         content.text(ctx, info);
+      }
    }
 
    void window::click(struct mouse_button const& btn_)

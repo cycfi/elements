@@ -10,6 +10,8 @@
 #include <photon/exception.hpp>
 #include <map>
 
+#include <iostream>
+
 namespace photon
 {
    void on_error(int error, const char* desc)
@@ -143,6 +145,7 @@ namespace photon
 
    void text_entry(GLFWwindow* window_ptr, unsigned int codepoint, int mods)
    {
+      std::cout << "text_entry" << ' ';
       if (app_ptr)
       {
          text_info info{ codepoint, mods };
@@ -154,6 +157,7 @@ namespace photon
 
    void key_press(GLFWwindow* window_ptr, int key, int scancode, int action, int mods)
    {
+      std::cout << "key_press" << ' ';
       if (app_ptr)
       {
          key_info k = { key_code(key), key_action(action), mods };

@@ -225,7 +225,7 @@ auto make_dropdown_menu()
    return dropdown;
 }
 
-auto make_buttons(window& main_window)
+auto make_buttons()
 {
    auto bred      = colors::red.opacity(0.4);
    auto bgreen    = colors::green.level(0.7).opacity(0.4);
@@ -239,10 +239,9 @@ auto make_buttons(window& main_window)
    auto note      = button(icons::gear, "Setup", brblue);
 
    reset.on_click =
-      [lbutton, &main_window](bool) mutable
+      [lbutton](bool) mutable
       {
          lbutton.get().state(0);
-         main_window.draw();
       };
 
    return
@@ -312,7 +311,7 @@ auto make_some_buttons()
    return htile(group1, left_margin(20, group2));
 }
 
-auto make_controls(window& main_window)
+auto make_controls()
 {
    auto  column1 =
       margin({ 20, 0, 20, 20 },
@@ -327,7 +326,7 @@ auto make_controls(window& main_window)
    auto  column2 =
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, make_buttons(main_window)),
+            top_margin(20, make_buttons()),
             widget{} // empty space
          )
       );
@@ -381,42 +380,21 @@ auto make_custom_controls(canvas& canvas_)
             group("Sprite Knobs and Sliders",
                margin(
                   { 20, 20, 20, 20 },
-                     htile(
+                  htile(
+                     vtile(
+                        caption(my_knob, "Volume"),
+                        top_margin(20, caption(my_knob2, "Balance"))
+                     ),
+                     left_margin(10, caption(my_slider, "A")),
+                     caption(my_slider, "D"),
+                     caption(my_slider, "S"),
+                     caption(my_slider, "R"),
+                     left_margin(20,
                         vtile(
-                           caption(my_knob, "Volume"),
-                           top_margin(20, caption(my_knob2, "Balance"))
-                        ),
-                        left_margin(10, caption(my_slider, "A")),
-                        caption(my_slider, "D"),
-                        caption(my_slider, "S"),
-                        caption(my_slider, "R"),
-                        left_margin(20,
-                           vtile(
-                              caption(my_knob3, "Bass"),
-                              caption(my_knob3, "Mid"),
-                              caption(my_knob3, "Treble")
-                           )
+                           caption(my_knob3, "Bass"),
+                           caption(my_knob3, "Mid"),
+                           caption(my_knob3, "Treble")
                         )
-                     )
-               )
-            );
-   
-   auto  linked_slider1 = ref(slider{});
-   auto  linked_slider2 = ref(slider{});
-
-   auto  control_routing =
-            group("Control Routing",
-               margin(
-                  { 20, 20, 20, 20 },
-                  align_left(
-                     caption(
-                        bottom_margin(15,
-                           htile(
-                              hsize(30, linked_slider1),
-                              left_margin(20, hsize(30, linked_slider2))
-                           )
-                        ),
-                     "Linked Sliders"
                      )
                   )
                )
@@ -425,68 +403,49 @@ auto make_custom_controls(canvas& canvas_)
    return align_top(sprite_controls);
 }
 
-auto make_linked_controls(window& main_window)
+auto make_linked_controls()
 {
-   auto  linked_slider1 = ref(slider{});
-   auto  linked_slider2 = ref(slider{});
-   
-   auto  link_sliders =
-      [&main_window](auto slider1, auto slider2)
-      {
-         slider1.get().on_change =
-            [slider2, &main_window](double val) mutable -> double
-            {
-               slider2.get().position(val);
-               main_window.draw();
-               return val;
-            };
-      };
-   
-   link_sliders(linked_slider1, linked_slider2);
-   link_sliders(linked_slider2, linked_slider1);
-   
-   auto  linked_sliders =
-            margin(
-               { 20, 20, 20, 20 },
-               align_left(
-                  caption(
-                     bottom_margin(10,
-                        htile(
-                           hsize(30, linked_slider1),
-                           left_margin(20, hsize(30, linked_slider2))
-                        )
-                     ),
-                     "Linked Sliders"
-                  )
-               )
-            );
-   
-   auto  number_box = ref(basic_input_box("Number from 1 to 1.0"));
+   auto  slider_control = ref(slider{});
+   auto  number_box = ref(basic_input_box("Enter a Number from 0 to 1"));
    
    number_box.get().on_enter =
-      [&main_window, linked_slider1, linked_slider2](std::string const& text) mutable -> bool
+      [number_box, slider_control](std::string const& text) mutable -> bool
       {
          std::size_t pos = 0;
          double      val = stod(text, &pos);
 
          if (pos != text.size() || val < 0 || val > 1.0)
             return false;
-         linked_slider1.get().position(val);
-         linked_slider2.get().position(val);
-         main_window.draw();
+         slider_control.get().position(val);
+         number_box.get().select_all();
          return true;
       };
    
+   slider_control.get().on_change =
+      [number_box](double val) mutable -> double
+      {
+         auto str = std::to_string(val);
+         number_box.get().text(str);
+         number_box.get().select_none();
+         return val;
+      };
+   
+   auto  linked_slider =
+         margin(
+            { 20, 20, 20, 0 },
+            vsize(25, slider_control)
+         );
+   
    auto  linked_number =
          margin(
-            { 10, 10, 10, 10 },
+            { 20, 0, 20, 20 },
             input_box(number_box)
          );
 
    auto  control_routing =
             group("Control Routing",
                vtile(
-                  linked_sliders,
+                  linked_slider,
                   linked_number
                )
             );
@@ -495,12 +454,10 @@ auto make_linked_controls(window& main_window)
 
 }
 
-auto make_more_controls(window& main_window)
+auto make_more_controls(canvas& canvas_)
 {
-   canvas& canvas_ = main_window.canvas();
-   
    auto  column1 = make_custom_controls(canvas_);
-   auto  column2 = make_linked_controls(main_window);
+   auto  column2 = make_linked_controls();
 
    return
       margin(
@@ -577,8 +534,8 @@ int main()
                   make_vtile_main(),
                   make_htile_main(),
                   make_basic_text(),
-                  make_controls(main_window),
-                  make_more_controls(main_window),
+                  make_controls(),
+                  make_more_controls(canvas_),
                   make_view_port(canvas_),
                   make_edit_box()
                )

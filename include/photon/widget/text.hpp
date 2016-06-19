@@ -120,8 +120,13 @@ namespace photon
 
       using widget::focus;
 
-      int                  select_start() const { return _select_start; }
-      int                  select_end() const { return _select_end; }
+      int                  select_start() const    { return _select_start; }
+      void                 select_start(int pos);
+      int                  select_end() const      { return _select_end; }
+      void                 select_end(int pos);
+      void                 select_all();
+      void                 select_none();
+
       float                width() const { return _width; }
       std::string const&   text() const { return _text; }
       void                 text(std::string const& text_) { _text = text_; }

@@ -496,6 +496,29 @@ namespace photon
       }
       return false;
    }
+   
+   void basic_text_box::select_start(int pos)
+   {
+      if (pos == -1 || (pos >= 0 && pos < _text.size()))
+         _select_start = pos;
+   }
+
+   void basic_text_box::select_end(int pos)
+   {
+      if (pos == -1 || (pos >= 0 && pos < _text.size()))
+         _select_end = pos;
+   }
+   
+   void basic_text_box::select_all()
+   {
+      _select_start = 0;
+      _select_end = int(_text.size());
+   }
+   
+   void basic_text_box::select_none()
+   {
+      _select_start = _select_end = -1;
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    rect basic_input_box::limits(basic_context const& ctx) const
@@ -527,7 +550,7 @@ namespace photon
       switch (k.key)
       {
          case key_code::key_enter:
-            if (on_enter && !on_enter(text()))
+            if (on_enter && on_enter(text()))
                ctx.window.draw();
          case key_code::key_up:
          case key_code::key_down:

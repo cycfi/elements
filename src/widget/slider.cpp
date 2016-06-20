@@ -327,11 +327,8 @@ namespace photon
          if (on_change)
             new_pos = on_change(new_pos);
          _pos = new_pos;
-         //if (_pos != new_pos)
-         //{
-            ctx.window.draw();
-            return true;
-         //}
+         ctx.window.draw();
+         return true;
       }
       return false;
    }

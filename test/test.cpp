@@ -1,6 +1,7 @@
 #include <photon/window.hpp>
 #include <photon/app.hpp>
 #include <photon/widget.hpp>
+#include <cmath>
 
 using namespace photon;
 
@@ -366,36 +367,63 @@ auto make_custom_controls(canvas& canvas_)
 
    auto  slider_img = std::make_shared<canvas::image>(
             canvas_, "./assets/images/slider.png");
+
+   auto  slider2_img = std::make_shared<canvas::image>(
+            canvas_, "./assets/images/slider2.png");
    
    auto  knob_sprites_white = std::make_shared<canvas::image>(
             canvas_, "./assets/images/knob_sprites_white_128x128.png");
-   
 
    auto  my_knob = size({ 80, 80 }, image_knob{ knob_sprites, 150, 100, knob::volume });
    auto  my_knob2 = align_center(size({ 50, 50 }, image_knob{ knob_sprites, 150, 100, knob::pan }));
    auto  my_knob3 = size({ 40, 40 }, image_knob{ knob_sprites_white, 128, 99, knob::none });
    auto  my_slider = size({ 40, 180 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
+   
+   auto  slider2 = ref(image_slider{ slider2_img, 0.1, 0.714, { 1.2, 1.2 }, false });
+   auto  my_slider2 = size({ 30, 180 }, slider2);
+   
+   slider2.get().on_change =
+      [](double val)->double
+      {
+         return std::round(val * 4) / 4;
+      };
+   
+   auto  big_small_knobs =
+            vtile(
+               caption(my_knob, "Volume"),
+               top_margin(20, caption(my_knob2, "Balance"))
+            );
+   
+   auto  selector_labels =
+            vsize(180,
+               vtile(
+                  valign(0.0,    icon{icons::angledoubleleft}),
+                  valign(0.25,   icon{icons::angleleft}),
+                  valign(0.5,    icon{icons::stopcircle}),
+                  valign(0.75,   icon{icons::angleright}),
+                  valign(1.0,    icon{icons::angledoubleright})
+               )
+            );
+   
+   auto  eq_knobs =
+            vtile(
+               caption(my_knob3, "Bass"),
+               caption(my_knob3, "Mid"),
+               caption(my_knob3, "Treble")
+            );
 
    auto  sprite_controls =
             group("Sprite Knobs and Sliders",
                margin(
                   { 20, 20, 20, 20 },
                   htile(
-                     vtile(
-                        caption(my_knob, "Volume"),
-                        top_margin(20, caption(my_knob2, "Balance"))
-                     ),
+                     big_small_knobs,
                      left_margin(10, caption(my_slider, "A")),
                      caption(my_slider, "D"),
                      caption(my_slider, "S"),
                      caption(my_slider, "R"),
-                     left_margin(20,
-                        vtile(
-                           caption(my_knob3, "Bass"),
-                           caption(my_knob3, "Mid"),
-                           caption(my_knob3, "Treble")
-                        )
-                     )
+                     left_margin(20, htile(selector_labels, my_slider2)),
+                     left_margin(20, eq_knobs)
                   )
                )
             );

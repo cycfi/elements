@@ -374,33 +374,35 @@ namespace photon
       }
    }
 
-   image_slider::image_slider(
+   vimage_slider::vimage_slider(
       image_ptr img_, float aspect_ratio_
-    , float knob_size_, point oversize_
+    , rect knob_bounds
     , bool draw_gauge)
     : slider(draw_gauge)
     , _img(img_)
     , _aspect_ratio(aspect_ratio_)
-    , _knob_size(knob_size_)
-    , _oversize(oversize_)
+    , _knob_bounds(knob_bounds)
    {}
 
-   void image_slider::draw_knob(theme& thm, rect bounds, bool horiz, bool hilite)
+   void vimage_slider::draw_knob(theme& thm, rect bounds, bool horiz, bool hilite)
    {
-      rect  img_bounds = {
-         0, 0, bounds.width() * _oversize.x, bounds.height() * _oversize.y
-      };
+      auto     size = _img->size();
+      double   scale = bounds.width() / _knob_bounds.width();
+      rect     img_bounds;
 
-      img_bounds = center(img_bounds, bounds);
+      img_bounds.left = bounds.left - (_knob_bounds.left * scale);
+      img_bounds.top = bounds.top - (_knob_bounds.top * scale);
+      img_bounds.right = img_bounds.left + (size.x * scale);
+      img_bounds.bottom = img_bounds.top + (size.y * scale);
       _img->draw(img_bounds);
    }
 
-   void image_slider::draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite)
+   void vimage_slider::draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite)
    {
    }
 
-   slider::constants image_slider::dimensions() const
+   slider::constants vimage_slider::dimensions() const
    {
-      return { _aspect_ratio, 0.25, _knob_size };
+      return { _aspect_ratio, 0.25, _knob_bounds.height() / _knob_bounds.width() };
    }
 }

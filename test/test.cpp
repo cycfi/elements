@@ -377,11 +377,11 @@ auto make_custom_controls(canvas& canvas_)
    auto  my_knob = size({ 80, 80 }, image_knob{ knob_sprites, 150, 100, knob::volume });
    auto  my_knob2 = align_center(size({ 50, 50 }, image_knob{ knob_sprites, 150, 100, knob::pan }));
    auto  my_knob3 = size({ 40, 40 }, image_knob{ knob_sprites_white, 128, 99, knob::none });
-   auto  my_slider = size({ 40, 180 }, image_slider{ slider_img, 0.15, 1.5, { 1.0, 1.15 } });
-   
-   auto  slider2 = ref(image_slider{ slider2_img, 0.1, 0.714, { 1.2, 1.2 }, false });
+
+   auto  my_slider = size({ 40, 220 }, vimage_slider{ slider_img, 0.1, { 12, 12, 137, 293 } });
+   auto  slider2 = ref(vimage_slider{ slider2_img, 0.1, { 12, 2, 66, 41 }, false });
    auto  my_slider2 = size({ 30, 180 }, slider2);
-   
+
    slider2.get().on_change =
       [](double val)->double
       {
@@ -418,10 +418,10 @@ auto make_custom_controls(canvas& canvas_)
                   { 20, 20, 20, 20 },
                   htile(
                      big_small_knobs,
-                     left_margin(10, caption(my_slider, "A")),
-                     caption(my_slider, "D"),
-                     caption(my_slider, "S"),
-                     caption(my_slider, "R"),
+                     left_margin(10, caption(my_slider, "1")),
+                     caption(my_slider, "2"),
+                     caption(my_slider, "3"),
+                     caption(my_slider, "4"),
                      left_margin(20, htile(selector_labels, my_slider2)),
                      left_margin(20, eq_knobs)
                   )
@@ -518,8 +518,8 @@ int main()
       {
          char const* titles[] =
          {
-            "Vertical Tiles",
             "Horizontal Tiles",
+            "Vertical Tiles",
             "Static Text and Icons",
             "Controls",
             "More Controls",
@@ -559,8 +559,8 @@ int main()
          auto content =
             ref(
                rdeck(
-                  make_vtile_main(),
                   make_htile_main(),
+                  make_vtile_main(),
                   make_basic_text(),
                   make_controls(),
                   make_more_controls(canvas_),

@@ -25,10 +25,13 @@
 
 #include <memory>
 #include <vector>
+#include <chrono>
 
 namespace photon
 {
    class app;
+   using duration = std::chrono::duration<double>;
+   using time_point = std::chrono::time_point<std::chrono::steady_clock>;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Windows
@@ -63,7 +66,6 @@ namespace photon
       virtual void         focus(bool is_focus);
       virtual void         close();
       virtual void         idle();
-      virtual void         refresh();
 
       void                 set_cursor(cursor::type t) const;
       void                 reset_cursor() const;
@@ -92,9 +94,8 @@ namespace photon
       rect                 _current_limits;
       mouse_button         _btn;
       theme_ptr            _theme;
-      double               _click_time;
+      time_point           _click_time;
       int                  _num_clicks;
-      bool                 _refresh;
       key_info             _current_key;
       text_info            _current_text;
    };

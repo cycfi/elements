@@ -81,9 +81,8 @@ namespace photon
     , _app(app_)
     , _canvas(0)
     , _theme(theme)
-    , _click_time(0)
+    , _click_time(std::chrono::high_resolution_clock::now())
     , _num_clicks(0)
-    , _refresh(false)
     , _current_key({ key_code::key_unknown, key_action::unknown, 0 })
     , _current_text({ 0, 0 })
    {
@@ -233,12 +232,12 @@ namespace photon
       struct mouse_button btn = btn_;
       if (btn.is_pressed) // mouse down
       {
-         double time = glfwGetTime();
-         if (time - _click_time < _app.multi_click_speed)
+         auto now = std::chrono::high_resolution_clock::now();
+         if (now - _click_time < _app.multi_click_speed)
             btn.num_clicks = ++_num_clicks;
          else
             btn.num_clicks = _num_clicks = 1;
-         _click_time = time;
+         _click_time = now;
       }
       _btn = btn;
       context ctx { *this, &content, _current_bounds };
@@ -297,14 +296,6 @@ namespace photon
 
    void window::idle()
    {
-      //if (_refresh)
-      //   draw();
-   }
-
-   void window::refresh()
-   {
-      _refresh = true;
-      glfwPostEmptyEvent();
    }
 
    std::string window::clipboard() const

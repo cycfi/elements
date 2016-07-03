@@ -8,9 +8,10 @@
 #include <photon/app.hpp>
 #include <photon/window.hpp>
 #include <photon/exception.hpp>
-#include <map>
 
-#include <iostream>
+#include <map>
+#include <chrono>
+#include <thread>
 
 namespace photon
 {
@@ -23,7 +24,6 @@ namespace photon
    app* app_ptr = 0; // singleton
 
    app::app()
-    : _idle_time(0)
    {
       if (!glfwInit())
          throw glfw_exception(-1, "Failed to init GLFW.");
@@ -96,13 +96,9 @@ namespace photon
    {
       while (windows_open())
       {
-         glfwWaitEvents();
-         double time = glfwGetTime();
-         if (time - _idle_time > idle_time)
-         {
-            windows_idle();
-            _idle_time = time;
-         }
+         glfwPollEvents();
+         std::this_thread::sleep_for(idle_time);
+         windows_idle();
       }
    }
 
@@ -145,7 +141,6 @@ namespace photon
 
    void text_entry(GLFWwindow* window_ptr, unsigned int codepoint, int mods)
    {
-      std::cout << "text_entry" << ' ';
       if (app_ptr)
       {
          text_info info{ codepoint, mods };
@@ -157,7 +152,6 @@ namespace photon
 
    void key_press(GLFWwindow* window_ptr, int key, int scancode, int action, int mods)
    {
-      std::cout << "key_press" << ' ';
       if (app_ptr)
       {
          key_info k = { key_code(key), key_action(action), mods };

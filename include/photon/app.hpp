@@ -10,13 +10,18 @@
 #include <photon/support.hpp>
 #include <photon/cursor.hpp>
 #include <photon/key.hpp>
+
 #include <type_traits>
 #include <vector>
 #include <stack>
 #include <functional>
+#include <chrono>
 
 namespace photon
 {
+   using duration = std::chrono::duration<double>;
+   using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // The Application
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,9 +36,9 @@ namespace photon
       virtual void         text(text_info const& info);
       virtual void         run();
       cursor&              get_cursor(cursor::type t);
-
-      double const         multi_click_speed = 0.5;
-      double const         idle_time = 0.25;
+      
+      duration             multi_click_speed = duration{ 0.5 };
+      duration             idle_time = duration{ 0.25 };
 
       struct undo_redo_task
       {
@@ -60,7 +65,6 @@ namespace photon
       using undo_stack_type = std::stack<undo_redo_task>;
 
       std::vector<cursor>  _cursors;
-      double               _idle_time;
       undo_stack_type      undo_stack;
       undo_stack_type      redo_stack;
    };

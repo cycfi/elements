@@ -78,4 +78,8 @@ namespace photon
    {
       return false;
    }
+   
+   void widget::idle(basic_context const& ctx)
+   {
+   }
 }

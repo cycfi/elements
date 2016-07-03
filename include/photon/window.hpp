@@ -30,8 +30,6 @@
 namespace photon
 {
    class app;
-   using duration = std::chrono::duration<double>;
-   using time_point = std::chrono::time_point<std::chrono::steady_clock>;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Windows

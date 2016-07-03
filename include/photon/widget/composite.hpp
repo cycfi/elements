@@ -43,6 +43,7 @@ namespace photon
       virtual widget*         focus();
       virtual void            focus(std::size_t index);
       virtual bool            is_control() const;
+      virtual void            idle(basic_context const& ctx);
 
    // composite
 

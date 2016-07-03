@@ -55,6 +55,7 @@
 		5DC6FEB91CF1D4FE00C4253C /* text_utils.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DC6FEB81CF1D4FE00C4253C /* text_utils.hpp */; };
 		5DC6FEBB1CF1D51400C4253C /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */; };
 		5DC6FEBC1CF1D51400C4253C /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */; };
+		5DDCED401D29538500B82C84 /* reference.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5DDCED3F1D29538500B82C84 /* reference.hpp */; };
 		5DE7F50E1CC06586009293EB /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB938A1CB9C42B001DFB55 /* test.cpp */; };
 		5DEB936D1CB9B98A001DFB55 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DEB936C1CB9B98A001DFB55 /* OpenGL.framework */; };
 		5DEB93861CB9BFAD001DFB55 /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB93851CB9BFAD001DFB55 /* nanovg.c */; };
@@ -138,6 +139,7 @@
 		5DBCE9781D0A3AF4007E8335 /* floating.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = floating.cpp; sourceTree = "<group>"; };
 		5DC6FEB81CF1D4FE00C4253C /* text_utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = text_utils.hpp; sourceTree = "<group>"; };
 		5DC6FEBA1CF1D51400C4253C /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
+		5DDCED3F1D29538500B82C84 /* reference.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = reference.hpp; sourceTree = "<group>"; };
 		5DEB93601CB9B84D001DFB55 /* photon_gui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = photon_gui; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DEB936C1CB9B98A001DFB55 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		5DEB93851CB9BFAD001DFB55 /* nanovg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nanovg.c; path = ../../libs/nanovg/src/nanovg.c; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 				5D809D1D1CC3AA97005EE2D2 /* margin.hpp */,
 				5D3470001D027799007BD3B5 /* menu.hpp */,
 				5D736D9A1CCF8C4D006A2B3E /* port.hpp */,
+				5DDCED3F1D29538500B82C84 /* reference.hpp */,
 				5DFA982E1D0E8C77004A36BE /* proxy.hpp */,
 				5D809D1F1CC3AA97005EE2D2 /* size.hpp */,
 				5D809D201CC3AA97005EE2D2 /* slider.hpp */,
@@ -342,6 +345,7 @@
 			files = (
 				5D3470011D027799007BD3B5 /* menu.hpp in Headers */,
 				5D7459D21D03918000CE9E0F /* gallery.hpp in Headers */,
+				5DDCED401D29538500B82C84 /* reference.hpp in Headers */,
 				5DFA98301D0E8C77004A36BE /* proxy.hpp in Headers */,
 				5DFA982F1D0E8C77004A36BE /* composite.hpp in Headers */,
 				5DF8A6531CE9ED7B00EBF7CC /* knob.hpp in Headers */,

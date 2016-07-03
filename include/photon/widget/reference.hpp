@@ -39,6 +39,7 @@ namespace photon
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point p);
+      virtual void            idle(basic_context const& ctx);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;
@@ -141,6 +142,13 @@ namespace photon
    widget_reference<Widget>::cursor(context const& ctx, point p)
    {
       return ptr->cursor(ctx, p);
+   }
+   
+   template <typename Widget>
+   inline void
+   widget_reference<Widget>::idle(basic_context const& ctx)
+   {
+      ptr->idle(ctx);
    }
 
    template <typename Widget>

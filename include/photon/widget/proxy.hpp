@@ -37,6 +37,7 @@ namespace photon
       virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point p);
+      virtual void            idle(basic_context const& ctx);
 
       virtual bool            focus(focus_request r);
       virtual widget const*   focus() const;

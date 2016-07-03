@@ -220,4 +220,10 @@ namespace photon
             return true;
       return false;
    }
+   
+   void composite_base::idle(basic_context const& ctx)
+   {
+      for (auto const& e : *this)
+         e->idle(ctx);
+   }
 }

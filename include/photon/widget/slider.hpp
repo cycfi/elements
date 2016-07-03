@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_SLIDER_APRIL_16_2016
 
 #include <photon/widget/widget.hpp>
+#include <photon/support.hpp>
 #include <functional>
 
 namespace photon
@@ -31,6 +32,7 @@ namespace photon
                         slider(bool draw_gauge = true)
                          : _draw_gauge(draw_gauge)
                          , _pos(0.0)
+                         , _final_pos(0.0)
                          , _tracking(false)
                         {}
 
@@ -41,6 +43,7 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      scroll(context const& ctx, point p);
       virtual bool      is_control() const;
+      virtual void      idle(basic_context const& ctx);
 
       virtual void      draw_slot(theme& thm, rect knob_r, rect bounds, bool hilite);
       virtual void      draw_gauge(theme& thm, rect knob_r, rect bounds, bool hilite);
@@ -58,9 +61,11 @@ namespace photon
       void              reposition(context const& ctx);
 
       double            _pos;
+      double            _final_pos;
       point             _offset;
       bool              _tracking;
       bool              _draw_gauge;
+      time_point        _last_update;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

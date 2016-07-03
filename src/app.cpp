@@ -94,12 +94,31 @@ namespace photon
 
    void app::run()
    {
+      bool do_idle = false;
+   
+      std::thread idle_thread(
+         [this, &do_idle]()
+         {
+            while (windows_open())
+            {
+               std::this_thread::sleep_for(idle_time);
+               glfwPostEmptyEvent();
+               do_idle = true;
+            }
+         }
+      );
+   
       while (windows_open())
       {
-         glfwPollEvents();
-         std::this_thread::sleep_for(idle_time);
-         windows_idle();
+         glfwWaitEvents();
+         if (do_idle)
+         {
+            do_idle = false;
+            windows_idle();
+         }
       }
+      
+      idle_thread.join();
    }
 
    void app::add_undo(undo_redo_task f)

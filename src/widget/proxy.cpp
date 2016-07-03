@@ -102,4 +102,9 @@ namespace photon
    {
       return subject().is_control();
    }
+   
+   void proxy_base::idle(basic_context const& ctx)
+   {
+      subject().idle(ctx);
+   }
 }

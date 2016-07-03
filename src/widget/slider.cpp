@@ -11,6 +11,9 @@
 #include <photon/window.hpp>
 #include <cmath>
 
+#include <iostream>
+
+
 namespace photon
 {
    rect slider::limits(basic_context const& ctx) const
@@ -304,6 +307,13 @@ namespace photon
       }
 
       reposition(ctx);
+      
+      if (!btn.is_pressed && _pos != _final_pos)
+      {
+         _pos = _final_pos;
+         ctx.window.draw();
+      }
+      
       return this;
    }
 
@@ -317,6 +327,16 @@ namespace photon
    {
       return true;
    }
+   
+   void slider::idle(basic_context const& ctx)
+   {
+      auto now = photon::now();
+      if (!_tracking && on_change && _final_pos != _pos && now > (_last_update + seconds{ 0.1 }))
+      {
+         _pos = _final_pos;
+         ctx.window.draw();
+      }
+   }
 
    bool slider::scroll(context const& ctx, point p)
    {
@@ -325,8 +345,9 @@ namespace photon
       if (_pos != new_pos)
       {
          if (on_change)
-            new_pos = on_change(new_pos);
+            _final_pos = on_change(new_pos);
          _pos = new_pos;
+         _last_update = now();
          ctx.window.draw();
          return true;
       }
@@ -365,12 +386,10 @@ namespace photon
       if (_pos != new_pos)
       {
          if (on_change)
-            new_pos = on_change(new_pos);
-         if (_pos != new_pos)
-         {
-            _pos = new_pos;
-            ctx.window.draw();
-         }
+            _final_pos = on_change(new_pos);
+         _pos = new_pos;
+         _last_update = now();
+         ctx.window.draw();
       }
    }
 

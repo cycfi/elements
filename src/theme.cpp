@@ -10,7 +10,7 @@ namespace photon
 {
    void theme::load_fonts()
    {
-      _canvas.new_font("icons", "./assets/fonts/fontawesome-webfont.ttf");
+      _canvas.new_font("icons", "./assets/fonts/photon_basic.ttf");
       _canvas.new_font("sans", "./assets/fonts/Roboto-Regular.ttf");
       _canvas.new_font("sans-bold", "./assets/fonts/Roboto-Bold.ttf");
    }

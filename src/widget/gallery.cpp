@@ -131,7 +131,7 @@ namespace photon
     , color body_color
    )
    {
-      return make_button<basic_dropdown_menu>(text, icons::caretdown, body_color);
+      return make_button<basic_dropdown_menu>(text, icons::down_dir, body_color);
    }
 
    void draw_check_box(
@@ -180,7 +180,7 @@ namespace photon
       if (state)
       {
          auto save = set(theme_.icon_color, c1.level(2.0));
-         text_utils(theme_).draw_icon(box, icons::check, 14);
+         text_utils(theme_).draw_icon(box, icons::ok, 14);
       }
       else
       {

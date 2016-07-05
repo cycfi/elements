@@ -178,12 +178,12 @@ auto make_basic_text()
    auto icons =
       margin({ 10, 10, 10, 10 },
          htile(
-            align_center(icon{ icons::paperclip,      24 }),
-            align_center(icon{ icons::arrowright,     24 }),
-            align_center(icon{ icons::barchart,       24 }),
-            align_center(icon{ icons::batteryfull,    24 }),
-            align_center(icon{ icons::car,            24 }),
-            align_center(icon{ icons::glass,          24 })
+            align_center(icon{ icons::docs,           24 }),
+            align_center(icon{ icons::right,          24 }),
+            align_center(icon{ icons::trash,          24 }),
+            align_center(icon{ icons::block,          24 }),
+            align_center(icon{ icons::cw,             24 }),
+            align_center(icon{ icons::attention,      24 })
          )
       );
 
@@ -236,8 +236,8 @@ auto make_buttons()
    auto mbutton   = button("Momentary Button");
    auto tbutton   = toggle_button("Toggle Button", bred);
    auto lbutton   = ref(latching_button("Latching Button", bgreen));
-   auto reset     = button("Clear Latch", icons::unlock, bblue);
-   auto note      = button(icons::gear, "Setup", brblue);
+   auto reset     = button("Clear Latch", icons::lock_open, bblue);
+   auto note      = button(icons::cog, "Setup", brblue);
 
    reset.on_click =
       [lbutton](bool) mutable
@@ -300,9 +300,9 @@ auto make_some_buttons()
                vtile(
                   align_middle(
                      htile(
-                        left_margin(20, icon_button(icons::poweroff, 24)),
-                        left_margin(10, icon_button(icons::wifi, 24)),
-                        xside_margin(10, icon_button(icons::bluetooth, 24))
+                        left_margin(20, icon_button(icons::power, 24)),
+                        left_margin(10, icon_button(icons::magnifying_glass, 24)),
+                        xside_margin(10, icon_button(icons::arrows_cw, 24))
                      )
                   )
                )
@@ -397,11 +397,11 @@ auto make_custom_controls(canvas& canvas_)
    auto  selector_labels =
             vsize(180,
                vtile(
-                  valign(0.0,    icon{icons::angledoubleleft}),
-                  valign(0.25,   icon{icons::angleleft}),
-                  valign(0.5,    icon{icons::stopcircle}),
-                  valign(0.75,   icon{icons::angleright}),
-                  valign(1.0,    icon{icons::angledoubleright})
+                  valign(0.0,    icon{icons::angle_double_left}),
+                  valign(0.25,   icon{icons::angle_left}),
+                  valign(0.5,    icon{icons::stop}),
+                  valign(0.75,   icon{icons::angle_right}),
+                  valign(1.0,    icon{icons::angle_double_right})
                )
             );
    
@@ -584,7 +584,7 @@ int main()
                };
          }
 
-         auto  caret = left_margin(5, icon(icons::caretdown));
+         auto  caret = left_margin(5, icon(icons::down_dir));
          auto  dropdown = basic_dropdown_menu(htile(title, caret), htile(title, caret));
 
          dropdown.menu(menu);

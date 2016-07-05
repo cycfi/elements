@@ -123,12 +123,12 @@ namespace photon
 
    void app::add_undo(undo_redo_task f)
    {
-      undo_stack.push(f);
+      _undo_stack.push(f);
       if (has_redo())
       {
          // clear the redo stack
          undo_stack_type empty{};
-         redo_stack.swap(empty);
+         _redo_stack.swap(empty);
       }
    }
 
@@ -136,9 +136,9 @@ namespace photon
    {
       if (has_undo())
       {
-         auto t = undo_stack.top();
-         undo_stack.pop();
-         redo_stack.push(t);
+         auto t = _undo_stack.top();
+         _undo_stack.pop();
+         _redo_stack.push(t);
          t.undo();  // execute undo function
          return true;
       }
@@ -149,9 +149,9 @@ namespace photon
    {
       if (has_redo())
       {
-         auto t = redo_stack.top();
-         undo_stack.push(t);
-         redo_stack.pop();
+         auto t = _redo_stack.top();
+         _undo_stack.push(t);
+         _redo_stack.pop();
          t.redo();  // execute redo function
          return true;
       }

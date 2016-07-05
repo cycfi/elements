@@ -44,8 +44,8 @@ namespace photon
       };
 
       void                 add_undo(undo_redo_task t);
-      bool                 has_undo() { return !undo_stack.empty(); }
-      bool                 has_redo() { return !redo_stack.empty(); }
+      bool                 has_undo() { return !_undo_stack.empty(); }
+      bool                 has_redo() { return !_redo_stack.empty(); }
       bool                 undo();
       bool                 redo();
 
@@ -62,8 +62,8 @@ namespace photon
       using undo_stack_type = std::stack<undo_redo_task>;
 
       std::vector<cursor>  _cursors;
-      undo_stack_type      undo_stack;
-      undo_stack_type      redo_stack;
+      undo_stack_type      _undo_stack;
+      undo_stack_type      _redo_stack;
    };
 
    template <typename App, typename... Args>

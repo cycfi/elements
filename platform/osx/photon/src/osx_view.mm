@@ -5,23 +5,13 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/view.hpp>
-#include <photon/support/context.hpp>
-#include <photon/widget/basic.hpp>
+#import <Cocoa/Cocoa.h>
 
 namespace photon
 {
-   auto w = basic(
-      [](context const& ctx)
-      {
-         auto cnv = ctx.canvas();
-
-         cnv.fill_color(colors::blue);
-         cnv.fill_rect(rect{ 10, 10, 200, 200 });
-      }
-   );
-
-   void view::draw()
+   photon::canvas view::canvas() const
    {
-      w.draw(context{ *this, &w, rect{} });
+      CGContextRef ctx = (CGContextRef) [[NSGraphicsContext currentContext] graphicsPort];
+      return photon::canvas{(canvas_impl*)ctx};
    }
 }

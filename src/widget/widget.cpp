@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #include <photon/widget/widget.hpp>
+#include <photon/support.hpp>
 
 namespace photon
 {

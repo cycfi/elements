@@ -8,18 +8,12 @@
 #define PHOTON_GUI_LIB_THEME_APRIL_15_2016
 
 #include <photon/support.hpp>
-#include <memory>
 
 namespace photon
 {
    class theme
    {
    public:
-                           theme() {}
-      virtual              ~theme() {}
-
-      void                 canvas(class canvas const& canvas_)    { _canvas = canvas_; }
-      class canvas&        canvas() const                         { return _canvas; }
 
       color                panel_color                = { 28, 30, 34, 192 };
       color                frame_color                = { 220, 220, 220, 70 };
@@ -47,42 +41,10 @@ namespace photon
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
 
+      // Fonts
       char const*          icons                      = "icons";
       char const*          sans                       = "sans";
       char const*          sans_bold                  = "sans-bold";
-
-      virtual void         load_fonts();
-
-   private:
-
-      mutable class canvas _canvas;
-   };
-
-   using theme_ptr = std::shared_ptr<theme>;
-   
-   template <typename T>
-   struct setter
-   {
-      setter(T& ref, T const& new_val)
-       : _ref(ref)
-       , _save(ref)
-      {
-         _ref = new_val;
-      }
-      
-      ~setter()
-      {
-         _ref = _save;
-      }
-
-      T& _ref;
-      T  _save;
-   };
-   
-   template <typename T>
-   inline setter<T> set(T& ref, T const& new_val)
-   {
-      return { ref, new_val };
    };
 }
 

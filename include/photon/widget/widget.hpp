@@ -7,7 +7,8 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
 #define PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
-#include <photon/support.hpp>
+#include <photon/support/rect.hpp>
+#include <photon/support/misc.hpp>
 
 #include <memory>
 #include <vector>
@@ -15,6 +16,9 @@
 
 namespace photon
 {
+   class basic_context;
+   class context;
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Widgets
    //

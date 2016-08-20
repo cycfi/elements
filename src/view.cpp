@@ -13,10 +13,13 @@ namespace photon
    auto w = basic(
       [](context const& ctx)
       {
-         auto cnv = ctx.canvas();
+         auto c = ctx.canvas();
 
-         cnv.fill_color(colors::blue);
-         cnv.fill_rect(rect{ 10, 10, 200, 200 });
+         c.fill_color(colors::blue.opacity(0.7));
+         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 40);
+
+         c.fill_color(colors::red.opacity(0.7));
+         c.fill_rect(rect{ 100, 100, size{ 200, 200 } });
       }
    );
 

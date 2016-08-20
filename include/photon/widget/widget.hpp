@@ -8,10 +8,6 @@
 #define PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
 #include <photon/support.hpp>
-#include <photon/rect.hpp>
-#include <photon/point.hpp>
-#include <photon/context.hpp>
-#include <photon/key.hpp>
 
 #include <memory>
 #include <vector>
@@ -51,7 +47,7 @@ namespace photon
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info const& k);
+//      virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point p);
       virtual void            idle(basic_context const& ctx);

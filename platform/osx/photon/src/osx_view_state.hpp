@@ -6,7 +6,9 @@
 =================================================================================================*/
 #if !defined(PHOTON_GUI_LIB_OSX_VIEW_STATE_AUGUST_22_2016)
 #define PHOTON_GUI_LIB_OSX_VIEW_STATE_AUGUST_22_2016
+
 #include <Quartz/Quartz.h>
+#include <photon/support/canvas.hpp>
 
 namespace photon
 {
@@ -14,6 +16,7 @@ namespace photon
    {
       view_state()
        : font_attributes(nullptr)
+       , text_align(canvas::align_baseline)
       {}
 
       ~view_state()
@@ -23,6 +26,7 @@ namespace photon
       }
 
       CFDictionaryRef   font_attributes;
+      int               text_align;
    };
 }
 

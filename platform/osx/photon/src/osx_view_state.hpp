@@ -4,20 +4,26 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <photon/view.hpp>
-#import <Cocoa/Cocoa.h>
-#include "osx_view_state.hpp"
+#if !defined(PHOTON_GUI_LIB_OSX_VIEW_STATE_AUGUST_22_2016)
+#define PHOTON_GUI_LIB_OSX_VIEW_STATE_AUGUST_22_2016
+#include <Quartz/Quartz.h>
 
 namespace photon
 {
-   view::view()
-    : _impl(nullptr)
-    , _state(new view_state{})
-   {}
-
-   photon::canvas view::canvas()
+   struct view_state
    {
-      CGContextRef ctx = (CGContextRef) [[NSGraphicsContext currentContext] graphicsPort];
-      return photon::canvas{(canvas_impl*)ctx, *this};
-   }
+      view_state()
+       : font_attributes(nullptr)
+      {}
+
+      ~view_state()
+      {
+         if (font_attributes)
+            CFRelease(font_attributes);
+      }
+
+      CFDictionaryRef   font_attributes;
+   };
 }
+
+#endif

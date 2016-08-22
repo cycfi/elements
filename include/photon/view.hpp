@@ -10,10 +10,12 @@
 #include <photon/support/rect.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/widget/widget.hpp>
+#include <memory>
 
 namespace photon
 {
    struct view_impl;
+   struct view_state;
    class platform_access;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,18 +24,21 @@ namespace photon
    class view
    {
    public:
-                        view()
-                         : _impl(nullptr)
-                        {}
+                        view();
+                        view(view const&) = delete;
+      view&             operator=(view const&) = delete;
 
       void              draw();
-      photon::canvas    canvas() const;
+      photon::canvas    canvas();
 
    private:
 
+      friend class platform_access;
+      friend class canvas;
+      using view_state_ptr = std::shared_ptr<view_state>;
 
-      friend class      platform_access;
       view_impl*        _impl;
+      view_state_ptr    _state;
    };
 }
 

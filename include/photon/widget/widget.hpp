@@ -37,8 +37,8 @@ namespace photon
 
                               widget(widget&&) = default;
                               widget(widget const&) = default;
-                              widget& operator=(widget&&) = default;
-                              widget& operator=(widget const&) = default;
+      widget&                 operator=(widget&&) = default;
+      widget&                 operator=(widget const&) = default;
    // image
 
       virtual rect            limits(basic_context const& ctx) const;

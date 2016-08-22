@@ -24,6 +24,15 @@ namespace photon
          c.fill_rect(rect{ 100, 100, size{ 200, 200 } });
          c.line_width(3);
          c.stroke_rect(rect{ 100, 100, size{ 200, 200 } });
+
+         c.line_width(0.2);
+         c.stroke_color(colors::black.opacity(0.5));
+         c.move_to(point{ 200, 50 });
+         c.line_to(point{ 600, 50 });
+         c.stroke();
+
+         c.font("Helvetica", 30, c.bold);
+         c.fill_text(point{ 250, 50 }, "Hello, World");
       }
    );
 

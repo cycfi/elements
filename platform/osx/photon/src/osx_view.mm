@@ -12,7 +12,7 @@ namespace photon
 {
    view::view()
     : _impl(nullptr)
-    , _state(new view_state{})
+    , _state(std::make_shared<view_state>())
    {}
 
    photon::canvas view::canvas()

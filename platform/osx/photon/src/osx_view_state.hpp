@@ -14,9 +14,12 @@ namespace photon
 {
    struct view_state
    {
-      view_state()
+      using view_state_ptr = std::shared_ptr<view_state>;
+
+      view_state(view_state_ptr saved = view_state_ptr{})
        : font_attributes(nullptr)
-       , text_align(canvas::align_baseline)
+       , text_align(canvas::baseline)
+       , saved(saved)
       {}
 
       ~view_state()
@@ -27,6 +30,7 @@ namespace photon
 
       CFDictionaryRef   font_attributes;
       int               text_align;
+      view_state_ptr    saved;
    };
 }
 

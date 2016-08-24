@@ -33,7 +33,7 @@ namespace photon
          c.line_to(point{ 400, 50 });
          c.stroke();
 
-         c.font("Helvetica", 16, c.bold);
+         //c.font("Open Sans", 16, c.bold);
 
          c.move_to(point{ 10, 100 });
          c.line_to(point{ 10, 10 });
@@ -59,7 +59,7 @@ namespace photon
          c.text_align(c.bottom);
          c.fill_text(point{ 250, 50 }, "j-Bottom");
 
-         c.text_align(c.left);
+         c.text_align(c.left + c.baseline);
          c.fill_text(point{ 250, 100 }, "j-Left");
 
          c.text_align(c.center);

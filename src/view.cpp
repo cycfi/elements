@@ -71,9 +71,15 @@ namespace photon
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-         c.font("Open Sans", 45, c.bold);
-         c.fill_text(point{ 10, 50 }, "Fill Text");
-         c.stroke_text(point{ 10, 100 }, "Stroke Text");
+         //c.font("Open Sans", 45, c.bold);
+         //c.fill_text(point{ 10, 50 }, "Fill Text");
+         //c.stroke_text(point{ 10, 100 }, "Stroke Text");
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+         c.fill_style(colors::blue);
+         c.shadow_style(point{ 1, 1 }, 10, colors::black);
+         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 10);
       }
    );
 

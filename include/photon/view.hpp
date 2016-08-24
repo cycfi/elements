@@ -28,8 +28,11 @@ namespace photon
                         view(view const&) = delete;
       view&             operator=(view const&) = delete;
 
-      void              draw();
+      void              draw(rect dirty_);
       photon::canvas    canvas();
+      point             cursor_pos() const;
+      point             size() const;
+      rect              dirty() const   { return _dirty; }
 
    private:
 
@@ -39,6 +42,7 @@ namespace photon
 
       view_impl*        _impl;
       view_state_ptr    _state;
+      rect              _dirty;
    };
 }
 

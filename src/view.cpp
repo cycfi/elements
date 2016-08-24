@@ -83,8 +83,10 @@ namespace photon
       }
    );
 
-   void view::draw()
+   void view::draw(rect dirty_)
    {
-      w.draw(context{ *this, &w, rect{} });
+      _dirty = dirty_;
+      auto size_ = size();
+      w.draw(context{ *this, &w, rect{ 0, 0, size_.x, size_.y } });
    }
 }

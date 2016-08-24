@@ -39,7 +39,14 @@ namespace photon
 {
    [super drawRect:dirty];
 
-   _view.draw();
+   _view.draw(
+      {
+         float(dirty.origin.x),
+         float(dirty.origin.y),
+         float(dirty.size.width),
+         float(dirty.size.height)
+      }
+   );
 }
 
 @end

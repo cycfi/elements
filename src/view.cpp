@@ -6,10 +6,39 @@
 =================================================================================================*/
 #include <photon/view.hpp>
 #include <photon/support/context.hpp>
-#include <photon/widget/basic.hpp>
+#include <photon/widget.hpp>
 
 namespace photon
 {
+   auto box = basic(
+      [](context const& ctx)
+      {
+         auto c = ctx.canvas();
+         c.fill_style(colors::gold.opacity(0.8));
+         c.fill_round_rect(ctx.bounds, 4);
+      }
+   );
+
+   auto make_vtile()
+   {
+      auto _box = top_margin(
+         { 20 },
+         hsize(100, box)
+      );
+
+      return margin(
+         { 20, 0, 20, 20 },
+         vtile(
+            halign(0.0, _box),
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)
+         )
+      );
+   }
+
    auto w = basic(
       [](context const& ctx)
       {
@@ -86,7 +115,14 @@ namespace photon
    void view::draw(rect dirty_)
    {
       _dirty = dirty_;
+
+      basic_context bctx{ *this };
+      rect limits = content.limits(bctx);
+
+
+
       auto size_ = size();
+      auto w = make_vtile();
       w.draw(context{ *this, &w, rect{ 0, 0, size_.x, size_.y } });
    }
 }

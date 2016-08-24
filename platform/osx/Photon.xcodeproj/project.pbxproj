@@ -21,6 +21,7 @@
 		5DA584B11D618F4C004276C2 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584B01D618F4C004276C2 /* widget.cpp */; };
 		5DE564191D6DE49900F9435C /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
 		5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641A1D6DE4CD00F9435C /* composite.cpp */; };
+		5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641C1D6DF16300F9435C /* proxy.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		5DA584B01D618F4C004276C2 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widget.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
+		5DE5641C1D6DF16300F9435C /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				5DE5641A1D6DE4CD00F9435C /* composite.cpp */,
+				5DE5641C1D6DF16300F9435C /* proxy.cpp */,
 				5DE564181D6DE49900F9435C /* tile.cpp */,
 				5DA584B01D618F4C004276C2 /* widget.cpp */,
 			);
@@ -209,6 +212,7 @@
 				5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */,
 				5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */,
 				5DA584B11D618F4C004276C2 /* widget.cpp in Sources */,
+				5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */,
 				5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */,
 				5D07FE191D68638800D7EE92 /* context.cpp in Sources */,
 				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,

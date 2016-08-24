@@ -43,6 +43,8 @@ namespace photon
       view_impl*        _impl;
       view_state_ptr    _state;
       rect              _dirty;
+      rect              _current_bounds;
+      rect              _current_limits;
    };
 }
 

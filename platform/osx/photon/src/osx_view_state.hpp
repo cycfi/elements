@@ -26,7 +26,7 @@ namespace photon
       ~view_state()
       {
          if (gradient)
-            CFRelease(gradient);
+            CGGradientRelease(gradient);
          if (font_attributes)
             CFRelease(font_attributes);
       }

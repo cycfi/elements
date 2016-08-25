@@ -111,27 +111,13 @@ namespace photon
 //         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 10);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
+    // panel
 
+/*
          auto r = rect{ 50, 50, size{ 200, 200 } };
          color panel_color = { 28, 30, 34, 192 };
          float radius = 3.0;
          float shadow = 10;
-
-//         c.rect(r.inset(-10, -10));
-//         c.round_rect(r, 10);
-//         c.clip();
-//         c.shadow_style(point{ 1, 1 }, 10, colors::black);
-//         c.fill_round_rect(r, 10);
-
-
-//         c.rect(r.inset(-10, -10));
-//         c.round_rect(r, 10);
-//         c.clip();
-
-//         c.round_rect(r, 10);
-//         c.rect(r.inset(-10, -10));
-//         c.shadow_style(point{ 1, 1 }, 10, colors::black);
-//         c.fill();
 
          c.fill_style(panel_color);
          c.fill_rect(ctx.bounds);
@@ -160,6 +146,22 @@ namespace photon
             c.shadow_style(point{ 1, 2 }, shadow, colors::black);
             c.fill_round_rect(r, radius);
          }
+*/
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // gradients
+
+         c.color_space(
+            {
+               { 0, colors::blue },
+               { 1, colors::red },
+            }
+         );
+
+         c.rect(ctx.bounds.inset(50, 50));
+         c.clip();
+         c.fill_style({ point{0, 0}, point{0, ctx.bounds.bottom} });
+
       }
    );
 

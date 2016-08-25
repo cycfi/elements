@@ -35,6 +35,8 @@ namespace photon
       point                size() const;
       void                 size(point size_);
       void                 limits(rect limits_) const;
+      
+      void                 refresh();
       rect                 dirty() const   { return _dirty; }
 
       layer_composite      content;

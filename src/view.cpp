@@ -131,7 +131,8 @@ namespace photon
       auto size_ = size();
       clamp(size_.x, limits_.left, limits_.right);
       clamp(size_.y, limits_.top, limits_.bottom);
-      size(size_);
+      if (size_ != size())
+         size(size_);
 
       rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
 

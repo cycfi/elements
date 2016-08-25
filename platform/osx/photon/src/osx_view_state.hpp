@@ -17,17 +17,21 @@ namespace photon
       using view_state_ptr = std::shared_ptr<view_state>;
 
       view_state(view_state_ptr saved = view_state_ptr{})
-       : font_attributes(nullptr)
+       : gradient(nullptr)
+       , font_attributes(nullptr)
        , text_align(canvas::baseline)
        , saved(saved)
       {}
 
       ~view_state()
       {
+         if (gradient)
+            CFRelease(gradient);
          if (font_attributes)
             CFRelease(font_attributes);
       }
 
+      CGGradientRef     gradient;
       CFDictionaryRef   font_attributes;
       int               text_align;
       view_state_ptr    saved;

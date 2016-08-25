@@ -155,7 +155,7 @@ namespace photon
             c.rect(r.inset(-10, -10));
             c.clip();
 
-            // Shadow
+            // Drop shadow
             c.fill_style(colors::black);
             c.shadow_style(point{ 1, 2 }, shadow, colors::black);
             c.fill_round_rect(r, radius);

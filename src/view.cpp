@@ -44,15 +44,15 @@ namespace photon
       {
          auto c = ctx.canvas();
 
-         //c.fill_style(colors::blue.opacity(0.7));
-         //c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 40);
-         //c.line_width(3);
-         //c.stroke_round_rect(rect{ 10, 10, size{ 200, 200 } }, 40);
-         //
-         //c.fill_style(colors::red.opacity(0.7));
-         //c.fill_rect(rect{ 100, 100, size{ 200, 200 } });
-         //c.line_width(3);
-         //c.stroke_rect(rect{ 100, 100, size{ 200, 200 } });
+//         c.fill_style(colors::blue.opacity(0.7));
+//         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 40);
+//         c.line_width(3);
+//         c.stroke_round_rect(rect{ 10, 10, size{ 200, 200 } }, 40);
+//         
+//         c.fill_style(colors::red.opacity(0.7));
+//         c.fill_rect(rect{ 100, 100, size{ 200, 200 } });
+//         c.line_width(3);
+//         c.stroke_rect(rect{ 100, 100, size{ 200, 200 } });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -150,6 +150,8 @@ namespace photon
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // gradients
+    
+    
 
          c.color_space(
             {
@@ -158,9 +160,20 @@ namespace photon
             }
          );
 
-         c.rect(ctx.bounds.inset(50, 50));
-         c.clip();
+         c.round_rect(ctx.bounds.inset(50, 50), 10);
          c.fill_style({ point{0, 0}, point{0, ctx.bounds.bottom} });
+         c.fill();
+         
+    
+    
+    /// Clips
+    
+//         c.rect({ 10, 10, 200, 200 });
+//         c.clip();
+//         c.rect({ 150, 150, 300, 300 });
+//         c.clip();
+//
+//         c.fill_rect(ctx.bounds);
 
       }
    );

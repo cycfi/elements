@@ -12,16 +12,33 @@
 
 namespace photon
 {
-   struct view_state
+   struct view_state : std::enable_shared_from_this<view_state>
    {
       using view_state_ptr = std::shared_ptr<view_state>;
 
-      view_state(view_state_ptr saved = view_state_ptr{})
+      enum fill_type
+      {
+         default_, linear, radial
+      };
+
+      view_state()
        : gradient(nullptr)
        , font_attributes(nullptr)
        , text_align(canvas::baseline)
-       , saved(saved)
+       , saved(nullptr)
+       , paint(default_)
       {}
+
+      view_state(view_state_ptr prev)
+       : gradient(CGGradientRetain(prev->gradient))
+       , font_attributes(CFDictionaryCreateCopy(nullptr, prev->font_attributes))
+       , text_align(canvas::baseline)
+       , saved(prev)
+       , linear_gradient(prev->linear_gradient)
+       , radial_gradient(prev->radial_gradient)
+       , paint(prev->paint)
+      {
+      }
 
       ~view_state()
       {
@@ -31,10 +48,19 @@ namespace photon
             CFRelease(font_attributes);
       }
 
+
+
       CGGradientRef     gradient;
       CFDictionaryRef   font_attributes;
       int               text_align;
       view_state_ptr    saved;
+
+      using linear_gradient_type = canvas::linear_gradient;
+      using radial_gradient_type = canvas::radial_gradient;
+
+      linear_gradient_type  linear_gradient;
+      radial_gradient_type  radial_gradient;
+      fill_type             paint;
    };
 }
 

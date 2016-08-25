@@ -106,9 +106,60 @@ namespace photon
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-         c.fill_style(colors::blue);
-         c.shadow_style(point{ 1, 1 }, 10, colors::black);
-         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 10);
+//         c.fill_style(colors::blue);
+//         c.shadow_style(point{ 1, 1 }, 10, colors::black);
+//         c.fill_round_rect(rect{ 10, 10, size{ 200, 200 } }, 10);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+         auto r = rect{ 50, 50, size{ 200, 200 } };
+         color panel_color = { 28, 30, 34, 192 };
+         float radius = 3.0;
+         float shadow = 10;
+
+//         c.rect(r.inset(-10, -10));
+//         c.round_rect(r, 10);
+//         c.clip();
+//         c.shadow_style(point{ 1, 1 }, 10, colors::black);
+//         c.fill_round_rect(r, 10);
+
+
+//         c.rect(r.inset(-10, -10));
+//         c.round_rect(r, 10);
+//         c.clip();
+
+//         c.round_rect(r, 10);
+//         c.rect(r.inset(-10, -10));
+//         c.shadow_style(point{ 1, 1 }, 10, colors::black);
+//         c.fill();
+
+         c.fill_style(panel_color);
+         c.fill_rect(ctx.bounds);
+
+////// from here
+
+         {
+            auto state = c.new_state();
+
+            // Fill
+            c.fill_style(panel_color);
+            c.fill_round_rect(r, radius);
+
+            // Outline
+            c.line_width(2);
+            c.stroke_style(panel_color.opacity(0.3));
+            c.stroke_round_rect(r, radius);
+
+            // Clip
+            c.round_rect(r, radius);
+            c.rect(r.inset(-10, -10));
+            c.clip();
+
+            // Shadow
+            c.fill_style(colors::black);
+            c.shadow_style(point{ 1, 2 }, shadow, colors::black);
+            c.fill_round_rect(r, radius);
+         }
       }
    );
 
@@ -116,10 +167,8 @@ namespace photon
    {
       // $$$ temp $$$
       if (content.size() == 0)
-      {
-         content.elements.push_back(new_(make_vtile()));
-      }
-
+         //content.elements.push_back(new_(make_vtile()));
+         content.elements.push_back(new_(w));
       // $$$ temp $$$
 
       _dirty = dirty_;

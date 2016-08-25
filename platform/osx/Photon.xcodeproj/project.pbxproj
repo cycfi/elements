@@ -14,6 +14,7 @@
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
 		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
+		5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
 		5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584971D6156CD004276C2 /* AppDelegate.m */; };
 		5DA5849C1D6156CD004276C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584981D6156CD004276C2 /* main.m */; };
 		5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5849A1D6156CD004276C2 /* PhotonView.mm */; };
@@ -34,6 +35,7 @@
 		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5D565ED71D605F5D00FD087C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5DA567A81D6E6ED0008FEFF9 /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layer.cpp; sourceTree = "<group>"; };
 		5DA584961D6156CD004276C2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5DA584971D6156CD004276C2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5DA584981D6156CD004276C2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				5DE5641A1D6DE4CD00F9435C /* composite.cpp */,
+				5DA567A81D6E6ED0008FEFF9 /* layer.cpp */,
 				5DE5641C1D6DF16300F9435C /* proxy.cpp */,
 				5DE564181D6DE49900F9435C /* tile.cpp */,
 				5DA584B01D618F4C004276C2 /* widget.cpp */,
@@ -208,6 +211,7 @@
 				5DA584AE1D618C41004276C2 /* view.cpp in Sources */,
 				5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */,
 				5DE564191D6DE49900F9435C /* tile.cpp in Sources */,
+				5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */,
 				5DA5849C1D6156CD004276C2 /* main.m in Sources */,
 				5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */,
 				5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */,

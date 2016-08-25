@@ -10,6 +10,7 @@
 #include <photon/support/rect.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/widget/widget.hpp>
+#include <photon/widget/layer.hpp>
 #include <memory>
 
 namespace photon
@@ -24,15 +25,19 @@ namespace photon
    class view
    {
    public:
-                        view();
-                        view(view const&) = delete;
-      view&             operator=(view const&) = delete;
+                           view();
+                           view(view const&) = delete;
+      view&                operator=(view const&) = delete;
 
-      void              draw(rect dirty_);
-      photon::canvas    canvas();
-      point             cursor_pos() const;
-      point             size() const;
-      rect              dirty() const   { return _dirty; }
+      void                 draw(rect dirty_);
+      photon::canvas       canvas();
+      point                cursor_pos() const;
+      point                size() const;
+      void                 size(point size_);
+      void                 limits(rect limits_) const;
+      rect                 dirty() const   { return _dirty; }
+
+      layer_composite      content;
 
    private:
 
@@ -40,11 +45,10 @@ namespace photon
       friend class canvas;
       using view_state_ptr = std::shared_ptr<view_state>;
 
-      view_impl*        _impl;
-      view_state_ptr    _state;
-      rect              _dirty;
-      rect              _current_bounds;
-      rect              _current_limits;
+      view_impl*           _impl;
+      view_state_ptr       _state;
+      rect                 _dirty;
+      rect                 _current_bounds;
    };
 }
 

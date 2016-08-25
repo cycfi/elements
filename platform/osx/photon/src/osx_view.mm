@@ -42,4 +42,21 @@ namespace photon
       auto bounds = [ns_view bounds];
       return { float(bounds.size.width), float(bounds.size.height) };
    }
+   
+   void view::size(point size_)
+   {
+      if (size_ != size())
+      {
+         auto ns_view = get_mac_view(_impl);
+         [ns_view setFrameSize : NSSize{ size_.x, size_.y }];
+         [ns_view needsDisplay];
+      }
+   }
+   
+   void view::limits(rect limits_) const
+   {
+      auto ns_view = get_mac_view(_impl);
+      [[ns_view window] setMinSize: NSSize{ limits_.left, limits_.top }];
+      [[ns_view window] setMaxSize: NSSize{ limits_.right, limits_.bottom }];
+   }
 }

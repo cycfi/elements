@@ -16,7 +16,7 @@
 //#include <photon/widget/icon.hpp>
 //#include <photon/widget/image.hpp>
 //#include <photon/widget/knob.hpp>
-//#include <photon/widget/layer.hpp>
+#include <photon/widget/layer.hpp>
 #include <photon/widget/margin.hpp>
 //#include <photon/widget/menu.hpp>
 //#include <photon/widget/port.hpp>

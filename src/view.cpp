@@ -114,15 +114,36 @@ namespace photon
 
    void view::draw(rect dirty_)
    {
+      // $$$ temp $$$
+      if (content.size() == 0)
+      {
+         content.elements.push_back(new_(make_vtile()));
+      }
+
+      // $$$ temp $$$
+
       _dirty = dirty_;
 
       basic_context bctx{ *this };
-      rect limits = content.limits(bctx);
-
-
+      auto limits_ = content.limits(bctx);
+      limits(limits_);
 
       auto size_ = size();
-      auto w = make_vtile();
-      w.draw(context{ *this, &w, rect{ 0, 0, size_.x, size_.y } });
+      clamp(size_.x, limits_.left, limits_.right);
+      clamp(size_.y, limits_.top, limits_.bottom);
+      size(size_);
+
+      rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
+
+      // layout the subject only if the window bounds changes
+      context ctx{ *this, &content, subj_bounds };
+      if (subj_bounds != _current_bounds)
+      {
+         _current_bounds = subj_bounds;
+         content.layout(ctx);
+      }
+
+      // draw the subject
+      content.draw(ctx);
    }
 }

@@ -9,9 +9,24 @@
 
 #include <photon/support/rect.hpp>
 #include <photon/support/canvas.hpp>
+#include <photon/support/theme.hpp>
 #include <photon/widget/widget.hpp>
 #include <photon/widget/layer.hpp>
 #include <memory>
+
+namespace photon
+{
+   class view;
+}
+
+namespace client
+{
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Main user initialization. This client supplied function initializes the view at
+   // construction time. This is the main customization point provided for clients.
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   void  init(photon::view& v);
+}
 
 namespace photon
 {
@@ -35,11 +50,12 @@ namespace photon
       point                size() const;
       void                 size(point size_);
       void                 limits(rect limits_) const;
-      
+
       void                 refresh();
       rect                 dirty() const   { return _dirty; }
 
       layer_composite      content;
+      photon::theme        theme;
 
    private:
 

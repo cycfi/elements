@@ -18,11 +18,13 @@ namespace photon
          return (__bridge PhotonView*) impl;
       }
    }
-
+   
    view::view()
     : _impl(nullptr)
     , _state(std::make_shared<view_state>())
-   {}
+   {
+      client::init(*this);
+   }
 
    photon::canvas view::canvas()
    {

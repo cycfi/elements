@@ -40,11 +40,6 @@ namespace photon
       color                text_box_caret_color       = { 0, 190, 255, 255 };
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
-
-      // Fonts
-      char const*          icons                      = "icons";
-      char const*          sans                       = "sans";
-      char const*          sans_bold                  = "sans-bold";
    };
 }
 

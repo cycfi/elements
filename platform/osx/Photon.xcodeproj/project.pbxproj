@@ -12,6 +12,7 @@
 		5D07FE191D68638800D7EE92 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE181D68638800D7EE92 /* context.cpp */; };
 		5D07FE1B1D6868E800D7EE92 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 5D07FE1A1D6868E800D7EE92 /* include */; };
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
+		5D3806AD1D705F5400C6EB77 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AC1D705F5400C6EB77 /* init.cpp */; };
 		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
 		5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
@@ -31,6 +32,7 @@
 		5D07FE181D68638800D7EE92 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
 		5D07FE1A1D6868E800D7EE92 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../include; sourceTree = "<group>"; };
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
+		5D3806AC1D705F5400C6EB77 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		5D565EC91D605F5D00FD087C /* Photon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -68,6 +70,15 @@
 			path = support;
 			sourceTree = "<group>";
 		};
+		5D3806AB1D705F5400C6EB77 /* client */ = {
+			isa = PBXGroup;
+			children = (
+				5D3806AC1D705F5400C6EB77 /* init.cpp */,
+			);
+			name = client;
+			path = ../../../client;
+			sourceTree = "<group>";
+		};
 		5D565EC01D605F5D00FD087C = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +103,7 @@
 				5D565ED71D605F5D00FD087C /* Info.plist */,
 				5D07FE1A1D6868E800D7EE92 /* include */,
 				5DA584AC1D618C41004276C2 /* src */,
+				5D3806AB1D705F5400C6EB77 /* client */,
 				5DA584951D6156CD004276C2 /* osx_src */,
 			);
 			path = Photon;
@@ -214,6 +226,7 @@
 				5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */,
 				5DA5849C1D6156CD004276C2 /* main.m in Sources */,
 				5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */,
+				5D3806AD1D705F5400C6EB77 /* init.cpp in Sources */,
 				5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */,
 				5DA584B11D618F4C004276C2 /* widget.cpp in Sources */,
 				5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */,

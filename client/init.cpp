@@ -12,17 +12,41 @@ namespace client
 {
    using namespace photon;
 
-   void  init(view& v)
+   auto box = basic(
+      [](context const& ctx)
+      {
+         auto c = ctx.canvas();
+         c.fill_style(colors::gold.opacity(0.8));
+         c.fill_round_rect(ctx.bounds, 4);
+      }
+   );
+
+   auto make_vtile()
    {
-      auto box = basic(
-         [](context const& ctx)
-         {
-            auto c = ctx.canvas();
-            c.fill_style(colors::gold.opacity(0.8));
-            c.fill_round_rect(ctx.bounds, 4);
-         }
+      auto _box = top_margin(
+         { 20 },
+         hsize(100, box)
       );
 
-      v.content.elements.push_back(new_(box));
+      return margin(
+         { 20, 0, 20, 20 },
+         vtile(
+            halign(0.0, _box),
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)
+         )
+      );
+   }
+   
+   auto img = image{"assets/images/space.jpg"};
+   auto spr =  sprite{"assets/images/knob_sprites_white_128x128.png", point{128, 128}};
+   auto spr_middle = halign(0.5, valign(0.5, spr));
+
+   void  init(view& v)
+   {
+      v.content.elements.push_back(new_(img));
    }
 }

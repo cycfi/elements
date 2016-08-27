@@ -7,46 +7,90 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_SLIDER_APRIL_16_2016)
 #define PHOTON_GUI_LIB_WIDGET_SLIDER_APRIL_16_2016
 
-#include <photon/widget/layer.hpp>
+#include <photon/widget/widget.hpp>
 #include <photon/support.hpp>
 #include <functional>
-#include <memory>
 
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_vslider : public array_composite<3, layer_widget>
+   class slider : public widget
    {
    public:
 
-      using base_type = array_composite<3, layer_widget>;
+      struct constants
+      {
+         float aspect_ratio   = 0.2;   // the slider's aspect ratio
+         float slot_size      = 0.25;  // fraction of width
+         float knob_size      = 0.6;   // fraction of size (width or height)
+      };
 
-                           template <typename Slot, typename Gauge, typename Knob>
-                           basic_vslider(Slot&& slot, Gauge&& gauge, Knob&& knob);
+      using slider_function = std::function<double(double pos)>;
 
-      float                state() const;
-      void                 state(float state_);
+                        slider(bool draw_gauge = true)
+                         //: _draw_gauge(draw_gauge)
+                         //, _pos(0.0)
+                         //, _final_pos(0.0)
+                         //, _tracking(false)
+                        {}
+
+      virtual rect      limits(basic_context const& ctx) const;
+      //virtual widget*   hit_test(context const& ctx, point p);
+      virtual void      draw(context const& ctx);
+      //virtual widget*   click(context const& ctx, mouse_button btn);
+      //virtual void      drag(context const& ctx, mouse_button btn);
+      //virtual bool      scroll(context const& ctx, point p);
+      //virtual bool      is_control() const;
+      //virtual void      idle(basic_context const& ctx);
+
+      virtual void      draw_slot(context const& ctx, rect knob_r, rect bounds, bool hilite);
+      virtual void      draw_gauge(context const& ctx, rect knob_r, rect bounds, bool hilite);
+      virtual void      draw_knob(context const& ctx, rect bounds, bool horiz, bool hilite);
+      virtual void      draw_indicator(context const& ctx, rect bounds, bool horiz, bool hilite);
+      //
+      virtual constants dimensions() const   { return constants{}; }
+      //double            position() const     { return _pos; }
+      //void              position(double pos) { _pos = pos; }
+      //
+      //slider_function   on_change;
+
+   private:
+
+      //void              reposition(context const& ctx);
+
+      double            _pos = 0.0f;
+      //double            _final_pos;
+      //point             _offset;
+      //bool              _tracking;
+      //bool              _draw_gauge;
+      //time_point        _last_update;
    };
 
-   template <typename Slot, typename Gauge, typename Knob>
-   inline basic_vslider::basic_vslider(Slot&& slot, Gauge&& gauge, Knob&& knob)
-   {
-      elements[0] = new_(std::forward<Slot>(slot));
-      elements[1] = new_(std::forward<Gauge>(gauge));
-      elements[2] = new_(std::forward<Knob>(valign(0.0, knob)));
-   }
-
-   inline float basic_vslider::state() const
-   {
-      return std::dynamic_pointer_cast<align_widget_base>(elements[2])->align();
-   }
-
-   inline void basic_vslider::state(float state_)
-   {
-      std::dynamic_pointer_cast<align_widget_base>(elements[2])->align(state_);
-   }
+   //////////////////////////////////////////////////////////////////////////////////////////////////
+   //class vimage_slider : public slider
+   //{
+   //public:
+   //
+   //   using image_ptr = std::shared_ptr<canvas::image>;
+   //
+   //                     vimage_slider(
+   //                        image_ptr img_, float aspect_ratio_
+   //                      , rect knob_bounds
+   //                      , bool draw_gauge = true
+   //                     );
+   //
+   //   virtual void      draw_knob(theme& thm, rect bounds, bool horiz, bool hilite);
+   //   virtual void      draw_indicator(theme& thm, rect bounds, bool horiz, bool hilite);
+   //   virtual constants dimensions() const;
+   //
+   //private:
+   //
+   //   image_ptr         _img;
+   //   float             _aspect_ratio;
+   //   rect             _knob_bounds;
+   //};
 }
 
 #endif

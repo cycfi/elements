@@ -40,13 +40,18 @@ namespace client
          )
       );
    }
-   
+
    auto img = image{"assets/images/space.jpg"};
    auto spr =  sprite{"assets/images/knob_sprites_white_128x128.png", point{128, 128}};
    auto spr_middle = halign(0.5, valign(0.5, img));
 
+   auto make_slider()
+   {
+      return yside_margin({ 50, 50 }, halign(0.5, hsize(50, slider{})));
+   }
+
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(spr_middle));
+      v.content.elements.push_back(new_(make_slider()));
    }
 }

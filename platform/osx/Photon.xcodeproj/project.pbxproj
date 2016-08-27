@@ -14,6 +14,7 @@
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
 		5D3806AD1D705F5400C6EB77 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AC1D705F5400C6EB77 /* init.cpp */; };
 		5D3806AF1D70926100C6EB77 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
+		5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806B01D7191AA00C6EB77 /* slider.cpp */; };
 		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
 		5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
@@ -35,6 +36,7 @@
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		5D3806AC1D705F5400C6EB77 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		5D3806AE1D70926100C6EB77 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
+		5D3806B01D7191AA00C6EB77 /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
 		5D565EC91D605F5D00FD087C /* Photon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				5D3806AE1D70926100C6EB77 /* image.cpp */,
 				5DA567A81D6E6ED0008FEFF9 /* layer.cpp */,
 				5DE5641C1D6DF16300F9435C /* proxy.cpp */,
+				5D3806B01D7191AA00C6EB77 /* slider.cpp */,
 				5DE564181D6DE49900F9435C /* tile.cpp */,
 				5DA584B01D618F4C004276C2 /* widget.cpp */,
 			);
@@ -236,6 +239,7 @@
 				5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */,
 				5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */,
 				5D07FE191D68638800D7EE92 /* context.cpp in Sources */,
+				5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */,
 				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -27,8 +27,9 @@ namespace photon
                            image(image const&) = default;
                            image& operator=(image const&) = default;
 
-      virtual point        size(context const& ctx) const;
+      point                size(context const& ctx) const;
       virtual void         draw(context const& ctx);
+      virtual rect         source_rect(context const& ctx) const;
 
    protected:
 
@@ -44,24 +45,50 @@ namespace photon
    // image but only one frame is drawn at any single time. Useful for switches,
    // knobs and basic (sprite) animation.
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <size_t width_, size_t height_>
    class sprite : public image
    {
    public:
-                           sprite(char const* filename, point size);
-                           sprite(image_ptr img_, point size);
+                           sprite(char const* filename);
+                           sprite(image_ptr img_);
 
       virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
 
-      virtual point        size(context const& ctx) const;
       std::size_t          index() const              { return _index; }
       void                 index(std::size_t index_)  { _index = index_; }
+      constexpr float      width() const              { return width_; }
+      constexpr float      height() const             { return height_; }
+
+      virtual rect         source_rect(context const& ctx) const;
 
    private:
 
-      point                _size;
-      std::size_t          _index;
+      size_t               _index;
    };
+
+   template <size_t width_, size_t height_>
+   inline sprite<width_, height_>::sprite(char const* filename)
+    : image(filename)
+    , _index(0)
+   {}
+
+   template <size_t width_, size_t height_>
+   inline sprite<width_, height_>::sprite(image_ptr img_)
+    : image(img_)
+    , _index(0)
+   {}
+
+   template <size_t width_, size_t height_>
+   inline rect sprite<width_, height_>::limits(basic_context const& ctx) const
+   {
+      return { width(), height(), width(), height() };
+   }
+
+   template <size_t width_, size_t height_>
+   rect sprite<width_, height_>::source_rect(context const& ctx) const
+   {
+      return rect{ 0, height()*_index, width(), height()*(_index+1) };
+   }
 }
 
 #endif

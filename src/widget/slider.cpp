@@ -104,6 +104,7 @@ namespace photon
          canvas_.begin_path();
          canvas_.round_rect(bounds, corner_radius);
          canvas_.fill_style(fill_color);
+         //canvas_.shadow_style(point{ 1, 1 }, 10, colors::black);
          canvas_.fill();
 
 

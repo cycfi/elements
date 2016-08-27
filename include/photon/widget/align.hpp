@@ -15,22 +15,33 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Alignment widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class align_widget_base : public widget
+   {
+   public:
+                     align_widget_base(float align)
+                      : _align(align)
+                     {}
+
+      float          align() const        { return _align; }
+      void           align(float align_)  { _align = align_; }
+
+   private:
+
+      float          _align;
+   };
+
    template <typename Subject>
-   class halign_widget : public proxy<Subject>
+   class halign_widget : public proxy<Subject, align_widget_base>
    {
    public:
 
-      using base_type = proxy<Subject>;
+      using base_type = proxy<Subject, align_widget_base>;
 
                      halign_widget(float align, Subject&& subject);
                      halign_widget(float align, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
-
-   private:
-
-      float          _align;
    };
 
    template <typename Subject>
@@ -63,14 +74,12 @@ namespace photon
 
    template <typename Subject>
    inline halign_widget<Subject>::halign_widget(float align, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
-    , _align(align)
+    : base_type(std::forward<Subject>(subject), align)
    {}
 
    template <typename Subject>
    inline halign_widget<Subject>::halign_widget(float align, Subject const& subject)
-    : base_type(subject)
-    , _align(align)
+    : base_type(subject, align)
    {}
 
    template <typename Subject>
@@ -90,27 +99,23 @@ namespace photon
       if (available_width > elem_width)
          elem_width = std::min(available_width, e_limits.right);
 
-      ctx.bounds.left += (available_width - elem_width) * _align;
+      ctx.bounds.left += (available_width - elem_width) * this->align();
       ctx.bounds.width(elem_width);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class valign_widget : public proxy<Subject>
+   class valign_widget : public proxy<Subject, align_widget_base>
    {
    public:
 
-      using base_type = proxy<Subject>;
+      using base_type = proxy<Subject, align_widget_base>;
 
                      valign_widget(float align, Subject&& subject);
                      valign_widget(float align, Subject const& subject);
 
       virtual rect   limits(basic_context const& ctx) const;
       virtual void   prepare_subject(context& ctx);
-
-   private:
-
-      float          _align;
    };
 
    template <typename Subject>
@@ -143,14 +148,12 @@ namespace photon
 
    template <typename Subject>
    valign_widget<Subject>::valign_widget(float align, Subject&& subject)
-    : base_type(std::move(subject))
-    , _align(align)
+    : base_type(std::move(subject), align)
    {}
 
    template <typename Subject>
    valign_widget<Subject>::valign_widget(float align, Subject const& subject)
-    : base_type(subject)
-    , _align(align)
+    : base_type(subject, align)
    {}
 
    template <typename Subject>
@@ -170,7 +173,7 @@ namespace photon
       if (available_height > elem_height)
          elem_height = std::min(available_height, e_limits.bottom);
 
-      ctx.bounds.top += (available_height - elem_height) * _align;
+      ctx.bounds.top += (available_height - elem_height) * this->align();
       ctx.bounds.height(elem_height);
    }
 }

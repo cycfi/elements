@@ -43,10 +43,10 @@ namespace client
    
    auto img = image{"assets/images/space.jpg"};
    auto spr =  sprite{"assets/images/knob_sprites_white_128x128.png", point{128, 128}};
-   auto spr_middle = halign(0.5, valign(0.5, spr));
+   auto spr_middle = halign(0.5, valign(0.5, img));
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(img));
+      v.content.elements.push_back(new_(spr_middle));
    }
 }

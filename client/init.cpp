@@ -44,6 +44,7 @@ namespace client
    auto img = image{"assets/images/space.jpg"};
    auto spr =  sprite<128, 128>{"assets/images/knob_sprites_white_128x128.png"};
    auto spr_middle = halign(0.5, valign(0.5, spr));
+   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
 
    auto make_slider()
    {
@@ -52,6 +53,6 @@ namespace client
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(spr_middle));
+      v.content.elements.push_back(new_(gzmo));
    }
 }

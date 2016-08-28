@@ -27,7 +27,7 @@ namespace photon
                            image(image const&) = default;
                            image& operator=(image const&) = default;
 
-      point                size(context const& ctx) const;
+      point                size() const;
       virtual void         draw(context const& ctx);
       virtual rect         source_rect(context const& ctx) const;
 
@@ -38,6 +38,41 @@ namespace photon
    private:
 
       image_ptr            _img;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+	// Photon uses gizmos for user interface images such as buttons, frames etc.
+   // Basically a gizmo is a resizeable image. The unique feature is its ability
+	// to preserve the image near the edges when it is scaled up or down.
+   //
+   // The trick is by partictioning the image into 9 patches (tiles) much like
+   // a tic-tac-toe:
+   //
+   //       +---+-------+---+
+   //       | c |   h   | c |
+   //       +---+-------+---+
+   //       |   |       |   |
+   //       | v |   m   | v |
+   //       |   |       |   |
+   //       +---+-------+---+
+   //       | c |   h   | c |
+   //       +---+-------+---+
+   //
+   // The corner patches, 'c', are drawn into the destination rectangle without resizing.
+   // The top and bottom middle patches, 'h', are stretched horizontally to fit the
+   // destination rectangle. The left and right middle patches, 'v', are stretched
+   // vertically to fit the destination rectangle. Finally, the middle patch, 'm' is
+   // stretched both horizontally and vertically to fit the destination rectangle.
+   //
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class gizmo : public image
+   {
+   public:
+                           gizmo(char const* filename);
+                           gizmo(image_ptr img_);
+
+      virtual rect         limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

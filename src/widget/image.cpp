@@ -10,6 +10,9 @@
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // image implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    image::image(char const* filename)
     : _img(std::make_shared<canvas::image>(filename))
    {
@@ -35,48 +38,16 @@ namespace photon
       ctx.canvas().draw(get_image(), src, ctx.bounds);
    }
 
-   gizmo::gizmo(char const* filename)
-    : image(filename)
-   {}
-
-   gizmo::gizmo(image_ptr img_)
-    : image(img_)
-   {}
-
-   rect gizmo::limits(basic_context const& ctx) const
-   {
-      auto size_ = size();
-      return { size_.x, size_.y, full_extent, full_extent };
-   }
-
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // gizmo implementation
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    namespace
    {
-      //void gizmo_parts(rect src, rect dest, rect parts[9])
-      //{
-      //   // Subdivide a rect into 9 parts. src is the
-      //   // original size and dest is the resized rect.
-      //
-      //   float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
-      //   float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
-      //
-      //   auto corner = rect{ 0, 0, div_h, div_v };
-      //
-      //   parts[0] = corner.move(dest.left, dest.top);
-      //   parts[1] = corner.move(dest.left, dest.bottom - div_v);
-      //   parts[2] = corner.move(dest.right - div_h, dest.top);
-      //   parts[3] = corner.move(dest.right - div_h, dest.bottom - div_v);
-      //
-      //   parts[4] = max(parts[0], parts[1]).inset(0, div_v);
-      //   parts[5] = max(parts[0], parts[2]).inset(div_h, 0);
-      //   parts[6] = max(parts[2], parts[3]).inset(0, div_v);
-      //   parts[7] = max(parts[1], parts[3]).inset(div_h, 0);
-      //   parts[8] = dest.inset(div_h, div_v);
-      //}
-
       void gizmo_parts(rect src, rect dest, rect parts[9])
       {
-         // Subdivide a rect into 9 parts. src is the
-         // original size and dest is the resized rect.
+         // Subdivide a rect into 9 parts. src is the original size and dest
+         // is the resized rect. The 9 patches have a 1-pixel overlap to
+         // maintain seemless rendering.
 
          float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
          float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
@@ -94,6 +65,44 @@ namespace photon
          parts[7] = max(parts[1], parts[3]).inset(div_h, 0);
          parts[8] = dest.inset(div_h-1, div_v-1);
       }
+
+      void hgizmo_parts(rect src, rect dest, rect parts[3])
+      {
+         // Variation of gizmo_parts allowing horizontal resizing only.
+
+         float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
+         auto corner = rect{ 0, 0, div_h+1, src.height() };
+
+         parts[0] = corner.move(dest.left, dest.top);
+         parts[1] = corner.move(dest.right - (div_h+1), dest.top);
+         parts[2] = max(parts[0], parts[1]).inset(div_h, 0);
+      }
+
+      void vgizmo_parts(rect src, rect dest, rect parts[9])
+      {
+         // Variation of gizmo_parts allowing vertical resizing only.
+
+         float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
+         auto corner = rect{ 0, 0, src.width(), div_v+1 };
+
+         parts[0] = corner.move(dest.left, dest.top);
+         parts[1] = corner.move(dest.left, dest.bottom - (div_v+1));
+         parts[2] = max(parts[0], parts[1]).inset(0, div_v);
+      }
+   }
+
+   gizmo::gizmo(char const* filename)
+    : image(filename)
+   {}
+
+   gizmo::gizmo(image_ptr img_)
+    : image(img_)
+   {}
+
+   rect gizmo::limits(basic_context const& ctx) const
+   {
+      auto size_ = size();
+      return { size_.x, size_.y, full_extent, full_extent };
    }
 
    void gizmo::draw(context const& ctx)
@@ -104,13 +113,65 @@ namespace photon
       rect  src_bounds{ 0, 0, size_.x, size_.y };
 
       gizmo_parts(src_bounds, src_bounds, src);
-
-      //src_bounds.width(src_bounds.width()/2);
-      //src_bounds.height(src_bounds.height()/2);
-
       gizmo_parts(src_bounds, ctx.bounds, dest);
 
       for (int i = 0; i < 9; i++)
          ctx.canvas().draw(get_image(), src[i], dest[i]);
+   }
+
+   hgizmo::hgizmo(char const* filename)
+    : image(filename)
+   {}
+
+   hgizmo::hgizmo(image_ptr img_)
+    : image(img_)
+   {}
+
+   rect hgizmo::limits(basic_context const& ctx) const
+   {
+      auto size_ = size();
+      return { size_.x, size_.y, size_.y, full_extent };
+   }
+
+   void hgizmo::draw(context const& ctx)
+   {
+      rect  src[3];
+      rect  dest[3];
+      auto  size_ = size();
+      rect  src_bounds{ 0, 0, size_.x, size_.y };
+
+      hgizmo_parts(src_bounds, src_bounds, src);
+      hgizmo_parts(src_bounds, ctx.bounds, dest);
+      ctx.canvas().draw(get_image(), src[0], dest[0]);
+      ctx.canvas().draw(get_image(), src[1], dest[1]);
+      ctx.canvas().draw(get_image(), src[2], dest[2]);
+   }
+
+   vgizmo::vgizmo(char const* filename)
+    : image(filename)
+   {}
+
+   vgizmo::vgizmo(image_ptr img_)
+    : image(img_)
+   {}
+
+   rect vgizmo::limits(basic_context const& ctx) const
+   {
+      auto size_ = size();
+      return { size_.x, size_.y, size_.x, full_extent };
+   }
+
+   void vgizmo::draw(context const& ctx)
+   {
+      rect  src[3];
+      rect  dest[3];
+      auto  size_ = size();
+      rect  src_bounds{ 0, 0, size_.x, size_.y };
+
+      vgizmo_parts(src_bounds, src_bounds, src);
+      vgizmo_parts(src_bounds, ctx.bounds, dest);
+      ctx.canvas().draw(get_image(), src[0], dest[0]);
+      ctx.canvas().draw(get_image(), src[1], dest[1]);
+      ctx.canvas().draw(get_image(), src[2], dest[2]);
    }
 }

@@ -64,12 +64,35 @@ namespace photon
    // vertically to fit the destination rectangle. Finally, the middle patch, 'm' is
    // stretched both horizontally and vertically to fit the destination rectangle.
    //
+   // Variants of the gizmo are the hgizmo and vgizmo both having 3 patches
+   // allowing resizing in one dimension (horozontally or vertically) only.
+   //
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class gizmo : public image
    {
    public:
                            gizmo(char const* filename);
                            gizmo(image_ptr img_);
+
+      virtual rect         limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
+   };
+
+   class hgizmo : public image
+   {
+   public:
+                           hgizmo(char const* filename);
+                           hgizmo(image_ptr img_);
+
+      virtual rect         limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
+   };
+
+   class vgizmo : public image
+   {
+   public:
+                           vgizmo(char const* filename);
+                           vgizmo(image_ptr img_);
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);

@@ -32,6 +32,7 @@ namespace photon
          point    start;
          point    current = start;
          point    previous = start;
+			point		offset = point{ 0, 0 };
       };
 
                            tracker()   {}
@@ -49,9 +50,9 @@ namespace photon
       using info_ptr = std::unique_ptr<info>;
 
       virtual info_ptr     new_state(context const& ctx, point start);
-      virtual void         begin_tracking(context const& ctx, point start) = 0;
+      virtual void         begin_tracking(context const& ctx, info& track_info) = 0;
       virtual void         keep_tracking(context const& ctx, info& track_info) = 0;
-      virtual void         end_tracking(context const& ctx, point stop) = 0;
+      virtual void         end_tracking(context const& ctx, info& track_info) = 0;
 
    private:
 

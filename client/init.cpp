@@ -60,8 +60,18 @@ namespace client
             c.stroke_rect(ctx.bounds);
          }
       );
+      
+      auto filled_box = basic(
+         [](context const& ctx)
+         {
+            auto c = ctx.canvas();
+            c.fill_style(colors::white);
+            c.fill_rect(ctx.bounds);
+            c.stroke_rect(ctx.bounds);
+         }
+      );
 
-      auto ind = fixed_size({ 40, 20 }, box);
+      auto ind = fixed_size({ 40, 20 }, filled_box);
       auto slot = hsize(10, box);
       auto sldr = slider{ new_(std::move(ind)), new_(std::move(slot)), 0.3 };
       return yside_margin({ 50, 50 }, halign(0.5, std::move(sldr)));

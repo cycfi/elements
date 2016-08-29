@@ -22,7 +22,7 @@ namespace photon
                            slider(widget_ptr indicator, widget_ptr body, double init_value = 0.0)
                             : analog(indicator, body, init_value)
                            {}
-       
+
                            slider(slider&& rhs) = default;
       slider&              operator=(slider&& rhs) = default;
 
@@ -34,9 +34,11 @@ namespace photon
 
    protected:
 
+      virtual rect         indicator_bounds(context const& ctx) const;
       virtual void         prepare_indicator(context& ctx);
       virtual void         prepare_body(context& ctx);
       virtual double       value(context const& ctx, point p);
+      virtual void         begin_tracking(context const& ctx, info& track_info);
    };
 }
 

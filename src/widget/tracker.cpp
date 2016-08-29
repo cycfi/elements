@@ -14,11 +14,12 @@ namespace photon
       if (btn.is_pressed)
       {
          state = new_state(ctx, btn.pos);
-         begin_tracking(ctx, btn.pos);
+         begin_tracking(ctx, *state);
       }
       else
       {
-         end_tracking(ctx, btn.pos);
+         end_tracking(ctx, *state);
+         state.reset();
       }
       return this;
    }
@@ -27,6 +28,7 @@ namespace photon
    {
       state->previous = state->current;
       state->current = btn.pos;
+      state->current = state->current.move(-state->offset.x, -state->offset.y);
       keep_tracking(ctx, *state);
    }
 

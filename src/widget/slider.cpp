@@ -55,7 +55,7 @@ namespace photon
       }
    }
 
-   void slider::prepare_indicator(context& ctx)
+   rect slider::indicator_bounds(context const& ctx) const
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
@@ -67,15 +67,20 @@ namespace photon
 
       if (is_horiz)
       {
-         bounds.height(ind_h);
-         ctx.bounds = bounds.move((w - ind_w) * value(), 0);
+         bounds.width(ind_w);
+         return bounds.move((w - ind_w) * value(), 0);
       }
       else
       {
-         bounds.width(ind_w);
-         ctx.bounds = bounds.move(0, (h - ind_h) * (1.0 - value()));
+         bounds.height(ind_h);
+         return bounds.move(0, (h - ind_h) * (1.0 - value()));
          // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-value()
       }
+   }
+
+   void slider::prepare_indicator(context& ctx)
+   {
+      ctx.bounds = indicator_bounds(ctx);
    }
 
    double slider::value(context const& ctx, point p)
@@ -90,11 +95,31 @@ namespace photon
       auto  new_value = 0.0;
 
       if (is_horiz)
+      {
          new_value = (p.x - (bounds.left + (ind_w / 2))) / (w - ind_w);
+      }
       else
-         new_value = (p.y - (bounds.top + (ind_h / 2))) / (h - ind_h);
+      {
+         new_value = 1.0 - ((p.y - (bounds.top + (ind_h / 2))) / (h - ind_h));
+         // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
+      }
 
       clamp(new_value, 0.0, 1.0);
       return new_value;
+   }
+
+   void slider::begin_tracking(context const& ctx, info& track_info)
+   {
+      auto ind_bounds = indicator_bounds(ctx);
+      if (ind_bounds.includes(track_info.current))
+      {
+         auto cp = center_point(ind_bounds);
+         track_info.offset.x = track_info.current.x - cp.x;
+         track_info.offset.y = track_info.current.y - cp.y;
+      }
+      else
+      {
+         track(ctx, track_info.current);
+      }
    }
 }

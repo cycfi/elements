@@ -48,7 +48,7 @@ namespace photon
 
    widget* composite_base::click(context const& ctx, mouse_button btn)
    {
-      point p = ctx.cursor_pos();
+      point p = btn.pos;
 
       if (!empty())
       {
@@ -144,7 +144,7 @@ namespace photon
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, ctx.cursor_pos());
+         hit_info info = hit_element(ctx, ctx.cursor_pos()); // $$$ fixme $$$
          if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };

@@ -36,4 +36,17 @@ namespace photon
       // draw the subject
       content.draw(ctx);
    }
+   
+   void view::click(mouse_button btn)
+   {
+      context ctx { *this, &content, _current_bounds };
+      content.click(ctx, btn);
+   }
+
+   void view::drag(mouse_button btn)
+   {
+      context ctx { *this, &content, _current_bounds };
+      content.drag(ctx, btn);
+   }
 }
+

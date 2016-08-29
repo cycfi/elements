@@ -22,11 +22,11 @@ namespace photon
 
       struct info
       {
-			explicit	info(point start_)
-						 : start(start_)
-						{}
+         explicit info(point start_)
+                   : start(start_)
+                  {}
 
-						info(info const&) = default;
+                  info(info const&) = default;
          virtual  ~info() {}
 
          point    start;
@@ -34,24 +34,28 @@ namespace photon
          point    previous = start;
       };
 
-									tracker()	{}
-      virtual           	~tracker()	{}
+                           tracker()   {}
+      virtual              ~tracker()  {}
 
-      virtual widget*   	click(context const& ctx, mouse_button btn);
-      virtual void      	drag(context const& ctx, mouse_button btn);
+                           tracker(tracker&& rhs) = default;
+      tracker&             operator=(tracker&& rhs) = default;
+
+      virtual widget*      click(context const& ctx, mouse_button btn);
+      virtual void         drag(context const& ctx, mouse_button btn);
+      virtual bool       	is_control() const;
 
    protected:
 
-		using info_ptr = std::unique_ptr<info>;
+      using info_ptr = std::unique_ptr<info>;
 
-      virtual info_ptr  	new_state(context const& ctx, point start);
-      virtual void  			begin_tracking(context const& ctx, point start) = 0;
-      virtual void      	keep_tracking(context const& ctx, info& track_info) = 0;
-      virtual void      	end_tracking(context const& ctx, point stop) = 0;
+      virtual info_ptr     new_state(context const& ctx, point start);
+      virtual void         begin_tracking(context const& ctx, point start) = 0;
+      virtual void         keep_tracking(context const& ctx, info& track_info) = 0;
+      virtual void         end_tracking(context const& ctx, point stop) = 0;
 
-	private:
+   private:
 
-      info_ptr					state;
+      info_ptr             state;
    };
 }
 

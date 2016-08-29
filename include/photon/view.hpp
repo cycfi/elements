@@ -47,6 +47,9 @@ namespace photon
       void                 draw(rect dirty_);
       photon::canvas       canvas();
       point                cursor_pos() const;
+      void                 click(mouse_button btn);
+      void                 drag(mouse_button btn);
+
       point                size() const;
       void                 size(point size_);
       void                 limits(rect limits_) const;

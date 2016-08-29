@@ -13,12 +13,12 @@ namespace photon
    {
       if (btn.is_pressed)
       {
-         state = new_state(ctx, ctx.cursor_pos());
-         begin_tracking(ctx, ctx.cursor_pos());
+         state = new_state(ctx, btn.pos);
+         begin_tracking(ctx, btn.pos);
       }
       else
       {
-         end_tracking(ctx, ctx.cursor_pos());
+         end_tracking(ctx, btn.pos);
       }
       return this;
    }
@@ -26,12 +26,17 @@ namespace photon
    void tracker::drag(context const& ctx, mouse_button btn)
    {
       state->previous = state->current;
-      state->current = ctx.cursor_pos();
+      state->current = btn.pos;
       keep_tracking(ctx, *state);
    }
 
    tracker::info_ptr tracker::new_state(context const& ctx, point start)
    {
       return info_ptr{ new info{ start } };
+   }
+
+   bool tracker::is_control() const
+   {
+      return true;
    }
 }

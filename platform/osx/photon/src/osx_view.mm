@@ -34,8 +34,11 @@ namespace photon
    
    point view::cursor_pos() const
    {
-      auto pos = [NSEvent mouseLocation];
-      return { float(pos.x), float(pos.y) };
+      auto ns_view = get_mac_view(_impl);
+      auto global_pos = [NSEvent mouseLocation];
+      auto window_pos = [[ns_view window] convertScreenToBase : global_pos];
+      auto view_pos = [ns_view convertPoint : window_pos fromView: nil ];
+      return { float(view_pos.x), float(view_pos.y) };
    }
    
    point view::size() const

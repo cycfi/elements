@@ -46,13 +46,29 @@ namespace client
    auto spr_middle = halign(0.5, valign(0.5, spr));
    auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
 
+//   auto make_slider()
+//   {
+//      return yside_margin({ 50, 50 }, halign(0.5, hsize(50, slider{})));
+//   }
+
    auto make_slider()
    {
-      return yside_margin({ 50, 50 }, halign(0.5, hsize(50, slider{})));
+      auto box = basic(
+         [](context const& ctx)
+         {
+            auto c = ctx.canvas();
+            c.stroke_rect(ctx.bounds);
+         }
+      );
+
+      auto ind = fixed_size({ 40, 20 }, box);
+      auto slot = hsize(10, box);
+      auto sldr = slider{ new_(std::move(ind)), new_(std::move(slot)), 0.3 };
+      return yside_margin({ 50, 50 }, halign(0.5, std::move(sldr)));
    }
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(gzmo));
+      v.content.elements.push_back(new_(make_slider()));
    }
 }

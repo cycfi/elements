@@ -49,4 +49,30 @@ namespace photon
    );
 }
 
+- (void) mouseDown:(NSEvent*) event
+{
+   auto pos = [event locationInWindow];
+   photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   _view.click(btn);
+   [self setNeedsDisplay : YES];
+}
+
+- (void) mouseDragged:(NSEvent*) event
+{
+   auto pos = [event locationInWindow];
+   photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   _view.drag(btn);
+   [self setNeedsDisplay : YES];
+}
+
+- (void) mouseUp:(NSEvent*) event
+{
+   auto pos = [event locationInWindow];
+   photon::mouse_button btn = { false, 0, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   _view.click(btn);
+   [self setNeedsDisplay : YES];
+}
+
+
+
 @end

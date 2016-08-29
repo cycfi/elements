@@ -63,4 +63,12 @@ namespace photon
    {
       get_mac_view(_impl).needsDisplay = true;
    }
+   
+   void view::refresh(rect area)
+   {
+      [
+         get_mac_view(_impl)
+            setNeedsDisplayInRect : CGRectMake(area.left, area.right, area.width(), area.height())
+      ];
+   }
 }

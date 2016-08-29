@@ -52,6 +52,7 @@ namespace photon
       void                 limits(rect limits_) const;
 
       void                 refresh();
+      void                 refresh(rect area);
       rect                 dirty() const   { return _dirty; }
 
       layer_composite      content;

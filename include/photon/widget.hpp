@@ -10,12 +10,12 @@
 #include <photon/widget/align.hpp>
 #include <photon/widget/basic.hpp>
 //#include <photon/widget/button.hpp>
-//#include <photon/widget/composite.hpp>
+#include <photon/widget/composite.hpp>
+#include <photon/widget/dial.hpp>
 //#include <photon/widget/floating.hpp>
 //#include <photon/widget/gallery.hpp>
 //#include <photon/widget/icon.hpp>
 #include <photon/widget/image.hpp>
-//#include <photon/widget/knob.hpp>
 #include <photon/widget/layer.hpp>
 #include <photon/widget/margin.hpp>
 //#include <photon/widget/menu.hpp>

@@ -46,11 +46,6 @@ namespace client
    auto spr_middle = halign(0.5, valign(0.5, spr));
    auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
 
-//   auto make_slider()
-//   {
-//      return yside_margin({ 50, 50 }, halign(0.5, hsize(50, slider{})));
-//   }
-
    auto make_slider()
    {
       auto box = basic(
@@ -78,22 +73,37 @@ namespace client
       auto hind = fixed_size({ 20, 40 }, filled_box);
       auto hslot = vsize(10, box);
       auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
-      
-      //return margin({ 50, 50, 50, 50 }, valign(0.5, std::move(hsldr)));
-      
-      //return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
 
-      //return hsldr;
-      
       return
          vtile(
             margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr))),
             margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
          );
    }
+   
+   auto make_dial()
+   {
+      auto circle = basic(
+         [](context const& ctx)
+         {
+            auto c = ctx.canvas();
+            auto center = center_point(ctx.bounds);
+            auto r = std::min(ctx.bounds.width(), ctx.bounds.height()) / 2;
+
+            c.begin_path();
+            c.circle(photon::circle{ center.x, center.y, r });
+            c.stroke();
+         }
+      );
+      
+      auto ind = fixed_size({ 16, 16 }, circle);
+      auto di = dial{ new_(std::move(ind)), new_(circle), 0.0 };
+
+      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
+   }
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(make_slider()));
+      v.content.elements.push_back(new_(make_dial()));
    }
 }

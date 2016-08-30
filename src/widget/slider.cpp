@@ -11,13 +11,19 @@
 
 namespace photon
 {
+   slider::slider(widget_ptr indicator, widget_ptr body, double init_value)
+    : _indicator(indicator)
+    , _body(body)
+    , _value(init_value)
+    , _is_horiz(false)
+   {}
+
    rect slider::limits(basic_context const& ctx) const
    {
       auto  limits_ = body()->limits(ctx);
       auto  ind_limits = indicator()->limits(ctx);
-      auto  is_horiz = limits_.right > limits_.bottom;
 
-      if (is_horiz)
+      if ((_is_horiz = limits_.right > limits_.bottom))
       {
          limits_.top = std::max<float>(limits_.top, ind_limits.top);
          limits_.bottom = std::max<float>(limits_.bottom, ind_limits.bottom);
@@ -35,23 +41,35 @@ namespace photon
       return limits_;
    }
 
-   void slider::prepare_body(context& ctx)
+   void slider::draw(context const& ctx)
    {
-      auto  limits_ = body()->limits(ctx);
-      auto  bounds = ctx.bounds;
-      auto  w = bounds.width();
-      auto  h = bounds.height();
-      auto  is_horiz = limits_.right > limits_.bottom;
-      
-      if (is_horiz)
+      if (intersects(ctx.bounds, ctx.view.dirty()))
       {
-         bounds.height(std::min<float>(limits_.bottom, h));
-         ctx.bounds = center_v(bounds, ctx.bounds);
-      }
-      else
-      {
-         bounds.width(std::min<float>(limits_.right, w));
-         ctx.bounds = center_h(bounds, ctx.bounds);
+         {
+            auto  limits_ = body()->limits(ctx);
+            auto  bounds = ctx.bounds;
+
+            if (_is_horiz)
+            {
+               auto h = bounds.height();
+               bounds.height(std::min<float>(limits_.bottom, h));
+               bounds = center_v(bounds, ctx.bounds);
+            }
+            else
+            {
+               auto w = bounds.width();
+               bounds.width(std::min<float>(limits_.right, w));
+               bounds = center_h(bounds, ctx.bounds);
+            }
+
+            context sctx { ctx, _body.get(), bounds };
+            _body->draw(sctx);
+         }
+         {
+            context sctx { ctx, _indicator.get(), ctx.bounds };
+            sctx.bounds = indicator_bounds(sctx);
+            _indicator->draw(sctx);
+         }
       }
    }
 
@@ -60,14 +78,11 @@ namespace photon
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  body_limits_ = body()->limits(ctx);
-      auto  is_horiz = body_limits_.right > body_limits_.bottom;
-
       auto  limits_ = indicator()->limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;
 
-      if (is_horiz)
+      if (_is_horiz)
       {
          bounds.width(ind_w);
          return bounds.move((w - ind_w) * value(), 0);
@@ -80,25 +95,18 @@ namespace photon
       }
    }
 
-   void slider::prepare_indicator(context& ctx)
-   {
-      ctx.bounds = indicator_bounds(ctx);
-   }
-
-   double slider::value(context const& ctx, point p)
+   double slider::value_from_point(context const& ctx, point p)
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  body_limits_ = body()->limits(ctx);
-      auto  is_horiz = body_limits_.right > body_limits_.bottom;
 
       auto  limits_ = indicator()->limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;
       auto  new_value = 0.0;
 
-      if (is_horiz)
+      if (_is_horiz)
       {
          new_value = (p.x - (bounds.left + (ind_w / 2))) / (w - ind_w);
       }
@@ -121,9 +129,22 @@ namespace photon
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
       }
-      else
+   }
+
+   void slider::keep_tracking(context const& ctx, info& track_info)
+   {
+      if (track_info.current != track_info.previous)
       {
-         track(ctx, track_info.current);
+         double new_value = value_from_point(ctx, track_info.current);
+         if (_value != new_value)
+         {
+            _value = new_value;
+            ctx.view.refresh(ctx.bounds);
+         }
       }
+   }
+
+   void slider::end_tracking(context const& ctx, info& track_info)
+   {
    }
 }

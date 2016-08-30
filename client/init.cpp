@@ -104,6 +104,6 @@ namespace client
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(make_dial()));
+      v.content.elements.push_back(new_(make_slider()));
    }
 }

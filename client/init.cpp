@@ -71,10 +71,25 @@ namespace client
          }
       );
 
-      auto ind = fixed_size({ 40, 20 }, filled_box);
-      auto slot = hsize(10, box);
-      auto sldr = slider{ new_(std::move(ind)), new_(std::move(slot)), 0.3 };
-      return yside_margin({ 50, 50 }, halign(0.5, std::move(sldr)));
+      auto vind = fixed_size({ 40, 20 }, filled_box);
+      auto vslot = hsize(10, box);
+      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)), 0.3 };
+
+      auto hind = fixed_size({ 20, 40 }, filled_box);
+      auto hslot = vsize(10, box);
+      auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
+      
+      //return margin({ 50, 50, 50, 50 }, valign(0.5, std::move(hsldr)));
+      
+      //return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
+
+      //return hsldr;
+      
+      return
+         vtile(
+            margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr))),
+            margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
+         );
    }
 
    void  init(view& v)

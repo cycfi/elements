@@ -41,8 +41,8 @@ namespace photon
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  is_horiz = w > h;
-
+      auto  is_horiz = limits_.right > limits_.bottom;
+      
       if (is_horiz)
       {
          bounds.height(std::min<float>(limits_.bottom, h));
@@ -60,7 +60,9 @@ namespace photon
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  is_horiz = w > h;
+      auto  body_limits_ = body()->limits(ctx);
+      auto  is_horiz = body_limits_.right > body_limits_.bottom;
+
       auto  limits_ = indicator()->limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;
@@ -88,7 +90,9 @@ namespace photon
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  is_horiz = w > h;
+      auto  body_limits_ = body()->limits(ctx);
+      auto  is_horiz = body_limits_.right > body_limits_.bottom;
+
       auto  limits_ = indicator()->limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;

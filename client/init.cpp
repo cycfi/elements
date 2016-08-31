@@ -48,30 +48,32 @@ namespace client
 
    auto make_slider()
    {
-      auto box = basic(
-         [](context const& ctx)
+      struct box : widget
+      {
+         void draw(context const& ctx)
          {
             auto c = ctx.canvas();
             c.stroke_rect(ctx.bounds);
          }
-      );
+      };
       
-      auto filled_box = basic(
-         [](context const& ctx)
+      struct filled_box : widget
+      {
+         void draw(context const& ctx)
          {
             auto c = ctx.canvas();
             c.fill_style(colors::white);
             c.fill_rect(ctx.bounds);
             c.stroke_rect(ctx.bounds);
          }
-      );
+      };
 
-      auto vind = fixed_size({ 40, 20 }, filled_box);
-      auto vslot = hsize(10, box);
+      auto vind = fixed_size({ 40, 20 }, filled_box{});
+      auto vslot = hsize(10, box{});
       auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)), 0.3 };
 
-      auto hind = fixed_size({ 20, 40 }, filled_box);
-      auto hslot = vsize(10, box);
+      auto hind = fixed_size({ 20, 40 }, filled_box{});
+      auto hslot = vsize(10, box{});
       auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
 
       return

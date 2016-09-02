@@ -5,6 +5,7 @@
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
 #import "PhotonView.hpp"
+#import <cairo-quartz.h>
 
 namespace photon
 {
@@ -16,6 +17,28 @@ namespace photon
       {
          v._impl = (__bridge view_impl*) self_;
       }
+
+      static void new_surface(view& v, PhotonView* self_)
+      {
+         CGContextRef mac_context = (CGContextRef) NSGraphicsContext.currentContext.graphicsPort;
+         v._surface = cairo_quartz_surface_create_for_cg_context(mac_context, self_.bounds.size.width, self_.bounds.size.height);
+      }
+
+      static void delete_surface(view& v)
+      {
+         cairo_surface_destroy(v._surface);
+      }
+
+      static void new_context(view& v)
+      {
+         v._context = cairo_create(v._surface);
+      }
+
+      static void delete_context(view& v)
+      {
+         cairo_destroy(v._context);
+      }
+
    };
 };
 
@@ -39,6 +62,13 @@ namespace photon
 {
    [super drawRect:dirty];
 
+   using photon::platform_access;
+
+   platform_access::new_surface(_view, self);
+   platform_access::new_context(_view);
+
+	// === Use _surface and _context in platform-independent code here:
+   
    _view.draw(
       {
          float(dirty.origin.x),
@@ -47,6 +77,11 @@ namespace photon
          float(dirty.size.height)
       }
    );
+
+	// === End of platform-independent code.
+
+   platform_access::delete_context(_view);
+   platform_access::delete_surface(_view);
 }
 
 - (void) mouseDown:(NSEvent*) event

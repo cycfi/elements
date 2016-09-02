@@ -13,6 +13,7 @@
 #include <photon/widget/widget.hpp>
 #include <photon/widget/layer.hpp>
 #include <memory>
+#include <cairo.h>
 
 namespace photon
 {
@@ -71,6 +72,9 @@ namespace photon
       view_state_ptr       _state;
       rect                 _dirty;
       rect                 _current_bounds;
+      
+      cairo_surface_t*     _surface;
+      cairo_t*             _context;
    };
 }
 

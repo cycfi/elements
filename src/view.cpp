@@ -11,32 +11,38 @@ namespace photon
 {
    void view::draw(rect dirty_)
    {
-      _dirty = dirty_;
+      cairo_set_line_width(_context, 5);
+      cairo_set_source_rgb(_context, 0, 0, 0);
+      cairo_rectangle(_context, 10, 10, 100, 100);
+      cairo_stroke(_context);
 
-      basic_context bctx{ *this };
-      auto limits_ = content.limits(bctx);
-      limits(limits_);
 
-      auto size_ = size();
-      clamp(size_.x, limits_.left, limits_.right);
-      clamp(size_.y, limits_.top, limits_.bottom);
-      if (size_ != size())
-         size(size_);
-
-      rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
-
-      // layout the subject only if the window bounds changes
-      context ctx{ *this, &content, subj_bounds };
-      if (subj_bounds != _current_bounds)
-      {
-         _current_bounds = subj_bounds;
-         content.layout(ctx);
-      }
-
-      // draw the subject
-      content.draw(ctx);
+      //_dirty = dirty_;
+      //
+      //basic_context bctx{ *this };
+      //auto limits_ = content.limits(bctx);
+      //limits(limits_);
+      //
+      //auto size_ = size();
+      //clamp(size_.x, limits_.left, limits_.right);
+      //clamp(size_.y, limits_.top, limits_.bottom);
+      //if (size_ != size())
+      //   size(size_);
+      //
+      //rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
+      //
+      //// layout the subject only if the window bounds changes
+      //context ctx{ *this, &content, subj_bounds };
+      //if (subj_bounds != _current_bounds)
+      //{
+      //   _current_bounds = subj_bounds;
+      //   content.layout(ctx);
+      //}
+      //
+      //// draw the subject
+      //content.draw(ctx);
    }
-   
+
    void view::click(mouse_button btn)
    {
       context ctx { *this, &content, _current_bounds };
@@ -49,4 +55,3 @@ namespace photon
       content.drag(ctx, btn);
    }
 }
-

@@ -24,18 +24,13 @@ namespace elf
 
       void set_gradient(rect bounds, canvas& cnv)
       {
-         //auto gradient = canvas::linear_gradient{
-         //   { bounds.left, bounds.top },
-         //   { bounds.right, bounds.top }
-         //};
-         //cnv.fill_style(gradient);
-         //
-         //canvas::color_stop const stops[] =
-         //{
-         //   { 0.0, { 255, 255, 255, 150 } },
-         //   { 1.0, { 255, 255, 255, 150 } }
-         //};
-         //cnv.color_space(stops, 2);
+         auto gradient = canvas::linear_gradient{
+            { bounds.left, bounds.top },
+            { bounds.right, bounds.top }
+         };
+         gradient.add_color_stop({ 0.0, { 255, 255, 255, 150 } });
+         gradient.add_color_stop({ 1.0, { 127, 127, 127, 100 } });
+         cnv.fill_style(gradient);
       }
 
       void draw_fret(rect bounds, canvas& cnv)

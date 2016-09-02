@@ -88,7 +88,8 @@ namespace client
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(drawings{}));
-      //v.content.elements.push_back(new_(frets_));
+      //v.content.elements.push_back(new_(drawings{}));
+      v.content.elements.push_back(new_(background{}));
+      v.content.elements.push_back(new_(frets_));
    }
 }

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D07FE141D6857FB00D7EE92 /* osx_canvas.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE131D6857FB00D7EE92 /* osx_canvas.mm */; };
 		5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE151D685A0B00D7EE92 /* osx_view.mm */; };
 		5D07FE191D68638800D7EE92 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE181D68638800D7EE92 /* context.cpp */; };
 		5D07FE1B1D6868E800D7EE92 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 5D07FE1A1D6868E800D7EE92 /* include */; };
@@ -35,7 +34,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5D07FE131D6857FB00D7EE92 /* osx_canvas.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_canvas.mm; path = photon/src/osx_canvas.mm; sourceTree = SOURCE_ROOT; };
 		5D07FE151D685A0B00D7EE92 /* osx_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_view.mm; path = photon/src/osx_view.mm; sourceTree = SOURCE_ROOT; };
 		5D07FE181D68638800D7EE92 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
 		5D07FE1A1D6868E800D7EE92 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../include; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 				5DA584981D6156CD004276C2 /* main.m */,
 				5DA584991D6156CD004276C2 /* PhotonView.hpp */,
 				5DA5849A1D6156CD004276C2 /* PhotonView.mm */,
-				5D07FE131D6857FB00D7EE92 /* osx_canvas.mm */,
 				5D07FE151D685A0B00D7EE92 /* osx_view.mm */,
 			);
 			indentWidth = 3;
@@ -260,7 +257,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D07FE141D6857FB00D7EE92 /* osx_canvas.mm in Sources */,
 				5DA584AE1D618C41004276C2 /* view.cpp in Sources */,
 				5D3806AF1D70926100C6EB77 /* image.cpp in Sources */,
 				5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */,

@@ -9,13 +9,19 @@
 
 namespace photon
 {
+   photon::canvas view::canvas()
+   {
+      return photon::canvas{ _context };
+   }
+
    void view::draw(rect dirty_)
    {
+      setup_context();
+   
       cairo_set_line_width(_context, 5);
       cairo_set_source_rgb(_context, 0, 0, 0);
       cairo_rectangle(_context, 10, 10, 100, 100);
       cairo_stroke(_context);
-
 
       //_dirty = dirty_;
       //
@@ -41,6 +47,9 @@ namespace photon
       //
       //// draw the subject
       //content.draw(ctx);
+      
+      cairo_destroy(_context);
+      cairo_surface_destroy(_surface);
    }
 
    void view::click(mouse_button btn)

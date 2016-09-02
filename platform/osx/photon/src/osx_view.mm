@@ -6,8 +6,8 @@
 =================================================================================================*/
 #import <Cocoa/Cocoa.h>
 #include <photon/view.hpp>
-#include "osx_view_state.hpp"
 #include "PhotonView.hpp"
+#import <cairo-quartz.h>
 
 namespace photon
 {
@@ -21,15 +21,18 @@ namespace photon
 
    view::view()
     : _impl(nullptr)
-    , _state(std::make_shared<view_state>())
    {
       client::init(*this);
    }
 
-   photon::canvas view::canvas()
+   void view::setup_context()
    {
-      auto ctx = (CGContextRef) [[NSGraphicsContext currentContext] graphicsPort];
-      return photon::canvas{(canvas_impl*)ctx, *this};
+      auto ns_view = get_mac_view(_impl);
+      auto w = [ns_view bounds].size.width;
+      auto h = [ns_view bounds].size.height;
+      auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
+      _surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
+      _context = cairo_create(_surface);
    }
 
    point view::cursor_pos() const

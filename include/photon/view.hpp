@@ -32,7 +32,6 @@ namespace client
 namespace photon
 {
    struct view_impl;
-   struct view_state;
    class platform_access;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,15 +63,15 @@ namespace photon
 
    private:
 
+      void                 setup_context();
+
       friend class platform_access;
       friend class canvas;
-      using view_state_ptr = std::shared_ptr<view_state>;
 
       view_impl*           _impl;
-      view_state_ptr       _state;
       rect                 _dirty;
       rect                 _current_bounds;
-      
+
       cairo_surface_t*     _surface;
       cairo_t*             _context;
    };

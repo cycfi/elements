@@ -8,104 +8,43 @@
 #include <photon/support.hpp>
 #include <photon/widget.hpp>
 
+#include <elf/frets.hpp>
+
 namespace client
 {
-   using namespace photon;
+   namespace ph = photon;
 
-   auto box = basic(
-      [](context const& ctx)
+   using ph::widget;
+   using ph::rect;
+   using ph::context;
+   using ph::basic_context;
+   using ph::color;
+   using ph::view;
+
+   auto frets_ = align_middle(align_center(elf::frets{}));
+
+   // Main window background color
+   auto bkd_color = color{ 35, 35, 37, 255 };
+
+   struct background : widget
+   {
+      rect limits(basic_context const& ctx) const
       {
-         auto c = ctx.canvas();
-         c.fill_style(colors::gold.opacity(0.8));
-         c.fill_round_rect(ctx.bounds, 4);
+         // Main window limits
+         return { 640, 480, 640*2, 480*2 };
       }
-   );
 
-   auto make_vtile()
-   {
-      auto _box = top_margin(
-         { 20 },
-         hsize(100, box)
-      );
-
-      return margin(
-         { 20, 0, 20, 20 },
-         vtile(
-            halign(0.0, _box),
-            halign(0.2, _box),
-            halign(0.4, _box),
-            halign(0.6, _box),
-            halign(0.8, _box),
-            halign(1.0, _box)
-         )
-      );
-   }
-
-   auto img = image{"assets/images/space.jpg"};
-   auto spr =  sprite<128, 128>{"assets/images/knob_sprites_white_128x128.png"};
-   auto spr_middle = halign(0.5, valign(0.5, spr));
-   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
-
-   auto make_slider()
-   {
-      struct box : widget
+      void draw(context const& ctx)
       {
-         void draw(context const& ctx)
-         {
-            auto c = ctx.canvas();
-            c.stroke_rect(ctx.bounds);
-         }
-      };
-      
-      struct filled_box : widget
-      {
-         void draw(context const& ctx)
-         {
-            auto c = ctx.canvas();
-            c.fill_style(colors::white);
-            c.fill_rect(ctx.bounds);
-            c.stroke_rect(ctx.bounds);
-         }
-      };
-
-      auto vind = fixed_size({ 40, 20 }, filled_box{});
-      auto vslot = hsize(10, box{});
-      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)), 0.3 };
-
-      auto hind = fixed_size({ 20, 40 }, filled_box{});
-      auto hslot = vsize(10, box{});
-      auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
-
-      return
-         vtile(
-            margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr))),
-            margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
-         );
-   }
-   
-   auto make_dial()
-   {
-      auto circle = basic(
-         [](context const& ctx)
-         {
-            auto c = ctx.canvas();
-            auto center = center_point(ctx.bounds);
-            auto r = std::min(ctx.bounds.width(), ctx.bounds.height()) / 2;
-
-            c.begin_path();
-            c.circle(photon::circle{ center.x, center.y, r });
-            c.stroke();
-         }
-      );
-      
-      auto ind = fixed_size({ 16, 16 }, circle);
-      auto di = dial{ new_(std::move(ind)), new_(circle), 0.0 };
-
-      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
-   }
+         auto cnv = ctx.canvas();
+         cnv.fill_style(bkd_color);
+         cnv.fill_rect(ctx.bounds);
+      }
+   };
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(make_slider()));
+      v.content.elements.push_back(new_(background{}));
+      v.content.elements.push_back(new_(frets_));
    }
 }

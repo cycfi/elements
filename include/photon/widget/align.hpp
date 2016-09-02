@@ -8,6 +8,7 @@
 #define PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016
 
 #include <photon/widget/proxy.hpp>
+#include <photon/support/context.hpp>
 #include <memory>
 
 namespace photon

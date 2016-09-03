@@ -1,5 +1,5 @@
 /*=================================================================================================
-   Copyright (cnv) 2016 Joel de Guzman
+   Copyright (c) 2016 Joel de Guzman
 
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
@@ -101,12 +101,16 @@ namespace elf
       float const scale_len = 0.8;
       float const w = 600 * scale_len;
       float const h = w * 0.15;
-      rect const  bbox = { 0, 0, 640, 150 };
+      rect const bbox = { 0, 0, 640, 150 };
 
-      auto cnv = ctx.canvas();
-      auto state = cnv.new_state();
-      auto scale = ctx.bounds.width() / bbox.width();
+      auto  cnv = ctx.canvas();
+      auto  state = cnv.new_state();
+      auto  scale = ctx.bounds.width() / bbox.width();
+      float sch = bbox.height() * scale;
+      float offs = (ctx.bounds.height()-sch)/2;
+
       cnv.scale({ scale, scale });
+      cnv.translate({ 0, offs/scale });
       draw_frets(center({ 0, 0, w, h }, bbox), cnv);
 
       // The bridge

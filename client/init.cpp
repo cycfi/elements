@@ -21,10 +21,9 @@ namespace client
    using ph::basic_context;
    using ph::color;
    using ph::view;
-   
-   namespace colors = ph::colors;
+   using ph::layer;
 
-   auto frets_ = align_middle(align_center(elf::frets{}));
+   namespace colors = ph::colors;
 
    // Main window background color
    auto bkd_color = color{ 35, 35, 37, 255 };
@@ -85,11 +84,16 @@ namespace client
          
       }
    };
+   
+   //auto gtr = layer(elf::frets{});
+   
+   auto vpups = align_middle(align_center(elf::frets{}));
+
 
    void  init(view& v)
    {
       //v.content.elements.push_back(new_(drawings{}));
       v.content.elements.push_back(new_(background{}));
-      v.content.elements.push_back(new_(frets_));
+      v.content.elements.push_back(new_(vpups));
    }
 }

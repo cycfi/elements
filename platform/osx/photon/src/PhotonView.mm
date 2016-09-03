@@ -134,8 +134,11 @@ namespace photon
 
 - (void)mouseMoved:(NSEvent*) event
 {
-    [self displayIfNeeded];
-    [super mouseMoved: event];
+   auto pos = [event locationInWindow];
+   pos = [self convertPoint:pos fromView:nil];
+   _view.cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::hovering);
+   [self displayIfNeeded];
+   [super mouseMoved: event];
 }
 
 

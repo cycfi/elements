@@ -128,13 +128,25 @@ namespace photon
 
    bool composite_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      if (status == cursor_tracking::leaving && _cursor_info.element)
+      {
+         context ectx{ ctx, _cursor_info.element, _cursor_info.bounds };
+         _cursor_info.element->cursor(ectx, p, status);
+         return true;
+      }
+
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
          if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
-            return info.element->cursor(ectx, p, status);
+            bool r = info.element->cursor(ectx, p, status);
+            if (r)
+               _cursor_info = info;
+            else
+               _cursor_info = hit_info{};
+            return r;
          }
       }
       return false;

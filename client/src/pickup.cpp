@@ -7,6 +7,7 @@
 #include <elf/pickup.hpp>
 #include <photon/view.hpp>
 #include <cmath>
+
 #include <iostream>
 
 namespace elf
@@ -21,12 +22,13 @@ namespace elf
       {
          auto state = canvas_.new_state();
 
+         float l = bounds.left;
+         float t = bounds.top;
          float w = bounds.width();
          float h = bounds.height();
 
-         canvas_.translate({ bounds.left + (w/2), bounds.top + (h/2) });
-         bounds = bounds.move(-(bounds.left + (w/2)), -(bounds.top + (h/2)));
-
+         canvas_.translate({ l+(w/2), t+(h/2) });
+         bounds = bounds.move(-(l+(w/2)), -(t+(h/2)));
          canvas_.rotate(slant);
          return state;
       }
@@ -37,7 +39,7 @@ namespace elf
 
          canvas_.begin_path();
          canvas_.round_rect(bounds, bounds.width()/2);
-         return canvas_.hit_test(mp);
+         return canvas_.hit_test(canvas_.transform_point(mp));
       }
 
       void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx)
@@ -67,7 +69,7 @@ namespace elf
 
          // Glow
          auto   alpha = glow_color.alpha;
-         
+
          bounds = bounds.inset(-1, -1);
          canvas_.stroke_style(glow_color.opacity(alpha * 0.4));
          canvas_.stroke_round_rect(bounds, bounds.width()/2);
@@ -95,24 +97,22 @@ namespace elf
       auto  canvas_ = ctx.canvas();
       bool  hilite = false;
 
-      hilite = ctx.bounds.includes(mp);
+      //hilite = ctx.bounds.includes(mp);
 
       if (_type == single)
       {
-         //hilite = hit_test_pickup(r1, _slant, mp, canvas_);
+         hilite = hit_test_pickup(r1, _slant, mp, canvas_);
          draw_pickup(r1, _slant, hilite, ctx);
       }
       else
       {
-//         hilite =
-//            hit_test_pickup(r1, _slant, mp, canvas_) ||
-//            hit_test_pickup(r2, _slant, mp, canvas_)
-//            ;
+         hilite =
+            hit_test_pickup(r1, _slant, mp, canvas_) ||
+            hit_test_pickup(r2, _slant, mp, canvas_)
+            ;
          draw_pickup(r1, _slant, hilite, ctx);
          draw_pickup(r2, _slant, hilite, ctx);
       }
-
-      std::cout <<  "Drawing... hilite: " << hilite << std::endl;
    }
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
@@ -121,6 +121,19 @@ namespace elf
 
 
       ctx.view.refresh();
+
+//      switch (status)
+//      {
+//         case cursor_tracking::entering:
+//            std::cout << "entering" << std::endl;
+//            break;
+//         case cursor_tracking::hovering:
+//            std::cout << "hovering" << std::endl;
+//            break;
+//         case cursor_tracking::leaving:
+//            std::cout << "leaving" << std::endl;
+//            break;
+//      };
 
       //ctx.view.refresh(ctx.bounds);
       //ctx.view.draw(ctx.bounds);

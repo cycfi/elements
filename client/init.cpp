@@ -90,7 +90,7 @@ namespace client
       layer(
          elf::pickup{ 0.42, elf::pickup::double_, 0 },
          elf::pickup{ 0.28, elf::pickup::single, 0 },
-         elf::pickup{ 0.13, elf::pickup::double_, 0 },
+         elf::pickup{ 0.13, elf::pickup::double_, 0.2 },
          elf::frets{}
       );
    auto vpups = align_middle(align_center(gtr));

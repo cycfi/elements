@@ -49,9 +49,9 @@ namespace photon
 
       struct hit_info
       {
-         widget*   element;
-         rect      bounds;
-         int       index;
+         widget*   element    = nullptr;
+         rect      bounds     = empty_rect;
+         int       index      = -1;
       };
 
       using iterator = widget_ptr*;
@@ -72,9 +72,10 @@ namespace photon
 
    private:
 
-   	int			            _focus = -1;
+      int                     _focus = -1;
       int                     _drag_tracking = -1;
       hit_info                _click_info;
+      hit_info                _cursor_info;
    };
 
    template <typename Container, typename Base>

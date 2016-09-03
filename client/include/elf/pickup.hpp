@@ -20,8 +20,10 @@ namespace elf
    {
    public:
 
-      pickup(float pos, bool single, float slant)
-       : _pos(pos), _single(single), _slant(slant)
+      enum type { single, double_ };
+
+      pickup(float pos, type type_, float slant)
+       : _pos(pos), _type(type_), _slant(slant)
       {}
 
       virtual rect      limits(basic_context const& ctx) const;
@@ -38,7 +40,7 @@ namespace elf
       void              pickup_bounds(context const& ctx, rect& r1, rect& r2) const;
 
       float             _pos;
-      bool              _single;
+      type              _type;
       float             _slant;
    };
 }

@@ -9,6 +9,7 @@
 #include <photon/widget.hpp>
 
 #include <elf/frets.hpp>
+#include <elf/pickup.hpp>
 
 namespace client
 {
@@ -43,7 +44,7 @@ namespace client
          cnv.fill_rect(ctx.bounds);
       }
    };
-   
+
    struct drawings : widget
    {
       void draw(context const& ctx)
@@ -59,7 +60,7 @@ namespace client
              cnv.fill_rect(r);
              cnv.stroke_rect(r);
          }
-         
+
          {
              auto r = rect{ 50, 5, 100, 80 };
              auto grad = canvas::linear_gradient{ { 50, 5 }, { 50, 50 } };
@@ -69,7 +70,7 @@ namespace client
              cnv.fill_round_rect(r, 5);
              cnv.stroke_round_rect(r, 5);
          }
-         
+
          {
              auto r = rect{ 80, 30, 130, 110 };
              auto cp = center_point(r);
@@ -80,14 +81,19 @@ namespace client
              cnv.fill_round_rect(r, 10);
              cnv.stroke_round_rect(r, 10);
          }
-         
-         
+
+
       }
    };
-   
-   //auto gtr = layer(elf::frets{});
-   
-   auto vpups = align_middle(align_center(elf::frets{}));
+
+   auto gtr =
+      layer(
+         elf::pickup{ 0.42, elf::pickup::double_, 0 },
+         elf::pickup{ 0.28, elf::pickup::single, 0 },
+         elf::pickup{ 0.13, elf::pickup::double_, 0 },
+         elf::frets{}
+      );
+   auto vpups = align_middle(align_center(gtr));
 
 
    void  init(view& v)

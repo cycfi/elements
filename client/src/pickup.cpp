@@ -41,10 +41,8 @@ namespace elf
          auto fill_color = theme.controls_color;
 
          // Fill
-         canvas_.begin_path();
-         canvas_.round_rect(bounds, bounds.width()/2);
          canvas_.fill_style(fill_color);
-         canvas_.fill();
+         canvas_.fill_round_rect(bounds, bounds.width()/2);
 
          if (hilite)
          {
@@ -53,26 +51,18 @@ namespace elf
          }
 
          // Outline
-         canvas_.stroke_style(outline_color);
+         canvas_.stroke_style(outline_color.opacity(0.3));
          canvas_.line_width(2);
-         canvas_.stroke();
+         canvas_.stroke_round_rect(bounds, bounds.width()/2);
 
-         //// Glow
-         //float glow_size = 10;
-         //
-         //canvas_.begin_path();
-         //auto outer_r = bounds.inset(-glow_size, -glow_size);
-         //canvas_.round_rect(outer_r, outer_r.width()/2);
-         //canvas_.round_rect(bounds, bounds.width()/2);
-         //canvas_.path_winding(photon::canvas::hole);
-         //
-         //photon::paint glow_paint
-         //   = canvas_.box_gradient(bounds, bounds.width()/2, glow_size
-         //    , glow_color, { 0, 0, 0, 0 }
-         //   );
-         //
-         //canvas_.fill_paint(glow_paint);
-         //canvas_.fill();
+         // Glow
+         bounds = bounds.inset(-1, -1);
+         canvas_.stroke_style(glow_color.opacity(0.4));
+         canvas_.stroke_round_rect(bounds, bounds.width()/2);
+
+         bounds = bounds.inset(-1, -1);
+         canvas_.stroke_style(glow_color.opacity(0.1));
+         canvas_.stroke_round_rect(bounds, bounds.width()/2);
       }
    }
 
@@ -86,13 +76,13 @@ namespace elf
       rect  r1, r2;
       pickup_bounds(ctx, r1, r2);
       rect  pu_bounds = r1;
-      if (!_single)
+      if (_type == double_)
          pu_bounds.right = r2.right;
 
       //auto  mp = ctx.cursor_pos();
       //auto  canvas_ = ctx.canvas();
 
-      if (_single)
+      if (_type == single)
       {
          //bool hilite = hit_test_pickup(r1, _slant, mp, canvas_);
          bool hilite = false;
@@ -121,14 +111,14 @@ namespace elf
 
       float pu_w = h * 0.25;
       rect  pu_bounds  = { 0, 0, pu_w, h };
-      if (!_single)
+      if (_type == double_)
          pu_bounds.right += pu_w + 4;
 
       rect  active_bounds = { 0, 0, w + pu_bounds.width(), h };
       active_bounds = center(active_bounds, bounds);
       pu_bounds = align(pu_bounds, active_bounds, _pos, 0.5);
 
-      if (_single)
+      if (_type == single)
       {
          r1 = pu_bounds;
       }

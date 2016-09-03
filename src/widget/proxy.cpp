@@ -70,11 +70,11 @@ namespace photon
       return subject().text(sctx, info);
    }
 
-   bool proxy_base::cursor(context const& ctx, point p)
+   bool proxy_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().cursor(sctx, p);
+      return subject().cursor(sctx, p, status);
    }
 
    bool proxy_base::scroll(context const& ctx, point p)

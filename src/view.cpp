@@ -58,4 +58,12 @@ namespace photon
       context ctx { *this, &content, _current_bounds };
       content.drag(ctx, btn);
    }
+   
+   void view::cursor(point p, cursor_tracking status)
+   {
+      context ctx { *this, &content, _current_bounds };
+      content.cursor(ctx, p, status);
+   }
 }
+
+

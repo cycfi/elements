@@ -49,6 +49,7 @@ namespace photon
       point                cursor_pos() const;
       void                 click(mouse_button btn);
       void                 drag(mouse_button btn);
+      void                 cursor(point p, cursor_tracking status);
 
       point                size() const;
       void                 size(point size_);

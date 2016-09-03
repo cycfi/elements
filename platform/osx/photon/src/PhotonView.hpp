@@ -9,7 +9,8 @@
 
 @interface PhotonView : NSView
 {
-   photon::view _view;
+   photon::view      _view;
+   NSTrackingArea*   _tracking_area;
 }
 
 @end

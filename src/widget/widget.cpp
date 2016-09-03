@@ -50,7 +50,7 @@ namespace photon
       return false;
    }
 
-   bool widget::cursor(context const& ctx, point p)
+   bool widget::cursor(context const& ctx, point p, cursor_tracking status)
    {
       return false;
    }

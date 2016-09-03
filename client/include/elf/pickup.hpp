@@ -14,7 +14,9 @@ namespace elf
    using photon::widget;
    using photon::basic_context;
    using photon::context;
+   using photon::point;
    using photon::rect;
+   using photon::cursor_tracking;
 
    class pickup : public widget
    {
@@ -28,12 +30,12 @@ namespace elf
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
-
       //virtual widget*   hit_test(context const& ctx, point p);
-      //
+      virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
+
       //virtual widget*   click(context const& ctx, mouse_button btn);
       //virtual void      drag(context const& ctx, mouse_button btn);
-      //virtual bool      is_control() const;
+      virtual bool      is_control() const;
 
    private:
 

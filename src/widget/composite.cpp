@@ -126,7 +126,7 @@ namespace photon
       return false;
    }
 
-   bool composite_base::cursor(context const& ctx, point p)
+   bool composite_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (!empty())
       {
@@ -134,7 +134,7 @@ namespace photon
          if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
-            return info.element->cursor(ectx, p);
+            return info.element->cursor(ectx, p, status);
          }
       }
       return false;

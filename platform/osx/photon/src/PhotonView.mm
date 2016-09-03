@@ -27,6 +27,8 @@ namespace photon
 - (void) awakeFromNib
 {
    photon::platform_access::init_view(_view, self);
+   _tracking_area = nil;
+   [self updateTrackingAreas];
 }
 
 - (void) dealloc
@@ -79,6 +81,62 @@ namespace photon
    [self setNeedsDisplay : YES];
 }
 
+- (void)updateTrackingAreas
+{
+   if (_tracking_area != nil)
+      [self removeTrackingArea : _tracking_area];
+
+//   NSTrackingAreaOptions const options =
+//      NSTrackingMouseEnteredAndExited |
+//      NSTrackingActiveInKeyWindow |
+//      NSTrackingEnabledDuringMouseDrag |
+//      NSTrackingCursorUpdate |
+//      NSTrackingInVisibleRect |
+//      NSTrackingAssumeInside
+//   ;
+
+   NSTrackingAreaOptions const options =
+         NSTrackingMouseEnteredAndExited |
+         NSTrackingActiveAlways |
+         NSTrackingMouseMoved
+      ;
+
+   _tracking_area =
+      [[NSTrackingArea alloc]
+         initWithRect : [self bounds]
+              options : options
+                owner : self
+             userInfo : nil
+      ];
+
+    [self addTrackingArea:_tracking_area];
+    [super updateTrackingAreas];
+}
+
+- (void)mouseEntered:(NSEvent*) event
+{
+   [[self window] setAcceptsMouseMovedEvents:YES];
+   [[self window] makeFirstResponder:self];
+   auto pos = [event locationInWindow];
+   pos = [self convertPoint:pos fromView:nil];
+   _view.cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::entering);
+   [self displayIfNeeded];
+}
+
+- (void)mouseExited:(NSEvent*) event
+{
+   [[self window] setAcceptsMouseMovedEvents:NO];
+   auto pos = [event locationInWindow];
+   pos = [self convertPoint:pos fromView:nil];
+   _view.cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::leaving);
+   [self displayIfNeeded];
+}
+
+- (void)mouseMoved:(NSEvent*) event
+{
+    [self displayIfNeeded];
+    [super mouseMoved: event];
+}
 
 
 @end

@@ -20,8 +20,6 @@ namespace elf
 
    namespace
    {
-      float const scale_len = 0.8;
-
       void set_gradient(rect bounds, canvas& cnv)
       {
          auto gradient = canvas::linear_gradient{
@@ -100,18 +98,22 @@ namespace elf
 
    void frets::draw(context const& ctx)
    {
+      float const scale_len = 0.8;
+      float const w = 600 * scale_len;
+      float const h = w * 0.15;
+      rect const  bbox = { 0, 0, 640, 150 };
+
       auto cnv = ctx.canvas();
-      float w = ctx.bounds.width() * scale_len;
-      float h = w * 0.15;
-      clamp_max(h, ctx.bounds.height());
-      draw_frets(center({ 0, 0, w, h }, ctx.bounds), cnv);
+      auto state = cnv.new_state();
+      auto scale = ctx.bounds.width() / bbox.width();
+      cnv.scale({ scale, scale });
+      draw_frets(center({ 0, 0, w, h }, bbox), cnv);
 
       // The bridge
       float br_height = w * 0.2f;
-      clamp_max(br_height, ctx.bounds.height());
       rect br_rect = { 0, 0, w, br_height };
-      br_rect = center(br_rect, ctx.bounds);
+      br_rect = center(br_rect, bbox);
       br_rect.width(8);
       draw_bridge(br_rect.move(-8, 0), cnv);
-   }
+    }
 }

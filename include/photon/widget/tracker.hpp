@@ -32,7 +32,7 @@ namespace photon
          point    start;
          point    current = start;
          point    previous = start;
-			point		offset = point{ 0, 0 };
+         point    offset = point{ 0, 0 };
       };
 
                            tracker()   {}
@@ -43,7 +43,7 @@ namespace photon
 
       virtual widget*      click(context const& ctx, mouse_button btn);
       virtual void         drag(context const& ctx, mouse_button btn);
-      virtual bool       	is_control() const;
+      virtual bool         is_control() const;
 
    protected:
 

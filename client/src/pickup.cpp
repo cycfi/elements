@@ -15,6 +15,7 @@ namespace elf
    using photon::full_extent;
    using photon::canvas;
    using photon::clamp_max;
+   using photon::widget;
 
    namespace
    {
@@ -89,9 +90,6 @@ namespace elf
    {
       rect  r1, r2;
       pickup_bounds(ctx, r1, r2);
-      rect  pu_bounds = r1;
-      if (_type == double_)
-         pu_bounds.right = r2.right;
 
       auto  mp = ctx.cursor_pos();
       auto  canvas_ = ctx.canvas();
@@ -114,6 +112,26 @@ namespace elf
          draw_pickup(r2, _slant, hilite, ctx);
       }
    }
+
+   //widget* pickup::hit_test(context const& ctx, point p)
+   //{
+   //   rect  r1, r2;
+   //   pickup_bounds(ctx, r1, r2);
+   //
+   //   auto  canvas_ = ctx.canvas();
+   //   if (_type == single)
+   //   {
+   //      if (hit_test_pickup(r1, _slant, p, canvas_))
+   //         return this;
+   //   }
+   //   else
+   //   {
+   //      if (hit_test_pickup(r1, _slant, p, canvas_) ||
+   //         hit_test_pickup(r2, _slant, p, canvas_))
+   //         return this;
+   //   }
+   //   return nullptr;
+   //}
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
    {
@@ -170,8 +188,15 @@ namespace elf
       }
    }
 
-   bool pickup::is_control() const
+   void pickup::begin_tracking(context const& ctx, info& track_info)
    {
-      return true;
+   }
+
+   void pickup::keep_tracking(context const& ctx, info& track_info)
+   {
+   }
+
+   void pickup::end_tracking(context const& ctx, info& track_info)
+   {
    }
 }

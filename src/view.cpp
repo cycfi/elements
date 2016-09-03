@@ -61,8 +61,13 @@ namespace photon
    
    void view::cursor(point p, cursor_tracking status)
    {
+      //setup_context();
+
       context ctx { *this, &content, _current_bounds };
       content.cursor(ctx, p, status);
+      
+      //cairo_destroy(_context);
+      //cairo_surface_destroy(_surface);
    }
 }
 

@@ -16,8 +16,6 @@ namespace photon
       static void init_view(view& v, PhotonView* self_)
       {
          v._impl = (__bridge view_impl*) self_;
-         v._surface = nullptr;
-         v._context = nullptr;
       }
    };
 };

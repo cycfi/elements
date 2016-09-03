@@ -45,7 +45,6 @@ namespace photon
       view&                operator=(view const&) = delete;
 
       void                 draw(rect dirty_);
-      photon::canvas       canvas();
       point                cursor_pos() const;
       void                 click(mouse_button btn);
       void                 drag(mouse_button btn);
@@ -64,7 +63,7 @@ namespace photon
 
    private:
 
-      void                 setup_context();
+      cairo_t*             setup_context();
 
       friend class platform_access;
       friend class canvas;
@@ -72,9 +71,6 @@ namespace photon
       view_impl*           _impl;
       rect                 _dirty;
       rect                 _current_bounds;
-
-      cairo_surface_t*     _surface;
-      cairo_t*             _context;
    };
 }
 

@@ -25,22 +25,29 @@ namespace photon
       client::init(*this);
    }
 
-   void view::setup_context()
+   cairo_t* view::setup_context()
    {
       auto ns_view = get_mac_view(_impl);
       auto w = [ns_view bounds].size.width;
       auto h = [ns_view bounds].size.height;
+      auto locked = [ns_view lockFocusIfCanDraw];
+
       auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
-      _surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
-      _context = cairo_create(_surface);
+      cairo_surface_t* surface = surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
+      cairo_t* context = cairo_create(surface);
+      cairo_surface_destroy(surface);
+
+      if (locked)
+         [ns_view unlockFocus];
+      return context;
    }
 
    point view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(_impl);
-      auto  frame = [ns_view frame];
+      auto  frame_height = [ns_view frame].size.height;
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
-      return { float(pos.x), float(frame.size.height - pos.y - 1) };
+      return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
    point view::size() const
@@ -59,8 +66,8 @@ namespace photon
    void view::limits(rect limits_) const
    {
       auto ns_view = get_mac_view(_impl);
-      [[ns_view window] setContentMinSize: NSSize{ limits_.left, limits_.top }];
-      [[ns_view window] setContentMaxSize: NSSize{ limits_.right, limits_.bottom }];
+      [[ns_view window] setContentMinSize : NSSize{ limits_.left, limits_.top }];
+      [[ns_view window] setContentMaxSize : NSSize{ limits_.right, limits_.bottom }];
    }
 
    void view::refresh()
@@ -70,9 +77,11 @@ namespace photon
 
    void view::refresh(rect area)
    {
+      auto  ns_view = get_mac_view(_impl);
+      auto  frame_height = [ns_view frame].size.height;
       [
-         get_mac_view(_impl)
-            setNeedsDisplayInRect : CGRectMake(area.left, area.right, area.width(), area.height())
+         ns_view setNeedsDisplayInRect
+              : CGRectMake(area.left, frame_height - area.bottom, area.width(), area.height())
       ];
    }
 }

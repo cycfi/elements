@@ -9,18 +9,13 @@
 
 namespace photon
 {
-   photon::canvas view::canvas()
-   {
-      return photon::canvas{ _context };
-   }
-
    void view::draw(rect dirty_)
    {
-      setup_context();
-   
+      auto context_ = setup_context();
+
       _dirty = dirty_;
 
-      basic_context bctx{ *this };
+      basic_context bctx{ *this, *context_ };
       auto limits_ = content.limits(bctx);
       limits(limits_);
 
@@ -33,7 +28,7 @@ namespace photon
       rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
 
       // layout the subject only if the window bounds changes
-      context ctx{ *this, &content, subj_bounds };
+      context ctx{ *this, *context_, &content, subj_bounds };
       if (subj_bounds != _current_bounds)
       {
          _current_bounds = subj_bounds;
@@ -43,32 +38,42 @@ namespace photon
       // draw the subject
       content.draw(ctx);
 
-      cairo_destroy(_context);
-      cairo_surface_destroy(_surface);
+      cairo_destroy(context_);
    }
 
    void view::click(mouse_button btn)
    {
-      context ctx { *this, &content, _current_bounds };
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      context ctx { *this, *context_, &content, _current_bounds };
+
       content.click(ctx, btn);
+
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
    }
 
    void view::drag(mouse_button btn)
    {
-      context ctx { *this, &content, _current_bounds };
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      context ctx { *this, *context_, &content, _current_bounds };
+
       content.drag(ctx, btn);
+
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
    }
-   
+
    void view::cursor(point p, cursor_tracking status)
    {
-      //setup_context();
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      context ctx { *this, *context_, &content, _current_bounds };
 
-      context ctx { *this, &content, _current_bounds };
       content.cursor(ctx, p, status);
-      
-      //cairo_destroy(_context);
-      //cairo_surface_destroy(_surface);
+
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
    }
 }
-
-

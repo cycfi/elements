@@ -18,6 +18,8 @@ namespace elf
    using photon::widget;
    using photon::clamp;
 
+   namespace icons = photon::icons;
+
    float const scale_len = 0.8;
 
    namespace
@@ -57,6 +59,7 @@ namespace elf
          auto fill_color = theme.controls_color;
 
          // Fill
+         canvas_.begin_path();
          canvas_.fill_style(fill_color);
          canvas_.fill_round_rect(bounds, bounds.width()/2);
 
@@ -87,6 +90,35 @@ namespace elf
          canvas_.stroke_style(outline_color);
          canvas_.stroke_round_rect(bounds, radius);
       }
+
+      bool hit_test_rotator(rect bounds, float slant, point mp, context const& ctx)
+      {
+         auto  canvas_ = ctx.canvas();
+         auto  state = prepare(bounds, slant, canvas_);
+
+         float size = (bounds.height() / 3);
+         bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
+         canvas_.begin_path();
+         canvas_.rect(bounds);
+         return canvas_.hit_test(canvas_.transform_point(mp));
+      }
+
+      point draw_rotator(rect bounds, float slant, context const& ctx)
+      {
+         auto  canvas_ = ctx.canvas();
+         auto& theme = ctx.theme();
+         auto  state = prepare(bounds, slant, canvas_);
+
+         // Draw rotator icon
+         float  height = bounds.height();
+         float  size = height / 3;
+         bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
+
+         canvas_.font("photon_basic", height / 6);
+         canvas_.fill_style(theme.icon_color);
+         draw_icon(canvas_, bounds, icons::cycle);
+         return canvas_.reverse_transform_point(center_point(bounds));
+      }
    }
 
    rect pickup::limits(basic_context const& ctx) const
@@ -102,20 +134,29 @@ namespace elf
       auto  mp = ctx.cursor_pos();
       auto  canvas_ = ctx.canvas();
 
+      rect  pu_bounds = r1;
+      if (_type == double_)
+         pu_bounds.right = r2.right;
+      bool hit_rotator = hit_test_rotator(pu_bounds, _slant, mp, ctx);
+
       if (_type == single)
       {
-         bool hilite = hit_test_pickup(r1, _slant, mp, canvas_);
+         bool hilite = hit_rotator || hit_test_pickup(r1, _slant, mp, canvas_);
          draw_pickup(r1, _slant, hilite, ctx);
       }
       else
       {
          bool hilite =
+            hit_rotator ||
             hit_test_pickup(r1, _slant, mp, canvas_) ||
             hit_test_pickup(r2, _slant, mp, canvas_)
             ;
          draw_pickup(r1, _slant, hilite, ctx);
          draw_pickup(r2, _slant, hilite, ctx);
       }
+
+      if (hit_rotator)
+         _rotator_pos = draw_rotator(pu_bounds, _slant, ctx);
    }
 
    widget* pickup::hit_test(context const& ctx, point p)
@@ -149,6 +190,9 @@ namespace elf
             // start tracking rotate
             _tracking = tracking_rotate;
             _offset = point{ mp.x-_rotator_pos.x, mp.y-_rotator_pos.y };
+
+            //_offset = {0,0};
+
             //if (btn.num_clicks == 2)
             //{
             //   _slant = 0;
@@ -210,8 +254,11 @@ namespace elf
             return hit_pickup;
       }
 
-//      if (hit_test_rotator(r, _slant, p, thm))
-//         return hit_rotator;
+      rect  pu_bounds = r1;
+      if (_type == double_)
+         pu_bounds.right = r2.right;
+      if (hit_test_rotator(pu_bounds, _slant, p, ctx))
+         return hit_rotator;
 
       return hit_none;
    }

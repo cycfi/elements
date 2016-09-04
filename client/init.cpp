@@ -23,8 +23,10 @@ namespace client
    using ph::color;
    using ph::view;
    using ph::layer;
+   using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
+   namespace icons = ph::icons;
 
    // Main window background color
    auto bkd_color = color{ 35, 35, 37, 255 };
@@ -96,36 +98,55 @@ namespace client
 
          auto texty = [&cnv](float x, float y, char const* text)
          {
-            cnv.stroke_style(colors::dim_gray);
+            cnv.stroke_style(colors::magenta.opacity(0.5));
             cnv.line_width(0.5);
             cnv.move_to({ x-100, y });
             cnv.line_to({ x+100, y });
             cnv.move_to({ x, y-50 });
             cnv.line_to({ x, y+50 });
             cnv.stroke();
-            
+
+            cnv.stroke_style(colors::dim_gray);
             cnv.fill_style(colors::dim_gray);
             cnv.font("Open Sans", 24);
             cnv.fill_text({ x, y }, text);
          };
-         
-         cnv.text_align(cnv.left);
-         texty(50, 250, "Lefty");
 
-         cnv.text_align(cnv.right);
-         texty(200, 250, "Righty");
+         {
+            cnv.text_align(cnv.left);
+            texty(100, 250, "Lefty");
 
-         cnv.text_align(cnv.center);
-         texty(300, 250, "Centery");
+            cnv.text_align(cnv.right);
+            texty(250, 250, "Righty");
 
-         cnv.text_align(cnv.left | cnv.top);
-         texty(400, 250, "Topy");
-         
-         cnv.text_align(cnv.left | cnv.middle);
-         texty(500, 250, "Middley");
+            cnv.text_align(cnv.center);
+            texty(350, 250, "Centery");
 
-         cnv.text_align(cnv.left | cnv.bottom);
-         texty(600, 250, "Bottomy");
+            cnv.text_align(cnv.left | cnv.top);
+            texty(450, 250, "Topy");
+
+            cnv.text_align(cnv.left | cnv.middle);
+            texty(550, 250, "Middley");
+
+            cnv.text_align(cnv.left | cnv.bottom);
+            texty(650, 250, "Bottomy");
+         }
+
+         {
+            cnv.font("photon_basic", 48);
+            rect b = { 50, 320, 120, 390 };
+
+            cnv.stroke_rect(b);
+            draw_icon(cnv, b, icons::power);
+            
+            b = b.move(80, 0);
+            cnv.stroke_rect(b);
+            draw_icon(cnv, b, icons::wrench);
+
+            b = b.move(80, 0);
+            cnv.stroke_rect(b);
+            draw_icon(cnv, b, icons::cog);
+         }
       }
    };
 
@@ -141,8 +162,8 @@ namespace client
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(drawings{}));
-      //v.content.elements.push_back(new_(background{}));
-      //v.content.elements.push_back(new_(vpups));
+      //v.content.elements.push_back(new_(drawings{}));
+      v.content.elements.push_back(new_(background{}));
+      v.content.elements.push_back(new_(vpups));
    }
 }

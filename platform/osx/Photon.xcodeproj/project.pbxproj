@@ -19,6 +19,7 @@
 		5D4F7FE41D73CFBC00C61217 /* analog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4F7FE31D73CFBC00C61217 /* analog.cpp */; };
 		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
+		5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D5C65C31D7BD696002197F8 /* photon_basic.ttf */; };
 		5D76EBC41D796A010036EECC /* pickup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D76EBC31D796A010036EECC /* pickup.cpp */; };
 		5D76EBC61D7972470036EECC /* frets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D76EBC51D7972470036EECC /* frets.cpp */; };
 		5D9F54571D798EBC006DC5B0 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D9F54561D798EBC006DC5B0 /* libcairo.a */; };
@@ -48,6 +49,7 @@
 		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5D565ED71D605F5D00FD087C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5D5C65C31D7BD696002197F8 /* photon_basic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = photon_basic.ttf; path = ../../assets/fonts/photon_basic.ttf; sourceTree = "<group>"; };
 		5D76EBC31D796A010036EECC /* pickup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pickup.cpp; sourceTree = "<group>"; };
 		5D76EBC51D7972470036EECC /* frets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frets.cpp; sourceTree = "<group>"; };
 		5D9F54561D798EBC006DC5B0 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 		5D565EC01D605F5D00FD087C = {
 			isa = PBXGroup;
 			children = (
+				5D5C65C21D7BD67C002197F8 /* fonts */,
 				5D9F54551D798EB1006DC5B0 /* libs */,
 				5D565ECB1D605F5D00FD087C /* Photon */,
 				5D565ECA1D605F5D00FD087C /* Products */,
@@ -124,6 +127,14 @@
 				5DA584951D6156CD004276C2 /* osx_src */,
 			);
 			path = Photon;
+			sourceTree = "<group>";
+		};
+		5D5C65C21D7BD67C002197F8 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				5D5C65C31D7BD696002197F8 /* photon_basic.ttf */,
+			);
+			name = fonts;
 			sourceTree = "<group>";
 		};
 		5D76EBC21D796A010036EECC /* src */ = {
@@ -245,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D07FE1B1D6868E800D7EE92 /* include in Resources */,
+				5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */,
 				5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */,
 				5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */,
 			);

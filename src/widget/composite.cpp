@@ -126,12 +126,21 @@ namespace photon
       return false;
    }
 
+   namespace
+   {
+      void cursor_leaving(context const& ctx, point p, composite_base::hit_info& _cursor_info)
+      {
+         context ectx{ ctx, _cursor_info.element, _cursor_info.bounds };
+         _cursor_info.element->cursor(ectx, p, cursor_tracking::leaving);
+         _cursor_info = composite_base::hit_info{};
+      };
+   }
+
    bool composite_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (status == cursor_tracking::leaving && _cursor_info.element)
       {
-         context ectx{ ctx, _cursor_info.element, _cursor_info.bounds };
-         _cursor_info.element->cursor(ectx, p, status);
+         cursor_leaving(ctx, p, _cursor_info);
          return true;
       }
 
@@ -149,6 +158,14 @@ namespace photon
             return r;
          }
       }
+
+      // If we're previously tracking an element, send it a 'leaving' message
+      if (_cursor_info.element)
+      {
+         cursor_leaving(ctx, p, _cursor_info);
+         return true;
+      }
+
       return false;
    }
 

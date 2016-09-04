@@ -113,25 +113,25 @@ namespace elf
       }
    }
 
-//   widget* pickup::hit_test(context const& ctx, point p)
-//   {
-//      rect  r1, r2;
-//      pickup_bounds(ctx, r1, r2);
-//
-//      auto  canvas_ = ctx.canvas();
-//      if (_type == single)
-//      {
-//         if (hit_test_pickup(r1, _slant, p, canvas_))
-//            return this;
-//      }
-//      else
-//      {
-//         if (hit_test_pickup(r1, _slant, p, canvas_) ||
-//            hit_test_pickup(r2, _slant, p, canvas_))
-//            return this;
-//      }
-//      return nullptr;
-//   }
+   widget* pickup::hit_test(context const& ctx, point p)
+   {
+      rect  r1, r2;
+      pickup_bounds(ctx, r1, r2);
+
+      auto  canvas_ = ctx.canvas();
+      if (_type == single)
+      {
+         if (hit_test_pickup(r1, _slant, p, canvas_))
+            return this;
+      }
+      else
+      {
+         if (hit_test_pickup(r1, _slant, p, canvas_) ||
+            hit_test_pickup(r2, _slant, p, canvas_))
+            return this;
+      }
+      return nullptr;
+   }
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
    {

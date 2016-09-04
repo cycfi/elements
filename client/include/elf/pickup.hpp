@@ -33,7 +33,7 @@ namespace elf
 
       virtual rect      limits(basic_context const& ctx) const;
       virtual void      draw(context const& ctx);
-      //virtual widget*   hit_test(context const& ctx, point p);
+      virtual widget*   hit_test(context const& ctx, point p);
       virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
 
       virtual void      begin_tracking(context const& ctx, info& track_info);

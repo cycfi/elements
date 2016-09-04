@@ -37,9 +37,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    enum class cursor_tracking
    {
-      entering,
-      hovering,
-      leaving
+      entering,   // Sent when the cursor is entering a widget
+      hovering,   // Sent when the cursor is hovering over a widget
+      leaving     // Sent when the cursor is leaving a widget
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

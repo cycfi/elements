@@ -63,21 +63,26 @@ namespace elf
             glow_color = glow_color.opacity(1).level(1.5);
          }
 
-         // Outline
-         canvas_.stroke_style(outline_color);
-         canvas_.line_width(1.5);
-         canvas_.stroke_round_rect(bounds, bounds.width()/2);
-
          // Glow
-         auto   alpha = glow_color.alpha;
+         auto  alpha = glow_color.alpha;
+         auto  radius = bounds.width()/2;
 
-         bounds = bounds.inset(-1, -1);
+         canvas_.line_width(4);
+         canvas_.stroke_style(glow_color.opacity(alpha * 0.2));
+         canvas_.stroke_round_rect(bounds, radius);
+
+         canvas_.line_width(3);
          canvas_.stroke_style(glow_color.opacity(alpha * 0.4));
-         canvas_.stroke_round_rect(bounds, bounds.width()/2);
+         canvas_.stroke_round_rect(bounds, radius);
 
-         bounds = bounds.inset(-1, -1);
-         canvas_.stroke_style(glow_color.opacity(alpha * 0.1));
-         canvas_.stroke_round_rect(bounds, bounds.width()/2);
+         canvas_.line_width(2);
+         canvas_.stroke_style(glow_color.opacity(alpha * 0.7));
+         canvas_.stroke_round_rect(bounds, radius);
+
+         // Outline
+         canvas_.line_width(1);
+         canvas_.stroke_style(outline_color);
+         canvas_.stroke_round_rect(bounds, radius);
       }
    }
 
@@ -93,18 +98,15 @@ namespace elf
 
       auto  mp = ctx.cursor_pos();
       auto  canvas_ = ctx.canvas();
-      bool  hilite = false;
-
-      //hilite = ctx.bounds.includes(mp);
 
       if (_type == single)
       {
-         hilite = hit_test_pickup(r1, _slant, mp, canvas_);
+         bool hilite = hit_test_pickup(r1, _slant, mp, canvas_);
          draw_pickup(r1, _slant, hilite, ctx);
       }
       else
       {
-         hilite =
+         bool hilite =
             hit_test_pickup(r1, _slant, mp, canvas_) ||
             hit_test_pickup(r2, _slant, mp, canvas_)
             ;
@@ -135,12 +137,6 @@ namespace elf
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      //_hilite = status == cursor_tracking::entering;
-
-
-      //ctx.view.refresh();
-
-
       ctx.view.refresh(ctx.bounds);
       return true;
    }

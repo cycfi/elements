@@ -16,6 +16,9 @@ namespace elf
    using photon::canvas;
    using photon::clamp_max;
    using photon::widget;
+   using photon::clamp;
+
+   float const scale_len = 0.8;
 
    namespace
    {
@@ -117,22 +120,7 @@ namespace elf
 
    widget* pickup::hit_test(context const& ctx, point p)
    {
-      rect  r1, r2;
-      pickup_bounds(ctx, r1, r2);
-
-      auto  canvas_ = ctx.canvas();
-      if (_type == single)
-      {
-         if (hit_test_pickup(r1, _slant, p, canvas_))
-            return this;
-      }
-      else
-      {
-         if (hit_test_pickup(r1, _slant, p, canvas_) ||
-            hit_test_pickup(r2, _slant, p, canvas_))
-            return this;
-      }
-      return nullptr;
+      return hit(ctx, p) ? this : nullptr;
    }
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
@@ -141,9 +129,95 @@ namespace elf
       return true;
    }
 
+   bool pickup::reposition(context const& ctx, point mp)
+   {
+      rect r1, r2;
+      pickup_bounds(ctx, r1, r2);
+      rect pu_bounds = (_type == single) ? r1 : rect{ r1.left, r1.top, r2.right, r2.bottom };
+
+      if (_tracking == start)
+      {
+         hit_item what = hit(ctx, mp);
+         if (what == hit_pickup)
+         {
+            // start tracking move
+            _tracking = tracking_move;
+            _offset = point{ mp.x-pu_bounds.left, mp.y-pu_bounds.top };
+         }
+         else if (what == hit_rotator)
+         {
+            // start tracking rotate
+            _tracking = tracking_rotate;
+            _offset = point{ mp.x-_rotator_pos.x, mp.y-_rotator_pos.y };
+            //if (btn.num_clicks == 2)
+            //{
+            //   _slant = 0;
+            //   ctx.view.refresh(ctx.bounds);
+            //   return true;
+            //}
+         }
+      }
+
+      // continue tracking move
+      if (_tracking == tracking_move)
+      {
+         float w = (ctx.bounds.width() * scale_len) + pu_bounds.width();
+         float offs = (ctx.bounds.width() - w) / 2;
+         mp.x -= _offset.x + ctx.bounds.left + offs;
+
+         double align = mp.x / (w - pu_bounds.width());
+         clamp(align, 0.0, 1.0);
+         _pos = align;
+         ctx.view.refresh(ctx.bounds);
+         return true;
+      }
+
+      // continue tracking rotate
+      if (_tracking == tracking_rotate)
+      {
+         mp = mp.move(-_offset.x, -_offset.y);
+         auto center = center_point(pu_bounds);
+         float angle = -std::atan2(mp.x-center.x, mp.y-center.y);
+
+         clamp(angle, -0.4, 0.4);
+         _slant = angle;
+         ctx.view.refresh(ctx.bounds);
+         return true;
+      }
+
+      return false;
+   }
+
+   pickup::hit_item pickup::hit(context const& ctx, point p) const
+   {
+      rect  r1, r2;
+      pickup_bounds(ctx, r1, r2);
+      rect  r = r1;
+      if (_type == double_)
+         r.right = r2.right;
+
+      auto  canvas_ = ctx.canvas();
+
+      if (_type == single)
+      {
+         if (hit_test_pickup(r1, _slant, p, canvas_))
+            return hit_pickup;
+      }
+      else
+      {
+         if (hit_test_pickup(r1, _slant, ctx.cursor_pos(), canvas_) ||
+            hit_test_pickup(r2, _slant, ctx.cursor_pos(), canvas_))
+            return hit_pickup;
+      }
+
+//      if (hit_test_rotator(r, _slant, p, thm))
+//         return hit_rotator;
+
+      return hit_none;
+   }
+
    void pickup::pickup_bounds(context const& ctx, rect& r1, rect& r2) const
    {
-      float const scale_len = 0.8;
       auto        bounds = ctx.bounds;
       float       w = bounds.width() * scale_len;
       float       h = w * 0.19;
@@ -173,13 +247,18 @@ namespace elf
 
    void pickup::begin_tracking(context const& ctx, info& track_info)
    {
+      _tracking = start;
+      reposition(ctx, track_info.current);
    }
 
    void pickup::keep_tracking(context const& ctx, info& track_info)
    {
+      if (_tracking == tracking_move || _tracking == tracking_rotate)
+         reposition(ctx, track_info.current);
    }
 
    void pickup::end_tracking(context const& ctx, info& track_info)
    {
+      _tracking = none;
    }
 }

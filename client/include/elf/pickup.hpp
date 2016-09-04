@@ -17,6 +17,7 @@ namespace elf
    using photon::point;
    using photon::rect;
    using photon::cursor_tracking;
+   using photon::mouse_button;
 
    class pickup : public tracker
    {
@@ -25,7 +26,7 @@ namespace elf
       enum type { single, double_ };
 
                         pickup(float pos, type type_, float slant)
-                         : _pos(pos), _type(type_), _slant(slant)
+                         : _pos(pos), _type(type_), _slant(slant), _tracking(none)
                         {}
 
                         pickup(pickup&& rhs) = default;
@@ -42,11 +43,31 @@ namespace elf
 
    private:
 
+      enum tracking_status
+      {
+         none,
+         start,
+         tracking_move,
+         tracking_rotate
+      };
+
+      enum hit_item
+      {
+         hit_none,
+         hit_pickup,
+         hit_rotator
+      };
+
+      bool              reposition(context const& ctx, point mp);
+      hit_item          hit(context const& ctx, point p) const;
       void              pickup_bounds(context const& ctx, rect& r1, rect& r2) const;
 
       float             _pos;
       type              _type;
       float             _slant;
+      tracking_status   _tracking;
+      point             _offset;
+      point             _rotator_pos;
    };
 }
 

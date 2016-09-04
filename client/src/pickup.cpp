@@ -8,8 +8,6 @@
 #include <photon/view.hpp>
 #include <cmath>
 
-#include <iostream>
-
 namespace elf
 {
    using photon::full_extent;
@@ -19,7 +17,6 @@ namespace elf
    using photon::clamp;
 
    namespace icons = photon::icons;
-
    float const scale_len = 0.8;
 
    namespace
@@ -45,7 +42,7 @@ namespace elf
 
          canvas_.begin_path();
          canvas_.round_rect(bounds, bounds.width()/2);
-         return canvas_.hit_test(canvas_.transform_point(mp));
+         return canvas_.hit_test(canvas_.device_to_user(mp));
       }
 
       void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx)
@@ -100,7 +97,7 @@ namespace elf
          bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
          canvas_.begin_path();
          canvas_.rect(bounds);
-         return canvas_.hit_test(canvas_.transform_point(mp));
+         return canvas_.hit_test(canvas_.device_to_user(mp));
       }
 
       point draw_rotator(rect bounds, float slant, context const& ctx)
@@ -114,10 +111,10 @@ namespace elf
          float  size = height / 3;
          bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
 
-         canvas_.font("photon_basic", height / 6);
+         canvas_.font("photon_basic", 18);
          canvas_.fill_style(theme.icon_color);
          draw_icon(canvas_, bounds, icons::cycle);
-         return canvas_.reverse_transform_point(center_point(bounds));
+         return canvas_.user_to_device(center_point(bounds));
       }
    }
 

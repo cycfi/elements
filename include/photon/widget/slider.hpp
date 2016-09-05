@@ -37,8 +37,6 @@ namespace photon
       widget_ptr           indicator() const    { return _indicator; }
       widget_ptr           body() const         { return _body; }
 
-   protected:
-
       rect                 indicator_bounds(context const& ctx) const;
       virtual double       value_from_point(context const& ctx, point p);
 

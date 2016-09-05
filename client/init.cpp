@@ -211,7 +211,7 @@ namespace client
       );
 
       auto ind = fixed_size({ 16, 16 }, circle);
-      auto di = dial{ new_(std::move(ind)), new_(circle), 0.0 };
+      auto di = dial{ "assets/images/knob_sprites_150x150_darker.png", 150 };
 
       return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
    }

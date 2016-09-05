@@ -187,6 +187,17 @@ namespace photon
       return { width, _height, width, _height };
    }
 
+   std::size_t sprite::num_frames() const
+   {
+      return pixmap().size().y / _height;
+   }
+
+   void sprite::index(std::size_t index_)
+   {
+      if (index_ < num_frames())
+         _index = index_;
+   }
+
    rect sprite::source_rect(context const& ctx) const
    {
       auto width = pixmap().size().x;

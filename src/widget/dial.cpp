@@ -9,83 +9,39 @@
 #include <photon/view.hpp>
 #include <cmath>
 
+#include <iostream>
+
 namespace photon
 {
    double const _2pi = 2 * M_PI;
    double const travel = 0.83;
    double const range = _2pi * travel;
    double const start_angle = _2pi * (1-travel)/2;
-   double const offset_angle = M_PI / 2.0;
 
-   dial::dial(widget_ptr indicator, widget_ptr body, double init_value)
-    : _indicator(indicator)
-    , _body(body)
-    , _value(init_value)
-   {}
-
-   point dial::indicator_point(context const& ctx) const
+   dial::dial(char const* sprite_file, float height, float scale, double init_value)
+    : _value(init_value)
+    , _image(sprite_file, height, scale)
    {
-      rect  bounds = body_bounds(ctx);
-      float radius = (bounds.width() / 2) * 0.8;
-      point center = center_point(bounds);
-      float angle = (range * value()) + offset_angle + start_angle;
+      _image.index(_value * _image.num_frames());
+   }
 
-      // Compute the new dot position based on the angle
-      return
-         {
-            float(center.x + (radius * cos(angle))),
-            float(center.y + (radius * sin(angle)))
-         };
+   rect dial::limits(basic_context const& ctx) const
+   {
+      return _image.limits(ctx);
    }
 
    void dial::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view.dirty()))
-      {
-         {
-            context sctx { ctx, _body.get(), ctx.bounds };
-            prepare_body(sctx);
-            _body->draw(sctx);
-         }
-         {
-            context sctx { ctx, _indicator.get(), ctx.bounds };
-            prepare_indicator(sctx);
-            _indicator->draw(sctx);
-         }
-      }
+      _image.draw(ctx);
    }
 
-   void dial::prepare_indicator(context& ctx)
+   void dial::value(double value_)
    {
-      point p = indicator_point(ctx);
-      auto  ind_limits = _indicator->limits(ctx);
-      rect  bounds{ 0, 0, ind_limits.right, ind_limits.bottom };
-
-      bounds = bounds.move_to(
-         (p.x - (bounds.width() / 2)),
-         (p.y - (bounds.height() / 2))
-      );
-      ctx.bounds = bounds;
+      _value = value_;
+      _image.index(_value * _image.num_frames());
    }
 
-   rect dial::body_bounds(context const& ctx) const
-   {
-      auto  bounds = ctx.bounds;
-      auto  w = bounds.width();
-      auto  h = bounds.height();
-      if (w < h)
-         bounds.height(w);
-      else
-         bounds.width(h);
-      return center(bounds, ctx.bounds);
-   }
-
-   void dial::prepare_body(context& ctx)
-   {
-      ctx.bounds = body_bounds(ctx);
-   }
-
-   double dial::value(context const& ctx, point p)
+   double dial::value_from_point(context const& ctx, point p)
    {
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
@@ -110,10 +66,10 @@ namespace photon
    {
       if (track_info.current != track_info.previous)
       {
-         double new_value = value(ctx, track_info.current);
+         double new_value = value_from_point(ctx, track_info.current);
          if (_value != new_value)
          {
-            _value = new_value;
+            value(new_value);
             ctx.view.refresh(ctx.bounds);
          }
       }

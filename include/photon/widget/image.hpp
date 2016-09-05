@@ -108,8 +108,9 @@ namespace photon
 
       virtual rect         limits(basic_context const& ctx) const;
 
+      std::size_t          num_frames() const;
       std::size_t          index() const              { return _index; }
-      void                 index(std::size_t index_)  { _index = index_; }
+      void                 index(std::size_t index_);
       point                size() const;
 
       virtual rect         source_rect(context const& ctx) const;

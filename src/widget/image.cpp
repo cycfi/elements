@@ -174,4 +174,22 @@ namespace photon
       ctx.canvas().draw(pixmap(), src[1], dest[1]);
       ctx.canvas().draw(pixmap(), src[2], dest[2]);
    }
+
+   sprite::sprite(char const* filename, float height, float scale)
+    : image(filename, scale)
+    , _index(0)
+    , _height(height)
+   {}
+
+   rect sprite::limits(basic_context const& ctx) const
+   {
+      auto width = pixmap().size().x;
+      return { width, _height, width, _height };
+   }
+
+   rect sprite::source_rect(context const& ctx) const
+   {
+      auto width = pixmap().size().x;
+      return rect{ 0, _height * _index, width,_height * (_index + 1) };
+   }
 }

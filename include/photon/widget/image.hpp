@@ -101,50 +101,24 @@ namespace photon
    // image but only one frame is drawn at any single time. Useful for switches,
    // knobs and basic (sprite) animation.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <size_t width_, size_t height_>
    class sprite : public image
    {
    public:
-                           sprite(char const* filename, float scale = 1);
-                           sprite(pixmap_ptr pixmap_);
+                           sprite(char const* filename, float height, float scale = 1);
 
       virtual rect         limits(basic_context const& ctx) const;
 
       std::size_t          index() const              { return _index; }
       void                 index(std::size_t index_)  { _index = index_; }
-      constexpr float      width() const              { return width_; }
-      constexpr float      height() const             { return height_; }
+      point                size() const;
 
       virtual rect         source_rect(context const& ctx) const;
 
    private:
 
       size_t               _index;
+      float                _height;
    };
-
-   template <size_t width_, size_t height_>
-   inline sprite<width_, height_>::sprite(char const* filename, float scale)
-    : image(filename, scale)
-    , _index(0)
-   {}
-
-   template <size_t width_, size_t height_>
-   inline sprite<width_, height_>::sprite(pixmap_ptr pixmap_)
-    : image(pixmap_)
-    , _index(0)
-   {}
-
-   template <size_t width_, size_t height_>
-   inline rect sprite<width_, height_>::limits(basic_context const& ctx) const
-   {
-      return { width(), height(), width(), height() };
-   }
-
-   template <size_t width_, size_t height_>
-   rect sprite<width_, height_>::source_rect(context const& ctx) const
-   {
-      return rect{ 0, height()*_index, width(), height()*(_index+1) };
-   }
 }
 
 #endif

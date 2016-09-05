@@ -190,7 +190,7 @@ namespace client
    };
 
    auto img = image{ "assets/images/space.jpg" };
-   auto spr =  sprite<50, 50>{ "assets/images/knob_sprites_150x150_darker.png", 1.0/3 };
+   auto spr =  sprite{ "assets/images/knob_sprites_150x150_darker.png", 50, 1.0/3 };
    auto spr_middle = halign(0.5, valign(0.5, spr));
    auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 1.0/4 });
    auto vgzmo = margin(rect{20, 20, 20, 20}, halign(0.5, vgizmo{ "assets/images/slot.png", 1.0/4 }));
@@ -220,13 +220,13 @@ namespace client
    {
       //v.content.elements.push_back(new_(my_image{}));
 
-      //v.content.elements.push_back(new_(background{}));
+      v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
-      v.content.elements.push_back(new_(make_dial()));
+      //v.content.elements.push_back(new_(make_dial()));
 
       //v.content.elements.push_back(new_(vgzmo));
-      //v.content.elements.push_back(new_(spr_middle));
+      v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));
       //v.content.elements.push_back(new_(vpups));

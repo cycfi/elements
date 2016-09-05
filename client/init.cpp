@@ -31,6 +31,7 @@ namespace client
    using ph::vgizmo;
    using ph::dial;
    using ph::basic;
+   using ph::slider;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -197,23 +198,45 @@ namespace client
    
    auto make_dial()
    {
-      auto circle = basic(
-         [](context const& ctx)
+      auto di = dial{ "assets/images/knob_sprites_150x150.png", 150 };
+      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
+   }
+   
+   auto make_slider()
+   {
+      struct box : widget
+      {
+         void draw(context const& ctx)
          {
             auto c = ctx.canvas();
-            auto center = center_point(ctx.bounds);
-            auto r = std::min(ctx.bounds.width(), ctx.bounds.height()) / 2;
-
-            c.begin_path();
-            c.circle(photon::circle{ center.x, center.y, r });
-            c.stroke();
+            c.stroke_rect(ctx.bounds);
          }
-      );
+      };
 
-      auto ind = fixed_size({ 16, 16 }, circle);
-      auto di = dial{ "assets/images/knob_sprites_150x150_darker.png", 150 };
+      struct filled_box : widget
+      {
+         void draw(context const& ctx)
+         {
+            auto c = ctx.canvas();
+            c.fill_style(colors::white);
+            c.fill_rect(ctx.bounds);
+            c.stroke_rect(ctx.bounds);
+         }
+      };
 
-      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
+      auto vind = fixed_size({ 40, 20 }, filled_box{});
+      auto vslot = hsize(10, box{});
+      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)), 0.3 };
+
+      auto hind = fixed_size({ 20, 40 }, filled_box{});
+      auto hslot = vsize(10, box{});
+      auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
+
+      return
+         vtile(
+            margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr))),
+            margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
+         );
    }
 
    void  init(view& v)
@@ -223,7 +246,8 @@ namespace client
       //v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
-      v.content.elements.push_back(new_(make_dial()));
+//      v.content.elements.push_back(new_(make_dial()));
+      v.content.elements.push_back(new_(make_slider()));
 
       //v.content.elements.push_back(new_(vgzmo));
       //v.content.elements.push_back(new_(spr_middle));

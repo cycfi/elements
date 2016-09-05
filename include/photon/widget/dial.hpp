@@ -21,7 +21,7 @@ namespace photon
    {
    public:
                            dial(
-                              char const* filename
+                              char const* sprite_file
                             , float height
                             , float scale = 1
                             , double init_value = 0.0

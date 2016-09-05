@@ -220,13 +220,13 @@ namespace client
    {
       //v.content.elements.push_back(new_(my_image{}));
 
-      v.content.elements.push_back(new_(background{}));
+      //v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
-      //v.content.elements.push_back(new_(make_dial()));
+      v.content.elements.push_back(new_(make_dial()));
 
       //v.content.elements.push_back(new_(vgzmo));
-      v.content.elements.push_back(new_(spr_middle));
+      //v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));
       //v.content.elements.push_back(new_(vpups));

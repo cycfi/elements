@@ -17,6 +17,12 @@ namespace photon
    double const start_angle = _2pi * (1-travel)/2;
    double const offset_angle = M_PI / 2.0;
 
+   dial::dial(widget_ptr indicator, widget_ptr body, double init_value)
+    : _indicator(indicator)
+    , _body(body)
+    , _value(init_value)
+   {}
+
    point dial::indicator_point(context const& ctx) const
    {
       rect  bounds = body_bounds(ctx);
@@ -32,10 +38,27 @@ namespace photon
          };
    }
 
+   void dial::draw(context const& ctx)
+   {
+      if (intersects(ctx.bounds, ctx.view.dirty()))
+      {
+         {
+            context sctx { ctx, _body.get(), ctx.bounds };
+            prepare_body(sctx);
+            _body->draw(sctx);
+         }
+         {
+            context sctx { ctx, _indicator.get(), ctx.bounds };
+            prepare_indicator(sctx);
+            _indicator->draw(sctx);
+         }
+      }
+   }
+
    void dial::prepare_indicator(context& ctx)
    {
       point p = indicator_point(ctx);
-      auto  ind_limits = indicator()->limits(ctx);
+      auto  ind_limits = _indicator->limits(ctx);
       rect  bounds{ 0, 0, ind_limits.right, ind_limits.bottom };
 
       bounds = bounds.move_to(
@@ -80,6 +103,23 @@ namespace photon
    }
 
    void dial::begin_tracking(context const& ctx, info& track_info)
+   {
+   }
+
+   void dial::keep_tracking(context const& ctx, info& track_info)
+   {
+      if (track_info.current != track_info.previous)
+      {
+         double new_value = value(ctx, track_info.current);
+         if (_value != new_value)
+         {
+            _value = new_value;
+            ctx.view.refresh(ctx.bounds);
+         }
+      }
+   }
+
+   void dial::end_tracking(context const& ctx, info& track_info)
    {
    }
 }

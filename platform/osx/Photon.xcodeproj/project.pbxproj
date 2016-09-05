@@ -16,7 +16,6 @@
 		5D3806AF1D70926100C6EB77 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
 		5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806B01D7191AA00C6EB77 /* slider.cpp */; };
 		5D4F7FE21D73BBC700C61217 /* tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4F7FE11D73BBC700C61217 /* tracker.cpp */; };
-		5D4F7FE41D73CFBC00C61217 /* analog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4F7FE31D73CFBC00C61217 /* analog.cpp */; };
 		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
 		5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D5C65C31D7BD696002197F8 /* photon_basic.ttf */; };
@@ -46,7 +45,6 @@
 		5D3806AE1D70926100C6EB77 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		5D3806B01D7191AA00C6EB77 /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
 		5D4F7FE11D73BBC700C61217 /* tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tracker.cpp; sourceTree = "<group>"; };
-		5D4F7FE31D73CFBC00C61217 /* analog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = analog.cpp; sourceTree = "<group>"; };
 		5D565EC91D605F5D00FD087C /* Photon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -190,7 +188,6 @@
 		5DA584AF1D618F4C004276C2 /* widget */ = {
 			isa = PBXGroup;
 			children = (
-				5D4F7FE31D73CFBC00C61217 /* analog.cpp */,
 				5DE5641A1D6DE4CD00F9435C /* composite.cpp */,
 				5D2950B91D75C25A00734694 /* dial.cpp */,
 				5D3806AE1D70926100C6EB77 /* image.cpp */,
@@ -293,7 +290,6 @@
 				5D5C65D81D7C2257002197F8 /* text_utils.cpp in Sources */,
 				5D76EBC41D796A010036EECC /* pickup.cpp in Sources */,
 				5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */,
-				5D4F7FE41D73CFBC00C61217 /* analog.cpp in Sources */,
 				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,
 				5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */,
 				5D4F7FE21D73BBC700C61217 /* tracker.cpp in Sources */,

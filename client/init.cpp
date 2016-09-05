@@ -187,9 +187,9 @@ namespace client
    };
 
    auto img = image{ "assets/images/space.jpg" };
-   auto spr =  sprite<150, 150>{"assets/images/knob_sprites_150x150_darker.png"};
+   auto spr =  sprite<150, 150>{ "assets/images/knob_sprites_150x150_darker.png" };
    auto spr_middle = halign(0.5, valign(0.5, spr));
-   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
+   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 0.25 });
 
    void  init(view& v)
    {

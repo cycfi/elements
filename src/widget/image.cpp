@@ -13,8 +13,8 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   image::image(char const* filename)
-    : _pixmap(std::make_shared<photon::pixmap>(filename))
+   image::image(char const* filename, float scale)
+    : _pixmap(std::make_shared<photon::pixmap>(filename, scale))
    {
    }
 
@@ -91,8 +91,8 @@ namespace photon
       }
    }
 
-   gizmo::gizmo(char const* filename)
-    : image(filename)
+   gizmo::gizmo(char const* filename, float scale)
+    : image(filename, scale)
    {}
 
    gizmo::gizmo(pixmap_ptr pixmap_)

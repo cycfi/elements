@@ -20,7 +20,7 @@ namespace photon
    class image : public widget
    {
    public:
-                           image(char const* filename);
+                           image(char const* filename, float scale = 1);
                            image(pixmap_ptr pixmap_);
                            image(image const&) = default;
                            image& operator=(image const&) = default;
@@ -69,7 +69,7 @@ namespace photon
    class gizmo : public image
    {
    public:
-                           gizmo(char const* filename);
+                           gizmo(char const* filename, float scale = 1);
                            gizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
@@ -105,7 +105,7 @@ namespace photon
    class sprite : public image
    {
    public:
-                           sprite(char const* filename);
+                           sprite(char const* filename, float scale = 1);
                            sprite(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
@@ -123,8 +123,8 @@ namespace photon
    };
 
    template <size_t width_, size_t height_>
-   inline sprite<width_, height_>::sprite(char const* filename)
-    : image(filename)
+   inline sprite<width_, height_>::sprite(char const* filename, float scale)
+    : image(filename, scale)
     , _index(0)
    {}
 

@@ -25,6 +25,9 @@ namespace client
    using ph::view;
    using ph::layer;
    using ph::pixmap;
+   using ph::image;
+   using ph::sprite;
+   using ph::gizmo;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -161,9 +164,9 @@ namespace client
       );
    auto vpups = align_middle(align_center(gtr));
 
-   struct image : widget
+   struct my_image : widget
    {
-      pixmap pm = { "assets/images/space.jpg" };
+      pixmap pm = pixmap{ "assets/images/space.jpg" };
 
       void draw(context const& ctx)
       {
@@ -172,15 +175,32 @@ namespace client
          {
             cnv.draw(pm, ctx.bounds);
             cnv.draw(pm, ctx.bounds.inset(ctx.bounds.width()/4, ctx.bounds.height()/4));
+
+//            float v = 50;
+//
+//            cnv.draw(pm, { 0, 0, 100, 100 }, { v, v, v+100, v+400 });
+//            
+//            cnv.line_width(0.5);
+//            cnv.stroke_rect({ 0, 0, v, v });
          }
       }
    };
 
+   auto img = image{ "assets/images/space.jpg" };
+   auto spr =  sprite<150, 150>{"assets/images/knob_sprites_150x150_darker.png"};
+   auto spr_middle = halign(0.5, valign(0.5, spr));
+   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{"assets/images/button.png"});
+
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(image{}));
-      //v.content.elements.push_back(new_(drawings{}));
+      v.content.elements.push_back(new_(my_image{}));
+
       //v.content.elements.push_back(new_(background{}));
+      //v.content.elements.push_back(new_(gzmo));
+
+      //v.content.elements.push_back(new_(spr_middle));
+      //v.content.elements.push_back(new_(img));
+      //v.content.elements.push_back(new_(drawings{}));
       //v.content.elements.push_back(new_(vpups));
    }
 }

@@ -70,12 +70,16 @@ namespace elf
          auto  alpha = glow_color.alpha;
          auto  radius = bounds.width()/2;
 
+         canvas_.line_width(5);
+         canvas_.stroke_style(glow_color.opacity(alpha * 0.1));
+         canvas_.stroke_round_rect(bounds, radius);
+         
          canvas_.line_width(4);
-         canvas_.stroke_style(glow_color.opacity(alpha * 0.2));
+         canvas_.stroke_style(glow_color.opacity(alpha * 0.3));
          canvas_.stroke_round_rect(bounds, radius);
 
          canvas_.line_width(3);
-         canvas_.stroke_style(glow_color.opacity(alpha * 0.4));
+         canvas_.stroke_style(glow_color.opacity(alpha * 0.5));
          canvas_.stroke_round_rect(bounds, radius);
 
          canvas_.line_width(2);

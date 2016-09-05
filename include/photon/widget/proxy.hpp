@@ -21,7 +21,7 @@ namespace photon
    {
    public:
 
-   // image
+   // Image
 
       virtual rect            limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
@@ -30,7 +30,7 @@ namespace photon
       virtual bool            scroll(context const& ctx, point p);
       virtual void            prepare_subject(context& ctx);
 
-   // control
+   // Control
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
@@ -44,10 +44,17 @@ namespace photon
       virtual widget*         focus();
       virtual bool            is_control() const;
 
-   // proxy
+   // Proxy
 
       virtual widget const&  subject() const = 0;
       virtual widget&        subject() = 0;
+      
+   // Receiver
+
+      virtual void            value(bool val);
+      virtual void            value(int val);
+      virtual void            value(double val);
+      virtual void            value(std::string val);
    };
 
    template <typename Subject, typename Base = proxy_base>

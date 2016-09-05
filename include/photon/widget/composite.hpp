@@ -22,7 +22,7 @@ namespace photon
    {
    public:
 
-   // image
+   // Image
 
       virtual rect            limits(basic_context const& ctx) const = 0;
       virtual widget*         hit_test(context const& ctx, point p);
@@ -30,7 +30,7 @@ namespace photon
       virtual void            layout(context const& ctx) = 0;
       virtual bool            scroll(context const& ctx, point p);
 
-   // control
+   // Control
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
@@ -45,7 +45,7 @@ namespace photon
       virtual bool            is_control() const;
       virtual void            idle(basic_context const& ctx);
 
-   // composite
+   // Composite
 
       struct hit_info
       {

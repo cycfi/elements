@@ -18,27 +18,28 @@ namespace photon
    double const range = _2pi * travel;
    double const start_angle = _2pi * (1-travel)/2;
 
-   dial::dial(char const* sprite_file, float height, float scale, double init_value)
+   dial::dial(widget_ptr image, double init_value)
     : _value(init_value)
-    , _image(sprite_file, height, scale)
+    , _image(image)
    {
-      _image.index(_value * _image.num_frames());
+      clamp(_value, 0.0, 1.0);
+      _image->value(_value);
    }
 
    rect dial::limits(basic_context const& ctx) const
    {
-      return _image.limits(ctx);
+      return _image->limits(ctx);
    }
 
    void dial::draw(context const& ctx)
    {
-      _image.draw(ctx);
+      _image->draw(ctx);
    }
 
-   void dial::value(double value_)
+   void dial::value(double val)
    {
-      _value = value_;
-      _image.index(_value * _image.num_frames());
+      _value = val;
+      _image->value(_value);
    }
 
    double dial::value_from_point(context const& ctx, point p)

@@ -103,9 +103,29 @@ namespace photon
    {
       return subject().is_control();
    }
-   
+
    void proxy_base::idle(basic_context const& ctx)
    {
       subject().idle(ctx);
+   }
+
+   void proxy_base::value(bool val)
+   {
+      subject().value(val);
+   }
+
+   void proxy_base::value(int val)
+   {
+      subject().value(val);
+   }
+
+   void proxy_base::value(double val)
+   {
+      subject().value(val);
+   }
+
+   void proxy_base::value(std::string val)
+   {
+      subject().value(val);
    }
 }

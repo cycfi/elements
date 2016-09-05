@@ -79,8 +79,24 @@ namespace photon
    {
       return false;
    }
-   
+
    void widget::idle(basic_context const& ctx)
+   {
+   }
+
+   void widget::value(bool val)
+   {
+   }
+
+   void widget::value(int val)
+   {
+   }
+
+   void widget::value(double val)
+   {
+   }
+
+   void widget::value(std::string val)
    {
    }
 }

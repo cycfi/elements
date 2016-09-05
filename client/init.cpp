@@ -198,7 +198,8 @@ namespace client
    
    auto make_dial()
    {
-      auto di = dial{ "assets/images/knob_sprites_150x150.png", 150 };
+      auto spr =  sprite{ "assets/images/knob_sprites_150x150.png", 150 };
+      auto di = dial{ new_(spr) };
       return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
    }
    
@@ -246,8 +247,8 @@ namespace client
       //v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
-//      v.content.elements.push_back(new_(make_dial()));
-      v.content.elements.push_back(new_(make_slider()));
+      v.content.elements.push_back(new_(make_dial()));
+      //v.content.elements.push_back(new_(make_slider()));
 
       //v.content.elements.push_back(new_(vgzmo));
       //v.content.elements.push_back(new_(spr_middle));

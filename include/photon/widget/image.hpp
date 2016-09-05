@@ -115,6 +115,9 @@ namespace photon
 
       virtual rect         source_rect(context const& ctx) const;
 
+      virtual void         value(int val);
+      virtual void         value(double val);
+
    private:
 
       size_t               _index;

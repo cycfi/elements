@@ -203,4 +203,14 @@ namespace photon
       auto width = pixmap().size().x;
       return rect{ 0, _height * _index, width,_height * (_index + 1) };
    }
+
+   void sprite::value(int val)
+   {
+      index(val);
+   }
+
+   void sprite::value(double val)
+   {
+      index(val * (num_frames()-1));
+   }
 }

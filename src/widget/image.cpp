@@ -119,8 +119,8 @@ namespace photon
          ctx.canvas().draw(pixmap(), src[i], dest[i]);
    }
 
-   hgizmo::hgizmo(char const* filename)
-    : image(filename)
+   hgizmo::hgizmo(char const* filename, float scale)
+    : image(filename, scale)
    {}
 
    hgizmo::hgizmo(pixmap_ptr pixmap_)
@@ -147,8 +147,8 @@ namespace photon
       ctx.canvas().draw(pixmap(), src[2], dest[2]);
    }
 
-   vgizmo::vgizmo(char const* filename)
-    : image(filename)
+   vgizmo::vgizmo(char const* filename, float scale)
+    : image(filename, scale)
    {}
 
    vgizmo::vgizmo(pixmap_ptr pixmap_)

@@ -28,6 +28,9 @@ namespace client
    using ph::image;
    using ph::sprite;
    using ph::gizmo;
+   using ph::vgizmo;
+   using ph::dial;
+   using ph::basic;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -187,17 +190,42 @@ namespace client
    };
 
    auto img = image{ "assets/images/space.jpg" };
-   auto spr =  sprite<150, 150>{ "assets/images/knob_sprites_150x150_darker.png" };
+   auto spr =  sprite<50, 50>{ "assets/images/knob_sprites_150x150_darker.png", 1.0/3 };
    auto spr_middle = halign(0.5, valign(0.5, spr));
-   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 0.25 });
+   auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 1.0/4 });
+   auto vgzmo = margin(rect{20, 20, 20, 20}, halign(0.5, vgizmo{ "assets/images/slot.png", 1.0/4 }));
+   
+   auto make_dial()
+   {
+      auto circle = basic(
+         [](context const& ctx)
+         {
+            auto c = ctx.canvas();
+            auto center = center_point(ctx.bounds);
+            auto r = std::min(ctx.bounds.width(), ctx.bounds.height()) / 2;
+
+            c.begin_path();
+            c.circle(photon::circle{ center.x, center.y, r });
+            c.stroke();
+         }
+      );
+
+      auto ind = fixed_size({ 16, 16 }, circle);
+      auto di = dial{ new_(std::move(ind)), new_(circle), 0.0 };
+
+      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
+   }
 
    void  init(view& v)
    {
-      v.content.elements.push_back(new_(my_image{}));
+      //v.content.elements.push_back(new_(my_image{}));
 
       //v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
+      v.content.elements.push_back(new_(make_dial()));
+
+      //v.content.elements.push_back(new_(vgzmo));
       //v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));

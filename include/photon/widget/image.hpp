@@ -79,7 +79,7 @@ namespace photon
    class hgizmo : public image
    {
    public:
-                           hgizmo(char const* filename);
+                           hgizmo(char const* filename, float scale = 1);
                            hgizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
@@ -89,7 +89,7 @@ namespace photon
    class vgizmo : public image
    {
    public:
-                           vgizmo(char const* filename);
+                           vgizmo(char const* filename, float scale = 1);
                            vgizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;

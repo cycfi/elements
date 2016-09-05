@@ -14,17 +14,17 @@ namespace photon
    // image implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
    image::image(char const* filename)
-    : _img(std::make_shared<canvas::image>(filename))
+    : _pixmap(std::make_shared<photon::pixmap>(filename))
    {
    }
 
-   image::image(image_ptr img_)
-    : _img(img_)
+   image::image(pixmap_ptr pixmap_)
+    : _pixmap(pixmap_)
    {}
 
    point image::size() const
    {
-      return _img->size();
+      return _pixmap->size();
    }
 
    rect image::source_rect(context const& ctx) const
@@ -35,7 +35,7 @@ namespace photon
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      ctx.canvas().draw(get_image(), src, ctx.bounds);
+      ctx.canvas().draw(pixmap(), src, ctx.bounds);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,8 +95,8 @@ namespace photon
     : image(filename)
    {}
 
-   gizmo::gizmo(image_ptr img_)
-    : image(img_)
+   gizmo::gizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
    {}
 
    rect gizmo::limits(basic_context const& ctx) const
@@ -116,15 +116,15 @@ namespace photon
       gizmo_parts(src_bounds, ctx.bounds, dest);
 
       for (int i = 0; i < 9; i++)
-         ctx.canvas().draw(get_image(), src[i], dest[i]);
+         ctx.canvas().draw(pixmap(), src[i], dest[i]);
    }
 
    hgizmo::hgizmo(char const* filename)
     : image(filename)
    {}
 
-   hgizmo::hgizmo(image_ptr img_)
-    : image(img_)
+   hgizmo::hgizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
    {}
 
    rect hgizmo::limits(basic_context const& ctx) const
@@ -142,17 +142,17 @@ namespace photon
 
       hgizmo_parts(src_bounds, src_bounds, src);
       hgizmo_parts(src_bounds, ctx.bounds, dest);
-      ctx.canvas().draw(get_image(), src[0], dest[0]);
-      ctx.canvas().draw(get_image(), src[1], dest[1]);
-      ctx.canvas().draw(get_image(), src[2], dest[2]);
+      ctx.canvas().draw(pixmap(), src[0], dest[0]);
+      ctx.canvas().draw(pixmap(), src[1], dest[1]);
+      ctx.canvas().draw(pixmap(), src[2], dest[2]);
    }
 
    vgizmo::vgizmo(char const* filename)
     : image(filename)
    {}
 
-   vgizmo::vgizmo(image_ptr img_)
-    : image(img_)
+   vgizmo::vgizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
    {}
 
    rect vgizmo::limits(basic_context const& ctx) const
@@ -170,8 +170,8 @@ namespace photon
 
       vgizmo_parts(src_bounds, src_bounds, src);
       vgizmo_parts(src_bounds, ctx.bounds, dest);
-      ctx.canvas().draw(get_image(), src[0], dest[0]);
-      ctx.canvas().draw(get_image(), src[1], dest[1]);
-      ctx.canvas().draw(get_image(), src[2], dest[2]);
+      ctx.canvas().draw(pixmap(), src[0], dest[0]);
+      ctx.canvas().draw(pixmap(), src[1], dest[1]);
+      ctx.canvas().draw(pixmap(), src[2], dest[2]);
    }
 }

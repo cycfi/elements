@@ -9,6 +9,7 @@
 
 #include <photon/widget/widget.hpp>
 #include <photon/support/canvas.hpp>
+#include <photon/support/pixmap.hpp>
 #include <memory>
 
 namespace photon
@@ -19,11 +20,8 @@ namespace photon
    class image : public widget
    {
    public:
-
-      using image_ptr = std::shared_ptr<canvas::image>;
-
                            image(char const* filename);
-                           image(image_ptr img_);
+                           image(pixmap_ptr pixmap_);
                            image(image const&) = default;
                            image& operator=(image const&) = default;
 
@@ -33,11 +31,11 @@ namespace photon
 
    protected:
 
-      canvas::image&       get_image() const  { return *_img.get(); }
+      photon::pixmap&      pixmap() const  { return *_pixmap.get(); }
 
    private:
 
-      image_ptr            _img;
+      pixmap_ptr            _pixmap;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +70,7 @@ namespace photon
    {
    public:
                            gizmo(char const* filename);
-                           gizmo(image_ptr img_);
+                           gizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
@@ -82,7 +80,7 @@ namespace photon
    {
    public:
                            hgizmo(char const* filename);
-                           hgizmo(image_ptr img_);
+                           hgizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
@@ -92,7 +90,7 @@ namespace photon
    {
    public:
                            vgizmo(char const* filename);
-                           vgizmo(image_ptr img_);
+                           vgizmo(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
@@ -108,7 +106,7 @@ namespace photon
    {
    public:
                            sprite(char const* filename);
-                           sprite(image_ptr img_);
+                           sprite(pixmap_ptr pixmap_);
 
       virtual rect         limits(basic_context const& ctx) const;
 
@@ -131,8 +129,8 @@ namespace photon
    {}
 
    template <size_t width_, size_t height_>
-   inline sprite<width_, height_>::sprite(image_ptr img_)
-    : image(img_)
+   inline sprite<width_, height_>::sprite(pixmap_ptr pixmap_)
+    : image(pixmap_)
     , _index(0)
    {}
 

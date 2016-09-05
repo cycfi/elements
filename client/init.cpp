@@ -16,6 +16,7 @@ namespace client
    namespace ph = photon;
 
    using ph::widget;
+   using ph::point;
    using ph::rect;
    using ph::context;
    using ph::canvas;
@@ -23,6 +24,7 @@ namespace client
    using ph::color;
    using ph::view;
    using ph::layer;
+   using ph::pixmap;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -138,7 +140,7 @@ namespace client
 
             cnv.stroke_rect(b);
             draw_icon(cnv, b, icons::power);
-            
+
             b = b.move(80, 0);
             cnv.stroke_rect(b);
             draw_icon(cnv, b, icons::wrench);
@@ -159,11 +161,26 @@ namespace client
       );
    auto vpups = align_middle(align_center(gtr));
 
+   struct image : widget
+   {
+      pixmap pm = { "assets/images/space.jpg" };
+
+      void draw(context const& ctx)
+      {
+         auto cnv = ctx.canvas();
+
+         {
+            cnv.draw(pm, ctx.bounds);
+            cnv.draw(pm, ctx.bounds.inset(ctx.bounds.width()/4, ctx.bounds.height()/4));
+         }
+      }
+   };
 
    void  init(view& v)
    {
+      v.content.elements.push_back(new_(image{}));
       //v.content.elements.push_back(new_(drawings{}));
-      v.content.elements.push_back(new_(background{}));
-      v.content.elements.push_back(new_(vpups));
+      //v.content.elements.push_back(new_(background{}));
+      //v.content.elements.push_back(new_(vpups));
    }
 }

@@ -188,8 +188,6 @@ namespace elf
             _tracking = tracking_rotate;
             _offset = point{ mp.x-_rotator_pos.x, mp.y-_rotator_pos.y };
 
-            //_offset = {0,0};
-
             //if (btn.num_clicks == 2)
             //{
             //   _slant = 0;
@@ -202,8 +200,9 @@ namespace elf
       // continue tracking move
       if (_tracking == tracking_move)
       {
-         float w = (ctx.bounds.width() * scale_len) + pu_bounds.width();
-         float offs = (ctx.bounds.width() - w) / 2;
+         float bw = ctx.bounds.width();
+         float w = (bw * scale_len) + pu_bounds.width();
+         float offs = (bw - w) / 2;
          mp.x -= _offset.x + ctx.bounds.left + offs;
 
          double align = mp.x / (w - pu_bounds.width());

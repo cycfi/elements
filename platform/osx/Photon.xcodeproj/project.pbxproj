@@ -23,6 +23,7 @@
 		5D5C65D81D7C2257002197F8 /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C65D71D7C2257002197F8 /* text_utils.cpp */; };
 		5D76EBC41D796A010036EECC /* pickup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D76EBC31D796A010036EECC /* pickup.cpp */; };
 		5D76EBC61D7972470036EECC /* frets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D76EBC51D7972470036EECC /* frets.cpp */; };
+		5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9ADA801D7CFAD700996964 /* pixmap.cpp */; };
 		5D9F54571D798EBC006DC5B0 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D9F54561D798EBC006DC5B0 /* libcairo.a */; };
 		5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
 		5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584971D6156CD004276C2 /* AppDelegate.m */; };
@@ -54,6 +55,7 @@
 		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
 		5D76EBC31D796A010036EECC /* pickup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pickup.cpp; sourceTree = "<group>"; };
 		5D76EBC51D7972470036EECC /* frets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frets.cpp; sourceTree = "<group>"; };
+		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
 		5D9F54561D798EBC006DC5B0 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
 		5DA567A81D6E6ED0008FEFF9 /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layer.cpp; sourceTree = "<group>"; };
 		5DA584961D6156CD004276C2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				5D07FE181D68638800D7EE92 /* context.cpp */,
+				5D9ADA801D7CFAD700996964 /* pixmap.cpp */,
 				5D07FE1C1D686C4A00D7EE92 /* rect.cpp */,
 				5D5C65D71D7C2257002197F8 /* text_utils.cpp */,
 			);
@@ -292,6 +295,7 @@
 				5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */,
 				5D4F7FE41D73CFBC00C61217 /* analog.cpp in Sources */,
 				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,
+				5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */,
 				5D4F7FE21D73BBC700C61217 /* tracker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

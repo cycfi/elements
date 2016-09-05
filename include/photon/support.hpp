@@ -13,6 +13,7 @@
 #include <photon/support/context.hpp>
 #include <photon/support/icon_ids.hpp>
 #include <photon/support/misc.hpp>
+#include <photon/support/pixmap.hpp>
 #include <photon/support/point.hpp>
 #include <photon/support/rect.hpp>
 #include <photon/support/text_utils.hpp>

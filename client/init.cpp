@@ -227,21 +227,26 @@ namespace client
 
    auto make_dial()
    {
-      float scale = 1.0/2;
+      float scale = 1.0/4;
 
-      auto spr =  sprite{ "assets/images/knob_sprites_white_128x128.png", 64, scale };
+      auto spr =  sprite{ "assets/images/knob_sprites_white_128x128.png", 32, scale };
       auto rlines = image{ "assets/images/radial-lines.png", scale };
 
 
-//      auto spr =  sprite{ "assets/images/knob_sprites_150x150.png", 150 };
-      auto di = dial(spr);
-      
-      auto lyr = layer(
-        align_center(align_middle(di)),
-        align_center(align_middle(rlines))
-      );
+//      auto di = dial(spr);
+//      
+//      auto lyr = layer(
+//        align_center(align_middle(di)),
+//        align_center(align_middle(rlines))
+//      );
+//      
+//      auto all = caption(lyr, "Volume");
 
-      return margin({ 50, 50, 50, 50 }, std::move(lyr));
+      auto di = dial(spr);
+      auto lyr = layer(align_center(align_middle(di)), rlines);
+      auto all = align_center(align_middle(caption(lyr, "Volume", 0.5)));
+
+      return margin({ 50, 50, 50, 50 }, std::move(all));
    }
 
    auto make_slider()
@@ -282,12 +287,22 @@ namespace client
             margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
          );
    }
+   
+   auto make_slider2()
+   {
+      auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
+      auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
+      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)) };
+      return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
+   }
 
    void  init(view& v)
    {
 
       v.content.elements.push_back(new_(background{}));
       
+      //v.content.elements.push_back(new_(make_slider2()));
+
       
       //v.content.elements.push_back(new_(sldr_knob_middle));
 
@@ -298,7 +313,7 @@ namespace client
 
       //v.content.elements.push_back(new_(gzmo));
 
-      //v.content.elements.push_back(new_(make_dial()));
+      v.content.elements.push_back(new_(make_dial()));
       
       //v.content.elements.push_back(new_(make_slider()));
 
@@ -307,6 +322,6 @@ namespace client
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));
       
-      v.content.elements.push_back(new_(vpups));
+      //v.content.elements.push_back(new_(vpups));
    }
 }

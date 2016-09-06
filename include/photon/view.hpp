@@ -60,7 +60,6 @@ namespace photon
       rect                 dirty() const   { return _dirty; }
 
       layer_composite      content;
-      photon::theme        theme;
 
    private:
 

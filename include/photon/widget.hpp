@@ -13,7 +13,6 @@
 #include <photon/widget/composite.hpp>
 #include <photon/widget/dial.hpp>
 //#include <photon/widget/floating.hpp>
-//#include <photon/widget/gallery.hpp>
 //#include <photon/widget/icon.hpp>
 #include <photon/widget/image.hpp>
 #include <photon/widget/layer.hpp>
@@ -26,5 +25,8 @@
 #include <photon/widget/slider.hpp>
 //#include <photon/widget/text.hpp>
 #include <photon/widget/tile.hpp>
+
+// Include this last
+#include <photon/widget/gallery.hpp>
 
 #endif

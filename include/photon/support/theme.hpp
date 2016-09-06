@@ -20,27 +20,34 @@ namespace photon
 
       color                controls_color             = { 18, 49, 85, 200 };
       color                indicator_color            = { 0, 127, 255, 200 };
+      color                basic_font_color           = { 220, 220, 220, 200 };
 
-      color                heading_font_color         = { 220, 220, 220, 200 };
-      char const*          heading_font               = "sans-bold";
+      color                heading_font_color         = basic_font_color;
+      char const*          heading_font               = "Open Sans";
       float                heading_font_size          = 20.0;
 
-      color                label_font_color           = { 220, 220, 220, 200 };
-      char const*          label_font                 = "sans";
+      color                label_font_color           = basic_font_color;
+      char const*          label_font                 = "Open Sans";
       float                label_font_size            = 18.0;
 
-      color                icon_color                 = { 220, 220, 220, 200 };
-      char const*          icon_font                  = "icons";
+      color                icon_color                 = basic_font_color;
+      char const*          icon_font                  = "photon_basic";
       float                icon_font_size             = 18.0;
 
-      color                text_box_font_color        = { 220, 220, 220, 200 };
-      char const*          text_box_font              = "sans";
+      color                text_box_font_color        = basic_font_color;
+      char const*          text_box_font              = "Open Sans";
       float                text_box_font_size         = 18.0;
       color                text_box_hilite_color      = { 0, 127, 255, 100 };
       color                text_box_caret_color       = { 0, 190, 255, 255 };
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
    };
+
+   // Access to the global theme
+   theme const& get_theme();
+
+   // Set the global theme
+   void set_theme(theme const& thm);
 }
 
 #endif

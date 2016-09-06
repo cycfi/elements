@@ -15,6 +15,7 @@ namespace elf
    using photon::clamp_max;
    using photon::widget;
    using photon::clamp;
+   using photon::get_theme;
 
    namespace icons = photon::icons;
    float const scale_len = 0.8;
@@ -47,9 +48,9 @@ namespace elf
 
       void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx)
       {
-         auto  canvas_ = ctx.canvas();
-         auto& theme = ctx.theme();
-         auto  state = prepare(bounds, slant, canvas_);
+         auto        canvas_ = ctx.canvas();
+         auto const& theme = get_theme();
+         auto        state = prepare(bounds, slant, canvas_);
 
          auto outline_color = theme.frame_color;
          auto glow_color = theme.indicator_color;
@@ -106,9 +107,9 @@ namespace elf
 
       point draw_rotator(rect bounds, float slant, context const& ctx)
       {
-         auto  canvas_ = ctx.canvas();
-         auto& theme = ctx.theme();
-         auto  state = prepare(bounds, slant, canvas_);
+         auto        canvas_ = ctx.canvas();
+         auto const& theme = get_theme();
+         auto        state = prepare(bounds, slant, canvas_);
 
          // Draw rotator icon
          float  height = bounds.height();

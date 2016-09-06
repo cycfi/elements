@@ -32,6 +32,7 @@ namespace photon
 
    void dial_base::value(double val)
    {
+      clamp(val, 0.0, 1.0);
       _value = val;
       subject().value(_value);
    }
@@ -72,5 +73,12 @@ namespace photon
 
    void dial_base::end_tracking(context const& ctx, info& track_info)
    {
+   }
+
+   bool dial_base::scroll(context const& ctx, point p)
+   {
+      value(value() + p.y * 0.01);
+      ctx.view.refresh(ctx.bounds);
+      return true;
    }
 }

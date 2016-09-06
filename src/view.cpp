@@ -76,4 +76,16 @@ namespace photon
       cairo_surface_destroy(surface_);
       cairo_destroy(context_);
    }
+   
+   void view::scroll(point p)
+   {
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      context ctx { *this, *context_, &content, _current_bounds };
+
+      content.scroll(ctx, p);
+
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
+   }
 }

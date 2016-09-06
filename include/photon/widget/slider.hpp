@@ -28,6 +28,7 @@ namespace photon
       virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
 
+      virtual bool         scroll(context const& ctx, point p);
       virtual void         begin_tracking(context const& ctx, info& track_info);
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);

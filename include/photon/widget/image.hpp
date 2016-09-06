@@ -26,6 +26,7 @@ namespace photon
                            image& operator=(image const&) = default;
 
       point                size() const;
+      virtual rect         limits(basic_context const& ctx) const;
       virtual void         draw(context const& ctx);
       virtual rect         source_rect(context const& ctx) const;
 

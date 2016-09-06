@@ -52,15 +52,13 @@ namespace photon
 
    point view::size() const
    {
-      auto ns_view = get_mac_view(_impl);
-      auto frame = [ns_view frame];
+      auto frame = [get_mac_view(_impl) frame];
       return { float(frame.size.width), float(frame.size.height) };
    }
 
    void view::size(point size_)
    {
-      auto ns_view = get_mac_view(_impl);
-      [[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
+      [[get_mac_view(_impl) window] setContentSize:NSMakeSize(size_.x, size_.y)];
    }
 
    void view::limits(rect limits_) const
@@ -77,11 +75,8 @@ namespace photon
 
    void view::refresh(rect area)
    {
-      auto  ns_view = get_mac_view(_impl);
-      auto  frame_height = [ns_view frame].size.height;
-      [
-         ns_view setNeedsDisplayInRect
-              : CGRectMake(area.left, frame_height - area.bottom, area.width(), area.height())
+      [get_mac_view(_impl) setNeedsDisplayInRect
+         : CGRectMake(area.left, area.top, area.width(), area.height())
       ];
    }
 }

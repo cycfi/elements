@@ -29,7 +29,13 @@ namespace photon
 
    rect image::source_rect(context const& ctx) const
    {
-      return rect{ 0, 0, ctx.bounds.width(), ctx.bounds.height() };
+      return { 0, 0, ctx.bounds.width(), ctx.bounds.height() };
+   }
+
+   rect image::limits(basic_context const& ctx) const
+   {
+      auto size_ = size();
+      return { size_.x, size_.y, size_.x, size_.y };
    }
 
    void image::draw(context const& ctx)

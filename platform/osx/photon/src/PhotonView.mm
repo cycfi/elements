@@ -41,13 +41,12 @@ namespace photon
 - (void) drawRect:(NSRect)dirty
 {
    [super drawRect:dirty];
-
    _view.draw(
       {
          float(dirty.origin.x),
          float(dirty.origin.y),
-         float(dirty.size.width),
-         float(dirty.size.height)
+         float(dirty.origin.x + dirty.size.width),
+         float(dirty.origin.y + dirty.size.height)
       }
    );
 }
@@ -58,7 +57,7 @@ namespace photon
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
    _view.click(btn);
-   [self setNeedsDisplay : YES];
+   [self displayIfNeeded];
 }
 
 - (void) mouseDragged:(NSEvent*) event
@@ -67,7 +66,7 @@ namespace photon
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
    _view.drag(btn);
-   [self setNeedsDisplay : YES];
+   [self displayIfNeeded];
 }
 
 - (void) mouseUp:(NSEvent*) event
@@ -76,7 +75,7 @@ namespace photon
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn = { false, 0, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
    _view.click(btn);
-   [self setNeedsDisplay : YES];
+   [self displayIfNeeded];
 }
 
 - (void)updateTrackingAreas
@@ -137,6 +136,23 @@ namespace photon
    _view.cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
+}
+
+- (void)scrollWheel:(NSEvent*) event
+{
+   photon::point delta = { float([event scrollingDeltaX]), float([event scrollingDeltaY]) };
+
+   if ([event hasPreciseScrollingDeltas])
+   {
+      delta.x *= 0.1;
+      delta.y *= 0.1;
+   }
+
+   if (fabs(delta.x) > 0.0 || fabs(delta.y) > 0.0)
+      _view.scroll(delta);
+
+   [self displayIfNeeded];
+   [super scrollWheel: event];
 }
 
 

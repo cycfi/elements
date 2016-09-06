@@ -41,7 +41,9 @@ namespace photon
                             : Base(args...)
                            {}
 
+                           tracker(tracker const& rhs);
                            tracker(tracker&& rhs) = default;
+      tracker&             operator=(tracker const& rhs);
       tracker&             operator=(tracker&& rhs) = default;
 
       virtual widget*      click(context const& ctx, mouse_button btn);
@@ -65,6 +67,20 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+   template <typename Base>
+   tracker<Base>::tracker(tracker const& rhs)
+    : Base(rhs)
+   {}
+
+   template <typename Base>
+   tracker<Base>& tracker<Base>::operator=(tracker const& rhs)
+   {
+      Base::operator=(rhs);
+      state.reset();
+      return *this;
+   }
+
    template <typename Base>
    inline widget* tracker<Base>::click(context const& ctx, mouse_button btn)
    {

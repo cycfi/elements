@@ -23,11 +23,9 @@ namespace photon
                            dial_base(double init_value = 0.0);
       virtual              ~dial_base() {}
 
-                           dial_base(dial_base&& rhs) = default;
-      dial_base&           operator=(dial_base&& rhs) = default;
-
       virtual void         prepare_subject(context& ctx);
 
+      virtual bool         scroll(context const& ctx, point p);
       virtual void         begin_tracking(context const& ctx, info& track_info);
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);

@@ -73,6 +73,22 @@ namespace photon
       }
    }
 
+   bool slider::scroll(context const& ctx, point p)
+   {
+      double new_value = _value + ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
+      clamp(new_value, 0.0, 1.0);
+      if (_value != new_value)
+      {
+         //if (on_change)
+         //   _final_pos = on_change(new_pos);
+         _value = new_value;
+         //_last_update = now();
+         ctx.view.refresh(ctx.bounds);
+         return true;
+      }
+      return false;
+   }
+
    rect slider::indicator_bounds(context const& ctx) const
    {
       auto  bounds = ctx.bounds;

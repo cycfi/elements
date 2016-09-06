@@ -214,6 +214,10 @@ namespace client
          }
       }
    };
+   
+   auto sldr_knob = image{ "assets/images/slider-white.png", 1.0/4 };
+   auto sldr_knob_middle = halign(0.5, valign(0.5, sldr_knob));
+
 
    auto img = image{ "assets/images/space.jpg" };
    auto spr =  sprite{ "assets/images/knob_sprites_150x150_darker.png", 50, 1.0/3 };
@@ -223,13 +227,21 @@ namespace client
 
    auto make_dial()
    {
+      float scale = 1.0/2;
 
+      auto spr =  sprite{ "assets/images/knob_sprites_white_128x128.png", 64, scale };
+      auto rlines = image{ "assets/images/radial-lines.png", scale };
 
-      auto spr =  sprite{ "assets/images/knob_64_white2.png", 32, 1.0/4 };
 
 //      auto spr =  sprite{ "assets/images/knob_sprites_150x150.png", 150 };
       auto di = dial(spr);
-      return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
+      
+      auto lyr = layer(
+        align_center(align_middle(di)),
+        align_center(align_middle(rlines))
+      );
+
+      return margin({ 50, 50, 50, 50 }, std::move(lyr));
    }
 
    auto make_slider()
@@ -239,7 +251,8 @@ namespace client
          void draw(context const& ctx)
          {
             auto c = ctx.canvas();
-            c.stroke_rect(ctx.bounds);
+            c.line_width(1);
+            c.stroke_rect(ctx.bounds.inset(1, 1));
          }
       };
 
@@ -249,8 +262,9 @@ namespace client
          {
             auto c = ctx.canvas();
             c.fill_style(colors::white);
-            c.fill_rect(ctx.bounds);
-            c.stroke_rect(ctx.bounds);
+            c.fill_rect(ctx.bounds.inset(1, 1));
+            c.line_width(1);
+            c.stroke_rect(ctx.bounds.inset(1, 1));
          }
       };
 
@@ -274,6 +288,9 @@ namespace client
 
       v.content.elements.push_back(new_(background{}));
       
+      
+      //v.content.elements.push_back(new_(sldr_knob_middle));
+
       //v.content.elements.push_back(new_(test{}));
 
 
@@ -281,13 +298,15 @@ namespace client
 
       //v.content.elements.push_back(new_(gzmo));
 
-      //v.content.elements.push_back(new_(make_dial()));
+      v.content.elements.push_back(new_(make_dial()));
+      
       //v.content.elements.push_back(new_(make_slider()));
 
-      v.content.elements.push_back(new_(vgzmo));
+      //v.content.elements.push_back(new_(vgzmo));
       //v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));
+      
       //v.content.elements.push_back(new_(vpups));
    }
 }

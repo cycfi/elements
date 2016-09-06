@@ -25,7 +25,7 @@ namespace photon
    {
       enum what { left, middle, right };
 
-      bool  is_pressed;
+      bool  down;
       int   num_clicks;
       what  state;
       point pos;

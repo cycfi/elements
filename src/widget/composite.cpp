@@ -52,7 +52,7 @@ namespace photon
 
       if (!empty())
       {
-         hit_info info = (btn.is_pressed)? hit_element(ctx, p) : _click_info;
+         hit_info info = (btn.down)? hit_element(ctx, p) : _click_info;
 
          if (info.element && focus(focus_request::wants_focus))
          {
@@ -75,7 +75,7 @@ namespace photon
             context ectx{ ctx, info.element, info.bounds };
             if (info.element->click(ectx, btn))
             {
-               if (btn.is_pressed)
+               if (btn.down)
                   _click_info = info;
                return info.element;
             }

@@ -287,7 +287,7 @@ namespace elf
 
    widget* pickup::click(context const& ctx, mouse_button btn)
    {
-      if (btn.num_clicks == 2)
+      if (!btn.down && btn.num_clicks == 2)
       {
          _slant = 0;
          ctx.view.refresh(ctx.bounds);

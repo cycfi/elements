@@ -84,7 +84,7 @@ namespace photon
    template <typename Base>
    inline widget* tracker<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (btn.is_pressed)
+      if (btn.down)
       {
          state = new_state(ctx, btn.pos);
          begin_tracking(ctx, *state);

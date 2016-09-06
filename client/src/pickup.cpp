@@ -73,7 +73,7 @@ namespace elf
          canvas_.line_width(5);
          canvas_.stroke_style(glow_color.opacity(alpha * 0.1));
          canvas_.stroke_round_rect(bounds, radius);
-         
+
          canvas_.line_width(4);
          canvas_.stroke_style(glow_color.opacity(alpha * 0.3));
          canvas_.stroke_round_rect(bounds, radius);
@@ -191,13 +191,6 @@ namespace elf
             // start tracking rotate
             _tracking = tracking_rotate;
             _offset = point{ mp.x-_rotator_pos.x, mp.y-_rotator_pos.y };
-
-            //if (btn.num_clicks == 2)
-            //{
-            //   _slant = 0;
-            //   ctx.view.refresh(ctx.bounds);
-            //   return true;
-            //}
          }
       }
 
@@ -290,6 +283,16 @@ namespace elf
          r1.right = r1.left + pu_w;
          r2.left = r2.right - pu_w;
       }
+   }
+
+   widget* pickup::click(context const& ctx, mouse_button btn)
+   {
+      if (btn.num_clicks == 2)
+      {
+         _slant = 0;
+         ctx.view.refresh(ctx.bounds);
+      }
+      return tracker<>::click(ctx, btn);
    }
 
    void pickup::begin_tracking(context const& ctx, info& track_info)

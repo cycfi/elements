@@ -54,8 +54,15 @@ namespace photon
 - (void) mouseDown:(NSEvent*) event
 {
    auto pos = [event locationInWindow];
+   auto click_count = [event clickCount];
    pos = [self convertPoint:pos fromView:nil];
-   photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   photon::mouse_button btn =
+   {
+      true,
+      int(click_count),
+      photon::mouse_button::left,
+      { float(pos.x), float(pos.y) }
+   };
    _view.click(btn);
    [self displayIfNeeded];
 }
@@ -63,8 +70,15 @@ namespace photon
 - (void) mouseDragged:(NSEvent*) event
 {
    auto pos = [event locationInWindow];
+   auto click_count = [event clickCount];
    pos = [self convertPoint:pos fromView:nil];
-   photon::mouse_button btn = { true, 1, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   photon::mouse_button btn =
+   {
+      true,
+      int(click_count),
+      photon::mouse_button::left,
+      { float(pos.x), float(pos.y) }
+   };
    _view.drag(btn);
    [self displayIfNeeded];
 }
@@ -72,8 +86,15 @@ namespace photon
 - (void) mouseUp:(NSEvent*) event
 {
    auto pos = [event locationInWindow];
+   auto click_count = [event clickCount];
    pos = [self convertPoint:pos fromView:nil];
-   photon::mouse_button btn = { false, 0, photon::mouse_button::left, { float(pos.x), float(pos.y) } };
+   photon::mouse_button btn =
+   {
+      false,
+      int(click_count),
+      photon::mouse_button::left,
+      { float(pos.x), float(pos.y) }
+   };
    _view.click(btn);
    [self displayIfNeeded];
 }

@@ -16,7 +16,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class slider : public tracker
+   class slider : public tracker<>
    {
    public:
                            slider(widget_ptr indicator, widget_ptr body, double init_value = 0.0);
@@ -32,13 +32,13 @@ namespace photon
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);
 
-      double               value() const        { return _value; }
-      void                 value(double value_) { _value = value_; }
-      widget_ptr           indicator() const    { return _indicator; }
-      widget_ptr           body() const         { return _body; }
+      virtual double       value() const        { return _value; }
+      virtual void         value(double val)    { _value = val; }
 
       rect                 indicator_bounds(context const& ctx) const;
       virtual double       value_from_point(context const& ctx, point p);
+      widget_ptr           indicator() const    { return _indicator; }
+      widget_ptr           body() const         { return _body; }
 
    private:
 

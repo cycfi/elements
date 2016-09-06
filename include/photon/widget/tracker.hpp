@@ -16,7 +16,8 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // tracker Tracks the mouse movement.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class tracker : public widget
+   template <typename Base = widget>
+   class tracker : public Base
    {
    public:
 
@@ -35,8 +36,10 @@ namespace photon
          point    offset = point{ 0, 0 };
       };
 
-                           tracker()   {}
-      virtual              ~tracker()  {}
+                           template <typename... T>
+                           tracker(T&&... args)
+                            : Base(args...)
+                           {}
 
                            tracker(tracker&& rhs) = default;
       tracker&             operator=(tracker&& rhs) = default;
@@ -58,6 +61,46 @@ namespace photon
 
       info_ptr             state;
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Base>
+   inline widget* tracker<Base>::click(context const& ctx, mouse_button btn)
+   {
+      if (btn.is_pressed)
+      {
+         state = new_state(ctx, btn.pos);
+         begin_tracking(ctx, *state);
+      }
+      else
+      {
+         end_tracking(ctx, *state);
+         state.reset();
+      }
+      return this;
+   }
+
+   template <typename Base>
+   inline void tracker<Base>::drag(context const& ctx, mouse_button btn)
+   {
+      state->previous = state->current;
+      state->current = btn.pos;
+      state->current = state->current.move(-state->offset.x, -state->offset.y);
+      keep_tracking(ctx, *state);
+   }
+
+   template <typename Base>
+   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& ctx, point start)
+   {
+      return info_ptr{ new info{ start } };
+   }
+
+   template <typename Base>
+   inline bool tracker<Base>::is_control() const
+   {
+      return true;
+   }
 }
 
 #endif

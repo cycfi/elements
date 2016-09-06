@@ -7,6 +7,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016)
 #define PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016
 
+#include <photon/widget/proxy.hpp>
 #include <photon/widget/tracker.hpp>
 #include <photon/support.hpp>
 #include <functional>
@@ -16,17 +17,17 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class dial : public tracker
+   class dial_base : public tracker<proxy_base>
    {
    public:
-                           dial(widget_ptr image, double init_value = 0.0);
-      virtual              ~dial() {}
+                           dial_base(double init_value = 0.0);
+      virtual              ~dial_base() {}
 
-                           dial(dial&& rhs) = default;
-      dial&                operator=(dial&& rhs) = default;
+                           dial_base(dial_base&& rhs) = default;
+      dial_base&           operator=(dial_base&& rhs) = default;
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      virtual void         prepare_subject(context& ctx);
+
       virtual void         begin_tracking(context const& ctx, info& track_info);
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);
@@ -38,8 +39,14 @@ namespace photon
    private:
 
       double               _value;
-      widget_ptr           _image;
    };
+
+   template <typename Subject>
+   inline proxy<typename std::decay<Subject>::type, dial_base>
+   dial(Subject&& subject, double init_value = 0.0)
+   {
+      return { std::forward<Subject>(subject), init_value };
+   }
 }
 
 #endif

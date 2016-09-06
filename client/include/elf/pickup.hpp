@@ -19,7 +19,7 @@ namespace elf
    using photon::cursor_tracking;
    using photon::mouse_button;
 
-   class pickup : public tracker
+   class pickup : public tracker<>
    {
    public:
 

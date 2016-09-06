@@ -18,31 +18,25 @@ namespace photon
    double const range = _2pi * travel;
    double const start_angle = _2pi * (1-travel)/2;
 
-   dial::dial(widget_ptr image, double init_value)
+   dial_base::dial_base(double init_value)
     : _value(init_value)
-    , _image(image)
    {
       clamp(_value, 0.0, 1.0);
-      _image->value(_value);
    }
 
-   rect dial::limits(basic_context const& ctx) const
+   void dial_base::prepare_subject(context& ctx)
    {
-      return _image->limits(ctx);
+      proxy_base::prepare_subject(ctx);
+      subject().value(_value);
    }
 
-   void dial::draw(context const& ctx)
-   {
-      _image->draw(ctx);
-   }
-
-   void dial::value(double val)
+   void dial_base::value(double val)
    {
       _value = val;
-      _image->value(_value);
+      subject().value(_value);
    }
 
-   double dial::value_from_point(context const& ctx, point p)
+   double dial_base::value_from_point(context const& ctx, point p)
    {
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
@@ -59,11 +53,11 @@ namespace photon
       return value();
    }
 
-   void dial::begin_tracking(context const& ctx, info& track_info)
+   void dial_base::begin_tracking(context const& ctx, info& track_info)
    {
    }
 
-   void dial::keep_tracking(context const& ctx, info& track_info)
+   void dial_base::keep_tracking(context const& ctx, info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -76,7 +70,7 @@ namespace photon
       }
    }
 
-   void dial::end_tracking(context const& ctx, info& track_info)
+   void dial_base::end_tracking(context const& ctx, info& track_info)
    {
    }
 }

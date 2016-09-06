@@ -56,6 +56,31 @@ namespace client
       }
    };
 
+   struct test : widget
+   {
+      void draw(context const& ctx)
+      {
+//         auto cnv = ctx.canvas();
+//         auto* cr = &cnv.cairo_context();
+//
+//         int              w, h;
+//         cairo_surface_t *image;
+//
+//         image = cairo_image_surface_create_from_png ("assets/images/test.png");
+//         w = cairo_image_surface_get_width (image);
+//         h = cairo_image_surface_get_height (image);
+//
+//         cairo_translate (cr, 128.0, 128.0);
+//         //cairo_rotate (cr, 45* M_PI/180);
+//         cairo_scale  (cr, 256.0/w, 256.0/h);
+//         cairo_translate (cr, -0.5*w, -0.5*h);
+//
+//         cairo_set_source_surface (cr, image, 0, 0);
+//         cairo_paint (cr);
+//         cairo_surface_destroy (image);
+      }
+   };
+
    struct drawings : widget
    {
       void draw(context const& ctx)
@@ -183,7 +208,7 @@ namespace client
 //            float v = 50;
 //
 //            cnv.draw(pm, { 0, 0, 100, 100 }, { v, v, v+100, v+400 });
-//            
+//
 //            cnv.line_width(0.5);
 //            cnv.stroke_rect({ 0, 0, v, v });
          }
@@ -195,14 +220,18 @@ namespace client
    auto spr_middle = halign(0.5, valign(0.5, spr));
    auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 1.0/4 });
    auto vgzmo = margin(rect{20, 20, 20, 20}, halign(0.5, vgizmo{ "assets/images/slot.png", 1.0/4 }));
-   
+
    auto make_dial()
    {
-      auto spr =  sprite{ "assets/images/knob_sprites_150x150.png", 150 };
-      auto di = dial{ new_(spr) };
+
+
+      auto spr =  sprite{ "assets/images/knob_64_white2.png", 32, 1.0/4 };
+
+//      auto spr =  sprite{ "assets/images/knob_sprites_150x150.png", 150 };
+      auto di = dial(spr);
       return margin({ 50, 50, 50, 50 }, valign(0.5, halign(0.5, std::move(di))));
    }
-   
+
    auto make_slider()
    {
       struct box : widget
@@ -242,15 +271,20 @@ namespace client
 
    void  init(view& v)
    {
+
+      v.content.elements.push_back(new_(background{}));
+      
+      //v.content.elements.push_back(new_(test{}));
+
+
       //v.content.elements.push_back(new_(my_image{}));
 
-      //v.content.elements.push_back(new_(background{}));
       //v.content.elements.push_back(new_(gzmo));
 
-      v.content.elements.push_back(new_(make_dial()));
+      //v.content.elements.push_back(new_(make_dial()));
       //v.content.elements.push_back(new_(make_slider()));
 
-      //v.content.elements.push_back(new_(vgzmo));
+      v.content.elements.push_back(new_(vgzmo));
       //v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));

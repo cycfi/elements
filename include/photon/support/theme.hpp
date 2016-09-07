@@ -16,7 +16,9 @@ namespace photon
    public:
 
       color                panel_color                = { 28, 30, 34, 192 };
-      color                frame_color                = { 220, 220, 220, 70 };
+      color                frame_color                = { 220, 220, 220, 100 };
+      float                frame_corner_radius        = 3.0;
+      float                frame_stroke_width         = 1.0;
 
       color                controls_color             = { 18, 49, 85, 200 };
       color                indicator_color            = { 0, 127, 255, 200 };
@@ -29,6 +31,7 @@ namespace photon
       color                label_font_color           = basic_font_color;
       char const*          label_font                 = "Open Sans";
       float                label_font_size            = 18.0;
+      canvas::font_style   label_style                = canvas::bold;
 
       color                icon_color                 = basic_font_color;
       char const*          icon_font                  = "photon_basic";

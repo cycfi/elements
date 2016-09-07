@@ -32,6 +32,7 @@ namespace client
    using ph::dial;
    using ph::basic;
    using ph::slider;
+   using ph::frame;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -191,7 +192,8 @@ namespace client
          elf::pickup{ 0.13, elf::pickup::double_, 0.2 },
          elf::frets{}
       );
-   auto vpups = align_middle(align_center(gtr));
+   auto vpups2 = align_middle(align_center(gtr));
+   auto vpups = margin({50, 50, 50, 50}, group("Virtual Pickups", vpups2, 0.8));
 
    struct my_image : widget
    {
@@ -295,6 +297,8 @@ namespace client
       auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)) };
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
+   
+   auto fr = margin({50, 50, 50, 50}, frame{});
 
    void  init(view& v)
    {
@@ -313,7 +317,7 @@ namespace client
 
       //v.content.elements.push_back(new_(gzmo));
 
-      v.content.elements.push_back(new_(make_dial()));
+      //v.content.elements.push_back(new_(make_dial()));
       
       //v.content.elements.push_back(new_(make_slider()));
 
@@ -321,7 +325,11 @@ namespace client
       //v.content.elements.push_back(new_(spr_middle));
       //v.content.elements.push_back(new_(img));
       //v.content.elements.push_back(new_(drawings{}));
+
+      //v.content.elements.push_back(new_(fr));
+
+      //v.content.elements.push_back(new_(fr));
       
-      //v.content.elements.push_back(new_(vpups));
+      v.content.elements.push_back(new_(vpups));
    }
 }

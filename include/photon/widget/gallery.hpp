@@ -13,6 +13,16 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Frames
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class frame : public widget
+   {
+   public:
+
+      virtual void   draw(context const& ctx);
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class label : public widget
@@ -37,6 +47,39 @@ namespace photon
       std::string       _text;
       float             _size;
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Groups
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Heading, typename Content>
+   inline auto make_group(
+      Heading&& heading,
+      Content&& content,
+      bool center_heading = true
+   )
+   {
+      auto align_ = center_heading? 0.5 : 0;
+      return
+        layer(
+            align_top(halign(align_, margin({10, 4, 10, 4}, heading))),
+            top_margin(20, std::forward<Content>(content)),
+            frame{}
+        );
+   }
+
+   template <typename Content>
+   inline auto group(
+      std::string    title
+    , Content&&      content
+    , float          label_size = 1.0
+    , bool center_heading = true
+   )
+   {
+      return make_group(
+         label(title, label_size),
+         std::forward<Content>(content), center_heading
+      );
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Captions

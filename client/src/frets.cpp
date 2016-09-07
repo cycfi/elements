@@ -110,7 +110,7 @@ namespace elf
       float offs = (ctx.bounds.height()-sch)/2;
 
       cnv.scale({ scale, scale });
-      cnv.translate({ 0, offs/scale });
+      cnv.translate({ ctx.bounds.left/scale, (ctx.bounds.top+offs)/scale });
       draw_frets(center({ 0, 0, w, h }, bbox), cnv);
 
       // The bridge

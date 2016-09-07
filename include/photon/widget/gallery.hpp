@@ -62,7 +62,7 @@ namespace photon
       return
         layer(
             align_top(halign(align_, margin({10, 4, 10, 4}, heading))),
-            top_margin(20, std::forward<Content>(content)),
+            std::forward<Content>(content),
             frame{}
         );
    }
@@ -72,11 +72,11 @@ namespace photon
       std::string    title
     , Content&&      content
     , float          label_size = 1.0
-    , bool center_heading = true
+    , bool           center_heading = true
    )
    {
       return make_group(
-         label(title, label_size),
+         left_top_margin({ 10, 10 }, label(title, label_size)),
          std::forward<Content>(content), center_heading
       );
    }

@@ -193,7 +193,7 @@ namespace client
          elf::frets{}
       );
    auto vpups2 = align_middle(align_center(gtr));
-   auto vpups = margin({50, 50, 50, 50}, group("Virtual Pickups", vpups2, 0.8));
+   auto vpups = margin({50, 50, 50, 50}, group("Virtual Pickups", vpups2, 0.8, false));
 
    struct my_image : widget
    {

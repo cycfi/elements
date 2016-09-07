@@ -18,6 +18,7 @@ namespace photon
          return this;
       return 0;
    }
+
    widget* basic_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(ctx.cursor_pos()))

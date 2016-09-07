@@ -32,6 +32,7 @@ namespace client
    using ph::dial;
    using ph::basic;
    using ph::slider;
+   using ph::selector;
    using ph::frame;
    using ph::basic_toggle_button;
    using ph::codepoint_to_utf8;
@@ -303,6 +304,14 @@ namespace client
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
    
+   auto make_selector()
+   {
+      auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
+      auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
+      auto vsldr = selector<4>{ new_(std::move(vind)), new_(std::move(vslot)) };
+      return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
+   }
+   
    auto fr = margin({50, 50, 50, 50}, frame{});
 
    void  init(view& v)
@@ -311,6 +320,7 @@ namespace client
       v.content.elements.push_back(new_(background{}));
       
       //v.content.elements.push_back(new_(make_slider2()));
+      v.content.elements.push_back(new_(make_selector()));
 
       
       //v.content.elements.push_back(new_(sldr_knob_middle));
@@ -321,7 +331,7 @@ namespace client
       //v.content.elements.push_back(new_(my_image{}));
 
       //v.content.elements.push_back(new_(gzmo));
-      v.content.elements.push_back(new_(btn));
+      //v.content.elements.push_back(new_(btn));
 
       //v.content.elements.push_back(new_(make_dial()));
       

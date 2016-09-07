@@ -8,8 +8,9 @@
 #define PHOTON_GUI_LIB_WIDGET_SLIDER_AUGUST_29_2016
 
 #include <photon/widget/tracker.hpp>
+#include <photon/view.hpp>
 #include <photon/support.hpp>
-#include <functional>
+#include <cmath>
 
 namespace photon
 {
@@ -20,8 +21,6 @@ namespace photon
    {
    public:
                            slider(widget_ptr indicator, widget_ptr body, double init_value = 0.0);
-      virtual              ~slider() {}
-
                            slider(slider&& rhs) = default;
       slider&              operator=(slider&& rhs) = default;
 
@@ -48,6 +47,37 @@ namespace photon
       widget_ptr           _body;
       mutable bool         _is_horiz;
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Selectors
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <size_t num_states>
+   class selector : public slider
+   {
+   public:
+
+      static_assert(num_states > 1, "Error: not enough states.");
+
+      using slider::slider;
+      using slider::value;
+
+      virtual bool         scroll(context const& ctx, point p);
+      virtual void         value(double val);
+   };
+
+   template <size_t num_states>
+   inline bool selector<num_states>::scroll(context const& ctx, point p)
+   {
+      // We don't allow selector move via the scroll wheel.
+      return false;
+   }
+
+   template <size_t num_states>
+   inline void selector<num_states>::value(double val)
+   {
+      constexpr auto max = num_states-1;
+      slider::value(std::round(val * max) / max);
+   }
 }
 
 #endif

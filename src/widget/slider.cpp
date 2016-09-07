@@ -75,14 +75,11 @@ namespace photon
 
    bool slider::scroll(context const& ctx, point p)
    {
-      double new_value = _value + ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
+      double new_value = value() + ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
       clamp(new_value, 0.0, 1.0);
-      if (_value != new_value)
+      if (value() != new_value)
       {
-         //if (on_change)
-         //   _final_pos = on_change(new_pos);
-         _value = new_value;
-         //_last_update = now();
+         value(new_value);
          ctx.view.refresh(ctx.bounds);
          return true;
       }
@@ -154,7 +151,7 @@ namespace photon
          double new_value = value_from_point(ctx, track_info.current);
          if (_value != new_value)
          {
-            _value = new_value;
+            value(new_value);
             ctx.view.refresh(ctx.bounds);
          }
       }
@@ -162,5 +159,11 @@ namespace photon
 
    void slider::end_tracking(context const& ctx, info& track_info)
    {
+      double new_value = value_from_point(ctx, track_info.current);
+      if (_value != new_value)
+      {
+         value(new_value);
+         ctx.view.refresh(ctx.bounds);
+      }
    }
 }

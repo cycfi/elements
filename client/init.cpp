@@ -33,6 +33,7 @@ namespace client
    using ph::basic;
    using ph::slider;
    using ph::frame;
+   using ph::basic_toggle_button;
    using ph::codepoint_to_utf8;
 
    namespace colors = ph::colors;
@@ -227,6 +228,10 @@ namespace client
    auto gzmo = margin(rect{20, 20, 20, 20}, gizmo{ "assets/images/button.png", 1.0/4 });
    auto vgzmo = margin(rect{20, 20, 20, 20}, halign(0.5, vgizmo{ "assets/images/slot.png", 1.0/4 }));
 
+   auto btnon = margin(rect{100, 100, 100, 100}, image{ "assets/images/glow-buttton-on.png", 1.0/4 });
+   auto btnoff = margin(rect{100, 100, 100, 100}, image{ "assets/images/glow-buttton-off.png", 1.0/4 });
+   auto btn = basic_toggle_button(btnoff, btnon);
+
    auto make_dial()
    {
       float scale = 1.0/4;
@@ -316,6 +321,7 @@ namespace client
       //v.content.elements.push_back(new_(my_image{}));
 
       //v.content.elements.push_back(new_(gzmo));
+      v.content.elements.push_back(new_(btn));
 
       //v.content.elements.push_back(new_(make_dial()));
       
@@ -330,6 +336,6 @@ namespace client
 
       //v.content.elements.push_back(new_(fr));
       
-      v.content.elements.push_back(new_(vpups));
+      //v.content.elements.push_back(new_(vpups));
    }
 }

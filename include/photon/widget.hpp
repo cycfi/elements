@@ -9,7 +9,7 @@
 
 #include <photon/widget/align.hpp>
 #include <photon/widget/basic.hpp>
-//#include <photon/widget/button.hpp>
+#include <photon/widget/button.hpp>
 #include <photon/widget/composite.hpp>
 #include <photon/widget/dial.hpp>
 //#include <photon/widget/floating.hpp>

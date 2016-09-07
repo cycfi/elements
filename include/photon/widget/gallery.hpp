@@ -61,7 +61,7 @@ namespace photon
       auto align_ = center_heading? 0.5 : 0;
       return
         layer(
-            align_top(halign(align_, margin({10, 4, 10, 4}, heading))),
+            align_top(halign(align_, margin({ 10, 4, 10, 4 }, heading))),
             std::forward<Content>(content),
             frame{}
         );

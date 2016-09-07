@@ -31,6 +31,7 @@
 		5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5849A1D6156CD004276C2 /* PhotonView.mm */; };
 		5DA584AE1D618C41004276C2 /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584AD1D618C41004276C2 /* view.cpp */; };
 		5DA584B11D618F4C004276C2 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584B01D618F4C004276C2 /* widget.cpp */; };
+		5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9FDF11D800E4F0058DCA4 /* button.cpp */; };
 		5DE564191D6DE49900F9435C /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
 		5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641A1D6DE4CD00F9435C /* composite.cpp */; };
 		5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641C1D6DF16300F9435C /* proxy.cpp */; };
@@ -65,6 +66,7 @@
 		5DA5849A1D6156CD004276C2 /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhotonView.mm; sourceTree = "<group>"; };
 		5DA584AD1D618C41004276C2 /* view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cpp; sourceTree = "<group>"; };
 		5DA584B01D618F4C004276C2 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widget.cpp; sourceTree = "<group>"; };
+		5DB9FDF11D800E4F0058DCA4 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
 		5DE5641C1D6DF16300F9435C /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 		5DA584AF1D618F4C004276C2 /* widget */ = {
 			isa = PBXGroup;
 			children = (
+				5DB9FDF11D800E4F0058DCA4 /* button.cpp */,
 				5DE5641A1D6DE4CD00F9435C /* composite.cpp */,
 				5D2950B91D75C25A00734694 /* dial.cpp */,
 				5D4857241D7F1EC5006D71FB /* gallery.cpp */,
@@ -282,6 +285,7 @@
 				5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */,
 				5D4857231D7F1A65006D71FB /* theme.cpp in Sources */,
 				5DA5849C1D6156CD004276C2 /* main.m in Sources */,
+				5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */,
 				5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */,
 				5D3806AD1D705F5400C6EB77 /* init.cpp in Sources */,
 				5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */,

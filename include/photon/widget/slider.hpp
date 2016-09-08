@@ -17,66 +17,113 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class slider : public tracker<>
+   class slider_base : public tracker<>
    {
    public:
-                           slider(widget_ptr indicator, widget_ptr body, double init_value = 0.0);
-                           slider(slider&& rhs) = default;
-      slider&              operator=(slider&& rhs) = default;
+                              slider_base(double init_value)
+                               : _value(init_value)
+                              {}
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      virtual rect            limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+      virtual void            layout(context const& ctx);
 
-      virtual bool         scroll(context const& ctx, point p);
-      virtual void         begin_tracking(context const& ctx, info& track_info);
-      virtual void         keep_tracking(context const& ctx, info& track_info);
-      virtual void         end_tracking(context const& ctx, info& track_info);
+      virtual bool            scroll(context const& ctx, point p);
+      virtual void            begin_tracking(context const& ctx, info& track_info);
+      virtual void            keep_tracking(context const& ctx, info& track_info);
+      virtual void            end_tracking(context const& ctx, info& track_info);
 
-      virtual double       value() const        { return _value; }
-      virtual void         value(double val)    { _value = val; }
+      virtual double          value() const        { return _value; }
+      virtual void            value(double val)    { _value = val; }
 
-      rect                 indicator_bounds(context const& ctx) const;
-      virtual double       value_from_point(context const& ctx, point p);
-      widget_ptr           indicator() const    { return _indicator; }
-      widget_ptr           body() const         { return _body; }
+      rect                    body_bounds(context const& ctx) const;
+      rect                    indicator_bounds(context const& ctx) const;
+      virtual double          value_from_point(context const& ctx, point p);
+
+      virtual widget const&   indicator() const = 0;
+      virtual widget&         indicator() = 0;
+      virtual widget const&   body() const = 0;
+      virtual widget&         body() = 0;
 
    private:
 
-      double               _value;
-      widget_ptr           _indicator;
-      widget_ptr           _body;
-      mutable bool         _is_horiz;
+      double                  _value;
+      mutable bool            _is_horiz = false;
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Indicator, typename Body, typename Base = slider_base>
+   class basic_slider : public Base
+   {
+   public:
+                              inline basic_slider(Indicator&& indicator, Body&& body, double init_value)
+                               : Base(init_value)
+                               , _indicator(std::forward<Indicator>(indicator))
+                               , _body(std::forward<Body>(body))
+                              {}
+
+      virtual widget const&   indicator() const  { return _indicator; }
+      virtual widget&         indicator()        { return _indicator; }
+      virtual widget const&   body() const       { return _body; }
+      virtual widget&         body()             { return _body; }
+
+   private:
+
+      Indicator               _indicator;
+      Body                    _body;
+   };
+
+   template <typename Indicator, typename Body>
+   inline basic_slider<
+      typename std::decay<Indicator>::type,
+      typename std::decay<Body>::type,
+      slider_base
+   >
+   slider(Indicator&& indicator, Body&& body, double init_value = 0.0)
+   {
+      return { std::forward<Indicator>(indicator), std::forward<Body>(body), init_value };
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Selectors
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <size_t num_states>
-   class selector : public slider
+   class selector_base : public slider_base
    {
    public:
 
       static_assert(num_states > 1, "Error: not enough states.");
 
-      using slider::slider;
-      using slider::value;
+      using slider_base::slider_base;
+      using slider_base::value;
 
       virtual bool         scroll(context const& ctx, point p);
       virtual void         value(double val);
    };
 
    template <size_t num_states>
-   inline bool selector<num_states>::scroll(context const& ctx, point p)
+   inline bool selector_base<num_states>::scroll(context const& ctx, point p)
    {
       // We don't allow selector move via the scroll wheel.
       return false;
    }
 
    template <size_t num_states>
-   inline void selector<num_states>::value(double val)
+   inline void selector_base<num_states>::value(double val)
    {
       constexpr auto max = num_states-1;
-      slider::value(std::round(val * max) / max);
+      slider_base::value(std::round(val * max) / max);
+   }
+
+   template <size_t num_states, typename Indicator, typename Body>
+   inline basic_slider<
+      typename std::decay<Indicator>::type,
+      typename std::decay<Body>::type,
+      selector_base<num_states>
+   >
+   selector(Indicator&& indicator, Body&& body, double init_value = 0.0)
+   {
+      return { std::forward<Indicator>(indicator), std::forward<Body>(body), init_value };
    }
 }
 

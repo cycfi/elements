@@ -11,17 +11,10 @@
 
 namespace photon
 {
-   slider::slider(widget_ptr indicator, widget_ptr body, double init_value)
-    : _indicator(indicator)
-    , _body(body)
-    , _value(init_value)
-    , _is_horiz(false)
-   {}
-
-   rect slider::limits(basic_context const& ctx) const
+   rect slider_base::limits(basic_context const& ctx) const
    {
-      auto  limits_ = body()->limits(ctx);
-      auto  ind_limits = indicator()->limits(ctx);
+      auto  limits_ = body().limits(ctx);
+      auto  ind_limits = indicator().limits(ctx);
 
       if ((_is_horiz = limits_.right > limits_.bottom))
       {
@@ -41,41 +34,40 @@ namespace photon
       return limits_;
    }
 
-   void slider::draw(context const& ctx)
+   void slider_base::layout(context const& ctx)
+   {
+      {
+         context sctx { ctx, &body(), ctx.bounds };
+         sctx.bounds = indicator_bounds(sctx);
+         body().layout(sctx);
+      }
+      {
+         context sctx { ctx, &indicator(), ctx.bounds };
+         sctx.bounds = body_bounds(sctx);
+         indicator().layout(sctx);
+      }
+   }
+
+   void slider_base::draw(context const& ctx)
    {
       if (intersects(ctx.bounds, ctx.view.dirty()))
       {
          {
-            auto  limits_ = body()->limits(ctx);
-            auto  bounds = ctx.bounds;
-
-            if (_is_horiz)
-            {
-               auto h = bounds.height();
-               bounds.height(std::min<float>(limits_.bottom, h));
-               bounds = center_v(bounds, ctx.bounds);
-            }
-            else
-            {
-               auto w = bounds.width();
-               bounds.width(std::min<float>(limits_.right, w));
-               bounds = center_h(bounds, ctx.bounds);
-            }
-
-            context sctx { ctx, _body.get(), bounds };
-            _body->draw(sctx);
+            context sctx { ctx, &body(), ctx.bounds };
+            sctx.bounds = body_bounds(sctx);
+            body().draw(sctx);
          }
          {
-            context sctx { ctx, _indicator.get(), ctx.bounds };
+            context sctx { ctx, &indicator(), ctx.bounds };
             sctx.bounds = indicator_bounds(sctx);
-            _indicator->draw(sctx);
+            indicator().draw(sctx);
          }
       }
    }
 
-   bool slider::scroll(context const& ctx, point p)
+   bool slider_base::scroll(context const& ctx, point p)
    {
-      double new_value = value() + ((ctx.bounds.width() < ctx.bounds.height()) ? p.y : -p.x) * 0.01;
+      double new_value = value() + (_is_horiz ? p.y : -p.x) * 0.01;
       clamp(new_value, 0.0, 1.0);
       if (value() != new_value)
       {
@@ -86,12 +78,32 @@ namespace photon
       return false;
    }
 
-   rect slider::indicator_bounds(context const& ctx) const
+   rect slider_base::body_bounds(context const& ctx) const
+   {
+      auto  limits_ = body().limits(ctx);
+      auto  bounds = ctx.bounds;
+
+      if (_is_horiz)
+      {
+         auto h = bounds.height();
+         bounds.height(std::min<float>(limits_.bottom, h));
+         bounds = center_v(bounds, ctx.bounds);
+      }
+      else
+      {
+         auto w = bounds.width();
+         bounds.width(std::min<float>(limits_.right, w));
+         bounds = center_h(bounds, ctx.bounds);
+      }
+      return bounds;
+   }
+
+   rect slider_base::indicator_bounds(context const& ctx) const
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  limits_ = indicator()->limits(ctx);
+      auto  limits_ = indicator().limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;
 
@@ -108,13 +120,13 @@ namespace photon
       }
    }
 
-   double slider::value_from_point(context const& ctx, point p)
+   double slider_base::value_from_point(context const& ctx, point p)
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
 
-      auto  limits_ = indicator()->limits(ctx);
+      auto  limits_ = indicator().limits(ctx);
       auto  ind_w = limits_.right;
       auto  ind_h = limits_.bottom;
       auto  new_value = 0.0;
@@ -133,7 +145,7 @@ namespace photon
       return new_value;
    }
 
-   void slider::begin_tracking(context const& ctx, info& track_info)
+   void slider_base::begin_tracking(context const& ctx, info& track_info)
    {
       auto ind_bounds = indicator_bounds(ctx);
       if (ind_bounds.includes(track_info.current))
@@ -144,7 +156,7 @@ namespace photon
       }
    }
 
-   void slider::keep_tracking(context const& ctx, info& track_info)
+   void slider_base::keep_tracking(context const& ctx, info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -157,7 +169,7 @@ namespace photon
       }
    }
 
-   void slider::end_tracking(context const& ctx, info& track_info)
+   void slider_base::end_tracking(context const& ctx, info& track_info)
    {
       double new_value = value_from_point(ctx, track_info.current);
       if (_value != new_value)

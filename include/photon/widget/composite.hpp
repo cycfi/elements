@@ -69,6 +69,7 @@ namespace photon
       hit_info                _cursor_info;
    };
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Container, typename Base>
    class composite : public Base, public Container
    {

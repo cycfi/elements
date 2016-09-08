@@ -283,11 +283,11 @@ namespace client
 
       auto vind = fixed_size({ 40, 20 }, filled_box{});
       auto vslot = hsize(10, box{});
-      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)), 0.3 };
+      auto vsldr = slider(std::move(vind), std::move(vslot), 0.3);
 
       auto hind = fixed_size({ 20, 40 }, filled_box{});
       auto hslot = vsize(10, box{});
-      auto hsldr = slider{ new_(std::move(hind)), new_(std::move(hslot)), 0.3 };
+      auto hsldr = slider(std::move(hind), std::move(hslot), 0.3);
 
       return
          vtile(
@@ -300,7 +300,7 @@ namespace client
    {
       auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
       auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
-      auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)) };
+      auto vsldr = slider(std::move(vind), std::move(vslot));
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
 
@@ -308,7 +308,7 @@ namespace client
    {
       auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
       auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
-      auto vsldr = selector<4>{ new_(std::move(vind)), new_(std::move(vslot)) };
+      auto vsldr = selector<4>(std::move(vind), std::move(vslot));
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
 
@@ -320,7 +320,7 @@ namespace client
       v.content.push_back(new_(background{}));
 
       //v.content.push_back(new_(make_slider2()));
-      //v.content.push_back(new_(make_selector()));
+      v.content.push_back(new_(make_selector()));
 
 
       //v.content.push_back(new_(sldr_knob_middle));
@@ -346,6 +346,6 @@ namespace client
 
       //v.content.push_back(new_(fr));
 
-      v.content.push_back(new_(vpups));
+      //v.content.push_back(new_(vpups));
    }
 }

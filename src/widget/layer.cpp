@@ -16,9 +16,9 @@ namespace photon
    rect layer_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, full_extent };
-      for (auto const& elem : *this)
+      for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = elem->limits(ctx);
+         rect  el = get(ix)->limits(ctx);
 
          clamp_min(limits.left, el.left);
          clamp_min(limits.top, el.top);
@@ -35,26 +35,27 @@ namespace photon
    void layer_widget::layout(context const& ctx)
    {
       bounds = ctx.bounds;
-      for (std::size_t i = 0; i != size(); ++i)
+      for (std::size_t ix = 0; ix != size(); ++ix)
       {
-         (*this)[i]->layout(context{ ctx, (*this)[i].get(), bounds_of(ctx, i) });
+         auto e = get(ix);
+         e->layout(context{ ctx, e, bounds_of(ctx, ix) });
       }
    }
 
    layer_widget::hit_info layer_widget::hit_element(context const& ctx, point p) const
    {
       // we test from the highest index (topmost element)
-      for (int i = int(size())-1; i >= 0; --i)
+      for (int ix = int(size())-1; ix >= 0; --ix)
       {
-         widget_ptr e = (*this)[i];
+         auto e = get(ix);
          if (e->is_control())
          {
-            rect bounds = bounds_of(ctx, i);
+            rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
             {
-               context ectx{ ctx, e.get(), bounds };
+               context ectx{ ctx, e, bounds };
                if (e->hit_test(ectx, p))
-                  return hit_info{ e.get(), bounds, int(i) };
+                  return hit_info{ e, bounds, int(ix) };
             }
          }
       }
@@ -65,7 +66,7 @@ namespace photon
    {
       float width = ctx.bounds.width();
       float height = ctx.bounds.height();
-      rect  limits = (*this)[index]->limits(ctx);
+      rect  limits = get(index)->limits(ctx);
 
       clamp_min(width, limits.left);
       clamp_max(width, limits.right);
@@ -85,11 +86,11 @@ namespace photon
    {
       if (!composite_base::focus())
       {
-         for (int i = int(size())-1; i >= 0; --i)
+         for (int ix = int(size())-1; ix >= 0; --ix)
          {
-            widget_ptr e = (*this)[i];
+            widget* e = get(ix);
             if (e->is_control() && e->focus(focus_request::wants_focus))
-               composite_base::focus(i);
+               composite_base::focus(ix);
          }
       }
    }
@@ -102,23 +103,23 @@ namespace photon
       rect bounds = bounds_of(ctx, _selected_index);
       if (intersects(bounds, ctx.view.dirty()))
       {
-         auto elem = (*this)[_selected_index];
-         context ectx{ ctx, elem.get(), bounds };
+         auto elem = get(_selected_index);
+         context ectx{ ctx, elem, bounds };
          elem->draw(ectx);
       }
    }
 
    layer_widget::hit_info deck_widget::hit_element(context const& ctx, point p) const
    {
-      widget_ptr e = (*this)[_selected_index];
+      auto e = get(_selected_index);
       if (e->is_control())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          if (bounds.includes(p))
          {
-            context ectx{ ctx, e.get(), bounds };
+            context ectx{ ctx, e, bounds };
             if (e->hit_test(ectx, p))
-               return hit_info{ e.get(), bounds, int(_selected_index) };
+               return hit_info{ e, bounds, int(_selected_index) };
          }
       }
       return hit_info{ 0, rect{}, -1 };
@@ -128,7 +129,7 @@ namespace photon
    {
       if (!composite_base::focus())
       {
-         widget_ptr e = (*this)[_selected_index];
+         auto e = get(_selected_index);
          if (e->is_control() && e->focus(focus_request::wants_focus))
             composite_base::focus(_selected_index);
       }

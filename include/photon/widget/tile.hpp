@@ -39,7 +39,7 @@ namespace photon
    inline auto vtile(W&&... elements)
    {
       array_composite<sizeof...(elements), vtile_widget> r{};
-      r.elements = { new_(std::forward<W>(elements))... };
+      r = { new_(std::forward<W>(elements))... };
       return r;
    }
 

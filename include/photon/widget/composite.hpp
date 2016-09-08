@@ -54,21 +54,12 @@ namespace photon
          int       index      = -1;
       };
 
-      using iterator = widget_ptr*;
-      using const_iterator = widget_ptr const*;
-
       virtual hit_info        hit_element(context const& ctx, point p) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
 
       virtual std::size_t     size() const = 0;
-      virtual iterator        begin() = 0;
-      virtual const_iterator  begin() const = 0;
-
-      iterator                end()                            { return begin()+size(); }
-      const_iterator          end() const                      { return begin()+size(); }
       bool                    empty() const                    { return size() == 0; }
-      widget_ptr&             operator[](std::size_t ix)       { return begin()[ix]; }
-      widget_ptr const&       operator[](std::size_t ix) const { return begin()[ix]; }
+      virtual widget*         get(std::size_t ix) const = 0;
 
    private:
 
@@ -79,18 +70,15 @@ namespace photon
    };
 
    template <typename Container, typename Base>
-   class composite : public Base
+   class composite : public Base, public Container
    {
    public:
+   
+      using Container::Container;
+      using Container::operator=;
 
-      using iterator = typename Base::iterator;
-      using const_iterator = typename Base::const_iterator;
-
-      virtual std::size_t     size() const   { return elements.size(); };
-      virtual iterator        begin()        { return &elements[0]; }
-      virtual const_iterator  begin() const  { return &elements[0]; }
-
-      Container               elements;
+      virtual std::size_t     size() const              { return Container::size(); };
+      virtual widget*         get(std::size_t ix) const { return (*this)[ix].get(); }
    };
 
    template <size_t N, typename Base>

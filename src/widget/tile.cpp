@@ -15,9 +15,9 @@ namespace photon
    rect vtile_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, full_extent, 0.0 };
-      for (auto const& elem : *this)
+      for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = elem->limits(ctx);
+         rect  el = get(ix)->limits(ctx);
 
          limits.top += el.top;
          limits.bottom += el.bottom;
@@ -43,8 +43,9 @@ namespace photon
       double   curr     = ctx.bounds.top;
       auto     i        = _tiles.begin();
 
-      for (auto const& elem : *this)
+      for (std::size_t ix = 0; ix != size();  ++ix)
       {
+         auto  elem = get(ix);
          rect  limits = elem->limits(ctx);
 
          *i++ = curr;
@@ -55,7 +56,7 @@ namespace photon
             curr -= extra * (limits.bottom - limits.top) / m_size;
 
          rect ebounds = { _left, float(prev), _right, float(curr) };
-         elem->layout(context{ ctx, elem.get(), ebounds });
+         elem->layout(context{ ctx, elem, ebounds });
       }
       *i = curr;
    }
@@ -71,9 +72,9 @@ namespace photon
    rect htile_widget::limits(basic_context const& ctx) const
    {
       rect limits{ 0.0, 0.0, 0.0, full_extent };
-      for (auto const& elem : *this)
+      for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = elem->limits(ctx);
+         rect  el = get(ix)->limits(ctx);
 
          limits.left += el.left;
          limits.right += el.right;
@@ -99,8 +100,9 @@ namespace photon
       double   curr     = ctx.bounds.left;
       auto     i        = _tiles.begin();
 
-      for (auto const& elem : *this)
+      for (std::size_t ix = 0; ix != size();  ++ix)
       {
+         auto  elem = get(ix);
          rect  limits = elem->limits(ctx);
 
          *i++ = curr;
@@ -111,7 +113,7 @@ namespace photon
             curr -= extra * (limits.right - limits.left) / m_size;
 
          rect ebounds = { float(prev), _top, float(curr), _bottom };
-         elem->layout(context{ ctx, elem.get(), ebounds });
+         elem->layout(context{ ctx, elem, ebounds });
       }
       *i = curr;
    }

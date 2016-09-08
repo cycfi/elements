@@ -39,7 +39,7 @@ namespace photon
    inline auto layer(W&&... elements)
    {
       array_composite<sizeof...(elements), layer_widget> r{};
-      r.elements = { new_(std::forward<W>(elements))... };
+      r = { new_(std::forward<W>(elements))... };
       std::reverse(r.begin(), r.end());
       return r;
    }

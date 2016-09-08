@@ -218,7 +218,7 @@ namespace client
          }
       }
    };
-   
+
    auto sldr_knob = image{ "assets/images/slider-white.png", 1.0/4 };
    auto sldr_knob_middle = halign(0.5, valign(0.5, sldr_knob));
 
@@ -242,12 +242,12 @@ namespace client
 
 
 //      auto di = dial(spr);
-//      
+//
 //      auto lyr = layer(
 //        align_center(align_middle(di)),
 //        align_center(align_middle(rlines))
 //      );
-//      
+//
 //      auto all = caption(lyr, "Volume");
 
       auto di = dial(spr);
@@ -295,7 +295,7 @@ namespace client
             margin({ 50, 0, 50, 50 }, valign(0.5, std::move(hsldr)))
          );
    }
-   
+
    auto make_slider2()
    {
       auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
@@ -303,7 +303,7 @@ namespace client
       auto vsldr = slider{ new_(std::move(vind)), new_(std::move(vslot)) };
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
-   
+
    auto make_selector()
    {
       auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
@@ -311,41 +311,41 @@ namespace client
       auto vsldr = selector<4>{ new_(std::move(vind)), new_(std::move(vslot)) };
       return margin({ 50, 50, 50, 50 }, halign(0.5, std::move(vsldr)));
    }
-   
+
    auto fr = margin({50, 50, 50, 50}, frame{});
 
    void  init(view& v)
    {
 
-      v.content.elements.push_back(new_(background{}));
-      
-      //v.content.elements.push_back(new_(make_slider2()));
-      v.content.elements.push_back(new_(make_selector()));
+      v.content.push_back(new_(background{}));
 
-      
-      //v.content.elements.push_back(new_(sldr_knob_middle));
-
-      //v.content.elements.push_back(new_(test{}));
+      //v.content.push_back(new_(make_slider2()));
+      //v.content.push_back(new_(make_selector()));
 
 
-      //v.content.elements.push_back(new_(my_image{}));
+      //v.content.push_back(new_(sldr_knob_middle));
 
-      //v.content.elements.push_back(new_(gzmo));
-      //v.content.elements.push_back(new_(btn));
+      //v.content.push_back(new_(test{}));
 
-      //v.content.elements.push_back(new_(make_dial()));
-      
-      //v.content.elements.push_back(new_(make_slider()));
 
-      //v.content.elements.push_back(new_(vgzmo));
-      //v.content.elements.push_back(new_(spr_middle));
-      //v.content.elements.push_back(new_(img));
-      //v.content.elements.push_back(new_(drawings{}));
+      //v.content.push_back(new_(my_image{}));
 
-      //v.content.elements.push_back(new_(fr));
+      //v.content.push_back(new_(gzmo));
+      //v.content.push_back(new_(btn));
 
-      //v.content.elements.push_back(new_(fr));
-      
-      //v.content.elements.push_back(new_(vpups));
+      //v.content.push_back(new_(make_dial()));
+
+      //v.content.push_back(new_(make_slider()));
+
+      //v.content.push_back(new_(vgzmo));
+      //v.content.push_back(new_(spr_middle));
+      //v.content.push_back(new_(img));
+      //v.content.push_back(new_(drawings{}));
+
+      //v.content.push_back(new_(fr));
+
+      //v.content.push_back(new_(fr));
+
+      v.content.push_back(new_(vpups));
    }
 }

@@ -319,8 +319,8 @@ namespace client
 
       v.content.push_back(new_(background{}));
 
-      //v.content.push_back(new_(make_slider2()));
-      v.content.push_back(new_(make_selector()));
+      v.content.push_back(new_(make_slider2()));
+      //v.content.push_back(new_(make_selector()));
 
 
       //v.content.push_back(new_(sldr_knob_middle));

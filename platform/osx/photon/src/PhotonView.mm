@@ -168,6 +168,9 @@ namespace photon
       delta.x *= 0.1;
       delta.y *= 0.1;
    }
+   
+   if (event.directionInvertedFromDevice)
+      delta.y = -delta.y;
 
    if (fabs(delta.x) > 0.0 || fabs(delta.y) > 0.0)
       _view.scroll(delta);

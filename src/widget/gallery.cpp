@@ -31,7 +31,6 @@ namespace photon
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
 
-      canvas_.rect(ctx.bounds);
       canvas_.fill_text(point{ cx, cy }, _text.c_str());
    }
 

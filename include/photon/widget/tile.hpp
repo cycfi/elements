@@ -70,7 +70,7 @@ namespace photon
    inline auto htile(W&&... elements)
    {
       array_composite<sizeof...(elements), htile_widget> r{};
-      r.elements = { new_(std::forward<W>(elements))... };
+      r = { new_(std::forward<W>(elements))... };
       return r;
    }
 }

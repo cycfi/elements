@@ -53,9 +53,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Heading, typename Content>
    inline auto make_group(
-      Heading&& heading,
-      Content&& content,
-      bool center_heading = true
+      Heading&&   heading,
+      Content&&   content,
+      bool        center_heading = true
    )
    {
       auto align_ = center_heading? 0.5 : 0;
@@ -69,10 +69,10 @@ namespace photon
 
    template <typename Content>
    inline auto group(
-      std::string    title
-    , Content&&      content
-    , float          label_size = 1.0
-    , bool           center_heading = true
+      std::string    title,
+      Content&&      content,
+      float          label_size = 1.0,
+      bool           center_heading = true
    )
    {
       return make_group(
@@ -81,15 +81,44 @@ namespace photon
       );
    }
 
+   template <typename Heading, typename Content>
+   inline auto make_unframed_group(
+      Heading&&   heading,
+      Content&&   content,
+      bool        center_heading = true
+   )
+   {
+      auto align_ = center_heading? 0.5 : 0;
+      return
+        layer(
+            align_top(halign(align_, margin({ 10, 4, 10, 4 }, heading))),
+            std::forward<Content>(content)
+        );
+   }
+
+   template <typename Content>
+   inline auto unframed_group(
+      std::string    title,
+      Content&&      content,
+      float          label_size = 1.0,
+      bool           center_heading = true
+   )
+   {
+      return make_unframed_group(
+         left_top_margin({ 10, 10 }, label(title, label_size)),
+         std::forward<Content>(content), center_heading
+      );
+   }
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Captions
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Control>
-   inline auto caption(Control&& control, std::string const& title, float size = 1.0)
+   template <typename Content>
+   inline auto caption(Content&& content, std::string const& title, float size = 1.0)
    {
       return
          vtile(
-            std::forward<Control>(control),
+            std::forward<Content>(content),
             align_center(top_margin(5.0, label(title, size)))
          );
    }

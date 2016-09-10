@@ -34,11 +34,11 @@ namespace photon
        , _size(size_)
       {}
 
-      virtual rect      limits(basic_context const& ctx) const;
-      virtual void      draw(context const& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
 
-      std::string       text() const                     { return _text; }
-      void              text(std::string const& text)    { _text = text; }
+      std::string             text() const                     { return _text; }
+      void                    text(std::string const& text)    { _text = text; }
 
       using widget::text;
 

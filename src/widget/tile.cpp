@@ -12,20 +12,20 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect vtile_widget::limits(basic_context const& ctx) const
+   widget_limits vtile_widget::limits(basic_context const& ctx) const
    {
-      rect limits{ 0.0, 0.0, full_extent, 0.0 };
+      widget_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = get(ix)->limits(ctx);
+         auto el = get(ix)->limits(ctx);
 
-         limits.top += el.top;
-         limits.bottom += el.bottom;
-         clamp_min(limits.left, el.left);
-         clamp_max(limits.right, el.right);
+         limits.min.y += el.min.y;
+         limits.max.y += el.max.y;
+         clamp_min(limits.min.x, el.min.x);
+         clamp_max(limits.max.x, el.max.x);
       }
 
-      clamp_min(limits.right, limits.left);
+      clamp_min(limits.max.x, limits.min.x);
       return limits;
    }
 
@@ -36,24 +36,24 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      rect     limits   = this->limits(ctx);
+      auto     limits   = this->limits(ctx);
       double   height   = ctx.bounds.height();
-      double   extra    = limits.bottom - height;
-      double   m_size   = limits.bottom - limits.top;
+      double   extra    = limits.max.y - height;
+      double   m_size   = limits.max.y - limits.min.y;
       double   curr     = ctx.bounds.top;
       auto     i        = _tiles.begin();
 
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
          auto  elem = get(ix);
-         rect  limits = elem->limits(ctx);
+         auto  limits = elem->limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
-         curr += limits.bottom;
+         curr += limits.max.y;
 
          if ((extra != 0) && (m_size != 0))
-            curr -= extra * (limits.bottom - limits.top) / m_size;
+            curr -= extra * (limits.max.y - limits.min.y) / m_size;
 
          rect ebounds = { _left, float(prev), _right, float(curr) };
          elem->layout(context{ ctx, elem, ebounds });
@@ -69,20 +69,20 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Horizontal Tiles
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect htile_widget::limits(basic_context const& ctx) const
+   widget_limits htile_widget::limits(basic_context const& ctx) const
    {
-      rect limits{ 0.0, 0.0, 0.0, full_extent };
+      widget_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = get(ix)->limits(ctx);
+         auto el = get(ix)->limits(ctx);
 
-         limits.left += el.left;
-         limits.right += el.right;
-         clamp_min(limits.top, el.top);
-         clamp_max(limits.bottom, el.bottom);
+         limits.min.x += el.min.x;
+         limits.max.x += el.max.x;
+         clamp_min(limits.min.y, el.min.y);
+         clamp_max(limits.max.y, el.max.y);
       }
 
-      clamp_min(limits.bottom, limits.top);
+      clamp_min(limits.max.y, limits.min.y);
       return limits;
    }
 
@@ -93,24 +93,24 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      rect     limits   = this->limits(ctx);
+      auto     limits   = this->limits(ctx);
       double   width    = ctx.bounds.width();
-      double   extra    = limits.right - width;
-      double   m_size   = limits.right - limits.left;
+      double   extra    = limits.max.x - width;
+      double   m_size   = limits.max.x - limits.min.x;
       double   curr     = ctx.bounds.left;
       auto     i        = _tiles.begin();
 
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
          auto  elem = get(ix);
-         rect  limits = elem->limits(ctx);
+         auto  limits = elem->limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
-         curr += limits.right;
+         curr += limits.max.x;
 
          if ((extra != 0) && (m_size != 0))
-            curr -= extra * (limits.right - limits.left) / m_size;
+            curr -= extra * (limits.max.x - limits.min.x) / m_size;
 
          rect ebounds = { float(prev), _top, float(curr), _bottom };
          elem->layout(context{ ctx, elem, ebounds });

@@ -19,18 +19,18 @@ namespace photon
    {
    public:
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         layout(context const& ctx);
-      virtual hit_info     hit_element(context const& ctx, point p) const;
-      virtual rect         bounds_of(context const& ctx, std::size_t index) const;
-      virtual bool         focus(focus_request r);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            layout(context const& ctx);
+      virtual hit_info        hit_element(context const& ctx, point p) const;
+      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
+      virtual bool            focus(focus_request r);
 
       using composite_base::focus;
 
    private:
 
-      void                 focus_top();
-      rect                 bounds;
+      void                    focus_top();
+      rect                    bounds;
    };
 
    using layer_composite = vector_composite<layer_widget>;
@@ -78,7 +78,7 @@ namespace photon
       std::reverse(r.begin(), r.end());
       return r;
    }
-   
+
    template <typename... W>
    inline auto rdeck(W&&... elements)
    {

@@ -22,11 +22,11 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     size_widget(point size, Subject&& subject);
-                     size_widget(point size, Subject const& subject);
+                              size_widget(point size, Subject&& subject);
+                              size_widget(point size, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
@@ -53,14 +53,14 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect size_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits size_widget<Subject>::limits(basic_context const& ctx) const
    {
       rect  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
       float size_y = _size.y;
       clamp(size_x, e_limits.left, e_limits.right);
       clamp(size_y, e_limits.top, e_limits.bottom);
-      return rect{ size_x, size_y, size_x, size_y };
+      return { { size_x, size_y }, { size_x, size_y } };
    }
 
    template <typename Subject>
@@ -78,15 +78,15 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     hsize_widget(float width, Subject&& subject);
-                     hsize_widget(float width, Subject const& subject);
+                              hsize_widget(float width, Subject&& subject);
+                              hsize_widget(float width, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
-      float          _width;
+      float                   _width;
    };
 
    template <typename Subject>
@@ -109,12 +109,12 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect hsize_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits hsize_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float width = _width;
-      clamp(width, e_limits.left, e_limits.right);
-      return rect{ width, e_limits.top, width, e_limits.bottom };
+      clamp(width, e_limits.min.x, e_limits.max.x);
+      return { { width, e_limits.min.y }, { width, e_limits.max.y } };
    }
 
    template <typename Subject>
@@ -131,15 +131,15 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     vsize_widget(float height, Subject&& subject);
-                     vsize_widget(float height, Subject const& subject);
+                              vsize_widget(float height, Subject&& subject);
+                              vsize_widget(float height, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
-      float          _height;
+      float                   _height;
    };
 
    template <typename Subject>
@@ -162,12 +162,12 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect vsize_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits vsize_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float height = _height;
-      clamp(height, e_limits.top, e_limits.bottom);
-      return rect{ e_limits.left, height, e_limits.right, height };
+      clamp(height, e_limits.min.y, e_limits.max.y);
+      return { { e_limits.min.x, height }, { e_limits.max.x, height } };
    }
 
    template <typename Subject>
@@ -186,15 +186,15 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     min_size_widget(point size, Subject&& subject);
-                     min_size_widget(point size, Subject const& subject);
+                              min_size_widget(point size, Subject&& subject);
+                              min_size_widget(point size, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
-      point          _size;
+      point                   _size;
    };
 
    template <typename Subject>
@@ -217,14 +217,14 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect min_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits min_size_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
       float size_y = _size.y;
       clamp(size_x, e_limits.left, e_limits.right);
       clamp(size_y, e_limits.top, e_limits.bottom);
-      return rect{ size_x, size_y, e_limits.right, e_limits.bottom };
+      return { size_x, size_y, e_limits.max.x, e_limits.max.y };
    }
 
    template <typename Subject>
@@ -244,15 +244,15 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     hmin_size_widget(float width, Subject&& subject);
-                     hmin_size_widget(float width, Subject const& subject);
+                              hmin_size_widget(float width, Subject&& subject);
+                              hmin_size_widget(float width, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
-      float          _width;
+      float                   _width;
    };
 
    template <typename Subject>
@@ -275,12 +275,12 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect hmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits hmin_size_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float width = _width;
-      clamp(width, e_limits.left, e_limits.right);
-      return rect{ width, e_limits.top, e_limits.right, e_limits.bottom };
+      clamp(width, e_limits.min.x, e_limits.max.x);
+      return { width, e_limits.min.y, e_limits.max.x, e_limits.max.y };
    }
 
    template <typename Subject>
@@ -298,15 +298,15 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     vmin_size_widget(float height, Subject&& subject);
-                     vmin_size_widget(float height, Subject const& subject);
+                              vmin_size_widget(float height, Subject&& subject);
+                              vmin_size_widget(float height, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
-      float          _height;
+      float                   _height;
    };
 
    template <typename Subject>
@@ -329,12 +329,12 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect vmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits vmin_size_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float height = _height;
-      clamp(height, e_limits.top, e_limits.bottom);
-      return rect{ e_limits.left, height, e_limits.right, e_limits.bottom };
+      clamp(height, e_limits.min.y, e_limits.max.y);
+      return { e_limits.min.x, height, e_limits.max.x, e_limits.max.y };
    }
 
    template <typename Subject>
@@ -354,14 +354,14 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     hpercent_widget(float percent, Subject&& subject);
-                     hpercent_widget(float percent, Subject const& subject);
+                              hpercent_widget(float percent, Subject&& subject);
+                              hpercent_widget(float percent, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
 
    private:
 
-      float          _percent;
+      float                   _percent;
    };
 
    template <typename Subject>
@@ -384,11 +384,11 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect hpercent_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits hpercent_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float max_width = std::max(e_limits.left, e_limits.right * _percent);
-      return rect{ e_limits.left, e_limits.top, max_width, e_limits.bottom };
+      return { e_limits.min.x, e_limits.min.y, max_width, e_limits.max.y };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -399,14 +399,14 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-                     vpercent_widget(float percent, Subject&& subject);
-                     vpercent_widget(float percent, Subject const& subject);
+                              vpercent_widget(float percent, Subject&& subject);
+                              vpercent_widget(float percent, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
 
    private:
 
-      float          _percent;
+      float                   _percent;
    };
 
    template <typename Subject>
@@ -429,11 +429,11 @@ namespace photon
    }
 
    template <typename Subject>
-   inline rect vpercent_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits vpercent_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float max_height = std::max(e_limits.top, e_limits.bottom * _percent);
-      return rect{ e_limits.left, e_limits.top, e_limits.right, max_height };
+      return { e_limits.min.x, e_limits.min.y, e_limits.max.x, max_height };
    }
 }
 

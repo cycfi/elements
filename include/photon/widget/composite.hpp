@@ -24,7 +24,7 @@ namespace photon
 
    // Image
 
-      virtual rect            limits(basic_context const& ctx) const = 0;
+      virtual widget_limits   limits(basic_context const& ctx) const = 0;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;
@@ -50,7 +50,7 @@ namespace photon
       struct hit_info
       {
          widget*   element    = nullptr;
-         rect      bounds     = empty_rect;
+         rect      bounds     = rect{};
          int       index      = -1;
       };
 

@@ -18,6 +18,7 @@ namespace elf
    using photon::rect;
    using photon::cursor_tracking;
    using photon::mouse_button;
+   using photon::widget_limits;
 
    class pickup : public tracker<>
    {
@@ -25,22 +26,22 @@ namespace elf
 
       enum type { single, double_ };
 
-                        pickup(float pos, type type_, float slant)
-                         : _pos(pos), _type(type_), _slant(slant), _tracking(none)
-                        {}
+                              pickup(float pos, type type_, float slant)
+                              : _pos(pos), _type(type_), _slant(slant), _tracking(none)
+                              {}
 
-                        pickup(pickup&& rhs) = default;
-      pickup&           operator=(pickup&& rhs) = default;
+                              pickup(pickup&& rhs) = default;
+      pickup&                 operator=(pickup&& rhs) = default;
 
-      virtual rect      limits(basic_context const& ctx) const;
-      virtual void      draw(context const& ctx);
-      virtual widget*   hit_test(context const& ctx, point p);
-      virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+      virtual widget*         hit_test(context const& ctx, point p);
+      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
-      virtual widget*   click(context const& ctx, mouse_button btn);
-      virtual void      begin_tracking(context const& ctx, info& track_info);
-      virtual void      keep_tracking(context const& ctx, info& track_info);
-      virtual void      end_tracking(context const& ctx, info& track_info);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            begin_tracking(context const& ctx, info& track_info);
+      virtual void            keep_tracking(context const& ctx, info& track_info);
+      virtual void            end_tracking(context const& ctx, info& track_info);
 
    private:
 
@@ -59,16 +60,16 @@ namespace elf
          hit_rotator
       };
 
-      bool              reposition(context const& ctx, point mp);
-      hit_item          hit(context const& ctx, point p) const;
-      void              pickup_bounds(context const& ctx, rect& r1, rect& r2) const;
+      bool                    reposition(context const& ctx, point mp);
+      hit_item                hit(context const& ctx, point p) const;
+      void                    pickup_bounds(context const& ctx, rect& r1, rect& r2) const;
 
-      float             _pos;
-      type              _type;
-      float             _slant;
-      tracking_status   _tracking;
-      point             _offset;
-      point             _rotator_pos;
+      float                   _pos;
+      type                    _type;
+      float                   _slant;
+      tracking_status         _tracking;
+      point                   _offset;
+      point                   _rotator_pos;
    };
 }
 

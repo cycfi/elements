@@ -25,10 +25,10 @@ namespace photon
    {
       enum what { left, middle, right };
 
-      bool  down;
-      int   num_clicks;
-      what  state;
-      point pos;
+      bool     down;
+      int      num_clicks;
+      what     state;
+      point    pos;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +46,22 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    struct text_info
    {
-      uint32_t    codepoint;
-      int         modifiers;
+      uint32_t codepoint;
+      int      modifiers;
    };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Widget Limits
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct widget_limits
+   {
+      point    min;
+      point    max;
+   };
+
+   constexpr float         full_extent    = 1E6;
+   constexpr widget_limits full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
+   constexpr widget_limits empty_limits   = { { 0.0, 0.0 }, { 0.0, 0.0 } };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Focus request
@@ -83,7 +96,7 @@ namespace photon
 
    // Image
 
-      virtual rect            limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);

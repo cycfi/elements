@@ -11,24 +11,24 @@
 
 namespace photon
 {
-   rect slider_base::limits(basic_context const& ctx) const
+   widget_limits slider_base::limits(basic_context const& ctx) const
    {
       auto  limits_ = body().limits(ctx);
       auto  ind_limits = indicator().limits(ctx);
 
-      if ((_is_horiz = limits_.right > limits_.bottom))
+      if ((_is_horiz = limits_.max.x > limits_.max.y))
       {
-         limits_.top = std::max<float>(limits_.top, ind_limits.top);
-         limits_.bottom = std::max<float>(limits_.bottom, ind_limits.bottom);
-         limits_.left = std::max<float>(limits_.left, ind_limits.left * 2);
-         limits_.right = std::max<float>(limits_.left, limits_.right);
+         limits_.min.y = std::max<float>(limits_.min.y, ind_limits.min.y);
+         limits_.max.y = std::max<float>(limits_.max.y, ind_limits.max.y);
+         limits_.min.x = std::max<float>(limits_.min.x, ind_limits.min.x * 2);
+         limits_.max.x = std::max<float>(limits_.max.x, limits_.max.x);
       }
       else
       {
-         limits_.left = std::max<float>(limits_.left, ind_limits.left);
-         limits_.right = std::max<float>(limits_.right, ind_limits.right);
-         limits_.top = std::max<float>(limits_.top, ind_limits.top * 2);
-         limits_.bottom = std::max<float>(limits_.top, limits_.bottom);
+         limits_.min.x = std::max<float>(limits_.min.x, ind_limits.min.x);
+         limits_.max.x = std::max<float>(limits_.max.x, ind_limits.max.x);
+         limits_.min.y = std::max<float>(limits_.min.y, ind_limits.min.y * 2);
+         limits_.max.y = std::max<float>(limits_.max.y, limits_.max.y);
       }
 
       return limits_;
@@ -86,13 +86,13 @@ namespace photon
       if (_is_horiz)
       {
          auto h = bounds.height();
-         bounds.height(std::min<float>(limits_.bottom, h));
+         bounds.height(std::min<float>(limits_.max.y, h));
          bounds = center_v(bounds, ctx.bounds);
       }
       else
       {
          auto w = bounds.width();
-         bounds.width(std::min<float>(limits_.right, w));
+         bounds.width(std::min<float>(limits_.max.x, w));
          bounds = center_h(bounds, ctx.bounds);
       }
       return bounds;
@@ -104,8 +104,8 @@ namespace photon
       auto  w = bounds.width();
       auto  h = bounds.height();
       auto  limits_ = indicator().limits(ctx);
-      auto  ind_w = limits_.right;
-      auto  ind_h = limits_.bottom;
+      auto  ind_w = limits_.max.x;
+      auto  ind_h = limits_.max.y;
 
       if (_is_horiz)
       {
@@ -127,8 +127,8 @@ namespace photon
       auto  h = bounds.height();
 
       auto  limits_ = indicator().limits(ctx);
-      auto  ind_w = limits_.right;
-      auto  ind_h = limits_.bottom;
+      auto  ind_w = limits_.max.x;
+      auto  ind_h = limits_.max.y;
       auto  new_value = 0.0;
 
       if (_is_horiz)

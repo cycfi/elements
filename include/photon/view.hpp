@@ -53,7 +53,7 @@ namespace photon
 
       point                size() const;
       void                 size(point size_);
-      void                 limits(rect limits_) const;
+      void                 limits(widget_limits limits_) const;
 
       void                 refresh();
       void                 refresh(rect area);

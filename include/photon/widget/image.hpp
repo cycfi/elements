@@ -20,21 +20,21 @@ namespace photon
    class image : public widget
    {
    public:
-                           image(char const* filename, float scale = 1);
-                           image(pixmap_ptr pixmap_);
+                              image(char const* filename, float scale = 1);
+                              image(pixmap_ptr pixmap_);
 
-      point                size() const;
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
-      virtual rect         source_rect(context const& ctx) const;
+      point                   size() const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+      virtual rect            source_rect(context const& ctx) const;
 
    protected:
 
-      photon::pixmap&      pixmap() const  { return *_pixmap.get(); }
+      photon::pixmap&         pixmap() const  { return *_pixmap.get(); }
 
    private:
 
-      pixmap_ptr            _pixmap;
+      pixmap_ptr              _pixmap;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,31 +68,31 @@ namespace photon
    class gizmo : public image
    {
    public:
-                           gizmo(char const* filename, float scale = 1);
-                           gizmo(pixmap_ptr pixmap_);
+                              gizmo(char const* filename, float scale = 1);
+                              gizmo(pixmap_ptr pixmap_);
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
    };
 
    class hgizmo : public image
    {
    public:
-                           hgizmo(char const* filename, float scale = 1);
-                           hgizmo(pixmap_ptr pixmap_);
+                              hgizmo(char const* filename, float scale = 1);
+                              hgizmo(pixmap_ptr pixmap_);
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
    };
 
    class vgizmo : public image
    {
    public:
-                           vgizmo(char const* filename, float scale = 1);
-                           vgizmo(pixmap_ptr pixmap_);
+                              vgizmo(char const* filename, float scale = 1);
+                              vgizmo(pixmap_ptr pixmap_);
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,24 +103,24 @@ namespace photon
    class sprite : public image
    {
    public:
-                           sprite(char const* filename, float height, float scale = 1);
+                              sprite(char const* filename, float height, float scale = 1);
 
-      virtual rect         limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
 
-      std::size_t          num_frames() const;
-      std::size_t          index() const              { return _index; }
-      void                 index(std::size_t index_);
-      point                size() const;
+      std::size_t             num_frames() const;
+      std::size_t             index() const              { return _index; }
+      void                    index(std::size_t index_);
+      point                   size() const;
 
-      virtual rect         source_rect(context const& ctx) const;
+      virtual rect            source_rect(context const& ctx) const;
 
-      virtual void         value(int val);
-      virtual void         value(double val);
+      virtual void            value(int val);
+      virtual void            value(double val);
 
    private:
 
-      size_t               _index;
-      float                _height;
+      size_t                  _index;
+      float                   _height;
    };
 }
 

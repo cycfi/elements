@@ -23,7 +23,7 @@ namespace photon
 
    // Image
 
-      virtual rect            limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);

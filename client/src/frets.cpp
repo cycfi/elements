@@ -91,9 +91,9 @@ namespace elf
       }
    }
 
-   rect frets::limits(basic_context const& ctx) const
+   widget_limits frets::limits(basic_context const& ctx) const
    {
-      return { 300, 60, full_extent, full_extent };
+      return { { 300, 60 }, { full_extent, full_extent } };
    }
 
    void frets::draw(context const& ctx)

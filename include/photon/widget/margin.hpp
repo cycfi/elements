@@ -22,18 +22,18 @@ namespace photon
 
       using base_type = proxy<Subject>;
 
-      margin_widget(Rect margin_, Subject&& subject)
-       : base_type(std::move(subject))
-       , _margin(margin_)
-      {}
+                              margin_widget(Rect margin_, Subject&& subject)
+                               : base_type(std::move(subject))
+                               , _margin(margin_)
+                              {}
 
-      margin_widget(Rect margin_, Subject const& subject)
-       : base_type(subject)
-       , _margin(margin_)
-      {}
+                              margin_widget(Rect margin_, Subject const& subject)
+                               : base_type(subject)
+                               , _margin(margin_)
+                              {}
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
 
    private:
 
@@ -44,14 +44,14 @@ namespace photon
    // Inlines
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Rect, typename Subject>
-   inline rect margin_widget<Rect, Subject>::limits(basic_context const& ctx) const
+   inline widget_limits margin_widget<Rect, Subject>::limits(basic_context const& ctx) const
    {
       auto r = this->subject().limits(ctx);
 
-      r.left += _margin.left + _margin.right;
-      r.right += _margin.left + _margin.right;
-      r.top += _margin.top + _margin.bottom;
-      r.bottom += _margin.top + _margin.bottom;
+      r.min.x += _margin.left + _margin.right;
+      r.max.x += _margin.left + _margin.right;
+      r.min.y += _margin.top + _margin.bottom;
+      r.max.y += _margin.top + _margin.bottom;
 
       return r;
    }

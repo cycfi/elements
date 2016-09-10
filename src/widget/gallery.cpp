@@ -8,14 +8,14 @@
 
 namespace photon
 {
-   rect label::limits(basic_context const& ctx) const
+   widget_limits label::limits(basic_context const& ctx) const
    {
       auto const&    theme_ = get_theme();
       auto           canvas_ = ctx.canvas();
 
       canvas_.font(theme_.label_font, theme_.label_font_size * _size);
       auto  info = canvas_.measure_text(_text.c_str());
-      return { info.size.x, info.size.y, info.size.x, info.size.y };
+      return { { info.size.x, info.size.y }, { info.size.x, info.size.y } };
    }
 
    void label::draw(context const& ctx)

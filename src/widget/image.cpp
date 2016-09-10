@@ -32,10 +32,10 @@ namespace photon
       return { 0, 0, ctx.bounds.width(), ctx.bounds.height() };
    }
 
-   rect image::limits(basic_context const& ctx) const
+   widget_limits image::limits(basic_context const& ctx) const
    {
       auto size_ = size();
-      return { size_.x, size_.y, size_.x, size_.y };
+      return { { size_.x, size_.y }, { size_.x, size_.y } };
    }
 
    void image::draw(context const& ctx)
@@ -105,10 +105,10 @@ namespace photon
     : image(pixmap_)
    {}
 
-   rect gizmo::limits(basic_context const& ctx) const
+   widget_limits gizmo::limits(basic_context const& ctx) const
    {
       auto size_ = size();
-      return { size_.x, size_.y, full_extent, full_extent };
+      return { { size_.x, size_.y }, { full_extent, full_extent } };
    }
 
    void gizmo::draw(context const& ctx)
@@ -133,10 +133,10 @@ namespace photon
     : image(pixmap_)
    {}
 
-   rect hgizmo::limits(basic_context const& ctx) const
+   widget_limits hgizmo::limits(basic_context const& ctx) const
    {
       auto size_ = size();
-      return { size_.x, size_.y, size_.y, full_extent };
+      return { { size_.x, size_.y }, { size_.y, full_extent } };
    }
 
    void hgizmo::draw(context const& ctx)
@@ -161,10 +161,10 @@ namespace photon
     : image(pixmap_)
    {}
 
-   rect vgizmo::limits(basic_context const& ctx) const
+   widget_limits vgizmo::limits(basic_context const& ctx) const
    {
       auto size_ = size();
-      return { size_.x, size_.y, size_.x, full_extent };
+      return { { size_.x, size_.y }, { size_.x, full_extent } };
    }
 
    void vgizmo::draw(context const& ctx)
@@ -187,10 +187,10 @@ namespace photon
     , _height(height)
    {}
 
-   rect sprite::limits(basic_context const& ctx) const
+   widget_limits sprite::limits(basic_context const& ctx) const
    {
       auto width = pixmap().size().x;
-      return { width, _height, width, _height };
+      return { { width, _height }, { width, _height } };
    }
 
    std::size_t sprite::num_frames() const

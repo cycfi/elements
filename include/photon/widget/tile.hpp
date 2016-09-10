@@ -22,15 +22,15 @@ namespace photon
       vtile_widget() {}
       ~vtile_widget() {}
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         layout(context const& ctx);
-      virtual rect         bounds_of(context const& ctx, std::size_t index) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            layout(context const& ctx);
+      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
 
    private:
 
-      std::vector<float>   _tiles;
-      float                _left;
-      float                _right;
+      std::vector<float>      _tiles;
+      float                   _left;
+      float                   _right;
    };
 
    using vtile_composite = vector_composite<vtile_widget>;
@@ -53,15 +53,15 @@ namespace photon
       htile_widget() {}
       ~htile_widget() {}
 
-      virtual rect         limits(basic_context const& ctx) const;
-      virtual void         layout(context const& ctx);
-      virtual rect         bounds_of(context const& ctx, std::size_t index) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            layout(context const& ctx);
+      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
 
    private:
 
-      std::vector<float>   _tiles;
-      float                _top;
-      float                _bottom;
+      std::vector<float>      _tiles;
+      float                   _top;
+      float                   _bottom;
    };
 
    using htile_composite = vector_composite<htile_widget>;

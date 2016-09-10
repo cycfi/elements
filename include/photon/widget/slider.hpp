@@ -24,7 +24,7 @@ namespace photon
                                : _value(init_value)
                               {}
 
-      virtual rect            limits(basic_context const& ctx) const;
+      virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
 

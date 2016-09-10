@@ -15,13 +15,14 @@ namespace elf
    using photon::basic_context;
    using photon::context;
    using photon::rect;
+   using photon::widget_limits;
 
    class frets : public widget
    {
    public:
 
-      virtual rect      limits(basic_context const& ctx) const;
-      virtual void      draw(context const& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
    };
 }
 

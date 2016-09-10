@@ -123,9 +123,9 @@ namespace elf
       }
    }
 
-   rect pickup::limits(basic_context const& ctx) const
+   widget_limits pickup::limits(basic_context const& ctx) const
    {
-      return { 400, 100, full_extent, full_extent };
+      return { { 400, 100 }, { full_extent, full_extent } };
    }
 
    void pickup::draw(context const& ctx)

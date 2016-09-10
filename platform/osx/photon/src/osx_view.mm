@@ -61,11 +61,11 @@ namespace photon
       [[get_mac_view(_impl) window] setContentSize:NSMakeSize(size_.x, size_.y)];
    }
 
-   void view::limits(rect limits_) const
+   void view::limits(widget_limits limits_) const
    {
       auto ns_view = get_mac_view(_impl);
-      [[ns_view window] setContentMinSize : NSSize{ limits_.left, limits_.top }];
-      [[ns_view window] setContentMaxSize : NSSize{ limits_.right, limits_.bottom }];
+      [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
+      [[ns_view window] setContentMaxSize : NSSize{ limits_.max.y, limits_.max.y }];
    }
 
    void view::refresh()

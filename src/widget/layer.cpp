@@ -13,20 +13,20 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Layer
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   rect layer_widget::limits(basic_context const& ctx) const
+   widget_limits layer_widget::limits(basic_context const& ctx) const
    {
-      rect limits{ 0.0, 0.0, full_extent, full_extent };
+      widget_limits limits{ { 0.0, 0.0 }, { full_extent, full_extent } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         rect  el = get(ix)->limits(ctx);
+         auto el = get(ix)->limits(ctx);
 
-         clamp_min(limits.left, el.left);
-         clamp_min(limits.top, el.top);
-         clamp_max(limits.right, el.right);
-         clamp_max(limits.bottom, el.bottom);
+         clamp_min(limits.min.x, el.min.x);
+         clamp_min(limits.min.y, el.min.y);
+         clamp_max(limits.max.x, el.max.x);
+         clamp_max(limits.max.y, el.max.y);
 
-         limits.right = std::max(limits.right, limits.left);
-         limits.bottom = std::max(limits.bottom, limits.top);
+         limits.max.x = std::max(limits.max.x, limits.min.x);
+         limits.max.y = std::max(limits.max.y, limits.min.y);
       }
 
       return limits;
@@ -66,12 +66,12 @@ namespace photon
    {
       float width = ctx.bounds.width();
       float height = ctx.bounds.height();
-      rect  limits = get(index)->limits(ctx);
+      auto  limits = get(index)->limits(ctx);
 
-      clamp_min(width, limits.left);
-      clamp_max(width, limits.right);
-      clamp_min(height, limits.top);
-      clamp_max(height, limits.bottom);
+      clamp_min(width, limits.min.x);
+      clamp_max(width, limits.max.x);
+      clamp_min(height, limits.min.y);
+      clamp_max(height, limits.max.y);
 
       return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
    }

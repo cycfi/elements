@@ -20,8 +20,8 @@ namespace photon
       limits(limits_);
 
       auto size_ = size();
-      clamp(size_.x, limits_.left, limits_.right);
-      clamp(size_.y, limits_.top, limits_.bottom);
+      clamp(size_.x, limits_.min.x, limits_.max.x);
+      clamp(size_.y, limits_.min.y, limits_.max.y);
       if (size_ != size())
          size(size_);
 

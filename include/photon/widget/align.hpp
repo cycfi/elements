@@ -38,11 +38,11 @@ namespace photon
 
       using base_type = proxy<Subject, align_widget_base>;
 
-                     halign_widget(float align, Subject&& subject);
-                     halign_widget(float align, Subject const& subject);
+                              halign_widget(float align, Subject&& subject);
+                              halign_widget(float align, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
    };
 
    template <typename Subject>
@@ -84,21 +84,21 @@ namespace photon
    {}
 
    template <typename Subject>
-   inline rect halign_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits halign_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect e_limits = this->subject().limits(ctx);
-      return rect{ e_limits.left, e_limits.top, full_extent, e_limits.bottom };
+      auto e_limits = this->subject().limits(ctx);
+      return { { e_limits.min.x, e_limits.min.y }, { full_extent, e_limits.max.y } };
    }
 
    template <typename Subject>
    inline void halign_widget<Subject>::prepare_subject(context& ctx)
    {
-      rect  e_limits          = this->subject().limits(ctx);
-      float elem_width        = e_limits.left;
-      float available_width   = ctx.bounds.width();
+      widget_limits  e_limits          = this->subject().limits(ctx);
+      float          elem_width        = e_limits.min.x;
+      float          available_width   = ctx.bounds.width();
 
       if (available_width > elem_width)
-         elem_width = std::min(available_width, e_limits.right);
+         elem_width = std::min(available_width, e_limits.max.x);
 
       ctx.bounds.left += (available_width - elem_width) * this->align();
       ctx.bounds.width(elem_width);
@@ -112,11 +112,11 @@ namespace photon
 
       using base_type = proxy<Subject, align_widget_base>;
 
-                     valign_widget(float align, Subject&& subject);
-                     valign_widget(float align, Subject const& subject);
+                              valign_widget(float align, Subject&& subject);
+                              valign_widget(float align, Subject const& subject);
 
-      virtual rect   limits(basic_context const& ctx) const;
-      virtual void   prepare_subject(context& ctx);
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
    };
 
    template <typename Subject>
@@ -158,21 +158,21 @@ namespace photon
    {}
 
    template <typename Subject>
-   inline rect valign_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits valign_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect e_limits = this->subject().limits(ctx);
-      return rect{ e_limits.left, e_limits.top, e_limits.right, full_extent };
+      auto e_limits = this->subject().limits(ctx);
+      return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, full_extent } };
    }
 
    template <typename Subject>
    inline void valign_widget<Subject>::prepare_subject(context& ctx)
    {
-      rect  e_limits          = this->subject().limits(ctx);
-      float elem_height       = e_limits.top;
+      auto  e_limits          = this->subject().limits(ctx);
+      float elem_height       = e_limits.min.y;
       float available_height  = ctx.bounds.height();
 
       if (available_height > elem_height)
-         elem_height = std::min(available_height, e_limits.bottom);
+         elem_height = std::min(available_height, e_limits.max.y);
 
       ctx.bounds.top += (available_height - elem_height) * this->align();
       ctx.bounds.height(elem_height);

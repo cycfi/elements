@@ -26,6 +26,7 @@ namespace photon
       }
 
       clamp_min(limits.max.x, limits.min.x);
+      clamp_max(limits.max.y, full_extent);
       return limits;
    }
 
@@ -36,10 +37,18 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      auto     limits   = this->limits(ctx);
+      double   min_y = 0.0;
+      double   max_y = 0.0;
+      for (std::size_t ix = 0; ix != size();  ++ix)
+      {
+         auto el = get(ix)->limits(ctx);
+         min_y += el.min.y;
+         max_y += el.max.y;
+      }
+
       double   height   = ctx.bounds.height();
-      double   extra    = limits.max.y - height;
-      double   m_size   = limits.max.y - limits.min.y;
+      double   extra    = max_y - height;
+      double   m_size   = max_y - min_y;
       double   curr     = ctx.bounds.top;
       auto     i        = _tiles.begin();
 
@@ -93,10 +102,18 @@ namespace photon
 
       _tiles.resize(size()+1);
 
-      auto     limits   = this->limits(ctx);
+      double   min_x = 0.0;
+      double   max_x = 0.0;
+      for (std::size_t ix = 0; ix != size();  ++ix)
+      {
+         auto el = get(ix)->limits(ctx);
+         min_x += el.min.x;
+         max_x += el.max.x;
+      }
+
       double   width    = ctx.bounds.width();
-      double   extra    = limits.max.x - width;
-      double   m_size   = limits.max.x - limits.min.x;
+      double   extra    = max_x - width;
+      double   m_size   = max_x - min_x;
       double   curr     = ctx.bounds.left;
       auto     i        = _tiles.begin();
 

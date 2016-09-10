@@ -128,61 +128,9 @@ namespace client
       );
    }
 
-   struct box : widget
-   {
-      void draw(context const& ctx)
-      {
-         auto c = ctx.canvas();
-         c.fill_style(colors::gold.opacity(0.8));
-         c.fill_round_rect(ctx.bounds, 4);
-      }
-   };
-
-   auto make_vtile()
-   {
-      auto _box = top_margin(
-         { 20 },
-         hsize(100, box{})
-      );
-
-      return margin(
-         { 20, 0, 20, 20 },
-         vtile(
-            halign(0.0, _box),
-            halign(0.2, _box),
-            halign(0.4, _box),
-            halign(0.6, _box),
-            halign(0.8, _box),
-            halign(1.0, _box)
-         )
-      );
-   }
-
-   auto make_htile()
-   {
-      auto _box = left_margin(
-         { 20 },
-         vsize(100, box{})
-      );
-
-      return margin(
-         { 0, 20, 20, 20 },
-         htile(
-            valign(0.0, _box),
-            valign(0.2, _box),
-            valign(0.4, _box),
-            valign(0.6, _box),
-            valign(0.8, _box),
-            valign(1.0, _box)
-         )
-      );
-   }
-
    void  init(view& v)
    {
       v.content.push_back(new_(background{}));
       v.content.push_back(new_(make_virtual_pickups()));
-
-      //v.content.push_back(new_(make_htile()));
    }
 }

@@ -263,7 +263,7 @@ namespace elf
       float       w = bounds.width() * scale_len;
       float       h = w * 0.19;
 
-      clamp_max(h, ctx.bounds.height() * 0.8); // 0.8 to accomodate the rotator
+      clamp_max(h, ctx.bounds.height() * (1/1.3));  // 0.8 to accomodate the rotator
 
       float pu_w = h * 0.25;
       rect  pu_bounds  = { 0, 0, pu_w, h };

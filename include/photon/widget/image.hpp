@@ -22,8 +22,6 @@ namespace photon
    public:
                            image(char const* filename, float scale = 1);
                            image(pixmap_ptr pixmap_);
-                           image(image const&) = default;
-                           image& operator=(image const&) = default;
 
       point                size() const;
       virtual rect         limits(basic_context const& ctx) const;

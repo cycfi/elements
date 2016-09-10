@@ -53,8 +53,8 @@ namespace client
 
    auto make_dial(char const* label)
    {
-      float scale = 1.0/4;
-      auto  knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 32, scale };
+      float scale = 1.0/3;
+      auto  knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 128*scale, scale };
       auto  rlines = image{ "assets/images/radial-lines.png", scale };
 
       return align_center(align_middle(
@@ -65,6 +65,14 @@ namespace client
       ));
    }
 
+   auto make_selector()
+   {
+      auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
+      auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
+      auto vsldr = selector<2>(std::move(vind), std::move(vslot));
+      return vsize(40, halign(0.5, std::move(vsldr)));
+   }
+
    auto make_pickups_control(char const* name)
    {
       float scale = 1.0/4;
@@ -73,12 +81,18 @@ namespace client
 
       auto c1 = vtile(
             make_dial("Frequency"),
-            align_center(align_middle(single_double_decal))
+           align_center(align_middle(htile(
+               make_selector(),
+               single_double_decal
+            )))
          );
 
       auto c2 = vtile(
             make_dial("Resonance"),
-            align_center(align_middle(sine_decal))
+            align_center(align_middle(htile(
+               make_selector(),
+               sine_decal
+            )))
          );
 
       auto c3 = vtile(

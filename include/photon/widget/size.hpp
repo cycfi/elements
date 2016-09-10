@@ -387,8 +387,8 @@ namespace photon
    inline widget_limits hpercent_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
-      float max_width = std::max(e_limits.left, e_limits.right * _percent);
-      return { e_limits.min.x, e_limits.min.y, max_width, e_limits.max.y };
+      float max_width = std::max(e_limits.min.x, e_limits.max.x * _percent);
+      return { { e_limits.min.x, e_limits.min.y }, { max_width, e_limits.max.y } };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,8 +432,8 @@ namespace photon
    inline widget_limits vpercent_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
-      float max_height = std::max(e_limits.top, e_limits.bottom * _percent);
-      return { e_limits.min.x, e_limits.min.y, e_limits.max.x, max_height };
+      float max_height = std::max(e_limits.min.y, e_limits.max.y * _percent);
+      return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, max_height } };
    }
 }
 

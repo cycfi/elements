@@ -44,8 +44,8 @@ namespace photon
    inline basic_button::basic_button(W1&& off, W2&& on)
     : _state(false)
    {
-      (*this)[0] = new_(std::forward<W1>(off));
-      (*this)[1] = new_(std::forward<W2>(on));
+      (*this)[0] = share(std::forward<W1>(off));
+      (*this)[1] = share(std::forward<W2>(on));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

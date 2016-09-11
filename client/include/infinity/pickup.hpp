@@ -30,9 +30,6 @@ namespace infinity
                               : _pos(pos), _type(type_), _slant(slant), _tracking(none), _id(id)
                               {}
 
-                              pickup(pickup&& rhs) = default;
-      pickup&                 operator=(pickup&& rhs) = default;
-
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
       virtual widget*         hit_test(context const& ctx, point p);

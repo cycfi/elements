@@ -39,7 +39,7 @@ namespace photon
    inline auto layer(W&&... elements)
    {
       array_composite<sizeof...(elements), layer_widget> r{};
-      r = { new_(std::forward<W>(elements))... };
+      r = { share(std::forward<W>(elements))... };
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -74,7 +74,7 @@ namespace photon
    inline auto deck(W&&... elements)
    {
       array_composite<sizeof...(elements), deck_widget> r{};
-      r.elements = { new_(std::forward<W>(elements))... };
+      r.elements = { share(std::forward<W>(elements))... };
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -83,7 +83,7 @@ namespace photon
    inline auto rdeck(W&&... elements)
    {
       array_composite<sizeof...(elements), deck_widget> r{};
-      r.elements = { new_(std::forward<W>(elements))... };
+      r.elements = { share(std::forward<W>(elements))... };
       return r;
    }
 }

@@ -13,7 +13,6 @@
 #include <photon/widget/widget.hpp>
 #include <photon/widget/layer.hpp>
 #include <memory>
-#include <cairo.h>
 
 namespace photon
 {
@@ -37,6 +36,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // The View. There's only one of this per window.
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct application {};
+   using application_ptr = std::shared_ptr<application>;
+
    class view
    {
    public:
@@ -60,13 +62,13 @@ namespace photon
       rect                 dirty() const   { return _dirty; }
 
       layer_composite      content;
+      application_ptr      app;
 
    private:
 
       cairo_t*             setup_context();
 
       friend class platform_access;
-      friend class canvas;
 
       view_impl*           _impl;
       rect                 _dirty;

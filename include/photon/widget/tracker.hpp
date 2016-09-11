@@ -109,7 +109,7 @@ namespace photon
    template <typename Base>
    inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& ctx, point start)
    {
-      return info_ptr{ new info{ start } };
+      return std::make_unique<info>(start);
    }
 
    template <typename Base>

@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <string>
+#include <type_traits>
 
 namespace photon
 {
@@ -127,13 +128,27 @@ namespace photon
    using widget_ptr = std::shared_ptr<widget>;
    using widget_const_ptr = std::shared_ptr<widget const>;
 
+   template <typename T, typename Enavle = void>
+   struct is_reference : std::false_type {};
+
    template <typename Widget>
-   inline widget_ptr new_(Widget&& w)
+   inline typename std::enable_if<
+      (!is_reference<typename std::remove_reference<Widget>::type>::value)
+    , widget_ptr>::type
+   share(Widget&& w)
    {
       using widget_type = typename std::decay<Widget>::type;
       return std::make_shared<widget_type>(std::forward<Widget>(w));
    }
 
+   template <typename Widget>
+   inline typename std::enable_if<
+      (is_reference<typename std::remove_reference<Widget>::type>::value)
+    , widget_ptr>::type
+   share(Widget&& w)
+   {
+      return w.get_ptr();
+   }
 }
 
 #endif

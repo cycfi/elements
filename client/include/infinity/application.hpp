@@ -13,7 +13,7 @@
 namespace infinity
 {
    using photon::view;
-   using photon::widget_reference;
+   using photon::reference;
 
    class application : public photon::application
    {
@@ -22,8 +22,10 @@ namespace infinity
 
    private:
 
-      using pickup_ref = widget_reference<pickup>;
+      friend struct application_impl;
+      using pickup_ref = reference<pickup>;
 
+      view&             _view;
       pickup_ref        _pickup_a;
       pickup_ref        _pickup_b;
       pickup_ref        _pickup_c;

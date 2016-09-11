@@ -27,7 +27,12 @@ namespace infinity
       enum type { single, double_ };
 
                               pickup(float pos, type type_, float slant, char id)
-                              : _pos(pos), _type(type_), _slant(slant), _tracking(none), _id(id)
+                               : _pos(pos)
+                               , _type(type_)
+                               , _slant(slant)
+                               , _tracking(none)
+                               , _id(id)
+                               , _is_visible(true)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
@@ -39,6 +44,8 @@ namespace infinity
       virtual void            begin_tracking(context const& ctx, info& track_info);
       virtual void            keep_tracking(context const& ctx, info& track_info);
       virtual void            end_tracking(context const& ctx, info& track_info);
+
+      void                    visible(bool val) { _is_visible = val; }
 
    private:
 
@@ -68,6 +75,7 @@ namespace infinity
       tracking_status         _tracking;
       point                   _offset;
       point                   _rotator_pos;
+      bool                    _is_visible;
    };
 }
 

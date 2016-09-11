@@ -18,23 +18,23 @@ namespace photon
    // may be copied and all copies will refer to the same widget being referenced.
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Widget>
-   class widget_reference : public widget
+   class reference : public widget
    {
    public:
                               template <typename... T>
-                              widget_reference(T const&... args)
+                              reference(T const&... args)
                                : ptr(std::make_shared<Widget>(args...))
                               {}
 
                               template <typename... T>
-                              widget_reference(T&&... args)
+                              reference(T&&... args)
                                : ptr(std::make_shared<Widget>(std::move(args)...))
                               {}
 
-                              widget_reference(widget_reference&& rhs) = default;
-                              widget_reference(widget_reference const& rhs) = default;
-      widget_reference&       operator=(widget_reference&& rhs) = default;
-      widget_reference&       operator=(widget_reference const& rhs) = default;
+                              reference(reference&& rhs) = default;
+                              reference(reference const& rhs) = default;
+      reference&       operator=(reference&& rhs) = default;
+      reference&       operator=(reference const& rhs) = default;
 
    // image
 
@@ -69,151 +69,151 @@ namespace photon
    };
 
    template <typename Widget>
-   widget_reference<Widget> ref(Widget&& rhs);
+   reference<Widget> ref(Widget&& rhs);
 
    template <typename Widget>
-   widget_reference<Widget> ref(Widget const& rhs);
+   reference<Widget> ref(Widget const& rhs);
 
    template <typename Widget>
-   struct is_reference<widget_reference<Widget>> : std::true_type {};
+   struct is_reference<reference<Widget>> : std::true_type {};
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // widget_reference (inline) implementation
+   // reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Widget>
    inline widget_limits
-   widget_reference<Widget>::limits(basic_context const& ctx) const
+   reference<Widget>::limits(basic_context const& ctx) const
    {
       return ptr->limits(ctx);
    }
 
    template <typename Widget>
    inline widget*
-   widget_reference<Widget>::hit_test(context const& ctx, point p)
+   reference<Widget>::hit_test(context const& ctx, point p)
    {
       return ptr->hit_test(ctx, p);
    }
 
    template <typename Widget>
    inline void
-   widget_reference<Widget>::draw(context const& ctx)
+   reference<Widget>::draw(context const& ctx)
    {
       ptr->draw(ctx);
    }
 
    template <typename Widget>
    inline void
-   widget_reference<Widget>::layout(context const& ctx)
+   reference<Widget>::layout(context const& ctx)
    {
       ptr->layout(ctx);
    }
 
    template <typename Widget>
    inline bool
-   widget_reference<Widget>::scroll(context const& ctx, point p)
+   reference<Widget>::scroll(context const& ctx, point p)
    {
       return ptr->scroll(ctx, p);
    }
 
    template <typename Widget>
    inline widget*
-   widget_reference<Widget>::click(context const& ctx, mouse_button btn)
+   reference<Widget>::click(context const& ctx, mouse_button btn)
    {
       return ptr->click(ctx, btn);
    }
 
    template <typename Widget>
    inline void
-   widget_reference<Widget>::drag(context const& ctx, mouse_button btn)
+   reference<Widget>::drag(context const& ctx, mouse_button btn)
    {
       return ptr->drag(ctx, btn);
    }
 
 //   template <typename Widget>
 //   inline bool
-//   widget_reference<Widget>::key(context const& ctx, key_info const& k)
+//   reference<Widget>::key(context const& ctx, key_info const& k)
 //   {
 //      return ptr->key(ctx, k);
 //   }
 
    template <typename Widget>
    inline bool
-   widget_reference<Widget>::text(context const& ctx, text_info const& info)
+   reference<Widget>::text(context const& ctx, text_info const& info)
    {
       return ptr->text(ctx, info);
    }
 
    template <typename Widget>
    inline bool
-   widget_reference<Widget>::cursor(context const& ctx, point p, cursor_tracking status)
+   reference<Widget>::cursor(context const& ctx, point p, cursor_tracking status)
    {
       return ptr->cursor(ctx, p, status);
    }
 
    template <typename Widget>
    inline void
-   widget_reference<Widget>::idle(basic_context const& ctx)
+   reference<Widget>::idle(basic_context const& ctx)
    {
       ptr->idle(ctx);
    }
 
    template <typename Widget>
    inline bool
-   widget_reference<Widget>::focus(focus_request r)
+   reference<Widget>::focus(focus_request r)
    {
       return ptr->focus(r);
    }
 
    template <typename Widget>
    inline widget const*
-   widget_reference<Widget>::focus() const
+   reference<Widget>::focus() const
    {
       return ptr->focus();
    }
 
    template <typename Widget>
    inline widget*
-   widget_reference<Widget>::focus()
+   reference<Widget>::focus()
    {
       return ptr->focus();
    }
 
    template <typename Widget>
    inline bool
-   widget_reference<Widget>::is_control() const
+   reference<Widget>::is_control() const
    {
       return ptr->is_control();
    }
 
    template <typename Widget>
    Widget&
-   widget_reference<Widget>::get()
+   reference<Widget>::get()
    {
       return *ptr.get();
    }
 
    template <typename Widget>
    Widget const&
-   widget_reference<Widget>::get() const
+   reference<Widget>::get() const
    {
       return *ptr.get();
    }
 
    template <typename Widget>
    widget_ptr
-   widget_reference<Widget>::get_ptr()
+   reference<Widget>::get_ptr()
    {
       return ptr;
    }
 
    template <typename Widget>
-   inline widget_reference<Widget> ref(Widget&& rhs)
+   inline reference<Widget> ref(Widget&& rhs)
    {
       return { rhs };
    }
 
    template <typename Widget>
-   inline widget_reference<Widget> ref(Widget const& rhs)
+   inline reference<Widget> ref(Widget const& rhs)
    {
       return { rhs };
    }

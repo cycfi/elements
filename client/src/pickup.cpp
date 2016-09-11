@@ -142,6 +142,9 @@ namespace infinity
 
    void pickup::draw(context const& ctx)
    {
+      if (!_is_visible)
+         return;
+
       rect  r1, r2;
       pickup_bounds(ctx, r1, r2);
 

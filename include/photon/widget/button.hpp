@@ -32,6 +32,7 @@ namespace photon
 
       bool              state() const;
       bool              state(bool new_state);
+      virtual void      value(bool new_state)   { state(new_state); }
 
       button_function   on_click;
 

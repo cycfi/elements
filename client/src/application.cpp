@@ -48,118 +48,142 @@ namespace infinity
    auto     sine_decal = image{ "assets/images/sine-decal.png", decal_scale };
    auto     single_double_decal = image{ "assets/images/single-double-decal.png", decal_scale };
 
-   auto make_on_off_switch()
+   struct application_impl
    {
-      return align_center(basic_toggle_button(off_btn, on_btn));
-   }
+      application& _app;
+      application_impl(application& app)
+       : _app(app)
+      {};
 
-   auto make_slider()
-   {
-      auto vslot = yside_margin({5, 5}, slider_slot);
-      auto vsldr = slider(slider_knob, vslot, 1.0);
-      return align_center(vsldr);
-   }
+      template <typename Pickup>
+      auto make_on_off_switch(Pickup& pickup)
+      {
+         auto& view = _app._view;
+         auto  btn = basic_toggle_button(off_btn, on_btn);
+         btn.value(true);
+         btn.on_click = [&pickup, &view](bool state)
+         {
+            pickup.get().visible(state);
+            view.refresh();
+         };
+         return align_center(btn);
+      }
 
-   auto make_dial(char const* label, double init_value)
-   {
-      return align_center_top(
-         caption(
-            layer(align_center_middle(dial(knob, init_value)), radial_lines),
-            label, 0.5
-         )
-      );
-   }
+      auto make_slider()
+      {
+         auto vslot = yside_margin({5, 5}, slider_slot);
+         auto vsldr = slider(slider_knob, vslot, 1.0);
+         return align_center(vsldr);
+      }
 
-   auto make_selector(double init_value)
-   {
-      auto vslot = yside_margin({3, 3}, slider_slot);
-      auto vsldr = selector<2>(selector_knob, vslot, init_value);
-      return vsize(32, halign(0.5, vsldr));
-   }
+      auto make_dial(char const* label, double init_value)
+      {
+         return align_center_top(
+            caption(
+               layer(align_center_middle(dial(knob, init_value)), radial_lines),
+               label, 0.5
+            )
+         );
+      }
 
-   auto make_pickups_control(char const* name)
-   {
-      auto c1 = vtile(
-            make_dial("Frequency", 0.5),
-            align_center(
-                yside_margin({ 10, 10 },
-                   htile(
-                      make_selector(1),
-                      single_double_decal
+      auto make_selector(double init_value)
+      {
+         auto vslot = yside_margin({3, 3}, slider_slot);
+         auto vsldr = selector<2>(selector_knob, vslot, init_value);
+         return vsize(32, halign(0.5, vsldr));
+      }
+
+      template <typename Pickup>
+      auto make_pickups_control(Pickup& pickup, char const* name)
+      {
+         auto c1 = vtile(
+               make_dial("Frequency", 0.5),
+               align_center(
+                   yside_margin({ 10, 10 },
+                      htile(
+                         make_selector(1),
+                         single_double_decal
+                      )
                    )
-                )
-            )
-         );
+               )
+            );
 
-      auto c2 = vtile(
-            make_dial("Resonance", 0.5),
-            align_center(
-                yside_margin({ 10, 10 },
-                   htile(
-                      make_selector(1),
-                      sine_decal
+         auto c2 = vtile(
+               make_dial("Resonance", 0.5),
+               align_center(
+                   yside_margin({ 10, 10 },
+                      htile(
+                         make_selector(1),
+                         sine_decal
+                      )
                    )
-                )
-            )
-         );
+               )
+            );
 
-      auto c3 = vtile(
-            make_on_off_switch(),
-            layer(
-                make_slider(),
-                margin({ 5, 22, 5, 22 }, vgrid_lines{ 2, 10 })
-            )
-         );
+         auto c3 = vtile(
+               make_on_off_switch(pickup),
+               layer(
+                   make_slider(),
+                   margin({ 5, 22, 5, 22 }, vgrid_lines{ 2, 10 })
+               )
+            );
 
-      auto controls =
-         margin(
-            { 10, 10, 10, 10 },
-            htile(
-               top_margin(30, c1),
-               top_margin(30, c2),
-               c3
-            )
-         );
+         auto controls =
+            margin(
+               { 10, 10, 10, 10 },
+               htile(
+                  top_margin(30, c1),
+                  top_margin(30, c2),
+                  c3
+               )
+            );
 
-      return unframed_group(name, controls, 0.7, false);
-   }
+         return unframed_group(name, controls, 0.7, false);
+      }
 
-   template <typename Pickup>
-   auto make_virtual_pickups(Pickup& a, Pickup& b, Pickup& c)
-   {
-      auto vpickups =
-         align_middle(
-            align_center(
-               layer(a, b, c, frets{})
-            )
-         );
-
-      return margin(
-         { 20, 0, 20, 20 },
-         vtile(
-            yside_margin({ 10, 10 }, align_right(logo)),
-            group("Virtual Pickups",
-               vtile(
-                  top_margin(40, vpickups),
-                  htile(
-                     make_pickups_control("Pickup A"),
-                     make_pickups_control("Pickup B"),
-                     make_pickups_control("Pickup C")
+      auto make_virtual_pickups()
+      {
+         auto vpickups =
+            align_middle(
+               align_center(
+                  layer(
+                     _app._pickup_a,
+                     _app._pickup_b,
+                     _app._pickup_c,
+                     frets{}
                   )
-               ),
-               0.7, false)
-         )
-      );
-   }
+               )
+            );
+
+         return margin(
+            { 20, 0, 20, 20 },
+            vtile(
+               yside_margin({ 10, 10 }, align_right(logo)),
+               group("Virtual Pickups",
+                  vtile(
+                     top_margin(40, vpickups),
+                     htile(
+                        make_pickups_control(_app._pickup_a, "Pickup A"),
+                        make_pickups_control(_app._pickup_b, "Pickup B"),
+                        make_pickups_control(_app._pickup_c, "Pickup C")
+                     )
+                  ),
+                  0.7, false)
+            )
+         );
+      }
+   };
 
    application::application(photon::view& view_)
-    : _pickup_a(0.13, pickup::double_, 0, 'A')
+    : _view(view_)
+    , _pickup_a(0.13, pickup::double_, 0, 'A')
     , _pickup_b(0.28, pickup::single, 0, 'B')
     , _pickup_c(0.42, pickup::double_, 0, 'C')
    {
+      application_impl impl{ *this };
       view_.content.push_back(share(background{}));
       view_.content.push_back(
-         share(make_virtual_pickups(_pickup_a, _pickup_b, _pickup_c))
+         share(impl.make_virtual_pickups())
       );
    }
 }

@@ -125,9 +125,9 @@ namespace client
          align_middle(
             align_center(
                layer(
-                  elf::pickup{ 0.42, elf::pickup::double_, 0 },
-                  elf::pickup{ 0.28, elf::pickup::single, 0 },
-                  elf::pickup{ 0.13, elf::pickup::double_, 0 },
+                  elf::pickup{ 0.42, elf::pickup::double_, 0, 'C' },
+                  elf::pickup{ 0.28, elf::pickup::single, 0, 'B' },
+                  elf::pickup{ 0.13, elf::pickup::double_, 0, 'A' },
                   elf::frets{}
                )
             )
@@ -139,9 +139,9 @@ namespace client
             vtile(
                top_margin(40, vpickups),
                htile(
-                  make_pickups_control("Pickup 1"),
-                  make_pickups_control("Pickup 2"),
-                  make_pickups_control("Pickup 3")
+                  make_pickups_control("Pickup A"),
+                  make_pickups_control("Pickup B"),
+                  make_pickups_control("Pickup C")
                )
             ),
             0.8, false)

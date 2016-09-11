@@ -46,7 +46,7 @@ namespace elf
          return canvas_.hit_test(canvas_.device_to_user(mp));
       }
 
-      void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx)
+      void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx, char id)
       {
          auto        canvas_ = ctx.canvas();
          auto const& theme = get_theme();
@@ -91,6 +91,18 @@ namespace elf
          canvas_.line_width(1);
          canvas_.stroke_style(outline_color);
          canvas_.stroke_round_rect(bounds, radius);
+         
+         // ID
+         if (hilite)
+         {
+            canvas_.font("Roboto", 16);
+            canvas_.fill_style(glow_color);
+            canvas_.text_align(canvas_.middle | canvas_.center);
+            float cx = bounds.left + (bounds.width() / 2);
+            float cy = bounds.top + (bounds.height() / 4);
+            char id_[] = { id, 0 };
+            canvas_.fill_text(point{ cx, cy }, id_);
+         }
       }
 
       bool hit_test_rotator(rect bounds, float slant, point mp, context const& ctx)
@@ -139,22 +151,25 @@ namespace elf
       rect  pu_bounds = r1;
       if (_type == double_)
          pu_bounds.right = r2.right;
-      bool hit_rotator = hit_test_rotator(pu_bounds, _slant, mp, ctx);
+      
+      bool  is_tracking = _tracking != none;
+      bool  hit_rotator = hit_test_rotator(pu_bounds, _slant, mp, ctx);
 
       if (_type == single)
       {
-         bool hilite = hit_rotator || hit_test_pickup(r1, _slant, mp, canvas_);
-         draw_pickup(r1, _slant, hilite, ctx);
+         bool hilite = is_tracking || hit_rotator || hit_test_pickup(r1, _slant, mp, canvas_);
+         draw_pickup(r1, _slant, hilite, ctx, _id);
       }
       else
       {
          bool hilite =
+            is_tracking ||
             hit_rotator ||
             hit_test_pickup(r1, _slant, mp, canvas_) ||
             hit_test_pickup(r2, _slant, mp, canvas_)
             ;
-         draw_pickup(r1, _slant, hilite, ctx);
-         draw_pickup(r2, _slant, hilite, ctx);
+         draw_pickup(r1, _slant, hilite, ctx, _id);
+         draw_pickup(r2, _slant, hilite, ctx, _id);
       }
 
       if (hit_rotator)

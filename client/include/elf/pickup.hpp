@@ -26,8 +26,8 @@ namespace elf
 
       enum type { single, double_ };
 
-                              pickup(float pos, type type_, float slant)
-                              : _pos(pos), _type(type_), _slant(slant), _tracking(none)
+                              pickup(float pos, type type_, float slant, char id)
+                              : _pos(pos), _type(type_), _slant(slant), _tracking(none), _id(id)
                               {}
 
                               pickup(pickup&& rhs) = default;
@@ -67,6 +67,7 @@ namespace elf
       float                   _pos;
       type                    _type;
       float                   _slant;
+      char                    _id;
       tracking_status         _tracking;
       point                   _offset;
       point                   _rotator_pos;

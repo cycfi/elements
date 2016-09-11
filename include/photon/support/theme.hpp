@@ -45,6 +45,11 @@ namespace photon
       color                text_box_caret_color       = { 0, 190, 255, 255 };
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
+
+      color                major_grid_color           = frame_color;
+      float                major_grid_width           = 1.5;
+      color                minor_grid_color           = indicator_color;
+      float                minor_grid_width           = 0.4;
    };
 
    // Access to the global theme

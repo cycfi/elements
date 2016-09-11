@@ -8,8 +8,8 @@
 #include <photon/support.hpp>
 #include <photon/widget.hpp>
 
-#include <elf/frets.hpp>
-#include <elf/pickup.hpp>
+#include <infinity/frets.hpp>
+#include <infinity/pickup.hpp>
 
 namespace client
 {
@@ -31,8 +31,8 @@ namespace client
    };
 
    // Shared Images
-   auto     on_btn = image{ "assets/images/glow-buttton-on.png", 1.0/6 };
-   auto     off_btn = image{ "assets/images/glow-buttton-off.png", 1.0/6 };
+   auto     on_btn = image{ "assets/images/power-on.png", 1.0/6 };
+   auto     off_btn = image{ "assets/images/power-off.png", 1.0/6 };
 
    auto     slider_slot = vgizmo{ "assets/images/slot.png", 1.0/4 };
    auto     selector_knob = image{ "assets/images/slide-switch.png", 1.0/4 };
@@ -54,35 +54,35 @@ namespace client
    auto make_slider()
    {
       auto vslot = yside_margin({5, 5}, slider_slot);
-      auto vsldr = slider(slider_knob, vslot);
+      auto vsldr = slider(slider_knob, vslot, 1.0);
       return align_center(vsldr);
    }
 
-   auto make_dial(char const* label)
+   auto make_dial(char const* label, double init_value)
    {
       return align_center_top(
          caption(
-            layer(align_center_middle(dial(knob)), radial_lines),
+            layer(align_center_middle(dial(knob, init_value)), radial_lines),
             label, 0.5
          )
       );
    }
 
-   auto make_selector()
+   auto make_selector(double init_value)
    {
       auto vslot = yside_margin({3, 3}, slider_slot);
-      auto vsldr = selector<2>(selector_knob, vslot);
+      auto vsldr = selector<2>(selector_knob, vslot, init_value);
       return vsize(32, halign(0.5, vsldr));
    }
 
    auto make_pickups_control(char const* name)
    {
       auto c1 = vtile(
-            make_dial("Frequency"),
+            make_dial("Frequency", 0.5),
             align_center(
                 yside_margin({ 10, 10 },
                    htile(
-                      make_selector(),
+                      make_selector(1),
                       single_double_decal
                    )
                 )
@@ -90,11 +90,11 @@ namespace client
          );
 
       auto c2 = vtile(
-            make_dial("Resonance"),
+            make_dial("Resonance", 0.5),
             align_center(
                 yside_margin({ 10, 10 },
                    htile(
-                      make_selector(),
+                      make_selector(1),
                       sine_decal
                    )
                 )
@@ -103,7 +103,10 @@ namespace client
 
       auto c3 = vtile(
             make_on_off_switch(),
-            make_slider()
+            layer(
+                make_slider(),
+                margin({ 5, 22, 5, 22 }, vgrid_lines{ 2, 10 })
+            )
          );
 
       auto controls =
@@ -125,10 +128,10 @@ namespace client
          align_middle(
             align_center(
                layer(
-                  elf::pickup{ 0.42, elf::pickup::double_, 0, 'C' },
-                  elf::pickup{ 0.28, elf::pickup::single, 0, 'B' },
-                  elf::pickup{ 0.13, elf::pickup::double_, 0, 'A' },
-                  elf::frets{}
+                  infinity::pickup{ 0.42, infinity::pickup::double_, 0, 'C' },
+                  infinity::pickup{ 0.28, infinity::pickup::single, 0, 'B' },
+                  infinity::pickup{ 0.13, infinity::pickup::double_, 0, 'A' },
+                  infinity::frets{}
                )
             )
          );

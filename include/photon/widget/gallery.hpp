@@ -29,10 +29,10 @@ namespace photon
    {
    public:
 
-      label(std::string const& text, float size_ = 1.0)
-       : _text(text)
-       , _size(size_)
-      {}
+                              label(std::string const& text, float size_ = 1.0)
+                               : _text(text)
+                               , _size(size_)
+                              {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
@@ -46,6 +46,26 @@ namespace photon
 
       std::string       _text;
       float             _size;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Grid Lines
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class vgrid_lines : public widget
+   {
+   public:
+
+                              vgrid_lines(float major_divisions, float minor_divisions)
+                               : _major_divisions(major_divisions)
+                               , _minor_divisions(minor_divisions)
+                              {}
+
+      virtual void            draw(context const& ctx);
+
+   private:
+
+      float                   _major_divisions;
+      float                   _minor_divisions;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

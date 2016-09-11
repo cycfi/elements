@@ -4,11 +4,11 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <elf/frets.hpp>
+#include <infinity/frets.hpp>
 #include <photon/view.hpp>
 #include <cmath>
 
-namespace elf
+namespace infinity
 {
    using photon::canvas;
    using photon::circle;

@@ -4,11 +4,11 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 =================================================================================================*/
-#include <elf/pickup.hpp>
+#include <infinity/pickup.hpp>
 #include <photon/view.hpp>
 #include <cmath>
 
-namespace elf
+namespace infinity
 {
    using photon::full_extent;
    using photon::canvas;
@@ -96,11 +96,11 @@ namespace elf
          if (hilite)
          {
             canvas_.font("Roboto", 16);
-            canvas_.fill_style(glow_color);
+            canvas_.fill_style(glow_color.opacity(0.5));
             canvas_.text_align(canvas_.middle | canvas_.center);
             float cx = bounds.left + (bounds.width() / 2);
             float cy = bounds.top + (bounds.height() / 4);
-            char id_[] = { id, 0 };
+            char const id_[] = { id, 0 };
             canvas_.fill_text(point{ cx, cy }, id_);
          }
       }

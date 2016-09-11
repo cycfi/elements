@@ -23,7 +23,7 @@ namespace photon
    {
    public:
 
-      using slider_function = std::function<double(double pos)>;
+      using slider_function = std::function<void(double pos)>;
 
                               slider_base(double init_value)
                                : _value(init_value)

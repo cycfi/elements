@@ -20,15 +20,16 @@ namespace infinity
    public:
                         application(view& view_);
 
+      void              pickup_enable(int which, bool enable);
+      void              pickup_set_type(int which, pickup::type type_);
+
    private:
 
       friend struct application_impl;
       using pickup_ref = reference<pickup>;
 
       view&             _view;
-      pickup_ref        _pickup_a;
-      pickup_ref        _pickup_b;
-      pickup_ref        _pickup_c;
+      pickup_ref        _pickups[3];
    };
 }
 

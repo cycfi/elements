@@ -55,16 +55,14 @@ namespace infinity
        : _app(app)
       {};
 
-      template <typename Pickup>
-      auto make_on_off_switch(Pickup& pickup)
+      auto make_on_off_switch(int which)
       {
-         auto& view = _app._view;
+         auto& app = _app;
          auto  btn = basic_toggle_button(off_btn, on_btn);
          btn.value(true);
-         btn.on_click = [&pickup, &view](bool state)
+         btn.on_click = [&app, which](bool state)
          {
-            pickup.get().visible(state);
-            view.refresh();
+            app.pickup_enable(which, state);
          };
          return align_center(btn);
       }
@@ -86,22 +84,29 @@ namespace infinity
          );
       }
 
-      auto make_selector(double init_value)
+      template <typename F>
+      auto make_selector(F f, double init_value)
       {
          auto vslot = yside_margin({3, 3}, slider_slot);
          auto vsldr = selector<2>(selector_knob, vslot, init_value);
+         vsldr.on_change = f;
          return vsize(32, halign(0.5, vsldr));
       }
 
-      template <typename Pickup>
-      auto make_pickups_control(Pickup& pickup, char const* name)
+      auto make_pickups_control(int which, char const* name)
       {
+         auto& app = _app;
+         auto set_type = [&app, which](double val)
+         {
+            app.pickup_set_type(which, (val > 0.5)? pickup::single : pickup::double_);
+         };
+
          auto c1 = vtile(
                make_dial("Frequency", 0.5),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_selector(1),
+                         make_selector(set_type, 1),
                          single_double_decal
                       )
                    )
@@ -113,7 +118,7 @@ namespace infinity
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_selector(1),
+                         make_selector([](double){}, 1),
                          sine_decal
                       )
                    )
@@ -121,7 +126,7 @@ namespace infinity
             );
 
          auto c3 = vtile(
-               make_on_off_switch(pickup),
+               make_on_off_switch(which),
                layer(
                    make_slider(),
                    margin({ 5, 22, 5, 22 }, vgrid_lines{ 2, 10 })
@@ -147,9 +152,9 @@ namespace infinity
             align_middle(
                align_center(
                   layer(
-                     _app._pickup_a,
-                     _app._pickup_b,
-                     _app._pickup_c,
+                     _app._pickups[0],
+                     _app._pickups[1],
+                     _app._pickups[2],
                      frets{}
                   )
                )
@@ -163,9 +168,9 @@ namespace infinity
                   vtile(
                      top_margin(40, vpickups),
                      htile(
-                        make_pickups_control(_app._pickup_a, "Pickup A"),
-                        make_pickups_control(_app._pickup_b, "Pickup B"),
-                        make_pickups_control(_app._pickup_c, "Pickup C")
+                        make_pickups_control(0, "Pickup A"),
+                        make_pickups_control(1, "Pickup B"),
+                        make_pickups_control(2, "Pickup C")
                      )
                   ),
                   0.7, false)
@@ -176,14 +181,28 @@ namespace infinity
 
    application::application(photon::view& view_)
     : _view(view_)
-    , _pickup_a(0.13, pickup::double_, 0, 'A')
-    , _pickup_b(0.28, pickup::single, 0, 'B')
-    , _pickup_c(0.42, pickup::double_, 0, 'C')
+    , _pickups{
+        { 0.13, pickup::single, 0.3, 'A' },
+        { 0.28, pickup::single, 0, 'B' },
+        { 0.42, pickup::single, 0, 'C' }
+     }
    {
       application_impl impl{ *this };
       view_.content.push_back(share(background{}));
       view_.content.push_back(
          share(impl.make_virtual_pickups())
       );
+   }
+
+   void application::pickup_enable(int which, bool enable)
+   {
+      _pickups[which].get().visible(enable);
+      _view.refresh();
+   }
+
+   void application::pickup_set_type(int which, pickup::type type_)
+   {
+      _pickups[which].get().set_type(type_);
+      _view.refresh();
    }
 }

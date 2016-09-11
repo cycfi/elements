@@ -45,7 +45,8 @@ namespace infinity
       virtual void            keep_tracking(context const& ctx, info& track_info);
       virtual void            end_tracking(context const& ctx, info& track_info);
 
-      void                    visible(bool val) { _is_visible = val; }
+      void                    visible(bool val)       { _is_visible = val; }
+      void                    set_type(type type_)    { _type = type_; }
 
    private:
 

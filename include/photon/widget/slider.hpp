@@ -62,6 +62,12 @@ namespace photon
                                , _body(std::forward<Body>(body))
                               {}
 
+                              inline basic_slider(Indicator const& indicator, Body const& body, double init_value)
+                               : Base(init_value)
+                               , _indicator(indicator)
+                               , _body(body)
+                              {}
+
       virtual widget const&   indicator() const  { return _indicator; }
       virtual widget&         indicator()        { return _indicator; }
       virtual widget const&   body() const       { return _body; }

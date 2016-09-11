@@ -22,12 +22,6 @@ namespace client
 
    struct background : widget
    {
-//      widget_limits limits(basic_context const& ctx) const
-//      {
-//         // Main window limits
-//         return { { 0, 0 }, { 640*2, 480*2 } };
-//      }
-
       void draw(context const& ctx)
       {
          auto cnv = ctx.canvas();
@@ -36,30 +30,39 @@ namespace client
       }
    };
 
+   // Shared Images
+   auto     on_btn = image{ "assets/images/glow-buttton-on.png", 1.0/6 };
+   auto     off_btn = image{ "assets/images/glow-buttton-off.png", 1.0/6 };
+
+   auto     slider_slot = vgizmo{ "assets/images/slot.png", 1.0/4 };
+   auto     selector_knob = image{ "assets/images/slide-switch.png", 1.0/4 };
+   auto     slider_knob = image{ "assets/images/slider-white.png", 1.0/6 };
+
+   float    knob_scale = 1.0/3.5;
+   auto     knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 128*knob_scale, knob_scale };
+   auto     radial_lines = image{ "assets/images/radial-lines.png", knob_scale };
+
+   float    decal_scale = 1.0/4;
+   auto     sine_decal = image{ "assets/images/sine-decal.png", decal_scale };
+   auto     single_double_decal = image{ "assets/images/single-double-decal.png", decal_scale };
+
    auto make_on_off_switch()
    {
-      auto on = image{ "assets/images/glow-buttton-on.png", 1.0/6 };
-      auto off = image{ "assets/images/glow-buttton-off.png", 1.0/6 };
-      return align_center(basic_toggle_button(off, on));
+      return align_center(basic_toggle_button(off_btn, on_btn));
    }
 
    auto make_slider()
    {
-      auto vind = image{ "assets/images/slider-white.png", 1.0/6 };
-      auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
-      auto vsldr = slider(std::move(vind), std::move(vslot));
-      return halign(0.5, std::move(vsldr));
+      auto vslot = yside_margin({5, 5}, slider_slot);
+      auto vsldr = slider(slider_knob, vslot);
+      return halign(0.5, vsldr);
    }
 
    auto make_dial(char const* label)
    {
-      float scale = 1.0/3.5;
-      auto  knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 128*scale, scale };
-      auto  rlines = image{ "assets/images/radial-lines.png", scale };
-
       return align_center_top(
          caption(
-            layer(align_center_middle(dial(knob)), rlines),
+            layer(align_center_middle(dial(knob)), radial_lines),
             label, 0.5
          )
       );
@@ -67,18 +70,13 @@ namespace client
 
    auto make_selector()
    {
-      auto vslot = yside_margin({3, 3}, vgizmo{ "assets/images/slot.png", 1.0/4 });
-      auto vind = image{ "assets/images/slide-switch.png", 1.0/4 };
-      auto vsldr = selector<2>(std::move(vind), std::move(vslot));
-      return vsize(32, halign(0.5, std::move(vsldr)));
+      auto vslot = yside_margin({3, 3}, slider_slot);
+      auto vsldr = selector<2>(selector_knob, vslot);
+      return vsize(32, halign(0.5, vsldr));
    }
 
    auto make_pickups_control(char const* name)
    {
-      float scale = 1.0/4;
-      auto  sine_decal = image{ "assets/images/sine-decal.png", scale };
-      auto  single_double_decal = image{ "assets/images/single-double-decal.png", scale };
-
       auto c1 = vtile(
             make_dial("Frequency"),
             align_center(
@@ -112,8 +110,8 @@ namespace client
          margin(
             { 10, 10, 10, 10 },
             htile(
-               top_margin(40, c1),
-               top_margin(40, c2),
+               top_margin(30, c1),
+               top_margin(30, c2),
                c3
             )
          );

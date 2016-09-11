@@ -177,6 +177,19 @@ namespace photon
       ctx.bounds.top += (available_height - elem_height) * this->align();
       ctx.bounds.height(elem_height);
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   inline auto align_center_middle(Subject const& subject)
+   {
+      return align_center(align_middle(subject));
+   }
+
+   template <typename Subject>
+   inline auto align_center_top(Subject const& subject)
+   {
+      return align_center(align_top(subject));
+   }
 }
 
 #endif

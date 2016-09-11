@@ -22,11 +22,11 @@ namespace client
 
    struct background : widget
    {
-      widget_limits limits(basic_context const& ctx) const
-      {
-         // Main window limits
-         return { { 640, 480 }, { 640*2, 480*2 } };
-      }
+//      widget_limits limits(basic_context const& ctx) const
+//      {
+//         // Main window limits
+//         return { { 0, 0 }, { 640*2, 480*2 } };
+//      }
 
       void draw(context const& ctx)
       {
@@ -45,7 +45,7 @@ namespace client
 
    auto make_slider()
    {
-      auto vind = image{ "assets/images/slider-white.png", 1.0/5 };
+      auto vind = image{ "assets/images/slider-white.png", 1.0/6 };
       auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
       auto vsldr = slider(std::move(vind), std::move(vslot));
       return halign(0.5, std::move(vsldr));
@@ -53,24 +53,24 @@ namespace client
 
    auto make_dial(char const* label)
    {
-      float scale = 1.0/3;
+      float scale = 1.0/3.5;
       auto  knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 128*scale, scale };
       auto  rlines = image{ "assets/images/radial-lines.png", scale };
 
-      return align_center(align_middle(
+      return align_center_top(
          caption(
-            layer(align_center(align_middle(dial(knob))), rlines),
+            layer(align_center_middle(dial(knob)), rlines),
             label, 0.5
          )
-      ));
+      );
    }
 
    auto make_selector()
    {
-      auto vslot = yside_margin({5, 5}, vgizmo{ "assets/images/slot.png", 1.0/4 });
-      auto vind = left_margin(4, image{ "assets/images/slide-switch.png", 1.0/4 });
+      auto vslot = yside_margin({3, 3}, vgizmo{ "assets/images/slot.png", 1.0/4 });
+      auto vind = image{ "assets/images/slide-switch.png", 1.0/4 };
       auto vsldr = selector<2>(std::move(vind), std::move(vslot));
-      return vsize(40, halign(0.5, std::move(vsldr)));
+      return vsize(32, halign(0.5, std::move(vsldr)));
    }
 
    auto make_pickups_control(char const* name)
@@ -81,18 +81,26 @@ namespace client
 
       auto c1 = vtile(
             make_dial("Frequency"),
-           align_center(align_middle(htile(
-               make_selector(),
-               single_double_decal
-            )))
+            align_center(
+                top_margin(10,
+                   htile(
+                      make_selector(),
+                      single_double_decal
+                   )
+                )
+            )
          );
 
       auto c2 = vtile(
             make_dial("Resonance"),
-            align_center(align_middle(htile(
-               make_selector(),
-               sine_decal
-            )))
+            align_center(
+                top_margin(10,
+                   htile(
+                      make_selector(),
+                      sine_decal
+                   )
+                )
+            )
          );
 
       auto c3 = vtile(
@@ -131,7 +139,7 @@ namespace client
          { 20, 20, 20, 20 },
          group("Virtual Pickups",
             vtile(
-               yside_margin({ 20, 20 }, vpickups),
+               top_margin(40, vpickups),
                htile(
                   make_pickups_control("Pickup 1"),
                   make_pickups_control("Pickup 2"),

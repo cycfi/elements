@@ -92,6 +92,7 @@ namespace photon
       }
 
       clamp_min(limits.max.y, limits.min.y);
+      clamp_max(limits.max.x, full_extent);
       return limits;
    }
 

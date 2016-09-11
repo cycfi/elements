@@ -98,8 +98,8 @@ namespace elf
          auto  canvas_ = ctx.canvas();
          auto  state = prepare(bounds, slant, canvas_);
 
-         float size = (bounds.height() / 3);
-         bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
+         float size = (bounds.height() / 4);
+         bounds = { bounds.left, bounds.bottom-10, bounds.right, bounds.bottom + size };
          canvas_.begin_path();
          canvas_.rect(bounds);
          return canvas_.hit_test(canvas_.device_to_user(mp));
@@ -113,10 +113,10 @@ namespace elf
 
          // Draw rotator icon
          float  height = bounds.height();
-         float  size = height / 3;
-         bounds = { bounds.left, bounds.bottom, bounds.right, bounds.bottom + size };
+         float  size = height / 4;
+         bounds = { bounds.left, bounds.bottom-10, bounds.right, bounds.bottom + size };
 
-         canvas_.font("photon_basic", 18);
+         canvas_.font("photon_basic", 16);
          canvas_.fill_style(theme.icon_color);
          draw_icon(canvas_, bounds, icons::cycle);
          return canvas_.user_to_device(center_point(bounds));

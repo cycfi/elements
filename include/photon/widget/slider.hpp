@@ -22,9 +22,6 @@ namespace photon
    class slider_base : public tracker<>
    {
    public:
-
-      using slider_function = std::function<void(double pos)>;
-
                               slider_base(double init_value)
                                : _value(init_value)
                               {}
@@ -50,16 +47,25 @@ namespace photon
       virtual widget const&   body() const = 0;
       virtual widget&         body() = 0;
 
-      slider_function         on_change;
-
    private:
 
       double                  _value;
       mutable bool            _is_horiz = false;
    };
 
+   class basic_slider_base : public slider_base
+   {
+   public:
+
+      using slider_function = std::function<void(double pos)>;
+      using slider_base::slider_base;
+
+      slider_function         on_change;
+      virtual void            value(double val);
+   };
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   template <typename Indicator, typename Body, typename Base = slider_base>
+   template <typename Indicator, typename Body, typename Base = basic_slider_base>
    class basic_slider : public Base
    {
    public:
@@ -100,15 +106,27 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Selectors
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class basic_selector_base : public slider_base
+   {
+   public:
+
+      using selector_function = std::function<void(size_t pos)>;
+      using slider_function = std::function<void(double pos)>;
+      using slider_base::slider_base;
+
+      selector_function       on_change;
+      void                    select(size_t val);
+   };
+
    template <size_t num_states>
-   class selector_base : public slider_base
+   class selector_base : public basic_selector_base
    {
    public:
 
       static_assert(num_states > 1, "Error: not enough states.");
 
-      using slider_base::slider_base;
-      using slider_base::value;
+      using basic_selector_base::basic_selector_base;
+      using basic_selector_base::value;
 
       virtual bool         scroll(context const& ctx, point p);
       virtual void         value(double val);
@@ -124,8 +142,10 @@ namespace photon
    template <size_t num_states>
    inline void selector_base<num_states>::value(double val)
    {
-      constexpr auto max = num_states-1;
-      slider_base::value(std::round(val * max) / max);
+      constexpr auto    max = num_states-1;
+      auto const        state = std::round(val * max);
+      basic_selector_base::value(state / max);
+      basic_selector_base::select(state);
    }
 
    template <size_t num_states, typename Indicator, typename Body>

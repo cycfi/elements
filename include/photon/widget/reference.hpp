@@ -21,16 +21,8 @@ namespace photon
    class reference : public widget
    {
    public:
-                              template <typename... T>
-                              reference(T const&... args)
-                               : ptr(std::make_shared<Widget>(args...))
-                              {}
-
-                              template <typename... T>
-                              reference(T&&... args)
-                               : ptr(std::make_shared<Widget>(std::move(args)...))
-                              {}
-
+                              reference();
+      explicit                reference(photon::widget_ptr ptr);
                               reference(reference&& rhs) = default;
                               reference(reference const& rhs) = default;
       reference&              operator=(reference&& rhs) = default;
@@ -80,6 +72,15 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Widget>
+   inline reference<Widget>::reference()
+   {}
+
+   template <typename Widget>
+   inline reference<Widget>::reference(photon::widget_ptr ptr)
+    : ptr(std::dynamic_pointer_cast<Widget>(ptr))
+   {}
+
    template <typename Widget>
    inline widget_limits
    reference<Widget>::limits(basic_context const& ctx) const

@@ -14,6 +14,7 @@ namespace infinity
 {
    using photon::view;
    using photon::reference;
+   using photon::basic_selector_base;
 
    class application : public photon::application
    {
@@ -21,15 +22,17 @@ namespace infinity
                         application(view& view_);
 
       void              pickup_enable(int which, bool enable);
-      void              pickup_set_type(int which, pickup::type type_);
+      void              pickup_type(int which, pickup::type type_);
 
    private:
 
       friend struct application_impl;
       using pickup_ref = reference<pickup>;
+      using selector_ref = reference<basic_selector_base>;
 
       view&             _view;
       pickup_ref        _pickups[3];
+      selector_ref      _sd_switches[3];
    };
 }
 

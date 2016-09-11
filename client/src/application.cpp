@@ -84,29 +84,41 @@ namespace infinity
          );
       }
 
-      template <typename F>
-      auto make_selector(F f, double init_value)
+      auto make_phase_selector(double init_value)
       {
          auto vslot = yside_margin({3, 3}, slider_slot);
          auto vsldr = selector<2>(selector_knob, vslot, init_value);
-         vsldr.on_change = f;
          return vsize(32, halign(0.5, vsldr));
+      }
+
+      auto make_sd_selector(int which, double init_value)
+      {
+         auto  vslot = yside_margin({3, 3}, slider_slot);
+         auto  ref =
+            application::selector_ref(
+               share(selector<2>(selector_knob, vslot, init_value))
+            );
+
+         auto& app = _app;
+         ref.get().on_change =
+            [&app, which](size_t val)
+            {
+               auto type = val? pickup::single : pickup::double_;
+               app.pickup_type(which, type);
+            };
+
+         _app._sd_switches[which] = ref;
+         return vsize(32, halign(0.5, _app._sd_switches[which]));
       }
 
       auto make_pickups_control(int which, char const* name)
       {
-         auto& app = _app;
-         auto set_type = [&app, which](double val)
-         {
-            app.pickup_set_type(which, (val > 0.5)? pickup::single : pickup::double_);
-         };
-
          auto c1 = vtile(
                make_dial("Frequency", 0.5),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_selector(set_type, 1),
+                         make_sd_selector(which, 1),
                          single_double_decal
                       )
                    )
@@ -118,7 +130,7 @@ namespace infinity
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_selector([](double){}, 1),
+                         make_phase_selector(1),
                          sine_decal
                       )
                    )
@@ -182,9 +194,9 @@ namespace infinity
    application::application(photon::view& view_)
     : _view(view_)
     , _pickups{
-        { 0.13, pickup::single, 0.3, 'A' },
-        { 0.28, pickup::single, 0, 'B' },
-        { 0.42, pickup::single, 0, 'C' }
+        pickup_ref(share(pickup{ 0.13, pickup::double_, 0, 'A' })),
+        pickup_ref(share(pickup{ 0.28, pickup::single, 0, 'B' })),
+        pickup_ref(share(pickup{ 0.42, pickup::single, 0, 'C' }))
      }
    {
       application_impl impl{ *this };
@@ -192,6 +204,9 @@ namespace infinity
       view_.content.push_back(
          share(impl.make_virtual_pickups())
       );
+
+      _sd_switches[0].get().value(0);
+      _sd_switches[2].get().value(0);
    }
 
    void application::pickup_enable(int which, bool enable)
@@ -200,7 +215,7 @@ namespace infinity
       _view.refresh();
    }
 
-   void application::pickup_set_type(int which, pickup::type type_)
+   void application::pickup_type(int which, pickup::type type_)
    {
       _pickups[which].get().set_type(type_);
       _view.refresh();

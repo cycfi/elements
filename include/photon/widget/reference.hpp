@@ -33,8 +33,8 @@ namespace photon
 
                               reference(reference&& rhs) = default;
                               reference(reference const& rhs) = default;
-      reference&       operator=(reference&& rhs) = default;
-      reference&       operator=(reference const& rhs) = default;
+      reference&              operator=(reference&& rhs) = default;
+      reference&              operator=(reference const& rhs) = default;
 
    // image
 

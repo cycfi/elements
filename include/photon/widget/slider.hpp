@@ -10,7 +10,9 @@
 #include <photon/widget/tracker.hpp>
 #include <photon/view.hpp>
 #include <photon/support.hpp>
+
 #include <cmath>
+#include <functional>
 
 namespace photon
 {
@@ -20,6 +22,9 @@ namespace photon
    class slider_base : public tracker<>
    {
    public:
+
+      using slider_function = std::function<double(double pos)>;
+
                               slider_base(double init_value)
                                : _value(init_value)
                               {}
@@ -33,8 +38,8 @@ namespace photon
       virtual void            keep_tracking(context const& ctx, info& track_info);
       virtual void            end_tracking(context const& ctx, info& track_info);
 
-      virtual double          value() const        { return _value; }
-      virtual void            value(double val)    { _value = val; }
+      double                  value() const;
+      virtual void            value(double val);
 
       rect                    body_bounds(context const& ctx) const;
       rect                    indicator_bounds(context const& ctx) const;
@@ -44,6 +49,8 @@ namespace photon
       virtual widget&         indicator() = 0;
       virtual widget const&   body() const = 0;
       virtual widget&         body() = 0;
+
+      slider_function         on_change;
 
    private:
 

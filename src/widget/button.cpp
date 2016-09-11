@@ -41,7 +41,7 @@ namespace photon
       return true;
    }
 
-   bool basic_button::state() const
+   bool basic_button::value() const
    {
       return _state;
    }
@@ -70,17 +70,17 @@ namespace photon
 
       if (btn.down)
       {
-         if (state(!state()))             // toggle the state
+         if (state(!value()))             // toggle the state
          {
             ctx.view.refresh(ctx.bounds); // we need to save the current state, the state
-            _current_state = state();     // can change in the drag function and so we'll
+            _current_state = value();     // can change in the drag function and so we'll
          }                                // need it later when the button is finally released
       }
       else
       {
          state(_current_state);
          if (on_click)
-            on_click(state());
+            on_click(value());
       }
       return this;
    }

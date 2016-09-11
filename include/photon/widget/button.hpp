@@ -30,9 +30,10 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
-      bool              state() const;
       bool              state(bool new_state);
       virtual void      value(bool new_state)   { state(new_state); }
+      bool              value() const;
+
 
       button_function   on_click;
 

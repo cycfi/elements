@@ -178,4 +178,16 @@ namespace photon
          ctx.view.refresh(ctx.bounds);
       }
    }
+
+   void slider_base::value(double val)
+   {
+      if (on_change)
+         on_change(val);
+      _value = val;
+   }
+   
+   double  slider_base::value() const
+   {
+      return _value;
+   }
 }

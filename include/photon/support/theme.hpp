@@ -25,8 +25,8 @@ namespace photon
       color                basic_font_color           = { 220, 220, 220, 200 };
 
       color                heading_font_color         = basic_font_color;
-      char const*          heading_font               = "Open Sans";
-      float                heading_font_size          = 20.0;
+      char const*          heading_font               = "BlairMdITC TT Medium";
+      float                heading_font_size          = 18.0;
       canvas::font_style   heading_style              = canvas::bold;
 
       color                label_font_color           = basic_font_color;

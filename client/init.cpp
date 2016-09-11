@@ -31,6 +31,8 @@ namespace client
    };
 
    // Shared Images
+   auto     logo = image{ "assets/images/logo.png", 1.0/4 };
+
    auto     on_btn = image{ "assets/images/power-on.png", 1.0/6 };
    auto     off_btn = image{ "assets/images/power-off.png", 1.0/6 };
 
@@ -119,7 +121,7 @@ namespace client
             )
          );
 
-      return unframed_group(name, controls, 0.8, false);
+      return unframed_group(name, controls, 0.7, false);
    }
 
    auto make_virtual_pickups()
@@ -137,17 +139,20 @@ namespace client
          );
 
       return margin(
-         { 20, 20, 20, 20 },
-         group("Virtual Pickups",
-            vtile(
-               top_margin(40, vpickups),
-               htile(
-                  make_pickups_control("Pickup A"),
-                  make_pickups_control("Pickup B"),
-                  make_pickups_control("Pickup C")
-               )
-            ),
-            0.8, false)
+         { 20, 0, 20, 20 },
+         vtile(
+            yside_margin({ 10, 10 }, align_right(logo)),
+            group("Virtual Pickups",
+               vtile(
+                  top_margin(40, vpickups),
+                  htile(
+                     make_pickups_control("Pickup A"),
+                     make_pickups_control("Pickup B"),
+                     make_pickups_control("Pickup C")
+                  )
+               ),
+               0.7, false)
+         )
       );
    }
 

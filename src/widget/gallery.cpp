@@ -8,6 +8,33 @@
 
 namespace photon
 {
+   widget_limits heading::limits(basic_context const& ctx) const
+   {
+      auto const&    theme_ = get_theme();
+      auto           canvas_ = ctx.canvas();
+
+      canvas_.font(theme_.heading_font, theme_.heading_font_size * _size);
+      auto  info = canvas_.measure_text(_text.c_str());
+      auto  height = info.ascent + info.descent + info.leading;
+      return { { info.size.x, height }, { info.size.x, height } };
+   }
+
+   void heading::draw(context const& ctx)
+   {
+      auto const&    theme_ = get_theme();
+      auto           canvas_ = ctx.canvas();
+      auto           state = canvas_.new_state();
+
+      canvas_.fill_style(theme_.heading_font_color);
+      canvas_.font(theme_.heading_font, theme_.heading_font_size * _size, theme_.heading_style);
+      canvas_.text_align(canvas_.middle | canvas_.center);
+
+      float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
+      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
+
+      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+   }
+
    widget_limits label::limits(basic_context const& ctx) const
    {
       auto const&    theme_ = get_theme();

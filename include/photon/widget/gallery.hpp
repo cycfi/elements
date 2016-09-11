@@ -23,6 +23,32 @@ namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Headings
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class heading : public widget
+   {
+   public:
+
+                              heading(std::string const& text, float size_ = 1.0)
+                               : _text(text)
+                               , _size(size_)
+                              {}
+
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+
+      std::string             text() const                     { return _text; }
+      void                    text(std::string const& text)    { _text = text; }
+
+      using widget::text;
+
+   private:
+
+      std::string       _text;
+      float             _size;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class label : public widget
@@ -96,7 +122,7 @@ namespace photon
    )
    {
       return make_group(
-         left_top_margin({ 10, 10 }, label(title, label_size)),
+         left_top_margin({ 10, 10 }, heading{ title, label_size }),
          std::forward<Content>(content), center_heading
       );
    }
@@ -125,7 +151,7 @@ namespace photon
    )
    {
       return make_unframed_group(
-         left_top_margin({ 10, 10 }, label(title, label_size)),
+         left_top_margin({ 10, 10 }, heading{ title, label_size }),
          std::forward<Content>(content), center_heading
       );
    }

@@ -55,7 +55,7 @@ namespace client
    {
       auto vslot = yside_margin({5, 5}, slider_slot);
       auto vsldr = slider(slider_knob, vslot);
-      return halign(0.5, vsldr);
+      return align_center(vsldr);
    }
 
    auto make_dial(char const* label)
@@ -80,7 +80,7 @@ namespace client
       auto c1 = vtile(
             make_dial("Frequency"),
             align_center(
-                top_margin(10,
+                yside_margin({ 10, 10 },
                    htile(
                       make_selector(),
                       single_double_decal
@@ -92,7 +92,7 @@ namespace client
       auto c2 = vtile(
             make_dial("Resonance"),
             align_center(
-                top_margin(10,
+                yside_margin({ 10, 10 },
                    htile(
                       make_selector(),
                       sine_decal

@@ -50,7 +50,7 @@ namespace infinity
       void                    visible(bool val)       { _is_visible = val; }
       void                    set_type(type type_)    { _type = type_; }
       void                    position(double pos);
-      void                    angle(double slant);
+      void                    slant(double slant_);
 
       pickup_function         on_position_change;
       pickup_function         on_slant_change;

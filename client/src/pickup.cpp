@@ -200,11 +200,11 @@ namespace infinity
       }
    }
 
-   void pickup::angle(double slant)
+   void pickup::slant(double slant_)
    {
-      if (_slant != slant)
+      if (_slant != slant_)
       {
-         _slant = slant;
+         _slant = slant_;
          if (on_slant_change)
             on_slant_change(_slant);
       }
@@ -256,7 +256,7 @@ namespace infinity
          float angle = -std::atan2(mp.x-center.x, mp.y-center.y);
 
          clamp(angle, -0.4, 0.4);
-         this->angle(angle);
+         slant(angle);
          ctx.view.refresh(ctx.bounds);
          return true;
       }
@@ -328,7 +328,7 @@ namespace infinity
    {
       if (!btn.down && btn.num_clicks == 2)
       {
-         angle(0);
+         slant(0);
          ctx.view.refresh(ctx.bounds);
       }
       return tracker<>::click(ctx, btn);

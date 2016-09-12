@@ -24,6 +24,7 @@ namespace infinity
    public:
                         application(view& view_);
 
+      void              init_defaults();
       void              pickup_enable(int which, bool enable);
       void              pickup_type(int which, pickup::type type_);
       void              pickup_phase(int which, bool in_phase);

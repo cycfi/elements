@@ -283,6 +283,19 @@ namespace infinity
          share(impl.make_virtual_pickups())
       );
 
+      init_defaults();
+   }
+
+   void application::init_defaults()
+   {
+      _controls[0].pickup.get().position(0.13);
+      _controls[1].pickup.get().position(0.28);
+      _controls[2].pickup.get().position(0.42);
+
+      _controls[0].pickup.get().slant(0);
+      _controls[1].pickup.get().slant(0);
+      _controls[2].pickup.get().slant(0);
+
       _controls[0].type.value(0);
       _controls[1].type.value(1);
       _controls[2].type.value(0);

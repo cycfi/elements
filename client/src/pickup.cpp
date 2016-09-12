@@ -91,7 +91,7 @@ namespace infinity
          canvas_.line_width(1);
          canvas_.stroke_style(outline_color);
          canvas_.stroke_round_rect(bounds, radius);
-         
+
          // ID
          if (hilite)
          {
@@ -154,7 +154,7 @@ namespace infinity
       rect  pu_bounds = r1;
       if (_type == double_)
          pu_bounds.right = r2.right;
-      
+
       bool  is_tracking = _tracking != none;
       bool  hit_rotator = hit_test_rotator(pu_bounds, _slant, mp, ctx);
 
@@ -190,6 +190,26 @@ namespace infinity
       return true;
    }
 
+   void pickup::position(double pos)
+   {
+      if (_pos != pos)
+      {
+         _pos = pos;
+         if (on_position_change)
+            on_position_change(_pos);
+      }
+   }
+
+   void pickup::angle(double slant)
+   {
+      if (_slant != slant)
+      {
+         _slant = slant;
+         if (on_slant_change)
+            on_slant_change(_slant);
+      }
+   }
+
    bool pickup::reposition(context const& ctx, point mp)
    {
       rect r1, r2;
@@ -223,7 +243,7 @@ namespace infinity
 
          double align = mp.x / (w - pu_bounds.width());
          clamp(align, 0.0, 1.0);
-         _pos = align;
+         position(align);
          ctx.view.refresh(ctx.bounds);
          return true;
       }
@@ -236,7 +256,7 @@ namespace infinity
          float angle = -std::atan2(mp.x-center.x, mp.y-center.y);
 
          clamp(angle, -0.4, 0.4);
-         _slant = angle;
+         this->angle(angle);
          ctx.view.refresh(ctx.bounds);
          return true;
       }
@@ -308,7 +328,7 @@ namespace infinity
    {
       if (!btn.down && btn.num_clicks == 2)
       {
-         _slant = 0;
+         angle(0);
          ctx.view.refresh(ctx.bounds);
       }
       return tracker<>::click(ctx, btn);

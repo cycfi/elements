@@ -62,6 +62,7 @@ namespace photon
 
       using slider_function = std::function<void(double pos)>;
       using slider_base::slider_base;
+      using slider_base::value;
 
       slider_function         on_change;
       virtual void            value(double val);
@@ -99,7 +100,7 @@ namespace photon
    inline basic_slider<
       typename std::decay<Indicator>::type,
       typename std::decay<Body>::type,
-      slider_base
+      basic_slider_base
    >
    slider(Indicator&& indicator, Body&& body, double init_value = 0.0)
    {
@@ -116,6 +117,7 @@ namespace photon
       using selector_function = std::function<void(size_t pos)>;
       using slider_function = std::function<void(double pos)>;
       using slider_base::slider_base;
+      using slider_base::value;
 
       selector_function       on_change;
       void                    select(size_t val);

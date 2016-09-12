@@ -11,6 +11,8 @@
 #include <infinity/frets.hpp>
 #include <infinity/application.hpp>
 
+#include <iostream>
+
 namespace infinity
 {
    namespace colors = photon::colors;
@@ -57,38 +59,99 @@ namespace infinity
 
       auto make_on_off_switch(int which)
       {
+         auto  ref =
+            application::button_ref(
+               share(basic_toggle_button(off_btn, on_btn))
+            );
+
+         ref.value(true);
          auto& app = _app;
-         auto  btn = basic_toggle_button(off_btn, on_btn);
-         btn.value(true);
-         btn.on_click = [&app, which](bool state)
+         ref.get().on_click = [&app, which](bool state)
          {
             app.pickup_enable(which, state);
          };
-         return align_center(btn);
+         _app._controls[which].enable = ref;
+         return align_center(ref);
       }
 
-      auto make_slider()
+      auto make_slider(int which)
       {
          auto vslot = yside_margin({5, 5}, slider_slot);
-         auto vsldr = slider(slider_knob, vslot, 1.0);
-         return align_center(vsldr);
+
+         auto sl = share(slider(slider_knob, vslot, 1.0));
+
+         auto ref =
+            application::slider_ref(
+                sl
+            );
+
+         auto& app = _app;
+         ref.get().on_change = [&app, which](double val)
+         {
+            app.pickup_level(which, val);
+         };
+         _app._controls[which].level = ref;
+         return align_center(ref);
       }
 
-      auto make_dial(char const* label, double init_value)
+      auto make_dial(dial_base::dial_function f, int which, char const* label, double init_value)
       {
+         auto  ref =
+            application::dial_ref(
+               share(dial(knob, init_value))
+            );
+
+         ref.get().on_change = f;
+         _app._controls[which].frequency = ref;
          return align_center_top(
             caption(
-               layer(align_center_middle(dial(knob, init_value)), radial_lines),
+               layer(align_center_middle(ref), radial_lines),
                label, 0.5
             )
          );
       }
 
-      auto make_phase_selector(double init_value)
+      auto make_freq_dial(int which, char const* label, double init_value)
+      {
+         auto& app = _app;
+         auto  f =
+            [&app, which](double val)
+            {
+               app.pickup_frequency(which, val);
+            };
+
+         return make_dial(f, which, label, init_value);
+      }
+
+      auto make_reso_dial(int which, char const* label, double init_value)
+      {
+         auto& app = _app;
+         auto  f =
+            [&app, which](double val)
+            {
+               app.pickup_resonance(which, val);
+            };
+
+         return make_dial(f, which, label, init_value);
+      }
+
+      auto make_phase_selector(int which, double init_value)
       {
          auto vslot = yside_margin({3, 3}, slider_slot);
-         auto vsldr = selector<2>(selector_knob, vslot, init_value);
-         return vsize(32, halign(0.5, vsldr));
+         auto  ref =
+            application::selector_ref(
+               share(selector<2>(selector_knob, vslot, init_value))
+            );
+
+         auto& app = _app;
+         ref.get().on_change =
+            [&app, which](size_t val)
+            {
+               app.pickup_phase(which, val);
+            };
+
+         _app._controls[which].phase = ref;
+         return vsize(32, halign(0.5, _app._controls[which].phase));
       }
 
       auto make_sd_selector(int which, double init_value)
@@ -107,14 +170,14 @@ namespace infinity
                app.pickup_type(which, type);
             };
 
-         _app._sd_switches[which] = ref;
-         return vsize(32, halign(0.5, _app._sd_switches[which]));
+         _app._controls[which].type = ref;
+         return vsize(32, halign(0.5, _app._controls[which].type));
       }
 
       auto make_pickups_control(int which, char const* name)
       {
          auto c1 = vtile(
-               make_dial("Frequency", 0.5),
+               make_freq_dial(which, "Frequency", 0.5),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
@@ -126,11 +189,11 @@ namespace infinity
             );
 
          auto c2 = vtile(
-               make_dial("Resonance", 0.5),
+               make_reso_dial(which, "Resonance", 0.5),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_phase_selector(1),
+                         make_phase_selector(which, 1),
                          sine_decal
                       )
                    )
@@ -140,7 +203,7 @@ namespace infinity
          auto c3 = vtile(
                make_on_off_switch(which),
                layer(
-                   make_slider(),
+                   make_slider(which),
                    margin({ 5, 22, 5, 22 }, vgrid_lines{ 2, 10 })
                )
             );
@@ -164,9 +227,9 @@ namespace infinity
             align_middle(
                align_center(
                   layer(
-                     _app._pickups[0],
-                     _app._pickups[1],
-                     _app._pickups[2],
+                     _app._controls[0].pickup,
+                     _app._controls[1].pickup,
+                     _app._controls[2].pickup,
                      frets{}
                   )
                )
@@ -193,31 +256,77 @@ namespace infinity
 
    application::application(photon::view& view_)
     : _view(view_)
-    , _pickups{
-        pickup_ref(share(pickup{ 0.13, pickup::double_, 0, 'A' })),
-        pickup_ref(share(pickup{ 0.28, pickup::single, 0, 'B' })),
-        pickup_ref(share(pickup{ 0.42, pickup::single, 0, 'C' }))
-     }
    {
+      auto make_pickup = [this](int which, double pos, auto type, char id)
+      {
+         auto  ref = pickup_ref(share(pickup{ pos, type, 0, id }));
+         ref.get().on_position_change =
+            [this, which](double val)
+            {
+               pickup_position(which, val);
+            };
+
+         ref.get().on_slant_change =
+            [this, which](double val)
+            {
+               pickup_slant(which, val);
+            };
+         return ref;
+      };
+
+      _controls[0].pickup = make_pickup(0, 0.13, pickup::double_, 'A');
+      _controls[1].pickup = make_pickup(1, 0.28, pickup::single, 'B');
+      _controls[2].pickup = make_pickup(2, 0.42, pickup::single, 'C');
+
       application_impl impl{ *this };
       view_.content.push_back(share(background{}));
       view_.content.push_back(
          share(impl.make_virtual_pickups())
       );
 
-      _sd_switches[0].value(0);
-      _sd_switches[2].value(0);
+      _controls[0].type.value(0);
+      _controls[2].type.value(0);
    }
 
    void application::pickup_enable(int which, bool enable)
    {
-      _pickups[which].get().visible(enable);
+      _controls[which].pickup.get().visible(enable);
       _view.refresh();
    }
 
    void application::pickup_type(int which, pickup::type type_)
    {
-      _pickups[which].get().set_type(type_);
+      _controls[which].pickup.get().set_type(type_);
       _view.refresh();
+   }
+
+   void application::pickup_phase(int which, bool in_phase)
+   {
+      std::cout << "Phase: " << in_phase << std::endl;
+   }
+
+   void application::pickup_frequency(int which, double f)
+   {
+      std::cout << "Frequency: " << f << std::endl;
+   }
+
+   void application::pickup_resonance(int which, double q)
+   {
+      std::cout << "Resonance: " << q << std::endl;
+   }
+
+   void application::pickup_level(int which, double val)
+   {
+      std::cout << "Level: " << val << std::endl;
+   }
+
+   void application::pickup_position(int which, double val)
+   {
+      std::cout << "Position: " << val << std::endl;
+   }
+
+   void application::pickup_slant(int which, double val)
+   {
+      std::cout << "Slant: " << val << std::endl;
    }
 }

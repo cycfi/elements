@@ -35,6 +35,8 @@ namespace photon
       clamp(val, 0.0, 1.0);
       _value = val;
       subject().value(_value);
+      if (on_change)
+         on_change(_value);
    }
 
    double dial_base::value_from_point(context const& ctx, point p)

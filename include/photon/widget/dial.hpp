@@ -20,6 +20,10 @@ namespace photon
    class dial_base : public tracker<proxy_base>
    {
    public:
+
+      using dial_function = std::function<void(double pos)>;
+      using tracker<proxy_base>::value;
+
                            dial_base(double init_value = 0.0);
       virtual              ~dial_base() {}
 
@@ -30,9 +34,11 @@ namespace photon
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);
 
-      double               value() const        { return _value; }
+      double               value() const;
       void                 value(double val);
       virtual double       value_from_point(context const& ctx, point p);
+
+      dial_function        on_change;
 
    private:
 
@@ -44,6 +50,11 @@ namespace photon
    dial(Subject&& subject, double init_value = 0.0)
    {
       return { std::forward<Subject>(subject), init_value };
+   }
+
+   inline double dial_base::value() const
+   {
+      return _value;
    }
 }
 

@@ -8,6 +8,7 @@
 #define INFINITY_PICKUP_MAY_14_2016
 
 #include <photon/widget/tracker.hpp>
+#include <functional>
 
 namespace infinity
 {
@@ -25,8 +26,9 @@ namespace infinity
    public:
 
       enum type { single, double_ };
+      using pickup_function = std::function<void(double val)>;
 
-                              pickup(float pos, type type_, float slant, char id)
+                              pickup(double pos, type type_, double slant, char id)
                                : _pos(pos)
                                , _type(type_)
                                , _slant(slant)
@@ -47,6 +49,11 @@ namespace infinity
 
       void                    visible(bool val)       { _is_visible = val; }
       void                    set_type(type type_)    { _type = type_; }
+      void                    position(double pos);
+      void                    angle(double slant);
+
+      pickup_function         on_position_change;
+      pickup_function         on_slant_change;
 
    private:
 
@@ -69,9 +76,9 @@ namespace infinity
       hit_item                hit(context const& ctx, point p) const;
       void                    pickup_bounds(context const& ctx, rect& r1, rect& r2) const;
 
-      float                   _pos;
+      double                  _pos;
       type                    _type;
-      float                   _slant;
+      double                  _slant;
       char                    _id;
       tracking_status         _tracking;
       point                   _offset;

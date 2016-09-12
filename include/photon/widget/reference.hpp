@@ -28,7 +28,7 @@ namespace photon
       reference&              operator=(reference&& rhs) = default;
       reference&              operator=(reference const& rhs) = default;
 
-   // image
+   // Image
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
@@ -36,7 +36,7 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point p);
 
-   // control
+   // Control
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
@@ -49,6 +49,13 @@ namespace photon
       virtual widget const*   focus() const;
       virtual widget*         focus();
       virtual bool            is_control() const;
+
+   // Receiver
+
+      virtual void            value(bool val);
+      virtual void            value(int val);
+      virtual void            value(double val);
+      virtual void            value(std::string val);
 
       Widget&                 get();
       Widget const&           get() const;
@@ -187,21 +194,45 @@ namespace photon
    }
 
    template <typename Widget>
-   Widget&
+   inline void reference<Widget>::value(bool val)
+   {
+      ptr->value(val);
+   }
+
+   template <typename Widget>
+   inline void reference<Widget>::value(int val)
+   {
+      ptr->value(val);
+   }
+
+   template <typename Widget>
+   inline void reference<Widget>::value(double val)
+   {
+      ptr->value(val);
+   }
+
+   template <typename Widget>
+   inline void reference<Widget>::value(std::string val)
+   {
+      ptr->value(val);
+   }
+
+   template <typename Widget>
+   inline Widget&
    reference<Widget>::get()
    {
       return *ptr.get();
    }
 
    template <typename Widget>
-   Widget const&
+   inline Widget const&
    reference<Widget>::get() const
    {
       return *ptr.get();
    }
 
    template <typename Widget>
-   widget_ptr
+   inline widget_ptr
    reference<Widget>::get_ptr()
    {
       return ptr;

@@ -22,6 +22,9 @@ namespace photon
    class slider_base : public tracker<>
    {
    public:
+
+      using tracker<>::value;
+
                               slider_base(double init_value)
                                : _value(init_value)
                               {}
@@ -130,6 +133,7 @@ namespace photon
 
       virtual bool         scroll(context const& ctx, point p);
       virtual void         value(double val);
+      virtual void         value(int val);
    };
 
    template <size_t num_states>
@@ -146,6 +150,12 @@ namespace photon
       auto const        state = std::round(val * max);
       basic_selector_base::value(state / max);
       basic_selector_base::select(state);
+   }
+
+   template <size_t num_states>
+   inline void selector_base<num_states>::value(int val)
+   {
+      value(double(val) * (num_states-1));
    }
 
    template <size_t num_states, typename Indicator, typename Body>

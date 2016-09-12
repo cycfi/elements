@@ -205,8 +205,8 @@ namespace infinity
          share(impl.make_virtual_pickups())
       );
 
-      _sd_switches[0].get().value(0);
-      _sd_switches[2].get().value(0);
+      _sd_switches[0].value(0);
+      _sd_switches[2].value(0);
    }
 
    void application::pickup_enable(int which, bool enable)

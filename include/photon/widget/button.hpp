@@ -21,6 +21,7 @@ namespace photon
 
       using base_type = array_composite<2, deck_widget>;
       using button_function = std::function<void(bool)>;
+      using base_type::value;
 
                         template <typename W1, typename W2>
                         basic_button(W1&& off, W2&& on);
@@ -30,12 +31,14 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
-      bool              state(bool new_state);
-      virtual void      value(bool new_state)   { state(new_state); }
+      virtual void      value(bool new_state);
       bool              value() const;
 
-
       button_function   on_click;
+
+   protected:
+
+      bool              state(bool new_state);
 
    private:
 

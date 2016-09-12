@@ -57,6 +57,13 @@ namespace photon
       return false;
    }
 
+   void basic_button::value(bool new_state)
+   {
+      state(new_state);
+      if (on_click && _state != new_state)
+         on_click(_state);
+   }
+
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Toggle Button
    ////////////////////////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)

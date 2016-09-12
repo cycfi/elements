@@ -181,6 +181,7 @@ namespace photon
 
    void slider_base::value(double val)
    {
+      clamp(val, 0.0, 1.0);
       _value = val;
    }
    

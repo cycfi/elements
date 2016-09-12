@@ -94,15 +94,14 @@ namespace infinity
          return align_center(ref);
       }
 
-      auto make_dial(dial_base::dial_function f, int which, char const* label, double init_value)
+      auto make_dial(dial_base::dial_function f, application::dial_ref& ref, int which, char const* label)
       {
-         auto  ref =
+         ref =
             application::dial_ref(
-               share(dial(knob, init_value))
+               share(dial(knob, 0))
             );
 
          ref.get().on_change = f;
-         _app._controls[which].frequency = ref;
          return align_center_top(
             caption(
                layer(align_center_middle(ref), radial_lines),
@@ -111,7 +110,7 @@ namespace infinity
          );
       }
 
-      auto make_freq_dial(int which, char const* label, double init_value)
+      auto make_freq_dial(int which, char const* label)
       {
          auto& app = _app;
          auto  f =
@@ -120,10 +119,10 @@ namespace infinity
                app.pickup_frequency(which, val);
             };
 
-         return make_dial(f, which, label, init_value);
+         return make_dial(f, _app._controls[which].frequency, which, label);
       }
 
-      auto make_reso_dial(int which, char const* label, double init_value)
+      auto make_reso_dial(int which, char const* label)
       {
          auto& app = _app;
          auto  f =
@@ -132,15 +131,15 @@ namespace infinity
                app.pickup_resonance(which, val);
             };
 
-         return make_dial(f, which, label, init_value);
+         return make_dial(f, _app._controls[which].resonance, which, label);
       }
 
-      auto make_phase_selector(int which, double init_value)
+      auto make_phase_selector(int which)
       {
          auto vslot = yside_margin({3, 3}, slider_slot);
          auto  ref =
             application::selector_ref(
-               share(selector<2>(selector_knob, vslot, init_value))
+               share(selector<2>(selector_knob, vslot, 0))
             );
 
          auto& app = _app;
@@ -154,12 +153,12 @@ namespace infinity
          return vsize(32, halign(0.5, _app._controls[which].phase));
       }
 
-      auto make_sd_selector(int which, double init_value)
+      auto make_sd_selector(int which)
       {
          auto  vslot = yside_margin({3, 3}, slider_slot);
          auto  ref =
             application::selector_ref(
-               share(selector<2>(selector_knob, vslot, init_value))
+               share(selector<2>(selector_knob, vslot, 0))
             );
 
          auto& app = _app;
@@ -177,11 +176,11 @@ namespace infinity
       auto make_pickups_control(int which, char const* name)
       {
          auto c1 = vtile(
-               make_freq_dial(which, "Frequency", 0.5),
+               make_freq_dial(which, "Frequency"),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_sd_selector(which, 1),
+                         make_sd_selector(which),
                          single_double_decal
                       )
                    )
@@ -189,11 +188,11 @@ namespace infinity
             );
 
          auto c2 = vtile(
-               make_reso_dial(which, "Resonance", 0.5),
+               make_reso_dial(which, "Resonance"),
                align_center(
                    yside_margin({ 10, 10 },
                       htile(
-                         make_phase_selector(which, 1),
+                         make_phase_selector(which),
                          sine_decal
                       )
                    )
@@ -285,7 +284,28 @@ namespace infinity
       );
 
       _controls[0].type.value(0);
+      _controls[1].type.value(1);
       _controls[2].type.value(0);
+
+      _controls[0].phase.value(1);
+      _controls[1].phase.value(1);
+      _controls[2].phase.value(1);
+
+      _controls[0].frequency.value(0.8);
+      _controls[1].frequency.value(0.8);
+      _controls[2].frequency.value(0.8);
+
+      _controls[0].resonance.value(0.3);
+      _controls[1].resonance.value(0.3);
+      _controls[2].resonance.value(0.3);
+
+      _controls[0].enable.value(1);
+      _controls[1].enable.value(1);
+      _controls[2].enable.value(1);
+
+      _controls[0].level.value(1.0);
+      _controls[1].level.value(1.0);
+      _controls[2].level.value(1.0);
    }
 
    void application::pickup_enable(int which, bool enable)

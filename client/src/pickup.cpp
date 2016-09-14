@@ -48,7 +48,7 @@ namespace infinity
 
       void draw_pickup(rect bounds, float slant, bool hilite, context const& ctx, char id)
       {
-         auto        canvas_ = ctx.canvas();
+         auto&       canvas_ = ctx.canvas;
          auto const& theme = get_theme();
          auto        state = prepare(bounds, slant, canvas_);
 
@@ -107,7 +107,7 @@ namespace infinity
 
       bool hit_test_rotator(rect bounds, float slant, point mp, context const& ctx)
       {
-         auto  canvas_ = ctx.canvas();
+         auto& canvas_ = ctx.canvas;
          auto  state = prepare(bounds, slant, canvas_);
 
          float size = (bounds.height() / 4);
@@ -119,7 +119,7 @@ namespace infinity
 
       point draw_rotator(rect bounds, float slant, context const& ctx)
       {
-         auto        canvas_ = ctx.canvas();
+         auto&       canvas_ = ctx.canvas;
          auto const& theme = get_theme();
          auto        state = prepare(bounds, slant, canvas_);
 
@@ -149,7 +149,7 @@ namespace infinity
       pickup_bounds(ctx, r1, r2);
 
       auto  mp = ctx.cursor_pos();
-      auto  canvas_ = ctx.canvas();
+      auto& canvas_ = ctx.canvas;
 
       rect  pu_bounds = r1;
       if (_type == double_)
@@ -272,7 +272,7 @@ namespace infinity
       if (_type == double_)
          r.right = r2.right;
 
-      auto  canvas_ = ctx.canvas();
+      auto& canvas_ = ctx.canvas;
 
       if (_type == single)
       {

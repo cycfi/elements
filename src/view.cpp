@@ -15,7 +15,8 @@ namespace photon
 
       _dirty = dirty_;
 
-      basic_context bctx{ *this, *context_ };
+      canvas cnv{ *context_ };
+      basic_context bctx{ *this, cnv };
       auto limits_ = content.limits(bctx);
       limits(limits_);
 
@@ -28,7 +29,7 @@ namespace photon
       rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
 
       // layout the subject only if the window bounds changes
-      context ctx{ *this, *context_, &content, subj_bounds };
+      context ctx{ *this, cnv, &content, subj_bounds };
       if (subj_bounds != _current_bounds)
       {
          _current_bounds = subj_bounds;
@@ -45,7 +46,8 @@ namespace photon
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
-      context ctx { *this, *context_, &content, _current_bounds };
+      canvas cnv{ *context_ };
+      context ctx { *this, cnv, &content, _current_bounds };
 
       content.click(ctx, btn);
 
@@ -57,7 +59,8 @@ namespace photon
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
-      context ctx { *this, *context_, &content, _current_bounds };
+      canvas cnv{ *context_ };
+      context ctx { *this, cnv, &content, _current_bounds };
 
       content.drag(ctx, btn);
 
@@ -69,7 +72,8 @@ namespace photon
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
-      context ctx { *this, *context_, &content, _current_bounds };
+      canvas cnv{ *context_ };
+      context ctx { *this, cnv, &content, _current_bounds };
 
       content.cursor(ctx, p, status);
 
@@ -81,7 +85,8 @@ namespace photon
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
-      context ctx { *this, *context_, &content, _current_bounds };
+      canvas cnv{ *context_ };
+      context ctx { *this, cnv, &content, _current_bounds };
 
       content.scroll(ctx, p);
 

@@ -11,7 +11,7 @@ namespace photon
    widget_limits heading::limits(basic_context const& ctx) const
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
 
       canvas_.font(theme_.heading_font, theme_.heading_font_size * _size);
       auto  info = canvas_.measure_text(_text.c_str());
@@ -22,7 +22,7 @@ namespace photon
    void heading::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
       auto           state = canvas_.new_state();
 
       canvas_.fill_style(theme_.heading_font_color);
@@ -38,7 +38,7 @@ namespace photon
    widget_limits label::limits(basic_context const& ctx) const
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
 
       canvas_.font(theme_.label_font, theme_.label_font_size * _size);
       auto  info = canvas_.measure_text(_text.c_str());
@@ -49,7 +49,7 @@ namespace photon
    void label::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
       auto           state = canvas_.new_state();
 
       canvas_.fill_style(theme_.label_font_color);
@@ -65,7 +65,7 @@ namespace photon
    void frame::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
       auto const&    bounds = ctx.bounds;
 
       canvas_.line_width(theme_.frame_stroke_width);
@@ -78,7 +78,7 @@ namespace photon
    void vgrid_lines::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
-      auto           canvas_ = ctx.canvas();
+      auto&          canvas_ = ctx.canvas;
       auto const&    bounds = ctx.bounds;
 
       float pos = bounds.top;

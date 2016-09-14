@@ -103,7 +103,7 @@ namespace infinity
       float const h = w * 0.15;
       rect const bbox = { 0, 0, 640, 150 };
 
-      auto  cnv = ctx.canvas();
+      auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
       auto  scale = ctx.bounds.width() / bbox.width();
       float sch = bbox.height() * scale;

@@ -484,7 +484,7 @@ namespace photon
    template <typename Subject>
    inline void fit_widget<Subject>::prepare_subject(context& ctx)
    {
-      auto  canvas_ = ctx.canvas();
+      auto& canvas_ = ctx.canvas;
       canvas_.save();
       auto& bounds = ctx.bounds;
       auto  w = bounds.width();
@@ -498,7 +498,7 @@ namespace photon
    template <typename Subject>
    inline void fit_widget<Subject>::restore_subject(context& ctx)
    {
-      ctx.canvas().restore();
+      ctx.canvas.restore();
    }
 }
 

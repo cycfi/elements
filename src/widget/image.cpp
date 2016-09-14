@@ -41,7 +41,7 @@ namespace photon
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      ctx.canvas().draw(pixmap(), src, ctx.bounds);
+      ctx.canvas.draw(pixmap(), src, ctx.bounds);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ namespace photon
       gizmo_parts(src_bounds, ctx.bounds, dest);
 
       for (int i = 0; i < 9; i++)
-         ctx.canvas().draw(pixmap(), src[i], dest[i]);
+         ctx.canvas.draw(pixmap(), src[i], dest[i]);
    }
 
    hgizmo::hgizmo(char const* filename, float scale)
@@ -148,9 +148,9 @@ namespace photon
 
       hgizmo_parts(src_bounds, src_bounds, src);
       hgizmo_parts(src_bounds, ctx.bounds, dest);
-      ctx.canvas().draw(pixmap(), src[0], dest[0]);
-      ctx.canvas().draw(pixmap(), src[1], dest[1]);
-      ctx.canvas().draw(pixmap(), src[2], dest[2]);
+      ctx.canvas.draw(pixmap(), src[0], dest[0]);
+      ctx.canvas.draw(pixmap(), src[1], dest[1]);
+      ctx.canvas.draw(pixmap(), src[2], dest[2]);
    }
 
    vgizmo::vgizmo(char const* filename, float scale)
@@ -176,9 +176,9 @@ namespace photon
 
       vgizmo_parts(src_bounds, src_bounds, src);
       vgizmo_parts(src_bounds, ctx.bounds, dest);
-      ctx.canvas().draw(pixmap(), src[0], dest[0]);
-      ctx.canvas().draw(pixmap(), src[1], dest[1]);
-      ctx.canvas().draw(pixmap(), src[2], dest[2]);
+      ctx.canvas.draw(pixmap(), src[0], dest[0]);
+      ctx.canvas.draw(pixmap(), src[1], dest[1]);
+      ctx.canvas.draw(pixmap(), src[2], dest[2]);
    }
 
    sprite::sprite(char const* filename, float height, float scale)

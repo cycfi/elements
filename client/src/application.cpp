@@ -239,8 +239,8 @@ namespace infinity
                )
             );
 
-         return //fit(
-            //{ 380*1.61, 380 },
+         return fit(
+            { 380*1.61, 380 },
             margin(
                { 20, 0, 20, 20 },
                vtile(
@@ -256,7 +256,7 @@ namespace infinity
                      ),
                      0.7, false)
                )
-            //)
+            )
          );
       }
    };

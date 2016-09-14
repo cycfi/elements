@@ -21,7 +21,9 @@ namespace photon
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().hit_test(sctx, p);
+      auto r = subject().hit_test(sctx, p);
+      restore_subject(sctx);
+      return r;
    }
 
    void proxy_base::draw(context const& ctx)
@@ -29,6 +31,7 @@ namespace photon
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
       subject().draw(sctx);
+      restore_subject(sctx);
    }
 
    void proxy_base::layout(context const& ctx)
@@ -36,9 +39,14 @@ namespace photon
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
       subject().layout(sctx);
+      restore_subject(sctx);
    }
 
    void proxy_base::prepare_subject(context& ctx)
+   {
+   }
+
+   void proxy_base::restore_subject(context& ctx)
    {
    }
 
@@ -46,7 +54,9 @@ namespace photon
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().click(sctx, btn);
+      auto r = subject().click(sctx, btn);
+      restore_subject(sctx);
+      return r;
    }
 
    void proxy_base::drag(context const& ctx, mouse_button btn)
@@ -54,6 +64,7 @@ namespace photon
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
       subject().drag(sctx, btn);
+      restore_subject(sctx);
    }
 
 //   bool proxy_base::key(context const& ctx, key_info const& k)
@@ -67,21 +78,27 @@ namespace photon
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().text(sctx, info);
+      auto r = subject().text(sctx, info);
+      restore_subject(sctx);
+      return r;
    }
 
    bool proxy_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().cursor(sctx, p, status);
+      auto r = subject().cursor(sctx, p, status);
+      restore_subject(sctx);
+      return r;
    }
 
    bool proxy_base::scroll(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      return subject().scroll(sctx, p);
+      auto r = subject().scroll(sctx, p);
+      restore_subject(sctx);
+      return r;
    }
 
    bool proxy_base::focus(focus_request r)

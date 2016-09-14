@@ -24,6 +24,11 @@ namespace infinity
 
    struct background : widget
    {
+//      widget_limits limits(basic_context const& ctx) const
+//      {
+//         return { { 380*1.61, 380 }, { full_extent, full_extent } };
+//      }
+
       void draw(context const& ctx)
       {
          auto cnv = ctx.canvas();
@@ -234,20 +239,23 @@ namespace infinity
                )
             );
 
-         return margin(
-            { 20, 0, 20, 20 },
-            vtile(
-               yside_margin({ 10, 10 }, align_right(logo)),
-               group("Virtual Pickups",
-                  vtile(
-                     top_margin(40, vpickups),
-                     htile(
-                        make_pickups_control(0, "Pickup A"),
-                        make_pickups_control(1, "Pickup B"),
-                        make_pickups_control(2, "Pickup C")
-                     )
-                  ),
-                  0.7, false)
+         return fit(
+            { 380*1.61, 380 },
+            margin(
+               { 20, 0, 20, 20 },
+               vtile(
+                  yside_margin({ 10, 10 }, align_right(logo)),
+                  group("Virtual Pickups",
+                     vtile(
+                        top_margin(40, vpickups),
+                        htile(
+                           make_pickups_control(0, "Pickup A"),
+                           make_pickups_control(1, "Pickup B"),
+                           make_pickups_control(2, "Pickup C")
+                        )
+                     ),
+                     0.7, false)
+               )
             )
          );
       }
@@ -256,6 +264,8 @@ namespace infinity
    application::application(photon::view& view_)
     : _view(view_)
    {
+      _view.maintain_aspect(true);
+
       auto make_pickup = [this](int which, double pos, auto type, char id)
       {
          auto  ref = pickup_ref(share(pickup{ pos, type, 0, id }));

@@ -21,6 +21,7 @@ namespace photon
 
    view::view()
     : _impl(nullptr)
+    , _maintain_aspect(false)
    {
       client::init(*this);
    }
@@ -66,6 +67,8 @@ namespace photon
       auto ns_view = get_mac_view(_impl);
       [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
       [[ns_view window] setContentMaxSize : NSSize{ limits_.max.y, limits_.max.y }];
+      if (_maintain_aspect)
+         [[ns_view window] setContentAspectRatio:NSSize{ limits_.min.x, limits_.min.y } ];
    }
 
    void view::refresh()

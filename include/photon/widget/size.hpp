@@ -345,95 +345,160 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Percentage sizing widgets
+   // Span sizing widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class hpercent_widget : public proxy<Subject>
+   class hspan_widget : public proxy<Subject>
    {
    public:
 
       using base_type = proxy<Subject>;
 
-                              hpercent_widget(float percent, Subject&& subject);
-                              hpercent_widget(float percent, Subject const& subject);
+                              hspan_widget(float span, Subject&& subject);
+                              hspan_widget(float span, Subject const& subject);
 
       virtual widget_limits   limits(basic_context const& ctx) const;
 
    private:
 
-      float                   _percent;
+      float                   _span;
    };
 
    template <typename Subject>
-   inline hpercent_widget<Subject>::hpercent_widget(float percent, Subject&& subject)
+   inline hspan_widget<Subject>::hspan_widget(float span, Subject&& subject)
     : base_type(std::forward<Subject>(subject))
-    , _percent(percent)
+    , _span(span)
    {}
 
    template <typename Subject>
-   inline hpercent_widget<Subject>::hpercent_widget(float percent, Subject const& subject)
+   inline hspan_widget<Subject>::hspan_widget(float span, Subject const& subject)
     : base_type(subject)
-    , _percent(percent)
+    , _span(span)
    {}
 
    template <typename Subject>
-   inline hpercent_widget<typename std::decay<Subject>::type>
-   hpercent(float percent, Subject&& subject)
+   inline hspan_widget<typename std::decay<Subject>::type>
+   hspan(float span, Subject&& subject)
    {
-      return { percent, std::forward<Subject>(subject) };
+      return { span, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline widget_limits hpercent_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits hspan_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
-      float max_width = std::max(e_limits.min.x, e_limits.max.x * _percent);
+      float max_width = std::max(e_limits.min.x, e_limits.max.x * _span);
       return { { e_limits.min.x, e_limits.min.y }, { max_width, e_limits.max.y } };
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class vpercent_widget : public proxy<Subject>
+   class vspan_widget : public proxy<Subject>
    {
    public:
 
       using base_type = proxy<Subject>;
 
-                              vpercent_widget(float percent, Subject&& subject);
-                              vpercent_widget(float percent, Subject const& subject);
+                              vspan_widget(float span, Subject&& subject);
+                              vspan_widget(float span, Subject const& subject);
 
       virtual widget_limits   limits(basic_context const& ctx) const;
 
    private:
 
-      float                   _percent;
+      float                   _span;
    };
 
    template <typename Subject>
-   inline vpercent_widget<Subject>::vpercent_widget(float percent, Subject&& subject)
+   inline vspan_widget<Subject>::vspan_widget(float span, Subject&& subject)
     : base_type(std::forward<Subject>(subject))
-    , _percent(percent)
+    , _span(span)
    {}
 
    template <typename Subject>
-   inline vpercent_widget<Subject>::vpercent_widget(float percent, Subject const& subject)
+   inline vspan_widget<Subject>::vspan_widget(float span, Subject const& subject)
     : base_type(subject)
-    , _percent(percent)
+    , _span(span)
    {}
 
    template <typename Subject>
-   inline vpercent_widget<typename std::decay<Subject>::type>
-   vpercent(float percent, Subject&& subject)
+   inline vspan_widget<typename std::decay<Subject>::type>
+   vspan(float span, Subject&& subject)
    {
-      return { percent, std::forward<Subject>(subject) };
+      return { span, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline widget_limits vpercent_widget<Subject>::limits(basic_context const& ctx) const
+   inline widget_limits vspan_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
-      float max_height = std::max(e_limits.min.y, e_limits.max.y * _percent);
+      float max_height = std::max(e_limits.min.y, e_limits.max.y * _span);
       return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, max_height } };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class fit_widget : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              fit_widget(point size, Subject&& subject);
+                              fit_widget(point size, Subject const& subject);
+
+      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
+      virtual void            restore_subject(context& ctx);
+
+   private:
+
+      point                   _size;
+   };
+
+   template <typename Subject>
+   inline fit_widget<Subject>::fit_widget(point size, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline fit_widget<Subject>::fit_widget(point size, Subject const& subject)
+    : base_type(subject)
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline fit_widget<typename std::decay<Subject>::type>
+   fit(point size, Subject&& subject)
+   {
+      return { size, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline widget_limits fit_widget<Subject>::limits(basic_context const& ctx) const
+   {
+      return { _size, { full_extent, full_extent } };
+   }
+
+   template <typename Subject>
+   inline void fit_widget<Subject>::prepare_subject(context& ctx)
+   {
+      auto  canvas_ = ctx.canvas();
+      canvas_.save();
+      auto& bounds = ctx.bounds;
+      auto  w = bounds.width();
+      auto  h = bounds.height();
+      auto  scale = point{ w/_size.x, h/_size.y };
+      canvas_.translate({ -bounds.left, -bounds.top });
+      canvas_.scale(scale);
+      bounds = { 0, 0, _size.x, _size.y };
+   }
+
+   template <typename Subject>
+   inline void fit_widget<Subject>::restore_subject(context& ctx)
+   {
+      ctx.canvas().restore();
    }
 }
 

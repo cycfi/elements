@@ -59,7 +59,9 @@ namespace photon
 
       void                 refresh();
       void                 refresh(rect area);
-      rect                 dirty() const   { return _dirty; }
+      rect                 dirty() const              { return _dirty; }
+      bool                 maintain_aspect() const    { return _maintain_aspect; }
+      void                 maintain_aspect(bool flag) { _maintain_aspect = flag; }
 
       layer_composite      content;
       application_ptr      app;
@@ -73,6 +75,7 @@ namespace photon
       view_impl*           _impl;
       rect                 _dirty;
       rect                 _current_bounds;
+      bool                 _maintain_aspect;
    };
 }
 

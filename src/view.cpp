@@ -81,14 +81,14 @@ namespace photon
       cairo_destroy(context_);
    }
    
-   void view::scroll(point p)
+   void view::scroll(point dir, point p)
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
       canvas cnv{ *context_ };
       context ctx { *this, cnv, &content, _current_bounds };
 
-      content.scroll(ctx, p);
+      content.scroll(ctx, dir, p);
 
       cairo_surface_destroy(surface_);
       cairo_destroy(context_);

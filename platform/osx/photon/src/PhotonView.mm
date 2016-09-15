@@ -172,8 +172,10 @@ namespace photon
    if (event.directionInvertedFromDevice)
       delta.y = -delta.y;
 
+   auto pos = [event locationInWindow];
+   pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta.x) > 0.0 || fabs(delta.y) > 0.0)
-      _view.scroll(delta);
+      _view.scroll(delta, { float(pos.x), float(pos.y) });
 
    [self displayIfNeeded];
    [super scrollWheel: event];

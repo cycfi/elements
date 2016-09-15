@@ -29,7 +29,7 @@ namespace photon
 
       virtual void         prepare_subject(context& ctx);
 
-      virtual bool         scroll(context const& ctx, point p);
+      virtual bool         scroll(context const& ctx, point dir, point p);
       virtual void         begin_tracking(context const& ctx, info& track_info);
       virtual void         keep_tracking(context const& ctx, info& track_info);
       virtual void         end_tracking(context const& ctx, info& track_info);

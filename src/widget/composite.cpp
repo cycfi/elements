@@ -169,15 +169,15 @@ namespace photon
       return false;
    }
 
-   bool composite_base::scroll(context const& ctx, point p)
+   bool composite_base::scroll(context const& ctx, point dir, point p)
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, ctx.cursor_pos()); // $$$ fixme $$$
+         hit_info info = hit_element(ctx, p);
          if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
-            return info.element->scroll(ectx, p);
+            return info.element->scroll(ectx, dir, p);
          }
       }
       return false;

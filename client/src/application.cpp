@@ -240,7 +240,7 @@ namespace infinity
             );
 
          return fit(
-            { 380*1.61, 380 },
+            { 550, 400 },
             margin(
                { 20, 0, 20, 20 },
                vtile(

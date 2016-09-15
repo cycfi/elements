@@ -55,7 +55,7 @@ namespace photon
       return false;
    }
 
-   bool widget::scroll(context const& ctx, point p)
+   bool widget::scroll(context const& ctx, point dir, point p)
    {
       return false;
    }

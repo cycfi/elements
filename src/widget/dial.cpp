@@ -77,9 +77,9 @@ namespace photon
    {
    }
 
-   bool dial_base::scroll(context const& ctx, point p)
+   bool dial_base::scroll(context const& ctx, point dir, point p)
    {
-      value(value() + p.y * 0.01);
+      value(value() + dir.y * 0.01);
       ctx.view.refresh(ctx.bounds);
       return true;
    }

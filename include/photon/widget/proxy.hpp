@@ -27,7 +27,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point p);
+      virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            prepare_subject(context& ctx);
       virtual void            restore_subject(context& ctx);
 

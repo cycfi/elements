@@ -33,7 +33,7 @@ namespace photon
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
 
-      virtual bool            scroll(context const& ctx, point p);
+      virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            begin_tracking(context const& ctx, info& track_info);
       virtual void            keep_tracking(context const& ctx, info& track_info);
       virtual void            end_tracking(context const& ctx, info& track_info);
@@ -133,13 +133,13 @@ namespace photon
       using basic_selector_base::basic_selector_base;
       using basic_selector_base::value;
 
-      virtual bool         scroll(context const& ctx, point p);
+      virtual bool         scroll(context const& ctx, point dir, point p);
       virtual void         value(double val);
       virtual void         value(int val);
    };
 
    template <size_t num_states>
-   inline bool selector_base<num_states>::scroll(context const& ctx, point p)
+   inline bool selector_base<num_states>::scroll(context const& ctx, point dir, point p)
    {
       // We don't allow selector move via the scroll wheel.
       return false;

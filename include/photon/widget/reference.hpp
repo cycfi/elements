@@ -34,7 +34,7 @@ namespace photon
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point p);
+      virtual bool            scroll(context const& ctx, point dir, point p);
 
    // Control
 
@@ -118,9 +118,9 @@ namespace photon
 
    template <typename Widget>
    inline bool
-   reference<Widget>::scroll(context const& ctx, point p)
+   reference<Widget>::scroll(context const& ctx, point dir, point p)
    {
-      return ptr->scroll(ctx, p);
+      return ptr->scroll(ctx, dir, p);
    }
 
    template <typename Widget>

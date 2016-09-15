@@ -92,11 +92,11 @@ namespace photon
       return r;
    }
 
-   bool proxy_base::scroll(context const& ctx, point p)
+   bool proxy_base::scroll(context const& ctx, point dir, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx);
-      auto r = subject().scroll(sctx, p);
+      auto r = subject().scroll(sctx, dir, p);
       restore_subject(sctx);
       return r;
    }

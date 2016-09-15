@@ -345,31 +345,31 @@ namespace infinity
 
    void application::pickup_phase(int which, bool in_phase)
    {
-      std::cout << "Phase: " << in_phase << std::endl;
+//      std::cout << "Phase: " << in_phase << std::endl;
    }
 
    void application::pickup_frequency(int which, double f)
    {
-      std::cout << "Frequency: " << f << std::endl;
+//      std::cout << "Frequency: " << f << std::endl;
    }
 
    void application::pickup_resonance(int which, double q)
    {
-      std::cout << "Resonance: " << q << std::endl;
+//      std::cout << "Resonance: " << q << std::endl;
    }
 
    void application::pickup_level(int which, double val)
    {
-      std::cout << "Level: " << val << std::endl;
+//      std::cout << "Level: " << val << std::endl;
    }
 
    void application::pickup_position(int which, double val)
    {
-      std::cout << "Position: " << val << std::endl;
+//      std::cout << "Position: " << val << std::endl;
    }
 
    void application::pickup_slant(int which, double val)
    {
-      std::cout << "Slant: " << val << std::endl;
+//      std::cout << "Slant: " << val << std::endl;
    }
 }

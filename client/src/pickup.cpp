@@ -39,6 +39,7 @@ namespace infinity
 
       bool hit_test_pickup(rect bounds, float slant, point mp, canvas& canvas_)
       {
+         mp = canvas_.user_to_device(mp);
          auto state = prepare(bounds, slant, canvas_);
 
          canvas_.begin_path();
@@ -108,6 +109,7 @@ namespace infinity
       bool hit_test_rotator(rect bounds, float slant, point mp, context const& ctx)
       {
          auto& canvas_ = ctx.canvas;
+         mp = canvas_.user_to_device(mp);
          auto  state = prepare(bounds, slant, canvas_);
 
          float size = (bounds.height() / 4);
@@ -119,19 +121,23 @@ namespace infinity
 
       point draw_rotator(rect bounds, float slant, context const& ctx)
       {
-         auto&       canvas_ = ctx.canvas;
-         auto const& theme = get_theme();
-         auto        state = prepare(bounds, slant, canvas_);
+         auto& canvas_ = ctx.canvas;
+         point _rotator_pos;
+         {
+            auto const& theme = get_theme();
+            auto        state = prepare(bounds, slant, canvas_);
 
-         // Draw rotator icon
-         float  height = bounds.height();
-         float  size = height / 4;
-         bounds = { bounds.left, bounds.bottom-10, bounds.right, bounds.bottom + size };
+            // Draw rotator icon
+            float  height = bounds.height();
+            float  size = height / 4;
+            bounds = { bounds.left, bounds.bottom-10, bounds.right, bounds.bottom + size };
 
-         canvas_.font("photon_basic", 16);
-         canvas_.fill_style(theme.icon_color);
-         draw_icon(canvas_, bounds, icons::cycle);
-         return canvas_.user_to_device(center_point(bounds));
+            canvas_.font("photon_basic", 14);
+            canvas_.fill_style(theme.icon_color);
+            draw_icon(canvas_, bounds, icons::cycle);
+            _rotator_pos = canvas_.user_to_device(center_point(bounds));
+         }
+         return canvas_.device_to_user(_rotator_pos);
       }
    }
 
@@ -258,9 +264,6 @@ namespace infinity
    {
       rect  r1, r2;
       pickup_bounds(ctx, r1, r2);
-      rect  r = r1;
-      if (_type == double_)
-         r.right = r2.right;
 
       auto& canvas_ = ctx.canvas;
 
@@ -316,12 +319,34 @@ namespace infinity
 
    widget* pickup::click(context const& ctx, mouse_button btn)
    {
+      //rect  r1, r2;
+      //pickup_bounds(ctx, r1, r2);
+      //rect  pu_bounds = r1;
+      //if (_type == double_)
+      //   pu_bounds.right = r2.right;
+      //
+      //btn.pos = transform_point(pu_bounds, _slant, btn.pos, ctx);
+
       if (!btn.down && btn.num_clicks == 2)
       {
          slant(0);
          ctx.view.refresh(ctx);
       }
       return tracker<>::click(ctx, btn);
+   }
+
+   void pickup::drag(context const& ctx, mouse_button btn)
+   {
+      //rect  r1, r2;
+      //pickup_bounds(ctx, r1, r2);
+      //rect  pu_bounds = r1;
+      //if (_type == double_)
+      //   pu_bounds.right = r2.right;
+      //
+      //btn.pos = transform_point(pu_bounds, _slant, btn.pos, ctx);
+
+
+      tracker<>::drag(ctx, btn);
    }
 
    void pickup::begin_tracking(context const& ctx, info& track_info)

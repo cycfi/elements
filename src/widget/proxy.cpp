@@ -20,7 +20,7 @@ namespace photon
    widget* proxy_base::hit_test(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
-      prepare_subject(sctx);
+      prepare_subject(sctx, p);
       auto r = subject().hit_test(sctx, p);
       restore_subject(sctx);
       return r;
@@ -46,6 +46,11 @@ namespace photon
    {
    }
 
+   void proxy_base::prepare_subject(context& ctx, point& p)
+   {
+      prepare_subject(ctx);
+   }
+
    void proxy_base::restore_subject(context& ctx)
    {
    }
@@ -53,7 +58,7 @@ namespace photon
    widget* proxy_base::click(context const& ctx, mouse_button btn)
    {
       context sctx { ctx, &subject(), ctx.bounds };
-      prepare_subject(sctx);
+      prepare_subject(sctx, btn.pos);
       auto r = subject().click(sctx, btn);
       restore_subject(sctx);
       return r;
@@ -62,7 +67,7 @@ namespace photon
    void proxy_base::drag(context const& ctx, mouse_button btn)
    {
       context sctx { ctx, &subject(), ctx.bounds };
-      prepare_subject(sctx);
+      prepare_subject(sctx, btn.pos);
       subject().drag(sctx, btn);
       restore_subject(sctx);
    }
@@ -86,7 +91,7 @@ namespace photon
    bool proxy_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
       context sctx { ctx, &subject(), ctx.bounds };
-      prepare_subject(sctx);
+      prepare_subject(sctx, p);
       auto r = subject().cursor(sctx, p, status);
       restore_subject(sctx);
       return r;
@@ -95,7 +100,7 @@ namespace photon
    bool proxy_base::scroll(context const& ctx, point dir, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
-      prepare_subject(sctx);
+      prepare_subject(sctx, p);
       auto r = subject().scroll(sctx, dir, p);
       restore_subject(sctx);
       return r;

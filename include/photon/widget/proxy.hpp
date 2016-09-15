@@ -29,6 +29,7 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            prepare_subject(context& ctx);
+      virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
 
    // Control
@@ -49,7 +50,7 @@ namespace photon
 
       virtual widget const&  subject() const = 0;
       virtual widget&        subject() = 0;
-      
+
    // Receiver
 
       virtual void            value(bool val);

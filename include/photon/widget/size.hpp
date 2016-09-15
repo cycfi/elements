@@ -449,6 +449,7 @@ namespace photon
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
+      virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
 
    private:
@@ -493,6 +494,13 @@ namespace photon
       canvas_.translate({ -bounds.left, -bounds.top });
       canvas_.scale(scale);
       bounds = { 0, 0, _size.x, _size.y };
+   }
+
+   template <typename Subject>
+   void fit_widget<Subject>::prepare_subject(context& ctx, point& p)
+   {
+      prepare_subject(ctx);
+      p = ctx.canvas.device_to_user(p);
    }
 
    template <typename Subject>

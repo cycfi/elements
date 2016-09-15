@@ -23,17 +23,17 @@ namespace photon
 
       struct info
       {
-         explicit info(point start_)
-                   : start(start_)
-                  {}
+         explicit          info(point start_)
+                           : start(start_)
+                           {}
 
-                  info(info const&) = default;
-         virtual  ~info() {}
+                           info(info const&) = default;
+         virtual           ~info() {}
 
-         point    start;
-         point    current = start;
-         point    previous = start;
-         point    offset = point{ 0, 0 };
+         point             start;
+         point             current = start;
+         point             previous = start;
+         point             offset = point{ 0, 0 };
       };
 
                            template <typename... T>

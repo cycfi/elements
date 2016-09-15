@@ -80,8 +80,6 @@ namespace photon
    {
       auto p1 = ctx.canvas.user_to_device(ctx.bounds.top_left());
       auto p2 = ctx.canvas.user_to_device(ctx.bounds.bottom_right());
-      auto w = ctx.bounds.width();
-      auto h = ctx.bounds.height();
       [get_mac_view(_impl) setNeedsDisplayInRect
          : CGRectMake(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y)
       ];

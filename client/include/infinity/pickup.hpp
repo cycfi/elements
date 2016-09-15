@@ -44,7 +44,6 @@ namespace infinity
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
       virtual widget*         click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
       virtual void            begin_tracking(context const& ctx, info& track_info);
       virtual void            keep_tracking(context const& ctx, info& track_info);
       virtual void            end_tracking(context const& ctx, info& track_info);

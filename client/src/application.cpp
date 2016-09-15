@@ -24,11 +24,6 @@ namespace infinity
 
    struct background : widget
    {
-//      widget_limits limits(basic_context const& ctx) const
-//      {
-//         return { { 380*1.61, 380 }, { full_extent, full_extent } };
-//      }
-
       void draw(context const& ctx)
       {
          auto& cnv = ctx.canvas;

@@ -182,6 +182,8 @@ namespace infinity
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      if (status == cursor_tracking::leaving)
+         _hit = hit_none;
       ctx.view.refresh(ctx);
       return true;
    }
@@ -319,34 +321,12 @@ namespace infinity
 
    widget* pickup::click(context const& ctx, mouse_button btn)
    {
-      //rect  r1, r2;
-      //pickup_bounds(ctx, r1, r2);
-      //rect  pu_bounds = r1;
-      //if (_type == double_)
-      //   pu_bounds.right = r2.right;
-      //
-      //btn.pos = transform_point(pu_bounds, _slant, btn.pos, ctx);
-
       if (!btn.down && btn.num_clicks == 2)
       {
          slant(0);
          ctx.view.refresh(ctx);
       }
       return tracker<>::click(ctx, btn);
-   }
-
-   void pickup::drag(context const& ctx, mouse_button btn)
-   {
-      //rect  r1, r2;
-      //pickup_bounds(ctx, r1, r2);
-      //rect  pu_bounds = r1;
-      //if (_type == double_)
-      //   pu_bounds.right = r2.right;
-      //
-      //btn.pos = transform_point(pu_bounds, _slant, btn.pos, ctx);
-
-
-      tracker<>::drag(ctx, btn);
    }
 
    void pickup::begin_tracking(context const& ctx, info& track_info)

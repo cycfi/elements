@@ -176,7 +176,7 @@ namespace infinity
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      ctx.view.refresh(ctx.bounds);
+      ctx.view.refresh(ctx);
       return true;
    }
 
@@ -234,7 +234,7 @@ namespace infinity
          double align = mp.x / (w - pu_bounds.width());
          clamp(align, 0.0, 1.0);
          position(align);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          return true;
       }
 
@@ -247,7 +247,7 @@ namespace infinity
 
          clamp(angle, -0.4, 0.4);
          slant(angle);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          return true;
       }
 
@@ -319,7 +319,7 @@ namespace infinity
       if (!btn.down && btn.num_clicks == 2)
       {
          slant(0);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
       return tracker<>::click(ctx, btn);
    }

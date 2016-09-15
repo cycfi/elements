@@ -68,7 +68,7 @@ namespace photon
          if (_value != new_value)
          {
             value(new_value);
-            ctx.view.refresh(ctx.bounds);
+            ctx.view.refresh(ctx);
          }
       }
    }
@@ -80,7 +80,7 @@ namespace photon
    bool dial_base::scroll(context const& ctx, point dir, point p)
    {
       value(value() + dir.y * 0.01);
-      ctx.view.refresh(ctx.bounds);
+      ctx.view.refresh(ctx);
       return true;
    }
 }

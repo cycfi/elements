@@ -26,14 +26,14 @@ namespace photon
       if (!btn.down && on_click)
          on_click(true);
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       return this;
    }
 
    void basic_button::drag(context const& ctx, mouse_button btn)
    {
       if (state(ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
    }
 
    bool basic_button::is_control() const
@@ -71,7 +71,7 @@ namespace photon
    {
       if (!ctx.bounds.includes(btn.pos))
       {
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          return 0;
       }
 
@@ -79,7 +79,7 @@ namespace photon
       {
          if (state(!value()))             // toggle the state
          {
-            ctx.view.refresh(ctx.bounds); // we need to save the current state, the state
+            ctx.view.refresh(ctx);        // we need to save the current state, the state
             _current_state = value();     // can change in the drag function and so we'll
          }                                // need it later when the button is finally released
       }
@@ -95,7 +95,7 @@ namespace photon
    void basic_toggle_button::drag(context const& ctx, mouse_button btn)
    {
       if (state(!_current_state ^ ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

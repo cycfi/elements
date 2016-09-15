@@ -32,6 +32,7 @@ namespace photon
 {
    struct view_impl;
    class platform_access;
+   class context;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // The View. There's only one of this per window.
@@ -58,10 +59,10 @@ namespace photon
       void                 limits(widget_limits limits_) const;
 
       void                 refresh();
-      void                 refresh(rect area);
-      rect                 dirty() const              { return _dirty; }
-      bool                 maintain_aspect() const    { return _maintain_aspect; }
-      void                 maintain_aspect(bool flag) { _maintain_aspect = flag; }
+      void                 refresh(context const& ctx);
+      rect                 dirty() const                 { return _dirty; }
+      bool                 maintain_aspect() const       { return _maintain_aspect; }
+      void                 maintain_aspect(bool flag)    { _maintain_aspect = flag; }
 
       layer_composite      content;
       application_ptr      app;

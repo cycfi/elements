@@ -76,10 +76,14 @@ namespace photon
       get_mac_view(_impl).needsDisplay = true;
    }
 
-   void view::refresh(rect area)
+   void view::refresh(context const& ctx)
    {
+      auto p1 = ctx.canvas.user_to_device(ctx.bounds.top_left());
+      auto p2 = ctx.canvas.user_to_device(ctx.bounds.bottom_right());
+      auto w = ctx.bounds.width();
+      auto h = ctx.bounds.height();
       [get_mac_view(_impl) setNeedsDisplayInRect
-         : CGRectMake(area.left, area.top, area.width(), area.height())
+         : CGRectMake(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y)
       ];
    }
 }

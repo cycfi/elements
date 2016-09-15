@@ -72,7 +72,7 @@ namespace photon
       if (value() != new_value)
       {
          value(new_value);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          return true;
       }
       return false;
@@ -164,7 +164,7 @@ namespace photon
          if (_value != new_value)
          {
             value(new_value);
-            ctx.view.refresh(ctx.bounds);
+            ctx.view.refresh(ctx);
          }
       }
    }
@@ -175,7 +175,7 @@ namespace photon
       if (_value != new_value)
       {
          value(new_value);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
    }
 

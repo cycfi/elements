@@ -148,40 +148,30 @@ namespace infinity
       rect  r1, r2;
       pickup_bounds(ctx, r1, r2);
 
-      auto  mp = ctx.cursor_pos();
-      auto& canvas_ = ctx.canvas;
-
       rect  pu_bounds = r1;
       if (_type == double_)
          pu_bounds.right = r2.right;
 
       bool  is_tracking = _tracking != none;
-      bool  hit_rotator = hit_test_rotator(pu_bounds, _slant, mp, ctx);
+      bool hilite = is_tracking || _hit;
 
       if (_type == single)
       {
-         bool hilite = is_tracking || hit_rotator || hit_test_pickup(r1, _slant, mp, canvas_);
          draw_pickup(r1, _slant, hilite, ctx, _id);
       }
       else
       {
-         bool hilite =
-            is_tracking ||
-            hit_rotator ||
-            hit_test_pickup(r1, _slant, mp, canvas_) ||
-            hit_test_pickup(r2, _slant, mp, canvas_)
-            ;
          draw_pickup(r1, _slant, hilite, ctx, _id);
          draw_pickup(r2, _slant, hilite, ctx, _id);
       }
 
-      if (hit_rotator)
+      if (_hit == hit_rotator)
          _rotator_pos = draw_rotator(pu_bounds, _slant, ctx);
    }
 
    widget* pickup::hit_test(context const& ctx, point p)
    {
-      return hit(ctx, p) ? this : nullptr;
+      return (_hit = hit(ctx, p)) ? this : nullptr;
    }
 
    bool pickup::cursor(context const& ctx, point p, cursor_tracking status)
@@ -218,14 +208,14 @@ namespace infinity
 
       if (_tracking == start)
       {
-         hit_item what = hit(ctx, mp);
-         if (what == hit_pickup)
+         _hit = hit(ctx, mp);
+         if (_hit == hit_pickup)
          {
             // start tracking move
             _tracking = tracking_move;
             _offset = point{ mp.x-pu_bounds.left, mp.y-pu_bounds.top };
          }
-         else if (what == hit_rotator)
+         else if (_hit == hit_rotator)
          {
             // start tracking rotate
             _tracking = tracking_rotate;
@@ -281,8 +271,8 @@ namespace infinity
       }
       else
       {
-         if (hit_test_pickup(r1, _slant, ctx.cursor_pos(), canvas_) ||
-            hit_test_pickup(r2, _slant, ctx.cursor_pos(), canvas_))
+         if (hit_test_pickup(r1, _slant, p, canvas_) ||
+            hit_test_pickup(r2, _slant, p, canvas_))
             return hit_pickup;
       }
 

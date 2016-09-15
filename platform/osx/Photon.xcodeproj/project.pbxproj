@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE151D685A0B00D7EE92 /* osx_view.mm */; };
-		5D07FE191D68638800D7EE92 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE181D68638800D7EE92 /* context.cpp */; };
 		5D07FE1B1D6868E800D7EE92 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 5D07FE1A1D6868E800D7EE92 /* include */; };
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
 		5D2950BA1D75C25A00734694 /* dial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2950B91D75C25A00734694 /* dial.cpp */; };
@@ -40,7 +39,6 @@
 
 /* Begin PBXFileReference section */
 		5D07FE151D685A0B00D7EE92 /* osx_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_view.mm; path = photon/src/osx_view.mm; sourceTree = SOURCE_ROOT; };
-		5D07FE181D68638800D7EE92 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
 		5D07FE1A1D6868E800D7EE92 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../include; sourceTree = "<group>"; };
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		5D2950B91D75C25A00734694 /* dial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dial.cpp; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 		5D07FE171D68638800D7EE92 /* support */ = {
 			isa = PBXGroup;
 			children = (
-				5D07FE181D68638800D7EE92 /* context.cpp */,
 				5D9ADA801D7CFAD700996964 /* pixmap.cpp */,
 				5D07FE1C1D686C4A00D7EE92 /* rect.cpp */,
 				5D5C65D71D7C2257002197F8 /* text_utils.cpp */,
@@ -298,7 +295,6 @@
 				5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */,
 				5D2950BA1D75C25A00734694 /* dial.cpp in Sources */,
 				5D76EBC61D7972470036EECC /* frets.cpp in Sources */,
-				5D07FE191D68638800D7EE92 /* context.cpp in Sources */,
 				5D5C65D81D7C2257002197F8 /* text_utils.cpp in Sources */,
 				5D76EBC41D796A010036EECC /* pickup.cpp in Sources */,
 				5D4857251D7F1EC5006D71FB /* gallery.cpp in Sources */,

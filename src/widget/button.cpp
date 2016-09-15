@@ -14,25 +14,25 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    widget* basic_button::hit_test(context const& ctx, point p)
    {
-      if (ctx.bounds.includes(ctx.cursor_pos()))
+      if (ctx.bounds.includes(p))
          return this;
       return 0;
    }
 
    widget* basic_button::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(ctx.cursor_pos()))
+      if (!ctx.bounds.includes(btn.pos))
          return 0;
       if (!btn.down && on_click)
          on_click(true);
-      if (state(btn.down && ctx.bounds.includes(ctx.cursor_pos())))
+      if (state(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx.bounds);
       return this;
    }
 
    void basic_button::drag(context const& ctx, mouse_button btn)
    {
-      if (state(ctx.bounds.includes(ctx.cursor_pos())))
+      if (state(ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx.bounds);
    }
 
@@ -69,7 +69,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    widget* basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(ctx.cursor_pos()))
+      if (!ctx.bounds.includes(btn.pos))
       {
          ctx.view.refresh(ctx.bounds);
          return 0;
@@ -94,7 +94,7 @@ namespace photon
 
    void basic_toggle_button::drag(context const& ctx, mouse_button btn)
    {
-      if (state(!_current_state ^ ctx.bounds.includes(ctx.cursor_pos())))
+      if (state(!_current_state ^ ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx.bounds);
    }
 
@@ -103,7 +103,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(ctx.cursor_pos()))
+      if (!ctx.bounds.includes(btn.pos))
          return 0;
       if (btn.down)
          return basic_button::click(ctx, btn);

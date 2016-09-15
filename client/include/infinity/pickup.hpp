@@ -35,6 +35,7 @@ namespace infinity
                                , _tracking(none)
                                , _id(id)
                                , _is_visible(true)
+                               , _hit(hit_none)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
@@ -84,6 +85,7 @@ namespace infinity
       point                   _offset;
       point                   _rotator_pos;
       bool                    _is_visible;
+      hit_item                _hit;
    };
 }
 

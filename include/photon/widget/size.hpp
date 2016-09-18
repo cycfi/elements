@@ -491,9 +491,9 @@ namespace photon
       auto  w = bounds.width();
       auto  h = bounds.height();
       auto  scale = point{ w/_size.x, h/_size.y };
-      canvas_.translate({ -bounds.left, -bounds.top });
       canvas_.scale(scale);
-      bounds = { 0, 0, _size.x, _size.y };
+      auto  offset = point{ bounds.left / scale.x, bounds.top / scale.y };
+      bounds = { offset.x, offset.y, offset.x + _size.x, offset.y + _size.y };
    }
 
    template <typename Subject>

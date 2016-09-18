@@ -76,7 +76,7 @@ namespace infinity
 
       auto make_slider(int which)
       {
-         auto vslot = yside_margin({5, 5}, slider_slot);
+         auto vslot = yside_margin({ 1, 1 }, slider_slot);
 
          auto sl = share(slider(slider_knob, vslot, 1.0));
 
@@ -136,7 +136,7 @@ namespace infinity
 
       auto make_phase_selector(int which)
       {
-         auto vslot = yside_margin({3, 3}, slider_slot);
+         auto vslot = yside_margin({ 1, 1 }, slider_slot);
          auto  ref =
             application::selector_ref(
                share(selector<2>(selector_knob, vslot, 0))
@@ -155,7 +155,7 @@ namespace infinity
 
       auto make_sd_selector(int which)
       {
-         auto  vslot = yside_margin({3, 3}, slider_slot);
+         auto  vslot = yside_margin({ 1, 1 }, slider_slot);
          auto  ref =
             application::selector_ref(
                share(selector<2>(selector_knob, vslot, 0))
@@ -234,12 +234,12 @@ namespace infinity
                )
             );
 
-         return fit(
-            { 550, 400 },
-            margin(
-               { 20, 0, 20, 20 },
-               vtile(
-                  yside_margin({ 10, 10 }, align_right(logo)),
+         return margin(
+            { 20, 0, 20, 20 },
+            vtile(
+               yside_margin({ 10, 10 }, align_right(logo)),
+               fit(
+                  { 550, 320 },
                   group("Virtual Pickups",
                      vtile(
                         top_margin(40, vpickups),
@@ -249,7 +249,8 @@ namespace infinity
                            make_pickups_control(2, "Pickup C")
                         )
                      ),
-                     0.7, false)
+                     0.7, false
+                  )
                )
             )
          );

@@ -105,7 +105,7 @@ namespace infinity
          return align_center_top(
             caption(
                layer(align_center_middle(ref), radial_lines),
-               label, 0.5
+               label, 0.7
             )
          );
       }
@@ -234,27 +234,27 @@ namespace infinity
                )
             );
 
-         return margin(
-            { 20, 0, 20, 20 },
-            vtile(
-               yside_margin({ 10, 10 }, align_right(logo)),
-               fit(
-                  { 550, 320 },
-                  group("Virtual Pickups",
-                     vtile(
-                        top_margin(40, vpickups),
-                        htile(
-                           make_pickups_control(0, "Pickup A"),
-                           make_pickups_control(1, "Pickup B"),
-                           make_pickups_control(2, "Pickup C")
-                        )
-                     ),
-                     0.7, false
-                  )
-               )
-            )
-         );
-      }
+         return fit(
+             { 550, 400 },
+             margin(
+                { 20, 0, 20, 20 },
+                vtile(
+                   yside_margin({ 10, 10 }, align_right(logo)),
+                      group("Virtual Pickups",
+                         vtile(
+                            top_margin(40, vpickups),
+                            htile(
+                               make_pickups_control(0, "Pickup A"),
+                               make_pickups_control(1, "Pickup B"),
+                               make_pickups_control(2, "Pickup C")
+                            )
+                         ),
+                         0.9, false
+                      )
+                   )
+                )
+             );
+        }
    };
 
    application::application(photon::view& view_)

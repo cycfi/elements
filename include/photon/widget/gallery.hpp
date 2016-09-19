@@ -232,7 +232,7 @@ namespace photon
       return make_button<Button>(
          margin(
             button_margin,
-            align_center(label(text, 0.8))
+            align_center(label(text))
          ),
          body_color
       );
@@ -251,7 +251,7 @@ namespace photon
             align_center(
                htile(
                   right_margin(8, icon(icon_code)),
-                  label(text, 0.8)
+                  label(text)
                )
             )
          ),
@@ -271,7 +271,7 @@ namespace photon
             button_margin,
             align_center(
                htile(
-                  label(text, 0.8),
+                  label(text),
                   left_margin(8, icon(icon_code))
                )
             )
@@ -473,7 +473,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    inline auto menu_item_text(std::string const& text)
    {
-      return xside_margin({ 20, 20 }, align_left(label(text, 0.8)));
+      return xside_margin({ 20, 20 }, align_left(label(text)));
    }
 
    inline auto menu_item(std::string const& text)

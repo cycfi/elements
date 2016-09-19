@@ -119,19 +119,16 @@ namespace client
                       top_margin(20, note)
                    )
                 ),
-             0.8, false)
+             0.9, false)
          );
    }
 
    void  init(photon::view& view_)
    {
-      //view_.maintain_aspect(true);
-      view_.content.push_back(share(background{}));
-      //view_.content.push_back(share(test()));
+      //view_.content.push_back(share(background{}));
+      //view_.content.push_back(share(make_buttons(view_)));
 
-      view_.content.push_back(share(make_buttons(view_)));
-
-      //view_.maintain_aspect(true);
-      //view_.app = std::make_shared<infinity::application>(view_);
+      view_.maintain_aspect(true);
+      view_.app = std::make_shared<infinity::application>(view_);
    }
 }

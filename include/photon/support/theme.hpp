@@ -26,21 +26,21 @@ namespace photon
 
       color                heading_font_color         = basic_font_color;
       char const*          heading_font               = "BlairMdITC TT Medium";
-      float                heading_font_size          = 18.0;
+      float                heading_font_size          = 16.0;
       canvas::font_style   heading_style              = canvas::bold;
 
       color                label_font_color           = basic_font_color;
       char const*          label_font                 = "Roboto Regular";
-      float                label_font_size            = 18.0;
+      float                label_font_size            = 14.0;
       canvas::font_style   label_style                = canvas::normal;
 
       color                icon_color                 = basic_font_color;
       char const*          icon_font                  = "photon_basic";
-      float                icon_font_size             = 18.0;
+      float                icon_font_size             = 16.0;
 
       color                text_box_font_color        = basic_font_color;
       char const*          text_box_font              = "Open Sans";
-      float                text_box_font_size         = 18.0;
+      float                text_box_font_size         = 14.0;
       color                text_box_hilite_color      = { 0, 127, 255, 100 };
       color                text_box_caret_color       = { 0, 190, 255, 255 };
       color                edit_box_fill_color        = { 32, 32, 32, 32 };

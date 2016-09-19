@@ -69,13 +69,13 @@ namespace client
          layer(
             yside_margin({ 5, 5 },
                vtile(
-                  menu_item("Menu Item 1"),
-                  menu_item("Menu Item 2"),
-                  menu_item("Menu Item 3"),
+                  menu_item("Perfection is achieved,"),
+                  menu_item("not when there is nothing more to add,"),
+                  menu_item("but when there is nothing left to take away."),
                   menu_item_spacer(),
-                  menu_item("Menu Item 4"),
-                  menu_item("Menu Item 5"),
-                  menu_item("Menu Item 6")
+                  menu_item("We are what we repeatedly do;"),
+                  menu_item("excellence, then,"),
+                  menu_item("is not an act but a habit.")
                )
             ),
             menu_background{}

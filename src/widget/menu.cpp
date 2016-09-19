@@ -11,12 +11,14 @@ namespace photon
    void basic_popup_button::layout(context const& ctx)
    {
       basic_button::layout(ctx);
-      rect  bounds = {
-            ctx.bounds.left+3, ctx.bounds.bottom,
-            ctx.bounds.right-3, full_extent
-         };
 
       auto& pu = popup();
+      auto pu_limits = pu.limits(ctx);
+      rect  bounds = {
+            ctx.bounds.left + 3, ctx.bounds.bottom,
+            ctx.bounds.left + 3 + pu_limits.min.x, full_extent
+         };
+
       context new_ctx{ ctx.view, ctx.canvas, &pu, bounds };
       pu.bounds(bounds);
       pu.layout(new_ctx);

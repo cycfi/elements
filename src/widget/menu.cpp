@@ -8,7 +8,7 @@
 
 namespace photon
 {
-   void basic_dropdown_menu::layout(context const& ctx)
+   void basic_popup_button::layout(context const& ctx)
    {
       basic_button::layout(ctx);
       rect  bounds = {
@@ -22,7 +22,7 @@ namespace photon
       pu.layout(new_ctx);
    }
 
-   widget* basic_dropdown_menu::click(context const& ctx, mouse_button btn)
+   widget* basic_popup_button::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -54,16 +54,16 @@ namespace photon
       return this;
    }
 
-   void basic_dropdown_menu::drag(context const& ctx, mouse_button btn)
+   void basic_popup_button::drag(context const& ctx, mouse_button btn)
    {
       ctx.view.refresh();
    }
 
-   //bool basic_dropdown_menu::key(context const& ctx, key_info const& k)
+   //bool basic_popup_button::key(context const& ctx, key_info const& k)
    //{
    //   if (k.key == key_code::key_escape)
    //   {
-   //      remove_menu(ctx, _menu);
+   //      remove_menu(ctx, _popup);
    //      state(false);
    //      ctx.view.refresh();
    //      return true;
@@ -71,14 +71,14 @@ namespace photon
    //   return false;
    //}
 
-   bool basic_dropdown_menu::focus(focus_request r)
+   bool basic_popup_button::focus(focus_request r)
    {
       return true;
    }
 
-   basic_popup_widget& basic_dropdown_menu::popup() const
+   basic_popup_widget& basic_popup_button::popup() const
    {
-      return *std::dynamic_pointer_cast<basic_popup_widget>(_menu).get();
+      return *std::dynamic_pointer_cast<basic_popup_widget>(_popup).get();
    }
 
    void basic_menu_item_widget::draw(context const& ctx)

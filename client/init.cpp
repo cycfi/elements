@@ -63,7 +63,7 @@ namespace client
 
    auto make_dropdown_menu()
    {
-      auto dropdown  = dropdown_menu("Dropdown");
+      auto dropdown  = popup_button("Dropdown");
 
       auto menu =
          layer(

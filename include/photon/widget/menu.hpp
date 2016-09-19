@@ -15,13 +15,13 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Dropdown Menu
+   // Popup Button
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_dropdown_menu : public basic_button
+   class basic_popup_button : public basic_button
    {
    public:
                               template <typename W1, typename W2>
-                              basic_dropdown_menu(W1&& off, W2&& on);
+                              basic_popup_button(W1&& off, W2&& on);
 
       virtual void            layout(context const& ctx);
       virtual widget*         click(context const& ctx, mouse_button btn);
@@ -36,18 +36,18 @@ namespace photon
 
       basic_popup_widget&     popup() const;
 
-      widget_ptr              _menu;
+      widget_ptr              _popup;
    };
 
    template <typename W1, typename W2>
-   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
+   inline basic_popup_button::basic_popup_button(W1&& off, W2&& on)
     : basic_button(std::forward<W1>(off), std::forward<W2>(on))
    {}
 
    template <typename Menu>
-   inline void basic_dropdown_menu::menu(Menu&& menu_)
+   inline void basic_popup_button::menu(Menu&& menu_)
    {
-      _menu = share(basic_popup(menu_));
+      _popup = share(basic_popup(menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

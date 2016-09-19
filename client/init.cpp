@@ -125,10 +125,10 @@ namespace client
 
    void  init(photon::view& view_)
    {
-      //view_.content.push_back(share(background{}));
-      //view_.content.push_back(share(make_buttons(view_)));
+      view_.content.push_back(share(background{}));
+      view_.content.push_back(share(make_buttons(view_)));
 
-      view_.maintain_aspect(true);
-      view_.app = std::make_shared<infinity::application>(view_);
+      //view_.maintain_aspect(true);
+      //view_.app = std::make_shared<infinity::application>(view_);
    }
 }

@@ -47,7 +47,7 @@ namespace photon
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
-      _menu = share(basic_popup({ 0, 0, 0, 0 }, menu_));
+      _menu = share(basic_popup(menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

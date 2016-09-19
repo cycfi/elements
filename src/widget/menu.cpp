@@ -11,7 +11,15 @@ namespace photon
    void basic_dropdown_menu::layout(context const& ctx)
    {
       basic_button::layout(ctx);
-      popup().layout_from_button(ctx);
+      rect  bounds = {
+            ctx.bounds.left+3, ctx.bounds.bottom,
+            ctx.bounds.right-3, full_extent
+         };
+
+      auto& pu = popup();
+      context new_ctx{ ctx.view, ctx.canvas, &pu, bounds };
+      pu.bounds(bounds);
+      pu.layout(new_ctx);
    }
 
    widget* basic_dropdown_menu::click(context const& ctx, mouse_button btn)
@@ -20,7 +28,14 @@ namespace photon
       {
          if (state(true))
          {
-            popup().install(ctx, *this);
+            auto on_click = [this](context const& ctx, mouse_button btn)
+            {
+               this->popup().close(ctx);
+               this->value(0);
+               ctx.view.refresh();
+            };
+
+            popup().open(ctx, on_click);
             ctx.view.refresh();
          }
       }
@@ -29,7 +44,11 @@ namespace photon
          if (!value() || !hit_test(ctx, btn.pos))
          {
             // simulate a menu click:
-            popup().click_from_button(ctx, btn);
+            btn.down = true;
+            auto& pu = popup();
+            rect  bounds = pu.bounds();
+            context new_ctx{ ctx.view, ctx.canvas, &pu, bounds };
+            pu.click(new_ctx, btn);
          }
       }
       return this;

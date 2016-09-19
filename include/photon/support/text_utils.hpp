@@ -12,9 +12,10 @@
 
 namespace photon
 {
-   void           draw_icon(canvas& cnv, rect bounds, uint32_t code, int size);
-   void           draw_icon(canvas& cnv, rect bounds, uint32_t code, int size, color c);
-   point          measure_icon(canvas& cnv, uint32_t cp, int size);
+   void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);
+   void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
+   point          measure_icon(canvas& cnv, uint32_t cp, float size);
+   point          measure_text(canvas& cnv, char const* text, char const* face, float size);
    std::string    codepoint_to_utf8(int cp);
 }
 

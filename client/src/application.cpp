@@ -33,7 +33,7 @@ namespace infinity
    };
 
    // Shared Images
-   auto     logo = image{ "assets/images/logo.png", 1.0/4 };
+   auto     logo = image{ "assets/images/logo.png", 1.0/5 };
 
    auto     on_btn = image{ "assets/images/power-on.png", 1.0/6 };
    auto     off_btn = image{ "assets/images/power-off.png", 1.0/6 };

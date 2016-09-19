@@ -9,41 +9,11 @@
 
 #include <photon/widget/widget.hpp>
 #include <photon/widget/button.hpp>
-#include <photon/widget/floating.hpp>
+#include <photon/widget/popup.hpp>
 #include <photon/view.hpp>
 
 namespace photon
 {
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Menu
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   class basic_menu_widget : public floating_widget
-   {
-   public:
-                              basic_menu_widget(rect bounds)
-                               : floating_widget(bounds)
-                               , _button(0)
-                              {}
-
-      virtual widget*         hit_test(context const& ctx, point p);
-      virtual widget*         click(context const& ctx, mouse_button btn);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-
-      basic_button*           button() const                { return _button; }
-      void                    button(basic_button* button_) { _button = button_; }
-
-   private:
-
-      basic_button*           _button;
-   };
-
-   template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, basic_menu_widget>
-   basic_menu(rect bounds, Subject&& subject)
-   {
-      return { std::forward<Subject>(subject), bounds };
-   }
-
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +34,8 @@ namespace photon
 
    private:
 
+      basic_popup_widget&     popup() const;
+
       widget_ptr              _menu;
    };
 
@@ -75,21 +47,11 @@ namespace photon
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
-      _menu = share(basic_menu({0, 0, 0, 0}, menu_));
+      _menu = share(basic_popup({ 0, 0, 0, 0 }, menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Menu Background
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   class menu_background : public widget
-   {
-   public:
-
-      virtual void            draw(context const& ctx);
-   };
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Basic Menu Items
+   // Menu Items
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class basic_menu_item_widget : public proxy_base
    {

@@ -357,30 +357,24 @@ namespace photon
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
    private:
 
       std::string             _text;
-      bool                    _hit = false;
    };
 
    template <bool state>
    widget_limits check_box_widget<state>::limits(basic_context const& ctx) const
    {
-      auto const&    theme_ = get_theme();
-      auto&          canvas_ = ctx.canvas;
-
-      canvas_.font(theme_.label_font, theme_.label_font_size);
-      auto  info = canvas_.measure_text(_text.c_str());
-      auto  height = info.ascent + info.descent + info.leading;
-      return { { info.size.x, height }, { info.size.x, height } };
+      auto& thm = get_theme();
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
+      return { { size.x, size.y }, { size.x, size.y } };
    }
 
    template <bool state>
    void check_box_widget<state>::draw(context const& ctx)
    {
-      draw_check_box(ctx, _text, state, _hit);
+      draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
    }
 
    inline basic_toggle_button check_box(std::string const& text)
@@ -389,14 +383,6 @@ namespace photon
          check_box_widget<false>{ text }
        , check_box_widget<true>{ text }
       );
-   }
-
-   template <bool state>
-   bool check_box_widget<state>::cursor(context const& ctx, point p, cursor_tracking status)
-   {
-      _hit = (status != cursor_tracking::leaving) && ctx.bounds.includes(p);
-      widget::cursor(ctx, p, status);
-      return _hit;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -415,11 +401,9 @@ namespace photon
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
       uint32_t                _code;
       float                   _size;
-      bool                    _hit = false;
    };
 
    template <bool state>
@@ -432,15 +416,7 @@ namespace photon
    template <bool state>
    void icon_button_widget<state>::draw(context const& ctx)
    {
-      draw_icon_button(ctx, _code, _size, state, _hit);
-   }
-
-   template <bool state>
-   bool icon_button_widget<state>::cursor(context const& ctx, point p, cursor_tracking status)
-   {
-      _hit = (status != cursor_tracking::leaving) && ctx.bounds.includes(p);
-      widget::cursor(ctx, p, status);
-      return _hit;
+      draw_icon_button(ctx, _code, _size, state, ctx.bounds.includes(ctx.view.cursor_pos()));
    }
 
    inline basic_toggle_button icon_button(uint32_t code, float size)
@@ -467,6 +443,16 @@ namespace photon
       std::string const& text
     , color body_color = default_button_color
    );
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Menu Background
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class menu_background : public widget
+   {
+   public:
+
+      virtual void            draw(context const& ctx);
+   };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Menu Items

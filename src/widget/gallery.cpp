@@ -12,14 +12,12 @@ namespace photon
 {
    widget_limits heading::limits(basic_context const& ctx) const
    {
-      auto const&    theme_ = get_theme();
-      auto&          canvas_ = ctx.canvas;
-      auto           state = canvas_.new_state();
+      auto& thm = get_theme();
+      auto  size = measure_text(
+         ctx.canvas, _text.c_str(), thm.heading_font, thm.heading_font_size * _size
+      );
+      return { { size.x, size.y }, { size.x, size.y } };
 
-      canvas_.font(theme_.heading_font, theme_.heading_font_size * _size);
-      auto  info = canvas_.measure_text(_text.c_str());
-      auto  height = info.ascent + info.descent + info.leading;
-      return { { info.size.x, height }, { info.size.x, height } };
    }
 
    void heading::draw(context const& ctx)
@@ -40,14 +38,11 @@ namespace photon
 
    widget_limits label::limits(basic_context const& ctx) const
    {
-      auto const&    theme_ = get_theme();
-      auto&          canvas_ = ctx.canvas;
-      auto           state = canvas_.new_state();
-
-      canvas_.font(theme_.label_font, theme_.label_font_size * _size);
-      auto  info = canvas_.measure_text(_text.c_str());
-      auto  height = info.ascent + info.descent + info.leading;
-      return { { info.size.x, height }, { info.size.x, height } };
+      auto& thm = get_theme();
+      auto  size = measure_text(
+         ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size * _size
+      );
+      return { { size.x, size.y }, { size.x, size.y } };
    }
 
    void label::draw(context const& ctx)
@@ -367,6 +362,18 @@ namespace photon
       color icon_color = state ? indicator_color.level(4.0) : indicator_color.level(0.2);
       draw_icon(canvas_, bounds.move(0.5, 0.5), code, size, icon_color);
 
+   }
+
+   void menu_background::draw(context const& ctx)
+   {
+      auto&       canvas_ = ctx.canvas;
+      auto const& bounds = ctx.bounds;
+
+      // Panel fill
+      canvas_.begin_path();
+      canvas_.rect(bounds);
+      canvas_.fill_style(get_theme().panel_color.opacity(0.95));
+      canvas_.fill();
    }
 
    widget_limits menu_item_spacer_widget::limits(basic_context const& ctx) const

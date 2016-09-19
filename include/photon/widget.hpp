@@ -18,6 +18,7 @@
 #include <photon/widget/layer.hpp>
 #include <photon/widget/margin.hpp>
 #include <photon/widget/menu.hpp>
+#include <photon/widget/popup.hpp>
 //#include <photon/widget/port.hpp>
 #include <photon/widget/proxy.hpp>
 #include <photon/widget/reference.hpp>

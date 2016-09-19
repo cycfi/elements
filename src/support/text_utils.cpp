@@ -10,7 +10,7 @@
 
 namespace photon
 {
-   void draw_icon(canvas& cnv, rect bounds, uint32_t code, int size, color c)
+   void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {
       auto  state = cnv.new_state();
       auto& thm = get_theme();
@@ -22,17 +22,26 @@ namespace photon
       cnv.fill_text(point{ cx, cy }, codepoint_to_utf8(code).c_str());
    }
    
-   void draw_icon(canvas& cnv, rect bounds, uint32_t code, int size)
+   void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size)
    {
       draw_icon(cnv, bounds, code, size, get_theme().icon_color);
    }
 
-   point measure_icon(canvas& cnv, uint32_t cp, int size)
+   point measure_icon(canvas& cnv, uint32_t cp, float size)
    {
       auto  state = cnv.new_state();
       auto& thm = get_theme();
       cnv.font(thm.icon_font, size);
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
+   }
+   
+   point measure_text(canvas& cnv, char const* text, char const* face, float size)
+   {
+      auto  state = cnv.new_state();
+      cnv.font(face, size);
+      auto  info = cnv.measure_text(text);
+      auto  height = info.ascent + info.descent + info.leading;
+      return { info.size.x, height };
    }
 
    namespace detail

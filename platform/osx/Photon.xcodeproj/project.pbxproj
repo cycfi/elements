@@ -32,6 +32,7 @@
 		5DA584B11D618F4C004276C2 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584B01D618F4C004276C2 /* widget.cpp */; };
 		5DACB74E1D8E9A34007517FC /* floating.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74D1D8E9A34007517FC /* floating.cpp */; };
 		5DACB7501D8E9B91007517FC /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74F1D8E9B91007517FC /* menu.cpp */; };
+		5DACB7541D8FC7B1007517FC /* popup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB7531D8FC7B1007517FC /* popup.cpp */; };
 		5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9FDF11D800E4F0058DCA4 /* button.cpp */; };
 		5DD362D01D855DB60002FD15 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD362CF1D855DB60002FD15 /* application.cpp */; };
 		5DE564191D6DE49900F9435C /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
@@ -69,6 +70,7 @@
 		5DA584B01D618F4C004276C2 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widget.cpp; sourceTree = "<group>"; };
 		5DACB74D1D8E9A34007517FC /* floating.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = floating.cpp; sourceTree = "<group>"; };
 		5DACB74F1D8E9B91007517FC /* menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = menu.cpp; sourceTree = "<group>"; };
+		5DACB7531D8FC7B1007517FC /* popup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = popup.cpp; sourceTree = "<group>"; };
 		5DB9FDF11D800E4F0058DCA4 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
 		5DD362CF1D855DB60002FD15 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				5D3806AE1D70926100C6EB77 /* image.cpp */,
 				5DA567A81D6E6ED0008FEFF9 /* layer.cpp */,
 				5DACB74F1D8E9B91007517FC /* menu.cpp */,
+				5DACB7531D8FC7B1007517FC /* popup.cpp */,
 				5DE5641C1D6DF16300F9435C /* proxy.cpp */,
 				5D3806B01D7191AA00C6EB77 /* slider.cpp */,
 				5DE564181D6DE49900F9435C /* tile.cpp */,
@@ -306,6 +309,7 @@
 				5D76EBC41D796A010036EECC /* pickup.cpp in Sources */,
 				5D4857251D7F1EC5006D71FB /* gallery.cpp in Sources */,
 				5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */,
+				5DACB7541D8FC7B1007517FC /* popup.cpp in Sources */,
 				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,
 				5DACB7501D8E9B91007517FC /* menu.cpp in Sources */,
 				5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */,

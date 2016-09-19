@@ -55,11 +55,11 @@ namespace photon
    template <typename Subject>
    inline widget_limits size_widget<Subject>::limits(basic_context const& ctx) const
    {
-      rect  e_limits = this->subject().limits(ctx);
+      auto  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
       float size_y = _size.y;
-      clamp(size_x, e_limits.left, e_limits.right);
-      clamp(size_y, e_limits.top, e_limits.bottom);
+      clamp(size_x, e_limits.min.x, e_limits.max.x);
+      clamp(size_y, e_limits.min.y, e_limits.max.y);
       return { { size_x, size_y }, { size_x, size_y } };
    }
 

@@ -8,8 +8,6 @@
 
 namespace photon
 {
-   rect  menu_background::shadow_offset  = { -10, -10, +20, +30 };
-
    void menu_background::draw(context const& ctx)
    {
       auto&       canvas_ = ctx.canvas;
@@ -20,35 +18,13 @@ namespace photon
       canvas_.rect(bounds);
       canvas_.fill_style(get_theme().panel_color.opacity(0.95));
       canvas_.fill();
-
-      // Drop shadow
-      //rect offs = shadow_offset;
-      //canvas_.begin_path();
-      //rect  shr =
-      //   {  bounds.left+offs.left, bounds.top+offs.top,
-      //      bounds.right+offs.right, bounds.bottom+offs.bottom
-      //   };
-      //
-      //canvas_.rect(shr);
-      //canvas_.rect(bounds);
-      //canvas_.path_winding(canvas::hole);
-      //
-      //paint shadow_paint
-      //   = canvas_.box_gradient(bounds.move(0, 2), 4, 10
-      //    , color(0, 0, 0, 128), color(0, 0, 0, 0)
-      //   );
-      //
-      //canvas_.fill_paint(shadow_paint);
-      //canvas_.fill();
    }
 
    namespace
    {
       auto find_menu(context const& ctx, widget_ptr _menu)
       {
-         auto f = ctx.view.content.begin();
-         auto l = ctx.view.content.end();
-         return std::find(f, l, _menu);
+         return std::find(ctx.view.content.begin(), ctx.view.content.end(), _menu);
       }
 
       void install_menu(context const& ctx, widget_ptr _menu, basic_button& button_)
@@ -145,6 +121,9 @@ namespace photon
 
    widget* basic_menu_widget::hit_test(context const& ctx, point p)
    {
+      // We call widget::hit_test instead of proxy_base::hit_test because
+      // we want to process hits/clicks outside the subject's bounds (e.g.
+      // to dismiss the menu when cliced anywhere outside the menu bounds).
       return widget::hit_test(ctx, p);
    }
 
@@ -153,13 +132,22 @@ namespace photon
       auto r = floating_widget::click(ctx, btn);
       remove_menu(ctx, shared_from_this());
       _button->value(0);
-      ctx.view.refresh(ctx);
+      ctx.view.refresh();
       return r;
+   }
+
+   bool basic_menu_widget::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      bool hit = proxy_base::hit_test(ctx, p);
+      if (status == cursor_tracking::leaving || hit)
+         ctx.view.refresh();
+      proxy_base::cursor(ctx, p, status);
+      return hit;
    }
 
    void basic_menu_item_widget::draw(context const& ctx)
    {
-      if (_hit)
+      if (ctx.bounds.includes(ctx.view.cursor_pos()))
       {
          auto& canvas_ = ctx.canvas;
 
@@ -173,8 +161,9 @@ namespace photon
 
    widget* basic_menu_item_widget::hit_test(context const& ctx, point p)
    {
-      if ((_hit = ctx.bounds.includes(p)))
+      if (ctx.bounds.includes(p))
          return this;
+      ctx.view.refresh(ctx);
       return 0;
    }
 
@@ -187,9 +176,11 @@ namespace photon
 
    bool basic_menu_item_widget::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if ((_hit = ctx.bounds.includes(p)))
-         ctx.view.refresh(ctx);
-      return proxy_base::cursor(ctx, p, status);
+      bool hit = ctx.bounds.includes(p);
+      if (status == cursor_tracking::leaving || hit)
+         ctx.view.refresh();
+      proxy_base::cursor(ctx, p, status);
+      return hit;
    }
 
    bool basic_menu_item_widget::is_control() const

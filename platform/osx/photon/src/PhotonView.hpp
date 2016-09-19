@@ -11,6 +11,7 @@
 {
    photon::view      _view;
    NSTrackingArea*   _tracking_area;
+   NSTextField*      _textField;
 }
 
 @end

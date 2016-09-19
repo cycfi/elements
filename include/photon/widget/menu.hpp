@@ -27,6 +27,7 @@ namespace photon
 
       virtual widget*         hit_test(context const& ctx, point p);
       virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
       basic_button*           button() const                { return _button; }
       void                    button(basic_button* button_) { _button = button_; }
@@ -74,7 +75,7 @@ namespace photon
    template <typename Menu>
    inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
-      _menu = new_(basic_menu({0, 0, 0, 0}, menu_));
+      _menu = share(basic_menu({0, 0, 0, 0}, menu_));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +85,6 @@ namespace photon
    {
    public:
 
-      static rect             shadow_offset;
       virtual void            draw(context const& ctx);
    };
 
@@ -104,10 +104,6 @@ namespace photon
       virtual bool            is_control() const;
 
       menu_item_function      on_click;
-
-   private:
-
-      bool                    _hit = false;
    };
 
    template <typename Subject>

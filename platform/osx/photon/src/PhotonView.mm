@@ -27,6 +27,14 @@ namespace photon
    photon::platform_access::init_view(_view, self);
    _tracking_area = nil;
    [self updateTrackingAreas];
+   
+//    _textField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 200, 24)];
+//    [_textField setStringValue:@"Text Box"];
+//    [_textField setBezeled:YES];
+//    [_textField setDrawsBackground:YES];
+//    [_textField setEditable:YES];
+//    [_textField setSelectable:YES];
+//    [self addSubview:_textField];
 }
 
 - (void) dealloc

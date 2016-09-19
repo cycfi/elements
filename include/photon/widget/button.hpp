@@ -31,6 +31,7 @@ namespace photon
       virtual void      drag(context const& ctx, mouse_button btn);
       virtual bool      is_control() const;
 
+      virtual void      value(int new_state);
       virtual void      value(bool new_state);
       bool              value() const;
 

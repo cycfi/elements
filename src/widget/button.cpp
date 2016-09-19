@@ -63,6 +63,11 @@ namespace photon
       if (on_click && _state != new_state)
          on_click(_state);
    }
+   
+   void basic_button::value(int new_state)
+   {
+      value(bool(new_state));
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Toggle Button

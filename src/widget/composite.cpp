@@ -149,21 +149,25 @@ namespace photon
          hit_info info = hit_element(ctx, p);
          if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
          {
+            // If we're previously tracking an element, send it a 'leaving' message
+            if (_cursor_info.element && _cursor_info.element != info.element)
+               cursor_leaving(ctx, p, _cursor_info);
+         
             context ectx{ ctx, info.element, info.bounds };
             bool r = info.element->cursor(ectx, p, status);
             if (r)
+            {
                _cursor_info = info;
+            }
             else
+            {
+               // If widget does not want the cursor, send it a 'leaving' message immediately
+               if (info.element && _cursor_info.element != info.element)
+                  cursor_leaving(ctx, p, info);
                _cursor_info = hit_info{};
+            }
             return r;
          }
-      }
-
-      // If we're previously tracking an element, send it a 'leaving' message
-      if (_cursor_info.element)
-      {
-         cursor_leaving(ctx, p, _cursor_info);
-         return true;
       }
 
       return false;

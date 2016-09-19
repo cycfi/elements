@@ -241,13 +241,13 @@ namespace photon
    template <typename Widget>
    inline reference<Widget> ref(Widget&& rhs)
    {
-      return { rhs };
+      return reference<Widget>{ share(rhs) };
    }
 
    template <typename Widget>
    inline reference<Widget> ref(Widget const& rhs)
    {
-      return { rhs };
+      return reference<Widget>{ share(rhs) };
    }
 }
 

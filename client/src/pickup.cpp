@@ -124,7 +124,6 @@ namespace infinity
          auto& canvas_ = ctx.canvas;
          point _rotator_pos;
          {
-            auto const& theme = get_theme();
             auto        state = prepare(bounds, slant, canvas_);
 
             // Draw rotator icon
@@ -132,9 +131,7 @@ namespace infinity
             float  size = height / 4;
             bounds = { bounds.left, bounds.bottom-10, bounds.right, bounds.bottom + size };
 
-            canvas_.font("photon_basic", 14);
-            canvas_.fill_style(theme.icon_color);
-            draw_icon(canvas_, bounds, icons::cycle);
+            draw_icon(canvas_, bounds, icons::cycle, 14);
             _rotator_pos = canvas_.user_to_device(center_point(bounds));
          }
          return canvas_.device_to_user(_rotator_pos);

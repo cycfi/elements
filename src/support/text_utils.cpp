@@ -6,20 +6,32 @@
 =================================================================================================*/
 #include <photon/support/text_utils.hpp>
 #include <photon/support/misc.hpp>
+#include <photon/support/theme.hpp>
 
 namespace photon
 {
-   void draw_icon(canvas& cnv, rect bounds, uint32_t code)
+   void draw_icon(canvas& cnv, rect bounds, uint32_t code, int size, color c)
    {
       auto  state = cnv.new_state();
+      auto& thm = get_theme();
       float cx = bounds.left + (bounds.width() / 2);
       float cy = bounds.top + (bounds.height() / 2);
+      cnv.font(thm.icon_font, size);
+      cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_text(point{ cx, cy }, codepoint_to_utf8(code).c_str());
    }
-
-   point measure_icon(canvas& cnv, uint32_t cp)
+   
+   void draw_icon(canvas& cnv, rect bounds, uint32_t code, int size)
    {
+      draw_icon(cnv, bounds, code, size, get_theme().icon_color);
+   }
+
+   point measure_icon(canvas& cnv, uint32_t cp, int size)
+   {
+      auto  state = cnv.new_state();
+      auto& thm = get_theme();
+      cnv.font(thm.icon_font, size);
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 

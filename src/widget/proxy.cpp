@@ -72,12 +72,14 @@ namespace photon
       restore_subject(sctx);
    }
 
-//   bool proxy_base::key(context const& ctx, key_info const& k)
-//   {
-//      context sctx { ctx, &subject(), ctx.bounds };
-//      prepare_subject(sctx);
-//      return subject().key(sctx, k);
-//   }
+   bool proxy_base::key(context const& ctx, key_info const& k)
+   {
+      context sctx { ctx, &subject(), ctx.bounds };
+      prepare_subject(sctx);
+      auto r = subject().key(sctx, k);
+      restore_subject(sctx);
+      return r;
+   }
 
    bool proxy_base::text(context const& ctx, text_info const& info)
    {

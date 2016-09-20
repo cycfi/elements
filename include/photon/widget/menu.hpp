@@ -26,7 +26,7 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-//      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            focus(focus_request r);
 
                               template <typename Menu>
@@ -34,9 +34,9 @@ namespace photon
 
    private:
 
-      basic_popup_widget&     popup() const;
+      using popup_ptr = std::shared_ptr<basic_popup_widget>;
 
-      widget_ptr              _popup;
+      popup_ptr               _popup;
    };
 
    template <typename W1, typename W2>
@@ -47,7 +47,7 @@ namespace photon
    template <typename Menu>
    inline void basic_popup_button::menu(Menu&& menu_)
    {
-      _popup = share(basic_popup(menu_));
+      _popup = std::dynamic_pointer_cast<basic_popup_widget>(share(basic_popup(menu_)));
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

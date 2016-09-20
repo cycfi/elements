@@ -12,16 +12,15 @@ namespace photon
    {
       basic_button::layout(ctx);
 
-      auto& pu = popup();
-      auto pu_limits = pu.limits(ctx);
+      auto pu_limits = _popup->limits(ctx);
       rect  bounds = {
             ctx.bounds.left + 3, ctx.bounds.bottom,
             ctx.bounds.left + 3 + pu_limits.min.x, full_extent
          };
 
-      context new_ctx{ ctx.view, ctx.canvas, &pu, bounds };
-      pu.bounds(bounds);
-      pu.layout(new_ctx);
+      context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+      _popup->bounds(bounds);
+      _popup->layout(new_ctx);
    }
 
    widget* basic_popup_button::click(context const& ctx, mouse_button btn)
@@ -32,12 +31,12 @@ namespace photon
          {
             auto on_click = [this](context const& ctx, mouse_button btn)
             {
-               this->popup().close(ctx);
+               _popup->close(ctx);
                this->value(0);
                ctx.view.refresh();
             };
 
-            popup().open(ctx, on_click);
+            _popup->open(ctx, on_click);
             ctx.view.refresh();
          }
       }
@@ -47,10 +46,9 @@ namespace photon
          {
             // simulate a menu click:
             btn.down = true;
-            auto& pu = popup();
-            rect  bounds = pu.bounds();
-            context new_ctx{ ctx.view, ctx.canvas, &pu, bounds };
-            pu.click(new_ctx, btn);
+            rect  bounds = _popup->bounds();
+            context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+            _popup->click(new_ctx, btn);
          }
       }
       return this;
@@ -61,26 +59,21 @@ namespace photon
       ctx.view.refresh();
    }
 
-   //bool basic_popup_button::key(context const& ctx, key_info const& k)
-   //{
-   //   if (k.key == key_code::key_escape)
-   //   {
-   //      remove_menu(ctx, _popup);
-   //      state(false);
-   //      ctx.view.refresh();
-   //      return true;
-   //   }
-   //   return false;
-   //}
+   bool basic_popup_button::key(context const& ctx, key_info const& k)
+   {
+      if (k.key == key_code::escape)
+      {
+         _popup->close(ctx);
+         state(false);
+         ctx.view.refresh();
+         return true;
+      }
+      return false;
+   }
 
    bool basic_popup_button::focus(focus_request r)
    {
       return true;
-   }
-
-   basic_popup_widget& basic_popup_button::popup() const
-   {
-      return *std::dynamic_pointer_cast<basic_popup_widget>(_popup).get();
    }
 
    void basic_menu_item_widget::draw(context const& ctx)

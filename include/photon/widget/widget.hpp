@@ -9,6 +9,7 @@
 
 #include <photon/support/rect.hpp>
 #include <photon/support/misc.hpp>
+#include <photon/support/key.hpp>
 
 #include <memory>
 #include <string>
@@ -107,7 +108,7 @@ namespace photon
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-//      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            key(context const& ctx, key_info const& k);
       virtual bool            text(context const& ctx, text_info const& info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual void            idle(basic_context const& ctx);

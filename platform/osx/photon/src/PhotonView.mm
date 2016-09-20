@@ -28,6 +28,9 @@ namespace photon
    _tracking_area = nil;
    [self updateTrackingAreas];
    
+//   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];
+//   [[self window] setBackgroundColor: c];
+   
 //    _textField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 200, 24)];
 //    [_textField setStringValue:@"Text Box"];
 //    [_textField setBezeled:YES];

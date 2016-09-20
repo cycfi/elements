@@ -100,18 +100,18 @@ namespace photon
       }
    }
 
-//   bool composite_base::key(context const& ctx, key_info const& k)
-//   {
-//      if (_focus != -1)
-//      {
-//         rect bounds = bounds_of(ctx, _focus);
-//         auto focus_ptr = (*this)[_focus];
-//         context ectx{ ctx, focus_ptr, bounds };
-//         return focus_ptr->key(ectx, k);
-//      };
-//
-//      return false;
-//   }
+   bool composite_base::key(context const& ctx, key_info const& k)
+   {
+      if (_focus != -1)
+      {
+         rect bounds = bounds_of(ctx, _focus);
+         auto focus_ptr = get(_focus);
+         context ectx{ ctx, focus_ptr, bounds };
+         return focus_ptr->key(ectx, k);
+      };
+
+      return false;
+   }
 
    bool composite_base::text(context const& ctx, text_info const& info)
    {

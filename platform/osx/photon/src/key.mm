@@ -31,6 +31,7 @@
 #include <photon/support/key.hpp>
 #include <array>
 #include <algorithm>
+#import "PhotonView.hpp"
 
 namespace photon
 {
@@ -163,5 +164,50 @@ namespace photon
    {
       static keys_impl _impl;
       return _impl._keys;
+   }
+
+   key_code translate_key(unsigned int key)
+   {
+       if (key >= 256)
+           return key_code::unknown;
+
+       return keys()[key];
+   }
+
+   int translate_flags(NSUInteger flags)
+   {
+      int mods = 0;
+
+      if (flags & NSShiftKeyMask)
+         mods |= mod_shift;
+      if (flags & NSControlKeyMask)
+         mods |= mod_control;
+      if (flags & NSAlternateKeyMask)
+         mods |= mod_alt;
+      if (flags & NSCommandKeyMask)
+         mods |= mod_super;
+
+      return mods;
+   }
+
+   NSUInteger translate_key_to_modifier_flag(key_code key)
+   {
+      switch (key)
+      {
+         case key_code::left_shift:
+         case key_code::right_shift:
+            return NSShiftKeyMask;
+         case key_code::left_control:
+         case key_code::right_control:
+            return NSControlKeyMask;
+         case key_code::left_alt:
+         case key_code::right_alt:
+            return NSAlternateKeyMask;
+         case key_code::left_super:
+         case key_code::right_super:
+            return NSCommandKeyMask;
+      }
+
+      return 0;
    }
 }

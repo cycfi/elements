@@ -93,4 +93,17 @@ namespace photon
       cairo_surface_destroy(surface_);
       cairo_destroy(context_);
    }
+   
+   void view::key(key_info const& k)
+   {
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      canvas cnv{ *context_ };
+      context ctx { *this, cnv, &content, _current_bounds };
+
+      content.key(ctx, k);
+
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
+   }
 }

@@ -27,10 +27,10 @@ namespace photon
    photon::platform_access::init_view(_view, self);
    _tracking_area = nil;
    [self updateTrackingAreas];
-   
+
 //   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];
 //   [[self window] setBackgroundColor: c];
-   
+
 //    _textField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 200, 24)];
 //    [_textField setStringValue:@"Text Box"];
 //    [_textField setBezeled:YES];
@@ -179,7 +179,7 @@ namespace photon
       delta.x *= 0.1;
       delta.y *= 0.1;
    }
-   
+
    if (event.directionInvertedFromDevice)
       delta.y = -delta.y;
 
@@ -192,5 +192,67 @@ namespace photon
    [super scrollWheel: event];
 }
 
+namespace
+{
+   void handle_key(PhotonView& ns_view, photon::view& _view, photon::key_info k)
+   {
+      using photon::key_action;
+      bool repeated = false;
+
+      if (k.action == key_action::release && ns_view._keys[k.key] == key_action::release)
+         return;
+
+      if (k.action == key_action::press && ns_view._keys[k.key] == key_action::press)
+         repeated = true;
+
+      ns_view._keys[k.key] = k.action;
+
+      if (repeated)
+         k.action = key_action::repeat;
+
+      _view.key(k);
+   }
+}
+
+- (void)keyDown:(NSEvent*) event
+{
+   auto const key = photon::translate_key([event keyCode]);
+   auto const mods = photon::translate_flags([event modifierFlags]);
+
+   handle_key(*self, _view, { key, photon::key_action::press, mods });
+   //[self interpretKeyEvents:[NSArray arrayWithObject:event]];
+}
+
+- (void)flagsChanged:(NSEvent*) event
+{
+   auto const modifier_flags =
+       [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+   auto const key = photon::translate_key([event keyCode]);
+   auto const mods = photon::translate_flags(modifier_flags);
+   auto const key_flag = photon::translate_key_to_modifier_flag(key);
+
+   photon::key_action action;
+   if (key_flag & modifier_flags)
+   {
+      if (_keys[key] == photon::key_action::press)
+         action = photon::key_action::release;
+      else
+         action = photon::key_action::press;
+   }
+   else
+   {
+      action = photon::key_action::release;
+   }
+
+   handle_key(*self, _view, { key, action, mods });
+}
+
+- (void)keyUp:(NSEvent*) event
+{
+   auto const key = photon::translate_key([event keyCode]);
+   auto const mods = photon::translate_flags([event modifierFlags]);
+
+   handle_key(*self, _view, { key, photon::key_action::release, mods });
+}
 
 @end

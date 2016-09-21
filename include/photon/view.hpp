@@ -53,6 +53,7 @@ namespace photon
       void                 drag(mouse_button btn);
       void                 cursor(point p, cursor_tracking status);
       void                 scroll(point dir, point p);
+      void                 key(key_info const& k);
 
       point                size() const;
       void                 size(point size_);

@@ -11,13 +11,12 @@
 
 using key_map = std::map<photon::key_code, photon::key_action>;
 
-@interface PhotonView : NSView
+@interface PhotonView : NSView <NSTextInputClient>
 {
-
-   photon::view      _view;
-   NSTrackingArea*   _tracking_area;
-   NSTextField*      _textField;
-   key_map           _keys;
+   photon::view                  _view;
+   NSTrackingArea*               _tracking_area;
+   NSMutableAttributedString*    _marked_text;
+   key_map                       _keys;
 }
 
 @end

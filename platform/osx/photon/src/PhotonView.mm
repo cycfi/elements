@@ -3,6 +3,30 @@
 
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
+
+   Based on GLFW2
+
+   Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
+
+   This software is provided 'as-is', without any express or implied
+   warranty. In no event will the authors be held liable for any damages
+   arising from the use of this software.
+
+   Permission is granted to anyone to use this software for any purpose,
+   including commercial applications, and to alter it and redistribute it
+   freely, subject to the following restrictions:
+
+   1. The origin of this software must not be misrepresented; you must not
+      claim that you wrote the original software. If you use this software
+      in a product, an acknowledgment in the product documentation would
+      be appreciated but is not required.
+
+   2. Altered source versions must be plainly marked as such, and must not
+      be misrepresented as being the original software.
+
+   3. This notice may not be removed or altered from any source
+      distribution.
+
 =================================================================================================*/
 #import "PhotonView.hpp"
 #import <cairo-quartz.h>
@@ -20,6 +44,19 @@ namespace photon
    };
 };
 
+// Helper utils
+namespace
+{
+   // Defines a constant for empty ranges in NSTextInputClient
+   //
+   NSRange const kEmptyRange = { NSNotFound, 0 };
+
+   float transformY(float y)
+   {
+      return CGDisplayBounds(CGMainDisplayID()).size.height - y;
+   }
+}
+
 @implementation PhotonView
 
 - (void) awakeFromNib
@@ -27,6 +64,9 @@ namespace photon
    photon::platform_access::init_view(_view, self);
    _tracking_area = nil;
    [self updateTrackingAreas];
+
+   _marked_text = [[NSMutableAttributedString alloc] init];
+
 
 //   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];
 //   [[self window] setBackgroundColor: c];
@@ -42,6 +82,16 @@ namespace photon
 
 - (void) dealloc
 {
+}
+
+- (BOOL)canBecomeKeyView
+{
+   return YES;
+}
+
+- (BOOL)acceptsFirstResponder
+{
+   return YES;
 }
 
 -(BOOL) isFlipped
@@ -220,7 +270,7 @@ namespace
    auto const mods = photon::translate_flags([event modifierFlags]);
 
    handle_key(*self, _view, { key, photon::key_action::press, mods });
-   //[self interpretKeyEvents:[NSArray arrayWithObject:event]];
+   [self interpretKeyEvents:[NSArray arrayWithObject:event]];
 }
 
 - (void)flagsChanged:(NSEvent*) event
@@ -253,6 +303,108 @@ namespace
    auto const mods = photon::translate_flags([event modifierFlags]);
 
    handle_key(*self, _view, { key, photon::key_action::release, mods });
+}
+
+- (BOOL)hasMarkedText
+{
+   return [_marked_text length] > 0;
+}
+
+- (NSRange)markedRange
+{
+   if ([_marked_text length] > 0)
+      return NSMakeRange(0, [_marked_text length] - 1);
+   else
+      return kEmptyRange;
+}
+
+- (NSRange)selectedRange
+{
+    return kEmptyRange;
+}
+
+- (void)setMarkedText : (id)string
+        selectedRange : (NSRange)selectedRange
+     replacementRange : (NSRange)replacementRange
+{
+   if ([string isKindOfClass:[NSAttributedString class]])
+      (void)[_marked_text initWithAttributedString:string];
+   else
+      (void)[_marked_text initWithString:string];
+}
+
+- (void)unmarkText
+{
+   [[_marked_text mutableString] setString:@""];
+}
+
+- (NSArray*)validAttributesForMarkedText
+{
+   return [NSArray array];
+}
+
+- (NSAttributedString*)attributedSubstringForProposedRange : (NSRange)range
+                                               actualRange : (NSRangePointer)actualRange
+{
+   return nil;
+}
+
+- (NSUInteger)characterIndexForPoint:(NSPoint)point
+{
+   return 0;
+}
+
+namespace
+{
+   void get_window_pos(NSWindow* window, int& xpos, int& ypos)
+   {
+      NSRect const content_rect =
+         [window contentRectForFrameRect:[window frame]];
+
+      if (xpos)
+         xpos = content_rect.origin.x;
+      if (ypos)
+         ypos = transformY(content_rect.origin.y + content_rect.size.height);
+   }
+}
+
+- (NSRect)firstRectForCharacterRange:(NSRange)range
+                         actualRange:(NSRangePointer)actualRange
+{
+   int xpos, ypos;
+   get_window_pos([self window], xpos, ypos);
+   NSRect const content_rect = [[self window] frame];
+   return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
+}
+
+- (void)insertText:(id)string replacementRange:(NSRange)replacementRange
+{
+   NSEvent*    event = [NSApp currentEvent];
+   auto const  mods = photon::translate_flags([event modifierFlags]);
+   NSString*   characters;
+
+   if ([string isKindOfClass:[NSAttributedString class]])
+      characters = [string string];
+   else
+      characters = (NSString*) string;
+
+   NSUInteger i, length = [characters length];
+   for (i = 0;  i < length;  i++)
+   {
+      const unichar codepoint = [characters characterAtIndex:i];
+      if ((codepoint & 0xff00) == 0xf700)
+         continue;
+      _view.text({ codepoint, mods });
+   }
+}
+
+//- (void)insertText:(id)string
+//{
+//    //[super insertText:string];  // have superclass insert it
+//}
+
+- (void)doCommandBySelector:(SEL)selector
+{
 }
 
 @end

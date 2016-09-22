@@ -42,68 +42,68 @@ namespace photon
       cairo_destroy(context_);
    }
 
+   namespace
+   {
+      template <typename F, typename This>
+      void call(F f, This& self, rect _current_bounds)
+      {
+         auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+         auto context_ = cairo_create(surface_);
+         canvas cnv{ *context_ };
+         context ctx { self, cnv, &self.content, _current_bounds };
+
+         f(ctx, self.content);
+
+         cairo_surface_destroy(surface_);
+         cairo_destroy(context_);
+      }
+   }
+
    void view::click(mouse_button btn)
    {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      context ctx { *this, cnv, &content, _current_bounds };
-
-      content.click(ctx, btn);
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
+      call(
+         [btn](auto const& ctx, auto& content) { content.click(ctx, btn); },
+         *this, _current_bounds
+      );
    }
 
    void view::drag(mouse_button btn)
    {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      context ctx { *this, cnv, &content, _current_bounds };
-
-      content.drag(ctx, btn);
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
+      call(
+         [btn](auto const& ctx, auto& content) { content.drag(ctx, btn); },
+         *this, _current_bounds
+      );
    }
 
    void view::cursor(point p, cursor_tracking status)
    {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      context ctx { *this, cnv, &content, _current_bounds };
-
-      content.cursor(ctx, p, status);
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
+      call(
+         [p, status](auto const& ctx, auto& content) { content.cursor(ctx, p, status); },
+         *this, _current_bounds
+      );
    }
-   
+
    void view::scroll(point dir, point p)
    {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      context ctx { *this, cnv, &content, _current_bounds };
-
-      content.scroll(ctx, dir, p);
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
+      call(
+         [dir, p](auto const& ctx, auto& content) { content.scroll(ctx, dir, p); },
+         *this, _current_bounds
+      );
    }
-   
+
    void view::key(key_info const& k)
    {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      context ctx { *this, cnv, &content, _current_bounds };
+      call(
+         [k](auto const& ctx, auto& content) { content.key(ctx, k); },
+         *this, _current_bounds
+      );
+   }
 
-      content.key(ctx, k);
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
+   void view::text(text_info const& info)
+   {
+      call(
+         [info](auto const& ctx, auto& content) { content.text(ctx, info); },
+         *this, _current_bounds
+      );
    }
 }

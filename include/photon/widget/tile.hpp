@@ -19,9 +19,6 @@ namespace photon
    {
    public:
 
-      vtile_widget() {}
-      ~vtile_widget() {}
-
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
       virtual rect            bounds_of(context const& ctx, std::size_t index) const;
@@ -49,9 +46,6 @@ namespace photon
    class htile_widget : public composite_base
    {
    public:
-
-      htile_widget() {}
-      ~htile_widget() {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);

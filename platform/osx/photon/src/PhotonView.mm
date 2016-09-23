@@ -389,14 +389,10 @@ namespace
 
 - (void)insertText:(id)string replacementRange:(NSRange)replacementRange
 {
-   NSEvent*    event = [NSApp currentEvent];
+   auto*       event = [NSApp currentEvent];
    auto const  mods = photon::translate_flags([event modifierFlags]);
-   NSString*   characters;
-
-   if ([string isKindOfClass:[NSAttributedString class]])
-      characters = [string string];
-   else
-      characters = (NSString*) string;
+   auto*       characters = ([string isKindOfClass:[NSAttributedString class]]) ?
+                  [string string] : (NSString*) string;
 
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)

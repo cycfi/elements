@@ -17,7 +17,7 @@ namespace photon
       widget_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto el = get(ix)->limits(ctx);
+         auto el = at(ix).limits(ctx);
 
          limits.min.y += el.min.y;
          limits.max.y += el.max.y;
@@ -41,7 +41,7 @@ namespace photon
       double   max_y = 0.0;
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto el = get(ix)->limits(ctx);
+         auto el = at(ix).limits(ctx);
          min_y += el.min.y;
          max_y += el.max.y;
       }
@@ -54,8 +54,8 @@ namespace photon
 
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto  elem = get(ix);
-         auto  limits = elem->limits(ctx);
+         auto& elem = at(ix);
+         auto  limits = elem.limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
@@ -65,7 +65,7 @@ namespace photon
             curr -= extra * (limits.max.y - limits.min.y) / m_size;
 
          rect ebounds = { _left, float(prev), _right, float(curr) };
-         elem->layout(context{ ctx, elem, ebounds });
+         elem.layout(context{ ctx, &elem, ebounds });
       }
       *i = curr;
    }
@@ -83,7 +83,7 @@ namespace photon
       widget_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto el = get(ix)->limits(ctx);
+         auto el = at(ix).limits(ctx);
 
          limits.min.x += el.min.x;
          limits.max.x += el.max.x;
@@ -107,7 +107,7 @@ namespace photon
       double   max_x = 0.0;
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto el = get(ix)->limits(ctx);
+         auto el = at(ix).limits(ctx);
          min_x += el.min.x;
          max_x += el.max.x;
       }
@@ -120,8 +120,8 @@ namespace photon
 
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
-         auto  elem = get(ix);
-         auto  limits = elem->limits(ctx);
+         auto& elem = at(ix);
+         auto  limits = elem.limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
@@ -131,7 +131,7 @@ namespace photon
             curr -= extra * (limits.max.x - limits.min.x) / m_size;
 
          rect ebounds = { float(prev), _top, float(curr), _bottom };
-         elem->layout(context{ ctx, elem, ebounds });
+         elem.layout(context{ ctx, &elem, ebounds });
       }
       *i = curr;
    }

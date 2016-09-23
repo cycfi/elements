@@ -197,17 +197,21 @@ namespace photon
          case key_code::left_shift:
          case key_code::right_shift:
             return NSShiftKeyMask;
+
          case key_code::left_control:
          case key_code::right_control:
             return NSControlKeyMask;
+
          case key_code::left_alt:
          case key_code::right_alt:
             return NSAlternateKeyMask;
+
          case key_code::left_super:
          case key_code::right_super:
             return NSCommandKeyMask;
-      }
 
-      return 0;
+         default:
+            return 0;
+      }
    }
 }

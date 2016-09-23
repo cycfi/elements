@@ -59,7 +59,7 @@ namespace photon
 
       virtual std::size_t     size() const = 0;
       bool                    empty() const                    { return size() == 0; }
-      virtual widget*         get(std::size_t ix) const = 0;
+      virtual widget&         at(std::size_t ix) const = 0;
 
    private:
 
@@ -78,8 +78,8 @@ namespace photon
       using Container::Container;
       using Container::operator=;
 
-      virtual std::size_t     size() const              { return Container::size(); };
-      virtual widget*         get(std::size_t ix) const { return (*this)[ix].get(); }
+      virtual std::size_t     size() const               { return Container::size(); };
+      virtual widget&         at(std::size_t ix) const   { return *(*this)[ix].get(); }
    };
 
    template <size_t N, typename Base>
@@ -101,8 +101,8 @@ namespace photon
                                , _last(last)
                               {}
 
-      virtual std::size_t     size() const              { return _last - _first; };
-      virtual widget*         get(std::size_t ix) const { return _container[_first + ix]; }
+      virtual std::size_t     size() const               { return _last - _first; };
+      virtual widget&         at(std::size_t ix) const   { return _container[_first + ix]; }
 
    private:
 

@@ -39,9 +39,9 @@ namespace photon
          rect bounds = bounds_of(ctx, ix);
          if (intersects(bounds, ctx.view.dirty()))
          {
-            auto e = get(ix);
-            context ectx{ ctx, e, bounds };
-            e->draw(ectx);
+            auto& e = at(ix);
+            context ectx{ ctx, &e, bounds };
+            e.draw(ectx);
          }
       }
    }
@@ -60,12 +60,12 @@ namespace photon
             {
                // end the previous focus
                if (_focus != -1)
-                  get(_focus)->focus(focus_request::end_focus);
+                  at(_focus).focus(focus_request::end_focus);
 
                // start a new focus
                _focus = info.index;
                if (_focus != -1)
-                  get(_focus)->focus(focus_request::begin_focus);
+                  at(_focus).focus(focus_request::begin_focus);
             }
          }
 
@@ -93,10 +93,10 @@ namespace photon
    {
       if (_drag_tracking != -1)
       {
-         rect bounds = bounds_of(ctx, _drag_tracking);
-         auto e = get(_drag_tracking);
-         context ectx{ ctx, e, bounds };
-         e->drag(ectx, btn);
+         rect  bounds = bounds_of(ctx, _drag_tracking);
+         auto& e = at(_drag_tracking);
+         context ectx{ ctx, &e, bounds };
+         e.drag(ectx, btn);
       }
    }
 
@@ -104,10 +104,10 @@ namespace photon
    {
       if (_focus != -1)
       {
-         rect bounds = bounds_of(ctx, _focus);
-         auto focus_ptr = get(_focus);
-         context ectx{ ctx, focus_ptr, bounds };
-         return focus_ptr->key(ectx, k);
+         rect  bounds = bounds_of(ctx, _focus);
+         auto& focus_ = at(_focus);
+         context ectx{ ctx, &focus_, bounds };
+         return focus_.key(ectx, k);
       };
 
       return false;
@@ -117,10 +117,10 @@ namespace photon
    {
       if (_focus != -1)
       {
-         rect bounds = bounds_of(ctx, _focus);
-         auto focus_ptr = get(_focus);
-         context ectx{ ctx, focus_ptr, bounds };
-         return focus_ptr->text(ectx, info);
+         rect  bounds = bounds_of(ctx, _focus);
+         auto& focus_ = at(_focus);
+         context ectx{ ctx, &focus_, bounds };
+         return focus_.text(ectx, info);
       };
 
       return false;
@@ -193,18 +193,18 @@ namespace photon
       {
          case focus_request::wants_focus:
             for (std::size_t ix = 0; ix != size();  ++ix)
-               if (get(ix)->focus(focus_request::wants_focus))
+               if (at(ix).focus(focus_request::wants_focus))
                   return true;
             return false;
 
          case focus_request::begin_focus:
             if (_focus != -1)
-               get(_focus)->focus(focus_request::begin_focus);
+               at(_focus).focus(focus_request::begin_focus);
             return true;
 
          case focus_request::end_focus:
             if (_focus != -1)
-               get(_focus)->focus(focus_request::end_focus);
+               at(_focus).focus(focus_request::end_focus);
             return true;
       }
 
@@ -213,12 +213,12 @@ namespace photon
 
    widget const* composite_base::focus() const
    {
-      return (empty() || (_focus == -1))? 0 : get(_focus);
+      return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
    widget* composite_base::focus()
    {
-      return (empty() || (_focus == -1))? 0 : get(_focus);
+      return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
    void composite_base::focus(std::size_t index)
@@ -231,15 +231,15 @@ namespace photon
    {
       for (std::size_t ix = 0; ix < size(); ++ix)
       {
-         auto e = get(ix);
-         if (e->is_control())
+         auto& e = at(ix);
+         if (e.is_control())
          {
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
             {
-               context ectx{ ctx, e, bounds };
-               if (e->hit_test(ectx, p))
-                  return hit_info{ e, bounds, int(ix) };
+               context ectx{ ctx, &e, bounds };
+               if (e.hit_test(ectx, p))
+                  return hit_info{ &e, bounds, int(ix) };
             }
          }
       }
@@ -249,7 +249,7 @@ namespace photon
    bool composite_base::is_control() const
    {
       for (std::size_t ix = 0; ix < size(); ++ix)
-         if (get(ix)->is_control())
+         if (at(ix).is_control())
             return true;
       return false;
    }
@@ -257,6 +257,6 @@ namespace photon
    void composite_base::idle(basic_context const& ctx)
    {
       for (std::size_t ix = 0; ix < size(); ++ix)
-         get(ix)->idle(ctx);
+         at(ix).idle(ctx);
    }
 }

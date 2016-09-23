@@ -40,12 +40,12 @@ namespace photon
    {
    }
 
-   bool widget::key(context const& ctx, key_info const& k)
+   bool widget::key(context const& ctx, key_info k)
    {
       return false;
    }
 
-   bool widget::text(context const& ctx, text_info const& info)
+   bool widget::text(context const& ctx, text_info info)
    {
       return false;
    }

@@ -100,7 +100,7 @@ namespace photon
       }
    }
 
-   bool composite_base::key(context const& ctx, key_info const& k)
+   bool composite_base::key(context const& ctx, key_info k)
    {
       if (_focus != -1)
       {
@@ -113,7 +113,7 @@ namespace photon
       return false;
    }
 
-   bool composite_base::text(context const& ctx, text_info const& info)
+   bool composite_base::text(context const& ctx, text_info info)
    {
       if (_focus != -1)
       {

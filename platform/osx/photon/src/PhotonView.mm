@@ -377,6 +377,16 @@ namespace
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
+namespace
+{
+   void handle_text(photon::view& _view, photon::text_info info)
+   {
+      if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
+        return;
+      _view.text(info);
+   }
+}
+
 - (void)insertText:(id)string replacementRange:(NSRange)replacementRange
 {
    NSEvent*    event = [NSApp currentEvent];
@@ -394,14 +404,9 @@ namespace
       const unichar codepoint = [characters characterAtIndex:i];
       if ((codepoint & 0xff00) == 0xf700)
          continue;
-      _view.text({ codepoint, mods });
+      handle_text(_view, { codepoint, mods });
    }
 }
-
-//- (void)insertText:(id)string
-//{
-//    //[super insertText:string];  // have superclass insert it
-//}
 
 - (void)doCommandBySelector:(SEL)selector
 {

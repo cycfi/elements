@@ -59,7 +59,7 @@ namespace photon
       ctx.view.refresh();
    }
 
-   bool basic_popup_button::key(context const& ctx, key_info const& k)
+   bool basic_popup_button::key(context const& ctx, key_info k)
    {
       if (k.key == key_code::escape)
       {

@@ -40,8 +40,8 @@ namespace photon
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info const& k);
-      virtual bool            text(context const& ctx, text_info const& info);
+      virtual bool            key(context const& ctx, key_info k);
+      virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual void            idle(basic_context const& ctx);
 
@@ -139,14 +139,14 @@ namespace photon
 
    template <typename Widget>
    inline bool
-   reference<Widget>::key(context const& ctx, key_info const& k)
+   reference<Widget>::key(context const& ctx, key_info k)
    {
       return ptr->key(ctx, k);
    }
 
    template <typename Widget>
    inline bool
-   reference<Widget>::text(context const& ctx, text_info const& info)
+   reference<Widget>::text(context const& ctx, text_info info)
    {
       return ptr->text(ctx, info);
    }

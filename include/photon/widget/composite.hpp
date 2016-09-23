@@ -34,8 +34,8 @@ namespace photon
 
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info const& k);
-      virtual bool            text(context const& ctx, text_info const& info);
+      virtual bool            key(context const& ctx, key_info k);
+      virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
       virtual bool            focus(focus_request r);
@@ -89,11 +89,15 @@ namespace photon
    using vector_composite = composite<std::vector<widget_ptr>, Base>;
 
    template <typename Container, typename Base>
-   class range_composite : public Base
+   class range_composite : public Base, public Container
    {
    public:
+
+      using Container::Container;
+      using Container::operator=;
+
                               range_composite(
-                                 Container& container
+                                 Container&  container
                                , std::size_t first
                                , std::size_t last
                               )

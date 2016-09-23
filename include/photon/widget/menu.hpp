@@ -26,7 +26,7 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual widget*         click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            key(context const& ctx, key_info k);
       virtual bool            focus(focus_request r);
 
                               template <typename Menu>

@@ -14,52 +14,38 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    widget_limits flow_widget::limits(basic_context const& ctx) const
    {
-      double max_y = 0;
-      for (std::size_t ix = 0; ix != size();  ++ix)
-         clamp_min(max_y, at(ix).limits(ctx).min.y);
-      return { { 0, 0 }, { full_extent, float(max_y) } };
+      if (_laid_out)
+         return base_type::limits(ctx);
+      return { { 0, 0 }, { full_extent, full_extent } };
    }
 
    void flow_widget::layout(context const& ctx)
    {
-      _vtile.clear();
+      using htile = range_composite<htile_widget>;
+      clear();
 
       double      max_x = ctx.bounds.width();
       double      curr_x = 0;
       std::size_t first = 0;
       std::size_t last = 0;
 
-      for (std::size_t ix = 0; ix != size();  ++ix)
+      for (std::size_t ix = 0; ix != _elements.size();  ++ix)
       {
-         auto&    elem = at(ix);
+         auto&    elem = _elements.at(ix);
          double   elem_nat_x = elem.limits(ctx).min.x;
          curr_x = curr_x + elem_nat_x;
 
          if (curr_x > max_x)
          {
             curr_x = elem_nat_x;
-            auto htile_ = std::make_shared<htile>(*this, first, last);
-            _vtile.push_back(htile_);
+            push_back(std::make_shared<htile>(*this, first, last));
             first = last;
          }
 
          last++;
       }
 
-      _vtile.layout(ctx);
-   }
-
-   rect flow_widget::bounds_of(context const& ctx, std::size_t index) const
-   {
-      for (std::size_t ix = 0; ix != _vtile.size();  ++ix)
-      {
-         auto  htile_ = std::dynamic_pointer_cast<htile>(_vtile[ix]);
-         auto  size = htile_->size();
-         if (size < index)
-            return htile_->bounds_of(ctx, index);
-         index -= size;
-      }
-
-      return {};
+      base_type::layout(ctx);
+      _laid_out = true;
    }
 }

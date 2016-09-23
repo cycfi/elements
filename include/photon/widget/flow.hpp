@@ -15,20 +15,24 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Flow Widget
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class flow_widget : public composite_base
+   class flow_widget : public vector_composite<vtile_widget>
    {
    public:
 
+      using base_type = vector_composite<vtile_widget>;
+
+                              flow_widget(composite_base& elements)
+                               : _elements(elements)
+                               , _laid_out(false)
+                              {}
+
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
-      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
 
    private:
 
-      using htile = range_composite<htile_widget>;
-      using vtile = vector_composite<vtile_widget>;
-
-      vtile                   _vtile;
+      composite_base&         _elements;
+      bool                    _laid_out;
    };
 }
 

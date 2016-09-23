@@ -74,7 +74,7 @@ namespace photon
    class composite : public Base, public Container
    {
    public:
-   
+
       using Container::Container;
       using Container::operator=;
 
@@ -87,6 +87,29 @@ namespace photon
 
    template <typename Base>
    using vector_composite = composite<std::vector<widget_ptr>, Base>;
+
+   template <typename Container, typename Base>
+   class range_composite : public Base
+   {
+   public:
+                              range_composite(
+                                 Container& container
+                               , std::size_t first
+                               , std::size_t last
+                              )
+                               : _first(first)
+                               , _last(last)
+                              {}
+
+      virtual std::size_t     size() const              { return _last - _first; };
+      virtual widget*         get(std::size_t ix) const { return _container[_first + ix]; }
+
+   private:
+
+      std::size_t             _first;
+      std::size_t             _last;
+      Container&              _container;
+   };
 }
 
 #endif

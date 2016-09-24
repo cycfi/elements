@@ -73,6 +73,7 @@ namespace photon
    private:
 
       cairo_t*             setup_context();
+      void                 set_limits(basic_context& bctx);
 
       friend class platform_access;
 

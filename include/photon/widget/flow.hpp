@@ -21,8 +21,8 @@ namespace photon
 
       using base_type = vector_composite<vtile_widget>;
 
-                              flow_widget(composite_base& elements)
-                               : _elements(elements)
+                              flow_widget(container& container_)
+                               : _container(container_)
                                , _laid_out(false)
                               {}
 
@@ -31,9 +31,14 @@ namespace photon
 
    private:
 
-      composite_base&         _elements;
+      container&              _container;
       bool                    _laid_out;
    };
+
+   inline auto flow(container& container_)
+   {
+      return flow_widget{ container_ };
+   }
 }
 
 #endif

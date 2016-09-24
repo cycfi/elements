@@ -9,14 +9,8 @@
 
 namespace photon
 {
-   void view::draw(rect dirty_)
+   void view::set_limits(basic_context& bctx)
    {
-      auto context_ = setup_context();
-
-      _dirty = dirty_;
-
-      canvas cnv{ *context_ };
-      basic_context bctx{ *this, cnv };
       auto limits_ = content.limits(bctx);
       limits(limits_);
 
@@ -25,8 +19,20 @@ namespace photon
       clamp(size_.y, limits_.min.y, limits_.max.y);
       if (size_ != size())
          size(size_);
+   }
 
-      rect subj_bounds = { 0, 0, float(size_.x), float(size_.y) };
+   void view::draw(rect dirty_)
+   {
+      auto context_ = setup_context();
+
+      _dirty = dirty_;
+
+      canvas cnv{ *context_ };
+      basic_context bctx{ *this, cnv };
+      set_limits(bctx);
+
+      auto size_ = size();
+      rect subj_bounds = { 0, 0, size_.x, size_.y };
 
       // layout the subject only if the window bounds changes
       context ctx{ *this, cnv, &content, subj_bounds };
@@ -34,6 +40,9 @@ namespace photon
       {
          _current_bounds = subj_bounds;
          content.layout(ctx);
+         
+         // Check the limits again, it can change after layout
+         set_limits(bctx);
       }
 
       // draw the subject

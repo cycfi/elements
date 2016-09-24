@@ -18,7 +18,16 @@ namespace photon
    //
    // Class for a widget that is composed of other widgets
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class composite_base : public widget
+   class container
+   {
+   public:
+
+      virtual std::size_t     size() const = 0;
+      bool                    empty() const                    { return size() == 0; }
+      virtual widget&         at(std::size_t ix) const = 0;
+   };
+
+   class composite_base : public widget, public container
    {
    public:
 
@@ -57,10 +66,6 @@ namespace photon
       virtual hit_info        hit_element(context const& ctx, point p) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
 
-      virtual std::size_t     size() const = 0;
-      bool                    empty() const                    { return size() == 0; }
-      virtual widget&         at(std::size_t ix) const = 0;
-
    private:
 
       int                     _focus = -1;
@@ -93,23 +98,23 @@ namespace photon
    {
    public:
                               range_composite(
-                                 composite_base&   composite
-                               , std::size_t       first
-                               , std::size_t       last
+                                 container&     container_
+                               , std::size_t    first
+                               , std::size_t    last
                               )
                                : _first(first)
                                , _last(last)
-                               , _composite(composite)
+                               , _container(container_)
                               {}
 
       virtual std::size_t     size() const               { return _last - _first; };
-      virtual widget&         at(std::size_t ix) const   { return _composite.at(_first + ix); }
+      virtual widget&         at(std::size_t ix) const   { return _container.at(_first + ix); }
 
    private:
 
       std::size_t             _first;
       std::size_t             _last;
-      composite_base&         _composite;
+      container&              _container;
    };
 }
 

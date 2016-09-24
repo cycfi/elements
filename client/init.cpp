@@ -6,6 +6,7 @@
 =================================================================================================*/
 #include <photon/view.hpp>
 #include <infinity/application.hpp>
+#include <cstdlib>
 
 namespace client
 {
@@ -123,10 +124,23 @@ namespace client
          );
    }
 
+   auto make_flow()
+   {
+      static auto c = vector_composite<container>{};
+      for (int i = 0; i < 100; ++i)
+      {
+         auto w = 10 + ((double(std::rand()) * 90) / RAND_MAX);
+         auto _box = margin({ 5, 5, 5, 5 }, fixed_size({ float(w), 20 }, box{}));
+         c.push_back(share(_box));
+      }
+      return align_top(flow(c));
+   }
+
    void  init(photon::view& view_)
    {
       view_.content.push_back(share(background{}));
-      view_.content.push_back(share(make_buttons(view_)));
+      view_.content.push_back(share(make_flow()));
+      //view_.content.push_back(share(make_buttons(view_)));
 
       //view_.maintain_aspect(true);
       //view_.app = std::make_shared<infinity::application>(view_);

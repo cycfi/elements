@@ -37,30 +37,30 @@ namespace photon
       , float width
      )
      {
-        using htile = range_composite<htile_widget>;
+         using htile = range_composite<htile_widget>;
 
-        double      curr_x = 0;
-        std::size_t first = 0;
-        std::size_t last = 0;
+         double      curr_x = 0;
+         std::size_t first = 0;
+         std::size_t last = 0;
 
-        for (std::size_t ix = 0; ix != container_.size();  ++ix)
-        {
-           auto&    elem = container_.at(ix);
-           double   elem_nat_x = elem.limits(ctx).min.x;
-           curr_x = curr_x + elem_nat_x;
+         for (std::size_t ix = 0; ix != container_.size();  ++ix)
+         {
+            auto&    elem = container_.at(ix);
+            double   elem_nat_x = elem.limits(ctx).min.x;
+            curr_x = curr_x + elem_nat_x;
 
-           if (curr_x > width)
-           {
-              curr_x = elem_nat_x;
-              rows.push_back(std::make_shared<htile>(container_, first, last));
-              first = last;
-           }
+            if (curr_x > width)
+            {
+               curr_x = elem_nat_x;
+               rows.push_back(std::make_shared<htile>(container_, first, last));
+               first = last;
+            }
 
-           last++;
-        }
+            last++;
+         }
 
-        if (first != last)
-           rows.push_back(std::make_shared<htile>(container_, first, last));
+         if (first != last)
+            rows.push_back(std::make_shared<htile>(container_, first, last));
      }
    }
 

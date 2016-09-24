@@ -9,6 +9,7 @@
 
 #include <photon/widget/composite.hpp>
 #include <photon/widget/tile.hpp>
+#include <functional>
 
 namespace photon
 {
@@ -21,9 +22,22 @@ namespace photon
 
       using base_type = vector_composite<vtile_widget>;
 
-                              flow_widget(container& container_)
+      using break_function =
+               std::function<
+                  void(
+                     container& container_
+                   , std::vector<widget_ptr>& rows
+                   , basic_context const& ctx
+                   , float width
+                  )
+               >;
+                              flow_widget(
+                                 container& container_
+                               , break_function brf = default_break_function()
+                              )
                                : _container(container_)
                                , _laid_out(false)
+                               , _break_f(brf)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
@@ -31,13 +45,21 @@ namespace photon
 
    private:
 
+      static break_function   default_break_function();
+
       container&              _container;
       bool                    _laid_out;
+      break_function          _break_f;
    };
 
    inline auto flow(container& container_)
    {
       return flow_widget{ container_ };
+   }
+
+   inline auto flow(container& container_, flow_widget::break_function brf)
+   {
+      return flow_widget{ container_, brf };
    }
 }
 

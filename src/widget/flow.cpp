@@ -22,34 +22,50 @@ namespace photon
 
    void flow_widget::layout(context const& ctx)
    {
-      using htile = range_composite<htile_widget>;
       clear();
-
-      double      max_x = ctx.bounds.width();
-      double      curr_x = 0;
-      std::size_t first = 0;
-      std::size_t last = 0;
-
-      for (std::size_t ix = 0; ix != _container.size();  ++ix)
-      {
-         auto&    elem = _container.at(ix);
-         double   elem_nat_x = elem.limits(ctx).min.x;
-         curr_x = curr_x + elem_nat_x;
-
-         if (curr_x > max_x)
-         {
-            curr_x = elem_nat_x;
-            push_back(std::make_shared<htile>(_container, first, last));
-            first = last;
-         }
-
-         last++;
-      }
-
-      if (first != last)
-         push_back(std::make_shared<htile>(_container, first, last));
-
+      _break_f(_container, *this, ctx, ctx.bounds.width());
       base_type::layout(ctx);
       _laid_out = true;
+   }
+
+   namespace
+   {
+      void break_into_htiles(
+        container& container_
+      , std::vector<widget_ptr>& rows
+      , basic_context const& ctx
+      , float width
+     )
+     {
+        using htile = range_composite<htile_widget>;
+
+        double      curr_x = 0;
+        std::size_t first = 0;
+        std::size_t last = 0;
+
+        for (std::size_t ix = 0; ix != container_.size();  ++ix)
+        {
+           auto&    elem = container_.at(ix);
+           double   elem_nat_x = elem.limits(ctx).min.x;
+           curr_x = curr_x + elem_nat_x;
+
+           if (curr_x > width)
+           {
+              curr_x = elem_nat_x;
+              rows.push_back(std::make_shared<htile>(container_, first, last));
+              first = last;
+           }
+
+           last++;
+        }
+
+        if (first != last)
+           rows.push_back(std::make_shared<htile>(container_, first, last));
+     }
+   }
+
+   flow_widget::break_function flow_widget::default_break_function()
+   {
+      return break_into_htiles;
    }
 }

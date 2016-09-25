@@ -22,6 +22,8 @@ namespace photon
    {
    public:
 
+      virtual                 ~container() {}
+
       virtual std::size_t     size() const = 0;
       bool                    empty() const                    { return size() == 0; }
       virtual widget&         at(std::size_t ix) const = 0;

@@ -25,7 +25,7 @@
 #include <photon/widget/reference.hpp>
 #include <photon/widget/size.hpp>
 #include <photon/widget/slider.hpp>
-//#include <photon/widget/text.hpp>
+#include <photon/widget/text.hpp>
 #include <photon/widget/tile.hpp>
 
 // Include this last

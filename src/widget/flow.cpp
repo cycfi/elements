@@ -23,49 +23,48 @@ namespace photon
    void flow_widget::layout(context const& ctx)
    {
       clear();
-      _break_f(_container, *this, ctx, ctx.bounds.width());
+      _flowable.break_lines(*this, ctx, ctx.bounds.width());
       base_type::layout(ctx);
       _laid_out = true;
    }
 
-   namespace
+   void flowable::break_lines(
+      std::vector<widget_ptr>& rows
+    , basic_context const& ctx
+    , float width
+   )
    {
-      void break_into_htiles(
-        container& container_
-      , std::vector<widget_ptr>& rows
-      , basic_context const& ctx
-      , float width
-     )
-     {
-         using htile = range_composite<htile_widget>;
+      double      curr_x = 0;
+      std::size_t first = 0;
+      std::size_t last = 0;
 
-         double      curr_x = 0;
-         std::size_t first = 0;
-         std::size_t last = 0;
+      for (std::size_t ix = 0; ix != size();  ++ix)
+      {
+         double   elem_nat_x = width_of(ix, ctx);
+         curr_x = curr_x + elem_nat_x;
 
-         for (std::size_t ix = 0; ix != container_.size();  ++ix)
+         if (curr_x > width)
          {
-            auto&    elem = container_.at(ix);
-            double   elem_nat_x = elem.limits(ctx).min.x;
-            curr_x = curr_x + elem_nat_x;
-
-            if (curr_x > width)
-            {
-               curr_x = elem_nat_x;
-               rows.push_back(std::make_shared<htile>(container_, first, last));
-               first = last;
-            }
-
-            last++;
+            curr_x = elem_nat_x;
+            rows.push_back(make_row(first, last));
+            first = last;
          }
 
-         if (first != last)
-            rows.push_back(std::make_shared<htile>(container_, first, last));
-     }
+         last++;
+      }
+
+      if (first != last)
+         rows.push_back(make_row(first, last));
    }
 
-   flow_widget::break_function flow_widget::default_break_function()
+   float flowable_container::width_of(size_t index, basic_context const& ctx) const
    {
-      return break_into_htiles;
+      return at(index).limits(ctx).min.x;
+   }
+
+   widget_ptr flowable_container::make_row(size_t first, size_t last)
+   {
+      using htile = range_composite<htile_widget>;
+      return std::make_shared<htile>(*this, first, last);
    }
 }

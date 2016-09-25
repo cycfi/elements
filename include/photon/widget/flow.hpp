@@ -16,28 +16,40 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Flow Widget
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class flowable
+   {
+   public:
+
+      virtual                 ~flowable() {}
+
+      virtual void            break_lines(
+                                 std::vector<widget_ptr>& rows
+                               , basic_context const& ctx
+                               , float width
+                              );
+
+      virtual std::size_t     size() const = 0;
+      virtual float           width_of(size_t index, basic_context const& ctx) const = 0;
+      virtual widget_ptr      make_row(size_t first, size_t last) = 0;
+   };
+
+   class flowable_container : public flowable, public container
+   {
+   public:
+
+      virtual float           width_of(size_t index, basic_context const& ctx) const;
+      virtual widget_ptr      make_row(size_t first, size_t last);
+   };
+
    class flow_widget : public vector_composite<vtile_widget>
    {
    public:
 
       using base_type = vector_composite<vtile_widget>;
 
-      using break_function =
-               std::function<
-                  void(
-                     container& container_
-                   , std::vector<widget_ptr>& rows
-                   , basic_context const& ctx
-                   , float width
-                  )
-               >;
-                              flow_widget(
-                                 container& container_
-                               , break_function brf = default_break_function()
-                              )
-                               : _container(container_)
+                              flow_widget(flowable& flowable_)
+                               : _flowable(flowable_)
                                , _laid_out(false)
-                               , _break_f(brf)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
@@ -45,21 +57,13 @@ namespace photon
 
    private:
 
-      static break_function   default_break_function();
-
-      container&              _container;
+      flowable&               _flowable;
       bool                    _laid_out;
-      break_function          _break_f;
    };
 
-   inline auto flow(container& container_)
+   inline auto flow(flowable& flowable_)
    {
-      return flow_widget{ container_ };
-   }
-
-   inline auto flow(container& container_, flow_widget::break_function brf)
-   {
-      return flow_widget{ container_, brf };
+      return flow_widget{ flowable_ };
    }
 }
 

@@ -126,7 +126,7 @@ namespace client
 
    auto make_flow()
    {
-      static auto c = vector_composite<container>{};
+      static auto c = vector_composite<flowable_container>{};
       for (int i = 0; i < 100; ++i)
       {
          auto w = 10 + ((double(std::rand()) * 90) / RAND_MAX);
@@ -136,13 +136,19 @@ namespace client
       return align_top(flow(c));
    }
 
+   auto make_text()
+   {
+      return margin({ 20, 20, 20, 20 }, text_box{"Я могу есть стекло, оно мне не вредит."});
+   }
+
    void  init(photon::view& view_)
    {
-      view_.content.push_back(share(background{}));
+      //view_.content.push_back(share(background{}));
+      view_.content.push_back(share(make_text()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 
-      view_.maintain_aspect(true);
-      view_.app = std::make_shared<infinity::application>(view_);
+      //view_.maintain_aspect(true);
+      //view_.app = std::make_shared<infinity::application>(view_);
    }
 }

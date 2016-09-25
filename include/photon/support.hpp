@@ -11,6 +11,7 @@
 #include <photon/support/circle.hpp>
 #include <photon/support/color.hpp>
 #include <photon/support/context.hpp>
+#include <photon/support/glyphs.hpp>
 #include <photon/support/icon_ids.hpp>
 #include <photon/support/key.hpp>
 #include <photon/support/misc.hpp>

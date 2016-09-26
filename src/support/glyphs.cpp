@@ -72,6 +72,7 @@ namespace photon
     , int glyph_start, int glyph_end
     , int cluster_start, int cluster_end
     , glyphs const& source
+    , bool strip_leading_spaces
    )
     : _first(first)
     , _last(last)
@@ -83,6 +84,43 @@ namespace photon
     , _clusterflags(source._clusterflags)
     , _owns(false)
    {
+      // We strip leading spaces until after the last leading newline.
+      // Examples:
+      //
+      //    "\n\n  " ===>  "  "
+      //    " \n\n"  ===>  ""
+      //    "   xxx" ===>  "xxx"
+
+      auto  strip_leading = [this](auto f)
+      {
+         int      glyph_index = 0;
+         unsigned codepoint;
+         unsigned state = 0;
+
+         cairo_text_cluster_t* cluster = _clusters;
+         for (auto i = _first; i != _last; ++i)
+         {
+            if (!decode_utf8(state, codepoint, uint8_t(*i)))
+            {
+               if (!f(codepoint))
+                  break;
+               glyph_index += cluster->num_glyphs;
+               ++cluster;
+            }
+         }
+
+         auto   clusters_skipped = int(cluster - _clusters);
+
+         _glyph_count -= glyph_index;
+         _glyphs += glyph_index;
+         _cluster_count -= clusters_skipped;
+         _clusters = cluster;
+         _first += clusters_skipped;
+      };
+
+      if (strip_leading_spaces)
+         strip_leading([](auto cp){ return !is_newline(cp) && is_space(cp); });
+      strip_leading([](auto cp){ return is_newline(cp); });
    }
 
    glyphs::~glyphs()
@@ -132,47 +170,58 @@ namespace photon
    {
       char const* first = _first;
       char const* last = _last;
-      char const* pivot = _first;
+      char const* space_pos = _first;
       int         start_glyph_index = 0;
       int         start_cluster_index = 0;
-      int         got_glyph_index = 0;
-      int         got_cluster_index = 0;
+      int         space_glyph_index = 0;
+      int         space_cluster_index = 0;
       float       start_x = _glyphs->x;
 
       auto add_line = [&]()
       {
          glyphs glyph_{
-            first, pivot
-          , start_glyph_index, got_glyph_index
-          , start_cluster_index, got_cluster_index, *this
+            first, space_pos
+          , start_glyph_index, space_glyph_index
+          , start_cluster_index, space_cluster_index
+          , *this, !lines.empty()
          };
          lines.push_back(std::move(glyph_));
-         first = pivot;
-         start_glyph_index = got_glyph_index;
-         start_cluster_index = got_cluster_index;
-         start_x = _glyphs[got_glyph_index].x;
+         first = space_pos;
+         start_glyph_index = space_glyph_index;
+         start_cluster_index = space_cluster_index;
+         start_x = _glyphs[space_glyph_index].x;
       };
 
-      int   glyph_index = 0;
+      int      glyph_index = 0;
+      unsigned codepoint;
+      unsigned state = 0;
+
       cairo_text_cluster_t* cluster = _clusters;
       for (auto i = _first; i != _last; ++i)
       {
-         unsigned    codepoint;
-         unsigned    state = 0;
-
          if (!decode_utf8(state, codepoint, uint8_t(*i)))
          {
             cairo_glyph_t*  glyph = _glyphs + glyph_index;
 
-            if ((glyph->x - start_x) > width)
+            // Check if we exceeded the line width:
+            cairo_text_extents_t extents;
+            cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
+            if (((glyph->x + extents.x_advance) - start_x) > width)
+            {
+               // Add the line if we did (exceed the line width)
                add_line();
+            }
 
+            // Did we have a space?
             else if (is_space(codepoint))
             {
-               got_glyph_index = glyph_index;
-               got_cluster_index = int(cluster - _clusters);
-               pivot = i;
-               if ((got_glyph_index != start_glyph_index) && is_newline(codepoint))
+               // Mark the spaces for later
+               space_glyph_index = glyph_index;
+               space_cluster_index = int(cluster - _clusters);
+               space_pos = i;
+
+               // If we got an explicit new line, add the line right away.
+               if ((space_glyph_index != start_glyph_index) && is_newline(codepoint))
                   add_line();
             }
 
@@ -185,7 +234,7 @@ namespace photon
          first, last
        , start_glyph_index, _glyph_count
        , start_cluster_index, _cluster_count
-       , *this
+       , *this, true
       };
 
       lines.push_back(std::move(glyph_));

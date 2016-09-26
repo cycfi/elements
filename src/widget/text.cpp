@@ -41,31 +41,6 @@ namespace photon
          line.draw({ x, y }, cnv);
          y += 20;
       }
-
-
-
-      //auto  gw = g.width();
-
-      //if (w > gw)
-      //{
-      //   g.draw({ x, y }, cnv);
-      //}
-      //else
-      //{
-      //   std::pair<glyphs, glyphs> partitions = g.break_line(w);
-      //   while (partitions.first.size())
-      //   {
-      //      partitions.first.draw({ x, y }, cnv);
-      //      y += 20;
-      //      gw = partitions.second.width();
-      //      if (w > gw)
-      //      {
-      //         partitions.second.draw({ x, y }, cnv);
-      //         break;
-      //      }
-      //      partitions = partitions.second.break_line(w);
-      //   }
-      //}
    }
 
    void text_box::text(std::string const& text)

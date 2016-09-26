@@ -59,6 +59,7 @@ namespace photon
                          , int glyph_start, int glyph_end
                          , int cluster_start, int cluster_end
                          , glyphs const& source
+                         , bool strip_leading_spaces
                         );
 
       void              build();

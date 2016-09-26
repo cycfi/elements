@@ -136,14 +136,14 @@ namespace client
       "against discontinuity.\n\n"
 
       "Without complexity, one cannot dream. Stagnation is the antithesis of "
-      "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
+      "life-force. Only a seeker of the galaxy may engender this wellspring of hope. "
       "Yes, it is possible to eliminate the things that can destroy us, but not "
       "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
       "You may be ruled by desire without realizing it. Do not let it eliminate "
       "the growth of your journey.\n\n"
 
-      "Я могу есть стекло, оно мне не вредит.\n\n"
-      "--New-Age Bullshit Generator"
+      "    Я могу есть стекло, оно мне не вредит.\n"
+      "    —New-Age Bullshit Generator"
       ;
 
    auto make_flow()

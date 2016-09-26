@@ -9,6 +9,7 @@
 
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
+#include <vector>
 #include "cairo.h"
 
 namespace photon
@@ -19,8 +20,6 @@ namespace photon
    class glyphs
    {
    public:
-
-      using glyph_pair = std::pair<glyphs, glyphs>;
 
                         glyphs(
                            char const* first, char const* last
@@ -39,7 +38,7 @@ namespace photon
       glyphs&           operator=(glyphs&& rhs);
 
       void              draw(point pos, canvas& canvas_);
-      glyph_pair        break_line(float width);
+      void              break_lines(float width, std::vector<glyphs>& lines);
       float             width() const;
 
                         // for_each F signature:

@@ -24,32 +24,48 @@ namespace photon
    {
       auto& cnv = ctx.canvas;
       glyphs g{ _text.data(), _text.data() + _text.size(), "Open Sans", 14 };
+      
+      cnv.stroke_style(colors::black);
+      cnv.line_width(0.5);
+      cnv.stroke_rect(ctx.bounds);
 
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + 14;
       auto  w = ctx.bounds.width();
-      auto  gw = g.width();
 
-      if (w > gw)
+      std::vector<glyphs> lines;
+      g.break_lines(w, lines);
+
+      for (auto& line : lines)
       {
-         g.draw({ x, y }, cnv);
+         line.draw({ x, y }, cnv);
+         y += 20;
       }
-      else
-      {
-         std::pair<glyphs, glyphs> partitions = g.break_line(w);
-         while (partitions.first.size())
-         {
-            partitions.first.draw({ x, y }, cnv);
-            y += 20;
-            gw = partitions.second.width();
-            if (w > gw)
-            {
-               partitions.second.draw({ x, y }, cnv);
-               break;
-            }
-            partitions = partitions.second.break_line(w);
-         }
-      }
+
+
+
+      //auto  gw = g.width();
+
+      //if (w > gw)
+      //{
+      //   g.draw({ x, y }, cnv);
+      //}
+      //else
+      //{
+      //   std::pair<glyphs, glyphs> partitions = g.break_line(w);
+      //   while (partitions.first.size())
+      //   {
+      //      partitions.first.draw({ x, y }, cnv);
+      //      y += 20;
+      //      gw = partitions.second.width();
+      //      if (w > gw)
+      //      {
+      //         partitions.second.draw({ x, y }, cnv);
+      //         break;
+      //      }
+      //      partitions = partitions.second.break_line(w);
+      //   }
+      //}
    }
 
    void text_box::text(std::string const& text)

@@ -128,35 +128,52 @@ namespace photon
       );
    }
 
-   glyphs::glyph_pair glyphs::break_line(float width)
+   void glyphs::break_lines(float width, std::vector<glyphs>& lines)
    {
-      unsigned    codepoint;
-      unsigned    state = 0;
-      int         glyph_index = 0;
-      float       start_x = _glyphs->x;
-      char const* i = _first;
-
-      int         r_glyph_index = 0;
-      int         r_cluster_index = 0;
+      char const* first = _first;
+      char const* last = _last;
       char const* pivot = _first;
+      int         start_glyph_index = 0;
+      int         start_cluster_index = 0;
+      int         got_glyph_index = 0;
+      int         got_cluster_index = 0;
+      float       start_x = _glyphs->x;
 
-      cairo_text_cluster_t* cluster = _clusters;
-      for (; i != _last; ++i)
+      auto add_line = [&]()
       {
+         glyphs glyph_{
+            first, pivot
+          , start_glyph_index, got_glyph_index
+          , start_cluster_index, got_cluster_index, *this
+         };
+         lines.push_back(std::move(glyph_));
+         first = pivot;
+         start_glyph_index = got_glyph_index;
+         start_cluster_index = got_cluster_index;
+         start_x = _glyphs[got_glyph_index].x;
+      };
+
+      int   glyph_index = 0;
+      cairo_text_cluster_t* cluster = _clusters;
+      for (auto i = _first; i != _last; ++i)
+      {
+         unsigned    codepoint;
+         unsigned    state = 0;
+
          if (!decode_utf8(state, codepoint, uint8_t(*i)))
          {
             cairo_glyph_t*  glyph = _glyphs + glyph_index;
 
             if ((glyph->x - start_x) > width)
-               break;
+               add_line();
 
-            if (is_space(codepoint))
+            else if (is_space(codepoint))
             {
-               r_glyph_index = glyph_index;
-               r_cluster_index = int(cluster - _clusters);
+               got_glyph_index = glyph_index;
+               got_cluster_index = int(cluster - _clusters);
                pivot = i;
-               if (r_glyph_index && is_newline(codepoint))
-                  break;
+               if ((got_glyph_index != start_glyph_index) && is_newline(codepoint))
+                  add_line();
             }
 
             glyph_index += cluster->num_glyphs;
@@ -164,18 +181,14 @@ namespace photon
          }
       }
 
-      glyphs first{
-         _first, pivot, 0, r_glyph_index, 0, r_cluster_index, *this
-      };
-
-      glyphs second{
-         pivot, _last
-       , r_glyph_index, _glyph_count
-       , r_cluster_index, _cluster_count
+      glyphs glyph_{
+         first, last
+       , start_glyph_index, _glyph_count
+       , start_cluster_index, _cluster_count
        , *this
       };
 
-      return std::make_pair(std::move(first), std::move(second));
+      lines.push_back(std::move(glyph_));
    }
 
    float glyphs::width() const

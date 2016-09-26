@@ -26,16 +26,18 @@ namespace photon
                                  std::vector<widget_ptr>& rows
                                , basic_context const& ctx
                                , float width
-                              );
-
-      virtual std::size_t     size() const = 0;
-      virtual float           width_of(size_t index, basic_context const& ctx) const = 0;
-      virtual widget_ptr      make_row(size_t first, size_t last) = 0;
+                              ) = 0;
    };
 
    class flowable_container : public flowable, public container
    {
    public:
+
+      virtual void            break_lines(
+                                 std::vector<widget_ptr>& rows
+                               , basic_context const& ctx
+                               , float width
+                              );
 
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual widget_ptr      make_row(size_t first, size_t last);

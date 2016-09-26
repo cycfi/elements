@@ -20,7 +20,6 @@ namespace photon
    class glyphs
    {
    public:
-
                         glyphs(
                            char const* first, char const* last
                          , char const* face, float size
@@ -37,6 +36,7 @@ namespace photon
                         glyphs(glyphs&& rhs);
       glyphs&           operator=(glyphs&& rhs);
 
+      void              text(char const* first, char const* last);
       void              draw(point pos, canvas& canvas_);
       void              break_lines(float width, std::vector<glyphs>& lines);
       float             width() const;
@@ -49,6 +49,15 @@ namespace photon
       std::size_t       size() const      { return _last - _first; }
       char const*       begin() const     { return _first; }
       char const*       end() const       { return _last; }
+
+      struct font_metrics
+      {
+         float          ascent;
+         float          descent;
+         float          leading;
+      };
+
+      font_metrics      metrics() const;
 
    private:
                         glyphs(glyphs const&) = delete;

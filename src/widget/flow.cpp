@@ -28,7 +28,7 @@ namespace photon
       _laid_out = true;
    }
 
-   void flowable::break_lines(
+   void flowable_container::break_lines(
       std::vector<widget_ptr>& rows
     , basic_context const& ctx
     , float width

@@ -160,12 +160,15 @@ namespace client
 
    auto make_text()
    {
-      return margin({ 20, 20, 20, 20 }, text_box{text});
+      return margin(
+         { 20, 20, 20, 20 },
+         text_box{ text, "Helvetica Neue", 14, colors::gold }
+      );
    }
 
    void  init(photon::view& view_)
    {
-      //view_.content.push_back(share(background{}));
+      view_.content.push_back(share(background{}));
       view_.content.push_back(share(make_text()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));

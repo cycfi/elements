@@ -136,6 +136,21 @@ namespace photon
       }
    }
 
+   void glyphs::text(char const* first, char const* last)
+   {
+      if (!_owns)
+         return; // $$$ JDG: Throw? $$$
+
+      if (_glyphs)
+         cairo_glyph_free(_glyphs);
+      if (_clusters)
+         cairo_text_cluster_free(_clusters);
+
+      _first = first;
+      _last = last;
+      build();
+   }
+
    void glyphs::build()
    {
       auto stat = cairo_scaled_font_text_to_glyphs(
@@ -158,6 +173,7 @@ namespace photon
 
       cairo_set_scaled_font(cr, _scaled_font);
       cairo_translate(cr, pos.x - _glyphs->x, pos.y - _glyphs->y);
+      canvas_.apply_fill_style();
 
       cairo_show_text_glyphs(
          cr, _first, int(_last - _first),
@@ -250,5 +266,18 @@ namespace photon
          return (glyph->x + extents.x_advance) - _glyphs->x;
       }
       return 0;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   glyphs::font_metrics glyphs::metrics() const
+   {
+      cairo_font_extents_t font_extents;
+      cairo_scaled_font_extents(_scaled_font, &font_extents);
+
+      return {
+         /*ascent=*/    float(font_extents.ascent),
+         /*descent=*/   float(font_extents.descent),
+         /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent)),
+      };
    }
 }

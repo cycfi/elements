@@ -44,10 +44,9 @@ namespace photon
     , _clusters(rhs._clusters)
     , _cluster_count(rhs._cluster_count)
     , _clusterflags(rhs._clusterflags)
+    , _owns(rhs._owns)
    {
-      rhs._scaled_font = nullptr;
-      rhs._glyphs = nullptr;
-      rhs._clusters = nullptr;
+      rhs._owns = false;
    }
 
    glyphs& glyphs::operator=(glyphs&& rhs)
@@ -62,22 +61,41 @@ namespace photon
          _clusters = rhs._clusters;
          _cluster_count = rhs._cluster_count;
          _clusterflags = rhs._clusterflags;
-
-         rhs._scaled_font = nullptr;
-         rhs._glyphs = nullptr;
-         rhs._clusters = nullptr;
+         _owns = rhs._owns;
+         rhs._owns = false;
       }
       return *this;
    }
 
+   glyphs::glyphs(
+      char const* first, char const* last
+    , int glyph_start, int glyph_end
+    , int cluster_start, int cluster_end
+    , glyphs const& source
+   )
+    : _first(first)
+    , _last(last)
+    , _scaled_font(source._scaled_font)
+    , _glyphs(source._glyphs + glyph_start)
+    , _glyph_count(glyph_end - glyph_start)
+    , _clusters(source._clusters + cluster_start)
+    , _cluster_count(cluster_end - cluster_start)
+    , _clusterflags(source._clusterflags)
+    , _owns(false)
+   {
+   }
+
    glyphs::~glyphs()
    {
-      if (_glyphs)
-         cairo_glyph_free(_glyphs);
-      if (_clusters)
-         cairo_text_cluster_free(_clusters);
-      if (_scaled_font)
-         cairo_scaled_font_destroy(_scaled_font);
+      if (_owns)
+      {
+         if (_glyphs)
+            cairo_glyph_free(_glyphs);
+         if (_clusters)
+            cairo_text_cluster_free(_clusters);
+         if (_scaled_font)
+            cairo_scaled_font_destroy(_scaled_font);
+      }
    }
 
    void glyphs::build()
@@ -98,6 +116,7 @@ namespace photon
    void glyphs::draw(point pos, canvas& canvas_)
    {
       auto cr = &canvas_.cairo_context();
+      auto state = canvas_.new_state();
 
       cairo_set_scaled_font(cr, _scaled_font);
       cairo_translate(cr, pos.x - _glyphs->x, pos.y - _glyphs->y);
@@ -107,5 +126,67 @@ namespace photon
          _glyphs, _glyph_count,
          _clusters, _cluster_count, _clusterflags
       );
+   }
+
+   glyphs::glyph_pair glyphs::break_line(float width)
+   {
+      unsigned    codepoint;
+      unsigned    state = 0;
+      int         glyph_index = 0;
+      float       start_x = _glyphs->x;
+      char const* i = _first;
+
+      int         r_glyph_index = 0;
+      int         r_cluster_index = 0;
+      char const* pivot = _first;
+
+      cairo_text_cluster_t* cluster = _clusters;
+      for (; i != _last; ++i)
+      {
+         if (!decode_utf8(state, codepoint, uint8_t(*i)))
+         {
+            cairo_glyph_t*  glyph = _glyphs + glyph_index;
+
+            if ((glyph->x - start_x) > width)
+               break;
+
+            if (is_space(codepoint))
+            {
+               r_glyph_index = glyph_index;
+               r_cluster_index = int(cluster - _clusters);
+               pivot = i;
+               if (r_glyph_index && is_newline(codepoint))
+                  break;
+            }
+
+            glyph_index += cluster->num_glyphs;
+            ++cluster;
+         }
+      }
+
+      glyphs first{
+         _first, pivot, 0, r_glyph_index, 0, r_cluster_index, *this
+      };
+
+      glyphs second{
+         pivot, _last
+       , r_glyph_index, _glyph_count
+       , r_cluster_index, _cluster_count
+       , *this
+      };
+
+      return std::make_pair(std::move(first), std::move(second));
+   }
+
+   float glyphs::width() const
+   {
+      if (_glyph_count)
+      {
+         cairo_text_extents_t extents;
+         auto glyph = _glyphs + _glyph_count -1;
+         cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
+         return (glyph->x + extents.x_advance) - _glyphs->x;
+      }
+      return 0;
    }
 }

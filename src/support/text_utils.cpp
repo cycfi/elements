@@ -46,7 +46,7 @@ namespace photon
 
    namespace detail
    {
-      char const* codepoint_to_utf8(int cp, char str[8])
+      char const* codepoint_to_utf8(unsigned cp, char str[8])
       {
          int n = 0;
          if (cp < 0x80) n = 1;
@@ -70,10 +70,10 @@ namespace photon
       }
    }
 
-   std::string codepoint_to_utf8(int cp)
+   std::string codepoint_to_utf8(unsigned codepoint)
    {
       std::string result{ 8 };
-      detail::codepoint_to_utf8(cp, &result[0]);
+      detail::codepoint_to_utf8(codepoint, &result[0]);
       return result;
    }
 }

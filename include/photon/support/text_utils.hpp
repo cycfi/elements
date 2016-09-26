@@ -12,11 +12,46 @@
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
    point          measure_icon(canvas& cnv, uint32_t cp, float size);
    point          measure_text(canvas& cnv, char const* text, char const* face, float size);
-   std::string    codepoint_to_utf8(int cp);
+   std::string    codepoint_to_utf8(unsigned codepoint);
+   bool           is_space(unsigned codepoint);
+   bool           is_newline(unsigned codepoint);
+   unsigned       decode_utf8(unsigned& state, unsigned& codepoint, unsigned byte);
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   inline bool is_space(unsigned codepoint)
+   {
+      switch (codepoint)
+      {
+         case 9:        // \t
+         case 11:       // \v
+         case 12:       // \f
+         case 32:       // space
+			case 10:		   // \n
+			case 13:		   // \r
+         case 0x00a0:   // NBSP
+            return true;
+         default:
+            return false;
+      }
+   }
+
+   inline bool is_newline(unsigned codepoint)
+   {
+      switch (codepoint)
+      {
+			case 10:		   // \n
+			case 13:		   // \r
+			case 0x0085:	// NEL
+            return true;
+         default:
+            return false;
+      }
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // decode_utf8

@@ -23,14 +23,33 @@ namespace photon
    void text_box::draw(context const& ctx)
    {
       auto& cnv = ctx.canvas;
-      glyphs g{ _text.data(), _text.data() + _text.size(), "Open Sans", 32 };
-      g.draw({ 0, 32 }, cnv);
+      glyphs g{ _text.data(), _text.data() + _text.size(), "Open Sans", 14 };
 
-      g.for_each(
-         [](char const* s, uint32_t codepoint, point pos)
+      auto  x = ctx.bounds.left;
+      auto  y = ctx.bounds.top + 14;
+      auto  w = ctx.bounds.width();
+      auto  gw = g.width();
+
+      if (w > gw)
+      {
+         g.draw({ x, y }, cnv);
+      }
+      else
+      {
+         std::pair<glyphs, glyphs> partitions = g.break_line(w);
+         while (partitions.first.size())
          {
+            partitions.first.draw({ x, y }, cnv);
+            y += 20;
+            gw = partitions.second.width();
+            if (w > gw)
+            {
+               partitions.second.draw({ x, y }, cnv);
+               break;
+            }
+            partitions = partitions.second.break_line(w);
          }
-      );
+      }
    }
 
    void text_box::text(std::string const& text)

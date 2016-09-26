@@ -19,6 +19,9 @@ namespace photon
    class glyphs
    {
    public:
+
+      using glyph_pair = std::pair<glyphs, glyphs>;
+
                         glyphs(
                            char const* first, char const* last
                          , char const* face, float size
@@ -36,9 +39,11 @@ namespace photon
       glyphs&           operator=(glyphs&& rhs);
 
       void              draw(point pos, canvas& canvas_);
+      glyph_pair        break_line(float width);
+      float             width() const;
 
                         // for_each F signature:
-                        // f(char const* utf8, unsigned codepoint, point pos);
+                        // bool f(char const* utf8, unsigned codepoint, point pos);
                         template <typename F>
       void              for_each(F f);
 
@@ -49,6 +54,14 @@ namespace photon
    private:
                         glyphs(glyphs const&) = delete;
       glyphs&           operator=(glyphs const& rhs) = delete;
+
+                        glyphs(
+                           char const* first, char const* last
+                         , int glyph_start, int glyph_end
+                         , int cluster_start, int cluster_end
+                         , glyphs const& source
+                        );
+
       void              build();
 
       using scaled_font = cairo_scaled_font_t;
@@ -64,14 +77,15 @@ namespace photon
       cluster*          _clusters = nullptr;
       int               _cluster_count;
       cluster_flags     _clusterflags;
+      bool              _owns = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename F>
    inline void glyphs::for_each(F f)
    {
-      uint32_t  codepoint;
-      uint32_t  state = 0;
+      unsigned  codepoint;
+      unsigned  state = 0;
       int       glyph_index = 0;
       float     start_x = _glyphs->x;
       float     start_y = _glyphs->y;
@@ -82,7 +96,10 @@ namespace photon
          if (!decode_utf8(state, codepoint, uint8_t(*i)))
          {
             cairo_glyph_t*  glyph = _glyphs + glyph_index;
-            f(i, codepoint, point{ float(glyph->x - start_x), float(glyph->y - start_y)});
+            float x = glyph->x - start_x;
+            float y = glyph->y - start_y;
+            if (!f(i, codepoint, point{ x, y }))
+               break;
             glyph_index += cluster->num_glyphs;
             ++cluster;
          }

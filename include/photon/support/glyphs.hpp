@@ -20,73 +20,73 @@ namespace photon
    class glyphs
    {
    public:
-                        glyphs(
-                           char const* first, char const* last
-                         , char const* face, float size
-                         , int style = canvas::normal
-                        );
+                           glyphs(
+                              char const* first, char const* last
+                            , char const* face, float size
+                            , int style = canvas::normal
+                           );
 
-                        glyphs(
-                           char const* first, char const* last
-                         , glyphs const& source
-                        );
+                           glyphs(
+                              char const* first, char const* last
+                            , glyphs const& source
+                           );
 
-                        ~glyphs();
+                           ~glyphs();
 
-                        glyphs(glyphs&& rhs);
-      glyphs&           operator=(glyphs&& rhs);
+                           glyphs(glyphs&& rhs);
+      glyphs&              operator=(glyphs&& rhs);
 
-      void              text(char const* first, char const* last);
-      void              draw(point pos, canvas& canvas_);
-      void              break_lines(float width, std::vector<glyphs>& lines);
-      float             width() const;
+      void                 text(char const* first, char const* last);
+      void                 draw(point pos, canvas& canvas_);
+      void                 break_lines(float width, std::vector<glyphs>& lines);
+      float                width() const;
 
-                        // for_each F signature:
-                        // bool f(char const* utf8, unsigned codepoint, point pos);
-                        template <typename F>
-      void              for_each(F f);
+                           // for_each F signature:
+                           // bool f(char const* utf8, unsigned codepoint, point pos);
+                           template <typename F>
+      void                 for_each(F f);
 
-      std::size_t       size() const      { return _last - _first; }
-      char const*       begin() const     { return _first; }
-      char const*       end() const       { return _last; }
+      std::size_t          size() const      { return _last - _first; }
+      char const*          begin() const     { return _first; }
+      char const*          end() const       { return _last; }
 
       struct font_metrics
       {
-         float          ascent;
-         float          descent;
-         float          leading;
+         float             ascent;
+         float             descent;
+         float             leading;
       };
 
-      font_metrics      metrics() const;
+      font_metrics         metrics() const;
 
    private:
-                        glyphs(glyphs const&) = delete;
-      glyphs&           operator=(glyphs const& rhs) = delete;
+                           glyphs(glyphs const&) = delete;
+      glyphs&              operator=(glyphs const& rhs) = delete;
 
-                        glyphs(
-                           char const* first, char const* last
-                         , int glyph_start, int glyph_end
-                         , int cluster_start, int cluster_end
-                         , glyphs const& source
-                         , bool strip_leading_spaces
-                        );
+                           glyphs(
+                              char const* first, char const* last
+                            , int glyph_start, int glyph_end
+                            , int cluster_start, int cluster_end
+                            , glyphs const& source
+                            , bool strip_leading_spaces
+                           );
 
-      void              build();
+      void                 build();
 
       using scaled_font = cairo_scaled_font_t;
       using glyph = cairo_glyph_t;
       using cluster = cairo_text_cluster_t;
       using cluster_flags = cairo_text_cluster_flags_t;
 
-      char const*       _first;
-      char const*       _last;
-      scaled_font*      _scaled_font = nullptr;
-      glyph*            _glyphs = nullptr;
-      int               _glyph_count;
-      cluster*          _clusters = nullptr;
-      int               _cluster_count;
-      cluster_flags     _clusterflags;
-      bool              _owns = true;
+      char const*          _first;
+      char const*          _last;
+      scaled_font*         _scaled_font = nullptr;
+      glyph*               _glyphs = nullptr;
+      int                  _glyph_count;
+      cluster*             _clusters = nullptr;
+      int                  _cluster_count;
+      cluster_flags        _clusterflags;
+      bool                 _owns = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

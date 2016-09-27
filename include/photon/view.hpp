@@ -64,6 +64,7 @@ namespace photon
       void                 refresh();
       void                 refresh(context const& ctx);
       rect                 dirty() const                 { return _dirty; }
+
       bool                 maintain_aspect() const       { return _maintain_aspect; }
       void                 maintain_aspect(bool flag)    { _maintain_aspect = flag; }
 

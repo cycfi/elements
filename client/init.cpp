@@ -165,11 +165,18 @@ namespace client
          text_box{ text, "Helvetica Neue", 14, colors::gold }
       );
    }
+   
+    auto make_view_port()
+    {
+       auto  space = image{ "assets/images/space.jpg" };
+       return scroller(space);
+    }
 
    void  init(photon::view& view_)
    {
-      view_.content.push_back(share(background{}));
-      view_.content.push_back(share(make_text()));
+      //view_.content.push_back(share(background{}));
+      view_.content.push_back(share(make_view_port()));
+      //view_.content.push_back(share(make_text()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 

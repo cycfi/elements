@@ -356,7 +356,7 @@ namespace photon
       {
          // horizontal scroll
          rect b = scroll_bar_position(
-            ctx, { halign(), e_limits.min.y, sb.hscroll_bounds });
+            ctx, { halign(), e_limits.min.x, sb.hscroll_bounds });
 
          if (_tracking == start)
          {

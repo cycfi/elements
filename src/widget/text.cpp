@@ -24,7 +24,12 @@ namespace photon
 
    widget_limits text_box::limits(basic_context const& ctx) const
    {
-      return { { 200, 100 }, { full_extent, full_extent } };
+      auto  size = _layout.metrics();
+      auto  line_height = size.ascent + size.descent + size.leading;
+      return {
+         { 200, line_height },
+         { full_extent, full_extent }
+      };
    }
 
    void text_box::layout(context const& ctx)

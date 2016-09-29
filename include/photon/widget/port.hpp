@@ -140,7 +140,7 @@ namespace photon
       };
 
       scrollbar_bounds  get_scrollbar_bounds(context const& ctx);
-      bool              reposition(context const& ctx);
+      bool              reposition(context const& ctx, point p);
 
       bool              has_scrollbars() const { return !(_traits & no_scrollbars); }
       bool              allow_hscroll() const { return !(_traits & no_hscroll); }

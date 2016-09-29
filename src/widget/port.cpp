@@ -258,7 +258,7 @@ namespace photon
          if (btn.down)
          {
             _tracking = start;
-            if (reposition(ctx))
+            if (reposition(ctx, btn.pos))
                return ctx.widget;
          }
          _tracking = none;
@@ -268,10 +268,10 @@ namespace photon
 
    void scroller_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_tracking == none || !reposition(ctx))
+      if (_tracking == none || !reposition(ctx, btn.pos))
       {
          // scroll cursor into view:
-         auto mp = ctx.view.cursor_pos();
+         auto mp = btn.pos;
          if (!ctx.bounds.includes(mp))
          {
             point dp;
@@ -289,12 +289,11 @@ namespace photon
       }
    }
 
-   bool scroller_base::reposition(context const& ctx)
+   bool scroller_base::reposition(context const& ctx, point p)
    {
       if (!has_scrollbars())
          return false;
 
-      point             p = ctx.view.cursor_pos();
       scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
       widget_limits     e_limits = subject().limits(ctx);
 

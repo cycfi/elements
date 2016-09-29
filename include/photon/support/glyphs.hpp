@@ -42,7 +42,7 @@ namespace photon
       float                width() const;
 
                            // for_each F signature:
-                           // bool f(char const* utf8, unsigned codepoint, point pos);
+                           // bool f(char const* utf8, unsigned codepoint, float left, float right);
                            template <typename F>
       void                 for_each(F f);
 
@@ -97,7 +97,6 @@ namespace photon
       unsigned  state = 0;
       int       glyph_index = 0;
       float     start_x = _glyphs->x;
-      float     start_y = _glyphs->y;
 
       cairo_text_cluster_t* cluster = _clusters;
       for (auto i = _first; i != _last; ++i)
@@ -105,9 +104,11 @@ namespace photon
          if (!decode_utf8(state, codepoint, uint8_t(*i)))
          {
             cairo_glyph_t*  glyph = _glyphs + glyph_index;
+            cairo_text_extents_t extents;
+            cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
+
             float x = glyph->x - start_x;
-            float y = glyph->y - start_y;
-            if (!f(i, codepoint, point{ x, y }))
+            if (!f(i, codepoint, x, x + extents.x_advance))
                break;
             glyph_index += cluster->num_glyphs;
             ++cluster;

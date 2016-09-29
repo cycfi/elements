@@ -162,21 +162,29 @@ namespace client
    {
       return margin(
          { 20, 20, 20, 20 },
-         text_box{ text, "Helvetica Neue", 14, colors::gold }
+         static_text_box{ text, "Helvetica Neue", 14, colors::gold }
       );
    }
-   
-    auto make_view_port()
-    {
-       auto  space = image{ "assets/images/space.jpg" };
-       return scroller(space);
-    }
+
+   auto make_edit_text()
+   {
+      return margin(
+         { 20, 20, 20, 20 },
+         basic_text_box{ text, "Helvetica Neue", 14 }
+      );
+   }
+
+   auto make_view_port()
+   {
+      auto  space = image{ "assets/images/space.jpg" };
+      return scroller(space);
+   }
 
    void  init(photon::view& view_)
    {
-      //view_.content.push_back(share(background{}));
-      view_.content.push_back(share(make_view_port()));
-      //view_.content.push_back(share(make_text()));
+      view_.content.push_back(share(background{}));
+      //view_.content.push_back(share(make_view_port()));
+      view_.content.push_back(share(make_edit_text()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 

@@ -16,12 +16,12 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Text Box
+   // Static Text Box
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class text_box : public widget
+   class static_text_box : public widget
    {
    public:
-                              text_box(
+                              static_text_box(
                                  std::string const& text
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
@@ -33,19 +33,84 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual void            draw(context const& ctx);
 
-      std::string             text() const                     { return _text; }
+      std::string const&      text() const                     { return _text; }
       void                    text(std::string const& text);
       virtual void            value(std::string val);
 
       using widget::text;
 
-   private:
+   protected:
 
       std::string             _text;
       glyphs                  _layout;
       std::vector<glyphs>     _rows;
       color                   _color;
       float                   _current_width;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Editable Text Box
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class basic_text_box : public static_text_box
+   {
+   public:
+                              basic_text_box(
+                                 std::string const& text
+                               , char const* face  = get_theme().text_box_font
+                               , float size        = get_theme().text_box_font_size
+                               , color color_      = get_theme().text_box_font_color
+                               , int style         = canvas::normal
+                              );
+
+      virtual void            draw(context const& ctx);
+      virtual widget*         click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            text(context const& ctx, text_info info);
+      virtual bool            key(context const& ctx, key_info k);
+      virtual bool            focus(focus_request r);
+      virtual bool            is_control() const;
+
+      using widget::focus;
+
+      int                     select_start() const    { return _select_start; }
+      void                    select_start(int pos);
+      int                     select_end() const      { return _select_end; }
+      void                    select_end(int pos);
+      void                    select_all();
+      void                    select_none();
+
+   private:
+
+      struct glyph_metrics
+      {
+         char const* str;           // The start of the utf8 string
+         point       pos;           // Position where glyph is drawn
+         rect        bounds;        // Glyph bounds
+         float       line_height;   // Line height
+      };
+
+      void                    draw_selection(context const& ctx);
+      char const*             caret_position(context const& ctx, point p);
+      glyph_metrics           glyph_info(context const& ctx, char const* s);
+
+      void                    delete_();
+      void                    cut(view& v, int start, int end);
+      void                    copy(view& v, int start, int end);
+      void                    paste(view& v, int start, int end);
+
+      struct state_saver;
+      using state_saver_f = std::function<void()>;
+
+      state_saver_f           capture_state();
+      void                    scroll_into_view(context const& ctx, bool save_x);
+
+      int                     _select_start;
+      int                     _select_end;
+      float                   _width;
+      float                   _current_x;
+      state_saver_f           _typing_state;
+      bool                    _is_focus;
    };
 }
 

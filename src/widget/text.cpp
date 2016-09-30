@@ -282,19 +282,33 @@ namespace photon
             break;
 
          case key_code::left:
-            if (!(k.modifiers & mod_shift) && _select_end != -1 && _select_start != _select_end)
-               _select_start = _select_end = std::min(_select_start, _select_end) - 1;
+            if (_select_end != -1 && _select_start != _select_end)
+            {
+               if (k.modifiers & mod_shift)
+                  --_select_end;
+               else
+                  _select_start = _select_end = std::min(_select_start, _select_end);
+            }
             else if (_select_start != -1 && _select_start > 0)
+            {
                --_select_start;
+            }
             move_caret = true;
             save_x = true;
             break;
 
          case key_code::right:
-            if (!(k.modifiers & mod_shift) && _select_end != -1 && _select_start != _select_end)
-               _select_start = _select_end = std::max(_select_start, _select_end) + 1;
+            if (_select_end != -1 && _select_start != _select_end)
+            {
+               if (k.modifiers & mod_shift)
+                  ++_select_end;
+               else
+                  _select_start = _select_end = std::max(_select_start, _select_end);
+            }
             else if (_select_start != -1 && _select_start < _text.size())
+            {
                ++_select_start;
+            }
             move_caret = true;
             save_x = true;
             break;
@@ -411,6 +425,7 @@ namespace photon
 
          auto  end_info = glyph_info(ctx, _text.data() + _select_end);
          rect& r2 = end_info.bounds;
+         r2.right = r2.left;
          r2.left = ctx.bounds.left;
 
          canvas.fill_style(theme.text_box_hilite_color);
@@ -496,7 +511,7 @@ namespace photon
       {
          auto const& last_row = _rows.back();
          auto        rightmost = x + last_row.width();
-         auto        bottom_y = ctx.bounds.top + (line_height * _rows.size() - 1);
+         auto        bottom_y = y + (line_height * (_rows.size() - 1));
 
          info.pos = { rightmost, bottom_y };
          info.bounds = { rightmost, bottom_y - ascent, ctx.bounds.right, bottom_y + descent };

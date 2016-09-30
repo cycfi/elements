@@ -381,22 +381,15 @@ namespace photon
 
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
-      canvas.fill_style(theme.text_box_hilite_color);
 
+      canvas.fill_style(theme.text_box_hilite_color);
       canvas.begin_path();
       canvas.move_to(r1.top_left());
       canvas.line_to(r1.top_right());
       canvas.line_to({ r1.right, r2.top });
-      if (!r2.is_empty())
-      {
-         canvas.line_to(r2.top_right());
-         canvas.line_to(r2.bottom_right());
-         canvas.line_to(r2.bottom_left());
-      }
-      else
-      {
-         canvas.line_to(r2.top_left());
-      }
+      canvas.line_to(r2.top_right());
+      canvas.line_to(r2.bottom_right());
+      canvas.line_to(r2.bottom_left());
       canvas.line_to({ r2.left, r1.bottom });
       canvas.line_to(r1.bottom_left());
       canvas.close_path();
@@ -415,15 +408,32 @@ namespace photon
       auto  y = ctx.bounds.top + metrics.ascent;
       auto  descent = metrics.descent;
       auto  ascent = metrics.ascent;
+      auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
 
       glyph_metrics info;
       info.str = nullptr;
-      info.line_height = metrics.ascent + metrics.descent + metrics.leading;
+      info.line_height = line_height;
 
+      // Check if s is at the very end
+      if (s == _text.data() + _text.size())
+      {
+         auto const& last_row = _rows.back();
+         auto        rightmost = x + last_row.width();
+         auto        bottom_y = ctx.bounds.top + (line_height * _rows.size() -1);
+
+         info.pos = { rightmost, bottom_y };
+         info.bounds = { rightmost, bottom_y - ascent, ctx.bounds.right, bottom_y + descent };
+         info.str = s;
+         return info;
+      }
+
+      glyphs*  prev_row = nullptr;
       for (auto& row : _rows)
       {
+         // Check if s is within this row
          if (s >= row.begin() && s < row.end())
          {
+            // Get the actual coordinates of the glyph
             row.for_each(
                [s, &info, x, y, ascent, descent](char const* utf8, unsigned codepoint, float left, float right)
                {
@@ -439,14 +449,19 @@ namespace photon
             );
             break;
          }
-         else if (s < row.begin())
+         // This handles the case where s is in between the start of the
+         // current row and the end of the previous.
+         else if (s < row.begin() && prev_row)
          {
-            info.pos = { x, y };
-            info.bounds = { x, y - ascent, x, y + descent };
+            auto  rightmost = x + prev_row->width();
+            auto  prev_y = y - line_height;
+            info.pos = { rightmost, prev_y };
+            info.bounds = { rightmost, prev_y - ascent, ctx.bounds.right, prev_y + descent };
             info.str = s;
             break;
          }
-         y += info.line_height;
+         y += line_height;
+         prev_row = &row;
       }
 
       return info;

@@ -30,6 +30,7 @@ namespace photon
       bool     down;
       int      num_clicks;
       what     state;
+      int      modifiers;
       point    pos;
    };
 

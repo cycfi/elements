@@ -116,12 +116,14 @@ namespace
 {
    auto pos = [event locationInWindow];
    auto click_count = [event clickCount];
+   auto const mods = photon::translate_flags([event modifierFlags]);
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn =
    {
       true,
       int(click_count),
       photon::mouse_button::left,
+      mods,
       { float(pos.x), float(pos.y) }
    };
    _view.click(btn);
@@ -132,12 +134,14 @@ namespace
 {
    auto pos = [event locationInWindow];
    auto click_count = [event clickCount];
+   auto const mods = photon::translate_flags([event modifierFlags]);
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn =
    {
       true,
       int(click_count),
       photon::mouse_button::left,
+      mods,
       { float(pos.x), float(pos.y) }
    };
    _view.drag(btn);
@@ -148,12 +152,14 @@ namespace
 {
    auto pos = [event locationInWindow];
    auto click_count = [event clickCount];
+   auto const mods = photon::translate_flags([event modifierFlags]);
    pos = [self convertPoint:pos fromView:nil];
    photon::mouse_button btn =
    {
       false,
       int(click_count),
       photon::mouse_button::left,
+      mods,
       { float(pos.x), float(pos.y) }
    };
    _view.click(btn);

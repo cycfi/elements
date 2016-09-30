@@ -44,6 +44,7 @@ namespace photon
       float                text_box_font_size         = 14.0;
       color                text_box_hilite_color      = { 0, 127, 255, 100 };
       color                text_box_caret_color       = { 0, 190, 255, 255 };
+      float                text_box_caret_width       = 1.5;
       color                edit_box_fill_color        = { 32, 32, 32, 32 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
 

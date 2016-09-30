@@ -151,8 +151,8 @@ namespace photon
          else
          {
             _select_start = int(pos - _first);
-//            if (ctx.window.key().modifiers != mod_shift)
-//               _select_end = _select_start;
+            if (btn.modifiers != mod_shift)
+               _select_end = _select_start;
          }
          scroll_into_view(ctx, false);
          _current_x = mp.x-ctx.bounds.left;
@@ -371,34 +371,83 @@ namespace photon
 
    void basic_text_box::draw_selection(context const& ctx)
    {
-      auto  start_info = glyph_info(ctx, _text.data() + _select_start);
-      rect& r1 = start_info.bounds;
-      r1.right = ctx.bounds.right;
-
-      auto  end_info = glyph_info(ctx, _text.data() + _select_end);
-      rect& r2 = end_info.bounds;
-      r2.left = ctx.bounds.left;
-
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
+      auto  start_info = glyph_info(ctx, _text.data() + _select_start);
+      if (_select_start == _select_end)
+      {
+         auto width = theme.text_box_caret_width;
+         rect& caret = start_info.bounds;
+         canvas.line_width(width);
+         canvas.stroke_style(theme.text_box_caret_color);
+         canvas.move_to({ caret.left + (width/2), caret.top });
+         canvas.line_to({ caret.left + (width/2), caret.bottom });
+         canvas.stroke();
+      }
+      else
+      {
+         rect& r1 = start_info.bounds;
+         r1.right = ctx.bounds.right;
 
-      canvas.fill_style(theme.text_box_hilite_color);
-      canvas.begin_path();
-      canvas.move_to(r1.top_left());
-      canvas.line_to(r1.top_right());
-      canvas.line_to({ r1.right, r2.top });
-      canvas.line_to(r2.top_right());
-      canvas.line_to(r2.bottom_right());
-      canvas.line_to(r2.bottom_left());
-      canvas.line_to({ r2.left, r1.bottom });
-      canvas.line_to(r1.bottom_left());
-      canvas.close_path();
-      canvas.fill();
+         auto  end_info = glyph_info(ctx, _text.data() + _select_end);
+         rect& r2 = end_info.bounds;
+         r2.left = ctx.bounds.left;
+
+         canvas.fill_style(theme.text_box_hilite_color);
+         canvas.begin_path();
+         canvas.move_to(r1.top_left());
+         canvas.line_to(r1.top_right());
+         canvas.line_to({ r1.right, r2.top });
+         canvas.line_to(r2.top_right());
+         canvas.line_to(r2.bottom_right());
+         canvas.line_to(r2.bottom_left());
+         canvas.line_to({ r2.left, r1.bottom });
+         canvas.line_to(r1.bottom_left());
+         canvas.close_path();
+         canvas.fill();
+      }
    }
 
    char const* basic_text_box::caret_position(context const& ctx, point p)
    {
-      return 0;
+      auto  x = ctx.bounds.left;
+      auto  y = ctx.bounds.top;
+      auto  metrics = _layout.metrics();
+      auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
+
+      char const* found = nullptr;
+      for (auto& row : _rows)
+      {
+         // Check if p is within this row
+         if ((p.y >= y) && (p.y < y + line_height))
+         {
+            // Check if we are at the very start of the row
+            if (p.x == x)
+            {
+               found = row.begin();
+               break;
+            }
+
+            // Get the actual coordinates of the glyph
+            row.for_each(
+               [p, x, &found](char const* utf8, unsigned codepoint, float left, float right)
+               {
+                  if ((p.x >= (x + left)) && (p.x < (x + right)))
+                  {
+                     found = utf8;
+                     return false;
+                  }
+                  return true;
+               }
+            );
+            // Assume it's at the end of the row if we haven't found a hit
+            if (!found)
+                found = row.end();
+            break;
+         }
+         y += line_height;
+      }
+      return found;
    }
 
    basic_text_box::glyph_metrics basic_text_box::glyph_info(context const& ctx, char const* s)

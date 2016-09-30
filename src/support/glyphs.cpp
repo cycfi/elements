@@ -23,7 +23,6 @@ namespace photon
       auto cr = scratch_context_.context();
       _scaled_font = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
       build();
-
    }
 
    glyphs::glyphs(char const* first, char const* last, glyphs const& source)
@@ -133,6 +132,10 @@ namespace photon
             cairo_text_cluster_free(_clusters);
          if (_scaled_font)
             cairo_scaled_font_destroy(_scaled_font);
+
+         _glyphs = nullptr;
+         _clusters = nullptr;
+         _scaled_font = nullptr;
       }
    }
 
@@ -142,9 +145,15 @@ namespace photon
          return; // $$$ JDG: Throw? $$$
 
       if (_glyphs)
+      {
          cairo_glyph_free(_glyphs);
+         _glyphs = nullptr;
+      }
       if (_clusters)
+      {
          cairo_text_cluster_free(_clusters);
+         _clusters = nullptr;
+      }
 
       _first = first;
       _last = last;

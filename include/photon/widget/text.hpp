@@ -104,6 +104,7 @@ namespace photon
 
       state_saver_f           capture_state();
       void                    scroll_into_view(context const& ctx, bool save_x);
+      void                    update_text();
 
       int                     _select_start;
       int                     _select_end;

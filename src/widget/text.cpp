@@ -214,6 +214,9 @@ namespace photon
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
 
+      update_text();
+      layout(ctx);
+
       scroll_into_view(ctx, true);
       return true;
    }
@@ -392,6 +395,11 @@ namespace photon
          clamp(_select_end, 0, int(_text.size()));
          if (!(k.modifiers & mod_shift))
             _select_end = _select_start;
+      }
+      else
+      {
+         update_text();
+         layout(ctx);
       }
 
       scroll_into_view(ctx, save_x);
@@ -684,5 +692,12 @@ namespace photon
    void basic_text_box::select_none()
    {
       _select_start = _select_end = -1;
+   }
+
+   void basic_text_box::update_text()
+   {
+      _rows.clear();
+      _layout.text(_text.data(), _text.data() + _text.size());
+      _layout.break_lines(_current_width, _rows);
    }
 }

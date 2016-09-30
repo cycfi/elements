@@ -191,23 +191,23 @@ namespace photon
       return false;
    }
 
-//   namespace
-//   {
-//      void add_undo(
-//         context const& ctx
-//       , std::function<void()>& typing_state
-//       , std::function<void()> undo_f
-//       , std::function<void()> redo_f
-//      )
-//      {
-//         if (typing_state)
-//         {
-//            ctx.window.app().add_undo({ typing_state, undo_f });
-//            typing_state = {}; // reset
-//         }
-//         ctx.window.app().add_undo({ undo_f, redo_f });
-//      };
-//   }
+   namespace
+   {
+      void add_undo(
+         context const& ctx
+       , std::function<void()>& typing_state
+       , std::function<void()> undo_f
+       , std::function<void()> redo_f
+      )
+      {
+         if (typing_state)
+         {
+            ctx.view.add_undo({ typing_state, undo_f });
+            typing_state = {}; // reset
+         }
+         ctx.view.add_undo({ undo_f, redo_f });
+      };
+   }
 
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
@@ -284,7 +284,7 @@ namespace photon
                _select_start += 1;
                _select_end = _select_start;
                save_x = true;
-               //add_undo(ctx, _typing_state, undo_f, capture_state());
+               add_undo(ctx, _typing_state, undo_f, capture_state());
             }
             break;
 
@@ -292,7 +292,7 @@ namespace photon
          case key_code::_delete:
             delete_();
             save_x = true;
-            //add_undo(ctx, _typing_state, undo_f, capture_state());
+            add_undo(ctx, _typing_state, undo_f, capture_state());
             break;
 
          case key_code::left:
@@ -362,7 +362,7 @@ namespace photon
             {
                cut(ctx.view, start, end);
                save_x = true;
-               //add_undo(ctx, _typing_state, undo_f, capture_state());
+               add_undo(ctx, _typing_state, undo_f, capture_state());
             }
             break;
 
@@ -376,7 +376,7 @@ namespace photon
             {
                paste(ctx.view, start, end);
                save_x = true;
-               //add_undo(ctx, _typing_state, undo_f, capture_state());
+               add_undo(ctx, _typing_state, undo_f, capture_state());
             }
             break;
 
@@ -385,14 +385,14 @@ namespace photon
             {
                if (_typing_state)
                {
-                  //ctx.window.app().add_undo({ _typing_state, undo_f });
+                  ctx.view.add_undo({ _typing_state, undo_f });
                   _typing_state = {}; // reset
                }
 
                if (k.modifiers & mod_shift)
-                  ;//ctx.window.app().redo();
+                  ctx.view.redo();
                else
-                  ;//ctx.window.app().undo();
+                  ctx.view.undo();
             }
             break;
 

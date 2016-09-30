@@ -12,6 +12,7 @@
 #include <photon/support/theme.hpp>
 #include <photon/widget/widget.hpp>
 #include <photon/widget/layer.hpp>
+#include <functional>
 #include <memory>
 
 namespace photon
@@ -71,6 +72,18 @@ namespace photon
       std::string          clipboard() const;
       void                 clipboard(std::string const& text) const;
 
+      struct undo_redo_task
+      {
+         std::function<void()> undo;
+         std::function<void()> redo;
+      };
+
+      void                 add_undo(undo_redo_task t);
+      bool                 has_undo() { return !_undo_stack.empty(); }
+      bool                 has_redo() { return !_redo_stack.empty(); }
+      bool                 undo();
+      bool                 redo();
+
       layer_composite      content;
       application_ptr      app;
 
@@ -85,6 +98,11 @@ namespace photon
       rect                 _dirty;
       rect                 _current_bounds;
       bool                 _maintain_aspect;
+
+      using undo_stack_type = std::stack<undo_redo_task>;
+
+      undo_stack_type      _undo_stack;
+      undo_stack_type      _redo_stack;
    };
 }
 

@@ -40,7 +40,7 @@ namespace photon
       {
          _current_bounds = subj_bounds;
          content.layout(ctx);
-         
+
          // Check the limits again, it can change after layout
          set_limits(bctx);
       }
@@ -114,5 +114,42 @@ namespace photon
          [info](auto const& ctx, auto& content) { content.text(ctx, info); },
          *this, _current_bounds
       );
+   }
+
+   void view::add_undo(undo_redo_task f)
+   {
+      _undo_stack.push(f);
+      if (has_redo())
+      {
+         // clear the redo stack
+         undo_stack_type empty{};
+         _redo_stack.swap(empty);
+      }
+   }
+
+   bool view::undo()
+   {
+      if (has_undo())
+      {
+         auto t = _undo_stack.top();
+         _undo_stack.pop();
+         _redo_stack.push(t);
+         t.undo();  // execute undo function
+         return true;
+      }
+      return false;
+   }
+
+   bool view::redo()
+   {
+      if (has_redo())
+      {
+         auto t = _redo_stack.top();
+         _undo_stack.push(t);
+         _redo_stack.pop();
+         t.redo();  // execute redo function
+         return true;
+      }
+      return false;
    }
 }

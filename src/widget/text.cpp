@@ -226,25 +226,39 @@ namespace photon
          )
          return false;
 
-      bool caret_pos = false;
+      bool move_caret = false;
       bool save_x = false;
 
       int start = std::min(_select_end, _select_start);
       int end = std::max(_select_end, _select_start);
       std::function<void()> undo_f = capture_state();
 
-      auto up_down = [this, &ctx, &k, &caret_pos]()
+      auto up_down = [this, &ctx, &k, &move_caret]()
       {
-         auto info = glyph_info(ctx, &_text[_select_start]);
+         bool up = k.key == key_code::up;
+         glyph_metrics info;
+         if (_select_end != -1 && _select_start != _select_end)
+         {
+            int pos = up ?
+               std::min(_select_start, _select_end) :
+               std::max(_select_start, _select_end)
+               ;
+            info = glyph_info(ctx, &_text[pos]);
+         }
+         else
+         {
+            info = glyph_info(ctx, &_text[_select_start]);
+         }
          if (info.str)
          {
-            auto y = (k.key == key_code::up) ? -info.line_height : +info.line_height;
-            char const* cp = caret_position(ctx, point{ ctx.bounds.left + _current_x, info.pos.y + y });
+            auto y = up ? -info.line_height : +info.line_height;
+            auto pos = point{ ctx.bounds.left + _current_x, info.pos.y + y };
+            char const* cp = caret_position(ctx, pos);
             if (cp)
-            {
                _select_start = int(cp - &_text[0]);
-               caret_pos = true;
-            }
+            else
+               _select_start = up ? 0 : int(_text.size());
+            move_caret = true;
          }
       };
 
@@ -268,38 +282,42 @@ namespace photon
             break;
 
          case key_code::left:
-            if (_select_start != -1 && _select_start > 0)
+            if (!(k.modifiers & mod_shift) && _select_end != -1 && _select_start != _select_end)
+               _select_start = _select_end = std::min(_select_start, _select_end) - 1;
+            else if (_select_start != -1 && _select_start > 0)
                --_select_start;
-            caret_pos = true;
+            move_caret = true;
             save_x = true;
             break;
 
          case key_code::right:
-            if (_select_start != -1 && _select_start < _text.size())
+            if (!(k.modifiers & mod_shift) && _select_end != -1 && _select_start != _select_end)
+               _select_start = _select_end = std::max(_select_start, _select_end) + 1;
+            else if (_select_start != -1 && _select_start < _text.size())
                ++_select_start;
-            caret_pos = true;
+            move_caret = true;
             save_x = true;
             break;
 
          case key_code::up:
-            if (_select_start != -1 && _select_start > 0)
+            if (_select_start != -1)
                up_down();
             break;
 
          case key_code::down:
-            if (_select_start != -1 && _select_start < _text.size())
+            if (_select_start != -1)
                up_down();
             break;
 
          case key_code::home:
             _select_start = 0;
-            caret_pos = true;
+            move_caret = true;
             save_x = true;
             break;
 
          case key_code::end:
             _select_start = int(_text.size());
-            caret_pos = true;
+            move_caret = true;
             save_x = true;
             break;
 
@@ -354,8 +372,10 @@ namespace photon
             break;
       }
 
-      if (caret_pos)
+      if (move_caret)
       {
+         clamp(_select_start, 0, int(_text.size()));
+         clamp(_select_end, 0, int(_text.size()));
          if (!(k.modifiers & mod_shift))
             _select_end = _select_start;
       }
@@ -394,17 +414,24 @@ namespace photon
          r2.left = ctx.bounds.left;
 
          canvas.fill_style(theme.text_box_hilite_color);
-         canvas.begin_path();
-         canvas.move_to(r1.top_left());
-         canvas.line_to(r1.top_right());
-         canvas.line_to({ r1.right, r2.top });
-         canvas.line_to(r2.top_right());
-         canvas.line_to(r2.bottom_right());
-         canvas.line_to(r2.bottom_left());
-         canvas.line_to({ r2.left, r1.bottom });
-         canvas.line_to(r1.bottom_left());
-         canvas.close_path();
-         canvas.fill();
+         if (r1.top == r2.top)
+         {
+            canvas.fill_rect({ r1.left, r1.top, r2.right, r1.bottom });
+         }
+         else
+         {
+            canvas.begin_path();
+            canvas.move_to(r1.top_left());
+            canvas.line_to(r1.top_right());
+            canvas.line_to({ r1.right, r2.top });
+            canvas.line_to(r2.top_right());
+            canvas.line_to(r2.bottom_right());
+            canvas.line_to(r2.bottom_left());
+            canvas.line_to({ r2.left, r1.bottom });
+            canvas.line_to(r1.bottom_left());
+            canvas.close_path();
+            canvas.fill();
+         }
       }
    }
 
@@ -457,7 +484,8 @@ namespace photon
       auto  y = ctx.bounds.top + metrics.ascent;
       auto  descent = metrics.descent;
       auto  ascent = metrics.ascent;
-      auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
+      auto  leading = metrics.leading;
+      auto  line_height = ascent + descent + leading;
 
       glyph_metrics info;
       info.str = nullptr;
@@ -468,7 +496,7 @@ namespace photon
       {
          auto const& last_row = _rows.back();
          auto        rightmost = x + last_row.width();
-         auto        bottom_y = ctx.bounds.top + (line_height * _rows.size() -1);
+         auto        bottom_y = ctx.bounds.top + (line_height * _rows.size() - 1);
 
          info.pos = { rightmost, bottom_y };
          info.bounds = { rightmost, bottom_y - ascent, ctx.bounds.right, bottom_y + descent };

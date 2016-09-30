@@ -150,9 +150,20 @@ namespace photon
          }
          else
          {
-            _select_start = int(pos - _first);
-            if (btn.modifiers != mod_shift)
-               _select_end = _select_start;
+            auto hit = int(pos - _first);
+            if ((btn.modifiers == mod_shift) &&
+                (_select_start != -1) &&
+                (_select_start != _select_end))
+            {
+               if (hit < _select_start)
+                  _select_start = hit;
+               else
+                  _select_end = hit;
+            }
+            else
+            {
+               _select_end = _select_start = hit;
+            }
          }
          scroll_into_view(ctx, false);
          _current_x = mp.x-ctx.bounds.left;
@@ -583,24 +594,24 @@ namespace photon
       _select_end = _select_start = start;
    }
 
-   void basic_text_box::cut(view& w, int start, int end)
+   void basic_text_box::cut(view& v, int start, int end)
    {
       if (start != end)
       {
-         //w.clipboard(_text.substr(start, end-start));
+         v.clipboard(_text.substr(start, end-start));
          delete_();
       }
    }
 
-   void basic_text_box::copy(view& w, int start, int end)
+   void basic_text_box::copy(view& v, int start, int end)
    {
       if (start != end)
-         ;//w.clipboard(_text.substr(start, end-start));
+         v.clipboard(_text.substr(start, end-start));
    }
 
-   void basic_text_box::paste(view& w, int start, int end)
+   void basic_text_box::paste(view& v, int start, int end)
    {
-      std::string ins; // = w.clipboard();
+      std::string ins = v.clipboard();
       _text.replace(start, end-start, ins);
       start += ins.size();
       _select_start = start;

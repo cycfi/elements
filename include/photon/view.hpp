@@ -53,7 +53,7 @@ namespace photon
       void                 drag(mouse_button btn);
       void                 cursor(point p, cursor_tracking status);
       void                 scroll(point dir, point p);
-      
+
       void                 key(key_info const& k);
       void                 text(text_info const& info);
 
@@ -67,6 +67,9 @@ namespace photon
 
       bool                 maintain_aspect() const       { return _maintain_aspect; }
       void                 maintain_aspect(bool flag)    { _maintain_aspect = flag; }
+
+      std::string          clipboard() const;
+      void                 clipboard(std::string const& text) const;
 
       layer_composite      content;
       application_ptr      app;

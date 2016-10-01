@@ -454,4 +454,43 @@ namespace photon
       }
       return false;
    }
+
+   bool scroller_base::key(context const& ctx, key_info k)
+   {
+      auto valign_ = [&](double align)
+      {
+         clamp(align, 0.0, 1.0);
+         valign(align);
+         ctx.view.refresh(ctx);
+      };
+
+      switch (k.key)
+      {
+         case key_code::home:
+            valign_(0);
+            break;
+
+         case key_code::end:
+            valign_(1);
+            break;
+
+         case key_code::page_up:
+         case key_code::page_down:
+         {
+            if (k.action == key_action::press)
+            {
+               widget_limits     e_limits = subject().limits(ctx);
+               scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+               rect b = scroll_bar_position(
+                   ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });
+               double page = b.height() / sb.vscroll_bounds.height();
+               valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
+            }
+            break;
+         }
+         default:
+            return proxy_base::key(ctx, k);
+      }
+      return false;
+   }
 }

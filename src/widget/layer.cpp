@@ -90,7 +90,11 @@ namespace photon
          {
             auto& e = at(ix);
             if (e.is_control() && e.focus(focus_request::wants_focus))
+            {
+               e.focus(focus_request::begin_focus);
                composite_base::focus(ix);
+               break;
+            }
          }
       }
    }

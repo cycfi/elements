@@ -58,8 +58,6 @@ namespace photon
                                  std::string const& text
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
-                               , color color_      = get_theme().text_box_font_color
-                               , int style         = canvas::normal
                               );
 
       virtual void            draw(context const& ctx);

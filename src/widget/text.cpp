@@ -87,14 +87,8 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(
-      std::string const& text
-    , char const* face
-    , float size
-    , color color_
-    , int style
-   )
-    : static_text_box(text, face, size, color_, style)
+   basic_text_box::basic_text_box(std::string const& text, char const* face, float size)
+    : static_text_box(text, face, size)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)
@@ -103,7 +97,8 @@ namespace photon
 
    void basic_text_box::draw(context const& ctx)
    {
-      draw_selection(ctx);
+      if (_is_focus)
+         draw_selection(ctx);
       static_text_box::draw(ctx);
    }
 
@@ -275,9 +270,9 @@ namespace photon
             auto pos = point{ ctx.bounds.left + _current_x, info.pos.y + y };
             char const* cp = caret_position(ctx, pos);
             if (cp)
-               _select_start = int(cp - &_text[0]);
+               _select_end = int(cp - &_text[0]);
             else
-               _select_start = up ? 0 : int(_text.size());
+               _select_end = up ? 0 : int(_text.size());
             move_caret = true;
          }
       };
@@ -343,18 +338,6 @@ namespace photon
                up_down();
             break;
 
-         case key_code::home:
-            _select_start = 0;
-            move_caret = true;
-            save_x = true;
-            break;
-
-         case key_code::end:
-            _select_start = int(_text.size());
-            move_caret = true;
-            save_x = true;
-            break;
-
          case key_code::a:
             if (k.modifiers & mod_super)
             {
@@ -411,7 +394,7 @@ namespace photon
          clamp(_select_start, 0, int(_text.size()));
          clamp(_select_end, 0, int(_text.size()));
          if (!(k.modifiers & mod_shift))
-            _select_end = _select_start;
+            _select_start = _select_end;
       }
       else
       {

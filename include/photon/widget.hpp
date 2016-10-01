@@ -14,7 +14,6 @@
 #include <photon/widget/dial.hpp>
 #include <photon/widget/floating.hpp>
 #include <photon/widget/flow.hpp>
-//#include <photon/widget/icon.hpp>
 #include <photon/widget/image.hpp>
 #include <photon/widget/layer.hpp>
 #include <photon/widget/margin.hpp>

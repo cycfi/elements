@@ -230,11 +230,11 @@ namespace
 {
    photon::point delta = { float([event scrollingDeltaX]), float([event scrollingDeltaY]) };
 
-   if ([event hasPreciseScrollingDeltas])
-   {
-      delta.x *= 0.1;
-      delta.y *= 0.1;
-   }
+//   if ([event hasPreciseScrollingDeltas])
+//   {
+//      delta.x *= 0.1;
+//      delta.y *= 0.1;
+//   }
 
    if (event.directionInvertedFromDevice)
       delta.y = -delta.y;

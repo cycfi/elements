@@ -109,6 +109,7 @@ namespace photon
       virtual bool            scroll(context const& ctx, point dir, point p);
       virtual bool            scroll_into_view(context const& ctx, rect r);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            key(context const& ctx, key_info k);
       virtual bool            is_control() const;
 
       struct scrollbar_info

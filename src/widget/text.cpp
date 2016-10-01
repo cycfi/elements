@@ -97,8 +97,7 @@ namespace photon
 
    void basic_text_box::draw(context const& ctx)
    {
-      if (_is_focus)
-         draw_selection(ctx);
+      draw_selection(ctx);
       static_text_box::draw(ctx);
    }
 
@@ -416,7 +415,7 @@ namespace photon
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
       auto  start_info = glyph_info(ctx, _text.data() + _select_start);
-      if (_select_start == _select_end)
+      if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
       {
          auto width = theme.text_box_caret_width;
          rect& caret = start_info.bounds;
@@ -436,7 +435,10 @@ namespace photon
          r2.right = r2.left;
          r2.left = ctx.bounds.left;
 
-         canvas.fill_style(theme.text_box_hilite_color);
+         auto color = theme.text_box_hilite_color;
+         if (!_is_focus)
+            color = color.opacity(0.2);
+         canvas.fill_style(color);
          if (r1.top == r2.top)
          {
             canvas.fill_rect({ r1.left, r1.top, r2.right, r1.bottom });

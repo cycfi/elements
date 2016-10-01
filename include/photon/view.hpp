@@ -58,6 +58,9 @@ namespace photon
       void                 key(key_info const& k);
       void                 text(text_info const& info);
 
+      void                 focus(focus_request r);
+      bool                 is_focus() const;
+
       point                size() const;
       void                 size(point size_);
       void                 limits(widget_limits limits_) const;

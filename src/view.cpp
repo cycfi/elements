@@ -152,4 +152,10 @@ namespace photon
       }
       return false;
    }
+   
+   void view::focus(focus_request r)
+   {
+      content.focus(r);
+      refresh();
+   }
 }

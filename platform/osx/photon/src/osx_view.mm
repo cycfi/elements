@@ -140,4 +140,9 @@ namespace photon
       [pasteboard setString:[NSString stringWithUTF8String:text.c_str()]
                     forType:NSStringPboardType];
    }
+
+   bool view::is_focus() const
+   {
+      return [[get_mac_view(_impl) window] isKeyWindow];
+   }
 }

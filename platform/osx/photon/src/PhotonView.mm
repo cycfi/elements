@@ -67,6 +67,21 @@ namespace
 
    _marked_text = [[NSMutableAttributedString alloc] init];
 
+   [[NSNotificationCenter defaultCenter]
+      addObserver : self
+         selector : @selector(windowDidBecomeKey:)
+             name : NSWindowDidBecomeKeyNotification object:[self window]
+   ];
+
+
+   [[NSNotificationCenter defaultCenter]
+      addObserver : self
+         selector : @selector(windowDidResignKey:)
+             name : NSWindowDidResignMainNotification object:[self window]
+   ];
+
+
+
 
 //   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];
 //   [[self window] setBackgroundColor: c];
@@ -97,6 +112,16 @@ namespace
 -(BOOL) isFlipped
 {
    return YES;
+}
+
+- (BOOL)canBecomeKeyWindow
+{
+    return YES;
+}
+
+- (BOOL)canBecomeMainWindow
+{
+    return YES;
 }
 
 - (void) drawRect:(NSRect)dirty
@@ -412,6 +437,16 @@ namespace
 
 - (void)doCommandBySelector:(SEL)selector
 {
+}
+
+-(void) windowDidBecomeKey:(NSNotification*) notification
+{
+   _view.focus(photon::focus_request::begin_focus);
+}
+
+-(void) windowDidResignKey:(NSNotification*) notification
+{
+   _view.focus(photon::focus_request::end_focus);
 }
 
 @end

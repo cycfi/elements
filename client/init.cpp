@@ -146,6 +146,32 @@ namespace client
       "    —New-Age Bullshit Generator"
       ;
 
+   std::string const text2 =
+      "To traverse the quest is to become one with it.\n\n"
+
+      "You and I are adventurers of the quantum cycle. The goal of expanding wave "
+      "functions is to plant the seeds of non-locality rather than pain. "
+      "The complexity of the present time seems to demand a redefining of our "
+      "bodies if we are going to survive. "
+      "We are at a crossroads of will and greed. Humankind has nothing to lose. "
+      "Our conversations with other storytellers have led to an evolving of "
+      "hyper-sentient consciousness. "
+      "If you have never experienced this flow on a cosmic scale, it can be "
+      "difficult to self-actualize. Although you may not realize it, you are "
+      "ancient. Have you found your vision quest?\n\n"
+
+      "Imagine a deepening of what could be. We are being called to explore the "
+      "galaxy itself as an interface between nature and transformation. This "
+      "circuit never ends. Entity, look within and recreate yourself. "
+      "Eons from now, we warriors will exist like never before as we are reborn "
+      "by the universe. We must change ourselves and empower others. The "
+      "wellspring of sharing is now happening worldwide. "
+      "You will soon be awakened by a power deep within yourself - a power "
+      "that is ethereal, dynamic. Astral projection may be the solution to "
+      "what's holding you back from an ecstatic oasis of divinity. As you "
+      "reflect, you will enter into infinite freedom that transcends understanding.\n\n"
+      ;
+
    auto make_flow()
    {
       static auto c = vector_composite<flowable_container>{};
@@ -168,10 +194,20 @@ namespace client
 
    auto make_edit_text()
    {
-      return margin(
+      auto edit_box = margin(
          { 20, 20, 20, 20 },
-         basic_text_box{ text, "Helvetica Neue", 14 }
+         hsize(
+            800,
+            basic_text_box{ text2+text, "Helvetica Neue", 14 }
+         )
       );
+
+//      auto edit_box = margin(
+//         { 20, 20, 20, 20 },
+//         basic_text_box{ text2+text, "Helvetica Neue", 14 }
+//      );
+
+      return scroller(std::move(edit_box));
    }
 
    auto make_view_port()

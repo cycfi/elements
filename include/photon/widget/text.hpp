@@ -45,7 +45,7 @@ namespace photon
       glyphs                  _layout;
       std::vector<glyphs>     _rows;
       color                   _color;
-      float                   _current_width;
+      point                   _current_size = { -1, -1 };
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

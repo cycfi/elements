@@ -30,8 +30,12 @@ namespace photon
 
    widget_limits static_text_box::limits(basic_context const& ctx) const
    {
-      auto  size = _layout.metrics();
-      auto  line_height = size.ascent + size.descent + size.leading;
+      float line_height = _current_size.y;
+      if (line_height == -1)
+      {
+         auto  size = _layout.metrics();
+         line_height = size.ascent + size.descent + size.leading;
+      }
       return {
          { 200, line_height },
          { full_extent, full_extent }
@@ -41,8 +45,10 @@ namespace photon
    void static_text_box::layout(context const& ctx)
    {
       _rows.clear();
-      _current_width =ctx.bounds.width();
-      _layout.break_lines(_current_width, _rows);
+      _current_size.x = ctx.bounds.width();
+      _layout.break_lines(_current_size.x, _rows);
+      auto  size = _layout.metrics();
+      _current_size.y = _rows.size() * (size.ascent + size.descent + size.leading);
    }
 
    void static_text_box::draw(context const& ctx)
@@ -70,7 +76,7 @@ namespace photon
       _text = text;
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
-      _layout.break_lines(_current_width, _rows);
+      _layout.break_lines(_current_size.x, _rows);
    }
 
    void static_text_box::value(std::string val)
@@ -89,8 +95,8 @@ namespace photon
     , int style
    )
     : static_text_box(text, face, size, color_, style)
-    , _select_start(100) // (-1)
-    , _select_end(400) // (-1)
+    , _select_start(-1)
+    , _select_end(-1)
     , _current_x(0)
     , _is_focus(false)
    {}
@@ -533,7 +539,7 @@ namespace photon
          auto        bottom_y = y + (line_height * (_rows.size() - 1));
 
          info.pos = { rightmost, bottom_y };
-         info.bounds = { rightmost, bottom_y - ascent, ctx.bounds.right, bottom_y + descent };
+         info.bounds = { rightmost, bottom_y - ascent, rightmost + 10, bottom_y + descent };
          info.str = s;
          return info;
       }
@@ -567,7 +573,7 @@ namespace photon
             auto  rightmost = x + prev_row->width();
             auto  prev_y = y - line_height;
             info.pos = { rightmost, prev_y };
-            info.bounds = { rightmost, prev_y - ascent, ctx.bounds.right, prev_y + descent };
+            info.bounds = { rightmost, prev_y - ascent, rightmost + 10, prev_y + descent };
             info.str = s;
             break;
          }
@@ -709,6 +715,6 @@ namespace photon
    {
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
-      _layout.break_lines(_current_width, _rows);
+      _layout.break_lines(_current_size.x, _rows);
    }
 }

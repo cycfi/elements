@@ -93,6 +93,9 @@ namespace photon
    template <typename F>
    inline void glyphs::for_each(F f)
    {
+      if (_first == _last)
+         return;
+       
       unsigned  codepoint;
       unsigned  state = 0;
       int       glyph_index = 0;

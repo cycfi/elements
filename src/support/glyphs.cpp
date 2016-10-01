@@ -162,6 +162,10 @@ namespace photon
 
    void glyphs::build()
    {
+      // reurn early if there's nothing to build
+      if (_first == _last)
+         return;
+       
       auto stat = cairo_scaled_font_text_to_glyphs(
          _scaled_font, 0, 0, _first, int(_last - _first),
          &_glyphs, &_glyph_count, &_clusters, &_cluster_count,
@@ -177,6 +181,10 @@ namespace photon
 
    void glyphs::draw(point pos, canvas& canvas_)
    {
+      // reurn early if there's nothing to draw
+      if (_first == _last)
+         return;
+
       auto cr = &canvas_.cairo_context();
       auto state = canvas_.new_state();
 
@@ -193,6 +201,10 @@ namespace photon
 
    void glyphs::break_lines(float width, std::vector<glyphs>& lines)
    {
+      // reurn early if there's nothing to break
+      if (_first == _last)
+         return;
+   
       char const* first = _first;
       char const* last = _last;
       char const* space_pos = _first;
@@ -267,6 +279,9 @@ namespace photon
 
    float glyphs::width() const
    {
+      if (_first == _last)
+         return 0;
+       
       if (_glyph_count)
       {
          cairo_text_extents_t extents;

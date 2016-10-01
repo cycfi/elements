@@ -412,21 +412,44 @@ namespace photon
 
    void basic_text_box::draw_selection(context const& ctx)
    {
+      if (_select_start == -1)
+         return;
+
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
-      auto  start_info = glyph_info(ctx, _text.data() + _select_start);
-      if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
+
+      // Handle the case where text is empty
+      if (_is_focus && _text.empty())
       {
+         auto  size = _layout.metrics();
+         auto  line_height = size.ascent + size.descent + size.leading;
+         auto  width = theme.text_box_caret_width;
+         auto  left = ctx.bounds.left;
+         auto  top = ctx.bounds.top;
+
+         canvas.line_width(width);
+         canvas.stroke_style(theme.text_box_caret_color);
+         canvas.move_to({ left + (width/2), top });
+         canvas.line_to({ left + (width/2), top + line_height });
+         canvas.stroke();
+      }
+      // Handle the case where there is no selection
+      else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
+      {
+         auto  start_info = glyph_info(ctx, _text.data() + _select_start);
          auto width = theme.text_box_caret_width;
          rect& caret = start_info.bounds;
+
          canvas.line_width(width);
          canvas.stroke_style(theme.text_box_caret_color);
          canvas.move_to({ caret.left + (width/2), caret.top });
          canvas.line_to({ caret.left + (width/2), caret.bottom });
          canvas.stroke();
       }
+      // Handle selections
       else
       {
+         auto  start_info = glyph_info(ctx, _text.data() + _select_start);
          rect& r1 = start_info.bounds;
          r1.right = ctx.bounds.right;
 
@@ -437,7 +460,7 @@ namespace photon
 
          auto color = theme.text_box_hilite_color;
          if (!_is_focus)
-            color = color.opacity(0.2);
+            color = color.opacity(0.15);
          canvas.fill_style(color);
          if (r1.top == r2.top)
          {
@@ -644,6 +667,12 @@ namespace photon
 
    void basic_text_box::scroll_into_view(context const& ctx, bool save_x)
    {
+      if (_text.empty())
+      {
+         ctx.view.refresh(ctx);
+         return;
+      }
+
       auto info = glyph_info(ctx, &_text[_select_start]);
       if (info.str)
       {
@@ -702,4 +731,52 @@ namespace photon
       _layout.text(_text.data(), _text.data() + _text.size());
       _layout.break_lines(_current_size.x, _rows);
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Input Text Box
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   widget_limits basic_input_box::limits(basic_context const& ctx) const
+   {
+      auto  size = _layout.metrics();
+      auto  line_height = size.ascent + size.descent + size.leading;
+      return { { 200, line_height }, { full_extent, line_height } };
+   }
+
+   void basic_input_box::draw(context const& ctx)
+   {
+//      if (text().empty())
+//      {
+//         //char const* first = &_placeholder[0];
+//         //text_utils::text_draw_info info = {
+//         //   first, first + _placeholder.size(),
+//         //   first, first, select_start() != -1 && ctx.window.is_focus(), false
+//         //};
+//         //text_utils(ctx.theme()).draw_edit_text_box(ctx.bounds, info);
+//      }
+//      else
+//      {
+         basic_text_box::draw(ctx);
+//      }
+   }
+
+   bool basic_input_box::key(context const& ctx, key_info const& k)
+   {
+      switch (k.key)
+      {
+         case key_code::enter:
+            if (on_enter && on_enter(text()))
+               ctx.view.refresh(ctx);
+         case key_code::up:
+         case key_code::down:
+            return false;
+         default:
+            break;
+      }
+      return basic_text_box::key(ctx, k);
+   }
+
+   //void input_panel::draw(context const& ctx)
+   //{
+   //   text_utils(ctx.theme()).draw_edit_box_base(ctx.bounds);
+   //}
 }

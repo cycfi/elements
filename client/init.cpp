@@ -209,6 +209,15 @@ namespace client
 
       return scroller(std::move(edit_box));
    }
+   
+   auto make_input_box()
+   {
+      auto input_box = margin(
+         { 20, 200, 20, 200 },
+         basic_input_box{ "Placeholder" }
+      );
+      return input_box;
+   }
 
    auto make_view_port()
    {
@@ -220,7 +229,8 @@ namespace client
    {
       view_.content.push_back(share(background{}));
       //view_.content.push_back(share(make_view_port()));
-      view_.content.push_back(share(make_edit_text()));
+      //view_.content.push_back(share(make_edit_text()));
+      view_.content.push_back(share(make_input_box()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 

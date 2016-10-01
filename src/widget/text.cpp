@@ -185,7 +185,7 @@ namespace photon
    {
       if (ctx.bounds.includes(p))
       {
-         //ctx.window.set_cursor(cursor::ibeam);
+         ctx.view.set_cursor(cursor_type::ibeam);
          return true;
       }
       return false;

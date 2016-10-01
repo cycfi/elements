@@ -41,6 +41,16 @@ namespace photon
    struct application {};
    using application_ptr = std::shared_ptr<application>;
 
+   enum class cursor_type
+   {
+      arrow,
+      ibeam,
+      cross_hair,
+      hand,
+      h_resize,
+      v_resize
+   };
+
    class view
    {
    public:
@@ -53,6 +63,7 @@ namespace photon
       void                 click(mouse_button btn);
       void                 drag(mouse_button btn);
       void                 cursor(point p, cursor_tracking status);
+      void                 set_cursor(cursor_type type);
       void                 scroll(point dir, point p);
 
       void                 key(key_info const& k);

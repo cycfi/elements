@@ -87,7 +87,11 @@ namespace photon
    void view::cursor(point p, cursor_tracking status)
    {
       call(
-         [p, status](auto const& ctx, auto& content) { content.cursor(ctx, p, status); },
+         [p, status, this](auto const& ctx, auto& content)
+         {
+            if (!content.cursor(ctx, p, status))
+               set_cursor(cursor_type::arrow);
+         },
          *this, _current_bounds
       );
    }
@@ -152,7 +156,7 @@ namespace photon
       }
       return false;
    }
-   
+
    void view::focus(focus_request r)
    {
       content.focus(r);

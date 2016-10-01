@@ -145,4 +145,29 @@ namespace photon
    {
       return [[get_mac_view(_impl) window] isKeyWindow];
    }
+
+   void view::set_cursor(cursor_type type)
+   {
+      switch (type)
+      {
+         case cursor_type::arrow:
+            [[NSCursor arrowCursor] set];
+            break;
+         case cursor_type::ibeam:
+            [[NSCursor IBeamCursor] set];
+            break;
+         case cursor_type::cross_hair:
+            [[NSCursor crosshairCursor] set];
+            break;
+         case cursor_type::hand:
+            [[NSCursor openHandCursor] set];
+            break;
+         case cursor_type::h_resize:
+            [[NSCursor resizeLeftRightCursor] set];
+            break;
+         case cursor_type::v_resize:
+            [[NSCursor resizeUpDownCursor] set];
+            break;
+      }
+   }
 }

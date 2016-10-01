@@ -309,9 +309,9 @@ namespace photon
                else
                   _select_start = _select_end = std::min(_select_start, _select_end);
             }
-            else if (_select_start != -1 && _select_start > 0)
+            else if (_select_end != -1)
             {
-               --_select_start;
+               --_select_end;
             }
             move_caret = true;
             save_x = true;
@@ -325,9 +325,9 @@ namespace photon
                else
                   _select_start = _select_end = std::max(_select_start, _select_end);
             }
-            else if (_select_start != -1 && _select_start < _text.size())
+            else if (_select_end != -1)
             {
-               ++_select_start;
+               ++_select_end;
             }
             move_caret = true;
             save_x = true;

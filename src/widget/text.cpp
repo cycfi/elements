@@ -243,6 +243,7 @@ namespace photon
 
       bool move_caret = false;
       bool save_x = false;
+      bool handled = false;
 
       int start = std::min(_select_end, _select_start);
       int end = std::max(_select_end, _select_start);
@@ -286,14 +287,18 @@ namespace photon
                _select_end = _select_start;
                save_x = true;
                add_undo(ctx, _typing_state, undo_f, capture_state());
+               handled = true;
             }
             break;
 
          case key_code::backspace:
          case key_code::_delete:
-            delete_();
-            save_x = true;
-            add_undo(ctx, _typing_state, undo_f, capture_state());
+            {
+               delete_();
+               save_x = true;
+               add_undo(ctx, _typing_state, undo_f, capture_state());
+               handled = true;
+            }
             break;
 
          case key_code::left:
@@ -310,6 +315,7 @@ namespace photon
             }
             move_caret = true;
             save_x = true;
+            handled = true;
             break;
 
          case key_code::right:
@@ -326,16 +332,19 @@ namespace photon
             }
             move_caret = true;
             save_x = true;
+            handled = true;
             break;
 
          case key_code::up:
             if (_select_start != -1)
                up_down();
+            handled = true;
             break;
 
          case key_code::down:
             if (_select_start != -1)
                up_down();
+            handled = true;
             break;
 
          case key_code::a:
@@ -343,6 +352,7 @@ namespace photon
             {
                _select_start = 0;
                _select_end = int(_text.size());
+               handled = true;
             }
             break;
 
@@ -352,12 +362,16 @@ namespace photon
                cut(ctx.view, start, end);
                save_x = true;
                add_undo(ctx, _typing_state, undo_f, capture_state());
+               handled = true;
             }
             break;
 
          case key_code::c:
             if (k.modifiers & mod_super)
+            {
                copy(ctx.view, start, end);
+               handled = true;
+            }
             break;
 
          case key_code::v:
@@ -366,6 +380,7 @@ namespace photon
                paste(ctx.view, start, end);
                save_x = true;
                add_undo(ctx, _typing_state, undo_f, capture_state());
+               handled = true;
             }
             break;
 
@@ -382,6 +397,7 @@ namespace photon
                   ctx.view.redo();
                else
                   ctx.view.undo();
+               handled = true;
             }
             break;
 
@@ -403,7 +419,7 @@ namespace photon
       }
 
       scroll_into_view(ctx, save_x);
-      return true;
+      return handled;
    }
 
    bool basic_text_box::is_control() const
@@ -453,7 +469,7 @@ namespace photon
    {
       if (_select_start == -1)
          return;
-       
+
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
 
@@ -714,13 +730,13 @@ namespace photon
 
    void basic_text_box::select_start(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos < _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
          _select_start = pos;
    }
 
    void basic_text_box::select_end(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos < _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
          _select_end = pos;
    }
 
@@ -770,7 +786,7 @@ namespace photon
                { ctx.bounds.left, ctx.bounds.top + size.ascent }
               , _placeholder.c_str()
             );
-            
+
             draw_caret(ctx);
          }
       }
@@ -780,16 +796,36 @@ namespace photon
       }
    }
 
-   bool basic_input_box::key(context const& ctx, key_info const& k)
+   bool basic_input_box::key(context const& ctx, key_info k)
    {
       switch (k.key)
       {
          case key_code::enter:
             if (on_enter && on_enter(text()))
                ctx.view.refresh(ctx);
+            return true;
+
          case key_code::up:
          case key_code::down:
             return false;
+
+         case key_code::home:
+            {
+               select_start(0);
+               select_end(0);
+               scroll_into_view(ctx, false);
+               return true;
+            }
+
+         case key_code::end:
+            {
+               int end = int(_text.size());
+               select_start(end);
+               select_end(end);
+               scroll_into_view(ctx, false);
+               return true;
+            }
+            
          default:
             break;
       }

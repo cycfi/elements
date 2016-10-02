@@ -85,6 +85,10 @@ namespace photon
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
 
+   protected:
+
+      void                    scroll_into_view(context const& ctx, bool save_x);
+
    private:
 
       struct glyph_metrics
@@ -107,7 +111,6 @@ namespace photon
       using state_saver_f = std::function<void()>;
 
       state_saver_f           capture_state();
-      void                    scroll_into_view(context const& ctx, bool save_x);
       void                    update_text();
 
       int                     _select_start;
@@ -134,7 +137,7 @@ namespace photon
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
-      virtual bool            key(context const& ctx, key_info const& k);
+      virtual bool            key(context const& ctx, key_info k);
 
       enter_function          on_enter;
 

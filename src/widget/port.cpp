@@ -464,32 +464,36 @@ namespace photon
          ctx.view.refresh(ctx);
       };
 
-      switch (k.key)
+      if (!proxy_base::key(ctx, k))
       {
-         case key_code::home:
-            valign_(0);
-            break;
-
-         case key_code::end:
-            valign_(1);
-            break;
-
-         case key_code::page_up:
-         case key_code::page_down:
+         switch (k.key)
          {
-            if (k.action == key_action::press)
+            case key_code::home:
+               valign_(0);
+               break;
+
+            case key_code::end:
+               valign_(1);
+               break;
+
+            case key_code::page_up:
+            case key_code::page_down:
             {
-               widget_limits     e_limits = subject().limits(ctx);
-               scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-               rect b = scroll_bar_position(
-                   ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });
-               double page = b.height() / sb.vscroll_bounds.height();
-               valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
+               if (k.action == key_action::press)
+               {
+                  widget_limits     e_limits = subject().limits(ctx);
+                  scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
+                  rect b = scroll_bar_position(
+                      ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });
+                  double page = b.height() / sb.vscroll_bounds.height();
+                  valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
+               }
+               break;
             }
-            break;
+
+            default:
+                break;
          }
-         default:
-            return proxy_base::key(ctx, k);
       }
       return false;
    }

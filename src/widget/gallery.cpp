@@ -418,16 +418,16 @@ namespace photon
       auto&       bounds = ctx.bounds;
       auto const& theme = get_theme();
 
-      canvas_.line_width(2);
-      canvas_.stroke_style(colors::white.opacity(0.2));
+      canvas_.line_width(1.5);
+      canvas_.stroke_style(colors::white.opacity(0.3));
       canvas_.round_rect(bounds, 4-0.5f);
       canvas_.stroke();
-      
+
       canvas_.stroke_style(colors::black.opacity(0.5));
       canvas_.line_width(1);
       canvas_.round_rect(bounds.move(-1, -1), 4-0.5f);
       canvas_.stroke();
-      
+
       canvas_.round_rect(bounds.move(-0.5, -0.5), 4-0.5f);
       canvas_.fill_style(theme.edit_box_fill_color.opacity(0.9));
       canvas_.fill();

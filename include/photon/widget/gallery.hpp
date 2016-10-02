@@ -501,7 +501,7 @@ namespace photon
          margin(
             pad,
             scroller(
-               hsize(4096, std::move(text_input)),
+               hsize(16384, std::move(text_input)),
                no_scrollbars | no_vscroll
             )
          ),

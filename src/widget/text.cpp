@@ -30,12 +30,14 @@ namespace photon
 
    widget_limits static_text_box::limits(basic_context const& ctx) const
    {
-      float line_height = _current_size.y;
-      if (line_height == -1)
-      {
-         auto  size = _layout.metrics();
-         line_height = size.ascent + size.descent + size.leading;
-      }
+      auto  size = _layout.metrics();
+      auto  min_line_height = size.ascent + size.descent + size.leading;
+      float line_height =
+         (_current_size.y == -1) ?
+         min_line_height :
+         std::max(_current_size.y, min_line_height)
+         ;
+
       return {
          { 200, line_height },
          { full_extent, full_extent }
@@ -45,10 +47,17 @@ namespace photon
    void static_text_box::layout(context const& ctx)
    {
       _rows.clear();
-      _current_size.x = ctx.bounds.width();
-      _layout.break_lines(_current_size.x, _rows);
+      auto  new_x = ctx.bounds.width();
+      _layout.break_lines(new_x, _rows);
       auto  size = _layout.metrics();
-      _current_size.y = _rows.size() * (size.ascent + size.descent + size.leading);
+      auto  new_y = _rows.size() * (size.ascent + size.descent + size.leading);
+
+      // Refresh the whole view if the size has changed
+      if (_current_size.x != new_x || _current_size.y != new_y)
+         ctx.view.refresh();
+
+      _current_size.x = new_x;
+      _current_size.y = new_y;
    }
 
    void static_text_box::draw(context const& ctx)
@@ -152,9 +161,7 @@ namespace photon
          else
          {
             auto hit = int(pos - _first);
-            if ((btn.modifiers == mod_shift) &&
-                (_select_start != -1) &&
-                (_select_start != _select_end))
+            if ((btn.modifiers == mod_shift) && (_select_start != -1))
             {
                if (hit < _select_start)
                   _select_start = hit;
@@ -278,6 +285,30 @@ namespace photon
          }
       };
 
+      auto incr_selection = [this]()
+      {
+         if (_select_end < _text.size())
+         {
+            char const* p = &_text[_select_end + 1];
+            char const* end = p + _text.size();
+            while (p != end && !valid_utf8_start(uint8_t(*p)))
+               ++p;
+            _select_end = int(p - &_text[0]);
+         }
+      };
+
+      auto decr_selection = [this]()
+      {
+         if (_select_end > 0)
+         {
+            char const* p = &_text[_select_end - 1];
+            char const* start = &_text[0];
+            while (p != start && !valid_utf8_start(uint8_t(*p)))
+               --p;
+            _select_end = int(p - &_text[0]);
+         }
+      };
+
       switch (k.key)
       {
          case key_code::enter:
@@ -305,13 +336,13 @@ namespace photon
             if (_select_end != -1 && _select_start != _select_end)
             {
                if (k.modifiers & mod_shift)
-                  --_select_end;
+                  decr_selection();
                else
                   _select_start = _select_end = std::min(_select_start, _select_end);
             }
             else if (_select_end != -1)
             {
-               --_select_end;
+               decr_selection();
             }
             move_caret = true;
             save_x = true;
@@ -322,13 +353,13 @@ namespace photon
             if (_select_end != -1 && _select_start != _select_end)
             {
                if (k.modifiers & mod_shift)
-                  ++_select_end;
+                  incr_selection();
                else
                   _select_start = _select_end = std::max(_select_start, _select_end);
             }
             else if (_select_end != -1)
             {
-               ++_select_end;
+               incr_selection();
             }
             move_caret = true;
             save_x = true;
@@ -336,11 +367,6 @@ namespace photon
             break;
 
          case key_code::up:
-            if (_select_start != -1)
-               up_down();
-            handled = true;
-            break;
-
          case key_code::down:
             if (_select_start != -1)
                up_down();
@@ -620,42 +646,55 @@ namespace photon
 
    void basic_text_box::delete_()
    {
-      int start = std::min(_select_end, _select_start);
-      if (start == _select_end)
+      auto  start = std::min(_select_end, _select_start);
+      auto  end = std::max(_select_end, _select_start);
+      if (start != -1)
       {
-         if (start > 0)
-            _text.erase(--start, 1);
+         if (start == end)
+         {
+            if (start > 0)
+               _text.erase(--start, 1);
+         }
+         else
+         {
+            _text.erase(start, end-start);
+         }
+         _select_end = _select_start = start;
       }
-      else
-      {
-         int end = std::max(_select_end, _select_start);
-         _text.erase(start, end-start);
-      }
-      _select_end = _select_start = start;
    }
 
    void basic_text_box::cut(view& v, int start, int end)
    {
-      if (start != end)
+      if (start != -1 && start != end)
       {
-         v.clipboard(_text.substr(start, end-start));
+         auto  end_ = std::max(start, end);
+         auto  start_ = std::min(start, end);
+         v.clipboard(_text.substr(start, end_-start_));
          delete_();
       }
    }
 
    void basic_text_box::copy(view& v, int start, int end)
    {
-      if (start != end)
-         v.clipboard(_text.substr(start, end-start));
+      if (start != -1 && start != end)
+      {
+         auto  end_ = std::max(start, end);
+         auto  start_ = std::min(start, end);
+         v.clipboard(_text.substr(start, end_-start_));
+      }
    }
 
    void basic_text_box::paste(view& v, int start, int end)
    {
-      std::string ins = v.clipboard();
-      _text.replace(start, end-start, ins);
-      start += ins.size();
-      _select_start = start;
-      _select_end = end = start;
+      if (start != -1)
+      {
+         auto  end_ = std::max(start, end);
+         auto  start_ = std::min(start, end);
+         std::string ins = v.clipboard();
+         _text.replace(start, end_-start_, ins);
+         start += ins.size();
+         _select_end = _select_start = start;
+      }
    }
 
    struct basic_text_box::state_saver
@@ -825,10 +864,33 @@ namespace photon
                scroll_into_view(ctx, false);
                return true;
             }
-            
+
          default:
             break;
       }
       return basic_text_box::key(ctx, k);
+   }
+
+   void basic_input_box::paste(view& v, int start, int end)
+   {
+      std::string clip = v.clipboard();
+      if (clip.empty())
+         return;
+
+      std::string ins;
+
+      // Copy clip ito ins, but ensure there are no newlines.
+      // Also, limit ins to 256 characters.
+      char const* p = &clip[0];
+      char const* last = p + clip.size();
+
+      for (int i = 0; (i < 256) && (p != last); ++p, ++i)
+         if (!is_newline(uint8_t(*p)))
+            ins += *p;
+
+      _text.replace(start, end-start, ins);
+      start += ins.size();
+      select_start(start);
+      select_end(start);
    }
 }

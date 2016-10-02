@@ -102,10 +102,10 @@ namespace photon
       char const*             caret_position(context const& ctx, point p);
       glyph_metrics           glyph_info(context const& ctx, char const* s);
 
-      void                    delete_();
-      void                    cut(view& v, int start, int end);
-      void                    copy(view& v, int start, int end);
-      void                    paste(view& v, int start, int end);
+      virtual void             delete_();
+      virtual void             cut(view& v, int start, int end);
+      virtual void             copy(view& v, int start, int end);
+      virtual void             paste(view& v, int start, int end);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
@@ -131,8 +131,8 @@ namespace photon
       using enter_function = std::function<bool(std::string const& text)>;
 
                               basic_input_box(std::string const& placeholder)
-                               : basic_text_box("")
-                               , _placeholder(placeholder)
+                              : basic_text_box("")
+                              , _placeholder(placeholder)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
@@ -142,6 +142,8 @@ namespace photon
       enter_function          on_enter;
 
    private:
+
+      virtual void            paste(view& v, int start, int end);
 
       std::string             _placeholder;
    };

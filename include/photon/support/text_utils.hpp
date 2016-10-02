@@ -33,24 +33,41 @@ namespace photon
          case 32:       // space
 			case 10:		   // \n
 			case 13:		   // \r
-         case 0x00a0:   // NBSP
+         case 0xA0:     // NBSP
             return true;
          default:
             return false;
       }
    }
 
+   // Check if codepoint is a new line
    inline bool is_newline(unsigned codepoint)
    {
       switch (codepoint)
       {
 			case 10:		   // \n
 			case 13:		   // \r
-			case 0x0085:	// NEL
+			case 0x85:	   // NEL
             return true;
          default:
             return false;
       }
+   }
+
+   // Check if byte is a valid UTF8 initial char
+   inline bool valid_utf8_start(uint8_t byte)
+   {
+      return
+         (byte >= 0x00 && byte <= 0x7F)   ||
+         (byte >= 0xC2 && byte <= 0xDF)   ||
+         (byte == 0xE0)                   ||
+         (byte >= 0xE1 && byte <= 0xEC)   ||
+         (byte == 0xED)                   ||
+         (byte >= 0xEE && byte <= 0xEF)   ||
+         (byte == 0xF0)                   ||
+         (byte >= 0xF1 && byte <= 0xF3)   ||
+         (byte == 0xF4)
+      ;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +81,7 @@ namespace photon
       utf8_reject = 12
    };
 
-   inline unsigned decode_utf8(unsigned& state, unsigned& codepoint, unsigned byte)
+   inline unsigned decode_utf8(unsigned& state, unsigned& codepoint, uint8_t byte)
    {
       static constexpr uint8_t utf8d[] =
       {

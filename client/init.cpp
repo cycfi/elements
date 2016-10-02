@@ -212,11 +212,11 @@ namespace client
    
    auto make_input_box()
    {
-      auto input_box = margin(
+      auto i_box = margin(
          { 20, 200, 20, 200 },
-         basic_input_box{ "Placeholder" }
+         input_box("Text Input Box")
       );
-      return input_box;
+      return i_box;
    }
 
    auto make_view_port()

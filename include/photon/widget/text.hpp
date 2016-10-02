@@ -82,6 +82,9 @@ namespace photon
       void                    select_all();
       void                    select_none();
 
+      virtual void            draw_selection(context const& ctx);
+      virtual void            draw_caret(context const& ctx);
+
    private:
 
       struct glyph_metrics
@@ -92,7 +95,6 @@ namespace photon
          float       line_height;   // Line height
       };
 
-      void                    draw_selection(context const& ctx);
       char const*             caret_position(context const& ctx, point p);
       glyph_metrics           glyph_info(context const& ctx, char const* s);
 
@@ -140,47 +142,6 @@ namespace photon
 
       std::string             _placeholder;
    };
-
-   //class input_panel : public widget
-   //{
-   //public:
-   //
-   //   virtual void draw(context const& ctx);
-   //};
-   //
-   //template <typename InputBox>
-   //inline auto input_box(
-   //   InputBox&& input_box
-   // , rect pad  = rect{ 7, 7, 7, 4 }
-   //)
-   //{
-   //   return layer(
-   //      margin(
-   //         pad,
-   //         scroller(
-   //            std::forward<InputBox>(input_box),
-   //            no_scrollbars | no_vscroll
-   //         )
-   //      ),
-   //      input_panel()
-   //   );
-   //}
-   //
-   //inline auto input_box(
-   //   std::string const& placeholder
-   // , rect pad  = rect{ 7, 7, 7, 4 }
-   //)
-   //{
-   //   return input_box(basic_input_box{ placeholder }, pad);
-   //}
-   //
-   //inline auto input_box(
-   //   char const* placeholder
-   // , rect pad  = rect{ 7, 7, 7, 4 }
-   //)
-   //{
-   //   return input_box(basic_input_box{ placeholder }, pad);
-   //}
 }
 
 #endif

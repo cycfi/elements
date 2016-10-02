@@ -479,6 +479,66 @@ namespace photon
    {
       return menu_item_spacer_widget{};
    }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Text Entry
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class input_panel : public widget
+   {
+   public:
+
+      virtual void draw(context const& ctx);
+   };
+
+   template <typename InputBox, typename Panel>
+   inline auto input_box(
+      InputBox&& text_input
+    , Panel&& panel
+    , rect pad  = rect{ 5, 5, 5, 4 }
+   )
+   {
+      return layer(
+         margin(
+            pad,
+            scroller(
+               hsize(4096, std::move(text_input)),
+               no_scrollbars | no_vscroll
+            )
+         ),
+         std::move(panel)
+      );
+   }
+   
+   template <typename InputBox>
+   inline auto input_box(
+      InputBox&& text_input
+    , rect pad  = rect{ 5, 5, 5, 4 }
+   )
+   {
+      return input_box(std::move(text_input), input_panel{}, pad);
+   }
+
+   inline auto input_box(
+      std::string const& placeholder
+    , rect pad  = rect{ 5, 5, 5, 4 }
+   )
+   {
+      return input_box(
+         basic_input_box{ placeholder }
+       , pad
+      );
+   }
+
+   inline auto input_box(
+      char const* placeholder
+    , rect pad  = rect{ 5, 5, 5, 4 }
+   )
+   {
+      return input_box(
+         basic_input_box{ placeholder }
+       , pad
+      );
+   }
 }
 
 #endif

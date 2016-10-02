@@ -42,14 +42,14 @@ namespace photon
       color                text_box_font_color        = basic_font_color;
       char const*          text_box_font              = "Open Sans";
       float                text_box_font_size         = 14.0;
-      color                text_box_hilite_color      = { 0, 127, 255, 70 };
+      color                text_box_hilite_color      = { 0, 127, 255, 100 };
       color                text_box_caret_color       = { 0, 190, 255, 255 };
-      float                text_box_caret_width       = 1.5;
-      color                edit_box_fill_color        = { 32, 32, 32, 32 };
+      float                text_box_caret_width       = 1.2;
+      color                edit_box_fill_color        = { 63, 71, 77, 150 };
       color                inactive_font_color        = { 127, 127, 127, 150 };
 
       color                major_grid_color           = frame_color;
-      float                major_grid_width           = 1.5;
+      float                major_grid_width           = 0.5;
       color                minor_grid_color           = indicator_color;
       float                minor_grid_width           = 0.4;
    };

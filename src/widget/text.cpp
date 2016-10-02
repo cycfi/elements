@@ -99,6 +99,7 @@ namespace photon
    {
       draw_selection(ctx);
       static_text_box::draw(ctx);
+      draw_caret(ctx);
    }
 
    widget* basic_text_box::click(context const& ctx, mouse_button btn)
@@ -410,7 +411,7 @@ namespace photon
       return true;
    }
 
-   void basic_text_box::draw_selection(context const& ctx)
+   void basic_text_box::draw_caret(context const& ctx)
    {
       if (_select_start == -1)
          return;
@@ -433,7 +434,7 @@ namespace photon
          canvas.line_to({ left + (width/2), top + line_height });
          canvas.stroke();
       }
-      // Handle the case where there is no selection
+      // Draw the caret
       else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
       {
          auto  start_info = glyph_info(ctx, _text.data() + _select_start);
@@ -446,8 +447,17 @@ namespace photon
          canvas.line_to({ caret.left + (width/2), caret.bottom });
          canvas.stroke();
       }
-      // Handle selections
-      else
+   }
+
+   void basic_text_box::draw_selection(context const& ctx)
+   {
+      if (_select_start == -1)
+         return;
+       
+      auto& canvas = ctx.canvas;
+      auto const& theme = get_theme();
+
+      if (!_text.empty())
       {
          auto  start_info = glyph_info(ctx, _text.data() + _select_start);
          rect& r1 = start_info.bounds;
@@ -744,19 +754,30 @@ namespace photon
 
    void basic_input_box::draw(context const& ctx)
    {
-//      if (text().empty())
-//      {
-//         //char const* first = &_placeholder[0];
-//         //text_utils::text_draw_info info = {
-//         //   first, first + _placeholder.size(),
-//         //   first, first, select_start() != -1 && ctx.window.is_focus(), false
-//         //};
-//         //text_utils(ctx.theme()).draw_edit_text_box(ctx.bounds, info);
-//      }
-//      else
-//      {
+      if (text().empty())
+      {
+         if (!_placeholder.empty())
+         {
+            draw_selection(ctx);
+
+            auto& canvas = ctx.canvas;
+            auto& theme = get_theme();
+            auto  size = _layout.metrics();
+
+            canvas.font(theme.text_box_font, theme.text_box_font_size);
+            canvas.fill_style(theme.inactive_font_color);
+            canvas.fill_text(
+               { ctx.bounds.left, ctx.bounds.top + size.ascent }
+              , _placeholder.c_str()
+            );
+            
+            draw_caret(ctx);
+         }
+      }
+      else
+      {
          basic_text_box::draw(ctx);
-//      }
+      }
    }
 
    bool basic_input_box::key(context const& ctx, key_info const& k)
@@ -774,9 +795,4 @@ namespace photon
       }
       return basic_text_box::key(ctx, k);
    }
-
-   //void input_panel::draw(context const& ctx)
-   //{
-   //   text_utils(ctx.theme()).draw_edit_box_base(ctx.bounds);
-   //}
 }

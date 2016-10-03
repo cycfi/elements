@@ -45,7 +45,7 @@ namespace photon
    protected:
 
       std::string             _text;
-      glyphs                  _layout;
+      master_glyphs           _layout;
       std::vector<glyphs>     _rows;
       color                   _color;
       point                   _current_size = { -1, -1 };

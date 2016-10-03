@@ -126,8 +126,7 @@ namespace photon
       char const*   _first = _text.data();
       char const*   _last = _first + _text.size();
 
-      auto mp = btn.pos;
-      if (char const* pos = caret_position(ctx, mp))
+      if (char const* pos = caret_position(ctx, btn.pos))
       {
          if (btn.num_clicks != 1)
          {
@@ -173,8 +172,8 @@ namespace photon
                _select_end = _select_start = hit;
             }
          }
-         scroll_into_view(ctx, false);
-         _current_x = mp.x-ctx.bounds.left;
+         _current_x = btn.pos.x-ctx.bounds.left;
+         ctx.view.refresh(ctx);
       }
       return this;
    }
@@ -185,6 +184,7 @@ namespace photon
       if (char const* pos = caret_position(ctx, btn.pos))
       {
          _select_end = int(pos-first);
+         _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
       }
    }
@@ -270,7 +270,7 @@ namespace photon
          }
          else
          {
-            info = glyph_info(ctx, &_text[_select_start]);
+            info = glyph_info(ctx, &_text[_select_end]);
          }
          if (info.str)
          {
@@ -338,7 +338,6 @@ namespace photon
             char const* end = _text.data() + _text.size();
             while (p != start && wordch(*p))
                --p;
-
             while (p != start && !wordch(*p))
                --p;
             if (p != start)
@@ -375,21 +374,14 @@ namespace photon
             break;
 
          case key_code::left:
-            if (_select_end != -1 && _select_start != _select_end)
+            if (_select_end != -1)
             {
                if (k.modifiers & mod_alt)
                   prev_word();
-               else if (k.modifiers & mod_shift)
-                  prev_char();
                else
+                  prev_char();
+               if (!(k.modifiers & mod_shift))
                   _select_start = _select_end = std::min(_select_start, _select_end);
-            }
-            else if (_select_end != -1)
-            {
-               if (k.modifiers & mod_alt)
-                  prev_word();
-               else
-                  prev_char();
             }
             move_caret = true;
             save_x = true;
@@ -397,21 +389,14 @@ namespace photon
             break;
 
          case key_code::right:
-            if (_select_end != -1 && _select_start != _select_end)
+            if (_select_end != -1)
             {
                if (k.modifiers & mod_alt)
                   next_word();
-               else if (k.modifiers & mod_shift)
-                  next_char();
                else
+                  next_char();
+               if (!(k.modifiers & mod_shift))
                   _select_start = _select_end = std::max(_select_start, _select_end);
-            }
-            else if (_select_end != -1)
-            {
-               if (k.modifiers & mod_alt)
-                  next_word();
-               else
-                  next_char();
             }
             move_caret = true;
             save_x = true;

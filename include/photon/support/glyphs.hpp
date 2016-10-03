@@ -9,40 +9,34 @@
 
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
+#include <photon/support/assert.hpp>
+#include <photon/support/exception.hpp>
 #include <vector>
-#include "cairo.h"
+#include <cairo.h>
 
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // glyphs: Text drawing and measuring utility
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   class master_glyphs;
+
    class glyphs
    {
    public:
                            glyphs(
                               char const* first, char const* last
-                            , char const* face, float size
-                            , int style = canvas::normal
+                            , int glyph_start, int glyph_end
+                            , int cluster_start, int cluster_end
+                            , master_glyphs const& master
+                            , bool strip_leading_spaces
                            );
 
-                           glyphs(
-                              char const* first, char const* last
-                            , glyphs const& source
-                           );
-
-                           ~glyphs();
-
-                           glyphs(glyphs&& rhs);
-      glyphs&              operator=(glyphs&& rhs);
-
-      void                 text(char const* first, char const* last);
       void                 draw(point pos, canvas& canvas_);
-      void                 break_lines(float width, std::vector<glyphs>& lines);
       float                width() const;
 
                            // for_each F signature:
-                           // bool f(char const* utf8, unsigned codepoint, float left, float right);
+                           // bool f(char const* utf8, float left, float right);
                            template <typename F>
       void                 for_each(F f);
 
@@ -59,19 +53,8 @@ namespace photon
 
       font_metrics         metrics() const;
 
-   private:
-                           glyphs(glyphs const&) = delete;
-      glyphs&              operator=(glyphs const& rhs) = delete;
-
-                           glyphs(
-                              char const* first, char const* last
-                            , int glyph_start, int glyph_end
-                            , int cluster_start, int cluster_end
-                            , glyphs const& source
-                            , bool strip_leading_spaces
-                           );
-
-      void                 build();
+   protected:
+                           glyphs(char const* first, char const* last);
 
       using scaled_font = cairo_scaled_font_t;
       using glyph = cairo_glyph_t;
@@ -80,19 +63,54 @@ namespace photon
 
       char const*          _first;
       char const*          _last;
-      scaled_font*         _scaled_font = nullptr;
-      glyph*               _glyphs = nullptr;
-      int                  _glyph_count;
-      cluster*             _clusters = nullptr;
-      int                  _cluster_count;
+      scaled_font*         _scaled_font   = nullptr;
+      glyph*               _glyphs        = nullptr;
+      int                  _glyph_count   = 0;
+      cluster*             _clusters      = nullptr;
+      int                  _cluster_count = 0;
       cluster_flags        _clusterflags;
-      bool                 _owns = true;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct failed_to_build_master_glyphs : exception {};
+
+   class master_glyphs : public glyphs
+   {
+   public:
+                           master_glyphs(
+                              char const* first, char const* last
+                            , char const* face, float size
+                            , int style = canvas::normal
+                           );
+
+                           master_glyphs(
+                              char const* first, char const* last
+                            , master_glyphs const& source
+                           );
+
+                           master_glyphs(master_glyphs&&);
+      master_glyphs&       operator=(master_glyphs&& rhs);
+
+                           ~master_glyphs();
+
+      void                 break_lines(float width, std::vector<glyphs>& lines);
+      void                 text(char const* first, char const* last);
+
+   private:
+                           master_glyphs(master_glyphs const&) = delete;
+      master_glyphs&       operator=(master_glyphs const& rhs) = delete;
+
+      void                 build();
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename F>
    inline void glyphs::for_each(F f)
    {
+      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+
       if (_first == _last)
          return;
 

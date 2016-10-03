@@ -559,7 +559,7 @@ namespace photon
 
             // Get the actual coordinates of the glyph
             row.for_each(
-               [p, x, &found](char const* utf8, unsigned codepoint, float left, float right)
+               [p, x, &found](char const* utf8, float left, float right)
                {
                   if ((p.x >= (x + left)) && (p.x < (x + right)))
                   {
@@ -593,12 +593,6 @@ namespace photon
       info.str = nullptr;
       info.line_height = line_height;
 
-      //// Check if s is at the very start
-      //if (s == _text.data())
-      //{
-      //
-      //}
-
       // Check if s is at the very end
       if (s == _text.data() + _text.size())
       {
@@ -620,7 +614,7 @@ namespace photon
          {
             // Get the actual coordinates of the glyph
             row.for_each(
-               [s, &info, x, y, ascent, descent](char const* utf8, unsigned codepoint, float left, float right)
+               [s, &info, x, y, ascent, descent](char const* utf8, float left, float right)
                {
                   if (utf8 >= s)
                   {

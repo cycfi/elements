@@ -95,27 +95,25 @@ namespace photon
    {
       if (_first == _last)
          return;
-       
-      unsigned  codepoint;
-      unsigned  state = 0;
-      int       glyph_index = 0;
-      float     start_x = _glyphs->x;
 
-      cairo_text_cluster_t* cluster = _clusters;
-      for (auto i = _first; i != _last; ++i)
+      int   glyph_index = 0;
+      int   byte_index = 0;
+      float start_x = _glyphs->x;
+
+      for (int i = 0; i < _cluster_count; i++)
       {
-         if (decode_utf8(state, codepoint, uint8_t(*i)) == utf8_accept)
-         {
-            cairo_glyph_t*  glyph = _glyphs + glyph_index;
-            cairo_text_extents_t extents;
-            cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
+         cairo_text_cluster_t* cluster = _clusters + i;
+         cairo_glyph_t* glyph = _glyphs + glyph_index;
+         cairo_text_extents_t extents;
+         cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
 
-            float x = glyph->x - start_x;
-            if (!f(i, codepoint, x, x + extents.x_advance))
-               break;
-            glyph_index += cluster->num_glyphs;
-            ++cluster;
-         }
+         float x = glyph->x - start_x;
+         if (!f(_first + byte_index, x, x + extents.x_advance))
+            break;
+
+         // glyph/byte position
+         glyph_index += cluster->num_glyphs;
+         byte_index += cluster->num_bytes;
       }
    }
 }

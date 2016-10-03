@@ -233,7 +233,7 @@ namespace photon
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
 
-      update_text();
+      _layout.text(_text.data(), _text.data() + _text.size());
       layout(ctx);
 
       scroll_into_view(ctx, true);
@@ -438,13 +438,15 @@ namespace photon
          if (!(k.modifiers & mod_shift))
             _select_start = _select_end;
       }
-      else
+      else if (handled)
       {
-         update_text();
+         _layout.text(_text.data(), _text.data() + _text.size());
          layout(ctx);
+         ctx.view.refresh(ctx);
       }
 
-      scroll_into_view(ctx, save_x);
+      if (handled)
+         scroll_into_view(ctx, save_x);
       return handled;
    }
 
@@ -569,7 +571,7 @@ namespace photon
             );
             // Assume it's at the end of the row if we haven't found a hit
             if (!found)
-                found = row.end();
+               found = row.end();
             break;
          }
          y += line_height;
@@ -590,6 +592,12 @@ namespace photon
       glyph_metrics info;
       info.str = nullptr;
       info.line_height = line_height;
+
+      //// Check if s is at the very start
+      //if (s == _text.data())
+      //{
+      //
+      //}
 
       // Check if s is at the very end
       if (s == _text.data() + _text.size())
@@ -653,7 +661,16 @@ namespace photon
          if (start == end)
          {
             if (start > 0)
-               _text.erase(--start, 1);
+            {
+               char const* end_p = &_text[start];
+               char const* p = end_p - 1;
+               char const* start_p = &_text[0];
+               while (p != start_p && !valid_utf8_start(uint8_t(*p)))
+                  --p;
+
+               start = int(p - &_text[0]);
+               _text.erase(start, end_p - p);
+            }
          }
          else
          {
@@ -788,13 +805,6 @@ namespace photon
    void basic_text_box::select_none()
    {
       _select_start = _select_end = -1;
-   }
-
-   void basic_text_box::update_text()
-   {
-      _rows.clear();
-      _layout.text(_text.data(), _text.data() + _text.size());
-      _layout.break_lines(_current_size.x, _rows);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

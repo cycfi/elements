@@ -102,16 +102,15 @@ namespace photon
       char const*             caret_position(context const& ctx, point p);
       glyph_metrics           glyph_info(context const& ctx, char const* s);
 
-      virtual void             delete_();
-      virtual void             cut(view& v, int start, int end);
-      virtual void             copy(view& v, int start, int end);
-      virtual void             paste(view& v, int start, int end);
+      virtual void            delete_();
+      virtual void            cut(view& v, int start, int end);
+      virtual void            copy(view& v, int start, int end);
+      virtual void            paste(view& v, int start, int end);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
 
       state_saver_f           capture_state();
-      void                    update_text();
 
       int                     _select_start;
       int                     _select_end;

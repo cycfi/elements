@@ -104,7 +104,7 @@ namespace photon
       cairo_text_cluster_t* cluster = _clusters;
       for (auto i = _first; i != _last; ++i)
       {
-         if (!decode_utf8(state, codepoint, uint8_t(*i)))
+         if (decode_utf8(state, codepoint, uint8_t(*i)) == utf8_accept)
          {
             cairo_glyph_t*  glyph = _glyphs + glyph_index;
             cairo_text_extents_t extents;

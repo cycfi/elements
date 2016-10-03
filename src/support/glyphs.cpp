@@ -165,7 +165,7 @@ namespace photon
       // reurn early if there's nothing to build
       if (_first == _last)
          return;
-       
+
       auto stat = cairo_scaled_font_text_to_glyphs(
          _scaled_font, 0, 0, _first, int(_last - _first),
          &_glyphs, &_glyph_count, &_clusters, &_cluster_count,
@@ -204,7 +204,7 @@ namespace photon
       // reurn early if there's nothing to break
       if (_first == _last)
          return;
-   
+
       char const* first = _first;
       char const* last = _last;
       char const* space_pos = _first;
@@ -220,7 +220,8 @@ namespace photon
             first, space_pos
           , start_glyph_index, space_glyph_index
           , start_cluster_index, space_cluster_index
-          , *this, !lines.empty()
+          , *this
+          , lines.size() > 1 // skip leading spaces if this is not the first line
          };
          lines.push_back(std::move(glyph_));
          first = space_pos;
@@ -271,7 +272,8 @@ namespace photon
          first, last
        , start_glyph_index, _glyph_count
        , start_cluster_index, _cluster_count
-       , *this, true
+       , *this
+       , lines.size() > 1 // skip leading spaces if this is not the first line
       };
 
       lines.push_back(std::move(glyph_));
@@ -281,7 +283,7 @@ namespace photon
    {
       if (_first == _last)
          return 0;
-       
+
       if (_glyph_count)
       {
          cairo_text_extents_t extents;

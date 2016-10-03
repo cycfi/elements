@@ -59,14 +59,7 @@ namespace photon
    {
       return
          (byte >= 0x00 && byte <= 0x7F)   ||
-         (byte >= 0xC2 && byte <= 0xDF)   ||
-         (byte == 0xE0)                   ||
-         (byte >= 0xE1 && byte <= 0xEC)   ||
-         (byte == 0xED)                   ||
-         (byte >= 0xEE && byte <= 0xEF)   ||
-         (byte == 0xF0)                   ||
-         (byte >= 0xF1 && byte <= 0xF3)   ||
-         (byte == 0xF4)
+         (byte >= 0xC2 && byte <= 0xF4)
       ;
    }
 

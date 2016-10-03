@@ -285,19 +285,19 @@ namespace photon
          }
       };
 
-      auto incr_selection = [this]()
+      auto next_char = [this]()
       {
          if (_select_end < _text.size())
          {
             char const* p = &_text[_select_end + 1];
-            char const* end = p + _text.size();
+            char const* end = _text.data() + _text.size();
             while (p != end && !valid_utf8_start(uint8_t(*p)))
                ++p;
             _select_end = int(p - &_text[0]);
          }
       };
 
-      auto decr_selection = [this]()
+      auto prev_char = [this]()
       {
          if (_select_end > 0)
          {
@@ -305,6 +305,48 @@ namespace photon
             char const* start = &_text[0];
             while (p != start && !valid_utf8_start(uint8_t(*p)))
                --p;
+            _select_end = int(p - &_text[0]);
+         }
+      };
+
+      auto next_word = [this]()
+      {
+         // $$$ TODO: Make this UTF8 friendly $$$
+         auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
+
+         if (_select_end < _text.size())
+         {
+            char const* p = &_text[_select_end];
+            char const* end = _text.data() + _text.size();
+            while (p != end && wordch(*p))
+               ++p;
+            while (p != end && !wordch(*p))
+               ++p;
+            _select_end = int(p - &_text[0]);
+         }
+      };
+
+      auto prev_word = [this]()
+      {
+         // $$$ TODO: Make this UTF8 friendly $$$
+         auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
+
+         if (_select_end > 0)
+         {
+            char const* p = &_text[_select_end-1];
+            char const* start = &_text[0];
+            char const* end = _text.data() + _text.size();
+            while (p != start && wordch(*p))
+               --p;
+
+            while (p != start && !wordch(*p))
+               --p;
+            if (p != start)
+            {
+               ++p;
+               while (p != end && !valid_utf8_start(uint8_t(*p)))
+                  ++p;
+            }
             _select_end = int(p - &_text[0]);
          }
       };
@@ -335,14 +377,19 @@ namespace photon
          case key_code::left:
             if (_select_end != -1 && _select_start != _select_end)
             {
-               if (k.modifiers & mod_shift)
-                  decr_selection();
+               if (k.modifiers & mod_alt)
+                  prev_word();
+               else if (k.modifiers & mod_shift)
+                  prev_char();
                else
                   _select_start = _select_end = std::min(_select_start, _select_end);
             }
             else if (_select_end != -1)
             {
-               decr_selection();
+               if (k.modifiers & mod_alt)
+                  prev_word();
+               else
+                  prev_char();
             }
             move_caret = true;
             save_x = true;
@@ -352,14 +399,19 @@ namespace photon
          case key_code::right:
             if (_select_end != -1 && _select_start != _select_end)
             {
-               if (k.modifiers & mod_shift)
-                  incr_selection();
+               if (k.modifiers & mod_alt)
+                  next_word();
+               else if (k.modifiers & mod_shift)
+                  next_char();
                else
                   _select_start = _select_end = std::max(_select_start, _select_end);
             }
             else if (_select_end != -1)
             {
-               incr_selection();
+               if (k.modifiers & mod_alt)
+                  next_word();
+               else
+                  next_char();
             }
             move_caret = true;
             save_x = true;
@@ -749,10 +801,13 @@ namespace photon
          return;
       }
 
-      auto info = glyph_info(ctx, &_text[_select_start]);
+      if (_select_end == -1)
+         return;
+
+      auto info = glyph_info(ctx, &_text[_select_end]);
       if (info.str)
       {
-         if (!scrollable::find(ctx).scroll_into_view(info.bounds))
+         if (!scrollable::find(ctx).scroll_into_view(info.bounds.inset(-15, 0)))
             ctx.view.refresh(ctx);
 
          if (save_x)

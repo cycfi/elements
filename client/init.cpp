@@ -229,8 +229,8 @@ namespace client
    {
       view_.content.push_back(share(background{}));
       //view_.content.push_back(share(make_view_port()));
-      //view_.content.push_back(share(make_edit_text()));
-      view_.content.push_back(share(make_input_box()));
+      view_.content.push_back(share(make_edit_text()));
+      //view_.content.push_back(share(make_input_box()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 

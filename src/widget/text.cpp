@@ -877,24 +877,33 @@ namespace photon
 
    void basic_input_box::paste(view& v, int start, int end)
    {
-      std::string clip = v.clipboard();
-      if (clip.empty())
-         return;
+      if (start != -1)
+      {
+         auto  end_ = std::max(start, end);
+         auto  start_ = std::min(start, end);
 
-      std::string ins;
+         std::string clip = v.clipboard();
+         if (clip.empty())
+            return;
 
-      // Copy clip ito ins, but ensure there are no newlines.
-      // Also, limit ins to 256 characters.
-      char const* p = &clip[0];
-      char const* last = p + clip.size();
+         std::string ins;
 
-      for (int i = 0; (i < 256) && (p != last); ++p, ++i)
-         if (!is_newline(uint8_t(*p)))
+         // Copy clip ito ins, stop when a newline is found.
+         // Also, limit ins to 256 characters.
+         char const* p = &clip[0];
+         char const* last = p + clip.size();
+
+         for (int i = 0; (i < 256) && (p != last); ++p, ++i)
+         {
+            if (is_newline(uint8_t(*p)))
+               break;
             ins += *p;
+         }
 
-      _text.replace(start, end-start, ins);
-      start += ins.size();
-      select_start(start);
-      select_end(start);
+         _text.replace(start_, end_-start_, ins);
+         start_ += ins.size();
+         select_start(start_);
+         select_end(start_);
+      }
    }
 }

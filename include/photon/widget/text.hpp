@@ -84,6 +84,8 @@ namespace photon
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
+      virtual bool            word_break(char const* utf8) const;
+      virtual bool            line_break(char const* utf8) const;
 
    protected:
 

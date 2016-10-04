@@ -135,21 +135,16 @@ namespace photon
 
             if (btn.num_clicks == 2)
             {
-               // $$$ TODO: Make this UTF8 friendly $$$
-               auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
-
-               while (last < _last && !wordch(*last))
-                  last++;
-               while (first > _first && !wordch(*first))
-                  first--;
+               while (last < _last && !word_break(last))
+                  last = next_utf8(_last, last);
+               while (first > _first && !word_break(first))
+                  first = prev_utf8(_first, first);
             }
             else if (btn.num_clicks == 3)
             {
-               auto parach = [](char ch) { return ch == '\n' || ch == '\r'; };
-
-               while (last < _last && !parach(*last))
+               while (last < _last && !is_newline(uint8_t(*last)))
                   last++;
-               while (first > _first && !parach(*first))
+               while (first > _first && !is_newline(uint8_t(*first)))
                   first--;
             }
             if (first != _first)
@@ -289,10 +284,8 @@ namespace photon
       {
          if (_select_end < _text.size())
          {
-            char const* p = &_text[_select_end + 1];
             char const* end = _text.data() + _text.size();
-            while (p != end && !valid_utf8_start(uint8_t(*p)))
-               ++p;
+            char const* p = next_utf8(end, &_text[_select_end]);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -301,51 +294,38 @@ namespace photon
       {
          if (_select_end > 0)
          {
-            char const* p = &_text[_select_end - 1];
             char const* start = &_text[0];
-            while (p != start && !valid_utf8_start(uint8_t(*p)))
-               --p;
+            char const* p = prev_utf8(start, &_text[_select_end]);
             _select_end = int(p - &_text[0]);
          }
       };
 
       auto next_word = [this]()
       {
-         // $$$ TODO: Make this UTF8 friendly $$$
-         auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
-
          if (_select_end < _text.size())
          {
             char const* p = &_text[_select_end];
             char const* end = _text.data() + _text.size();
-            while (p != end && wordch(*p))
-               ++p;
-            while (p != end && !wordch(*p))
-               ++p;
+            while (p != end && word_break(p))
+               p = next_utf8(end, p);
+            while (p != end && !word_break(p))
+               p = next_utf8(end, p);
             _select_end = int(p - &_text[0]);
          }
       };
 
       auto prev_word = [this]()
       {
-         // $$$ TODO: Make this UTF8 friendly $$$
-         auto wordch = [](char ch) { return std::isspace(ch) || std::ispunct(ch); };
-
          if (_select_end > 0)
          {
-            char const* p = &_text[_select_end-1];
             char const* start = &_text[0];
+            char const* p = prev_utf8(start, &_text[_select_end]);
+            while (p != start && word_break(p))
+               p = prev_utf8(start, p);
+            while (p != start && !word_break(p))
+               p = prev_utf8(start, p);
             char const* end = _text.data() + _text.size();
-            while (p != start && wordch(*p))
-               --p;
-            while (p != start && !wordch(*p))
-               --p;
-            if (p != start)
-            {
-               ++p;
-               while (p != end && !valid_utf8_start(uint8_t(*p)))
-                  ++p;
-            }
+            p = next_utf8(end, p);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -693,12 +673,9 @@ namespace photon
          {
             if (start > 0)
             {
-               char const* end_p = &_text[start];
-               char const* p = end_p - 1;
                char const* start_p = &_text[0];
-               while (p != start_p && !valid_utf8_start(uint8_t(*p)))
-                  --p;
-
+               char const* end_p = &_text[start];
+               char const* p = prev_utf8(start_p, end_p);
                start = int(p - &_text[0]);
                _text.erase(start, end_p - p);
             }
@@ -839,6 +816,18 @@ namespace photon
    void basic_text_box::select_none()
    {
       _select_start = _select_end = -1;
+   }
+
+   bool basic_text_box::word_break(char const* utf8) const
+   {
+      auto cp = codepoint(utf8);
+      return is_space(cp) || is_punctuation(cp);
+   }
+
+   bool basic_text_box::line_break(char const* utf8) const
+   {
+      auto cp = codepoint(utf8);
+      return is_newline(cp);
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -20,7 +20,11 @@ namespace photon
    std::string    codepoint_to_utf8(unsigned codepoint);
    bool           is_space(unsigned codepoint);
    bool           is_newline(unsigned codepoint);
+   bool           is_punctuation(unsigned codepoint);
    unsigned       decode_utf8(unsigned& state, unsigned& codepoint, unsigned byte);
+   char const*    next_utf8(char const* last, char const* utf8);
+   char const*    prev_utf8(char const* start, char const* utf8);
+   unsigned       codepoint(char const*& utf8);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    inline bool is_space(unsigned codepoint)
@@ -54,19 +58,21 @@ namespace photon
       }
    }
 
-   // Check if byte is a valid UTF8 initial char
-   inline bool valid_utf8_start(uint8_t byte)
+   // Check if codepoint is a punctuation
+   inline bool is_punctuation(unsigned codepoint)
    {
-      return
-         (byte >= 0x00 && byte <= 0x7F)   ||
-         (byte >= 0xC2 && byte <= 0xF4)
-      ;
+      return (codepoint < 0x80 && std::ispunct(codepoint))
+         || (codepoint >= 0xA0 && codepoint <= 0xBF)
+         || (codepoint >= 0x2000 && codepoint <= 0x206F)
+         ;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   // decode_utf8
+   // Decoding UTF8
+   //
    // Copyright (c) 2008-2010 Bjoern Hoehrmann <bjoern@hoehrmann.de>
    // See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+   ////////////////////////////////////////////////////////////////////////////////////////////////
 
    enum
    {
@@ -107,6 +113,63 @@ namespace photon
 
       state = utf8d[256 + state + type];
       return state;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // UTF8 Iteration. See A code point iterator adapter for C++ strings in UTF-8
+   // by çngel JosŽ Riesgo: http://www.nubaria.com/en/blog/?p=371
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct utf8_mask
+   {
+      static uint8_t const first    = 128;   // 1000000
+      static uint8_t const second   = 64;    // 0100000
+      static uint8_t const third    = 32;    // 0010000
+      static uint8_t const fourth   = 16;    // 0001000
+   };
+
+   inline char const* next_utf8(char const* last, char const* utf8)
+   {
+      char c = *utf8;
+      std::size_t offset = 1;
+
+      if (c & utf8_mask::first)
+         offset =
+            (c & utf8_mask::third)?
+               ((c & utf8_mask::fourth)? 4 : 3) : 2
+         ;
+
+      utf8 += offset;
+      if (utf8 > last)
+         utf8 = last;
+      return utf8;
+   }
+
+   inline char const* prev_utf8(char const* start, char const* utf8)
+   {
+      if (*--utf8 & utf8_mask::first)
+      {
+         if ((*--utf8 & utf8_mask::second) == 0)
+         {
+            if ((*--utf8 & utf8_mask::second) == 0)
+               --utf8;
+         }
+      }
+      if (utf8 < start)
+         utf8 = start;
+      return utf8;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Extracting codepoints from UTF8
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   inline unsigned codepoint(char const*& utf8)
+   {
+      unsigned state = 0;
+      unsigned cp;
+      while (decode_utf8(state, cp, uint8_t(*utf8)))
+         utf8++;
+      ++utf8; // one past the last byte
+      return cp;
    }
 }
 

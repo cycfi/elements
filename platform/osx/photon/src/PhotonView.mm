@@ -79,20 +79,9 @@ namespace
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification object:[self window]
    ];
-
- 
-
-
-//   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];
-//   [[self window] setBackgroundColor: c];
-
-//    _textField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 200, 24)];
-//    [_textField setStringValue:@"Text Box"];
-//    [_textField setBezeled:YES];
-//    [_textField setDrawsBackground:YES];
-//    [_textField setEditable:YES];
-//    [_textField setSelectable:YES];
-//    [self addSubview:_textField];
+   
+   // $$$ Black $$$
+   self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 }
 
 - (void) dealloc

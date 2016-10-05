@@ -255,18 +255,7 @@ namespace photon
       {
          bool up = k.key == key_code::up;
          glyph_metrics info;
-         if (_select_end != -1 && _select_start != _select_end)
-         {
-            int pos = up ?
-               std::min(_select_start, _select_end) :
-               std::max(_select_start, _select_end)
-               ;
-            info = glyph_info(ctx, &_text[pos]);
-         }
-         else
-         {
-            info = glyph_info(ctx, &_text[_select_end]);
-         }
+         info = glyph_info(ctx, &_text[_select_end]);
          if (info.str)
          {
             auto y = up ? -info.line_height : +info.line_height;

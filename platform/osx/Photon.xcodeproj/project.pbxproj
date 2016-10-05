@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE151D685A0B00D7EE92 /* osx_view.mm */; };
-		5D07FE1B1D6868E800D7EE92 /* include in Resources */ = {isa = PBXBuildFile; fileRef = 5D07FE1A1D6868E800D7EE92 /* include */; };
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
 		5D1366661D917127002A5B1E /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D1366651D917127002A5B1E /* key.mm */; };
 		5D2950BA1D75C25A00734694 /* dial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2950B91D75C25A00734694 /* dial.cpp */; };
@@ -39,6 +38,14 @@
 		5DACB7541D8FC7B1007517FC /* popup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB7531D8FC7B1007517FC /* popup.cpp */; };
 		5DB059DF1D955E3D008D9712 /* flow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB059DE1D955E3D008D9712 /* flow.cpp */; };
 		5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9FDF11D800E4F0058DCA4 /* button.cpp */; };
+		5DC84A5F1DA4E300008E7EE3 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */; };
+		5DC84A601DA4E300008E7EE3 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */; };
+		5DC84A611DA4E300008E7EE3 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */; };
+		5DC84A621DA4E300008E7EE3 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */; };
+		5DC84A631DA4E300008E7EE3 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */; };
+		5DC84A641DA4E300008E7EE3 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5E1DA4E300008E7EE3 /* Roboto-Regular.ttf */; };
+		5DC84A661DA4E322008E7EE3 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A651DA4E322008E7EE3 /* images */; };
+		5DC84A681DA4E881008E7EE3 /* BlairMdITC TT-Medium in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */; };
 		5DD362D01D855DB60002FD15 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD362CF1D855DB60002FD15 /* application.cpp */; };
 		5DE564191D6DE49900F9435C /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
 		5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641A1D6DE4CD00F9435C /* composite.cpp */; };
@@ -82,6 +89,14 @@
 		5DACB7531D8FC7B1007517FC /* popup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = popup.cpp; sourceTree = "<group>"; };
 		5DB059DE1D955E3D008D9712 /* flow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flow.cpp; sourceTree = "<group>"; };
 		5DB9FDF11D800E4F0058DCA4 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
+		5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Bold.ttf"; path = "../../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "../../assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../../assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Light.ttf"; path = "../../assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
+		5DC84A5E1DA4E300008E7EE3 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		5DC84A651DA4E322008E7EE3 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../assets/images; sourceTree = "<group>"; };
+		5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BlairMdITC TT-Medium"; path = "../../assets/fonts/BlairMdITC TT-Medium"; sourceTree = "<group>"; };
 		5DD362CF1D855DB60002FD15 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
@@ -125,6 +140,7 @@
 		5D565EC01D605F5D00FD087C = {
 			isa = PBXGroup;
 			children = (
+				5DC84A651DA4E322008E7EE3 /* images */,
 				5D5C65C21D7BD67C002197F8 /* fonts */,
 				5D9F54551D798EB1006DC5B0 /* libs */,
 				5D565ECB1D605F5D00FD087C /* Photon */,
@@ -157,6 +173,13 @@
 		5D5C65C21D7BD67C002197F8 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */,
+				5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */,
+				5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */,
+				5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */,
+				5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */,
+				5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */,
+				5DC84A5E1DA4E300008E7EE3 /* Roboto-Regular.ttf */,
 				5D5C65C31D7BD696002197F8 /* photon_basic.ttf */,
 			);
 			name = fonts;
@@ -288,9 +311,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D07FE1B1D6868E800D7EE92 /* include in Resources */,
+				5DC84A661DA4E322008E7EE3 /* images in Resources */,
+				5DC84A681DA4E881008E7EE3 /* BlairMdITC TT-Medium in Resources */,
+				5DC84A621DA4E300008E7EE3 /* Roboto-Bold.ttf in Resources */,
 				5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */,
 				5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */,
+				5DC84A5F1DA4E300008E7EE3 /* OpenSans-Bold.ttf in Resources */,
+				5DC84A601DA4E300008E7EE3 /* OpenSans-Light.ttf in Resources */,
+				5DC84A611DA4E300008E7EE3 /* OpenSans-Regular.ttf in Resources */,
+				5DC84A641DA4E300008E7EE3 /* Roboto-Regular.ttf in Resources */,
+				5DC84A631DA4E300008E7EE3 /* Roboto-Light.ttf in Resources */,
 				5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

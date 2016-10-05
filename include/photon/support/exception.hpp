@@ -13,7 +13,11 @@ namespace photon
 {
    struct exception : std::runtime_error
    {
-      explicit       exception(std::string const& what = "")
+                     exception()
+                       : std::runtime_error("")
+                     {}
+       
+      explicit       exception(std::string const& what)
                        : std::runtime_error(what)
                      {}
    };

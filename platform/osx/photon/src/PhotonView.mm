@@ -80,7 +80,7 @@ namespace
              name : NSWindowDidResignMainNotification object:[self window]
    ];
 
-
+ 
 
 
 //   NSColor* c = [NSColor colorWithCalibratedRed:35 green:35 blue:37 alpha:1.0f];

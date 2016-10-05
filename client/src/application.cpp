@@ -32,26 +32,26 @@ namespace infinity
       }
    };
 
-   // Shared Images
-   auto     logo = image{ "assets/images/logo.png", 1.0/5 };
-
-   auto     on_btn = image{ "assets/images/power-on.png", 1.0/6 };
-   auto     off_btn = image{ "assets/images/power-off.png", 1.0/6 };
-
-   auto     slider_slot = vgizmo{ "assets/images/slot.png", 1.0/4 };
-   auto     selector_knob = image{ "assets/images/slide-switch.png", 1.0/4 };
-   auto     slider_knob = image{ "assets/images/slider-white.png", 1.0/6 };
-
-   float    knob_scale = 1.0/3.5;
-   auto     knob =  sprite{ "assets/images/knob_sprites_white_128x128.png", 128*knob_scale, knob_scale };
-   auto     radial_lines = image{ "assets/images/radial-lines.png", knob_scale };
-
-   float    decal_scale = 1.0/4;
-   auto     sine_decal = image{ "assets/images/sine-decal.png", decal_scale };
-   auto     single_double_decal = image{ "assets/images/single-double-decal.png", decal_scale };
-
    struct application_impl
    {
+      // Shared Images
+      image    logo = image{ "images/logo.png", 1.0/5 };
+
+      image    on_btn = image{ "images/power-on.png", 1.0/6 };
+      image    off_btn = image{ "images/power-off.png", 1.0/6 };
+
+      vgizmo   slider_slot = vgizmo{ "images/slot.png", 1.0/4 };
+      image    selector_knob = image{ "images/slide-switch.png", 1.0/4 };
+      image    slider_knob = image{ "images/slider-white.png", 1.0/6 };
+
+      float    knob_scale = 1.0/3.5;
+      sprite   knob =  sprite{ "images/knob_sprites_white_128x128.png", 128*knob_scale, knob_scale };
+      image    radial_lines = image{ "images/radial-lines.png", knob_scale };
+
+      float    decal_scale = 1.0/4;
+      image    sine_decal = image{ "images/sine-decal.png", decal_scale };
+      image    single_double_decal = image{ "images/single-double-decal.png", decal_scale };
+
       application& _app;
       application_impl(application& app)
        : _app(app)

@@ -67,7 +67,7 @@ namespace photon
 
    bool slider_base::scroll(context const& ctx, point dir, point p)
    {
-      double new_value = value() + (_is_horiz ? -dir.x : dir.y) * 0.01;
+      double new_value = value() + (_is_horiz ? -dir.x : dir.y) * 0.005;
       clamp(new_value, 0.0, 1.0);
       if (value() != new_value)
       {

@@ -47,6 +47,14 @@ namespace photon
     : _impl(nullptr)
     , _maintain_aspect(false)
    {
+      // Before calling client::init, set the working directory so we can access our resources
+      CFBundleRef mainBundle = CFBundleGetMainBundle();
+      CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+      char path[PATH_MAX];
+      CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+      CFRelease(resourcesURL);
+      chdir(path);
+
       client::init(*this);
    }
 

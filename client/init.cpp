@@ -221,20 +221,19 @@ namespace client
 
    auto make_view_port()
    {
-      auto  space = image{ "assets/images/space.jpg" };
+      auto  space = image{ "images/space.jpg" };
       return scroller(space);
    }
 
    void  init(photon::view& view_)
    {
-      view_.content.push_back(share(background{}));
+      //view_.content.push_back(share(background{}));
       //view_.content.push_back(share(make_view_port()));
-      view_.content.push_back(share(make_edit_text()));
+      //view_.content.push_back(share(make_edit_text()));
       //view_.content.push_back(share(make_input_box()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
 
-      //view_.maintain_aspect(true);
-      //view_.app = std::make_shared<infinity::application>(view_);
+      view_.app = std::make_shared<infinity::application>(view_);
    }
 }

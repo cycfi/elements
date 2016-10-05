@@ -251,7 +251,7 @@ namespace photon
       int end = std::max(_select_end, _select_start);
       std::function<void()> undo_f = capture_state();
 
-      auto up_down = [this, &ctx, &k, &move_caret]()
+      auto up_down = [this, &ctx, k, &move_caret]()
       {
          bool up = k.key == key_code::up;
          glyph_metrics info;

@@ -72,14 +72,13 @@
 		5D76EBC31D796A010036EECC /* pickup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pickup.cpp; sourceTree = "<group>"; };
 		5D76EBC51D7972470036EECC /* frets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frets.cpp; sourceTree = "<group>"; };
 		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
+		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = photon/include; sourceTree = SOURCE_ROOT; };
 		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
 		5D9FCF3D1D9773A400D533ED /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		5DA3B5071D98728800C06FF5 /* glyphs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glyphs.cpp; sourceTree = "<group>"; };
 		5DA567A81D6E6ED0008FEFF9 /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layer.cpp; sourceTree = "<group>"; };
-		5DA584961D6156CD004276C2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5DA584971D6156CD004276C2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5DA584981D6156CD004276C2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		5DA584991D6156CD004276C2 /* PhotonView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhotonView.hpp; sourceTree = "<group>"; };
 		5DA5849A1D6156CD004276C2 /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhotonView.mm; sourceTree = "<group>"; };
 		5DA584AD1D618C41004276C2 /* view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cpp; sourceTree = "<group>"; };
 		5DA584B01D618F4C004276C2 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widget.cpp; sourceTree = "<group>"; };
@@ -143,7 +142,7 @@
 				5DC84A6B1DA51346008E7EE3 /* lib */,
 				5DC84A651DA4E322008E7EE3 /* images */,
 				5D5C65C21D7BD67C002197F8 /* fonts */,
-				5D565ECB1D605F5D00FD087C /* Photon */,
+				5D565ECB1D605F5D00FD087C /* photon */,
 				5D565ECA1D605F5D00FD087C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -156,7 +155,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5D565ECB1D605F5D00FD087C /* Photon */ = {
+		5D565ECB1D605F5D00FD087C /* photon */ = {
 			isa = PBXGroup;
 			children = (
 				5D565ED21D605F5D00FD087C /* Assets.xcassets */,
@@ -165,8 +164,9 @@
 				5D07FE1A1D6868E800D7EE92 /* include */,
 				5DA584AC1D618C41004276C2 /* src */,
 				5D3806AB1D705F5400C6EB77 /* client */,
-				5DA584951D6156CD004276C2 /* osx_src */,
+				5D8F88631DAAF44D0010DED5 /* platform */,
 			);
+			name = photon;
 			path = Photon;
 			sourceTree = "<group>";
 		};
@@ -195,19 +195,25 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		5DA584951D6156CD004276C2 /* osx_src */ = {
+		5D8F88631DAAF44D0010DED5 /* platform */ = {
 			isa = PBXGroup;
 			children = (
-				5DA584961D6156CD004276C2 /* AppDelegate.h */,
+				5D8F88641DAAF4650010DED5 /* include */,
+				5DA584951D6156CD004276C2 /* src */,
+			);
+			name = platform;
+			sourceTree = "<group>";
+		};
+		5DA584951D6156CD004276C2 /* src */ = {
+			isa = PBXGroup;
+			children = (
 				5DA584971D6156CD004276C2 /* AppDelegate.m */,
 				5D1366651D917127002A5B1E /* key.mm */,
 				5DA584981D6156CD004276C2 /* main.m */,
-				5DA584991D6156CD004276C2 /* PhotonView.hpp */,
 				5DA5849A1D6156CD004276C2 /* PhotonView.mm */,
 				5D07FE151D685A0B00D7EE92 /* osx_view.mm */,
 			);
 			indentWidth = 3;
-			name = osx_src;
 			path = src;
 			sourceTree = "<group>";
 			tabWidth = 3;
@@ -418,6 +424,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					./photon/include,
 					../../include,
 					../../client/include,
 					/usr/local/include/cairo,
@@ -466,6 +473,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					./photon/include,
 					../../include,
 					../../client/include,
 					/usr/local/include/cairo,

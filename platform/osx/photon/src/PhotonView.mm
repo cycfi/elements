@@ -86,7 +86,6 @@ namespace
 
 - (void) dealloc
 {
-    [super dealloc];
 }
 
 - (BOOL)canBecomeKeyView

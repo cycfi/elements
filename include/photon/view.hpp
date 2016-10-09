@@ -33,7 +33,7 @@ namespace photon
 {
    struct view_impl;
    class platform_access;
-   class context;
+   struct context;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // The View. There's only one of this per window.

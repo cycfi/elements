@@ -17,8 +17,8 @@
 
 namespace photon
 {
-   class basic_context;
-   class context;
+   struct basic_context;
+   struct context;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Mouse Button

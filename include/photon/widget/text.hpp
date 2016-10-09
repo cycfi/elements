@@ -116,7 +116,6 @@ namespace photon
 
       int                     _select_start;
       int                     _select_end;
-      float                   _width;
       float                   _current_x;
       state_saver_f           _typing_state;
       bool                    _is_focus;

@@ -715,10 +715,10 @@ namespace photon
    {
       state_saver(basic_text_box* this_)
        : text(this_->_text)
-       , save_text(this_->_text)
        , select_start(this_->_select_start)
-       , save_select_start(this_->_select_start)
        , select_end(this_->_select_end)
+       , save_text(this_->_text)
+       , save_select_start(this_->_select_start)
        , save_select_end(this_->_select_end)
       {}
 

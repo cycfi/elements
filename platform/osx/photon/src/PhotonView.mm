@@ -28,7 +28,7 @@
       distribution.
 
 =================================================================================================*/
-#import "PhotonView.hpp"
+#import <PhotonView.hpp>
 #import <cairo-quartz.h>
 
 namespace photon

@@ -224,6 +224,25 @@ namespace client
       auto  space = image{ "images/space.jpg" };
       return scroller(space);
    }
+   
+   auto make_dial()
+   {
+      float scale = 1.0/4;
+
+      auto spr =  sprite{ "images/knob_sprites_white_128x128.png", 32, scale };
+      auto rlines = image{ "images/radial-lines.png", scale };
+
+      auto di = dial(spr);
+      auto lyr = layer(align_center(align_middle(di)), rlines);
+      auto all = align_center(align_middle(caption(lyr, "Volume", 0.5)));
+
+      return margin({ 50, 50, 50, 50 }, std::move(all));
+   }
+   
+   auto make_image()
+   {
+      return align_middle(align_center(image{ "images/radial-lines.png" }));
+   }
 
    void  init(photon::view& view_)
    {
@@ -233,6 +252,9 @@ namespace client
       //view_.content.push_back(share(make_input_box()));
       //view_.content.push_back(share(make_flow()));
       //view_.content.push_back(share(make_buttons(view_)));
+      //view_.content.push_back(share(fit({ 150, 150 }, make_dial())));
+
+      view_.content.push_back(share(make_image()));
 
       //view_.app = std::make_shared<infinity::application>(view_);
    }

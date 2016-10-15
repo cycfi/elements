@@ -227,12 +227,13 @@ namespace photon
    void master_glyphs::break_lines(float width, std::vector<glyphs>& lines)
    {
       PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       // reurn early if there's nothing to break
       if (_first == _last)
          return;
+       
+      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       char const* first = _first;
       char const* last = _last;

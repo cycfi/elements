@@ -10,6 +10,8 @@
 		5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE151D685A0B00D7EE92 /* osx_view.mm */; };
 		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
 		5D1366661D917127002A5B1E /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D1366651D917127002A5B1E /* key.mm */; };
+		5D213E0F1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */; };
+		5D213E101DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */; };
 		5D2950BA1D75C25A00734694 /* dial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2950B91D75C25A00734694 /* dial.cpp */; };
 		5D3806AD1D705F5400C6EB77 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AC1D705F5400C6EB77 /* init.cpp */; };
 		5D3806AF1D70926100C6EB77 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
@@ -57,6 +59,8 @@
 		5D07FE1A1D6868E800D7EE92 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../include; sourceTree = "<group>"; };
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		5D1366651D917127002A5B1E /* key.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = key.mm; path = photon/src/key.mm; sourceTree = SOURCE_ROOT; };
+		5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-clang-darwin42-1_61.a"; path = "../../../../../boost/stage/lib/libboost_filesystem-clang-darwin42-1_61.a"; sourceTree = "<group>"; };
+		5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-clang-darwin42-1_61.a"; path = "../../../../../boost/stage/lib/libboost_system-clang-darwin42-1_61.a"; sourceTree = "<group>"; };
 		5D2950B91D75C25A00734694 /* dial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dial.cpp; sourceTree = "<group>"; };
 		5D3806AC1D705F5400C6EB77 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = init.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		5D3806AE1D70926100C6EB77 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D213E0F1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a in Frameworks */,
+				5D213E101DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a in Frameworks */,
 				5DC84A6A1DA5132D008E7EE3 /* libcairo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,6 +262,8 @@
 			isa = PBXGroup;
 			children = (
 				5DC84A691DA5132D008E7EE3 /* libcairo.a */,
+				5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */,
+				5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */,
 			);
 			name = lib;
 			sourceTree = "<group>";
@@ -494,8 +502,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					./photon/include,
+					../../include,
+					../../client/include,
+					/usr/local/include/cairo,
+					"$(BOOST_ROOT)",
+				);
 				INFOPLIST_FILE = photon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(BOOST_ROOT)/stage/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -506,8 +525,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					./photon/include,
+					../../include,
+					../../client/include,
+					/usr/local/include/cairo,
+					"$(BOOST_ROOT)",
+				);
 				INFOPLIST_FILE = photon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(BOOST_ROOT)/stage/lib",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -30,7 +30,8 @@
 =================================================================================================*/
 #import <Cocoa/Cocoa.h>
 #include <photon/view.hpp>
-#include "PhotonView.hpp"
+#include <PhotonView.hpp>
+#include <CocoaUtils.hpp>
 #import <cairo-quartz.h>
 
 namespace photon
@@ -48,7 +49,7 @@ namespace photon
     , _maintain_aspect(false)
    {
       // Before calling client::init, set the working directory so we can access our resources
-      CFBundleRef mainBundle = CFBundleGetMainBundle();
+      CFBundleRef mainBundle = GetCurrentBundle();
       CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
       char path[PATH_MAX];
       CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);

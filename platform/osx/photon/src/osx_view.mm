@@ -92,7 +92,9 @@ namespace photon
 
    void view::size(point size_)
    {
-      [[get_mac_view(_impl) window] setContentSize:NSMakeSize(size_.x, size_.y)];
+      auto  ns_view = get_mac_view(_impl);
+      ns_view.bounds.origin = NSMakePoint(0, 0);
+      [[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
    }
 
    void view::limits(widget_limits limits_) const

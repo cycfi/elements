@@ -20,6 +20,7 @@ using key_map = std::map<photon::key_code, photon::key_action>;
    NSTrackingArea*               _tracking_area;
    NSMutableAttributedString*    _marked_text;
    key_map                       _keys;
+   bool                          _first_time;
 }
 
 @end

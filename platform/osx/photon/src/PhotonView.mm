@@ -61,6 +61,8 @@ namespace
 
 - (void) awakeFromNib
 {
+   _first_time = true;
+
    photon::platform_access::init_view(_view, self);
    _tracking_area = nil;
    [self updateTrackingAreas];
@@ -79,7 +81,7 @@ namespace
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification object:[self window]
    ];
-   
+
    // $$$ Black $$$
    self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 }
@@ -124,6 +126,15 @@ namespace
          float(dirty.origin.y + dirty.size.height)
       }
    );
+
+   // If this is our first time, let's do a redraw. The view may have been
+   // resized inside _view.draw and a redraw makes sure that the view is
+   // properly displayed.
+   if (_first_time)
+   {
+      _first_time = false;
+      [self display];
+   }
 }
 
 - (void) mouseDown:(NSEvent*) event
@@ -259,7 +270,7 @@ namespace
       _view.scroll(delta, { float(pos.x), float(pos.y) });
 
    [self displayIfNeeded];
-   [super scrollWheel: event];
+   //[super scrollWheel: event];
 }
 
 namespace

@@ -17,6 +17,18 @@ namespace photon
       auto size_ = size();
       clamp(size_.x, limits_.min.x, limits_.max.x);
       clamp(size_.y, limits_.min.y, limits_.max.y);
+
+      if (_maintain_aspect)
+      {
+         auto aspect = limits_.min.x/limits_.min.y;
+         auto current_aspect = size_.x/size_.y;
+         if (std::floor(aspect * 100) != std::floor(current_aspect * 100))
+         {
+            size_.x *= aspect;
+            size_.y = size_.x;
+         }
+      }
+
       if (size_ != size())
          size(size_);
    }
@@ -30,7 +42,7 @@ namespace photon
       canvas cnv{ *context_ };
       basic_context bctx{ *this, cnv };
       set_limits(bctx);
-
+      
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
 
@@ -47,7 +59,8 @@ namespace photon
 
       // draw the subject
       content.draw(ctx);
-
+      
+      // Cleanup the context
       cairo_destroy(context_);
    }
 

@@ -56,7 +56,7 @@ namespace photon
       CFRelease(resourcesURL);
       chdir(path);
 
-      client::init(*this);
+      client::init_view(*this);
    }
 
    cairo_t* view::setup_context()

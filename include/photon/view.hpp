@@ -26,13 +26,12 @@ namespace client
    // Main user initialization. This client supplied function initializes the view at
    // construction time. This is the main customization point provided for clients.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   void  init(photon::view& v);
+   void init_view(photon::view& v);
 }
 
 namespace photon
 {
    struct view_impl;
-   class platform_access;
    struct context;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +105,7 @@ namespace photon
       cairo_t*             setup_context();
       void                 set_limits(basic_context& bctx);
 
-      friend class platform_access;
+      friend class platform_view_access;
 
       view_impl*           _impl;
       rect                 _dirty;

@@ -33,7 +33,7 @@
 
 namespace photon
 {
-   class platform_access
+   class platform_view_access
    {
    public:
 
@@ -63,7 +63,7 @@ namespace
 {
    _first_time = true;
 
-   photon::platform_access::init_view(_view, self);
+   photon::platform_view_access::init_view(_view, self);
    _tracking_area = nil;
    [self updateTrackingAreas];
 

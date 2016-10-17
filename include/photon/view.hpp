@@ -39,8 +39,9 @@ namespace photon
    // client specific behavior and builds the view's content. The client typically
    // creates a subclass of this and assigns it to the view's app member.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   struct application
+   class application
    {
+   public:
                      application(view& view_)
                       : _view(view_)
                      {}

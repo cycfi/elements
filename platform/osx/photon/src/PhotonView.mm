@@ -29,20 +29,8 @@
 
 =================================================================================================*/
 #import <PhotonView.hpp>
-#import <cairo-quartz.h>
-
-namespace photon
-{
-   class platform_view_access
-   {
-   public:
-
-      static void init_view(view& v, PhotonView* self_)
-      {
-         v._impl = (__bridge view_impl*) self_;
-      }
-   };
-};
+#import <osx_view.hpp>
+#import <cairo-quartz.h>v._impl
 
 // Helper utils
 namespace

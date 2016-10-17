@@ -35,9 +35,24 @@ namespace photon
    struct context;
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // The Application. There's one of this per view. The application provides the
+   // client specific behavior and builds the view's content. The client typically
+   // creates a subclass of this and assigns it to the view's app member.
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct application
+   {
+                     application(view& view_)
+                      : _view(view_)
+                     {}
+
+      virtual        ~application() {}
+
+      view&          _view;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // The View. There's only one of this per window.
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   struct application {};
    using application_ptr = std::shared_ptr<application>;
 
    enum class cursor_type

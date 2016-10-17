@@ -190,6 +190,12 @@ namespace photon
    {
       return align_center(align_top(subject));
    }
+   
+   template <typename Subject>
+   inline auto align_dead_center(Subject const& subject)
+   {
+      return align_center(align_middle(subject));
+   }
 }
 
 #endif

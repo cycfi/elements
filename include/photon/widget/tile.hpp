@@ -36,7 +36,7 @@ namespace photon
    inline auto vtile(W&&... elements)
    {
       array_composite<sizeof...(elements), vtile_widget> r{};
-      r = { share(std::forward<W>(elements))... };
+      r = {{ share(std::forward<W>(elements))... }};
       return r;
    }
 
@@ -64,7 +64,7 @@ namespace photon
    inline auto htile(W&&... elements)
    {
       array_composite<sizeof...(elements), htile_widget> r{};
-      r = { share(std::forward<W>(elements))... };
+      r = {{ share(std::forward<W>(elements))... }};
       return r;
    }
 }

@@ -471,7 +471,7 @@ namespace photon
 
    template <typename Subject>
    inline fit_widget<typename std::decay<Subject>::type>
-   fit(point size, Subject&& subject)
+   fit_scaled(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
    }

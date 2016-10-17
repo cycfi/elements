@@ -180,21 +180,33 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
+   inline auto align_center_top(Subject const& subject)
+   {
+      return align_center(align_top(subject));
+   }
+
+   template <typename Subject>
    inline auto align_center_middle(Subject const& subject)
    {
       return align_center(align_middle(subject));
    }
 
    template <typename Subject>
-   inline auto align_center_top(Subject const& subject)
+   inline auto align_center_bottom(Subject const& subject)
    {
-      return align_center(align_top(subject));
+      return align_center(align_bottom(subject));
    }
    
    template <typename Subject>
-   inline auto align_dead_center(Subject const& subject)
+   inline auto align_left_middle(Subject const& subject)
    {
-      return align_center(align_middle(subject));
+      return align_left(align_middle(subject));
+   }
+   
+   template <typename Subject>
+   inline auto align_right_middle(Subject const& subject)
+   {
+      return align_right(align_middle(subject));
    }
 }
 

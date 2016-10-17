@@ -7,7 +7,7 @@
 #include <CocoaUtils.hpp>
 #include <dlfcn.h>
 
-CFBundleRef GetBundleFromExecutable (const char* filepath)
+CFBundleRef GetBundleFromExecutable(const char* filepath)
 {
 	NSString* execStr = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
 	NSString* macOSStr = [execStr stringByDeletingLastPathComponent];

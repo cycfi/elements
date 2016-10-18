@@ -4,7 +4,7 @@
    Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
    http://creativecommons.org/licenses/by-sa/4.0/
 
-   Based on GLFW2
+   Based on GLFW3
 
    Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
 

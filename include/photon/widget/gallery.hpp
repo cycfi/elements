@@ -508,7 +508,7 @@ namespace photon
          std::move(panel)
       );
    }
-   
+
    template <typename InputBox>
    inline auto input_box(
       InputBox&& text_input
@@ -520,7 +520,7 @@ namespace photon
 
    inline auto input_box(
       std::string const& placeholder
-    , rect pad  = rect{ 5, 5, 5, 4 }
+    , rect pad = rect{ 5, 5, 5, 4 }
    )
    {
       return input_box(
@@ -531,13 +531,43 @@ namespace photon
 
    inline auto input_box(
       char const* placeholder
-    , rect pad  = rect{ 5, 5, 5, 4 }
+    , rect pad = rect{ 5, 5, 5, 4 }
    )
    {
       return input_box(
          basic_input_box{ placeholder }
        , pad
       );
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Dials
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   inline auto dial(
+      reference<dial_base>&   control
+    , char const*             knob_sprite
+    , float                   knob_height
+    , char const*             background_image
+    , char const*             caption_text
+    , float                   scale = 1.0/5
+    , float                   caption_size = 0.3
+   )
+   {
+      auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
+      auto lines = image{ background_image, scale };
+      control = reference<dial_base>(share(dial(knob)));
+
+      return
+         align_center_middle(
+            caption(
+               layer(
+                  align_center_middle(control),
+                  lines
+               ),
+               caption_text,  // caption
+               0.3            // relative caption text size
+            )
+         );
    }
 }
 

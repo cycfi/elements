@@ -55,6 +55,7 @@ namespace photon
                            {}
 
       virtual void         draw(context const& ctx);
+      virtual void         refresh(context const& ctx, widget& widget);
       virtual hit_info     hit_element(context const& ctx, point p) const;
       virtual bool         focus(focus_request r);
 

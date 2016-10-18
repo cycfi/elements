@@ -35,6 +35,7 @@ namespace photon
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point dir, point p);
+      virtual void            refresh(context const& ctx, widget& widget);
 
    // Control
 
@@ -121,6 +122,13 @@ namespace photon
    reference<Widget>::scroll(context const& ctx, point dir, point p)
    {
       return ptr->scroll(ctx, dir, p);
+   }
+
+   template <typename Widget>
+   inline void
+   reference<Widget>::refresh(context const& ctx, widget& widget)
+   {
+      ptr->refresh(ctx, widget);
    }
 
    template <typename Widget>

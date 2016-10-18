@@ -74,6 +74,7 @@ namespace photon
       view&                operator=(view const&) = delete;
 
       void                 draw(rect dirty_);
+      void                 refresh(widget& widget);
       point                cursor_pos() const;
       void                 click(mouse_button btn);
       void                 drag(mouse_button btn);

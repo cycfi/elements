@@ -6,6 +6,7 @@
 =================================================================================================*/
 #include <photon/widget/proxy.hpp>
 #include <photon/support/context.hpp>
+#include <photon/view.hpp>
 
 namespace photon
 {
@@ -40,6 +41,21 @@ namespace photon
       prepare_subject(sctx);
       subject().layout(sctx);
       restore_subject(sctx);
+   }
+
+   void proxy_base::refresh(context const& ctx, widget& widget)
+   {
+      if (&widget == this)
+      {
+         ctx.view.refresh(ctx);
+      }
+      else
+      {
+         context sctx { ctx, &subject(), ctx.bounds };
+         prepare_subject(sctx);
+         subject().refresh(sctx, widget);
+         restore_subject(sctx);
+      }
    }
 
    void proxy_base::prepare_subject(context& ctx)

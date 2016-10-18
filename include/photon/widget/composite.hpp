@@ -40,6 +40,7 @@ namespace photon
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;
       virtual bool            scroll(context const& ctx, point dir, point p);
+      virtual void            refresh(context const& ctx, widget& widget);
 
    // Control
 

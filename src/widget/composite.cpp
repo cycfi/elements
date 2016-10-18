@@ -46,6 +46,24 @@ namespace photon
       }
    }
 
+   void composite_base::refresh(context const& ctx, widget& widget)
+   {
+      if (&widget == this)
+      {
+         ctx.view.refresh(ctx);
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+         {
+            rect bounds = bounds_of(ctx, ix);
+            auto& e = at(ix);
+            context ectx{ ctx, &e, bounds };
+            e.refresh(ectx, widget);
+         }
+      }
+   }
+
    widget* composite_base::click(context const& ctx, mouse_button btn)
    {
       point p = btn.pos;
@@ -152,7 +170,7 @@ namespace photon
             // If we're previously tracking an element, send it a 'leaving' message
             if (_cursor_info.element && _cursor_info.element != info.element)
                cursor_leaving(ctx, p, _cursor_info);
-         
+
             context ectx{ ctx, info.element, info.bounds };
             bool r = info.element->cursor(ectx, p, status);
             if (r)

@@ -113,6 +113,21 @@ namespace photon
       }
    }
 
+   void deck_widget::refresh(context const& ctx, widget& widget)
+   {
+      if (&widget == this)
+      {
+         ctx.view.refresh(ctx);
+      }
+      else
+      {
+         rect bounds = bounds_of(ctx, _selected_index);
+         auto& elem = at(_selected_index);
+         context ectx{ ctx, &elem, bounds };
+         elem.refresh(ectx, widget);
+      }
+   }
+
    layer_widget::hit_info deck_widget::hit_element(context const& ctx, point p) const
    {
       auto& e = at(_selected_index);

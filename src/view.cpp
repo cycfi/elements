@@ -42,7 +42,7 @@ namespace photon
       canvas cnv{ *context_ };
       basic_context bctx{ *this, cnv };
       set_limits(bctx);
-      
+
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
 
@@ -59,7 +59,7 @@ namespace photon
 
       // draw the subject
       content.draw(ctx);
-      
+
       // Cleanup the context
       cairo_destroy(context_);
    }
@@ -79,6 +79,14 @@ namespace photon
          cairo_surface_destroy(surface_);
          cairo_destroy(context_);
       }
+   }
+
+   void view::refresh(widget& widget)
+   {
+      call(
+         [&widget](auto const& ctx, auto& content) { content.refresh(ctx, widget); },
+         *this, _current_bounds
+      );
    }
 
    void view::click(mouse_button btn)

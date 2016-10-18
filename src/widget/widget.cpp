@@ -6,6 +6,7 @@
 =================================================================================================*/
 #include <photon/widget/widget.hpp>
 #include <photon/support.hpp>
+#include <photon/view.hpp>
 
 namespace photon
 {
@@ -29,6 +30,12 @@ namespace photon
 
    void widget::layout(context const& ctx)
    {
+   }
+
+   void widget::refresh(context const& ctx, widget& widget)
+   {
+      if (&widget == this)
+         ctx.view.refresh(ctx);
    }
 
    widget* widget::click(context const& ctx, mouse_button btn)

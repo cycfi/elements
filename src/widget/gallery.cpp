@@ -10,6 +10,13 @@
 
 namespace photon
 {
+   void background_fill::draw(context const& ctx)
+   {
+      auto&  cnv = ctx.canvas;
+      cnv.fill_style(_color);
+      cnv.fill_rect(ctx.bounds);
+   }
+
    widget_limits heading::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();

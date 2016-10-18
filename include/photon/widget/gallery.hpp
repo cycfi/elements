@@ -14,22 +14,31 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Background Fill
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   struct background_fill : widget
+   {
+                     background_fill(color color_)
+                      : _color(color_)
+                     {}
+
+      void           draw(context const& ctx);
+      color          _color;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    // Frames
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class frame : public widget
+   struct frame : public widget
    {
-   public:
-
       virtual void   draw(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Headings
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class heading : public widget
+   struct heading : widget
    {
-   public:
-
                               heading(std::string const& text, float size_ = 1.0)
                                : _text(text)
                                , _size(size_)
@@ -43,19 +52,15 @@ namespace photon
 
       using widget::text;
 
-   private:
-
-      std::string       _text;
-      float             _size;
+      std::string             _text;
+      float                   _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class label : public widget
+   struct label : widget
    {
-   public:
-
                               label(std::string const& text, float size_ = 1.0)
                                : _text(text)
                                , _size(size_)
@@ -69,27 +74,21 @@ namespace photon
 
       using widget::text;
 
-   private:
-
-      std::string       _text;
-      float             _size;
+      std::string             _text;
+      float                   _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Grid Lines
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class vgrid_lines : public widget
+   struct vgrid_lines : widget
    {
-   public:
-
                               vgrid_lines(float major_divisions, float minor_divisions)
                                : _major_divisions(major_divisions)
                                , _minor_divisions(minor_divisions)
                               {}
 
       virtual void            draw(context const& ctx);
-
-   private:
 
       float                   _major_divisions;
       float                   _minor_divisions;
@@ -173,15 +172,12 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Icons
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class icon : public widget
+   struct icon : widget
    {
-   public:
                               icon(std::uint32_t code_, float size_ = -1);
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
-
-   private:
 
       std::uint32_t           _code;
       float                   _size;
@@ -193,18 +189,14 @@ namespace photon
    auto const button_margin = rect{ 10, 5, 10, 5 };
    auto const default_button_color = color{ 0, 0, 0, 0 };
 
-   class basic_button_body : public widget
+   struct basic_button_body : public widget
    {
-   public:
-
       static float corner_radius;
 
-                     basic_button_body(color body_color);
-      virtual void   draw(context const& ctx);
+                              basic_button_body(color body_color);
+      virtual void            draw(context const& ctx);
 
-   private:
-
-      color          body_color;
+      color                   body_color;
    };
 
    inline basic_button_body::basic_button_body(color body_color)
@@ -348,17 +340,14 @@ namespace photon
    );
 
    template <bool state>
-   class check_box_widget : public widget
+   struct check_box_widget : widget
    {
-   public:
                               check_box_widget(std::string const& text)
                                : _text(text)
                               {}
 
       virtual widget_limits   limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
-
-   private:
 
       std::string             _text;
    };
@@ -391,9 +380,8 @@ namespace photon
    void draw_icon_button(context const& ctx, uint32_t code, float size, bool state, bool hilite);
 
    template <bool state>
-   class icon_button_widget : public widget
+   struct icon_button_widget : widget
    {
-   public:
                               icon_button_widget(uint32_t code, float size)
                                : _code(code)
                                , _size(size)
@@ -447,10 +435,8 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Menu Background
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class menu_background : public widget
+   struct menu_background : widget
    {
-   public:
-
       virtual void            draw(context const& ctx);
    };
 
@@ -467,10 +453,8 @@ namespace photon
       return basic_menu_item(menu_item_text(text));
    }
 
-   class menu_item_spacer_widget : public widget
+   struct menu_item_spacer_widget : public widget
    {
-   public:
-
       virtual widget_limits limits(basic_context const& ctx) const;
       virtual void          draw(context const& ctx);
    };
@@ -483,10 +467,8 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Text Entry
    ////////////////////////////////////////////////////////////////////////////////////////////////
-   class input_panel : public widget
+   struct input_panel : public widget
    {
-   public:
-
       virtual void draw(context const& ctx);
    };
 

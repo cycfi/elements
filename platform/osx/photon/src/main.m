@@ -1,11 +1,9 @@
-//
-//  main.m
-//  Photon
-//
-//  Created by Joel on 14/08/2016.
-//  Copyright © 2016 Cycfi Research. All rights reserved.
-//
+/*=================================================================================================
+   Copyright (c) 2016 Joel de Guzman
 
+   Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
+   http://creativecommons.org/licenses/by-sa/4.0/
+=================================================================================================*/
 #import <Cocoa/Cocoa.h>
 
 int main(int argc, const char * argv[])

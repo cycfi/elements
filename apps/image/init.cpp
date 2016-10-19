@@ -31,10 +31,13 @@ namespace client
       return scroller(space);
    }
 
-   void  init_view(photon::view& view_)
+   init_view _init_view
    {
-      view_.content.push_back(share(background{}));
-      view_.content.push_back(share(make_view_port()));
-   }
+       [](photon::view& view_)
+       {
+         view_.content.push_back(share(background{}));
+         view_.content.push_back(share(make_view_port()));
+       }
+   };
 }
 

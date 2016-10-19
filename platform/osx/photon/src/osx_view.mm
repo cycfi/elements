@@ -28,11 +28,24 @@
       distribution.
 
 =================================================================================================*/
-#import <Cocoa/Cocoa.h>
+#include <Cocoa/Cocoa.h>
 #include <photon/view.hpp>
 #include <PhotonView.hpp>
 #include <CocoaUtils.hpp>
-#import <cairo-quartz.h>
+#include <cairo-quartz.h>
+
+namespace client
+{
+   namespace
+   {
+      void (*_init_view)(photon::view& v) = nullptr;
+   }
+   
+   init_view::init_view(init_view_function f)
+   {
+      _init_view = f;
+   }
+}
 
 namespace photon
 {
@@ -56,7 +69,8 @@ namespace photon
       CFRelease(resourcesURL);
       chdir(path);
 
-      client::init_view(*this);
+      PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
+      client::_init_view(*this);
    }
 
    cairo_t* view::setup_context()

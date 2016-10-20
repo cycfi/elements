@@ -92,16 +92,13 @@ namespace photon
       void                 focus(focus_request r);
       bool                 is_focus() const;
 
+      widget_limits        limits();
+      void                 set_constraints(bool maintain_aspect);
       point                size() const;
-      void                 size(point size_);
-      void                 limits(widget_limits limits_) const;
 
       void                 refresh();
       void                 refresh(context const& ctx);
       rect                 dirty() const                 { return _dirty; }
-
-      bool                 maintain_aspect() const       { return _maintain_aspect; }
-      void                 maintain_aspect(bool flag)    { _maintain_aspect = flag; }
 
       std::string          clipboard() const;
       void                 clipboard(std::string const& text) const;
@@ -124,14 +121,13 @@ namespace photon
    private:
 
       cairo_t*             setup_context();
-      void                 set_limits(basic_context& bctx);
+      //void                 set_limits(basic_context& bctx);
 
       friend class platform_view_access;
 
       view_impl*           _impl;
       rect                 _dirty;
       rect                 _current_bounds;
-      bool                 _maintain_aspect;
 
       using undo_stack_type = std::stack<undo_redo_task>;
 

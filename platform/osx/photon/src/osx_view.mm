@@ -34,19 +34,6 @@
 #include <CocoaUtils.hpp>
 #include <cairo-quartz.h>
 
-namespace client
-{
-   namespace
-   {
-      void (*_init_view)(photon::view& v) = nullptr;
-   }
-   
-   init_view::init_view(init_view_function f)
-   {
-      _init_view = f;
-   }
-}
-
 namespace photon
 {
    namespace
@@ -59,7 +46,6 @@ namespace photon
 
    view::view()
     : _impl(nullptr)
-    , _maintain_aspect(false)
    {
       // Before calling client::init, set the working directory so we can access our resources
       CFBundleRef mainBundle = GetCurrentBundle();
@@ -68,9 +54,6 @@ namespace photon
       CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
       CFRelease(resourcesURL);
       chdir(path);
-
-      PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
-      client::_init_view(*this);
    }
 
    cairo_t* view::setup_context()
@@ -104,21 +87,106 @@ namespace photon
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void view::size(point size_)
+   void view::set_constraints(bool maintain_aspect)
    {
+      auto limits_ = limits();
+      if (limits_.min.y == 0)
+         maintain_aspect = false;
+
       auto  ns_view = get_mac_view(_impl);
-      ns_view.bounds.origin = NSMakePoint(0, 0);
-      [[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
+
+      [ns_view removeConstraints:[ns_view constraints]];
+
+      if (maintain_aspect)
+      {
+         NSLayoutConstraint* constraint =
+            [NSLayoutConstraint
+               constraintWithItem : ns_view
+                        attribute : NSLayoutAttributeWidth
+                        relatedBy : NSLayoutRelationEqual
+                           toItem : ns_view
+                        attribute : NSLayoutAttributeHeight
+                       multiplier : limits_.min.x / limits_.min.y
+                         constant : 0.0f
+            ];
+         [ns_view addConstraint:constraint];
+      }
+
+      {
+         NSLayoutConstraint* constraint =
+            [NSLayoutConstraint
+               constraintWithItem : ns_view
+                        attribute : NSLayoutAttributeWidth
+                        relatedBy : NSLayoutRelationLessThanOrEqual
+                           toItem : nil
+                        attribute : NSLayoutAttributeNotAnAttribute
+                       multiplier : 1.0
+                         constant : limits_.max.x
+            ];
+         [ns_view addConstraint:constraint];
+      }
+
+      {
+         NSLayoutConstraint* constraint =
+            [NSLayoutConstraint
+               constraintWithItem : ns_view
+                        attribute : NSLayoutAttributeWidth
+                        relatedBy : NSLayoutRelationGreaterThanOrEqual
+                           toItem : nil
+                        attribute : NSLayoutAttributeNotAnAttribute
+                       multiplier : 1.0
+                         constant : limits_.min.x
+            ];
+         [ns_view addConstraint:constraint];
+      }
+
+      if (!maintain_aspect)
+      {
+         {
+            NSLayoutConstraint* constraint =
+               [NSLayoutConstraint
+                  constraintWithItem : ns_view
+                           attribute : NSLayoutAttributeHeight
+                           relatedBy : NSLayoutRelationLessThanOrEqual
+                              toItem : nil
+                           attribute : NSLayoutAttributeNotAnAttribute
+                          multiplier : 1.0
+                            constant : limits_.max.y
+               ];
+            [ns_view addConstraint:constraint];
+         }
+
+         {
+            NSLayoutConstraint* constraint =
+               [NSLayoutConstraint
+                  constraintWithItem : ns_view
+                           attribute : NSLayoutAttributeHeight
+                           relatedBy : NSLayoutRelationGreaterThanOrEqual
+                              toItem : nil
+                           attribute : NSLayoutAttributeNotAnAttribute
+                          multiplier : 1.0
+                            constant : limits_.min.y
+               ];
+            [ns_view addConstraint:constraint];
+         }
+      }
    }
 
-   void view::limits(widget_limits limits_) const
-   {
-      auto ns_view = get_mac_view(_impl);
-      [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
-      [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
-      if (_maintain_aspect)
-         [[ns_view window] setContentAspectRatio:NSSize{ limits_.min.x, limits_.min.y } ];
-   }
+//   void view::size(point size_)
+//   {
+//      auto  ns_view = get_mac_view(_impl);
+//      ns_view.bounds.origin = NSMakePoint(0, 0);
+//      [[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
+//   }
+
+//   void view::limits(widget_limits limits_) const
+//   {
+//      auto ns_view = get_mac_view(_impl);
+//      [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
+//      [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
+//      if (_set_constraints)
+//         [[ns_view window] setContentAspectRatio:NSSize{ limits_.min.x, limits_.min.y } ];
+//   }
 
    void view::refresh()
    {

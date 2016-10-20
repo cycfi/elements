@@ -9,6 +9,61 @@
 
 namespace photon
 {
+   void view::set_limits(basic_context& bctx)
+   {
+      auto limits_ = content.limits(bctx);
+      limits(limits_);
+
+      auto size_ = size();
+      clamp(size_.x, limits_.min.x, limits_.max.x);
+      clamp(size_.y, limits_.min.y, limits_.max.y);
+
+      if (_maintain_aspect)
+      {
+         auto aspect = limits_.min.x/limits_.min.y;
+         auto current_aspect = size_.x/size_.y;
+         if (std::floor(aspect * 100) != std::floor(current_aspect * 100))
+         {
+            size_.x *= aspect;
+            size_.y = size_.x;
+         }
+      }
+
+      if (size_ != size())
+         size(size_);
+   }
+
+   void view::draw(rect dirty_)
+   {
+      auto context_ = setup_context();
+
+      _dirty = dirty_;
+
+      canvas cnv{ *context_ };
+      basic_context bctx{ *this, cnv };
+      set_limits(bctx);
+
+      auto size_ = size();
+      rect subj_bounds = { 0, 0, size_.x, size_.y };
+
+      // layout the subject only if the window bounds changes
+      context ctx{ *this, cnv, &content, subj_bounds };
+      if (subj_bounds != _current_bounds)
+      {
+         _current_bounds = subj_bounds;
+         content.layout(ctx);
+
+         // Check the limits again, it can change after layout
+         set_limits(bctx);
+      }
+
+      // draw the subject
+      content.draw(ctx);
+
+      // Cleanup the context
+      cairo_destroy(context_);
+   }
+
    namespace
    {
       template <typename F, typename This>
@@ -24,44 +79,6 @@ namespace photon
          cairo_surface_destroy(surface_);
          cairo_destroy(context_);
       }
-   }
-
-   widget_limits view::limits()
-   {
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-
-      canvas cnv{ *context_ };
-      basic_context bctx{ *this, cnv };
-      auto limits_ = content.limits(bctx);
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
-      return limits_;
-   }
-
-   void view::draw(rect dirty_)
-   {
-      auto context_ = setup_context();
-
-      _dirty = dirty_;
-
-      canvas cnv{ *context_ };
-      auto size_ = size();
-      rect subj_bounds = { 0, 0, size_.x, size_.y };
-
-      // layout the subject only if the view bounds change
-      context ctx{ *this, cnv, &content, subj_bounds };
-      if (subj_bounds != _current_bounds)
-      {
-         _current_bounds = subj_bounds;
-         content.layout(ctx);
-      }
-
-      // draw the subject
-      content.draw(ctx);
-
-      // Cleanup the context
-      cairo_destroy(context_);
    }
 
    void view::refresh(widget& widget)

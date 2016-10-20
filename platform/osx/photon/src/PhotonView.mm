@@ -45,19 +45,6 @@ namespace
    }
 }
 
-namespace client
-{
-   namespace
-   {
-      void (*_init_view)(photon::view& v) = nullptr;
-   }
-
-   init_view::init_view(init_view_function f)
-   {
-      _init_view = f;
-   }
-}
-
 @implementation PhotonView
 
 - (void) awakeFromNib
@@ -66,10 +53,6 @@ namespace client
 
    photon::platform_view_access::init_view(_view, self);
    _tracking_area = nil;
-
-   PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
-   client::_init_view(_view);
-
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
@@ -120,24 +103,7 @@ namespace client
     return YES;
 }
 
-//- (void) setFrameSize :(NSSize) newSize
-//{
-//   auto limits = _view.limits();
-//
-//   if (newSize.width < limits.min.x)
-//      newSize.width = limits.min.x;
-//   else if (newSize.width > limits.max.x)
-//      newSize.width = limits.max.x;
-//
-//   if (newSize.height < limits.min.y)
-//      newSize.height = limits.min.y;
-//   else if (newSize.height > limits.max.y)
-//      newSize.height = limits.max.y;
-//
-//   [super setFrameSize : newSize];
-//}
-
-- (void) drawRect :(NSRect) dirty
+- (void) drawRect:(NSRect)dirty
 {
    [super drawRect:dirty];
    _view.draw(

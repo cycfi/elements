@@ -45,13 +45,35 @@ namespace
    }
 }
 
+namespace client
+{
+   namespace
+   {
+      void (*_init_view)(photon::view& v) = nullptr;
+   }
+
+   init_view::init_view(init_view_function f)
+   {
+      _init_view = f;
+   }
+}
+
 @implementation PhotonView
 
 - (void) awakeFromNib
 {
    _first_time = true;
 
+    //NSRect f = self.frame;
+    //f.size.width = 350;
+    //f.size.height = 150;
+    //self.frame = f;
+
    photon::platform_view_access::init_view(_view, self);
+
+   PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
+   client::_init_view(_view);
+
    _tracking_area = nil;
    [self updateTrackingAreas];
 

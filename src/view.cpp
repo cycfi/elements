@@ -40,8 +40,8 @@ namespace photon
       _dirty = dirty_;
 
       canvas cnv{ *context_ };
-      basic_context bctx{ *this, cnv };
-      set_limits(bctx);
+//      basic_context bctx{ *this, cnv };
+//      set_limits(bctx);
 
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
@@ -54,7 +54,7 @@ namespace photon
          content.layout(ctx);
 
          // Check the limits again, it can change after layout
-         set_limits(bctx);
+         //set_limits(bctx);
       }
 
       // draw the subject

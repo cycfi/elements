@@ -34,19 +34,6 @@
 #include <CocoaUtils.hpp>
 #include <cairo-quartz.h>
 
-namespace client
-{
-   namespace
-   {
-      void (*_init_view)(photon::view& v) = nullptr;
-   }
-   
-   init_view::init_view(init_view_function f)
-   {
-      _init_view = f;
-   }
-}
-
 namespace photon
 {
    namespace
@@ -68,9 +55,6 @@ namespace photon
       CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
       CFRelease(resourcesURL);
       chdir(path);
-
-      PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
-      client::_init_view(*this);
    }
 
    cairo_t* view::setup_context()
@@ -108,7 +92,9 @@ namespace photon
    {
       auto  ns_view = get_mac_view(_impl);
       ns_view.bounds.origin = NSMakePoint(0, 0);
-      [[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
+      //[[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
+
+      [ns_view setFrameSize : NSMakeSize(size_.x, size_.y)];
    }
 
    void view::limits(widget_limits limits_) const

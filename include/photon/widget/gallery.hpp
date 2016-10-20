@@ -531,8 +531,8 @@ namespace photon
     , float                   knob_height
     , char const*             background_image
     , char const*             caption_text
-    , float                   scale = 1.0/5
-    , float                   caption_size = 0.3
+    , float                   scale = 1.0/4
+    , float                   caption_size = 1.0
    )
    {
       auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
@@ -547,7 +547,7 @@ namespace photon
                   lines
                ),
                caption_text,  // caption
-               0.3            // relative caption text size
+               caption_size   // relative caption text size
             )
          );
    }

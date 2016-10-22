@@ -23,6 +23,8 @@ using key_map = std::map<photon::key_code, photon::key_action>;
    bool                          _first_time;
 }
 
+- (void) make;
+
 @end
 
 // Internal Cocoa-only API

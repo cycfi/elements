@@ -60,7 +60,7 @@ namespace client
 
 @implementation PhotonView
 
-- (void) awakeFromNib
+- (void) make
 {
    _first_time = true;
 
@@ -94,6 +94,11 @@ namespace client
 
    // $$$ Black $$$
    self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+}
+
+- (void) awakeFromNib
+{
+   [self make];
 }
 
 - (void) dealloc

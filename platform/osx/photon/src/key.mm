@@ -1,8 +1,7 @@
 /*=================================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
-   http://creativecommons.org/licenses/by-sa/4.0/
+   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
 
    Key mapping ported to C++ from GLFW3
 
@@ -31,7 +30,7 @@
 #include <photon/support/key.hpp>
 #include <array>
 #include <algorithm>
-#import "PhotonView.hpp"
+#import <PhotonView.hpp>
 
 namespace photon
 {

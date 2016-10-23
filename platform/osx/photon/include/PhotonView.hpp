@@ -11,6 +11,13 @@
 #include <photon/support/key.hpp>
 #include <map>
 
+#ifndef PHOTON_CONCAT
+# define PHOTON_CONCAT(x,y) x ## y
+# define PHOTON_EVAL(x, y) PHOTON_CONCAT(x,y)
+#endif
+
+#define PhotonView PHOTON_EVAL(PHOTON_APP_PREFIX, PhotonView)
+
 using key_map = std::map<photon::key_code, photon::key_action>;
 
 @interface PhotonView : NSView <NSTextInputClient>

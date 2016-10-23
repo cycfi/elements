@@ -1,7 +1,7 @@
 /*=======================================================================================
    Copyright © 2016 Cycfi Research. All rights reserved.
 
-   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
+   Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =======================================================================================*/
 #if !defined(PHOTON_OSX_VIEW_AUGUST_20_2016)
 #define PHOTON_OSX_VIEW_AUGUST_20_2016

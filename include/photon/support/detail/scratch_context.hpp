@@ -1,7 +1,7 @@
 /*=======================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
+   Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =======================================================================================*/
 #include "cairo.h"
 

@@ -1,9 +1,8 @@
-/*=================================================================================================
+/*=======================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
-   http://creativecommons.org/licenses/by-sa/4.0/
-=================================================================================================*/
+   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
+=======================================================================================*/
 #if !defined(PHOTON_GUI_LIB_VIEW_AUGUST_15_2016)
 #define PHOTON_GUI_LIB_VIEW_AUGUST_15_2016
 
@@ -22,10 +21,10 @@ namespace photon
 
 namespace client
 {
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    // Main user initialization. This client supplied function initializes the view at
    // construction time. This is the main customization point provided for clients.
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    struct init_view
    {
       typedef void (*init_view_function)(photon::view& v);
@@ -38,11 +37,11 @@ namespace photon
    struct view_impl;
    struct context;
 
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    // The Application. There's one of this per view. The application provides the
    // client specific behavior and builds the view's content. The client typically
    // creates a subclass of this and assigns it to the view's app member.
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    class application
    {
    public:
@@ -55,9 +54,9 @@ namespace photon
       view&          _view;
    };
 
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    // The View. There's only one of this per window.
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    using application_ptr = std::shared_ptr<application>;
 
    enum class cursor_type

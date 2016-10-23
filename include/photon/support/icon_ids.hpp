@@ -1,9 +1,8 @@
-/*=================================================================================================
+/*=======================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
-   http://creativecommons.org/licenses/by-sa/4.0/
-=================================================================================================*/
+   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
+=======================================================================================*/
 #if !defined(PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016)
 #define PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016
 

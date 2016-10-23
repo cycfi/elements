@@ -1,8 +1,8 @@
-/*=================================================================================================
+/*=======================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Licensed under a Creative Commons Attribution-ShareAlike 4.0 International.
-   http://creativecommons.org/licenses/by-sa/4.0/
+   Distributed under the The MIT License (https://opensource.org/licenses/MIT)
+
 
    Key mapping ported to C++ from GLFW3
 
@@ -27,7 +27,7 @@
    3. This notice may not be removed or altered from any source
       distribution.
 
-=================================================================================================*/
+=======================================================================================*/
 #if !defined(PHOTON_GUI_LIB_KEY_APRIL_26_2016)
 #define PHOTON_GUI_LIB_KEY_APRIL_26_2016
 
@@ -182,9 +182,9 @@ namespace photon
       last              = menu,
    };
 
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    // Key info
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////
    struct key_info
    {
       key_code          key;

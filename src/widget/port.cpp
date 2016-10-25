@@ -1,7 +1,7 @@
 /*=======================================================================================
    Copyright (c) 2016 Joel de Guzman
 
-   Distributed under the MIT License (https://opensource.org/licenses/MIT)
+   Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =======================================================================================*/
 #include <photon/widget/port.hpp>
 #include <photon/view.hpp>

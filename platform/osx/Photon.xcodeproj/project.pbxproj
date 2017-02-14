@@ -7,45 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE151D685A0B00D7EE92 /* osx_view.mm */; };
-		5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
-		5D1366661D917127002A5B1E /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D1366651D917127002A5B1E /* key.mm */; };
-		5D213E0F1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */; };
-		5D213E101DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */; };
-		5D213E201DB1DC6200D8DE5A /* CocoaUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D213E1F1DB1DC6200D8DE5A /* CocoaUtils.mm */; };
-		5D2950BA1D75C25A00734694 /* dial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2950B91D75C25A00734694 /* dial.cpp */; };
-		5D3806AF1D70926100C6EB77 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
-		5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806B01D7191AA00C6EB77 /* slider.cpp */; };
-		5D4857231D7F1A65006D71FB /* theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4857221D7F1A65006D71FB /* theme.cpp */; };
-		5D4857251D7F1EC5006D71FB /* gallery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4857241D7F1EC5006D71FB /* gallery.cpp */; };
-		5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
-		5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
-		5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D5C65C31D7BD696002197F8 /* photon_basic.ttf */; };
-		5D5C65D81D7C2257002197F8 /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C65D71D7C2257002197F8 /* text_utils.cpp */; };
-		5D84EAB11D9A83A1000C6C8C /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D84EAB01D9A83A1000C6C8C /* port.cpp */; };
-		5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9ADA801D7CFAD700996964 /* pixmap.cpp */; };
-		5D9FCF3E1D9773A400D533ED /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9FCF3D1D9773A400D533ED /* text.cpp */; };
-		5DA3B5081D98728800C06FF5 /* glyphs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA3B5071D98728800C06FF5 /* glyphs.cpp */; };
-		5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
-		5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584971D6156CD004276C2 /* AppDelegate.m */; };
-		5DA5849C1D6156CD004276C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584981D6156CD004276C2 /* main.m */; };
-		5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5849A1D6156CD004276C2 /* PhotonView.mm */; };
-		5DA584AE1D618C41004276C2 /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584AD1D618C41004276C2 /* view.cpp */; };
-		5DA584B11D618F4C004276C2 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584B01D618F4C004276C2 /* widget.cpp */; };
-		5DACB74E1D8E9A34007517FC /* floating.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74D1D8E9A34007517FC /* floating.cpp */; };
-		5DACB7501D8E9B91007517FC /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74F1D8E9B91007517FC /* menu.cpp */; };
-		5DACB7541D8FC7B1007517FC /* popup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB7531D8FC7B1007517FC /* popup.cpp */; };
-		5DB059DF1D955E3D008D9712 /* flow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB059DE1D955E3D008D9712 /* flow.cpp */; };
-		5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9FDF11D800E4F0058DCA4 /* button.cpp */; };
-		5DC84A5F1DA4E300008E7EE3 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */; };
-		5DC84A601DA4E300008E7EE3 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */; };
-		5DC84A611DA4E300008E7EE3 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */; };
-		5DC84A621DA4E300008E7EE3 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */; };
-		5DC84A631DA4E300008E7EE3 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */; };
-		5DC84A641DA4E300008E7EE3 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5E1DA4E300008E7EE3 /* Roboto-Regular.ttf */; };
-		5DC84A661DA4E322008E7EE3 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A651DA4E322008E7EE3 /* images */; };
-		5DC84A681DA4E881008E7EE3 /* BlairMdITC TT-Medium in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */; };
-		5DC84A6A1DA5132D008E7EE3 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DC84A691DA5132D008E7EE3 /* libcairo.a */; };
+		5D702A561E532890005420A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D702A551E532890005420A6 /* Assets.xcassets */; };
 		5DDBCB9A1DB447A000E821BE /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584AD1D618C41004276C2 /* view.cpp */; };
 		5DDBCB9B1DB447A000E821BE /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D84EAB01D9A83A1000C6C8C /* port.cpp */; };
 		5DDBCB9C1DB447A000E821BE /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
@@ -81,7 +43,6 @@
 		5DDBCBBC1DB447A000E821BE /* BlairMdITC TT-Medium in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */; };
 		5DDBCBBD1DB447A000E821BE /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */; };
 		5DDBCBBE1DB447A000E821BE /* photon_basic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D5C65C31D7BD696002197F8 /* photon_basic.ttf */; };
-		5DDBCBBF1DB447A000E821BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED21D605F5D00FD087C /* Assets.xcassets */; };
 		5DDBCBC01DB447A000E821BE /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */; };
 		5DDBCBC11DB447A000E821BE /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */; };
 		5DDBCBC21DB447A000E821BE /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */; };
@@ -89,9 +50,6 @@
 		5DDBCBC41DB447A000E821BE /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */; };
 		5DDBCBC51DB447A000E821BE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D565ED41D605F5D00FD087C /* MainMenu.xib */; };
 		5DDBCBCD1DB447EE00E821BE /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDBCBCC1DB447EE00E821BE /* init.cpp */; };
-		5DE564191D6DE49900F9435C /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
-		5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641A1D6DE4CD00F9435C /* composite.cpp */; };
-		5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641C1D6DF16300F9435C /* proxy.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,12 +65,11 @@
 		5D3806B01D7191AA00C6EB77 /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
 		5D4857221D7F1A65006D71FB /* theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = theme.cpp; sourceTree = "<group>"; };
 		5D4857241D7F1EC5006D71FB /* gallery.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gallery.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		5D565EC91D605F5D00FD087C /* Photon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photon.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D565ED21D605F5D00FD087C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D565ED51D605F5D00FD087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		5D565ED71D605F5D00FD087C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D5C65C31D7BD696002197F8 /* photon_basic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = photon_basic.ttf; path = ../../assets/fonts/photon_basic.ttf; sourceTree = "<group>"; };
 		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
+		5D702A531E5327AE005420A6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = platform/osx/Info.plist; sourceTree = "<group>"; };
+		5D702A551E532890005420A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = platform/osx/Assets.xcassets; sourceTree = "<group>"; };
 		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
 		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = photon/include; sourceTree = SOURCE_ROOT; };
 		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
@@ -146,16 +103,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		5D565EC61D605F5D00FD087C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5D213E0F1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a in Frameworks */,
-				5D213E101DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a in Frameworks */,
-				5DC84A6A1DA5132D008E7EE3 /* libcairo.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5DDBCBB61DB447A000E821BE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -196,7 +143,6 @@
 		5D565ECA1D605F5D00FD087C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D565EC91D605F5D00FD087C /* Photon.app */,
 				5DDBCBC91DB447A000E821BE /* Image.app */,
 			);
 			name = Products;
@@ -205,9 +151,7 @@
 		5D565ECB1D605F5D00FD087C /* photon */ = {
 			isa = PBXGroup;
 			children = (
-				5D565ED21D605F5D00FD087C /* Assets.xcassets */,
 				5D565ED41D605F5D00FD087C /* MainMenu.xib */,
-				5D565ED71D605F5D00FD087C /* Info.plist */,
 				5D07FE1A1D6868E800D7EE92 /* include */,
 				5DA584AC1D618C41004276C2 /* src */,
 				5D8F88631DAAF44D0010DED5 /* platform */,
@@ -303,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				5DDBCBCC1DB447EE00E821BE /* init.cpp */,
+				5D702A531E5327AE005420A6 /* Info.plist */,
+				5D702A551E532890005420A6 /* Assets.xcassets */,
 			);
 			name = image;
 			path = ../../apps/image;
@@ -319,23 +265,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5D565EC81D605F5D00FD087C /* Photon */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5D565EDA1D605F5D00FD087C /* Build configuration list for PBXNativeTarget "Photon" */;
-			buildPhases = (
-				5D565EC51D605F5D00FD087C /* Sources */,
-				5D565EC61D605F5D00FD087C /* Frameworks */,
-				5D565EC71D605F5D00FD087C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Photon;
-			productName = Photon;
-			productReference = 5D565EC91D605F5D00FD087C /* Photon.app */;
-			productType = "com.apple.product-type.application";
-		};
 		5DDBCB981DB447A000E821BE /* Image */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5DDBCBC61DB447A000E821BE /* Build configuration list for PBXNativeTarget "Image" */;
@@ -359,13 +288,8 @@
 		5D565EC11D605F5D00FD087C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Cycfi Research";
-				TargetAttributes = {
-					5D565EC81D605F5D00FD087C = {
-						CreatedOnToolsVersion = 7.3;
-					};
-				};
 			};
 			buildConfigurationList = 5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -380,31 +304,12 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5D565EC81D605F5D00FD087C /* Photon */,
 				5DDBCB981DB447A000E821BE /* Image */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		5D565EC71D605F5D00FD087C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5DC84A661DA4E322008E7EE3 /* images in Resources */,
-				5DC84A681DA4E881008E7EE3 /* BlairMdITC TT-Medium in Resources */,
-				5DC84A621DA4E300008E7EE3 /* Roboto-Bold.ttf in Resources */,
-				5D5C65C41D7BD696002197F8 /* photon_basic.ttf in Resources */,
-				5D565ED31D605F5D00FD087C /* Assets.xcassets in Resources */,
-				5DC84A5F1DA4E300008E7EE3 /* OpenSans-Bold.ttf in Resources */,
-				5DC84A601DA4E300008E7EE3 /* OpenSans-Light.ttf in Resources */,
-				5DC84A611DA4E300008E7EE3 /* OpenSans-Regular.ttf in Resources */,
-				5DC84A641DA4E300008E7EE3 /* Roboto-Regular.ttf in Resources */,
-				5DC84A631DA4E300008E7EE3 /* Roboto-Light.ttf in Resources */,
-				5D565ED61D605F5D00FD087C /* MainMenu.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5DDBCBBA1DB447A000E821BE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -413,12 +318,12 @@
 				5DDBCBBC1DB447A000E821BE /* BlairMdITC TT-Medium in Resources */,
 				5DDBCBBD1DB447A000E821BE /* Roboto-Bold.ttf in Resources */,
 				5DDBCBBE1DB447A000E821BE /* photon_basic.ttf in Resources */,
-				5DDBCBBF1DB447A000E821BE /* Assets.xcassets in Resources */,
 				5DDBCBC01DB447A000E821BE /* OpenSans-Bold.ttf in Resources */,
 				5DDBCBC11DB447A000E821BE /* OpenSans-Light.ttf in Resources */,
 				5DDBCBC21DB447A000E821BE /* OpenSans-Regular.ttf in Resources */,
 				5DDBCBC31DB447A000E821BE /* Roboto-Regular.ttf in Resources */,
 				5DDBCBC41DB447A000E821BE /* Roboto-Light.ttf in Resources */,
+				5D702A561E532890005420A6 /* Assets.xcassets in Resources */,
 				5DDBCBC51DB447A000E821BE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,41 +331,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5D565EC51D605F5D00FD087C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5DA584AE1D618C41004276C2 /* view.cpp in Sources */,
-				5D84EAB11D9A83A1000C6C8C /* port.cpp in Sources */,
-				5D3806AF1D70926100C6EB77 /* image.cpp in Sources */,
-				5DA3B5081D98728800C06FF5 /* glyphs.cpp in Sources */,
-				5D1366661D917127002A5B1E /* key.mm in Sources */,
-				5D07FE1D1D686C4A00D7EE92 /* rect.cpp in Sources */,
-				5D9FCF3E1D9773A400D533ED /* text.cpp in Sources */,
-				5DE564191D6DE49900F9435C /* tile.cpp in Sources */,
-				5DA567A91D6E6ED0008FEFF9 /* layer.cpp in Sources */,
-				5D4857231D7F1A65006D71FB /* theme.cpp in Sources */,
-				5DA5849C1D6156CD004276C2 /* main.m in Sources */,
-				5D213E201DB1DC6200D8DE5A /* CocoaUtils.mm in Sources */,
-				5DB9FDF21D800E4F0058DCA4 /* button.cpp in Sources */,
-				5D07FE161D685A0B00D7EE92 /* osx_view.mm in Sources */,
-				5DA5849B1D6156CD004276C2 /* AppDelegate.m in Sources */,
-				5DA584B11D618F4C004276C2 /* widget.cpp in Sources */,
-				5DE5641D1D6DF16300F9435C /* proxy.cpp in Sources */,
-				5DA5849D1D6156CD004276C2 /* PhotonView.mm in Sources */,
-				5D2950BA1D75C25A00734694 /* dial.cpp in Sources */,
-				5DACB74E1D8E9A34007517FC /* floating.cpp in Sources */,
-				5D5C65D81D7C2257002197F8 /* text_utils.cpp in Sources */,
-				5DB059DF1D955E3D008D9712 /* flow.cpp in Sources */,
-				5D4857251D7F1EC5006D71FB /* gallery.cpp in Sources */,
-				5D3806B11D7191AA00C6EB77 /* slider.cpp in Sources */,
-				5DACB7541D8FC7B1007517FC /* popup.cpp in Sources */,
-				5DE5641B1D6DE4CD00F9435C /* composite.cpp in Sources */,
-				5DACB7501D8E9B91007517FC /* menu.cpp in Sources */,
-				5D9ADA811D7CFAD700996964 /* pixmap.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5DDBCB991DB447A000E821BE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -525,8 +395,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -576,8 +448,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -610,52 +484,6 @@
 			};
 			name = Release;
 		};
-		5D565EDB1D605F5D00FD087C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					./photon/include,
-					../../include,
-					../../client/include,
-					/usr/local/include/cairo,
-					"$(BOOST_ROOT)",
-				);
-				INFOPLIST_FILE = photon/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib/,
-					"$(BOOST_ROOT)/stage/lib",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		5D565EDC1D605F5D00FD087C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					./photon/include,
-					../../include,
-					../../client/include,
-					/usr/local/include/cairo,
-					"$(BOOST_ROOT)",
-				);
-				INFOPLIST_FILE = photon/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib/,
-					"$(BOOST_ROOT)/stage/lib",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		5DDBCBC71DB447A000E821BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -668,7 +496,7 @@
 					/usr/local/include/cairo,
 					"$(BOOST_ROOT)",
 				);
-				INFOPLIST_FILE = photon/Info.plist;
+				INFOPLIST_FILE = ../../apps/image/platform/osx/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib/,
@@ -691,7 +519,7 @@
 					/usr/local/include/cairo,
 					"$(BOOST_ROOT)",
 				);
-				INFOPLIST_FILE = photon/Info.plist;
+				INFOPLIST_FILE = ../../apps/image/platform/osx/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib/,
@@ -710,15 +538,6 @@
 			buildConfigurations = (
 				5D565ED81D605F5D00FD087C /* Debug */,
 				5D565ED91D605F5D00FD087C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5D565EDA1D605F5D00FD087C /* Build configuration list for PBXNativeTarget "Photon" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5D565EDB1D605F5D00FD087C /* Debug */,
-				5D565EDC1D605F5D00FD087C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

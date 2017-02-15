@@ -174,9 +174,9 @@
 		5D58AE741E53FC410044E571 /* platform */ = {
 			isa = PBXGroup;
 			children = (
+				5D58AE6A1E53FB930044E571 /* main.m */,
 				5D58AE681E53FB930044E571 /* AppDelegate.h */,
 				5D58AE691E53FB930044E571 /* AppDelegate.m */,
-				5D58AE6A1E53FB930044E571 /* main.m */,
 				5D58AE6D1E53FBB30044E571 /* Info.plist */,
 				5D58AE6F1E53FBC70044E571 /* Assets.xcassets */,
 				5D58AE711E53FBD70044E571 /* MainMenu.xib */,

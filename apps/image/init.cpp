@@ -32,11 +32,10 @@ namespace client
 
    init_view _init_view
    {
-       [](photon::view& view_)
-       {
+      [](photon::view& view_)
+      {
          view_.content.push_back(share(background{}));
          view_.content.push_back(share(make_view_port()));
-       }
+      }
    };
 }
-

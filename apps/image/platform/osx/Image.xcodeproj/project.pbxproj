@@ -93,7 +93,7 @@
 		5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../../assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		5DC84A5D1DA4E300008E7EE3 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Light.ttf"; path = "../../assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		5DC84A5E1DA4E300008E7EE3 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
-		5DC84A651DA4E322008E7EE3 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../assets/images; sourceTree = "<group>"; };
+		5DC84A651DA4E322008E7EE3 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = assets/images; sourceTree = "<group>"; };
 		5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BlairMdITC TT-Medium"; path = "../../assets/fonts/BlairMdITC TT-Medium"; sourceTree = "<group>"; };
 		5DC84A691DA5132D008E7EE3 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../../usr/local/lib/libcairo.a; sourceTree = LIB; };
 		5DDBCBC91DB447A000E821BE /* Image.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Image.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,7 +135,6 @@
 			children = (
 				5DDBCBCE1DB447F500E821BE /* app */,
 				5DC84A6B1DA51346008E7EE3 /* lib */,
-				5DC84A651DA4E322008E7EE3 /* images */,
 				5D5C65C21D7BD67C002197F8 /* fonts */,
 				5D565ECB1D605F5D00FD087C /* photon */,
 				5D565ECA1D605F5D00FD087C /* Products */,
@@ -259,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				5DDBCBCC1DB447EE00E821BE /* init.cpp */,
+				5DC84A651DA4E322008E7EE3 /* images */,
 				5D58AE741E53FC410044E571 /* platform */,
 			);
 			name = app;
@@ -317,17 +317,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D58AE6E1E53FBB30044E571 /* Info.plist in Resources */,
+				5D58AE731E53FBD70044E571 /* MainMenu.xib in Resources */,
 				5DDBCBBB1DB447A000E821BE /* images in Resources */,
+				5D58AE701E53FBC70044E571 /* Assets.xcassets in Resources */,
 				5DDBCBBC1DB447A000E821BE /* BlairMdITC TT-Medium in Resources */,
 				5DDBCBBD1DB447A000E821BE /* Roboto-Bold.ttf in Resources */,
 				5DDBCBBE1DB447A000E821BE /* photon_basic.ttf in Resources */,
 				5DDBCBC01DB447A000E821BE /* OpenSans-Bold.ttf in Resources */,
 				5DDBCBC11DB447A000E821BE /* OpenSans-Light.ttf in Resources */,
 				5DDBCBC21DB447A000E821BE /* OpenSans-Regular.ttf in Resources */,
-				5D58AE6E1E53FBB30044E571 /* Info.plist in Resources */,
 				5DDBCBC31DB447A000E821BE /* Roboto-Regular.ttf in Resources */,
-				5D58AE701E53FBC70044E571 /* Assets.xcassets in Resources */,
-				5D58AE731E53FBD70044E571 /* MainMenu.xib in Resources */,
 				5DDBCBC41DB447A000E821BE /* Roboto-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -63,11 +63,6 @@ namespace client
 {
    _first_time = true;
 
-    //NSRect f = self.frame;
-    //f.size.width = 350;
-    //f.size.height = 150;
-    //self.frame = f;
-
    photon::platform_view_access::init_view(_view, self);
 
    PHOTON_ASSERT(&client::_init_view, "Error. init_view is uninitialized.");
@@ -104,12 +99,12 @@ namespace client
 {
 }
 
-- (BOOL)canBecomeKeyView
+- (BOOL) canBecomeKeyView
 {
    return YES;
 }
 
-- (BOOL)acceptsFirstResponder
+- (BOOL) acceptsFirstResponder
 {
    return YES;
 }
@@ -119,12 +114,12 @@ namespace client
    return YES;
 }
 
-- (BOOL)canBecomeKeyWindow
+- (BOOL) canBecomeKeyWindow
 {
     return YES;
 }
 
-- (BOOL)canBecomeMainWindow
+- (BOOL) canBecomeMainWindow
 {
     return YES;
 }
@@ -205,19 +200,10 @@ namespace client
    [self displayIfNeeded];
 }
 
-- (void)updateTrackingAreas
+- (void) updateTrackingAreas
 {
    if (_tracking_area != nil)
       [self removeTrackingArea : _tracking_area];
-
-//   NSTrackingAreaOptions const options =
-//      NSTrackingMouseEnteredAndExited |
-//      NSTrackingActiveInKeyWindow |
-//      NSTrackingEnabledDuringMouseDrag |
-//      NSTrackingCursorUpdate |
-//      NSTrackingInVisibleRect |
-//      NSTrackingAssumeInside
-//   ;
 
    NSTrackingAreaOptions const options =
          NSTrackingMouseEnteredAndExited |
@@ -237,7 +223,7 @@ namespace client
     [super updateTrackingAreas];
 }
 
-- (void)mouseEntered:(NSEvent*) event
+- (void) mouseEntered:(NSEvent*) event
 {
    [[self window] setAcceptsMouseMovedEvents:YES];
    [[self window] makeFirstResponder:self];
@@ -247,7 +233,7 @@ namespace client
    [self displayIfNeeded];
 }
 
-- (void)mouseExited:(NSEvent*) event
+- (void) mouseExited:(NSEvent*) event
 {
    [[self window] setAcceptsMouseMovedEvents:NO];
    auto pos = [event locationInWindow];
@@ -256,7 +242,7 @@ namespace client
    [self displayIfNeeded];
 }
 
-- (void)mouseMoved:(NSEvent*) event
+- (void) mouseMoved:(NSEvent*) event
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
@@ -265,15 +251,9 @@ namespace client
    [super mouseMoved: event];
 }
 
-- (void)scrollWheel:(NSEvent*) event
+- (void) scrollWheel:(NSEvent*) event
 {
    photon::point delta = { float([event scrollingDeltaX]), float([event scrollingDeltaY]) };
-
-//   if ([event hasPreciseScrollingDeltas])
-//   {
-//      delta.x *= 0.1;
-//      delta.y *= 0.1;
-//   }
 
    if (event.directionInvertedFromDevice)
       delta.y = -delta.y;
@@ -284,7 +264,6 @@ namespace client
       _view.scroll(delta, { float(pos.x), float(pos.y) });
 
    [self displayIfNeeded];
-   //[super scrollWheel: event];
 }
 
 namespace
@@ -309,7 +288,7 @@ namespace
    }
 }
 
-- (void)keyDown:(NSEvent*) event
+- (void) keyDown:(NSEvent*) event
 {
    auto const key = photon::translate_key([event keyCode]);
    auto const mods = photon::translate_flags([event modifierFlags]);
@@ -318,7 +297,7 @@ namespace
    [self interpretKeyEvents:[NSArray arrayWithObject:event]];
 }
 
-- (void)flagsChanged:(NSEvent*) event
+- (void) flagsChanged:(NSEvent*) event
 {
    auto const modifier_flags =
        [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
@@ -342,7 +321,7 @@ namespace
    handle_key(*self, _view, { key, action, mods });
 }
 
-- (void)keyUp:(NSEvent*) event
+- (void) keyUp:(NSEvent*) event
 {
    auto const key = photon::translate_key([event keyCode]);
    auto const mods = photon::translate_flags([event modifierFlags]);
@@ -350,12 +329,12 @@ namespace
    handle_key(*self, _view, { key, photon::key_action::release, mods });
 }
 
-- (BOOL)hasMarkedText
+- (BOOL) hasMarkedText
 {
    return [_marked_text length] > 0;
 }
 
-- (NSRange)markedRange
+- (NSRange) markedRange
 {
    if ([_marked_text length] > 0)
       return NSMakeRange(0, [_marked_text length] - 1);
@@ -363,7 +342,7 @@ namespace
       return kEmptyRange;
 }
 
-- (NSRange)selectedRange
+- (NSRange) selectedRange
 {
     return kEmptyRange;
 }
@@ -378,23 +357,23 @@ namespace
       (void)[_marked_text initWithString:string];
 }
 
-- (void)unmarkText
+- (void) unmarkText
 {
    [[_marked_text mutableString] setString:@""];
 }
 
-- (NSArray*)validAttributesForMarkedText
+- (NSArray*) validAttributesForMarkedText
 {
    return [NSArray array];
 }
 
-- (NSAttributedString*)attributedSubstringForProposedRange : (NSRange)range
+- (NSAttributedString*) attributedSubstringForProposedRange : (NSRange)range
                                                actualRange : (NSRangePointer)actualRange
 {
    return nil;
 }
 
-- (NSUInteger)characterIndexForPoint:(NSPoint)point
+- (NSUInteger) characterIndexForPoint:(NSPoint)point
 {
    return 0;
 }
@@ -413,7 +392,7 @@ namespace
    }
 }
 
-- (NSRect)firstRectForCharacterRange:(NSRange)range
+- (NSRect) firstRectForCharacterRange:(NSRange)range
                          actualRange:(NSRangePointer)actualRange
 {
    int xpos, ypos;
@@ -432,7 +411,7 @@ namespace
    }
 }
 
-- (void)insertText:(id)string replacementRange:(NSRange)replacementRange
+- (void) insertText:(id)string replacementRange:(NSRange)replacementRange
 {
    auto*       event = [NSApp currentEvent];
    auto const  mods = photon::translate_flags([event modifierFlags]);
@@ -449,7 +428,7 @@ namespace
    }
 }
 
-- (void)doCommandBySelector:(SEL)selector
+- (void) doCommandBySelector:(SEL)selector
 {
 }
 

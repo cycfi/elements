@@ -72,10 +72,11 @@
 		5D58AE6D1E53FBB30044E571 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = platform/osx/Info.plist; sourceTree = "<group>"; };
 		5D58AE6F1E53FBC70044E571 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = platform/osx/Assets.xcassets; sourceTree = "<group>"; };
 		5D58AE721E53FBD70044E571 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = platform/osx/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5D58AED31E54361D0044E571 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		5D5C65C31D7BD696002197F8 /* photon_basic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = photon_basic.ttf; path = ../../assets/fonts/photon_basic.ttf; sourceTree = "<group>"; };
 		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
 		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
-		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../../platform/osx/photon/include; sourceTree = SOURCE_ROOT; };
+		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = platform/osx/photon/include; sourceTree = PHOTON_ROOT; };
 		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
 		5D9FCF3D1D9773A400D533ED /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		5DA3B5071D98728800C06FF5 /* glyphs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glyphs.cpp; sourceTree = "<group>"; };
@@ -101,7 +102,6 @@
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
 		5DE5641C1D6DF16300F9435C /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
-		5DF1B4B31E53EB29009FA01A /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../../../include; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,13 +152,12 @@
 		5D565ECB1D605F5D00FD087C /* photon */ = {
 			isa = PBXGroup;
 			children = (
-				5DF1B4B31E53EB29009FA01A /* include */,
+				5D58AED31E54361D0044E571 /* include */,
 				5DA584AC1D618C41004276C2 /* src */,
 				5D8F88631DAAF44D0010DED5 /* platform */,
 			);
 			name = photon;
-			path = Photon;
-			sourceTree = "<group>";
+			sourceTree = PHOTON_ROOT;
 		};
 		5D58AE5B1E53FA540044E571 /* src */ = {
 			isa = PBXGroup;
@@ -169,8 +168,8 @@
 				5D58AE611E53FA540044E571 /* PhotonView.mm */,
 			);
 			name = src;
-			path = ../../../../../platform/osx/photon/src;
-			sourceTree = "<group>";
+			path = platform/osx/photon/src;
+			sourceTree = PHOTON_ROOT;
 		};
 		5D58AE741E53FC410044E571 /* platform */ = {
 			isa = PBXGroup;
@@ -198,8 +197,8 @@
 				5D5C65C31D7BD696002197F8 /* photon_basic.ttf */,
 			);
 			name = fonts;
-			path = ../../../../assets/fonts;
-			sourceTree = "<group>";
+			path = assets/fonts;
+			sourceTree = PHOTON_ROOT;
 		};
 		5D8F88631DAAF44D0010DED5 /* platform */ = {
 			isa = PBXGroup;
@@ -208,7 +207,7 @@
 				5D8F88641DAAF4650010DED5 /* include */,
 			);
 			name = platform;
-			sourceTree = "<group>";
+			sourceTree = PHOTON_ROOT;
 		};
 		5DA584AC1D618C41004276C2 /* src */ = {
 			isa = PBXGroup;
@@ -217,9 +216,8 @@
 				5D07FE171D68638800D7EE92 /* support */,
 				5DA584AF1D618F4C004276C2 /* widget */,
 			);
-			name = src;
-			path = ../../../../../src;
-			sourceTree = "<group>";
+			path = src;
+			sourceTree = PHOTON_ROOT;
 		};
 		5DA584AF1D618F4C004276C2 /* widget */ = {
 			isa = PBXGroup;

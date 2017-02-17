@@ -55,8 +55,8 @@
 
 /* Begin PBXFileReference section */
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
-		5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-clang-darwin42-1_61.a"; path = "../../../../../boost/stage/lib/libboost_filesystem-clang-darwin42-1_61.a"; sourceTree = "<group>"; };
-		5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-clang-darwin42-1_61.a"; path = "../../../../../boost/stage/lib/libboost_system-clang-darwin42-1_61.a"; sourceTree = "<group>"; };
+		5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-clang-darwin42-1_61.a"; path = "stage/lib/libboost_filesystem-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
+		5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-clang-darwin42-1_61.a"; path = "stage/lib/libboost_system-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
 		5D2950B91D75C25A00734694 /* dial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dial.cpp; sourceTree = "<group>"; };
 		5D3806AE1D70926100C6EB77 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		5D3806B01D7191AA00C6EB77 /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BlairMdITC TT-Medium"; path = "../../assets/fonts/BlairMdITC TT-Medium"; sourceTree = "<group>"; };
 		5DC84A691DA5132D008E7EE3 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../../usr/local/lib/libcairo.a; sourceTree = LIB; };
 		5DDBCBC91DB447A000E821BE /* Image.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Image.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5DDBCBCC1DB447EE00E821BE /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = init.cpp; path = ../../apps/image/init.cpp; sourceTree = "<group>"; };
+		5DDBCBCC1DB447EE00E821BE /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
 		5DE5641C1D6DF16300F9435C /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
@@ -261,7 +261,7 @@
 			);
 			name = app;
 			path = ../..;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -418,11 +418,15 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					./photon/include,
-					../../include,
+					"$(PHOTON_ROOT)/include",
+					"$(PHOTON_ROOT)/platform/osx/photon/include",
+					"$(BOOST_ROOT)",
 					/usr/local/include/cairo,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIB)",
+					"$(BOOST_ROOT)/stage/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -430,7 +434,7 @@
 					"$(OTHER_CFLAGS)",
 					"-ftemplate-backtrace-limit=0",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.12;
 			};
 			name = Debug;
 		};
@@ -467,18 +471,22 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					./photon/include,
-					../../include,
+					"$(PHOTON_ROOT)/include",
+					"$(PHOTON_ROOT)/platform/osx/photon/include",
+					"$(BOOST_ROOT)",
 					/usr/local/include/cairo,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIB)",
+					"$(BOOST_ROOT)/stage/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-ftemplate-backtrace-limit=0",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.12;
 			};
 			name = Release;
 		};
@@ -487,18 +495,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					../../../../include,
-					../../../../platform/osx/photon/include,
-					/usr/local/include/cairo,
-					"$(BOOST_ROOT)",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib/,
-					"$(BOOST_ROOT)/stage/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -509,18 +509,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					../../../../include,
-					../../../../platform/osx/photon/include,
-					/usr/local/include/cairo,
-					"$(BOOST_ROOT)",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib/,
-					"$(BOOST_ROOT)/stage/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = CYCFI.Photon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

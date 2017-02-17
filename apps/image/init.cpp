@@ -34,8 +34,11 @@ namespace client
    {
       [](photon::view& view_)
       {
-         view_.content.push_back(share(background{}));
-         view_.content.push_back(share(make_view_port()));
+         view_.content =
+         {
+            share(background{}),
+            share(make_view_port())
+         };
       }
    };
 }

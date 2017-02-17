@@ -3,26 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =======================================================================================*/
-#include <photon/view.hpp>
-#include <photon/widget.hpp>
-#include <cstdlib>
+#include <photon.hpp>
 
 namespace client
 {
    using namespace photon;
-
-   // Main window background color
-   auto bkd_color = color{ 35, 35, 37, 255 };
-
-   struct background : widget
-   {
-      void draw(context const& ctx)
-      {
-         auto&  cnv = ctx.canvas;
-         cnv.fill_style(bkd_color);
-         cnv.fill_rect(ctx.bounds);
-      }
-   };
 
    auto make_view_port()
    {
@@ -36,7 +21,6 @@ namespace client
       {
          view_.content =
          {
-            share(background{}),
             share(make_view_port())
          };
       }

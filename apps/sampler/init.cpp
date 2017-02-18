@@ -140,10 +140,11 @@ namespace client
       {
          auto main_pane = pane("Menu", make_htile_main(), 1.0, false);
          auto main_widget = margin({ 20, 20, 20, 20 }, main_pane);
+         auto space_dark = image{ "images/space_dark.jpg" };
 
          view_.content =
          {
-            share(background{}),
+            share(space_dark),
             share(main_widget)
          };
       }

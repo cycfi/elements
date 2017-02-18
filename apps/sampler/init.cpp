@@ -10,7 +10,7 @@ namespace client
    using namespace photon;
 
    // Main window background color
-   auto bkd_color = color{ 35, 35, 37, 255 };
+   auto bkd_color = color{ 62, 62, 62, 255 };
 
    struct background : widget
    {
@@ -76,8 +76,8 @@ namespace client
    auto make_vtile_main()
    {
       return htile(
-         margin({ 10, 10, 10, 10 }, group("Aligns", make_vtile(), 0.8, false)),
-         margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2(), 0.8, false))
+         margin({ 10, 10, 10, 10 }, group("Aligns", make_vtile(), 0.9, false)),
+         margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2(), 0.9, false))
       );
    }
 
@@ -123,8 +123,8 @@ namespace client
    auto make_htile_main()
    {
       return htile(
-         margin({ 10, 10, 10, 10 }, group("Aligns", make_htile(), 0.8, false)),
-         margin({ 10, 10, 10, 10 }, group("Percentages", make_htile2(), 0.8, false))
+         margin({ 10, 10, 10, 10 }, group("Aligns", make_htile(), 0.9, false)),
+         margin({ 10, 10, 10, 10 }, group("Percentages", make_htile2(), 0.9, false))
       );
    }
 
@@ -138,10 +138,13 @@ namespace client
    {
       [](photon::view& view_)
       {
+         auto main_pane = pane("Menu", make_htile_main(), 1.0, false);
+         auto main_widget = margin({ 20, 20, 20, 20 }, main_pane);
+
          view_.content =
          {
             share(background{}),
-            share(make_htile_main())
+            share(main_widget)
          };
       }
    };

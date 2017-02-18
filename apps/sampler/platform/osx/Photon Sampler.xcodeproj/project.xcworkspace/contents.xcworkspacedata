@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/joel/dev/photon/apps/sampler/platform/osx/Sampler.xcodeproj">
+      location = "self:/Users/joel/dev/photon/apps/sampler/platform/osx/Photon Sampler.xcodeproj">
    </FileRef>
 </Workspace>

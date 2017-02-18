@@ -15,18 +15,18 @@ namespace photon
    public:
 
       color                panel_color                = { 28, 30, 34, 192 };
-      color                frame_color                = { 220, 220, 220, 100 };
+      color                frame_color                = { 220, 220, 220, 80 };
       float                frame_corner_radius        = 3.0;
-      float                frame_stroke_width         = 1.5;
+      float                frame_stroke_width         = 1.0;
 
       color                controls_color             = { 18, 49, 85, 200 };
       color                indicator_color            = { 0, 127, 255, 200 };
       color                basic_font_color           = { 220, 220, 220, 200 };
 
       color                heading_font_color         = basic_font_color;
-      char const*          heading_font               = "BlairMdITC TT Medium";
+      char const*          heading_font               = "Roboto";
       float                heading_font_size          = 16.0;
-      canvas::font_style   heading_style              = canvas::bold;
+      canvas::font_style   heading_style              = canvas::normal;
 
       color                label_font_color           = basic_font_color;
       char const*          label_font                 = "Open Sans";

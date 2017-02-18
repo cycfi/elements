@@ -23,7 +23,6 @@ namespace photon
          ctx.canvas, _text.c_str(), thm.heading_font, thm.heading_font_size * _size
       );
       return { { size.x, size.y }, { size.x, size.y } };
-
    }
 
    void heading::draw(context const& ctx)
@@ -40,6 +39,34 @@ namespace photon
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
 
       canvas_.fill_text(point{ cx, cy }, _text.c_str());
+   }
+
+   void title_bar::draw(context const& ctx)
+   {
+      float const corner_radius = 4.0;
+      auto&       canvas_ = ctx.canvas;
+      auto const& bounds = ctx.bounds;
+
+      auto gradient = canvas::linear_gradient{
+         bounds.top_left(),
+         bounds.bottom_left()
+      };
+
+      gradient.add_color_stop({ 0.0, { 255, 255, 255, 16 } });
+      gradient.add_color_stop({ 1.0, { 0, 0, 0, 16 } });
+      canvas_.fill_style(gradient);
+
+      canvas_.begin_path();
+      canvas_.round_rect(bounds, corner_radius);
+      canvas_.fill();
+      canvas_.fill();
+
+      canvas_.begin_path();
+      canvas_.move_to(point{ bounds.left+0.5f, bounds.bottom-0.5f });
+      canvas_.line_to(point{ bounds.right-0.5f, bounds.bottom-0.5f });
+      canvas_.stroke_style(color{ 0, 0, 0, 32 });
+      canvas_.line_width(1);
+      canvas_.stroke();
    }
 
    widget_limits label::limits(basic_context const& ctx) const
@@ -65,6 +92,89 @@ namespace photon
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
 
       canvas_.fill_text(point{ cx, cy }, _text.c_str());
+   }
+
+   void panel::draw(context const& ctx)
+   {
+      auto const&    theme_ = get_theme();
+      float const    corner_radius  = 4.0;
+      rect const     shadow_offset  = { -10, -10, +20, +30 };
+      auto&          canvas_ = ctx.canvas;
+      auto const&    bounds = ctx.bounds;
+
+      // Panel fill
+      canvas_.begin_path();
+      canvas_.round_rect(ctx.bounds, corner_radius);
+      canvas_.fill_style(theme_.panel_color);
+      canvas_.fill();
+      
+      // Simulated blurred shadow (cairo does not have blur yet)
+      {
+         auto save = canvas_.new_state();
+
+         canvas_.begin_path();
+         auto vs = ctx.view.size();
+         canvas_.rect({ 0, 0, vs.x, vs.y });
+         canvas_.round_rect(bounds.inset(0.5, 0.5), corner_radius);
+         canvas_.fill_rule(canvas::fill_odd_even);
+         canvas_.clip();
+
+         canvas_.round_rect(bounds, corner_radius);
+         canvas_.line_width(2);
+         canvas_.stroke_style(color(0, 0, 0, 50));
+         canvas_.stroke();
+
+         rect shr = bounds;
+         shr.left -= 2;
+         shr.top -= 2;
+         shr.right += 6;
+         shr.bottom += 6;
+
+         canvas_.begin_path();
+         canvas_.round_rect(shr, corner_radius*2);
+         canvas_.fill_style(color(0, 0, 0, 20));
+         canvas_.fill();
+         
+         shr.left += 1;
+         shr.top += 1;
+         shr.right -= 2;
+         shr.bottom -= 2;
+         canvas_.begin_path();
+         canvas_.round_rect(shr, corner_radius*1.5);
+         canvas_.fill_style(color(0, 0, 0, 30));
+         canvas_.fill();
+         
+         shr.left += 1;
+         shr.top += 1;
+         shr.right -= 2;
+         shr.bottom -= 2;
+         canvas_.begin_path();
+         canvas_.round_rect(shr, corner_radius);
+         canvas_.fill_style(color(0, 0, 0, 40));
+         canvas_.fill();
+      }
+
+
+      //// Drop shadow
+      //rect offs = shadow_offset;
+      //canvas_.begin_path();
+      //rect  shr =
+      //   {  bounds.left+offs.left, bounds.top+offs.top,
+      //      bounds.right+offs.right, bounds.bottom+offs.bottom
+      //   };
+      //
+      //canvas_.rect(shr);
+      //canvas_.round_rect(bounds, corner_radius);
+
+//      canvas_.path_winding(canvas::hole);
+//
+//      paint shadow_paint
+//         = canvas_.box_gradient(bounds.move(0, 2), corner_radius*2, 10
+//          , color(0, 0, 0, 128), color(0, 0, 0, 0)
+//         );
+//
+//      canvas_.fill_paint(shadow_paint);
+//      canvas_.fill();
    }
 
    void frame::draw(context const& ctx)
@@ -143,6 +253,7 @@ namespace photon
          bounds.top_left(),
          bounds.bottom_left()
       };
+
       gradient.add_color_stop({ 0.0, { 255, 255, 255, 32 } });
       gradient.add_color_stop({ 1.0, { 0, 0, 0, 32 } });
       canvas_.fill_style(gradient);

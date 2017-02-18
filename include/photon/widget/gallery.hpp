@@ -26,6 +26,16 @@ namespace photon
    };
 
    //////////////////////////////////////////////////////////////////////////////////////
+   // Panels
+   //////////////////////////////////////////////////////////////////////////////////////
+   class panel : public widget
+   {
+   public:
+
+      virtual void draw(context const& ctx);
+   };
+
+   //////////////////////////////////////////////////////////////////////////////////////
    // Frames
    //////////////////////////////////////////////////////////////////////////////////////
    struct frame : public widget
@@ -53,6 +63,17 @@ namespace photon
 
       std::string             _text;
       float                   _size;
+   };
+
+   //////////////////////////////////////////////////////////////////////////////////////
+   // Title Bars
+   //////////////////////////////////////////////////////////////////////////////////////
+
+   class title_bar : public widget
+   {
+   public:
+
+      virtual void            draw(context const& ctx);
    };
 
    //////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +113,52 @@ namespace photon
       float                   _major_divisions;
       float                   _minor_divisions;
    };
+
+   //////////////////////////////////////////////////////////////////////////////////////
+   // Pane
+   //////////////////////////////////////////////////////////////////////////////////////
+   template <typename Heading, typename Content>
+   inline auto pane(
+      Heading&& heading,
+      Content&& content,
+      bool center_heading = true
+   )
+   {
+      auto align_ = center_heading? 0.5 : 0;
+      return
+        layer(
+            align_top(
+                layer(
+                    halign(align_, margin({10, 4, 10, 4}, heading)),
+                    title_bar{}
+                )
+            ),
+            top_margin(30, std::forward<Content>(content)),
+            panel{}
+        );
+   }
+
+   template <typename Content>
+   inline auto pane(
+      std::string const& title,
+      Content&& content,
+      float title_size = 1.0,
+      bool center_heading = true
+   )
+   {
+      return pane(heading(title, title_size), content, center_heading);
+   }
+
+   template <typename Content>
+   inline auto pane(
+      char const* title,
+      Content&& content,
+      float title_size = 1.0,
+      bool center_heading = true
+   )
+   {
+      return pane(heading(title, title_size), content, center_heading);
+   }
 
    //////////////////////////////////////////////////////////////////////////////////////
    // Groups

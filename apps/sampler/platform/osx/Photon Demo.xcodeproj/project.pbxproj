@@ -15,6 +15,7 @@
 		5D58AE6C1E53FB930044E571 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE6A1E53FB930044E571 /* main.m */; };
 		5D58AE701E53FBC70044E571 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D58AE6F1E53FBC70044E571 /* Assets.xcassets */; };
 		5D58AE731E53FBD70044E571 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D58AE711E53FBD70044E571 /* MainMenu.xib */; };
+		5D72D6AF1E5910EC0069DBFE /* blur_image_surface.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D72D6AE1E5910EC0069DBFE /* blur_image_surface.c */; };
 		5DDBCB9A1DB447A000E821BE /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584AD1D618C41004276C2 /* view.cpp */; };
 		5DDBCB9B1DB447A000E821BE /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D84EAB01D9A83A1000C6C8C /* port.cpp */; };
 		5DDBCB9C1DB447A000E821BE /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
@@ -74,6 +75,7 @@
 		5D58AED31E54361D0044E571 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		5D5C65C31D7BD696002197F8 /* photon_basic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = photon_basic.ttf; path = ../../assets/fonts/photon_basic.ttf; sourceTree = "<group>"; };
 		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
+		5D72D6AE1E5910EC0069DBFE /* blur_image_surface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = blur_image_surface.c; sourceTree = "<group>"; };
 		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
 		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = platform/osx/photon/include; sourceTree = PHOTON_ROOT; };
 		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
@@ -96,7 +98,7 @@
 		5DC84A651DA4E322008E7EE3 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = assets/images; sourceTree = "<group>"; };
 		5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BlairMdITC TT-Medium"; path = "../../assets/fonts/BlairMdITC TT-Medium"; sourceTree = "<group>"; };
 		5DC84A691DA5132D008E7EE3 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../../usr/local/lib/libcairo.a; sourceTree = LIB; };
-		5DDBCBC91DB447A000E821BE /* Photon Sampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photon Sampler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDBCBC91DB447A000E821BE /* Photon Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photon Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DDBCBCC1DB447EE00E821BE /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
 		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 		5D07FE171D68638800D7EE92 /* support */ = {
 			isa = PBXGroup;
 			children = (
+				5D72D6AD1E5910EC0069DBFE /* detail */,
 				5DA3B5071D98728800C06FF5 /* glyphs.cpp */,
 				5D9ADA801D7CFAD700996964 /* pixmap.cpp */,
 				5D07FE1C1D686C4A00D7EE92 /* rect.cpp */,
@@ -143,7 +146,7 @@
 		5D565ECA1D605F5D00FD087C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5DDBCBC91DB447A000E821BE /* Photon Sampler.app */,
+				5DDBCBC91DB447A000E821BE /* Photon Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,6 +201,14 @@
 			name = fonts;
 			path = assets/fonts;
 			sourceTree = PHOTON_ROOT;
+		};
+		5D72D6AD1E5910EC0069DBFE /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				5D72D6AE1E5910EC0069DBFE /* blur_image_surface.c */,
+			);
+			path = detail;
+			sourceTree = "<group>";
 		};
 		5D8F88631DAAF44D0010DED5 /* platform */ = {
 			isa = PBXGroup;
@@ -265,9 +276,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5DDBCB981DB447A000E821BE /* Photon Sampler */ = {
+		5DDBCB981DB447A000E821BE /* Photon Demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5DDBCBC61DB447A000E821BE /* Build configuration list for PBXNativeTarget "Photon Sampler" */;
+			buildConfigurationList = 5DDBCBC61DB447A000E821BE /* Build configuration list for PBXNativeTarget "Photon Demo" */;
 			buildPhases = (
 				5DDBCB991DB447A000E821BE /* Sources */,
 				5DDBCBB61DB447A000E821BE /* Frameworks */,
@@ -277,9 +288,9 @@
 			);
 			dependencies = (
 			);
-			name = "Photon Sampler";
+			name = "Photon Demo";
 			productName = Photon;
-			productReference = 5DDBCBC91DB447A000E821BE /* Photon Sampler.app */;
+			productReference = 5DDBCBC91DB447A000E821BE /* Photon Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -291,7 +302,7 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Cycfi Research";
 			};
-			buildConfigurationList = 5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon Sampler" */;
+			buildConfigurationList = 5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon Demo" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -304,7 +315,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5DDBCB981DB447A000E821BE /* Photon Sampler */,
+				5DDBCB981DB447A000E821BE /* Photon Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -355,6 +366,7 @@
 				5DDBCBAC1DB447A000E821BE /* dial.cpp in Sources */,
 				5DDBCBAD1DB447A000E821BE /* floating.cpp in Sources */,
 				5DDBCBAE1DB447A000E821BE /* text_utils.cpp in Sources */,
+				5D72D6AF1E5910EC0069DBFE /* blur_image_surface.c in Sources */,
 				5DDBCBAF1DB447A000E821BE /* flow.cpp in Sources */,
 				5D58AE6B1E53FB930044E571 /* AppDelegate.m in Sources */,
 				5DDBCBB01DB447A000E821BE /* gallery.cpp in Sources */,
@@ -523,7 +535,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon Sampler" */ = {
+		5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D565ED81D605F5D00FD087C /* Debug */,
@@ -532,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5DDBCBC61DB447A000E821BE /* Build configuration list for PBXNativeTarget "Photon Sampler" */ = {
+		5DDBCBC61DB447A000E821BE /* Build configuration list for PBXNativeTarget "Photon Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5DDBCBC71DB447A000E821BE /* Debug */,

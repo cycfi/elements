@@ -20,18 +20,18 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="Photon Sampler" id="1Xt-HY-uBw">
+                <menuItem title="Photon Demo" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Photon Sampler" systemMenu="apple" id="uQy-DD-JDr">
+                    <menu key="submenu" title="Photon Demo" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
-                            <menuItem title="About Photon Sampler" id="5kV-Vb-QxS">
+                            <menuItem title="About Photon Demo" id="5kV-Vb-QxS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Hide Photon Sampler" keyEquivalent="h" id="Olw-nP-bQN">
+                            <menuItem title="Hide Photon Demo" keyEquivalent="h" id="Olw-nP-bQN">
                                 <connections>
                                     <action selector="hide:" target="-1" id="PnN-Uc-m68"/>
                                 </connections>
@@ -49,7 +49,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                            <menuItem title="Quit Photon Sampler" keyEquivalent="q" id="4sb-4s-VLi">
+                            <menuItem title="Quit Photon Demo" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
                                 </connections>
@@ -60,7 +60,7 @@
             </items>
             <point key="canvasLocation" x="106" y="-372"/>
         </menu>
-        <window title="Photon Sampler" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="Photon Demo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="360"/>

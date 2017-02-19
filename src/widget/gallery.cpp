@@ -53,7 +53,7 @@ namespace photon
       };
 
       gradient.add_color_stop({ 0.0, { 255, 255, 255, 16 } });
-      gradient.add_color_stop({ 1.0, { 0, 0, 0, 16 } });
+      gradient.add_color_stop({ 0.8, { 0, 0, 0, 16 } });
       canvas_.fill_style(gradient);
 
       canvas_.begin_path();
@@ -119,11 +119,6 @@ namespace photon
          canvas_.fill_rule(canvas::fill_odd_even);
          canvas_.clip();
 
-         canvas_.round_rect(bounds, corner_radius);
-         canvas_.line_width(2);
-         canvas_.stroke_style(color(0, 0, 0, 50));
-         canvas_.stroke();
-
          rect shr = bounds;
          shr.left -= 2;
          shr.top -= 2;
@@ -153,28 +148,6 @@ namespace photon
          canvas_.fill_style(color(0, 0, 0, 40));
          canvas_.fill();
       }
-
-
-      //// Drop shadow
-      //rect offs = shadow_offset;
-      //canvas_.begin_path();
-      //rect  shr =
-      //   {  bounds.left+offs.left, bounds.top+offs.top,
-      //      bounds.right+offs.right, bounds.bottom+offs.bottom
-      //   };
-      //
-      //canvas_.rect(shr);
-      //canvas_.round_rect(bounds, corner_radius);
-
-//      canvas_.path_winding(canvas::hole);
-//
-//      paint shadow_paint
-//         = canvas_.box_gradient(bounds.move(0, 2), corner_radius*2, 10
-//          , color(0, 0, 0, 128), color(0, 0, 0, 0)
-//         );
-//
-//      canvas_.fill_paint(shadow_paint);
-//      canvas_.fill();
    }
 
    void frame::draw(context const& ctx)

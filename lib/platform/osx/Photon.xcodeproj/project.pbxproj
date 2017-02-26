@@ -1,0 +1,450 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D03C4E41E62D232002D8798 /* blur_image_surface.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */; };
+		5D03C4E51E62D235002D8798 /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584AD1D618C41004276C2 /* view.cpp */; };
+		5D03C4E61E62D23A002D8798 /* glyphs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA3B5071D98728800C06FF5 /* glyphs.cpp */; };
+		5D03C4E71E62D23A002D8798 /* pixmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9ADA801D7CFAD700996964 /* pixmap.cpp */; };
+		5D03C4E81E62D23A002D8798 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D07FE1C1D686C4A00D7EE92 /* rect.cpp */; };
+		5D03C4E91E62D23A002D8798 /* text_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C65D71D7C2257002197F8 /* text_utils.cpp */; };
+		5D03C4EA1E62D23A002D8798 /* theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4857221D7F1A65006D71FB /* theme.cpp */; };
+		5D03C4EB1E62D23F002D8798 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB9FDF11D800E4F0058DCA4 /* button.cpp */; };
+		5D03C4EC1E62D23F002D8798 /* composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641A1D6DE4CD00F9435C /* composite.cpp */; };
+		5D03C4ED1E62D23F002D8798 /* dial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2950B91D75C25A00734694 /* dial.cpp */; };
+		5D03C4EE1E62D23F002D8798 /* floating.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74D1D8E9A34007517FC /* floating.cpp */; };
+		5D03C4EF1E62D23F002D8798 /* flow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB059DE1D955E3D008D9712 /* flow.cpp */; };
+		5D03C4F01E62D23F002D8798 /* gallery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4857241D7F1EC5006D71FB /* gallery.cpp */; };
+		5D03C4F11E62D23F002D8798 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806AE1D70926100C6EB77 /* image.cpp */; };
+		5D03C4F21E62D23F002D8798 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA567A81D6E6ED0008FEFF9 /* layer.cpp */; };
+		5D03C4F31E62D23F002D8798 /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB74F1D8E9B91007517FC /* menu.cpp */; };
+		5D03C4F41E62D23F002D8798 /* popup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DACB7531D8FC7B1007517FC /* popup.cpp */; };
+		5D03C4F51E62D23F002D8798 /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D84EAB01D9A83A1000C6C8C /* port.cpp */; };
+		5D03C4F61E62D23F002D8798 /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE5641C1D6DF16300F9435C /* proxy.cpp */; };
+		5D03C4F71E62D23F002D8798 /* slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3806B01D7191AA00C6EB77 /* slider.cpp */; };
+		5D03C4F81E62D23F002D8798 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9FCF3D1D9773A400D533ED /* text.cpp */; };
+		5D03C4F91E62D23F002D8798 /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE564181D6DE49900F9435C /* tile.cpp */; };
+		5D03C4FA1E62D23F002D8798 /* widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DA584B01D618F4C004276C2 /* widget.cpp */; };
+		5D03C4FB1E62D247002D8798 /* CocoaUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */; };
+		5D03C4FC1E62D247002D8798 /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5E1E53FA540044E571 /* key.mm */; };
+		5D03C4FD1E62D247002D8798 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE601E53FA540044E571 /* osx_view.mm */; };
+		5D03C4FE1E62D247002D8798 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE611E53FA540044E571 /* PhotonView.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blur_image_surface.c; path = support/detail/blur_image_surface.c; sourceTree = "<group>"; };
+		5D03C4E01E62D1ED002D8798 /* libPhoton.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPhoton.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
+		5D2950B91D75C25A00734694 /* dial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dial.cpp; sourceTree = "<group>"; };
+		5D3806AE1D70926100C6EB77 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
+		5D3806B01D7191AA00C6EB77 /* slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = slider.cpp; sourceTree = "<group>"; };
+		5D4857221D7F1A65006D71FB /* theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = theme.cpp; sourceTree = "<group>"; };
+		5D4857241D7F1EC5006D71FB /* gallery.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gallery.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaUtils.mm; sourceTree = "<group>"; };
+		5D58AE5E1E53FA540044E571 /* key.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = key.mm; sourceTree = "<group>"; };
+		5D58AE601E53FA540044E571 /* osx_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_view.mm; sourceTree = "<group>"; };
+		5D58AE611E53FA540044E571 /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhotonView.mm; sourceTree = "<group>"; };
+		5D58AED31E54361D0044E571 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
+		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
+		5D8F88641DAAF4650010DED5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = platform/osx/photon/include; sourceTree = PHOTON_ROOT; };
+		5D9ADA801D7CFAD700996964 /* pixmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pixmap.cpp; sourceTree = "<group>"; };
+		5D9FCF3D1D9773A400D533ED /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
+		5DA3B5071D98728800C06FF5 /* glyphs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glyphs.cpp; sourceTree = "<group>"; };
+		5DA567A81D6E6ED0008FEFF9 /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layer.cpp; sourceTree = "<group>"; };
+		5DA584AD1D618C41004276C2 /* view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cpp; sourceTree = "<group>"; };
+		5DA584B01D618F4C004276C2 /* widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widget.cpp; sourceTree = "<group>"; };
+		5DACB74D1D8E9A34007517FC /* floating.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = floating.cpp; sourceTree = "<group>"; };
+		5DACB74F1D8E9B91007517FC /* menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = menu.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		5DACB7531D8FC7B1007517FC /* popup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = popup.cpp; sourceTree = "<group>"; };
+		5DB059DE1D955E3D008D9712 /* flow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flow.cpp; sourceTree = "<group>"; };
+		5DB9FDF11D800E4F0058DCA4 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
+		5DE564181D6DE49900F9435C /* tile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile.cpp; sourceTree = "<group>"; };
+		5DE5641A1D6DE4CD00F9435C /* composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = composite.cpp; sourceTree = "<group>"; };
+		5DE5641C1D6DF16300F9435C /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D03C4DD1E62D1ED002D8798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D03C4D91E62CFB5002D8798 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */,
+			);
+			name = detail;
+			sourceTree = "<group>";
+		};
+		5D07FE171D68638800D7EE92 /* support */ = {
+			isa = PBXGroup;
+			children = (
+				5DA3B5071D98728800C06FF5 /* glyphs.cpp */,
+				5D9ADA801D7CFAD700996964 /* pixmap.cpp */,
+				5D07FE1C1D686C4A00D7EE92 /* rect.cpp */,
+				5D5C65D71D7C2257002197F8 /* text_utils.cpp */,
+				5D4857221D7F1A65006D71FB /* theme.cpp */,
+			);
+			path = support;
+			sourceTree = "<group>";
+		};
+		5D565EC01D605F5D00FD087C = {
+			isa = PBXGroup;
+			children = (
+				5D565ECB1D605F5D00FD087C /* photon */,
+				5D565ECA1D605F5D00FD087C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D565ECA1D605F5D00FD087C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D03C4E01E62D1ED002D8798 /* libPhoton.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D565ECB1D605F5D00FD087C /* photon */ = {
+			isa = PBXGroup;
+			children = (
+				5D58AED31E54361D0044E571 /* include */,
+				5DA584AC1D618C41004276C2 /* src */,
+				5D8F88631DAAF44D0010DED5 /* platform */,
+			);
+			name = photon;
+			sourceTree = PHOTON_ROOT;
+		};
+		5D58AE5B1E53FA540044E571 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */,
+				5D58AE5E1E53FA540044E571 /* key.mm */,
+				5D58AE601E53FA540044E571 /* osx_view.mm */,
+				5D58AE611E53FA540044E571 /* PhotonView.mm */,
+			);
+			name = src;
+			path = platform/osx/photon/src;
+			sourceTree = PHOTON_ROOT;
+		};
+		5D8F88631DAAF44D0010DED5 /* platform */ = {
+			isa = PBXGroup;
+			children = (
+				5D58AE5B1E53FA540044E571 /* src */,
+				5D8F88641DAAF4650010DED5 /* include */,
+			);
+			name = platform;
+			sourceTree = PHOTON_ROOT;
+		};
+		5DA584AC1D618C41004276C2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5D03C4D91E62CFB5002D8798 /* detail */,
+				5DA584AD1D618C41004276C2 /* view.cpp */,
+				5D07FE171D68638800D7EE92 /* support */,
+				5DA584AF1D618F4C004276C2 /* widget */,
+			);
+			path = src;
+			sourceTree = PHOTON_ROOT;
+		};
+		5DA584AF1D618F4C004276C2 /* widget */ = {
+			isa = PBXGroup;
+			children = (
+				5DB9FDF11D800E4F0058DCA4 /* button.cpp */,
+				5DE5641A1D6DE4CD00F9435C /* composite.cpp */,
+				5D2950B91D75C25A00734694 /* dial.cpp */,
+				5DACB74D1D8E9A34007517FC /* floating.cpp */,
+				5DB059DE1D955E3D008D9712 /* flow.cpp */,
+				5D4857241D7F1EC5006D71FB /* gallery.cpp */,
+				5D3806AE1D70926100C6EB77 /* image.cpp */,
+				5DA567A81D6E6ED0008FEFF9 /* layer.cpp */,
+				5DACB74F1D8E9B91007517FC /* menu.cpp */,
+				5DACB7531D8FC7B1007517FC /* popup.cpp */,
+				5D84EAB01D9A83A1000C6C8C /* port.cpp */,
+				5DE5641C1D6DF16300F9435C /* proxy.cpp */,
+				5D3806B01D7191AA00C6EB77 /* slider.cpp */,
+				5D9FCF3D1D9773A400D533ED /* text.cpp */,
+				5DE564181D6DE49900F9435C /* tile.cpp */,
+				5DA584B01D618F4C004276C2 /* widget.cpp */,
+			);
+			path = widget;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D03C4DE1E62D1ED002D8798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D03C4DF1E62D1ED002D8798 /* Photon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D03C4E11E62D1ED002D8798 /* Build configuration list for PBXNativeTarget "Photon" */;
+			buildPhases = (
+				5D03C4DC1E62D1ED002D8798 /* Sources */,
+				5D03C4DD1E62D1ED002D8798 /* Frameworks */,
+				5D03C4DE1E62D1ED002D8798 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Photon;
+			productName = PhotonLib;
+			productReference = 5D03C4E01E62D1ED002D8798 /* libPhoton.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D565EC11D605F5D00FD087C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Cycfi Research";
+				TargetAttributes = {
+					5D03C4DF1E62D1ED002D8798 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D565EC01D605F5D00FD087C;
+			productRefGroup = 5D565ECA1D605F5D00FD087C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D03C4DF1E62D1ED002D8798 /* Photon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D03C4DC1E62D1ED002D8798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D03C4FA1E62D23F002D8798 /* widget.cpp in Sources */,
+				5D03C4E91E62D23A002D8798 /* text_utils.cpp in Sources */,
+				5D03C4F11E62D23F002D8798 /* image.cpp in Sources */,
+				5D03C4FD1E62D247002D8798 /* osx_view.mm in Sources */,
+				5D03C4FB1E62D247002D8798 /* CocoaUtils.mm in Sources */,
+				5D03C4F51E62D23F002D8798 /* port.cpp in Sources */,
+				5D03C4F41E62D23F002D8798 /* popup.cpp in Sources */,
+				5D03C4F21E62D23F002D8798 /* layer.cpp in Sources */,
+				5D03C4E51E62D235002D8798 /* view.cpp in Sources */,
+				5D03C4F01E62D23F002D8798 /* gallery.cpp in Sources */,
+				5D03C4EC1E62D23F002D8798 /* composite.cpp in Sources */,
+				5D03C4FC1E62D247002D8798 /* key.mm in Sources */,
+				5D03C4EE1E62D23F002D8798 /* floating.cpp in Sources */,
+				5D03C4F91E62D23F002D8798 /* tile.cpp in Sources */,
+				5D03C4FE1E62D247002D8798 /* PhotonView.mm in Sources */,
+				5D03C4ED1E62D23F002D8798 /* dial.cpp in Sources */,
+				5D03C4F71E62D23F002D8798 /* slider.cpp in Sources */,
+				5D03C4EF1E62D23F002D8798 /* flow.cpp in Sources */,
+				5D03C4E41E62D232002D8798 /* blur_image_surface.c in Sources */,
+				5D03C4E71E62D23A002D8798 /* pixmap.cpp in Sources */,
+				5D03C4F81E62D23F002D8798 /* text.cpp in Sources */,
+				5D03C4F61E62D23F002D8798 /* proxy.cpp in Sources */,
+				5D03C4E81E62D23A002D8798 /* rect.cpp in Sources */,
+				5D03C4EA1E62D23A002D8798 /* theme.cpp in Sources */,
+				5D03C4E61E62D23A002D8798 /* glyphs.cpp in Sources */,
+				5D03C4F31E62D23F002D8798 /* menu.cpp in Sources */,
+				5D03C4EB1E62D23F002D8798 /* button.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D03C4E21E62D1ED002D8798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D03C4E31E62D1ED002D8798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D565ED81D605F5D00FD087C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "PHOTON_APP_PREFIX=";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PHOTON_ROOT)/include",
+					"$(PHOTON_ROOT)/platform/osx/photon/include",
+					"$(BOOST_ROOT)",
+					/usr/local/include/cairo,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIB)",
+					"$(BOOST_ROOT)/stage/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-backtrace-limit=0",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D565ED91D605F5D00FD087C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PHOTON_APP_PREFIX=";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PHOTON_ROOT)/include",
+					"$(PHOTON_ROOT)/platform/osx/photon/include",
+					"$(BOOST_ROOT)",
+					/usr/local/include/cairo,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIB)",
+					"$(BOOST_ROOT)/stage/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-backtrace-limit=0",
+				);
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D03C4E11E62D1ED002D8798 /* Build configuration list for PBXNativeTarget "Photon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D03C4E21E62D1ED002D8798 /* Debug */,
+				5D03C4E31E62D1ED002D8798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D565EC41D605F5D00FD087C /* Build configuration list for PBXProject "Photon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D565ED81D605F5D00FD087C /* Debug */,
+				5D565ED91D605F5D00FD087C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D565EC11D605F5D00FD087C /* Project object */;
+}

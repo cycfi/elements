@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D03C4DB1E62CFC9002D8798 /* blur_image_surface.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */; };
 		5D58AE631E53FA540044E571 /* CocoaUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */; };
 		5D58AE641E53FA540044E571 /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5E1E53FA540044E571 /* key.mm */; };
 		5D58AE661E53FA540044E571 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE601E53FA540044E571 /* osx_view.mm */; };
@@ -54,6 +55,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blur_image_surface.c; path = support/detail/blur_image_surface.c; sourceTree = "<group>"; };
 		5D07FE1C1D686C4A00D7EE92 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		5D213E0D1DB1D66300D8DE5A /* libboost_filesystem-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-clang-darwin42-1_61.a"; path = "stage/lib/libboost_filesystem-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
 		5D213E0E1DB1D66300D8DE5A /* libboost_system-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-clang-darwin42-1_61.a"; path = "stage/lib/libboost_system-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
@@ -118,6 +120,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D03C4D91E62CFB5002D8798 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				5D03C4DA1E62CFC9002D8798 /* blur_image_surface.c */,
+			);
+			name = detail;
+			sourceTree = "<group>";
+		};
 		5D07FE171D68638800D7EE92 /* support */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +222,7 @@
 		5DA584AC1D618C41004276C2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				5D03C4D91E62CFB5002D8798 /* detail */,
 				5DA584AD1D618C41004276C2 /* view.cpp */,
 				5D07FE171D68638800D7EE92 /* support */,
 				5DA584AF1D618F4C004276C2 /* widget */,
@@ -357,6 +368,7 @@
 				5DDBCBAC1DB447A000E821BE /* dial.cpp in Sources */,
 				5DDBCBAD1DB447A000E821BE /* floating.cpp in Sources */,
 				5DDBCBAE1DB447A000E821BE /* text_utils.cpp in Sources */,
+				5D03C4DB1E62CFC9002D8798 /* blur_image_surface.c in Sources */,
 				5DDBCBAF1DB447A000E821BE /* flow.cpp in Sources */,
 				5D58AE6B1E53FB930044E571 /* AppDelegate.m in Sources */,
 				5DDBCBB01DB447A000E821BE /* gallery.cpp in Sources */,

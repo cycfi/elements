@@ -8,12 +8,12 @@
 
 namespace photon
 {
-   inline widget_limits floating_widget::limits(basic_context const& ctx) const
+   widget_limits floating_widget::limits(basic_context const& ctx) const
    {
       return full_limits;
    }
 
-   inline void floating_widget::prepare_subject(context& ctx)
+   void floating_widget::prepare_subject(context& ctx)
    {
       ctx.bounds = this->bounds();
       auto  e_limits = this->subject().limits(ctx);

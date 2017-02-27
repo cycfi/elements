@@ -11,8 +11,7 @@ namespace client
 
    auto make_view_port()
    {
-      auto  space = image{ "images/space.jpg" };
-      return scroller(space);
+      return share(scroller(image{ "images/space.jpg" }));
    }
 
    init_view _init_view
@@ -21,7 +20,7 @@ namespace client
       {
          view_.content =
          {
-            share(make_view_port())
+            make_view_port()
          };
       }
    };

@@ -33,7 +33,6 @@
 		5D03C4FB1E62D247002D8798 /* CocoaUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */; };
 		5D03C4FC1E62D247002D8798 /* key.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE5E1E53FA540044E571 /* key.mm */; };
 		5D03C4FD1E62D247002D8798 /* osx_view.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE601E53FA540044E571 /* osx_view.mm */; };
-		5D03C4FE1E62D247002D8798 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE611E53FA540044E571 /* PhotonView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +47,6 @@
 		5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaUtils.mm; sourceTree = "<group>"; };
 		5D58AE5E1E53FA540044E571 /* key.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = key.mm; sourceTree = "<group>"; };
 		5D58AE601E53FA540044E571 /* osx_view.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_view.mm; sourceTree = "<group>"; };
-		5D58AE611E53FA540044E571 /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhotonView.mm; sourceTree = "<group>"; };
 		5D58AED31E54361D0044E571 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		5D5C65D71D7C2257002197F8 /* text_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_utils.cpp; sourceTree = "<group>"; };
 		5D84EAB01D9A83A1000C6C8C /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = port.cpp; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				5D58AE5D1E53FA540044E571 /* CocoaUtils.mm */,
 				5D58AE5E1E53FA540044E571 /* key.mm */,
 				5D58AE601E53FA540044E571 /* osx_view.mm */,
-				5D58AE611E53FA540044E571 /* PhotonView.mm */,
 			);
 			name = src;
 			path = platform/osx/photon/src;
@@ -263,7 +260,6 @@
 				5D03C4FC1E62D247002D8798 /* key.mm in Sources */,
 				5D03C4EE1E62D23F002D8798 /* floating.cpp in Sources */,
 				5D03C4F91E62D23F002D8798 /* tile.cpp in Sources */,
-				5D03C4FE1E62D247002D8798 /* PhotonView.mm in Sources */,
 				5D03C4ED1E62D23F002D8798 /* dial.cpp in Sources */,
 				5D03C4F71E62D23F002D8798 /* slider.cpp in Sources */,
 				5D03C4EF1E62D23F002D8798 /* flow.cpp in Sources */,

@@ -11,12 +11,12 @@
 		5D04B9E01E62E8FE005FF558 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D04B9DC1E62E8FE005FF558 /* libcairo.a */; };
 		5D04B9E11E62E8FE005FF558 /* libboost_filesystem-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D04B9DD1E62E8FE005FF558 /* libboost_filesystem-clang-darwin42-1_61.a */; };
 		5D04B9E21E62E8FE005FF558 /* libboost_system-clang-darwin42-1_61.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D04B9DE1E62E8FE005FF558 /* libboost_system-clang-darwin42-1_61.a */; };
-		5D52D9D81E64360E00A1AB51 /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D52D9D71E64360E00A1AB51 /* PhotonView.mm */; };
 		5D58AE6B1E53FB930044E571 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE691E53FB930044E571 /* AppDelegate.m */; };
 		5D58AE6C1E53FB930044E571 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D58AE6A1E53FB930044E571 /* main.m */; };
 		5D58AE6E1E53FBB30044E571 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D58AE6D1E53FBB30044E571 /* Info.plist */; };
 		5D58AE701E53FBC70044E571 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D58AE6F1E53FBC70044E571 /* Assets.xcassets */; };
 		5D58AE731E53FBD70044E571 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D58AE711E53FBD70044E571 /* MainMenu.xib */; };
+		5D87C5341F9B945800D5B3FF /* PhotonView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D87C5331F9B945800D5B3FF /* PhotonView.mm */; };
 		5DDBCBBB1DB447A000E821BE /* images in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A651DA4E322008E7EE3 /* images */; };
 		5DDBCBBC1DB447A000E821BE /* BlairMdITC TT-Medium in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A671DA4E881008E7EE3 /* BlairMdITC TT-Medium */; };
 		5DDBCBBD1DB447A000E821BE /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC84A5C1DA4E300008E7EE3 /* Roboto-Bold.ttf */; };
@@ -51,7 +51,6 @@
 		5D04B9DC1E62E8FE005FF558 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcairo.a; sourceTree = LIB; };
 		5D04B9DD1E62E8FE005FF558 /* libboost_filesystem-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-clang-darwin42-1_61.a"; path = "stage/lib/libboost_filesystem-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
 		5D04B9DE1E62E8FE005FF558 /* libboost_system-clang-darwin42-1_61.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-clang-darwin42-1_61.a"; path = "stage/lib/libboost_system-clang-darwin42-1_61.a"; sourceTree = BOOST_ROOT; };
-		5D52D9D71E64360E00A1AB51 /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PhotonView.mm; path = ../overtone/lib/photon/platform/osx/photon/src/PhotonView.mm; sourceTree = PHOTON_ROOT; };
 		5D58AE681E53FB930044E571 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = platform/osx/AppDelegate.h; sourceTree = "<group>"; };
 		5D58AE691E53FB930044E571 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = platform/osx/AppDelegate.m; sourceTree = "<group>"; };
 		5D58AE6A1E53FB930044E571 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = platform/osx/main.m; sourceTree = "<group>"; };
@@ -59,6 +58,7 @@
 		5D58AE6F1E53FBC70044E571 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = platform/osx/Assets.xcassets; sourceTree = "<group>"; };
 		5D58AE721E53FBD70044E571 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = platform/osx/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5D5C65C31D7BD696002197F8 /* photon_basic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = photon_basic.ttf; path = ../../assets/fonts/photon_basic.ttf; sourceTree = "<group>"; };
+		5D87C5331F9B945800D5B3FF /* PhotonView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PhotonView.mm; path = ../../platform/osx/photon/src/PhotonView.mm; sourceTree = "<group>"; };
 		5DC84A591DA4E300008E7EE3 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Bold.ttf"; path = "../../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		5DC84A5A1DA4E300008E7EE3 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "../../assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		5DC84A5B1DA4E300008E7EE3 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				5D58AE6A1E53FB930044E571 /* main.m */,
 				5D58AE681E53FB930044E571 /* AppDelegate.h */,
 				5D58AE691E53FB930044E571 /* AppDelegate.m */,
-				5D52D9D71E64360E00A1AB51 /* PhotonView.mm */,
+				5D87C5331F9B945800D5B3FF /* PhotonView.mm */,
 				5D58AE6D1E53FBB30044E571 /* Info.plist */,
 				5D58AE6F1E53FBC70044E571 /* Assets.xcassets */,
 				5D58AE711E53FBD70044E571 /* MainMenu.xib */,
@@ -255,8 +255,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D52D9D81E64360E00A1AB51 /* PhotonView.mm in Sources */,
 				5D58AE6C1E53FB930044E571 /* main.m in Sources */,
+				5D87C5341F9B945800D5B3FF /* PhotonView.mm in Sources */,
 				5DDBCBCD1DB447EE00E821BE /* init.cpp in Sources */,
 				5D58AE6B1E53FB930044E571 /* AppDelegate.m in Sources */,
 			);

@@ -34,8 +34,9 @@ namespace photon
    template <typename... W>
    inline auto vtile(W&&... elements)
    {
-      array_composite<sizeof...(elements), vtile_widget> r{};
-      r = {{ share(std::forward<W>(elements))... }};
+      using composite = array_composite<sizeof...(elements), vtile_widget>;
+      composite r{};
+      r = composite{{ share(std::forward<W>(elements))... }};
       return r;
    }
 
@@ -62,8 +63,9 @@ namespace photon
    template <typename... W>
    inline auto htile(W&&... elements)
    {
-      array_composite<sizeof...(elements), htile_widget> r{};
-      r = {{ share(std::forward<W>(elements))... }};
+      using composite = array_composite<sizeof...(elements), htile_widget>;
+      composite r{};
+      r = composite{{ share(std::forward<W>(elements))... }};
       return r;
    }
 }

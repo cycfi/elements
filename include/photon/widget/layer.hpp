@@ -37,8 +37,9 @@ namespace photon
    template <typename... W>
    inline auto layer(W&&... elements)
    {
-      array_composite<sizeof...(elements), layer_widget> r{};
-      r = {{ share(std::forward<W>(elements))... }};
+      using composite = array_composite<sizeof...(elements), layer_widget>;
+      composite r{};
+      r = composite{{ share(std::forward<W>(elements))... }};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -73,8 +74,9 @@ namespace photon
    template <typename... W>
    inline auto deck(W&&... elements)
    {
-      array_composite<sizeof...(elements), deck_widget> r{};
-      r.elements = { share(std::forward<W>(elements))... };
+      using composite = array_composite<sizeof...(elements), deck_widget>;
+      composite r{};
+      r.elements = composite{ share(std::forward<W>(elements))... };
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -82,8 +84,9 @@ namespace photon
    template <typename... W>
    inline auto rdeck(W&&... elements)
    {
-      array_composite<sizeof...(elements), deck_widget> r{};
-      r.elements = { share(std::forward<W>(elements))... };
+      using composite = array_composite<sizeof...(elements), deck_widget>;
+      composite r{};
+      r.elements = composite{ share(std::forward<W>(elements))... };
       return r;
    }
 }

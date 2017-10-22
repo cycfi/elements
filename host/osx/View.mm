@@ -38,15 +38,15 @@ using key_map = std::map<ph::key_code, ph::key_action>;
 ///////////////////////////////////////////////////////////////////////////////
 // Default functions
 
-ph::base_view* _new_view_(ph::host_view* h)
+std::unique_ptr<ph::base_view> _new_view_(ph::host_view* h)
 {
-   return new ph::base_view{h};
+   return std::unique_ptr<ph::base_view>{ new ph::base_view{h} };
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Main callbacks
 
-ph::base_view* (*new_view)(ph::host_view*) = &_new_view_;
+std::unique_ptr<ph::base_view> (*new_view)(ph::host_view*) = &_new_view_;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -156,7 +156,7 @@ namespace
 {
    _first_time = true;
 
-   _view.reset(new_view((__bridge ph::host_view*) self));
+   _view = new_view((__bridge ph::host_view*) self);
 
    _tracking_area = nil;
    [self updateTrackingAreas];

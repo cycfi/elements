@@ -12,10 +12,10 @@ add_executable(
    MACOSX_BUNDLE
    host.hpp
    key.hpp
+   main.cpp
    osx/app.mm
    osx/view.mm
    osx/key.mm
-   osx/main.cpp
    osx/MainMenu.xib
 )
 

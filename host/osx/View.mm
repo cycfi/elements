@@ -2,6 +2,29 @@
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
+
+   Based on GLFW3
+
+   Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
+
+   This software is provided 'as-is', without any express or implied
+   warranty. In no event will the authors be held liable for any damages
+   arising from the use of this software.
+
+   Permission is granted to anyone to use this software for any purpose,
+   including commercial applications, and to alter it and redistribute it
+   freely, subject to the following restrictions:
+
+   1. The origin of this software must not be misrepresented; you must not
+      claim that you wrote the original software. If you use this software
+      in a product, an acknowledgment in the product documentation would
+      be appreciated but is not required.
+
+   2. Altered source versions must be plainly marked as such, and must not
+      be misrepresented as being the original software.
+
+   3. This notice may not be removed or altered from any source
+      distribution.
 =============================================================================*/
 #include <host/host.hpp>
 #include <memory>
@@ -38,7 +61,6 @@ namespace photon
 namespace
 {
    // Defines a constant for empty ranges in NSTextInputClient
-   //
    NSRange const kEmptyRange = { NSNotFound, 0 };
 
    float transformY(float y)
@@ -116,6 +138,14 @@ namespace
 - (void) make;
 
 @end
+
+namespace
+{
+   PhotonView* get_mac_view(ph::host_view* h)
+   {
+      return (__bridge PhotonView*) h;
+   }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PhotonView Implementation
@@ -299,7 +329,7 @@ namespace
 - (void) flagsChanged:(NSEvent*) event
 {
    auto const modifier_flags =
-      [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+      [event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags(modifier_flags);
    auto const key_flag = ph::translate_key_to_modifier_flag(key);
@@ -418,3 +448,101 @@ namespace
 }
 
 @end
+
+namespace photon
+{
+   std::pair<float, float> base_view::cursor_pos() const
+   {
+      auto  ns_view = get_mac_view(h);
+      auto  frame_height = [ns_view frame].size.height;
+      auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
+      return { float(pos.x), float(frame_height - pos.y - 1) };
+   }
+
+   std::pair<float, float> base_view::size() const
+   {
+      auto frame = [get_mac_view(h) frame];
+      return { float(frame.size.width), float(frame.size.height) };
+   }
+
+   void base_view::size(float x, float y)
+   {
+      auto  ns_view = get_mac_view(h);
+      ns_view.bounds.origin = NSMakePoint(0, 0);
+      [ns_view setFrameSize : NSMakeSize(x, y)];
+   }
+
+   void base_view::refresh()
+   {
+      get_mac_view(h).needsDisplay = true;
+   }
+
+   void base_view::refresh(float left, float top, float right, float bottom)
+   {
+      [get_mac_view(h) setNeedsDisplayInRect
+         : CGRectMake(left, top, right-left, bottom-top)
+      ];
+   }
+
+   void base_view::limits(float minx, float miny, float maxx, float maxy, bool maintain_aspect)
+   {
+      auto ns_view = get_mac_view(h);
+      [[ns_view window] setContentMinSize : NSSize{ minx, miny }];
+      [[ns_view window] setContentMaxSize : NSSize{ maxx, maxy }];
+      if (maintain_aspect)
+         [[ns_view window] setContentAspectRatio:NSSize{ minx, miny } ];
+   }
+
+   bool base_view::is_focus() const
+   {
+      return [[get_mac_view(h) window] isKeyWindow];
+   }
+
+   std::string clipboard()
+   {
+      NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
+      if (![[pasteboard types] containsObject:NSStringPboardType])
+         return {};
+
+      NSString* object = [pasteboard stringForType:NSStringPboardType];
+      if (!object)
+         return {};
+      return [object UTF8String];
+   }
+
+   void clipboard(std::string const& text)
+   {
+      NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
+
+      NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
+      [pasteboard declareTypes:types owner:nil];
+      [pasteboard setString:[NSString stringWithUTF8String:text.c_str()]
+                    forType:NSStringPboardType];
+   }
+
+   void set_cursor(cursor_type type)
+   {
+      switch (type)
+      {
+         case cursor_type::arrow:
+            [[NSCursor arrowCursor] set];
+            break;
+         case cursor_type::ibeam:
+            [[NSCursor IBeamCursor] set];
+            break;
+         case cursor_type::cross_hair:
+            [[NSCursor crosshairCursor] set];
+            break;
+         case cursor_type::hand:
+            [[NSCursor openHandCursor] set];
+            break;
+         case cursor_type::h_resize:
+            [[NSCursor resizeLeftRightCursor] set];
+            break;
+         case cursor_type::v_resize:
+            [[NSCursor resizeUpDownCursor] set];
+            break;
+      }
+   }
+}
+

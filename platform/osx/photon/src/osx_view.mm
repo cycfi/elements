@@ -91,8 +91,6 @@ namespace photon
    {
       auto  ns_view = get_mac_view(_impl);
       ns_view.bounds.origin = NSMakePoint(0, 0);
-      //[[ns_view window] setContentSize:NSMakeSize(size_.x, size_.y)];
-
       [ns_view setFrameSize : NSMakeSize(size_.x, size_.y)];
    }
 

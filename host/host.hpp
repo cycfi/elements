@@ -7,6 +7,8 @@
 #define PHOTON_VIEW_AUGUST_20_2016
 
 #include <host/key.hpp>
+#include <utility>
+#include <string>
 
 namespace photon
 {
@@ -70,14 +72,23 @@ namespace photon
       virtual ~base_view()
       {}
 
-      virtual void draw(float left, float top, float right, float bottom) {};
-      virtual void click(mouse_button btn) {}
-      virtual void drag(mouse_button btn) {}
-      virtual void cursor(float x, float y, cursor_tracking status) {}
-      virtual void scroll(float dirx, float diry, float x, float y) {}
-      virtual void key(key_info const& k) {}
-      virtual void text(text_info const& info) {}
-      virtual void focus(focus_request r) {}
+      virtual void   draw(float left, float top, float right, float bottom) {};
+      virtual void   click(mouse_button btn) {}
+      virtual void   drag(mouse_button btn) {}
+      virtual void   cursor(float x, float y, cursor_tracking status) {}
+      virtual void   scroll(float dirx, float diry, float x, float y) {}
+      virtual void   key(key_info const& k) {}
+      virtual void   text(text_info const& info) {}
+      virtual void   focus(focus_request r) {}
+
+      void  refresh();
+      void  refresh(float left, float top, float right, float bottom);
+      void  limits(float minx, float miny, float maxx, float maxy, bool maintain_aspect);
+
+      std::pair<float, float> cursor_pos() const;
+      std::pair<float, float> size() const;
+      void                    size(float x, float y);
+      bool                    is_focus() const;
 
    private:
 
@@ -91,6 +102,25 @@ namespace photon
    /////////////////////////////////////////////////////////////////////////////
    // View creation callback
    extern base_view* (*new_view)(host_view* h);
+
+   /////////////////////////////////////////////////////////////////////////////
+   // The clipboard
+   std::string clipboard();
+   void clipboard(std::string const& text);
+
+   /////////////////////////////////////////////////////////////////////////////
+   // The Cursor
+   enum class cursor_type
+   {
+      arrow,
+      ibeam,
+      cross_hair,
+      hand,
+      h_resize,
+      v_resize
+   };
+
+   void set_cursor(cursor_type type);
 }
 
 #endif

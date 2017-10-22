@@ -27,150 +27,136 @@
       distribution.
 
 =================================================================================================*/
-#include <host/host.hpp>
-#include <array>
-#include <algorithm>
+#include <photon/host.hpp>
 #import <Cocoa/Cocoa.h>
 
 namespace photon
 {
-   struct keys_impl
-   {
-      keys_impl()
-      {
-         std::fill(_keys.begin(), _keys.end(), key_code::unknown);
-
-         _keys[0x1D] = key_code::_0;
-         _keys[0x12] = key_code::_1;
-         _keys[0x13] = key_code::_2;
-         _keys[0x14] = key_code::_3;
-         _keys[0x15] = key_code::_4;
-         _keys[0x17] = key_code::_5;
-         _keys[0x16] = key_code::_6;
-         _keys[0x1A] = key_code::_7;
-         _keys[0x1C] = key_code::_8;
-         _keys[0x19] = key_code::_9;
-         _keys[0x00] = key_code::a;
-         _keys[0x0B] = key_code::b;
-         _keys[0x08] = key_code::c;
-         _keys[0x02] = key_code::d;
-         _keys[0x0E] = key_code::e;
-         _keys[0x03] = key_code::f;
-         _keys[0x05] = key_code::g;
-         _keys[0x04] = key_code::h;
-         _keys[0x22] = key_code::i;
-         _keys[0x26] = key_code::j;
-         _keys[0x28] = key_code::k;
-         _keys[0x25] = key_code::l;
-         _keys[0x2E] = key_code::m;
-         _keys[0x2D] = key_code::n;
-         _keys[0x1F] = key_code::o;
-         _keys[0x23] = key_code::p;
-         _keys[0x0C] = key_code::q;
-         _keys[0x0F] = key_code::r;
-         _keys[0x01] = key_code::s;
-         _keys[0x11] = key_code::t;
-         _keys[0x20] = key_code::u;
-         _keys[0x09] = key_code::v;
-         _keys[0x0D] = key_code::w;
-         _keys[0x07] = key_code::x;
-         _keys[0x10] = key_code::y;
-         _keys[0x06] = key_code::z;
-
-         _keys[0x27] = key_code::apostrophe;
-         _keys[0x2A] = key_code::backslash;
-         _keys[0x2B] = key_code::comma;
-         _keys[0x18] = key_code::equal;
-         _keys[0x32] = key_code::grave_accent;
-         _keys[0x21] = key_code::left_bracket;
-         _keys[0x1B] = key_code::minus;
-         _keys[0x2F] = key_code::period;
-         _keys[0x1E] = key_code::right_bracket;
-         _keys[0x29] = key_code::semicolon;
-         _keys[0x2C] = key_code::slash;
-         _keys[0x0A] = key_code::world_1;
-
-         _keys[0x33] = key_code::backspace;
-         _keys[0x39] = key_code::caps_lock;
-         _keys[0x75] = key_code::_delete;
-         _keys[0x7D] = key_code::down;
-         _keys[0x77] = key_code::end;
-         _keys[0x24] = key_code::enter;
-         _keys[0x35] = key_code::escape;
-         _keys[0x7A] = key_code::f1;
-         _keys[0x78] = key_code::f2;
-         _keys[0x63] = key_code::f3;
-         _keys[0x76] = key_code::f4;
-         _keys[0x60] = key_code::f5;
-         _keys[0x61] = key_code::f6;
-         _keys[0x62] = key_code::f7;
-         _keys[0x64] = key_code::f8;
-         _keys[0x65] = key_code::f9;
-         _keys[0x6D] = key_code::f10;
-         _keys[0x67] = key_code::f11;
-         _keys[0x6F] = key_code::f12;
-         _keys[0x69] = key_code::f13;
-         _keys[0x6B] = key_code::f14;
-         _keys[0x71] = key_code::f15;
-         _keys[0x6A] = key_code::f16;
-         _keys[0x40] = key_code::f17;
-         _keys[0x4F] = key_code::f18;
-         _keys[0x50] = key_code::f19;
-         _keys[0x5A] = key_code::f20;
-         _keys[0x73] = key_code::home;
-         _keys[0x72] = key_code::insert;
-         _keys[0x7B] = key_code::left;
-         _keys[0x3A] = key_code::left_alt;
-         _keys[0x3B] = key_code::left_control;
-         _keys[0x38] = key_code::left_shift;
-         _keys[0x37] = key_code::left_super;
-         _keys[0x6E] = key_code::menu;
-         _keys[0x47] = key_code::num_lock;
-         _keys[0x79] = key_code::page_down;
-         _keys[0x74] = key_code::page_up;
-         _keys[0x7C] = key_code::right;
-         _keys[0x3D] = key_code::right_alt;
-         _keys[0x3E] = key_code::right_control;
-         _keys[0x3C] = key_code::right_shift;
-         _keys[0x36] = key_code::right_super;
-         _keys[0x31] = key_code::space;
-         _keys[0x30] = key_code::tab;
-         _keys[0x7E] = key_code::up;
-
-         _keys[0x52] = key_code::kp_0;
-         _keys[0x53] = key_code::kp_1;
-         _keys[0x54] = key_code::kp_2;
-         _keys[0x55] = key_code::kp_3;
-         _keys[0x56] = key_code::kp_4;
-         _keys[0x57] = key_code::kp_5;
-         _keys[0x58] = key_code::kp_6;
-         _keys[0x59] = key_code::kp_7;
-         _keys[0x5B] = key_code::kp_8;
-         _keys[0x5C] = key_code::kp_9;
-         _keys[0x45] = key_code::kp_add;
-         _keys[0x41] = key_code::kp_decimal;
-         _keys[0x4B] = key_code::kp_divide;
-         _keys[0x4C] = key_code::kp_enter;
-         _keys[0x51] = key_code::kp_equal;
-         _keys[0x43] = key_code::kp_multiply;
-         _keys[0x4E] = key_code::kp_subtract;
-      }
-
-      std::array<key_code, 256> _keys;
-   };
-
-   std::array<key_code, 256> const& keys()
-   {
-      static keys_impl _impl;
-      return _impl._keys;
-   }
-
    key_code translate_key(unsigned int key)
    {
-       if (key >= 256)
-           return key_code::unknown;
+      switch (key)
+      {
+         default:    return key_code::unknown;
 
-       return keys()[key];
+         case 0x1D:  return key_code::_0;
+         case 0x12:  return key_code::_1;
+         case 0x13:  return key_code::_2;
+         case 0x14:  return key_code::_3;
+         case 0x15:  return key_code::_4;
+         case 0x17:  return key_code::_5;
+         case 0x16:  return key_code::_6;
+         case 0x1A:  return key_code::_7;
+         case 0x1C:  return key_code::_8;
+         case 0x19:  return key_code::_9;
+
+         case 0x00:  return key_code::a;
+         case 0x0B:  return key_code::b;
+         case 0x08:  return key_code::c;
+         case 0x02:  return key_code::d;
+         case 0x0E:  return key_code::e;
+         case 0x03:  return key_code::f;
+         case 0x05:  return key_code::g;
+         case 0x04:  return key_code::h;
+         case 0x22:  return key_code::i;
+         case 0x26:  return key_code::j;
+         case 0x28:  return key_code::k;
+         case 0x25:  return key_code::l;
+         case 0x2E:  return key_code::m;
+         case 0x2D:  return key_code::n;
+         case 0x1F:  return key_code::o;
+         case 0x23:  return key_code::p;
+         case 0x0C:  return key_code::q;
+         case 0x0F:  return key_code::r;
+         case 0x01:  return key_code::s;
+         case 0x11:  return key_code::t;
+         case 0x20:  return key_code::u;
+         case 0x09:  return key_code::v;
+         case 0x0D:  return key_code::w;
+         case 0x07:  return key_code::x;
+         case 0x10:  return key_code::y;
+         case 0x06:  return key_code::z;
+
+         case 0x27:  return key_code::apostrophe;
+         case 0x2A:  return key_code::backslash;
+         case 0x2B:  return key_code::comma;
+         case 0x18:  return key_code::equal;
+         case 0x32:  return key_code::grave_accent;
+         case 0x21:  return key_code::left_bracket;
+         case 0x1B:  return key_code::minus;
+         case 0x2F:  return key_code::period;
+         case 0x1E:  return key_code::right_bracket;
+         case 0x29:  return key_code::semicolon;
+         case 0x2C:  return key_code::slash;
+         case 0x0A:  return key_code::world_1;
+
+         case 0x33:  return key_code::backspace;
+         case 0x39:  return key_code::caps_lock;
+         case 0x75:  return key_code::_delete;
+         case 0x7D:  return key_code::down;
+         case 0x77:  return key_code::end;
+         case 0x24:  return key_code::enter;
+         case 0x35:  return key_code::escape;
+
+         case 0x7A:  return key_code::f1;
+         case 0x78:  return key_code::f2;
+         case 0x63:  return key_code::f3;
+         case 0x76:  return key_code::f4;
+         case 0x60:  return key_code::f5;
+         case 0x61:  return key_code::f6;
+         case 0x62:  return key_code::f7;
+         case 0x64:  return key_code::f8;
+         case 0x65:  return key_code::f9;
+         case 0x6D:  return key_code::f10;
+         case 0x67:  return key_code::f11;
+         case 0x6F:  return key_code::f12;
+         case 0x69:  return key_code::f13;
+         case 0x6B:  return key_code::f14;
+         case 0x71:  return key_code::f15;
+         case 0x6A:  return key_code::f16;
+         case 0x40:  return key_code::f17;
+         case 0x4F:  return key_code::f18;
+         case 0x50:  return key_code::f19;
+         case 0x5A:  return key_code::f20;
+
+         case 0x73:  return key_code::home;
+         case 0x72:  return key_code::insert;
+         case 0x7B:  return key_code::left;
+         case 0x3A:  return key_code::left_alt;
+         case 0x3B:  return key_code::left_control;
+         case 0x38:  return key_code::left_shift;
+         case 0x37:  return key_code::left_super;
+         case 0x6E:  return key_code::menu;
+         case 0x47:  return key_code::num_lock;
+         case 0x79:  return key_code::page_down;
+         case 0x74:  return key_code::page_up;
+         case 0x7C:  return key_code::right;
+         case 0x3D:  return key_code::right_alt;
+         case 0x3E:  return key_code::right_control;
+         case 0x3C:  return key_code::right_shift;
+         case 0x36:  return key_code::right_super;
+         case 0x31:  return key_code::space;
+         case 0x30:  return key_code::tab;
+         case 0x7E:  return key_code::up;
+
+         case 0x52:  return key_code::kp_0;
+         case 0x53:  return key_code::kp_1;
+         case 0x54:  return key_code::kp_2;
+         case 0x55:  return key_code::kp_3;
+         case 0x56:  return key_code::kp_4;
+         case 0x57:  return key_code::kp_5;
+         case 0x58:  return key_code::kp_6;
+         case 0x59:  return key_code::kp_7;
+         case 0x5B:  return key_code::kp_8;
+         case 0x5C:  return key_code::kp_9;
+
+         case 0x45:  return key_code::kp_add;
+         case 0x41:  return key_code::kp_decimal;
+         case 0x4B:  return key_code::kp_divide;
+         case 0x4C:  return key_code::kp_enter;
+         case 0x51:  return key_code::kp_equal;
+         case 0x43:  return key_code::kp_multiply;
+         case 0x4E:  return key_code::kp_subtract;
+      }
    }
 
    int translate_flags(NSUInteger flags)

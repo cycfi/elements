@@ -26,7 +26,7 @@
    3. This notice may not be removed or altered from any source
       distribution.
 =============================================================================*/
-#include <host/host.hpp>
+#include <photon/host.hpp>
 #include <memory>
 #include <map>
 #import <Cocoa/Cocoa.h>

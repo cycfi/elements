@@ -3,7 +3,7 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <host/host.hpp>
+#include <photon/host.hpp>
 #include <dlfcn.h>
 #import <Cocoa/Cocoa.h>
 #import <AppKit/NSApplication.h>

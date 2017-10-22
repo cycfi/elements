@@ -34,6 +34,9 @@
 #include <cstdint>
 #include <cairo.h>
 
+#include <photon/support/point.hpp>
+#include <photon/support/rect.hpp>
+
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -45,12 +48,15 @@ namespace photon
    // event handling, 4) The clipboard.
    //
    // It is crucual, by design, to keep this header file always self contained
-   // with zero dependencies. The objective is the make it as easy as possible
+   // with no dependencies(*). The objective is the make it as easy as possible
    // to implement and maintain different hosts for various platforms and
    // applications. A platform (OS) may have multiple hosts for diverse needs.
    // For example, OSX may have a "Desktop App" host as well as an "AU"
    // (Audio Units) host that itself is typically a plugin guest, hosted by
    // another application.
+   //
+   // (* The only exception to this 'no-dependencies' rule is the necessary
+   // inclusion of rect.hpp and point.hpp. Both have no dependencies.)
    //
    // Another crucial design strategy is the keep this header file free from
    // any platform specific code (public types, public functions, etc.) that
@@ -83,6 +89,18 @@ namespace photon
       hovering,   // Sent when the cursor is hovering over the view
       leaving     // Sent when the cursor is leaving the view
    };
+
+   //////////////////////////////////////////////////////////////////////////////////////
+   // View Limits
+   //////////////////////////////////////////////////////////////////////////////////////
+   struct view_limits
+   {
+      point    min;
+      point    max;
+   };
+
+   constexpr float         full_extent    = 1E6;
+   constexpr view_limits   full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
 
    //////////////////////////////////////////////////////////////////////////////////////
    // Text info
@@ -266,37 +284,33 @@ namespace photon
    class base_view
    {
    public:
+                     base_view(host_view* h) : h(h) {}
+                     base_view(base_view const&) = delete;
+      virtual        ~base_view() {}
+      base_view&     operator=(base_view const&) = delete;
 
-      base_view(host_view* h)
-       : h(h)
-      {}
-
-      virtual ~base_view()
-      {}
-
-      virtual void   draw(float left, float top, float right, float bottom) {};
+      virtual void   draw(rect area) {};
       virtual void   click(mouse_button btn) {}
       virtual void   drag(mouse_button btn) {}
-      virtual void   cursor(float x, float y, cursor_tracking status) {}
-      virtual void   scroll(float dirx, float diry, float x, float y) {}
+      virtual void   cursor(point p, cursor_tracking status) {}
+      virtual void   scroll(point dir, point p) {}
       virtual void   key(key_info const& k) {}
       virtual void   text(text_info const& info) {}
       virtual void   focus(focus_request r) {}
 
-      void  refresh();
-      void  refresh(float left, float top, float right, float bottom);
-      void  limits(float minx, float miny, float maxx, float maxy, bool maintain_aspect);
+      void           refresh();
+      void           refresh(rect area);
+      void           limits(view_limits limits_, bool maintain_aspect);
 
-      std::pair<float, float> cursor_pos() const;
-      std::pair<float, float> size() const;
-      void                    size(float x, float y);
-      bool                    is_focus() const;
+      point          cursor_pos() const;
+      point          size() const;
+      void           size(float x, float y);
+      bool           is_focus() const;
 
    private:
 
-      cairo_t*                setup_context();
-
-      host_view* h;
+      cairo_t*       setup_context();
+      host_view*     h;
    };
 
    /////////////////////////////////////////////////////////////////////////////

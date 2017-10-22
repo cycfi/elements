@@ -219,10 +219,12 @@ namespace
    [super drawRect:dirty];
 
    _view->draw(
-      float(dirty.origin.x),
-      float(dirty.origin.y),
-      float(dirty.origin.x + dirty.size.width),
-      float(dirty.origin.y + dirty.size.height)
+      {
+         float(dirty.origin.x),
+         float(dirty.origin.y),
+         float(dirty.origin.x + dirty.size.width),
+         float(dirty.origin.y + dirty.size.height)
+      }
    );
 
    // If this is our first time, let's do a redraw. The view may have been
@@ -282,7 +284,7 @@ namespace
    [[self window] makeFirstResponder:self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-   _view->cursor(float(pos.x), float(pos.y), ph::cursor_tracking::entering);
+   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::entering);
    [self displayIfNeeded];
 }
 
@@ -291,7 +293,7 @@ namespace
    [[self window] setAcceptsMouseMovedEvents:NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-   _view->cursor(float(pos.x), float(pos.y), photon::cursor_tracking::leaving);
+   _view->cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -299,7 +301,7 @@ namespace
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-   _view->cursor(float(pos.x), float(pos.y), photon::cursor_tracking::hovering);
+   _view->cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
@@ -315,7 +317,7 @@ namespace
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
-      _view->scroll(delta_x, delta_y, float(pos.x), float(pos.y));
+      _view->scroll({ delta_x, delta_y }, { float(pos.x), float(pos.y) });
    [self displayIfNeeded];
 }
 
@@ -452,7 +454,7 @@ namespace
 
 namespace photon
 {
-   std::pair<float, float> base_view::cursor_pos() const
+   point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(h);
       auto  frame_height = [ns_view frame].size.height;
@@ -460,7 +462,7 @@ namespace photon
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
-   std::pair<float, float> base_view::size() const
+   point base_view::size() const
    {
       auto frame = [get_mac_view(h) frame];
       return { float(frame.size.width), float(frame.size.height) };
@@ -478,20 +480,20 @@ namespace photon
       get_mac_view(h).needsDisplay = true;
    }
 
-   void base_view::refresh(float left, float top, float right, float bottom)
+   void base_view::refresh(rect area)
    {
       [get_mac_view(h) setNeedsDisplayInRect
-         : CGRectMake(left, top, right-left, bottom-top)
+         : CGRectMake(area.left, area.top, area.width(), area.height())
       ];
    }
 
-   void base_view::limits(float minx, float miny, float maxx, float maxy, bool maintain_aspect)
+   void base_view::limits(view_limits limits_, bool maintain_aspect)
    {
       auto ns_view = get_mac_view(h);
-      [[ns_view window] setContentMinSize : NSSize{ minx, miny }];
-      [[ns_view window] setContentMaxSize : NSSize{ maxx, maxy }];
+      [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
+      [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
       if (maintain_aspect)
-         [[ns_view window] setContentAspectRatio:NSSize{ minx, miny } ];
+         [[ns_view window] setContentAspectRatio:NSSize{ limits_.min.x, limits_.min.y } ];
    }
 
    bool base_view::is_focus() const

@@ -23,7 +23,7 @@ namespace photon
                               image(pixmap_ptr pixmap_);
 
       point                   size() const;
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
       virtual rect            source_rect(context const& ctx) const;
 
@@ -70,7 +70,7 @@ namespace photon
                               gizmo(char const* filename, float scale = 1);
                               gizmo(pixmap_ptr pixmap_);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
    };
 
@@ -80,7 +80,7 @@ namespace photon
                               hgizmo(char const* filename, float scale = 1);
                               hgizmo(pixmap_ptr pixmap_);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
    };
 
@@ -90,7 +90,7 @@ namespace photon
                               vgizmo(char const* filename, float scale = 1);
                               vgizmo(pixmap_ptr pixmap_);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
    };
 
@@ -104,7 +104,7 @@ namespace photon
    public:
                               sprite(char const* filename, float height, float scale = 1);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
 
       std::size_t             num_frames() const;
       std::size_t             index() const              { return _index; }

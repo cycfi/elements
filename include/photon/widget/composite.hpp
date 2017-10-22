@@ -34,7 +34,7 @@ namespace photon
 
    // Image
 
-      virtual widget_limits   limits(basic_context const& ctx) const = 0;
+      virtual view_limits     limits(basic_context const& ctx) const = 0;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx) = 0;

@@ -25,7 +25,7 @@ namespace photon
 
       ~port_base() {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
       virtual void            draw(context const& ctx);
 
@@ -99,7 +99,7 @@ namespace photon
 
       ~scroller_base() {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
 

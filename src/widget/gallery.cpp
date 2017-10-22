@@ -16,7 +16,7 @@ namespace photon
       cnv.fill_rect(ctx.bounds);
    }
 
-   widget_limits heading::limits(basic_context const& ctx) const
+   view_limits heading::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(
@@ -69,7 +69,7 @@ namespace photon
       canvas_.stroke();
    }
 
-   widget_limits label::limits(basic_context const& ctx) const
+   view_limits label::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(
@@ -107,7 +107,7 @@ namespace photon
       canvas_.round_rect(ctx.bounds, corner_radius);
       canvas_.fill_style(theme_.panel_color);
       canvas_.fill();
-      
+
       // Simulated blurred shadow (cairo does not have blur yet)
       {
          auto save = canvas_.new_state();
@@ -129,7 +129,7 @@ namespace photon
          canvas_.round_rect(shr, corner_radius*2);
          canvas_.fill_style(color(0, 0, 0, 20));
          canvas_.fill();
-         
+
          shr.left += 1;
          shr.top += 1;
          shr.right -= 2;
@@ -138,7 +138,7 @@ namespace photon
          canvas_.round_rect(shr, corner_radius*1.5);
          canvas_.fill_style(color(0, 0, 0, 30));
          canvas_.fill();
-         
+
          shr.left += 1;
          shr.top += 1;
          shr.right -= 2;
@@ -201,7 +201,7 @@ namespace photon
     , _size(size_)
    {}
 
-   widget_limits icon::limits(basic_context const& ctx) const
+   view_limits icon::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       float font_size = (_size > 0)? _size : thm.icon_font_size;
@@ -484,7 +484,7 @@ namespace photon
       canvas_.fill();
    }
 
-   widget_limits menu_item_spacer_widget::limits(basic_context const& ctx) const
+   view_limits menu_item_spacer_widget::limits(basic_context const& ctx) const
    {
       return { { 0, 0 }, { full_extent, get_theme().label_font_size } };
    }

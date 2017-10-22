@@ -11,9 +11,9 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits vtile_widget::limits(basic_context const& ctx) const
+   view_limits vtile_widget::limits(basic_context const& ctx) const
    {
-      widget_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
+      view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
          auto el = at(ix).limits(ctx);
@@ -77,9 +77,9 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // Horizontal Tiles
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits htile_widget::limits(basic_context const& ctx) const
+   view_limits htile_widget::limits(basic_context const& ctx) const
    {
-      widget_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
+      view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
          auto el = at(ix).limits(ctx);

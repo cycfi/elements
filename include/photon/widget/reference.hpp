@@ -29,7 +29,7 @@ namespace photon
 
    // Image
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
@@ -89,7 +89,7 @@ namespace photon
    {}
 
    template <typename Widget>
-   inline widget_limits
+   inline view_limits
    reference<Widget>::limits(basic_context const& ctx) const
    {
       return ptr->limits(ctx);

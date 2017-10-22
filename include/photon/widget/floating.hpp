@@ -20,7 +20,7 @@ namespace photon
                               : _bounds(bounds)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
       rect                    bounds() const { return _bounds; }

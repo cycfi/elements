@@ -13,15 +13,15 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // port class implementation
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits port_base::limits(basic_context const& ctx) const
+   view_limits port_base::limits(basic_context const& ctx) const
    {
-      widget_limits e_limits = subject().limits(ctx);
+      view_limits e_limits = subject().limits(ctx);
       return { { 0, 0 }, e_limits.max };
    }
 
    void port_base::prepare_subject(context& ctx)
    {
-      widget_limits  e_limits          = subject().limits(ctx);
+      view_limits    e_limits          = subject().limits(ctx);
       double         elem_width        = e_limits.min.x;
       double         elem_height       = e_limits.min.y;
       double         available_width   = ctx.parent->bounds.width();
@@ -144,10 +144,10 @@ namespace photon
       return rect{ x, y, x+w, y+h };
    }
 
-   widget_limits scroller_base::limits(basic_context const& ctx) const
+   view_limits scroller_base::limits(basic_context const& ctx) const
    {
-      widget_limits e_limits = subject().limits(ctx);
-      return widget_limits{
+      view_limits e_limits = subject().limits(ctx);
+      return view_limits{
          { allow_hscroll()? 0 : e_limits.min.x, allow_vscroll()? 0 : e_limits.min.y },
          { e_limits.max.x, e_limits.max.y }
       };
@@ -162,7 +162,7 @@ namespace photon
    scroller_base::get_scrollbar_bounds(context const& ctx)
    {
       scrollbar_bounds r;
-      widget_limits    e_limits = subject().limits(ctx);
+      view_limits      e_limits = subject().limits(ctx);
 
       r.has_h = e_limits.min.x > ctx.bounds.width() && allow_hscroll();
       r.has_v = e_limits.min.y > ctx.bounds.height() && allow_vscroll();
@@ -204,7 +204,7 @@ namespace photon
       if (has_scrollbars())
       {
          scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-         widget_limits     e_limits = subject().limits(ctx);
+         view_limits       e_limits = subject().limits(ctx);
          point             mp = ctx.view.cursor_pos();
 
          if (sb.has_v)
@@ -217,8 +217,7 @@ namespace photon
 
    bool scroller_base::scroll(context const& ctx, point dir, point p)
    {
-      widget_limits  e_limits = subject().limits(ctx);
-
+      view_limits e_limits = subject().limits(ctx);
       bool redraw = false;
 
       if (allow_hscroll())
@@ -294,7 +293,7 @@ namespace photon
          return false;
 
       scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-      widget_limits     e_limits = subject().limits(ctx);
+      view_limits       e_limits = subject().limits(ctx);
 
       auto valign_ = [&](double align)
       {
@@ -480,7 +479,7 @@ namespace photon
             {
                if (k.action == key_action::press)
                {
-                  widget_limits     e_limits = subject().limits(ctx);
+                  view_limits       e_limits = subject().limits(ctx);
                   scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
                   rect b = scroll_bar_position(
                       ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });

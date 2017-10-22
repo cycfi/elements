@@ -8,7 +8,7 @@
 
 namespace photon
 {
-   widget_limits floating_widget::limits(basic_context const& ctx) const
+   view_limits floating_widget::limits(basic_context const& ctx) const
    {
       return full_limits;
    }

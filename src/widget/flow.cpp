@@ -11,9 +11,9 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // Flow Widget
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits flow_widget::limits(basic_context const& ctx) const
+   view_limits flow_widget::limits(basic_context const& ctx) const
    {
-      widget_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
+      view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
       if (_laid_out)
          limits_.min.y = base_type::limits(ctx).min.y;
       return limits_;

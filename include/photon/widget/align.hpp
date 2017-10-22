@@ -40,7 +40,7 @@ namespace photon
                               halign_widget(float align, Subject&& subject);
                               halign_widget(float align, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
    };
 
@@ -83,7 +83,7 @@ namespace photon
    {}
 
    template <typename Subject>
-   inline widget_limits halign_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits halign_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
       return { { e_limits.min.x, e_limits.min.y }, { full_extent, e_limits.max.y } };
@@ -92,7 +92,7 @@ namespace photon
    template <typename Subject>
    inline void halign_widget<Subject>::prepare_subject(context& ctx)
    {
-      widget_limits  e_limits          = this->subject().limits(ctx);
+      view_limits    e_limits          = this->subject().limits(ctx);
       float          elem_width        = e_limits.min.x;
       float          available_width   = ctx.bounds.width();
 
@@ -114,7 +114,7 @@ namespace photon
                               valign_widget(float align, Subject&& subject);
                               valign_widget(float align, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
    };
 
@@ -157,7 +157,7 @@ namespace photon
    {}
 
    template <typename Subject>
-   inline widget_limits valign_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits valign_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
       return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, full_extent } };
@@ -195,13 +195,13 @@ namespace photon
    {
       return align_center(align_bottom(subject));
    }
-   
+
    template <typename Subject>
    inline auto align_left_middle(Subject const& subject)
    {
       return align_left(align_middle(subject));
    }
-   
+
    template <typename Subject>
    inline auto align_right_middle(Subject const& subject)
    {

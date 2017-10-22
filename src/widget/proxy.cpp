@@ -12,7 +12,7 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // proxy class implementation
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits proxy_base::limits(basic_context const& ctx) const
+   view_limits proxy_base::limits(basic_context const& ctx) const
    {
       return subject().limits(ctx);
    }

@@ -18,7 +18,7 @@ namespace photon
    {
    public:
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
       virtual rect            bounds_of(context const& ctx, std::size_t index) const;
 
@@ -47,7 +47,7 @@ namespace photon
    {
    public:
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
       virtual rect            bounds_of(context const& ctx, std::size_t index) const;
 

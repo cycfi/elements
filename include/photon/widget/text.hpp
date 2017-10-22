@@ -31,7 +31,7 @@ namespace photon
                                , int style         = canvas::normal
                               );
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
       virtual void            draw(context const& ctx);
 
@@ -134,7 +134,7 @@ namespace photon
                               , _placeholder(placeholder)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
       virtual bool            key(context const& ctx, key_info k);
 

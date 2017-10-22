@@ -6,9 +6,9 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
 #define PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
+#include <photon/host.hpp>
 #include <photon/support/rect.hpp>
 #include <photon/support/misc.hpp>
-#include <photon/support/key.hpp>
 
 #include <memory>
 #include <string>
@@ -18,51 +18,6 @@ namespace photon
 {
    struct basic_context;
    struct context;
-
-   //////////////////////////////////////////////////////////////////////////////////////
-   // Mouse Button
-   //////////////////////////////////////////////////////////////////////////////////////
-   struct mouse_button
-   {
-      enum what { left, middle, right };
-
-      bool     down;
-      int      num_clicks;
-      what     state;
-      int      modifiers;
-      point    pos;
-   };
-
-   //////////////////////////////////////////////////////////////////////////////////////
-   // Cursor tracking
-   //////////////////////////////////////////////////////////////////////////////////////
-   enum class cursor_tracking
-   {
-      entering,   // Sent when the cursor is entering a widget
-      hovering,   // Sent when the cursor is hovering over a widget
-      leaving     // Sent when the cursor is leaving a widget
-   };
-
-   //////////////////////////////////////////////////////////////////////////////////////
-   // Text info
-   //////////////////////////////////////////////////////////////////////////////////////
-   struct text_info
-   {
-      uint32_t codepoint;
-      int      modifiers;
-   };
-
-   //////////////////////////////////////////////////////////////////////////////////////
-   // Widget Limits
-   //////////////////////////////////////////////////////////////////////////////////////
-   struct widget_limits
-   {
-      point    min;
-      point    max;
-   };
-
-   constexpr float         full_extent    = 1E6;
-   constexpr widget_limits full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
 
    //////////////////////////////////////////////////////////////////////////////////////
    // Focus request
@@ -97,7 +52,7 @@ namespace photon
 
    // Image
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual widget*         hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);

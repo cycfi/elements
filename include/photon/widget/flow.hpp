@@ -53,7 +53,7 @@ namespace photon
                                , _laid_out(false)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
 
    private:

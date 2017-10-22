@@ -10,7 +10,7 @@
 
 namespace photon
 {
-   widget_limits slider_base::limits(basic_context const& ctx) const
+   view_limits slider_base::limits(basic_context const& ctx) const
    {
       auto  limits_ = body().limits(ctx);
       auto  ind_limits = indicator().limits(ctx);
@@ -183,19 +183,19 @@ namespace photon
       clamp(val, 0.0, 1.0);
       _value = val;
    }
-   
+
    double  slider_base::value() const
    {
       return _value;
    }
-   
+
    void basic_slider_base::value(double val)
    {
       slider_base::value(val);
       if (on_change)
          on_change(val);
    }
-   
+
    void basic_selector_base::select(size_t val)
    {
       if (on_change)

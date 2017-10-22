@@ -53,7 +53,7 @@ namespace photon
                                , _size(size_)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
 
       std::string             text() const                     { return _text; }
@@ -86,7 +86,7 @@ namespace photon
                                , _size(size_)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
 
       std::string             text() const                     { return _text; }
@@ -242,7 +242,7 @@ namespace photon
    {
                               icon(std::uint32_t code_, float size_ = -1);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
 
       std::uint32_t           _code;
@@ -412,14 +412,14 @@ namespace photon
                                : _text(text)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
 
       std::string             _text;
    };
 
    template <bool state>
-   widget_limits check_box_widget<state>::limits(basic_context const& ctx) const
+   view_limits check_box_widget<state>::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
@@ -453,7 +453,7 @@ namespace photon
                                , _size(size)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
 
       uint32_t                _code;
@@ -461,7 +461,7 @@ namespace photon
    };
 
    template <bool state>
-   widget_limits icon_button_widget<state>::limits(basic_context const& ctx) const
+   view_limits icon_button_widget<state>::limits(basic_context const& ctx) const
    {
       auto  size = _size * 1.8f;
       return { { size, size }, { size, size } };
@@ -521,7 +521,7 @@ namespace photon
 
    struct menu_item_spacer_widget : public widget
    {
-      virtual widget_limits limits(basic_context const& ctx) const;
+      virtual view_limits limits(basic_context const& ctx) const;
       virtual void          draw(context const& ctx);
    };
 

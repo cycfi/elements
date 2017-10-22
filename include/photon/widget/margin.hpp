@@ -31,7 +31,7 @@ namespace photon
                                , _margin(margin_)
                               {}
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -43,7 +43,7 @@ namespace photon
    // Inlines
    //////////////////////////////////////////////////////////////////////////////////////
    template <typename Rect, typename Subject>
-   inline widget_limits margin_widget<Rect, Subject>::limits(basic_context const& ctx) const
+   inline view_limits margin_widget<Rect, Subject>::limits(basic_context const& ctx) const
    {
       auto r = this->subject().limits(ctx);
 

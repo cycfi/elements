@@ -13,7 +13,7 @@ namespace photon
    // widget class implementation
    //////////////////////////////////////////////////////////////////////////////////////
 
-   widget_limits widget::limits(basic_context const& ctx) const
+   view_limits widget::limits(basic_context const& ctx) const
    {
       return full_limits;
    }

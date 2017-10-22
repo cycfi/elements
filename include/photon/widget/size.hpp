@@ -24,7 +24,7 @@ namespace photon
                               size_widget(point size, Subject&& subject);
                               size_widget(point size, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -52,7 +52,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits size_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits size_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
@@ -80,7 +80,7 @@ namespace photon
                               hsize_widget(float width, Subject&& subject);
                               hsize_widget(float width, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -108,7 +108,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits hsize_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits hsize_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float width = _width;
@@ -133,7 +133,7 @@ namespace photon
                               vsize_widget(float height, Subject&& subject);
                               vsize_widget(float height, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -161,7 +161,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits vsize_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits vsize_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float height = _height;
@@ -188,7 +188,7 @@ namespace photon
                               min_size_widget(point size, Subject&& subject);
                               min_size_widget(point size, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -216,7 +216,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits min_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits min_size_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
@@ -246,7 +246,7 @@ namespace photon
                               hmin_size_widget(float width, Subject&& subject);
                               hmin_size_widget(float width, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -274,7 +274,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits hmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits hmin_size_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float width = _width;
@@ -300,7 +300,7 @@ namespace photon
                               vmin_size_widget(float height, Subject&& subject);
                               vmin_size_widget(float height, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
 
    private:
@@ -328,7 +328,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits vmin_size_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits vmin_size_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float height = _height;
@@ -356,7 +356,7 @@ namespace photon
                               hspan_widget(float span, Subject&& subject);
                               hspan_widget(float span, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
 
    private:
 
@@ -383,7 +383,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits hspan_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits hspan_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float max_width = std::max(e_limits.min.x, e_limits.max.x * _span);
@@ -401,7 +401,7 @@ namespace photon
                               vspan_widget(float span, Subject&& subject);
                               vspan_widget(float span, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
 
    private:
 
@@ -428,7 +428,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits vspan_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits vspan_widget<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
       float max_height = std::max(e_limits.min.y, e_limits.max.y * _span);
@@ -446,7 +446,7 @@ namespace photon
                               fit_widget(point size, Subject&& subject);
                               fit_widget(point size, Subject const& subject);
 
-      virtual widget_limits   limits(basic_context const& ctx) const;
+      virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
@@ -476,7 +476,7 @@ namespace photon
    }
 
    template <typename Subject>
-   inline widget_limits fit_widget<Subject>::limits(basic_context const& ctx) const
+   inline view_limits fit_widget<Subject>::limits(basic_context const& ctx) const
    {
       return { _size, { full_extent, full_extent } };
    }

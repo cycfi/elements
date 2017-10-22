@@ -27,7 +27,7 @@ namespace photon
     , _color(color_)
    {}
 
-   widget_limits static_text_box::limits(basic_context const& ctx) const
+   view_limits static_text_box::limits(basic_context const& ctx) const
    {
       auto  size = _layout.metrics();
       auto  min_line_height = size.ascent + size.descent + size.leading;
@@ -821,7 +821,7 @@ namespace photon
    //////////////////////////////////////////////////////////////////////////////////////
    // Input Text Box
    //////////////////////////////////////////////////////////////////////////////////////
-   widget_limits basic_input_box::limits(basic_context const& ctx) const
+   view_limits basic_input_box::limits(basic_context const& ctx) const
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;

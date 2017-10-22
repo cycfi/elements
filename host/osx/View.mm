@@ -3,7 +3,7 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =================================================================================================*/
-#import "../host.hpp"
+#import <host.hpp>
 #import <Cocoa/Cocoa.h>
 #import <memory>
 
@@ -12,9 +12,9 @@ namespace ph = photon;
 ///////////////////////////////////////////////////////////////////////////////
 // Default functions
 
-ph::base_view* _new_view_(ph::host_view*)
+ph::base_view* _new_view_(ph::host_view* h)
 {
-   return nullptr;
+   return new ph::base_view{h};
 }
 
 ///////////////////////////////////////////////////////////////////////////////

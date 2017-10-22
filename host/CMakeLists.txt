@@ -11,11 +11,13 @@ add_executable(
    MACOSX_BUNDLE
    host.hpp
    key.hpp
-   osx/App.mm
-   osx/View.mm
-   osx/main.mm
+   osx/app.mm
+   osx/view.mm
+   osx/main.cpp
    osx/MainMenu.xib
 )
+
+include_directories(${CMAKE_SOURCE_DIR})
 
 set_source_files_properties(
    osx/MainMenu.xib

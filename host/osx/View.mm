@@ -1,13 +1,15 @@
-/*=================================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
-=================================================================================================*/
-#import <host.hpp>
+=============================================================================*/
+#include <host/host.hpp>
+#include <memory>
+#include <map>
 #import <Cocoa/Cocoa.h>
-#import <memory>
 
 namespace ph = photon;
+using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Default functions
@@ -25,6 +27,14 @@ ph::base_view* (*new_view)(ph::host_view*) = &_new_view_;
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
 
+namespace photon
+{
+   // These functions are defined in key.mm:
+   key_code    translate_key(unsigned int key);
+   int         translate_flags(NSUInteger flags);
+   NSUInteger  translate_key_to_modifier_flag(key_code key);
+}
+
 namespace
 {
    // Defines a constant for empty ranges in NSTextInputClient
@@ -34,6 +44,60 @@ namespace
    float transformY(float y)
    {
       return CGDisplayBounds(CGMainDisplayID()).size.height - y;
+   }
+
+   ph::mouse_button get_button(NSEvent* event, NSView* self, bool down = true)
+   {
+      auto pos = [event locationInWindow];
+      auto click_count = [event clickCount];
+      auto const mods = ph::translate_flags([event modifierFlags]);
+      pos = [self convertPoint:pos fromView:nil];
+
+      return {
+         down,
+         int(click_count),
+         ph::mouse_button::left,
+         mods,
+         float(pos.x),
+         float(pos.y)
+      };
+   }
+
+   void handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
+   {
+      using ph::key_action;
+      bool repeated = false;
+
+      if (k.action == key_action::release && keys[k.key] == key_action::release)
+         return;
+
+      if (k.action == key_action::press && keys[k.key] == key_action::press)
+         repeated = true;
+
+      keys[k.key] = k.action;
+
+      if (repeated)
+         k.action = key_action::repeat;
+
+      _view.key(k);
+   }
+
+   void get_window_pos(NSWindow* window, int& xpos, int& ypos)
+   {
+      NSRect const content_rect =
+         [window contentRectForFrameRect:[window frame]];
+
+      if (xpos)
+         xpos = content_rect.origin.x;
+      if (ypos)
+         ypos = transformY(content_rect.origin.y + content_rect.size.height);
+   }
+
+   void handle_text(ph::base_view& _view, ph::text_info info)
+   {
+      if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
+         return;
+      _view.text(info);
    }
 }
 
@@ -46,6 +110,7 @@ namespace
    NSMutableAttributedString*       _marked_text;
    bool                             _first_time;
    std::unique_ptr<ph::base_view>   _view;
+   key_map                          _keys;
 }
 
 - (void) make;
@@ -141,37 +206,19 @@ namespace
 
 - (void) mouseDown:(NSEvent*) event
 {
-   auto pos = [event locationInWindow];
-   auto click_count = [event clickCount];
-//   auto const mods = ph::translate_flags([event modifierFlags]);
-   pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->click(get_button(event, self));
    [self displayIfNeeded];
 }
 
 - (void) mouseDragged:(NSEvent*) event
 {
-   auto pos = [event locationInWindow];
-   auto click_count = [event clickCount];
-//   auto const mods = ph::translate_flags([event modifierFlags]);
-   pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->drag(get_button(event, self));
    [self displayIfNeeded];
 }
 
 - (void) mouseUp:(NSEvent*) event
 {
-   auto pos = [event locationInWindow];
-   auto click_count = [event clickCount];
-//   auto const mods = ph::translate_flags([event modifierFlags]);
-   pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->click(get_button(event, self, false));
    [self displayIfNeeded];
 }
 
@@ -204,9 +251,7 @@ namespace
    [[self window] makeFirstResponder:self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->cursor(float(pos.x), float(pos.y), ph::cursor_tracking::entering);
    [self displayIfNeeded];
 }
 
@@ -215,9 +260,7 @@ namespace
    [[self window] setAcceptsMouseMovedEvents:NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->cursor(float(pos.x), float(pos.y), photon::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -225,98 +268,64 @@ namespace
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-
-   // $$$ Callback here $$$
-
+   _view->cursor(float(pos.x), float(pos.y), photon::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
 
 - (void) scrollWheel:(NSEvent*) event
 {
-//   ph::point delta = { float([event scrollingDeltaX]), float([event scrollingDeltaY]) };
+   float delta_x = [event scrollingDeltaX];
+   float delta_y = [event scrollingDeltaY];
 
-//   if (event.directionInvertedFromDevice)
-//      delta.y = -delta.y;
-//
-//   auto pos = [event locationInWindow];
-//   pos = [self convertPoint:pos fromView:nil];
-//   if (fabs(delta.x) > 0.0 || fabs(delta.y) > 0.0)
-//   {
-//      // $$$ Callback here $$$
-//   }
+   if (event.directionInvertedFromDevice)
+      delta_y = -delta_y;
 
+   auto pos = [event locationInWindow];
+   pos = [self convertPoint:pos fromView:nil];
+   if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
+      _view->scroll(delta_x, delta_y, float(pos.x), float(pos.y));
    [self displayIfNeeded];
 }
 
-//namespace
-//{
-//   void handle_key(PhotonView& ns_view, ph::view& _view, ph::key_info k)
-//   {
-//      using ph::key_action;
-//      bool repeated = false;
-//
-//      if (k.action == key_action::release && ns_view._keys[k.key] == key_action::release)
-//         return;
-//
-//      if (k.action == key_action::press && ns_view._keys[k.key] == key_action::press)
-//         repeated = true;
-//
-//      ns_view._keys[k.key] = k.action;
-//
-//      if (repeated)
-//         k.action = key_action::repeat;
-//
-//      _view.key(k);
-//   }
-//}
-
 - (void) keyDown:(NSEvent*) event
 {
-   //auto const key = ph::translate_key([event keyCode]);
-   //auto const mods = ph::translate_flags([event modifierFlags]);
-   //
-   //handle_key(*self, _view, { key, ph::key_action::press, mods });
-
-   // $$$ Callback here $$$
-
+   auto const key = ph::translate_key([event keyCode]);
+   auto const mods = ph::translate_flags([event modifierFlags]);
+   handle_key(_keys, *_view.get(), { key, ph::key_action::press, mods });
    [self interpretKeyEvents:[NSArray arrayWithObject:event]];
 }
 
 - (void) flagsChanged:(NSEvent*) event
 {
-   //auto const modifier_flags =
-   //    [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
-   //auto const key = ph::translate_key([event keyCode]);
-   //auto const mods = ph::translate_flags(modifier_flags);
-   //auto const key_flag = ph::translate_key_to_modifier_flag(key);
-   //
-   //ph::key_action action;
-   //if (key_flag & modifier_flags)
-   //{
-   //   if (_keys[key] == ph::key_action::press)
-   //      action = ph::key_action::release;
-   //   else
-   //      action = ph::key_action::press;
-   //}
-   //else
-   //{
-   //   action = ph::key_action::release;
-   //}
-   //
-   //handle_key(*self, _view, { key, action, mods });
+   auto const modifier_flags =
+      [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+   auto const key = ph::translate_key([event keyCode]);
+   auto const mods = ph::translate_flags(modifier_flags);
+   auto const key_flag = ph::translate_key_to_modifier_flag(key);
 
-   // $$$ Callback here $$$
+   ph::key_action action;
+   if (key_flag & modifier_flags)
+   {
+     if (_keys[key] == ph::key_action::press)
+        action = ph::key_action::release;
+     else
+        action = ph::key_action::press;
+   }
+   else
+   {
+     action = ph::key_action::release;
+   }
+
+   handle_key(_keys, *_view.get(), { key, action, mods });
 }
 
 - (void) keyUp:(NSEvent*) event
 {
-   //auto const key = ph::translate_key([event keyCode]);
-   //auto const mods = ph::translate_flags([event modifierFlags]);
-   //
-   //handle_key(*self, _view, { key, ph::key_action::release, mods });
+   auto const key = ph::translate_key([event keyCode]);
+   auto const mods = ph::translate_flags([event modifierFlags]);
 
-   // $$$ Callback here $$$
+   handle_key(_keys, *_view.get(), { key, ph::key_action::release, mods });
 }
 
 - (BOOL) hasMarkedText
@@ -368,20 +377,6 @@ namespace
    return 0;
 }
 
-namespace
-{
-   void get_window_pos(NSWindow* window, int& xpos, int& ypos)
-   {
-      NSRect const content_rect =
-         [window contentRectForFrameRect:[window frame]];
-
-      if (xpos)
-         xpos = content_rect.origin.x;
-      if (ypos)
-         ypos = transformY(content_rect.origin.y + content_rect.size.height);
-   }
-}
-
 - (NSRect) firstRectForCharacterRange:(NSRange)range
                          actualRange:(NSRangePointer)actualRange
 {
@@ -391,34 +386,21 @@ namespace
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
-//namespace
-//{
-//   void handle_text(ph::view& _view, ph::text_info info)
-//   {
-//      if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
-//        return;
-//      _view.text(info);
-//   }
-//}
-
 - (void) insertText:(id)string replacementRange:(NSRange)replacementRange
 {
-   //auto*       event = [NSApp currentEvent];
-   //auto const  mods = ph::translate_flags([event modifierFlags]);
-   //auto*       characters = ([string isKindOfClass:[NSAttributedString class]]) ?
-   //               [string string] : (NSString*) string;
-   //
-   //NSUInteger i, length = [characters length];
-   //for (i = 0;  i < length;  i++)
-   //{
-   //   const unichar codepoint = [characters characterAtIndex:i];
-   //   if ((codepoint & 0xff00) == 0xf700)
-   //      continue;
-   //   handle_text(_view, { codepoint, mods });
-   //}
+   auto*       event = [NSApp currentEvent];
+   auto const  mods = ph::translate_flags([event modifierFlags]);
+   auto*       characters = ([string isKindOfClass:[NSAttributedString class]]) ?
+                 [string string] : (NSString*) string;
 
-   // $$$ Callback here $$$
-
+   NSUInteger i, length = [characters length];
+   for (i = 0;  i < length;  i++)
+   {
+     const unichar codepoint = [characters characterAtIndex:i];
+     if ((codepoint & 0xff00) == 0xf700)
+        continue;
+     handle_text(*_view.get(), { codepoint, mods });
+   }
 }
 
 - (void) doCommandBySelector:(SEL)selector
@@ -427,15 +409,12 @@ namespace
 
 -(void) windowDidBecomeKey:(NSNotification*) notification
 {
-   //_view.focus(ph::focus_request::begin_focus);
-   // $$$ Callback here $$$
-
+   _view->focus(ph::focus_request::begin_focus);
 }
 
 -(void) windowDidResignKey:(NSNotification*) notification
 {
-   //_view.focus(ph::focus_request::end_focus);
-   // $$$ Callback here $$$
+   _view->focus(ph::focus_request::end_focus);
 }
 
 @end

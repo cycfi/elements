@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(appname "Application Name" "photon_app")
+option(photon_dir "Photon Base Directory")
 
 project(${appname})
 
@@ -13,11 +14,12 @@ add_executable(
    key.hpp
    osx/app.mm
    osx/view.mm
+   osx/key.mm
    osx/main.cpp
    osx/MainMenu.xib
 )
 
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${photon_dir})
 
 set_source_files_properties(
    osx/MainMenu.xib

@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+###############################################################################
+# We need both the appname and photon_dir passed as cmake command
+# line arguments. For example:
+#     cmake -Dappname=myapp -Dphoton_dir="/path/to/photon" -GXcode
+###############################################################################
 option(appname "Application Name" "photon_app")
 option(photon_dir "Photon Base Directory")
 

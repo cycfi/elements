@@ -32,9 +32,31 @@
 #include <utility>
 #include <string>
 #include <cstdint>
+#include <cairo.h>
 
 namespace photon
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // This header is self-contained, and should always be self contained. The
+   // facilities in this header file contain all that is necessary to
+   // implement platform specific behavior for a host platform application's
+   // most basic functionalities, including support for 1) The main application,
+   // 2) Creation and management of the main window, 3) Keyboard and mouse
+   // event handling, 4) The clipboard.
+   //
+   // It is crucual, by design, to keep this header file always self contained
+   // with zero dependencies. The objective is the make it as easy as possible
+   // to implement and maintain different hosts for various platforms and
+   // applications. A platform (OS) may have multiple hosts for diverse needs.
+   // For example, OSX may have a "Desktop App" host as well as an "AU"
+   // (Audio Units) host that itself is typically a plugin guest, hosted by
+   // another application.
+   //
+   // Another crucial design strategy is the keep this header file free from
+   // any platform specific code (public types, public functions, etc.) that
+   // may pollute the clean platform independent API.
+   ////////////////////////////////////////////////////////////////////////////
+
    struct host_view;
 
    ////////////////////////////////////////////////////////////////////////////
@@ -271,6 +293,8 @@ namespace photon
       bool                    is_focus() const;
 
    private:
+
+      cairo_t*                setup_context();
 
       host_view* h;
    };

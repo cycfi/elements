@@ -29,6 +29,7 @@
 #include <photon/host.hpp>
 #include <memory>
 #include <map>
+#include <cairo-quartz.h>
 #import <Cocoa/Cocoa.h>
 
 namespace ph = photon;
@@ -496,6 +497,23 @@ namespace photon
    bool base_view::is_focus() const
    {
       return [[get_mac_view(h) window] isKeyWindow];
+   }
+
+   cairo_t* base_view::setup_context()
+   {
+      auto ns_view = get_mac_view(h);
+      auto w = [ns_view bounds].size.width;
+      auto h = [ns_view bounds].size.height;
+      auto locked = [ns_view lockFocusIfCanDraw];
+
+      auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
+      cairo_surface_t* surface = surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
+      cairo_t* context = cairo_create(surface);
+      cairo_surface_destroy(surface);
+
+      if (locked)
+         [ns_view unlockFocus];
+      return context;
    }
 
    std::string clipboard()

@@ -7,6 +7,9 @@ option(photon_dir "Photon Base Directory")
 
 project(${appname})
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${photon_dir}/cmake/")
+FIND_PACKAGE(CAIRO REQUIRED cairo)
+
 add_executable(
    ${appname}
    MACOSX_BUNDLE
@@ -18,7 +21,14 @@ add_executable(
    MainMenu.xib
 )
 
-include_directories(${photon_dir}/include)
+include_directories(
+   ${photon_dir}/include
+   ${CAIRO_INCLUDE_DIRS}
+)
+
+target_link_libraries(${appname}
+	${CAIRO_LIBRARIES}
+)
 
 set_source_files_properties(
    MainMenu.xib

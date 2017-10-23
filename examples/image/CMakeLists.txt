@@ -47,13 +47,15 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-file(GLOB_RECURSE PHOTON_SOURCES ${photon_dir}/src/*.cpp)
+file(GLOB_RECURSE PHOTON_SOURCES ${photon_dir}/src/*.cpp ${photon_dir}/src/*.c)
+file(GLOB_RECURSE PHOTON_HOST ${photon_dir}/host/osx/*.mm)
 file(GLOB_RECURSE PHOTON_HEADERS ${photon_dir}/include/*.hpp)
 
 file(
    GLOB_RECURSE PHOTON_RESOURCES
    ${photon_dir}/resources/*.ttf
    ${photon_dir}/resources/*.jpeg
+   ${photon_dir}/resources/*.jpg
    ${photon_dir}/resources/*.png
 )
 
@@ -61,13 +63,30 @@ file(
    GLOB_RECURSE APP_RESOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpg
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xib
 )
 
 source_group(Resources
    FILES
    ${PHOTON_RESOURCES}
    ${APP_RESOURCES}
+)
+
+source_group("Source Files\\photon"
+   FILES
+   ${PHOTON_SOURCES}
+)
+
+source_group("Source Files\\photon_host"
+   FILES
+   ${PHOTON_HOST}
+)
+
+source_group("Header Files\\photon"
+   FILES
+   ${PHOTON_HEADERS}
 )
 
 ###############################################################################
@@ -79,10 +98,7 @@ add_executable(
    main.cpp
    ${PHOTON_SOURCES}
    ${PHOTON_HEADERS}
-   ${photon_dir}/src/support/detail/blur_image_surface.c
-   ${photon_dir}/host/osx/app.mm
-   ${photon_dir}/host/osx/view.mm
-   ${photon_dir}/host/osx/key.mm
+   ${PHOTON_HOST}
    ${PHOTON_RESOURCES}
    ${APP_RESOURCES}
 )

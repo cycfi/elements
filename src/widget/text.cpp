@@ -187,7 +187,7 @@ namespace photon
    {
       if (ctx.bounds.includes(p))
       {
-         ctx.view.set_cursor(cursor_type::ibeam);
+         set_cursor(cursor_type::ibeam);
          return true;
       }
       return false;
@@ -682,7 +682,7 @@ namespace photon
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         v.clipboard(_text.substr(start, end_-start_));
+         clipboard(_text.substr(start, end_-start_));
          delete_();
       }
    }
@@ -693,7 +693,7 @@ namespace photon
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         v.clipboard(_text.substr(start, end_-start_));
+         clipboard(_text.substr(start, end_-start_));
       }
    }
 
@@ -703,7 +703,7 @@ namespace photon
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         std::string ins = v.clipboard();
+         std::string ins = clipboard();
          _text.replace(start, end_-start_, ins);
          start += ins.size();
          _select_end = _select_start = start;
@@ -899,7 +899,7 @@ namespace photon
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
 
-         std::string clip = v.clipboard();
+         std::string clip = clipboard();
          if (clip.empty())
             return;
 

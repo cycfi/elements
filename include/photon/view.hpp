@@ -22,7 +22,7 @@ namespace photon
    class view : public base_view
    {
    public:
-                           view();
+                           view(host_view* h) : base_view(h) {}
                            view(view const&) = delete;
       view&                operator=(view const&) = delete;
 
@@ -34,6 +34,8 @@ namespace photon
       virtual void         key(key_info const& k) override;
       virtual void         text(text_info const& info) override;
       virtual void         focus(focus_request r) override;
+
+      using base_view::refresh;
 
       void                 refresh(widget& widget);
       void                 refresh(context const& ctx);
@@ -53,12 +55,10 @@ namespace photon
       bool                 redo();
 
       layer_composite      content;
-      application_ptr      app;
 
    private:
 
-      cairo_t*             setup_context();
-      void                 set_limits(basic_context& bctx);
+      void                 set_limits(basic_context& bctx, bool maintain_aspect);
 
       rect                 _dirty;
       rect                 _current_bounds;

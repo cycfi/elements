@@ -1,0 +1,22 @@
+{
+   "files.associations": {
+      "ios": "cpp",
+      "__config": "cpp",
+      "cstddef": "cpp",
+      "exception": "cpp",
+      "initializer_list": "cpp",
+      "new": "cpp",
+      "stdexcept": "cpp",
+      "typeinfo": "cpp",
+      "*.tcc": "cpp",
+      "cctype": "cpp",
+      "cmath": "cpp",
+      "cstdio": "cpp",
+      "cstdlib": "cpp",
+      "cwchar": "cpp",
+      "cwctype": "cpp",
+      "type_traits": "cpp",
+      "__functional_03": "cpp",
+      "functional": "cpp"
+   }
+}

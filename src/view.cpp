@@ -8,16 +8,16 @@
 
 namespace photon
 {
-   void view::set_limits(basic_context& bctx)
+   void view::set_limits(basic_context& bctx, bool maintain_aspect)
    {
       auto limits_ = content.limits(bctx);
-      limits(limits_);
+      limits(limits_, maintain_aspect);
 
       auto size_ = size();
       clamp(size_.x, limits_.min.x, limits_.max.x);
       clamp(size_.y, limits_.min.y, limits_.max.y);
 
-      if (_maintain_aspect)
+      if (maintain_aspect)
       {
          auto aspect = limits_.min.x/limits_.min.y;
          auto current_aspect = size_.x/size_.y;
@@ -80,6 +80,11 @@ namespace photon
          [&widget](auto const& ctx, auto& content) { content.refresh(ctx, widget); },
          *this, _current_bounds
       );
+   }
+
+   void view::refresh(context const& ctx)
+   {
+      refresh(ctx.bounds);
    }
 
    void view::click(mouse_button btn)

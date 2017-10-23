@@ -32,6 +32,7 @@
 #include <utility>
 #include <string>
 #include <cstdint>
+#include <functional>
 #include <cairo.h>
 
 #include <photon/support/point.hpp>
@@ -76,8 +77,7 @@ namespace photon
       int      num_clicks;
       what     state;
       int      modifiers;
-      float    x;
-      float    y;
+      point    pos;
    };
 
    //////////////////////////////////////////////////////////////////////////////////////
@@ -304,12 +304,15 @@ namespace photon
 
       point          cursor_pos() const;
       point          size() const;
-      void           size(float x, float y);
+      void           size(point p);
       bool           is_focus() const;
+
+   protected:
+
+      cairo_t*       setup_context();
 
    private:
 
-      cairo_t*       setup_context();
       host_view*     h;
    };
 
@@ -319,7 +322,7 @@ namespace photon
 
    /////////////////////////////////////////////////////////////////////////////
    // View creation callback
-   extern std::unique_ptr<base_view> (*new_view)(host_view* h);
+   extern std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
 
    /////////////////////////////////////////////////////////////////////////////
    // The clipboard

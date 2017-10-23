@@ -36,17 +36,15 @@ namespace ph = photon;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Default functions
-
-std::unique_ptr<ph::base_view> _new_view_(ph::host_view* h)
+// Main callback
+namespace photon
 {
-   return std::unique_ptr<ph::base_view>{ new ph::base_view{h} };
+   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view =
+      [](ph::host_view* h)
+      {
+         return std::make_unique<ph::base_view>(h);
+      };
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// Main callbacks
-
-std::unique_ptr<ph::base_view> (*new_view)(ph::host_view*) = &_new_view_;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -81,8 +79,7 @@ namespace
          int(click_count),
          ph::mouse_button::left,
          mods,
-         float(pos.x),
-         float(pos.y)
+         { float(pos.x), float(pos.y) }
       };
    }
 
@@ -156,7 +153,7 @@ namespace
 {
    _first_time = true;
 
-   _view = new_view((__bridge ph::host_view*) self);
+   _view = ph::new_view((__bridge ph::host_view*) self);
 
    _tracking_area = nil;
    [self updateTrackingAreas];
@@ -468,11 +465,11 @@ namespace photon
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(float x, float y)
+   void base_view::size(point p)
    {
       auto  ns_view = get_mac_view(h);
       ns_view.bounds.origin = NSMakePoint(0, 0);
-      [ns_view setFrameSize : NSMakeSize(x, y)];
+      [ns_view setFrameSize : NSMakeSize(p.x, p.y)];
    }
 
    void base_view::refresh()

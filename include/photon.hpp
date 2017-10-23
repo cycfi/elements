@@ -6,7 +6,7 @@
 #if !defined(PHOTON_GUI_LIB_FERBRUARY_17_2017)
 #define PHOTON_GUI_LIB_FERBRUARY_17_2017
 
-#include <photon/support.hpp>
+#include <photon/app.hpp>
 #include <photon/view.hpp>
 #include <photon/widget.hpp>
 

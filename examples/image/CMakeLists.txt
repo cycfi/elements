@@ -49,8 +49,26 @@ endif()
 
 file(GLOB_RECURSE PHOTON_SOURCES ${photon_dir}/src/*.cpp)
 file(GLOB_RECURSE PHOTON_HEADERS ${photon_dir}/include/*.hpp)
-file(GLOB_RECURSE PHOTON_RESOURCES ${photon_dir}/resources/*.*)
-file(GLOB APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.*)
+
+file(
+   GLOB_RECURSE PHOTON_RESOURCES
+   ${photon_dir}/resources/*.ttf
+   ${photon_dir}/resources/*.jpeg
+   ${photon_dir}/resources/*.png
+)
+
+file(
+   GLOB_RECURSE APP_RESOURCES
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
+)
+
+source_group(Resources
+   FILES
+   ${PHOTON_RESOURCES}
+   ${APP_RESOURCES}
+)
 
 ###############################################################################
 # The executable App

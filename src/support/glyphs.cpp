@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #include <photon/support/glyphs.hpp>
 #include <photon/support/detail/scratch_context.hpp>
 
@@ -134,7 +134,7 @@ namespace photon
       };
    }
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    master_glyphs::master_glyphs(
        char const* first, char const* last
      , char const* face, float size, int style
@@ -230,7 +230,7 @@ namespace photon
       // reurn early if there's nothing to break
       if (_first == _last)
          return;
-       
+
       PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
       PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 

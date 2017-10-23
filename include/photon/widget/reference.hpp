@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #if !defined(PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016)
 #define PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016
 
@@ -10,12 +10,12 @@
 
 namespace photon
 {
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Widget Reference
    //
    // A widget reference holds another widget by (smart) pointer. Widget references
    // may be copied and all copies will refer to the same widget being referenced.
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Widget>
    class reference : public widget
    {
@@ -76,9 +76,9 @@ namespace photon
    template <typename Widget>
    struct is_reference<reference<Widget>> : std::true_type {};
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Widget>
    inline reference<Widget>::reference()
    {}

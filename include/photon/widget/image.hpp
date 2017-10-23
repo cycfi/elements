@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #if !defined(PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016)
 #define PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016
 
@@ -13,9 +13,9 @@
 
 namespace photon
 {
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Images
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    class image : public widget
    {
    public:
@@ -36,7 +36,7 @@ namespace photon
       pixmap_ptr              _pixmap;
    };
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
 	// Photon uses gizmos for user interface images such as buttons, frames etc.
    // Basically a gizmo is a resizeable image. The unique feature is its ability
 	// to preserve the image near the edges when it is scaled up or down.
@@ -63,7 +63,7 @@ namespace photon
    // Variants of the gizmo are the hgizmo and vgizmo both having 3 patches
    // allowing resizing in one dimension (horozontally or vertically) only.
    //
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    class gizmo : public image
    {
    public:
@@ -94,11 +94,11 @@ namespace photon
       virtual void            draw(context const& ctx);
    };
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Images used as controls. Various frames are laid out in a single (big)
    // image but only one frame is drawn at any single time. Useful for switches,
    // knobs and basic (sprite) animation.
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    class sprite : public image
    {
    public:

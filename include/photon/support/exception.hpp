@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #if !defined(PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016)
 #define PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016
 
@@ -15,7 +15,7 @@ namespace photon
                      exception()
                        : std::runtime_error("")
                      {}
-       
+
       explicit       exception(std::string const& what)
                        : std::runtime_error(what)
                      {}

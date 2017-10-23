@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #include <photon/widget/gallery.hpp>
 #include <photon/support/text_utils.hpp>
 #include <photon/support/theme.hpp>

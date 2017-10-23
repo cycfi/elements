@@ -1,8 +1,8 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #if !defined(PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
 #define PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
@@ -19,12 +19,13 @@ namespace photon
    struct basic_context;
    struct context;
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Widgets
    //
-   // This is the class that deals with the graphic representation of fine-grained
-   // elements inside a window which may be static graphics or active controls.
-   //////////////////////////////////////////////////////////////////////////////////////
+   // This is the class that deals with the graphic representation of fine-
+   // grained elements inside a window which may be static graphics or active
+   // controls.
+   ////////////////////////////////////////////////////////////////////////////
    class widget : public std::enable_shared_from_this<widget>
    {
    public:
@@ -71,7 +72,7 @@ namespace photon
       virtual void            value(std::string val);
    };
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    using widget_ptr = std::shared_ptr<widget>;
    using widget_const_ptr = std::shared_ptr<widget const>;
 

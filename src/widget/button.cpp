@@ -1,16 +1,16 @@
-/*=======================================================================================
+/*=============================================================================
    Copyright (c) 2016-2017 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-=======================================================================================*/
+=============================================================================*/
 #include <photon/widget/button.hpp>
 #include <photon/view.hpp>
 
 namespace photon
 {
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Momentary Button
-   //////////////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
+   ////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    widget* basic_button::hit_test(context const& ctx, point p)
    {
       if (ctx.bounds.includes(p))
@@ -62,15 +62,15 @@ namespace photon
       if (on_click && _state != new_state)
          on_click(_state);
    }
-   
+
    void basic_button::value(int new_state)
    {
       value(bool(new_state));
    }
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Toggle Button
-   //////////////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
+   ////////////////////////////////////////////////////////////////////////////   widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    widget* basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(btn.pos))
@@ -102,9 +102,9 @@ namespace photon
          ctx.view.refresh(ctx);
    }
 
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Latching Button
-   //////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    widget* basic_latching_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(btn.pos))

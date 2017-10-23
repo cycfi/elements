@@ -38,7 +38,8 @@ endif()
 
 file(GLOB_RECURSE PHOTON_SOURCES ${photon_dir}/src/*.cpp)
 file(GLOB_RECURSE PHOTON_HEADERS ${photon_dir}/include/*.hpp)
-file(GLOB PHOTON_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.*)
+file(GLOB_RECURSE PHOTON_RESOURCES ${photon_dir}/resources/*.*)
+file(GLOB APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.*)
 
 add_executable(
    ${appname}
@@ -51,6 +52,7 @@ add_executable(
    ${photon_dir}/host/osx/view.mm
    ${photon_dir}/host/osx/key.mm
    ${PHOTON_RESOURCES}
+   ${APP_RESOURCES}
 )
 
 include_directories(
@@ -66,6 +68,7 @@ target_link_libraries(${appname}
 
 set_source_files_properties(
    ${PHOTON_RESOURCES}
+   ${APP_RESOURCES}
    PROPERTIES
    MACOSX_PACKAGE_LOCATION Resources
 )

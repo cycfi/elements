@@ -16,7 +16,7 @@ namespace photon
 	// Contexts
 	////////////////////////////////////////////////////////////////////////////////////////////////
    class view;
-   class widget;
+   class element;
    class canvas;
 
    struct basic_context
@@ -37,24 +37,24 @@ namespace photon
    struct context : basic_context
    {
       context(context const& rhs, rect bounds_)
-       : basic_context(rhs.view, rhs.canvas), widget(rhs.widget)
+       : basic_context(rhs.view, rhs.canvas), element(rhs.element)
        , parent(rhs.parent), bounds(bounds_)
       {}
 
-      context(context const& parent_, widget* widget_, rect bounds_)
-       : basic_context(parent_.view, parent_.canvas), widget(widget_)
+      context(context const& parent_, element* element_, rect bounds_)
+       : basic_context(parent_.view, parent_.canvas), element(element_)
        , parent(&parent_), bounds(bounds_)
       {}
 
-      context(class view& view_, class canvas& canvas_, widget* widget_, rect bounds_)
-       : basic_context(view_, canvas_), widget(widget_)
+      context(class view& view_, class canvas& canvas_, element* element_, rect bounds_)
+       : basic_context(view_, canvas_), element(element_)
        , parent(0), bounds(bounds_)
       {}
 
       context(context const&) = default;
       context& operator=(context const&) = default;
 
-      widget*              widget;
+      element*             element;
       context const*       parent;
       rect                 bounds;
    };

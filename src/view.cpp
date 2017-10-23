@@ -74,10 +74,10 @@ namespace photon
       }
    }
 
-   void view::refresh(widget& widget)
+   void view::refresh(element& element)
    {
       call(
-         [&widget](auto const& ctx, auto& content) { content.refresh(ctx, widget); },
+         [&element](auto const& ctx, auto& content) { content.refresh(ctx, element); },
          *this, _current_bounds
       );
    }

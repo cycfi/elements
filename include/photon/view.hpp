@@ -10,8 +10,8 @@
 #include <photon/support/rect.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/theme.hpp>
-#include <photon/widget/widget.hpp>
-#include <photon/widget/layer.hpp>
+#include <photon/element/element.hpp>
+#include <photon/element/layer.hpp>
 #include <functional>
 #include <memory>
 
@@ -37,7 +37,7 @@ namespace photon
 
       using base_view::refresh;
 
-      void                 refresh(widget& widget);
+      void                 refresh(element& element);
       void                 refresh(context const& ctx);
 
       rect                 dirty() const { return _dirty; }

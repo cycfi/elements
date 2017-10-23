@@ -8,6 +8,6 @@
 
 #include <photon/app.hpp>
 #include <photon/view.hpp>
-#include <photon/widget.hpp>
+#include <photon/element.hpp>
 
 #endif

@@ -9,16 +9,20 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ###############################################################################
-# We need both the appname and photon_dir passed as cmake command
-# line arguments. For example:
-#     cmake -Dappname=myapp -Dphoton_dir="/path/to/photon" -GXcode
+set(photon_root $ENV{PHOTON_ROOT})
 
-option(appname "Application Name" "photon_app")
-option(photon_dir "Photon Base Directory")
+if (NOT DEFINED photon_root)
+   message(FATAL_ERROR
+      "PHOTON_ROOT not found. Please add the environment"
+      " variable that points to the root of the Photon library")
+endif()
 
+set(appname "HelloUniverse")
 project(${appname})
+###############################################################################
+# Find Cairo
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${photon_dir}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${photon_root}/cmake/")
 FIND_PACKAGE(CAIRO REQUIRED cairo)
 
 ###############################################################################
@@ -47,16 +51,16 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-file(GLOB_RECURSE PHOTON_SOURCES ${photon_dir}/src/*.cpp ${photon_dir}/src/*.c)
-file(GLOB_RECURSE PHOTON_HOST ${photon_dir}/host/osx/*.mm)
-file(GLOB_RECURSE PHOTON_HEADERS ${photon_dir}/include/*.hpp)
+file(GLOB_RECURSE PHOTON_SOURCES ${photon_root}/src/*.cpp ${photon_root}/src/*.c)
+file(GLOB_RECURSE PHOTON_HOST ${photon_root}/host/osx/*.mm)
+file(GLOB_RECURSE PHOTON_HEADERS ${photon_root}/include/*.hpp)
 
 file(
    GLOB_RECURSE PHOTON_RESOURCES
-   ${photon_dir}/resources/*.ttf
-   ${photon_dir}/resources/*.jpeg
-   ${photon_dir}/resources/*.jpg
-   ${photon_dir}/resources/*.png
+   ${photon_root}/resources/*.ttf
+   ${photon_root}/resources/*.jpeg
+   ${photon_root}/resources/*.jpg
+   ${photon_root}/resources/*.png
 )
 
 file(
@@ -107,7 +111,7 @@ add_executable(
 # Includes
 
 include_directories(
-   ${photon_dir}/include
+   ${photon_root}/include
    ${CAIRO_INCLUDE_DIRS}
 )
 

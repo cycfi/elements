@@ -11,12 +11,12 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Widget Reference
+   // Element Reference
    //
-   // A element reference holds another element by (smart) pointer. Widget references
+   // A element reference holds another element by (smart) pointer. Element references
    // may be copied and all copies will refer to the same element being referenced.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Widget>
+   template <typename Element>
    class reference : public element
    {
    public:
@@ -57,204 +57,204 @@ namespace photon
       virtual void            value(double val);
       virtual void            value(std::string val);
 
-      Widget&                 get();
-      Widget const&           get() const;
+      Element&                 get();
+      Element const&           get() const;
       element_ptr             get_ptr();
 
    private:
 
-      using element_ptr = std::shared_ptr<Widget>;
+      using element_ptr = std::shared_ptr<Element>;
       element_ptr             ptr;
    };
 
-   template <typename Widget>
-   reference<Widget> ref(Widget&& rhs);
+   template <typename Element>
+   reference<Element> ref(Element&& rhs);
 
-   template <typename Widget>
-   reference<Widget> ref(Widget const& rhs);
+   template <typename Element>
+   reference<Element> ref(Element const& rhs);
 
-   template <typename Widget>
-   struct is_reference<reference<Widget>> : std::true_type {};
+   template <typename Element>
+   struct is_reference<reference<Element>> : std::true_type {};
 
    ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Widget>
-   inline reference<Widget>::reference()
+   template <typename Element>
+   inline reference<Element>::reference()
    {}
 
-   template <typename Widget>
-   inline reference<Widget>::reference(photon::element_ptr ptr)
-    : ptr(std::dynamic_pointer_cast<Widget>(ptr))
+   template <typename Element>
+   inline reference<Element>::reference(photon::element_ptr ptr)
+    : ptr(std::dynamic_pointer_cast<Element>(ptr))
    {}
 
-   template <typename Widget>
+   template <typename Element>
    inline view_limits
-   reference<Widget>::limits(basic_context const& ctx) const
+   reference<Element>::limits(basic_context const& ctx) const
    {
       return ptr->limits(ctx);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline element*
-   reference<Widget>::hit_test(context const& ctx, point p)
+   reference<Element>::hit_test(context const& ctx, point p)
    {
       return ptr->hit_test(ctx, p);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline void
-   reference<Widget>::draw(context const& ctx)
+   reference<Element>::draw(context const& ctx)
    {
       ptr->draw(ctx);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline void
-   reference<Widget>::layout(context const& ctx)
+   reference<Element>::layout(context const& ctx)
    {
       ptr->layout(ctx);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::scroll(context const& ctx, point dir, point p)
+   reference<Element>::scroll(context const& ctx, point dir, point p)
    {
       return ptr->scroll(ctx, dir, p);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline void
-   reference<Widget>::refresh(context const& ctx, element& element)
+   reference<Element>::refresh(context const& ctx, element& element)
    {
       ptr->refresh(ctx, element);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline element*
-   reference<Widget>::click(context const& ctx, mouse_button btn)
+   reference<Element>::click(context const& ctx, mouse_button btn)
    {
       return ptr->click(ctx, btn);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline void
-   reference<Widget>::drag(context const& ctx, mouse_button btn)
+   reference<Element>::drag(context const& ctx, mouse_button btn)
    {
       return ptr->drag(ctx, btn);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::key(context const& ctx, key_info k)
+   reference<Element>::key(context const& ctx, key_info k)
    {
       return ptr->key(ctx, k);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::text(context const& ctx, text_info info)
+   reference<Element>::text(context const& ctx, text_info info)
    {
       return ptr->text(ctx, info);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::cursor(context const& ctx, point p, cursor_tracking status)
+   reference<Element>::cursor(context const& ctx, point p, cursor_tracking status)
    {
       return ptr->cursor(ctx, p, status);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline void
-   reference<Widget>::idle(basic_context const& ctx)
+   reference<Element>::idle(basic_context const& ctx)
    {
       ptr->idle(ctx);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::focus(focus_request r)
+   reference<Element>::focus(focus_request r)
    {
       return ptr->focus(r);
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline element const*
-   reference<Widget>::focus() const
+   reference<Element>::focus() const
    {
       return ptr->focus();
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline element*
-   reference<Widget>::focus()
+   reference<Element>::focus()
    {
       return ptr->focus();
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline bool
-   reference<Widget>::is_control() const
+   reference<Element>::is_control() const
    {
       return ptr->is_control();
    }
 
-   template <typename Widget>
-   inline void reference<Widget>::value(bool val)
+   template <typename Element>
+   inline void reference<Element>::value(bool val)
    {
       ptr->value(val);
    }
 
-   template <typename Widget>
-   inline void reference<Widget>::value(int val)
+   template <typename Element>
+   inline void reference<Element>::value(int val)
    {
       ptr->value(val);
    }
 
-   template <typename Widget>
-   inline void reference<Widget>::value(double val)
+   template <typename Element>
+   inline void reference<Element>::value(double val)
    {
       ptr->value(val);
    }
 
-   template <typename Widget>
-   inline void reference<Widget>::value(std::string val)
+   template <typename Element>
+   inline void reference<Element>::value(std::string val)
    {
       ptr->value(val);
    }
 
-   template <typename Widget>
-   inline Widget&
-   reference<Widget>::get()
+   template <typename Element>
+   inline Element&
+   reference<Element>::get()
    {
       return *ptr.get();
    }
 
-   template <typename Widget>
-   inline Widget const&
-   reference<Widget>::get() const
+   template <typename Element>
+   inline Element const&
+   reference<Element>::get() const
    {
       return *ptr.get();
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline element_ptr
-   reference<Widget>::get_ptr()
+   reference<Element>::get_ptr()
    {
       return ptr;
    }
 
-   template <typename Widget>
-   inline reference<Widget> ref(Widget&& rhs)
+   template <typename Element>
+   inline reference<Element> ref(Element&& rhs)
    {
-      return reference<Widget>{ share(rhs) };
+      return reference<Element>{ share(rhs) };
    }
 
-   template <typename Widget>
-   inline reference<Widget> ref(Widget const& rhs)
+   template <typename Element>
+   inline reference<Element> ref(Element const& rhs)
    {
-      return reference<Widget>{ share(rhs) };
+      return reference<Element>{ share(rhs) };
    }
 }
 

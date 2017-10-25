@@ -346,70 +346,75 @@ namespace photon
       return make_button<basic_popup_button>(text, icons::down_dir, body_color);
    }
 
-   //void draw_check_box(
-   //   context const& ctx, std::string const& text, bool state, bool hilite
-   //)
-   //{
-   //   canvas&  canvas_ = ctx.canvas;
-   //   theme const&   theme_ = get_theme();
-   //   color    indicator_color = theme_.indicator_color;
-   //   rect     box = ctx.bounds.move(15, 0);
-   //
-   //   box.width(box.height());
-   //
-   //   color c1 = state ? indicator_color.level(1.5) : color(0, 0, 0, 32);
-   //   color c2 = state ? indicator_color : color(0, 0, 0, 92);
-   //
-   //   if (state && hilite)
-   //   {
-   //      c1 = c1.level(1.3);
-   //      c2 = c2.level(1.3);
-   //   }
-   //   paint bg = canvas_.box_gradient(box.inset(1, 1).move(0, 1.5), 3, 4, c1, c2);
-   //
-   //   canvas_.begin_path();
-   //   canvas_.round_rect(box.inset(1, 1), 3);
-   //   canvas_.fill_paint(bg);
-   //   canvas_.fill();
-   //
-   //   if (state || hilite)
-   //   {
-   //      float const glow = 2;
-   //      color glow_color = hilite ? indicator_color : c2;
-   //
-   //      paint glow_paint
-   //         = canvas_.box_gradient(box, 3, 3, glow_color, color(0, 0, 0, 0)
-   //         );
-   //
-   //      canvas_.begin_path();
-   //      canvas_.rect(box.inset(-glow, -glow));
-   //      canvas_.round_rect(box.inset(1.5, 1.5), 3);
-   //      canvas_.path_winding(canvas::hole);
-   //      canvas_.fill_paint(glow_paint);
-   //      canvas_.fill();
-   //   }
-   //
-   //   if (state)
-   //   {
-   //      auto save = set(theme_.icon_color, c1.level(2.0));
-   //      text_utils(theme_).draw_icon(box, icons::ok, 14);
-   //   }
-   //   else
-   //   {
-   //      color outline_color = hilite ? theme_.frame_color : color{ 0, 0, 0, 48 };
-   //      canvas_.begin_path();
-   //      canvas_.round_rect(box.inset(1, 1), 3);
-   //      canvas_.stroke_color(outline_color);
-   //      canvas_.stroke();
-   //   }
-   //
-   //   rect  text_bounds = ctx.bounds.move(45, 0);
-   //   text_utils(theme_)
-   //      .draw_text(
-   //         text_bounds, text.c_str(), theme_.label_font,
-   //         theme_.label_font_size, theme_.label_font_color
-   //      );
-   //}
+   void draw_check_box(
+     context const& ctx, std::string const& text, bool state, bool hilite
+   )
+   {
+      auto&       canvas_ = ctx.canvas;
+      auto const& theme_ = get_theme();
+      color       indicator_color = theme_.indicator_color;
+      rect        box = ctx.bounds.move(15, 0);
+
+      box.width(box.height());
+
+      color c1 = state ? indicator_color.level(1.5) : color(0, 0, 0, 32);
+      color c2 = state ? indicator_color : color(0, 0, 0, 92);
+
+      if (state && hilite)
+      {
+         c1 = c1.level(1.3);
+         c2 = c2.level(1.3);
+      }
+      //paint bg = canvas_.box_gradient(box.inset(1, 1).move(0, 1.5), 3, 4, c1, c2);
+
+      canvas_.begin_path();
+      canvas_.round_rect(box.inset(1, 1), 3);
+      //canvas_.fill_paint(bg);
+      canvas_.fill();
+
+      if (state || hilite)
+      {
+         float const glow = 2;
+         color glow_color = hilite ? indicator_color : c2;
+
+         // paint glow_paint
+         //   = canvas_.box_gradient(box, 3, 3, glow_color, color(0, 0, 0, 0)
+         //   );
+
+         canvas_.begin_path();
+         canvas_.rect(box.inset(-glow, -glow));
+         canvas_.round_rect(box.inset(1.5, 1.5), 3);
+         // canvas_.path_winding(canvas::hole);
+         // canvas_.fill_paint(glow_paint);
+         canvas_.fill();
+      }
+
+      if (state)
+      {
+         // auto save = set(theme_.icon_color, c1.level(2.0));
+         // text_utils(theme_).draw_icon(box, icons::ok, 14);
+         // draw_icon(box, icons::ok, 14);
+      }
+      else
+      {
+         color outline_color = hilite ? theme_.frame_color : color{ 0, 0, 0, 48 };
+         canvas_.begin_path();
+         canvas_.round_rect(box.inset(1, 1), 3);
+         canvas_.stroke_style(outline_color);
+         canvas_.stroke();
+      }
+
+      canvas_.text_align(canvas_.left | canvas_.center);
+      float cx = ctx.bounds.left-45;
+      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
+      canvas_.fill_text(point{ cx, cy }, text.c_str());
+
+      // text_utils(theme_)
+      //    .draw_text(
+      //       text_bounds, text.c_str(), theme_.label_font,
+      //       theme_.label_font_size, theme_.label_font_color
+      //    );
+   }
 
    void draw_icon_button(
       context const& ctx, uint32_t code, float size, bool state, bool hilite

@@ -79,23 +79,23 @@ namespace photon
    template <typename T, typename Enavle = void>
    struct is_reference : std::false_type {};
 
-   template <typename Widget>
+   template <typename Element>
    inline typename std::enable_if<
-      (!is_reference<typename std::remove_reference<Widget>::type>::value)
+      (!is_reference<typename std::remove_reference<Element>::type>::value)
     , element_ptr>::type
-   share(Widget&& w)
+   share(Element&& e)
    {
-      using element_type = typename std::decay<Widget>::type;
-      return std::make_shared<element_type>(std::forward<Widget>(w));
+      using element_type = typename std::decay<Element>::type;
+      return std::make_shared<element_type>(std::forward<Element>(e));
    }
 
-   template <typename Widget>
+   template <typename Element>
    inline typename std::enable_if<
-      (is_reference<typename std::remove_reference<Widget>::type>::value)
+      (is_reference<typename std::remove_reference<Element>::type>::value)
     , element_ptr>::type
-   share(Widget&& w)
+   share(Element&& e)
    {
-      return w.get_ptr();
+      return e.get_ptr();
    }
 }
 

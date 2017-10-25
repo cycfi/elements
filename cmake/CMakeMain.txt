@@ -129,6 +129,6 @@ set_source_files_properties(
 set_target_properties(
    ${appname}
    PROPERTIES
-   MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/plist.in
+   MACOSX_BUNDLE_INFO_PLIST ${app_root}/plist.in
 )
 

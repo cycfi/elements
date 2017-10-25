@@ -15,6 +15,6 @@ if (NOT DEFINED photon_root)
       " variable that points to the root of the Photon library")
 endif()
 
-set(appname "HelloUniverse")
+set(appname "TextEdit")
 
 include("${photon_root}/cmake/CMakeMain.txt")

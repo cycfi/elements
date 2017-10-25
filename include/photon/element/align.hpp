@@ -179,33 +179,39 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   inline auto align_center_top(Subject const& subject)
+   inline auto align_left_top(Subject&& subject)
    {
-      return align_center(align_top(subject));
+      return align_left(align_top(std::forward<Subject>(subject)));
    }
 
    template <typename Subject>
-   inline auto align_center_middle(Subject const& subject)
+   inline auto align_center_top(Subject&& subject)
    {
-      return align_center(align_middle(subject));
+      return align_center(align_top(std::forward<Subject>(subject)));
    }
 
    template <typename Subject>
-   inline auto align_center_bottom(Subject const& subject)
+   inline auto align_center_middle(Subject&& subject)
    {
-      return align_center(align_bottom(subject));
+      return align_center(align_middle(std::forward<Subject>(subject)));
    }
 
    template <typename Subject>
-   inline auto align_left_middle(Subject const& subject)
+   inline auto align_center_bottom(Subject&& subject)
    {
-      return align_left(align_middle(subject));
+      return align_center(align_bottom(std::forward<Subject>(subject)));
    }
 
    template <typename Subject>
-   inline auto align_right_middle(Subject const& subject)
+   inline auto align_left_middle(Subject&& subject)
    {
-      return align_right(align_middle(subject));
+      return align_left(align_middle(std::forward<Subject>(subject)));
+   }
+
+   template <typename Subject>
+   inline auto align_right_middle(Subject&& subject)
+   {
+      return align_right(align_middle(std::forward<Subject>(subject)));
    }
 }
 

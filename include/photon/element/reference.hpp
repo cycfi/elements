@@ -13,8 +13,9 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Element Reference
    //
-   // A element reference holds another element by (smart) pointer. Element references
-   // may be copied and all copies will refer to the same element being referenced.
+   // A element reference holds another element by (smart) pointer. Element
+   // references may be copied and all copies will refer to the same element
+   // being referenced.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
    class reference : public element

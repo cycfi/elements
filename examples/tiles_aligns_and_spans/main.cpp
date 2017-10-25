@@ -128,11 +128,35 @@ auto make_htile_main()
 
 int main(int argc, const char* argv[])
 {
+   auto right_btn = button(icons::right);
+   auto up_btn = button(icons::up);
+
+   auto content = deck(
+      make_vtile_main(),   // vertical tiles aligns and spans
+      make_htile_main()    // horizontal tiles aligns and spans
+   );
+
    app my_app{
-      [](view& view_)
+      [&](view& view_)
       {
-         auto menu_title = button(icons::right, "Menu"); // check_box("Vertical"); //
-         auto main_pane = pane(menu_title, make_vtile_main(), false);
+         right_btn.on_click = [&](bool)
+         {
+            content.select(1);
+            view_.refresh(content);
+         };
+
+         up_btn.on_click = [&](bool)
+         {
+            content.select(0);
+            view_.refresh(content);
+         };
+
+         auto top = htile(
+            hspan(1.0, align_left(right_margin(8, label("Tiles Aligns and Spans")))),
+            hspan(0.1, ref(right_btn)),
+            hspan(0.1, ref(up_btn))
+         );
+         auto main_pane = pane(top, ref(content), false);
          auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
 
          view_.content =

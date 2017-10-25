@@ -76,7 +76,7 @@ namespace photon
    {
       using composite = array_composite<sizeof...(elements), deck_element>;
       composite r{};
-      r.elements = composite{ share(std::forward<W>(elements))... };
+      r = composite{{ share(std::forward<W>(elements))... }};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -86,7 +86,7 @@ namespace photon
    {
       using composite = array_composite<sizeof...(elements), deck_element>;
       composite r{};
-      r.elements = composite{ share(std::forward<W>(elements))... };
+      r = composite{{ share(std::forward<W>(elements))... }};
       return r;
    }
 }

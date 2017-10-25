@@ -299,6 +299,23 @@ namespace photon
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
+    , color body_color = default_button_color
+   )
+   {
+      return make_button<Button>(
+         margin(
+            button_margin,
+            align_center(
+               icon(icon_code)
+            )
+         ),
+         body_color
+      );
+   }
+
+   template <typename Button>
+   inline Button make_button(
+      std::uint32_t icon_code
     , std::string const& text
     , color body_color = default_button_color
    )
@@ -347,6 +364,12 @@ namespace photon
    basic_button
    button(
       std::uint32_t icon_code
+    , color body_color = default_button_color
+   );
+
+   basic_button
+   button(
+      std::uint32_t icon_code
     , std::string const& text
     , color body_color = default_button_color
    );
@@ -367,6 +390,12 @@ namespace photon
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
+    , color body_color = default_button_color
+   );
+
+   basic_toggle_button
+   toggle_button(
+      std::uint32_t icon_code
     , std::string const& text
     , color body_color = default_button_color
    );
@@ -381,6 +410,12 @@ namespace photon
    basic_latching_button
    latching_button(
       std::string const& text
+    , color body_color = default_button_color
+   );
+
+   basic_latching_button
+   latching_button(
+      std::uint32_t icon_code
     , color body_color = default_button_color
    );
 

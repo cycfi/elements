@@ -7,13 +7,15 @@
 #define PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016
 
 #include <photon/element/element.hpp>
+#include <photon/element/element.hpp>
+#include <functional>
 
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Element Reference
    //
-   // A element reference holds another element by (smart) pointer. Element
+   // A element reference holds another element by reference. Element
    // references may be copied and all copies will refer to the same element
    // being referenced.
    ////////////////////////////////////////////////////////////////////////////
@@ -21,8 +23,8 @@ namespace photon
    class reference : public element
    {
    public:
-                              reference();
-      explicit                reference(photon::element_ptr ptr);
+
+      explicit                reference(Element& e);
                               reference(reference&& rhs) = default;
                               reference(reference const& rhs) = default;
       reference&              operator=(reference&& rhs) = default;
@@ -58,204 +60,182 @@ namespace photon
       virtual void            value(double val);
       virtual void            value(std::string val);
 
-      Element&                 get();
-      Element const&           get() const;
-      element_ptr             get_ptr();
+      Element&                get();
+      Element const&          get() const;
 
    private:
 
-      using element_ptr = std::shared_ptr<Element>;
-      element_ptr             ptr;
+      using element_ref = std::reference_wrapper<Element>;
+      element_ref             ref;
    };
 
    template <typename Element>
-   reference<Element> ref(Element&& rhs);
-
-   template <typename Element>
-   reference<Element> ref(Element const& rhs);
-
-   template <typename Element>
-   struct is_reference<reference<Element>> : std::true_type {};
+   reference<typename std::remove_reference<Element>::type>
+   link(Element& rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   inline reference<Element>::reference()
-   {}
-
-   template <typename Element>
-   inline reference<Element>::reference(photon::element_ptr ptr)
-    : ptr(std::dynamic_pointer_cast<Element>(ptr))
+   inline reference<Element>::reference(Element& e)
+    : ref(e)
    {}
 
    template <typename Element>
    inline view_limits
    reference<Element>::limits(basic_context const& ctx) const
    {
-      return ptr->limits(ctx);
+      return ref.get().limits(ctx);
    }
 
    template <typename Element>
    inline element*
    reference<Element>::hit_test(context const& ctx, point p)
    {
-      return ptr->hit_test(ctx, p);
+      return ref.get().hit_test(ctx, p);
    }
 
    template <typename Element>
    inline void
    reference<Element>::draw(context const& ctx)
    {
-      ptr->draw(ctx);
+      ref.get().draw(ctx);
    }
 
    template <typename Element>
    inline void
    reference<Element>::layout(context const& ctx)
    {
-      ptr->layout(ctx);
+      ref.get().layout(ctx);
    }
 
    template <typename Element>
    inline bool
    reference<Element>::scroll(context const& ctx, point dir, point p)
    {
-      return ptr->scroll(ctx, dir, p);
+      return ref.get().scroll(ctx, dir, p);
    }
 
    template <typename Element>
    inline void
    reference<Element>::refresh(context const& ctx, element& element)
    {
-      ptr->refresh(ctx, element);
+      ref.get().refresh(ctx, element);
    }
 
    template <typename Element>
    inline element*
    reference<Element>::click(context const& ctx, mouse_button btn)
    {
-      return ptr->click(ctx, btn);
+      return ref.get().click(ctx, btn);
    }
 
    template <typename Element>
    inline void
    reference<Element>::drag(context const& ctx, mouse_button btn)
    {
-      return ptr->drag(ctx, btn);
+      return ref.get().drag(ctx, btn);
    }
 
    template <typename Element>
    inline bool
    reference<Element>::key(context const& ctx, key_info k)
    {
-      return ptr->key(ctx, k);
+      return ref.get().key(ctx, k);
    }
 
    template <typename Element>
    inline bool
    reference<Element>::text(context const& ctx, text_info info)
    {
-      return ptr->text(ctx, info);
+      return ref.get().text(ctx, info);
    }
 
    template <typename Element>
    inline bool
    reference<Element>::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      return ptr->cursor(ctx, p, status);
+      return ref.get().cursor(ctx, p, status);
    }
 
    template <typename Element>
    inline void
    reference<Element>::idle(basic_context const& ctx)
    {
-      ptr->idle(ctx);
+      ref.get().idle(ctx);
    }
 
    template <typename Element>
    inline bool
    reference<Element>::focus(focus_request r)
    {
-      return ptr->focus(r);
+      return ref.get().focus(r);
    }
 
    template <typename Element>
    inline element const*
    reference<Element>::focus() const
    {
-      return ptr->focus();
+      return ref.get().focus();
    }
 
    template <typename Element>
    inline element*
    reference<Element>::focus()
    {
-      return ptr->focus();
+      return ref.get().focus();
    }
 
    template <typename Element>
    inline bool
    reference<Element>::is_control() const
    {
-      return ptr->is_control();
+      return ref.get().is_control();
    }
 
    template <typename Element>
    inline void reference<Element>::value(bool val)
    {
-      ptr->value(val);
+      ref.get().value(val);
    }
 
    template <typename Element>
    inline void reference<Element>::value(int val)
    {
-      ptr->value(val);
+      ref.get().value(val);
    }
 
    template <typename Element>
    inline void reference<Element>::value(double val)
    {
-      ptr->value(val);
+      ref.get().value(val);
    }
 
    template <typename Element>
    inline void reference<Element>::value(std::string val)
    {
-      ptr->value(val);
+      ref.get().value(val);
    }
 
    template <typename Element>
    inline Element&
    reference<Element>::get()
    {
-      return *ptr.get();
+      return ref.get();
    }
 
    template <typename Element>
    inline Element const&
    reference<Element>::get() const
    {
-      return *ptr.get();
+      return ref.get();
    }
 
    template <typename Element>
-   inline element_ptr
-   reference<Element>::get_ptr()
+   inline reference<typename std::remove_reference<Element>::type>
+   link(Element& rhs)
    {
-      return ptr;
-   }
-
-   template <typename Element>
-   inline reference<Element> ref(Element&& rhs)
-   {
-      return reference<Element>{ share(rhs) };
-   }
-
-   template <typename Element>
-   inline reference<Element> ref(Element const& rhs)
-   {
-      return reference<Element>{ share(rhs) };
+      return reference<typename std::remove_reference<Element>::type>{ rhs };
    }
 }
 

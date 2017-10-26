@@ -61,9 +61,10 @@ namespace photon
 
    void static_text_box::draw(context const& ctx)
    {
+      auto& cnv = ctx.canvas;
+      auto  state = cnv.new_state();
       auto  metrics = _layout.metrics();
       auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
-      auto& cnv = ctx.canvas;
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + metrics.ascent;
 

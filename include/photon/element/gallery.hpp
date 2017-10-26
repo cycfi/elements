@@ -128,12 +128,15 @@ namespace photon
       return
         layer(
             align_top(
-                layer(
-                    halign(align_, margin({10, 4, 10, 4}, heading)),
-                    title_bar{}
-                )
+               layer(
+                  halign(
+                     align_,
+                     margin({10, 4, 10, 4}, std::forward<Heading>(heading))
+                  ),
+                  title_bar{}
+               )
             ),
-            top_margin(30, std::forward<Content>(content)),
+            top_margin(40, std::forward<Content>(content)),
             panel{}
         );
    }
@@ -626,32 +629,34 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////
-   inline auto dial(
-      reference<dial_base>&   control
-    , char const*             knob_sprite
-    , float                   knob_height
-    , char const*             background_image
-    , char const*             caption_text
-    , float                   scale = 1.0/4
-    , float                   caption_size = 1.0
-   )
-   {
-      auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
-      auto lines = image{ background_image, scale };
-      control = reference<dial_base>(share(dial(knob)));
 
-      return
-         align_center_middle(
-            caption(
-               layer(
-                  align_center_middle(control),
-                  lines
-               ),
-               caption_text,  // caption
-               caption_size   // relative caption text size
-            )
-         );
-   }
+// $$$ FIXME $$$
+//   inline auto dial(
+//      reference<dial_base>&   control
+//    , char const*             knob_sprite
+//    , float                   knob_height
+//    , char const*             background_image
+//    , char const*             caption_text
+//    , float                   scale = 1.0/4
+//    , float                   caption_size = 1.0
+//   )
+//   {
+//      auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
+//      auto lines = image{ background_image, scale };
+//      control = reference<dial_base>(share(dial(knob)));
+//
+//      return
+//         align_center_middle(
+//            caption(
+//               layer(
+//                  align_center_middle(control),
+//                  lines
+//               ),
+//               caption_text,  // caption
+//               caption_size   // relative caption text size
+//            )
+//         );
+//   }
 }
 
 #endif

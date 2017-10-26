@@ -76,26 +76,12 @@ namespace photon
    using element_ptr = std::shared_ptr<element>;
    using element_const_ptr = std::shared_ptr<element const>;
 
-   template <typename T, typename Enavle = void>
-   struct is_reference : std::false_type {};
-
    template <typename Element>
-   inline typename std::enable_if<
-      (!is_reference<typename std::remove_reference<Element>::type>::value)
-    , element_ptr>::type
+   inline element_ptr
    share(Element&& e)
    {
       using element_type = typename std::decay<Element>::type;
       return std::make_shared<element_type>(std::forward<Element>(e));
-   }
-
-   template <typename Element>
-   inline typename std::enable_if<
-      (is_reference<typename std::remove_reference<Element>::type>::value)
-    , element_ptr>::type
-   share(Element&& e)
-   {
-      return e.get_ptr();
    }
 }
 

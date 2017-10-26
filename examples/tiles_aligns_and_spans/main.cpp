@@ -153,10 +153,11 @@ int main(int argc, const char* argv[])
 
          auto top = htile(
             hspan(1.0, align_left(right_margin(8, label("Tiles Aligns and Spans")))),
-            hspan(0.1, ref(right_btn)),
-            hspan(0.1, ref(up_btn))
+            hspan(0.1, link(right_btn)),
+            hspan(0.1, link(up_btn))
          );
-         auto main_pane = pane(top, ref(content), false);
+
+         auto main_pane = pane(top, link(content), false);
          auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
 
          view_.content =

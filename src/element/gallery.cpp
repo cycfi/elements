@@ -402,7 +402,7 @@ namespace photon
       if (state || hilite)
       {
          float const glow = 2;
-         color glow_color = hilite ? indicator_color : c2;
+         //color glow_color = hilite ? indicator_color : c2;
 
          // paint glow_paint
          //   = canvas_.box_gradient(box, 3, 3, glow_color, color(0, 0, 0, 0)

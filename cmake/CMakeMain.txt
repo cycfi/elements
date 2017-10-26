@@ -10,6 +10,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(${appname})
 
 ###############################################################################
+# Get rid of these warnings
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
+      OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
+      -Wno-missing-braces"
+   )
+
+endif()
+
+###############################################################################
 # Find Cairo
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${photon_root}/cmake/")
@@ -116,6 +127,8 @@ target_link_libraries(${appname}
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
 
+target_compile_options(${appname} PUBLIC "-fobjc-arc")
+
 ###############################################################################
 # Resource file properties
 
@@ -131,4 +144,6 @@ set_target_properties(
    PROPERTIES
    MACOSX_BUNDLE_INFO_PLIST ${app_root}/plist.in
 )
+
+
 

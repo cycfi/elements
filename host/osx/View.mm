@@ -32,6 +32,10 @@
 #include <cairo-quartz.h>
 #import <Cocoa/Cocoa.h>
 
+#if ! __has_feature(objc_arc)
+# error "ARC is off"
+#endif
+
 namespace ph = photon;
 using key_map = std::map<ph::key_code, ph::key_action>;
 

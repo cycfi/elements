@@ -3,10 +3,10 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
+
 cmake_minimum_required(VERSION 2.8.8)
 
 set(photon_root $ENV{PHOTON_ROOT})
-set(app_root ${CMAKE_CURRENT_LIST_DIR})
 
 if (NOT DEFINED photon_root)
    message(FATAL_ERROR
@@ -14,6 +14,10 @@ if (NOT DEFINED photon_root)
       " variable that points to the root of the Photon library")
 endif()
 
-set(appname "Basics")
+add_subdirectory(
+   ${photon_root}/cmake/ ${CMAKE_CURRENT_BINARY_DIR}/photon_lib)
 
-include("${photon_root}/cmake/CMakeMain.txt")
+add_subdirectory(../hello_universe ${CMAKE_CURRENT_BINARY_DIR}/hello_universe)
+add_subdirectory(../basics ${CMAKE_CURRENT_BINARY_DIR}/basics)
+add_subdirectory(../text_edit ${CMAKE_CURRENT_BINARY_DIR}/text_edit)
+add_subdirectory(../tiles_aligns_and_spans ${CMAKE_CURRENT_BINARY_DIR}/tiles_aligns_and_spans)

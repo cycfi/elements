@@ -8,7 +8,7 @@
 using namespace photon;
 
 // Main window background color
-auto bkd_color = color{ 62, 62, 62, 255 };
+auto constexpr bkd_color = color{ 35, 35, 37, 255 };
 
 struct background : element
 {
@@ -107,15 +107,48 @@ auto make_basic_text2()
       );
 }
 
-auto make_controls1()
+// Our dial
+auto make_dial(char const* label)
 {
-   return box;
+   return dial(
+      "knob_sprites_white_128x128.png", 128
+      , "radial-lines.png"
+      , label
+      , 0.5
+   );
 }
 
-auto make_controls2()
+auto make_controls()
 {
-   return box;
+   auto dial_info = make_dial("Volume");
+   return align_center_middle(dial_info.first);
 }
+
+//auto make_controls()
+//{
+//   auto sl = margin(
+//      { 20, 20, 20, 20 },
+//      group("Text Box",
+//         htile(
+//            xside_margin(10, slider{}),
+//            xside_margin(10, slider{}),
+//            xside_margin(10, slider{}),
+//            xside_margin(10, slider{}),
+//            xside_margin(10, slider{}),
+//            xside_margin(10, slider{}),
+//            xside_margin(10,
+//               vtile(
+//                  yside_margin(10, knob{}),
+//                  yside_margin(10, knob{}),
+//                  yside_margin(10, knob{})
+//               )
+//            )
+//         )
+//      )
+//   );
+//
+//   //main_widget = new_(std::move(sl));
+//}
 
 int main(int argc, const char* argv[])
 {
@@ -123,7 +156,8 @@ int main(int argc, const char* argv[])
 
    auto content = deck(
       make_basic_text(),
-      make_basic_text2()
+      make_basic_text2(),
+      make_controls()
    );
 
    int select = 0;

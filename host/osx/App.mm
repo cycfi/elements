@@ -53,6 +53,23 @@ namespace
       }
       return 0;
    }
+
+   struct setup_app
+   {
+      setup_app()
+      {
+         // Before anything else, set the working directory so we can access
+         // our resources
+         CFBundleRef mainBundle = GetCurrentBundle();
+         CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+         char path[PATH_MAX];
+         CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+         CFRelease(resourcesURL);
+         chdir(path);
+      }
+   };
+
+   static setup_app setup_app_{};
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,15 +78,6 @@ namespace photon
 {
    int app_main(int argc, const char* argv[])
    {
-      // Before anything else, set the working directory so we can access
-      // our resources
-      CFBundleRef mainBundle = GetCurrentBundle();
-      CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-      char path[PATH_MAX];
-      CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
-      CFRelease(resourcesURL);
-      chdir(path);
-
       return NSApplicationMain(argc, argv);
    }
 }

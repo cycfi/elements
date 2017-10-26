@@ -629,34 +629,34 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////
+   inline auto dial(
+      char const*          knob_sprite
+    , float                knob_height
+    , char const*          background_image
+    , char const*          caption_text
+    , float                scale = 1.0/4
+    , float                caption_size = 1.0
+   )
+   {
+      auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
+      auto lines = image{ background_image, scale };
+      auto control = dial(std::move(knob));
+      auto image = layer(
+         align_center_middle(std::move(control)),
+         std::move(lines)
+      );
 
-// $$$ FIXME $$$
-//   inline auto dial(
-//      reference<dial_base>&   control
-//    , char const*             knob_sprite
-//    , float                   knob_height
-//    , char const*             background_image
-//    , char const*             caption_text
-//    , float                   scale = 1.0/4
-//    , float                   caption_size = 1.0
-//   )
-//   {
-//      auto knob =  sprite{ knob_sprite, knob_height * scale, scale };
-//      auto lines = image{ background_image, scale };
-//      control = reference<dial_base>(share(dial(knob)));
-//
-//      return
-//         align_center_middle(
-//            caption(
-//               layer(
-//                  align_center_middle(control),
-//                  lines
-//               ),
-//               caption_text,  // caption
-//               caption_size   // relative caption text size
-//            )
-//         );
-//   }
+      return std::make_pair(
+         align_center_middle(
+            caption(
+               image,
+               caption_text,  // caption
+               caption_size   // relative caption text size
+            )
+         ),
+         link(static_cast<dial_base&>(image.at(1)))
+      );
+   }
 }
 
 #endif

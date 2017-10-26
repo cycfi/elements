@@ -3,7 +3,6 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-
 cmake_minimum_required(VERSION 2.8.8)
 
 set(photon_root $ENV{PHOTON_ROOT})

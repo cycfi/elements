@@ -153,39 +153,15 @@ namespace photon
       }
    }
 
-   void draw_indicator(canvas& cnv, rect bounds, color c, bool glow)
+   void draw_indicator(canvas& cnv, rect bounds, color c)
    {
-      {
-         cnv.fill_style(c);
-         cnv.begin_path();
-         cnv.rect(bounds);
-         cnv.fill();
-
-         // simulated glow. cairo does not have blur yet :-(
-         if (glow)
-         {
-            cnv.begin_path();
-            cnv.rect(bounds.inset(-20, -20));
-            cnv.rect(bounds.inset(0.5, 0.5));
-            cnv.fill_rule(canvas::fill_odd_even);
-            cnv.clip();
-
-            rect shr = bounds.inset(-1, -1);
-            cnv.begin_path();
-            cnv.round_rect(shr, 2);
-            cnv.fill_style(color(255, 255, 255, 100));
-            cnv.fill();
-
-            shr = shr.inset(-1, -1);
-            cnv.begin_path();
-            cnv.round_rect(shr, 3);
-            cnv.fill_style(color(255, 255, 255, 50));
-            cnv.fill();
-         }
-      }
+      cnv.fill_style(c);
+      cnv.begin_path();
+      cnv.round_rect(bounds, bounds.height()/8);
+      cnv.fill();
    }
 
-   void draw_indicator(canvas& cnv, circle cp, float val, color c, bool glow)
+   void draw_indicator(canvas& cnv, circle cp, float val, color c)
    {
       constexpr float w_factor = 0.05; // relative width of the indicator
       constexpr float h_factor = 0.2;  // relative height of the indicator
@@ -204,6 +180,6 @@ namespace photon
       rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
       ind_r = ind_r.move(0, r*0.6);
 
-      draw_indicator(cnv, ind_r, c, glow);
+      draw_indicator(cnv, ind_r, c);
    }
 }

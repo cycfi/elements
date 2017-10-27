@@ -127,7 +127,7 @@ auto make_controls()
 
 auto make_controls2()
 {
-   auto d = dial(basic_knob{ 64 }, 0.5);
+   auto d = dial(basic_knob{ 128 }, 0.5);
    return align_center_middle(d);
 }
 
@@ -161,11 +161,14 @@ struct testing : element
 {
    void draw(context const& ctx)
    {
-      auto&  cnv = ctx.canvas;
-      circle c{200, 200, 32};
-      draw_knob(cnv, c, colors::black);
-      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
-//      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
+   
+   
+    // Dial Knob
+//      auto&  cnv = ctx.canvas;
+//      circle c{200, 200, 32};
+//      draw_knob(cnv, c, colors::black);
+//      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0));
+////      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
 
       // Shadow...
       // auto&  cnv = ctx.canvas;

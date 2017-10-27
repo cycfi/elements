@@ -93,13 +93,11 @@ namespace photon
    {
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
-      auto  mp = ctx.view.cursor_pos();
-      bool  hilite = hit_test(ctx, mp);
       auto  indicator_color = thm.indicator_color.level(1.5);
       auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
 
       draw_knob(cnv, cp, colors::black);
-      draw_indicator(cnv, cp, _value, indicator_color, hilite);
+      draw_indicator(cnv, cp, _value, indicator_color);
    }
 
    void basic_knob::value(double val)

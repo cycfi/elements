@@ -15,7 +15,6 @@ namespace photon
    void draw_button(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
    void draw_knob(canvas& cnv, circle cp, color c);
    void draw_indicator(canvas& cnv, rect bounds, color c);
-   void draw_indicator(canvas& cnv, circle cp, float val, color c);
 }
 
 #endif

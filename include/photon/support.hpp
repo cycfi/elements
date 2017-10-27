@@ -16,6 +16,7 @@
 #include <photon/support/pixmap.hpp>
 #include <photon/support/point.hpp>
 #include <photon/support/rect.hpp>
+#include <photon/support/draw_utils.hpp>
 #include <photon/support/text_utils.hpp>
 #include <photon/support/theme.hpp>
 

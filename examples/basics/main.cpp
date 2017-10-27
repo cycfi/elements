@@ -127,7 +127,7 @@ auto make_controls()
 
 auto make_controls2()
 {
-   auto d = dial(basic_knob{ 128 }, 0.5);
+   auto d = dial(radial_marks<15>(basic_knob<128>()), 0.5);
    return align_center_middle(d);
 }
 

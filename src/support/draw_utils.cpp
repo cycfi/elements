@@ -157,29 +157,7 @@ namespace photon
    {
       cnv.fill_style(c);
       cnv.begin_path();
-      cnv.round_rect(bounds, bounds.height()/8);
+      cnv.round_rect(bounds, bounds.height()/12);
       cnv.fill();
-   }
-
-   void draw_indicator(canvas& cnv, circle cp, float val, color c)
-   {
-      constexpr float w_factor = 0.05; // relative width of the indicator
-      constexpr float h_factor = 0.2;  // relative height of the indicator
-      constexpr float travel = 0.83;
-      constexpr float range = (2 * M_PI) * travel;
-      constexpr float offs = (2 * M_PI) * (1-travel)/2;
-
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      cnv.translate({ center.x, center.y });
-      cnv.rotate(offs + (val * range));
-
-      float r = cp.radius;
-      float ind_w = r * w_factor;
-      float ind_h = r * h_factor;
-      rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
-      ind_r = ind_r.move(0, r*0.6);
-
-      draw_indicator(cnv, ind_r, c);
    }
 }

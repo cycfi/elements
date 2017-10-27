@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <photon/element/dial.hpp>
 #include <photon/support/theme.hpp>
-#include <photon/support/draw_utils.hpp>
 #include <photon/view.hpp>
 #include <cmath>
 
@@ -13,11 +12,6 @@
 
 namespace photon
 {
-   double const _2pi = 2 * M_PI;
-   double const travel = 0.83;
-   double const range = _2pi * travel;
-   double const start_angle = _2pi * (1-travel)/2;
-
    dial_base::dial_base(double init_value)
     : _value(init_value)
    {
@@ -41,6 +35,8 @@ namespace photon
 
    double dial_base::value_from_point(context const& ctx, point p)
    {
+      using namespace radial_consts;
+
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
       if (angle < 0.0)
@@ -84,24 +80,61 @@ namespace photon
       return true;
    }
 
-   view_limits basic_knob::limits(basic_context const& ctx) const
+   void draw_indicator(canvas& cnv, circle cp, float val, color c)
    {
-      return { { _size, _size }, { _size, _size } };
+      constexpr float w_factor = 0.05; // relative width of the indicator
+      constexpr float h_factor = 0.2;  // relative height of the indicator
+      using namespace radial_consts;
+
+      auto state = cnv.new_state();
+      auto center = cp.center();
+      cnv.translate({ center.x, center.y });
+      cnv.rotate(offset + (val * range));
+
+      float r = cp.radius;
+      float ind_w = r * w_factor;
+      float ind_h = r * h_factor;
+      rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
+      ind_r = ind_r.move(0, r*0.6);
+
+      draw_indicator(cnv, ind_r, c);
    }
 
-   void basic_knob::draw(context const& ctx)
+   void draw_radial_marks(canvas& cnv, circle cp, float size, color c)
    {
-      auto& thm = get_theme();
-      auto& cnv = ctx.canvas;
-      auto  indicator_color = thm.indicator_color.level(1.5);
-      auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      using namespace radial_consts;
+      auto state = cnv.new_state();
+      auto center = cp.center();
+      float div = range / 100;
 
-      draw_knob(cnv, cp, colors::black);
-      draw_indicator(cnv, cp, _value, indicator_color);
+      cnv.translate({ center.x, center.y });
+      for (int i = 0; i != 101; ++i)
+      {
+         auto inset = 0;
+         if (i % 10)
+         {
+            // Minor ticks
+            inset = size/2;
+            cnv.line_width(1);
+            cnv.stroke_style(c.opacity(0.4));
+         }
+         else
+         {
+            // Major ticks
+            cnv.line_width(2);
+            cnv.stroke_style(c.opacity(0.8));
+         }
+
+         float angle = offset + (M_PI / 2) + (i * div);
+         float sin_ = std::sin(angle);
+         float cos_ = std::cos(angle);
+         float from = cp.radius-size;
+         float to = cp.radius-inset;
+
+         cnv.move_to({ from * cos_, from * sin_ });
+         cnv.line_to({ to * cos_, to * sin_ });
+         cnv.stroke();
+      }
    }
 
-   void basic_knob::value(double val)
-   {
-      _value = val;
-   }
 }

@@ -115,8 +115,8 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // UTF8 Iteration. See A code point iterator adapter for C++ strings in UTF-8
-   // by �ngel Jos� Riesgo: http://www.nubaria.com/en/blog/?p=371
+   // UTF8 Iteration. See A code point iterator adapter for C++ strings in
+   // UTF-8 by �ngel Jos� Riesgo: http://www.nubaria.com/en/blog/?p=371
    ////////////////////////////////////////////////////////////////////////////
    struct utf8_mask
    {

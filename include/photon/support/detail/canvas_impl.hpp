@@ -280,8 +280,8 @@ namespace photon
       {
          cairo_pattern_t* pat =
             cairo_pattern_create_radial(
-               gr.start.x, gr.start.y, gr.start_radius,
-               gr.end.x, gr.end.y, gr.end_radius
+               gr.c1.x, gr.c1.y, gr.c1_radius,
+               gr.c2.x, gr.c2.y, gr.c2_radius
             );
 
          for (auto cs : gr.space)

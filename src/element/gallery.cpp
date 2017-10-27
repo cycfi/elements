@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <photon/element/gallery.hpp>
 #include <photon/support/text_utils.hpp>
+#include <photon/support/draw_utils.hpp>
 #include <photon/support/theme.hpp>
 
 namespace photon
@@ -32,7 +33,11 @@ namespace photon
       auto           state = canvas_.new_state();
 
       canvas_.fill_style(theme_.heading_font_color);
-      canvas_.font(theme_.heading_font, theme_.heading_font_size * _size, theme_.heading_style);
+      canvas_.font(
+         theme_.heading_font,
+         theme_.heading_font_size * _size,
+         theme_.heading_style
+      );
       canvas_.text_align(canvas_.middle | canvas_.center);
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
@@ -43,30 +48,7 @@ namespace photon
 
    void title_bar::draw(context const& ctx)
    {
-      float const corner_radius = 4.0;
-      auto&       canvas_ = ctx.canvas;
-      auto const& bounds = ctx.bounds;
-
-      auto gradient = canvas::linear_gradient{
-         bounds.top_left(),
-         bounds.bottom_left()
-      };
-
-      gradient.add_color_stop({ 0.0, { 255, 255, 255, 16 } });
-      gradient.add_color_stop({ 0.8, { 0, 0, 0, 16 } });
-      canvas_.fill_style(gradient);
-
-      canvas_.begin_path();
-      canvas_.round_rect(bounds, corner_radius);
-      canvas_.fill();
-      canvas_.fill();
-
-      canvas_.begin_path();
-      canvas_.move_to(point{ bounds.left+0.5f, bounds.bottom-0.5f });
-      canvas_.line_to(point{ bounds.right-0.5f, bounds.bottom-0.5f });
-      canvas_.stroke_style(color{ 0, 0, 0, 32 });
-      canvas_.line_width(1);
-      canvas_.stroke();
+      draw_box_vgradient(ctx.canvas, ctx.bounds, 4.0);
    }
 
    view_limits label::limits(basic_context const& ctx) const
@@ -96,58 +78,7 @@ namespace photon
 
    void panel::draw(context const& ctx)
    {
-      auto const&    theme_ = get_theme();
-      float const    corner_radius  = 4.0;
-      rect const     shadow_offset  = { -10, -10, +20, +30 };
-      auto&          canvas_ = ctx.canvas;
-      auto const&    bounds = ctx.bounds;
-
-      // Panel fill
-      canvas_.begin_path();
-      canvas_.round_rect(ctx.bounds, corner_radius);
-      canvas_.fill_style(theme_.panel_color);
-      canvas_.fill();
-
-      // Simulated blurred shadow (cairo does not have blur yet)
-      {
-         auto save = canvas_.new_state();
-
-         canvas_.begin_path();
-         auto vs = ctx.view.size();
-         canvas_.rect({ 0, 0, vs.x, vs.y });
-         canvas_.round_rect(bounds.inset(0.5, 0.5), corner_radius);
-         canvas_.fill_rule(canvas::fill_odd_even);
-         canvas_.clip();
-
-         rect shr = bounds;
-         shr.left -= 2;
-         shr.top -= 2;
-         shr.right += 6;
-         shr.bottom += 6;
-
-         canvas_.begin_path();
-         canvas_.round_rect(shr, corner_radius*2);
-         canvas_.fill_style(color(0, 0, 0, 20));
-         canvas_.fill();
-
-         shr.left += 1;
-         shr.top += 1;
-         shr.right -= 2;
-         shr.bottom -= 2;
-         canvas_.begin_path();
-         canvas_.round_rect(shr, corner_radius*1.5);
-         canvas_.fill_style(color(0, 0, 0, 30));
-         canvas_.fill();
-
-         shr.left += 1;
-         shr.top += 1;
-         shr.right -= 2;
-         shr.bottom -= 2;
-         canvas_.begin_path();
-         canvas_.round_rect(shr, corner_radius);
-         canvas_.fill_style(color(0, 0, 0, 40));
-         canvas_.fill();
-      }
+      draw_panel(ctx.canvas, ctx.bounds, get_theme().panel_color, 4.0);
    }
 
    void frame::draw(context const& ctx)
@@ -220,29 +151,7 @@ namespace photon
 
    void draw_button_base(context const& ctx, rect bounds, color color_, float corner_radius)
    {
-      canvas&  canvas_ = ctx.canvas;
-
-      auto gradient = canvas::linear_gradient{
-         bounds.top_left(),
-         bounds.bottom_left()
-      };
-
-      gradient.add_color_stop({ 0.0, { 255, 255, 255, 32 } });
-      gradient.add_color_stop({ 1.0, { 0, 0, 0, 32 } });
-      canvas_.fill_style(gradient);
-
-      canvas_.begin_path();
-      canvas_.round_rect(bounds.inset(1, 1), corner_radius-1);
-      canvas_.fill_style(color_);
-      canvas_.fill();
-      canvas_.round_rect(bounds.inset(1, 1), corner_radius-1);
-      canvas_.fill_style(gradient);
-      canvas_.fill();
-
-      canvas_.begin_path();
-      canvas_.round_rect(bounds.inset(0.5, 0.5), corner_radius-0.5);
-      canvas_.stroke_style(color{ 0, 0, 0, 48 });
-      canvas_.stroke();
+      draw_button(ctx.canvas, bounds, color_, corner_radius);
    }
 
    void basic_button_body::draw(context const& ctx)

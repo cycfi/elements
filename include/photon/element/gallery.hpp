@@ -628,6 +628,10 @@ namespace photon
 
    ////////////////////////////////////////////////////////////////////////////
    // Dials
+   //
+   //    This function returns a std::pair<E, R>, where E is the element
+   //    created and R is a reference to the dial_base which can be used
+   //    to attach callbacks (e.g. on_change) when the dial is moved.
    ////////////////////////////////////////////////////////////////////////////
    inline auto dial(
       char const*          knob_sprite

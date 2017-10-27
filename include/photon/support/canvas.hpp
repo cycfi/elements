@@ -94,10 +94,10 @@ namespace photon
 
       struct radial_gradient
       {
-         point start;
-         float start_radius;
-         point end;
-         float end_radius;
+         point c1;
+         float c1_radius;
+         point c2 = c1;
+         float c2_radius = c1_radius;
 
          void  add_color_stop(color_stop cs);
          std::vector<color_stop> space;

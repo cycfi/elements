@@ -17,6 +17,23 @@
       "cwctype": "cpp",
       "type_traits": "cpp",
       "__functional_03": "cpp",
-      "functional": "cpp"
+      "functional": "cpp",
+      "__bit_reference": "cpp",
+      "__split_buffer": "cpp",
+      "__tree": "cpp",
+      "array": "cpp",
+      "bitset": "cpp",
+      "deque": "cpp",
+      "iterator": "cpp",
+      "map": "cpp",
+      "memory": "cpp",
+      "stack": "cpp",
+      "string": "cpp",
+      "vector": "cpp",
+      "utility": "cpp",
+      "__locale": "cpp",
+      "locale": "cpp",
+      "algorithm": "cpp",
+      "system_error": "cpp"
    }
 }

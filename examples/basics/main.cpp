@@ -4,6 +4,7 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <photon.hpp>
+#include <photon/support/draw_utils.hpp>
 
 using namespace photon;
 
@@ -14,7 +15,7 @@ struct background : element
 {
    void draw(context const& ctx)
    {
-      auto&  cnv = ctx.canvas;
+      auto& cnv = ctx.canvas;
       cnv.fill_style(bkd_color);
       cnv.fill_rect(ctx.bounds);
    }
@@ -124,6 +125,12 @@ auto make_controls()
    return align_center_middle(dial_info.first);
 }
 
+auto make_controls2()
+{
+   auto d = dial(basic_knob{ 64 }, 0.5);
+   return align_center_middle(d);
+}
+
 //auto make_controls()
 //{
 //   auto sl = margin(
@@ -150,6 +157,40 @@ auto make_controls()
 //   //main_widget = new_(std::move(sl));
 //}
 
+struct testing : element
+{
+   void draw(context const& ctx)
+   {
+      auto&  cnv = ctx.canvas;
+      circle c{200, 200, 32};
+      draw_knob(cnv, c, colors::black);
+      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
+//      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
+
+      // Shadow...
+      // auto&  cnv = ctx.canvas;
+      // cnv.fill_style(colors::white.opacity(0.7));
+      // cnv.shadow_style({ 2, 4 }, 20, colors::black.opacity(0.4));
+      // cnv.fill_round_rect({ 130, 130, 350, 350 }, 50);
+
+      //auto const&    theme_ = get_theme();
+      //auto&          canvas_ = ctx.canvas;
+      //auto           state = canvas_.new_state();
+      //
+      //canvas_.shadow_style({ 2, 4 }, 20, colors::black.opacity(0.2));
+      //
+      //canvas_.line_width(0.5);
+      //canvas_.fill_style(theme_.heading_font_color);
+      //canvas_.font(theme_.heading_font, 72, theme_.heading_style);
+      //canvas_.text_align(canvas_.middle | canvas_.center);
+      //
+      //float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
+      //float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
+      //
+      //canvas_.fill_text(point{ cx, cy }, "Hello World");
+   }
+};
+
 int main(int argc, const char* argv[])
 {
    auto next_btn = button("Next");
@@ -157,7 +198,9 @@ int main(int argc, const char* argv[])
    auto content = deck(
       make_basic_text(),
       make_basic_text2(),
-      make_controls()
+      make_controls(),
+      testing{},
+      make_controls2()
    );
 
    int select = 0;

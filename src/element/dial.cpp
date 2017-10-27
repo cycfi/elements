@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <photon/element/dial.hpp>
 #include <photon/support/theme.hpp>
+#include <photon/support/draw_utils.hpp>
 #include <photon/view.hpp>
 #include <cmath>
 
@@ -81,5 +82,28 @@ namespace photon
       value(value() + dir.y * 0.005);
       ctx.view.refresh(ctx);
       return true;
+   }
+
+   view_limits basic_knob::limits(basic_context const& ctx) const
+   {
+      return { { _size, _size }, { _size, _size } };
+   }
+
+   void basic_knob::draw(context const& ctx)
+   {
+      auto& thm = get_theme();
+      auto& cnv = ctx.canvas;
+      auto  mp = ctx.view.cursor_pos();
+      bool  hilite = hit_test(ctx, mp);
+      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+
+      draw_knob(cnv, cp, colors::black);
+      draw_indicator(cnv, cp, _value, indicator_color, hilite);
+   }
+
+   void basic_knob::value(double val)
+   {
+      _value = val;
    }
 }

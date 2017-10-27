@@ -55,6 +55,26 @@ namespace photon
    {
       return _value;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic Knob (You can use this as the subject of dial)
+   ////////////////////////////////////////////////////////////////////////////
+   class basic_knob : public element
+   {
+   public:
+                              basic_knob(float size)
+                                : _size(size), _value(0) {}
+
+      float                   size() const { return _size; }
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+      virtual void            value(double val);
+
+   private:
+
+      float                   _size;
+      float                   _value;
+   };
 }
 
 #endif

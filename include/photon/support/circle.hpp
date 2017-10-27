@@ -25,6 +25,11 @@ namespace photon
       bool        operator==(circle const& other) const;
       bool        operator!=(circle const& other) const;
 
+      point       center() const;
+      circle      inset(float x);
+      circle      move(float dx, float dy) const;
+      circle      move_to(float x, float y) const;
+
       float       cx;
       float       cy;
       float       radius;
@@ -53,6 +58,26 @@ namespace photon
    inline bool circle::operator!=(circle const& other) const
    {
       return !(*this == other);
+   }
+
+   inline point circle::center() const
+   {
+      return { cx, cy };
+   }
+
+   inline circle circle::inset(float x)
+   {
+      return { cx, cy, radius-x };
+   }
+
+   inline circle circle::move(float dx, float dy) const
+   {
+      return { cx+dx, cy+dy, radius };
+   }
+
+   inline circle circle::move_to(float x, float y) const
+   {
+      return { x, y, radius };
    }
 }
 #endif

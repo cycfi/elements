@@ -15,9 +15,11 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Element Reference
    //
-   // A element reference holds another element by reference. Element
-   // references may be copied and all copies will refer to the same element
-   // being referenced.
+   // A element reference holds another element using std::reference_wrapper.
+   // Element references may be copied and all copies will refer to the same
+   // element being referenced. It is the responsibility of the client to
+   // manage the lifetime of the referenced element and make sure it is valid
+   // (alive) when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
    class reference : public element

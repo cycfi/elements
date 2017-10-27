@@ -105,13 +105,14 @@ namespace photon
       using namespace radial_consts;
       auto state = cnv.new_state();
       auto center = cp.center();
-      float div = range / 100;
+      constexpr auto num_divs = 50;
+      float div = range / num_divs;
 
       cnv.translate({ center.x, center.y });
-      for (int i = 0; i != 101; ++i)
+      for (int i = 0; i != num_divs+1; ++i)
       {
          auto inset = 0;
-         if (i % 10)
+         if (i % (num_divs / 10))
          {
             // Minor ticks
             inset = size/2;

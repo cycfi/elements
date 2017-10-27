@@ -180,7 +180,7 @@ namespace photon
       // Draw radial lines
       auto& cnv = ctx.canvas;
       auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
-      draw_radial_marks(cnv, cp, size, colors::light_gray);
+      draw_radial_marks(cnv, cp, size-2, colors::light_gray);
    }
 
    template <int size, typename Subject>

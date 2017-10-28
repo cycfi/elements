@@ -108,12 +108,14 @@ namespace photon
 
    void draw_knob(canvas& cnv, circle cp, color c)
    {
-      float radius = cp.radius;
+      auto state = cnv.new_state();
+      float radius = cp.radius * 0.85;
+      float inset = cp.radius * 0.15;
 
       // Draw beveled knob
       {
          auto gradient = canvas::radial_gradient{
-            { cp.cx, cp.cy }, radius*0.8f,
+            { cp.cx, cp.cy }, radius*0.75f,
             { cp.cx, cp.cy }, radius
          };
 
@@ -123,7 +125,7 @@ namespace photon
 
          cnv.fill_style(gradient);
          cnv.begin_path();
-         cnv.circle(cp);
+         cnv.circle(cp.inset(inset));
          cnv.fill();
       }
 
@@ -140,16 +142,40 @@ namespace photon
 
          cnv.fill_style(gradient);
          cnv.begin_path();
-         cnv.circle(cp);
+         cnv.circle(cp.inset(inset));
          cnv.fill();
       }
 
       // Draw the outline
       {
          cnv.stroke_style(colors::black.opacity(0.1));
-         cnv.circle(cp);
+         cnv.circle(cp.inset(inset));
          cnv.line_width(radius/30);
          cnv.stroke();
+      }
+
+      // Draw knob rim
+      {
+         cnv.begin_path();
+         cnv.circle(cp);
+         cnv.circle(cp.inset(inset));
+         cnv.fill_rule(canvas::fill_odd_even);
+         cnv.clip();
+
+         auto bounds = cp.bounds();
+         auto gradient = canvas::linear_gradient{
+            bounds.top_left(),
+            bounds.bottom_left()
+         };
+
+         gradient.add_color_stop({ 1.0, { 255, 255, 255, 64 } });
+         gradient.add_color_stop({ 0.0, { 0, 0, 0, 32 } });
+         cnv.fill_style(gradient);
+
+         cnv.begin_path();
+         cnv.rect(bounds);
+         cnv.fill_style(gradient);
+         cnv.fill();
       }
    }
 

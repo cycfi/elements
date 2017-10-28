@@ -91,7 +91,7 @@ namespace photon
       cnv.translate({ center.x, center.y });
       cnv.rotate(offset + (val * range));
 
-      float r = cp.radius;
+      float r = cp.radius * 0.85;
       float ind_w = r * w_factor;
       float ind_h = r * h_factor;
       rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };

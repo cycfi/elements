@@ -131,6 +131,12 @@ auto make_controls2()
    return align_center_middle(d);
 }
 
+auto make_controls3()
+{
+   auto s = slider(basic_thumb<25>(), basic_track<5>(), 0.5);
+   return align_middle(xside_margin({ 80, 80 }, std::move(s)));
+}
+
 //auto make_controls()
 //{
 //   auto sl = margin(
@@ -203,7 +209,8 @@ int main(int argc, const char* argv[])
       make_basic_text2(),
       make_controls(),
       testing{},
-      make_controls2()
+      make_controls2(),
+      make_controls3()
    );
 
    int select = 0;

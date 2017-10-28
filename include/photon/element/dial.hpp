@@ -59,30 +59,34 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Basic Knob (You can use this as the subject of dial)
    ////////////////////////////////////////////////////////////////////////////
-   template <int _size>
+   template <unsigned _size>
    class basic_knob_element : public element
    {
    public:
 
-      static int const size = _size;
+      static unsigned const size = _size;
 
-                              basic_knob_element() : _value(0) {}
+                              basic_knob_element(color c = colors::black)
+                               : _color(c), _value(0)
+                              {}
+
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
       virtual void            value(double val);
 
    private:
 
+      color                   _color;
       float                   _value;
    };
 
-   template <int size>
+   template <unsigned size>
    inline view_limits basic_knob_element<size>::limits(basic_context const& ctx) const
    {
       return { { size, size }, { size, size } };
    }
 
-   template <int size>
+   template <unsigned size>
    inline void basic_knob_element<size>::draw(context const& ctx)
    {
       void draw_indicator(canvas& cnv, circle cp, float val, color c);
@@ -92,20 +96,20 @@ namespace photon
       auto  indicator_color = thm.indicator_color.level(1.5);
       auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
 
-      draw_knob(cnv, cp, colors::black);
+      draw_knob(cnv, cp, _color);
       draw_indicator(cnv, cp, _value, indicator_color);
    }
 
-   template <int size>
+   template <unsigned size>
    inline void basic_knob_element<size>::value(double val)
    {
       _value = val;
    }
 
-   template <int size>
-   inline basic_knob_element<size> basic_knob()
+   template <unsigned size>
+   inline basic_knob_element<size> basic_knob(color c = colors::black)
    {
-      return {};
+      return {c};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -113,19 +117,19 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    namespace radial_consts
    {
-      constexpr double const _2pi = 2 * M_PI;
-      constexpr double const travel = 0.83;
-      constexpr double const range = _2pi * travel;
-      constexpr double const start_angle = _2pi * (1-travel)/2;
-      constexpr double offset = (2 * M_PI) * (1-travel)/2;
+      constexpr double _2pi = 2 * M_PI;
+      constexpr double travel = 0.83;
+      constexpr double range = _2pi * travel;
+      constexpr double start_angle = _2pi * (1 - travel) / 2;
+      constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
    }
 
-   template <int _size, typename Subject>
+   template <unsigned _size, typename Subject>
    class radial_marks_element : public proxy<Subject>
    {
    public:
 
-      static int const size = _size;
+      static unsigned const size = _size;
 
       using base_type = proxy<Subject>;
 
@@ -142,7 +146,7 @@ namespace photon
       virtual void            draw(context const& ctx);
    };
 
-   template <int size, typename Subject>
+   template <unsigned size, typename Subject>
    inline view_limits
    radial_marks_element<size, Subject>::limits(basic_context const& ctx) const
    {
@@ -158,7 +162,7 @@ namespace photon
       return sl;
    }
 
-   template <int size, typename Subject>
+   template <unsigned size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::prepare_subject(context& ctx)
    {
@@ -168,7 +172,7 @@ namespace photon
       ctx.bounds.right -= size;
    }
 
-   template <int size, typename Subject>
+   template <unsigned size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
    {
@@ -183,7 +187,7 @@ namespace photon
       draw_radial_marks(cnv, cp, size-2, colors::light_gray);
    }
 
-   template <int size, typename Subject>
+   template <unsigned size, typename Subject>
    inline radial_marks_element<size, Subject>
    radial_marks(Subject&& subject)
    {

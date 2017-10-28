@@ -12,21 +12,21 @@ namespace photon
 {
    view_limits slider_base::limits(basic_context const& ctx) const
    {
-      auto  limits_ = body().limits(ctx);
-      auto  ind_limits = indicator().limits(ctx);
+      auto  limits_ = track().limits(ctx);
+      auto  tmb_limits = thumb().limits(ctx);
 
       if ((_is_horiz = limits_.max.x > limits_.max.y))
       {
-         limits_.min.y = std::max<float>(limits_.min.y, ind_limits.min.y);
-         limits_.max.y = std::max<float>(limits_.max.y, ind_limits.max.y);
-         limits_.min.x = std::max<float>(limits_.min.x, ind_limits.min.x * 2);
+         limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y);
+         limits_.max.y = std::max<float>(limits_.max.y, tmb_limits.max.y);
+         limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x * 2);
          limits_.max.x = std::max<float>(limits_.max.x, limits_.max.x);
       }
       else
       {
-         limits_.min.x = std::max<float>(limits_.min.x, ind_limits.min.x);
-         limits_.max.x = std::max<float>(limits_.max.x, ind_limits.max.x);
-         limits_.min.y = std::max<float>(limits_.min.y, ind_limits.min.y * 2);
+         limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x);
+         limits_.max.x = std::max<float>(limits_.max.x, tmb_limits.max.x);
+         limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y * 2);
          limits_.max.y = std::max<float>(limits_.max.y, limits_.max.y);
       }
 
@@ -36,14 +36,14 @@ namespace photon
    void slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &body(), ctx.bounds };
-         sctx.bounds = indicator_bounds(sctx);
-         body().layout(sctx);
+         context sctx { ctx, &track(), ctx.bounds };
+         sctx.bounds = thumb_bounds(sctx);
+         track().layout(sctx);
       }
       {
-         context sctx { ctx, &indicator(), ctx.bounds };
+         context sctx { ctx, &thumb(), ctx.bounds };
          sctx.bounds = body_bounds(sctx);
-         indicator().layout(sctx);
+         thumb().layout(sctx);
       }
    }
 
@@ -52,14 +52,14 @@ namespace photon
       if (intersects(ctx.bounds, ctx.view.dirty()))
       {
          {
-            context sctx { ctx, &body(), ctx.bounds };
+            context sctx { ctx, &track(), ctx.bounds };
             sctx.bounds = body_bounds(sctx);
-            body().draw(sctx);
+            track().draw(sctx);
          }
          {
-            context sctx { ctx, &indicator(), ctx.bounds };
-            sctx.bounds = indicator_bounds(sctx);
-            indicator().draw(sctx);
+            context sctx { ctx, &thumb(), ctx.bounds };
+            sctx.bounds = thumb_bounds(sctx);
+            thumb().draw(sctx);
          }
       }
    }
@@ -79,7 +79,7 @@ namespace photon
 
    rect slider_base::body_bounds(context const& ctx) const
    {
-      auto  limits_ = body().limits(ctx);
+      auto  limits_ = track().limits(ctx);
       auto  bounds = ctx.bounds;
 
       if (_is_horiz)
@@ -97,24 +97,24 @@ namespace photon
       return bounds;
    }
 
-   rect slider_base::indicator_bounds(context const& ctx) const
+   rect slider_base::thumb_bounds(context const& ctx) const
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
-      auto  limits_ = indicator().limits(ctx);
-      auto  ind_w = limits_.max.x;
-      auto  ind_h = limits_.max.y;
+      auto  limits_ = thumb().limits(ctx);
+      auto  tmb_w = limits_.max.x;
+      auto  tmb_h = limits_.max.y;
 
       if (_is_horiz)
       {
-         bounds.width(ind_w);
-         return bounds.move((w - ind_w) * value(), 0);
+         bounds.width(tmb_w);
+         return bounds.move((w - tmb_w) * value(), 0);
       }
       else
       {
-         bounds.height(ind_h);
-         return bounds.move(0, (h - ind_h) * (1.0 - value()));
+         bounds.height(tmb_h);
+         return bounds.move(0, (h - tmb_h) * (1.0 - value()));
          // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-value()
       }
    }
@@ -125,18 +125,18 @@ namespace photon
       auto  w = bounds.width();
       auto  h = bounds.height();
 
-      auto  limits_ = indicator().limits(ctx);
-      auto  ind_w = limits_.max.x;
-      auto  ind_h = limits_.max.y;
+      auto  limits_ = thumb().limits(ctx);
+      auto  tmb_w = limits_.max.x;
+      auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
 
       if (_is_horiz)
       {
-         new_value = (p.x - (bounds.left + (ind_w / 2))) / (w - ind_w);
+         new_value = (p.x - (bounds.left + (tmb_w / 2))) / (w - tmb_w);
       }
       else
       {
-         new_value = 1.0 - ((p.y - (bounds.top + (ind_h / 2))) / (h - ind_h));
+         new_value = 1.0 - ((p.y - (bounds.top + (tmb_h / 2))) / (h - tmb_h));
          // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
       }
 
@@ -146,10 +146,10 @@ namespace photon
 
    void slider_base::begin_tracking(context const& ctx, info& track_info)
    {
-      auto ind_bounds = indicator_bounds(ctx);
-      if (ind_bounds.includes(track_info.current))
+      auto tmb_bounds = thumb_bounds(ctx);
+      if (tmb_bounds.includes(track_info.current))
       {
-         auto cp = center_point(ind_bounds);
+         auto cp = center_point(tmb_bounds);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
       }

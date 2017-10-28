@@ -41,13 +41,13 @@ namespace photon
       virtual void            value(double val);
 
       rect                    body_bounds(context const& ctx) const;
-      rect                    indicator_bounds(context const& ctx) const;
+      rect                    thumb_bounds(context const& ctx) const;
       virtual double          value_from_point(context const& ctx, point p);
 
-      virtual element const&  indicator() const = 0;
-      virtual element&        indicator() = 0;
-      virtual element const&  body() const = 0;
-      virtual element&        body() = 0;
+      virtual element const&  thumb() const = 0;
+      virtual element&        thumb() = 0;
+      virtual element const&  track() const = 0;
+      virtual element&        track() = 0;
 
    private:
 
@@ -68,44 +68,44 @@ namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Indicator, typename Body, typename Base = basic_slider_base>
+   template <typename Thumb, typename Track, typename Base = basic_slider_base>
    class basic_slider : public Base
    {
    public:
-                              inline basic_slider(Indicator&& indicator, Body&& body, double init_value)
+                              inline basic_slider(Thumb&& thumb, Track&& track, double init_value)
                                : Base(init_value)
-                               , _indicator(std::forward<Indicator>(indicator))
-                               , _body(std::forward<Body>(body))
+                               , _thumb(std::forward<Thumb>(thumb))
+                               , _body(std::forward<Track>(track))
                               {}
 
-                              inline basic_slider(Indicator const& indicator, Body const& body, double init_value)
+                              inline basic_slider(Thumb const& thumb, Track const& track, double init_value)
                                : Base(init_value)
-                               , _indicator(indicator)
-                               , _body(body)
+                               , _thumb(thumb)
+                               , _body(track)
                               {}
 
-      virtual element const&  indicator() const  { return _indicator; }
-      virtual element&        indicator()        { return _indicator; }
-      virtual element const&  body() const       { return _body; }
-      virtual element&        body()             { return _body; }
+      virtual element const&  thumb() const  { return _thumb; }
+      virtual element&        thumb()        { return _thumb; }
+      virtual element const&  track() const   { return _body; }
+      virtual element&        track()         { return _body; }
 
    private:
 
-      Indicator               _indicator;
-      Body                    _body;
+      Thumb                   _thumb;
+      Track                    _body;
    };
 
-   template <typename Indicator, typename Body>
+   template <typename Thumb, typename Track>
    inline basic_slider<
-      typename std::decay<Indicator>::type,
-      typename std::decay<Body>::type,
+      typename std::decay<Thumb>::type,
+      typename std::decay<Track>::type,
       basic_slider_base
    >
-   slider(Indicator&& indicator, Body&& body, double init_value = 0.0)
+   slider(Thumb&& thumb, Track&& track, double init_value = 0.0)
    {
       return {
-         std::forward<Indicator>(indicator),
-         std::forward<Body>(body),
+         std::forward<Thumb>(thumb),
+         std::forward<Track>(track),
          init_value
       };
    }
@@ -164,19 +164,111 @@ namespace photon
       value(double(val) * (num_states-1));
    }
 
-   template <size_t num_states, typename Indicator, typename Body>
+   template <size_t num_states, typename Thumb, typename Track>
    inline basic_slider<
-      typename std::decay<Indicator>::type,
-      typename std::decay<Body>::type,
+      typename std::decay<Thumb>::type,
+      typename std::decay<Track>::type,
       selector_base<num_states>
    >
-   selector(Indicator&& indicator, Body&& body, double init_value = 0.0)
+   selector(Thumb&& thumb, Track&& track, double init_value = 0.0)
    {
       return {
-         std::forward<Indicator>(indicator),
-         std::forward<Body>(body),
+         std::forward<Thumb>(thumb),
+         std::forward<Track>(track),
          init_value
       };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic Thumb (You can use this as the slider's thumb)
+   ////////////////////////////////////////////////////////////////////////////
+   template <unsigned _size>
+   class basic_thumb_element : public element
+   {
+   public:
+
+      static unsigned const size = _size;
+
+                              basic_thumb_element(color c = colors::black)
+                               : _color(c)
+                              {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+
+   private:
+
+      color                   _color;
+   };
+
+   template <unsigned size>
+   inline view_limits basic_thumb_element<size>::limits(basic_context const& ctx) const
+   {
+      return { { size, size }, { size, size } };
+   }
+
+   template <unsigned size>
+   inline void basic_thumb_element<size>::draw(context const& ctx)
+   {
+      auto& thm = get_theme();
+      auto& cnv = ctx.canvas;
+      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+
+      draw_thumb(cnv, cp, _color, indicator_color);
+   }
+
+   template <unsigned size>
+   inline basic_thumb_element<size> basic_thumb(color c = colors::black)
+   {
+      return {c};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic Track (You can use this as the slider's track)
+   ////////////////////////////////////////////////////////////////////////////
+   template <unsigned _size, bool _vertical = false>
+   class basic_track_element : public element
+   {
+   public:
+
+      static unsigned const size = _size;
+      static bool const vertical = _vertical;
+      static unsigned const min_length = 100;
+
+                              basic_track_element(color c = colors::black)
+                               : _color(c)
+                              {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            draw(context const& ctx);
+
+   private:
+
+      color                   _color;
+   };
+
+   template <unsigned size, bool vertical>
+   inline view_limits basic_track_element<size, vertical>
+      ::limits(basic_context const& ctx) const
+   {
+      return vertical?
+         view_limits{ { size, min_length }, { size, full_extent } } :
+         view_limits{ { min_length, size }, { full_extent, size } }
+         ;
+   }
+
+   template <unsigned size, bool vertical>
+   inline void basic_track_element<size, vertical>
+      ::draw(context const& ctx)
+   {
+      draw_track(ctx.canvas, ctx.bounds);
+   }
+
+   template <unsigned size, bool vertical = false>
+   inline basic_track_element<size> basic_track(color c = colors::black)
+   {
+      return {c};
    }
 }
 

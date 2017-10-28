@@ -186,4 +186,88 @@ namespace photon
       cnv.round_rect(bounds, bounds.height()/12);
       cnv.fill();
    }
+
+   void draw_thumb(canvas& cnv, circle cp, color c, color ic)
+   {
+      auto state = cnv.new_state();
+      float radius = cp.radius;
+
+      // Fill the body color
+      {
+         cnv.fill_style(c);
+         cnv.begin_path();
+         cnv.circle(cp);
+         cnv.fill();
+      }
+
+      // Draw some 3D highlight
+      {
+         auto hcp = cp.center().move(-radius, -radius);
+         auto gradient = canvas::radial_gradient{
+            hcp, radius*0.5f,
+            hcp, radius*2
+         };
+
+         gradient.add_color_stop({ 0.0, { 1.0, 1.0, 1.0, 0.4 } });
+         gradient.add_color_stop({ 1.0, { 0.6, 0.6, 0.6, 0.0 } });
+
+         cnv.fill_style(gradient);
+         cnv.begin_path();
+         cnv.circle(cp);
+         cnv.fill();
+      }
+
+      // Draw the indicator
+      {
+         cnv.fill_style(ic.level);
+         cnv.begin_path();
+         cnv.circle(cp.inset(cp.radius * 0.55));
+         cnv.fill();
+      }
+
+      // Add some outer bevel
+      {
+         auto gradient = canvas::linear_gradient{
+            { cp.cx, cp.cy - cp.radius },
+            { cp.cx, cp.cy + cp.radius }
+         };
+
+         gradient.add_color_stop({ 0.0, colors::white.opacity(0.3) });
+         gradient.add_color_stop({ 0.5, colors::black.opacity(0.5) });
+         cnv.fill_rule(canvas::fill_odd_even);
+         cnv.fill_style(gradient);
+
+         circle cpf = cp;
+         cnv.begin_path();
+         cnv.circle(cpf);
+         cpf.radius *= 0.9;
+         cnv.circle(cpf);
+         cnv.clip();
+
+         cnv.circle(cp);
+         cnv.fill();
+      }
+   }
+
+   void draw_track(canvas& cnv, rect bounds)
+   {
+      auto state = cnv.new_state();
+      auto w = bounds.width();
+      auto h = bounds.height();
+      auto r = (w > h)? h/2 : w/2;
+
+      cnv.begin_path();
+      cnv.round_rect(bounds, r);
+      cnv.clip();
+
+      cnv.fill_style(colors::black);
+      cnv.round_rect(bounds, r);
+      cnv.fill();
+
+      auto lwidth = r/4;
+      cnv.stroke_style(colors::white.opacity(0.3));
+      cnv.round_rect(bounds.move(-lwidth, -lwidth), r*0.6);
+      cnv.line_width(lwidth*1.5);
+      cnv.stroke();
+   }
 }

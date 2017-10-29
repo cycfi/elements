@@ -134,14 +134,14 @@ auto make_controls2()
 auto make_controls3()
 {
    auto s = slider(basic_thumb<25>(), slider_marks<35>(basic_track<5>()), 0.5);
-   return align_middle(xside_margin({ 80, 80 }, std::move(s)));
+   return align_middle(xside_margin({ 120, 120 }, std::move(s)));
 }
 
 auto make_controls4()
 {
 //   auto s = slider(basic_thumb<25>(), basic_track<5, true>(), 0.5);
    auto s = slider(basic_thumb<25>(), slider_marks<35>(basic_track<5, true>()), 0.5);
-   return align_center(yside_margin({ 80, 80 }, std::move(s)));
+   return align_center(yside_margin({ 50, 50 }, std::move(s)));
 }
 
 

@@ -216,7 +216,9 @@ namespace photon
       float pos = vertical? bounds.top : bounds.left;
       float incr = (vertical? h : w) / 50;
       auto state = cnv.new_state();
+      auto const& theme = get_theme();
 
+      cnv.stroke_style(theme.ticks_color);
       for (int i = 0; i != num_divs+1; ++i)
       {
          float inset = 0;
@@ -224,14 +226,14 @@ namespace photon
          {
             // Minor ticks
             inset = size / 6;
-            cnv.line_width(0.7);
-            cnv.stroke_style(c.opacity(0.4));
+            cnv.line_width(theme.minor_ticks_width);
+            cnv.stroke_style(c.level(theme.minor_ticks_level));
          }
          else
          {
             // Major ticks
-            cnv.line_width(1.5);
-            cnv.stroke_style(c.opacity(0.8));
+            cnv.line_width(theme.major_ticks_width);
+            cnv.stroke_style(c.level(theme.major_ticks_level));
          }
 
          if (vertical)

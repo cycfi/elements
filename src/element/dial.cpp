@@ -107,8 +107,10 @@ namespace photon
       auto center = cp.center();
       constexpr auto num_divs = 50;
       float div = range / num_divs;
+      auto const& theme = get_theme();
 
       cnv.translate({ center.x, center.y });
+      cnv.stroke_style(theme.ticks_color);
       for (int i = 0; i != num_divs+1; ++i)
       {
          auto inset = 0;
@@ -116,14 +118,14 @@ namespace photon
          {
             // Minor ticks
             inset = size/2;
-            cnv.line_width(0.7);
-            cnv.stroke_style(c.opacity(0.4));
+            cnv.line_width(theme.minor_ticks_width);
+            cnv.stroke_style(c.level(theme.minor_ticks_level));
          }
          else
          {
             // Major ticks
-            cnv.line_width(1.5);
-            cnv.stroke_style(c.opacity(0.8));
+            cnv.line_width(theme.major_ticks_width);
+            cnv.stroke_style(c.level(theme.major_ticks_level));
          }
 
          float angle = offset + (M_PI / 2) + (i * div);

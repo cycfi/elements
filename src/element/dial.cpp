@@ -116,13 +116,13 @@ namespace photon
          {
             // Minor ticks
             inset = size/2;
-            cnv.line_width(1);
+            cnv.line_width(0.7);
             cnv.stroke_style(c.opacity(0.4));
          }
          else
          {
             // Major ticks
-            cnv.line_width(2);
+            cnv.line_width(1.5);
             cnv.stroke_style(c.opacity(0.8));
          }
 

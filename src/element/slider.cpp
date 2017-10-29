@@ -36,13 +36,13 @@ namespace photon
    void slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &track(), ctx.bounds };
-         sctx.bounds = thumb_bounds(sctx);
+         context sctx { ctx, &thumb(), ctx.bounds };
+         sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }
       {
-         context sctx { ctx, &thumb(), ctx.bounds };
-         sctx.bounds = body_bounds(sctx);
+         context sctx { ctx, &track(), ctx.bounds };
+         sctx.bounds = thumb_bounds(sctx);
          thumb().layout(sctx);
       }
    }
@@ -53,7 +53,7 @@ namespace photon
       {
          {
             context sctx { ctx, &track(), ctx.bounds };
-            sctx.bounds = body_bounds(sctx);
+            sctx.bounds = track_bounds(sctx);
             track().draw(sctx);
          }
          {
@@ -77,21 +77,26 @@ namespace photon
       return false;
    }
 
-   rect slider_base::body_bounds(context const& ctx) const
+   rect slider_base::track_bounds(context const& ctx) const
    {
       auto  limits_ = track().limits(ctx);
       auto  bounds = ctx.bounds;
+      auto  th_bounds = thumb_bounds(ctx);
 
       if (_is_horiz)
       {
-         auto h = bounds.height();
-         bounds.height(std::min<float>(limits_.max.y, h));
+         bounds.height(std::min<float>(limits_.max.y, bounds.height()));
+         auto w2 = th_bounds.width() / 2;
+         bounds.left += w2;
+         bounds.right -= w2;
          bounds = center_v(bounds, ctx.bounds);
       }
       else
       {
-         auto w = bounds.width();
-         bounds.width(std::min<float>(limits_.max.x, w));
+         bounds.width(std::min<float>(limits_.max.x, bounds.width()));
+         auto h2 = th_bounds.height() / 2;
+         bounds.top += h2;
+         bounds.bottom -= h2;
          bounds = center_h(bounds, ctx.bounds);
       }
       return bounds;
@@ -200,5 +205,47 @@ namespace photon
    {
       if (on_change)
          on_change(val);
+   }
+
+   void draw_slider_marks(canvas& cnv, rect bounds, float size, color c)
+   {
+      constexpr auto num_divs = 50;
+      auto w = bounds.width();
+      auto h = bounds.height();
+      bool vertical = w < h;
+      float pos = vertical? bounds.top : bounds.left;
+      float incr = (vertical? h : w) / 50;
+      auto state = cnv.new_state();
+
+      for (int i = 0; i != num_divs+1; ++i)
+      {
+         float inset = 0;
+         if (i % (num_divs / 10))
+         {
+            // Minor ticks
+            inset = size / 6;
+            cnv.line_width(0.7);
+            cnv.stroke_style(c.opacity(0.4));
+         }
+         else
+         {
+            // Major ticks
+            cnv.line_width(1.5);
+            cnv.stroke_style(c.opacity(0.8));
+         }
+
+         if (vertical)
+         {
+            cnv.move_to({ bounds.left + inset, pos });
+            cnv.line_to({ bounds.right - inset, pos });
+         }
+         else
+         {
+            cnv.move_to({ pos, bounds.top + inset });
+            cnv.line_to({ pos, bounds.bottom - inset });
+         }
+         cnv.stroke();
+         pos += incr;
+      }
    }
 }

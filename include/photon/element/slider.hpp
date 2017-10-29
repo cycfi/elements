@@ -6,6 +6,7 @@
 #if !defined(PHOTON_GUI_LIB_WIDGET_SLIDER_AUGUST_29_2016)
 #define PHOTON_GUI_LIB_WIDGET_SLIDER_AUGUST_29_2016
 
+#include <photon/element/proxy.hpp>
 #include <photon/element/tracker.hpp>
 #include <photon/view.hpp>
 #include <photon/support.hpp>
@@ -40,7 +41,7 @@ namespace photon
       double                  value() const;
       virtual void            value(double val);
 
-      rect                    body_bounds(context const& ctx) const;
+      rect                    track_bounds(context const& ctx) const;
       rect                    thumb_bounds(context const& ctx) const;
       virtual double          value_from_point(context const& ctx, point p);
 
@@ -92,7 +93,7 @@ namespace photon
    private:
 
       Thumb                   _thumb;
-      Track                    _body;
+      Track                   _body;
    };
 
    template <typename Thumb, typename Track>
@@ -202,7 +203,8 @@ namespace photon
    };
 
    template <unsigned size>
-   inline view_limits basic_thumb_element<size>::limits(basic_context const& ctx) const
+   inline view_limits basic_thumb_element<size>
+      ::limits(basic_context const& ctx) const
    {
       return { { size, size }, { size, size } };
    }
@@ -213,7 +215,7 @@ namespace photon
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
       auto  indicator_color = thm.indicator_color.level(1.5);
-      auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      auto  cp = circle{ center_point(ctx.bounds), size/2.0f };
 
       draw_thumb(cnv, cp, _color, indicator_color);
    }
@@ -234,7 +236,7 @@ namespace photon
 
       static unsigned const size = _size;
       static bool const vertical = _vertical;
-      static unsigned const min_length = 100;
+      static unsigned const min_length = 64;
 
                               basic_track_element(color c = colors::black)
                                : _color(c)
@@ -266,9 +268,95 @@ namespace photon
    }
 
    template <unsigned size, bool vertical = false>
-   inline basic_track_element<size> basic_track(color c = colors::black)
+   inline basic_track_element<size, vertical>
+   basic_track(color c = colors::black)
    {
       return {c};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Slider Marks (You can use this to place tick marks on slider)
+   ////////////////////////////////////////////////////////////////////////////
+   template <unsigned _size, typename Subject>
+   class slider_marks_element : public proxy<Subject>
+   {
+   public:
+
+      static unsigned const size = _size;
+
+      using base_type = proxy<Subject>;
+
+                              slider_marks_element(Subject&& subject)
+                               : base_type(std::move(subject))
+                              {}
+
+                              slider_marks_element(Subject const& subject)
+                               : base_type(subject)
+                              {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
+      virtual void            draw(context const& ctx);
+
+   private:
+
+      bool                    _is_vertical;
+   };
+
+   template <unsigned size, typename Subject>
+   inline view_limits
+   slider_marks_element<size, Subject>::limits(basic_context const& ctx) const
+   {
+      auto sl = this->subject().limits(ctx);
+      if (sl.min.x < sl.min.y) // is vertical?
+      {
+         sl.min.x += size;
+         sl.max.x += size;
+         clamp_max(sl.max.x, full_extent);
+      }
+      else
+      {
+         sl.min.y += size;
+         sl.max.y += size;
+         clamp_max(sl.max.y, full_extent);
+      }
+      return sl;
+   }
+
+   template <unsigned size, typename Subject>
+   inline void
+   slider_marks_element<size, Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.width() < ctx.bounds.height()) // is vertical?
+      {
+         ctx.bounds.left += size/2;
+         ctx.bounds.right -= size/2;
+      }
+      else
+      {
+         ctx.bounds.top += size/2;
+         ctx.bounds.bottom -= size/2;
+      }
+   }
+
+   template <unsigned size, typename Subject>
+   inline void
+   slider_marks_element<size, Subject>::draw(context const& ctx)
+   {
+      void draw_slider_marks(canvas& cnv, rect bounds, float size, color c);
+
+      // Draw radial lines
+      draw_slider_marks(ctx.canvas, ctx.bounds, size, colors::light_gray);
+
+      // Draw the subject
+      base_type::draw(ctx);
+   }
+
+   template <unsigned size, typename Subject>
+   inline slider_marks_element<size, Subject>
+   slider_marks(Subject&& subject)
+   {
+      return {std::move(subject)};
    }
 }
 

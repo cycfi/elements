@@ -99,22 +99,6 @@ namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Grid Lines
-   ////////////////////////////////////////////////////////////////////////////
-   struct vgrid_lines : element
-   {
-                              vgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
-
-      virtual void            draw(context const& ctx);
-
-      float                   _major_divisions;
-      float                   _minor_divisions;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
    // Pane
    ////////////////////////////////////////////////////////////////////////////
    template <typename Heading, typename Content>

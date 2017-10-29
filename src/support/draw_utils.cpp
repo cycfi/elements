@@ -219,7 +219,7 @@ namespace photon
 
       // Draw the indicator
       {
-         cnv.fill_style(ic.level);
+         cnv.fill_style(ic);
          cnv.begin_path();
          cnv.circle(cp.inset(cp.radius * 0.55));
          cnv.fill();
@@ -255,6 +255,12 @@ namespace photon
       auto w = bounds.width();
       auto h = bounds.height();
       auto r = (w > h)? h/2 : w/2;
+
+      // extend the track a bit for the radius at the ends
+      if (w > h)
+         bounds = bounds.inset(-r, 0);
+      else
+         bounds = bounds.inset(0, -r);
 
       cnv.begin_path();
       cnv.round_rect(bounds, r);

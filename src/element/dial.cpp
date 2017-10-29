@@ -108,17 +108,16 @@ namespace photon
       constexpr auto num_divs = 50;
       float div = range / num_divs;
       auto const& theme = get_theme();
-      float from = cp.radius-size;
 
       cnv.translate({ center.x, center.y });
       cnv.stroke_style(theme.ticks_color);
       for (int i = 0; i != num_divs+1; ++i)
       {
-         auto inset = 0;
+         float from = cp.radius;
          if (i % (num_divs / 10))
          {
             // Minor ticks
-            inset = size/2;
+            from -= size / 4;
             cnv.line_width(theme.minor_ticks_width);
             cnv.stroke_style(c.level(theme.minor_ticks_level));
          }
@@ -132,7 +131,7 @@ namespace photon
          float angle = offset + (M_PI / 2) + (i * div);
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
-         float to = cp.radius-inset;
+         float to = cp.radius - (size / 2);
 
          cnv.move_to({ from * cos_, from * sin_ });
          cnv.line_to({ to * cos_, to * sin_ });
@@ -156,7 +155,6 @@ namespace photon
       auto state = cnv.new_state();
       auto center = cp.center();
       float div = range / (num_labels-1);
-      float from = cp.radius-size;
       auto const& theme = get_theme();
 
       cnv.translate({ center.x, center.y });
@@ -175,7 +173,7 @@ namespace photon
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
 
-         cnv.fill_text({ from * cos_, from * sin_ }, labels[i].c_str());
+         cnv.fill_text({ cp.radius * cos_, cp.radius * sin_ }, labels[i].c_str());
       }
    }
 }

@@ -165,10 +165,11 @@ namespace photon
    inline void
    radial_element_base<size, Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds.top += size;
-      ctx.bounds.left += size;
-      ctx.bounds.bottom -= size;
-      ctx.bounds.right -= size;
+      auto size_div2 = size /2;
+      ctx.bounds.top += size_div2;
+      ctx.bounds.left += size_div2;
+      ctx.bounds.bottom -= size_div2;
+      ctx.bounds.right -= size_div2;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -181,14 +182,7 @@ namespace photon
 
       static std::size_t const size = _size;
       using base_type = radial_element_base<_size, Subject>;
-
-                              radial_marks_element(Subject&& subject)
-                               : base_type(std::move(subject))
-                              {}
-
-                              radial_marks_element(Subject const& subject)
-                               : base_type(subject)
-                              {}
+      using base_type::base_type;
 
       virtual void            draw(context const& ctx);
    };

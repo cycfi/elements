@@ -127,9 +127,9 @@ auto make_controls()
 
 auto make_controls2()
 {
-   auto d = radial_labels<30>(
-      dial(radial_marks<15>(basic_knob<100>()), 0.8),
-      0.5, // relative label font size
+   auto d = radial_labels<15>(
+      dial(radial_marks<25>(basic_knob<100>()), 0.5),
+      0.8, // relative label font size
       "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
    );
    return align_center_middle(d);
@@ -143,7 +143,6 @@ auto make_controls3()
 
 auto make_controls4()
 {
-//   auto s = slider(basic_thumb<25>(), basic_track<5, true>(), 0.5);
    auto s = slider(basic_thumb<25>(), slider_marks<35>(basic_track<5, true>()), 0.5);
    return align_center(yside_margin({ 50, 50 }, std::move(s)));
 }

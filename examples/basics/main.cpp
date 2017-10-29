@@ -127,7 +127,11 @@ auto make_controls()
 
 auto make_controls2()
 {
-   auto d = dial(radial_marks<15>(basic_knob<100>()), 0.5);
+   auto d = radial_labels<30>(
+      dial(radial_marks<15>(basic_knob<100>()), 0.8),
+      0.5, // relative label font size
+      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+   );
    return align_center_middle(d);
 }
 
@@ -175,8 +179,8 @@ struct testing : element
 {
    void draw(context const& ctx)
    {
-   
-   
+
+
     // Dial Knob
 //      auto&  cnv = ctx.canvas;
 //      circle c{200, 200, 32};

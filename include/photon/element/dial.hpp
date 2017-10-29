@@ -59,12 +59,12 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Basic Knob (You can use this as the subject of dial)
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size>
+   template <std::size_t _size>
    class basic_knob_element : public element
    {
    public:
 
-      static unsigned const size = _size;
+      static std::size_t const size = _size;
 
                               basic_knob_element(color c = colors::black)
                                : _color(c), _value(0)
@@ -80,13 +80,13 @@ namespace photon
       float                   _value;
    };
 
-   template <unsigned size>
+   template <std::size_t size>
    inline view_limits basic_knob_element<size>::limits(basic_context const& ctx) const
    {
       return { { size, size }, { size, size } };
    }
 
-   template <unsigned size>
+   template <std::size_t size>
    inline void basic_knob_element<size>::draw(context const& ctx)
    {
       void draw_indicator(canvas& cnv, circle cp, float val, color c);
@@ -100,20 +100,20 @@ namespace photon
       draw_indicator(cnv, cp, _value, indicator_color);
    }
 
-   template <unsigned size>
+   template <std::size_t size>
    inline void basic_knob_element<size>::value(double val)
    {
       _value = val;
    }
 
-   template <unsigned size>
+   template <std::size_t size>
    inline basic_knob_element<size> basic_knob(color c = colors::black)
    {
       return {c};
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Radial Marks (You can use this to place dial tick marks on dials)
+   // Radial Element Base (common base class for radial elements)
    ////////////////////////////////////////////////////////////////////////////
    namespace radial_consts
    {
@@ -124,31 +124,30 @@ namespace photon
       constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
    }
 
-   template <unsigned _size, typename Subject>
-   class radial_marks_element : public proxy<Subject>
+   template <std::size_t _size, typename Subject>
+   class radial_element_base : public proxy<Subject>
    {
    public:
 
-      static unsigned const size = _size;
+      static std::size_t const size = _size;
 
       using base_type = proxy<Subject>;
 
-                              radial_marks_element(Subject&& subject)
+                              radial_element_base(Subject&& subject)
                                : base_type(std::move(subject))
                               {}
 
-                              radial_marks_element(Subject const& subject)
+                              radial_element_base(Subject const& subject)
                                : base_type(subject)
                               {}
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
-      virtual void            draw(context const& ctx);
    };
 
-   template <unsigned size, typename Subject>
+   template <std::size_t size, typename Subject>
    inline view_limits
-   radial_marks_element<size, Subject>::limits(basic_context const& ctx) const
+   radial_element_base<size, Subject>::limits(basic_context const& ctx) const
    {
       auto sl = this->subject().limits(ctx);
 
@@ -162,9 +161,9 @@ namespace photon
       return sl;
    }
 
-   template <unsigned size, typename Subject>
+   template <std::size_t size, typename Subject>
    inline void
-   radial_marks_element<size, Subject>::prepare_subject(context& ctx)
+   radial_element_base<size, Subject>::prepare_subject(context& ctx)
    {
       ctx.bounds.top += size;
       ctx.bounds.left += size;
@@ -172,7 +171,29 @@ namespace photon
       ctx.bounds.right -= size;
    }
 
-   template <unsigned size, typename Subject>
+   ////////////////////////////////////////////////////////////////////////////
+   // Radial Marks (You can use this to place dial tick marks around dials)
+   ////////////////////////////////////////////////////////////////////////////
+   template <std::size_t _size, typename Subject>
+   class radial_marks_element : public radial_element_base<_size, Subject>
+   {
+   public:
+
+      static std::size_t const size = _size;
+      using base_type = radial_element_base<_size, Subject>;
+
+                              radial_marks_element(Subject&& subject)
+                               : base_type(std::move(subject))
+                              {}
+
+                              radial_marks_element(Subject const& subject)
+                               : base_type(subject)
+                              {}
+
+      virtual void            draw(context const& ctx);
+   };
+
+   template <std::size_t size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
    {
@@ -186,11 +207,71 @@ namespace photon
       draw_radial_marks(ctx.canvas, cp, size-2, colors::light_gray);
    }
 
-   template <unsigned size, typename Subject>
+   template <std::size_t size, typename Subject>
    inline radial_marks_element<size, Subject>
    radial_marks(Subject&& subject)
    {
       return {std::move(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Radial Labels (You can use this to place dial labels around dials)
+   ////////////////////////////////////////////////////////////////////////////
+   template <std::size_t _size, typename Subject, std::size_t num_labels>
+   class radial_labels_element : public radial_element_base<_size, Subject>
+   {
+   public:
+
+      static std::size_t const size = _size;
+      using base_type = radial_element_base<_size, Subject>;
+      using string_array = std::array<std::string, num_labels>;
+
+                              radial_labels_element(Subject&& subject, float font_size)
+                               : base_type(std::move(subject))
+                               , _font_size(font_size)
+                              {}
+
+                              radial_labels_element(Subject const& subject, float font_size)
+                               : base_type(subject)
+                               , _font_size(font_size)
+                               {}
+
+      virtual void            draw(context const& ctx);
+
+      string_array            _labels;
+      float                   _font_size;
+   };
+
+   template <std::size_t size, typename Subject, std::size_t num_labels>
+   inline void
+   radial_labels_element<size, Subject, num_labels>::draw(context const& ctx)
+   {
+      void draw_radial_labels(
+         canvas& cnv
+       , circle cp
+       , float size
+       , float font_size
+       , std::string const labels[]
+       , std::size_t _num_labels
+      );
+
+      // Draw the subject
+      base_type::draw(ctx);
+
+      // Draw the labels
+      auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      draw_radial_labels(
+         ctx.canvas, cp, size, _font_size, _labels.data(), num_labels);
+   }
+
+   template <std::size_t size, typename Subject, typename... S>
+   inline radial_labels_element<size, Subject, sizeof...(S)>
+   radial_labels(Subject&& subject, float font_size, S&&... s)
+   {
+      auto r = radial_labels_element<size, Subject, sizeof...(S)>
+         {std::move(subject), font_size};
+      r._labels = { std::move(s)... };
+      return r;
    }
 }
 

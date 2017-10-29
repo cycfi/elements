@@ -108,6 +108,7 @@ namespace photon
       constexpr auto num_divs = 50;
       float div = range / num_divs;
       auto const& theme = get_theme();
+      float from = cp.radius-size;
 
       cnv.translate({ center.x, center.y });
       cnv.stroke_style(theme.ticks_color);
@@ -131,7 +132,6 @@ namespace photon
          float angle = offset + (M_PI / 2) + (i * div);
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
-         float from = cp.radius-size;
          float to = cp.radius-inset;
 
          cnv.move_to({ from * cos_, from * sin_ });
@@ -140,4 +140,42 @@ namespace photon
       }
    }
 
+   void draw_radial_labels(
+      canvas& cnv
+    , circle cp
+    , float size
+    , float font_size
+    , std::string const labels[]
+    , std::size_t num_labels
+   )
+   {
+      if (num_labels < 2)
+         return; // Nohing to do
+
+      using namespace radial_consts;
+      auto state = cnv.new_state();
+      auto center = cp.center();
+      float div = range / (num_labels-1);
+      float from = cp.radius-size;
+      auto const& theme = get_theme();
+
+      cnv.translate({ center.x, center.y });
+      cnv.text_align(cnv.middle | cnv.center);
+      cnv.fill_style(theme.label_font_color);
+
+      cnv.font(
+         theme.label_font,
+         theme.label_font_size * font_size,
+         theme.label_style
+      );
+
+      for (int i = 0; i != num_labels; ++i)
+      {
+         float angle = offset + (M_PI / 2) + (i * div);
+         float sin_ = std::sin(angle);
+         float cos_ = std::cos(angle);
+
+         cnv.fill_text({ from * cos_, from * sin_ }, labels[i].c_str());
+      }
+   }
 }

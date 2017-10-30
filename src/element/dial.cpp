@@ -149,7 +149,7 @@ namespace photon
    )
    {
       if (num_labels < 2)
-         return; // Nohing to do
+         return; // Nothing to do
 
       using namespace radial_consts;
       auto state = cnv.new_state();

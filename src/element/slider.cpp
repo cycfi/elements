@@ -250,4 +250,45 @@ namespace photon
          pos += incr;
       }
    }
+
+   void draw_slider_labels(
+      canvas& cnv
+    , rect bounds
+    , float size
+    , point thumb_size
+    , float font_size
+    , std::string const labels[]
+    , std::size_t num_labels
+   )
+   {
+      bool reverse = size < 0;
+      size = abs(size);
+
+      bool vertical = bounds.width() < bounds.height();
+      if (vertical)
+         bounds = bounds.inset(0, thumb_size.y/2);
+      else
+         bounds = bounds.inset(thumb_size.x/2, 0);
+
+      auto w = bounds.width();
+      auto h = bounds.height();
+      float pos = vertical? bounds.top : bounds.left;
+      float incr = (vertical? h : w) / (num_labels - 1);
+      auto state = cnv.new_state();
+      auto const& theme = get_theme();
+
+      cnv.text_align(cnv.middle | cnv.center);
+      cnv.fill_style(theme.label_font_color);
+
+      for (int i = 0; i != num_labels; ++i)
+      {
+         point where = vertical?
+            point{ reverse? bounds.left : bounds.right, pos } :
+            point{ pos, reverse? bounds.top : bounds.bottom }
+            ;
+
+         cnv.fill_text(where, labels[i].c_str());
+         pos += incr;
+      }
+   }
 }

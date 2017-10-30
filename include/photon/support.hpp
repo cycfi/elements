@@ -6,6 +6,7 @@
 #if !defined(PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016)
 #define PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016
 
+#include <photon/support/assert.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/circle.hpp>
 #include <photon/support/color.hpp>

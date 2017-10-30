@@ -13,6 +13,7 @@
 
 #include <cmath>
 #include <functional>
+#include <type_traits>
 
 namespace photon
 {
@@ -275,37 +276,31 @@ namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Slider Marks (You can use this to place tick marks on slider)
+   // Slider Element Base (common base class for slider elements)
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size, typename Subject>
-   class slider_marks_element : public proxy<Subject>
+   template <int _size, typename Subject>
+   class slider_element_base : public proxy<Subject>
    {
    public:
 
       static unsigned const size = _size;
-
       using base_type = proxy<Subject>;
 
-                              slider_marks_element(Subject&& subject)
+                              slider_element_base(Subject&& subject)
                                : base_type(std::move(subject))
                               {}
 
-                              slider_marks_element(Subject const& subject)
+                              slider_element_base(Subject const& subject)
                                : base_type(subject)
                               {}
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
-      virtual void            draw(context const& ctx);
-
-   private:
-
-      bool                    _is_vertical;
    };
 
-   template <unsigned size, typename Subject>
+   template <int size, typename Subject>
    inline view_limits
-   slider_marks_element<size, Subject>::limits(basic_context const& ctx) const
+   slider_element_base<size, Subject>::limits(basic_context const& ctx) const
    {
       auto sl = this->subject().limits(ctx);
       if (sl.min.x < sl.min.y) // is vertical?
@@ -323,9 +318,9 @@ namespace photon
       return sl;
    }
 
-   template <unsigned size, typename Subject>
+   template <int size, typename Subject>
    inline void
-   slider_marks_element<size, Subject>::prepare_subject(context& ctx)
+   slider_element_base<size, Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.width() < ctx.bounds.height()) // is vertical?
       {
@@ -339,7 +334,22 @@ namespace photon
       }
    }
 
-   template <unsigned size, typename Subject>
+   ////////////////////////////////////////////////////////////////////////////
+   // Slider Marks (You can use this to place tick marks on slider)
+   ////////////////////////////////////////////////////////////////////////////
+   template <std::size_t _size, typename Subject>
+   class slider_marks_element : public slider_element_base<_size, Subject>
+   {
+   public:
+
+      static unsigned const size = _size;
+      using base_type = slider_element_base<_size, Subject>;
+      using base_type::base_type;
+
+      virtual void            draw(context const& ctx);
+   };
+
+   template <std::size_t size, typename Subject>
    inline void
    slider_marks_element<size, Subject>::draw(context const& ctx)
    {
@@ -352,11 +362,107 @@ namespace photon
       base_type::draw(ctx);
    }
 
-   template <unsigned size, typename Subject>
+   template <std::size_t size, typename Subject>
    inline slider_marks_element<size, Subject>
    slider_marks(Subject&& subject)
    {
       return {std::move(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Slider Labels (You can use this to place slider labels with sliders)
+   ////////////////////////////////////////////////////////////////////////////
+   template <int _size, typename Subject, std::size_t num_labels>
+   class slider_labels_element
+    : public slider_element_base<abs(_size), Subject>
+   {
+   public:
+
+      static std::size_t const size = _size;
+      using base_type = slider_element_base<abs(_size), Subject>;
+      using string_array = std::array<std::string, num_labels>;
+
+                              slider_labels_element(Subject&& subject, float font_size)
+                               : base_type(std::move(subject))
+                               , _font_size(font_size)
+                              {}
+
+                              slider_labels_element(Subject const& subject, float font_size)
+                               : base_type(subject)
+                               , _font_size(font_size)
+                              {}
+
+      virtual void            prepare_subject(context& ctx);
+      virtual void            draw(context const& ctx);
+
+      string_array            _labels;
+      float                   _font_size;
+   };
+
+   template <int size, typename Subject, std::size_t num_labels>
+   inline void
+   slider_labels_element<size, Subject, num_labels>::prepare_subject(context& ctx)
+   {
+      bool reverse = size < 0;
+      int size_ = abs(size);
+
+      if (ctx.bounds.width() < ctx.bounds.height()) // is vertical?
+      {
+         if (reverse)
+            ctx.bounds.left += size_;
+         else
+            ctx.bounds.right -= size_;
+      }
+      else
+      {
+         if (reverse)
+            ctx.bounds.top += size_;
+         else
+            ctx.bounds.bottom -= size_;
+      }
+   }
+
+   template <int size, typename Subject, std::size_t num_labels>
+   inline void
+   slider_labels_element<size, Subject, num_labels>::draw(context const& ctx)
+   {
+      void draw_slider_labels(
+         canvas& cnv
+       , rect bounds
+       , float size
+       , point thumb_size
+       , float font_size
+       , std::string const labels[]
+       , std::size_t _num_labels
+      );
+
+      // Draw the subject
+      base_type::draw(ctx);
+
+      auto thl = static_cast<slider_base const&>(this->subject()).thumb().limits(ctx);
+      PHOTON_ASSERT( // assert that the thumb is not resizable
+         (thl.min.x == thl.max.x && thl.min.y == thl.max.y),
+         "Error. The slider thumb should not be resizable."
+      );
+
+      // Draw the labels
+      draw_slider_labels(
+         ctx.canvas, ctx.bounds, size, point{ thl.max.x, thl.max.y }
+       , _font_size, _labels.data(), num_labels);
+   }
+
+   template <int size, typename Subject, typename... S>
+   inline slider_labels_element<size, Subject, sizeof...(S)>
+   slider_labels(Subject&& subject, float font_size, S&&... s)
+   {
+      static_assert(std::is_base_of<slider_base, Subject>::value,
+         "Error! Subject must be a slider"
+      );
+
+      auto r = slider_labels_element<size, Subject, sizeof...(S)>
+         {std::move(subject), font_size};
+      r._labels = { std::move(s)... };
+      return r;
    }
 }
 

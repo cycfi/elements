@@ -3,7 +3,7 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.7.2)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -16,9 +16,7 @@ set(photon_root ${CMAKE_CURRENT_SOURCE_DIR}/../)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
       OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
-      -Wno-missing-braces"
-   )
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-Wno-missing-braces")
 
 endif()
 
@@ -102,8 +100,9 @@ target_link_libraries(photon_lib
    ${Boost_SYSTEM_LIBRARY}
 )
 
-target_compile_options(photon_lib PUBLIC "-fobjc-arc")
-
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   target_compile_options(photon_lib PUBLIC "-fobjc-arc")
+endif()
 
 
 

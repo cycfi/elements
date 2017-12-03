@@ -54,7 +54,7 @@ namespace photon
       void              stroke_preserve();
       void              clip();
       bool              hit_test(point p) const;
-      rect              fill_extent() const;
+      photon::rect      fill_extent() const;
 
       void              move_to(point p);
       void              line_to(point p);
@@ -64,9 +64,9 @@ namespace photon
                            float start_angle, float end_angle,
                            bool ccw = false
                         );
-      void              rect(struct rect r);
-      void              round_rect(struct rect r, float radius);
-      void              circle(struct circle c);
+      void              rect(photon::rect r);
+      void              round_rect(photon::rect r, float radius);
+      void              circle(photon::circle c);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Styles
@@ -79,8 +79,8 @@ namespace photon
       // Gradients
       struct color_stop
       {
-         float offset;
-         color color;
+         float          offset;
+         photon::color  color;
       };
 
       struct linear_gradient
@@ -116,10 +116,10 @@ namespace photon
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Rectangles
-      void              fill_rect(struct rect r);
-      void              fill_round_rect(struct rect r, float radius);
-      void              stroke_rect(struct rect r);
-      void              stroke_round_rect(struct rect r, float radius);
+      void              fill_rect(photon::rect r);
+      void              fill_round_rect(photon::rect r, float radius);
+      void              stroke_rect(photon::rect r);
+      void              stroke_round_rect(photon::rect r, float radius);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Font

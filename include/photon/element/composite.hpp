@@ -60,9 +60,9 @@ namespace photon
 
       struct hit_info
       {
-         element*  element    = nullptr;
-         rect      bounds     = rect{};
-         int       index      = -1;
+         photon::element*     element  = nullptr;
+         rect                 bounds   = rect{};
+         int                  index    = -1;
       };
 
       virtual hit_info        hit_element(context const& ctx, point p) const;
@@ -82,6 +82,8 @@ namespace photon
    {
    public:
 
+      using base_type = Base;
+      using container_type = Container;
       using Container::Container;
       using Container::operator=;
 

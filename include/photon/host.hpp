@@ -30,6 +30,7 @@
 #define PHOTON_VIEW_AUGUST_20_2016
 
 #include <utility>
+#include <memory>
 #include <string>
 #include <cstdint>
 #include <functional>

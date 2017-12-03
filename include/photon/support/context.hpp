@@ -21,7 +21,7 @@ namespace photon
 
    struct basic_context
    {
-      basic_context(view& view_, canvas& canvas_)
+      basic_context(photon::view& view_, photon::canvas& canvas_)
        : view(view_)
        , canvas(canvas_)
       {}
@@ -29,24 +29,24 @@ namespace photon
       basic_context(basic_context const&) = default;
       basic_context& operator=(basic_context const&) = default;
 
-      view&                view;
-      canvas&              canvas;
+      photon::view&        view;
+      photon::canvas&      canvas;
    };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
    struct context : basic_context
    {
-      context(context const& rhs, rect bounds_)
+      context(context const& rhs, photon::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
        , parent(rhs.parent), bounds(bounds_)
       {}
 
-      context(context const& parent_, element* element_, rect bounds_)
+      context(context const& parent_, element* element_, photon::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
        , parent(&parent_), bounds(bounds_)
       {}
 
-      context(class view& view_, class canvas& canvas_, element* element_, rect bounds_)
+      context(class view& view_, class canvas& canvas_, element* element_, photon::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
        , parent(0), bounds(bounds_)
       {}
@@ -54,9 +54,9 @@ namespace photon
       context(context const&) = default;
       context& operator=(context const&) = default;
 
-      element*             element;
-      context const*       parent;
-      rect                 bounds;
+      photon::element*  element;
+      context const*    parent;
+      photon::rect      bounds;
    };
 
 

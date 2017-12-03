@@ -7,6 +7,7 @@
 #define PHOTON_GUI_LIB_PIXMAP_SEPTEMBER_5_2016
 
 #include <vector>
+#include <memory>
 #include <cairo.h>
 #include <photon/support/point.hpp>
 #include <photon/support/exception.hpp>

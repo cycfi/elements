@@ -27,10 +27,11 @@ namespace photon
    using hours          = std::chrono::duration<double, std::ratio<60*60>>;
    using time_point     = std::chrono::time_point<std::chrono::steady_clock, duration>;
 
-   inline time_point now()
-   {
-      return std::chrono::high_resolution_clock::now();
-   }
+   // $$$ FIXME $$$
+   // inline time_point now()
+   // {
+   //    return std::chrono::high_resolution_clock::now();
+   // }
 
    ////////////////////////////////////////////////////////////////////////////
    // Utilities

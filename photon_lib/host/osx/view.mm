@@ -40,17 +40,6 @@ namespace ph = photon;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Main callback
-namespace photon
-{
-   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view =
-      [](ph::host_view* h)
-      {
-         return std::make_unique<ph::base_view>(h);
-      };
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // Helper utils
 
 namespace photon
@@ -455,6 +444,10 @@ namespace
 
 namespace photon
 {
+   ///////////////////////////////////////////////////////////////////////////
+   // Main view creation callback
+   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view;
+
    point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(h);

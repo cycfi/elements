@@ -55,6 +55,13 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       ${PHOTON_RESOURCES}
       ${APP_RESOURCES}
    )
+else()
+   add_executable(
+      ${appname}
+      main.cpp
+      ${PHOTON_RESOURCES}
+      ${APP_RESOURCES}
+   )
 endif()
 
 ###############################################################################

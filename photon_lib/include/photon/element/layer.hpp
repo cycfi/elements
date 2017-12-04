@@ -76,8 +76,9 @@ namespace photon
    inline auto deck(W&&... elements)
    {
       using composite = array_composite<sizeof...(elements), deck_element>;
+      using container = typename composite::container_type;
       composite r{};
-      r = composite{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<W>(elements))... }};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -86,8 +87,9 @@ namespace photon
    inline auto rdeck(W&&... elements)
    {
       using composite = array_composite<sizeof...(elements), deck_element>;
+      using container = typename composite::container_type;
       composite r{};
-      r = composite{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<W>(elements))... }};
       return r;
    }
 }

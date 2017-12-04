@@ -21,13 +21,25 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
 endif()
 
 ###############################################################################
-# Find Cairo
+# Cairo
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 FIND_PACKAGE(CAIRO REQUIRED cairo)
 
 ###############################################################################
-# Find Boost
+# GTK (linux only)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   # Use the package PkgConfig to detect GTK+ headers/library files
+   FIND_PACKAGE(PkgConfig REQUIRED)
+   PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
+
+   # Add other flags to the compiler
+   add_definitions(${GTK3_CFLAGS_OTHER})
+endif()
+
+###############################################################################
+# Boost
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(
@@ -99,24 +111,45 @@ set_target_properties(
 ###############################################################################
 # Includes
 
-target_include_directories(libphoton
-   PUBLIC include
-   ${CAIRO_INCLUDE_DIRS}
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   target_include_directories(libphoton
+      PUBLIC include
+      ${CAIRO_INCLUDE_DIRS}
+   )
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   target_include_directories(libphoton
+      PUBLIC include
+      ${CAIRO_INCLUDE_DIRS}
+      PRIVATE include
+      ${GTK3_INCLUDE_DIRS}
+   )
+endif()
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(libphoton
-	${CAIRO_LIBRARIES}
-   ${Boost_FILESYSTEM_LIBRARY}
-   ${Boost_SYSTEM_LIBRARY}
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   target_link_libraries(libphoton
+      ${CAIRO_LIBRARIES}
+      ${Boost_FILESYSTEM_LIBRARY}
+      ${Boost_SYSTEM_LIBRARY}
+   )
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   link_directories(${GTK3_LIBRARY_DIRS})
+
+   target_link_libraries(libphoton
+      ${CAIRO_LIBRARIES}
+      ${Boost_FILESYSTEM_LIBRARY}
+      ${Boost_SYSTEM_LIBRARY}
+      ${GTK3_LIBRARIES}
+   )
+endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    target_compile_options(libphoton PUBLIC "-fobjc-arc")
 endif()
-
-
-
 

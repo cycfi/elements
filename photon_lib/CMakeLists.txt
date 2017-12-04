@@ -61,6 +61,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    file(GLOB_RECURSE PHOTON_HOST host/osx/*.mm)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   file(GLOB_RECURSE PHOTON_HOST host/linux/*.cpp)
+endif()
+
 source_group("Source Files\\photon"
    FILES
    ${PHOTON_SOURCES}

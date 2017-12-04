@@ -14,9 +14,7 @@ project(${appname})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
       OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
-      -Wno-missing-braces"
-   )
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-Wno-missing-braces")
 
 endif()
 
@@ -25,10 +23,10 @@ endif()
 
 file(
    GLOB_RECURSE PHOTON_RESOURCES
-   ${photon_root}/resources/*.ttf
-   ${photon_root}/resources/*.jpeg
-   ${photon_root}/resources/*.jpg
-   ${photon_root}/resources/*.png
+   resources/*.ttf
+   resources/*.jpeg
+   resources/*.jpg
+   resources/*.png
 )
 
 file(
@@ -49,46 +47,42 @@ source_group(Resources
 ###############################################################################
 # The executable App
 
-add_executable(
-   ${appname}
-   MACOSX_BUNDLE
-   main.cpp
-   ${PHOTON_RESOURCES}
-   ${APP_RESOURCES}
-)
-
-###############################################################################
-# Includes
-
-include_directories(
-   ${photon_root}/include
-   ${CAIRO_INCLUDE_DIRS}
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   add_executable(
+      ${appname}
+      MACOSX_BUNDLE
+      main.cpp
+      ${PHOTON_RESOURCES}
+      ${APP_RESOURCES}
+   )
+endif()
 
 ###############################################################################
 # Libraries and linking
 
 target_link_libraries(${appname}
-   photon_lib
+   libphoton
 )
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
+endif()
 
 ###############################################################################
 # Resource file properties
 
-set_source_files_properties(
-   ${PHOTON_RESOURCES}
-   ${APP_RESOURCES}
-   PROPERTIES
-   MACOSX_PACKAGE_LOCATION Resources
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   set_source_files_properties(
+      ${PHOTON_RESOURCES}
+      ${APP_RESOURCES}
+      PROPERTIES
+      MACOSX_PACKAGE_LOCATION Resources
+   )
 
-set_target_properties(
-   ${appname}
-   PROPERTIES
-   MACOSX_BUNDLE_INFO_PLIST ${app_root}/plist.in
-)
-
-
+   set_target_properties(
+      ${appname}
+      PROPERTIES
+      MACOSX_BUNDLE_INFO_PLIST ${app_root}/plist.in
+   )
+endif()
 

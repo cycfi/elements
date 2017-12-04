@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.7.2)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(photon_lib)
+project(libphoton)
 set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 ###############################################################################
@@ -23,7 +23,7 @@ endif()
 ###############################################################################
 # Find Cairo
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${photon_root}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 FIND_PACKAGE(CAIRO REQUIRED cairo)
 
 ###############################################################################
@@ -54,9 +54,12 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-file(GLOB_RECURSE PHOTON_SOURCES ${photon_root}/src/*.cpp ${photon_root}/src/*.c)
-file(GLOB_RECURSE PHOTON_HOST ${photon_root}/host/osx/*.mm)
-file(GLOB_RECURSE PHOTON_HEADERS ${photon_root}/include/*.hpp)
+file(GLOB_RECURSE PHOTON_SOURCES src/*.cpp src/*.c)
+file(GLOB_RECURSE PHOTON_HEADERS include/*.hpp)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   file(GLOB_RECURSE PHOTON_HOST host/osx/*.mm)
+endif()
 
 source_group("Source Files\\photon"
    FILES
@@ -77,31 +80,37 @@ source_group("Header Files\\photon"
 # The Library
 
 add_library(
-   photon_lib
+   libphoton
    ${PHOTON_SOURCES}
    ${PHOTON_HEADERS}
    ${PHOTON_HOST}
 )
 
+set_target_properties(
+   libphoton
+   PROPERTIES
+   PREFIX lib OUTPUT_NAME photon
+)
+
 ###############################################################################
 # Includes
 
-include_directories(
-   ${photon_root}/include
+target_include_directories(libphoton
+   PUBLIC include
    ${CAIRO_INCLUDE_DIRS}
 )
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(photon_lib
+target_link_libraries(libphoton
 	${CAIRO_LIBRARIES}
    ${Boost_FILESYSTEM_LIBRARY}
    ${Boost_SYSTEM_LIBRARY}
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   target_compile_options(photon_lib PUBLIC "-fobjc-arc")
+   target_compile_options(libphoton PUBLIC "-fobjc-arc")
 endif()
 
 

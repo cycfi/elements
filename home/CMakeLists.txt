@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(photon_lib)
-set(photon_root ${CMAKE_CURRENT_SOURCE_DIR}/../)
+set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 ###############################################################################
 # Get rid of these warnings

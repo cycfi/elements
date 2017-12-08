@@ -68,50 +68,61 @@ namespace photon { namespace json
    };
 
    // The JSON parser
-   struct parser : x3::parser<parser>
+   class parser : public x3::parser<parser>
    {
+   public:
+
+      struct attribute {};
+      typedef attribute attribute_type;
+      static bool const has_attribute = true;
+
+      // Main parse entry point
+      template <typename Iterator, typename Context, typename Attribute>
+      bool parse(Iterator& first, Iterator const& last
+       , Context& context, x3::unused_type, Attribute& attr) const
+      {
+         x3::skip_over(first, last, context);
+         return parse_impl(first, last, attr);
+      }
+
+   private:
+
+      parser const& self() const { return *this; }
+
       // Floating point numbers
       template <typename Iter, typename Attribute>
       typename std::enable_if<std::is_floating_point<Attribute>::value, bool>::type
-      parse(Iter& first, Iter last, Attribute& val) const;
+      parse_impl(Iter& first, Iter last, Attribute& val) const;
 
       // Integers
       template <typename Iter, typename Attribute>
       typename std::enable_if<std::is_integral<Attribute>::value, bool>::type
-      parse(Iter& first, Iter last, Attribute& val) const;
+      parse_impl(Iter& first, Iter last, Attribute& val) const;
 
       // Boolean
       template <typename Iter>
-      bool parse(Iter& first, Iter last, bool& val) const;
+      bool parse_impl(Iter& first, Iter last, bool& val) const;
 
       // String
       template <typename Iter>
-      bool parse(Iter& first, Iter last, string& val) const;
+      bool parse_impl(Iter& first, Iter last, string& val) const;
 
       template <typename Iter>
-      bool parse(Iter& first, Iter last, std::string& val) const;
+      bool parse_impl(Iter& first, Iter last, std::string& val) const;
 
       // Object
       template <typename Iter, typename Attribute>
       typename std::enable_if<
          boost::fusion::traits::is_sequence<Attribute>::value, bool
       >::type
-      parse(Iter& first, Iter last, Attribute& val) const;
+      parse_impl(Iter& first, Iter last, Attribute& val) const;
 
       // Array
       template <typename Iter, typename Attribute>
-      bool parse(Iter& first, Iter last, std::vector<Attribute>& val) const;
+      bool parse_impl(Iter& first, Iter last, std::vector<Attribute>& val) const;
 
       template <typename Iter, typename Attribute, std::size_t N>
-      bool parse(Iter& first, Iter last, std::array<Attribute, N>& val) const;
-
-      // Main parse entry point
-      template <typename Iterator, typename Attribute>
-      bool parse(Iterator& first, Iterator const& last
-       , x3::unused_type, x3::unused_type, Attribute& attr) const
-      {
-         return parse(first, last, attr);
-      }
+      bool parse_impl(Iter& first, Iter last, std::array<Attribute, N>& val) const;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -172,28 +183,28 @@ namespace photon { namespace json
 
    template <typename Iter, typename Attribute>
    inline typename std::enable_if<std::is_floating_point<Attribute>::value, bool>::type
-   parser::parse(Iter& first, Iter last, Attribute& val) const
+   parser::parse_impl(Iter& first, Iter last, Attribute& val) const
    {
       return x3::parse(first, last, x3::real_parser<Attribute>{}, val);
    }
 
    template <typename Iter, typename Attribute>
    inline typename std::enable_if<std::is_integral<Attribute>::value, bool>::type
-   parser::parse(Iter& first, Iter last, Attribute& val) const
+   parser::parse_impl(Iter& first, Iter last, Attribute& val) const
    {
       return x3::parse(first, last, x3::int_parser<Attribute>{}, val);
    }
 
    template <typename Iter>
    inline bool
-   parser::parse(Iter& first, Iter last, bool& val) const
+   parser::parse_impl(Iter& first, Iter last, bool& val) const
    {
       return x3::parse(first, last, x3::bool_, val);
    }
 
    template <typename Iter>
    inline bool
-   parser::parse(Iter& first, Iter last, string& val) const
+   parser::parse_impl(Iter& first, Iter last, string& val) const
    {
       // Parse this manually for speed. We do not decode nor validate anything.
       // We simply detect what looks like a double-quoted string which contains
@@ -210,10 +221,10 @@ namespace photon { namespace json
 
    template <typename Iter>
    inline bool
-   parser::parse(Iter& first, Iter last, std::string& val) const
+   parser::parse_impl(Iter& first, Iter last, std::string& val) const
    {
       json::string s;
-      bool r = parse(first, last, s);
+      bool r = parse_impl(first, last, s);
       if (r)
          val = std::string(s);
       return r;
@@ -221,24 +232,25 @@ namespace photon { namespace json
 
    template <typename Iter, typename Attribute>
    inline typename std::enable_if<boost::fusion::traits::is_sequence<Attribute>::value, bool>::type
-   parser::parse(Iter& first, Iter last, Attribute& val) const
+   parser::parse_impl(Iter& first, Iter last, Attribute& val) const
    {
       return false;
    }
 
    template <typename Iter, typename Attribute>
    inline bool
-   parser::parse(Iter& first, Iter last, std::vector<Attribute>& val) const
+   parser::parse_impl(Iter& first, Iter last, std::vector<Attribute>& val) const
    {
-      static auto g = '[' >> *(*this) >> ']';
-      return x3::parse(first, last, g, x3::space, val);
+      static auto g = '[' >> self() >> *(',' >> self()) >> ']';
+      return x3::phrase_parse(first, last, g, x3::space, val);
    }
 
    template <typename Iter, typename Attribute, std::size_t N>
    inline bool
-   parser::parse(Iter& first, Iter last, std::array<Attribute, N>& val) const
+   parser::parse_impl(Iter& first, Iter last, std::array<Attribute, N>& val) const
    {
-      return false;
+      static auto g = '[' >> self() >> *(',' >> self()) >> ']';
+      return x3::parse(first, last, g, x3::space, val);
    }
 }}
 

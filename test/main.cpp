@@ -85,6 +85,12 @@ void test_json()
       test_array(jp, "[1, 2, 3, 4]", c);
    }
 
+   // int array
+   {
+      std::array<int, 4> c = {{1, 2, 3, 4}};
+      test_array(jp, "[1, 2, 3, 4]", c);
+   }
+
    // double vector
    {
       std::vector<double> c = {1.1, 2.2, 3.3, 4.4};

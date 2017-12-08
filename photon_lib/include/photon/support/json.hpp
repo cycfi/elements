@@ -15,6 +15,7 @@
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/fusion/adapted/array.hpp>
 #include <boost/regex/pending/unicode_iterator.hpp>
 
 #include <photon/support/exception.hpp>
@@ -22,6 +23,7 @@
 namespace photon { namespace json
 {
    namespace x3 = boost::spirit::x3;
+   namespace fusion = boost::fusion;
 
    struct malformed_json_string : exception { using exception::exception; };
 
@@ -114,6 +116,12 @@ namespace photon { namespace json
       bool parse_impl(
          Iter& first, Iter last, Context& context
        , std::array<Attribute, N>& val) const;
+
+      // Fusion iterator range
+      template <typename Iter, typename Context, typename First, typename Last>
+      bool
+      parse_impl(Iter& first, Iter last, Context& context
+       , fusion::iterator_range<First, Last>& val) const;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -243,6 +251,16 @@ namespace photon { namespace json
       return false;
    }
 
+   template <typename Iter, typename Context, typename First, typename Last>
+   bool
+   parser::parse_impl(Iter& first, Iter last, Context& context
+    , fusion::iterator_range<First, Last>& val) const
+   {
+      using attr_type = fusion::iterator_range<First, Last>;
+      static_assert(fusion::result_of::size<attr_type>::value == 1, "Unexpected size!");
+      return self().parse_impl(first, last, context, boost::fusion::at_c<0>(val));
+   }
+
    template <typename Iter, typename Context, typename Attribute>
    inline bool
    parser::parse_impl(
@@ -252,13 +270,42 @@ namespace photon { namespace json
       return g.parse(first, last, context, x3::unused, val);
    }
 
+   namespace detail
+   {
+      template <int N>
+      struct gen_sequence
+      {
+         static auto call()
+         {
+            return parser{} >> ',' >> gen_sequence<N-1>::call();
+         }
+      };
+
+      template <>
+      struct gen_sequence<1>
+      {
+         static auto call()
+         {
+            return parser{};
+         }
+      };
+   }
+
    template <typename Iter, typename Context, typename Attribute, std::size_t N>
    inline bool
    parser::parse_impl(
       Iter& first, Iter last, Context& context, std::array<Attribute, N>& val) const
    {
-      static auto g = '[' >> self() >> *(',' >> self()) >> ']';
-      return g.parse(first, last, context, x3::unused, val);
+      static_assert(N > 0, "Array must have at least one element");
+      static auto g = '[' >> detail::gen_sequence<N>::call() >> ']';
+
+      //static auto g = '[' >> self() >> ',' >> self() >> ',' >> self()  ',' >> self()  >> ']';
+
+      // int x = g;
+
+      typedef Attribute array_type[N];
+      array_type& array_ref = (array_type&)val;
+      return g.parse(first, last, context, x3::unused, array_ref);
    }
 }}
 

@@ -60,24 +60,24 @@ void test_json()
 {
    json::parser jp;
 
-   // {
-   //    test_parser(jp, "1234", 1234);
-   //    test_parser(jp, "1234.45", 1234.45);
-   //    test_parser(jp, "true", true);
-   //    test_parser(jp, "false", false);
-   // }
+   {
+      test_parser(jp, "1234", 1234);
+      test_parser(jp, "1234.45", 1234.45);
+      test_parser(jp, "true", true);
+      test_parser(jp, "false", false);
+   }
 
-   // {
-   //    test_string1(jp, "\"This is my string\"");
-   //    test_string1(jp, "\"This is \\\"my\\\" string\"");
-   // }
+   {
+      test_string1(jp, "\"This is my string\"");
+      test_string1(jp, "\"This is \\\"my\\\" string\"");
+   }
 
-   // {
-   //    test_string2(jp, "\"This is my string\"", "This is my string");
-   //    test_string2(jp, "\"This is \\\"my\\\" string\"", "This is \"my\" string");
-   //    test_string2(jp, "\"Sosa did fine.\\u263A\"", u8"Sosa did fine.\u263A");
-   //    test_string2(jp, "\"Snowman: \\u2603\"", u8"Snowman: \u2603");
-   // }
+   {
+      test_string2(jp, "\"This is my string\"", "This is my string");
+      test_string2(jp, "\"This is \\\"my\\\" string\"", "This is \"my\" string");
+      test_string2(jp, "\"Sosa did fine.\\u263A\"", u8"Sosa did fine.\u263A");
+      test_string2(jp, "\"Snowman: \\u2603\"", u8"Snowman: \u2603");
+   }
 
    {
       std::vector<int> c = {1, 2, 3, 4};

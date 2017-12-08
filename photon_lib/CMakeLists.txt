@@ -46,7 +46,7 @@ find_package(
   Boost 1.61 REQUIRED
   COMPONENTS filesystem system)
 
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_definitions("-DBOOST_ALL_NO_LIB") # disable auto-linking
 

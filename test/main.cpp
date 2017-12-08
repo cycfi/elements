@@ -83,6 +83,11 @@ void test_json()
       std::vector<int> c = {1, 2, 3, 4};
       test_array(jp, "[1, 2, 3, 4]", c);
    }
+
+   {
+      std::vector<std::string> c = {"a", "b", "c", "d"};
+      test_array(jp, "[\"a\", \"b\", \"c\", \"d\"]", c);
+   }
 }
 
 int main(int argc, const char* argv[])

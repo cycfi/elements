@@ -81,7 +81,6 @@ namespace photon { namespace json
       bool parse(Iterator& first, Iterator const& last
        , Context& context, x3::unused_type, Attribute& attr) const
       {
-         x3::skip_over(first, last, context);
          return parse_impl(first, last, context, attr);
       }
 
@@ -212,6 +211,8 @@ namespace photon { namespace json
    inline bool
    parser::parse_impl(Iter& first, Iter last, Context& context, string& val) const
    {
+      x3::skip_over(first, last, context);
+
       // Parse this manually for speed. We do not decode nor validate anything.
       // We simply detect what looks like a double-quoted string which contains
       // any character, including any escaped double quote (i.e. "\\\""). We'll
@@ -221,7 +222,10 @@ namespace photon { namespace json
       auto iter = first;
       bool r = double_quote.parse(iter, last, context, x3::unused, x3::unused);
       if (r)
+      {
          val = {first, iter};
+         first = iter;
+      }
       return r;
    }
 

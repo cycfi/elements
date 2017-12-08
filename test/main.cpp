@@ -60,6 +60,7 @@ void test_json()
 {
    json::parser jp;
 
+   // ints and bools
    {
       test_parser(jp, "1234", 1234);
       test_parser(jp, "1234.45", 1234.45);
@@ -67,28 +68,30 @@ void test_json()
       test_parser(jp, "false", false);
    }
 
+   // strings
    {
       test_string1(jp, "\"This is my string\"");
       test_string1(jp, "\"This is \\\"my\\\" string\"");
-   }
 
-   {
       test_string2(jp, "\"This is my string\"", "This is my string");
       test_string2(jp, "\"This is \\\"my\\\" string\"", "This is \"my\" string");
       test_string2(jp, "\"Sosa did fine.\\u263A\"", u8"Sosa did fine.\u263A");
       test_string2(jp, "\"Snowman: \\u2603\"", u8"Snowman: \u2603");
    }
 
+   // int vector
    {
       std::vector<int> c = {1, 2, 3, 4};
       test_array(jp, "[1, 2, 3, 4]", c);
    }
 
+   // double vector
    {
       std::vector<double> c = {1.1, 2.2, 3.3, 4.4};
       test_array(jp, "[1.1, 2.2, 3.3, 4.4]", c);
    }
 
+   // string vector
    {
       std::vector<std::string> c = {"a", "b", "c", "d"};
       test_array(jp, "[\"a\", \"b\", \"c\", \"d\"]", c);

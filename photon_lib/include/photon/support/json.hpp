@@ -23,15 +23,7 @@ namespace photon { namespace json
 {
    namespace x3 = boost::spirit::x3;
 
-   struct malformed_json_string : exception
-   {
-      explicit malformed_json_string(std::string const& what, char const* where)
-       : exception(what)
-       , where(where)
-      {}
-
-      char const* const where;
-   };
+   struct malformed_json_string : exception { using exception::exception; };
 
    class string
    {
@@ -52,16 +44,12 @@ namespace photon { namespace json
       string& operator=(string&&) = default;
 
       explicit operator std::string() const;
+      bool extract(std::string& s) const;
 
       char const* begin() const { return _first; }
       char const* end() const { return _last; }
 
    private:
-
-      void error(std::string s, char const* where) const
-      {
-         throw malformed_json_string{"Error: Malformed JSON string. " + s, where};
-      }
 
       char const* _first;
       char const* _last;
@@ -132,10 +120,9 @@ namespace photon { namespace json
    // Implementation
    ////////////////////////////////////////////////////////////////////////////
 
-   string::operator std::string() const
+   inline bool string::extract(std::string& result) const
    {
       using uchar = boost::uint32_t;   // a unicode code point
-      std::string result;              // result string is compiled here
       char const* i = _first + 1;      // skip the initial '"'
       char const* last = _last - 1;    // skip the final '"'
 
@@ -143,12 +130,12 @@ namespace photon { namespace json
       {
          auto ch = *i;
          if (std::iscntrl(ch))
-            error("Invalid control character", i);
+            return false;
 
          if (*i == '\\')
          {
             if (++i == last)
-               error("Unexpected end of string", i);
+               return false;
 
             switch (ch = *i)
             {
@@ -166,7 +153,7 @@ namespace photon { namespace json
                   auto ii = ++i;
                   bool r = x3::parse(ii, last, hex4, code_point);
                   if (!r)
-                     error("Bad hexadecimal number: " + std::string(i, last), i);
+                     return false;
 
                   i = ii; // update iterator position
                   using insert_iter = std::back_insert_iterator<std::string>;
@@ -181,6 +168,14 @@ namespace photon { namespace json
             result += ch;
          }
       }
+      return true;
+   }
+
+   inline string::operator std::string() const
+   {
+      std::string result;
+      if (!extract(result))
+         throw malformed_json_string{"Error: Malformed JSON string"};
       return result;
    }
 
@@ -220,13 +215,13 @@ namespace photon { namespace json
 
       static auto double_quote = '"' >> *("\\\"" | (x3::char_ - '"')) >> '"';
       auto iter = first;
-      bool r = double_quote.parse(iter, last, context, x3::unused, x3::unused);
-      if (r)
+      if (double_quote.parse(iter, last, context, x3::unused, x3::unused))
       {
          val = {first, iter};
          first = iter;
+         return true;
       }
-      return r;
+      return false;
    }
 
    template <typename Iter, typename Context>
@@ -234,10 +229,9 @@ namespace photon { namespace json
    parser::parse_impl(Iter& first, Iter last, Context& context, std::string& val) const
    {
       json::string s;
-      bool r = parse_impl(first, last, context, s);
-      if (r)
-         val = std::string(s);
-      return r;
+      if (parse_impl(first, last, context, s))
+         return s.extract(val);
+      return false;
    }
 
    template <typename Iter, typename Context, typename Attribute>

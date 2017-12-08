@@ -85,6 +85,11 @@ void test_json()
    }
 
    {
+      std::vector<double> c = {1.1, 2.2, 3.3, 4.4};
+      test_array(jp, "[1.1, 2.2, 3.3, 4.4]", c);
+   }
+
+   {
       std::vector<std::string> c = {"a", "b", "c", "d"};
       test_array(jp, "[\"a\", \"b\", \"c\", \"d\"]", c);
    }

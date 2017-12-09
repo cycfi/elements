@@ -44,6 +44,17 @@ void test_string2(json::parser const& jp, char const* in, std::string s)
    BOOST_TEST(attr == s);
 };
 
+template <typename C>
+bool same(C const& a, C const& b)
+{
+   if (boost::size(a) != boost::size(b))
+      return false;
+   for (std::size_t i = 0; i != boost::size(a); ++i)
+      if (a[i] != b[i])
+         return false;
+   return true;
+}
+
 template <typename Container>
 void test_array(json::parser const& jp, char const* in, Container const& c)
 {
@@ -53,7 +64,7 @@ void test_array(json::parser const& jp, char const* in, Container const& c)
    Container attr;
    bool r = x3::phrase_parse(f, l, jp, x3::space, attr);
    BOOST_TEST(r);
-   BOOST_TEST(attr == c);
+   BOOST_TEST(same(attr, c));
 };
 
 void test_json()
@@ -89,6 +100,9 @@ void test_json()
    {
       std::array<int, 4> c = {{1, 2, 3, 4}};
       test_array(jp, "[1, 2, 3, 4]", c);
+
+      int c2[4] = {1, 2, 3, 4};
+      test_array(jp, "[1, 2, 3, 4]", c2);
    }
 
    // double vector

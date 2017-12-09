@@ -16,6 +16,7 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
 #include <boost/fusion/adapted/array.hpp>
+#include <boost/fusion/adapted/std_array.hpp>
 #include <boost/regex/pending/unicode_iterator.hpp>
 
 #include <photon/support/exception.hpp>
@@ -116,6 +117,10 @@ namespace photon { namespace json
       bool parse_impl(
          Iter& first, Iter last, Context& context
        , std::array<Attribute, N>& val) const;
+
+      template <typename Iter, typename Context, typename Attribute, std::size_t N>
+      bool parse_impl(
+         Iter& first, Iter last, Context& context, Attribute (&val)[N]) const;
 
       // Fusion iterator range
       template <typename Iter, typename Context, typename First, typename Last>
@@ -289,6 +294,15 @@ namespace photon { namespace json
             return parser{};
          }
       };
+
+      template <>
+      struct gen_sequence<0>
+      {
+         static auto call()
+         {
+            return x3::eps;
+         }
+      };
    }
 
    template <typename Iter, typename Context, typename Attribute, std::size_t N>
@@ -296,16 +310,17 @@ namespace photon { namespace json
    parser::parse_impl(
       Iter& first, Iter last, Context& context, std::array<Attribute, N>& val) const
    {
-      static_assert(N > 0, "Array must have at least one element");
       static auto g = '[' >> detail::gen_sequence<N>::call() >> ']';
+      return g.parse(first, last, context, x3::unused, val);
+   }
 
-      //static auto g = '[' >> self() >> ',' >> self() >> ',' >> self()  ',' >> self()  >> ']';
-
-      // int x = g;
-
-      typedef Attribute array_type[N];
-      array_type& array_ref = (array_type&)val;
-      return g.parse(first, last, context, x3::unused, array_ref);
+   template <typename Iter, typename Context, typename Attribute, std::size_t N>
+   inline bool
+   parser::parse_impl(
+      Iter& first, Iter last, Context& context, Attribute (&val)[N]) const
+   {
+      static auto g = '[' >> detail::gen_sequence<N>::call() >> ']';
+      return g.parse(first, last, context, x3::unused, val);
    }
 }}
 

@@ -94,6 +94,10 @@ void test_json()
    {
       std::vector<int> c = {1, 2, 3, 4};
       test_array(jp, "[1, 2, 3, 4]", c);
+
+      // empty vector
+      std::vector<int> c2;
+      test_array(jp, "[]", c2);
    }
 
    // int array
@@ -103,6 +107,10 @@ void test_json()
 
       int c2[4] = {1, 2, 3, 4};
       test_array(jp, "[1, 2, 3, 4]", c2);
+
+      // empty array
+      std::array<int, 0> c3;
+      test_array(jp, "[]", c3);
    }
 
    // double vector

@@ -12,11 +12,15 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <functional>
+#include <unordered_map>
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/fusion/include/is_view.hpp>
 #include <boost/fusion/adapted/array.hpp>
 #include <boost/fusion/adapted/std_array.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/regex/pending/unicode_iterator.hpp>
 
 #include <photon/support/exception.hpp>
@@ -28,6 +32,9 @@ namespace photon { namespace json
 
    struct malformed_json_string : exception { using exception::exception; };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // json string class
+   ////////////////////////////////////////////////////////////////////////////
    class string
    {
    public:
@@ -58,7 +65,13 @@ namespace photon { namespace json
       char const* _last;
    };
 
-   // The JSON parser
+   template <typename T>
+   using is_adapted_struct =
+      std::is_same<typename fusion::traits::tag_of<T>::type, fusion::struct_tag>;
+
+   ////////////////////////////////////////////////////////////////////////////
+   // json parser class
+   ////////////////////////////////////////////////////////////////////////////
    class parser : public x3::parser<parser>
    {
    public:
@@ -68,9 +81,9 @@ namespace photon { namespace json
       static bool const has_attribute = true;
 
       // Main parse entry point
-      template <typename Iterator, typename Context, typename Attribute>
-      bool parse(Iterator& first, Iterator const& last
-       , Context& context, x3::unused_type, Attribute& attr) const
+      template <typename Iter, typename Ctx, typename Attr>
+      bool parse(Iter& first, Iter const& last
+       , Ctx& context, x3::unused_type, Attr& attr) const
       {
          return parse_impl(first, last, context, attr);
       }
@@ -80,59 +93,72 @@ namespace photon { namespace json
       parser const& self() const { return *this; }
 
       // Floating point numbers
-      template <typename Iter, typename Context, typename Attribute>
-      typename std::enable_if<std::is_floating_point<Attribute>::value, bool>::type
-      parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const;
+      template <typename Iter, typename Ctx, typename Attr>
+      typename std::enable_if<std::is_floating_point<Attr>::value, bool>::type
+      parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const;
 
       // Integers
-      template <typename Iter, typename Context, typename Attribute>
-      typename std::enable_if<std::is_integral<Attribute>::value, bool>::type
-      parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const;
+      template <typename Iter, typename Ctx, typename Attr>
+      typename std::enable_if<std::is_integral<Attr>::value, bool>::type
+      parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const;
 
       // Boolean
-      template <typename Iter, typename Context>
-      bool parse_impl(Iter& first, Iter last, Context& context, bool& val) const;
+      template <typename Iter, typename Ctx>
+      bool parse_impl(Iter& first, Iter last, Ctx& context, bool& attr) const;
 
       // String
-      template <typename Iter, typename Context>
-      bool parse_impl(Iter& first, Iter last, Context& context, string& val) const;
+      template <typename Iter, typename Ctx>
+      bool parse_impl(Iter& first, Iter last, Ctx& context, string& attr) const;
 
-      template <typename Iter, typename Context>
-      bool parse_impl(Iter& first, Iter last, Context& context, std::string& val) const;
+      template <typename Iter, typename Ctx>
+      bool parse_impl(Iter& first, Iter last, Ctx& context, std::string& attr) const;
 
       // Object
-      template <typename Iter, typename Context, typename Attribute>
-      typename std::enable_if<
-         boost::fusion::traits::is_sequence<Attribute>::value, bool
-      >::type
-      parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const;
+      template <typename Iter, typename Ctx, typename Attr>
+      typename std::enable_if<is_adapted_struct<Attr>::value, bool>::type
+      parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const;
 
       // Array
-      template <typename Iter, typename Context, typename Attribute>
+      template <typename Iter, typename Ctx, typename Attr>
       bool parse_impl(
-         Iter& first, Iter last, Context& context
-       , std::vector<Attribute>& val) const;
+         Iter& first, Iter last, Ctx& context
+       , std::vector<Attr>& attr) const;
 
-      template <typename Iter, typename Context, typename Attribute, std::size_t N>
+      template <typename Iter, typename Ctx, typename Attr, std::size_t N>
       bool parse_impl(
-         Iter& first, Iter last, Context& context
-       , std::array<Attribute, N>& val) const;
+         Iter& first, Iter last, Ctx& context
+       , std::array<Attr, N>& attr) const;
 
-      template <typename Iter, typename Context, typename Attribute, std::size_t N>
+      template <typename Iter, typename Ctx, typename Attr, std::size_t N>
       bool parse_impl(
-         Iter& first, Iter last, Context& context, Attribute (&val)[N]) const;
+         Iter& first, Iter last, Ctx& context, Attr (&attr)[N]) const;
 
       // Fusion iterator range
-      template <typename Iter, typename Context, typename First, typename Last>
+      template <typename Iter, typename Ctx, typename First, typename Last>
       bool
-      parse_impl(Iter& first, Iter last, Context& context
-       , fusion::iterator_range<First, Last>& val) const;
+      parse_impl(Iter& first, Iter last, Ctx& context
+       , fusion::iterator_range<First, Last>& attr) const;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // json pair parser class
+   ////////////////////////////////////////////////////////////////////////////
+   struct pair_parser : x3::parser<pair_parser>
+   {
+   public:
+
+      struct attribute {};
+      typedef attribute attribute_type;
+      static bool const has_attribute = true;
+
+      template <typename Iter, typename Ctx, typename Attr>
+      bool parse(Iter& first, Iter const& last
+       , Ctx& context, x3::unused_type, Attr& attr) const;
    };
 
    ////////////////////////////////////////////////////////////////////////////
    // Implementation
    ////////////////////////////////////////////////////////////////////////////
-
    inline bool string::extract(std::string& result) const
    {
       using uchar = boost::uint32_t;   // a unicode code point
@@ -192,32 +218,32 @@ namespace photon { namespace json
       return result;
    }
 
-   template <typename Iter, typename Context, typename Attribute>
-   inline typename std::enable_if<std::is_floating_point<Attribute>::value, bool>::type
-   parser::parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const
+   template <typename Iter, typename Ctx, typename Attr>
+   inline typename std::enable_if<std::is_floating_point<Attr>::value, bool>::type
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
-      static x3::real_parser<Attribute> p;
-      return p.parse(first, last, context, x3::unused, val);
+      static x3::real_parser<Attr> p;
+      return p.parse(first, last, context, x3::unused, attr);
    }
 
-   template <typename Iter, typename Context, typename Attribute>
-   inline typename std::enable_if<std::is_integral<Attribute>::value, bool>::type
-   parser::parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const
+   template <typename Iter, typename Ctx, typename Attr>
+   inline typename std::enable_if<std::is_integral<Attr>::value, bool>::type
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
-      static x3::int_parser<Attribute> p;
-      return p.parse(first, last, context, x3::unused, val);
+      static x3::int_parser<Attr> p;
+      return p.parse(first, last, context, x3::unused, attr);
    }
 
-   template <typename Iter, typename Context>
+   template <typename Iter, typename Ctx>
    inline bool
-   parser::parse_impl(Iter& first, Iter last, Context& context, bool& val) const
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, bool& attr) const
    {
-      return x3::bool_.parse(first, last, context, x3::unused, val);
+      return x3::bool_.parse(first, last, context, x3::unused, attr);
    }
 
-   template <typename Iter, typename Context>
+   template <typename Iter, typename Ctx>
    inline bool
-   parser::parse_impl(Iter& first, Iter last, Context& context, string& val) const
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, string& attr) const
    {
       x3::skip_over(first, last, context);
 
@@ -230,49 +256,47 @@ namespace photon { namespace json
       auto iter = first;
       if (double_quote.parse(iter, last, context, x3::unused, x3::unused))
       {
-         val = {first, iter};
+         attr = {first, iter};
          first = iter;
          return true;
       }
       return false;
    }
 
-   template <typename Iter, typename Context>
+   template <typename Iter, typename Ctx>
    inline bool
-   parser::parse_impl(Iter& first, Iter last, Context& context, std::string& val) const
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, std::string& attr) const
    {
       json::string s;
       if (parse_impl(first, last, context, s))
-         return s.extract(val);
+         return s.extract(attr);
       return false;
    }
 
-   template <typename Iter, typename Context, typename Attribute>
-   inline typename std::enable_if<
-      boost::fusion::traits::is_sequence<Attribute>::value, bool
-   >::type
-   parser::parse_impl(Iter& first, Iter last, Context& context, Attribute& val) const
+   template <typename Iter, typename Ctx, typename Attr>
+   inline typename std::enable_if<is_adapted_struct<Attr>::value, bool>::type
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
       return false;
    }
 
-   template <typename Iter, typename Context, typename First, typename Last>
+   template <typename Iter, typename Ctx, typename First, typename Last>
    bool
-   parser::parse_impl(Iter& first, Iter last, Context& context
-    , fusion::iterator_range<First, Last>& val) const
+   parser::parse_impl(Iter& first, Iter last, Ctx& context
+    , fusion::iterator_range<First, Last>& attr) const
    {
       using attr_type = fusion::iterator_range<First, Last>;
       static_assert(fusion::result_of::size<attr_type>::value == 1, "Unexpected size!");
-      return self().parse_impl(first, last, context, boost::fusion::at_c<0>(val));
+      return self().parse_impl(first, last, context, fusion::at_c<0>(attr));
    }
 
-   template <typename Iter, typename Context, typename Attribute>
+   template <typename Iter, typename Ctx, typename Attr>
    inline bool
    parser::parse_impl(
-      Iter& first, Iter last, Context& context, std::vector<Attribute>& val) const
+      Iter& first, Iter last, Ctx& context, std::vector<Attr>& attr) const
    {
-      static auto g = '[' >> self() >> *(',' >> self()) >> ']';
-      return g.parse(first, last, context, x3::unused, val);
+      static auto g = '[' >> -(self() % ',') >> ']';
+      return g.parse(first, last, context, x3::unused, attr);
    }
 
    namespace detail
@@ -305,22 +329,88 @@ namespace photon { namespace json
       };
    }
 
-   template <typename Iter, typename Context, typename Attribute, std::size_t N>
+   template <typename Iter, typename Ctx, typename Attr, std::size_t N>
    inline bool
    parser::parse_impl(
-      Iter& first, Iter last, Context& context, std::array<Attribute, N>& val) const
+      Iter& first, Iter last, Ctx& context, std::array<Attr, N>& attr) const
    {
       static auto g = '[' >> detail::gen_sequence<N>::call() >> ']';
-      return g.parse(first, last, context, x3::unused, val);
+      return g.parse(first, last, context, x3::unused, attr);
    }
 
-   template <typename Iter, typename Context, typename Attribute, std::size_t N>
+   template <typename Iter, typename Ctx, typename Attr, std::size_t N>
    inline bool
    parser::parse_impl(
-      Iter& first, Iter last, Context& context, Attribute (&val)[N]) const
+      Iter& first, Iter last, Ctx& context, Attr (&attr)[N]) const
    {
       static auto g = '[' >> detail::gen_sequence<N>::call() >> ']';
-      return g.parse(first, last, context, x3::unused, val);
+      return g.parse(first, last, context, x3::unused, attr);
+   }
+
+   namespace detail
+   {
+      template <int I, typename Struct, typename Map>
+      static void add_symbol(Map& map)
+      {
+         auto name = fusion::extension::struct_member_name<Struct, I>::call();
+         auto f = [](auto& first, auto last, auto& context, auto& attr) -> bool
+         {
+            return (':' >> parser{})
+               .parse(first, last, context, fusion::at_c<I>(attr));
+         };
+         map[name] = f;
+      }
+
+      template <int I, typename Struct>
+      struct fill_map
+      {
+         template <typename Map>
+         static Map&& call(Map&& map)
+         {
+            add_symbol<I, Struct>(map);
+            return fill_map<I-1, Struct>::call(std::forward<Map>(map));
+         }
+      };
+
+      template <typename Struct>
+      struct fill_map<0, Struct>
+      {
+         template <typename Map>
+         static Map&& call(Map&& map)
+         {
+            add_symbol<0, Struct>(map);
+            return std::forward<Map>(map);
+         }
+      };
+   }
+
+   template <typename Iter, typename Ctx, typename Attr>
+   inline bool
+   pair_parser::parse(Iter& first, Iter const& last
+    , Ctx& context, x3::unused_type, Attr& attr) const
+   {
+      using dispatch_function = std::function<bool(Iter&, Iter, Ctx&, Attr&)>;
+      using map = std::unordered_map<std::string, dispatch_function>;
+      static constexpr auto size = fusion::result_of::size<Attr>::value;
+      static auto lookup = detail::fill_map<size-1, Attr>::call(map{});
+
+      // Parse the key
+      auto i = first;
+      std::string name;
+      if (!json::parser{}.parse(i, last, context, name))
+         return false;
+
+      // Lookup the key
+      auto pos = lookup.find(name);
+      if (pos == lookup.end())
+         return false;
+
+      // Parse the value
+      if (!pos->second(i, last, context, attr))
+         return false;
+
+      first = i;
+      return true;
    }
 }}
 

@@ -76,6 +76,13 @@ struct foo
    std::string s;
 };
 
+struct bar
+{
+   int ii;
+   double dd;
+   foo ff;
+};
+
 template <typename T>
 void test_object(json::parser const& jp, char const* in, T const& obj)
 {
@@ -93,6 +100,13 @@ BOOST_FUSION_ADAPT_STRUCT(
    (int, i)
    (double, d)
    (std::string, s)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+   bar,
+   (int, ii)
+   (double, dd)
+   (foo, ff)
 )
 
 using fusion::operator==;
@@ -158,16 +172,36 @@ void test_json()
    // struct
    {
       foo obj = {1, 2.2, "hey!"};
+      bar obj2 = {8, 9.9, obj};
 
-      char const* in = R"(
-         {
-            "i" : 1,
-            "d" : 2.2,
-            "s" : "hey!"
-         }
-      )";
+      {
+         char const* in = R"(
+            {
+               "i" : 1,
+               "d" : 2.2,
+               "s" : "hey!"
+            }
+         )";
 
-      test_object(jp, in, obj);
+         test_object(jp, in, obj);
+      }
+
+      {
+         char const* in = R"(
+            {
+               "ii" : 8,
+               "dd" : 9.9,
+               "ff" :
+               {
+                  "i" : 1,
+                  "d" : 2.2,
+                  "s" : "hey!"
+               }
+            }
+         )";
+
+         test_object(jp, in, obj2);
+      }
    }
 }
 

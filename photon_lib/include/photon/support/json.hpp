@@ -14,6 +14,7 @@
 #include <array>
 #include <functional>
 #include <unordered_map>
+#include <ostream>
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
@@ -66,6 +67,13 @@ namespace photon { namespace json
       char const* _last;
    };
 
+   std::ostream& operator<<(std::ostream& out, string str)
+   {
+      for (auto ch : str)
+         out << ch;
+      return out;
+   }
+
    template <typename T>
    using is_adapted_struct =
       std::is_same<typename fusion::traits::tag_of<T>::type, fusion::struct_tag>;
@@ -92,6 +100,12 @@ namespace photon { namespace json
    private:
 
       parser const& self() const { return *this; }
+
+      // Note 1.0: We pass pointer attributes to bypass the container
+      // logic in X3.
+      template <typename Iter, typename Ctx, typename Attr>
+      typename std::enable_if<std::is_pointer<Attr>::value, bool>::type
+      parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const;
 
       // Floating point numbers
       template <typename Iter, typename Ctx, typename Attr>
@@ -158,6 +172,87 @@ namespace photon { namespace json
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   // json printer class
+   ////////////////////////////////////////////////////////////////////////////
+   class printer : public x3::parser<printer>
+   {
+   public:
+
+      struct attribute {};
+      typedef attribute attribute_type;
+      static bool const has_attribute = true;
+
+      printer(std::ostream& out, unsigned indent = 2)
+       : _out(out)
+       , _indent(indent)
+       , _current_indent(0)
+      {}
+
+      // Main print entry point
+      template <typename Attr>
+      void print(Attr& attr)
+      {
+         print_impl(attr);
+      }
+
+   private:
+
+      void endl()
+      {
+         _out << std::endl;
+         for (int i = 0; i != _current_indent; ++i)
+            _out << ' ';
+      }
+
+      void indent() { _current_indent += _indent; }
+      void dedent() { _current_indent -= _indent; }
+
+      // Floating point numbers
+      template <typename Attr>
+      typename std::enable_if<std::is_floating_point<Attr>::value>::type
+      print_impl(Attr attr);
+
+      // Integers
+      template <typename Attr>
+      typename std::enable_if<std::is_integral<Attr>::value>::type
+      print_impl(Attr attr);
+
+      // Boolean
+      void print_impl(bool attr);
+
+      // String
+      void print_impl(string attr);
+      void print_impl(std::string const& attr);
+
+      template <typename Iter>
+      void print_impl(Iter f, Iter l);
+
+      // Object
+      template <typename Attr>
+      typename std::enable_if<is_adapted_struct<Attr>::value>::type
+      print_impl(Attr const& attr);
+
+      // Array
+      template <typename Attr>
+      void print_impl(std::vector<Attr> const& attr);
+
+      template <typename Attr, std::size_t N>
+      void print_impl(std::array<Attr, N> const& attr);
+
+      template <typename Attr, std::size_t N>
+      void print_impl(Attr const (&attr)[N]);
+
+      template <typename C>
+      void print_container(C const& c);
+
+      friend struct print_object_helper;
+
+      std::ostream& _out;
+      unsigned _indent;
+      unsigned _current_indent;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
    // Implementation
    ////////////////////////////////////////////////////////////////////////////
    inline bool string::extract(std::string& result) const
@@ -220,6 +315,13 @@ namespace photon { namespace json
    }
 
    template <typename Iter, typename Ctx, typename Attr>
+   inline typename std::enable_if<std::is_pointer<Attr>::value, bool>::type
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
+   {
+      return parse_impl(first, last, context, *attr);
+   }
+
+   template <typename Iter, typename Ctx, typename Attr>
    inline typename std::enable_if<std::is_floating_point<Attr>::value, bool>::type
    parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
@@ -279,6 +381,9 @@ namespace photon { namespace json
    parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
       static auto g = '{' >> -(pair_parser{} % ',') >> '}';
+
+      // Note 1.1: p is a pointer. We pass pointer attributes to bypass
+      // the container logic in X3.
       auto p = &attr;
       return g.parse(first, last, context, x3::unused, p);
    }
@@ -358,8 +463,8 @@ namespace photon { namespace json
          auto name = fusion::extension::struct_member_name<Struct, I>::call();
          auto f = [](auto& first, auto last, auto& context, auto& attr) -> bool
          {
-            return (':' >> parser{})
-               .parse(first, last, context, x3::unused, fusion::at_c<I>(attr));
+            auto p = &fusion::at_c<I>(attr);
+            return (':' >> parser{}).parse(first, last, context, x3::unused, p);
          };
          map[name] = f;
       }
@@ -392,6 +497,9 @@ namespace photon { namespace json
    pair_parser::parse(Iter& first, Iter const& last
     , Ctx& context, x3::unused_type, Attr& attr) const
    {
+      // Note 1.2: attr is actually a pointer. We pass pointer attributes to
+      // bypass the container logic in X3 (see Note 1.0 and 1.1 above).
+
       using attr_type = typename std::remove_reference<decltype(*attr)>::type;
       using dispatch_function = std::function<bool(Iter&, Iter, Ctx&, attr_type&)>;
       using map = std::unordered_map<std::string, dispatch_function>;
@@ -415,6 +523,163 @@ namespace photon { namespace json
 
       first = i;
       return true;
+   }
+
+   template <typename Attr>
+   typename std::enable_if<std::is_floating_point<Attr>::value>::type
+   inline printer::print_impl(Attr attr)
+   {
+      _out << attr;
+   }
+
+   template <typename Attr>
+   typename std::enable_if<std::is_integral<Attr>::value>::type
+   inline printer::print_impl(Attr attr)
+   {
+      _out << attr;
+   }
+
+   inline void
+   printer::print_impl(bool attr)
+   {
+      _out << (attr? "true" : "false");
+   }
+
+   inline void
+   printer::print_impl(string attr)
+   {
+      _out << attr;
+   }
+
+   template <typename Iter>
+   inline void
+   printer::print_impl(Iter f, Iter l)
+   {
+      _out << '"';
+      for (auto i = f; i != l; ++i)
+      {
+         auto c = *i;
+         switch (c)
+         {
+            case '"':   _out << "\\\"";   break;
+            case '\\':  _out << "\\\\";   break;
+            case '/':   _out << "\\/";    break;
+            case '\b':  _out << "\\b";    break;
+            case '\f':  _out << "\\f";    break;
+            case '\n':  _out << "\\n";    break;
+            case '\r':  _out << "\\r";    break;
+            case '\t':  _out << "\\t";    break;
+            default:    _out << x3::to_utf8(c);
+         }
+      }
+
+      _out << '"';
+   }
+
+   inline void
+   printer::print_impl(std::string const& attr)
+   {
+      typedef boost::u8_to_u32_iterator<std::string::const_iterator> iter_t;
+      iter_t f = attr.begin();
+      iter_t l = attr.end();
+      print_impl(f, l);
+   }
+
+   struct print_object_helper
+   {
+      template <int I, typename Struct>
+      static void print_member(printer& pr, Struct const& attr)
+      {
+         auto name = fusion::extension::struct_member_name<Struct, I>::call();
+         pr.print_impl(name, name+std::strlen(name));
+         pr._out << " : ";
+         pr.print(fusion::at_c<I>(attr));
+      }
+
+      template <int I, typename Struct>
+      struct print_struct
+      {
+         static void call(printer& pr, Struct const& attr, bool last = true)
+         {
+            print_struct<I-1, Struct>::call(pr, attr, false);
+            print_member<I>(pr, attr);
+            if (!last)
+            {
+               pr._out << ',';
+               pr.endl();
+            }
+         }
+      };
+
+      template <typename Struct>
+      struct print_struct<0, Struct>
+      {
+         static void call(printer& pr, Struct const& attr, bool last = true)
+         {
+            print_member<0>(pr, attr);
+            if (!last)
+            {
+               pr._out << ',';
+               pr.endl();
+            }
+         }
+      };
+   };
+
+   template <typename Attr>
+   inline typename std::enable_if<is_adapted_struct<Attr>::value>::type
+   printer::print_impl(Attr const& attr)
+   {
+      static constexpr auto size = fusion::result_of::size<Attr>::value;
+      _out << '{';
+      {
+         indent();
+         endl();
+         print_object_helper::print_struct<size-1, Attr>::call(*this, attr);
+         dedent();
+      }
+      endl();
+      _out << '}';
+   }
+
+   template <typename C>
+   inline void printer::print_container(C const& c)
+   {
+      _out << '[';
+      {
+         indent();
+         endl();
+         for (auto const& e : c)
+         {
+            print_impl(e);
+            if (&e != &c.back())
+            {
+               _out << ',';
+               endl();
+            }
+         }
+         dedent();
+      }
+      endl();
+      _out << ']';
+   }
+
+   template <typename Attr>
+   inline void printer::print_impl(std::vector<Attr> const& attr)
+   {
+      print_container(attr);
+   }
+
+   template <typename Attr, std::size_t N>
+   inline void printer::print_impl(std::array<Attr, N> const& attr)
+   {
+      print_container(attr);
+   }
+
+   template <typename Attr, std::size_t N>
+   inline void printer::print_impl(Attr const (&attr)[N])
+   {
+      print_container(attr);
    }
 }}
 

@@ -6,6 +6,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <photon/support/json.hpp>
 #include <boost/fusion/include/equal_to.hpp>
+#include <sstream>
 
 namespace json = photon::json;
 namespace x3 = boost::spirit::x3;
@@ -80,6 +81,7 @@ struct bar
 {
    int ii;
    double dd;
+   std::vector<int> vv;
    foo ff;
 };
 
@@ -106,6 +108,7 @@ BOOST_FUSION_ADAPT_STRUCT(
    bar,
    (int, ii)
    (double, dd)
+   (std::vector<int>, vv)
    (foo, ff)
 )
 
@@ -172,7 +175,7 @@ void test_json()
    // struct
    {
       foo obj = {1, 2.2, "hey!"};
-      bar obj2 = {8, 9.9, obj};
+      bar obj2 = {8, 9.9, {1, 2, 3, 4}, obj};
 
       {
          char const* in = R"(
@@ -191,6 +194,7 @@ void test_json()
             {
                "ii" : 8,
                "dd" : 9.9,
+               "vv" : [1, 2, 3, 4],
                "ff" :
                {
                   "i" : 1,
@@ -201,6 +205,17 @@ void test_json()
          )";
 
          test_object(jp, in, obj2);
+      }
+
+      // Round trip
+      {
+         std::stringstream ss;
+         json::printer pr{ss, 3};
+         pr.print(obj2);
+         test_object(jp, ss.str().c_str(), obj2);
+
+         // Just for fun!
+         std::cout << ss.str() << std::endl;
       }
    }
 }

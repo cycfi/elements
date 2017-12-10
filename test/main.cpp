@@ -5,9 +5,11 @@
 =============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
 #include <photon/support/json.hpp>
+#include <boost/fusion/include/equal_to.hpp>
 
 namespace json = photon::json;
 namespace x3 = boost::spirit::x3;
+namespace fusion = boost::fusion;
 
 template <typename T>
 void test_parser(json::parser const& jp, char const* in, T n)
@@ -15,7 +17,7 @@ void test_parser(json::parser const& jp, char const* in, T n)
    char const* f = in;
    char const* l = f + std::strlen(f);
 
-   decltype(n) attr;
+   T attr;
    bool r = x3::parse(f, l, jp, attr);
    BOOST_TEST(r);
    BOOST_TEST(attr == n);
@@ -66,6 +68,34 @@ void test_array(json::parser const& jp, char const* in, Container const& c)
    BOOST_TEST(r);
    BOOST_TEST(same(attr, c));
 };
+
+struct foo
+{
+   int i;
+   double d;
+   std::string s;
+};
+
+template <typename T>
+void test_object(json::parser const& jp, char const* in, T const& obj)
+{
+   char const* f = in;
+   char const* l = f + std::strlen(f);
+
+   T attr;
+   bool r = x3::phrase_parse(f, l, jp, x3::space, attr);
+   BOOST_TEST(r);
+   BOOST_TEST(attr == obj);
+};
+
+BOOST_FUSION_ADAPT_STRUCT(
+   foo,
+   (int, i)
+   (double, d)
+   (std::string, s)
+)
+
+using fusion::operator==;
 
 void test_json()
 {
@@ -123,6 +153,21 @@ void test_json()
    {
       std::vector<std::string> c = {"a", "b", "c", "d"};
       test_array(jp, "[\"a\", \"b\", \"c\", \"d\"]", c);
+   }
+
+   // struct
+   {
+      foo obj = {1, 2.2, "hey!"};
+
+      char const* in = R"(
+         {
+            "i" : 1,
+            "d" : 2.2,
+            "s" : "hey!"
+         }
+      )";
+
+      test_object(jp, in, obj);
    }
 }
 

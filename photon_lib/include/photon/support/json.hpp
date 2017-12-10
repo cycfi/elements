@@ -21,6 +21,7 @@
 #include <boost/fusion/adapted/array.hpp>
 #include <boost/fusion/adapted/std_array.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/fusion/include/size.hpp>
 #include <boost/regex/pending/unicode_iterator.hpp>
 
 #include <photon/support/exception.hpp>
@@ -277,7 +278,9 @@ namespace photon { namespace json
    inline typename std::enable_if<is_adapted_struct<Attr>::value, bool>::type
    parser::parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const
    {
-      return false;
+      static auto g = '{' >> -(pair_parser{} % ',') >> '}';
+      auto p = &attr;
+      return g.parse(first, last, context, x3::unused, p);
    }
 
    template <typename Iter, typename Ctx, typename First, typename Last>
@@ -356,7 +359,7 @@ namespace photon { namespace json
          auto f = [](auto& first, auto last, auto& context, auto& attr) -> bool
          {
             return (':' >> parser{})
-               .parse(first, last, context, fusion::at_c<I>(attr));
+               .parse(first, last, context, x3::unused, fusion::at_c<I>(attr));
          };
          map[name] = f;
       }
@@ -389,15 +392,16 @@ namespace photon { namespace json
    pair_parser::parse(Iter& first, Iter const& last
     , Ctx& context, x3::unused_type, Attr& attr) const
    {
-      using dispatch_function = std::function<bool(Iter&, Iter, Ctx&, Attr&)>;
+      using attr_type = typename std::remove_reference<decltype(*attr)>::type;
+      using dispatch_function = std::function<bool(Iter&, Iter, Ctx&, attr_type&)>;
       using map = std::unordered_map<std::string, dispatch_function>;
-      static constexpr auto size = fusion::result_of::size<Attr>::value;
-      static auto lookup = detail::fill_map<size-1, Attr>::call(map{});
+      static constexpr auto size = fusion::result_of::size<attr_type>::value;
+      static auto lookup = detail::fill_map<size-1, attr_type>::call(map{});
 
       // Parse the key
       auto i = first;
       std::string name;
-      if (!json::parser{}.parse(i, last, context, name))
+      if (!json::parser{}.parse(i, last, context, x3::unused, name))
          return false;
 
       // Lookup the key
@@ -406,12 +410,29 @@ namespace photon { namespace json
          return false;
 
       // Parse the value
-      if (!pos->second(i, last, context, attr))
+      if (!pos->second(i, last, context, *attr))
          return false;
 
       first = i;
       return true;
    }
 }}
+
+namespace boost { namespace spirit { namespace x3 { namespace traits
+{
+   namespace json = photon::json;
+
+   template <typename Attribute>
+   struct is_substitute<json::pair_parser::attribute, Attribute
+    , typename std::enable_if<
+         json::is_adapted_struct<typename std::remove_pointer<Attribute>::type>::value
+      >::type>
+   : mpl::true_ {};
+
+   template <typename CharT, typename Traits, typename Allocator>
+   struct is_substitute<json::parser::attribute, std::basic_string<CharT, Traits, Allocator>>
+   : mpl::true_ {};
+
+}}}}
 
 #endif

@@ -37,15 +37,15 @@ namespace photon { namespace json
    ////////////////////////////////////////////////////////////////////////////
    // json string class
    ////////////////////////////////////////////////////////////////////////////
+   template <typename Iter>
    class string
    {
    public:
 
       string()
-       : _first(nullptr), _last(nullptr)
       {}
 
-      string(char const* first, char const* last)
+      string(Iter first, Iter last)
        : _first(first), _last(last)
       {}
 
@@ -63,11 +63,12 @@ namespace photon { namespace json
 
    private:
 
-      char const* _first;
-      char const* _last;
+      Iter _first;
+      Iter _last;
    };
 
-   std::ostream& operator<<(std::ostream& out, string str)
+   template <typename Iter>
+   std::ostream& operator<<(std::ostream& out, string<Iter> str)
    {
       for (auto ch : str)
          out << ch;
@@ -123,7 +124,7 @@ namespace photon { namespace json
 
       // String
       template <typename Iter, typename Ctx>
-      bool parse_impl(Iter& first, Iter last, Ctx& context, string& attr) const;
+      bool parse_impl(Iter& first, Iter last, Ctx& context, string<Iter>& attr) const;
 
       template <typename Iter, typename Ctx>
       bool parse_impl(Iter& first, Iter last, Ctx& context, std::string& attr) const;
@@ -221,7 +222,8 @@ namespace photon { namespace json
       void print_impl(bool attr);
 
       // String
-      void print_impl(string attr);
+      template <typename Iter>
+      void print_impl(string<Iter> attr);
       void print_impl(std::string const& attr);
 
       template <typename Iter>
@@ -255,11 +257,12 @@ namespace photon { namespace json
    ////////////////////////////////////////////////////////////////////////////
    // Implementation
    ////////////////////////////////////////////////////////////////////////////
-   inline bool string::extract(std::string& result) const
+   template <typename Iter>
+   inline bool string<Iter>::extract(std::string& result) const
    {
       using uchar = boost::uint32_t;   // a unicode code point
-      char const* i = _first + 1;      // skip the initial '"'
-      char const* last = _last - 1;    // skip the final '"'
+      Iter i = _first; ++i;            // skip the initial '"'
+      Iter last = _last; --last;       // skip the final '"'
 
       for (; i < last; ++i)
       {
@@ -306,7 +309,8 @@ namespace photon { namespace json
       return true;
    }
 
-   inline string::operator std::string() const
+   template <typename Iter>
+   inline string<Iter>::operator std::string() const
    {
       std::string result;
       if (!extract(result))
@@ -346,7 +350,7 @@ namespace photon { namespace json
 
    template <typename Iter, typename Ctx>
    inline bool
-   parser::parse_impl(Iter& first, Iter last, Ctx& context, string& attr) const
+   parser::parse_impl(Iter& first, Iter last, Ctx& context, string<Iter>& attr) const
    {
       x3::skip_over(first, last, context);
 
@@ -370,7 +374,7 @@ namespace photon { namespace json
    inline bool
    parser::parse_impl(Iter& first, Iter last, Ctx& context, std::string& attr) const
    {
-      json::string s;
+      json::string<Iter> s;
       if (parse_impl(first, last, context, s))
          return s.extract(attr);
       return false;
@@ -546,8 +550,9 @@ namespace photon { namespace json
       _out << (attr? "true" : "false");
    }
 
+   template <typename Iter>
    inline void
-   printer::print_impl(string attr)
+   printer::print_impl(string<Iter> attr)
    {
       _out << attr;
    }

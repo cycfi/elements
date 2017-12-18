@@ -29,7 +29,7 @@ void test_string1(json::parser const& jp, char const* in)
    char const* f = in;
    char const* l = f + std::strlen(f);
 
-   json::string s;
+   json::string<char const*> s;
    bool r = x3::parse(f, l, jp, s);
    BOOST_TEST(r);
    BOOST_TEST(s.begin() == in);
@@ -40,6 +40,17 @@ void test_string2(json::parser const& jp, char const* in, std::string s)
 {
    char const* f = in;
    char const* l = f + std::strlen(f);
+
+   std::string attr;
+   bool r = x3::parse(f, l, jp, attr);
+   BOOST_TEST(r);
+   BOOST_TEST(attr == s);
+};
+
+void test_string3(json::parser const& jp, std::string in, std::string s)
+{
+   std::string::const_iterator f = in.begin();
+   std::string::const_iterator l = in.end();
 
    std::string attr;
    bool r = x3::parse(f, l, jp, attr);
@@ -135,6 +146,8 @@ void test_json()
       test_string2(jp, "\"This is \\\"my\\\" string\"", "This is \"my\" string");
       test_string2(jp, "\"Sosa did fine.\\u263A\"", u8"Sosa did fine.\u263A");
       test_string2(jp, "\"Snowman: \\u2603\"", u8"Snowman: \u2603");
+
+      test_string3(jp, "\"This is my string\"", "This is my string");
    }
 
    // int vector

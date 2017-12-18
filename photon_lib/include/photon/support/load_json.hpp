@@ -26,7 +26,7 @@ namespace photon { namespace json
       auto f = src.begin();
       auto l = src.end();
       if (x3::phrase_parse(f, l, parser{}, x3::space, data))
-         return data;
+         return { std::move(data) };
       else
          return {};
    }

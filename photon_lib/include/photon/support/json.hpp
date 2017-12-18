@@ -101,8 +101,8 @@ namespace photon { namespace json
 
       parser const& self() const { return *this; }
 
-      // Note 1.0: We pass pointer attributes to bypass the container
-      // logic in X3.
+      // Note 1.0: We pass pointer attributes (internally) to bypass the
+      // container logic in X3.
       template <typename Iter, typename Ctx, typename Attr>
       typename std::enable_if<std::is_pointer<Attr>::value, bool>::type
       parse_impl(Iter& first, Iter last, Ctx& context, Attr& attr) const;
@@ -382,8 +382,8 @@ namespace photon { namespace json
    {
       static auto g = '{' >> -(pair_parser{} % ',') >> '}';
 
-      // Note 1.1: p is a pointer. We pass pointer attributes to bypass
-      // the container logic in X3.
+      // Note 1.1: p is a pointer. We pass pointer attributes (internally)
+      // to bypass the container logic in X3.
       auto p = &attr;
       return g.parse(first, last, context, x3::unused, p);
    }
@@ -497,8 +497,9 @@ namespace photon { namespace json
    pair_parser::parse(Iter& first, Iter const& last
     , Ctx& context, x3::unused_type, Attr& attr) const
    {
-      // Note 1.2: attr is actually a pointer. We pass pointer attributes to
-      // bypass the container logic in X3 (see Note 1.0 and 1.1 above).
+      // Note 1.2: attr is actually a pointer. We pass pointer attributes
+      // (internally) to bypass the container logic in X3 (see Note 1.0
+      // and 1.1 above).
 
       using attr_type = typename std::remove_reference<decltype(*attr)>::type;
       using dispatch_function = std::function<bool(Iter&, Iter, Ctx&, attr_type&)>;

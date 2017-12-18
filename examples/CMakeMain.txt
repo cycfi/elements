@@ -14,26 +14,41 @@ project(${appname})
 
 file(
    GLOB_RECURSE PHOTON_RESOURCES
-   resources/*.ttf
-   resources/*.jpeg
-   resources/*.jpg
-   resources/*.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/*.ttf
 )
 
-file(
-   GLOB_RECURSE APP_RESOURCES
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpg
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xib
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   file(
+      GLOB_RECURSE APP_RESOURCES
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpg
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xib
+   )
+else()
+   file(
+      GLOB_RECURSE APP_RESOURCES
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpg
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.json
+   )
+endif()
 
 source_group(Resources
    FILES
    ${PHOTON_RESOURCES}
    ${APP_RESOURCES}
 )
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   file(
+      COPY ${PHOTON_RESOURCES} ${APP_RESOURCES}
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+   )
+endif()
 
 ###############################################################################
 # The executable App

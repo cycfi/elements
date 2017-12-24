@@ -35,6 +35,13 @@ namespace photon
 
          return false;
       }
+
+      static gboolean
+      on_button_press(GtkWidget* widget, GdkEventButton* event, gpointer data)
+      {
+
+         return TRUE;
+      }
    }
 
    void make_main_window(base_view& main_view, GtkWidget* window)

@@ -20,14 +20,6 @@
 
 #ifdef __linux__
 # include <map>
-# include <cairo-ft.h>
-# include <ft2build.h>
-# include FT_SFNT_NAMES_H
-# include FT_FREETYPE_H
-# include FT_GLYPH_H
-# include FT_OUTLINE_H
-# include FT_BBOX_H
-# include FT_TYPE1_TABLES_H
 #endif
 
 namespace photon
@@ -43,6 +35,8 @@ namespace photon
                         canvas(canvas&& rhs)
                          : _context(rhs._context)
                         {}
+
+                        ~canvas();
 
                         canvas(canvas const& rhs) = delete;
       canvas&           operator=(canvas const& rhs) = delete;
@@ -233,7 +227,7 @@ namespace photon
 
 #if defined(__linux__)
 
-      std::map<std::string, FT_Face> _custom_fonts;
+      std::map<std::string, cairo_font_face_t*> _custom_fonts;
 #endif
    };
 }

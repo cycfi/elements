@@ -12,10 +12,18 @@ project(${appname})
 ###############################################################################
 # Sources (and Resources)
 
-file(
-   GLOB_RECURSE PHOTON_RESOURCES
-   ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/*.ttf
-)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   file(
+      GLOB_RECURSE PHOTON_RESOURCES
+      ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/*.ttf
+      ${CMAKE_CURRENT_SOURCE_DIR}/../resources/osx/fonts/*.ttf
+   )
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   file(
+      GLOB_RECURSE PHOTON_RESOURCES
+      ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/*.ttf
+   )
+endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    file(
@@ -26,7 +34,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xib
    )
-else()
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    file(
       GLOB_RECURSE APP_RESOURCES
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.ttf

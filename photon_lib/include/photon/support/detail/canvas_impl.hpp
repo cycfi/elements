@@ -6,6 +6,18 @@
 #if !defined(PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016)
 #define PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016
 
+#ifdef __linux__
+# include <map>
+# include <cairo-ft.h>
+# include <ft2build.h>
+# include FT_SFNT_NAMES_H
+# include FT_FREETYPE_H
+# include FT_GLYPH_H
+# include FT_OUTLINE_H
+# include FT_BBOX_H
+# include FT_TYPE1_TABLES_H
+#endif
+
 extern "C"
 {
    void blur_image_surface(cairo_surface_t *surface, int radius);
@@ -16,6 +28,14 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline canvas::~canvas()
+   {
+#if defined(__linux__)
+      for (auto& p : _custom_fonts)
+         cairo_font_face_destroy(p.second);
+#endif
+   }
+
    inline cairo_t& canvas::cairo_context() const
    {
       return _context;
@@ -359,22 +379,23 @@ namespace photon
       if (status != 0)
          return;
 
-      FT_Face face;
+      cairo_font_face_t* ct = nullptr;
       auto fi = _custom_fonts.find(font);
       if (_custom_fonts.find(font) == _custom_fonts.end())
       {
+         FT_Face face;
          std::string file = "./" + std::string{font} + ".ttf";
          status = FT_New_Face(value, file.c_str(), 0, &face);
          if (status != 0)
             return;
-         _custom_fonts[font] = face;
+         ct = cairo_ft_font_face_create_for_ft_face(face, 0);
+         _custom_fonts[font] = ct;
       }
       else
       {
-         face = fi->second;
+         ct = fi->second;
       }
 
-      cairo_font_face_t* ct = cairo_ft_font_face_create_for_ft_face(face, 0);
       cairo_set_font_face(&_context, ct);
       cairo_set_font_size(&_context, size);
 

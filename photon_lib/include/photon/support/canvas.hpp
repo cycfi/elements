@@ -18,6 +18,18 @@
 #include <cassert>
 #include <cairo.h>
 
+#ifdef __linux__
+# include <map>
+# include <cairo-ft.h>
+# include <ft2build.h>
+# include FT_SFNT_NAMES_H
+# include FT_FREETYPE_H
+# include FT_GLYPH_H
+# include FT_OUTLINE_H
+# include FT_BBOX_H
+# include FT_TYPE1_TABLES_H
+#endif
+
 namespace photon
 {
    class canvas
@@ -131,6 +143,7 @@ namespace photon
       };
 
       void              font(char const* face, float size = 16, int style = normal);
+      void              custom_font(char const* font, float size = 16);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Text
@@ -217,6 +230,11 @@ namespace photon
       cairo_t&          _context;
       canvas_state      _state;
       state_stack       _state_stack;
+
+#if defined(__linux__)
+
+      std::map<std::string, FT_Face> _custom_fonts;
+#endif
    };
 }
 

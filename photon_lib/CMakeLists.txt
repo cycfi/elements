@@ -27,6 +27,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 FIND_PACKAGE(CAIRO REQUIRED cairo)
 
 ###############################################################################
+# Freetype
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   find_package(Freetype REQUIRED)
+   include_directories(${FREETYPE_INCLUDE_DIRS})
+endif()
+
+###############################################################################
 # GTK (linux only)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -122,6 +130,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    target_include_directories(libphoton
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
+      ${FREETYPE_INCLUDE_DIRS}
       PRIVATE include
       ${GTK3_INCLUDE_DIRS}
    )
@@ -143,6 +152,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    target_link_libraries(libphoton
       ${CAIRO_LIBRARIES}
+      ${FREETYPE_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}
       ${Boost_SYSTEM_LIBRARY}
       ${GTK3_LIBRARIES}

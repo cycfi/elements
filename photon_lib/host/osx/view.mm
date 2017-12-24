@@ -446,7 +446,7 @@ namespace photon
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback
-   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view;
+   std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
 
    point base_view::cursor_pos() const
    {
@@ -495,7 +495,7 @@ namespace photon
       return [[get_mac_view(h) window] isKeyWindow];
    }
 
-   cairo_t* base_view::setup_context()
+   cairo_t* base_view::begin_drawing()
    {
       auto ns_view = get_mac_view(h);
       auto w = [ns_view bounds].size.width;
@@ -510,6 +510,11 @@ namespace photon
       if (locked)
          [ns_view unlockFocus];
       return context;
+   }
+
+   void base_view::end_drawing(cairo_t* ctx)
+   {
+      cairo_destroy(ctx);
    }
 
    std::string clipboard()

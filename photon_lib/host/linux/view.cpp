@@ -3,15 +3,51 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon/host.hpp>
-
-namespace ph = photon;
+#include "view_impl.hpp"
+#include <cairo.h>
 
 namespace photon
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback
-   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view;
+   std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
+
+   struct platform_access
+   {
+      inline static host_view* get_host_view(base_view& main_view)
+      {
+         return main_view.h;
+      }
+   };
+
+   namespace
+   {
+      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
+      {
+         auto& main_view = *reinterpret_cast<base_view*>(user_data);
+         platform_access::get_host_view(main_view)->cr = cr;
+
+         // Note that cr (cairo_t) is already clipped to only draw the
+         // exposed areas of the widget.
+         double left, top, right, bottom;
+         cairo_clip_extents(cr, &left, &top, &right, &bottom);
+         main_view.draw(rect{ float(left), float(top), float(right), float(bottom) });
+
+         return false;
+      }
+   }
+
+   void make_main_window(base_view& main_view, GtkWidget* window)
+   {
+      auto* drawing_area = gtk_drawing_area_new();
+
+      gtk_container_add(GTK_CONTAINER(window), drawing_area);
+
+      g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(on_draw), &main_view);
+
+      //gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+      gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+   }
 
    point base_view::cursor_pos() const
    {
@@ -20,7 +56,9 @@ namespace photon
 
    point base_view::size() const
    {
-      return {};
+      auto x = gtk_widget_get_allocated_width(h->window);
+      auto y = gtk_widget_get_allocated_height(h->window);
+      return { float(x), float(y) };
    }
 
    void base_view::size(point p)
@@ -44,9 +82,15 @@ namespace photon
       return false;
    }
 
-   cairo_t* base_view::setup_context()
+   cairo_t* base_view::begin_drawing()
    {
-      return 0;
+      // GTK already does this for us
+      return h->cr;
+   }
+
+   void base_view::end_drawing(cairo_t* ctx)
+   {
+      // GTK will do this for us
    }
 
    std::string clipboard()

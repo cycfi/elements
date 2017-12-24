@@ -34,7 +34,7 @@ namespace photon
 
    void view::draw(rect dirty_)
    {
-      auto context_ = setup_context();
+      auto context_ = begin_drawing();
 
       _dirty = dirty_;
 
@@ -54,7 +54,7 @@ namespace photon
       content.draw(ctx);
 
       // Cleanup the context
-      cairo_destroy(context_);
+      end_drawing(context_);
    }
 
    namespace

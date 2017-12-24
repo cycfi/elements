@@ -5,13 +5,11 @@
 =============================================================================*/
 #include <photon/host.hpp>
 
-namespace ph = photon;
-
 namespace photon
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback
-   std::function<std::unique_ptr<ph::base_view>(ph::host_view* h)> new_view;
+   std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
 
    point base_view::cursor_pos() const
    {

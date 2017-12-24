@@ -66,6 +66,7 @@ namespace photon
    ////////////////////////////////////////////////////////////////////////////
 
    struct host_view;
+   struct platform_access;
 
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
@@ -310,10 +311,12 @@ namespace photon
 
    protected:
 
-      cairo_t*       setup_context();
+      cairo_t*       begin_drawing();
+      void           end_drawing(cairo_t* ctx);
 
    private:
 
+      friend struct platform_access;
       host_view*     h;
    };
 

@@ -55,6 +55,26 @@ namespace photon
       template <typename Event>
       bool get_mouse(Event* event, mouse_button& btn, host_view* view)
       {
+         btn.modifiers = 0;
+         if (event->state & GDK_SHIFT_MASK)
+            btn.modifiers |= mod_shift;
+         if (event->state & GDK_CONTROL_MASK)
+            btn.modifiers |= mod_control;
+         if (event->state & GDK_MOD1_MASK)
+            btn.modifiers |= mod_alt;
+         if (event->state & GDK_SUPER_MASK)
+            btn.modifiers |= mod_super;
+
+         btn.num_clicks = view->click_count;
+         btn.pos = { float(event->x), float(event->y) };
+         return true;
+      }
+
+      bool get_button(GdkEventButton* event, mouse_button& btn, host_view* view)
+      {
+         if (event->button > 4)
+            return false;
+
          static constexpr auto _250ms = 250;
          switch (event->type)
          {
@@ -74,28 +94,8 @@ namespace photon
                return false;
          }
 
-         btn.modifiers = 0;
-         if (event->state | GDK_SHIFT_MASK)
-            btn.modifiers |= mod_shift;
-         if (event->state | GDK_CONTROL_MASK)
-            btn.modifiers |= mod_control;
-         if (event->state | GDK_MOD1_MASK)
-            btn.modifiers |= mod_alt;
-         if (event->state | GDK_SUPER_MASK)
-            btn.modifiers |= mod_super;
-
-         btn.num_clicks = view->click_count;
-         btn.pos = { float(event->x), float(event->y) };
-         return true;
-      }
-
-      bool get_button(GdkEventButton* event, mouse_button& btn, host_view* view)
-      {
-         if (event->button > 4)
-            return false;
          if (!get_mouse(event, btn, view))
             return false;
-         btn.state = mouse_button::what(event->button-1);
          return true;
       }
 
@@ -116,6 +116,26 @@ namespace photon
          mouse_button btn;
          if (get_mouse(event, btn, platform_access::get_host_view(main_view)))
          {
+            if (event->state & GDK_BUTTON1_MASK)
+            {
+               btn.down = true;
+               btn.state = mouse_button::left;
+            }
+            else if (event->state & GDK_BUTTON2_MASK)
+            {
+               btn.down = true;
+               btn.state = mouse_button::middle;
+            }
+            else if (event->state & GDK_BUTTON3_MASK)
+            {
+               btn.down = true;
+               btn.state = mouse_button::right;
+            }
+            else
+            {
+               btn.down = false;
+            }
+
             if (btn.down)
                main_view.drag(btn);
          }
@@ -173,7 +193,7 @@ namespace photon
    {
       auto x = gtk_widget_get_allocated_width(h->window);
       auto y = gtk_widget_get_allocated_height(h->window);
-      refresh({ 0, 0, x, y });
+      refresh({ 0, 0, float(x), float(y) });
    }
 
    void base_view::refresh(rect area)

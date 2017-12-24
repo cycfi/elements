@@ -38,6 +38,10 @@ namespace photon
 
       // This (cr) is only valid within the view's draw member function
       cairo_t* cr = 0;
+
+      // Mouse button click tracking
+      std::uint32_t click_time = 0;
+      std::uint32_t click_count = 0;
    };
 
    config get_config();

@@ -42,6 +42,9 @@ namespace photon
       // Mouse button click tracking
       std::uint32_t click_time = 0;
       std::uint32_t click_count = 0;
+
+      // Scroll acceleration tracking
+      std::uint32_t scroll_time = 0;
    };
 
    config get_config();

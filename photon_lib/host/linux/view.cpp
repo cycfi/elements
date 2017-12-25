@@ -141,6 +141,48 @@ namespace photon
          }
          return TRUE;
       }
+
+      static gboolean
+      on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
+      {
+         auto& main_view = get(user_data);
+         auto* host_view = platform_access::get_host_view(main_view);
+         auto elapsed = event->time - host_view->scroll_time;
+         static constexpr float _1s = 1000;
+         host_view->scroll_time = event->time;
+
+         float dx = 0;
+         float dy = 0;
+         float step = _1s / elapsed;
+
+         switch (event->direction)
+         {
+            case GDK_SCROLL_UP:
+               dy = step;
+               break;
+            case GDK_SCROLL_DOWN:
+               dy = -step;
+               break;
+            case GDK_SCROLL_LEFT:
+               dx = step;
+               break;
+            case GDK_SCROLL_RIGHT:
+               dy = -step;
+               break;
+            case GDK_SCROLL_SMOOTH:
+               dx = event->delta_x;
+               dy = event->delta_y;
+               break;
+            default:
+               break;
+         }
+
+         main_view.scroll(
+            { dx, dy },
+            { float(event->x), float(event->y) }
+         );
+         return TRUE;
+      }
    }
 
    void make_main_window(base_view& main_view, GtkWidget* window)
@@ -161,6 +203,8 @@ namespace photon
          G_CALLBACK(on_button), &main_view);
       g_signal_connect(drawing_area, "motion-notify-event",
          G_CALLBACK(on_motion), &main_view);
+      g_signal_connect(drawing_area, "scroll-event",
+         G_CALLBACK(on_scroll), &main_view);
 
       // Ask to receive events the drawing area doesn't normally
       // subscribe to. In particular, we need to ask for the
@@ -170,6 +214,7 @@ namespace photon
          | GDK_BUTTON_PRESS_MASK
          | GDK_BUTTON_RELEASE_MASK
          | GDK_POINTER_MOTION_MASK
+         | GDK_SCROLL_MASK
       );
    }
 

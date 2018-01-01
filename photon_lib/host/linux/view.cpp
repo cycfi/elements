@@ -147,8 +147,8 @@ namespace photon
       {
          auto& main_view = get(user_data);
          auto* host_view = platform_access::get_host_view(main_view);
-         auto elapsed = event->time - host_view->scroll_time;
-         static constexpr float _1s = 1000;
+         auto elapsed = std::max<float>(10.0f, event->time - host_view->scroll_time);
+         static constexpr float _1s = 100;
          host_view->scroll_time = event->time;
 
          float dx = 0;

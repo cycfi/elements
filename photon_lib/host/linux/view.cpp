@@ -167,7 +167,7 @@ namespace photon
                dx = step;
                break;
             case GDK_SCROLL_RIGHT:
-               dy = -step;
+               dx = -step;
                break;
             case GDK_SCROLL_SMOOTH:
                dx = event->delta_x;

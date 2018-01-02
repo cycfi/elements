@@ -41,17 +41,6 @@ namespace photon
          return false;
       }
 
-      // void draw(base_view& main_view)
-      // {
-      //    platform_access::get_host_view(main_view)->cr = cr;
-
-      //    // Note that cr (cairo_t) is already clipped to only draw the
-      //    // exposed areas of the widget.
-      //    double left, top, right, bottom;
-      //    cairo_clip_extents(cr, &left, &top, &right, &bottom);
-      //    main_view.draw(rect{ float(left), float(top), float(right), float(bottom) });
-      // }
-
       template <typename Event>
       bool get_mouse(Event* event, mouse_button& btn, host_view* view)
       {
@@ -232,6 +221,7 @@ namespace photon
 
    void base_view::size(point p)
    {
+       gtk_window_resize(GTK_WINDOW(h->window), p.x, p.y);
    }
 
    void base_view::refresh()
@@ -247,8 +237,16 @@ namespace photon
          area.left, area.top, area.width(), area.height());
    }
 
-   void base_view::limits(view_limits limits_, bool maintain_aspect)
+   void base_view::limits(view_limits limits_)
    {
+      GdkGeometry hints;
+      hints.min_width = limits_.min.x;
+      hints.min_height = limits_.min.y;
+      hints.max_width = limits_.max.x;
+      hints.max_height = limits_.max.y;
+
+      gtk_window_set_geometry_hints(GTK_WINDOW(h->window), nullptr,
+         &hints, GdkWindowHints(GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE));
    }
 
    bool base_view::is_focus() const

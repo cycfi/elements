@@ -7,6 +7,12 @@
 
 using namespace photon;
 
+// Main window background
+auto make_bkd()
+{
+   return share(port(image{ "dark-bkd.jpg" }));
+}
+
 std::string const text =
    "We are in the midst of an intergalatic condensing of beauty that will "
    "clear a path toward the planet itself. The quantum leap of rebirth is "
@@ -74,6 +80,7 @@ int main(int argc, const char* argv[])
       {
          view_.content =
          {
+            make_bkd(),
             make_edit_box()
          };
       }

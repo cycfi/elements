@@ -26,7 +26,7 @@ namespace photon
                            view(view const&) = delete;
       view&                operator=(view const&) = delete;
 
-      virtual void         draw(rect area) override;
+      virtual void         draw(cairo_t* ctx, rect area) override;
       virtual void         click(mouse_button btn) override;
       virtual void         drag(mouse_button btn) override;
       virtual void         cursor(point p, cursor_tracking status) override;

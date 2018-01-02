@@ -203,9 +203,22 @@ namespace
 
 - (void) drawRect:(NSRect)dirty
 {
+   auto w = [self bounds].size.width;
+   auto h = [self bounds].size.height;
+   auto locked = [self lockFocusIfCanDraw];
+
+   auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
+   cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
+   cairo_t* context = cairo_create(surface);
+   cairo_surface_destroy(surface);
+
+   if (locked)
+      [self unlockFocus];
+
    [super drawRect:dirty];
 
    _view->draw(
+      context,
       {
          float(dirty.origin.x),
          float(dirty.origin.y),
@@ -213,6 +226,8 @@ namespace
          float(dirty.origin.y + dirty.size.height)
       }
    );
+
+   cairo_destroy(context);
 }
 
 - (void) mouseDown:(NSEvent*) event
@@ -483,28 +498,6 @@ namespace photon
    bool base_view::is_focus() const
    {
       return [[get_mac_view(h) window] isKeyWindow];
-   }
-
-   cairo_t* base_view::begin_drawing()
-   {
-      auto ns_view = get_mac_view(h);
-      auto w = [ns_view bounds].size.width;
-      auto h = [ns_view bounds].size.height;
-      auto locked = [ns_view lockFocusIfCanDraw];
-
-      auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
-      cairo_surface_t* surface = surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
-      cairo_t* context = cairo_create(surface);
-      cairo_surface_destroy(surface);
-
-      if (locked)
-         [ns_view unlockFocus];
-      return context;
-   }
-
-   void base_view::end_drawing(cairo_t* ctx)
-   {
-      cairo_destroy(ctx);
    }
 
    std::string clipboard()

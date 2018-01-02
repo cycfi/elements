@@ -48,17 +48,13 @@ namespace photon
       return resized;
    }
 
-   void view::draw(rect dirty_)
+   void view::draw(cairo_t* context_, rect dirty_)
    {
-      auto context_ = begin_drawing();
-
       _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
-      set_limits();
-      
-//      if (set_limits())
-//         return; // return early if the window was resized.
+      if (set_limits())
+         return; // return early if the window was resized.
 
       canvas cnv{ *context_ };
       auto size_ = size();
@@ -74,9 +70,6 @@ namespace photon
 
       // draw the subject
       content.draw(ctx);
-
-      // Cleanup the context
-      end_drawing(context_);
    }
 
    namespace

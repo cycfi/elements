@@ -291,7 +291,7 @@ namespace photon
       virtual        ~base_view() {}
       base_view&     operator=(base_view const&) = delete;
 
-      virtual void   draw(rect area) {};
+      virtual void   draw(cairo_t* ctx, rect area) {};
       virtual void   click(mouse_button btn) {}
       virtual void   drag(mouse_button btn) {}
       virtual void   cursor(point p, cursor_tracking status) {}
@@ -308,11 +308,6 @@ namespace photon
       point          size() const;
       void           size(point p);
       bool           is_focus() const;
-
-   protected:
-
-      cairo_t*       begin_drawing();
-      void           end_drawing(cairo_t* ctx);
 
    private:
 

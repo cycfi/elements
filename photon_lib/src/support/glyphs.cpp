@@ -250,7 +250,7 @@ namespace photon
           , start_glyph_index, space_glyph_index
           , start_cluster_index, space_cluster_index
           , *this
-          , lines.size() > 1 // skip leading spaces if this is not the first line
+          , lines.size() > 0 // skip leading spaces if this is not the first line
          };
          lines.push_back(std::move(glyph_));
          first = space_pos;

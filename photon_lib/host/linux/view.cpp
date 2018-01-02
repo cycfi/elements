@@ -20,6 +20,13 @@ namespace photon
       }
    };
 
+   host_view::~host_view()
+   {
+      if (surface)
+         cairo_surface_destroy(surface);
+      surface = nullptr;
+   }
+
    namespace
    {
       inline base_view& get(gpointer user_data)
@@ -27,16 +34,48 @@ namespace photon
          return *reinterpret_cast<base_view*>(user_data);
       }
 
+      void clear_surface(cairo_surface_t* surface)
+      {
+         cairo_t* cr = cairo_create(surface);
+         cairo_set_source_rgb(cr, 0, 0, 0); // $$$ fixme $$$
+         cairo_paint(cr);
+         cairo_destroy(cr);
+      }
+
+      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
+      {
+         auto& main_view = get(user_data);
+         auto* host_view = platform_access::get_host_view(main_view);
+         auto* window = host_view->window;
+
+         if (host_view->surface)
+            cairo_surface_destroy(host_view->surface);
+
+         host_view->surface = gdk_window_create_similar_surface(
+            gtk_widget_get_window(window), CAIRO_CONTENT_COLOR,
+            gtk_widget_get_allocated_width(window),
+            gtk_widget_get_allocated_height(window)
+         );
+
+         clear_surface(host_view->surface);
+         return true;
+      }
+
       gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
          auto& main_view = get(user_data);
-         platform_access::get_host_view(main_view)->cr = cr;
+         auto* host_view = platform_access::get_host_view(main_view);
+         cairo_set_source_surface(cr, host_view->surface, 0, 0);
+         cairo_paint(cr);
 
          // Note that cr (cairo_t) is already clipped to only draw the
          // exposed areas of the widget.
          double left, top, right, bottom;
          cairo_clip_extents(cr, &left, &top, &right, &bottom);
-         main_view.draw(rect{ float(left), float(top), float(right), float(bottom) });
+         main_view.draw(
+            cr,
+            rect{ float(left), float(top), float(right), float(bottom) }
+         );
 
          return false;
       }
@@ -180,6 +219,9 @@ namespace photon
 
       gtk_container_add(GTK_CONTAINER(window), drawing_area);
 
+      g_signal_connect(G_OBJECT(drawing_area), "configure-event",
+         G_CALLBACK(on_configure), &main_view);
+
       g_signal_connect(G_OBJECT(drawing_area), "draw",
          G_CALLBACK(on_draw), &main_view);
 
@@ -198,12 +240,13 @@ namespace photon
       // Ask to receive events the drawing area doesn't normally
       // subscribe to. In particular, we need to ask for the
       // button press and motion notify events that want to handle.
-      gtk_widget_set_events (drawing_area,
+      gtk_widget_set_events(drawing_area,
          gtk_widget_get_events(drawing_area)
          | GDK_BUTTON_PRESS_MASK
          | GDK_BUTTON_RELEASE_MASK
          | GDK_POINTER_MOTION_MASK
          | GDK_SCROLL_MASK
+                            // GDK_SMOOTH_SCROLL_MASK
       );
    }
 
@@ -252,17 +295,6 @@ namespace photon
    bool base_view::is_focus() const
    {
       return false;
-   }
-
-   cairo_t* base_view::begin_drawing()
-   {
-      // GTK already does this for us
-      return h->cr;
-   }
-
-   void base_view::end_drawing(cairo_t* ctx)
-   {
-      // GTK will do this for us
    }
 
    std::string clipboard()

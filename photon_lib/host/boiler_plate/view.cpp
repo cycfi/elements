@@ -42,11 +42,6 @@ namespace photon
       return false;
    }
 
-   cairo_t* base_view::setup_context()
-   {
-      return 0;
-   }
-
    std::string clipboard()
    {
       return "";

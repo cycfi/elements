@@ -34,10 +34,10 @@ namespace photon
 {
    struct host_view
    {
-      GtkWidget* window = 0;
+      ~host_view();
 
-      // This (cr) is only valid within the view's draw member function
-      cairo_t* cr = 0;
+      cairo_surface_t* surface = nullptr;
+      GtkWidget* window = nullptr;
 
       // Mouse button click tracking
       std::uint32_t click_time = 0;

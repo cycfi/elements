@@ -141,9 +141,12 @@ namespace photon
       on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
          auto& main_view = get(user_data);
+         host_view* view = platform_access::get_host_view(main_view);
          mouse_button btn;
-         if (get_mouse(event, btn, platform_access::get_host_view(main_view)))
+         if (get_mouse(event, btn, view))
          {
+            view->cursor_position = btn.pos;
+
             if (event->state & GDK_BUTTON1_MASK)
             {
                btn.down = true;
@@ -166,6 +169,8 @@ namespace photon
 
             if (btn.down)
                main_view.drag(btn);
+            else
+               main_view.cursor(view->cursor_position, cursor_tracking::hovering);
          }
          return TRUE;
       }
@@ -252,7 +257,7 @@ namespace photon
 
    point base_view::cursor_pos() const
    {
-      return {};
+      return h->cursor_position;
    }
 
    point base_view::size() const

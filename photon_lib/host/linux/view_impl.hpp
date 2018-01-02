@@ -45,6 +45,8 @@ namespace photon
 
       // Scroll acceleration tracking
       std::uint32_t scroll_time = 0;
+
+      point cursor_position;
    };
 
    config get_config();

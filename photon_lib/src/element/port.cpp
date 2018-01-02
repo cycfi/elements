@@ -116,8 +116,9 @@ namespace photon
          if (_canvas.hit_test(mp))
             _canvas.fill_style(fill_color.opacity(0.6));
 
-         _canvas.fill();
+         _canvas.fill_preserve();
 
+         _canvas.line_width(0.5);
          _canvas.stroke_style(outline_color);
          _canvas.stroke();
       }

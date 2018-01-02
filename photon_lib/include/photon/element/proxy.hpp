@@ -31,6 +31,8 @@ namespace photon
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
+      
+      using element::refresh;
 
    // Control
 

@@ -96,25 +96,26 @@ namespace photon
 
    namespace
    {
-      void draw_scrollbar_fill(canvas& _canvas, rect r)
+      void draw_scrollbar_fill(canvas& _canvas, rect r, color fill_color)
       {
          _canvas.begin_path();
          _canvas.rect(r);
-         _canvas.fill_style(color{ 200, 200, 200, 30 });
+         _canvas.fill_style(fill_color);
          _canvas.fill();
       }
 
       void draw_scrollbar(
          canvas& _canvas, rect b, float radius,
-         color outline_color, color fill_color, point mp
+         color outline_color, color fill_color, point mp,
+         bool is_tracking
       )
       {
          _canvas.begin_path();
          _canvas.round_rect(b, radius);
          _canvas.fill_style(fill_color);
 
-         if (_canvas.hit_test(mp))
-            _canvas.fill_style(fill_color.opacity(0.6));
+         if (is_tracking || _canvas.hit_test(mp))
+            _canvas.fill_style(fill_color.opacity(0.8));
 
          _canvas.fill_preserve();
 
@@ -133,7 +134,7 @@ namespace photon
       float w = info.bounds.width();
       float h = info.bounds.height();
 
-      draw_scrollbar_fill(ctx.canvas, info.bounds);
+      draw_scrollbar_fill(ctx.canvas, info.bounds, thm.scrollbar_color);
 
       if (w > h)
       {
@@ -149,7 +150,8 @@ namespace photon
       }
 
       draw_scrollbar(ctx.canvas, rect{ x, y, x+w, y+h }, scroller_base::width/3,
-         thm.frame_color, { 0, 0, 0, 120 }, mp);
+         thm.frame_color.opacity(0.5), thm.scrollbar_color.opacity(0.4), mp,
+         _tracking == ((w > h)? tracking_h : tracking_v));
    }
 
    rect scroller_base::scroll_bar_position(context const& ctx, scrollbar_info const& info)
@@ -290,6 +292,7 @@ namespace photon
                return ctx.element;
          }
          _tracking = none;
+         refresh(ctx);
       }
       return port_base::click(ctx, btn);
    }
@@ -429,7 +432,7 @@ namespace photon
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
          if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
          {
-            //$$$ fixme $$$ ctx.window.set_cursor(cursor::arrow);
+            set_cursor(cursor_type::arrow);
             ctx.view.refresh(ctx);
             return true;
          }

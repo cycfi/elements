@@ -60,6 +60,7 @@ namespace photon
       virtual hit_info     hit_element(context const& ctx, point p) const;
       virtual bool         focus(focus_request r);
 
+      using element::refresh;
       using composite_base::focus;
 
       void                 select(std::size_t index);

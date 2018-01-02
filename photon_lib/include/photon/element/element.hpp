@@ -49,6 +49,7 @@ namespace photon
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            refresh(context const& ctx, element& element);
+      void                    refresh(context const& ctx) { refresh(ctx, *this); }
 
    // Control
 

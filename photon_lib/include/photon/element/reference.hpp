@@ -41,6 +41,8 @@ namespace photon
       virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            refresh(context const& ctx, element& element);
 
+      using element::refresh;
+
    // Control
 
       virtual element*        click(context const& ctx, mouse_button btn);

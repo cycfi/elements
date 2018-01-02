@@ -18,6 +18,7 @@ namespace photon
       color                frame_color                = { 220, 220, 220, 80 };
       float                frame_corner_radius        = 3.0;
       float                frame_stroke_width         = 1.0;
+      color                scrollbar_color            = { 100, 100, 120, 80 };
 
       color                controls_color             = { 18, 49, 85, 200 };
       color                indicator_color            = { 0, 127, 255, 200 };

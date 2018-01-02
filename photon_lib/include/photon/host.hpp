@@ -302,7 +302,7 @@ namespace photon
 
       void           refresh();
       void           refresh(rect area);
-      void           limits(view_limits limits_, bool maintain_aspect);
+      void           limits(view_limits limits_);
 
       point          cursor_pos() const;
       point          size() const;

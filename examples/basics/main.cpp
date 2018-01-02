@@ -99,7 +99,7 @@ auto make_basic_text()
 
 auto make_basic_text2()
 {
-   auto text_box = margin({ 10, 50, 10, 10 }, static_text_box{ text });
+   auto text_box = margin({ 10, 50, 10, 10 }, vport(static_text_box{ text }));
 
    return
       margin(
@@ -230,7 +230,7 @@ int main(int argc, const char* argv[])
       make_basic_text(),
       make_basic_text2(),
       make_controls(),
-      testing{},
+      // testing{},
       make_controls2(),
       make_controls3(),
       make_controls4()

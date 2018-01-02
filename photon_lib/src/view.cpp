@@ -8,28 +8,44 @@
 
 namespace photon
 {
-   void view::set_limits(basic_context& bctx, bool maintain_aspect)
+   view::view(host_view* h)
+    : base_view(h)
    {
+      set_limits();
+   }
+
+   bool view::set_limits()
+   {
+      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
+      auto context_ = cairo_create(surface_);
+      canvas cnv{ *context_ };
+      bool resized = false;
+
+      // Update the limits and constrain the window size to the limits
+      basic_context bctx{ *this, cnv };
       auto limits_ = content.limits(bctx);
-      limits(limits_, maintain_aspect);
-
-      auto size_ = size();
-      clamp(size_.x, limits_.min.x, limits_.max.x);
-      clamp(size_.y, limits_.min.y, limits_.max.y);
-
-      if (maintain_aspect)
+      if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
-         auto aspect = limits_.min.x/limits_.min.y;
-         auto current_aspect = size_.x/size_.y;
-         if (std::floor(aspect * 100) != std::floor(current_aspect * 100))
+         auto size_ = size();
+         auto orig_size_ = size_;
+
+         _current_limits = limits_;
+         limits(limits_);
+
+         clamp(size_.x, limits_.min.x, limits_.max.x);
+         clamp(size_.y, limits_.min.y, limits_.max.y);
+
+         if (size_ != orig_size_)
          {
-            size_.x *= aspect;
-            size_.y = size_.x;
+            size(size_);
+            size_ = size();
+            resized = true;
          }
       }
 
-      if (size_ != size())
-         size(size_);
+      cairo_surface_destroy(surface_);
+      cairo_destroy(context_);
+      return resized;
    }
 
    void view::draw(rect dirty_)
@@ -38,12 +54,18 @@ namespace photon
 
       _dirty = dirty_;
 
+      // Update the limits and constrain the window size to the limits
+      set_limits();
+      
+//      if (set_limits())
+//         return; // return early if the window was resized.
+
       canvas cnv{ *context_ };
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
+      context ctx{ *this, cnv, &content, subj_bounds };
 
       // layout the subject only if the window bounds changes
-      context ctx{ *this, cnv, &content, subj_bounds };
       if (subj_bounds != _current_bounds)
       {
          _current_bounds = subj_bounds;

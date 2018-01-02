@@ -47,6 +47,35 @@ namespace photon
       return { std::forward<Subject>(subject) };
    }
 
+   class vport_base : public proxy_base
+   {
+   public:
+
+      vport_base()
+       : _valign(0.0)
+      {}
+
+      ~vport_base() {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
+      virtual void            draw(context const& ctx);
+
+      double                  valign() const { return _valign; }
+      void                    valign(double val) { _valign = val; }
+
+   private:
+
+      double                  _valign;
+   };
+
+   template <typename Subject>
+   inline proxy<typename std::decay<Subject>::type, vport_base>
+   vport(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Scrollers
    ////////////////////////////////////////////////////////////////////////////

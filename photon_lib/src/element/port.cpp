@@ -11,7 +11,7 @@
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
-   // port class implementation
+   // port_base class implementation
    ////////////////////////////////////////////////////////////////////////////
    view_limits port_base::limits(basic_context const& ctx) const
    {
@@ -36,6 +36,35 @@ namespace photon
    }
 
    void port_base::draw(context const& ctx)
+   {
+      auto state = ctx.canvas.new_state();
+      ctx.canvas.rect(ctx.bounds);
+      ctx.canvas.clip();
+      proxy_base::draw(ctx);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // vport_base class implementation
+   ////////////////////////////////////////////////////////////////////////////
+   view_limits vport_base::limits(basic_context const& ctx) const
+   {
+      view_limits e_limits = subject().limits(ctx);
+      return { { e_limits.min.x, 0 }, e_limits.max };
+   }
+
+   void vport_base::prepare_subject(context& ctx)
+   {
+      view_limits    e_limits          = subject().limits(ctx);
+      double         elem_height       = e_limits.min.y;
+      double         available_height  = ctx.parent->bounds.height();
+
+      ctx.bounds.top -= (elem_height - available_height) * _valign;
+      ctx.bounds.height(elem_height);
+
+      subject().layout(ctx);
+   }
+
+   void vport_base::draw(context const& ctx)
    {
       auto state = ctx.canvas.new_state();
       ctx.canvas.rect(ctx.bounds);

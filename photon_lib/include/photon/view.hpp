@@ -22,7 +22,7 @@ namespace photon
    class view : public base_view
    {
    public:
-                           view(host_view* h) : base_view(h) {}
+                           view(host_view* h);
                            view(view const&) = delete;
       view&                operator=(view const&) = delete;
 
@@ -39,7 +39,6 @@ namespace photon
 
       void                 refresh(element& element);
       void                 refresh(context const& ctx);
-
       rect                 dirty() const { return _dirty; }
 
       struct undo_redo_task
@@ -58,10 +57,11 @@ namespace photon
 
    private:
 
-      void                 set_limits(basic_context& bctx, bool maintain_aspect);
+      bool                 set_limits();
 
       rect                 _dirty;
       rect                 _current_bounds;
+      view_limits          _current_limits;
 
       using undo_stack_type = std::stack<undo_redo_task>;
 

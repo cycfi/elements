@@ -9,9 +9,6 @@
 #include <photon/support/glyphs.hpp>
 #include <photon/support/theme.hpp>
 #include <photon/element/element.hpp>
-//#include <photon/element/port.hpp>
-//#include <photon/element/margin.hpp>
-//#include <photon/element/layer.hpp>
 #include <string>
 #include <vector>
 

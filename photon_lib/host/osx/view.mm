@@ -121,7 +121,6 @@ namespace
 {
    NSTrackingArea*                  _tracking_area;
    NSMutableAttributedString*       _marked_text;
-   bool                             _first_time;
    std::unique_ptr<ph::base_view>   _view;
    key_map                          _keys;
 }
@@ -144,8 +143,6 @@ namespace
 
 - (void) make
 {
-   _first_time = true;
-
    _view = ph::new_view((__bridge ph::host_view*) self);
 
    _tracking_area = nil;
@@ -216,15 +213,6 @@ namespace
          float(dirty.origin.y + dirty.size.height)
       }
    );
-
-   // If this is our first time, let's do a redraw. The view may have been
-   // resized inside _view.draw and a redraw makes sure that the view is
-   // properly displayed.
-   if (_first_time)
-   {
-      _first_time = false;
-      [self display];
-   }
 }
 
 - (void) mouseDown:(NSEvent*) event
@@ -464,9 +452,13 @@ namespace photon
 
    void base_view::size(point p)
    {
-      auto  ns_view = get_mac_view(h);
-      ns_view.bounds.origin = NSMakePoint(0, 0);
-      [ns_view setFrameSize : NSMakeSize(p.x, p.y)];
+      auto ns_view = get_mac_view(h);
+      auto frame = [ns_view frame];
+      auto title_bar_height = [ns_view window].frame.size.height - frame.size.height;
+
+      frame.size.width = p.x;
+      frame.size.height = p.y + title_bar_height;
+      [[ns_view window] setFrame : frame display : YES animate : false];
    }
 
    void base_view::refresh()
@@ -481,13 +473,11 @@ namespace photon
       ];
    }
 
-   void base_view::limits(view_limits limits_, bool maintain_aspect)
+   void base_view::limits(view_limits limits_)
    {
       auto ns_view = get_mac_view(h);
       [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
       [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
-      if (maintain_aspect)
-         [[ns_view window] setContentAspectRatio:NSSize{ limits_.min.x, limits_.min.y } ];
    }
 
    bool base_view::is_focus() const

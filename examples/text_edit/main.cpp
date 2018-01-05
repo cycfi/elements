@@ -65,9 +65,9 @@ auto make_edit_box()
    return
       share(
          scroller(
-         margin(
-            { 20, 20, 20, 20 },
-            align_left_top(hsize(800, basic_text_box(text2+text)))
+            margin(
+               { 20, 20, 20, 20 },
+               align_left_top(hsize(800, basic_text_box(text2+text)))
          )
       )
    );

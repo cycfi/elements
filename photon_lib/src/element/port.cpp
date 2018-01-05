@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <iostream>
+
 namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -231,6 +233,8 @@ namespace photon
 
    void scroller_base::draw(context const& ctx)
    {
+       std::cout << "draw" << std::endl;
+
       port_base::draw(ctx);
 
       if (has_scrollbars())
@@ -427,8 +431,16 @@ namespace photon
 
    bool scroller_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (has_scrollbars())
-      {
+      if (has_scrollbars()) {
+          static int c = 0;
+          if (status == cursor_tracking::leaving || status == cursor_tracking::entering)
+              std::cout << c++ << (status == cursor_tracking::leaving ? " leaving" : " entering") << std::endl;
+
+          if (status == cursor_tracking::leaving)
+          {
+
+          }
+
          ctx.view.refresh(ctx);
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
          if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
@@ -437,7 +449,7 @@ namespace photon
             return true;
          }
       }
-      return port_base::cursor(ctx, p, status);
+      return true;
    }
 
    bool scroller_base::is_control() const

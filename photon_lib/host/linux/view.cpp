@@ -127,8 +127,7 @@ namespace photon
          return true;
       }
 
-      static gboolean
-      on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
+      gboolean on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
       {
          auto& main_view = get(user_data);
          mouse_button btn;
@@ -137,8 +136,7 @@ namespace photon
          return TRUE;
       }
 
-      static gboolean
-      on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
+      gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
          auto& main_view = get(user_data);
          host_view* view = platform_access::get_host_view(main_view);
@@ -175,8 +173,7 @@ namespace photon
          return TRUE;
       }
 
-      static gboolean
-      on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
+      gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
       {
          auto& main_view = get(user_data);
          auto* host_view = platform_access::get_host_view(main_view);
@@ -218,6 +215,19 @@ namespace photon
       }
    }
 
+   gboolean on_event_crossing(GtkWidget* widget, GdkEventCrossing* event, gpointer user_data)
+   {
+      auto& main_view = get(user_data);
+      auto* host_view = platform_access::get_host_view(main_view);
+      host_view->cursor_position = point{ float(event->x), float(event->y) };
+      main_view.cursor(
+         host_view->cursor_position,
+         (event->type == GDK_ENTER_NOTIFY) ?
+            cursor_tracking::entering :
+            cursor_tracking::leaving
+      );
+   }
+
    void make_main_window(base_view& main_view, GtkWidget* window)
    {
       auto* drawing_area = gtk_drawing_area_new();
@@ -241,6 +251,10 @@ namespace photon
          G_CALLBACK(on_motion), &main_view);
       g_signal_connect(drawing_area, "scroll-event",
          G_CALLBACK(on_scroll), &main_view);
+      g_signal_connect(drawing_area, "enter-notify-event",
+         G_CALLBACK(on_event_crossing), &main_view);
+      g_signal_connect(drawing_area, "leave-notify-event",
+         G_CALLBACK(on_event_crossing), &main_view);
 
       // Ask to receive events the drawing area doesn't normally
       // subscribe to. In particular, we need to ask for the
@@ -251,6 +265,8 @@ namespace photon
          | GDK_BUTTON_RELEASE_MASK
          | GDK_POINTER_MOTION_MASK
          | GDK_SCROLL_MASK
+         | GDK_ENTER_NOTIFY_MASK
+         | GDK_LEAVE_NOTIFY_MASK
                             // GDK_SMOOTH_SCROLL_MASK
       );
    }

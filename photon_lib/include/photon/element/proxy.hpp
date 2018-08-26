@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2017 Joel de Guzman
+   Copyright (c) 2016-2018 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -31,7 +31,7 @@ namespace photon
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
-      
+
       using element::refresh;
 
    // Control

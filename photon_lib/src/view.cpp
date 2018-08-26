@@ -121,7 +121,7 @@ namespace photon
    void view::cursor(point p, cursor_tracking status)
    {
       call(
-         [p, status, this](auto const& ctx, auto& content)
+         [p, status](auto const& ctx, auto& content)
          {
             if (!content.cursor(ctx, p, status))
                set_cursor(cursor_type::arrow);

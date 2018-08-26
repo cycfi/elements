@@ -461,7 +461,7 @@ namespace photon
 
       auto r = slider_labels_element<size, Subject, sizeof...(S)>
          {std::move(subject), font_size};
-      r._labels = { std::move(s)... };
+      r._labels = {{ std::move(s)... }};
       return r;
    }
 }

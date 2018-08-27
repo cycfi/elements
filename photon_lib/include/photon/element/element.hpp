@@ -78,8 +78,7 @@ namespace photon
    using element_const_ptr = std::shared_ptr<element const>;
 
    template <typename Element>
-   inline element_ptr
-   share(Element&& e)
+   inline auto share(Element&& e)
    {
       using element_type = typename std::decay<Element>::type;
       return std::make_shared<element_type>(std::forward<Element>(e));

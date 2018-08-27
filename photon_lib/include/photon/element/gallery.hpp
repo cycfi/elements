@@ -147,6 +147,27 @@ namespace photon
       return pane(heading(title, title_size), content, center_heading);
    }
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   // Grid Lines
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   class vgrid_lines : public element
+   {
+   public:
+
+                              vgrid_lines(float major_divisions, float minor_divisions)
+                               : _major_divisions(major_divisions)
+                               , _minor_divisions(minor_divisions)
+                              {}
+
+      virtual void            draw(context const& ctx);
+
+   private:
+
+      float                   _major_divisions;
+      float                   _minor_divisions;
+   };
+
+
    ////////////////////////////////////////////////////////////////////////////
    // Groups
    ////////////////////////////////////////////////////////////////////////////

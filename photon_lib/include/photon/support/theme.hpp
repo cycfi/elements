@@ -52,6 +52,11 @@ namespace photon
       float                major_ticks_width          = 1.5;
       float                minor_ticks_level          = 0.4;
       float                minor_ticks_width          = 0.7;
+
+      color                major_grid_color           = frame_color;
+      float                major_grid_width           = 0.5;
+      color                minor_grid_color           = indicator_color;
+      float                minor_grid_width           = 0.4;
    };
 
    // Access to the global theme

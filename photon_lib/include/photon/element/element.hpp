@@ -20,7 +20,7 @@ namespace photon
    struct context;
 
    ////////////////////////////////////////////////////////////////////////////
-   // Widgets
+   // Elements
    //
    // This is the class that deals with the graphic representation of fine-
    // grained elements inside a window which may be static graphics or active

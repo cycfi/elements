@@ -241,6 +241,13 @@ namespace photon
    {
       return reference<typename std::remove_reference<Element>::type>{ rhs };
    }
+
+   template <typename Element>
+   inline reference<Element>
+   link(std::shared_ptr<Element> rhs)
+   {
+      return reference<Element>{ *rhs };
+   }
 }
 
 #endif

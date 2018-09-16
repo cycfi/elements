@@ -666,6 +666,48 @@ namespace photon
          link(static_cast<dial_base&>(image.at(1)))
       );
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Size limited
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct limit_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                              limit_element(view_limits limits_, Subject&& subject)
+                               : base_type(std::move(subject))
+                               , _limits(limits_)
+                              {}
+
+                              limit_element(view_limits limits_, Subject const& subject)
+                               : base_type(subject)
+                               , _limits(limits_)
+                              {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+
+      view_limits             _limits;
+   };
+
+   template <typename Subject>
+   inline limit_element<typename std::decay<Subject>::type>
+   limit(view_limits limits_, Subject&& subject)
+   {
+      return { limits_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline view_limits
+   limit_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto l = this->subject().limits(ctx);
+      clamp_min(l.min.x, _limits.min.x);
+      clamp_min(l.min.y, _limits.min.y);
+      clamp_max(l.max.x, _limits.max.x);
+      clamp_max(l.max.y, _limits.max.y);
+      return l;
+   }
 }
 
 #endif

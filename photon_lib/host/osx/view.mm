@@ -29,6 +29,7 @@
 #include <photon/host.hpp>
 #include <memory>
 #include <map>
+#include <photon/support/json_io.hpp>
 #include <cairo-quartz.h>
 #import <Cocoa/Cocoa.h>
 
@@ -37,6 +38,7 @@
 #endif
 
 namespace ph = photon;
+namespace json = photon::json;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,8 +52,34 @@ namespace photon
    NSUInteger  translate_key_to_modifier_flag(key_code key);
 }
 
+struct window_state
+{
+   float x;
+   float y;
+   float width;
+   float height;
+};
+
+BOOST_FUSION_ADAPT_STRUCT(
+   window_state,
+   (float, x)
+   (float, y)
+   (float, width)
+   (float, height)
+)
+
 namespace
 {
+   boost::optional<window_state> load_window_state()
+   {
+      return json::load<window_state>("window_state.json");
+   }
+
+   void save_window_state(window_state r)
+   {
+      json::save<window_state>("window_state.json", r);
+   }
+
    // Defines a constant for empty ranges in NSTextInputClient
    NSRange const kEmptyRange = { NSNotFound, 0 };
 
@@ -123,6 +151,7 @@ namespace
    NSMutableAttributedString*       _marked_text;
    std::unique_ptr<ph::base_view>   _view;
    key_map                          _keys;
+   bool                             _start;
 }
 
 - (void) make;
@@ -143,6 +172,7 @@ namespace
 
 - (void) make
 {
+   _start = true;
    _view = ph::new_view((__bridge ph::host_view*) self);
 
    _tracking_area = nil;
@@ -153,14 +183,30 @@ namespace
    [[NSNotificationCenter defaultCenter]
       addObserver : self
          selector : @selector(windowDidBecomeKey:)
-             name : NSWindowDidBecomeKeyNotification object:[self window]
+             name : NSWindowDidBecomeKeyNotification
+           object : [self window]
    ];
 
 
    [[NSNotificationCenter defaultCenter]
       addObserver : self
          selector : @selector(windowDidResignKey:)
-             name : NSWindowDidResignMainNotification object:[self window]
+             name : NSWindowDidResignMainNotification
+           object : [self window]
+   ];
+
+   [[NSNotificationCenter defaultCenter]
+      addObserver : self
+         selector : @selector(frameDidChange:)
+             name : NSWindowDidResizeNotification
+           object : [self window]
+   ];
+
+   [[NSNotificationCenter defaultCenter]
+      addObserver : self
+         selector : @selector(frameDidChange:)
+             name : NSWindowDidMoveNotification
+           object : [self window]
    ];
 
    // $$$ Black $$$
@@ -203,6 +249,22 @@ namespace
 
 - (void) drawRect:(NSRect)dirty
 {
+   if (_start)
+   {
+      _start = false;
+      if (auto ws = load_window_state())
+      {
+         auto frame = [self window].frame;
+         frame.origin.x = ws->x;
+         frame.size.width = ws->width;
+         frame.origin.y = ws->y;
+         frame.size.height = ws->height;
+
+         [[self window] setFrame : frame display : YES animate : false];
+         return;
+      }
+   }
+
    auto w = [self bounds].size.width;
    auto h = [self bounds].size.height;
    auto locked = [self lockFocusIfCanDraw];
@@ -441,6 +503,20 @@ namespace
 -(void) windowDidResignKey:(NSNotification*) notification
 {
    _view->focus(ph::focus_request::end_focus);
+}
+
+- (void)frameDidChange:(NSNotification*) notification
+{
+   auto frame = [self window].frame;
+
+   save_window_state(
+      {
+         float(frame.origin.x),
+         float(frame.origin.y),
+         float(frame.size.width),
+         float(frame.size.height)
+      }
+   );
 }
 
 @end

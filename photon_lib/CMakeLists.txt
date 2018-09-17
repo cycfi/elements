@@ -123,6 +123,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    target_include_directories(libphoton
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
+      ${Boost_INCLUDE_DIRS}
    )
 endif()
 
@@ -130,6 +131,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    target_include_directories(libphoton
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
+      ${Boost_INCLUDE_DIRS}
       ${FREETYPE_INCLUDE_DIRS}
       PRIVATE include
       ${GTK3_INCLUDE_DIRS}

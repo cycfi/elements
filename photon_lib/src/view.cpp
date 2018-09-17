@@ -14,6 +14,10 @@ namespace photon
       set_limits();
    }
 
+   view::~view()
+   {
+   }
+
    bool view::set_limits()
    {
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);

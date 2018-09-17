@@ -24,6 +24,7 @@ namespace photon
    public:
                            view(host_view* h);
                            view(view const&) = delete;
+                           ~view();
       view&                operator=(view const&) = delete;
 
       virtual void         draw(cairo_t* ctx, rect area) override;

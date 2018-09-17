@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright © 2016 Cycfi Research. All rights reserved.
+   Copyright (c) 2016-2018 Cycfi Research. All rights reserved.
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 

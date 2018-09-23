@@ -509,14 +509,15 @@ namespace
 {
    auto frame = [self window].frame;
 
-   save_window_state(
-      {
-         float(frame.origin.x),
-         float(frame.origin.y),
-         float(frame.size.width),
-         float(frame.size.height)
-      }
-   );
+   if (!_start)
+       save_window_state(
+          {
+             float(frame.origin.x),
+             float(frame.origin.y),
+             float(frame.size.width),
+             float(frame.size.height)
+          }
+       );
 }
 
 @end

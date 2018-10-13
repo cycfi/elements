@@ -6,7 +6,7 @@
 #include "view_impl.hpp"
 #include <photon/support/assert.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    config get_config()
    {
@@ -58,5 +58,5 @@ namespace photon
       g_object_unref(app);
       return status;
    }
-}
+}}
 

@@ -6,7 +6,7 @@
 #include <photon/element/floating.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    view_limits floating_element::limits(basic_context const& ctx) const
    {
@@ -30,4 +30,4 @@ namespace photon
       else if (h > e_limits.max.y)
          ctx.bounds.height(e_limits.max.y);
    }
-}
+}}

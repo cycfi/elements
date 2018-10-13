@@ -11,7 +11,7 @@
 #include <boost/filesystem.hpp>
 #include <string>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    pixmap::pixmap(point size, float scale)
     : _surface(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size.x, size.y))
@@ -111,4 +111,4 @@ namespace photon
    {
       cairo_surface_set_device_scale(_surface, 1/val, 1/val);
    }
-}
+}}

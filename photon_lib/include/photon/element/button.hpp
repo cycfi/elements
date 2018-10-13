@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016)
-#define PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016
 
 #include <photon/element/layer.hpp>
 #include <functional>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Momentary Button
@@ -92,6 +92,6 @@ namespace photon
    inline basic_latching_button::basic_latching_button(W1&& off, W2&& on)
     : basic_button(std::forward<W1>(off), std::forward<W2>(on))
    {}
-}
+}}
 
 #endif

@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_JSON_DECEMBER_5_2017)
-#define PHOTON_GUI_LIB_JSON_DECEMBER_5_2017
+#if !defined(CYCFI_PHOTON_GUI_LIB_JSON_DECEMBER_5_2017)
+#define CYCFI_PHOTON_GUI_LIB_JSON_DECEMBER_5_2017
 
 #include <type_traits>
 #include <utility>
@@ -27,7 +27,7 @@
 
 #include <photon/support/exception.hpp>
 
-namespace photon { namespace json
+namespace cycfi { namespace photon { namespace json
 {
    namespace x3 = boost::spirit::x3;
    namespace fusion = boost::fusion;
@@ -687,11 +687,11 @@ namespace photon { namespace json
    {
       print_container(attr);
    }
-}}
+}}}
 
 namespace boost { namespace spirit { namespace x3 { namespace traits
 {
-   namespace json = photon::json;
+   namespace json = cycfi::photon::json;
 
    template <typename Attribute>
    struct is_substitute<json::pair_parser::attribute, Attribute

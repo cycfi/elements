@@ -8,7 +8,7 @@
 #include <photon/support/draw_utils.hpp>
 #include <photon/support/theme.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    void background_fill::draw(context const& ctx)
    {
@@ -467,5 +467,4 @@ namespace photon
          pos += incr;
       }
    }
-
-}
+}}

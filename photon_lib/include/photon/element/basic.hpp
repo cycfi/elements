@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016)
-#define PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
 
 #include <photon/element/element.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Element
@@ -40,6 +40,6 @@ namespace photon
    {
       return { f };
    }
-}
+}}
 
 #endif

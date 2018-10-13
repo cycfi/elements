@@ -7,7 +7,7 @@
 #include <photon/support/misc.hpp>
 #include <photon/support/theme.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {
@@ -75,4 +75,4 @@ namespace photon
       detail::codepoint_to_utf8(codepoint, &result[0]);
       return result;
    }
-}
+}}

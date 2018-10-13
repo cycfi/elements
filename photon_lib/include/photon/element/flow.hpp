@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016)
-#define PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016
 
 #include <photon/element/composite.hpp>
 #include <photon/element/tile.hpp>
 #include <functional>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
@@ -66,6 +66,6 @@ namespace photon
    {
       return flow_element{ flowable_ };
    }
-}
+}}
 
 #endif

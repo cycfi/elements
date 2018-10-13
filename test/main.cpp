@@ -8,7 +8,7 @@
 #include <boost/fusion/include/equal_to.hpp>
 #include <sstream>
 
-namespace json = photon::json;
+namespace json = cycfi::photon::json;
 namespace x3 = boost::spirit::x3;
 namespace fusion = boost::fusion;
 

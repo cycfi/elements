@@ -3,15 +3,15 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
-#define PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
+#if !defined(CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
+#define CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
 
 #include <photon/host.hpp>
 #include <photon/support/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    namespace x3 = boost::spirit::x3;
    namespace fs = boost::filesystem;
@@ -22,7 +22,7 @@ namespace photon
       std::string application_name;
       std::string application_id;
    };
-}
+}}
 
 BOOST_FUSION_ADAPT_STRUCT(
    photon::config,
@@ -30,7 +30,7 @@ BOOST_FUSION_ADAPT_STRUCT(
    (std::string, application_id)
 )
 
-namespace photon
+namespace cycfi { namespace photon
 {
    struct host_view
    {
@@ -52,6 +52,6 @@ namespace photon
    config get_config();
    void activate(GtkApplication* app, gpointer user_data);
    void make_main_window(base_view& main_view, GtkWidget* window);
-}
+}}
 
 #endif

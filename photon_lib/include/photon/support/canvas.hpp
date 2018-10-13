@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_CANVAS_MAY_3_2016)
-#define PHOTON_GUI_LIB_CANVAS_MAY_3_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_CANVAS_MAY_3_2016)
+#define CYCFI_PHOTON_GUI_LIB_CANVAS_MAY_3_2016
 
 #include <photon/support/color.hpp>
 #include <photon/support/rect.hpp>
@@ -22,7 +22,7 @@
 # include <map>
 #endif
 
-namespace photon
+namespace cycfi { namespace photon
 {
    class canvas
    {
@@ -230,7 +230,7 @@ namespace photon
       std::map<std::string, cairo_font_face_t*> _custom_fonts;
 #endif
    };
-}
+}}
 
 #include <photon/support/detail/canvas_impl.hpp>
 #endif

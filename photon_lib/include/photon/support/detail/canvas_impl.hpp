@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016)
-#define PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016)
+#define CYCFI_PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016
 
 #ifdef __linux__
 # include <map>
@@ -23,7 +23,7 @@ extern "C"
    void blur_image_surface(cairo_surface_t *surface, int radius);
 }
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
@@ -597,5 +597,6 @@ namespace photon
          _state.pattern_set = _state.stroke_set;
       }
    }
-}
+}}
+
 #endif

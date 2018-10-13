@@ -6,7 +6,7 @@
 #include <photon.hpp>
 #include <photon/support/draw_utils.hpp>
 
-using namespace photon;
+using namespace cycfi::photon;
 
 // Main window background color
 auto constexpr bkd_color = color{ 35, 35, 37, 255 };

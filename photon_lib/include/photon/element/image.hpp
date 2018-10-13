@@ -3,15 +3,15 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016)
-#define PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016
 
 #include <photon/element/element.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/pixmap.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Images
@@ -121,6 +121,6 @@ namespace photon
       size_t                  _index;
       float                   _height;
    };
-}
+}}
 
 #endif

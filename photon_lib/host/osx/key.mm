@@ -30,7 +30,7 @@
 #include <photon/host.hpp>
 #import <Cocoa/Cocoa.h>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    key_code translate_key(unsigned int key)
    {
@@ -199,4 +199,4 @@ namespace photon
             return 0;
       }
    }
-}
+}}

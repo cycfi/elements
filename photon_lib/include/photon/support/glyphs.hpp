@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016)
-#define PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016)
+#define CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
 
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
@@ -13,7 +13,7 @@
 #include <vector>
 #include <cairo.h>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // glyphs: Text drawing and measuring utility
@@ -133,6 +133,6 @@ namespace photon
          byte_index += cluster->num_bytes;
       }
    }
-}
+}}
 
 #endif

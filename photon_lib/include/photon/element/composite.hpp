@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016)
-#define PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016)
+#define CYCFI_PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016
 
 #include <photon/element/element.hpp>
 #include <vector>
 #include <array>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Composites
@@ -122,6 +122,6 @@ namespace photon
       std::size_t             _last;
       container&              _container;
    };
-}
+}}
 
 #endif

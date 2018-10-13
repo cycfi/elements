@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016)
-#define PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016
 
 #include <photon/element/element.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Fixed sizing elements
@@ -507,6 +507,6 @@ namespace photon
    {
       ctx.canvas.restore();
    }
-}
+}}
 
 #endif

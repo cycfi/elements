@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation
@@ -540,4 +540,4 @@ namespace photon
       }
       return false;
    }
-}
+}}

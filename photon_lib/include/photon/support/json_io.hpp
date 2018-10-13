@@ -3,15 +3,15 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_LOAD_JSON_DECEMBER_18_2017)
-#define PHOTON_GUI_LIB_LOAD_JSON_DECEMBER_18_2017
+#if !defined(CYCFI_PHOTON_GUI_LIB_LOAD_JSON_DECEMBER_18_2017)
+#define CYCFI_PHOTON_GUI_LIB_LOAD_JSON_DECEMBER_18_2017
 
 #include <photon/support/json.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/optional.hpp>
 
-namespace photon { namespace json
+namespace cycfi { namespace photon { namespace json
 {
    namespace fs = boost::filesystem;
 
@@ -41,6 +41,6 @@ namespace photon { namespace json
       printer pr(file);
       pr.print(attr);
    }
-}}
+}}}
 
 #endif

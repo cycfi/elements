@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016)
-#define PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016
 
 #include <photon/support/point.hpp>
 #include <photon/element/element.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // tracker tracks the mouse movement.
@@ -116,6 +116,6 @@ namespace photon
    {
       return true;
    }
-}
+}}
 
 #endif

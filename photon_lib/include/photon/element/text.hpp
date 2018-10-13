@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016)
-#define PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016
 
 #include <photon/support/glyphs.hpp>
 #include <photon/support/theme.hpp>
@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -143,6 +143,6 @@ namespace photon
 
       std::string             _placeholder;
    };
-}
+}}
 
 #endif

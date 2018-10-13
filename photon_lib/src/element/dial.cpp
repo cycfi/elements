@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    dial_base::dial_base(double init_value)
     : _value(init_value)
@@ -176,4 +176,4 @@ namespace photon
          cnv.fill_text({ cp.radius * cos_, cp.radius * sin_ }, labels[i].c_str());
       }
    }
-}
+}}

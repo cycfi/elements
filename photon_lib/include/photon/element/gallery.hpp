@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016)
-#define PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016
 
 #include <photon/support/theme.hpp>
 #include <photon/support/text_utils.hpp>
 #include <photon/element.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Background Fill
@@ -708,6 +708,6 @@ namespace photon
       clamp_max(l.max.y, _limits.max.y);
       return l;
    }
-}
+}}
 
 #endif

@@ -3,15 +3,15 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016)
-#define PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016
 
 #include <photon/element/proxy.hpp>
 #include <photon/element/tracker.hpp>
 #include <photon/support.hpp>
 #include <functional>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Dials
@@ -267,6 +267,6 @@ namespace photon
       r._labels = {{ std::move(s)... }};
       return r;
    }
-}
+}}
 
 #endif

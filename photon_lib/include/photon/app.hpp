@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_APP_OCTOBER_23_2017)
-#define PHOTON_GUI_LIB_APP_OCTOBER_23_2017
+#if !defined(CYCFI_PHOTON_GUI_LIB_APP_OCTOBER_23_2017)
+#define CYCFI_PHOTON_GUI_LIB_APP_OCTOBER_23_2017
 
 #include <photon/view.hpp>
 #include <functional>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    class app
    {
@@ -36,6 +36,6 @@ namespace photon
          return app_main(argc, argv);
       }
    };
-}
+}}
 
 #endif

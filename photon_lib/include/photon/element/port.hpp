@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016)
-#define PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016
 
 #include <photon/element/proxy.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Port elements
@@ -186,6 +186,6 @@ namespace photon
    {
       return { std::forward<Subject>(subject), traits };
    }
-}
+}}
 
 #endif

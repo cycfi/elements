@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_RECT_APRIL_10_2016)
-#define PHOTON_GUI_LIB_RECT_APRIL_10_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_RECT_APRIL_10_2016)
+#define CYCFI_PHOTON_GUI_LIB_RECT_APRIL_10_2016
 
 #include <photon/support/point.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // rect
@@ -221,5 +221,6 @@ namespace photon
       r.right = 0.0;
       r.bottom = 0.0;
    }
-}
+}}
+
 #endif

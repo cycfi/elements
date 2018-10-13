@@ -7,7 +7,7 @@
 #include <photon/support.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
@@ -218,4 +218,4 @@ namespace photon
    {
       index(val * (num_frames()-1));
    }
-}
+}}

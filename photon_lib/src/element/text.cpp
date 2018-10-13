@@ -10,7 +10,7 @@
 #include <photon/support/context.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -924,4 +924,4 @@ namespace photon
          select_end(start_);
       }
    }
-}
+}}

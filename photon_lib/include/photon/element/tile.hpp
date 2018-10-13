@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016)
-#define PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016
 
 #include <photon/element/composite.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
@@ -70,6 +70,6 @@ namespace photon
       r = container{{ share(std::forward<W>(elements))... }};
       return r;
    }
-}
+}}
 
 #endif

@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_VIEW_AUGUST_15_2016)
-#define PHOTON_GUI_LIB_VIEW_AUGUST_15_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016)
+#define CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016
 
 #include <photon/host.hpp>
 #include <photon/support/rect.hpp>
@@ -15,7 +15,7 @@
 #include <functional>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    struct context;
 
@@ -69,6 +69,6 @@ namespace photon
       undo_stack_type      _undo_stack;
       undo_stack_type      _redo_stack;
    };
-}
+}}
 
 #endif

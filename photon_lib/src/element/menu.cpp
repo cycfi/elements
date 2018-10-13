@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon/element/menu.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    void basic_popup_button::layout(context const& ctx)
    {
@@ -117,4 +117,4 @@ namespace photon
    {
       return true;
    }
-}
+}}

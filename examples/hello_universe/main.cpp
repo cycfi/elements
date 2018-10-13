@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon.hpp>
 
-using namespace photon;
+using namespace cycfi::photon;
 
 auto make_view()
 {

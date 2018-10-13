@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon/element/menu.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    element* basic_popup_element::hit_test(context const& ctx, point p)
    {
@@ -47,4 +47,4 @@ namespace photon
       if (i != ctx.view.content.end())
          ctx.view.content.erase(i);
    }
-}
+}}

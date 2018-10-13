@@ -7,7 +7,7 @@
 #include <photon/support/rect.hpp>
 #include <algorithm>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    bool intersects(rect a, rect b)
    {
@@ -98,4 +98,4 @@ namespace photon
       clamp_max(r.bottom, encl.bottom);
       return r;
    }
-}
+}}

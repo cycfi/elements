@@ -7,7 +7,7 @@
 #include <photon/support/context.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // proxy class implementation
@@ -167,4 +167,4 @@ namespace photon
    {
       subject().value(val);
    }
-}
+}}

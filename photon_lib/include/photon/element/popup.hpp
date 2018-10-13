@@ -3,13 +3,13 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016)
-#define PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016
 
 #include <photon/element/floating.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Popup
@@ -42,6 +42,6 @@ namespace photon
    {
       return { std::forward<Subject>(subject) };
    }
-}
+}}
 
 #endif

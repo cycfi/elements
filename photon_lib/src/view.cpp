@@ -6,7 +6,7 @@
 #include <photon/view.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    view::view(host_view* h)
     : base_view(h)
@@ -200,4 +200,4 @@ namespace photon
       content.focus(r);
       refresh();
    }
-}
+}}

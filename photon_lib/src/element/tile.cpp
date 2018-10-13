@@ -6,7 +6,7 @@
 #include <photon/element/tile.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
@@ -139,4 +139,4 @@ namespace photon
    {
       return rect{ _tiles[index], _top, _tiles[index + 1], _bottom };
    }
-}
+}}

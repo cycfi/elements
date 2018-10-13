@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon/support/draw_utils.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius)
    {
@@ -276,4 +276,4 @@ namespace photon
       cnv.line_width(lwidth*1.5);
       cnv.stroke();
    }
-}
+}}

@@ -8,7 +8,7 @@
 #include <photon/view.hpp>
 #include <cmath>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    view_limits slider_base::limits(basic_context const& ctx) const
    {
@@ -291,4 +291,4 @@ namespace photon
          pos += incr;
       }
    }
-}
+}}

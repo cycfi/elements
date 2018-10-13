@@ -6,7 +6,7 @@
 #include <photon/support/glyphs.hpp>
 #include <photon/support/detail/scratch_context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    static detail::scratch_context scratch_context_;
 
@@ -326,4 +326,4 @@ namespace photon
          throw failed_to_build_master_glyphs{};
       }
    }
-}
+}}

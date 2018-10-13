@@ -7,7 +7,7 @@
 #include <photon/support.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // element class implementation
@@ -104,4 +104,4 @@ namespace photon
    void element::value(std::string val)
    {
    }
-}
+}}

@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016)
-#define PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016)
+#define CYCFI_PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016
 
 #include <photon/support/assert.hpp>
 #include <photon/support/canvas.hpp>

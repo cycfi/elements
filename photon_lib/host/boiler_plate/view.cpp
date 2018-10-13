@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon/host.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback
@@ -69,5 +69,5 @@ namespace photon
             break;
       }
    }
-}
+}}
 

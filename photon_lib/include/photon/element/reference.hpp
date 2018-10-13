@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016)
-#define PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016)
+#define CYCFI_PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016
 
 #include <photon/element/element.hpp>
 #include <photon/element/element.hpp>
 #include <functional>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Element Reference
@@ -248,6 +248,6 @@ namespace photon
    {
       return reference<Element>{ *rhs };
    }
-}
+}}
 
 #endif

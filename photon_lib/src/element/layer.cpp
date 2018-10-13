@@ -7,7 +7,7 @@
 #include <photon/view.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Layer
@@ -159,4 +159,4 @@ namespace photon
       if (index < size())
          _selected_index = index;
    }
-}
+}}

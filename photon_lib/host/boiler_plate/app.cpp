@@ -7,11 +7,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Application event loop entry
-namespace photon
+namespace cycfi { namespace photon
 {
    int app_main(int argc, const char* argv[])
    {
       return 0;
    }
-}
+}}
 

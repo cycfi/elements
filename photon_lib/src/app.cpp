@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon/app.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
-}
+}}
 

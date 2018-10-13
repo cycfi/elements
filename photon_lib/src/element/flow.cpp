@@ -6,7 +6,7 @@
 #include <photon/element/flow.hpp>
 #include <photon/support/context.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
@@ -66,4 +66,4 @@ namespace photon
       using htile = range_composite<htile_element>;
       return std::make_shared<htile>(*this, first, last);
    }
-}
+}}

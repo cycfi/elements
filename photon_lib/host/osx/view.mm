@@ -37,20 +37,20 @@
 # error "ARC is off"
 #endif
 
-namespace ph = photon;
-namespace json = photon::json;
+namespace ph = cycfi::photon;
+namespace json = cycfi::photon::json;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
 
-namespace photon
+namespace cycfi { namespace photon
 {
    // These functions are defined in key.mm:
    key_code    translate_key(unsigned int key);
    int         translate_flags(NSUInteger flags);
    NSUInteger  translate_key_to_modifier_flag(key_code key);
-}
+}}
 
 struct window_state
 {
@@ -348,7 +348,7 @@ namespace
    [[self window] setAcceptsMouseMovedEvents:NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::leaving);
+   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -356,7 +356,7 @@ namespace
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, photon::cursor_tracking::hovering);
+   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
@@ -522,7 +522,7 @@ namespace
 
 @end
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback
@@ -623,5 +623,5 @@ namespace photon
             break;
       }
    }
-}
+}}
 

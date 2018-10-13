@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_PIXMAP_SEPTEMBER_5_2016)
-#define PHOTON_GUI_LIB_PIXMAP_SEPTEMBER_5_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_PIXMAP_SEPTEMBER_5_2016)
+#define CYCFI_PHOTON_GUI_LIB_PIXMAP_SEPTEMBER_5_2016
 
 #include <vector>
 #include <memory>
@@ -12,7 +12,7 @@
 #include <photon/support/point.hpp>
 #include <photon/support/exception.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    class canvas;
 
@@ -95,6 +95,6 @@ namespace photon
       rhs._surface = nullptr;
       return *this;
    }
-}
+}}
 
 #endif

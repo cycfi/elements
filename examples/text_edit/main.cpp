@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon.hpp>
 
-using namespace photon;
+using namespace cycfi::photon;
 
 // Main window background
 auto make_bkd()

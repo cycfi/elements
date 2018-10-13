@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <photon.hpp>
 
-using namespace photon;
+using namespace cycfi::photon;
 
 // Main window background color
 auto bkd_color = color{ 62, 62, 62, 255 };

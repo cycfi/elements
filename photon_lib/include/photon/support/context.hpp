@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_CONTEXT_APRIL_17_2016)
-#define PHOTON_GUI_LIB_CONTEXT_APRIL_17_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_CONTEXT_APRIL_17_2016)
+#define CYCFI_PHOTON_GUI_LIB_CONTEXT_APRIL_17_2016
 
 #include <photon/support/point.hpp>
 #include <photon/support/rect.hpp>
 #include <cairo.h>
 
-namespace photon
+namespace cycfi { namespace photon
 {
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// Contexts
@@ -58,7 +58,6 @@ namespace photon
       context const*    parent;
       photon::rect      bounds;
    };
+}}
 
-
-}
 #endif

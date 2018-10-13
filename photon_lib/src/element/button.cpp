@@ -6,7 +6,7 @@
 #include <photon/element/button.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Momentary Button
@@ -115,4 +115,4 @@ namespace photon
          on_click(true);
       return this;
    }
-}
+}}

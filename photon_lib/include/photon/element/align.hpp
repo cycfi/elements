@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016)
-#define PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016
 
 #include <photon/element/proxy.hpp>
 #include <photon/support/context.hpp>
 #include <memory>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Alignment elements
@@ -231,6 +231,6 @@ namespace photon
    {
       return align_right(align_bottom(std::forward<Subject>(subject)));
    }
-}
+}}
 
 #endif

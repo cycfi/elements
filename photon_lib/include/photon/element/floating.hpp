@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016)
-#define PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016
 
 #include <photon/element/proxy.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Floating elements
@@ -37,6 +37,6 @@ namespace photon
    {
       return { std::forward<Subject>(subject), bounds };
    }
-}
+}}
 
 #endif

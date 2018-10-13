@@ -7,7 +7,7 @@
 #include <photon/support/context.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
@@ -276,4 +276,4 @@ namespace photon
       for (std::size_t ix = 0; ix < size(); ++ix)
          at(ix).idle(ctx);
    }
-}
+}}

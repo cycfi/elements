@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_POINT_APRIL_11_2016)
-#define PHOTON_GUI_LIB_POINT_APRIL_11_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_POINT_APRIL_11_2016)
+#define CYCFI_PHOTON_GUI_LIB_POINT_APRIL_11_2016
 
 #include <type_traits>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Colors
@@ -317,5 +317,6 @@ namespace photon
          { 255, 255, 255, 255 },
       };
    }
- }
+ }}
+
  #endif

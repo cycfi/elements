@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
-#define PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
 #include <photon/host.hpp>
 #include <photon/support/rect.hpp>
@@ -14,7 +14,7 @@
 #include <string>
 #include <type_traits>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    struct basic_context;
    struct context;
@@ -83,6 +83,6 @@ namespace photon
       using element_type = typename std::decay<Element>::type;
       return std::make_shared<element_type>(std::forward<Element>(e));
    }
-}
+}}
 
 #endif

@@ -5,7 +5,7 @@
 =============================================================================*/
 #include "cairo.h"
 
-namespace photon { namespace detail
+namespace cycfi { namespace photon { namespace detail
 {
    class scratch_context
    {
@@ -32,4 +32,4 @@ namespace photon { namespace detail
       cairo_surface_t*  _surface;
       cairo_t*          _context;
    };
-}}
+}}}

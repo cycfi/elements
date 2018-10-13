@@ -3,15 +3,15 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016)
-#define PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016)
+#define CYCFI_PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016
 
 #include <photon/element/element.hpp>
 #include <photon/element/button.hpp>
 #include <photon/element/popup.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
    // Popup Button
@@ -73,6 +73,6 @@ namespace photon
    {
       return { std::forward<Subject>(subject) };
    }
-}
+}}
 
 #endif

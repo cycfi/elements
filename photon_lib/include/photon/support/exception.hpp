@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016)
-#define PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016
+#if !defined(CYCFI_PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016)
+#define CYCFI_PHOTON_GUI_LIB_EXCEPTION_OCTOBER_3_2016
 
 #include <stdexcept>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    struct exception : std::runtime_error
    {
@@ -20,6 +20,6 @@ namespace photon
                        : std::runtime_error(what)
                      {}
    };
-}
+}}
 
 #endif

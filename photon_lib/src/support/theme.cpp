@@ -6,7 +6,7 @@
 #include <photon/support/theme.hpp>
 #include <photon/view.hpp>
 
-namespace photon
+namespace cycfi { namespace photon
 {
    // The global theme
    theme _theme;
@@ -20,4 +20,4 @@ namespace photon
    {
       _theme = thm;
    }
-}
+}}

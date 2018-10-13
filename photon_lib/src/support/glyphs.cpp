@@ -14,8 +14,8 @@ namespace cycfi { namespace photon
     : _first(first)
     , _last(last)
    {
-      PHOTON_ASSERT(_first, "Precondition failure: _first must not be null");
-      PHOTON_ASSERT(_last, "Precondition failure: _last must not be null");
+      CYCFI_ASSERT(_first, "Precondition failure: _first must not be null");
+      CYCFI_ASSERT(_last, "Precondition failure: _last must not be null");
    }
 
    glyphs::glyphs(
@@ -34,11 +34,11 @@ namespace cycfi { namespace photon
     , _cluster_count(cluster_end - cluster_start)
     , _clusterflags(master._clusterflags)
    {
-      PHOTON_ASSERT(_first, "Precondition failure: _first must not be null");
-      PHOTON_ASSERT(_last, "Precondition failure: _last must not be null");
-      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+      CYCFI_ASSERT(_first, "Precondition failure: _first must not be null");
+      CYCFI_ASSERT(_last, "Precondition failure: _last must not be null");
+      CYCFI_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      CYCFI_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      CYCFI_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       // We strip leading spaces until after the last leading newline.
       // Examples:
@@ -85,9 +85,9 @@ namespace cycfi { namespace photon
       if (_first == _last)
          return;
 
-      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+      CYCFI_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      CYCFI_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      CYCFI_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       auto cr = &canvas_.cairo_context();
       auto state = canvas_.new_state();
@@ -108,9 +108,9 @@ namespace cycfi { namespace photon
       if (_first == _last)
          return 0;
 
-      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+      CYCFI_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      CYCFI_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      CYCFI_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       if (_glyph_count)
       {
@@ -225,14 +225,14 @@ namespace cycfi { namespace photon
 
    void master_glyphs::break_lines(float width, std::vector<glyphs>& lines)
    {
-      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      CYCFI_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
 
       // reurn early if there's nothing to break
       if (_first == _last)
          return;
 
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+      CYCFI_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      CYCFI_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       char const* first = _first;
       char const* last = _last;

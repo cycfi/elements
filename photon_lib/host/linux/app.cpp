@@ -11,9 +11,9 @@ namespace cycfi { namespace photon
    config get_config()
    {
       fs::path path = "config.json";
-      PHOTON_ASSERT(fs::exists(path), "Error: config.json not exist.");
+      CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
       auto r = json::load<config>(path);
-      PHOTON_ASSERT(r, "Error: Invalid config.json.");
+      CYCFI_ASSERT(r, "Error: Invalid config.json.");
       return r.get();
    }
 

@@ -440,7 +440,7 @@ namespace cycfi { namespace photon
       base_type::draw(ctx);
 
       auto thl = static_cast<slider_base const&>(this->subject()).thumb().limits(ctx);
-      PHOTON_ASSERT( // assert that the thumb is not resizable
+      CYCFI_ASSERT( // assert that the thumb is not resizable
          (thl.min.x == thl.max.x && thl.min.y == thl.max.y),
          "Error. The slider thumb should not be resizable."
       );

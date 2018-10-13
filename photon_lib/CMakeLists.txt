@@ -143,6 +143,7 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    target_link_libraries(libphoton
+      common
       ${CAIRO_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}
       ${Boost_SYSTEM_LIBRARY}
@@ -153,6 +154,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    link_directories(${GTK3_LIBRARY_DIRS})
 
    target_link_libraries(libphoton
+      common
       ${CAIRO_LIBRARIES}
       ${FREETYPE_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}

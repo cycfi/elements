@@ -7,7 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PNG 1
 #include <photon/support/detail/stb_image.h>
-#include <photon/support/assert.hpp>
+#include <common/assert.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 
@@ -32,7 +32,7 @@ namespace cycfi { namespace photon
       if (pos == std::string::npos)
          throw failed_to_load_pixmap{ "Unknown file type." };
 
-      PHOTON_ASSERT(boost::filesystem::exists(filename), "File does not exist.");
+      CYCFI_ASSERT(boost::filesystem::exists(filename), "File does not exist.");
 
       auto  ext = path.substr(pos);
       if (ext == ".png" || ext == ".PNG")

@@ -32,8 +32,6 @@ namespace cycfi { namespace photon
 
    void draw_panel(canvas& cnv, rect bounds, color c, float corner_radius)
    {
-      rect const shadow_offset  = { -10, -10, +20, +30 };
-
       // Panel fill
       cnv.begin_path();
       cnv.round_rect(bounds, corner_radius);

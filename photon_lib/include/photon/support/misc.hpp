@@ -17,23 +17,6 @@
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Time
-   ////////////////////////////////////////////////////////////////////////////
-   using duration       = std::chrono::duration<double>;
-   using microseconds   = std::chrono::duration<double, std::micro>;
-   using milliseconds   = std::chrono::duration<double, std::milli>;
-   using seconds        = std::chrono::duration<double>;
-   using minutes        = std::chrono::duration<double, std::ratio<60>>;
-   using hours          = std::chrono::duration<double, std::ratio<60*60>>;
-   using time_point     = std::chrono::time_point<std::chrono::steady_clock, duration>;
-
-   // $$$ FIXME $$$
-   // inline time_point now()
-   // {
-   //    return std::chrono::high_resolution_clock::now();
-   // }
-
-   ////////////////////////////////////////////////////////////////////////////
    // Utilities
    ////////////////////////////////////////////////////////////////////////////
    template <typename T, typename U>

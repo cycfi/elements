@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016)
 #define CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
 
+#include <common/assert.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
-#include <photon/support/assert.hpp>
 #include <photon/support/exception.hpp>
 #include <vector>
 #include <cairo.h>
@@ -106,9 +106,9 @@ namespace cycfi { namespace photon
    template <typename F>
    inline void glyphs::for_each(F f)
    {
-      PHOTON_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
-      PHOTON_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
-      PHOTON_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
+      CYCFI_ASSERT(_scaled_font, "Precondition failure: _scaled_font must not be null");
+      CYCFI_ASSERT(_glyphs, "Precondition failure: _glyphs must not be null");
+      CYCFI_ASSERT(_clusters, "Precondition failure: _clusters must not be null");
 
       if (_first == _last)
          return;

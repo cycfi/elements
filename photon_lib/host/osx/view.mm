@@ -249,22 +249,6 @@ namespace
 
 - (void) drawRect:(NSRect)dirty
 {
-   if (_start)
-   {
-      _start = false;
-      if (auto ws = load_window_state())
-      {
-         auto frame = [self window].frame;
-         frame.origin.x = ws->x;
-         frame.size.width = ws->width;
-         frame.origin.y = ws->y;
-         frame.size.height = ws->height;
-
-         [[self window] setFrame : frame display : YES animate : false];
-         return;
-      }
-   }
-
    auto w = [self bounds].size.width;
    auto h = [self bounds].size.height;
    auto locked = [self lockFocusIfCanDraw];
@@ -290,6 +274,21 @@ namespace
    );
 
    cairo_destroy(context);
+   
+   if (_start)
+   {
+      _start = false;
+      if (auto ws = load_window_state())
+      {
+         auto frame = [self window].frame;
+         frame.origin.x = ws->x;
+         frame.size.width = ws->width;
+         frame.origin.y = ws->y;
+         frame.size.height = ws->height;
+
+         [[self window] setFrame : frame display : YES animate : false];
+      }
+   }
 }
 
 - (void) mouseDown:(NSEvent*) event

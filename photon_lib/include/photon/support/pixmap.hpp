@@ -10,7 +10,7 @@
 #include <memory>
 #include <cairo.h>
 #include <photon/support/point.hpp>
-#include <photon/support/exception.hpp>
+#include <infra/exception.hpp>
 
 namespace cycfi { namespace photon
 {

@@ -7,7 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PNG 1
 #include <photon/support/detail/stb_image.h>
-#include <common/assert.hpp>
+#include <infra/assert.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 

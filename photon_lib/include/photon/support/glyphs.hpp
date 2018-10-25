@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016)
 #define CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
 
-#include <common/assert.hpp>
+#include <infra/assert.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
-#include <photon/support/exception.hpp>
+#include <infra/exception.hpp>
 #include <vector>
 #include <cairo.h>
 

@@ -29,7 +29,7 @@
 #include <photon/host.hpp>
 #include <memory>
 #include <map>
-#include <photon/support/json_io.hpp>
+#include <infra/json_io.hpp>
 #include <cairo-quartz.h>
 #import <Cocoa/Cocoa.h>
 
@@ -38,7 +38,7 @@
 #endif
 
 namespace ph = cycfi::photon;
-namespace json = cycfi::photon::json;
+namespace json = cycfi::json;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////

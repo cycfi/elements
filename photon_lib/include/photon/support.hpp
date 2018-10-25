@@ -6,8 +6,8 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016)
 #define CYCFI_PHOTON_GUI_LIB_SUPPORT_AUGUST_15_2016
 
-#include <common/support.hpp>
-#include <common/assert.hpp>
+#include <infra/support.hpp>
+#include <infra/assert.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/circle.hpp>
 #include <photon/support/color.hpp>

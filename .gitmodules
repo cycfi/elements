@@ -1,6 +1,0 @@
-[submodule "libs/glfw"]
-	path = libs/glfw
-	url = git@github.com:glfw/glfw.git
-[submodule "libs/json_spirit"]
-	path = libs/json_spirit
-	url = git@github.com:cierelabs/json_spirit.git

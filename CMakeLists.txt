@@ -5,11 +5,11 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2)
 
-if (NOT DEFINED INTEGRE_COMMON_ROOT)
-  set(INTEGRE_COMMON_ROOT ../infra)
+if (NOT DEFINED INTEGRE_JSON)
+  set(INTEGRE_JSON ../json)
 endif()
 
-add_subdirectory(${INTEGRE_COMMON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/infra")
+add_subdirectory(${INTEGRE_JSON} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 project(libphoton)
 set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})

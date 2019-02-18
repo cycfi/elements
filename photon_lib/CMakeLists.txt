@@ -17,6 +17,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
       OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-Wno-missing-braces -Wno-comma")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-ftemplate-backtrace-limit=0")
 
 endif()
 
@@ -144,6 +145,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    target_link_libraries(libphoton
       infra
+      json
       ${CAIRO_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}
       ${Boost_SYSTEM_LIBRARY}
@@ -155,6 +157,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    target_link_libraries(libphoton
       infra
+      json
       ${CAIRO_LIBRARIES}
       ${FREETYPE_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}

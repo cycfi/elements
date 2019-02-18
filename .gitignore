@@ -25,3 +25,4 @@ xcuserdata/
 *.xcscmblueprint
 /.vscode/
 /.idea/
+/build/

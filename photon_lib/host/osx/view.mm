@@ -29,7 +29,7 @@
 #include <photon/host.hpp>
 #include <memory>
 #include <map>
-#include <infra/json_io.hpp>
+#include <json/json_io.hpp>
 #include <cairo-quartz.h>
 #import <Cocoa/Cocoa.h>
 
@@ -249,19 +249,16 @@ namespace
 
 - (void) drawRect:(NSRect)dirty
 {
+   [super drawRect:dirty];
+
    auto w = [self bounds].size.width;
    auto h = [self bounds].size.height;
-   auto locked = [self lockFocusIfCanDraw];
 
-   auto context_ref = CGContextRef(NSGraphicsContext.currentContext.graphicsPort);
+   auto context_ref = NSGraphicsContext.currentContext.CGContext;
    cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
    cairo_t* context = cairo_create(surface);
    cairo_surface_destroy(surface);
 
-   if (locked)
-      [self unlockFocus];
-
-   [super drawRect:dirty];
 
    _view->draw(
       context,
@@ -579,10 +576,10 @@ namespace cycfi { namespace photon
    std::string clipboard()
    {
       NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-      if (![[pasteboard types] containsObject:NSStringPboardType])
+      if (![[pasteboard types] containsObject:NSPasteboardTypeString])
          return {};
 
-      NSString* object = [pasteboard stringForType:NSStringPboardType];
+      NSString* object = [pasteboard stringForType:NSPasteboardTypeString];
       if (!object)
          return {};
       return [object UTF8String];
@@ -590,12 +587,12 @@ namespace cycfi { namespace photon
 
    void clipboard(std::string const& text)
    {
-      NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
+      NSArray* types = [NSArray arrayWithObjects:NSPasteboardTypeString, nil];
 
       NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
       [pasteboard declareTypes:types owner:nil];
       [pasteboard setString:[NSString stringWithUTF8String:text.c_str()]
-                    forType:NSStringPboardType];
+                    forType:NSPasteboardTypeString];
    }
 
    void set_cursor(cursor_type type)

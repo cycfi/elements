@@ -10,7 +10,7 @@
 #include <memory>
 #include <cairo.h>
 #include <photon/support/point.hpp>
-#include <infra/exception.hpp>
+#include <stdexcept>
 
 namespace cycfi { namespace photon
 {
@@ -19,7 +19,10 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Pixmaps
    ////////////////////////////////////////////////////////////////////////////
-   struct failed_to_load_pixmap : exception { using exception::exception; };
+   struct failed_to_load_pixmap : std::runtime_error
+   {
+       using std::runtime_error::runtime_error;
+   };
 
    class pixmap
    {

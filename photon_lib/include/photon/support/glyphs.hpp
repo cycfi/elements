@@ -9,8 +9,8 @@
 #include <infra/assert.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/text_utils.hpp>
-#include <infra/exception.hpp>
 #include <vector>
+#include <stdexcept>
 #include <cairo.h>
 
 namespace cycfi { namespace photon
@@ -71,8 +71,12 @@ namespace cycfi { namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   struct failed_to_build_master_glyphs : exception {};
-
+   struct failed_to_build_master_glyphs : std::runtime_error
+   {
+      failed_to_build_master_glyphs()
+       : std::runtime_error("Error. Failed to build master glyphs.") {}
+   };
+    
    class master_glyphs : public glyphs
    {
    public:

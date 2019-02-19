@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <cmath>
 
-#include <iostream>
-
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -233,8 +231,6 @@ namespace cycfi { namespace photon
 
    void scroller_base::draw(context const& ctx)
    {
-       std::cout << "draw" << std::endl;
-
       port_base::draw(ctx);
 
       if (has_scrollbars())
@@ -431,16 +427,8 @@ namespace cycfi { namespace photon
 
    bool scroller_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (has_scrollbars()) {
-          static int c = 0;
-          if (status == cursor_tracking::leaving || status == cursor_tracking::entering)
-              std::cout << c++ << (status == cursor_tracking::leaving ? " leaving" : " entering") << std::endl;
-
-          if (status == cursor_tracking::leaving)
-          {
-
-          }
-
+      if (has_scrollbars())
+      {
          ctx.view.refresh(ctx);
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
          if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))

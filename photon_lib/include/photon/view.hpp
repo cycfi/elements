@@ -22,10 +22,8 @@ namespace cycfi { namespace photon
    class view : public base_view
    {
    public:
-                           view(host_view* h);
-                           view(view const&) = delete;
+                           view(host_window h);
                            ~view();
-      view&                operator=(view const&) = delete;
 
       virtual void         draw(cairo_t* ctx, rect area) override;
       virtual void         click(mouse_button btn) override;
@@ -54,9 +52,16 @@ namespace cycfi { namespace photon
       bool                 undo();
       bool                 redo();
 
-      layer_composite      content;
+      using content_type = layer_composite;
+      using layers_type = layer_composite::container_type;
+
+      content_type&        content()         { return _content; }
+      content_type const&  content() const   { return _content; }
+      void                 content(layers_type&& layers);
 
    private:
+
+      layer_composite      _content;
 
       bool                 set_limits();
 

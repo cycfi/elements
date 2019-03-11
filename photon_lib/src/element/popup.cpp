@@ -34,17 +34,17 @@ namespace cycfi { namespace photon
 
    void basic_popup_element::open(context const& ctx, click_function on_click)
    {
-      ctx.view.content.push_back(shared_from_this());
+      ctx.view.content().push_back(shared_from_this());
       _on_click = on_click;
    }
 
    void basic_popup_element::close(context const& ctx)
    {
       auto i = std::find(
-         ctx.view.content.begin(), ctx.view.content.end(), shared_from_this()
+         ctx.view.content().begin(), ctx.view.content().end(), shared_from_this()
       );
 
-      if (i != ctx.view.content.end())
-         ctx.view.content.erase(i);
+      if (i != ctx.view.content().end())
+         ctx.view.content().erase(i);
    }
 }}

@@ -2,14 +2,16 @@
 
 using namespace cycfi::photon;
 
-class my_view : base_view
+// Main window background color
+auto constexpr bkd_color = color{ 35, 35, 37, 255 };
+
+struct background : element
 {
-public:
-
-   using base_view::base_view;
-
-   void draw(cairo_t* ctx, rect area) override
+   void draw(context const& ctx)
    {
+      auto& cnv = ctx.canvas;
+      cnv.fill_style(bkd_color);
+      cnv.fill_rect(ctx.bounds);
    }
 };
 
@@ -22,7 +24,10 @@ int main(int argc, const char* argv[])
    auto p = _win.position();
    _win.on_close = [&_app]() { _app.stop(); };
 
-   my_view view(_win.host());
+   view my_view(_win.host());
+   my_view.content(
+      { share(background{}) }
+   );
 
    _app.run();
    return 0;

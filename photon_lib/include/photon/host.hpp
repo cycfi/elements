@@ -315,6 +315,7 @@ namespace cycfi { namespace photon
       point          size() const;
       void           size(point p);
       bool           is_focus() const;
+      host_view      host() const { return _view; }
 
    private:
 
@@ -368,8 +369,8 @@ namespace cycfi { namespace photon
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard
-   inline std::string clipboard()  { /* $$$ for now $$$ */ return {}; }
-   inline void clipboard(std::string const& text)  { /* $$$ for now $$$ */ }
+   std::string clipboard();
+   void clipboard(std::string const& text);
 
    ////////////////////////////////////////////////////////////////////////////
    // The Cursor
@@ -383,7 +384,7 @@ namespace cycfi { namespace photon
       v_resize
    };
 
-   inline void set_cursor(cursor_type type) { /* $$$ for now $$$ */ }
+   void set_cursor(cursor_type type);
 }}
 
 #endif

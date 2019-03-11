@@ -91,6 +91,8 @@ namespace cycfi { namespace photon
 
       virtual std::size_t     size() const               { return Container::size(); };
       virtual element&        at(std::size_t ix) const   { return *(*this)[ix].get(); }
+
+      using Container::empty;
    };
 
    template <size_t N, typename Base>

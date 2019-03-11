@@ -5,12 +5,47 @@
 =============================================================================*/
 #include <photon/app.hpp>
 #import <Cocoa/Cocoa.h>
+#include <dlfcn.h>
 #include "nsstring.h"
 
 namespace cycfi { namespace photon
 {
+   namespace
+   {
+      CFBundleRef GetBundleFromExecutable(const char* filepath)
+      {
+         NSString* execStr = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
+         NSString* macOSStr = [execStr stringByDeletingLastPathComponent];
+         NSString* contentsStr = [macOSStr stringByDeletingLastPathComponent];
+         NSString* bundleStr = [contentsStr stringByDeletingLastPathComponent];
+         return CFBundleCreate (0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory:YES]);
+      }
+
+      CFBundleRef GetCurrentBundle()
+      {
+         Dl_info info;
+         if (dladdr ((const void*)GetCurrentBundle, &info))
+         {
+            if (info.dli_fname)
+            {
+               return GetBundleFromExecutable(info.dli_fname);
+            }
+         }
+         return 0;
+      }
+   }
+
    app::app(int argc, const char* argv[])
    {
+      // Before anything else, set the working directory so we can access
+      // our resources
+      CFBundleRef mainBundle = GetCurrentBundle();
+      CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+      char path[PATH_MAX];
+      CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+      CFRelease(resourcesURL);
+      chdir(path);
+
       [NSApplication sharedApplication];
       [NSApp setActivationPolicy : NSApplicationActivationPolicyRegular];
 

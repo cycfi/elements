@@ -1,27 +1,21 @@
-/*=============================================================================
-   Copyright (c) 2016-2018 Joel de Guzman
-
-   Distributed under the MIT License (https://opensource.org/licenses/MIT)
-=============================================================================*/
 #include <photon.hpp>
 
 using namespace cycfi::photon;
 
-auto make_view()
-{
-   return share(scroller(image{ "space.jpg" }));
-}
-
 int main(int argc, const char* argv[])
 {
-   app my_app{
-      [](view& view_)
+   app _app(argc, argv);
+   window _win(_app.name(), { 20, 20, 660, 420 });
+   _win.on_close = [&_app]() { _app.stop(); };
+
+   view view_(_win.host());
+
+   view_.content(
       {
-         view_.content =
-         {
-            make_view()
-         };
+         share(scroller(image{ "space.jpg" }))
       }
-   };
-   return my_app.main(argc, argv);
+   );
+
+   _app.run();
+   return 0;
 }

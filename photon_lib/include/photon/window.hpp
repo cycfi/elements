@@ -41,7 +41,7 @@ namespace cycfi { namespace photon
    public:
                         window(
                            std::string const& name
-                         , rect const& bounds
+                         , rect const& bounds = { 0, 0, 100, 100 }
                         );
                         ~window();
 

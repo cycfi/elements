@@ -124,10 +124,7 @@ auto make_htile_main()
 int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
-   window _win(_app.name(), { 50, 50, 1024, 768 });
-
-   auto s = _win.size();
-   auto p = _win.position();
+   window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
    auto right_btn = button(icons::right);

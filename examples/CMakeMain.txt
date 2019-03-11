@@ -32,7 +32,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpeg
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.jpg
       ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.png
-      ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xib
    )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    file(

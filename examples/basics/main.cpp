@@ -9,7 +9,7 @@
 using namespace cycfi::photon;
 
 // Main window background color
-auto constexpr bkd_color = color{ 35, 35, 37, 255 };
+auto constexpr bkd_color = rgba(35, 35, 37, 255);
 
 struct background : element
 {

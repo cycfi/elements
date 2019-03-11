@@ -264,8 +264,8 @@ namespace cycfi { namespace photon
 
       box.width(box.height());
 
-      color c1 = state ? indicator_color.level(1.5) : color(0, 0, 0, 32);
-      color c2 = state ? indicator_color : color(0, 0, 0, 92);
+      color c1 = state ? indicator_color.level(1.5) : rgba(0, 0, 0, 32);
+      color c2 = state ? indicator_color : rgba(0, 0, 0, 92);
 
       if (state && hilite)
       {
@@ -304,7 +304,7 @@ namespace cycfi { namespace photon
       }
       else
       {
-         color outline_color = hilite ? theme_.frame_color : color{ 0, 0, 0, 48 };
+         color outline_color = hilite ? theme_.frame_color : rgba(0, 0, 0, 48);
          canvas_.begin_path();
          canvas_.round_rect(box.inset(1, 1), 3);
          canvas_.stroke_style(outline_color);

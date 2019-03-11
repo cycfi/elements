@@ -213,7 +213,7 @@ namespace cycfi { namespace photon
          int                     align          = 0;
          point                   shadow_offset  = { 0, 0 };
          float                   shadow_blur    = 0.0;
-         color                   shadow_color   = { 0, 0, 0, 20 };
+         color                   shadow_color   = rgba(0, 0, 0, 20);
 
          enum pattern_state { none_set, stroke_set, fill_set };
          pattern_state           pattern_set = none_set;

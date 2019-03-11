@@ -3,7 +3,7 @@
 using namespace cycfi::photon;
 
 // Main window background color
-auto bkd_color = color{ 62, 62, 62, 255 };
+auto bkd_color = rgba(62, 62, 62, 255);
 
 struct background : element
 {

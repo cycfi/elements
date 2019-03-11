@@ -14,8 +14,8 @@ namespace cycfi { namespace photon
          bounds.bottom_left()
       };
 
-      gradient.add_color_stop({ 0.0, { 255, 255, 255, 16 } });
-      gradient.add_color_stop({ 0.8, { 0, 0, 0, 16 } });
+      gradient.add_color_stop({ 0.0, rgba(255, 255, 255, 16) });
+      gradient.add_color_stop({ 0.8, rgba(0, 0, 0, 16) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();
@@ -25,7 +25,7 @@ namespace cycfi { namespace photon
       cnv.begin_path();
       cnv.move_to(point{ bounds.left+0.5f, bounds.bottom-0.5f });
       cnv.line_to(point{ bounds.right-0.5f, bounds.bottom-0.5f });
-      cnv.stroke_style(color{ 0, 0, 0, 32 });
+      cnv.stroke_style(rgba(0, 0, 0, 32));
       cnv.line_width(1);
       cnv.stroke();
    }
@@ -56,7 +56,7 @@ namespace cycfi { namespace photon
 
          cnv.begin_path();
          cnv.round_rect(shr, corner_radius*2);
-         cnv.fill_style(color(0, 0, 0, 20));
+         cnv.fill_style(rgba(0, 0, 0, 20));
          cnv.fill();
 
          shr.left += 1;
@@ -65,7 +65,7 @@ namespace cycfi { namespace photon
          shr.bottom -= 2;
          cnv.begin_path();
          cnv.round_rect(shr, corner_radius*1.5);
-         cnv.fill_style(color(0, 0, 0, 30));
+         cnv.fill_style(rgba(0, 0, 0, 30));
          cnv.fill();
 
          shr.left += 1;
@@ -74,7 +74,7 @@ namespace cycfi { namespace photon
          shr.bottom -= 2;
          cnv.begin_path();
          cnv.round_rect(shr, corner_radius);
-         cnv.fill_style(color(0, 0, 0, 40));
+         cnv.fill_style(rgba(0, 0, 0, 40));
          cnv.fill();
       }
    }
@@ -86,8 +86,8 @@ namespace cycfi { namespace photon
          bounds.bottom_left()
       };
 
-      gradient.add_color_stop({ 0.0, { 255, 255, 255, 32 } });
-      gradient.add_color_stop({ 1.0, { 0, 0, 0, 32 } });
+      gradient.add_color_stop({ 0.0, rgba(255, 255, 255, 32) });
+      gradient.add_color_stop({ 1.0, rgba(0, 0, 0, 32) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();
@@ -100,7 +100,7 @@ namespace cycfi { namespace photon
 
       cnv.begin_path();
       cnv.round_rect(bounds.inset(0.5, 0.5), corner_radius-0.5);
-      cnv.stroke_style(color{ 0, 0, 0, 48 });
+      cnv.stroke_style(rgba(0, 0, 0, 48));
       cnv.stroke();
    }
 
@@ -166,8 +166,8 @@ namespace cycfi { namespace photon
             bounds.bottom_left()
          };
 
-         gradient.add_color_stop({ 1.0, { 255, 255, 255, 64 } });
-         gradient.add_color_stop({ 0.0, { 0, 0, 0, 32 } });
+         gradient.add_color_stop({ 1.0, rgba(255, 255, 255, 64) });
+         gradient.add_color_stop({ 0.0, rgba(0, 0, 0, 32) });
          cnv.fill_style(gradient);
 
          cnv.begin_path();

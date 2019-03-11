@@ -261,7 +261,7 @@ namespace cycfi { namespace photon
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
    auto const button_margin = rect{ 10, 5, 10, 5 };
-   auto const default_button_color = color{ 0, 0, 0, 0 };
+   auto const default_button_color = rgba(0, 0, 0, 0);
 
    struct basic_button_body : public element
    {

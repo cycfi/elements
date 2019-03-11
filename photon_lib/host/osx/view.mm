@@ -259,7 +259,6 @@ namespace
    cairo_t* context = cairo_create(surface);
    cairo_surface_destroy(surface);
 
-
    _view->draw(
       context,
       {
@@ -271,7 +270,7 @@ namespace
    );
 
    cairo_destroy(context);
-   
+
    if (_start)
    {
       _start = false;

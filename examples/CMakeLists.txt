@@ -6,7 +6,6 @@
 #add_subdirectory(hello_universe)
 #add_subdirectory(basics)
 #add_subdirectory(text_edit)
-#add_subdirectory(tiles_aligns_and_spans)
+add_subdirectory(tiles_aligns_and_spans)
 
-add_subdirectory(starter)
 

@@ -1,8 +1,3 @@
-/*=============================================================================
-   Copyright (c) 2016-2018 Joel de Guzman
-
-   Distributed under the MIT License (https://opensource.org/licenses/MIT)
-=============================================================================*/
 #include <photon.hpp>
 
 using namespace cycfi::photon;
@@ -128,6 +123,13 @@ auto make_htile_main()
 
 int main(int argc, const char* argv[])
 {
+   app _app(argc, argv);
+   window _win(_app.name(), { 50, 50, 1024, 768 });
+
+   auto s = _win.size();
+   auto p = _win.position();
+   _win.on_close = [&_app]() { _app.stop(); };
+
    auto right_btn = button(icons::right);
    auto up_btn = button(icons::up);
 
@@ -136,36 +138,36 @@ int main(int argc, const char* argv[])
       make_htile_main()    // horizontal tiles aligns and spans
    );
 
-   app my_app{
-      [&](view& view_)
-      {
-         right_btn.on_click = [&](bool)
-         {
-            content.select(1);
-            view_.refresh(content);
-         };
+   view view_(_win.host());
 
-         up_btn.on_click = [&](bool)
-         {
-            content.select(0);
-            view_.refresh(content);
-         };
-
-         auto top = htile(
-            hspan(1.0, align_left(right_margin(8, label("Tiles Aligns and Spans")))),
-            hspan(0.1, link(right_btn)),
-            hspan(0.1, link(up_btn))
-         );
-
-         auto main_pane = pane(top, link(content), false);
-         auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
-
-         view_.content =
-         {
-            share(background{}),
-            share(main_element)
-         };
-      }
+   right_btn.on_click = [&](bool)
+   {
+      content.select(1);
+      view_.refresh(content);
    };
-   return my_app.main(argc, argv);
+
+   up_btn.on_click = [&](bool)
+   {
+      content.select(0);
+      view_.refresh(content);
+   };
+
+   auto top = htile(
+      hspan(1.0, align_left(right_margin(8, label("Tiles Aligns and Spans")))),
+      hspan(0.1, link(right_btn)),
+      hspan(0.1, link(up_btn))
+   );
+
+   auto main_pane = pane(top, link(content), false);
+   auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
+
+   view_.content(
+      {
+         share(background{}),
+         share(main_element)
+      }
+   );
+
+   _app.run();
+   return 0;
 }

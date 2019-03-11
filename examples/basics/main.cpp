@@ -224,6 +224,12 @@ struct testing : element
 
 int main(int argc, const char* argv[])
 {
+   app _app(argc, argv);
+   window _win(_app.name());
+   _win.on_close = [&_app]() { _app.stop(); };
+
+   view view_(_win.host());
+
    auto next_btn = button("Next");
 
    auto content = deck(
@@ -238,30 +244,28 @@ int main(int argc, const char* argv[])
 
    int select = 0;
 
-   app my_app{
-      [&](view& view_)
-      {
-         next_btn.on_click = [&](bool)
-         {
-            if (++select == content.size())
-               select = 0;
-            content.select(select);
-            view_.refresh(content);
-         };
-
-         auto top = htile(
-            hspan(1.0, align_left(right_margin(8, label("Basics")))),
-            hspan(0.1, link(next_btn))
-         );
-         auto main_pane = pane(top, link(content), false);
-         auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
-
-         view_.content =
-         {
-            share(background{}),
-            share(main_element)
-         };
-      }
+   next_btn.on_click = [&](bool)
+   {
+      if (++select == content.size())
+         select = 0;
+      content.select(select);
+      view_.refresh(content);
    };
-   return my_app.main(argc, argv);
+
+   auto top = htile(
+      hspan(1.0, align_left(right_margin(8, label("Basics")))),
+      hspan(0.1, link(next_btn))
+   );
+   auto main_pane = pane(top, link(content), false);
+   auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
+
+   view_.content(
+      {
+         share(background{}),
+         share(main_element)
+      }
+   );
+
+   _app.run();
+   return 0;
 }

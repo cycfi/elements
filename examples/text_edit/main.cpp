@@ -75,15 +75,20 @@ auto make_edit_box()
 
 int main(int argc, const char* argv[])
 {
-   app my_app{
-      [](view& view_)
+   app _app(argc, argv);
+   window _win(_app.name());
+   _win.on_close = [&_app]() { _app.stop(); };
+
+   view view_(_win.host());
+
+   view_.content(
       {
-         view_.content =
-         {
-            make_bkd(),
-            make_edit_box()
-         };
+         make_bkd(),
+         make_edit_box()
       }
-   };
-   return my_app.main(argc, argv);
+   );
+
+   _app.run();
+   return 0;
+
 }

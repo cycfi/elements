@@ -7,6 +7,7 @@
 #define CYCFI_PHOTON_GUI_LIB_FERBRUARY_17_2017
 
 #include <photon/app.hpp>
+#include <photon/window.hpp>
 #include <photon/view.hpp>
 #include <photon/element.hpp>
 

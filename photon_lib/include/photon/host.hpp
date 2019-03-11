@@ -36,8 +36,10 @@
 #include <functional>
 #include <cairo.h>
 
+#include <infra/support.hpp>
 #include <photon/support/point.hpp>
 #include <photon/support/rect.hpp>
+#include <photon/window.hpp>
 
 namespace cycfi { namespace photon
 {
@@ -65,8 +67,6 @@ namespace cycfi { namespace photon
    // may pollute the clean platform independent API.
    ////////////////////////////////////////////////////////////////////////////
 
-   struct host_view;
-   struct platform_access;
 
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
@@ -281,15 +281,22 @@ namespace cycfi { namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // The view base class
+   // The base view base class
    ////////////////////////////////////////////////////////////////////////////
-   class base_view
+
+#if defined(__APPLE__)
+   using host_view = void*;
+#elif defined(_WIN32)
+   using host_view = HWND;
+#elif defined(__linux__)
+   using host_view = GtkWidget*;
+#endif
+
+   class base_view : non_copyable
    {
    public:
-                     base_view(host_view* h) : h(h) {}
-                     base_view(base_view const&) = delete;
-      virtual        ~base_view() {}
-      base_view&     operator=(base_view const&) = delete;
+                     base_view(host_window h);
+      virtual        ~base_view();
 
       virtual void   draw(cairo_t* ctx, rect area) {};
       virtual void   click(mouse_button btn) {}
@@ -311,22 +318,58 @@ namespace cycfi { namespace photon
 
    private:
 
-      friend struct platform_access;
-      host_view*     h;
+      host_view      _view;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Application event loop entry
-   int app_main(int argc, const char* argv[]);
 
-   ////////////////////////////////////////////////////////////////////////////
-   // View creation callback
-   extern std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
+
+   // ////////////////////////////////////////////////////////////////////////////
+   // // The view base class
+   // ////////////////////////////////////////////////////////////////////////////
+   // class base_view
+   // {
+   // public:
+   //                   base_view(host_view* h) : h(h) {}
+   //                   base_view(base_view const&) = delete;
+   //    virtual        ~base_view() {}
+   //    base_view&     operator=(base_view const&) = delete;
+
+   //    virtual void   draw(cairo_t* ctx, rect area) {};
+   //    virtual void   click(mouse_button btn) {}
+   //    virtual void   drag(mouse_button btn) {}
+   //    virtual void   cursor(point p, cursor_tracking status) {}
+   //    virtual void   scroll(point dir, point p) {}
+   //    virtual void   key(key_info const& k) {}
+   //    virtual void   text(text_info const& info) {}
+   //    virtual void   focus(focus_request r) {}
+
+   //    void           refresh();
+   //    void           refresh(rect area);
+   //    void           limits(view_limits limits_);
+
+   //    point          cursor_pos() const;
+   //    point          size() const;
+   //    void           size(point p);
+   //    bool           is_focus() const;
+
+   // private:
+
+   //    friend struct platform_access;
+   //    host_view*     h;
+   // };
+
+   // ////////////////////////////////////////////////////////////////////////////
+   // // Application event loop entry
+   // int app_main(int argc, const char* argv[]);
+
+   // ////////////////////////////////////////////////////////////////////////////
+   // // View creation callback
+   // extern std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard
-   std::string clipboard();
-   void clipboard(std::string const& text);
+   inline std::string clipboard()  { /* $$$ for now $$$ */ return {}; }
+   inline void clipboard(std::string const& text)  { /* $$$ for now $$$ */ }
 
    ////////////////////////////////////////////////////////////////////////////
    // The Cursor
@@ -340,7 +383,7 @@ namespace cycfi { namespace photon
       v_resize
    };
 
-   void set_cursor(cursor_type type);
+   inline void set_cursor(cursor_type type) { /* $$$ for now $$$ */ }
 }}
 
 #endif

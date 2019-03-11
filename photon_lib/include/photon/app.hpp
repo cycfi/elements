@@ -1,41 +1,40 @@
 /*=============================================================================
    Copyright (c) 2016-2018 Joel de Guzman
 
-   Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
+   Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_GUI_LIB_APP_OCTOBER_23_2017)
-#define CYCFI_PHOTON_GUI_LIB_APP_OCTOBER_23_2017
+#if !defined(CYCFI_PICO_APP_MARCH_6_2019)
+#define CYCFI_PICO_APP_MARCH_6_2019
 
-#include <photon/view.hpp>
-#include <functional>
+#include <string>
+#include <infra/support.hpp>
 
 namespace cycfi { namespace photon
 {
-   class app
+   ////////////////////////////////////////////////////////////////////////////
+   // Application class
+   ////////////////////////////////////////////////////////////////////////////
+   class app : non_copyable
    {
    public:
+                           app(int argc, const char* argv[]);
+                           ~app();
 
-      template <typename F>
-      app(F init_view)
-      {
-         // Initialize the host's view creation function
-         photon::new_view =
-            [init_view](host_view* h)
-            {
-               auto view_p = std::make_unique<view>(h);
-               init_view(*view_p.get());
-               return std::move(view_p);
-            };
-      }
+      std::string const&   name() const { return _app_name; }
+      void                 run();
+      void                 stop();
 
-      app(app const&) = delete;
-      app& operator=(app const&) = delete;
+   private:
 
-      int main(int argc, const char* argv[])
-      {
-         return app_main(argc, argv);
-      }
+#if defined(__APPLE__)
+      void* _menubar;
+#elif defined(_WIN32)
+      bool  _running = true;
+#endif
+
+      std::string          _app_name;
    };
 }}
 
 #endif
+

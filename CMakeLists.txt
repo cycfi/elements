@@ -5,14 +5,15 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2)
 
+project(libphoton)
+set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
+
 if (NOT DEFINED INTEGRE_JSON)
   set(INTEGRE_JSON ../json)
 endif()
 
 add_subdirectory(${INTEGRE_JSON} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
-project(libphoton)
-set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(photon_lib)
 add_subdirectory(examples)

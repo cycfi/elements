@@ -3,8 +3,8 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#if !defined(CYCFI_PICO_MACOS_NSSTRING_MARCH_6_2019)
-#define CYCFI_PICO_MACOS_NSSTRING_MARCH_6_2019
+#if !defined(CYCFI_PHOTON_HOST_MACOS_NSSTRING_MARCH_6_2019)
+#define CYCFI_PHOTON_HOST_MACOS_NSSTRING_MARCH_6_2019
 
 #import <Cocoa/Cocoa.h>
 #include <string>

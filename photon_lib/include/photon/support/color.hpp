@@ -6,7 +6,6 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_POINT_APRIL_11_2016)
 #define CYCFI_PHOTON_GUI_LIB_POINT_APRIL_11_2016
 
-#include <type_traits>
 #include <cstdint>
 
 namespace cycfi { namespace photon
@@ -22,17 +21,14 @@ namespace cycfi { namespace photon
        : red(red), green(green), blue(blue), alpha(alpha)
       {}
 
-      color opacity(float alpha_) const;
-      color level(float amount) const;
+      constexpr color opacity(float alpha_) const;
+      constexpr color level(float amount) const;
 
       float red   = 0.0f;
       float green = 0.0f;
       float blue  = 0.0f;
       float alpha = 0.0f;
    };
-
-   bool operator==(color a, color b);
-   bool operator!=(color a, color b);
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines

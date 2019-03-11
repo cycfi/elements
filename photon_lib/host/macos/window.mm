@@ -17,7 +17,7 @@ namespace photon = cycfi::photon;
 
 @implementation PhotonWindow
 
-- (void) set_pico_window : (photon::window*) pwin
+- (void) set_photon_window : (photon::window*) pwin
 {
    self->_pwin = pwin;
 }
@@ -50,7 +50,7 @@ namespace cycfi { namespace photon
 
       [window_ setTitle : make_nsstring(name)];
       [window_ makeKeyAndOrderFront : nil];
-      [window_ set_pico_window : this];
+      [window_ set_photon_window : this];
 
       size({ bounds.width(), bounds.height() });
       position({ bounds.left, bounds.top });

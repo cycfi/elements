@@ -79,7 +79,6 @@ namespace cycfi { namespace photon
       void              fill_style(color c);
       void              stroke_style(color c);
       void              line_width(float w);
-      void              shadow_style(point offs, float blur, color c = colors::black);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Gradients
@@ -211,9 +210,6 @@ namespace cycfi { namespace photon
          std::function<void()>   stroke_style;
          std::function<void()>   fill_style;
          int                     align          = 0;
-         point                   shadow_offset  = { 0, 0 };
-         float                   shadow_blur    = 0.0;
-         color                   shadow_color   = rgba(0, 0, 0, 20);
 
          enum pattern_state { none_set, stroke_set, fill_set };
          pattern_state           pattern_set = none_set;

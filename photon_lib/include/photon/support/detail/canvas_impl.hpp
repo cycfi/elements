@@ -18,11 +18,6 @@
 # include FT_TYPE1_TABLES_H
 #endif
 
-extern "C"
-{
-   void blur_image_surface(cairo_surface_t *surface, int radius);
-}
-
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -82,72 +77,8 @@ namespace cycfi { namespace photon
       cairo_close_path(&_context);
    }
 
-   struct blur
-   {
-      virtual rect get_extent(canvas& cnv) = 0;
-      virtual void draw(canvas& src_cnv, canvas& temp_cnv) = 0;
-      virtual void exit(canvas& cnv) = 0;
-
-      void operator()(canvas& cnv)
-      {
-         auto blur = cnv._state.shadow_blur;
-         float radius = blur/2;
-
-         auto extent = get_extent(cnv);
-         auto offsx = extent.left - radius;
-         auto offsy = extent.top - radius;
-         auto width = extent.width() + blur;
-         auto height = extent.height() + blur;
-
-         auto pm = pixmap{ { width, height } };
-         auto pm_ctx = pixmap_context{ pm };
-         auto pm_cnv = canvas{ *pm_ctx.context() };
-
-         cairo_surface_set_device_offset(pm._surface, -offsx, -offsy);
-         draw(cnv, pm_cnv);
-         blur_image_surface(pm._surface, blur);
-
-         auto sh_offs = cnv._state.shadow_offset;
-         cairo_set_source_surface(&cnv._context, pm._surface, sh_offs.x, sh_offs.y);
-         cairo_rectangle(&cnv._context, offsx+sh_offs.x, offsy+sh_offs.y, width, height);
-         cairo_fill(&cnv._context);
-
-         exit(cnv);
-      }
-   };
-
-   struct fill_blur : blur
-   {
-      virtual rect get_extent(canvas& cnv)
-      {
-         return cnv.fill_extent();
-      }
-
-      virtual void draw(canvas& src_cnv, canvas& temp_cnv)
-      {
-         path = cairo_copy_path(&src_cnv.cairo_context());
-         cairo_append_path(&temp_cnv.cairo_context(), path);
-         temp_cnv.fill_style(src_cnv._state.shadow_color);
-         temp_cnv.fill();
-      }
-
-      virtual void exit(canvas& cnv)
-      {
-         cairo_append_path(&cnv.cairo_context(), path);
-         cairo_path_destroy(path);
-      }
-
-      cairo_path_t* path = nullptr;
-   };
-
    inline void canvas::fill()
    {
-      if (_state.shadow_blur > 1.0)
-      {
-         fill_blur f;
-         f(*this);
-      }
-
       apply_fill_style();
       cairo_fill(&_context);
    }
@@ -263,13 +194,6 @@ namespace cycfi { namespace photon
    inline void canvas::line_width(float w)
    {
       cairo_set_line_width(&_context, w);
-   }
-
-   inline void canvas::shadow_style(point offs, float blur, color c)
-   {
-      _state.shadow_offset = offs;
-      _state.shadow_blur = blur;
-      _state.shadow_color = c;
    }
 
    inline void canvas::fill_style(linear_gradient const& gr)
@@ -446,43 +370,8 @@ namespace cycfi { namespace photon
       }
    }
 
-   //struct text_blur : blur
-   //{
-   //   text_blur(point p, char const* utf8)
-   //    : p(p)
-   //    , utf8(utf8)
-   //   {}
-   //
-   //   virtual rect get_extent(canvas& cnv)
-   //   {
-   //      auto metrics = cnv.measure_text(utf8);
-   //      p = get_text_start(_context, p, _state.align, utf8);
-   //      return { p.x-metrics.leading, };
-   //   }
-   //
-   //   virtual void draw(canvas& src_cnv, canvas& temp_cnv)
-   //   {
-   //      cairo_get_font_options(&src_cnv.cairo_context(), &options);
-   //      cairo_set_font_options(&temp_cnv.cairo_context(), &options);
-   //      temp_cnv.fill_style(src_cnv._state.shadow_color);
-   //   }
-   //
-   //   virtual void exit(canvas& cnv)
-   //   {
-   //   }
-   //
-   //   cairo_font_options_t options;
-   //   point p;
-   //   char const* utf8;
-   //};
-
    inline void canvas::fill_text(point p, char const* utf8)
    {
-      if (_state.shadow_blur > 1.0)
-      {
-         // Drop shadow not yet implemented
-      }
-
       apply_fill_style();
       p = get_text_start(_context, p, _state.align, utf8);
       cairo_move_to(&_context, p.x, p.y);

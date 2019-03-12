@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2018 Joel de Guzman
+   Copyright (c) 2016-2019 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -76,7 +76,7 @@ namespace cycfi { namespace photon
       failed_to_build_master_glyphs()
        : std::runtime_error("Error. Failed to build master glyphs.") {}
    };
-    
+
    class master_glyphs : public glyphs
    {
    public:

@@ -27,7 +27,7 @@
       distribution.
 
 =============================================================================*/
-#include <photon/host.hpp>
+#include <photon/base_view.hpp>
 #import <Cocoa/Cocoa.h>
 
 namespace cycfi { namespace photon

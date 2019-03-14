@@ -3,7 +3,7 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon/host.hpp>
+#include <photon/base_view.hpp>
 #import <Cocoa/Cocoa.h>
 #include <memory>
 #include <map>

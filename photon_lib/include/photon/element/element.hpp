@@ -6,7 +6,7 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
-#include <photon/host.hpp>
+#include <photon/base_view.hpp>
 #include <photon/support/rect.hpp>
 #include <photon/support/misc.hpp>
 

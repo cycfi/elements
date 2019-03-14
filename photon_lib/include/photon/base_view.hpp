@@ -2,29 +2,6 @@
    Copyright (c) 2016-2019 Cycfi Research. All rights reserved.
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-
-   Key mapping ported to C++ from GLFW3
-
-   Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
-
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any damages
-   arising from the use of this software.
-
-   Permission is granted to anyone to use this software for any purpose,
-   including commercial applications, and to alter it and redistribute it
-   freely, subject to the following restrictions:
-
-   1. The origin of this software must not be misrepresented; you must not
-      claim that you wrote the original software. If you use this software
-      in a product, an acknowledgment in the product documentation would
-      be appreciated but is not required.
-
-   2. Altered source versions must be plainly marked as such, and must not
-      be misrepresented as being the original software.
-
-   3. This notice may not be removed or altered from any source
-      distribution.
 =============================================================================*/
 #if !defined(CYCFI_PHOTON_HOST_AUGUST_20_2016)
 #define CYCFI_PHOTON_HOST_AUGUST_20_2016
@@ -43,31 +20,6 @@
 
 namespace cycfi { namespace photon
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // This header is self-contained, and should always be self contained. The
-   // facilities in this header file contain all that is necessary to
-   // implement platform specific behavior for a host platform application's
-   // most basic functionalities, including support for 1) The main application,
-   // 2) Creation and management of the main window, 3) Keyboard and mouse
-   // event handling, 4) The clipboard.
-   //
-   // It is crucual, by design, to keep this header file always self contained
-   // with no dependencies(*). The objective is the make it as easy as possible
-   // to implement and maintain different hosts for various platforms and
-   // applications. A platform (OS) may have multiple hosts for diverse needs.
-   // For example, OSX may have a "Desktop App" host as well as an "AU"
-   // (Audio Units) host that itself is typically a plugin guest, hosted by
-   // another application.
-   //
-   // (* The only exception to this 'no-dependencies' rule is the necessary
-   // inclusion of rect.hpp and point.hpp. Both have no dependencies.)
-   //
-   // Another crucial design strategy is the keep this header file free from
-   // any platform specific code (public types, public functions, etc.) that
-   // may pollute the clean platform independent API.
-   ////////////////////////////////////////////////////////////////////////////
-
-
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
    ////////////////////////////////////////////////////////////////////////////
@@ -125,6 +77,30 @@ namespace cycfi { namespace photon
 
    ////////////////////////////////////////////////////////////////////////////
    // Keyboard information
+   //
+   // Key mapping ported to C++ from GLFW3
+   //
+   // Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
+   //
+   // This software is provided 'as-is', without any express or implied
+   // warranty. In no event will the authors be held liable for any damages
+   // arising from the use of this software.
+   //
+   // Permission is granted to anyone to use this software for any purpose,
+   // including commercial applications, and to alter it and redistribute it
+   // freely, subject to the following restrictions:
+   //
+   // 1. The origin of this software must not be misrepresented; you must not
+   //    claim that you wrote the original software. If you use this software
+   //    in a product, an acknowledgment in the product documentation would
+   //    be appreciated but is not required.
+   //
+   // 2. Altered source versions must be plainly marked as such, and must not
+   //    be misrepresented as being the original software.
+   //
+   // 3. This notice may not be removed or altered from any source
+   //    distribution.
+   //
    ////////////////////////////////////////////////////////////////////////////
    enum class key_action
    {
@@ -321,51 +297,6 @@ namespace cycfi { namespace photon
 
       host_view      _view;
    };
-
-
-
-   // ////////////////////////////////////////////////////////////////////////////
-   // // The view base class
-   // ////////////////////////////////////////////////////////////////////////////
-   // class base_view
-   // {
-   // public:
-   //                   base_view(host_view* h) : h(h) {}
-   //                   base_view(base_view const&) = delete;
-   //    virtual        ~base_view() {}
-   //    base_view&     operator=(base_view const&) = delete;
-
-   //    virtual void   draw(cairo_t* ctx, rect area) {};
-   //    virtual void   click(mouse_button btn) {}
-   //    virtual void   drag(mouse_button btn) {}
-   //    virtual void   cursor(point p, cursor_tracking status) {}
-   //    virtual void   scroll(point dir, point p) {}
-   //    virtual void   key(key_info const& k) {}
-   //    virtual void   text(text_info const& info) {}
-   //    virtual void   focus(focus_request r) {}
-
-   //    void           refresh();
-   //    void           refresh(rect area);
-   //    void           limits(view_limits limits_);
-
-   //    point          cursor_pos() const;
-   //    point          size() const;
-   //    void           size(point p);
-   //    bool           is_focus() const;
-
-   // private:
-
-   //    friend struct platform_access;
-   //    host_view*     h;
-   // };
-
-   // ////////////////////////////////////////////////////////////////////////////
-   // // Application event loop entry
-   // int app_main(int argc, const char* argv[]);
-
-   // ////////////////////////////////////////////////////////////////////////////
-   // // View creation callback
-   // extern std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard

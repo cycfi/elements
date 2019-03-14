@@ -6,7 +6,7 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016)
 #define CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016
 
-#include <photon/host.hpp>
+#include <photon/base_view.hpp>
 #include <photon/support/rect.hpp>
 #include <photon/support/canvas.hpp>
 #include <photon/support/theme.hpp>

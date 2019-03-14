@@ -6,7 +6,7 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
 #define CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
 
-#include <photon/host.hpp>
+#include <photon/base_view.hpp>
 #include <photon/support/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>

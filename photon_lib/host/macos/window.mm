@@ -35,16 +35,27 @@ namespace photon = cycfi::photon;
 
 namespace cycfi { namespace photon
 {
-   window::window(std::string const& name, rect const& bounds)
+   namespace
    {
+      inline int window_style(int option)
+      {
+         return
+            ((option & window::with_title)? NSWindowStyleMaskTitled : 0)
+          | ((option & window::closable)? NSWindowStyleMaskClosable : 0)
+          | ((option & window::miniaturizable)? NSWindowStyleMaskMiniaturizable : 0)
+          | ((option & window::resizable)? NSWindowStyleMaskResizable : 0)
+          ;
+      }
+   }
+
+   window::window(std::string const& name, int style_, rect const& bounds)
+   {
+      auto style = window_style(style_);
+
       PhotonWindow* window_ =
          [[PhotonWindow alloc]
             initWithContentRect : NSMakeRect(0, 0, 0, 0)
-            styleMask :
-               NSWindowStyleMaskTitled |
-               NSWindowStyleMaskClosable |
-               NSWindowStyleMaskMiniaturizable |
-               NSWindowStyleMaskResizable
+            styleMask : window_style(style_)
             backing : NSBackingStoreBuffered
             defer : NO
          ];

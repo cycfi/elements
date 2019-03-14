@@ -39,10 +39,24 @@ namespace cycfi { namespace photon
    class window : non_copyable
    {
    public:
+
+      enum style
+      {
+         with_title     = 1
+       , closable       = 2
+       , miniaturizable = 4
+       , resizable      = 8
+
+       , bare           = 0
+       , standard       = with_title | closable | miniaturizable | resizable
+      };
+
                         window(
                            std::string const& name = ""
-                         , rect const& bounds = { 0, 0, 640, 480 }
+                         , int style_ = standard
+                         , rect const& bounds = rect{ 20, 20, 660, 500 }
                         );
+
                         ~window();
 
       point             size() const;

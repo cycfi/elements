@@ -437,12 +437,12 @@ namespace cycfi { namespace photon
    void base_view::size(point p)
    {
       auto ns_view = get_mac_view(host());
-      auto frame = [ns_view frame];
-      auto title_bar_height = [ns_view window].frame.size.height - frame.size.height;
-
-      frame.size.width = p.x;
-      frame.size.height = p.y + title_bar_height;
-      [[ns_view window] setFrame : frame display : YES animate : false];
+      auto window = [ns_view window];
+      auto view_frame = ns_view.frame;
+      auto win_frame = window.frame;
+      win_frame.size.width = (win_frame.size.width - view_frame.size.width) + p.x;
+      win_frame.size.height = (win_frame.size.height - view_frame.size.height) + p.y;
+      [window setFrame : win_frame display : YES animate : false];
    }
 
    void base_view::refresh()

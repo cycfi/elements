@@ -11,6 +11,7 @@ namespace photon = cycfi::photon;
 @interface PhotonWindow : NSWindow
 {
    photon::window* _pwin;
+   NSRect _saved_frame;
 }
 @end
 
@@ -21,12 +22,33 @@ namespace photon = cycfi::photon;
    self->_pwin = pwin;
 }
 
+- (void)zoom:(id)sender
+{
+   if (!self.zoomed)
+      _saved_frame = self.frame;
+   [super zoom : sender];
+}
+
 - (void) close
 {
    [super close];
    auto title = [self title];
    if ([title length] != 0)
+   {
+      bool zoomed = self.zoomed;
+      if (zoomed)
+         [self setFrame : _saved_frame display : NO animate : false];
       [self saveFrameUsingName : title];
+
+      bool is_fullscreen = [self styleMask] & NSWindowStyleMaskFullScreen;
+
+      NSMutableString* key =[title mutableCopy];
+      [key appendString : @"_zoom_state"];
+
+      auto zoom_state = zoomed? (is_fullscreen? @"fullscreen" : @"zoomed") : @"standard";
+      [[NSUserDefaults standardUserDefaults] setObject : zoom_state forKey : key];
+      [[NSUserDefaults standardUserDefaults] synchronize];
+   }
    if (_pwin->on_close)
       _pwin->on_close();
 }
@@ -67,10 +89,24 @@ namespace cycfi { namespace photon
       [window_ set_photon_window : this];
 
       auto title = [window_ title];
-      if ([title length] == 0 || ![window_ setFrameUsingName : title])
+      if ([title length] != 0)
       {
-         size({ bounds.width(), bounds.height() });
-         position({ bounds.left, bounds.top });
+         if (![window_ setFrameUsingName : title])
+         {
+            size({ bounds.width(), bounds.height() });
+            position({ bounds.left, bounds.top });
+         }
+         else
+         {
+            NSMutableString* key =[title mutableCopy];
+            [key appendString : @"_zoom_state"];
+
+            auto zoom_state = [[NSUserDefaults standardUserDefaults] stringForKey : key];
+            if ([zoom_state isEqualToString : @"zoomed"])
+               [window_ zoom : window_];
+            else if ([zoom_state isEqualToString : @"fullscreen"])
+               [window_ toggleFullScreen : window_];
+         }
       }
    }
 

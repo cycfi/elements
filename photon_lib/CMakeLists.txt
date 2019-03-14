@@ -79,7 +79,6 @@ file(GLOB_RECURSE PHOTON_SOURCES src/*.cpp src/*.c)
 file(GLOB_RECURSE PHOTON_HEADERS include/*.hpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-#   file(GLOB_RECURSE PHOTON_HOST host/osx/*.mm)
    file(GLOB_RECURSE PHOTON_HOST host/macos/*.mm)
 endif()
 

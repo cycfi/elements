@@ -7,7 +7,6 @@
 #import <Cocoa/Cocoa.h>
 #include <memory>
 #include <map>
-#include <json/json_io.hpp>
 #include <cairo-quartz.h>
 #include "nsstring.h"
 
@@ -16,7 +15,6 @@
 #endif
 
 namespace ph = cycfi::photon;
-namespace json = cycfi::json;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,34 +28,8 @@ namespace cycfi { namespace photon
    NSUInteger  translate_key_to_modifier_flag(key_code key);
 }}
 
-struct window_state
-{
-   float x;
-   float y;
-   float width;
-   float height;
-};
-
-BOOST_FUSION_ADAPT_STRUCT(
-   window_state,
-   (float, x)
-   (float, y)
-   (float, width)
-   (float, height)
-)
-
 namespace
 {
-   boost::optional<window_state> load_window_state()
-   {
-      return json::load<window_state>("window_state.json");
-   }
-
-   void save_window_state(window_state r)
-   {
-      json::save<window_state>("window_state.json", r);
-   }
-
    // Defines a constant for empty ranges in NSTextInputClient
    NSRange const kEmptyRange = { NSNotFound, 0 };
 
@@ -159,23 +131,6 @@ namespace
              name : NSWindowDidResignMainNotification
            object : [self window]
    ];
-
-   [[NSNotificationCenter defaultCenter]
-      addObserver : self
-         selector : @selector(frameDidChange:)
-             name : NSWindowDidResizeNotification
-           object : [self window]
-   ];
-
-   [[NSNotificationCenter defaultCenter]
-      addObserver : self
-         selector : @selector(frameDidChange:)
-             name : NSWindowDidMoveNotification
-           object : [self window]
-   ];
-
-   // $$$ Black $$$
-   //self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 }
 
 - (BOOL) canBecomeKeyView
@@ -225,21 +180,6 @@ namespace
 
    cairo_surface_destroy(surface);
    cairo_destroy(context);
-
-   if (_start)
-   {
-      _start = false;
-      if (auto ws = load_window_state())
-      {
-         auto frame = [self window].frame;
-         frame.origin.x = ws->x;
-         frame.size.width = ws->width;
-         frame.origin.y = ws->y;
-         frame.size.height = ws->height;
-
-         [[self window] setFrame : frame display : YES animate : false];
-      }
-   }
 }
 
 - (void) mouseDown:(NSEvent*) event
@@ -455,21 +395,6 @@ namespace
    _view->focus(ph::focus_request::end_focus);
 }
 
-- (void)frameDidChange:(NSNotification*) notification
-{
-   auto frame = [self window].frame;
-
-   if (!_start)
-      save_window_state(
-         {
-            float(frame.origin.x),
-            float(frame.origin.y),
-            float(frame.size.width),
-            float(frame.size.height)
-         }
-      );
-}
-
 @end
 
 namespace cycfi { namespace photon
@@ -490,7 +415,6 @@ namespace cycfi { namespace photon
       [content photon_init : this];
       NSWindow* window_ = (__bridge NSWindow*) h;
       [window_ setContentView : content];
-      // [window_.contentView addSubview : content];
    }
 
    base_view::~base_view()
@@ -537,7 +461,9 @@ namespace cycfi { namespace photon
    void base_view::limits(view_limits limits_)
    {
       auto ns_view = get_mac_view(host());
-      [[ns_view window] setContentMinSize : NSSize{ limits_.min.x, limits_.min.y }];
+      auto minx = std::max<float>(150, limits_.min.x);
+      auto miny = std::max<float>(100, limits_.min.y);
+      [[ns_view window] setContentMinSize : NSSize{ minx, miny }];
       [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
    }
 

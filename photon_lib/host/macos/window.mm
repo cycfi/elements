@@ -25,6 +25,9 @@ namespace photon = cycfi::photon;
 - (void) close
 {
    [super close];
+   auto title = [self title];
+   if ([title length] != 0)
+      [self saveFrameUsingName : title];
    if (_pwin->on_close)
       _pwin->on_close();
 }
@@ -35,7 +38,7 @@ namespace cycfi { namespace photon
 {
    window::window(std::string const& name, rect const& bounds)
    {
-      id window_ =
+      PhotonWindow* window_ =
          [[PhotonWindow alloc]
             initWithContentRect : NSMakeRect(0, 0, 0, 0)
             styleMask :
@@ -48,12 +51,17 @@ namespace cycfi { namespace photon
          ];
       _window = (__bridge void*) window_;
 
+      window_.appearance = [NSAppearance appearanceNamed : NSAppearanceNameVibrantDark];
       [window_ setTitle : make_nsstring(name)];
       [window_ makeKeyAndOrderFront : nil];
       [window_ set_photon_window : this];
 
-      size({ bounds.width(), bounds.height() });
-      position({ bounds.left, bounds.top });
+      auto title = [window_ title];
+      if ([title length] == 0 || ![window_ setFrameUsingName : title])
+      {
+         size({ bounds.width(), bounds.height() });
+         position({ bounds.left, bounds.top });
+      }
    }
 
    window::~window()

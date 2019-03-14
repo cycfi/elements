@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <photon/window.hpp>
 #import <Cocoa/Cocoa.h>
-#include "nsstring.h"
 
 namespace photon = cycfi::photon;
 
@@ -52,7 +51,7 @@ namespace cycfi { namespace photon
       _window = (__bridge void*) window_;
 
       window_.appearance = [NSAppearance appearanceNamed : NSAppearanceNameVibrantDark];
-      [window_ setTitle : make_nsstring(name)];
+      [window_ setTitle : [NSString stringWithUTF8String : name.c_str()]];
       [window_ makeKeyAndOrderFront : nil];
       [window_ set_photon_window : this];
 

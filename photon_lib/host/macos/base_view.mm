@@ -8,7 +8,6 @@
 #include <memory>
 #include <map>
 #include <cairo-quartz.h>
-#include "nsstring.h"
 
 #if ! __has_feature(objc_arc)
 # error "ARC is off"

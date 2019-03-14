@@ -6,7 +6,6 @@
 #include <photon/app.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
-#include "nsstring.h"
 
 namespace cycfi { namespace photon
 {
@@ -57,7 +56,7 @@ namespace cycfi { namespace photon
       [NSApp setMainMenu : menubar_];
       id _app_menu = [NSMenu new];
       id app_name = [[NSProcessInfo processInfo] processName];
-      _app_name = make_string(app_name);
+      _app_name = [app_name UTF8String];
       id quitTitle = [@"Quit " stringByAppendingString : app_name];
       id quitMenuItem = [[NSMenuItem alloc] initWithTitle : quitTitle
          action : @selector(terminate:) keyEquivalent : @"q"];

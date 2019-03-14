@@ -3,5 +3,9 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-set(appname "HelloUniverse")
+set(app_name "HelloUniverse")
+set(app_copyright "Copyright (c) 2016-2019 Joel de Guzman")
+set(app_id "com.cycfi.hello_universe")
+set(app_version "1.0")
+
 include("../CMakeMain.txt")

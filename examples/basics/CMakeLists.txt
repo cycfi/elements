@@ -3,5 +3,9 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-set(appname "Basics")
+set(app_name "Basics")
+set(app_copyright "Copyright (c) 2016-2019 Joel de Guzman")
+set(app_id "com.cycfi.basics")
+set(app_version "1.0")
+
 include("../CMakeMain.txt")

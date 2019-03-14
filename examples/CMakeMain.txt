@@ -7,7 +7,7 @@
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(${appname})
+project(${app_name})
 
 ###############################################################################
 # Sources (and Resources)
@@ -16,7 +16,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    file(
       GLOB_RECURSE PHOTON_RESOURCES
       ${CMAKE_CURRENT_SOURCE_DIR}/../resources/fonts/*.ttf
-      ${CMAKE_CURRENT_SOURCE_DIR}/../resources/osx/fonts/*.ttf
+      ${CMAKE_CURRENT_SOURCE_DIR}/../resources/macos/fonts/*.ttf
    )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    file(
@@ -62,7 +62,7 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    add_executable(
-      ${appname}
+      ${app_name}
       MACOSX_BUNDLE
       main.cpp
       ${PHOTON_RESOURCES}
@@ -70,7 +70,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    )
 else()
    add_executable(
-      ${appname}
+      ${app_name}
       main.cpp
       ${PHOTON_RESOURCES}
       ${APP_RESOURCES}
@@ -80,7 +80,7 @@ endif()
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(${appname}
+target_link_libraries(${app_name}
    libphoton
 )
 
@@ -92,6 +92,13 @@ endif()
 # Resource file properties
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   set(MACOSX_BUNDLE_BUNDLE_NAME ${app_name})
+   set(MACOSX_BUNDLE_COPYRIGHT ${app_copyright})
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${app_id})
+   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${app_version})
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set_source_files_properties(
       ${PHOTON_RESOURCES}
       ${APP_RESOURCES}
@@ -100,9 +107,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    )
 
    set_target_properties(
-      ${appname}
+      ${app_name}
       PROPERTIES
-      MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/plist.in
+      MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../resources/macos/plist.in
    )
 endif()
 

@@ -13,19 +13,19 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    struct point
    {
-      constexpr   point();
-      constexpr   point(float x, float y);
-                  point(point const&) = default;
-      point&      operator=(point const &) = default;
+      constexpr         point();
+      constexpr         point(float x, float y);
+      constexpr         point(point const&) = default;
+      constexpr point&  operator=(point const &) = default;
 
-      bool        operator==(point const& other) const;
-      bool        operator!=(point const& other) const;
+      constexpr bool    operator==(point const& other) const;
+      constexpr bool    operator!=(point const& other) const;
 
-      point       move(float dx, float dy) const;
-      point       move_to(float x, float y) const;
+      constexpr point   move(float dx, float dy) const;
+      constexpr point   move_to(float x, float y) const;
 
-      float       x;
-      float       y;
+      float             x;
+      float             y;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -50,17 +50,17 @@ namespace cycfi { namespace photon
     : x(x), y(y)
    {}
 
-   inline bool point::operator==(point const& other) const
+   inline constexpr bool point::operator==(point const& other) const
    {
       return (other.x == x) && (other.y == y);
    }
 
-   inline bool point::operator!=(point const& other) const
+   inline constexpr bool point::operator!=(point const& other) const
    {
       return !(*this == other);
    }
 
-   inline point point::move(float dx, float dy) const
+   inline constexpr point point::move(float dx, float dy) const
    {
       point r = *this;
       r.x += dx;
@@ -68,7 +68,7 @@ namespace cycfi { namespace photon
       return r;
    }
 
-   inline point point::move_to(float x_, float y_) const
+   inline constexpr point point::move_to(float x_, float y_) const
    {
       point r = *this;
       r.x = x_;

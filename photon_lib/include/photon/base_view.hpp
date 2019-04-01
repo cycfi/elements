@@ -53,6 +53,15 @@ namespace cycfi { namespace photon
       point    max;
    };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // View span
+   ////////////////////////////////////////////////////////////////////////////
+   struct view_span
+   {
+      float    x;
+      float    y;
+   };
+
    constexpr float         full_extent    = 1E6;
    constexpr view_limits   full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
 

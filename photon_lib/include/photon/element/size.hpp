@@ -221,9 +221,9 @@ namespace cycfi { namespace photon
       auto  e_limits = this->subject().limits(ctx);
       float size_x = _size.x;
       float size_y = _size.y;
-      clamp(size_x, e_limits.left, e_limits.right);
-      clamp(size_y, e_limits.top, e_limits.bottom);
-      return { size_x, size_y, e_limits.max.x, e_limits.max.y };
+      clamp(size_x, e_limits.min.x, e_limits.max.x);
+      clamp(size_y, e_limits.min.y, e_limits.max.y);
+      return { { size_x, size_y }, { e_limits.max.x, e_limits.max.y } };
    }
 
    template <typename Subject>
@@ -279,7 +279,7 @@ namespace cycfi { namespace photon
       auto  e_limits = this->subject().limits(ctx);
       float width = _width;
       clamp(width, e_limits.min.x, e_limits.max.x);
-      return { width, e_limits.min.y, e_limits.max.x, e_limits.max.y };
+      return { { width, e_limits.min.y }, e_limits.max };
    }
 
    template <typename Subject>
@@ -333,7 +333,7 @@ namespace cycfi { namespace photon
       auto  e_limits = this->subject().limits(ctx);
       float height = _height;
       clamp(height, e_limits.min.y, e_limits.max.y);
-      return { e_limits.min.x, height, e_limits.max.x, e_limits.max.y };
+      return { { e_limits.min.x, height }, e_limits.max };
    }
 
    template <typename Subject>
@@ -356,7 +356,7 @@ namespace cycfi { namespace photon
                               hspan_element(float span, Subject&& subject);
                               hspan_element(float span, Subject const& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual view_span       span() const;
 
    private:
 
@@ -376,18 +376,16 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
+   inline view_span hspan_element<Subject>::span() const
+   {
+      return { _span, this->subject().span().y };
+   }
+
+   template <typename Subject>
    inline hspan_element<typename std::decay<Subject>::type>
    hspan(float span, Subject&& subject)
    {
       return { span, std::forward<Subject>(subject) };
-   }
-
-   template <typename Subject>
-   inline view_limits hspan_element<Subject>::limits(basic_context const& ctx) const
-   {
-      auto  e_limits = this->subject().limits(ctx);
-      float max_width = std::max(e_limits.min.x, e_limits.max.x * _span);
-      return { { e_limits.min.x, e_limits.min.y }, { max_width, e_limits.max.y } };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -401,7 +399,7 @@ namespace cycfi { namespace photon
                               vspan_element(float span, Subject&& subject);
                               vspan_element(float span, Subject const& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual view_span       span() const;
 
    private:
 
@@ -421,18 +419,16 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
+   inline view_span vspan_element<Subject>::span() const
+   {
+      return { this->subject().span().x, _span };
+   }
+
+   template <typename Subject>
    inline vspan_element<typename std::decay<Subject>::type>
    vspan(float span, Subject&& subject)
    {
       return { span, std::forward<Subject>(subject) };
-   }
-
-   template <typename Subject>
-   inline view_limits vspan_element<Subject>::limits(basic_context const& ctx) const
-   {
-      auto  e_limits = this->subject().limits(ctx);
-      float max_height = std::max(e_limits.min.y, e_limits.max.y * _span);
-      return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, max_height } };
    }
 
    ////////////////////////////////////////////////////////////////////////////

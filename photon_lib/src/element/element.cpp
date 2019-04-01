@@ -17,6 +17,11 @@ namespace cycfi { namespace photon
       return full_limits;
    }
 
+   view_span element::span() const
+   {
+      return { 1.0f, 1.0f };
+   }
+
    element* element::hit_test(context const& ctx, point p)
    {
       return (ctx.bounds.includes(p)) ? this : 0;

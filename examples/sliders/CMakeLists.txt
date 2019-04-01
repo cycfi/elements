@@ -3,10 +3,9 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-add_subdirectory(hello_universe)
-add_subdirectory(basics)
-add_subdirectory(sliders)
-add_subdirectory(text_edit)
-add_subdirectory(tiles_aligns_and_spans)
+set(app_name "Sliders")
+set(app_copyright "Copyright (c) 2016-2019 Joel de Guzman")
+set(app_id "com.cycfi.sliders")
+set(app_version "1.0")
 
-
+include("../CMakeMain.txt")

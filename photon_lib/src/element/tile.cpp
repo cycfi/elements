@@ -36,32 +36,22 @@ namespace cycfi { namespace photon
 
       _tiles.resize(size()+1);
 
-      double   min_y = 0.0;
-      double   max_y = 0.0;
+      double max_span_y = 0.0;
       for (std::size_t ix = 0; ix != size();  ++ix)
-      {
-         auto el = at(ix).limits(ctx);
-         min_y += el.min.y;
-         max_y += el.max.y;
-      }
+         max_span_y += at(ix).span().y;
 
       double   height   = ctx.bounds.height();
-      double   extra    = max_y - height;
-      double   m_size   = max_y - min_y;
       double   curr     = ctx.bounds.top;
       auto     i        = _tiles.begin();
 
-      for (std::size_t ix = 0; ix != size();  ++ix)
+      for (std::size_t ix = 0; ix != size(); ++ix)
       {
          auto& elem = at(ix);
-         auto  limits = elem.limits(ctx);
+         auto  el = elem.limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
-         curr += limits.max.y;
-
-         if ((extra != 0) && (m_size != 0))
-            curr -= extra * (limits.max.y - limits.min.y) / m_size;
+         curr += height * at(ix).span().y / max_span_y;
 
          rect ebounds = { _left, float(prev), _right, float(curr) };
          elem.layout(context{ ctx, &elem, ebounds });
@@ -102,32 +92,22 @@ namespace cycfi { namespace photon
 
       _tiles.resize(size()+1);
 
-      double   min_x = 0.0;
-      double   max_x = 0.0;
+      double max_span_x = 0.0;
       for (std::size_t ix = 0; ix != size();  ++ix)
-      {
-         auto el = at(ix).limits(ctx);
-         min_x += el.min.x;
-         max_x += el.max.x;
-      }
+         max_span_x += at(ix).span().x;
 
       double   width    = ctx.bounds.width();
-      double   extra    = max_x - width;
-      double   m_size   = max_x - min_x;
       double   curr     = ctx.bounds.left;
       auto     i        = _tiles.begin();
 
-      for (std::size_t ix = 0; ix != size();  ++ix)
+      for (std::size_t ix = 0; ix != size(); ++ix)
       {
          auto& elem = at(ix);
          auto  limits = elem.limits(ctx);
 
          *i++ = curr;
          auto prev = curr;
-         curr += limits.max.x;
-
-         if ((extra != 0) && (m_size != 0))
-            curr -= extra * (limits.max.x - limits.min.x) / m_size;
+         curr += width * at(ix).span().x / max_span_x;
 
          rect ebounds = { float(prev), _top, float(curr), _bottom };
          elem.layout(context{ ctx, &elem, ebounds });

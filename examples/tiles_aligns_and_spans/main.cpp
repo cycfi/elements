@@ -36,13 +36,15 @@ auto make_vtile()
 
    return margin(
       { 20, 50, 20, 20 },
-      vtile(
-         halign(0.0, _box),
-         halign(0.2, _box),
-         halign(0.4, _box),
-         halign(0.6, _box),
-         halign(0.8, _box),
-         halign(1.0, _box)
+      hmin_size(150,
+         vtile(
+            halign(0.0, _box),
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)
+         )
       )
    );
 }
@@ -56,12 +58,14 @@ auto make_vtile2()
 
    return margin(
       { 20, 50, 20, 20 },
-      vtile(
-         vspan(1.0, _box),
-         vspan(0.5, _box),
-         vspan(0.5, _box),
-         vspan(0.5, _box),
-         vspan(2.0, _box)
+      hmin_size(150,
+         vtile(
+            vspan(1.0, _box),
+            vspan(0.5, _box),
+            vspan(0.5, _box),
+            vspan(0.5, _box),
+            vspan(2.0, _box)
+         )
       )
    );
 }

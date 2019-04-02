@@ -26,13 +26,15 @@ using slider_ptr = std::shared_ptr<basic_slider_base>;
 slider_ptr hsliders[3];
 slider_ptr vsliders[3];
 
-template <bool vertical>
+template <bool is_vertical>
 auto make_markers()
 {
+   auto track = basic_track<5, is_vertical>();
    return slider_labels<10>(
-      slider_marks<35>(basic_track<5, vertical>()),
-      0.8,        // relative label font size
-      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+      slider_marks<35>(track),         // Track with marks
+      0.8,                             // Label font size (relative size)
+      "0", "1", "2", "3", "4",         // Labels
+      "5", "6", "7", "8", "9", "10"
    );
 }
 

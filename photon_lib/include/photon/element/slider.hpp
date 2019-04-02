@@ -285,14 +285,7 @@ namespace cycfi { namespace photon
 
       static unsigned const size = _size;
       using base_type = proxy<Subject>;
-
-                              slider_element_base(Subject&& subject)
-                               : base_type(std::move(subject))
-                              {}
-
-                              slider_element_base(Subject const& subject)
-                               : base_type(subject)
-                              {}
+      using base_type::base_type;
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -363,10 +356,10 @@ namespace cycfi { namespace photon
    }
 
    template <std::size_t size, typename Subject>
-   inline slider_marks_element<size, Subject>
+   inline slider_marks_element<size, typename std::decay<Subject>::type>
    slider_marks(Subject&& subject)
    {
-      return {std::move(subject)};
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -386,7 +379,7 @@ namespace cycfi { namespace photon
                                  Subject&& subject
                                , float font_size
                               )
-                               : base_type(std::move(subject))
+                               : base_type(std::forward<Subject>(subject))
                                , _font_size(font_size)
                               {}
 
@@ -427,11 +420,11 @@ namespace cycfi { namespace photon
    }
 
    template <int size, typename Subject, typename... S>
-   inline slider_labels_element<size, Subject, sizeof...(S)>
+   inline slider_labels_element<size, typename std::decay<Subject>::type, sizeof...(S)>
    slider_labels(Subject&& subject, float font_size, S&&... s)
    {
-      auto r = slider_labels_element<size, Subject, sizeof...(S)>
-         {std::move(subject), font_size};
+      auto r = slider_labels_element<size, typename std::decay<Subject>::type, sizeof...(S)>
+         {std::forward<Subject>(subject), font_size};
       r._labels = {{ std::move(s)... }};
       return r;
    }

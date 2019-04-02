@@ -79,14 +79,15 @@ auto make_vsliders()
    );
 }
 
-auto make_sliders()
+auto make_controls()
 {
    return
       margin({ 20, 10, 20, 10 },
          vmin_size(400,
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Vertical", make_vsliders(), 0.8f)),
-               margin({ 20, 20, 20, 20 }, pane("Horizontal", make_hsliders(), 0.8f))
+               margin({ 20, 20, 20, 20 }, pane("Vertical Sliders", make_vsliders(), 0.8f)),
+               margin({ 20, 20, 20, 20 }, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
+               hspan(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", element(), 0.8f)))
             )
          )
       );
@@ -127,7 +128,7 @@ int main(int argc, const char* argv[])
    view_.content(
       {
          share(background{}),
-         share(make_sliders())
+         share(make_controls())
       }
    );
 

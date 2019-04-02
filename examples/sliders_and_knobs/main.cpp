@@ -25,6 +25,9 @@ using slider_ptr = std::shared_ptr<basic_slider_base>;
 slider_ptr hsliders[3];
 slider_ptr vsliders[3];
 
+using dial_ptr = std::shared_ptr<dial_base>;
+dial_ptr dials[3];
+
 template <bool is_vertical>
 auto make_markers()
 {
@@ -79,6 +82,36 @@ auto make_vsliders()
    );
 }
 
+auto make_dial(int index)
+{
+   dials[index] = share(
+      dial(
+         radial_marks<20>(basic_knob<50>()),
+         (index + 1) * 0.25
+      )
+   );
+
+   auto markers = radial_labels<15>(
+      link(dials[index]),
+      0.7,                                   // Label font size (relative size)
+      "0", "1", "2", "3", "4",               // Labels
+      "5", "6", "7", "8", "9", "10"
+   );
+
+   return align_center_middle(markers);
+}
+
+auto make_dials()
+{
+   return xside_margin(20,
+      vtile(
+         make_dial(0),
+         make_dial(1),
+         make_dial(2)
+      )
+   );
+}
+
 auto make_controls()
 {
    return
@@ -87,34 +120,47 @@ auto make_controls()
             htile(
                margin({ 20, 20, 20, 20 }, pane("Vertical Sliders", make_vsliders(), 0.8f)),
                margin({ 20, 20, 20, 20 }, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
-               hspan(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", element(), 0.8f)))
+               hspan(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
             )
          )
       );
 }
 
-void link_slider(int index, view& view_)
+void link_control(int index, view& view_)
 {
    vsliders[index]->on_change =
       [index, &view_](double val)
       {
          hsliders[index]->slider_base::value(val);
+         dials[index]->dial_base::value(val);
          view_.refresh(*hsliders[index]);
+         view_.refresh(*dials[index]);
       };
 
    hsliders[index]->on_change =
       [index, &view_](double val)
       {
          vsliders[index]->slider_base::value(val);
+         dials[index]->dial_base::value(val);
          view_.refresh(*vsliders[index]);
+         view_.refresh(*dials[index]);
+      };
+
+   dials[index]->on_change =
+      [index, &view_](double val)
+      {
+         vsliders[index]->slider_base::value(val);
+         hsliders[index]->slider_base::value(val);
+         view_.refresh(*vsliders[index]);
+         view_.refresh(*hsliders[index]);
       };
 }
 
-void link_sliders(view& view_)
+void link_controls(view& view_)
 {
-   link_slider(0, view_);
-   link_slider(1, view_);
-   link_slider(2, view_);
+   link_control(0, view_);
+   link_control(1, view_);
+   link_control(2, view_);
 }
 
 int main(int argc, const char* argv[])
@@ -132,7 +178,7 @@ int main(int argc, const char* argv[])
       }
    );
 
-   link_sliders(view_);
+   link_controls(view_);
    _app.run();
    return 0;
 }

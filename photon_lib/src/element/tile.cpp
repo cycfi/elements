@@ -47,11 +47,15 @@ namespace cycfi { namespace photon
       for (std::size_t ix = 0; ix != size(); ++ix)
       {
          auto& elem = at(ix);
-         auto  el = elem.limits(ctx);
+         auto  limits = elem.limits(ctx);
+         auto  elem_height = std::max<float>(height * at(ix).span().y / max_span_y, limits.min.y);
 
          *i++ = curr;
          auto prev = curr;
-         curr += height * at(ix).span().y / max_span_y;
+         curr += elem_height;
+
+         if (curr > ctx.bounds.bottom)
+            curr = ctx.bounds.bottom;
 
          rect ebounds = { _left, float(prev), _right, float(curr) };
          elem.layout(context{ ctx, &elem, ebounds });
@@ -104,10 +108,14 @@ namespace cycfi { namespace photon
       {
          auto& elem = at(ix);
          auto  limits = elem.limits(ctx);
+         auto  elem_width = std::max<float>(width * at(ix).span().x / max_span_x, limits.min.x);
 
          *i++ = curr;
          auto prev = curr;
-         curr += width * at(ix).span().x / max_span_x;
+         curr += elem_width;
+
+         if (curr > ctx.bounds.right)
+            curr = ctx.bounds.right;
 
          rect ebounds = { float(prev), _top, float(curr), _bottom };
          elem.layout(context{ ctx, &elem, ebounds });

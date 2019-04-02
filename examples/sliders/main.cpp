@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <photon.hpp>
 #include <photon/support/draw_utils.hpp>
-#include <random>
 
 using namespace cycfi::photon;
 
@@ -84,10 +83,10 @@ auto make_sliders()
 {
    return
       margin({ 20, 10, 20, 10 },
-         vmin_size(300,
+         vmin_size(400,
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Vertical", make_vsliders())),
-               margin({ 20, 20, 20, 20 }, pane("Horizontal", make_hsliders()))
+               margin({ 20, 20, 20, 20 }, pane("Vertical", make_vsliders(), 0.8f)),
+               margin({ 20, 20, 20, 20 }, pane("Horizontal", make_hsliders(), 0.8f))
             )
          )
       );
@@ -119,8 +118,6 @@ void link_sliders(view& view_)
 
 int main(int argc, const char* argv[])
 {
-   srand(0xdeadbeef);
-
    app _app(argc, argv);
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };

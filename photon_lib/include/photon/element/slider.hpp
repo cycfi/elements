@@ -378,49 +378,31 @@ namespace cycfi { namespace photon
    {
    public:
 
-      static std::size_t const size = _size;
+      constexpr static int const size = _size;
       using base_type = slider_element_base<abs(_size), Subject>;
       using string_array = std::array<std::string, num_labels>;
 
-                              slider_labels_element(Subject&& subject, float font_size)
+                              slider_labels_element(
+                                 Subject&& subject
+                               , float font_size
+                              )
                                : base_type(std::move(subject))
                                , _font_size(font_size)
                               {}
 
-                              slider_labels_element(Subject const& subject, float font_size)
+                              slider_labels_element(
+                                 Subject const& subject
+                               , float font_size
+                              )
                                : base_type(subject)
                                , _font_size(font_size)
                               {}
 
-      virtual void            prepare_subject(context& ctx);
       virtual void            draw(context const& ctx);
 
       string_array            _labels;
       float                   _font_size;
    };
-
-   template <int size, typename Subject, std::size_t num_labels>
-   inline void
-   slider_labels_element<size, Subject, num_labels>::prepare_subject(context& ctx)
-   {
-      bool reverse = size < 0;
-      int size_ = abs(size);
-
-      if (ctx.bounds.width() < ctx.bounds.height()) // is vertical?
-      {
-         if (reverse)
-            ctx.bounds.left += size_;
-         else
-            ctx.bounds.right -= size_;
-      }
-      else
-      {
-         if (reverse)
-            ctx.bounds.top += size_;
-         else
-            ctx.bounds.bottom -= size_;
-      }
-   }
 
    template <int size, typename Subject, std::size_t num_labels>
    inline void
@@ -430,7 +412,6 @@ namespace cycfi { namespace photon
          canvas& cnv
        , rect bounds
        , float size
-       , point thumb_size
        , float font_size
        , std::string const labels[]
        , std::size_t _num_labels
@@ -439,15 +420,9 @@ namespace cycfi { namespace photon
       // Draw the subject
       base_type::draw(ctx);
 
-      auto thl = static_cast<slider_base const&>(this->subject()).thumb().limits(ctx);
-      CYCFI_ASSERT( // assert that the thumb is not resizable
-         (thl.min.x == thl.max.x && thl.min.y == thl.max.y),
-         "Error. The slider thumb should not be resizable."
-      );
-
       // Draw the labels
       draw_slider_labels(
-         ctx.canvas, ctx.bounds, size, point{ thl.max.x, thl.max.y }
+         ctx.canvas, ctx.bounds, size
        , _font_size, _labels.data(), num_labels);
    }
 
@@ -455,10 +430,6 @@ namespace cycfi { namespace photon
    inline slider_labels_element<size, Subject, sizeof...(S)>
    slider_labels(Subject&& subject, float font_size, S&&... s)
    {
-      static_assert(std::is_base_of<slider_base, Subject>::value,
-         "Error! Subject must be a slider"
-      );
-
       auto r = slider_labels_element<size, Subject, sizeof...(S)>
          {std::move(subject), font_size};
       r._labels = {{ std::move(s)... }};

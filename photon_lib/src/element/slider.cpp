@@ -255,7 +255,6 @@ namespace cycfi { namespace photon
       canvas& cnv
     , rect bounds
     , float size
-    , point thumb_size
     , float font_size
     , std::string const labels[]
     , std::size_t num_labels
@@ -265,11 +264,6 @@ namespace cycfi { namespace photon
       size = abs(size);
 
       bool vertical = bounds.width() < bounds.height();
-      if (vertical)
-         bounds = bounds.inset(0, thumb_size.y/2);
-      else
-         bounds = bounds.inset(thumb_size.x/2, 0);
-
       auto w = bounds.width();
       auto h = bounds.height();
       float pos = vertical? bounds.top : bounds.left;
@@ -287,7 +281,7 @@ namespace cycfi { namespace photon
             point{ pos, reverse? bounds.top : bounds.bottom }
             ;
 
-         cnv.fill_text(where, labels[i].c_str());
+         cnv.fill_text(where, labels[vertical? (num_labels-i)-1 : i].c_str());
          pos += incr;
       }
    }

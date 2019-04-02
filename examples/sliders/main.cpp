@@ -22,49 +22,58 @@ struct background : element
    }
 };
 
-double value()
-{
-   return double(rand()) / (double(RAND_MAX) + 1);
-}
+using slider_ptr = std::shared_ptr<basic_slider_base>;
+slider_ptr hsliders[3];
+slider_ptr vsliders[3];
 
-auto make_hslider()
+template <bool vertical>
+auto make_markers()
 {
-   auto s = slider_labels<10>(
-      slider(basic_thumb<25>(), slider_marks<35>(basic_track<5>()), value()),
-      0.8, // relative label font size
+   return slider_labels<10>(
+      slider_marks<35>(basic_track<5, vertical>()),
+      0.8,        // relative label font size
       "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
    );
-   return align_middle(xside_margin({ 20, 20 }, std::move(s)));
+}
+
+auto make_hslider(int index)
+{
+   hsliders[index] = share(slider(
+      basic_thumb<25>(),
+      make_markers<false>(),
+      (index + 1) * 0.25
+   ));
+   return align_middle(xside_margin({ 20, 20 }, link(hsliders[index])));
 }
 
 auto make_hsliders()
 {
    return hmin_size(300,
       vtile(
-         make_hslider(),
-         make_hslider(),
-         make_hslider()
+         make_hslider(0),
+         make_hslider(1),
+         make_hslider(2)
       )
    );
 }
 
-auto make_vslider()
+auto make_vslider(int index)
 {
-   auto s = slider_labels<10>(
-      slider(basic_thumb<25>(), slider_marks<35>(basic_track<5, true>()), value()),
-      0.8, // relative label font size
-      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-   );
-   return align_center(yside_margin({ 20, 20 }, std::move(s)));
+   vsliders[index] = share(slider(
+      basic_thumb<25>(),
+      make_markers<true>(),
+      (index + 1) * 0.25
+   ));
+   return align_center(yside_margin({ 20, 20 }, link(vsliders[index])));
 }
 
 auto make_vsliders()
 {
    return hmin_size(300,
       htile(
-         make_vslider(),
-         make_vslider(),
-         make_vslider()
+         make_vslider(0),
+         make_vslider(1),
+         make_vslider(2)
       )
    );
 }
@@ -80,6 +89,30 @@ auto make_sliders()
             )
          )
       );
+}
+
+void link_slider(int index, view& view_)
+{
+   vsliders[index]->on_change =
+      [index, &view_](double val)
+      {
+         hsliders[index]->slider_base::value(val);
+         view_.refresh(*hsliders[index]);
+      };
+
+   hsliders[index]->on_change =
+      [index, &view_](double val)
+      {
+         vsliders[index]->slider_base::value(val);
+         view_.refresh(*vsliders[index]);
+      };
+}
+
+void link_sliders(view& view_)
+{
+   link_slider(0, view_);
+   link_slider(1, view_);
+   link_slider(2, view_);
 }
 
 int main(int argc, const char* argv[])
@@ -99,6 +132,7 @@ int main(int argc, const char* argv[])
       }
    );
 
+   link_sliders(view_);
    _app.run();
    return 0;
 }

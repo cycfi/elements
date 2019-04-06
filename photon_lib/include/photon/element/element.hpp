@@ -84,6 +84,11 @@ namespace cycfi { namespace photon
       using element_type = typename std::decay<Element>::type;
       return std::make_shared<element_type>(std::forward<Element>(e));
    }
+
+   inline element empty()
+   {
+      return {};
+   }
 }}
 
 #endif

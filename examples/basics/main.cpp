@@ -98,19 +98,18 @@ auto make_basic_text()
             el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
             el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
             el(0.5, "Now, Joel rewrote my code using modern C++14."),
-            margin({ 10, 10, 10, 10 }, group("Icons", std::move(icons)))
+            margin({ 10, 10, 10, 10 }, group("Icons", std::move(icons))),
+            empty()
          )
       );
 }
 
 auto make_basic_text2()
 {
-   auto text_box = margin({ 10, 50, 10, 10 }, vport(static_text_box{ text }));
-
-   return
-      margin(
+   static auto textbox = vport(static_text_box{ text });
+   return margin(
          { 10, 10, 10, 10 },
-         group("Text Box", std::move(text_box))
+         link(textbox)
       );
 }
 
@@ -131,102 +130,16 @@ auto make_controls()
    return align_center_middle(dial_info.first);
 }
 
-auto make_controls2()
+auto make_elements()
 {
-   auto d = radial_labels<15>(
-      dial(radial_marks<25>(basic_knob<100>()), 0.5),
-      0.8, // relative label font size
-      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-   );
-   return align_center_middle(d);
+   return
+      margin({ 20, 10, 20, 10 },
+         htile(
+            margin({ 20, 20, 20, 20 }, pane("Static Text", make_basic_text(), 0.8f)),
+            margin({ 20, 20, 20, 20 }, pane("Text Box", make_basic_text2(), 0.8f))
+         )
+      );
 }
-
-auto make_controls3()
-{
-   auto s = slider_labels<10>(
-      slider(basic_thumb<25>(), slider_marks<35>(basic_track<5>()), 0.5),
-      0.8, // relative label font size
-      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-   );
-
-
-//   auto s = slider(basic_thumb<25>(), slider_marks<35>(basic_track<5>()), 0.5);
-   return align_middle(xside_margin({ 120, 120 }, std::move(s)));
-}
-
-auto make_controls4()
-{
-   auto s = slider_labels<10>(
-      slider(basic_thumb<25>(), slider_marks<35>(basic_track<5, true>()), 0.5),
-      0.8, // relative label font size
-      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-   );
-   return align_center(yside_margin({ 50, 50 }, std::move(s)));
-}
-
-
-//auto make_controls()
-//{
-//   auto sl = margin(
-//      { 20, 20, 20, 20 },
-//      group("Text Box",
-//         htile(
-//            xside_margin(10, slider{}),
-//            xside_margin(10, slider{}),
-//            xside_margin(10, slider{}),
-//            xside_margin(10, slider{}),
-//            xside_margin(10, slider{}),
-//            xside_margin(10, slider{}),
-//            xside_margin(10,
-//               vtile(
-//                  yside_margin(10, knob{}),
-//                  yside_margin(10, knob{}),
-//                  yside_margin(10, knob{})
-//               )
-//            )
-//         )
-//      )
-//   );
-//
-//   //main_widget = new_(std::move(sl));
-//}
-
-struct testing : element
-{
-   void draw(context const& ctx)
-   {
-
-
-    // Dial Knob
-//      auto&  cnv = ctx.canvas;
-//      circle c{200, 200, 32};
-//      draw_knob(cnv, c, colors::black);
-//      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0));
-////      draw_indicator(cnv, c, 0.5, color{ 0, 127, 255, 200 }.level(2.0), true);
-
-      // Shadow...
-      // auto&  cnv = ctx.canvas;
-      // cnv.fill_style(colors::white.opacity(0.7));
-      // cnv.shadow_style({ 2, 4 }, 20, colors::black.opacity(0.4));
-      // cnv.fill_round_rect({ 130, 130, 350, 350 }, 50);
-
-      //auto const&    theme_ = get_theme();
-      //auto&          canvas_ = ctx.canvas;
-      //auto           state = canvas_.new_state();
-      //
-      //canvas_.shadow_style({ 2, 4 }, 20, colors::black.opacity(0.2));
-      //
-      //canvas_.line_width(0.5);
-      //canvas_.fill_style(theme_.heading_font_color);
-      //canvas_.font(theme_.heading_font, 72, theme_.heading_style);
-      //canvas_.text_align(canvas_.middle | canvas_.center);
-      //
-      //float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
-      //float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-      //
-      //canvas_.fill_text(point{ cx, cy }, "Hello World");
-   }
-};
 
 int main(int argc, const char* argv[])
 {
@@ -236,39 +149,10 @@ int main(int argc, const char* argv[])
 
    view view_(_win.host());
 
-   auto next_btn = button("Next");
-
-   auto content = deck(
-      make_basic_text(),
-      make_basic_text2(),
-      make_controls(),
-      // testing{},
-      make_controls2(),
-      make_controls3(),
-      make_controls4()
-   );
-
-   int select = 0;
-
-   next_btn.on_click = [&](bool)
-   {
-      if (++select == content.size())
-         select = 0;
-      content.select(select);
-      view_.refresh(content);
-   };
-
-   auto top = htile(
-      hspan(1.0, align_left(right_margin(8, label("Basics")))),
-      hspan(0.1, link(next_btn))
-   );
-   auto main_pane = pane(top, link(content), false);
-   auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
-
    view_.content(
       {
          share(background{}),
-         share(main_element)
+         share(make_elements())
       }
    );
 

@@ -48,7 +48,8 @@ namespace cycfi { namespace photon
       {
          auto& elem = at(ix);
          auto  limits = elem.limits(ctx);
-         auto  elem_height = std::max<float>(height * at(ix).span().y / max_span_y, limits.min.y);
+         auto  elem_height = height * at(ix).span().y / max_span_y;
+         clamp(elem_height, limits.min.y, limits.max.y);
 
          *i++ = curr;
          auto prev = curr;
@@ -108,7 +109,8 @@ namespace cycfi { namespace photon
       {
          auto& elem = at(ix);
          auto  limits = elem.limits(ctx);
-         auto  elem_width = std::max<float>(width * at(ix).span().x / max_span_x, limits.min.x);
+         auto  elem_width = width * at(ix).span().x / max_span_x;
+         clamp(elem_width, limits.min.x, limits.max.x);
 
          *i++ = curr;
          auto prev = curr;

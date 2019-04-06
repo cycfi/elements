@@ -14,13 +14,13 @@
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Popup Button
+   // Basic Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////
-   class basic_popup_button : public basic_button
+   class basic_dropdown_menu : public basic_button
    {
    public:
                               template <typename W1, typename W2>
-                              basic_popup_button(W1&& off, W2&& on);
+                              basic_dropdown_menu(W1&& off, W2&& on);
 
       virtual void            layout(context const& ctx);
       virtual element*        click(context const& ctx, mouse_button btn);
@@ -39,12 +39,12 @@ namespace cycfi { namespace photon
    };
 
    template <typename W1, typename W2>
-   inline basic_popup_button::basic_popup_button(W1&& off, W2&& on)
+   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
     : basic_button(std::forward<W1>(off), std::forward<W2>(on))
    {}
 
    template <typename Menu>
-   inline void basic_popup_button::menu(Menu&& menu_)
+   inline void basic_dropdown_menu::menu(Menu&& menu_)
    {
       _popup = std::dynamic_pointer_cast<basic_popup_element>(share(basic_popup(menu_)));
    }

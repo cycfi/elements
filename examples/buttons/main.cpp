@@ -23,7 +23,7 @@ struct background : element
 
 auto make_popup_menu()
 {
-   auto popup  = popup_button("Popup Button");
+   auto popup  = dropdown_menu("Dropdown Menu");
 
    auto menu =
       layer(
@@ -76,13 +76,57 @@ auto make_buttons(view& view_)
       );
 }
 
+auto make_more_buttons()
+{
+   auto  check_box1 = check_box("Reionizing electrons");
+   auto  check_box2 = check_box("The Nexus Meridian Unfolding");
+   auto  check_box3 = check_box("Serenity Dreamscape Exploration");
+
+   check_box1.value(true);
+   check_box2.value(true);
+   check_box3.value(true);
+
+   auto  group1 =
+         group("Check boxes",
+            margin({ 10, 10, 20, 20 },
+               top_margin(25,
+                  vtile(
+                     top_margin(10, align_left(check_box1)),
+                     top_margin(10, align_left(check_box2)),
+                     top_margin(10, align_left(check_box3))
+                  )
+               )
+            )
+         );
+
+   auto  group2 =
+         group("Icon Toggles",
+            margin({ 10, 10, 20, 20 },
+               vtile(
+                  top_margin(45,
+                     htile(
+                        align_center(icon_button(icons::power, 24)),
+                        align_center(icon_button(icons::magnifying_glass, 24)),
+                        align_center(icon_button(icons::left_circled, 24))
+                     )
+                  )
+               )
+            )
+         );
+
+   return vtile(
+      margin({ 20, 20, 20, 20 }, group1),
+      margin({ 20, 20, 20, 20 }, group2)
+   );
+}
+
 auto make_controls(view& view_)
 {
    return
       margin({ 20, 10, 20, 10 },
          htile(
             margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(view_), 0.8f)),
-            margin({ 20, 20, 20, 20 }, pane("22222", element(), 0.8f))
+            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons(), 0.8f))
          )
       );
 }

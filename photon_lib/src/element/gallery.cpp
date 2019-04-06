@@ -244,13 +244,12 @@ namespace cycfi { namespace photon
       return make_button<basic_latching_button>(text, icon_code, body_color);
    }
 
-   basic_popup_button
-   popup_button(
-      std::string const& text
-    , color body_color
+   basic_dropdown_menu
+   dropdown_menu(
+      std::string const &text, color body_color
    )
    {
-      return make_button<basic_popup_button>(text, icons::down_dir, body_color);
+      return make_button<basic_dropdown_menu>(text, icons::down_dir, body_color);
    }
 
    void draw_check_box(
@@ -258,6 +257,7 @@ namespace cycfi { namespace photon
    )
    {
       auto&       canvas_ = ctx.canvas;
+      auto        canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
       color       indicator_color = theme_.indicator_color;
       rect        box = ctx.bounds.move(15, 0);
@@ -298,21 +298,31 @@ namespace cycfi { namespace photon
 
       if (state)
       {
-         // auto save = set(theme_.icon_color, c1.level(2.0));
-         // text_utils(theme_).draw_icon(box, icons::ok, 14);
-         // draw_icon(box, icons::ok, 14);
+         //auto save = set(theme_.icon_color, c1.level(2.0));
+//         text_utils(theme_).draw_icon(box, icons::ok, 14);
+         //draw_icon(canvas_, box, icons::ok, 14);
+
+         draw_icon(canvas_, box, icons::ok, 14, c1.level(2.0));
       }
-      else
+      // else
       {
-         color outline_color = hilite ? theme_.frame_color : rgba(0, 0, 0, 48);
+         // color outline_color = hilite ? theme_.frame_color : rgba(0, 0, 0, 48);
+         color outline_color = theme_.frame_color;
          canvas_.begin_path();
          canvas_.round_rect(box.inset(1, 1), 3);
          canvas_.stroke_style(outline_color);
          canvas_.stroke();
       }
 
-      canvas_.text_align(canvas_.left | canvas_.center);
-      float cx = ctx.bounds.left-45;
+      canvas_.fill_style(theme_.label_font_color);
+      canvas_.font(
+         theme_.label_font,
+         theme_.label_font_size,
+         theme_.label_style
+      );
+      canvas_.text_align(canvas_.left | canvas_.middle);
+      // rect  text_bounds = ctx.bounds.move(45, 0);
+      float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
       canvas_.fill_text(point{ cx, cy }, text.c_str());
 
@@ -368,21 +378,21 @@ namespace cycfi { namespace photon
 
    namespace
    {
-       void draw_menu_background(cairo_t& _context, rect bounds, float radius)
-       {
-          auto x = bounds.left;
-          auto y = bounds.top;
-          auto r = bounds.right;
-          auto b = bounds.bottom;
-          auto const a = M_PI/180.0;
+      void draw_menu_background(cairo_t& _context, rect bounds, float radius)
+      {
+         auto x = bounds.left;
+         auto y = bounds.top;
+         auto r = bounds.right;
+         auto b = bounds.bottom;
+         auto const a = M_PI/180.0;
 
-          cairo_new_sub_path(&_context);
-          cairo_move_to(&_context, r, y);
-          cairo_arc(&_context, r-radius, b-radius, radius, 0*a, 90*a);
-          cairo_arc(&_context, x+radius, b-radius, radius, 90*a, 180*a);
-          cairo_line_to(&_context, x, y);
-          cairo_close_path(&_context);
-       }
+         cairo_new_sub_path(&_context);
+         cairo_move_to(&_context, r, y);
+         cairo_arc(&_context, r-radius, b-radius, radius, 0*a, 90*a);
+         cairo_arc(&_context, x+radius, b-radius, radius, 90*a, 180*a);
+         cairo_line_to(&_context, x, y);
+         cairo_close_path(&_context);
+      }
    }
 
    void menu_background::draw(context const& ctx)

@@ -7,7 +7,7 @@
 
 namespace cycfi { namespace photon
 {
-   void basic_popup_button::layout(context const& ctx)
+   void basic_dropdown_menu::layout(context const& ctx)
    {
       basic_button::layout(ctx);
 
@@ -22,7 +22,7 @@ namespace cycfi { namespace photon
       _popup->layout(new_ctx);
    }
 
-   element* basic_popup_button::click(context const& ctx, mouse_button btn)
+   element* basic_dropdown_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -53,12 +53,12 @@ namespace cycfi { namespace photon
       return this;
    }
 
-   void basic_popup_button::drag(context const& ctx, mouse_button btn)
+   void basic_dropdown_menu::drag(context const& ctx, mouse_button btn)
    {
       ctx.view.refresh();
    }
 
-   bool basic_popup_button::key(context const& ctx, key_info k)
+   bool basic_dropdown_menu::key(context const& ctx, key_info k)
    {
       if (k.key == key_code::escape)
       {
@@ -70,7 +70,7 @@ namespace cycfi { namespace photon
       return false;
    }
 
-   bool basic_popup_button::focus(focus_request r)
+   bool basic_dropdown_menu::focus(focus_request r)
    {
       return true;
    }

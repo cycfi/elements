@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <photon/element/gallery.hpp>
 #include <photon/support/text_utils.hpp>
-#include <photon/support/draw_utils.hpp>
 #include <photon/support/theme.hpp>
 
 namespace cycfi { namespace photon

@@ -4,7 +4,6 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <photon.hpp>
-#include <photon/support/draw_utils.hpp>
 
 using namespace cycfi::photon;
 

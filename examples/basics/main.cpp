@@ -4,7 +4,6 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <photon.hpp>
-#include <photon/support/draw_utils.hpp>
 
 using namespace cycfi::photon;
 
@@ -111,23 +110,6 @@ auto make_basic_text2()
          { 10, 10, 10, 10 },
          link(textbox)
       );
-}
-
-// Our dial
-auto make_dial(char const* label)
-{
-   return dial(
-      "knob_sprites_white_128x128.png", 128
-      , "radial-lines.png"
-      , label
-      , 0.5
-   );
-}
-
-auto make_controls()
-{
-   auto dial_info = make_dial("Volume");
-   return align_center_middle(dial_info.first);
 }
 
 auto make_elements()

@@ -53,7 +53,6 @@ namespace cycfi { namespace photon
          shr.top -= 2;
          shr.right += 6;
          shr.bottom += 6;
-
          cnv.begin_path();
          cnv.round_rect(shr, corner_radius*2);
          cnv.fill_style(rgba(0, 0, 0, 20));

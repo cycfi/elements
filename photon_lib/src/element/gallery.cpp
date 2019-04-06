@@ -265,54 +265,23 @@ namespace cycfi { namespace photon
       box.width(box.height());
 
       color c1 = state ? indicator_color.level(1.5) : rgba(0, 0, 0, 32);
-      color c2 = state ? indicator_color : rgba(0, 0, 0, 92);
 
       if (state && hilite)
-      {
          c1 = c1.level(1.3);
-         c2 = c2.level(1.3);
-      }
-      //paint bg = canvas_.box_gradient(box.inset(1, 1).move(0, 1.5), 3, 4, c1, c2);
-
-      canvas_.begin_path();
-      canvas_.round_rect(box.inset(1, 1), 3);
-      //canvas_.fill_paint(bg);
-      canvas_.fill();
-
-      if (state || hilite)
-      {
-         float const glow = 2;
-         //color glow_color = hilite ? indicator_color : c2;
-
-         // paint glow_paint
-         //   = canvas_.box_gradient(box, 3, 3, glow_color, color(0, 0, 0, 0)
-         //   );
-
-         canvas_.begin_path();
-         canvas_.rect(box.inset(-glow, -glow));
-         canvas_.round_rect(box.inset(1.5, 1.5), 3);
-         // canvas_.path_winding(canvas::hole);
-         // canvas_.fill_paint(glow_paint);
-         canvas_.fill();
-      }
 
       if (state)
-      {
-         //auto save = set(theme_.icon_color, c1.level(2.0));
-//         text_utils(theme_).draw_icon(box, icons::ok, 14);
-         //draw_icon(canvas_, box, icons::ok, 14);
-
          draw_icon(canvas_, box, icons::ok, 14, c1.level(2.0));
-      }
-      // else
-      {
-         // color outline_color = hilite ? theme_.frame_color : rgba(0, 0, 0, 48);
-         color outline_color = theme_.frame_color;
-         canvas_.begin_path();
-         canvas_.round_rect(box.inset(1, 1), 3);
-         canvas_.stroke_style(outline_color);
-         canvas_.stroke();
-      }
+
+      color outline_color = theme_.frame_color;
+      canvas_.begin_path();
+      canvas_.round_rect(box.inset(1, 1), 3);
+      canvas_.stroke_style(outline_color);
+      canvas_.stroke();
+
+      // Pseudo glow
+      canvas_.round_rect(box, 4);
+      canvas_.stroke_style(outline_color.opacity(0.1));
+      canvas_.stroke();
 
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
@@ -321,16 +290,9 @@ namespace cycfi { namespace photon
          theme_.label_style
       );
       canvas_.text_align(canvas_.left | canvas_.middle);
-      // rect  text_bounds = ctx.bounds.move(45, 0);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
       canvas_.fill_text(point{ cx, cy }, text.c_str());
-
-      // text_utils(theme_)
-      //    .draw_text(
-      //       text_bounds, text.c_str(), theme_.label_font,
-      //       theme_.label_font_size, theme_.label_font_color
-      //    );
    }
 
    void draw_icon_button(
@@ -351,24 +313,6 @@ namespace cycfi { namespace photon
 
       canvas&        canvas_ = ctx.canvas;
       rect           bounds = ctx.bounds;
-
-      // Draw Glow
-//      if (state)
-//      {
-//         float const glow = 7;
-//         color glow_color = indicator_color.level(2.0);
-//
-//         paint glow_paint
-//               = canvas_.box_gradient(bounds, corner_radius, 8, glow_color, color(0, 0, 0, 0)
-//            );
-//
-//         canvas_.begin_path();
-//         canvas_.rect(bounds.inset(-glow, -glow));
-//         canvas_.round_rect(bounds.inset(1.5, 1.5), corner_radius-1);
-//         canvas_.path_winding(canvas::hole);
-//         canvas_.fill_paint(glow_paint);
-//         canvas_.fill();
-//      }
 
       // Draw Icon
       color icon_color = state ? indicator_color.level(4.0) : indicator_color.level(0.2);

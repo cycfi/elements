@@ -125,6 +125,22 @@ auto make_htile_main()
    );
 }
 
+template <typename MenuItem>
+auto make_popup_menu(MenuItem& hmenu, MenuItem& vmenu)
+{
+   auto popup  = dropdown_menu("Orientation");
+
+   auto menu =
+      layer(
+         vtile(link(hmenu), link(vmenu)),
+         menu_background{}
+      );
+
+   popup.menu(menu);
+
+   return popup;
+}
+
 int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
@@ -134,8 +150,8 @@ int main(int argc, const char* argv[])
    auto p = _win.position();
    _win.on_close = [&_app]() { _app.stop(); };
 
-   auto right_btn = button(icons::right);
-   auto up_btn = button(icons::up);
+   auto hmenu = menu_item("Horizontal");
+   auto vmenu = menu_item("Vertical");
 
    auto content = deck(
       make_vtile_main(),   // vertical tiles aligns and spans
@@ -144,24 +160,19 @@ int main(int argc, const char* argv[])
 
    view view_(_win.host());
 
-   right_btn.on_click = [&](bool)
+   hmenu.on_click = [&]()
    {
       content.select(1);
       view_.refresh(content);
    };
 
-   up_btn.on_click = [&](bool)
+   vmenu.on_click = [&]()
    {
       content.select(0);
       view_.refresh(content);
    };
 
-   auto top = htile(
-      hspan(1.0, align_left(right_margin(8, label("Tiles Aligns and Spans")))),
-      hspan(0.1, link(right_btn)),
-      hspan(0.1, link(up_btn))
-   );
-
+   auto top = align_right(hsize(120, make_popup_menu(hmenu, vmenu)));
    auto main_pane = pane(top, link(content), false);
    auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
 

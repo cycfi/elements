@@ -15,27 +15,29 @@ struct background : element
    }
 };
 
-auto box = basic(
-   [](context const& ctx)
-   {
-      auto& c = ctx.canvas;
+auto box = min_size({ 5, 5 },
+   basic(
+      [](context const& ctx)
+      {
+         auto& c = ctx.canvas;
 
-      c.begin_path();
-      c.round_rect(ctx.bounds, 4);
-      c.fill_style(colors::gold.opacity(0.8));
-      c.fill();
-   }
+         c.begin_path();
+         c.round_rect(ctx.bounds, 4);
+         c.fill_style(colors::gold.opacity(0.8));
+         c.fill();
+      }
+   )
 );
 
 auto make_vtile()
 {
    auto _box = top_margin(
-      { 20 },
+      { 10 },
       hsize(150, box)
    );
 
    return margin(
-      { 20, 50, 20, 20 },
+      { 10, 50, 10, 10 },
       hmin_size(150,
          vtile(
             halign(0.0, _box),
@@ -52,12 +54,12 @@ auto make_vtile()
 auto make_vtile2()
 {
    auto _box = top_margin(
-      { 20 },
+      { 10 },
       box
    );
 
    return margin(
-      { 20, 50, 20, 20 },
+      { 10, 50, 10, 10 },
       hmin_size(150,
          vtile(
             vspan(1.0, _box),
@@ -81,12 +83,12 @@ auto make_vtile_main()
 auto make_htile()
 {
    auto _box = left_margin(
-      { 20 },
+      { 10 },
       vsize(100, box)
    );
 
    return margin(
-      { 0, 50, 20, 20 },
+      { 0, 50, 10, 10 },
       htile(
          valign(0.0, _box),
          valign(0.2, _box),
@@ -101,12 +103,12 @@ auto make_htile()
 auto make_htile2()
 {
    auto _box = left_margin(
-      { 20 },
+      { 10 },
       box
    );
 
    return margin(
-      { 0, 50, 20, 20 },
+      { 0, 50, 10, 10 },
       htile(
          hspan(1.0, _box),
          hspan(0.5, _box),
@@ -174,7 +176,7 @@ int main(int argc, const char* argv[])
 
    auto top = align_right(hsize(120, make_popup_menu(hmenu, vmenu)));
    auto main_pane = pane(top, link(content), false);
-   auto main_element = margin({ 20, 20, 20, 20 }, main_pane);
+   auto main_element = margin({ 10, 10, 10, 10 }, main_pane);
 
    view_.content(
       {

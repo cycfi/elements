@@ -181,7 +181,7 @@ namespace cycfi { namespace photon
    {
       cnv.fill_style(c);
       cnv.begin_path();
-      cnv.round_rect(bounds, bounds.height()/12);
+      cnv.round_rect(bounds, bounds.height()/5);
       cnv.fill();
    }
 

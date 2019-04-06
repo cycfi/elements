@@ -58,7 +58,13 @@ auto make_basic_text()
 {
    auto fr = [](auto el)
    {
-      return margin({ 10, 10, 10, 10 }, layer(margin({ 10, 5, 10, 5 }, el), frame{}));
+      return margin(
+         { 10, 10, 10, 10 },
+         layer(
+            margin({ 10, 5, 10, 5 }, el),
+            frame{}
+         )
+      );
    };
 
    auto eh = [=](char const* txt)

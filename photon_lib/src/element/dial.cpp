@@ -82,7 +82,7 @@ namespace cycfi { namespace photon
 
    void draw_indicator(canvas& cnv, circle cp, float val, color c)
    {
-      constexpr float w_factor = 0.05; // relative width of the indicator
+      constexpr float w_factor = 0.1;  // relative width of the indicator
       constexpr float h_factor = 0.2;  // relative height of the indicator
       using namespace radial_consts;
 

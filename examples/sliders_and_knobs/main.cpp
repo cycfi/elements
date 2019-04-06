@@ -33,7 +33,7 @@ auto make_markers()
 {
    auto track = basic_track<5, is_vertical>();
    return slider_labels<10>(
-      slider_marks<35>(track),         // Track with marks
+      slider_marks<40>(track),         // Track with marks
       0.8,                             // Label font size (relative size)
       "0", "1", "2", "3", "4",         // Labels
       "5", "6", "7", "8", "9", "10"
@@ -43,7 +43,7 @@ auto make_markers()
 auto make_hslider(int index)
 {
    hsliders[index] = share(slider(
-      basic_thumb<25>(),
+      basic_thumb<22>(),
       make_markers<false>(),
       (index + 1) * 0.25
    ));
@@ -64,7 +64,7 @@ auto make_hsliders()
 auto make_vslider(int index)
 {
    vsliders[index] = share(slider(
-      basic_thumb<25>(),
+      basic_thumb<22>(),
       make_markers<true>(),
       (index + 1) * 0.25
    ));

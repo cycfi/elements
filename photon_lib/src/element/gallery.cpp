@@ -345,7 +345,7 @@ namespace cycfi { namespace photon
 
       canvas_.begin_path();
       draw_menu_background(canvas_.cairo_context(), bounds, 5);
-      canvas_.fill_style(get_theme().panel_color.opacity(0.95));
+      canvas_.fill_style(get_theme().panel_color.opacity(0.8));
       canvas_.fill();
    }
 

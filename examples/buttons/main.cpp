@@ -20,62 +20,7 @@ struct background : element
    }
 };
 
-auto make_popup_menu()
-{
-   auto popup  = dropdown_menu("Dropdown Menu");
-
-   auto menu =
-      layer(
-         vtile(
-               menu_item("Once you stop learning, you start dying"),
-               menu_item("Everything should be made as simple as possible, but not simpler"),
-               menu_item("In the middle of difficulty lies opportunity"),
-               menu_item_spacer(),
-               menu_item("A person who never made a mistake never tried anything new"),
-               menu_item("Anger dwells only in the bosom of fools")
-         ),
-         menu_background{}
-      );
-
-   popup.menu(menu);
-
-   return popup;
-}
-
-auto make_buttons(view& view_)
-{
-   constexpr auto bred     = colors::red.opacity(0.4);
-   constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
-   constexpr auto bblue    = colors::blue.opacity(0.4);
-   constexpr auto brblue   = colors::royal_blue.opacity(0.4);
-
-   auto mbutton            = button("Momentary Button");
-   auto tbutton            = toggle_button("Toggle Button", bred);
-   auto lbutton            = share(latching_button("Latching Button", bgreen));
-   auto reset              = button("Clear Latch", icons::lock_open, bblue);
-   auto note               = button(icons::cog, "Setup", brblue);
-
-   reset.on_click =
-      [lbutton, &view_](bool) mutable
-      {
-         lbutton->value(0);
-         view_.refresh(*lbutton);
-      };
-
-   return
-      margin({ 20, 0, 20, 20 },
-         vtile(
-            top_margin(20, make_popup_menu()),
-            top_margin(20, mbutton),
-            top_margin(20, tbutton),
-            top_margin(20, link(lbutton)),
-            top_margin(20, reset),
-            top_margin(20, note)
-         )
-      );
-}
-
-auto make_more_buttons()
+auto make_buttons()
 {
    auto  check_box1 = check_box("Reionizing electrons");
    auto  check_box2 = check_box("The Nexus Meridian Unfolding");
@@ -119,13 +64,72 @@ auto make_more_buttons()
    );
 }
 
+auto make_popup_menu()
+{
+   auto popup  = dropdown_menu("Dropdown Menu");
+
+   auto menu =
+      layer(
+         vtile(
+               menu_item("Quantum Feedback Loop"),
+               menu_item("Psionic Wave Oscillator"),
+               menu_item("Gaia Abiogenesis"),
+               menu_item_spacer(),
+               menu_item("Chaotic Synchronicity"),
+               menu_item("Omega Quadrant"),
+               menu_item("Photonic Mesh"),
+               menu_item("Antimatter Soup"),
+               menu_item("Dark Beta Quarks"),
+               menu_item("Cosmic Infrared Shift")
+         ),
+         menu_background{}
+      );
+
+   popup.menu(menu);
+
+   return popup;
+}
+
+auto make_more_buttons(view& view_)
+{
+   constexpr auto bred     = colors::red.opacity(0.4);
+   constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
+   constexpr auto bblue    = colors::blue.opacity(0.4);
+   constexpr auto brblue   = colors::royal_blue.opacity(0.4);
+
+   auto mbutton            = button("Momentary Button");
+   auto tbutton            = toggle_button("Toggle Button", bred);
+   auto lbutton            = share(latching_button("Latching Button", bgreen));
+   auto reset              = button("Clear Latch", icons::lock_open, bblue);
+   auto note               = button(icons::cog, "Setup", brblue);
+
+   reset.on_click =
+      [lbutton, &view_](bool) mutable
+      {
+         lbutton->value(0);
+         view_.refresh(*lbutton);
+      };
+
+   return
+      margin({ 20, 0, 20, 20 },
+         vtile(
+            top_margin(20, make_popup_menu()),
+            top_margin(20, mbutton),
+            top_margin(20, tbutton),
+            top_margin(20, link(lbutton)),
+            top_margin(20, reset),
+            top_margin(20, note)
+         )
+      );
+}
+
 auto make_controls(view& view_)
 {
    return
       margin({ 20, 10, 20, 10 },
          htile(
-            margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(view_), 0.8f)),
-            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons(), 0.8f))
+            margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(), 0.8f)),
+            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons(view_), 0.8f))
          )
       );
 }

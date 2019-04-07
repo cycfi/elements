@@ -13,8 +13,9 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Proxies
    //
-   // A element that encapsulates another element. The proxy delegates its methods
-   // to an enlosed element.
+   // A element that encapsulates another element (its 'subject'). The proxy
+   // delegates its methods to its encapsulated subject, but may augment
+   // or totally override its behavior.
    ////////////////////////////////////////////////////////////////////////////
    class proxy_base : public element
    {

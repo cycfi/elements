@@ -45,8 +45,8 @@ namespace cycfi { namespace photon
 
       double height = ctx.bounds.height();
 
-      // - Collect min, max, and span information from each element
-      // - Also, accumulate the maximum span (max_span) for later
+      // - Collect min, max, and span information from each element.
+      // - Also, accumulate the maximum span (max_span) for later.
       double max_span = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
@@ -58,8 +58,8 @@ namespace cycfi { namespace photon
          info[i].max = limits.max.y;
       }
 
-      // - Calculate the ideal allocation sizes for each element
-      // - Get the total height computed by the ideal allocation sizes
+      // - Calculate the ideal allocation sizes for each element.
+      // - Get the total height computed by the ideal allocation sizes.
       // - Also, get the flex_count: the number of elements that can
       //   still flex (size re-adjusted), for later.
       float total = 0.0;
@@ -74,7 +74,7 @@ namespace cycfi { namespace photon
       }
 
       // If the total (ideal) height exceeds the supplied height,
-      // Adjust the heights of elements that can flex.
+      // adjust the heights of elements that can flex to make it fit.
       if (total > height && flex_count > 0)
       {
          float adjust = (total - height) / flex_count;
@@ -150,8 +150,8 @@ namespace cycfi { namespace photon
 
       double width = ctx.bounds.width();
 
-      // - Collect min, max, and span information from each element
-      // - Also, accumulate the maximum span (max_span) for later
+      // - Collect min, max, and span information from each element.
+      // - Also, accumulate the maximum span (max_span) for later.
       double max_span = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
@@ -163,8 +163,8 @@ namespace cycfi { namespace photon
          info[i].max = limits.max.x;
       }
 
-      // - Calculate the ideal allocation sizes for each element
-      // - Get the total width computed by the ideal allocation sizes
+      // - Calculate the ideal allocation sizes for each element.
+      // - Get the total width computed by the ideal allocation sizes.
       // - Also, get the flex_count: the number of elements that can
       //   still flex (size re-adjusted), for later.
       float total = 0.0;
@@ -178,8 +178,8 @@ namespace cycfi { namespace photon
          total += (info.alloc = elem_width);
       }
 
-      // If the total (ideal) width exceeds the supplied height,
-      // Adjust the widths of elements that can flex.
+      // If the total (ideal) width exceeds the supplied width,
+      // adjust the heights of elements that can flex to make it fit.
       if (total > width && flex_count > 0)
       {
          float adjust = (total - width) / flex_count;

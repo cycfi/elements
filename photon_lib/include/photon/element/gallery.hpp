@@ -355,7 +355,7 @@ namespace cycfi { namespace photon
             align_center(
                htile(
                   label(text),
-                  left_margin(8, icon(icon_code))
+                  left_margin(12, icon(icon_code))
                )
             )
          ),

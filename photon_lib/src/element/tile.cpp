@@ -8,15 +8,23 @@
 
 namespace cycfi { namespace photon
 {
+   namespace
+   {
+      struct layout_info
+      {
+         float min, max, span, alloc;
+      };
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
    ////////////////////////////////////////////////////////////////////////////
    view_limits vtile_element::limits(basic_context const& ctx) const
    {
       view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
-      for (std::size_t ix = 0; ix != size();  ++ix)
+      for (std::size_t i = 0; i != size();  ++i)
       {
-         auto el = at(ix).limits(ctx);
+         auto el = at(i).limits(ctx);
 
          limits.min.y += el.min.y;
          limits.max.y += el.max.y;
@@ -33,35 +41,79 @@ namespace cycfi { namespace photon
    {
       _left = ctx.bounds.left;
       _right = ctx.bounds.right;
-
       _tiles.resize(size()+1);
 
-      double max_span_y = 0.0;
-      for (std::size_t ix = 0; ix != size();  ++ix)
-         max_span_y += at(ix).span().y;
+      double height = ctx.bounds.height();
 
-      double   height   = ctx.bounds.height();
-      double   curr     = ctx.bounds.top;
-      auto     i        = _tiles.begin();
-
-      for (std::size_t ix = 0; ix != size(); ++ix)
+      // - Collect min, max, and span information from each element
+      // - Also, accumulate the maximum span (max_span) for later
+      double max_span = 0.0;
+      std::vector<layout_info> info(size());
+      for (std::size_t i = 0; i != size(); ++i)
       {
-         auto& elem = at(ix);
-         auto  limits = elem.limits(ctx);
-         auto  elem_height = height * at(ix).span().y / max_span_y;
-         clamp(elem_height, limits.min.y, limits.max.y);
+         auto& elem = at(i);
+         auto limits = elem.limits(ctx);
+         max_span += (info[i].span = elem.span().y);
+         info[i].min = limits.min.y;
+         info[i].max = limits.max.y;
+      }
 
-         *i++ = curr;
+      // - Calculate the ideal allocation sizes for each element
+      // - Get the total height computed by the ideal allocation sizes
+      // - Also, get the flex_count: the number of elements that can
+      //   still flex (size re-adjusted), for later.
+      float total = 0.0;
+      int flex_count = 0;
+      for (auto& info : info)
+      {
+         auto elem_height = height * info.span / max_span;
+         clamp(elem_height, info.min, info.max);
+         if (elem_height > info.min)
+            ++flex_count;
+         total += (info.alloc = elem_height);
+      }
+
+      // If the total (ideal) height exceeds the supplied height,
+      // Adjust the heights of elements that can flex.
+      if (total > height && flex_count > 0)
+      {
+         float adjust = (total - height) / flex_count;
+         for (auto& info : info)
+         {
+            if (info.alloc > info.min)
+            {
+               info.alloc -= adjust;
+               if (info.alloc < info.min)
+               {
+                  auto diff = info.min - info.alloc;
+                  info.alloc = info.min;
+                  --flex_count;
+                  total -= info.min;
+                  if (total <= height)
+                     break;
+                  if (flex_count > 0)
+                     adjust = (total - height) / flex_count;
+               }
+            }
+         }
+      }
+
+      // Now we have the final layout. We can now layout the individual
+      // elements.
+      double curr = ctx.bounds.top;
+      auto iter = _tiles.begin();
+      std::size_t i = 0;
+      for (auto const& info : info)
+      {
+         *iter++ = curr;
          auto prev = curr;
-         curr += elem_height;
+         curr += info.alloc;
 
-         if (curr > ctx.bounds.bottom)
-            curr = ctx.bounds.bottom;
-
+         auto& elem = at(i++);
          rect ebounds = { _left, float(prev), _right, float(curr) };
          elem.layout(context{ ctx, &elem, ebounds });
       }
-      *i = curr;
+      *iter = curr;
    }
 
    rect vtile_element::bounds_of(context const& ctx, std::size_t index) const
@@ -75,9 +127,9 @@ namespace cycfi { namespace photon
    view_limits htile_element::limits(basic_context const& ctx) const
    {
       view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
-      for (std::size_t ix = 0; ix != size();  ++ix)
+      for (std::size_t i = 0; i != size();  ++i)
       {
-         auto el = at(ix).limits(ctx);
+         auto el = at(i).limits(ctx);
 
          limits.min.x += el.min.x;
          limits.max.x += el.max.x;
@@ -94,35 +146,79 @@ namespace cycfi { namespace photon
    {
       _top = ctx.bounds.top;
       _bottom = ctx.bounds.bottom;
-
       _tiles.resize(size()+1);
 
-      double max_span_x = 0.0;
-      for (std::size_t ix = 0; ix != size();  ++ix)
-         max_span_x += at(ix).span().x;
+      double width = ctx.bounds.width();
 
-      double   width    = ctx.bounds.width();
-      double   curr     = ctx.bounds.left;
-      auto     i        = _tiles.begin();
-
-      for (std::size_t ix = 0; ix != size(); ++ix)
+      // - Collect min, max, and span information from each element
+      // - Also, accumulate the maximum span (max_span) for later
+      double max_span = 0.0;
+      std::vector<layout_info> info(size());
+      for (std::size_t i = 0; i != size(); ++i)
       {
-         auto& elem = at(ix);
-         auto  limits = elem.limits(ctx);
-         auto  elem_width = width * at(ix).span().x / max_span_x;
-         clamp(elem_width, limits.min.x, limits.max.x);
+         auto& elem = at(i);
+         auto limits = elem.limits(ctx);
+         max_span += (info[i].span = elem.span().x);
+         info[i].min = limits.min.x;
+         info[i].max = limits.max.x;
+      }
 
-         *i++ = curr;
+      // - Calculate the ideal allocation sizes for each element
+      // - Get the total width computed by the ideal allocation sizes
+      // - Also, get the flex_count: the number of elements that can
+      //   still flex (size re-adjusted), for later.
+      float total = 0.0;
+      int flex_count = 0;
+      for (auto& info : info)
+      {
+         auto elem_width = width * info.span / max_span;
+         clamp(elem_width, info.min, info.max);
+         if (elem_width > info.min)
+            ++flex_count;
+         total += (info.alloc = elem_width);
+      }
+
+      // If the total (ideal) width exceeds the supplied height,
+      // Adjust the widths of elements that can flex.
+      if (total > width && flex_count > 0)
+      {
+         float adjust = (total - width) / flex_count;
+         for (auto& info : info)
+         {
+            if (info.alloc > info.min)
+            {
+               info.alloc -= adjust;
+               if (info.alloc < info.min)
+               {
+                  auto diff = info.min - info.alloc;
+                  info.alloc = info.min;
+                  --flex_count;
+                  total -= info.min;
+                  if (total <= width)
+                     break;
+                  if (flex_count > 0)
+                     adjust = (total - width) / flex_count;
+               }
+            }
+         }
+      }
+
+      // Now we have the final layout. We can now layout the individual
+      // elements.
+      double curr = ctx.bounds.left;
+      auto iter = _tiles.begin();
+      std::size_t i = 0;
+      for (auto const& info : info)
+      {
+         *iter++ = curr;
          auto prev = curr;
-         curr += elem_width;
+         curr += info.alloc;
 
-         if (curr > ctx.bounds.right)
-            curr = ctx.bounds.right;
-
+         auto& elem = at(i++);
          rect ebounds = { float(prev), _top, float(curr), _bottom };
          elem.layout(context{ ctx, &elem, ebounds });
       }
-      *i = curr;
+      *iter = curr;
    }
 
    rect htile_element::bounds_of(context const& ctx, std::size_t index) const

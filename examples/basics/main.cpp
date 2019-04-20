@@ -115,10 +115,12 @@ auto make_basic_text2()
 auto make_elements()
 {
    return
-      margin({ 20, 10, 20, 10 },
-         htile(
-            margin({ 20, 20, 20, 20 }, pane("Static Text", make_basic_text(), 0.8f)),
-            margin({ 20, 20, 20, 20 }, pane("Text Box", make_basic_text2(), 0.8f))
+      max_size({ 1280, 640 },
+         margin({ 20, 10, 20, 10 },
+            htile(
+               margin({ 20, 20, 20, 20 }, pane("Static Text", make_basic_text(), 0.8f)),
+               margin({ 20, 20, 20, 20 }, pane("Text Box", make_basic_text2(), 0.8f))
+            )
          )
       );
 }

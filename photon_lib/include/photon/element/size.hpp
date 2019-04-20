@@ -344,6 +344,66 @@ namespace cycfi { namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Maximum sizing elements
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class max_size_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              max_size_element(point size, Subject&& subject);
+                              max_size_element(point size, Subject const& subject);
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual void            prepare_subject(context& ctx);
+
+   private:
+
+      point                   _size;
+   };
+
+   template <typename Subject>
+   inline max_size_element<Subject>::max_size_element(point size, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline max_size_element<Subject>::max_size_element(point size, Subject const& subject)
+    : base_type(subject)
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline max_size_element<typename std::decay<Subject>::type>
+   max_size(point size, Subject&& subject)
+   {
+      return { size, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline view_limits max_size_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      float size_x = _size.x;
+      float size_y = _size.y;
+      clamp(size_x, e_limits.min.x, e_limits.max.x);
+      clamp(size_y, e_limits.min.y, e_limits.max.y);
+      return { { e_limits.min.x, e_limits.min.y }, { size_x, size_y } };
+   }
+
+   template <typename Subject>
+   inline void max_size_element<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.width() > _size.x)
+         ctx.bounds.width(_size.x);
+      if (ctx.bounds.height() > _size.y)
+         ctx.bounds.height(_size.x);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Span sizing elements
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>

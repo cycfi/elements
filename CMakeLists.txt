@@ -15,5 +15,8 @@ endif()
 add_subdirectory(${INTEGRE_JSON} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(photon_lib)
-add_subdirectory(examples)
+
+if (NOT PHOTON_NO_EXAMPLES)
+   add_subdirectory(examples)
+endif()
 

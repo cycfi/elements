@@ -408,16 +408,35 @@ namespace cycfi { namespace photon
 
    base_view::base_view(host_window h)
    {
-      PhotonView* content = [[PhotonView alloc] init];
-      _view = (__bridge void*) content;
-      content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-      [content photon_init : this];
-      NSWindow* window_ = (__bridge NSWindow*) h;
-      [window_ setContentView : content];
+      NSView* parent_view = (__bridge NSView*) h;
+      if ([parent_view isKindOfClass:[NSView class]])
+      {
+         auto parent_frame = [parent_view frame];
+         auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
+         PhotonView* content = [[PhotonView alloc] initWithFrame:frame];
+
+         _view = (__bridge void*) content;
+         content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+         [content photon_init : this];
+         [parent_view addSubview : content];
+      }
+      else
+      {
+         PhotonView* content = [[PhotonView alloc] init];
+         _view = (__bridge void*) content;
+         content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+         [content photon_init : this];
+
+         NSWindow* window_ = (__bridge NSWindow*) h;
+         bool b = [window_ isKindOfClass:[NSWindow class]];
+         [window_ setContentView : content];
+      }
    }
 
    base_view::~base_view()
    {
+      auto ns_view = get_mac_view(host());
+      [ns_view removeFromSuperview];
    }
 
    point base_view::cursor_pos() const
@@ -434,17 +453,6 @@ namespace cycfi { namespace photon
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(point p)
-   {
-      auto ns_view = get_mac_view(host());
-      auto window = [ns_view window];
-      auto view_frame = ns_view.frame;
-      auto win_frame = window.frame;
-      win_frame.size.width = (win_frame.size.width - view_frame.size.width) + p.x;
-      win_frame.size.height = (win_frame.size.height - view_frame.size.height) + p.y;
-      [window setFrame : win_frame display : YES animate : false];
-   }
-
    void base_view::refresh()
    {
       get_mac_view(host()).needsDisplay = true;
@@ -455,15 +463,6 @@ namespace cycfi { namespace photon
       [get_mac_view(host()) setNeedsDisplayInRect
          : CGRectMake(area.left, area.top, area.width(), area.height())
       ];
-   }
-
-   void base_view::limits(view_limits limits_)
-   {
-      auto ns_view = get_mac_view(host());
-      auto minx = std::max<float>(150, limits_.min.x);
-      auto miny = std::max<float>(100, limits_.min.y);
-      [[ns_view window] setContentMinSize : NSSize{ minx, miny }];
-      [[ns_view window] setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
    }
 
    bool base_view::is_focus() const

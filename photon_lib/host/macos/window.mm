@@ -130,6 +130,15 @@ namespace cycfi { namespace photon
       [window_ setFrame : frame display : YES animate : false];
    }
 
+   void window::limits(view_limits limits_)
+   {
+      auto minx = std::max<float>(150, limits_.min.x);
+      auto miny = std::max<float>(100, limits_.min.y);
+      id const window_ = (__bridge id) _window;
+      [window_ setContentMinSize : NSSize{ minx, miny }];
+      [window_ setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
+   }
+
    point window::position() const
    {
       id const window_ = (__bridge id) _window;

@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <photon/view.hpp>
+#include <photon/window.hpp>
 #include <photon/support/context.hpp>
 
 namespace cycfi { namespace photon
@@ -13,14 +14,23 @@ namespace cycfi { namespace photon
    {
    }
 
+   view::view(window& win)
+    : base_view(win.host())
+   {
+      on_change_limits = [&win](view_limits limits_)
+      {
+         win.limits(limits_);
+      };
+   }
+
    view::~view()
    {
    }
 
-   bool view::set_limits()
+   void view::set_limits()
    {
       if (_content.empty())
-         return false;
+         return;
 
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
@@ -32,26 +42,13 @@ namespace cycfi { namespace photon
       auto limits_ = _content.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
-         auto size_ = size();
-         auto orig_size_ = size_;
-
          _current_limits = limits_;
-         limits(limits_);
-
-         clamp(size_.x, limits_.min.x, limits_.max.x);
-         clamp(size_.y, limits_.min.y, limits_.max.y);
-
-         if (size_ != orig_size_)
-         {
-            size(size_);
-            size_ = size();
-            resized = true;
-         }
+         if (on_change_limits)
+            on_change_limits(limits_);
       }
 
       cairo_surface_destroy(surface_);
       cairo_destroy(context_);
-      return resized;
    }
 
    void view::draw(cairo_t* context_, rect dirty_)
@@ -62,8 +59,7 @@ namespace cycfi { namespace photon
       _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
-      if (set_limits())
-         return; // return early if the window was resized.
+      set_limits();
 
       canvas cnv{ *context_ };
       auto size_ = size();

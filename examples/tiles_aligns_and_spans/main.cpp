@@ -160,7 +160,7 @@ int main(int argc, const char* argv[])
       make_htile_main()    // horizontal tiles aligns and spans
    );
 
-   view view_(_win.host());
+   view view_(_win);
 
    hmenu.on_click = [&]()
    {

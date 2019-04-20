@@ -140,7 +140,7 @@ int main(int argc, const char* argv[])
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
-   view view_(_win.host());
+   view view_(_win);
 
    view_.content(
       {

@@ -19,20 +19,10 @@
 
 #include <infra/support.hpp>
 #include <photon/support/rect.hpp>
+#include <photon/base_view.hpp>
 
 namespace cycfi { namespace photon
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Host window type
-
-#if defined(__APPLE__)
-   using host_window = void*;
-#elif defined(_WIN32)
-   using host_window = HWND;
-#elif defined(__linux__)
-   using host_window = GtkWidget*;
-#endif
-
    ////////////////////////////////////////////////////////////////////////////
    // Window class
    ////////////////////////////////////////////////////////////////////////////
@@ -61,6 +51,7 @@ namespace cycfi { namespace photon
 
       point             size() const;
       void              size(point const& p);
+      void              limits(view_limits limits_);
       point             position() const;
       void              position(point const& p);
       host_window       host() const { return _window; }

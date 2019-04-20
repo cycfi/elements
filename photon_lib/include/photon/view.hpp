@@ -18,11 +18,13 @@
 namespace cycfi { namespace photon
 {
    struct context;
+   class window;
 
    class view : public base_view
    {
    public:
                            view(host_window h);
+                           view(window& win);
                            ~view();
 
       virtual void         draw(cairo_t* ctx, rect area) override;
@@ -59,11 +61,13 @@ namespace cycfi { namespace photon
       content_type const&  content() const   { return _content; }
       void                 content(layers_type&& layers);
 
+      std::function<void(view_limits limits_)>  on_change_limits;
+
    private:
 
       layer_composite      _content;
 
-      bool                 set_limits();
+      void                 set_limits();
 
       rect                 _dirty;
       rect                 _current_bounds;

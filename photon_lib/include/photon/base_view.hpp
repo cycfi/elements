@@ -16,7 +16,7 @@
 #include <infra/support.hpp>
 #include <photon/support/point.hpp>
 #include <photon/support/rect.hpp>
-#include <photon/window.hpp>
+// #include <photon/window.hpp>
 
 namespace cycfi { namespace photon
 {
@@ -277,6 +277,14 @@ namespace cycfi { namespace photon
    using host_view = GtkWidget*;
 #endif
 
+#if defined(__APPLE__)
+   using host_window = void*;
+#elif defined(_WIN32)
+   using host_window = HWND;
+#elif defined(__linux__)
+   using host_window = GtkWidget*;
+#endif
+
    class base_view : non_copyable
    {
    public:
@@ -294,11 +302,9 @@ namespace cycfi { namespace photon
 
       void           refresh();
       void           refresh(rect area);
-      void           limits(view_limits limits_);
 
       point          cursor_pos() const;
       point          size() const;
-      void           size(point p);
       bool           is_focus() const;
       host_view      host() const { return _view; }
 

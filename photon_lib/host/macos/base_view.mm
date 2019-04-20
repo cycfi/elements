@@ -123,13 +123,29 @@ namespace
            object : [self window]
    ];
 
-
    [[NSNotificationCenter defaultCenter]
       addObserver : self
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification
            object : [self window]
    ];
+}
+
+- (void) dealloc
+{
+   [[NSNotificationCenter defaultCenter]
+      removeObserver : self
+                name : NSWindowDidBecomeKeyNotification
+              object : [self window]
+   ];
+
+   [[NSNotificationCenter defaultCenter]
+      removeObserver : self
+                name : NSWindowDidResignMainNotification
+              object : [self window]
+   ];
+
+   _view = nullptr;
 }
 
 - (BOOL) canBecomeKeyView
@@ -394,7 +410,7 @@ namespace
    _view->focus(ph::focus_request::end_focus);
 }
 
-@end
+@end // @implementation PhotonView
 
 namespace cycfi { namespace photon
 {
@@ -416,7 +432,6 @@ namespace cycfi { namespace photon
          PhotonView* content = [[PhotonView alloc] initWithFrame:frame];
 
          _view = (__bridge void*) content;
-         content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
          [content photon_init : this];
          [parent_view addSubview : content];
       }
@@ -453,6 +468,11 @@ namespace cycfi { namespace photon
       return { float(frame.size.width), float(frame.size.height) };
    }
 
+   void base_view::size(point p)
+   {
+      [get_mac_view(host()) setFrameSize : NSSize{ p.x, p.y }];
+   }
+
    void base_view::refresh()
    {
       get_mac_view(host()).needsDisplay = true;
@@ -463,11 +483,6 @@ namespace cycfi { namespace photon
       [get_mac_view(host()) setNeedsDisplayInRect
          : CGRectMake(area.left, area.top, area.width(), area.height())
       ];
-   }
-
-   bool base_view::is_focus() const
-   {
-      return [[get_mac_view(host()) window] isKeyWindow];
    }
 
    std::string clipboard()

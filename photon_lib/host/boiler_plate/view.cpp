@@ -37,11 +37,6 @@ namespace cycfi { namespace photon
    {
    }
 
-   bool base_view::is_focus() const
-   {
-      return false;
-   }
-
    std::string clipboard()
    {
       return "";

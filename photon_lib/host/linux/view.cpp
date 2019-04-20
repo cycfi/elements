@@ -313,11 +313,6 @@ namespace cycfi { namespace photon
          &hints, GdkWindowHints(GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE));
    }
 
-   bool base_view::is_focus() const
-   {
-      return false;
-   }
-
    std::string clipboard()
    {
       return "";

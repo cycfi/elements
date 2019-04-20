@@ -305,7 +305,7 @@ namespace cycfi { namespace photon
 
       point          cursor_pos() const;
       point          size() const;
-      bool           is_focus() const;
+      void           size(point p);
       host_view      host() const { return _view; }
 
    private:

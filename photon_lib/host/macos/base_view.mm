@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <photon/base_view.hpp>
 #import <Cocoa/Cocoa.h>
+#include <dlfcn.h>
 #include <memory>
 #include <map>
 #include <cairo-quartz.h>
@@ -18,6 +19,46 @@ using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
+
+namespace
+{
+   CFBundleRef GetBundleFromExecutable(const char* filepath)
+   {
+      NSString* execStr = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
+      NSString* macOSStr = [execStr stringByDeletingLastPathComponent];
+      NSString* contentsStr = [macOSStr stringByDeletingLastPathComponent];
+      NSString* bundleStr = [contentsStr stringByDeletingLastPathComponent];
+      return CFBundleCreate (0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory:YES]);
+   }
+
+   CFBundleRef GetCurrentBundle()
+   {
+      Dl_info info;
+      if (dladdr ((const void*)GetCurrentBundle, &info))
+      {
+         if (info.dli_fname)
+         {
+            return GetBundleFromExecutable(info.dli_fname);
+         }
+      }
+      return 0;
+   }
+
+   struct resource_setter
+   {
+      resource_setter()
+      {
+         // Before anything else, set the working directory so we can access
+         // our resources
+         CFBundleRef mainBundle = GetCurrentBundle();
+         CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+         char path[PATH_MAX];
+         CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+         CFRelease(resourcesURL);
+         chdir(path);
+      }
+   };
+}
 
 namespace cycfi { namespace photon
 {
@@ -108,6 +149,8 @@ namespace
 
 - (void) photon_init : (ph::base_view*) view_
 {
+   static resource_setter set_resource_pwd;
+
    _view = view_;
    _start = true;
 
@@ -115,7 +158,15 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+}
 
+- (void) dealloc
+{
+   _view = nullptr;
+}
+
+- (void) attach_notifications
+{
    [[NSNotificationCenter defaultCenter]
       addObserver : self
          selector : @selector(windowDidBecomeKey:)
@@ -131,7 +182,7 @@ namespace
    ];
 }
 
-- (void) dealloc
+- (void) detach_notifications
 {
    [[NSNotificationCenter defaultCenter]
       removeObserver : self
@@ -144,8 +195,6 @@ namespace
                 name : NSWindowDidResignMainNotification
               object : [self window]
    ];
-
-   _view = nullptr;
 }
 
 - (BOOL) canBecomeKeyView
@@ -446,12 +495,16 @@ namespace cycfi { namespace photon
          bool b = [window_ isKindOfClass:[NSWindow class]];
          [window_ setContentView : content];
       }
+
+      [get_mac_view(host()) attach_notifications];
    }
 
    base_view::~base_view()
    {
       auto ns_view = get_mac_view(host());
+      [ns_view detach_notifications];
       [ns_view removeFromSuperview];
+      _view = nil;
    }
 
    point base_view::cursor_pos() const

@@ -60,6 +60,7 @@ namespace cycfi { namespace photon
       content_type&        content()         { return _content; }
       content_type const&  content() const   { return _content; }
       void                 content(layers_type&& layers);
+      view_limits          limits() const    { return _current_limits; }
 
       std::function<void(view_limits limits_)>  on_change_limits;
 
@@ -71,7 +72,7 @@ namespace cycfi { namespace photon
 
       rect                 _dirty;
       rect                 _current_bounds;
-      view_limits          _current_limits;
+      view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
 
       using undo_stack_type = std::stack<undo_redo_task>;
 

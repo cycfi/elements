@@ -75,24 +75,52 @@ namespace cycfi { namespace photon
 
       // If the total (ideal) height exceeds the supplied height,
       // adjust the heights of elements that can flex to make it fit.
-      if (total > height && flex_count > 0)
+      if (total > height)
       {
-         float adjust = (total - height) / flex_count;
-         for (auto& info : info)
+         if (flex_count > 0)
          {
-            if (info.alloc > info.min)
+            float adjust = (total - height) / flex_count;
+            for (auto& info : info)
             {
-               info.alloc -= adjust;
-               if (info.alloc < info.min)
+               if (info.alloc > info.min) // can flex?
                {
-                  auto diff = info.min - info.alloc;
-                  info.alloc = info.min;
-                  --flex_count;
-                  total -= info.min;
-                  if (total <= height)
-                     break;
-                  if (flex_count > 0)
-                     adjust = (total - height) / flex_count;
+                  info.alloc -= adjust;
+                  if (info.alloc < info.min)
+                  {
+                     auto diff = info.min - info.alloc;
+                     info.alloc = info.min;
+                     --flex_count;
+                     total -= info.min;
+                     if (total <= height)
+                        break;
+                     if (flex_count > 0)
+                        adjust = (total - height) / flex_count;
+                  }
+               }
+            }
+         }
+      }
+      // If the total (ideal) height is less than the supplied height,
+      // increase the heights of elements that can flex to make it fit.
+      else if ((height - total) > 0.5)
+      {
+         if (flex_count > 0)
+         {
+            float adjust = (height - total) / flex_count;
+            for (auto& info : info)
+            {
+               if (info.alloc > info.min) // can flex?
+               {
+                  info.alloc += adjust;
+                  if (info.alloc > info.max)
+                  {
+                     auto diff = info.alloc - info.max;
+                     info.alloc = info.max;
+                     --flex_count;
+                     total -= info.max;
+                     if (flex_count > 0)
+                        adjust = (height - total) / flex_count;
+                  }
                }
             }
          }

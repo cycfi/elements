@@ -72,11 +72,33 @@ auto make_vtile2()
    );
 }
 
+auto make_vtile3()
+{
+   auto _box = top_margin(
+      { 10 },
+      box
+   );
+
+   return margin(
+      { 10, 50, 10, 10 },
+      hmin_size(150,
+         vtile(
+            vsize(40.0, _box),
+            vspan(2.0, _box),
+            vspan(1.0, _box),
+            vspan(0.5, vmin_size(20, _box)),
+            vsize(40.0, _box)
+         )
+      )
+   );
+}
+
 auto make_vtile_main()
 {
    return htile(
       margin({ 10, 10, 10, 10 }, group("Aligns", make_vtile(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2(), 0.9, false))
+      margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("Mixed", make_vtile3(), 0.9, false))
    );
 }
 
@@ -119,11 +141,31 @@ auto make_htile2()
    );
 }
 
+auto make_htile3()
+{
+   auto _box = left_margin(
+      { 10 },
+      box
+   );
+
+   return margin(
+      { 0, 50, 10, 10 },
+      htile(
+         hsize(40.0, _box),
+         hspan(2.0, _box),
+         hspan(1.0, _box),
+         hspan(0.5, hmin_size(20, _box)),
+         hsize(40.0, _box)
+      )
+   );
+}
+
 auto make_htile_main()
 {
    return htile(
       margin({ 10, 10, 10, 10 }, group("Aligns", make_htile(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Spans", make_htile2(), 0.9, false))
+      margin({ 10, 10, 10, 10 }, group("Spans", make_htile2(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("Mixed", make_htile3(), 0.9, false))
    );
 }
 

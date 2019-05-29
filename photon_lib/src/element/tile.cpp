@@ -37,94 +37,62 @@ namespace cycfi { namespace photon
       return limits;
    }
 
+   namespace
+   {
+      // Compute the best fit for all elements
+      void allocate(
+         double size, double max_span, double total
+       , std::vector<layout_info>& info)
+      {
+         double extra = size - total;
+         while (extra > 0.5) // loop while there's room to grow
+         {
+            double remove_span = 0.0;
+            for (auto& info : info)
+            {
+               if (info.alloc < info.max)       // This element can grow
+               {
+                  auto add = extra * info.span / max_span;
+                  info.alloc += add;
+                  if (info.alloc >= info.max)   // We exceeded its max
+                  {
+                     info.alloc = info.max;
+                     remove_span -= info.span;
+                  }
+                  total += add;
+               }
+            }
+            extra = size - total;
+            max_span -= remove_span;
+         }
+      }
+   }
+
    void vtile_element::layout(context const& ctx)
    {
       _left = ctx.bounds.left;
       _right = ctx.bounds.right;
       _tiles.resize(size()+1);
 
-      double height = ctx.bounds.height();
+      double const height = ctx.bounds.height();
 
-      // - Collect min, max, and span information from each element.
-      // - Also, accumulate the maximum span (max_span) for later.
+      // Collect min, max, and span information from each element. Also,
+      // accumulate the maximum span (max_span) for later. Initially set the
+      // allocation sizes of each element to its minimum.
       double max_span = 0.0;
+      float total = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
          max_span += (info[i].span = elem.span().y);
-         info[i].min = limits.min.y;
+         total += (info[i].alloc = info[i].min = limits.min.y);
          info[i].max = limits.max.y;
       }
 
-      // - Calculate the ideal allocation sizes for each element.
-      // - Get the total height computed by the ideal allocation sizes.
-      // - Also, get the flex_count: the number of elements that can
-      //   still flex (size re-adjusted), for later.
-      float total = 0.0;
-      int flex_count = 0;
-      for (auto& info : info)
-      {
-         auto elem_height = height * info.span / max_span;
-         clamp(elem_height, info.min, info.max);
-         if (elem_height > info.min)
-            ++flex_count;
-         total += (info.alloc = elem_height);
-      }
-
-      // If the total (ideal) height exceeds the supplied height,
-      // adjust the heights of elements that can flex to make it fit.
-      if (total > height)
-      {
-         if (flex_count > 0)
-         {
-            float adjust = (total - height) / flex_count;
-            for (auto& info : info)
-            {
-               if (info.alloc > info.min) // can flex?
-               {
-                  info.alloc -= adjust;
-                  if (info.alloc < info.min)
-                  {
-                     auto diff = info.min - info.alloc;
-                     info.alloc = info.min;
-                     --flex_count;
-                     total -= info.min;
-                     if (total <= height)
-                        break;
-                     if (flex_count > 0)
-                        adjust = (total - height) / flex_count;
-                  }
-               }
-            }
-         }
-      }
-      // If the total (ideal) height is less than the supplied height,
-      // increase the heights of elements that can flex to make it fit.
-      else if ((height - total) > 0.5)
-      {
-         if (flex_count > 0)
-         {
-            float adjust = (height - total) / flex_count;
-            for (auto& info : info)
-            {
-               if (info.alloc > info.min) // can flex?
-               {
-                  info.alloc += adjust;
-                  if (info.alloc > info.max)
-                  {
-                     auto diff = info.alloc - info.max;
-                     info.alloc = info.max;
-                     --flex_count;
-                     total -= info.max;
-                     if (flex_count > 0)
-                        adjust = (height - total) / flex_count;
-                  }
-               }
-            }
-         }
-      }
+      // Compute the best fit for all elements
+      allocate(height, max_span, total, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.
@@ -176,60 +144,25 @@ namespace cycfi { namespace photon
       _bottom = ctx.bounds.bottom;
       _tiles.resize(size()+1);
 
-      double width = ctx.bounds.width();
+      double const width = ctx.bounds.width();
 
-      // - Collect min, max, and span information from each element.
-      // - Also, accumulate the maximum span (max_span) for later.
+      // Collect min, max, and span information from each element. Also,
+      // accumulate the maximum span (max_span) for later. Initially set the
+      // allocation sizes of each element to its minimum.
       double max_span = 0.0;
+      double total = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
          max_span += (info[i].span = elem.span().x);
-         info[i].min = limits.min.x;
+         total += (info[i].alloc = info[i].min = limits.min.x);
          info[i].max = limits.max.x;
       }
 
-      // - Calculate the ideal allocation sizes for each element.
-      // - Get the total width computed by the ideal allocation sizes.
-      // - Also, get the flex_count: the number of elements that can
-      //   still flex (size re-adjusted), for later.
-      float total = 0.0;
-      int flex_count = 0;
-      for (auto& info : info)
-      {
-         auto elem_width = width * info.span / max_span;
-         clamp(elem_width, info.min, info.max);
-         if (elem_width > info.min)
-            ++flex_count;
-         total += (info.alloc = elem_width);
-      }
-
-      // If the total (ideal) width exceeds the supplied width,
-      // adjust the heights of elements that can flex to make it fit.
-      if (total > width && flex_count > 0)
-      {
-         float adjust = (total - width) / flex_count;
-         for (auto& info : info)
-         {
-            if (info.alloc > info.min)
-            {
-               info.alloc -= adjust;
-               if (info.alloc < info.min)
-               {
-                  auto diff = info.min - info.alloc;
-                  info.alloc = info.min;
-                  --flex_count;
-                  total -= info.min;
-                  if (total <= width)
-                     break;
-                  if (flex_count > 0)
-                     adjust = (total - width) / flex_count;
-               }
-            }
-         }
-      }
+      // Compute the best fit for all elements
+      allocate(width, max_span, total, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.

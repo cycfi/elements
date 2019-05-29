@@ -45,22 +45,22 @@ namespace cycfi { namespace photon
        , std::vector<layout_info>& info)
       {
          double extra = size - total;
-         while (extra > 0.5) // loop while there's room to grow
+         while (extra > 0.5)                    // loop while there's room to grow
          {
             double remove_span = 0.0;
+            total = 0.0;
             for (auto& info : info)
             {
                if (info.alloc < info.max)       // This element can grow
                {
-                  auto add = extra * info.span / max_span;
-                  info.alloc += add;
+                  info.alloc += extra * info.span / max_span;
                   if (info.alloc >= info.max)   // We exceeded its max
                   {
                      info.alloc = info.max;
                      remove_span -= info.span;
                   }
-                  total += add;
                }
+               total += info.alloc;
             }
             extra = size - total;
             max_span -= remove_span;
@@ -86,9 +86,11 @@ namespace cycfi { namespace photon
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
-         max_span += (info[i].span = elem.span().y);
+         info[i].span = elem.span().y;
          total += (info[i].alloc = info[i].min = limits.min.y);
          info[i].max = limits.max.y;
+         if (info[i].alloc < info[i].max) // Can grow?
+            max_span += info[i].span;
       }
 
       // Compute the best fit for all elements
@@ -156,9 +158,11 @@ namespace cycfi { namespace photon
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
-         max_span += (info[i].span = elem.span().x);
+         info[i].span = elem.span().x;
          total += (info[i].alloc = info[i].min = limits.min.x);
          info[i].max = limits.max.x;
+         if (info[i].alloc < info[i].max) // Can grow?
+            max_span += info[i].span;
       }
 
       // Compute the best fit for all elements

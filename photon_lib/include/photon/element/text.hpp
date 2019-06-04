@@ -20,6 +20,9 @@ namespace cycfi { namespace photon
    class static_text_box : public element
    {
    public:
+
+      using element::value;
+
                               static_text_box(
                                  std::string const& text
                                , char const* face  = get_theme().text_box_font

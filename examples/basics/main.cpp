@@ -55,10 +55,10 @@ std::string const text =
 
 auto make_basic_text()
 {
-   auto fr = [](auto&& el)
+   auto fr = [](auto&& el, float top = 10)
    {
       return margin(
-         { 10, 10, 10, 10 },
+         { 10, top, 10, 10 },
          layer(
             margin({ 10, 5, 10, 5 }, std::move(el)),
             frame{}
@@ -68,7 +68,7 @@ auto make_basic_text()
 
    auto eh = [=](char const* txt)
    {
-      return fr(halign(0.5, heading{ txt }));
+      return fr(halign(0.5, heading{ txt }), 0);
    };
 
    auto el = [=](double align, char const* txt)
@@ -77,7 +77,7 @@ auto make_basic_text()
    };
 
    auto icons =
-      margin({ 10, 50, 10, 10 },
+      margin({ 10, 0, 10, 10 },
          htile(
             align_center(icon{ icons::docs,           24 }),
             align_center(icon{ icons::right,          24 }),
@@ -90,16 +90,19 @@ auto make_basic_text()
 
    return
       margin(
-         { 10, 10, 10, 10 },
+         { 10, 0, 10, 10 },
          vtile(
-            fr(input_box("Text Input Box")),
-            // fr(basic_input_box("Text Input Box", 60)),
-            eh("Photon UI"),
-            el(1.0, "Hello, Universe. I am Photon."),
-            el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
-            el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
-            el(0.5, "Now, Joel rewrote my code using modern C++14."),
-            margin({ 10, 10, 10, 10 }, group("Icons", std::move(icons))),
+            pane("Text Input",
+               fr(input_box("Text Input Box"), 0), 0.8f),
+            top_margin(20, pane("Static Text",
+               vtile(
+                  eh("Photon UI"),
+                  el(1.0, "Hello, Universe. I am Photon."),
+                  el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
+                  el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
+                  el(0.5, "Now, Joel rewrote my code using modern C++14.")
+               ), 0.8f)),
+            top_margin(20, pane("Icons", std::move(icons), 0.8f)),
             empty()
          )
       );
@@ -109,7 +112,7 @@ auto make_basic_text2()
 {
    static auto textbox = vport(static_text_box{ text });
    return margin(
-         { 10, 10, 10, 10 },
+         { 10, 0, 10, 10 },
          link(textbox)
       );
 }
@@ -120,8 +123,10 @@ auto make_elements()
       max_size({ 1280, 640 },
          margin({ 20, 10, 20, 10 },
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Static Text", make_basic_text(), 0.8f)),
-               margin({ 20, 20, 20, 20 }, pane("Text Box", make_basic_text2(), 0.8f))
+               margin({ 20, 20, 20, 20 }, make_basic_text()),
+               margin({ 20, 20, 20, 20 },
+                  pane("Text Box", make_basic_text2(), 0.8f)
+               )
             )
          )
       );

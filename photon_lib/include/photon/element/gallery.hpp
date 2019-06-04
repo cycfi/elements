@@ -576,37 +576,19 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Text Entry
    ////////////////////////////////////////////////////////////////////////////
-   struct input_panel : public element
-   {
-      virtual void draw(context const& ctx);
-   };
-
-   template <typename InputBox, typename Panel>
-   inline auto input_box(
-      InputBox&& text_input
-    , Panel&& panel
-    , rect pad  = rect{ 5, 5, 5, 4 }
-   )
-   {
-      return layer(
-         margin(
-            pad,
-            scroller(
-               hsize(16384, std::move(text_input)),
-               no_scrollbars | no_vscroll
-            )
-         ),
-         std::move(panel)
-      );
-   }
-
    template <typename InputBox>
    inline auto input_box(
       InputBox&& text_input
     , rect pad  = rect{ 5, 5, 5, 4 }
    )
    {
-      return input_box(std::move(text_input), input_panel{}, pad);
+      return margin(
+            pad,
+            scroller(
+               hsize(16384, std::move(text_input)),
+               no_scrollbars | no_vscroll
+            )
+         );
    }
 
    inline auto input_box(

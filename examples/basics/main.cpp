@@ -55,12 +55,12 @@ std::string const text =
 
 auto make_basic_text()
 {
-   auto fr = [](auto el)
+   auto fr = [](auto&& el)
    {
       return margin(
          { 10, 10, 10, 10 },
          layer(
-            margin({ 10, 5, 10, 5 }, el),
+            margin({ 10, 5, 10, 5 }, std::move(el)),
             frame{}
          )
       );
@@ -92,6 +92,8 @@ auto make_basic_text()
       margin(
          { 10, 10, 10, 10 },
          vtile(
+            fr(input_box("Text Input Box")),
+            // fr(basic_input_box("Text Input Box", 60)),
             eh("Photon UI"),
             el(1.0, "Hello, Universe. I am Photon."),
             el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),

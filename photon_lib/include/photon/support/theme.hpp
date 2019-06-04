@@ -44,7 +44,6 @@ namespace cycfi { namespace photon
       color                text_box_hilite_color      = rgba(0, 127, 255, 100);
       color                text_box_caret_color       = rgba(0, 190, 255, 255);
       float                text_box_caret_width       = 1.2;
-      color                edit_box_fill_color        = rgba(63, 71, 77, 150);
       color                inactive_font_color        = rgba(127, 127, 127, 150);
 
       color                ticks_color                = rgba(127, 127, 127, 150);

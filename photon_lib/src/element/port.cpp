@@ -437,7 +437,7 @@ namespace cycfi { namespace photon
             return true;
          }
       }
-      return true;
+      return subject().cursor(ctx, p, status);
    }
 
    bool scroller_base::is_control() const

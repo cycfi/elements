@@ -77,12 +77,18 @@ namespace cycfi { namespace photon
             {
                // end the previous focus
                if (_focus != -1)
+               {
                   at(_focus).focus(focus_request::end_focus);
+                  ctx.view.refresh(ctx);
+               }
 
                // start a new focus
                _focus = info.index;
                if (_focus != -1)
+               {
                   at(_focus).focus(focus_request::begin_focus);
+                  ctx.view.refresh(ctx);
+               }
             }
          }
 

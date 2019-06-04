@@ -243,6 +243,16 @@ namespace cycfi { namespace photon
          );
    }
 
+   template <typename Content>
+   inline auto left_caption(Content&& content, std::string const& title, float size = 1.0)
+   {
+      return
+         htile(
+            align_middle(right_margin(5.0, label(title, size))),
+            std::forward<Content>(content)
+         );
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Icons
    ////////////////////////////////////////////////////////////////////////////
@@ -582,13 +592,16 @@ namespace cycfi { namespace photon
     , rect pad  = rect{ 5, 5, 5, 4 }
    )
    {
-      return margin(
+      return layer(
+         margin(
             pad,
             scroller(
                hsize(16384, std::move(text_input)),
                no_scrollbars | no_vscroll
             )
-         );
+         ),
+         frame{}
+      );
    }
 
    inline auto input_box(

@@ -93,7 +93,12 @@ auto make_basic_text()
          { 10, 0, 10, 10 },
          vtile(
             pane("Text Input",
-               fr(input_box("Text Input Box"), 0), 0.8f),
+               margin({ 10, 5, 10, 5 },
+                  vtile(
+                     left_caption(input_box("Show me the money"), "Gimme Some"),
+                     top_margin(10, left_caption(input_box("Show me more"), "Gimme Some More"))
+                  )
+               )),
             top_margin(20, pane("Static Text",
                vtile(
                   eh("Photon UI"),
@@ -101,8 +106,8 @@ auto make_basic_text()
                   el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
                   el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
                   el(0.5, "Now, Joel rewrote my code using modern C++14.")
-               ), 0.8f)),
-            top_margin(20, pane("Icons", std::move(icons), 0.8f)),
+               ))),
+            top_margin(20, pane("Icons", std::move(icons))),
             empty()
          )
       );
@@ -125,7 +130,7 @@ auto make_elements()
             htile(
                margin({ 20, 20, 20, 20 }, make_basic_text()),
                margin({ 20, 20, 20, 20 },
-                  pane("Text Box", make_basic_text2(), 0.8f)
+                  pane("Text Box", make_basic_text2())
                )
             )
          )

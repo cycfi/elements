@@ -113,6 +113,8 @@ namespace cycfi { namespace photon
 
    element* basic_text_box::click(context const& ctx, mouse_button btn)
    {
+      _show_caret = true;
+
       if (!btn.down) // released? return early
          return this;
 
@@ -214,6 +216,8 @@ namespace cycfi { namespace photon
 
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
+      _show_caret = true;
+
       if (_select_start == -1)
          return false;
 
@@ -237,6 +241,8 @@ namespace cycfi { namespace photon
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
+      _show_caret = true;
+
       if (_select_start == -1
          || k.action == key_action::release
          || k.action == key_action::unknown
@@ -463,11 +469,12 @@ namespace cycfi { namespace photon
 
    void basic_text_box::draw_caret(context const& ctx)
    {
-      if (_select_start == -1)
+      if (!_show_caret || _select_start == -1)
          return;
 
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
+      rect caret_bounds;
 
       // Handle the case where text is empty
       if (_is_focus && _text.empty())
@@ -483,6 +490,8 @@ namespace cycfi { namespace photon
          canvas.move_to({ left + (width/2), top });
          canvas.line_to({ left + (width/2), top + line_height });
          canvas.stroke();
+
+         caret_bounds = rect{ left, top, left+width, top + line_height };
       }
       // Draw the caret
       else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
@@ -496,6 +505,24 @@ namespace cycfi { namespace photon
          canvas.move_to({ caret.left + (width/2), caret.top });
          canvas.line_to({ caret.left + (width/2), caret.bottom });
          canvas.stroke();
+
+         caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
+      }
+
+      if (_is_focus)
+      {
+         ctx.view.add_idle_task(this,
+            [&_show_caret = _show_caret, &_view = ctx.view, caret_bounds]
+            {
+               _show_caret = !_show_caret;
+               _view.refresh(caret_bounds);
+            }
+         );
+      }
+      else
+      {
+         _show_caret = true;
+         ctx.view.remove_idle_task(this);
       }
    }
 
@@ -862,8 +889,10 @@ namespace cycfi { namespace photon
       switch (k.key)
       {
          case key_code::enter:
-            if (on_enter && on_enter(text()))
-               ctx.view.refresh(ctx);
+            if (on_enter)
+               on_enter(text());
+            ctx.view.refresh(ctx);
+            ctx.view.focus(focus_request::end_focus);
             return true;
 
          case key_code::up:

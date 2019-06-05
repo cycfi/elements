@@ -118,6 +118,7 @@ namespace cycfi { namespace photon
       float                   _current_x;
       state_saver_f           _typing_state;
       bool                    _is_focus;
+      bool                    _show_caret = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////

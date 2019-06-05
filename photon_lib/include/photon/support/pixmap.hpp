@@ -41,7 +41,7 @@ namespace cycfi { namespace photon
       float             scale() const;
       void              scale(float val);
 
-   //private:
+   private:
 
       friend class canvas;
       friend class pixmap_context;

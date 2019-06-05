@@ -137,6 +137,7 @@ namespace
 
 @interface PhotonView : NSView <NSTextInputClient>
 {
+   NSTimer*                         _idle_task;
    NSTrackingArea*                  _tracking_area;
    NSMutableAttributedString*       _marked_text;
    key_map                          _keys;
@@ -153,6 +154,13 @@ namespace
 
    _view = view_;
    _start = true;
+   _idle_task =
+      [NSTimer scheduledTimerWithTimeInterval : 0.5
+           target : self
+         selector : @selector(on_idle:)
+         userInfo : nil
+          repeats : YES
+      ];
 
    _tracking_area = nil;
    [self updateTrackingAreas];
@@ -163,6 +171,11 @@ namespace
 - (void) dealloc
 {
    _view = nullptr;
+}
+
+- (void) on_idle : (id)sender
+{
+   _view->idle();
 }
 
 - (void) attach_notifications
@@ -528,7 +541,7 @@ namespace cycfi { namespace photon
 
    void base_view::refresh()
    {
-      get_mac_view(host()).needsDisplay = true;
+      [get_mac_view(host()) setNeedsDisplay : YES];
    }
 
    void base_view::refresh(rect area)

@@ -299,6 +299,7 @@ namespace cycfi { namespace photon
       virtual void   key(key_info const& k) {}
       virtual void   text(text_info const& info) {}
       virtual void   focus(focus_request r) {}
+      virtual void   idle() {}
 
       void           refresh();
       void           refresh(rect area);

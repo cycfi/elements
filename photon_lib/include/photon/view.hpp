@@ -12,13 +12,14 @@
 #include <photon/support/theme.hpp>
 #include <photon/element/element.hpp>
 #include <photon/element/layer.hpp>
-#include <functional>
 #include <memory>
+#include <unordered_map>
 
 namespace cycfi { namespace photon
 {
    struct context;
    class window;
+   class idle_tasks;
 
    class view : public base_view
    {
@@ -35,12 +36,13 @@ namespace cycfi { namespace photon
       virtual void         key(key_info const& k) override;
       virtual void         text(text_info const& info) override;
       virtual void         focus(focus_request r) override;
+      virtual void         idle() override;
 
       using base_view::refresh;
 
       void                 refresh(element& element);
       void                 refresh(context const& ctx);
-      rect                 dirty() const { return _dirty; }
+      rect                 dirty() const        { return _dirty; }
 
       struct undo_redo_task
       {
@@ -49,20 +51,25 @@ namespace cycfi { namespace photon
       };
 
       void                 add_undo(undo_redo_task t);
-      bool                 has_undo() { return !_undo_stack.empty(); }
-      bool                 has_redo() { return !_redo_stack.empty(); }
+      bool                 has_undo()           { return !_undo_stack.empty(); }
+      bool                 has_redo()           { return !_redo_stack.empty(); }
       bool                 undo();
       bool                 redo();
 
       using content_type = layer_composite;
       using layers_type = layer_composite::container_type;
 
-      content_type&        content()         { return _content; }
-      content_type const&  content() const   { return _content; }
+      content_type&        content()            { return _content; }
+      content_type const&  content() const      { return _content; }
       void                 content(layers_type&& layers);
-      view_limits          limits() const    { return _current_limits; }
+      view_limits          limits() const       { return _current_limits; }
 
       std::function<void(view_limits limits_)>  on_change_limits;
+
+      using task = std::function<void()>;
+
+      void                 add_idle_task(void* id, task const& f);
+      void                 remove_idle_task(void* id);
 
    private:
 
@@ -75,9 +82,12 @@ namespace cycfi { namespace photon
       view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
 
       using undo_stack_type = std::stack<undo_redo_task>;
-
       undo_stack_type      _undo_stack;
       undo_stack_type      _redo_stack;
+
+      using task_list = std::unordered_map<void*, task>;
+
+      task_list            _tasks;
    };
 }}
 

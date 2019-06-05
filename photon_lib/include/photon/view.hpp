@@ -14,12 +14,14 @@
 #include <photon/element/layer.hpp>
 #include <memory>
 #include <unordered_map>
+#include <chrono>
 
 namespace cycfi { namespace photon
 {
    struct context;
    class window;
    class idle_tasks;
+   using milliseconds = std::chrono::milliseconds;
 
    class view : public base_view
    {
@@ -36,7 +38,7 @@ namespace cycfi { namespace photon
       virtual void         key(key_info const& k) override;
       virtual void         text(text_info const& info) override;
       virtual void         focus(focus_request r) override;
-      virtual void         idle() override;
+      virtual void         tick() override;
 
       using base_view::refresh;
 
@@ -68,8 +70,8 @@ namespace cycfi { namespace photon
 
       using task = std::function<void()>;
 
-      void                 add_idle_task(void* id, task const& f);
-      void                 remove_idle_task(void* id);
+      void                 add_task(void *id, milliseconds period, task const &f);
+      void                 remove_task(void *id);
 
    private:
 
@@ -85,7 +87,16 @@ namespace cycfi { namespace photon
       undo_stack_type      _undo_stack;
       undo_stack_type      _redo_stack;
 
-      using task_list = std::unordered_map<void*, task>;
+      using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
+      struct task_info
+      {
+         task           f;
+         milliseconds   period;
+         time_point     start;
+      };
+
+      using task_list = std::unordered_map<void*, task_info>;
 
       task_list            _tasks;
    };

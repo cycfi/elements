@@ -511,7 +511,7 @@ namespace cycfi { namespace photon
 
       if (_is_focus)
       {
-         ctx.view.add_idle_task(this,
+         ctx.view.add_task(this, milliseconds(500),
             [&_show_caret = _show_caret, &_view = ctx.view, caret_bounds]
             {
                _show_caret = !_show_caret;
@@ -522,7 +522,7 @@ namespace cycfi { namespace photon
       else
       {
          _show_caret = true;
-         ctx.view.remove_idle_task(this);
+         ctx.view.remove_task(this);
       }
    }
 

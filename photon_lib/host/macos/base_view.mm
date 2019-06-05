@@ -155,9 +155,9 @@ namespace
    _view = view_;
    _start = true;
    _idle_task =
-      [NSTimer scheduledTimerWithTimeInterval : 0.5
+      [NSTimer scheduledTimerWithTimeInterval : 0.001
            target : self
-         selector : @selector(on_idle:)
+         selector :@selector(on_tick:)
          userInfo : nil
           repeats : YES
       ];
@@ -173,9 +173,9 @@ namespace
    _view = nullptr;
 }
 
-- (void) on_idle : (id)sender
+- (void) on_tick : (id)sender
 {
-   _view->idle();
+   _view->tick();
 }
 
 - (void) attach_notifications

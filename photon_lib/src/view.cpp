@@ -292,18 +292,27 @@
       set_limits();
    }
 
-   void view::idle()
+   void view::tick()
    {
-      for (auto const& task : _tasks)
-         task.second();
+      using namespace std::chrono;
+      auto now = high_resolution_clock::now();
+      for (auto& task : _tasks)
+      {
+         if (now >= (task.second.start + task.second.period))
+         {
+            task.second.start = now;
+            task.second.f();
+         }
+      }
    }
 
-   void view::add_idle_task(void* id, task const& f)
+   void view::add_task(void *id, milliseconds period, task const &f)
    {
-      _tasks[id] = f;
+      using namespace std::chrono;
+      _tasks[id] = { f, period, high_resolution_clock::now() };
    }
 
-   void view::remove_idle_task(void* id)
+   void view::remove_task(void *id)
    {
       _tasks.erase(id);
    }

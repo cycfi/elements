@@ -77,7 +77,8 @@ namespace cycfi { namespace photon
 
    bool layer_element::focus(focus_request r)
    {
-      focus_top();
+      if (r == focus_request::begin_focus)
+         focus_top();
       return composite_base::focus(r);
    }
 

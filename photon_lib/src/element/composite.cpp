@@ -215,7 +215,7 @@ namespace cycfi { namespace photon
       switch (r)
       {
          case focus_request::wants_focus:
-            for (std::size_t ix = 0; ix != size();  ++ix)
+            for (std::size_t ix = 0; ix != size(); ++ix)
                if (at(ix).focus(focus_request::wants_focus))
                   return true;
             return false;

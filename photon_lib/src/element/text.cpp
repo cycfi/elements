@@ -475,6 +475,7 @@ namespace cycfi { namespace photon
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
       rect caret_bounds;
+      bool has_caret = false;
 
       // Handle the case where text is empty
       if (_is_focus && _text.empty())
@@ -491,6 +492,7 @@ namespace cycfi { namespace photon
          canvas.line_to({ left + (width/2), top + line_height });
          canvas.stroke();
 
+         has_caret = true;
          caret_bounds = rect{ left, top, left+width, top + line_height };
       }
       // Draw the caret
@@ -506,10 +508,11 @@ namespace cycfi { namespace photon
          canvas.line_to({ caret.left + (width/2), caret.bottom });
          canvas.stroke();
 
+         has_caret = true;
          caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
       }
 
-      if (_is_focus)
+      if (_is_focus && has_caret)
       {
          ctx.view.add_task(this, milliseconds(500),
             [&_show_caret = _show_caret, &_view = ctx.view, caret_bounds]

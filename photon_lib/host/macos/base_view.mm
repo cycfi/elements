@@ -155,7 +155,7 @@ namespace
    _view = view_;
    _start = true;
    _idle_task =
-      [NSTimer scheduledTimerWithTimeInterval : 0.001
+      [NSTimer scheduledTimerWithTimeInterval : 0.016
            target : self
          selector :@selector(on_tick:)
          userInfo : nil

@@ -73,6 +73,7 @@ namespace cycfi { namespace photon
    private:
 
       int                     _focus = -1;
+      int                     _saved_focus = -1;
       int                     _drag_tracking = -1;
       hit_info                _click_info;
       hit_info                _cursor_info;

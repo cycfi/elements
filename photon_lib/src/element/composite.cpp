@@ -221,6 +221,8 @@ namespace cycfi { namespace photon
             return false;
 
          case focus_request::begin_focus:
+            if (_focus == -1)
+               _focus = _saved_focus;
             if (_focus != -1)
                at(_focus).focus(focus_request::begin_focus);
             return true;
@@ -228,6 +230,7 @@ namespace cycfi { namespace photon
          case focus_request::end_focus:
             if (_focus != -1)
                at(_focus).focus(focus_request::end_focus);
+            _saved_focus = _focus;
             _focus = -1;
             return true;
       }

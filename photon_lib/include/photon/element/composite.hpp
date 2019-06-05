@@ -71,6 +71,8 @@ namespace cycfi { namespace photon
 
    private:
 
+      void                    new_focus(context const& ctx, int index);
+
       int                     _focus = -1;
       int                     _saved_focus = -1;
       int                     _drag_tracking = -1;

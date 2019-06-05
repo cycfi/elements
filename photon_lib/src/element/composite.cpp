@@ -74,22 +74,7 @@ namespace cycfi { namespace photon
          if (info.element && focus(focus_request::wants_focus))
          {
             if (_focus != info.index)
-            {
-               // end the previous focus
-               if (_focus != -1)
-               {
-                  at(_focus).focus(focus_request::end_focus);
-                  ctx.view.refresh(ctx);
-               }
-
-               // start a new focus
-               _focus = info.index;
-               if (_focus != -1)
-               {
-                  at(_focus).focus(focus_request::begin_focus);
-                  ctx.view.refresh(ctx);
-               }
-            }
+               new_focus(ctx, info.index);
          }
 
          if (info.element)
@@ -123,6 +108,24 @@ namespace cycfi { namespace photon
       }
    }
 
+   void composite_base::new_focus(context const& ctx, int index)
+   {
+      // end the previous focus
+      if (_focus != -1)
+      {
+         at(_focus).focus(focus_request::end_focus);
+         ctx.view.refresh(ctx);
+      }
+
+      // start a new focus
+      _focus = index;
+      if (_focus != -1)
+      {
+         at(_focus).focus(focus_request::begin_focus);
+         ctx.view.refresh(ctx);
+      }
+   }
+
    bool composite_base::key(context const& ctx, key_info k)
    {
       if (_focus != -1)
@@ -130,8 +133,34 @@ namespace cycfi { namespace photon
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = at(_focus);
          context ectx{ ctx, &focus_, bounds };
-         return focus_.key(ectx, k);
+         if (focus_.key(ectx, k))
+            return true;
       };
+
+      if (k.key == key_code::tab && size())
+      {
+         auto next_focus = _focus;
+         if ((next_focus == -1) || !(k.modifiers & mod_shift))
+         {
+            while (++next_focus != size())
+               if (at(next_focus).focus(focus_request::wants_focus))
+               {
+                  new_focus(ctx, next_focus);
+                  return true;
+               }
+            return false;
+         }
+         else
+         {
+            while (--next_focus >= 0)
+               if (at(next_focus).focus(focus_request::wants_focus))
+               {
+                  new_focus(ctx, next_focus);
+                  return true;
+               }
+            return false;
+         }
+      }
 
       return false;
    }
@@ -223,8 +252,16 @@ namespace cycfi { namespace photon
          case focus_request::begin_focus:
             if (_focus == -1)
                _focus = _saved_focus;
-            if (_focus != -1)
-               at(_focus).focus(focus_request::begin_focus);
+            if (_focus == -1)
+            {
+               for (std::size_t ix = 0; ix != size(); ++ix)
+                  if (at(ix).focus(focus_request::wants_focus))
+                  {
+                     _focus = ix;
+                     break;
+                  }
+            }
+            at(_focus).focus(focus_request::begin_focus);
             return true;
 
          case focus_request::end_focus:

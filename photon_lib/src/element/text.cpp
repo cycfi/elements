@@ -798,13 +798,15 @@ namespace cycfi { namespace photon
 
    bool basic_text_box::focus(focus_request r)
    {
-      switch (r) {
-
+      switch (r)
+      {
          case focus_request::wants_focus:
             return true;
 
          case focus_request::begin_focus:
             _is_focus = true;
+            if (_select_start == -1)
+               _select_start = _select_end = 0;
             return true;
 
          case focus_request::end_focus:
@@ -900,6 +902,7 @@ namespace cycfi { namespace photon
 
          case key_code::up:
          case key_code::down:
+         case key_code::tab:
             return false;
 
          case key_code::home:

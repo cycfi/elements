@@ -155,9 +155,9 @@ namespace
    _view = view_;
    _start = true;
    _idle_task =
-      [NSTimer scheduledTimerWithTimeInterval : 0.016
+      [NSTimer scheduledTimerWithTimeInterval : 0.016 // 60Hz
            target : self
-         selector :@selector(on_tick:)
+         selector : @selector(on_tick:)
          userInfo : nil
           repeats : YES
       ];
@@ -173,7 +173,7 @@ namespace
    _view = nullptr;
 }
 
-- (void) on_tick : (id)sender
+- (void) on_tick : (id) sender
 {
    _view->tick();
 }
@@ -259,19 +259,19 @@ namespace
    cairo_destroy(context);
 }
 
-- (void) mouseDown:(NSEvent*) event
+- (void) mouseDown : (NSEvent*) event
 {
    _view->click(get_button(event, self));
    [self displayIfNeeded];
 }
 
-- (void) mouseDragged:(NSEvent*) event
+- (void) mouseDragged : (NSEvent*) event
 {
    _view->drag(get_button(event, self));
    [self displayIfNeeded];
 }
 
-- (void) mouseUp:(NSEvent*) event
+- (void) mouseUp : (NSEvent*) event
 {
    _view->click(get_button(event, self, false));
    [self displayIfNeeded];
@@ -300,7 +300,7 @@ namespace
     [super updateTrackingAreas];
 }
 
-- (void) mouseEntered:(NSEvent*) event
+- (void) mouseEntered : (NSEvent*) event
 {
    [[self window] setAcceptsMouseMovedEvents : YES];
    [[self window] makeFirstResponder : self];
@@ -310,7 +310,7 @@ namespace
    [self displayIfNeeded];
 }
 
-- (void) mouseExited:(NSEvent*) event
+- (void) mouseExited : (NSEvent*) event
 {
    [[self window] setAcceptsMouseMovedEvents : NO];
    auto pos = [event locationInWindow];
@@ -319,7 +319,7 @@ namespace
    [self displayIfNeeded];
 }
 
-- (void) mouseMoved:(NSEvent*) event
+- (void) mouseMoved : (NSEvent*) event
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
@@ -328,7 +328,7 @@ namespace
    [super mouseMoved: event];
 }
 
-- (void) scrollWheel:(NSEvent*) event
+- (void) scrollWheel : (NSEvent*) event
 {
    float delta_x = [event scrollingDeltaX];
    float delta_y = [event scrollingDeltaY];
@@ -343,7 +343,7 @@ namespace
    [self displayIfNeeded];
 }
 
-- (void) keyDown:(NSEvent*) event
+- (void) keyDown : (NSEvent*) event
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
@@ -351,7 +351,7 @@ namespace
    [self interpretKeyEvents : [NSArray arrayWithObject:event]];
 }
 
-- (void) flagsChanged:(NSEvent*) event
+- (void) flagsChanged : (NSEvent*) event
 {
    auto const modifier_flags =
       [event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
@@ -375,7 +375,7 @@ namespace
    handle_key(_keys, *_view, { key, action, mods });
 }
 
-- (void) keyUp:(NSEvent*) event
+- (void) keyUp : (NSEvent*) event
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
@@ -427,7 +427,7 @@ namespace
    return nil;
 }
 
-- (NSUInteger) characterIndexForPoint:(NSPoint)point
+- (NSUInteger) characterIndexForPoint : (NSPoint)point
 {
    return 0;
 }
@@ -458,16 +458,16 @@ namespace
    }
 }
 
-- (void) doCommandBySelector:(SEL)selector
+- (void) doCommandBySelector : (SEL) selector
 {
 }
 
--(void) windowDidBecomeKey:(NSNotification*) notification
+-(void) windowDidBecomeKey : (NSNotification*) notification
 {
    _view->focus(ph::focus_request::begin_focus);
 }
 
--(void) windowDidResignKey:(NSNotification*) notification
+-(void) windowDidResignKey : (NSNotification*) notification
 {
    _view->focus(ph::focus_request::end_focus);
 }

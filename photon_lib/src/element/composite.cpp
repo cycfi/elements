@@ -280,10 +280,4 @@ namespace cycfi { namespace photon
             return true;
       return false;
    }
-
-   void composite_base::idle(basic_context const& ctx)
-   {
-      for (std::size_t ix = 0; ix < size(); ++ix)
-         at(ix).idle(ctx);
-   }
 }}

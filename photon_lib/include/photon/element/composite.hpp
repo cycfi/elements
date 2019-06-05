@@ -56,7 +56,6 @@ namespace cycfi { namespace photon
       virtual element*        focus();
       virtual void            focus(std::size_t index);
       virtual bool            is_control() const;
-      virtual void            idle(basic_context const& ctx);
 
    // Composite
 

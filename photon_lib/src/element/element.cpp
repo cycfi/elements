@@ -90,10 +90,6 @@ namespace cycfi { namespace photon
       return false;
    }
 
-   void element::idle(basic_context const& ctx)
-   {
-   }
-
    void element::value(bool val)
    {
    }

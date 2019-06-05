@@ -43,7 +43,6 @@ namespace cycfi { namespace photon
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual void            idle(basic_context const& ctx);
 
       virtual bool            focus(focus_request r);
       virtual element const*  focus() const;

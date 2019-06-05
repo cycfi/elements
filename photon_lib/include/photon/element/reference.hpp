@@ -50,7 +50,6 @@ namespace cycfi { namespace photon
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual void            idle(basic_context const& ctx);
 
       virtual bool            focus(focus_request r);
       virtual element const*  focus() const;
@@ -160,13 +159,6 @@ namespace cycfi { namespace photon
    reference<Element>::cursor(context const& ctx, point p, cursor_tracking status)
    {
       return ref.get().cursor(ctx, p, status);
-   }
-
-   template <typename Element>
-   inline void
-   reference<Element>::idle(basic_context const& ctx)
-   {
-      ref.get().idle(ctx);
    }
 
    template <typename Element>

@@ -148,11 +148,6 @@ namespace cycfi { namespace photon
       return subject().is_control();
    }
 
-   void proxy_base::idle(basic_context const& ctx)
-   {
-      subject().idle(ctx);
-   }
-
    void proxy_base::value(bool val)
    {
       subject().value(val);

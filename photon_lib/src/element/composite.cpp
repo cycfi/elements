@@ -261,7 +261,8 @@ namespace cycfi { namespace photon
                      break;
                   }
             }
-            at(_focus).focus(focus_request::begin_focus);
+            if (_focus != -1)
+               at(_focus).focus(focus_request::begin_focus);
             return true;
 
          case focus_request::end_focus:

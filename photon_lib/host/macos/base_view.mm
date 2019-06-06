@@ -170,6 +170,7 @@ namespace
 
 - (void) dealloc
 {
+   _idle_task = nil;
    _view = nullptr;
 }
 
@@ -208,6 +209,11 @@ namespace
                 name : NSWindowDidResignMainNotification
               object : [self window]
    ];
+}
+
+- (void) detach_timer
+{
+   [_idle_task invalidate];
 }
 
 - (BOOL) canBecomeKeyView
@@ -516,6 +522,7 @@ namespace cycfi { namespace photon
    {
       auto ns_view = get_mac_view(host());
       [ns_view detach_notifications];
+      [ns_view detach_timer];
       [ns_view removeFromSuperview];
       _view = nil;
    }

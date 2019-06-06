@@ -36,7 +36,7 @@ namespace cycfi { namespace photon
       virtual void            draw(context const& ctx);
 
       std::string const&      text() const                     { return _text; }
-      void                    text(std::string const& text);
+      virtual void            text(std::string const& text);
       virtual void            value(std::string val);
 
       using element::text;
@@ -67,6 +67,7 @@ namespace cycfi { namespace photon
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual bool            text(context const& ctx, text_info info);
+      virtual void            text(std::string const& text);
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            focus(focus_request r);
       virtual bool            is_control() const;
@@ -128,6 +129,9 @@ namespace cycfi { namespace photon
    {
    public:
 
+      using basic_text_box::text;
+
+      using text_function = std::function<std::string(std::string const& text)>;
       using enter_function = std::function<bool(std::string const& text)>;
 
                               basic_input_box(std::string const& placeholder)
@@ -137,8 +141,10 @@ namespace cycfi { namespace photon
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
+      virtual bool            text(context const& ctx, text_info info);
       virtual bool            key(context const& ctx, key_info k);
 
+      text_function           on_text;
       enter_function          on_enter;
 
    private:

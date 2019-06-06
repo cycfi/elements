@@ -239,6 +239,13 @@ namespace cycfi { namespace photon
       return true;
    }
 
+   void basic_text_box::text(std::string const& text_)
+   {
+      static_text_box::text(text_);
+      _select_start = std::min<int>(_select_start, text_.size());
+      _select_end = std::min<int>(_select_end, text_.size());
+   }
+
    bool basic_text_box::key(context const& ctx, key_info k)
    {
       _show_caret = true;
@@ -858,7 +865,7 @@ namespace cycfi { namespace photon
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
-      return { { 200, line_height }, { full_extent, line_height } };
+      return { { 50, line_height }, { full_extent, line_height } };
    }
 
    void basic_input_box::draw(context const& ctx)
@@ -887,6 +894,14 @@ namespace cycfi { namespace photon
       {
          basic_text_box::draw(ctx);
       }
+   }
+
+   bool basic_input_box::text(context const& ctx, text_info info)
+   {
+      bool r = basic_text_box::text(ctx, info);
+      if (on_text)
+         text(on_text(text()));
+      return r;
    }
 
    bool basic_input_box::key(context const& ctx, key_info k)
@@ -957,6 +972,16 @@ namespace cycfi { namespace photon
          start_ += ins.size();
          select_start(start_);
          select_end(start_);
+
+         if (on_text)
+         {
+            auto new_text = on_text(_text);
+            if (new_text != _text)
+            {
+               text(new_text);
+               select_all();
+            }
+         }
       }
    }
 }}

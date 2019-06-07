@@ -69,7 +69,7 @@ namespace
          CFRelease(resources_url);
          chdir(resource_path);
 
-         // Load the user fonts from the Resource folder. Nnormally this is automatically
+         // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
          // the user fonts ourself.
          for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)

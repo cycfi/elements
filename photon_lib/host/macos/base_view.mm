@@ -22,25 +22,20 @@ using key_map = std::map<ph::key_code, ph::key_action>;
 // Helper utils
 namespace
 {
-   CFBundleRef GetBundleFromExecutable(const char* filepath)
+   CFBundleRef get_bundle_from_executable(const char* filepath)
    {
-      NSString* exec_str = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
+      NSString* exec_str = [NSString stringWithCString:filepath encoding : NSUTF8StringEncoding];
       NSString* mac_os_str = [exec_str stringByDeletingLastPathComponent];
       NSString* contents_str = [mac_os_str stringByDeletingLastPathComponent];
       NSString* bundleStr = [contents_str stringByDeletingLastPathComponent];
-      return CFBundleCreate(0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory:YES]);
+      return CFBundleCreate(0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory : YES]);
    }
 
-   CFBundleRef GetCurrentBundle()
+   CFBundleRef get_current_bundle()
    {
       Dl_info info;
-      if (dladdr ((const void*)GetCurrentBundle, &info))
-      {
-         if (info.dli_fname)
-         {
-            return GetBundleFromExecutable(info.dli_fname);
-         }
-      }
+      if (dladdr((const void*)get_current_bundle, &info) && info.dli_fname)
+         return get_bundle_from_executable(info.dli_fname);
       return 0;
    }
 
@@ -67,7 +62,7 @@ namespace
       {
          // Before anything else, set the working directory so we can access
          // our resources
-         CFBundleRef main_bundle = GetCurrentBundle();
+         CFBundleRef main_bundle = get_current_bundle();
          CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
          char resource_path[PATH_MAX];
          CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
@@ -174,7 +169,7 @@ namespace
 
 - (void) photon_init : (ph::base_view*) view_
 {
-   static resource_setter set_resource_pwd;
+   static resource_setter init_resources;
 
    _view = view_;
    _start = true;

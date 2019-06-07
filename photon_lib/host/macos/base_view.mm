@@ -9,6 +9,7 @@
 #include <memory>
 #include <map>
 #include <cairo-quartz.h>
+#include <boost/filesystem.hpp>
 
 #if ! __has_feature(objc_arc)
 # error "ARC is off"
@@ -19,16 +20,15 @@ using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
-
 namespace
 {
    CFBundleRef GetBundleFromExecutable(const char* filepath)
    {
-      NSString* execStr = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
-      NSString* macOSStr = [execStr stringByDeletingLastPathComponent];
-      NSString* contentsStr = [macOSStr stringByDeletingLastPathComponent];
-      NSString* bundleStr = [contentsStr stringByDeletingLastPathComponent];
-      return CFBundleCreate (0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory:YES]);
+      NSString* exec_str = [NSString stringWithCString:filepath encoding:NSUTF8StringEncoding];
+      NSString* mac_os_str = [exec_str stringByDeletingLastPathComponent];
+      NSString* contents_str = [mac_os_str stringByDeletingLastPathComponent];
+      NSString* bundleStr = [contents_str stringByDeletingLastPathComponent];
+      return CFBundleCreate(0, (CFURLRef)[NSURL fileURLWithPath:bundleStr isDirectory:YES]);
    }
 
    CFBundleRef GetCurrentBundle()
@@ -44,18 +44,42 @@ namespace
       return 0;
    }
 
+   namespace fs = boost::filesystem;
+
+   void activate_font(fs::path font_path)
+   {
+      NSArray* available_fonts = [[NSFontManager sharedFontManager] availableFonts];
+      if (![available_fonts containsObject : [NSString stringWithUTF8String : font_path.stem().c_str()]])
+      {
+         auto furl = [NSURL fileURLWithPath : [NSString stringWithUTF8String : font_path.c_str()]];
+         assert(furl);
+
+         CFErrorRef error = nullptr;
+         if (!CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl
+            , kCTFontManagerScopeProcess, &error))
+            CFShow(error);
+      }
+   }
+
    struct resource_setter
    {
       resource_setter()
       {
          // Before anything else, set the working directory so we can access
          // our resources
-         CFBundleRef mainBundle = GetCurrentBundle();
-         CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-         char path[PATH_MAX];
-         CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
-         CFRelease(resourcesURL);
-         chdir(path);
+         CFBundleRef main_bundle = GetCurrentBundle();
+         CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
+         char resource_path[PATH_MAX];
+         CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
+         CFRelease(resources_url);
+         chdir(resource_path);
+
+         // Load the user fonts from the Resource folder. Nnormally this is automatically
+         // done on application startup, but for plugins, we need to explicitly load
+         // the user fonts ourself.
+         for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)
+            if (it->path().extension() == ".ttf")
+               activate_font(it->path());
       }
    };
 }

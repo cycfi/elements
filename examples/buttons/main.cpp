@@ -110,7 +110,8 @@ auto make_more_buttons()
                      htile(
                         align_center(icon_button(icons::power, 24)),
                         align_center(icon_button(icons::magnifying_glass, 24)),
-                        align_center(icon_button(icons::left_circled, 24))
+                        align_center(icon_button(icons::left_circled, 24)),
+                        align_center(icon_button(icons::left, icons::right, 24))
                      )
                   )
                )

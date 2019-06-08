@@ -6,79 +6,16 @@
 #include <photon/view.hpp>
 #include <photon/window.hpp>
 #include <photon/support/context.hpp>
-// #include <chrono>
-// #include <thread>
-// #include <unordered_map>
 
  namespace cycfi { namespace photon
  {
-//    class idle_tasks
-//    {
-//    public:
-
-//       using task = view::task;
-//       using task_list = std::unordered_map<std::string, task>;
-
-//       idle_tasks()
-//        : _loop([this]{ run(); })
-//       {
-//       }
-
-//       ~idle_tasks()
-//       {
-//          _running = false;
-//          _loop.join();
-//       }
-
-//       void add(std::string name, task const& f)
-//       {
-//          std::lock_guard<std::mutex> guard(_mutex);
-//          _tasks[name] = f;
-//       }
-
-//       void remove(std::string name)
-//       {
-//          std::lock_guard<std::mutex> guard(_mutex);
-//          _tasks.erase(name);
-//       }
-
-//    private:
-
-//       void run()
-//       {
-//          using namespace std::chrono;
-//          auto start = high_resolution_clock::now();
-//          milliseconds const period(1000);
-//          while (_running)
-//          {
-//             std::this_thread::sleep_for(milliseconds(10));
-//             auto now = high_resolution_clock::now();
-//             auto elapsed = duration_cast<milliseconds>(now - start);
-//             if (period <= elapsed)
-//             {
-//                start = now;
-//                std::lock_guard<std::mutex> guard(_mutex);
-//                for (auto const& task : _tasks)
-//                   task.second();
-//             }
-//          }
-//       }
-
-//       task_list      _tasks;
-//       std::thread    _loop;
-//       bool           _running = true;
-//       std::mutex     _mutex;
-//    };
-
    view::view(host_window h)
     : base_view(h)
-   //  , _idle_tasks(std::make_unique<idle_tasks>())
    {
    }
 
    view::view(window& win)
     : base_view(win.host())
-   //  , _idle_tasks(std::make_unique<idle_tasks>())
    {
       on_change_limits = [&win](view_limits limits_)
       {

@@ -50,9 +50,7 @@ namespace
          assert(furl);
 
          CFErrorRef error = nullptr;
-         if (!CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl
-            , kCTFontManagerScopeProcess, &error))
-            CFShow(error);
+         CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
       }
    }
 
@@ -549,7 +547,8 @@ namespace cycfi { namespace photon
    point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(host());
-      auto  frame_height = [ns_view frame].size.height;
+      auto  frame = [ns_view frame];
+      auto  frame_height = frame.size.height;
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }

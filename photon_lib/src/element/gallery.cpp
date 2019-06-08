@@ -299,22 +299,21 @@ namespace cycfi { namespace photon
    )
    {
       float corner_radius = 6;
-      color indicator_color = get_theme().indicator_color.level(0.7);
-      color body_color = indicator_color;
-
-      if (state)
-         body_color = body_color.level(2.0);
-      else if (hilite)
-         body_color = body_color.level(1.5);
+      auto const& theme = get_theme();
 
       // Draw Button Body
+      color body_color = state?
+         theme.icon_button_color :
+         theme.icon_button_color.opacity(0.5);
       draw_button_base(ctx, ctx.bounds, body_color, corner_radius);
 
-      canvas&        canvas_ = ctx.canvas;
-      rect           bounds = ctx.bounds;
+      canvas& canvas_ = ctx.canvas;
+      rect bounds = ctx.bounds;
 
       // Draw Icon
-      color icon_color = state ? indicator_color.level(4.0) : indicator_color.level(0.2);
+      color icon_color = hilite?
+         theme.icon_color :
+         theme.icon_color.level(0.6);
       draw_icon(canvas_, bounds.move(0.5, 0.5), code, size, icon_color);
    }
 

@@ -19,6 +19,7 @@ namespace cycfi { namespace photon
       float                frame_corner_radius        = 3.0;
       float                frame_stroke_width         = 1.0;
       color                scrollbar_color            = rgba(80, 80, 80, 80);
+      color                default_button_color       = rgba(0, 0, 0, 0);
 
       color                controls_color             = rgba(18, 49, 85, 200);
       color                indicator_color            = rgba(0, 127, 255, 200);
@@ -37,6 +38,7 @@ namespace cycfi { namespace photon
       color                icon_color                 = basic_font_color;
       char const*          icon_font                  = "photon_basic";
       float                icon_font_size             = 16.0;
+      color                icon_button_color          = default_button_color;
 
       color                text_box_font_color        = basic_font_color;
       char const*          text_box_font              = "Open Sans";

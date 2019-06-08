@@ -271,7 +271,6 @@ namespace cycfi { namespace photon
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
    auto const button_margin = rect{ 10, 5, 10, 5 };
-   auto const default_button_color = rgba(0, 0, 0, 0);
 
    struct basic_button_body : public element
    {
@@ -288,7 +287,9 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Button, typename Label>
-   inline Button make_button(Label&& label, color body_color = default_button_color)
+   inline Button make_button(
+      Label&& label
+    , color body_color = get_theme().default_button_color)
    {
       auto btn_body_off = basic_button_body(body_color.level(0.9));
       auto btn_body_on = basic_button_body(body_color.opacity(0.5));
@@ -302,7 +303,7 @@ namespace cycfi { namespace photon
    template <typename Button>
    inline Button make_button(
       std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    )
    {
       return make_button<Button>(
@@ -317,7 +318,7 @@ namespace cycfi { namespace photon
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    )
    {
       return make_button<Button>(
@@ -335,7 +336,7 @@ namespace cycfi { namespace photon
    inline Button make_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    )
    {
       return make_button<Button>(
@@ -356,7 +357,7 @@ namespace cycfi { namespace photon
    inline Button make_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    )
    {
       return make_button<Button>(
@@ -376,79 +377,79 @@ namespace cycfi { namespace photon
    basic_button
    button(
       std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_button
    button(
       std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_button
    button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_button
    button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
-    , color body_color = default_button_color
+    , color body_color = get_theme().default_button_color
    );
 
    ////////////////////////////////////////////////////////////////////////////
@@ -499,7 +500,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    void draw_icon_button(context const& ctx, uint32_t code, float size, bool state, bool hilite);
 
-   template <bool state>
+   template <bool state, bool hilite = state>
    struct icon_button_element : element
    {
                               icon_button_element(uint32_t code, float size)
@@ -514,17 +515,17 @@ namespace cycfi { namespace photon
       float                   _size;
    };
 
-   template <bool state>
-   view_limits icon_button_element<state>::limits(basic_context const& ctx) const
+   template <bool state, bool hilite>
+   inline view_limits icon_button_element<state, hilite>::limits(basic_context const& ctx) const
    {
       auto  size = _size * 1.8f;
       return { { size, size }, { size, size } };
    }
 
-   template <bool state>
-   void icon_button_element<state>::draw(context const& ctx)
+   template <bool state, bool hilite>
+   inline void icon_button_element<state, hilite>::draw(context const& ctx)
    {
-      draw_icon_button(ctx, _code, _size, state, ctx.bounds.includes(ctx.view.cursor_pos()));
+      draw_icon_button(ctx, _code, _size, state, hilite);
    }
 
    inline basic_toggle_button icon_button(uint32_t code, float size)
@@ -538,7 +539,7 @@ namespace cycfi { namespace photon
    inline basic_toggle_button icon_button(uint32_t code1, uint32_t code2, float size)
    {
       return {
-         icon_button_element<false>{ code1, size }
+         icon_button_element<false, true>{ code1, size }
        , icon_button_element<true>{ code2, size }
       };
    }
@@ -548,7 +549,8 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    basic_dropdown_menu
    dropdown_menu(
-           std::string const &text, color body_color = default_button_color
+      std::string const &text
+    , color body_color = get_theme().default_button_color
    );
 
    ////////////////////////////////////////////////////////////////////////////

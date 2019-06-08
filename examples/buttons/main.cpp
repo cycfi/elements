@@ -54,10 +54,10 @@ auto make_buttons(view& view_)
    constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 
    auto mbutton            = button("Momentary Button");
-   auto tbutton            = toggle_button("Toggle Button", bred);
-   auto lbutton            = share(latching_button("Latching Button", bgreen));
-   auto reset              = button("Clear Latch", icons::lock_open, bblue);
-   auto note               = button(icons::cog, "Setup", brblue);
+   auto tbutton            = toggle_button("Toggle Button", 1.0, bred);
+   auto lbutton            = share(latching_button("Latching Button", 1.0, bgreen));
+   auto reset              = button("Clear Latch", icons::lock_open, 1.0, bblue);
+   auto note               = button(icons::cog, "Setup", 1.0, brblue);
 
    reset.on_click =
       [lbutton, &view_](bool) mutable
@@ -103,7 +103,7 @@ auto make_more_buttons()
          );
 
    auto  group2 =
-         group("Icon Toggles",
+         group("Icon Buttons",
             margin({ 10, 10, 20, 20 },
                vtile(
                   top_margin(45,

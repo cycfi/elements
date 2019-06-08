@@ -132,115 +132,127 @@ namespace cycfi { namespace photon
    basic_button
    button(
       std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_button>(text, body_color);
+      return make_button<basic_button>(text, size, body_color);
    }
 
    basic_button
    button(
       std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_button>(icon_code, body_color);
+      return make_button<basic_button>(icon_code, size, body_color);
    }
 
    basic_button
    button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_button>(icon_code, text, body_color);
+      return make_button<basic_button>(icon_code, text, size, body_color);
    }
 
    basic_button
    button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_button>(text, icon_code, body_color);
+      return make_button<basic_button>(text, icon_code, size, body_color);
    }
 
    basic_toggle_button
    toggle_button(
       std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_toggle_button>(text, body_color);
+      return make_button<basic_toggle_button>(text, size, body_color);
    }
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_toggle_button>(icon_code, body_color);
+      return make_button<basic_toggle_button>(icon_code, size, body_color);
    }
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_toggle_button>(icon_code, text, body_color);
+      return make_button<basic_toggle_button>(icon_code, text, size, body_color);
    }
 
    basic_toggle_button
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_toggle_button>(text, icon_code, body_color);
+      return make_button<basic_toggle_button>(text, icon_code, size, body_color);
    }
 
    basic_latching_button
    latching_button(
       std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_latching_button>(text, body_color);
+      return make_button<basic_latching_button>(text, size, body_color);
    }
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_latching_button>(icon_code, body_color);
+      return make_button<basic_latching_button>(icon_code, size, body_color);
    }
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_latching_button>(icon_code, text, body_color);
+      return make_button<basic_latching_button>(icon_code, text, size, body_color);
    }
 
    basic_latching_button
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size
     , color body_color
    )
    {
-      return make_button<basic_latching_button>(text, icon_code, body_color);
+      return make_button<basic_latching_button>(text, icon_code, size, body_color);
    }
 
    basic_dropdown_menu
@@ -248,7 +260,7 @@ namespace cycfi { namespace photon
       std::string const &text, color body_color
    )
    {
-      return make_button<basic_dropdown_menu>(text, icons::down_dir, body_color);
+      return make_button<basic_dropdown_menu>(text, icons::down_dir, 1.0, body_color);
    }
 
    void draw_check_box(

@@ -303,13 +303,14 @@ namespace cycfi { namespace photon
    template <typename Button>
    inline Button make_button(
       std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
    {
       return make_button<Button>(
          margin(
             button_margin,
-            align_center(label(text))
+            align_center(label(text, size))
          ),
          body_color
       );
@@ -318,6 +319,7 @@ namespace cycfi { namespace photon
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
    {
@@ -325,7 +327,7 @@ namespace cycfi { namespace photon
          margin(
             button_margin,
             align_center(
-               icon(icon_code)
+               icon(icon_code, size)
             )
          ),
          body_color
@@ -336,6 +338,7 @@ namespace cycfi { namespace photon
    inline Button make_button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
    {
@@ -344,8 +347,8 @@ namespace cycfi { namespace photon
             button_margin,
             align_center(
                htile(
-                  right_margin(8, icon(icon_code)),
-                  label(text)
+                  right_margin(8, icon(icon_code, size)),
+                  label(text, size)
                )
             )
          ),
@@ -357,6 +360,7 @@ namespace cycfi { namespace photon
    inline Button make_button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
    {
@@ -365,8 +369,8 @@ namespace cycfi { namespace photon
             button_margin,
             align_center(
                htile(
-                  label(text),
-                  left_margin(12, icon(icon_code))
+                  label(text, size),
+                  left_margin(12, icon(icon_code, size))
                )
             )
          ),
@@ -377,12 +381,14 @@ namespace cycfi { namespace photon
    basic_button
    button(
       std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_button
    button(
       std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -390,6 +396,7 @@ namespace cycfi { namespace photon
    button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -397,18 +404,21 @@ namespace cycfi { namespace photon
    button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -416,6 +426,7 @@ namespace cycfi { namespace photon
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -423,18 +434,21 @@ namespace cycfi { namespace photon
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button
    latching_button(
       std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -442,6 +456,7 @@ namespace cycfi { namespace photon
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
@@ -449,6 +464,7 @@ namespace cycfi { namespace photon
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
+    , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 

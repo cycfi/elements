@@ -258,7 +258,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    struct icon : element
    {
-                              icon(std::uint32_t code_, float size_ = -1);
+                              icon(std::uint32_t code_, float size_ = 1.0);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);

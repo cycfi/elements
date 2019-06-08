@@ -79,12 +79,12 @@ auto make_basic_text()
    auto icons =
       margin({ 10, 0, 10, 10 },
          htile(
-            align_center(icon{ icons::docs,           24 }),
-            align_center(icon{ icons::right,          24 }),
-            align_center(icon{ icons::trash,          24 }),
-            align_center(icon{ icons::block,          24 }),
-            align_center(icon{ icons::cw,             24 }),
-            align_center(icon{ icons::attention,      24 })
+            align_center(icon{ icons::docs,           1.5 }),
+            align_center(icon{ icons::right,          1.5 }),
+            align_center(icon{ icons::trash,          1.5 }),
+            align_center(icon{ icons::block,          1.5 }),
+            align_center(icon{ icons::cw,             1.5 }),
+            align_center(icon{ icons::attention,      1.5 })
          )
       );
 

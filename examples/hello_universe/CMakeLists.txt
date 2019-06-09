@@ -10,4 +10,4 @@ set(app_version "1.0")
 
 set(PHOTON_APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/space.jpg)
 
-include("../CMakeMain.txt")
+include("../../CMakeMain.txt")

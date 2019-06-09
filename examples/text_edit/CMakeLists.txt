@@ -8,4 +8,4 @@ set(app_copyright "Copyright (c) 2016-2019 Joel de Guzman")
 set(app_id "com.cycfi.text_edit")
 set(app_version "1.0")
 
-include("../CMakeMain.txt")
+include("../../CMakeMain.txt")

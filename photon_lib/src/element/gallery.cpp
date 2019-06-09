@@ -327,8 +327,8 @@ namespace cycfi { namespace photon
 
       // Draw Icon
       color icon_color = hilite?
-         theme.icon_color.level(1.2) :
-         theme.icon_color.level(0.8);
+         theme.icon_color.level(1.5) :
+         theme.icon_color.level(0.9);
       draw_icon(canvas_, bounds.move(0.5, 0.5), code, size, icon_color);
    }
 

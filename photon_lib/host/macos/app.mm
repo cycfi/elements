@@ -20,7 +20,7 @@ namespace cycfi { namespace photon
       [menubar_ addItem : _app_menu_item];
       [NSApp setMainMenu : menubar_];
       id _app_menu = [NSMenu new];
-      id app_name = [[NSProcessInfo processInfo] processName];
+      id app_name = [NSRunningApplication currentApplication].localizedName;
       _app_name = [app_name UTF8String];
       id quitTitle = [@"Quit " stringByAppendingString : app_name];
       id quitMenuItem = [[NSMenuItem alloc] initWithTitle : quitTitle

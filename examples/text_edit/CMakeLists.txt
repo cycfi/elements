@@ -3,9 +3,10 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-set(app_name "TextEdit")
-set(app_copyright "Copyright (c) 2016-2019 Joel de Guzman")
-set(app_id "com.cycfi.text_edit")
-set(app_version "1.0")
+set(PHOTON_APP_PROJECT "TextEdit")
+set(PHOTON_APP_TITLE "Text Edit")
+set(PHOTON_APP_COPYRIGHT "Copyright (c) 2016-2019 Joel de Guzman")
+set(PHOTON_APP_ID "com.cycfi.text_edit")
+set(PHOTON_APP_VERSION "1.0")
 
 include("../../CMakeMain.txt")

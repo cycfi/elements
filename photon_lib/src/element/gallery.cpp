@@ -307,16 +307,19 @@ namespace cycfi { namespace photon
    }
 
    void draw_icon_button(
-      context const& ctx, uint32_t code, float size, bool state, bool hilite
+      context const& ctx
+    , uint32_t code
+    , float size
+    , color body_color_
+    , bool state
+    , bool hilite
    )
    {
       float corner_radius = 6;
       auto const& theme = get_theme();
 
       // Draw Button Body
-      color body_color = state?
-         theme.icon_button_color :
-         theme.icon_button_color.opacity(0.5);
+      color body_color = state? body_color_ : body_color_.opacity(0.5).level(0.8);
       draw_button_base(ctx, ctx.bounds, body_color, corner_radius);
 
       canvas& canvas_ = ctx.canvas;
@@ -324,8 +327,8 @@ namespace cycfi { namespace photon
 
       // Draw Icon
       color icon_color = hilite?
-         theme.icon_color :
-         theme.icon_color.level(0.6);
+         theme.icon_color.level(1.2) :
+         theme.icon_color.level(0.8);
       draw_icon(canvas_, bounds.move(0.5, 0.5), code, size, icon_color);
    }
 

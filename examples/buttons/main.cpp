@@ -46,13 +46,13 @@ auto make_popup_menu()
    return popup;
 }
 
+constexpr auto bred     = colors::red.opacity(0.4);
+constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
+constexpr auto bblue    = colors::blue.opacity(0.4);
+constexpr auto brblue   = colors::royal_blue.opacity(0.4);
+
 auto make_buttons(view& view_)
 {
-   constexpr auto bred     = colors::red.opacity(0.4);
-   constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
-   constexpr auto bblue    = colors::blue.opacity(0.4);
-   constexpr auto brblue   = colors::royal_blue.opacity(0.4);
-
    auto mbutton            = button("Momentary Button");
    auto tbutton            = toggle_button("Toggle Button", 1.0, bred);
    auto lbutton            = share(latching_button("Latching Button", 1.0, bgreen));
@@ -102,16 +102,18 @@ auto make_more_buttons()
             )
          );
 
+   auto indicator_color = get_theme().indicator_color;
+
    auto  group2 =
          group("Icon Buttons",
             margin({ 10, 10, 20, 20 },
                vtile(
                   top_margin(45,
                      htile(
-                        align_center(icon_button(icons::power, 24)),
-                        align_center(icon_button(icons::magnifying_glass, 24)),
-                        align_center(icon_button(icons::left_circled, 24)),
-                        align_center(icon_button(icons::left, icons::right, 24))
+                        align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
+                        align_center(icon_button(icons::magnifying_glass, 1.2)),
+                        align_center(icon_button(icons::left_circled, 1.2)),
+                        align_center(toggle_icon_button(icons::left, icons::right, 1.2))
                      )
                   )
                )

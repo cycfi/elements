@@ -66,7 +66,8 @@ namespace cycfi { namespace photon
       void                 content(layers_type&& layers);
       view_limits          limits() const       { return _current_limits; }
 
-      std::function<void(view_limits limits_)>  on_change_limits;
+      using change_limits_function = std::function<void(view_limits limits_)>;
+      change_limits_function on_change_limits;
 
       using task = std::function<void()>;
 

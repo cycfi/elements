@@ -74,6 +74,14 @@ target_link_libraries(${PHOTON_APP_PROJECT}
    libphoton
 )
 
+if (NOT DEFINED PHOTON_APP_INCLUDE_DIRECTORIES)
+   set(PHOTON_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
+endif()
+
+target_include_directories(${PHOTON_APP_PROJECT}
+   PRIVATE "${PHOTON_APP_INCLUDE_DIRECTORIES}"
+)
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
 endif()

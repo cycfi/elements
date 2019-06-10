@@ -92,9 +92,9 @@ namespace cycfi { namespace photon
 
       struct task_info
       {
-         task           f;
-         milliseconds   period;
-         time_point     start;
+         task              f;
+         milliseconds      period;
+         time_point        start;
       };
 
       using task_list = std::unordered_map<void*, task_info>;

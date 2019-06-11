@@ -71,6 +71,7 @@ endif()
 # Libraries and linking
 
 target_link_libraries(${PHOTON_APP_PROJECT}
+   ${PHOTON_APP_DEPENDENCIES}
    libphoton
 )
 

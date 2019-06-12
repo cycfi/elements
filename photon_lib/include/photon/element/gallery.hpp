@@ -579,8 +579,8 @@ namespace cycfi { namespace photon
    )
    {
       return {
-         icon_button_element<false, true>{ code1, size, body_color }
-       , icon_button_element<true>{ code2, size, body_color }
+         icon_button_element<true, true>{ code1, size, body_color }
+       , icon_button_element<true, true>{ code2, size, body_color }
       };
    }
 

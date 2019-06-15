@@ -154,7 +154,7 @@ namespace
 
 @interface PhotonView : NSView <NSTextInputClient>
 {
-   NSTimer*                         _idle_task;
+   NSTimer*                         _task;
    NSTrackingArea*                  _tracking_area;
    NSMutableAttributedString*       _marked_text;
    key_map                          _keys;
@@ -171,7 +171,7 @@ namespace
 
    _view = view_;
    _start = true;
-   _idle_task =
+   _task =
       [NSTimer scheduledTimerWithTimeInterval : 0.016 // 60Hz
            target : self
          selector : @selector(on_tick:)
@@ -187,7 +187,7 @@ namespace
 
 - (void) dealloc
 {
-   _idle_task = nil;
+   _task = nil;
    _view = nullptr;
 }
 
@@ -230,7 +230,7 @@ namespace
 
 - (void) detach_timer
 {
-   [_idle_task invalidate];
+   [_task invalidate];
 }
 
 - (BOOL) canBecomeKeyView

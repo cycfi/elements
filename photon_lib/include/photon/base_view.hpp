@@ -301,8 +301,8 @@ namespace cycfi { namespace photon
       virtual void   focus(focus_request r) {}
       virtual void   poll() {}
 
-      void           refresh();
-      void           refresh(rect area);
+      virtual void   refresh();
+      virtual void   refresh(rect area);
 
       point          cursor_pos() const;
       point          size() const;

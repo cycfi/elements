@@ -95,6 +95,28 @@
       }
    }
 
+   void view::refresh()
+   {
+      // Allow refresh to be called from another thread
+      _io.post(
+         [this]()
+         {
+            base_view::refresh();
+         }
+      );
+   }
+
+   void view::refresh(rect area)
+   {
+      // Allow refresh to be called from another thread
+      _io.post(
+         [this, area]()
+         {
+            base_view::refresh(area);
+         }
+      );
+   }
+
    void view::refresh(element& element)
    {
       call(

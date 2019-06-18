@@ -40,8 +40,8 @@ namespace cycfi { namespace photon
       virtual void         focus(focus_request r) override;
       virtual void         poll() override;
 
-      using base_view::refresh;
-
+      virtual void         refresh() override;
+      virtual void         refresh(rect area) override;
       void                 refresh(element& element);
       void                 refresh(context const& ctx);
       rect                 dirty() const;

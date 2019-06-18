@@ -12,6 +12,8 @@
 
 namespace cycfi { namespace photon
 {
+   using namespace std::chrono_literals;
+
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -474,6 +476,24 @@ namespace cycfi { namespace photon
       return true;
    }
 
+   void basic_text_box::blink_caret(rect caret_bounds, view& _view)
+   {
+      _show_caret = !_show_caret;
+      _view.refresh(caret_bounds);
+
+      if (_caret_timer)
+      {
+         _caret_timer->expires_from_now(500ms);
+         _caret_timer->async_wait(
+            [this, &_view, caret_bounds](auto const& err)
+            {
+               if (!err)
+                  blink_caret(caret_bounds, _view);
+            }
+         );
+      }
+   }
+
    void basic_text_box::draw_caret(context const& ctx)
    {
       if (!_show_caret || _select_start == -1)
@@ -521,18 +541,20 @@ namespace cycfi { namespace photon
 
       if (_is_focus && has_caret)
       {
-         ctx.view.add_task(this, milliseconds(500),
-            [&_show_caret = _show_caret, &_view = ctx.view, caret_bounds]
+         if (!_caret_timer)
+            _caret_timer = std::make_unique<timer>(ctx.view.io());
+         _caret_timer->expires_from_now(500ms);
+         _caret_timer->async_wait(
+            [this, &_view = ctx.view, caret_bounds](auto const& err)
             {
-               _show_caret = !_show_caret;
-               _view.refresh(caret_bounds);
+               if (!err)
+                  blink_caret(caret_bounds, _view);
             }
          );
       }
       else
       {
-         _show_caret = true;
-         ctx.view.remove_task(this);
+         _caret_timer = nullptr;
       }
    }
 

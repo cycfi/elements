@@ -11,11 +11,13 @@
  {
    view::view(host_window h)
     : base_view(h)
+    , _work(_io)
    {
    }
 
    view::view(window& win)
     : base_view(win.host())
+    , _work(_io)
    {
       on_change_limits = [&win](view_limits limits_)
       {
@@ -229,28 +231,8 @@
       set_limits();
    }
 
-   void view::tick()
+   void view::poll()
    {
-      using namespace std::chrono;
-      auto now = high_resolution_clock::now();
-      for (auto& task : _tasks)
-      {
-         if (now >= (task.second.start + task.second.period))
-         {
-            task.second.start = now;
-            task.second.f();
-         }
-      }
-   }
-
-   void view::add_task(void *id, milliseconds period, task const &f)
-   {
-      using namespace std::chrono;
-      _tasks[id] = { f, period, high_resolution_clock::now() };
-   }
-
-   void view::remove_task(void *id)
-   {
-      _tasks.erase(id);
+      _io.poll();
    }
 }}

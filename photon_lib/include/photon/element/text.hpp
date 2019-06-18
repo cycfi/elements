@@ -9,6 +9,7 @@
 #include <photon/support/glyphs.hpp>
 #include <photon/support/theme.hpp>
 #include <photon/element/element.hpp>
+#include <boost/asio.hpp>
 #include <string>
 #include <vector>
 
@@ -120,6 +121,11 @@ namespace cycfi { namespace photon
       state_saver_f           _typing_state;
       bool                    _is_focus;
       bool                    _show_caret = true;
+
+      void                    blink_caret(rect caret_bounds, view& _view);
+
+      using timer = boost::asio::steady_timer;
+      std::unique_ptr<timer>  _caret_timer;
    };
 
    ////////////////////////////////////////////////////////////////////////////

@@ -59,7 +59,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 add_definitions("-DBOOST_ALL_NO_LIB") # disable auto-linking
 
-set(BOOST_CMAKE_ARGS )
+set(BOOST_CMAKE_ARGS)
 if (DEFINED BOOST_ROOT)
    set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} "-DBOOST_ROOT=${BOOST_ROOT}")
 endif()

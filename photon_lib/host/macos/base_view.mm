@@ -193,7 +193,7 @@ namespace
 
 - (void) on_tick : (id) sender
 {
-   _view->tick();
+   _view->poll();
 }
 
 - (void) attach_notifications

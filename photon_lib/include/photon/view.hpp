@@ -12,6 +12,7 @@
 #include <photon/support/theme.hpp>
 #include <photon/element/element.hpp>
 #include <photon/element/layer.hpp>
+#include <boost/asio.hpp>
 #include <memory>
 #include <unordered_map>
 #include <chrono>
@@ -21,7 +22,6 @@ namespace cycfi { namespace photon
    struct context;
    class window;
    class idle_tasks;
-   using milliseconds = std::chrono::milliseconds;
 
    class view : public base_view
    {
@@ -38,7 +38,7 @@ namespace cycfi { namespace photon
       virtual void         key(key_info const& k) override;
       virtual void         text(text_info const& info) override;
       virtual void         focus(focus_request r) override;
-      virtual void         tick() override;
+      virtual void         poll() override;
 
       using base_view::refresh;
 
@@ -69,10 +69,8 @@ namespace cycfi { namespace photon
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
-      using task = std::function<void()>;
-
-      void                 add_task(void *id, milliseconds period, task const &f);
-      void                 remove_task(void *id);
+      using io_context = boost::asio::io_context;
+      io_context&          io()                 { return _io; }
 
    private:
 
@@ -88,18 +86,8 @@ namespace cycfi { namespace photon
       undo_stack_type      _undo_stack;
       undo_stack_type      _redo_stack;
 
-      using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
-
-      struct task_info
-      {
-         task              f;
-         milliseconds      period;
-         time_point        start;
-      };
-
-      using task_list = std::unordered_map<void*, task_info>;
-
-      task_list            _tasks;
+      io_context           _io;
+      io_context::work     _work;
    };
 }}
 

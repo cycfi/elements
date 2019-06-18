@@ -12,8 +12,7 @@
    view::view(host_window h)
     : base_view(h)
     , _work(_io)
-   {
-   }
+   {}
 
    view::view(window& win)
     : base_view(win.host())

@@ -44,7 +44,7 @@ namespace cycfi { namespace photon
 
       void                 refresh(element& element);
       void                 refresh(context const& ctx);
-      rect                 dirty() const        { return _dirty; }
+      rect                 dirty() const;
 
       struct undo_redo_task
       {
@@ -53,24 +53,24 @@ namespace cycfi { namespace photon
       };
 
       void                 add_undo(undo_redo_task t);
-      bool                 has_undo()           { return !_undo_stack.empty(); }
-      bool                 has_redo()           { return !_redo_stack.empty(); }
+      bool                 has_undo();
+      bool                 has_redo();
       bool                 undo();
       bool                 redo();
 
       using content_type = layer_composite;
       using layers_type = layer_composite::container_type;
 
-      content_type&        content()            { return _content; }
-      content_type const&  content() const      { return _content; }
+      content_type&        content();
+      content_type const&  content() const;
       void                 content(layers_type&& layers);
-      view_limits          limits() const       { return _current_limits; }
+      view_limits          limits() const;
 
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
       using io_context = boost::asio::io_context;
-      io_context&          io()                 { return _io; }
+      io_context&          io();
 
    private:
 
@@ -89,6 +89,44 @@ namespace cycfi { namespace photon
       io_context           _io;
       io_context::work     _work;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   inline rect view::dirty() const
+   {
+      return _dirty;
+   }
+
+   inline bool view::has_undo()
+   {
+      return !_undo_stack.empty();
+   }
+
+   inline bool  view::has_redo()
+   {
+      return !_redo_stack.empty();
+   }
+
+   inline view::content_type& view::content()
+   {
+      return _content;
+   }
+
+   inline view::content_type const& view::content() const
+   {
+      return _content;
+   }
+
+   inline view_limits view::limits() const
+   {
+      return _current_limits;
+   }
+
+   inline view::io_context& view::io()
+   {
+      return _io;
+   }
 }}
 
 #endif

@@ -26,6 +26,7 @@
 
    view::~view()
    {
+      _io.stop();
    }
 
    void view::set_limits()

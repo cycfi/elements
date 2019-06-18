@@ -32,6 +32,8 @@ namespace cycfi { namespace photon
                                , int style         = canvas::normal
                               );
 
+                              static_text_box(static_text_box&& rhs) = default;
+
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            layout(context const& ctx);
       virtual void            draw(context const& ctx);
@@ -62,6 +64,8 @@ namespace cycfi { namespace photon
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               );
+                              ~basic_text_box();
+                              basic_text_box(basic_text_box&& rhs) = default;
 
       virtual void            draw(context const& ctx);
       virtual element*        click(context const& ctx, mouse_button btn);
@@ -141,9 +145,11 @@ namespace cycfi { namespace photon
       using enter_function = std::function<bool(std::string const& text)>;
 
                               basic_input_box(std::string const& placeholder)
-                              : basic_text_box("")
-                              , _placeholder(placeholder)
+                               : basic_text_box("")
+                               , _placeholder(placeholder)
                               {}
+
+                              basic_input_box(basic_input_box&& rhs) = default;
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);

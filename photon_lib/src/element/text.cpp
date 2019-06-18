@@ -104,7 +104,17 @@ namespace cycfi { namespace photon
     , _select_end(-1)
     , _current_x(0)
     , _is_focus(false)
+    , _caret_timer(nullptr)
    {}
+
+   basic_text_box::~basic_text_box()
+   {
+      if (_caret_timer)
+      {
+         _caret_timer->cancel();
+         _caret_timer = nullptr;
+      }
+   }
 
    void basic_text_box::draw(context const& ctx)
    {
@@ -552,8 +562,9 @@ namespace cycfi { namespace photon
             }
          );
       }
-      else
+      else if (_caret_timer)
       {
+         _caret_timer->cancel();
          _caret_timer = nullptr;
       }
    }

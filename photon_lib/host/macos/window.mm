@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <photon/window.hpp>
 #import <Cocoa/Cocoa.h>
+#import <photon/support.hpp>
 
 namespace photon = cycfi::photon;
 
@@ -137,6 +138,12 @@ namespace cycfi { namespace photon
       id const window_ = (__bridge id) _window;
       [window_ setContentMinSize : NSSize{ minx, miny }];
       [window_ setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
+
+
+      auto _size = size();
+      photon::clamp(_size.x, minx, limits_.max.x);
+      photon::clamp(_size.y, miny, limits_.max.y);
+      size({ _size.x, _size.y });
    }
 
    point window::position() const

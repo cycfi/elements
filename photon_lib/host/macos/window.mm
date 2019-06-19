@@ -140,10 +140,10 @@ namespace cycfi { namespace photon
       [window_ setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
 
 
-      auto _size = size();
-      photon::clamp(_size.x, minx, limits_.max.x);
-      photon::clamp(_size.y, miny, limits_.max.y);
-      size({ _size.x, _size.y });
+      auto _size = [[window_ contentView] frame].size;
+      photon::clamp(_size.width, minx, limits_.max.x);
+      photon::clamp(_size.height, miny, limits_.max.y);
+      [window_ setContentSize : _size];
    }
 
    point window::position() const

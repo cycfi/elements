@@ -42,7 +42,7 @@ auto make_markers()
 auto make_hslider(int index)
 {
    hsliders[index] = share(slider(
-      basic_thumb<22>(),
+      basic_thumb<25>(),
       make_markers<false>(),
       (index + 1) * 0.25
    ));
@@ -63,7 +63,7 @@ auto make_hsliders()
 auto make_vslider(int index)
 {
    vsliders[index] = share(slider(
-      basic_thumb<22>(),
+      basic_thumb<25>(),
       make_markers<true>(),
       (index + 1) * 0.25
    ));

@@ -41,7 +41,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, port_base>
+   inline proxy<Subject, port_base>
    port(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
@@ -70,7 +70,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, vport_base>
+   inline proxy<Subject, vport_base>
    vport(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
@@ -181,7 +181,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, scroller_base>
+   inline proxy<Subject, scroller_base>
    scroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits };

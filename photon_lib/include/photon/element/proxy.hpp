@@ -66,22 +66,20 @@ namespace cycfi { namespace photon
    class proxy : public Base
    {
    public:
-                              template <typename... T>
-                              proxy(Subject&& subject_, T&&... args)
-                               : Base(args...)
-                               , _subject(std::move(subject_)) {}
+
+      using subject_type = typename std::decay<Subject>::type;
 
                               template <typename... T>
-                              proxy(Subject const& subject_, T&&... args)
-                               : Base(args...)
-                               , _subject(subject_) {}
+                              proxy(Subject&& subject_, T&&... args)
+                               : Base(std::forward<T>(args)...)
+                               , _subject(std::forward<Subject>(subject_)) {}
 
       virtual element const&  subject() const { return _subject; }
       virtual element&        subject() { return _subject; }
 
    private:
 
-      Subject                 _subject;
+      subject_type            _subject;
    };
 }}
 

@@ -38,35 +38,34 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject, align_element_base>;
 
                               halign_element(float align, Subject&& subject);
-                              halign_element(float align, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
    };
 
    template <typename Subject>
-   inline halign_element<typename std::decay<Subject>::type>
+   inline halign_element<Subject>
    halign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<typename std::decay<Subject>::type>
+   inline halign_element<Subject>
    align_left(Subject&& subject)
    {
       return { 0.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<typename std::decay<Subject>::type>
+   inline halign_element<Subject>
    align_center(Subject&& subject)
    {
       return { 0.5, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<typename std::decay<Subject>::type>
+   inline halign_element<Subject>
    align_right(Subject&& subject)
    {
       return { 1.0, std::forward<Subject>(subject) };
@@ -75,11 +74,6 @@ namespace cycfi { namespace photon
    template <typename Subject>
    inline halign_element<Subject>::halign_element(float align, Subject&& subject)
     : base_type(std::forward<Subject>(subject), align)
-   {}
-
-   template <typename Subject>
-   inline halign_element<Subject>::halign_element(float align, Subject const& subject)
-    : base_type(subject, align)
    {}
 
    template <typename Subject>
@@ -112,35 +106,34 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject, align_element_base>;
 
                               valign_element(float align, Subject&& subject);
-                              valign_element(float align, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
    };
 
    template <typename Subject>
-   inline valign_element<typename std::decay<Subject>::type>
+   inline valign_element<Subject>
    valign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<typename std::decay<Subject>::type>
+   inline valign_element<Subject>
    align_top(Subject&& subject)
    {
       return { 0.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<typename std::decay<Subject>::type>
+   inline valign_element<Subject>
    align_middle(Subject&& subject)
    {
       return { 0.5, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<typename std::decay<Subject>::type>
+   inline valign_element<Subject>
    align_bottom(Subject&& subject)
    {
       return { 1.0, std::forward<Subject>(subject) };
@@ -148,12 +141,7 @@ namespace cycfi { namespace photon
 
    template <typename Subject>
    valign_element<Subject>::valign_element(float align, Subject&& subject)
-    : base_type(std::move(subject), align)
-   {}
-
-   template <typename Subject>
-   valign_element<Subject>::valign_element(float align, Subject const& subject)
-    : base_type(subject, align)
+    : base_type(std::forward<Subject>(subject), align)
    {}
 
    template <typename Subject>

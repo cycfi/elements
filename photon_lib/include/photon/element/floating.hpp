@@ -32,7 +32,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, floating_element>
+   inline proxy<Subject, floating_element>
    floating(rect bounds, Subject&& subject)
    {
       return { std::forward<Subject>(subject), bounds };

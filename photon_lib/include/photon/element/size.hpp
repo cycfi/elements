@@ -22,7 +22,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               size_element(point size, Subject&& subject);
-                              size_element(point size, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -39,13 +38,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline size_element<Subject>::size_element(point size, Subject const& subject)
-    : base_type(subject)
-    , _size(size)
-   {}
-
-   template <typename Subject>
-   inline size_element<typename std::decay<Subject>::type>
+   inline size_element<Subject>
    fixed_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -78,7 +71,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               hsize_element(float width, Subject&& subject);
-                              hsize_element(float width, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -95,13 +87,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline hsize_element<Subject>::hsize_element(float width, Subject const& subject)
-    : base_type(subject)
-    , _width(width)
-   {}
-
-   template <typename Subject>
-   inline hsize_element<typename std::decay<Subject>::type>
+   inline hsize_element<Subject>
    hsize(float width, Subject&& subject)
    {
       return { width, std::forward<Subject>(subject) };
@@ -131,7 +117,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               vsize_element(float height, Subject&& subject);
-                              vsize_element(float height, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -148,13 +133,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline vsize_element<Subject>::vsize_element(float height, Subject const& subject)
-    : base_type(subject)
-    , _height(height)
-   {}
-
-   template <typename Subject>
-   inline vsize_element<typename std::decay<Subject>::type>
+   inline vsize_element<Subject>
    vsize(float height, Subject&& subject)
    {
       return { height, std::forward<Subject>(subject) };
@@ -186,7 +165,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               min_size_element(point size, Subject&& subject);
-                              min_size_element(point size, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -203,13 +181,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline min_size_element<Subject>::min_size_element(point size, Subject const& subject)
-    : base_type(subject)
-    , _size(size)
-   {}
-
-   template <typename Subject>
-   inline min_size_element<typename std::decay<Subject>::type>
+   inline min_size_element<Subject>
    min_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -244,7 +216,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               hmin_size_element(float width, Subject&& subject);
-                              hmin_size_element(float width, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -261,13 +232,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline hmin_size_element<Subject>::hmin_size_element(float width, Subject const& subject)
-    : base_type(subject)
-    , _width(width)
-   {}
-
-   template <typename Subject>
-   inline hmin_size_element<typename std::decay<Subject>::type>
+   inline hmin_size_element<Subject>
    hmin_size(float width, Subject&& subject)
    {
       return { width, std::forward<Subject>(subject) };
@@ -298,7 +263,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               vmin_size_element(float height, Subject&& subject);
-                              vmin_size_element(float height, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -315,13 +279,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline vmin_size_element<Subject>::vmin_size_element(float height, Subject const& subject)
-    : base_type(subject)
-    , _height(height)
-   {}
-
-   template <typename Subject>
-   inline vmin_size_element<typename std::decay<Subject>::type>
+   inline vmin_size_element<Subject>
    vmin_size(float height, Subject&& subject)
    {
       return { height, std::forward<Subject>(subject) };
@@ -354,7 +312,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               max_size_element(point size, Subject&& subject);
-                              max_size_element(point size, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -371,13 +328,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline max_size_element<Subject>::max_size_element(point size, Subject const& subject)
-    : base_type(subject)
-    , _size(size)
-   {}
-
-   template <typename Subject>
-   inline max_size_element<typename std::decay<Subject>::type>
+   inline max_size_element<Subject>
    max_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -414,7 +365,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               hspan_element(float span, Subject&& subject);
-                              hspan_element(float span, Subject const& subject);
 
       virtual view_span       span() const;
 
@@ -430,19 +380,13 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline hspan_element<Subject>::hspan_element(float span, Subject const& subject)
-    : base_type(subject)
-    , _span(span)
-   {}
-
-   template <typename Subject>
    inline view_span hspan_element<Subject>::span() const
    {
       return { _span, this->subject().span().y };
    }
 
    template <typename Subject>
-   inline hspan_element<typename std::decay<Subject>::type>
+   inline hspan_element<Subject>
    hspan(float span, Subject&& subject)
    {
       return { span, std::forward<Subject>(subject) };
@@ -457,7 +401,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               vspan_element(float span, Subject&& subject);
-                              vspan_element(float span, Subject const& subject);
 
       virtual view_span       span() const;
 
@@ -473,19 +416,13 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline vspan_element<Subject>::vspan_element(float span, Subject const& subject)
-    : base_type(subject)
-    , _span(span)
-   {}
-
-   template <typename Subject>
    inline view_span vspan_element<Subject>::span() const
    {
       return { this->subject().span().x, _span };
    }
 
    template <typename Subject>
-   inline vspan_element<typename std::decay<Subject>::type>
+   inline vspan_element<Subject>
    vspan(float span, Subject&& subject)
    {
       return { span, std::forward<Subject>(subject) };
@@ -500,7 +437,6 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               fit_element(point size, Subject&& subject);
-                              fit_element(point size, Subject const& subject);
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            prepare_subject(context& ctx);
@@ -519,13 +455,7 @@ namespace cycfi { namespace photon
    {}
 
    template <typename Subject>
-   inline fit_element<Subject>::fit_element(point size, Subject const& subject)
-    : base_type(subject)
-    , _size(size)
-   {}
-
-   template <typename Subject>
-   inline fit_element<typename std::decay<Subject>::type>
+   inline fit_element<Subject>
    fit_scaled(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };

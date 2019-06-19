@@ -68,7 +68,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, basic_menu_item_element>
+   inline proxy<Subject, basic_menu_item_element>
    basic_menu_item(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };

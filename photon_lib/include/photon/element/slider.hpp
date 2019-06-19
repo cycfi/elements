@@ -74,6 +74,10 @@ namespace cycfi { namespace photon
    class basic_slider : public Base
    {
    public:
+
+      using thumb_type = typename std::decay<Thumb>::type;
+      using track_type = typename std::decay<Track>::type;
+
                               inline basic_slider(Thumb&& thumb, Track&& track, double init_value)
                                : Base(init_value)
                                , _thumb(std::forward<Thumb>(thumb))
@@ -93,16 +97,12 @@ namespace cycfi { namespace photon
 
    private:
 
-      Thumb                   _thumb;
-      Track                   _body;
+      thumb_type              _thumb;
+      track_type              _body;
    };
 
    template <typename Thumb, typename Track>
-   inline basic_slider<
-      typename std::decay<Thumb>::type,
-      typename std::decay<Track>::type,
-      basic_slider_base
-   >
+   inline basic_slider<Thumb, Track, basic_slider_base>
    slider(Thumb&& thumb, Track&& track, double init_value = 0.0)
    {
       return {
@@ -167,11 +167,7 @@ namespace cycfi { namespace photon
    }
 
    template <size_t num_states, typename Thumb, typename Track>
-   inline basic_slider<
-      typename std::decay<Thumb>::type,
-      typename std::decay<Track>::type,
-      selector_base<num_states>
-   >
+   inline basic_slider<Thumb, Track, selector_base<num_states>>
    selector(Thumb&& thumb, Track&& track, double init_value = 0.0)
    {
       return {
@@ -356,7 +352,7 @@ namespace cycfi { namespace photon
    }
 
    template <std::size_t size, typename Subject>
-   inline slider_marks_element<size, typename std::decay<Subject>::type>
+   inline slider_marks_element<size, Subject>
    slider_marks(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
@@ -380,14 +376,6 @@ namespace cycfi { namespace photon
                                , float font_size
                               )
                                : base_type(std::forward<Subject>(subject))
-                               , _font_size(font_size)
-                              {}
-
-                              slider_labels_element(
-                                 Subject const& subject
-                               , float font_size
-                              )
-                               : base_type(subject)
                                , _font_size(font_size)
                               {}
 
@@ -420,10 +408,10 @@ namespace cycfi { namespace photon
    }
 
    template <int size, typename Subject, typename... S>
-   inline slider_labels_element<size, typename std::decay<Subject>::type, sizeof...(S)>
+   inline slider_labels_element<size, Subject, sizeof...(S)>
    slider_labels(Subject&& subject, float font_size, S&&... s)
    {
-      auto r = slider_labels_element<size, typename std::decay<Subject>::type, sizeof...(S)>
+      auto r = slider_labels_element<size, Subject, sizeof...(S)>
          {std::forward<Subject>(subject), font_size};
       r._labels = {{ std::move(s)... }};
       return r;

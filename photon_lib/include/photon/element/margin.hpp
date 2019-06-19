@@ -22,12 +22,7 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               margin_element(Rect margin_, Subject&& subject)
-                               : base_type(std::move(subject))
-                               , _margin(margin_)
-                              {}
-
-                              margin_element(Rect margin_, Subject const& subject)
-                               : base_type(subject)
+                               : base_type(std::forward<Subject>(subject))
                                , _margin(margin_)
                               {}
 
@@ -80,7 +75,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Full Margin
    template <typename Subject>
-   inline margin_element<rect, typename std::decay<Subject>::type>
+   inline margin_element<rect, Subject>
    margin(rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -95,7 +90,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<left_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<left_margin_rect, Subject>
    left_margin(left_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -110,7 +105,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<right_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<right_margin_rect, Subject>
    right_margin(right_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -125,7 +120,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<top_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<top_margin_rect, Subject>
    top_margin(top_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -140,7 +135,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<bottom_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<bottom_margin_rect, Subject>
    bottom_margin(bottom_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -156,7 +151,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<left_top_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<left_top_margin_rect, Subject>
    left_top_margin(left_top_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -173,7 +168,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<xside_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<xside_margin_rect, Subject>
    xside_margin(xside_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
@@ -190,7 +185,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline margin_element<yside_margin_rect, typename std::decay<Subject>::type>
+   inline margin_element<yside_margin_rect, Subject>
    yside_margin(yside_margin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };

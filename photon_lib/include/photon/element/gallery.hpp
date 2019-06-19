@@ -725,12 +725,7 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               limit_element(view_limits limits_, Subject&& subject)
-                               : base_type(std::move(subject))
-                               , _limits(limits_)
-                              {}
-
-                              limit_element(view_limits limits_, Subject const& subject)
-                               : base_type(subject)
+                               : base_type(std::forward<Subject>(subject))
                                , _limits(limits_)
                               {}
 
@@ -740,7 +735,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline limit_element<typename std::decay<Subject>::type>
+   inline limit_element<Subject>
    limit(view_limits limits_, Subject&& subject)
    {
       return { limits_, std::forward<Subject>(subject) };

@@ -45,7 +45,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename Subject>
-   inline proxy<typename std::decay<Subject>::type, dial_base>
+   inline proxy<Subject, dial_base>
    dial(Subject&& subject, double init_value = 0.0)
    {
       return { std::forward<Subject>(subject), init_value };
@@ -134,11 +134,7 @@ namespace cycfi { namespace photon
       using base_type = proxy<Subject>;
 
                               radial_element_base(Subject&& subject)
-                               : base_type(std::move(subject))
-                              {}
-
-                              radial_element_base(Subject const& subject)
-                               : base_type(subject)
+                               : base_type(std::forward<Subject>(subject))
                               {}
 
       virtual view_limits     limits(basic_context const& ctx) const;
@@ -205,7 +201,7 @@ namespace cycfi { namespace photon
    inline radial_marks_element<size, Subject>
    radial_marks(Subject&& subject)
    {
-      return {std::move(subject)};
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -224,11 +220,6 @@ namespace cycfi { namespace photon
                                : base_type(std::move(subject))
                                , _font_size(font_size)
                               {}
-
-                              radial_labels_element(Subject const& subject, float font_size)
-                               : base_type(subject)
-                               , _font_size(font_size)
-                               {}
 
       virtual void            draw(context const& ctx);
 

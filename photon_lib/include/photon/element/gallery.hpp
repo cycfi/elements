@@ -378,21 +378,21 @@ namespace cycfi { namespace photon
       );
    }
 
-   basic_button
+   _basic_button
    button(
       std::string const& text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_button
+   _basic_button
    button(
       std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_button
+   _basic_button
    button(
       std::uint32_t icon_code
     , std::string const& text
@@ -400,7 +400,7 @@ namespace cycfi { namespace photon
     , color body_color = get_theme().default_button_color
    );
 
-   basic_button
+   _basic_button
    button(
       std::string const& text
     , std::uint32_t icon_code
@@ -408,21 +408,21 @@ namespace cycfi { namespace photon
     , color body_color = get_theme().default_button_color
    );
 
-   basic_toggle_button
+   _basic_toggle_button
    toggle_button(
       std::string const& text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_toggle_button
+   _basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_toggle_button
+   _basic_toggle_button
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
@@ -430,7 +430,7 @@ namespace cycfi { namespace photon
     , color body_color = get_theme().default_button_color
    );
 
-   basic_toggle_button
+   _basic_toggle_button
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
@@ -438,21 +438,21 @@ namespace cycfi { namespace photon
     , color body_color = get_theme().default_button_color
    );
 
-   basic_latching_button
+   _basic_latching_button
    latching_button(
       std::string const& text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_latching_button
+   _basic_latching_button
    latching_button(
       std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
-   basic_latching_button
+   _basic_latching_button
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
@@ -460,7 +460,7 @@ namespace cycfi { namespace photon
     , color body_color = get_theme().default_button_color
    );
 
-   basic_latching_button
+   _basic_latching_button
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
@@ -503,9 +503,9 @@ namespace cycfi { namespace photon
       draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
    }
 
-   inline basic_toggle_button check_box(std::string const& text)
+   inline _basic_toggle_button check_box(std::string const& text)
    {
-      return basic_toggle_button(
+      return _basic_toggle_button(
          check_box_element<false>{ text }
        , check_box_element<true>{ text }
       );
@@ -559,7 +559,7 @@ namespace cycfi { namespace photon
       );
    }
 
-   inline basic_toggle_button toggle_icon_button(
+   inline _basic_toggle_button toggle_icon_button(
       uint32_t code
     , float size
     , color body_color = get_theme().default_button_color
@@ -571,7 +571,7 @@ namespace cycfi { namespace photon
       };
    }
 
-   inline basic_toggle_button toggle_icon_button(
+   inline _basic_toggle_button toggle_icon_button(
       uint32_t code1
     , uint32_t code2
     , float size
@@ -584,7 +584,7 @@ namespace cycfi { namespace photon
       };
    }
 
-   inline basic_button icon_button(
+   inline _basic_button icon_button(
       uint32_t code
     , float size
     , color body_color = get_theme().default_button_color

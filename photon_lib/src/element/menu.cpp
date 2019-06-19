@@ -9,7 +9,7 @@ namespace cycfi { namespace photon
 {
    void basic_dropdown_menu::layout(context const& ctx)
    {
-      basic_button::layout(ctx);
+      _basic_button::layout(ctx);
 
       auto pu_limits = _popup->limits(ctx);
       rect  bounds = {

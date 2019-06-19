@@ -16,7 +16,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Basic Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////
-   class basic_dropdown_menu : public basic_button
+   class basic_dropdown_menu : public _basic_button
    {
    public:
                               template <typename W1, typename W2>
@@ -40,7 +40,7 @@ namespace cycfi { namespace photon
 
    template <typename W1, typename W2>
    inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
-    : basic_button(std::forward<W1>(off), std::forward<W2>(on))
+    : _basic_button(std::forward<W1>(off), std::forward<W2>(on))
    {}
 
    template <typename Menu>

@@ -14,7 +14,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Momentary Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_button : public array_composite<2, deck_element>
+   class _basic_button : public array_composite<2, deck_element>
    {
    public:
 
@@ -23,7 +23,7 @@ namespace cycfi { namespace photon
       using base_type::value;
 
                         template <typename W1, typename W2>
-                        basic_button(W1&& off, W2&& on);
+                        _basic_button(W1&& off, W2&& on);
 
       virtual element*  hit_test(context const& ctx, point p);
       virtual element*  click(context const& ctx, mouse_button btn);
@@ -46,7 +46,7 @@ namespace cycfi { namespace photon
    };
 
    template <typename W1, typename W2>
-   inline basic_button::basic_button(W1&& off, W2&& on)
+   inline _basic_button::_basic_button(W1&& off, W2&& on)
     : _state(false)
    {
       (*this)[0] = share(std::forward<W1>(off));
@@ -56,11 +56,11 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Toggle Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_toggle_button : public basic_button
+   class _basic_toggle_button : public _basic_button
    {
    public:
                         template <typename W1, typename W2>
-                        basic_toggle_button(W1&& off, W2&& on);
+                        _basic_toggle_button(W1&& off, W2&& on);
 
       virtual element*  click(context const& ctx, mouse_button btn);
       virtual void      drag(context const& ctx, mouse_button btn);
@@ -71,26 +71,26 @@ namespace cycfi { namespace photon
    };
 
    template <typename W1, typename W2>
-   inline basic_toggle_button::basic_toggle_button(W1&& off, W2&& on)
-    : basic_button(std::forward<W1>(off), std::forward<W2>(on))
+   inline _basic_toggle_button::_basic_toggle_button(W1&& off, W2&& on)
+    : _basic_button(std::forward<W1>(off), std::forward<W2>(on))
     , _current_state(false)
    {}
 
    ////////////////////////////////////////////////////////////////////////////
    // Latching Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_latching_button : public basic_button
+   class _basic_latching_button : public _basic_button
    {
    public:
                         template <typename W1, typename W2>
-                        basic_latching_button(W1&& off, W2&& on);
+                        _basic_latching_button(W1&& off, W2&& on);
 
       virtual element*  click(context const& ctx, mouse_button btn);
    };
 
    template <typename W1, typename W2>
-   inline basic_latching_button::basic_latching_button(W1&& off, W2&& on)
-    : basic_button(std::forward<W1>(off), std::forward<W2>(on))
+   inline _basic_latching_button::_basic_latching_button(W1&& off, W2&& on)
+    : _basic_button(std::forward<W1>(off), std::forward<W2>(on))
    {}
 }}
 

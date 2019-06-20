@@ -122,6 +122,9 @@ auto make_more_buttons()
 
    float const button_scale = 1.0/4;
    sprite power_button = sprite{ "power_180x632.png", 158*button_scale, button_scale };
+   sprite phase_button = sprite{ "phase_180x632.png", 158*button_scale, button_scale };
+   sprite mail_button = sprite{ "mail_180x632.png", 158*button_scale, button_scale };
+   sprite transpo_button = sprite{ "transpo_180x632.png", 158*button_scale, button_scale };
 
    auto  group3 =
          group("Sprite Buttons",
@@ -130,9 +133,9 @@ auto make_more_buttons()
                   top_margin(35,
                      htile(
                         align_center(toggle_button(power_button)),
-                        align_center(icon_button(icons::magnifying_glass, 1.2)),
-                        align_center(icon_button(icons::left_circled, 1.2)),
-                        align_center(toggle_icon_button(icons::left, icons::right, 1.2))
+                        align_center(toggle_button(phase_button)),
+                        align_center(momentary_button(mail_button)),
+                        align_center(toggle_button(transpo_button))
                      )
                   )
                )

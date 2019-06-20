@@ -206,7 +206,7 @@ namespace cycfi { namespace photon
    rect sprite::source_rect(context const& ctx) const
    {
       auto width = pixmap().size().x;
-      return rect{ 0, _height * _index, width,_height * (_index + 1) };
+      return rect{ 0, _height * _index, width, _height * (_index + 1) };
    }
 
    void sprite::value(int val)

@@ -65,6 +65,7 @@ namespace cycfi { namespace photon
       content_type const&  content() const;
       void                 content(layers_type&& layers);
       view_limits          limits() const;
+      mouse_button         current_button() const;
 
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
@@ -81,6 +82,7 @@ namespace cycfi { namespace photon
       rect                 _dirty;
       rect                 _current_bounds;
       view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
+      mouse_button         _current_button;
 
       using undo_stack_type = std::stack<undo_redo_task>;
       undo_stack_type      _undo_stack;
@@ -126,6 +128,11 @@ namespace cycfi { namespace photon
    inline view::io_context& view::io()
    {
       return _io;
+   }
+
+   inline mouse_button view::current_button() const
+   {
+      return _current_button;
    }
 }}
 

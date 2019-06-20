@@ -133,6 +133,7 @@
 
    void view::click(mouse_button btn)
    {
+      _current_button = btn;
       if (_content.empty())
          return;
 
@@ -144,6 +145,7 @@
 
    void view::drag(mouse_button btn)
    {
+      _current_button = btn;
       if (_content.empty())
          return;
 

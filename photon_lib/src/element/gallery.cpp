@@ -129,27 +129,27 @@ namespace cycfi { namespace photon
       draw_button_base(ctx, ctx.bounds, body_color, corner_radius);
    }
 
-   _basic_button
+   layered_button
    button(
       std::string const& text
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_button>(text, size, body_color);
+      return make_button<layered_button>(text, size, body_color);
    }
 
-   _basic_button
+   layered_button
    button(
       std::uint32_t icon_code
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_button>(icon_code, size, body_color);
+      return make_button<layered_button>(icon_code, size, body_color);
    }
 
-   _basic_button
+   layered_button
    button(
       std::uint32_t icon_code
     , std::string const& text
@@ -157,10 +157,10 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_button>(icon_code, text, size, body_color);
+      return make_button<layered_button>(icon_code, text, size, body_color);
    }
 
-   _basic_button
+   layered_button
    button(
       std::string const& text
     , std::uint32_t icon_code
@@ -168,30 +168,30 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_button>(text, icon_code, size, body_color);
+      return make_button<layered_button>(text, icon_code, size, body_color);
    }
 
-   _basic_toggle_button
+   basic_toggle_button<>
    toggle_button(
       std::string const& text
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_toggle_button>(text, size, body_color);
+      return make_button<basic_toggle_button<>>(text, size, body_color);
    }
 
-   _basic_toggle_button
+   basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_toggle_button>(icon_code, size, body_color);
+      return make_button<basic_toggle_button<>>(icon_code, size, body_color);
    }
 
-   _basic_toggle_button
+   basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
     , std::string const& text
@@ -199,10 +199,10 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_toggle_button>(icon_code, text, size, body_color);
+      return make_button<basic_toggle_button<>>(icon_code, text, size, body_color);
    }
 
-   _basic_toggle_button
+   basic_toggle_button<>
    toggle_button(
       std::string const& text
     , std::uint32_t icon_code
@@ -210,30 +210,30 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_toggle_button>(text, icon_code, size, body_color);
+      return make_button<basic_toggle_button<>>(text, icon_code, size, body_color);
    }
 
-   _basic_latching_button
+   basic_latching_button<>
    latching_button(
       std::string const& text
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_latching_button>(text, size, body_color);
+      return make_button<basic_latching_button<>>(text, size, body_color);
    }
 
-   _basic_latching_button
+   basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
     , float size
     , color body_color
    )
    {
-      return make_button<_basic_latching_button>(icon_code, size, body_color);
+      return make_button<basic_latching_button<>>(icon_code, size, body_color);
    }
 
-   _basic_latching_button
+   basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
     , std::string const& text
@@ -241,10 +241,10 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_latching_button>(icon_code, text, size, body_color);
+      return make_button<basic_latching_button<>>(icon_code, text, size, body_color);
    }
 
-   _basic_latching_button
+   basic_latching_button<>
    latching_button(
       std::string const& text
     , std::uint32_t icon_code
@@ -252,7 +252,7 @@ namespace cycfi { namespace photon
     , color body_color
    )
    {
-      return make_button<_basic_latching_button>(text, icon_code, size, body_color);
+      return make_button<basic_latching_button<>>(text, icon_code, size, body_color);
    }
 
    basic_dropdown_menu

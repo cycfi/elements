@@ -106,7 +106,7 @@ auto make_more_buttons()
 
    auto  group2 =
          group("Icon Buttons",
-            margin({ 10, 10, 20, 20 },
+            margin({ 10, 10, 20, 10 },
                vtile(
                   top_margin(35,
                      htile(
@@ -125,7 +125,7 @@ auto make_more_buttons()
 
    auto  group3 =
          group("Sprite Buttons",
-            margin({ 10, 10, 20, 20 },
+            margin({ 10, 10, 20, 10 },
                vtile(
                   top_margin(35,
                      htile(

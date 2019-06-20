@@ -9,7 +9,7 @@ set(PHOTON_APP_ID "com.cycfi.buttons")
 set(PHOTON_APP_VERSION "1.0")
 
 set(PHOTON_APP_RESOURCES
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/power_180x475.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/power_180x632.png
 )
 
 include("../../CMakeMain.txt")

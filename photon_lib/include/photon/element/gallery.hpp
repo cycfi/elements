@@ -597,6 +597,23 @@ namespace cycfi { namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Basic buttons
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   inline basic_toggle_button<proxy<Subject, basic_button>>
+   toggle_button(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline proxy<Subject, basic_button>
+   momentary_button(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
    basic_dropdown_menu

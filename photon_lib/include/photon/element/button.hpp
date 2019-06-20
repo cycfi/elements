@@ -23,6 +23,11 @@ namespace cycfi { namespace photon
 
       using button_function = std::function<void(bool)>;
 
+                        basic_button()
+                         : _state(false)
+                         , _hold_state(false)
+                        {}
+
       virtual element*  click(context const& ctx, mouse_button btn);
       virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
       virtual void      draw(context const& ctx);
@@ -41,15 +46,9 @@ namespace cycfi { namespace photon
 
    private:
 
-      bool              _state = false;
+      bool              _state : 1;
+      bool              _hold_state : 1;
    };
-
-   template <typename Subject>
-   inline proxy<Subject, basic_button>
-   m_button(Subject&& subject)
-   {
-      return { std::forward<Subject>(subject) };
-   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
@@ -100,6 +99,9 @@ namespace cycfi { namespace photon
    class basic_toggle_button : public Base
    {
    public:
+                        template <typename W1>
+                        basic_toggle_button(W1&& state);
+
                         template <typename W1, typename W2>
                         basic_toggle_button(W1&& off, W2&& on);
 
@@ -112,9 +114,16 @@ namespace cycfi { namespace photon
    };
 
    template <typename Base>
+   template <typename W1>
+   inline basic_toggle_button<Base>::basic_toggle_button(W1&& state)
+    : Base(std::forward<W1>(state))
+    , _current_state(false)
+   {}
+
+   template <typename Base>
    template <typename W1, typename W2>
    inline basic_toggle_button<Base>::basic_toggle_button(W1&& off, W2&& on)
-    : layered_button(std::forward<W1>(off), std::forward<W2>(on))
+    : Base(std::forward<W1>(off), std::forward<W2>(on))
     , _current_state(false)
    {}
 
@@ -158,6 +167,9 @@ namespace cycfi { namespace photon
    class basic_latching_button : public Base
    {
    public:
+                        template <typename W1>
+                        basic_latching_button(W1&& state);
+
                         template <typename W1, typename W2>
                         basic_latching_button(W1&& off, W2&& on);
 
@@ -165,9 +177,15 @@ namespace cycfi { namespace photon
    };
 
    template <typename Base>
+   template <typename W1>
+   inline basic_latching_button<Base>::basic_latching_button(W1&& state)
+    : Base(std::forward<W1>(state))
+   {}
+
+   template <typename Base>
    template <typename W1, typename W2>
    inline basic_latching_button<Base>::basic_latching_button(W1&& off, W2&& on)
-    : layered_button(std::forward<W1>(off), std::forward<W2>(on))
+    : Base(std::forward<W1>(off), std::forward<W2>(on))
    {}
 
    template <typename Base>

@@ -108,7 +108,7 @@ auto make_more_buttons()
          group("Icon Buttons",
             margin({ 10, 10, 20, 20 },
                vtile(
-                  top_margin(45,
+                  top_margin(35,
                      htile(
                         align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
                         align_center(icon_button(icons::magnifying_glass, 1.2)),
@@ -121,15 +121,15 @@ auto make_more_buttons()
          );
 
    float const button_scale = 1.0/4;
-   sprite power_button = sprite{ "power_180x475.png", 158*button_scale, button_scale };
+   sprite power_button = sprite{ "power_180x632.png", 158*button_scale, button_scale };
 
    auto  group3 =
          group("Sprite Buttons",
             margin({ 10, 10, 20, 20 },
                vtile(
-                  top_margin(45,
+                  top_margin(35,
                      htile(
-                        align_center(m_button(power_button)),
+                        align_center(toggle_button(power_button)),
                         align_center(icon_button(icons::magnifying_glass, 1.2)),
                         align_center(icon_button(icons::left_circled, 1.2)),
                         align_center(toggle_icon_button(icons::left, icons::right, 1.2))

@@ -28,10 +28,18 @@ namespace cycfi { namespace photon
       if (!ctx.view.current_button().down)
       {
          bool hit = ctx.bounds.includes(ctx.view.cursor_pos());
-         subject().value(hit? 1 : _state? 2 : 0);
+         if (!hit)
+            _hold_state = false;
+         if (!_hold_state)
+            subject().value((_state? 2 : 0) + int(hit));
          if (hit)
             ctx.view.refresh(ctx);
       }
+      else
+      {
+         _hold_state = true;
+      }
+
       proxy_base::draw(ctx);
    }
 

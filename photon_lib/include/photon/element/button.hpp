@@ -22,6 +22,7 @@ namespace cycfi { namespace photon
    public:
 
       using button_function = std::function<void(bool)>;
+      using proxy_base::value;
 
                         basic_button()
                          : _state(false)

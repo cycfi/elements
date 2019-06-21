@@ -5,8 +5,6 @@
 =============================================================================*/
 #include <photon/element/button.hpp>
 
-#include <iostream>
-
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -23,30 +21,17 @@ namespace cycfi { namespace photon
       return this;
    }
 
-   void basic_button::draw(context const& ctx)
-   {
-      if (!ctx.view.current_button().down)
-      {
-         bool hit = ctx.bounds.includes(ctx.view.cursor_pos());
-         if (!hit)
-            _hold_state = false;
-         if (!_hold_state)
-            subject().value((_state? 2 : 0) + int(hit));
-         if (hit)
-            ctx.view.refresh(ctx);
-      }
-      else
-      {
-         _hold_state = true;
-      }
-
-      proxy_base::draw(ctx);
-   }
-
    bool basic_button::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (ctx.bounds.includes(p) || status == cursor_tracking::leaving)
+      {
+         if (!ctx.view.current_button().down)
+         {
+            int hilite = status != cursor_tracking::leaving;
+            subject().value((_state? 2 : 0) + hilite);
+         }
          ctx.view.refresh(ctx);
+      }
       return false;
    }
 
@@ -71,7 +56,7 @@ namespace cycfi { namespace photon
       if (new_state != _state)
       {
          _state = new_state;
-         subject().value(_state? 2 : 0);
+         subject().value(_state? 3 : 1);
          return true;
       }
       return false;

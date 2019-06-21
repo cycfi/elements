@@ -11,7 +11,7 @@ set(PHOTON_APP_VERSION "1.0")
 set(PHOTON_APP_RESOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/power_180x632.png
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/phase_180x632.png
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/mail_180x474.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/mail_180x632.png
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/transpo_180x632.png
 )
 

@@ -326,33 +326,45 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Slider Marks (You can use this to place tick marks on slider)
    ////////////////////////////////////////////////////////////////////////////
-   template <std::size_t _size, typename Subject>
+   template <
+      std::size_t _size, std::size_t _num_divs
+    , std::size_t _major_divs, typename Subject>
    class slider_marks_element : public slider_element_base<_size, Subject>
    {
    public:
 
-      static unsigned const size = _size;
+      static_assert(_major_divs > 0, "Major divisions must be greater than zero");
+
       using base_type = slider_element_base<_size, Subject>;
       using base_type::base_type;
 
       virtual void            draw(context const& ctx);
    };
 
-   template <std::size_t size, typename Subject>
+   template <
+      std::size_t _size, std::size_t _num_divs
+    , std::size_t _major_divs, typename Subject>
    inline void
-   slider_marks_element<size, Subject>::draw(context const& ctx)
+   slider_marks_element<_size, _num_divs, _major_divs, Subject>
+      ::draw(context const& ctx)
    {
-      void draw_slider_marks(canvas& cnv, rect bounds, float size, color c);
+      void draw_slider_marks(
+         canvas& cnv, rect bounds, float size, std::size_t major_divs
+       , std::size_t minor_divs, color c);
 
-      // Draw radial lines
-      draw_slider_marks(ctx.canvas, ctx.bounds, size, colors::light_gray);
+      // Draw linear lines
+      draw_slider_marks(
+         ctx.canvas, ctx.bounds, _size, _num_divs
+       , _major_divs, colors::light_gray);
 
       // Draw the subject
       base_type::draw(ctx);
    }
 
-   template <std::size_t size, typename Subject>
-   inline slider_marks_element<size, Subject>
+   template <
+      std::size_t _size, std::size_t _num_divs = 50
+    , std::size_t _major_divs = 10, typename Subject>
+   inline slider_marks_element<_size, _num_divs, _major_divs, Subject>
    slider_marks(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};

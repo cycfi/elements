@@ -207,14 +207,15 @@ namespace cycfi { namespace photon
          on_change(val);
    }
 
-   void draw_slider_marks(canvas& cnv, rect bounds, float size, color c)
+   void draw_slider_marks(
+      canvas& cnv, rect bounds, float size, std::size_t num_divs
+    , std::size_t major_divs, color c)
    {
-      constexpr auto num_divs = 50;
       auto w = bounds.width();
       auto h = bounds.height();
       bool vertical = w < h;
       float pos = vertical? bounds.top : bounds.left;
-      float incr = (vertical? h : w) / 50;
+      float incr = (vertical? h : w) / num_divs;
       auto state = cnv.new_state();
       auto const& theme = get_theme();
 
@@ -222,7 +223,7 @@ namespace cycfi { namespace photon
       for (int i = 0; i != num_divs+1; ++i)
       {
          float inset = 0;
-         if (i % (num_divs / 10))
+         if (i % (num_divs / major_divs))
          {
             // Minor ticks
             inset = size / 6;

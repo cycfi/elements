@@ -56,7 +56,7 @@ namespace cycfi { namespace photon
       if (new_state != _state)
       {
          _state = new_state;
-         subject().value(_state? 3 : 1);
+         subject().value((_state? 2 : 0));
          return true;
       }
       return false;

@@ -13,7 +13,7 @@ namespace cycfi { namespace photon
    element* basic_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(btn.pos))
-         return 0;
+         return nullptr;
       if (!btn.down && on_click)
          on_click(true);
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
@@ -23,15 +23,9 @@ namespace cycfi { namespace photon
 
    bool basic_button::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (ctx.bounds.includes(p) || status == cursor_tracking::leaving)
-      {
-         if (!ctx.view.current_button().down)
-         {
-            int hilite = status != cursor_tracking::leaving;
-            subject().value((_state? 2 : 0) + hilite);
-         }
-         ctx.view.refresh(ctx);
-      }
+      _hilite = status != cursor_tracking::leaving;
+      subject().value((_state? 2 : 0) + _hilite);
+      ctx.view.refresh(ctx);
       return false;
    }
 
@@ -56,7 +50,7 @@ namespace cycfi { namespace photon
       if (new_state != _state)
       {
          _state = new_state;
-         subject().value((_state? 2 : 0));
+         subject().value((_state? 2 : 0) + _hilite);
          return true;
       }
       return false;

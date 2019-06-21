@@ -24,6 +24,11 @@ namespace cycfi { namespace photon
       using button_function = std::function<void(bool)>;
       using proxy_base::value;
 
+                        basic_button()
+                         : _state(false)
+                         , _hilite(0)
+                        {}
+
       virtual element*  click(context const& ctx, mouse_button btn);
       virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
       virtual void      drag(context const& ctx, mouse_button btn);
@@ -41,7 +46,8 @@ namespace cycfi { namespace photon
 
    private:
 
-      bool              _state = false;
+      bool              _state : 1;
+      bool              _hilite : 1;
    };
 
    ////////////////////////////////////////////////////////////////////////////

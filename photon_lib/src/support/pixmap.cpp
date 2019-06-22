@@ -34,7 +34,8 @@ namespace cycfi { namespace photon
          throw failed_to_load_pixmap{ "Unknown file type." };
 
       std::string full_path = find_file(filename);
-      CYCFI_ASSERT(full_path != "", "File does not exist.");
+      if (full_path == "")
+         throw failed_to_load_pixmap{ "File does not exist." };
 
       auto  ext = path.substr(pos);
       if (ext == ".png" || ext == ".PNG")

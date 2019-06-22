@@ -81,7 +81,8 @@ namespace cycfi { namespace photon { namespace icons
       doc                           = 0xe844,
       docs                          = 0xe845,
       lock_open                     = 0xe846,
-      lock                          = 0xe847
+      lock                          = 0xe847,
+      floppy                        = 0xe848
    };
 }}}
 

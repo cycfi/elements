@@ -33,24 +33,7 @@ namespace cycfi { namespace photon
       if (pos == std::string::npos)
          throw failed_to_load_pixmap{ "Unknown file type." };
 
-      std::string full_path;
-      if (boost::filesystem::path(filename).is_absolute())
-      {
-         full_path = filename;
-         CYCFI_ASSERT(boost::filesystem::exists(full_path), "File does not exist.");
-      }
-      else
-      {
-         for (auto const& path : resource_paths)
-         {
-            if (boost::filesystem::exists(path + '/' + filename))
-            {
-               full_path = path + '/' + filename;
-               break;
-            }
-         }
-      }
-
+      std::string full_path = find_file(filename);
       CYCFI_ASSERT(full_path != "", "File does not exist.");
 
       auto  ext = path.substr(pos);

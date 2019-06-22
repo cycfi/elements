@@ -7,7 +7,7 @@
 #define CYCFI_PHOTON_GUI_LIB_RESOURCE_PATHS_JUNE_22_2019
 
 #include <set>
-#include <string>
+#include <string_view>
 
 namespace cycfi { namespace photon
 {
@@ -18,6 +18,10 @@ namespace cycfi { namespace photon
    // Applications may add additional paths as needed.
 
    extern std::vector<std::string> resource_paths;
+
+   // Search for a file using the resource_paths. Returns an empty
+   // string if file is not found.
+   std::string find_file(std::string_view file);
 }}
 
 #endif

@@ -19,11 +19,6 @@
 namespace ph = cycfi::photon;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
-namespace cycfi { namespace photon
-{
-   std::vector<std::string> resource_paths;
-}}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
 namespace

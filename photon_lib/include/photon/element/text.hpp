@@ -124,12 +124,12 @@ namespace cycfi { namespace photon
       float                   _current_x;
       state_saver_f           _typing_state;
       bool                    _is_focus;
-      bool                    _show_caret = true;
-
-      void                    blink_caret(rect caret_bounds, view& _view);
 
       using timer = boost::asio::steady_timer;
-      std::unique_ptr<timer>  _caret_timer;
+      using timer_ptr = std::shared_ptr<boost::asio::steady_timer>;
+
+      bool                    _show_caret = true;
+      bool                    _caret_wait = false;
    };
 
    ////////////////////////////////////////////////////////////////////////////

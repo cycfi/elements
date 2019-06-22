@@ -104,17 +104,10 @@ namespace cycfi { namespace photon
     , _select_end(-1)
     , _current_x(0)
     , _is_focus(false)
-    , _caret_timer(nullptr)
    {}
 
    basic_text_box::~basic_text_box()
-   {
-      if (_caret_timer)
-      {
-         _caret_timer->cancel();
-         _caret_timer = nullptr;
-      }
-   }
+   {}
 
    void basic_text_box::draw(context const& ctx)
    {
@@ -486,27 +479,9 @@ namespace cycfi { namespace photon
       return true;
    }
 
-   void basic_text_box::blink_caret(rect caret_bounds, view& _view)
-   {
-      _show_caret = !_show_caret;
-      _view.refresh(caret_bounds);
-
-      if (_caret_timer)
-      {
-         _caret_timer->expires_from_now(500ms);
-         _caret_timer->async_wait(
-            [this, &_view, caret_bounds](auto const& err)
-            {
-               if (!err)
-                  blink_caret(caret_bounds, _view);
-            }
-         );
-      }
-   }
-
    void basic_text_box::draw_caret(context const& ctx)
    {
-      if (!_show_caret || _select_start == -1)
+      if (_select_start == -1)
          return;
 
       auto& canvas = ctx.canvas;
@@ -523,11 +498,14 @@ namespace cycfi { namespace photon
          auto  left = ctx.bounds.left;
          auto  top = ctx.bounds.top;
 
-         canvas.line_width(width);
-         canvas.stroke_style(theme.text_box_caret_color);
-         canvas.move_to({ left + (width/2), top });
-         canvas.line_to({ left + (width/2), top + line_height });
-         canvas.stroke();
+         if (_show_caret)
+         {
+            canvas.line_width(width);
+            canvas.stroke_style(theme.text_box_caret_color);
+            canvas.move_to({ left + (width/2), top });
+            canvas.line_to({ left + (width/2), top + line_height });
+            canvas.stroke();
+         }
 
          has_caret = true;
          caret_bounds = rect{ left, top, left+width, top + line_height };
@@ -539,33 +517,35 @@ namespace cycfi { namespace photon
          auto width = theme.text_box_caret_width;
          rect& caret = start_info.bounds;
 
-         canvas.line_width(width);
-         canvas.stroke_style(theme.text_box_caret_color);
-         canvas.move_to({ caret.left + (width/2), caret.top });
-         canvas.line_to({ caret.left + (width/2), caret.bottom });
-         canvas.stroke();
+         if (_show_caret)
+         {
+            canvas.line_width(width);
+            canvas.stroke_style(theme.text_box_caret_color);
+            canvas.move_to({ caret.left + (width/2), caret.top });
+            canvas.line_to({ caret.left + (width/2), caret.bottom });
+            canvas.stroke();
+         }
 
          has_caret = true;
          caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
       }
 
-      if (_is_focus && has_caret)
+      if (_is_focus && has_caret && !_caret_wait)
       {
-         if (!_caret_timer)
-            _caret_timer = std::make_unique<timer>(ctx.view.io());
-         _caret_timer->expires_from_now(500ms);
-         _caret_timer->async_wait(
-            [this, &_view = ctx.view, caret_bounds](auto const& err)
+         _caret_wait = true;
+         auto _timer = std::make_shared<timer>(ctx.view.io());
+         _timer->expires_from_now(500ms);
+         _timer->async_wait(
+            [_timer, this, &_view = ctx.view, caret_bounds](auto const& err)
             {
                if (!err)
-                  blink_caret(caret_bounds, _view);
+               {
+                  _show_caret = !_show_caret;
+                  _view.refresh(caret_bounds);
+                  _caret_wait = false;
+               }
             }
          );
-      }
-      else if (_caret_timer)
-      {
-         _caret_timer->cancel();
-         _caret_timer = nullptr;
       }
    }
 

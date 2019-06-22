@@ -101,7 +101,7 @@ auto make_controls()
          vmin_size(350,
             htile(
                margin({ 20, 20, 20, 20 }, pane("Sliders", make_vsliders(), 0.8f)),
-               hspan(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
+               hstretch(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
             )
          )
       );

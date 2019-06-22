@@ -62,11 +62,11 @@ auto make_vtile2()
       { 10, 50, 10, 10 },
       hmin_size(150,
          vtile(
-            vspan(1.0, _box),
-            vspan(0.5, _box),
-            vspan(0.5, _box),
-            vspan(0.5, _box),
-            vspan(2.0, _box)
+            vstretch(1.0, _box),
+            vstretch(0.5, _box),
+            vstretch(0.5, _box),
+            vstretch(0.5, _box),
+            vstretch(2.0, _box)
          )
       )
    );
@@ -84,9 +84,9 @@ auto make_vtile3()
       hmin_size(150,
          vtile(
             vsize(40.0, _box),
-            vspan(2.0, _box),
-            vspan(1.0, _box),
-            vspan(0.5, vmin_size(20, _box)),
+            vstretch(2.0, _box),
+            vstretch(1.0, _box),
+            vstretch(0.5, vmin_size(20, _box)),
             vsize(40.0, _box)
          )
       )
@@ -132,11 +132,11 @@ auto make_htile2()
    return margin(
       { 0, 50, 10, 10 },
       htile(
-         hspan(1.0, _box),
-         hspan(0.5, _box),
-         hspan(0.5, _box),
-         hspan(0.5, _box),
-         hspan(2.0, _box)
+         hstretch(1.0, _box),
+         hstretch(0.5, _box),
+         hstretch(0.5, _box),
+         hstretch(0.5, _box),
+         hstretch(2.0, _box)
       )
    );
 }
@@ -152,9 +152,9 @@ auto make_htile3()
       { 0, 50, 10, 10 },
       htile(
          hsize(40.0, _box),
-         hspan(2.0, _box),
-         hspan(1.0, _box),
-         hspan(0.5, hmin_size(20, _box)),
+         hstretch(2.0, _box),
+         hstretch(1.0, _box),
+         hstretch(0.5, hmin_size(20, _box)),
          hsize(40.0, _box)
       )
    );
@@ -164,7 +164,7 @@ auto make_htile_main()
 {
    return htile(
       margin({ 10, 10, 10, 10 }, group("Aligns", make_htile(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Spans", make_htile2(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("Stretch", make_htile2(), 0.9, false)),
       margin({ 10, 10, 10, 10 }, group("Mixed", make_htile3(), 0.9, false))
    );
 }
@@ -198,8 +198,8 @@ int main(int argc, const char* argv[])
    auto vmenu = menu_item("Vertical");
 
    auto content = deck(
-      make_vtile_main(),   // vertical tiles aligns and spans
-      make_htile_main()    // horizontal tiles aligns and spans
+      make_vtile_main(),   // vertical tiles aligns and stretch
+      make_htile_main()    // horizontal tiles aligns and stretch
    );
 
    view view_(_win);

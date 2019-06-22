@@ -17,7 +17,7 @@ namespace cycfi { namespace photon
       return full_limits;
    }
 
-   view_span element::span() const
+   view_stretch element::stretch() const
    {
       return { 1.0f, 1.0f };
    }

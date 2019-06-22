@@ -104,6 +104,8 @@ namespace cycfi { namespace photon
     , _select_end(-1)
     , _current_x(0)
     , _is_focus(false)
+    , _show_caret(true)
+    , _caret_started(false)
    {}
 
    basic_text_box::~basic_text_box()

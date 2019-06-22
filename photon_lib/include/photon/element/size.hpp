@@ -355,77 +355,77 @@ namespace cycfi { namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Span sizing elements
+   // Stretch elements
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class hspan_element : public proxy<Subject>
+   class hstretch_element : public proxy<Subject>
    {
    public:
 
       using base_type = proxy<Subject>;
 
-                              hspan_element(float span, Subject&& subject);
+                              hstretch_element(float stretch, Subject&& subject);
 
-      virtual view_span       span() const;
+      virtual view_stretch    stretch() const;
 
    private:
 
-      float                   _span;
+      float                   _stretch;
    };
 
    template <typename Subject>
-   inline hspan_element<Subject>::hspan_element(float span, Subject&& subject)
+   inline hstretch_element<Subject>::hstretch_element(float stretch, Subject&& subject)
     : base_type(std::forward<Subject>(subject))
-    , _span(span)
+    , _stretch(stretch)
    {}
 
    template <typename Subject>
-   inline view_span hspan_element<Subject>::span() const
+   inline view_stretch hstretch_element<Subject>::stretch() const
    {
-      return { _span, this->subject().span().y };
+      return { _stretch, this->subject().stretch().y };
    }
 
    template <typename Subject>
-   inline hspan_element<Subject>
-   hspan(float span, Subject&& subject)
+   inline hstretch_element<Subject>
+   hstretch(float stretch, Subject&& subject)
    {
-      return { span, std::forward<Subject>(subject) };
+      return { stretch, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   class vspan_element : public proxy<Subject>
+   class vstretch_element : public proxy<Subject>
    {
    public:
 
       using base_type = proxy<Subject>;
 
-                              vspan_element(float span, Subject&& subject);
+                              vstretch_element(float stretch, Subject&& subject);
 
-      virtual view_span       span() const;
+      virtual view_stretch    stretch() const;
 
    private:
 
-      float                   _span;
+      float                   _stretch;
    };
 
    template <typename Subject>
-   inline vspan_element<Subject>::vspan_element(float span, Subject&& subject)
+   inline vstretch_element<Subject>::vstretch_element(float stretch, Subject&& subject)
     : base_type(std::forward<Subject>(subject))
-    , _span(span)
+    , _stretch(stretch)
    {}
 
    template <typename Subject>
-   inline view_span vspan_element<Subject>::span() const
+   inline view_stretch vstretch_element<Subject>::stretch() const
    {
-      return { this->subject().span().x, _span };
+      return { this->subject().stretch().x, _stretch };
    }
 
    template <typename Subject>
-   inline vspan_element<Subject>
-   vspan(float span, Subject&& subject)
+   inline vstretch_element<Subject>
+   vstretch(float stretch, Subject&& subject)
    {
-      return { span, std::forward<Subject>(subject) };
+      return { stretch, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////

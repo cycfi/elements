@@ -17,9 +17,9 @@ namespace cycfi { namespace photon
       return subject().limits(ctx);
    }
 
-   view_span proxy_base::span() const
+   view_stretch proxy_base::stretch() const
    {
-      return subject().span();
+      return subject().stretch();
    }
 
    element* proxy_base::hit_test(context const& ctx, point p)

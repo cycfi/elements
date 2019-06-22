@@ -24,7 +24,7 @@ namespace cycfi { namespace photon
    // Image
 
       virtual view_limits     limits(basic_context const& ctx) const;
-      virtual view_span       span() const;
+      virtual view_stretch    stretch() const;
       virtual element*        hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);

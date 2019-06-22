@@ -12,7 +12,7 @@ namespace cycfi { namespace photon
    {
       struct layout_info
       {
-         float min, max, span, alloc;
+         float min, max, stretch, alloc;
       };
    }
 
@@ -41,29 +41,29 @@ namespace cycfi { namespace photon
    {
       // Compute the best fit for all elements
       void allocate(
-         double size, double max_span, double total
+         double size, double max_stretch, double total
        , std::vector<layout_info>& info)
       {
          double extra = size - total;
          while (extra > 0.5)                    // loop while there's room to grow
          {
-            double remove_span = 0.0;
+            double remove_stretch = 0.0;
             total = 0.0;
             for (auto& info : info)
             {
                if (info.alloc < info.max)       // This element can grow
                {
-                  info.alloc += extra * info.span / max_span;
+                  info.alloc += extra * info.stretch / max_stretch;
                   if (info.alloc >= info.max)   // We exceeded its max
                   {
                      info.alloc = info.max;
-                     remove_span -= info.span;
+                     remove_stretch -= info.stretch;
                   }
                }
                total += info.alloc;
             }
             extra = size - total;
-            max_span -= remove_span;
+            max_stretch -= remove_stretch;
          }
       }
    }
@@ -76,25 +76,25 @@ namespace cycfi { namespace photon
 
       double const height = ctx.bounds.height();
 
-      // Collect min, max, and span information from each element. Also,
-      // accumulate the maximum span (max_span) for later. Initially set the
+      // Collect min, max, and stretch information from each element. Also,
+      // accumulate the maximum stretch (max_stretch) for later. Initially set the
       // allocation sizes of each element to its minimum.
-      double max_span = 0.0;
+      double max_stretch = 0.0;
       float total = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
-         info[i].span = elem.span().y;
+         info[i].stretch = elem.stretch().y;
          total += (info[i].alloc = info[i].min = limits.min.y);
          info[i].max = limits.max.y;
          if (info[i].alloc < info[i].max) // Can grow?
-            max_span += info[i].span;
+            max_stretch += info[i].stretch;
       }
 
       // Compute the best fit for all elements
-      allocate(height, max_span, total, info);
+      allocate(height, max_stretch, total, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.
@@ -148,25 +148,25 @@ namespace cycfi { namespace photon
 
       double const width = ctx.bounds.width();
 
-      // Collect min, max, and span information from each element. Also,
-      // accumulate the maximum span (max_span) for later. Initially set the
-      // allocation sizes of each element to its minimum.
-      double max_span = 0.0;
+      // Collect min, max, and stretch information from each element. Also,
+      // accumulate the maximum stretch (max_stretch) for later. Initially
+      // set the allocation sizes of each element to its minimum.
+      double max_stretch = 0.0;
       double total = 0.0;
       std::vector<layout_info> info(size());
       for (std::size_t i = 0; i != size(); ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
-         info[i].span = elem.span().x;
+         info[i].stretch = elem.stretch().x;
          total += (info[i].alloc = info[i].min = limits.min.x);
          info[i].max = limits.max.x;
-         if (info[i].alloc < info[i].max) // Can grow?
-            max_span += info[i].span;
+         if (info[i].alloc < info[i].max) // Can stretch?
+            max_stretch += info[i].stretch;
       }
 
       // Compute the best fit for all elements
-      allocate(width, max_span, total, info);
+      allocate(width, max_stretch, total, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.

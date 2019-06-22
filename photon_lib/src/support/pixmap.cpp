@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <photon/support/pixmap.hpp>
+#include <photon/support/resource_paths.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PNG 1
 #include <photon/support/detail/stb_image.h>
@@ -32,19 +33,37 @@ namespace cycfi { namespace photon
       if (pos == std::string::npos)
          throw failed_to_load_pixmap{ "Unknown file type." };
 
-      CYCFI_ASSERT(boost::filesystem::exists(filename), "File does not exist.");
+      std::string full_path;
+      if (boost::filesystem::path(filename).is_absolute())
+      {
+         full_path = filename;
+         CYCFI_ASSERT(boost::filesystem::exists(full_path), "File does not exist.");
+      }
+      else
+      {
+         for (auto const& path : resource_paths)
+         {
+            if (boost::filesystem::exists(path + '/' + filename))
+            {
+               full_path = path + '/' + filename;
+               break;
+            }
+         }
+      }
+
+      CYCFI_ASSERT(full_path != "", "File does not exist.");
 
       auto  ext = path.substr(pos);
       if (ext == ".png" || ext == ".PNG")
       {
          // For PNGs, use Cairo's native PNG loader
-         _surface = cairo_image_surface_create_from_png(filename);
+         _surface = cairo_image_surface_create_from_png(full_path.c_str());
       }
       else
       {
          // For everything else, use stb_image
          int w, h, components;
-         uint8_t* src_data = stbi_load(filename, &w, &h, &components, 4);
+         uint8_t* src_data = stbi_load(full_path.c_str(), &w, &h, &components, 4);
 
          if (src_data)
          {

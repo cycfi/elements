@@ -4,6 +4,7 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <photon/base_view.hpp>
+#include <photon/support/resource_paths.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -17,6 +18,11 @@
 
 namespace ph = cycfi::photon;
 using key_map = std::map<ph::key_code, ph::key_action>;
+
+namespace cycfi { namespace photon
+{
+   std::vector<std::string> resource_paths;
+}}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -65,7 +71,7 @@ namespace
          char resource_path[PATH_MAX];
          CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
          CFRelease(resources_url);
-         chdir(resource_path);
+         cycfi::photon::resource_paths.push_back(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load

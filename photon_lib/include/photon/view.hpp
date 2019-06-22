@@ -80,7 +80,7 @@ namespace cycfi { namespace photon
 
       layer_composite      _content;
 
-      void                 set_limits();
+      bool                 set_limits();
 
       rect                 _dirty;
       rect                 _current_bounds;

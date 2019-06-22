@@ -29,10 +29,10 @@
       _io.stop();
    }
 
-   void view::set_limits()
+   bool view::set_limits()
    {
       if (_content.empty())
-         return;
+         return false;
 
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
@@ -44,6 +44,7 @@
       auto limits_ = _content.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
+         resized = true;
          _current_limits = limits_;
          if (on_change_limits)
             on_change_limits(limits_);
@@ -51,6 +52,7 @@
 
       cairo_surface_destroy(surface_);
       cairo_destroy(context_);
+      return resized;
    }
 
    void view::draw(cairo_t* context_, rect dirty_)
@@ -61,7 +63,11 @@
       _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
-      set_limits();
+      if (set_limits())
+      {
+         refresh();
+         return;
+      }
 
       canvas cnv{ *context_ };
       auto size_ = size();

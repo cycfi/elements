@@ -129,7 +129,7 @@ namespace cycfi { namespace photon
       using timer_ptr = std::shared_ptr<boost::asio::steady_timer>;
 
       bool                    _show_caret = true;
-      bool                    _caret_wait = false;
+      bool                    _caret_started = false;
    };
 
    ////////////////////////////////////////////////////////////////////////////

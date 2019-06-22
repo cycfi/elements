@@ -73,6 +73,9 @@ namespace cycfi { namespace photon
       using io_context = boost::asio::io_context;
       io_context&          io();
 
+                           template <typename T, typename F>
+      void                 defer(T duration, F f);
+
    private:
 
       layer_composite      _content;
@@ -133,6 +136,20 @@ namespace cycfi { namespace photon
    inline mouse_button view::current_button() const
    {
       return _current_button;
+   }
+
+   template <typename T, typename F>
+   inline void view::defer(T duration, F f)
+   {
+      auto timer = std::make_shared<boost::asio::steady_timer>(_io);
+      timer->expires_from_now(duration);
+      timer->async_wait(
+         [timer, f](auto const& err)
+         {
+            if (!err)
+               f();
+         }
+      );
    }
 }}
 

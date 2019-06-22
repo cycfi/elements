@@ -530,20 +530,15 @@ namespace cycfi { namespace photon
          caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
       }
 
-      if (_is_focus && has_caret && !_caret_wait)
+      if (_is_focus && has_caret && !_caret_started)
       {
-         _caret_wait = true;
-         auto _timer = std::make_shared<timer>(ctx.view.io());
-         _timer->expires_from_now(500ms);
-         _timer->async_wait(
-            [_timer, this, &_view = ctx.view, caret_bounds](auto const& err)
+         _caret_started = true;
+         ctx.view.defer(500ms,
+            [this, &_view = ctx.view, caret_bounds]()
             {
-               if (!err)
-               {
-                  _show_caret = !_show_caret;
-                  _view.refresh(caret_bounds);
-                  _caret_wait = false;
-               }
+               _show_caret = !_show_caret;
+               _view.refresh(caret_bounds);
+               _caret_started = false;
             }
          );
       }

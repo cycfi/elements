@@ -147,7 +147,11 @@
          return;
 
       call(
-         [btn](auto const& ctx, auto& _content) { _content.click(ctx, btn); },
+         [btn, this](auto const& ctx, auto& _content)
+         {
+            _content.click(ctx, btn);
+            _is_focus = _content.focus();
+         },
          *this, _current_bounds
       );
    }
@@ -251,7 +255,7 @@
 
    void view::focus(focus_request r)
    {
-      if (_content.empty())
+      if (_content.empty() || !_is_focus)
          return;
 
       _content.focus(r);

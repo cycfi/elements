@@ -270,7 +270,8 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
 
 #if defined(__APPLE__)
-   using host_view = void*;
+   struct _host_view;
+   using host_view = _host_view*;
 #elif defined(_WIN32)
    using host_view = HWND;
 #elif defined(__linux__)
@@ -278,7 +279,8 @@ namespace cycfi { namespace photon
 #endif
 
 #if defined(__APPLE__)
-   using host_window = void*;
+   struct _host_window;
+   using host_window = _host_window*;
 #elif defined(_WIN32)
    using host_window = HWND;
 #elif defined(__linux__)
@@ -288,6 +290,7 @@ namespace cycfi { namespace photon
    class base_view : non_copyable
    {
    public:
+                     base_view(host_view h);
                      base_view(host_window h);
       virtual        ~base_view();
 

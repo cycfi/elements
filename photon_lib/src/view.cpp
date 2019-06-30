@@ -9,7 +9,7 @@
 
  namespace cycfi { namespace photon
  {
-   view::view(host_window h)
+   view::view(host_view h)
     : base_view(h)
     , _work(_io)
    {}

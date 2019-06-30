@@ -510,29 +510,27 @@ namespace cycfi { namespace photon
 
    base_view::base_view(host_window h)
    {
+      PhotonView* content = [[PhotonView alloc] init];
+      _view = (__bridge host_view) content;
+      content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+      [content photon_init : this];
+
+      NSWindow* window_ = (__bridge NSWindow*) h;
+      bool b = [window_ isKindOfClass:[NSWindow class]];
+      [window_ setContentView : content];
+      [get_mac_view(host()) attach_notifications];
+   }
+
+   base_view::base_view(host_view h)
+   {
       NSView* parent_view = (__bridge NSView*) h;
-      if ([parent_view isKindOfClass:[NSView class]])
-      {
-         auto parent_frame = [parent_view frame];
-         auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
-         PhotonView* content = [[PhotonView alloc] initWithFrame:frame];
+      auto parent_frame = [parent_view frame];
+      auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
+      PhotonView* content = [[PhotonView alloc] initWithFrame : frame];
 
-         _view = (__bridge void*) content;
-         [content photon_init : this];
-         [parent_view addSubview : content];
-      }
-      else
-      {
-         PhotonView* content = [[PhotonView alloc] init];
-         _view = (__bridge void*) content;
-         content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-         [content photon_init : this];
-
-         NSWindow* window_ = (__bridge NSWindow*) h;
-         bool b = [window_ isKindOfClass:[NSWindow class]];
-         [window_ setContentView : content];
-      }
-
+      _view = (__bridge host_view) content;
+      [content photon_init : this];
+      [parent_view addSubview : content];
       [get_mac_view(host()) attach_notifications];
    }
 

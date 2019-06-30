@@ -26,7 +26,7 @@ namespace cycfi { namespace photon
    class view : public base_view
    {
    public:
-                           view(host_window h);
+                           view(host_view h);
                            view(window& win);
                            ~view();
 

@@ -17,7 +17,7 @@ namespace cycfi { namespace photon
    {
    public:
                               floating_element(rect bounds)
-                              : _bounds(bounds)
+                               : _bounds(bounds)
                               {}
 
       virtual view_limits     limits(basic_context const& ctx) const;

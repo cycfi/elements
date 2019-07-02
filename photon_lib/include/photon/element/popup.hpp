@@ -20,8 +20,8 @@ namespace cycfi { namespace photon
 
       using click_function = std::function<void(context const& ctx, mouse_button btn)>;
 
-                              basic_popup_element()
-                               : floating_element({})
+                              basic_popup_element(rect bounds = {})
+                               : floating_element(bounds)
                               {}
 
       virtual element*        hit_test(context const& ctx, point p);
@@ -38,9 +38,9 @@ namespace cycfi { namespace photon
 
    template <typename Subject>
    inline proxy<Subject, basic_popup_element>
-   basic_popup(Subject&& subject)
+   basic_popup(Subject&& subject, rect bounds = {})
    {
-      return { std::forward<Subject>(subject) };
+      return { std::forward<Subject>(subject), bounds };
    }
 }}
 

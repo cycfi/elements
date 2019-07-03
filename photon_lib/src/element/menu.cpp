@@ -30,12 +30,12 @@ namespace cycfi { namespace photon
          {
             auto on_click = [this](context const& ctx, mouse_button btn)
             {
-               _popup->close(ctx);
+               _popup->close(ctx.view);
                this->value(0);
                ctx.view.refresh();
             };
 
-            _popup->open(ctx, on_click);
+            _popup->open(ctx.view, on_click);
             ctx.view.refresh();
          }
       }
@@ -62,7 +62,7 @@ namespace cycfi { namespace photon
    {
       if (k.key == key_code::escape)
       {
-         _popup->close(ctx);
+         _popup->close(ctx.view);
          state(false);
          ctx.view.refresh();
          return true;

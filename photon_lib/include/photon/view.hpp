@@ -64,6 +64,9 @@ namespace cycfi { namespace photon
       content_type&        content();
       content_type const&  content() const;
       void                 content(layers_type&& layers);
+      void                 add(element_ptr e);
+      void                 remove(element_ptr e);
+
       view_limits          limits() const;
       mouse_button         current_button() const;
 
@@ -82,6 +85,7 @@ namespace cycfi { namespace photon
 
       bool                 set_limits();
 
+      bool                 _relayout = false;
       rect                 _dirty;
       rect                 _current_bounds;
       view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
@@ -122,6 +126,24 @@ namespace cycfi { namespace photon
    inline view::content_type const& view::content() const
    {
       return _content;
+   }
+
+   inline void view::add(element_ptr e)
+   {
+      _content.push_back(e);
+      _relayout = true;
+      refresh(*e);
+   }
+
+   inline void view::remove(element_ptr e)
+   {
+      auto i = std::find(_content.begin(), _content.end(), e);
+      if (i != _content.end())
+      {
+         _content.erase(i);
+         refresh(*e);
+         _relayout = true;
+      }
    }
 
    inline view_limits view::limits() const

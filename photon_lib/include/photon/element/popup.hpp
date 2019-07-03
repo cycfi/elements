@@ -28,8 +28,8 @@ namespace cycfi { namespace photon
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
-      void                    open(context const& ctx, click_function on_click = {});
-      void                    close(context const& ctx);
+      void                    open(view& view_, click_function on_click = {});
+      void                    close(view& view_);
 
    private:
 

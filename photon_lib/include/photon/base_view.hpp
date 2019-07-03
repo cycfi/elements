@@ -290,31 +290,31 @@ namespace cycfi { namespace photon
    class base_view : non_copyable
    {
    public:
-                     base_view(host_view h);
-                     base_view(host_window h);
-      virtual        ~base_view();
+                        base_view(host_view h);
+                        base_view(host_window h);
+      virtual           ~base_view();
 
-      virtual void   draw(cairo_t* ctx, rect area) {};
-      virtual void   click(mouse_button btn) {}
-      virtual void   drag(mouse_button btn) {}
-      virtual void   cursor(point p, cursor_tracking status) {}
-      virtual void   scroll(point dir, point p) {}
-      virtual void   key(key_info const& k) {}
-      virtual void   text(text_info const& info) {}
-      virtual void   focus(focus_request r) {}
-      virtual void   poll() {}
+      virtual void      draw(cairo_t* ctx, rect area) {};
+      virtual void      click(mouse_button btn) {}
+      virtual void      drag(mouse_button btn) {}
+      virtual void      cursor(point p, cursor_tracking status) {}
+      virtual void      scroll(point dir, point p) {}
+      virtual void      key(key_info const& k) {}
+      virtual void      text(text_info const& info) {}
+      virtual void      focus(focus_request r) {}
+      virtual void      poll() {}
 
-      virtual void   refresh();
-      virtual void   refresh(rect area);
+      virtual void      refresh();
+      virtual void      refresh(rect area);
 
-      point          cursor_pos() const;
-      point          size() const;
-      void           size(point p);
-      host_view      host() const { return _view; }
+      point             cursor_pos() const;
+      photon::size      size() const;
+      void              size(photon::size p);
+      host_view         host() const { return _view; }
 
    private:
 
-      host_view      _view;
+      host_view         _view;
    };
 
    ////////////////////////////////////////////////////////////////////////////

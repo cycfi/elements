@@ -75,8 +75,9 @@
       context ctx{ *this, cnv, &_content, subj_bounds };
 
       // layout the subject only if the window bounds changes
-      if (subj_bounds != _current_bounds)
+      if (_relayout || subj_bounds != _current_bounds)
       {
+         _relayout = false;
          _current_bounds = subj_bounds;
          _content.layout(ctx);
       }

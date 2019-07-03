@@ -89,6 +89,9 @@ namespace cycfi { namespace photon
       [window_ makeKeyAndOrderFront : nil];
       [window_ set_photon_window : this];
 
+      // Make the window background transparent
+      [window_ setBackgroundColor: [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0]];
+
       auto title = [window_ title];
       if ([title length] != 0)
       {

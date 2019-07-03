@@ -552,13 +552,13 @@ namespace cycfi { namespace photon
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
-   point base_view::size() const
+   photon::size base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(point p)
+   void base_view::size(photon::size p)
    {
       [get_mac_view(host()) setFrameSize : NSSize{ p.x, p.y }];
    }

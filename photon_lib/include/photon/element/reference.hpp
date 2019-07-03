@@ -12,23 +12,15 @@
 
 namespace cycfi { namespace photon
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Element Reference
-   //
-   // A element reference holds another element using std::reference_wrapper.
-   // Element references may be copied and all copies will refer to the same
-   // element being referenced. It is the responsibility of the client to
-   // manage the lifetime of the referenced element and make sure it is valid
-   // (alive) when a reference member function is called.
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Element>
-   class reference : public element
+   template <typename Base>
+   class indirect : public Base
    {
    public:
 
-      explicit                reference(Element& e);
-                              reference(reference&& rhs) = default;
-      reference&              operator=(reference&& rhs) = default;
+      using Base::Base;
+
+                              indirect(indirect&& rhs) = default;
+      indirect&               operator=(indirect&& rhs) = default;
 
    // Image
 
@@ -60,6 +52,25 @@ namespace cycfi { namespace photon
       virtual void            value(int val);
       virtual void            value(double val);
       virtual void            value(std::string val);
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Element Reference
+   //
+   // A element reference holds another element using std::reference_wrapper.
+   // Element references may be copied and all copies will refer to the same
+   // element being referenced. It is the responsibility of the client to
+   // manage the lifetime of the referenced element and make sure it is valid
+   // (alive) when a reference member function is called.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Element>
+   class reference : public element
+   {
+   public:
+
+      explicit                reference(Element& e);
+                              reference(reference&& rhs) = default;
+      reference&              operator=(reference&& rhs) = default;
 
       Element&                get();
       Element const&          get() const;
@@ -71,18 +82,18 @@ namespace cycfi { namespace photon
    };
 
    template <typename Element>
-   reference<typename std::remove_reference<Element>::type>
+   indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element& rhs);
 
    template <typename Element>
-   reference<Element>
+   indirect<reference<Element>>
    link(std::shared_ptr<Element> rhs);
 
    ////////////////////////////////////////////////////////////////////////////
-   // Just like referencem but shared_reference retains the shared pointer.
+   // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class shared_reference : public reference<Element>
+   class shared_reference : public element
    {
    public:
 
@@ -90,14 +101,149 @@ namespace cycfi { namespace photon
                               shared_reference(shared_reference&& rhs) = default;
       shared_reference&       operator=(shared_reference&& rhs) = default;
 
+      Element&                get();
+      Element const&          get() const;
+
    private:
 
       std::shared_ptr<Element> _ptr;
    };
 
    template <typename Element>
-   shared_reference<Element>
+   indirect<shared_reference<Element>>
    shared_link(std::shared_ptr<Element> rhs);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // indirect (inline) implementation
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base>
+   inline view_limits
+   indirect<Base>::limits(basic_context const& ctx) const
+   {
+      return this->get().limits(ctx);
+   }
+
+   template <typename Base>
+   inline element*
+   indirect<Base>::hit_test(context const& ctx, point p)
+   {
+      return this->get().hit_test(ctx, p);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::draw(context const& ctx)
+   {
+      this->get().draw(ctx);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::layout(context const& ctx)
+   {
+      this->get().layout(ctx);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::scroll(context const& ctx, point dir, point p)
+   {
+      return this->get().scroll(ctx, dir, p);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::refresh(context const& ctx, element& element)
+   {
+      this->get().refresh(ctx, element);
+   }
+
+   template <typename Base>
+   inline element*
+   indirect<Base>::click(context const& ctx, mouse_button btn)
+   {
+      return this->get().click(ctx, btn);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::drag(context const& ctx, mouse_button btn)
+   {
+      return this->get().drag(ctx, btn);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::key(context const& ctx, key_info k)
+   {
+      return this->get().key(ctx, k);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::text(context const& ctx, text_info info)
+   {
+      return this->get().text(ctx, info);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      return this->get().cursor(ctx, p, status);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::focus(focus_request r)
+   {
+      return this->get().focus(r);
+   }
+
+   template <typename Base>
+   inline element const*
+   indirect<Base>::focus() const
+   {
+      return this->get().focus();
+   }
+
+   template <typename Base>
+   inline element*
+   indirect<Base>::focus()
+   {
+      return this->get().focus();
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::is_control() const
+   {
+      return this->get().is_control();
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::value(bool val)
+   {
+      this->get().value(val);
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::value(int val)
+   {
+      this->get().value(val);
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::value(double val)
+   {
+      this->get().value(val);
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::value(std::string val)
+   {
+      this->get().value(val);
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
@@ -106,135 +252,6 @@ namespace cycfi { namespace photon
    inline reference<Element>::reference(Element& e)
     : ref(e)
    {}
-
-   template <typename Element>
-   inline view_limits
-   reference<Element>::limits(basic_context const& ctx) const
-   {
-      return ref.get().limits(ctx);
-   }
-
-   template <typename Element>
-   inline element*
-   reference<Element>::hit_test(context const& ctx, point p)
-   {
-      return ref.get().hit_test(ctx, p);
-   }
-
-   template <typename Element>
-   inline void
-   reference<Element>::draw(context const& ctx)
-   {
-      ref.get().draw(ctx);
-   }
-
-   template <typename Element>
-   inline void
-   reference<Element>::layout(context const& ctx)
-   {
-      ref.get().layout(ctx);
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::scroll(context const& ctx, point dir, point p)
-   {
-      return ref.get().scroll(ctx, dir, p);
-   }
-
-   template <typename Element>
-   inline void
-   reference<Element>::refresh(context const& ctx, element& element)
-   {
-      ref.get().refresh(ctx, element);
-   }
-
-   template <typename Element>
-   inline element*
-   reference<Element>::click(context const& ctx, mouse_button btn)
-   {
-      return ref.get().click(ctx, btn);
-   }
-
-   template <typename Element>
-   inline void
-   reference<Element>::drag(context const& ctx, mouse_button btn)
-   {
-      return ref.get().drag(ctx, btn);
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::key(context const& ctx, key_info k)
-   {
-      return ref.get().key(ctx, k);
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::text(context const& ctx, text_info info)
-   {
-      return ref.get().text(ctx, info);
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::cursor(context const& ctx, point p, cursor_tracking status)
-   {
-      return ref.get().cursor(ctx, p, status);
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::focus(focus_request r)
-   {
-      return ref.get().focus(r);
-   }
-
-   template <typename Element>
-   inline element const*
-   reference<Element>::focus() const
-   {
-      return ref.get().focus();
-   }
-
-   template <typename Element>
-   inline element*
-   reference<Element>::focus()
-   {
-      return ref.get().focus();
-   }
-
-   template <typename Element>
-   inline bool
-   reference<Element>::is_control() const
-   {
-      return ref.get().is_control();
-   }
-
-   template <typename Element>
-   inline void reference<Element>::value(bool val)
-   {
-      ref.get().value(val);
-   }
-
-   template <typename Element>
-   inline void reference<Element>::value(int val)
-   {
-      ref.get().value(val);
-   }
-
-   template <typename Element>
-   inline void reference<Element>::value(double val)
-   {
-      ref.get().value(val);
-   }
-
-   template <typename Element>
-   inline void reference<Element>::value(std::string val)
-   {
-      ref.get().value(val);
-   }
 
    template <typename Element>
    inline Element&
@@ -251,17 +268,17 @@ namespace cycfi { namespace photon
    }
 
    template <typename Element>
-   inline reference<typename std::remove_reference<Element>::type>
+   inline indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element& rhs)
    {
-      return reference<typename std::remove_reference<Element>::type>{ rhs };
+      return indirect<reference<typename std::remove_reference<Element>::type>>{ rhs };
    }
 
    template <typename Element>
-   inline reference<Element>
+   inline indirect<reference<Element>>
    link(std::shared_ptr<Element> rhs)
    {
-      return reference<Element>{ *rhs };
+      return indirect<reference<Element>>{ *rhs };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -269,15 +286,28 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
    inline shared_reference<Element>::shared_reference(std::shared_ptr<Element> ptr)
-    : reference<Element>(*ptr)
-    , _ptr(ptr)
+    : _ptr(ptr)
    {}
 
    template <typename Element>
-   inline shared_reference<Element>
+   inline Element&
+   shared_reference<Element>::get()
+   {
+      return *_ptr;
+   }
+
+   template <typename Element>
+   inline Element const&
+   shared_reference<Element>::get() const
+   {
+      return *_ptr;
+   }
+
+   template <typename Element>
+   inline indirect<shared_reference<Element>>
    shared_link(std::shared_ptr<Element> rhs)
    {
-      return shared_reference<Element>{ rhs };
+      return indirect<shared_reference<Element>>{ rhs };
    }
 }}
 

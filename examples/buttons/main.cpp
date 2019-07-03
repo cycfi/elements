@@ -72,7 +72,7 @@ auto make_buttons(view& view_)
             top_margin(20, make_popup_menu()),
             top_margin(20, mbutton),
             top_margin(20, tbutton),
-            top_margin(20, link(lbutton)),
+            top_margin(20, hold(lbutton)),
             top_margin(20, reset),
             top_margin(20, note)
          )

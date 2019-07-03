@@ -20,7 +20,7 @@
 #include <photon/element/popup.hpp>
 #include <photon/element/port.hpp>
 #include <photon/element/proxy.hpp>
-#include <photon/element/reference.hpp>
+#include <photon/element/indirect.hpp>
 #include <photon/element/size.hpp>
 #include <photon/element/slider.hpp>
 #include <photon/element/text.hpp>

@@ -84,6 +84,12 @@ namespace cycfi { namespace photon
       return std::make_shared<element_type>(std::forward<Element>(e));
    }
 
+   template <typename Element>
+   inline auto weak(std::shared_ptr<Element> ptr)
+   {
+      return std::weak_ptr<element>(ptr);
+   }
+
    inline element empty()
    {
       return {};

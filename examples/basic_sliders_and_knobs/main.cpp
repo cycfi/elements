@@ -46,7 +46,7 @@ auto make_hslider(int index)
       make_markers<false>(),
       (index + 1) * 0.25
    ));
-   return align_middle(xside_margin({ 20, 20 }, link(hsliders[index])));
+   return align_middle(xside_margin({ 20, 20 }, hold(hsliders[index])));
 }
 
 auto make_hsliders()
@@ -67,7 +67,7 @@ auto make_vslider(int index)
       make_markers<true>(),
       (index + 1) * 0.25
    ));
-   return align_center(yside_margin({ 20, 20 }, link(vsliders[index])));
+   return align_center(yside_margin({ 20, 20 }, hold(vsliders[index])));
 }
 
 auto make_vsliders()
@@ -91,7 +91,7 @@ auto make_dial(int index)
    );
 
    auto markers = radial_labels<15>(
-      link(dials[index]),
+      hold(dials[index]),
       0.7,                                   // Label font size (relative size)
       "0", "1", "2", "3", "4",               // Labels
       "5", "6", "7", "8", "9", "10"

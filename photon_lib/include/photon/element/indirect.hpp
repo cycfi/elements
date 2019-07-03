@@ -20,7 +20,9 @@ namespace cycfi { namespace photon
       using Base::Base;
 
                               indirect(indirect&& rhs) = default;
+                              indirect(indirect const& rhs) = default;
       indirect&               operator=(indirect&& rhs) = default;
+      indirect&               operator=(indirect const& rhs) = default;
 
    // Image
 
@@ -55,13 +57,13 @@ namespace cycfi { namespace photon
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Element Reference
+   // reference
    //
-   // A element reference holds another element using std::reference_wrapper.
-   // Element references may be copied and all copies will refer to the same
-   // element being referenced. It is the responsibility of the client to
-   // manage the lifetime of the referenced element and make sure it is valid
-   // (alive) when a reference member function is called.
+   // A reference holds another element using std::reference_wrapper. Element
+   // references may be copied and all copies will refer to the same element
+   // being referenced. It is the responsibility of the client to manage the
+   // lifetime of the referenced element and make sure it is valid (alive)
+   // when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
    class reference : public element
@@ -70,7 +72,9 @@ namespace cycfi { namespace photon
 
       explicit                reference(Element& e);
                               reference(reference&& rhs) = default;
+                              reference(reference const& rhs) = default;
       reference&              operator=(reference&& rhs) = default;
+      reference&              operator=(reference const& rhs) = default;
 
       Element&                get();
       Element const&          get() const;
@@ -78,28 +82,26 @@ namespace cycfi { namespace photon
    private:
 
       using element_ref = std::reference_wrapper<Element>;
-      element_ref             ref;
+      element_ref             _ref;
    };
 
    template <typename Element>
    indirect<reference<typename std::remove_reference<Element>::type>>
-   link(Element& rhs);
-
-   template <typename Element>
-   indirect<reference<Element>>
-   link(std::shared_ptr<Element> rhs);
+   link(Element &rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class shared_reference : public element
+   class shared_element : public element
    {
    public:
 
-      explicit                shared_reference(std::shared_ptr<Element> ptr);
-                              shared_reference(shared_reference&& rhs) = default;
-      shared_reference&       operator=(shared_reference&& rhs) = default;
+      explicit                shared_element(std::shared_ptr<Element> ptr);
+                              shared_element(shared_element&& rhs) = default;
+                              shared_element(shared_element const& rhs) = default;
+      shared_element&         operator=(shared_element&& rhs) = default;
+      shared_element&         operator=(shared_element const& rhs) = default;
 
       Element&                get();
       Element const&          get() const;
@@ -110,8 +112,8 @@ namespace cycfi { namespace photon
    };
 
    template <typename Element>
-   indirect<shared_reference<Element>>
-   shared_link(std::shared_ptr<Element> rhs);
+   indirect<shared_element<Element>>
+   hold(std::shared_ptr<Element> rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // indirect (inline) implementation
@@ -250,64 +252,57 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
    inline reference<Element>::reference(Element& e)
-    : ref(e)
+    : _ref(e)
    {}
 
    template <typename Element>
    inline Element&
    reference<Element>::get()
    {
-      return ref.get();
+      return _ref.get();
    }
 
    template <typename Element>
    inline Element const&
    reference<Element>::get() const
    {
-      return ref.get();
+      return _ref.get();
    }
 
    template <typename Element>
    inline indirect<reference<typename std::remove_reference<Element>::type>>
-   link(Element& rhs)
+   link(Element &rhs)
    {
       return indirect<reference<typename std::remove_reference<Element>::type>>{ rhs };
-   }
-
-   template <typename Element>
-   inline indirect<reference<Element>>
-   link(std::shared_ptr<Element> rhs)
-   {
-      return indirect<reference<Element>>{ *rhs };
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // shared_reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   inline shared_reference<Element>::shared_reference(std::shared_ptr<Element> ptr)
+   inline shared_element<Element>::shared_element(std::shared_ptr<Element> ptr)
     : _ptr(ptr)
    {}
 
    template <typename Element>
    inline Element&
-   shared_reference<Element>::get()
+   shared_element<Element>::get()
    {
       return *_ptr;
    }
 
    template <typename Element>
    inline Element const&
-   shared_reference<Element>::get() const
+   shared_element<Element>::get() const
    {
       return *_ptr;
    }
 
    template <typename Element>
-   inline indirect<shared_reference<Element>>
-   shared_link(std::shared_ptr<Element> rhs)
+   inline indirect<shared_element<Element>>
+   hold(std::shared_ptr<Element> rhs)
    {
-      return indirect<shared_reference<Element>>{ rhs };
+      return indirect<shared_element<Element>>{ rhs };
    }
 }}
 

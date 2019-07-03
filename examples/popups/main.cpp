@@ -42,7 +42,7 @@ void make_popup(view& view_)
                      align_top(icon{ icons::attention, 2.5 }),
                      left_margin(20, std::move(textbox))
                   ),
-                  align_right(hsize(100, shared_link(ok_button)))
+                  align_right(hsize(100, hold(ok_button)))
                )
             ),
             panel{}
@@ -53,7 +53,7 @@ void make_popup(view& view_)
    view_.add(popup);
 
    ok_button->on_click =
-      [&view_, p = std::weak_ptr<element>(popup)](bool)
+      [&view_, p = weak(popup)](bool)
       {
          view_.io().post(
             [&view_, p]

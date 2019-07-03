@@ -729,7 +729,7 @@ namespace cycfi { namespace photon
                caption_size   // relative caption text size
             )
          ),
-         link(static_cast<dial_base&>(image.at(1)))
+         link(static_cast<dial_base &>(image.at(1)))
       );
    }
 

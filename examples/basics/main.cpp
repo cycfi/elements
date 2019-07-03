@@ -115,10 +115,10 @@ auto make_basic_text()
 
 auto make_basic_text2()
 {
-   static auto textbox = vport(static_text_box{ text });
+   auto textbox = share(vport(static_text_box{ text }));
    return margin(
          { 10, 0, 10, 10 },
-         link(textbox)
+         hold(textbox)
       );
 }
 

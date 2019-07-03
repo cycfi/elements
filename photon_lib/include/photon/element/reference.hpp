@@ -28,9 +28,7 @@ namespace cycfi { namespace photon
 
       explicit                reference(Element& e);
                               reference(reference&& rhs) = default;
-                              reference(reference const& rhs) = default;
       reference&              operator=(reference&& rhs) = default;
-      reference&              operator=(reference const& rhs) = default;
 
    // Image
 
@@ -75,6 +73,31 @@ namespace cycfi { namespace photon
    template <typename Element>
    reference<typename std::remove_reference<Element>::type>
    link(Element& rhs);
+
+   template <typename Element>
+   reference<Element>
+   link(std::shared_ptr<Element> rhs);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Just like referencem but shared_reference retains the shared pointer.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Element>
+   class shared_reference : public reference<Element>
+   {
+   public:
+
+      explicit                shared_reference(std::shared_ptr<Element> ptr);
+                              shared_reference(shared_reference&& rhs) = default;
+      shared_reference&       operator=(shared_reference&& rhs) = default;
+
+   private:
+
+      std::shared_ptr<Element> _ptr;
+   };
+
+   template <typename Element>
+   shared_reference<Element>
+   shared_link(std::shared_ptr<Element> rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
@@ -239,6 +262,22 @@ namespace cycfi { namespace photon
    link(std::shared_ptr<Element> rhs)
    {
       return reference<Element>{ *rhs };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // shared_reference (inline) implementation
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Element>
+   inline shared_reference<Element>::shared_reference(std::shared_ptr<Element> ptr)
+    : reference<Element>(*ptr)
+    , _ptr(ptr)
+   {}
+
+   template <typename Element>
+   inline shared_reference<Element>
+   shared_link(std::shared_ptr<Element> rhs)
+   {
+      return shared_reference<Element>{ rhs };
    }
 }}
 

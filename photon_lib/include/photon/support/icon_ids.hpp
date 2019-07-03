@@ -38,7 +38,7 @@ namespace cycfi { namespace photon { namespace icons
       angle_circled_right           = 0xe819,
       angle_circled_up              = 0xe81a,
       angle_circled_down            = 0xe81b,
-      attention                     = 0xe81c,
+      exclamation                   = 0xe81c,
       block                         = 0xe81d,
       pencil                        = 0xe81e,
       pin                           = 0xe81f,
@@ -83,7 +83,12 @@ namespace cycfi { namespace photon { namespace icons
       lock_open                     = 0xe846,
       lock                          = 0xe847,
       sliders                       = 0xf1de,
-      floppy                        = 0xe848
+      floppy                        = 0xe848,
+      attention                     = 0xe849,
+      info                          = 0xe84a,
+      error                         = 0xe84b,
+      lightbulb                     = 0xf0eb,
+      mixer                         = 0xf1de
    };
 }}}
 

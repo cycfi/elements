@@ -20,15 +20,50 @@ struct background : element
    }
 };
 
+std::string const text =
+   "We are being called to explore the cosmos itself as an "
+   "interface between will and energy. It is a sign of things "
+   "to come. The dreamtime is approaching a tipping point."
+   ;
+
 // A Popup
-auto make_popup(view const& view_)
+void make_popup(view& view_)
 {
-   return share(
+   auto textbox = static_text_box{ text };
+   auto ok_button = share(button("OK", 1.0, get_theme().indicator_color));
+
+   auto popup = share(
       align_center_middle(
-         fixed_size({ 400, 200 },
-          pane("Popup", element())
+         fixed_size({ 400, 180 },
+         layer(
+            margin({ 20, 20, 20, 20 },
+               vtile(
+                  htile(
+                     align_top(icon{ icons::attention, 2.5 }),
+                     left_margin(20, std::move(textbox))
+                  ),
+                  align_right(hsize(100, shared_link(ok_button)))
+               )
+            ),
+            panel{}
+         )
       ))
    );
+
+   view_.add(popup);
+
+   ok_button->on_click =
+      [&view_, p = std::weak_ptr<element>(popup)](bool)
+      {
+         view_.io().post(
+            [&view_, p]
+            {
+               auto popup = p.lock();
+               if (popup)
+                  view_.remove(popup);
+            }
+         );
+      };
 }
 
 int main(int argc, const char* argv[])
@@ -47,12 +82,10 @@ int main(int argc, const char* argv[])
       }
    );
 
-   auto popup = make_popup(view_);
-
    view_.defer(1500ms,
-      [&view_, &popup]()
+      [&view_]()
       {
-         view_.add(popup);
+         make_popup(view_);
       }
    );
 

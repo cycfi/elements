@@ -315,4 +315,13 @@ namespace cycfi { namespace photon
             return true;
       return false;
    }
+
+   void composite_base::reset()
+   {
+      _focus = -1;
+      _saved_focus = -1;
+      _drag_tracking = -1;
+      _click_info = hit_info{};
+      _cursor_info = hit_info{};
+   }
 }}

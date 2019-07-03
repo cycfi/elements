@@ -142,6 +142,7 @@ namespace cycfi { namespace photon
       {
          _content.erase(i);
          refresh(*e);
+         _content.reset();
          _relayout = true;
       }
    }

@@ -106,14 +106,14 @@ int main(int argc, const char* argv[])
       }
    );
 
-   view_.post(3500ms,
+   view_.post(2s,
       [&view_, msg_box]
       {
          view_.remove(msg_box);
       }
    );
 
-   view_.post(4s,
+   view_.post(3s,
       [&view_, &_app]
       {
          make_alert(view_, _app);

@@ -7,7 +7,9 @@
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
 
 #include <photon/element/element.hpp>
+#include <photon/element/proxy.hpp>
 #include <photon/support/theme.hpp>
+#include <functional>
 
 namespace cycfi { namespace photon
 {
@@ -160,6 +162,39 @@ namespace cycfi { namespace photon
       std::uint32_t           _code;
       float                   _size;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Key Intercept
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct key_intercept_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                              key_intercept_element(Subject&& subject)
+                               : base_type(std::forward<Subject>(subject))
+                              {}
+
+      virtual bool            key(context const& ctx, key_info k);
+      virtual bool            is_control() const { return true; }
+
+      using key_function = std::function<bool(key_info k)>;
+
+      key_function            on_key = [](auto){ return false; };
+   };
+
+   template <typename Subject>
+   inline key_intercept_element<Subject>
+   key_intercept(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline bool key_intercept_element<Subject>::key(context const& ctx, key_info k)
+   {
+      return on_key(k);
+   }
 }}
 
 #endif

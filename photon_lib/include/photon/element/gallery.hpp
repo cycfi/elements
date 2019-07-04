@@ -283,7 +283,7 @@ namespace cycfi { namespace photon
    button(
       std::string const& text
     , std::uint32_t icon_code
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color
    );
 
@@ -663,6 +663,42 @@ namespace cycfi { namespace photon
          ))));
 
       return std::pair{ ok_button, popup };
+   }
+
+   inline auto message_box2(
+      char const* message
+    , std::uint32_t icon_id
+    , size size_ = get_theme().message_box_size
+    , char const* cancel_text = "Cancel"
+    , char const* ok_text = "OK"
+    , color ok_color = get_theme().indicator_color
+   )
+   {
+      auto textbox = static_text_box{ message };
+      auto cancel_button = share(button(cancel_text, 1.0));
+      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto popup = share(
+         align_center_middle(
+            fixed_size(size_,
+            layer(
+               margin({ 20, 20, 20, 20 },
+                  vtile(
+                     htile(
+                        align_top(icon{ icon_id, 2.5 }),
+                        left_margin(20, std::move(textbox))
+                     ),
+                     align_right(
+                        htile(
+                           hsize(100, hold(cancel_button)),
+                           left_margin(20, hsize(100, hold(ok_button)))
+                        )
+                     )
+                  )
+               ),
+               panel{}
+         ))));
+
+      return std::tuple{ ok_button, cancel_button, popup };
    }
 }}
 

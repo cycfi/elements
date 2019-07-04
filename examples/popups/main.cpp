@@ -32,6 +32,50 @@ auto make_message()
    return message_box0(msg, icons::hand, { 400, 150 });
 }
 
+// A Choice Popup
+void make_choice(view& view_)
+{
+   char const* choice_text =
+      "Our conversations with other lifeforms have led to a "
+      "summoning of ultra-amazing consciousness. Humankind has "
+      "nothing to lose. Who are we? Where on the great quest "
+      "will we be awakened?"
+      ;
+
+   auto [cancel_button, ok_button, popup]
+      = message_box2(choice_text, icons::block);
+   view_.add(popup);
+
+   auto&& dismiss =
+      [&view_, p = get(popup)]()
+      {
+         // We want to dismiss the message box when the OK button is clicked,
+         // but we can't do it immediately because we need to retain the
+         // button, otherwsise there's nothing to return to. So, we post a
+         // function that is called at idle time.
+
+         view_.io().post(
+            [&view_, p]
+            {
+               if (auto popup = p.lock())
+                  view_.remove(popup);
+            }
+         );
+      };
+
+   ok_button->on_click =
+      [dismiss](bool)
+      {
+         dismiss();
+      };
+
+   cancel_button->on_click =
+      [dismiss](bool)
+      {
+         dismiss();
+      };
+}
+
 // An Alert Popup
 void make_alert(view& view_)
 {
@@ -47,7 +91,7 @@ void make_alert(view& view_)
    ok_button->on_click =
       [&view_, p = get(popup)](bool)
       {
-         // We want to dismiss the alert box when the OK button is clicked,
+         // We want to dismiss the message box when the OK button is clicked,
          // but we can't do it immediately because we need to retain the
          // button, otherwsise there's nothing to return to. So, we post a
          // function that is called at idle time.
@@ -57,6 +101,9 @@ void make_alert(view& view_)
             {
                if (auto popup = p.lock())
                   view_.remove(popup);
+
+               // Now let's make a choice:
+               make_choice(view_);
             }
          );
       };

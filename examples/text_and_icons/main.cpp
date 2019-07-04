@@ -116,10 +116,10 @@ auto make_basic_text()
 auto make_basic_text2()
 {
    auto textbox = share(vport(static_text_box{ text }));
-   return margin(
+   return hmin_size(350, margin(
          { 10, 0, 10, 10 },
          hold(textbox)
-      );
+      ));
 }
 
 auto make_elements()

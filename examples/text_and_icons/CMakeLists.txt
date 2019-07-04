@@ -3,7 +3,8 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-set(PHOTON_APP_PROJECT "Basics")
+set(PHOTON_APP_PROJECT "TextAndIcons")
+set(PHOTON_APP_TITLE "Text and Icons")
 set(PHOTON_APP_COPYRIGHT "Copyright (c) 2016-2019 Joel de Guzman")
 set(PHOTON_APP_ID "com.cycfi.basics")
 set(PHOTON_APP_VERSION "1.0")

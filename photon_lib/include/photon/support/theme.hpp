@@ -27,8 +27,8 @@ namespace cycfi { namespace photon
 
       color                heading_font_color         = basic_font_color;
       char const*          heading_font               = "Roboto";
-      float                heading_font_size          = 16.0;
-      canvas::font_style   heading_style              = canvas::normal;
+      float                heading_font_size          = 14.0;
+      canvas::font_style   heading_style              = canvas::bold;
 
       color                label_font_color           = basic_font_color;
       char const*          label_font                 = "Open Sans";

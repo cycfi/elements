@@ -7,7 +7,7 @@
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_MAY_4_2016
 
 #include <photon/element/align.hpp>
-#include <photon/element/basic.hpp>
+#include <photon/element/basics.hpp>
 #include <photon/element/button.hpp>
 #include <photon/element/composite.hpp>
 #include <photon/element/dial.hpp>

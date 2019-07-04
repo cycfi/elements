@@ -58,9 +58,12 @@ namespace cycfi { namespace photon
 
    void basic_button::value(bool new_state)
    {
-      state(new_state);
-      if (on_click && _state != new_state)
-         on_click(_state);
+      if (_state != new_state)
+      {
+         state(new_state);
+         if (on_click)
+            on_click(_state);
+      }
    }
 
    void basic_button::value(int new_state)
@@ -118,9 +121,12 @@ namespace cycfi { namespace photon
 
    void layered_button::value(bool new_state)
    {
-      state(new_state);
-      if (on_click && _state != new_state)
-         on_click(_state);
+      if (_state != new_state)
+      {
+         state(new_state);
+         if (on_click)
+            on_click(_state);
+      }
    }
 
    void layered_button::value(int new_state)

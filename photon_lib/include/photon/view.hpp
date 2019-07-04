@@ -77,7 +77,10 @@ namespace cycfi { namespace photon
       io_context&          io();
 
                            template <typename T, typename F>
-      void                 defer(T duration, F f);
+      void                 post(T duration, F f);
+
+                           template <typename F>
+      void                 post(F f);
 
    private:
 
@@ -130,21 +133,39 @@ namespace cycfi { namespace photon
 
    inline void view::add(element_ptr e)
    {
-      _content.push_back(e);
-      _relayout = true;
-      refresh(*e);
+      // We'll defer this call just to be safe, to give the trigger that
+      // initiated this call (e.g. button on_click) a chance to return.
+
+      io().post(
+         [e, this]
+         {
+            _content.push_back(e);
+            _relayout = true;
+            refresh(*e);
+         }
+      );
    }
 
    inline void view::remove(element_ptr e)
    {
-      auto i = std::find(_content.begin(), _content.end(), e);
-      if (i != _content.end())
-      {
-         refresh(*e);
-         _content.erase(i);
-         _content.reset();
-         _relayout = true;
-      }
+      // We want to dismiss the element, but we can't do it immediately
+      // because we need to retain the trigger that initiated this call (e.g.
+      // button on_click), otherwise there's nothing to return to. So, we
+      // post a function that is called at idle time.
+
+      io().post(
+         [e, this]
+         {
+            auto i = std::find(_content.begin(), _content.end(), e);
+            if (i != _content.end())
+            {
+               refresh(*e);
+               _content.erase(i);
+               _content.reset();
+               _relayout = true;
+            }
+         }
+      );
    }
 
    inline view_limits view::limits() const
@@ -163,7 +184,7 @@ namespace cycfi { namespace photon
    }
 
    template <typename T, typename F>
-   inline void view::defer(T duration, F f)
+   inline void view::post(T duration, F f)
    {
       auto timer = std::make_shared<boost::asio::steady_timer>(_io);
       timer->expires_from_now(duration);
@@ -174,6 +195,12 @@ namespace cycfi { namespace photon
                f();
          }
       );
+   }
+
+   template <typename F>
+   inline void view::post(F f)
+   {
+      _io.post(f);
    }
 }}
 

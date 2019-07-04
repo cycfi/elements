@@ -547,13 +547,12 @@ namespace cycfi { namespace photon
       if (_is_focus && has_caret && !_caret_started)
       {
          _caret_started = true;
-         ctx.view.defer(500ms,
-            [this, &_view = ctx.view, caret_bounds]()
-            {
-               _show_caret = !_show_caret;
-               _view.refresh(caret_bounds);
-               _caret_started = false;
-            }
+         ctx.view.post(500ms,
+                       [this, &_view = ctx.view, caret_bounds]() {
+                          _show_caret = !_show_caret;
+                          _view.refresh(caret_bounds);
+                          _caret_started = false;
+                       }
          );
       }
    }

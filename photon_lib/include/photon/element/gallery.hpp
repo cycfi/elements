@@ -639,8 +639,8 @@ namespace cycfi { namespace photon
    inline auto message_box1(
       char const* message
     , std::uint32_t icon_id
-    , size size_ = get_theme().message_box_size
     , char const* ok_text = "OK"
+    , size size_ = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -668,9 +668,9 @@ namespace cycfi { namespace photon
    inline auto message_box2(
       char const* message
     , std::uint32_t icon_id
-    , size size_ = get_theme().message_box_size
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
+    , size size_ = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {

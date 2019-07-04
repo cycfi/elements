@@ -33,7 +33,7 @@ auto make_message()
 }
 
 // A Choice Popup
-void make_choice(view& view_)
+void make_choice(view& view_, app& _app)
 {
    char const* choice_text =
       "Our conversations with other lifeforms have led to a "
@@ -43,24 +43,15 @@ void make_choice(view& view_)
       ;
 
    auto [cancel_button, ok_button, popup]
-      = message_box2(choice_text, icons::block);
+      = message_box2(choice_text, icons::question);
    view_.add(popup);
 
    auto&& dismiss =
-      [&view_, p = get(popup)]()
+      [&view_, &_app, p = get(popup)]()
       {
-         // We want to dismiss the message box when the OK button is clicked,
-         // but we can't do it immediately because we need to retain the
-         // button, otherwsise there's nothing to return to. So, we post a
-         // function that is called at idle time.
-
-         view_.io().post(
-            [&view_, p]
-            {
-               if (auto popup = p.lock())
-                  view_.remove(popup);
-            }
-         );
+         if (auto popup = p.lock())
+            view_.remove(popup);
+         _app.stop();
       };
 
    ok_button->on_click =
@@ -77,7 +68,7 @@ void make_choice(view& view_)
 }
 
 // An Alert Popup
-void make_alert(view& view_)
+void make_alert(view& view_, app& _app)
 {
    char const* alert_text =
       "We are being called to explore the cosmos itself as an "
@@ -89,23 +80,13 @@ void make_alert(view& view_)
    view_.add(popup);
 
    ok_button->on_click =
-      [&view_, p = get(popup)](bool)
+      [&view_, &_app, p = get(popup)](bool)
       {
-         // We want to dismiss the message box when the OK button is clicked,
-         // but we can't do it immediately because we need to retain the
-         // button, otherwsise there's nothing to return to. So, we post a
-         // function that is called at idle time.
+         if (auto popup = p.lock())
+            view_.remove(popup);
 
-         view_.io().post(
-            [&view_, p]
-            {
-               if (auto popup = p.lock())
-                  view_.remove(popup);
-
-               // Now let's make a choice:
-               make_choice(view_);
-            }
-         );
+         // Now let's make a choice.
+         make_choice(view_, _app);
       };
 }
 
@@ -125,17 +106,17 @@ int main(int argc, const char* argv[])
       }
    );
 
-   view_.defer(3s,
-      [&view_, msg_box]()
+   view_.post(3500ms,
+      [&view_, msg_box]
       {
          view_.remove(msg_box);
       }
    );
 
-   view_.defer(4s,
-      [&view_]()
+   view_.post(4s,
+      [&view_, &_app]
       {
-         make_alert(view_);
+         make_alert(view_, _app);
       }
    );
 

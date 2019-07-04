@@ -135,7 +135,18 @@ namespace cycfi { namespace photon
          context ectx{ ctx, &focus_, bounds };
          if (focus_.key(ectx, k))
             return true;
-      };
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+         {
+            rect bounds = bounds_of(ctx, ix);
+            auto& e = at(ix);
+            context ectx{ ctx, &e, bounds };
+            if (e.key(ectx, k))
+               return true;
+         }
+      }
 
       if (k.key == key_code::tab && size())
       {

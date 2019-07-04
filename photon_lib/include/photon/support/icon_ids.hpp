@@ -88,7 +88,8 @@ namespace cycfi { namespace photon { namespace icons
       info                          = 0xe84a,
       error                         = 0xe84b,
       lightbulb                     = 0xf0eb,
-      mixer                         = 0xf1de
+      mixer                         = 0xf1de,
+      hand                          = 0xf256
    };
 }}}
 

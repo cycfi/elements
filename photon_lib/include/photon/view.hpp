@@ -140,8 +140,8 @@ namespace cycfi { namespace photon
       auto i = std::find(_content.begin(), _content.end(), e);
       if (i != _content.end())
       {
-         _content.erase(i);
          refresh(*e);
+         _content.erase(i);
          _content.reset();
          _relayout = true;
       }

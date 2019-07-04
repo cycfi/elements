@@ -613,12 +613,33 @@ namespace cycfi { namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Alerts
+   // Messages and Alerts
    ////////////////////////////////////////////////////////////////////////////
-   inline auto alert1(
+   inline auto message_box0(
       char const* message
     , std::uint32_t icon_id
-    , size size_ = { 400, 180 }
+    , size size_ = get_theme().message_box_size
+   )
+   {
+      auto textbox = static_text_box{ message };
+      auto popup = share(
+         align_center_middle(
+            fixed_size(size_,
+            layer(
+               margin({ 20, 20, 20, 20 }, htile(
+                  align_top(icon{ icon_id, 2.5 }),
+                  left_margin(20, std::move(textbox))
+               )),
+               panel{}
+         ))));
+
+      return popup;
+   }
+
+   inline auto message_box1(
+      char const* message
+    , std::uint32_t icon_id
+    , size size_ = get_theme().message_box_size
     , char const* ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
@@ -627,7 +648,7 @@ namespace cycfi { namespace photon
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          align_center_middle(
-            fixed_size({ 400, 180 },
+            fixed_size(size_,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(

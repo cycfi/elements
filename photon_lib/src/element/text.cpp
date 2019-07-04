@@ -31,6 +31,8 @@ namespace cycfi { namespace photon
 
    view_limits static_text_box::limits(basic_context const& ctx) const
    {
+      sync();
+
       auto  size = _layout.metrics();
       auto  min_line_height = size.ascent + size.descent + size.leading;
       float line_height =
@@ -47,6 +49,8 @@ namespace cycfi { namespace photon
 
    void static_text_box::layout(context const& ctx)
    {
+      sync();
+
       _rows.clear();
       auto  new_x = ctx.bounds.width();
       _layout.break_lines(new_x, _rows);
@@ -80,6 +84,14 @@ namespace cycfi { namespace photon
          if (y > ctx.bounds.bottom + metrics.ascent)
             break;
       }
+   }
+
+   void static_text_box::sync() const
+   {
+      auto f = _text.data();
+      auto l = _text.data() + _text.size();
+      if (f != _layout.begin() || l != _layout.end())
+         _layout.text(f, l);
    }
 
    void static_text_box::text(std::string const& text)

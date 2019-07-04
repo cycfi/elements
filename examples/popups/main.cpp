@@ -6,6 +6,7 @@
 #include <photon.hpp>
 
 using namespace cycfi::photon;
+using namespace std::chrono_literals;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -20,8 +21,19 @@ struct background : element
    }
 };
 
-// A Popup
-void make_popup(view& view_)
+// A Message Popup
+auto make_message()
+{
+   char const* msg = "Patience... Wait for it...\n\n"
+      "The nexus is overflowing with supercharged waveforms. "
+      "Awareness is a constant. "
+      ;
+
+   return message_box0(msg, icons::hand, { 400, 150 });
+}
+
+// An Alert Popup
+void make_alert(view& view_)
 {
    char const* alert_text =
       "We are being called to explore the cosmos itself as an "
@@ -29,12 +41,17 @@ void make_popup(view& view_)
       "to come. The dreamtime is approaching a tipping point."
       ;
 
-   auto [ok_button, popup] = alert1(alert_text, icons::attention);
+   auto [ok_button, popup] = message_box1(alert_text, icons::attention);
    view_.add(popup);
 
    ok_button->on_click =
       [&view_, p = get(popup)](bool)
       {
+         // We want to dismiss the alert box when the OK button is clicked,
+         // but we can't do it immediately because we need to retain the
+         // button, otherwsise there's nothing to return to. So, we post a
+         // function that is called at idle time.
+
          view_.io().post(
             [&view_, p]
             {
@@ -47,24 +64,31 @@ void make_popup(view& view_)
 
 int main(int argc, const char* argv[])
 {
-   using namespace std::chrono_literals;
-
    app _app(argc, argv);
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
    view view_(_win);
+   auto msg_box = make_message();
 
    view_.content(
       {
-         share(background{})
+         share(background{}),
+         msg_box
       }
    );
 
-   view_.defer(1500ms,
+   view_.defer(3s,
+      [&view_, msg_box]()
+      {
+         view_.remove(msg_box);
+      }
+   );
+
+   view_.defer(4s,
       [&view_]()
       {
-         make_popup(view_);
+         make_alert(view_);
       }
    );
 

@@ -647,7 +647,7 @@ namespace cycfi { namespace photon
       auto textbox = static_text_box{ message };
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
-         align_center_middle(
+         key_intercept(align_center_middle(
             fixed_size(size_,
             layer(
                margin({ 20, 20, 20, 20 },
@@ -660,7 +660,19 @@ namespace cycfi { namespace photon
                   )
                ),
                panel{}
-         ))));
+         )))));
+
+      popup->on_key =
+         [ok_ = get(ok_button)](auto k)
+         {
+            if (k.key == key_code::enter)
+            {
+               if (auto ok = ok_.lock())
+                  ok->value(true);
+               return true;
+            }
+            return false;
+         };
 
       return std::pair{ ok_button, popup };
    }
@@ -678,7 +690,7 @@ namespace cycfi { namespace photon
       auto cancel_button = share(button(cancel_text, 1.0));
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
-         align_center_middle(
+         key_intercept(align_center_middle(
             fixed_size(size_,
             layer(
                margin({ 20, 20, 20, 20 },
@@ -696,7 +708,28 @@ namespace cycfi { namespace photon
                   )
                ),
                panel{}
-         ))));
+         )))));
+
+      popup->on_key =
+         [ok_ = get(ok_button), cancel_ = get(cancel_button)](auto k)
+         {
+            if (k.action == key_action::release)
+               return false;
+
+            if (k.key == key_code::enter)
+            {
+               if (auto ok = ok_.lock())
+                  ok->value(true);
+               return true;
+            }
+            else if (k.key == key_code::escape)
+            {
+               if (auto cancel = cancel_.lock())
+                  cancel->value(true);
+               return true;
+            }
+            return false;
+         };
 
       return std::tuple{ ok_button, cancel_button, popup };
    }

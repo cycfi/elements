@@ -20,46 +20,25 @@ struct background : element
    }
 };
 
-std::string const text =
-   "We are being called to explore the cosmos itself as an "
-   "interface between will and energy. It is a sign of things "
-   "to come. The dreamtime is approaching a tipping point."
-   ;
-
 // A Popup
 void make_popup(view& view_)
 {
-   auto textbox = static_text_box{ text };
-   auto ok_button = share(button("OK", 1.0, get_theme().indicator_color));
+   char const* alert_text =
+      "We are being called to explore the cosmos itself as an "
+      "interface between will and energy. It is a sign of things "
+      "to come. The dreamtime is approaching a tipping point."
+      ;
 
-   auto popup = share(
-      align_center_middle(
-         fixed_size({ 400, 180 },
-         layer(
-            margin({ 20, 20, 20, 20 },
-               vtile(
-                  htile(
-                     align_top(icon{ icons::attention, 2.5 }),
-                     left_margin(20, std::move(textbox))
-                  ),
-                  align_right(hsize(100, hold(ok_button)))
-               )
-            ),
-            panel{}
-         )
-      ))
-   );
-
+   auto [ok_button, popup] = alert1(alert_text, icons::attention);
    view_.add(popup);
 
    ok_button->on_click =
-      [&view_, p = weak(popup)](bool)
+      [&view_, p = get(popup)](bool)
       {
          view_.io().post(
             [&view_, p]
             {
-               auto popup = p.lock();
-               if (popup)
+               if (auto popup = p.lock())
                   view_.remove(popup);
             }
          );

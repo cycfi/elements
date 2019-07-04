@@ -64,7 +64,10 @@ auto make_vsliders()
 auto make_dial(int index)
 {
    float const knob_scale = 1.0/3;
-   sprite knob = sprite{ "knob_sprites_white_128x128.png", 128*knob_scale, knob_scale };
+   sprite knob = sprite{
+      "knob_sprites_white_128x128.png",
+      128 * knob_scale, knob_scale
+   };
 
    dials[index] = share(
       dial(

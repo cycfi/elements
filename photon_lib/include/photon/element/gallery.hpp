@@ -13,92 +13,6 @@
 namespace cycfi { namespace photon
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Background Fill
-   ////////////////////////////////////////////////////////////////////////////
-   struct background_fill : element
-   {
-                     background_fill(color color_)
-                      : _color(color_)
-                     {}
-
-      void           draw(context const& ctx);
-      color          _color;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Panels
-   ////////////////////////////////////////////////////////////////////////////
-   class panel : public element
-   {
-   public:
-
-      virtual void draw(context const& ctx);
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Frames
-   ////////////////////////////////////////////////////////////////////////////
-   struct frame : public element
-   {
-      virtual void   draw(context const& ctx);
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Headings
-   ////////////////////////////////////////////////////////////////////////////
-   struct heading : element
-   {
-                              heading(std::string const& text, float size_ = 1.0)
-                               : _text(text)
-                               , _size(size_)
-                              {}
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-
-      std::string             text() const                     { return _text; }
-      void                    text(std::string const& text)    { _text = text; }
-
-      using element::text;
-
-      std::string             _text;
-      float                   _size;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Title Bars
-   ////////////////////////////////////////////////////////////////////////////
-
-   class title_bar : public element
-   {
-   public:
-
-      virtual void            draw(context const& ctx);
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Labels
-   ////////////////////////////////////////////////////////////////////////////
-   struct label : element
-   {
-                              label(std::string const& text, float size_ = 1.0)
-                               : _text(text)
-                               , _size(size_)
-                              {}
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-
-      std::string             text() const                     { return _text; }
-      void                    text(std::string const& text)    { _text = text; }
-
-      using element::text;
-
-      std::string             _text;
-      float                   _size;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
    // Pane
    ////////////////////////////////////////////////////////////////////////////
    template <typename Heading, typename Content>
@@ -146,27 +60,6 @@ namespace cycfi { namespace photon
    {
       return pane(heading(title, title_size), content, center_heading);
    }
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   // Grid Lines
-   ////////////////////////////////////////////////////////////////////////////////////////////////
-   class vgrid_lines : public element
-   {
-   public:
-
-                              vgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
-
-      virtual void            draw(context const& ctx);
-
-   private:
-
-      float                   _major_divisions;
-      float                   _minor_divisions;
-   };
-
 
    ////////////////////////////////////////////////////////////////////////////
    // Groups
@@ -252,20 +145,6 @@ namespace cycfi { namespace photon
             std::forward<Content>(content)
          );
    }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Icons
-   ////////////////////////////////////////////////////////////////////////////
-   struct icon : element
-   {
-                              icon(std::uint32_t code_, float size_ = 1.0);
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-
-      std::uint32_t           _code;
-      float                   _size;
-   };
 
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
@@ -734,40 +613,35 @@ namespace cycfi { namespace photon
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Size limited
+   // Alerts
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
-   struct limit_element : public proxy<Subject>
+   inline auto alert1(
+      char const* message
+    , std::uint32_t icon_id
+    , size size_ = { 400, 180 }
+    , char const* ok_text = "OK"
+    , color ok_color = get_theme().indicator_color
+   )
    {
-      using base_type = proxy<Subject>;
+      auto textbox = static_text_box{ message };
+      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto popup = share(
+         align_center_middle(
+            fixed_size({ 400, 180 },
+            layer(
+               margin({ 20, 20, 20, 20 },
+                  vtile(
+                     htile(
+                        align_top(icon{ icon_id, 2.5 }),
+                        left_margin(20, std::move(textbox))
+                     ),
+                     align_right(hsize(100, hold(ok_button)))
+                  )
+               ),
+               panel{}
+         ))));
 
-                              limit_element(view_limits limits_, Subject&& subject)
-                               : base_type(std::forward<Subject>(subject))
-                               , _limits(limits_)
-                              {}
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-
-      view_limits             _limits;
-   };
-
-   template <typename Subject>
-   inline limit_element<Subject>
-   limit(view_limits limits_, Subject&& subject)
-   {
-      return { limits_, std::forward<Subject>(subject) };
-   }
-
-   template <typename Subject>
-   inline view_limits
-   limit_element<Subject>::limits(basic_context const& ctx) const
-   {
-      auto l = this->subject().limits(ctx);
-      clamp_min(l.min.x, _limits.min.x);
-      clamp_min(l.min.y, _limits.min.y);
-      clamp_max(l.max.x, _limits.max.x);
-      clamp_max(l.max.y, _limits.max.y);
-      return l;
+      return std::pair{ ok_button, popup };
    }
 }}
 

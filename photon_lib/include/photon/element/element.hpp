@@ -85,7 +85,7 @@ namespace cycfi { namespace photon
    }
 
    template <typename Element>
-   inline auto weak(std::shared_ptr<Element> ptr)
+   inline auto get(std::shared_ptr<Element> ptr)
    {
       return std::weak_ptr<element>(ptr);
    }

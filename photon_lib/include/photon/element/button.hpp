@@ -64,13 +64,13 @@ namespace cycfi { namespace photon
                         template <typename W1, typename W2>
                         layered_button(W1&& off, W2&& on);
 
-      virtual element*  hit_test(context const& ctx, point p);
-      virtual element*  click(context const& ctx, mouse_button btn);
-      virtual void      drag(context const& ctx, mouse_button btn);
-      virtual bool      is_control() const;
+      virtual element*  hit_test(context const& ctx, point p) override;
+      virtual element*  click(context const& ctx, mouse_button btn) override;
+      virtual void      drag(context const& ctx, mouse_button btn) override;
+      virtual bool      is_control() const override;
 
-      virtual void      value(int new_state);
-      virtual void      value(bool new_state);
+      virtual void      value(int new_state) override;
+      virtual void      value(bool new_state) override;
       bool              value() const;
 
       button_function   on_click;

@@ -149,7 +149,7 @@ namespace cycfi { namespace photon
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
-   auto const button_margin = rect{ 10, 5, 10, 5 };
+   auto constexpr button_margin = rect{ 10, 5, 10, 5 };
 
    struct basic_button_body : public element
    {
@@ -179,21 +179,21 @@ namespace cycfi { namespace photon
       return Button(std::move(btn_img_off), std::move(btn_img_on));
    }
 
-   template <typename Button>
-   inline Button make_button(
-      std::string const& text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   )
-   {
-      return make_button<Button>(
-         margin(
-            button_margin,
-            align_center(label(text, size))
-         ),
-         body_color
-      );
-   }
+template <typename Button>
+inline Button make_button(
+   std::string const& text
+   , float size = 1.0
+   , color body_color = get_theme().default_button_color
+)
+{
+   return make_button<Button>(
+      margin(
+         button_margin,
+         align_center(label(text, size))
+      ),
+      body_color
+   );
+}
 
    template <typename Button>
    inline Button make_button(

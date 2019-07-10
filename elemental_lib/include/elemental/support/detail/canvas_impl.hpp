@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016)
-#define CYCFI_PHOTON_GUI_LIB_CANVAS_IMPL_MAY_3_2016
+#if !defined(CYCFI_ELEMENTAL_GUI_LIB_CANVAS_IMPL_MAY_3_2016)
+#define CYCFI_ELEMENTAL_GUI_LIB_CANVAS_IMPL_MAY_3_2016
 
 #ifdef __linux__
 # include <map>

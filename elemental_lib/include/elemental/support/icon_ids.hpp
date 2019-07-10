@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016)
-#define CYCFI_PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016
+#if !defined(CYCFI_ELEMENTAL_GUI_LIB_ICON_IDS_JUNE_4_2016)
+#define CYCFI_ELEMENTAL_GUI_LIB_ICON_IDS_JUNE_4_2016
 
 namespace cycfi { namespace elemental { namespace icons
 {

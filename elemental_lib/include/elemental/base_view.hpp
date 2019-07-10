@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_HOST_AUGUST_20_2016)
-#define CYCFI_PHOTON_HOST_AUGUST_20_2016
+#if !defined(CYCFI_ELEMENTAL_HOST_AUGUST_20_2016)
+#define CYCFI_ELEMENTAL_HOST_AUGUST_20_2016
 
 #include <utility>
 #include <memory>

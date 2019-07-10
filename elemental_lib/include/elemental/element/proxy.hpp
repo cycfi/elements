@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_GUI_LIB_PROXY_APRIL_10_2016)
-#define CYCFI_PHOTON_GUI_LIB_PROXY_APRIL_10_2016
+#if !defined(CYCFI_ELEMENTAL_GUI_LIB_PROXY_APRIL_10_2016)
+#define CYCFI_ELEMENTAL_GUI_LIB_PROXY_APRIL_10_2016
 
 #include <elemental/element/element.hpp>
 

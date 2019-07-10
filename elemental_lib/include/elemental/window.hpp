@@ -3,8 +3,8 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#if !defined(CYCFI_PHOTON_GUI_LIB_WINDOW_MARCH_6_2019)
-#define CYCFI_PHOTON_GUI_LIB_WINDOW_MARCH_6_2019
+#if !defined(CYCFI_ELEMENTAL_GUI_LIB_WINDOW_MARCH_6_2019)
+#define CYCFI_ELEMENTAL_GUI_LIB_WINDOW_MARCH_6_2019
 
 #include <string>
 #include <functional>

@@ -9,16 +9,16 @@
 
 namespace elemental = cycfi::elemental;
 
-@interface PhotonWindow : NSWindow
+@interface ElementalWindow : NSWindow
 {
    elemental::window* _pwin;
    NSRect _saved_frame;
 }
 @end
 
-@implementation PhotonWindow
+@implementation ElementalWindow
 
-- (void) set_photon_window : (elemental::window*) pwin
+- (void) set_elemental_window : (elemental::window*) pwin
 {
    self->_pwin = pwin;
 }
@@ -75,8 +75,8 @@ namespace cycfi { namespace elemental
    {
       auto style = window_style(style_);
 
-      PhotonWindow* window_ =
-         [[PhotonWindow alloc]
+      ElementalWindow* window_ =
+         [[ElementalWindow alloc]
             initWithContentRect : NSMakeRect(0, 0, 0, 0)
             styleMask : window_style(style_)
             backing : NSBackingStoreBuffered
@@ -87,7 +87,7 @@ namespace cycfi { namespace elemental
       window_.appearance = [NSAppearance appearanceNamed : NSAppearanceNameVibrantDark];
       [window_ setTitle : [NSString stringWithUTF8String : name.c_str()]];
       [window_ makeKeyAndOrderFront : nil];
-      [window_ set_photon_window : this];
+      [window_ set_elemental_window : this];
 
       // Make the window background transparent
       [window_ setBackgroundColor: [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0]];

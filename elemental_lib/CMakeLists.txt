@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.7.2)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(libphoton)
-set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
+project(libelemental)
+set(elemental_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 ###############################################################################
 # Get rid of these warnings
@@ -75,44 +75,44 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-file(GLOB_RECURSE PHOTON_SOURCES src/*.cpp src/*.c)
-file(GLOB_RECURSE PHOTON_HEADERS include/*.hpp)
+file(GLOB_RECURSE ELEMENTAL_SOURCES src/*.cpp src/*.c)
+file(GLOB_RECURSE ELEMENTAL_HEADERS include/*.hpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   file(GLOB_RECURSE PHOTON_HOST host/macos/*.mm)
+   file(GLOB_RECURSE ELEMENTAL_HOST host/macos/*.mm)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-   file(GLOB_RECURSE PHOTON_HOST host/linux/*.cpp)
+   file(GLOB_RECURSE ELEMENTAL_HOST host/linux/*.cpp)
 endif()
 
 source_group("Source Files\\elemental"
    FILES
-   ${PHOTON_SOURCES}
+   ${ELEMENTAL_SOURCES}
 )
 
-source_group("Source Files\\photon_host"
+source_group("Source Files\\elemental_host"
    FILES
-   ${PHOTON_HOST}
+   ${ELEMENTAL_HOST}
 )
 
 source_group("Header Files\\elemental"
    FILES
-   ${PHOTON_HEADERS}
+   ${ELEMENTAL_HEADERS}
 )
 
 ###############################################################################
 # The Library
 
 add_library(
-   libphoton
-   ${PHOTON_SOURCES}
-   ${PHOTON_HEADERS}
-   ${PHOTON_HOST}
+   libelemental
+   ${ELEMENTAL_SOURCES}
+   ${ELEMENTAL_HEADERS}
+   ${ELEMENTAL_HOST}
 )
 
 set_target_properties(
-   libphoton
+   libelemental
    PROPERTIES
    PREFIX lib OUTPUT_NAME elemental
 )
@@ -121,7 +121,7 @@ set_target_properties(
 # Includes
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   target_include_directories(libphoton
+   target_include_directories(libelemental
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIRS}
@@ -129,7 +129,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-   target_include_directories(libphoton
+   target_include_directories(libelemental
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIRS}
@@ -143,7 +143,7 @@ endif()
 # Libraries and linking
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   target_link_libraries(libphoton
+   target_link_libraries(libelemental
       infra
       json
       ${CAIRO_LIBRARIES}
@@ -155,7 +155,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    link_directories(${GTK3_LIBRARY_DIRS})
 
-   target_link_libraries(libphoton
+   target_link_libraries(libelemental
       infra
       json
       ${CAIRO_LIBRARIES}
@@ -167,6 +167,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   target_compile_options(libphoton PUBLIC "-fobjc-arc")
+   target_compile_options(libelemental PUBLIC "-fobjc-arc")
 endif()
 

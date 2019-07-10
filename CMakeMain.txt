@@ -7,17 +7,17 @@
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(${PHOTON_APP_PROJECT})
+project(${ELEMENTAL_APP_PROJECT})
 
 ###############################################################################
 # Sources (and Resources)
 
-if (NOT DEFINED PHOTON_ICON_FONT)
-   set(PHOTON_ICON_FONT ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/photon_basic.ttf)
+if (NOT DEFINED ELEMENTAL_ICON_FONT)
+   set(ELEMENTAL_ICON_FONT ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/elemental_basic.ttf)
 endif()
 
-set(PHOTON_RESOURCES
-   ${PHOTON_ICON_FONT}
+set(ELEMENTAL_RESOURCES
+   ${ELEMENTAL_ICON_FONT}
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Regular.ttf
@@ -28,59 +28,59 @@ set(PHOTON_RESOURCES
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    set(
-      PHOTON_APP_RESOURCES
-      ${PHOTON_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
+      ELEMENTAL_APP_RESOURCES
+      ${ELEMENTAL_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
    )
    file(
-      COPY ${PHOTON_RESOURCES} ${PHOTON_APP_RESOURCES}
+      COPY ${ELEMENTAL_RESOURCES} ${ELEMENTAL_APP_RESOURCES}
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
    )
 endif()
 
 source_group(Resources
    FILES
-   ${PHOTON_RESOURCES}
-   ${PHOTON_APP_RESOURCES}
+   ${ELEMENTAL_RESOURCES}
+   ${ELEMENTAL_APP_RESOURCES}
 )
 
 ###############################################################################
 # The executable App
 
-if (NOT DEFINED PHOTON_APP_SOURCES)
-   set(PHOTON_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+if (NOT DEFINED ELEMENTAL_APP_SOURCES)
+   set(ELEMENTAL_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    add_executable(
-      ${PHOTON_APP_PROJECT}
+      ${ELEMENTAL_APP_PROJECT}
       MACOSX_BUNDLE
-      ${PHOTON_APP_SOURCES}
-      ${PHOTON_RESOURCES}
-      ${PHOTON_APP_RESOURCES}
+      ${ELEMENTAL_APP_SOURCES}
+      ${ELEMENTAL_RESOURCES}
+      ${ELEMENTAL_APP_RESOURCES}
    )
 else()
    add_executable(
-      ${PHOTON_APP_PROJECT}
-      ${PHOTON_APP_SOURCES}
-      ${PHOTON_RESOURCES}
-      ${PHOTON_APP_RESOURCES}
+      ${ELEMENTAL_APP_PROJECT}
+      ${ELEMENTAL_APP_SOURCES}
+      ${ELEMENTAL_RESOURCES}
+      ${ELEMENTAL_APP_RESOURCES}
    )
 endif()
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(${PHOTON_APP_PROJECT}
-   ${PHOTON_APP_DEPENDENCIES}
-   libphoton
+target_link_libraries(${ELEMENTAL_APP_PROJECT}
+   ${ELEMENTAL_APP_DEPENDENCIES}
+   libelemental
 )
 
-if (NOT DEFINED PHOTON_APP_INCLUDE_DIRECTORIES)
-   set(PHOTON_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
+if (NOT DEFINED ELEMENTAL_APP_INCLUDE_DIRECTORIES)
+   set(ELEMENTAL_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif()
 
-target_include_directories(${PHOTON_APP_PROJECT}
-   PRIVATE "${PHOTON_APP_INCLUDE_DIRECTORIES}"
+target_include_directories(${ELEMENTAL_APP_PROJECT}
+   PRIVATE "${ELEMENTAL_APP_INCLUDE_DIRECTORIES}"
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -90,27 +90,27 @@ endif()
 ###############################################################################
 # Resource file properties
 
-if (NOT DEFINED PHOTON_APP_TITLE)
-   set(PHOTON_APP_TITLE ${PHOTON_APP_PROJECT})
+if (NOT DEFINED ELEMENTAL_APP_TITLE)
+   set(ELEMENTAL_APP_TITLE ${ELEMENTAL_APP_PROJECT})
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   set(MACOSX_BUNDLE_BUNDLE_NAME ${PHOTON_APP_TITLE})
-   set(MACOSX_BUNDLE_COPYRIGHT ${PHOTON_APP_COPYRIGHT})
-   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${PHOTON_APP_ID})
-   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PHOTON_APP_VERSION})
+   set(MACOSX_BUNDLE_BUNDLE_NAME ${ELEMENTAL_APP_TITLE})
+   set(MACOSX_BUNDLE_COPYRIGHT ${ELEMENTAL_APP_COPYRIGHT})
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${ELEMENTAL_APP_ID})
+   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${ELEMENTAL_APP_VERSION})
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set_source_files_properties(
-      ${PHOTON_RESOURCES}
-      ${PHOTON_APP_RESOURCES}
+      ${ELEMENTAL_RESOURCES}
+      ${ELEMENTAL_APP_RESOURCES}
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
    )
 
    set_target_properties(
-      ${PHOTON_APP_PROJECT}
+      ${ELEMENTAL_APP_PROJECT}
       PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/resources/macos/plist.in
    )

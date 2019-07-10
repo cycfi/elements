@@ -36,7 +36,7 @@ namespace cycfi { namespace elemental
       canvas::font_style   label_style                = canvas::normal;
 
       color                icon_color                 = basic_font_color;
-      char const*          icon_font                  = "photon_basic";
+      char const*          icon_font                  = "elemental_basic";
       float                icon_font_size             = 16.0;
       color                icon_button_color          = default_button_color;
 

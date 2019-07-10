@@ -37,7 +37,7 @@ namespace cycfi { namespace elemental
    };
 
    ////////////////////////////////////////////////////////////////////////////
-	// Photon uses gizmos for user interface images such as buttons, frames etc.
+	// Elemental uses gizmos for user interface images such as buttons, frames etc.
    // Basically a gizmo is a resizeable image. The unique feature is its ability
 	// to preserve the image near the edges when it is scaled up or down.
    //

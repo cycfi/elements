@@ -151,9 +151,9 @@ namespace
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// PhotonView Interface
+// ElementalView Interface
 
-@interface PhotonView : NSView <NSTextInputClient>
+@interface ElementalView : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
    NSTrackingArea*                  _tracking_area;
@@ -164,9 +164,9 @@ namespace
 }
 @end
 
-@implementation PhotonView
+@implementation ElementalView
 
-- (void) photon_init : (ph::base_view*) view_
+- (void) elemental_init : (ph::base_view*) view_
 {
    static resource_setter init_resources;
 
@@ -496,24 +496,24 @@ namespace
    _view->focus(ph::focus_request::end_focus);
 }
 
-@end // @implementation PhotonView
+@end // @implementation ElementalView
 
 namespace cycfi { namespace elemental
 {
    namespace
    {
-      PhotonView* get_mac_view(ph::host_view h)
+      ElementalView* get_mac_view(ph::host_view h)
       {
-         return (__bridge PhotonView*) h;
+         return (__bridge ElementalView*) h;
       }
    }
 
    base_view::base_view(host_window h)
    {
-      PhotonView* content = [[PhotonView alloc] init];
+      ElementalView* content = [[ElementalView alloc] init];
       _view = (__bridge host_view) content;
       content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-      [content photon_init : this];
+      [content elemental_init : this];
 
       NSWindow* window_ = (__bridge NSWindow*) h;
       bool b = [window_ isKindOfClass:[NSWindow class]];
@@ -526,10 +526,10 @@ namespace cycfi { namespace elemental
       NSView* parent_view = (__bridge NSView*) h;
       auto parent_frame = [parent_view frame];
       auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
-      PhotonView* content = [[PhotonView alloc] initWithFrame : frame];
+      ElementalView* content = [[ElementalView alloc] initWithFrame : frame];
 
       _view = (__bridge host_view) content;
-      [content photon_init : this];
+      [content elemental_init : this];
       [parent_view addSubview : content];
       [get_mac_view(host()) attach_notifications];
    }

@@ -33,7 +33,7 @@ auto make_popup_menu()
                menu_item_spacer(),
                menu_item("Chaotic Synchronicity"),
                menu_item("Omega Quadrant"),
-               menu_item("Photonic Mesh"),
+               menu_item("Elementalic Mesh"),
                menu_item("Antimatter Soup"),
                menu_item("Dark Beta Quarks"),
                menu_item("Cosmic Infrared Shift")

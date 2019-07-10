@@ -39,12 +39,7 @@ place your clone of the infra and json libraries in the same directory as
 you have the Elemental C++ GUI library.
 
 If you wish to place them somewhere else, then you need to set the cmake
-variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
-invocation:
-
-```
--DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
-```
+variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT later (see below).
 
 ### Boost
 

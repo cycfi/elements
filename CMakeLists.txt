@@ -8,11 +8,11 @@ cmake_minimum_required(VERSION 3.7.2)
 project(elemental)
 set(elemental_root ${CMAKE_CURRENT_SOURCE_DIR})
 
-if (NOT DEFINED INTEGRE_JSON)
-  set(INTEGRE_JSON ../json)
+if (NOT DEFINED CYCFI_JSON_ROOT)
+  set(CYCFI_JSON_ROOT ../json)
 endif()
 
-add_subdirectory(${INTEGRE_JSON} "${CMAKE_CURRENT_BINARY_DIR}/json")
+add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(elemental_lib)
 

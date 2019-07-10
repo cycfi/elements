@@ -82,7 +82,7 @@ your platform and desired IDE, but here is an example for MacOS 10.14:
 1. CD to the elemental library: ```cd elemental```
 2. Make a build directory inside the elemental directory ```mkdir build```
 3. CD to the build directory: ```cd build```
-4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your-installation-boost-path ../
+4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your/boost/path ../
 
 If placed the cycfi infra and json somewhere else, then you need to set the
 cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
@@ -96,7 +96,7 @@ invocation:
 
 1. Simply open the CMakeLists.txt file using CLion.
 2. Open Preferences. Under Build, Execution, Deployment/CMake, add
-   -DBOOST_ROOT=your-installation-boost-path to your CMake options
+   -DBOOST_ROOT=your/boost/path to your CMake options
 
 If placed the cycfi infra and json somewhere else, then you need to add the
 cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:

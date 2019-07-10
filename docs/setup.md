@@ -75,7 +75,7 @@ brew install cmake
 ### Generating the Project using CMake
 
 There are multiple ways to generate a project file using CMake depending on
-your platform and desired IDE, but here is an some example for MacOS 10.14:
+your platform and desired IDE, but here is an example for MacOS 10.14:
 
 ### Using [XCode](https://developer.apple.com/xcode/):
 

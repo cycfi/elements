@@ -35,11 +35,11 @@ git clone https://github.com/cycfi/json.git
 
 Infra provides some basic groundwork common to Cycfi libraries, including
 Elemental. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
-place your clone of the infra library in the same directory as you have the
-Elemental C++ GUI library.
+place your clone of the infra and json libraries in the same directory as 
+you have the Elemental C++ GUI library.
 
 If you wish to place them somewhere else, then you need to set the cmake
-variable CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
+variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
 invocation:
 
 ```
@@ -75,7 +75,8 @@ brew install cmake
 ```
 ### Generating the Project using CMake
 
-There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an some example for MacOS 10.14:
+There are multiple ways to generate a project file using CMake depending on 
+your platform and desired IDE, but here is an some example for MacOS 10.14:
 
 ### Using [XCode](https://developer.apple.com/xcode/):
 
@@ -84,11 +85,26 @@ There are multiple ways to generate a project file using CMake depending on your
 3. CD to the build directory: ```cd build```
 4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your-installation-boost-path ../
 
+If placed the cycfi infra and json somewhere else, then you need to set the 
+cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
+
+```
+-DCYCFI_INFRA_ROOT=cycfi-infra-path -CYCFI_JSON_ROOT=cycfi-json-path
+```
+
 ### Using [CLion](https://www.jetbrains.com/clion/):
 
 1. Simply open the CMakeLists.txt file using CLion.
 2. Open Preferences. Under Build, Execution, Deployment/CMake, add
    -DBOOST_ROOT=your-installation-boost-path to your CMake options
+   
+If placed the cycfi infra and json somewhere else, then you need to add the 
+cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
+invocation:
+
+```
+-DCYCFI_INFRA_ROOT=cycfi-infra-path -CYCFI_JSON_ROOT=cycfi-json-path
+```
 
 ### Building and Running the examples
 

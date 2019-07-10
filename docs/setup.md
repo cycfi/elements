@@ -43,7 +43,7 @@ variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
 invocation:
 
 ```
--DCYCFI_INFRA_ROOT=cycfi-infra-path -CYCFI_JSON_ROOT=cycfi-json-path
+-DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
 ```
 
 ### Boost
@@ -86,10 +86,11 @@ your platform and desired IDE, but here is an some example for MacOS 10.14:
 4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your-installation-boost-path ../
 
 If placed the cycfi infra and json somewhere else, then you need to set the 
-cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
+cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
+invocation:
 
 ```
--DCYCFI_INFRA_ROOT=cycfi-infra-path -CYCFI_JSON_ROOT=cycfi-json-path
+-DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
 ```
 
 ### Using [CLion](https://www.jetbrains.com/clion/):
@@ -99,11 +100,10 @@ cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
    -DBOOST_ROOT=your-installation-boost-path to your CMake options
    
 If placed the cycfi infra and json somewhere else, then you need to add the 
-cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
-invocation:
+cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
 
 ```
--DCYCFI_INFRA_ROOT=cycfi-infra-path -CYCFI_JSON_ROOT=cycfi-json-path
+-DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
 ```
 
 ### Building and Running the examples

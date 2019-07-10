@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_SIZE_APRIL_14_2016
 
-#include <photon/element/element.hpp>
+#include <elemental/element/element.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Fixed sizing elements

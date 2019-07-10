@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon/base_view.hpp>
+#include <elemental/base_view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback

@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/layer.hpp>
-#include <photon/view.hpp>
-#include <photon/support/context.hpp>
+#include <elemental/element/layer.hpp>
+#include <elemental/view.hpp>
+#include <elemental/support/context.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Layer

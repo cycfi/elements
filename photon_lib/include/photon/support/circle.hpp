@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_CIRCLE_APRIL_17_2016)
 #define CYCFI_PHOTON_GUI_LIB_CIRCLE_APRIL_17_2016
 
-#include <photon/support/rect.hpp>
+#include <elemental/support/rect.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Circles

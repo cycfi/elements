@@ -6,15 +6,15 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_MISC_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_MISC_APRIL_10_2016
 
-#include <photon/support/rect.hpp>
-#include <photon/support/point.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/support/point.hpp>
 
 #include <cfloat>
 #include <cstdint>
 #include <cassert>
 #include <chrono>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Utilities

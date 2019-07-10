@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/support/theme.hpp>
-#include <photon/view.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    // The global theme
    theme _theme;

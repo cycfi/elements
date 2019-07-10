@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_FLOW_SEPTEMBER_23_2016
 
-#include <photon/element/composite.hpp>
-#include <photon/element/tile.hpp>
+#include <elemental/element/composite.hpp>
+#include <elemental/element/tile.hpp>
 #include <functional>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element

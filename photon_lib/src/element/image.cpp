@@ -3,17 +3,17 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/image.hpp>
-#include <photon/support.hpp>
-#include <photon/support/context.hpp>
+#include <elemental/element/image.hpp>
+#include <elemental/support.hpp>
+#include <elemental/support/context.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
    image::image(char const* filename, float scale)
-    : _pixmap(std::make_shared<photon::pixmap>(filename, scale))
+    : _pixmap(std::make_shared<elemental::pixmap>(filename, scale))
    {
    }
 

@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_CANVAS_MAY_3_2016)
 #define CYCFI_PHOTON_GUI_LIB_CANVAS_MAY_3_2016
 
-#include <photon/support/color.hpp>
-#include <photon/support/rect.hpp>
-#include <photon/support/circle.hpp>
-#include <photon/support/pixmap.hpp>
+#include <elemental/support/color.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/support/circle.hpp>
+#include <elemental/support/pixmap.hpp>
 
 #include <vector>
 #include <functional>
@@ -22,7 +22,7 @@
 # include <map>
 #endif
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    class canvas
    {
@@ -60,7 +60,7 @@ namespace cycfi { namespace photon
       void              stroke_preserve();
       void              clip();
       bool              hit_test(point p) const;
-      photon::rect      fill_extent() const;
+      elemental::rect      fill_extent() const;
 
       void              move_to(point p);
       void              line_to(point p);
@@ -70,9 +70,9 @@ namespace cycfi { namespace photon
                            float start_angle, float end_angle,
                            bool ccw = false
                         );
-      void              rect(photon::rect r);
-      void              round_rect(photon::rect r, float radius);
-      void              circle(photon::circle c);
+      void              rect(elemental::rect r);
+      void              round_rect(elemental::rect r, float radius);
+      void              circle(elemental::circle c);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Styles
@@ -85,7 +85,7 @@ namespace cycfi { namespace photon
       struct color_stop
       {
          float          offset;
-         photon::color  color;
+         elemental::color  color;
       };
 
       struct linear_gradient
@@ -121,10 +121,10 @@ namespace cycfi { namespace photon
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Rectangles
-      void              fill_rect(photon::rect r);
-      void              fill_round_rect(photon::rect r, float radius);
-      void              stroke_rect(photon::rect r);
-      void              stroke_round_rect(photon::rect r, float radius);
+      void              fill_rect(elemental::rect r);
+      void              fill_round_rect(elemental::rect r, float radius);
+      void              stroke_rect(elemental::rect r);
+      void              stroke_round_rect(elemental::rect r, float radius);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
@@ -170,8 +170,8 @@ namespace cycfi { namespace photon
       ///////////////////////////////////////////////////////////////////////////////////
       // Pixmaps
 
-      void              draw(pixmap const& pm, photon::rect src, photon::rect dest);
-      void              draw(pixmap const& pm, photon::rect dest);
+      void              draw(pixmap const& pm, elemental::rect src, elemental::rect dest);
+      void              draw(pixmap const& pm, elemental::rect dest);
       void              draw(pixmap const& pm, point pos);
 
       ///////////////////////////////////////////////////////////////////////////////////
@@ -228,5 +228,5 @@ namespace cycfi { namespace photon
    };
 }}
 
-#include <photon/support/detail/canvas_impl.hpp>
+#include <elemental/support/detail/canvas_impl.hpp>
 #endif

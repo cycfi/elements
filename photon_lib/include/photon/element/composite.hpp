@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_COMPOSITE_APRIL_10_2016
 
-#include <photon/element/element.hpp>
+#include <elemental/element/element.hpp>
 #include <vector>
 #include <array>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Composites
@@ -62,7 +62,7 @@ namespace cycfi { namespace photon
 
       struct hit_info
       {
-         photon::element*     element  = nullptr;
+         elemental::element*     element  = nullptr;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };

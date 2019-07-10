@@ -18,7 +18,7 @@
 # include FT_TYPE1_TABLES_H
 #endif
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
@@ -115,7 +115,7 @@ namespace cycfi { namespace photon
    {
       double x1, y1, x2, y2;
       cairo_fill_extents(&_context, &x1, &y1, &x2, &y2);
-      return photon::rect(x1, y1, x2, y2);
+      return elemental::rect(x1, y1, x2, y2);
    }
 
    inline void canvas::move_to(point p)
@@ -408,7 +408,7 @@ namespace cycfi { namespace photon
       _state.align = align;
    }
 
-   inline void canvas::draw(pixmap const& pm, photon::rect src, photon::rect dest)
+   inline void canvas::draw(pixmap const& pm, elemental::rect src, elemental::rect dest)
    {
       auto  state = new_state();
       auto  w = dest.width();
@@ -421,7 +421,7 @@ namespace cycfi { namespace photon
       cairo_fill(&_context);
    }
 
-   inline void canvas::draw(pixmap const& pm, photon::rect dest)
+   inline void canvas::draw(pixmap const& pm, elemental::rect dest)
    {
       draw(pm, { 0, 0, pm.size() }, dest);
    }

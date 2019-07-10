@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_REFERENCE_APRIL_10_2016
 
-#include <photon/element/element.hpp>
-#include <photon/element/element.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/element/element.hpp>
 #include <functional>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    template <typename Base>
    class indirect : public Base

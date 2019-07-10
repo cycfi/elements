@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_RECT_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_RECT_APRIL_10_2016
 
-#include <photon/support/point.hpp>
+#include <elemental/support/point.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // rect

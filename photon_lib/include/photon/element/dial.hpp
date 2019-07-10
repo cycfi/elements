@@ -6,12 +6,12 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016
 
-#include <photon/element/proxy.hpp>
-#include <photon/element/tracker.hpp>
-#include <photon/support.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/element/tracker.hpp>
+#include <elemental/support.hpp>
 #include <functional>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Dials

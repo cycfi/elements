@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_PROXY_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_PROXY_APRIL_10_2016
 
-#include <photon/element/element.hpp>
+#include <elemental/element/element.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Proxies

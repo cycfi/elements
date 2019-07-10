@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_GALLERY_JUNE_5_2016
 
-#include <photon/support/theme.hpp>
-#include <photon/support/text_utils.hpp>
-#include <photon/element.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/support/text_utils.hpp>
+#include <elemental/element.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Pane

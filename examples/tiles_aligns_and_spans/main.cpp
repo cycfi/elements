@@ -1,6 +1,6 @@
-#include <photon.hpp>
+#include <elemental.hpp>
 
-using namespace cycfi::photon;
+using namespace cycfi::elemental;
 
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);

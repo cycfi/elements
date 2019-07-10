@@ -8,7 +8,7 @@
 
 #include <cstdint>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Colors

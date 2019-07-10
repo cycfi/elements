@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/support/misc.hpp>
-#include <photon/support/rect.hpp>
+#include <elemental/support/misc.hpp>
+#include <elemental/support/rect.hpp>
 #include <algorithm>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    bool intersects(rect a, rect b)
    {

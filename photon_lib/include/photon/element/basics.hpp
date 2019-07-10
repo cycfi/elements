@@ -6,12 +6,12 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
 
-#include <photon/element/element.hpp>
-#include <photon/element/proxy.hpp>
-#include <photon/support/theme.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/support/theme.hpp>
 #include <functional>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Element

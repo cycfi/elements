@@ -9,7 +9,7 @@
 #include <set>
 #include <string_view>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    // Resources (e.g. images) that are identified by file names can be
    // absolute or relative paths. For relative paths, the resource_paths

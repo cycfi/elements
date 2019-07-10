@@ -4,9 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include "view_impl.hpp"
-#include <photon/support/assert.hpp>
+#include <elemental/support/assert.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    config get_config()
    {

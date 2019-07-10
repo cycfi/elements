@@ -6,7 +6,7 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_POINT_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_POINT_APRIL_10_2016
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Points

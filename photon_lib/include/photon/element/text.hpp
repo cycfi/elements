@@ -6,14 +6,14 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_TEXT_APRIL_17_2016
 
-#include <photon/support/glyphs.hpp>
-#include <photon/support/theme.hpp>
-#include <photon/element/element.hpp>
+#include <elemental/support/glyphs.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/element/element.hpp>
 #include <boost/asio.hpp>
 #include <string>
 #include <vector>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box

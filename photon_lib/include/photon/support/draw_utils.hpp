@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_DRAW_UTILS_OCTOBER_27_2017)
 #define CYCFI_PHOTON_GUI_LIB_DRAW_UTILS_OCTOBER_27_2017
 
-#include <photon/support/canvas.hpp>
+#include <elemental/support/canvas.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
    void draw_panel(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);

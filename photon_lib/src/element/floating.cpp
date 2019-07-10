@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/floating.hpp>
-#include <photon/support/context.hpp>
+#include <elemental/element/floating.hpp>
+#include <elemental/support/context.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    view_limits floating_element::limits(basic_context const& ctx) const
    {

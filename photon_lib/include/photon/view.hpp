@@ -6,18 +6,18 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016)
 #define CYCFI_PHOTON_GUI_LIB_VIEW_AUGUST_15_2016
 
-#include <photon/base_view.hpp>
-#include <photon/support/rect.hpp>
-#include <photon/support/canvas.hpp>
-#include <photon/support/theme.hpp>
-#include <photon/element/element.hpp>
-#include <photon/element/layer.hpp>
+#include <elemental/base_view.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/support/canvas.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/element/layer.hpp>
 #include <boost/asio.hpp>
 #include <memory>
 #include <unordered_map>
 #include <chrono>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    struct context;
    class window;

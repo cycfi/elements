@@ -9,7 +9,7 @@
 #include <string>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Application class

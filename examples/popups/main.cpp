@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon.hpp>
+#include <elemental.hpp>
 
-using namespace cycfi::photon;
+using namespace cycfi::elemental;
 using namespace std::chrono_literals;
 
 // Main window background color

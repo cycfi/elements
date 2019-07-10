@@ -5,7 +5,7 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2)
 
-project(photon)
+project(elemental)
 set(photon_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (NOT DEFINED INTEGRE_JSON)

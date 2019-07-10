@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_TRACKER_AUGUST_29_2016
 
-#include <photon/support/point.hpp>
-#include <photon/element/element.hpp>
+#include <elemental/support/point.hpp>
+#include <elemental/element/element.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // tracker tracks the mouse movement.

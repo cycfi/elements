@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/port.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/port.hpp>
+#include <elemental/view.hpp>
 #include <algorithm>
 #include <cmath>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation

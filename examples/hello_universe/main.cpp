@@ -1,6 +1,6 @@
-#include <photon.hpp>
+#include <elemental.hpp>
 
-using namespace cycfi::photon;
+using namespace cycfi::elemental;
 
 int main(int argc, const char* argv[])
 {

@@ -3,9 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/menu.hpp>
+#include <elemental/element/menu.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    void basic_dropdown_menu::layout(context const& ctx)
    {

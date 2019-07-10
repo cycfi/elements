@@ -5,7 +5,7 @@
 =============================================================================*/
 #include "cairo.h"
 
-namespace cycfi { namespace photon { namespace detail
+namespace cycfi { namespace elemental { namespace detail
 {
    class scratch_context
    {

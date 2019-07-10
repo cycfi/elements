@@ -6,7 +6,7 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016)
 #define CYCFI_PHOTON_GUI_LIB_ICON_IDS_JUNE_4_2016
 
-namespace cycfi { namespace photon { namespace icons
+namespace cycfi { namespace elemental { namespace icons
 {
    enum
    {

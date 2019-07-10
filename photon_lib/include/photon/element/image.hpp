@@ -6,12 +6,12 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_IMAGE_APRIL_24_2016
 
-#include <photon/element/element.hpp>
-#include <photon/support/canvas.hpp>
-#include <photon/support/pixmap.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/support/canvas.hpp>
+#include <elemental/support/pixmap.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Images
@@ -29,7 +29,7 @@ namespace cycfi { namespace photon
 
    protected:
 
-      photon::pixmap&         pixmap() const  { return *_pixmap.get(); }
+      elemental::pixmap&         pixmap() const  { return *_pixmap.get(); }
 
    private:
 

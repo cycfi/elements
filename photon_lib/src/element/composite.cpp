@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/composite.hpp>
-#include <photon/support/context.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/composite.hpp>
+#include <elemental/support/context.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
@@ -216,7 +216,7 @@ namespace cycfi { namespace photon
             if (_cursor_info.element && _cursor_info.element != info.element)
                cursor_leaving(ctx, p, _cursor_info);
 
-            if (photon::intersects(info.bounds, view_bounds(ctx.view)))
+            if (elemental::intersects(info.bounds, view_bounds(ctx.view)))
             {
                context ectx{ ctx, info.element, info.bounds };
                bool r = info.element->cursor(ectx, p, status);
@@ -238,7 +238,7 @@ namespace cycfi { namespace photon
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (info.element && photon::intersects(info.bounds, view_bounds(ctx.view)))
+         if (info.element && elemental::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
             return info.element->scroll(ectx, dir, p);

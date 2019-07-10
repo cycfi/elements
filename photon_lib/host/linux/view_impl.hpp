@@ -6,16 +6,16 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
 #define CYCFI_PHOTON_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
 
-#include <photon/base_view.hpp>
-#include <photon/support/json_io.hpp>
+#include <elemental/base_view.hpp>
+#include <elemental/support/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    namespace x3 = boost::spirit::x3;
    namespace fs = boost::filesystem;
-   namespace ph = photon;
+   namespace ph = elemental;
 
    struct config
    {
@@ -25,12 +25,12 @@ namespace cycfi { namespace photon
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-   photon::config,
+   elemental::config,
    (std::string, application_name)
    (std::string, application_id)
 )
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    struct host_view
    {

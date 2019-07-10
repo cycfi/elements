@@ -86,7 +86,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    file(GLOB_RECURSE PHOTON_HOST host/linux/*.cpp)
 endif()
 
-source_group("Source Files\\photon"
+source_group("Source Files\\elemental"
    FILES
    ${PHOTON_SOURCES}
 )
@@ -96,7 +96,7 @@ source_group("Source Files\\photon_host"
    ${PHOTON_HOST}
 )
 
-source_group("Header Files\\photon"
+source_group("Header Files\\elemental"
    FILES
    ${PHOTON_HEADERS}
 )
@@ -114,7 +114,7 @@ add_library(
 set_target_properties(
    libphoton
    PROPERTIES
-   PREFIX lib OUTPUT_NAME photon
+   PREFIX lib OUTPUT_NAME elemental
 )
 
 ###############################################################################

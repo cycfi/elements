@@ -6,16 +6,16 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_SLIDER_AUGUST_29_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_SLIDER_AUGUST_29_2016
 
-#include <photon/element/proxy.hpp>
-#include <photon/element/tracker.hpp>
-#include <photon/view.hpp>
-#include <photon/support.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/element/tracker.hpp>
+#include <elemental/view.hpp>
+#include <elemental/support.hpp>
 
 #include <cmath>
 #include <functional>
 #include <type_traits>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Sliders

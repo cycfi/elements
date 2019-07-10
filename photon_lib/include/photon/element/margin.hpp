@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_MARGIN_APRIL_11_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_MARGIN_APRIL_11_2016
 
-#include <photon/element/proxy.hpp>
+#include <elemental/element/proxy.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Margins

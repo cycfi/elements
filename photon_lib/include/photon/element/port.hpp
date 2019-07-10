@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_PORT_APRIL_24_2016
 
-#include <photon/element/proxy.hpp>
+#include <elemental/element/proxy.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Port elements

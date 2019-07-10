@@ -3,16 +3,16 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/support/pixmap.hpp>
-#include <photon/support/resource_paths.hpp>
+#include <elemental/support/pixmap.hpp>
+#include <elemental/support/resource_paths.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PNG 1
-#include <photon/support/detail/stb_image.h>
+#include <elemental/support/detail/stb_image.h>
 #include <infra/assert.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    pixmap::pixmap(point size, float scale)
     : _surface(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size.x, size.y))
@@ -93,7 +93,7 @@ namespace cycfi { namespace photon
          cairo_surface_destroy(_surface);
    }
 
-   photon::size pixmap::size() const
+   elemental::size pixmap::size() const
    {
       double scx, scy;
       cairo_surface_get_device_scale(_surface, &scx, &scy);

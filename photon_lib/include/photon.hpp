@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_FERBRUARY_17_2017)
 #define CYCFI_PHOTON_GUI_LIB_FERBRUARY_17_2017
 
-#include <photon/app.hpp>
-#include <photon/window.hpp>
-#include <photon/view.hpp>
-#include <photon/element.hpp>
+#include <elemental/app.hpp>
+#include <elemental/window.hpp>
+#include <elemental/view.hpp>
+#include <elemental/element.hpp>
 
 #endif

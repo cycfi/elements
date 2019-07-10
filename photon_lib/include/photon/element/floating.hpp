@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_FLOATING_JUNE_9_2016
 
-#include <photon/element/proxy.hpp>
+#include <elemental/element/proxy.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Floating elements

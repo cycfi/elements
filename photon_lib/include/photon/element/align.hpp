@@ -6,11 +6,11 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_ALIGN_APRIL_14_2016
 
-#include <photon/element/proxy.hpp>
-#include <photon/support/context.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/support/context.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Alignment elements

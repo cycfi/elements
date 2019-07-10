@@ -6,13 +6,13 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_BUTTON_APRIL_21_2016
 
-#include <photon/element/layer.hpp>
-#include <photon/element/proxy.hpp>
-#include <photon/support/context.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/layer.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/support/context.hpp>
+#include <elemental/view.hpp>
 #include <functional>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button

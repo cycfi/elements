@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_TEXT_UTILS_MAY_22_2016)
 #define CYCFI_PHOTON_GUI_LIB_TEXT_UTILS_MAY_22_2016
 
-#include <photon/support/canvas.hpp>
+#include <elemental/support/canvas.hpp>
 #include <string>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);

@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_POPUP_JUNE_4_2016
 
-#include <photon/element/floating.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/floating.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Popup

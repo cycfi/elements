@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/view.hpp>
-#include <photon/window.hpp>
-#include <photon/support/context.hpp>
+#include <elemental/view.hpp>
+#include <elemental/window.hpp>
+#include <elemental/support/context.hpp>
 
- namespace cycfi { namespace photon
+ namespace cycfi { namespace elemental
  {
    view::view(host_view h)
     : base_view(h)

@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/text.hpp>
-#include <photon/element/port.hpp>
-#include <photon/support/theme.hpp>
-#include <photon/support/text_utils.hpp>
-#include <photon/support/context.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/text.hpp>
+#include <elemental/element/port.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/support/text_utils.hpp>
+#include <elemental/support/context.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    using namespace std::chrono_literals;
 

@@ -7,13 +7,13 @@
 #define CYCFI_PHOTON_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
 
 #include <infra/assert.hpp>
-#include <photon/support/canvas.hpp>
-#include <photon/support/text_utils.hpp>
+#include <elemental/support/canvas.hpp>
+#include <elemental/support/text_utils.hpp>
 #include <vector>
 #include <stdexcept>
 #include <cairo.h>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // glyphs: Text drawing and measuring utility

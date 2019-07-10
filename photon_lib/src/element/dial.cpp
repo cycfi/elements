@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/dial.hpp>
-#include <photon/support/theme.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/dial.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/view.hpp>
 #include <cmath>
 
 #include <iostream>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    dial_base::dial_base(double init_value)
     : _value(init_value)

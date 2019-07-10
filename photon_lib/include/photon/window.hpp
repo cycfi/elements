@@ -18,10 +18,10 @@
 #endif
 
 #include <infra/support.hpp>
-#include <photon/support/rect.hpp>
-#include <photon/base_view.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/base_view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Window class

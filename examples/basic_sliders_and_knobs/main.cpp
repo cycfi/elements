@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon.hpp>
+#include <elemental.hpp>
 
-using namespace cycfi::photon;
+using namespace cycfi::elemental;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);

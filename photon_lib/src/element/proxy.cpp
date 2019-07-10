@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/proxy.hpp>
-#include <photon/support/context.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/proxy.hpp>
+#include <elemental/support/context.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // proxy class implementation

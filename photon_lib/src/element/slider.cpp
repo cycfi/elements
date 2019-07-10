@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/slider.hpp>
-#include <photon/support/theme.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/slider.hpp>
+#include <elemental/support/theme.hpp>
+#include <elemental/view.hpp>
 #include <cmath>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    view_limits slider_base::limits(basic_context const& ctx) const
    {

@@ -6,10 +6,10 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_TILE_APRIL_13_2016
 
-#include <photon/element/composite.hpp>
+#include <elemental/element/composite.hpp>
 #include <memory>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles

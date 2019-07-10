@@ -8,18 +8,18 @@
 
 #include <infra/support.hpp>
 #include <infra/assert.hpp>
-#include <photon/support/canvas.hpp>
-#include <photon/support/circle.hpp>
-#include <photon/support/color.hpp>
-#include <photon/support/context.hpp>
-#include <photon/support/glyphs.hpp>
-#include <photon/support/icon_ids.hpp>
-#include <photon/support/misc.hpp>
-#include <photon/support/pixmap.hpp>
-#include <photon/support/point.hpp>
-#include <photon/support/rect.hpp>
-#include <photon/support/draw_utils.hpp>
-#include <photon/support/text_utils.hpp>
-#include <photon/support/theme.hpp>
+#include <elemental/support/canvas.hpp>
+#include <elemental/support/circle.hpp>
+#include <elemental/support/color.hpp>
+#include <elemental/support/context.hpp>
+#include <elemental/support/glyphs.hpp>
+#include <elemental/support/icon_ids.hpp>
+#include <elemental/support/misc.hpp>
+#include <elemental/support/pixmap.hpp>
+#include <elemental/support/point.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/support/draw_utils.hpp>
+#include <elemental/support/text_utils.hpp>
+#include <elemental/support/theme.hpp>
 
 #endif

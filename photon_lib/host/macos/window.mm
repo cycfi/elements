@@ -3,22 +3,22 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon/window.hpp>
+#include <elemental/window.hpp>
 #import <Cocoa/Cocoa.h>
-#import <photon/support.hpp>
+#import <elemental/support.hpp>
 
-namespace photon = cycfi::photon;
+namespace elemental = cycfi::elemental;
 
 @interface PhotonWindow : NSWindow
 {
-   photon::window* _pwin;
+   elemental::window* _pwin;
    NSRect _saved_frame;
 }
 @end
 
 @implementation PhotonWindow
 
-- (void) set_photon_window : (photon::window*) pwin
+- (void) set_photon_window : (elemental::window*) pwin
 {
    self->_pwin = pwin;
 }
@@ -56,7 +56,7 @@ namespace photon = cycfi::photon;
 
 @end
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    namespace
    {
@@ -144,8 +144,8 @@ namespace cycfi { namespace photon
 
 
       auto _size = [[window_ contentView] frame].size;
-      photon::clamp(_size.width, minx, limits_.max.x);
-      photon::clamp(_size.height, miny, limits_.max.y);
+      elemental::clamp(_size.width, minx, limits_.max.x);
+      elemental::clamp(_size.height, miny, limits_.max.y);
       [window_ setContentSize : _size];
    }
 

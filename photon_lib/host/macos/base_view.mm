@@ -3,8 +3,8 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <photon/base_view.hpp>
-#include <photon/support/resource_paths.hpp>
+#include <elemental/base_view.hpp>
+#include <elemental/support/resource_paths.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -16,7 +16,7 @@
 # error "ARC is off"
 #endif
 
-namespace ph = cycfi::photon;
+namespace ph = cycfi::elemental;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ namespace
          char resource_path[PATH_MAX];
          CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
          CFRelease(resources_url);
-         cycfi::photon::resource_paths.push_back(resource_path);
+         cycfi::elemental::resource_paths.push_back(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
@@ -78,7 +78,7 @@ namespace
    };
 }
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    // These functions are defined in key.mm:
    key_code    translate_key(unsigned int key);
@@ -498,7 +498,7 @@ namespace
 
 @end // @implementation PhotonView
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    namespace
    {
@@ -552,13 +552,13 @@ namespace cycfi { namespace photon
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
-   photon::size base_view::size() const
+   elemental::size base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(photon::size p)
+   void base_view::size(elemental::size p)
    {
       [get_mac_view(host()) setFrameSize : NSSize{ p.x, p.y }];
    }

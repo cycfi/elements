@@ -6,12 +6,12 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_MENU_JUNE_4_2016
 
-#include <photon/element/element.hpp>
-#include <photon/element/button.hpp>
-#include <photon/element/popup.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/element/button.hpp>
+#include <elemental/element/popup.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Dropdown Menu

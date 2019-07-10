@@ -6,9 +6,9 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_THEME_APRIL_15_2016)
 #define CYCFI_PHOTON_GUI_LIB_THEME_APRIL_15_2016
 
-#include <photon/support.hpp>
+#include <elemental/support.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    class theme
    {

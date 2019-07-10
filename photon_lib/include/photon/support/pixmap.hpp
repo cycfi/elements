@@ -9,10 +9,10 @@
 #include <vector>
 #include <memory>
 #include <cairo.h>
-#include <photon/support/point.hpp>
+#include <elemental/support/point.hpp>
 #include <stdexcept>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    class canvas;
 
@@ -37,7 +37,7 @@ namespace cycfi { namespace photon
       pixmap&           operator=(pixmap const& rhs) = delete;
       pixmap&           operator=(pixmap&& rhs);
 
-      photon::size      size() const;
+      elemental::size      size() const;
       float             scale() const;
       void              scale(float val);
 

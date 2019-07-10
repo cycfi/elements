@@ -6,15 +6,15 @@
 #if !defined(CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016)
 #define CYCFI_PHOTON_GUI_LIB_WIDGET_APRIL_10_2016
 
-#include <photon/base_view.hpp>
-#include <photon/support/rect.hpp>
-#include <photon/support/misc.hpp>
+#include <elemental/base_view.hpp>
+#include <elemental/support/rect.hpp>
+#include <elemental/support/misc.hpp>
 
 #include <memory>
 #include <string>
 #include <type_traits>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    struct basic_context;
    struct context;

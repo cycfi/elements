@@ -27,10 +27,10 @@
       distribution.
 
 =============================================================================*/
-#include <photon/base_view.hpp>
+#include <elemental/base_view.hpp>
 #import <Cocoa/Cocoa.h>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    key_code translate_key(unsigned int key)
    {

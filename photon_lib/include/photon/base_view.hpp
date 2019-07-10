@@ -14,11 +14,11 @@
 #include <cairo.h>
 
 #include <infra/support.hpp>
-#include <photon/support/point.hpp>
-#include <photon/support/rect.hpp>
-// #include <photon/window.hpp>
+#include <elemental/support/point.hpp>
+#include <elemental/support/rect.hpp>
+// #include <elemental/window.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
@@ -308,8 +308,8 @@ namespace cycfi { namespace photon
       virtual void      refresh(rect area);
 
       point             cursor_pos() const;
-      photon::size      size() const;
-      void              size(photon::size p);
+      elemental::size      size() const;
+      void              size(elemental::size p);
       host_view         host() const { return _view; }
 
    private:

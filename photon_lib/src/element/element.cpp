@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <photon/element/element.hpp>
-#include <photon/support.hpp>
-#include <photon/view.hpp>
+#include <elemental/element/element.hpp>
+#include <elemental/support.hpp>
+#include <elemental/view.hpp>
 
-namespace cycfi { namespace photon
+namespace cycfi { namespace elemental
 {
    ////////////////////////////////////////////////////////////////////////////
    // element class implementation

@@ -19,7 +19,7 @@ completeness' sake...
 
 ### C++17
 
-Elemental supports the MacOS at this point. Ports for other platforms are
+Elemental currently supports the MacOS. Ports for other platforms are
 still in flux. In the Mac, we support both XCode and CLion IDEs. Get the
 latest version with a C++17 compiler.
 

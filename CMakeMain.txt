@@ -9,6 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(${ELEMENTAL_APP_PROJECT})
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   set (MACOSX YES)
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   set (LINUX YES)
+endif()
+
 ###############################################################################
 # Sources (and Resources)
 

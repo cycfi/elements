@@ -8,6 +8,7 @@
 
 #include <set>
 #include <string_view>
+#include <vector>
 
 namespace cycfi { namespace elemental
 {

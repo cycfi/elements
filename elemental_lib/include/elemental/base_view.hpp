@@ -16,7 +16,10 @@
 #include <infra/support.hpp>
 #include <elemental/support/point.hpp>
 #include <elemental/support/rect.hpp>
-// #include <elemental/window.hpp>
+
+#if defined(_WIN32)
+# include <windows.h>
+#endif
 
 namespace cycfi { namespace elemental
 {
@@ -290,7 +293,10 @@ namespace cycfi { namespace elemental
    class base_view : non_copyable
    {
    public:
+
+#if !defined(_WIN32)
                         base_view(host_view h);
+#endif
                         base_view(host_window h);
       virtual           ~base_view();
 

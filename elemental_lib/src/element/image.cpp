@@ -6,6 +6,7 @@
 #include <elemental/element/image.hpp>
 #include <elemental/support.hpp>
 #include <elemental/support/context.hpp>
+#include <algorithm>
 
 namespace cycfi { namespace elemental
 {

@@ -11,6 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(libelemental)
 set(elemental_root ${CMAKE_CURRENT_SOURCE_DIR})
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   set (MACOSX YES)
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   set (LINUX YES)
+endif()
+
 ###############################################################################
 # Get rid of these warnings
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
@@ -24,13 +32,22 @@ endif()
 ###############################################################################
 # Cairo
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-FIND_PACKAGE(CAIRO REQUIRED cairo)
+if (WIN32)
+   set(CAIRO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
+   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set(CAIRO_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
+   else()
+      set(CAIRO_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
+   endif()
+else()
+	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+	FIND_PACKAGE(CAIRO REQUIRED cairo)
+endif()
 
 ###############################################################################
 # Freetype
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
    find_package(Freetype REQUIRED)
    include_directories(${FREETYPE_INCLUDE_DIRS})
 endif()
@@ -38,7 +55,7 @@ endif()
 ###############################################################################
 # GTK (linux only)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
    # Use the package PkgConfig to detect GTK+ headers/library files
    FIND_PACKAGE(PkgConfig REQUIRED)
    PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
@@ -78,11 +95,11 @@ endif()
 file(GLOB_RECURSE ELEMENTAL_SOURCES src/*.cpp src/*.c)
 file(GLOB_RECURSE ELEMENTAL_HEADERS include/*.hpp)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (MACOSX)
    file(GLOB_RECURSE ELEMENTAL_HOST host/macos/*.mm)
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
    file(GLOB_RECURSE ELEMENTAL_HOST host/linux/*.cpp)
 endif()
 
@@ -104,23 +121,30 @@ source_group("Header Files\\elemental"
 ###############################################################################
 # The Library
 
-add_library(
-   libelemental
+add_library(libelemental
    ${ELEMENTAL_SOURCES}
    ${ELEMENTAL_HEADERS}
    ${ELEMENTAL_HOST}
 )
 
-set_target_properties(
-   libelemental
+set_target_properties(libelemental
    PROPERTIES
    PREFIX lib OUTPUT_NAME elemental
 )
 
+if (WIN32)
+   target_compile_definitions(libelemental
+      PUBLIC
+      WIN32_LEAN_AND_MEAN
+      NOMINMAX
+      BOOST_ALL_NO_LIB=1
+   )
+endif()
+
 ###############################################################################
 # Includes
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (MACOSX OR WIN32)
    target_include_directories(libelemental
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
@@ -128,7 +152,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    )
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
    target_include_directories(libelemental
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
@@ -142,7 +166,7 @@ endif()
 ###############################################################################
 # Libraries and linking
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (MACOSX OR WIN32)
    target_link_libraries(libelemental
       infra
       json
@@ -152,7 +176,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    )
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
    link_directories(${GTK3_LIBRARY_DIRS})
 
    target_link_libraries(libelemental
@@ -166,7 +190,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    )
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (MACOSX)
    target_compile_options(libelemental PUBLIC "-fobjc-arc")
 endif()
 

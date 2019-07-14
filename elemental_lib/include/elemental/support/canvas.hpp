@@ -84,7 +84,7 @@ namespace cycfi { namespace elemental
       // Gradients
       struct color_stop
       {
-         float          offset;
+         float             offset;
          elemental::color  color;
       };
 

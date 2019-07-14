@@ -83,7 +83,8 @@ namespace cycfi { namespace elemental
    template <std::size_t size>
    inline view_limits basic_knob_element<size>::limits(basic_context const& ctx) const
    {
-      return { { size, size }, { size, size } };
+	  auto pt = point{ float(size), float(size) };
+      return view_limits{ pt, pt };
    }
 
    template <std::size_t size>

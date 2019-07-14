@@ -203,7 +203,8 @@ namespace cycfi { namespace elemental
    inline view_limits basic_thumb_element<size>
       ::limits(basic_context const& ctx) const
    {
-      return { { size, size }, { size, size } };
+	  auto pt = point{ float(size), float(size) };
+	  return view_limits{ pt, pt };
    }
 
    template <unsigned size>
@@ -251,10 +252,11 @@ namespace cycfi { namespace elemental
    inline view_limits basic_track_element<size, vertical>
       ::limits(basic_context const& ctx) const
    {
-      return vertical?
-         view_limits{ { size, min_length }, { size, full_extent } } :
-         view_limits{ { min_length, size }, { full_extent, size } }
-         ;
+	  auto sz = float(size);
+	  auto min_length_ = float(min_length);
+	  auto p1 = vertical ? point{ sz, min_length_ } : point{ min_length_, sz };
+	  auto p2 = vertical ? point{ sz, full_extent } : point{ full_extent, sz };
+	  return view_limits{ p1, p2 };
    }
 
    template <unsigned size, bool vertical>

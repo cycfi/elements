@@ -28,3 +28,5 @@ xcuserdata/
 /build/
 /cmake-build-debug/
 /cmake-build-release/
+/.vs/
+/CMakeSettings.json

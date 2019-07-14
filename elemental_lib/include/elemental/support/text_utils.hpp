@@ -8,6 +8,7 @@
 
 #include <elemental/support/canvas.hpp>
 #include <string>
+#include <cctype>
 
 namespace cycfi { namespace elemental
 {

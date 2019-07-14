@@ -14,8 +14,8 @@ namespace cycfi { namespace elemental
          bounds.bottom_left()
       };
 
-      gradient.add_color_stop({ 0.0, rgba(255, 255, 255, 16) });
-      gradient.add_color_stop({ 0.8, rgba(0, 0, 0, 16) });
+      gradient.add_color_stop({ 0.0f, rgba(255, 255, 255, 16) });
+      gradient.add_color_stop({ 0.8f, rgba(0, 0, 0, 16) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();
@@ -134,8 +134,9 @@ namespace cycfi { namespace elemental
             hcp, radius*2
          };
 
-         gradient.add_color_stop({ 0.0, { 1.0, 1.0, 1.0, 0.4 } });
-         gradient.add_color_stop({ 1.0, { 0.6, 0.6, 0.6, 0.0 } });
+		 using cs = canvas::color_stop;
+         gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
+         gradient.add_color_stop(cs{ 1.0f, { 0.6f, 0.6f, 0.6f, 0.0f } });
 
          cnv.fill_style(gradient);
          cnv.begin_path();
@@ -205,8 +206,9 @@ namespace cycfi { namespace elemental
             hcp, radius*2
          };
 
-         gradient.add_color_stop({ 0.0, { 1.0, 1.0, 1.0, 0.4 } });
-         gradient.add_color_stop({ 1.0, { 0.6, 0.6, 0.6, 0.0 } });
+		 using cs = canvas::color_stop;
+		 gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
+         gradient.add_color_stop(cs{ 1.0f, { 0.6f, 0.6f, 0.6f, 0.0f } });
 
          cnv.fill_style(gradient);
          cnv.begin_path();

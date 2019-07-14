@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/composite.hpp>
-#include <elemental/support/context.hpp>
-#include <elemental/view.hpp>
+#include <elements/element/composite.hpp>
+#include <elements/support/context.hpp>
+#include <elements/view.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
@@ -216,7 +216,7 @@ namespace cycfi { namespace elemental
             if (_cursor_info.element && _cursor_info.element != info.element)
                cursor_leaving(ctx, p, _cursor_info);
 
-            if (elemental::intersects(info.bounds, view_bounds(ctx.view)))
+            if (elements::intersects(info.bounds, view_bounds(ctx.view)))
             {
                context ectx{ ctx, info.element, info.bounds };
                bool r = info.element->cursor(ectx, p, status);
@@ -238,7 +238,7 @@ namespace cycfi { namespace elemental
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (info.element && elemental::intersects(info.bounds, view_bounds(ctx.view)))
+         if (info.element && elements::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
             return info.element->scroll(ectx, dir, p);

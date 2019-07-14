@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/misc.hpp>
-#include <elemental/support/rect.hpp>
+#include <elements/support/misc.hpp>
+#include <elements/support/rect.hpp>
 #include <algorithm>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    bool intersects(rect a, rect b)
    {

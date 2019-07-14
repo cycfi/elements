@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/base_view.hpp>
+#include <elements/base_view.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Application event loop entry
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    int app_main(int argc, const char* argv[])
    {

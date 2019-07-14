@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/glyphs.hpp>
-#include <elemental/support/detail/scratch_context.hpp>
+#include <elements/support/glyphs.hpp>
+#include <elements/support/detail/scratch_context.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    static detail::scratch_context scratch_context_;
 

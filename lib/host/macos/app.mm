@@ -3,10 +3,10 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental/app.hpp>
+#include <elements/app.hpp>
 #import <Cocoa/Cocoa.h>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    app::app(int argc, const char* argv[])
    {

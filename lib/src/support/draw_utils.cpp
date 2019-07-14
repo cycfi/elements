@@ -3,9 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/draw_utils.hpp>
+#include <elements/support/draw_utils.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius)
    {

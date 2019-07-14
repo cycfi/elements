@@ -7,7 +7,7 @@
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(${ELEMENTAL_APP_PROJECT})
+project(${ELEMENTS_APP_PROJECT})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set (MACOSX YES)
@@ -20,12 +20,12 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-if (NOT DEFINED ELEMENTAL_ICON_FONT)
-   set(ELEMENTAL_ICON_FONT ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/elemental_basic.ttf)
+if (NOT DEFINED ELEMENTS_ICON_FONT)
+   set(ELEMENTS_ICON_FONT ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/elements_basic.ttf)
 endif()
 
-set(ELEMENTAL_RESOURCES
-   ${ELEMENTAL_ICON_FONT}
+set(ELEMENTS_RESOURCES
+   ${ELEMENTS_ICON_FONT}
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Regular.ttf
@@ -36,59 +36,59 @@ set(ELEMENTAL_RESOURCES
 
 if (LINUX)
    set(
-      ELEMENTAL_APP_RESOURCES
-      ${ELEMENTAL_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
+      ELEMENTS_APP_RESOURCES
+      ${ELEMENTS_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
    )
    file(
-      COPY ${ELEMENTAL_RESOURCES} ${ELEMENTAL_APP_RESOURCES}
+      COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
    )
 endif()
 
 source_group(Resources
    FILES
-   ${ELEMENTAL_RESOURCES}
-   ${ELEMENTAL_APP_RESOURCES}
+   ${ELEMENTS_RESOURCES}
+   ${ELEMENTS_APP_RESOURCES}
 )
 
 ###############################################################################
 # The executable App
 
-if (NOT DEFINED ELEMENTAL_APP_SOURCES)
-   set(ELEMENTAL_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+if (NOT DEFINED ELEMENTS_APP_SOURCES)
+   set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 endif()
 
 if (MACOSX)
    add_executable(
-      ${ELEMENTAL_APP_PROJECT}
+      ${ELEMENTS_APP_PROJECT}
       MACOSX_BUNDLE
-      ${ELEMENTAL_APP_SOURCES}
-      ${ELEMENTAL_RESOURCES}
-      ${ELEMENTAL_APP_RESOURCES}
+      ${ELEMENTS_APP_SOURCES}
+      ${ELEMENTS_RESOURCES}
+      ${ELEMENTS_APP_RESOURCES}
    )
 else()
    add_executable(
-      ${ELEMENTAL_APP_PROJECT}
-      ${ELEMENTAL_APP_SOURCES}
-      ${ELEMENTAL_RESOURCES}
-      ${ELEMENTAL_APP_RESOURCES}
+      ${ELEMENTS_APP_PROJECT}
+      ${ELEMENTS_APP_SOURCES}
+      ${ELEMENTS_RESOURCES}
+      ${ELEMENTS_APP_RESOURCES}
    )
 endif()
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(${ELEMENTAL_APP_PROJECT}
-   ${ELEMENTAL_APP_DEPENDENCIES}
-   libelemental
+target_link_libraries(${ELEMENTS_APP_PROJECT}
+   ${ELEMENTS_APP_DEPENDENCIES}
+   libelements
 )
 
-if (NOT DEFINED ELEMENTAL_APP_INCLUDE_DIRECTORIES)
-   set(ELEMENTAL_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
+if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)
+   set(ELEMENTS_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif()
 
-target_include_directories(${ELEMENTAL_APP_PROJECT}
-   PRIVATE "${ELEMENTAL_APP_INCLUDE_DIRECTORIES}"
+target_include_directories(${ELEMENTS_APP_PROJECT}
+   PRIVATE "${ELEMENTS_APP_INCLUDE_DIRECTORIES}"
 )
 
 if (MACOSX)
@@ -98,27 +98,27 @@ endif()
 ###############################################################################
 # Resource file properties
 
-if (NOT DEFINED ELEMENTAL_APP_TITLE)
-   set(ELEMENTAL_APP_TITLE ${ELEMENTAL_APP_PROJECT})
+if (NOT DEFINED ELEMENTS_APP_TITLE)
+   set(ELEMENTS_APP_TITLE ${ELEMENTS_APP_PROJECT})
 endif()
 
 if (MACOSX)
-   set(MACOSX_BUNDLE_BUNDLE_NAME ${ELEMENTAL_APP_TITLE})
-   set(MACOSX_BUNDLE_COPYRIGHT ${ELEMENTAL_APP_COPYRIGHT})
-   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${ELEMENTAL_APP_ID})
-   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${ELEMENTAL_APP_VERSION})
+   set(MACOSX_BUNDLE_BUNDLE_NAME ${ELEMENTS_APP_TITLE})
+   set(MACOSX_BUNDLE_COPYRIGHT ${ELEMENTS_APP_COPYRIGHT})
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${ELEMENTS_APP_ID})
+   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${ELEMENTS_APP_VERSION})
 endif()
 
 if (MACOSX)
    set_source_files_properties(
-      ${ELEMENTAL_RESOURCES}
-      ${ELEMENTAL_APP_RESOURCES}
+      ${ELEMENTS_RESOURCES}
+      ${ELEMENTS_APP_RESOURCES}
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
    )
 
    set_target_properties(
-      ${ELEMENTAL_APP_PROJECT}
+      ${ELEMENTS_APP_PROJECT}
       PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/resources/macos/plist.in
    )

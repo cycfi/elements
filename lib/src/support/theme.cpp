@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/theme.hpp>
-#include <elemental/view.hpp>
+#include <elements/support/theme.hpp>
+#include <elements/view.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    // The global theme
    theme _theme;

@@ -3,22 +3,22 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental/window.hpp>
+#include <elements/window.hpp>
 #import <Cocoa/Cocoa.h>
-#import <elemental/support.hpp>
+#import <elements/support.hpp>
 
-namespace elemental = cycfi::elemental;
+namespace elements = cycfi::elements;
 
 @interface ElementalWindow : NSWindow
 {
-   elemental::window* _pwin;
+   elements::window* _pwin;
    NSRect _saved_frame;
 }
 @end
 
 @implementation ElementalWindow
 
-- (void) set_elemental_window : (elemental::window*) pwin
+- (void) set_elements_window : (elements::window*) pwin
 {
    self->_pwin = pwin;
 }
@@ -56,7 +56,7 @@ namespace elemental = cycfi::elemental;
 
 @end
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    namespace
    {
@@ -87,7 +87,7 @@ namespace cycfi { namespace elemental
       window_.appearance = [NSAppearance appearanceNamed : NSAppearanceNameVibrantDark];
       [window_ setTitle : [NSString stringWithUTF8String : name.c_str()]];
       [window_ makeKeyAndOrderFront : nil];
-      [window_ set_elemental_window : this];
+      [window_ set_elements_window : this];
 
       // Make the window background transparent
       [window_ setBackgroundColor: [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0]];
@@ -144,8 +144,8 @@ namespace cycfi { namespace elemental
 
 
       auto _size = [[window_ contentView] frame].size;
-      elemental::clamp(_size.width, minx, limits_.max.x);
-      elemental::clamp(_size.height, miny, limits_.max.y);
+      elements::clamp(_size.width, minx, limits_.max.x);
+      elements::clamp(_size.height, miny, limits_.max.y);
       [window_ setContentSize : _size];
    }
 

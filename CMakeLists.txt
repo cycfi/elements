@@ -5,8 +5,8 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2)
 
-project(elemental)
-set(elemental_root ${CMAKE_CURRENT_SOURCE_DIR})
+project(elements)
+set(elements_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (NOT DEFINED CYCFI_JSON_ROOT)
   set(CYCFI_JSON_ROOT ../json)
@@ -16,7 +16,7 @@ add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(lib)
 
-if (NOT ELEMENTAL_NO_EXAMPLES)
+if (NOT ELEMENTS_NO_EXAMPLES)
    add_subdirectory(examples)
 endif()
 

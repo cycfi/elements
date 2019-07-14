@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/text_utils.hpp>
-#include <elemental/support/misc.hpp>
-#include <elemental/support/theme.hpp>
+#include <elements/support/text_utils.hpp>
+#include <elements/support/misc.hpp>
+#include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {

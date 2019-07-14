@@ -3,14 +3,14 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/text.hpp>
-#include <elemental/element/port.hpp>
-#include <elemental/support/theme.hpp>
-#include <elemental/support/text_utils.hpp>
-#include <elemental/support/context.hpp>
-#include <elemental/view.hpp>
+#include <elements/element/text.hpp>
+#include <elements/element/port.hpp>
+#include <elements/support/theme.hpp>
+#include <elements/support/text_utils.hpp>
+#include <elements/support/context.hpp>
+#include <elements/view.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    using namespace std::chrono_literals;
 

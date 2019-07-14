@@ -3,8 +3,8 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental/base_view.hpp>
-#include <elemental/support/resource_paths.hpp>
+#include <elements/base_view.hpp>
+#include <elements/support/resource_paths.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -16,7 +16,7 @@
 # error "ARC is off"
 #endif
 
-namespace ph = cycfi::elemental;
+namespace ph = cycfi::elements;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ namespace
          char resource_path[PATH_MAX];
          CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
          CFRelease(resources_url);
-         cycfi::elemental::resource_paths.push_back(resource_path);
+         cycfi::elements::resource_paths.push_back(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
@@ -78,7 +78,7 @@ namespace
    };
 }
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    // These functions are defined in key.mm:
    key_code    translate_key(unsigned int key);
@@ -166,7 +166,7 @@ namespace
 
 @implementation ElementalView
 
-- (void) elemental_init : (ph::base_view*) view_
+- (void) elements_init : (ph::base_view*) view_
 {
    static resource_setter init_resources;
 
@@ -498,7 +498,7 @@ namespace
 
 @end // @implementation ElementalView
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    namespace
    {
@@ -513,7 +513,7 @@ namespace cycfi { namespace elemental
       ElementalView* content = [[ElementalView alloc] init];
       _view = (__bridge host_view) content;
       content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-      [content elemental_init : this];
+      [content elements_init : this];
 
       NSWindow* window_ = (__bridge NSWindow*) h;
       bool b = [window_ isKindOfClass:[NSWindow class]];
@@ -529,7 +529,7 @@ namespace cycfi { namespace elemental
       ElementalView* content = [[ElementalView alloc] initWithFrame : frame];
 
       _view = (__bridge host_view) content;
-      [content elemental_init : this];
+      [content elements_init : this];
       [parent_view addSubview : content];
       [get_mac_view(host()) attach_notifications];
    }
@@ -552,13 +552,13 @@ namespace cycfi { namespace elemental
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
-   elemental::size base_view::size() const
+   elements::size base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(elemental::size p)
+   void base_view::size(elements::size p)
    {
       [get_mac_view(host()) setFrameSize : NSSize{ p.x, p.y }];
    }

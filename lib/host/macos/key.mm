@@ -27,10 +27,10 @@
       distribution.
 
 =============================================================================*/
-#include <elemental/base_view.hpp>
+#include <elements/base_view.hpp>
 #import <Cocoa/Cocoa.h>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    key_code translate_key(unsigned int key)
    {

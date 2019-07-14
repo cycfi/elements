@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/flow.hpp>
-#include <elemental/support/context.hpp>
+#include <elements/element/flow.hpp>
+#include <elements/support/context.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element

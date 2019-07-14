@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/gallery.hpp>
-#include <elemental/support/text_utils.hpp>
-#include <elemental/support/theme.hpp>
+#include <elements/element/gallery.hpp>
+#include <elements/support/text_utils.hpp>
+#include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    float basic_button_body::corner_radius = 4.0;
 

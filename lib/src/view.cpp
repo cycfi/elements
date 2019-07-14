@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/view.hpp>
-#include <elemental/window.hpp>
-#include <elemental/support/context.hpp>
+#include <elements/view.hpp>
+#include <elements/window.hpp>
+#include <elements/support/context.hpp>
 
- namespace cycfi { namespace elemental
+ namespace cycfi { namespace elements
  {
    view::view(host_view h)
     : base_view(h)

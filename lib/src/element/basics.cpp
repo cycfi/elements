@@ -3,9 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/basics.hpp>
+#include <elements/element/basics.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    void background_fill::draw(context const& ctx)
    {

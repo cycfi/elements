@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/support/resource_paths.hpp>
+#include <elements/support/resource_paths.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    namespace fs = boost::filesystem;
    std::vector<std::string> resource_paths;

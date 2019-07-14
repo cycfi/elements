@@ -6,7 +6,7 @@
 #include "view_impl.hpp"
 #include <cairo.h>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback

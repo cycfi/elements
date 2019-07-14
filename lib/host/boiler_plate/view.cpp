@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental/base_view.hpp>
+#include <elements/base_view.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ///////////////////////////////////////////////////////////////////////////
    // Main view creation callback

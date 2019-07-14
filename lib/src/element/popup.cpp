@@ -3,9 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/menu.hpp>
+#include <elements/element/menu.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    element* basic_popup_element::hit_test(context const& ctx, point p)
    {

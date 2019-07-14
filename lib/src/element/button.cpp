@@ -3,9 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/button.hpp>
+#include <elements/element/button.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button

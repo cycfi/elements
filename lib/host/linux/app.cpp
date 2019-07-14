@@ -4,9 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include "view_impl.hpp"
-#include <elemental/support/assert.hpp>
+#include <elements/support/assert.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    config get_config()
    {

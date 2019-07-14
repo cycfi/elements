@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/element.hpp>
-#include <elemental/support.hpp>
-#include <elemental/view.hpp>
+#include <elements/element/element.hpp>
+#include <elements/support.hpp>
+#include <elements/view.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // element class implementation

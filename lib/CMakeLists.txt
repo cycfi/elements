@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.7.2)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(libelemental)
-set(elemental_root ${CMAKE_CURRENT_SOURCE_DIR})
+project(libelements)
+set(elements_root ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set (MACOSX YES)
@@ -92,48 +92,48 @@ endif()
 ###############################################################################
 # Sources (and Resources)
 
-file(GLOB_RECURSE ELEMENTAL_SOURCES src/*.cpp src/*.c)
-file(GLOB_RECURSE ELEMENTAL_HEADERS include/*.hpp)
+file(GLOB_RECURSE ELEMENTS_SOURCES src/*.cpp src/*.c)
+file(GLOB_RECURSE ELEMENTS_HEADERS include/*.hpp)
 
 if (MACOSX)
-   file(GLOB_RECURSE ELEMENTAL_HOST host/macos/*.mm)
+   file(GLOB_RECURSE ELEMENTS_HOST host/macos/*.mm)
 endif()
 
 if (LINUX)
-   file(GLOB_RECURSE ELEMENTAL_HOST host/linux/*.cpp)
+   file(GLOB_RECURSE ELEMENTS_HOST host/linux/*.cpp)
 endif()
 
-source_group("Source Files\\elemental"
+source_group("Source Files\\elements"
    FILES
-   ${ELEMENTAL_SOURCES}
+   ${ELEMENTS_SOURCES}
 )
 
-source_group("Source Files\\elemental_host"
+source_group("Source Files\\elements_host"
    FILES
-   ${ELEMENTAL_HOST}
+   ${ELEMENTS_HOST}
 )
 
-source_group("Header Files\\elemental"
+source_group("Header Files\\elements"
    FILES
-   ${ELEMENTAL_HEADERS}
+   ${ELEMENTS_HEADERS}
 )
 
 ###############################################################################
 # The Library
 
-add_library(libelemental
-   ${ELEMENTAL_SOURCES}
-   ${ELEMENTAL_HEADERS}
-   ${ELEMENTAL_HOST}
+add_library(libelements
+   ${ELEMENTS_SOURCES}
+   ${ELEMENTS_HEADERS}
+   ${ELEMENTS_HOST}
 )
 
-set_target_properties(libelemental
+set_target_properties(libelements
    PROPERTIES
-   PREFIX lib OUTPUT_NAME elemental
+   PREFIX lib OUTPUT_NAME elements
 )
 
 if (WIN32)
-   target_compile_definitions(libelemental
+   target_compile_definitions(libelements
       PUBLIC
       WIN32_LEAN_AND_MEAN
       NOMINMAX
@@ -145,7 +145,7 @@ endif()
 # Includes
 
 if (MACOSX OR WIN32)
-   target_include_directories(libelemental
+   target_include_directories(libelements
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIRS}
@@ -153,7 +153,7 @@ if (MACOSX OR WIN32)
 endif()
 
 if (LINUX)
-   target_include_directories(libelemental
+   target_include_directories(libelements
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIRS}
@@ -167,7 +167,7 @@ endif()
 # Libraries and linking
 
 if (MACOSX OR WIN32)
-   target_link_libraries(libelemental
+   target_link_libraries(libelements
       infra
       json
       ${CAIRO_LIBRARIES}
@@ -179,7 +179,7 @@ endif()
 if (LINUX)
    link_directories(${GTK3_LIBRARY_DIRS})
 
-   target_link_libraries(libelemental
+   target_link_libraries(libelements
       infra
       json
       ${CAIRO_LIBRARIES}
@@ -191,6 +191,6 @@ if (LINUX)
 endif()
 
 if (MACOSX)
-   target_compile_options(libelemental PUBLIC "-fobjc-arc")
+   target_compile_options(libelements PUBLIC "-fobjc-arc")
 endif()
 

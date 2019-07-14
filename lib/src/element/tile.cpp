@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/tile.hpp>
-#include <elemental/support/context.hpp>
+#include <elements/element/tile.hpp>
+#include <elements/support/context.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    namespace
    {

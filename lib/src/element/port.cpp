@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/port.hpp>
-#include <elemental/view.hpp>
+#include <elements/element/port.hpp>
+#include <elements/view.hpp>
 #include <algorithm>
 #include <cmath>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation

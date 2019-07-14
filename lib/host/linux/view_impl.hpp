@@ -3,19 +3,19 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTAL_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
-#define CYCFI_ELEMENTAL_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
+#if !defined(CYCFI_ELEMENTS_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017)
+#define CYCFI_ELEMENTS_GUI_LIB_HOST_VIEW_IMPL_DECEMBER_24_2017
 
-#include <elemental/base_view.hpp>
-#include <elemental/support/json_io.hpp>
+#include <elements/base_view.hpp>
+#include <elements/support/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    namespace x3 = boost::spirit::x3;
    namespace fs = boost::filesystem;
-   namespace ph = elemental;
+   namespace ph = elements;
 
    struct config
    {
@@ -25,12 +25,12 @@ namespace cycfi { namespace elemental
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-   elemental::config,
+   elements::config,
    (std::string, application_name)
    (std::string, application_id)
 )
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    struct host_view
    {

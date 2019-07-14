@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/layer.hpp>
-#include <elemental/view.hpp>
-#include <elemental/support/context.hpp>
+#include <elements/element/layer.hpp>
+#include <elements/view.hpp>
+#include <elements/support/context.hpp>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Layer

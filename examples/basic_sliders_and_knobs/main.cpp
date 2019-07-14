@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental.hpp>
+#include <elements.hpp>
 
-using namespace cycfi::elemental;
+using namespace cycfi::elements;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);

@@ -3,18 +3,18 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elemental/element/image.hpp>
-#include <elemental/support.hpp>
-#include <elemental/support/context.hpp>
+#include <elements/element/image.hpp>
+#include <elements/support.hpp>
+#include <elements/support/context.hpp>
 #include <algorithm>
 
-namespace cycfi { namespace elemental
+namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
    image::image(char const* filename, float scale)
-    : _pixmap(std::make_shared<elemental::pixmap>(filename, scale))
+    : _pixmap(std::make_shared<elements::pixmap>(filename, scale))
    {
    }
 

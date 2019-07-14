@@ -14,7 +14,7 @@ endif()
 
 add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
-add_subdirectory(elemental_lib)
+add_subdirectory(lib)
 
 if (NOT ELEMENTAL_NO_EXAMPLES)
    add_subdirectory(examples)

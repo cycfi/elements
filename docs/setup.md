@@ -1,4 +1,4 @@
-# ![Elemental-Logo](images/elements.png) Elemental C++ GUI library
+# ![Elements-Logo](images/elements.png) Elements C++ GUI library
 
 ## Setup and Installation
 
@@ -19,13 +19,13 @@ completeness' sake...
 
 ### C++17
 
-Elemental currently supports the MacOS. Ports for other platforms are
+Elements currently supports the MacOS. Ports for other platforms are
 still in flux. In the Mac, we support both XCode and CLion IDEs. Get the
 latest version with a C++17 compiler.
 
 ### Git
 
-Elemental C++ GUI library, plus the Cycfi Infra and JSON libraries:
+Elements C++ GUI library, plus the Cycfi Infra and JSON libraries:
 
 ```
 git clone https://github.com/cycfi/elements.git
@@ -34,9 +34,9 @@ git clone https://github.com/cycfi/json.git
 ```
 
 Infra provides some basic groundwork common to Cycfi libraries, including
-Elemental. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
+Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
 place your clone of the infra and json libraries in the same directory as
-you have the Elemental C++ GUI library.
+you have the Elements C++ GUI library.
 
 If you wish to place them somewhere else, then you need to set the cmake
 variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT later (see below).

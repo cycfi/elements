@@ -1,4 +1,4 @@
-# ![Elemental-Logo](docs/images/elemental.png) Elemental C++ GUI library
+# ![Elemental-Logo](docs/images/elements.png) Elemental C++ GUI library
 
 **Update: Renamed the library to avoid the name Clash with QNX Photon.**
 

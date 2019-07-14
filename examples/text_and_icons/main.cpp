@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental.hpp>
+#include <elements.hpp>
 
-using namespace cycfi::elemental;
+using namespace cycfi::elements;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -101,8 +101,8 @@ auto make_basic_text()
                )),
             top_margin(20, pane("Static Text",
                vtile(
-                  eh("Elemental UI"),
-                  el(1.0, "Hello, Universe. I am Elemental."),
+                  eh("Elements UI"),
+                  el(1.0, "Hello, Universe. I am Elements."),
                   el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
                   el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
                   el(0.5, "Now, Joel rewrote my code using modern C++14.")

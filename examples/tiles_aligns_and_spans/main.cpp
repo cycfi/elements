@@ -1,6 +1,6 @@
-#include <elemental.hpp>
+#include <elements.hpp>
 
-using namespace cycfi::elemental;
+using namespace cycfi::elements;
 
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);

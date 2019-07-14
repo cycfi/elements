@@ -3,9 +3,9 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include <elemental.hpp>
+#include <elements.hpp>
 
-using namespace cycfi::elemental;
+using namespace cycfi::elements;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -33,7 +33,7 @@ auto make_popup_menu()
                menu_item_spacer(),
                menu_item("Chaotic Synchronicity"),
                menu_item("Omega Quadrant"),
-               menu_item("Elementalic Mesh"),
+               menu_item("Photonic Mesh"),
                menu_item("Antimatter Soup"),
                menu_item("Dark Beta Quarks"),
                menu_item("Cosmic Infrared Shift")

@@ -1,4 +1,4 @@
-# ![Elemental-Logo](images/elemental.png) Elemental C++ GUI library
+# ![Elemental-Logo](images/elements.png) Elemental C++ GUI library
 
 ## Setup and Installation
 
@@ -28,7 +28,7 @@ latest version with a C++17 compiler.
 Elemental C++ GUI library, plus the Cycfi Infra and JSON libraries:
 
 ```
-git clone https://github.com/cycfi/elemental.git
+git clone https://github.com/cycfi/elements.git
 git clone https://github.com/cycfi/infra.git
 git clone https://github.com/cycfi/json.git
 ```
@@ -79,8 +79,8 @@ your platform and desired IDE, but here is an example for MacOS 10.14:
 
 ### Using [XCode](https://developer.apple.com/xcode/):
 
-1. CD to the elemental library: ```cd elemental```
-2. Make a build directory inside the elemental directory ```mkdir build```
+1. CD to the elements library: ```cd elements```
+2. Make a build directory inside the elements directory ```mkdir build```
 3. CD to the build directory: ```cd build```
 4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your/boost/path ../
 
@@ -108,7 +108,7 @@ cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
 ### Building and Running the examples
 
 If successful, cmake will generate an XCode project in the build directory.
-Open the project file elemental.xcodeproj and build all. You should see a
+Open the project file elements.xcodeproj and build all. You should see a
 couple of example applications.
 
 Tips:

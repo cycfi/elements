@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
       bool        operator!=(circle const& other) const;
 
       point       center() const;
-      circle      inset(float x);
+      circle      inset(float x) const;
       circle      move(float dx, float dy) const;
       circle      move_to(float x, float y) const;
 
@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
       return { cx, cy };
    }
 
-   inline circle circle::inset(float x)
+   inline circle circle::inset(float x) const
    {
       return { cx, cy, radius-x };
    }

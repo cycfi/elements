@@ -10,6 +10,31 @@ namespace elements = cycfi::elements;
 
 namespace cycfi { namespace elements
 {
+   void DisableCloseButton(HWND hwnd)
+   {
+      EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE,
+         MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+   }
+
+   void DisableMinimizeButton(HWND hwnd)
+   {
+      SetWindowLong(hwnd, GWL_STYLE,
+         GetWindowLong(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
+   }
+
+   void DisableMaximizeButton(HWND hwnd)
+   {
+      SetWindowLong(hwnd, GWL_STYLE,
+         GetWindowLong(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
+   }
+
+   void DisableResizing(HWND hwnd)
+   {
+      SetWindowLong(hwnd, GWL_STYLE,
+         GetWindowLong(hwnd, GWL_STYLE) & ~WS_SIZEBOX);
+      DisableMaximizeButton(hwnd);
+   }
+
    LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
    {
       auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -56,7 +81,15 @@ namespace cycfi { namespace elements
          nullptr, nullptr, nullptr,
          nullptr
       );
-      SetWindowLongPtr(_window, GWLP_USERDATA, (LONG_PTR)this);
+      SetWindowLongPtr(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+      if (!(style_ & closable))
+         DisableCloseButton(_window);
+      if (!(style_ & miniaturizable))
+         DisableMinimizeButton(_window);
+      if (!(style_ & resizable))
+         DisableResizing(_window);
+
       ShowWindow(_window, SW_RESTORE);
    }
 

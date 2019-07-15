@@ -5,6 +5,16 @@
 =============================================================================*/
 #include <elements/app.hpp>
 
+// int wmain(int, wchar_t**)
+// {
+//    return 0;
+// }
+
+// #undef UNICODE
+// #define UNICODE
+// #include <windows.h>
+// #include <shellapi.h>
+
 namespace cycfi { namespace elements
 {
    app::app(int argc, const char* argv[])
@@ -17,6 +27,19 @@ namespace cycfi { namespace elements
 
    void app::run()
    {
+      // struct Args
+      // {
+      //    int n;
+      //    wchar_t** p;
+
+      //    ~Args() {  if (p != 0) ::LocalFree( p ); }
+      //    Args(): p(::CommandLineToArgvW( ::GetCommandLine(), &n)) {}
+      // };
+
+      // Args args;
+
+      // if (!args.p == 0)
+      //    wmain(args.n, args.p);
    }
 
    void app::stop()

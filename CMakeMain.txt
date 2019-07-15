@@ -66,9 +66,26 @@ if (MACOSX)
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
    )
-else()
+endif()
+
+if (LINUX)
    add_executable(
       ${ELEMENTS_APP_PROJECT}
+      ${ELEMENTS_APP_SOURCES}
+      ${ELEMENTS_RESOURCES}
+      ${ELEMENTS_APP_RESOURCES}
+   )
+endif()
+
+if (WIN32)
+
+   set(CMAKE_EXE_LINKER_FLAGS
+      "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
+   )
+
+   add_executable(
+      ${ELEMENTS_APP_PROJECT}
+      WIN32
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}

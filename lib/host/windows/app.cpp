@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
    void app::run()
    {
       MSG messages;
-      while (GetMessage(&messages, NULL, 0, 0) > 0)
+      while (_running && GetMessage(&messages, NULL, 0, 0) > 0)
       {
          TranslateMessage(&messages);
          DispatchMessage(&messages);
@@ -78,6 +78,7 @@ namespace cycfi { namespace elements
 
    void app::stop()
    {
+      _running = false;
    }
 }}
 

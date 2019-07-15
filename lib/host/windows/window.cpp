@@ -12,16 +12,13 @@ namespace cycfi { namespace elements
 {
    LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
    {
+      auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+      auto* p = reinterpret_cast<window*>(param);
       switch (message)
       {
-         case WM_CHAR:
-         if (wparam==VK_ESCAPE)
-         {
-            DestroyWindow(hwnd);
-         }
-
          case WM_DESTROY:
-            PostQuitMessage(0);
+            if (p)
+               p->on_close();
             break;
 
          default:
@@ -57,8 +54,9 @@ namespace cycfi { namespace elements
          bounds.left, bounds.top,
          bounds.width(), bounds.height(),
          nullptr, nullptr, nullptr,
-         this
+         nullptr
       );
+      SetWindowLongPtr(_window, GWLP_USERDATA, (LONG_PTR)this);
       ShowWindow(_window, SW_RESTORE);
    }
 

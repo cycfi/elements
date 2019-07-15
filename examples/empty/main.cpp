@@ -22,7 +22,6 @@ int main(int argc, const char* argv[])
                               // Add more content layers here. The order
                               // specifies the layering. The lowest layer
                               // is at the top of this list.
-
       }
    );
 

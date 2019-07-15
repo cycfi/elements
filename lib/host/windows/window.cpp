@@ -37,16 +37,44 @@ namespace cycfi { namespace elements
          DisableMaximizeButton(hwnd);
       }
 
+      LRESULT onClose(window* win)
+      {
+         if (win)
+            win->on_close();
+         return 0;
+      }
+
+      BOOL CALLBACK EnumChildProc(HWND child, LPARAM lParam)
+      {
+         LPRECT bounds = (LPRECT) lParam;
+         MoveWindow(
+            child,
+            0, 0,
+            bounds->right,
+            bounds->bottom,
+            TRUE);
+
+         // Make sure the child window is visible.
+         ShowWindow(child, SW_SHOW);
+         return true;
+      }
+
+      LRESULT onSize(HWND hwnd)
+      {
+         RECT bounds;
+         GetClientRect(hwnd, &bounds);
+         EnumChildWindows(hwnd, EnumChildProc, (LPARAM) &bounds);
+         return 0;
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-         auto* p = reinterpret_cast<window*>(param);
+         auto* win = reinterpret_cast<window*>(param);
          switch (message)
          {
-            case WM_DESTROY:
-               if (p)
-                  p->on_close();
-               break;
+            case WM_CLOSE: return onClose(win);
+            case WM_SIZE: return onSize(hwnd);
 
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);

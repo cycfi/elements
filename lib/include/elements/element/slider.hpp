@@ -343,6 +343,10 @@ namespace cycfi { namespace elements
       virtual void            draw(context const& ctx);
    };
 
+   void draw_slider_marks(
+      canvas& cnv, rect bounds, float size, std::size_t major_divs
+    , std::size_t minor_divs, color c);
+
    template <
       std::size_t _size, std::size_t _num_divs
     , std::size_t _major_divs, typename Subject>
@@ -350,10 +354,6 @@ namespace cycfi { namespace elements
    slider_marks_element<_size, _num_divs, _major_divs, Subject>
       ::draw(context const& ctx)
    {
-      void draw_slider_marks(
-         canvas& cnv, rect bounds, float size, std::size_t major_divs
-       , std::size_t minor_divs, color c);
-
       // Draw linear lines
       draw_slider_marks(
          ctx.canvas, ctx.bounds, _size, _num_divs
@@ -399,19 +399,19 @@ namespace cycfi { namespace elements
       float                   _font_size;
    };
 
+   void draw_slider_labels(
+      canvas& cnv
+    , rect bounds
+    , float size
+    , float font_size
+    , std::string const labels[]
+    , std::size_t _num_labels
+   );
+
    template <int size, typename Subject, std::size_t num_labels>
    inline void
    slider_labels_element<size, Subject, num_labels>::draw(context const& ctx)
    {
-      void draw_slider_labels(
-         canvas& cnv
-       , rect bounds
-       , float size
-       , float font_size
-       , std::string const labels[]
-       , std::size_t _num_labels
-      );
-
       // Draw the subject
       base_type::draw(ctx);
 

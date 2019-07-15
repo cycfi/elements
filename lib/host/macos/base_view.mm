@@ -151,9 +151,9 @@ namespace
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ElementalView Interface
+// ElementsView Interface
 
-@interface ElementalView : NSView <NSTextInputClient>
+@interface ElementsView : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
    NSTrackingArea*                  _tracking_area;
@@ -164,7 +164,7 @@ namespace
 }
 @end
 
-@implementation ElementalView
+@implementation ElementsView
 
 - (void) elements_init : (ph::base_view*) view_
 {
@@ -496,21 +496,21 @@ namespace
    _view->focus(ph::focus_request::end_focus);
 }
 
-@end // @implementation ElementalView
+@end // @implementation ElementsView
 
 namespace cycfi { namespace elements
 {
    namespace
    {
-      ElementalView* get_mac_view(ph::host_view h)
+      ElementsView* get_mac_view(ph::host_view h)
       {
-         return (__bridge ElementalView*) h;
+         return (__bridge ElementsView*) h;
       }
    }
 
    base_view::base_view(host_window h)
    {
-      ElementalView* content = [[ElementalView alloc] init];
+      ElementsView* content = [[ElementsView alloc] init];
       _view = (__bridge host_view) content;
       content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
       [content elements_init : this];
@@ -526,7 +526,7 @@ namespace cycfi { namespace elements
       NSView* parent_view = (__bridge NSView*) h;
       auto parent_frame = [parent_view frame];
       auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
-      ElementalView* content = [[ElementalView alloc] initWithFrame : frame];
+      ElementsView* content = [[ElementsView alloc] initWithFrame : frame];
 
       _view = (__bridge host_view) content;
       [content elements_init : this];

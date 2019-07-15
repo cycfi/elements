@@ -4,19 +4,19 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/window.hpp>
+#include <elements/support.hpp>
 #import <Cocoa/Cocoa.h>
-#import <elements/support.hpp>
 
 namespace elements = cycfi::elements;
 
-@interface ElementalWindow : NSWindow
+@interface ElementsWindow : NSWindow
 {
    elements::window* _pwin;
    NSRect _saved_frame;
 }
 @end
 
-@implementation ElementalWindow
+@implementation ElementsWindow
 
 - (void) set_elements_window : (elements::window*) pwin
 {
@@ -75,8 +75,8 @@ namespace cycfi { namespace elements
    {
       auto style = window_style(style_);
 
-      ElementalWindow* window_ =
-         [[ElementalWindow alloc]
+      ElementsWindow* window_ =
+         [[ElementsWindow alloc]
             initWithContentRect : NSMakeRect(0, 0, 0, 0)
             styleMask : window_style(style_)
             backing : NSBackingStoreBuffered

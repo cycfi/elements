@@ -103,6 +103,11 @@ if (LINUX)
    file(GLOB_RECURSE ELEMENTS_HOST host/linux/*.cpp)
 endif()
 
+if (WIN32)
+   file(GLOB_RECURSE ELEMENTS_HOST host/windows/*.cpp)
+endif()
+
+
 source_group("Source Files\\elements"
    FILES
    ${ELEMENTS_SOURCES}

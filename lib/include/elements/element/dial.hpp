@@ -87,11 +87,11 @@ namespace cycfi { namespace elements
       return view_limits{ pt, pt };
    }
 
+   void draw_indicator(canvas& cnv, circle cp, float val, color c);
+
    template <std::size_t size>
    inline void basic_knob_element<size>::draw(context const& ctx)
    {
-      void draw_indicator(canvas& cnv, circle cp, float val, color c);
-
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
       auto  indicator_color = thm.indicator_color.level(1.5);
@@ -184,12 +184,12 @@ namespace cycfi { namespace elements
       virtual void            draw(context const& ctx);
    };
 
+   void draw_radial_marks(canvas& cnv, circle cp, float size, color c);
+
    template <std::size_t size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
    {
-      void draw_radial_marks(canvas& cnv, circle cp, float size, color c);
-
       // Draw the subject
       base_type::draw(ctx);
 
@@ -228,19 +228,19 @@ namespace cycfi { namespace elements
       float                   _font_size;
    };
 
+   void draw_radial_labels(
+      canvas& cnv
+    , circle cp
+    , float size
+    , float font_size
+    , std::string const labels[]
+    , std::size_t _num_labels
+   );
+
    template <std::size_t size, typename Subject, std::size_t num_labels>
    inline void
    radial_labels_element<size, Subject, num_labels>::draw(context const& ctx)
    {
-      void draw_radial_labels(
-         canvas& cnv
-       , circle cp
-       , float size
-       , float font_size
-       , std::string const labels[]
-       , std::size_t _num_labels
-      );
-
       // Draw the subject
       base_type::draw(ctx);
 

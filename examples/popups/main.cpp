@@ -10,16 +10,7 @@ using namespace std::chrono_literals;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
-
-struct background : element
-{
-   void draw(context const& ctx)
-   {
-      auto& cnv = ctx.canvas;
-      cnv.fill_style(bkd_color);
-      cnv.fill_rect(ctx.bounds);
-   }
-};
+auto background = box(bkd_color);
 
 // A Message Popup
 auto make_message()
@@ -101,7 +92,7 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(background{}),
+         share(background),
          msg_box
       }
    );

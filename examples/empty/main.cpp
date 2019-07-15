@@ -2,6 +2,10 @@
 
 using namespace cycfi::elements;
 
+// Main window background color
+auto constexpr bkd_color = rgba(35, 35, 37, 255);
+auto background = box(bkd_color);
+
 int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
@@ -12,11 +16,13 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-                           // Add more content layers here. The order
-                           // specifies the layering. The lowest layer
-                           // is at the top of this list.
+         share(background)    // Replace background with your main element,
+                              // or keep it and add another layer on top of it.
 
-         share(element())  // Replace element() with your main element.
+                              // Add more content layers here. The order
+                              // specifies the layering. The lowest layer
+                              // is at the top of this list.
+
       }
    );
 

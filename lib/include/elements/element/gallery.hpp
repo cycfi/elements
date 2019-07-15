@@ -13,6 +13,30 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
+   // Box: A simple colored box.
+   ////////////////////////////////////////////////////////////////////////////
+   struct box_element : element
+   {
+      box_element(color color_)
+       : _color(color_)
+      {}
+
+      void draw(context const& ctx)
+      {
+         auto& cnv = ctx.canvas;
+         cnv.fill_style(_color);
+         cnv.fill_rect(ctx.bounds);
+      }
+
+      color _color;
+   };
+
+   inline auto box(color color_)
+   {
+      return box_element{ color_ };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Pane
    ////////////////////////////////////////////////////////////////////////////
    template <typename Heading, typename Content>

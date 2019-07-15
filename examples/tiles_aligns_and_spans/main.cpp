@@ -4,18 +4,9 @@ using namespace cycfi::elements;
 
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);
+auto background = box(bkd_color);
 
-struct background : element
-{
-   void draw(context const& ctx)
-   {
-      auto&  cnv = ctx.canvas;
-      cnv.fill_style(bkd_color);
-      cnv.fill_rect(ctx.bounds);
-   }
-};
-
-auto box = min_size({ 5, 5 },
+auto rbox = min_size({ 5, 5 },
    basic(
       [](context const& ctx)
       {
@@ -33,7 +24,7 @@ auto make_vtile()
 {
    auto _box = top_margin(
       { 10 },
-      hsize(150, box)
+      hsize(150, rbox)
    );
 
    return margin(
@@ -55,7 +46,7 @@ auto make_vtile2()
 {
    auto _box = top_margin(
       { 10 },
-      box
+      rbox
    );
 
    return margin(
@@ -76,7 +67,7 @@ auto make_vtile3()
 {
    auto _box = top_margin(
       { 10 },
-      box
+      rbox
    );
 
    return margin(
@@ -106,7 +97,7 @@ auto make_htile()
 {
    auto _box = left_margin(
       { 10 },
-      vsize(100, box)
+      vsize(100, rbox)
    );
 
    return margin(
@@ -126,7 +117,7 @@ auto make_htile2()
 {
    auto _box = left_margin(
       { 10 },
-      box
+      rbox
    );
 
    return margin(
@@ -145,7 +136,7 @@ auto make_htile3()
 {
    auto _box = left_margin(
       { 10 },
-      box
+      rbox
    );
 
    return margin(
@@ -222,7 +213,7 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(background{}),
+         share(background),
          share(main_element)
       }
    );

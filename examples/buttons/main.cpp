@@ -145,8 +145,8 @@ auto make_controls(view& view_)
    return
       margin({ 20, 10, 20, 10 },
          htile(
-            margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(view_), 0.8f)),
-            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons(), 0.8f))
+            margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(view_))),
+            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons()))
          )
       );
 }

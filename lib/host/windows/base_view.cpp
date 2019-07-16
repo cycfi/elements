@@ -4,7 +4,9 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/base_view.hpp>
+#include <elements/support/canvas.hpp>
 #include <elements/support/resource_paths.hpp>
+#include <cairo.h>
 #include <cairo-win32.h>
 
 namespace cycfi { namespace elements
@@ -24,6 +26,8 @@ namespace cycfi { namespace elements
             // Create the cairo surface and context.
             cairo_surface_t* surface = cairo_win32_surface_create(hdc);
             cairo_t* context = cairo_create(surface);
+
+            cairo_scale(context, 2, 2);
 
             view->draw(context,
                {
@@ -51,6 +55,11 @@ namespace cycfi { namespace elements
          {
             case WM_PAINT: return onPaint(hwnd, view);
 
+            case WM_DPICHANGED:
+            {
+               static int xxx = 123;
+            }
+
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);
          }
@@ -70,6 +79,12 @@ namespace cycfi { namespace elements
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClass(&windowClass))
                MessageBox(nullptr, "Could not register class", "Error", MB_OK);
+
+            auto pwd = fs::current_path();
+            auto resource_path = pwd / "resources";
+            resource_paths.push_back(resource_path.string());
+
+            canvas::load_fonts(resource_path);
          }
       };
    }
@@ -113,7 +128,7 @@ namespace cycfi { namespace elements
    {
       RECT r;
       GetWindowRect(_view, &r);
-      return { float(r.right-r.left), float(r.bottom-r.top) };
+      return { float(r.right-r.left) / 2, float(r.bottom-r.top) / 2 };
    }
 
    void base_view::size(elements::size p)

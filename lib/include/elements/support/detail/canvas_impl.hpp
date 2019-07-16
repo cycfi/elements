@@ -287,6 +287,16 @@ namespace cycfi { namespace elements
 
    inline void canvas::font(char const* face, float size)
    {
+#if defined(__linux__) || defined(_WIN32)
+      auto fi = _fonts.find(face);
+      if (fi != _fonts.end())
+      {
+         cairo_font_face_t* ct = fi->second;
+         cairo_set_font_face(&_context, ct);
+         cairo_set_font_size(&_context, size);
+         return;
+      }
+#endif
       cairo_select_font_face(&_context, face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
       cairo_set_font_size(&_context, size);
    }

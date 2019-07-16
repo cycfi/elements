@@ -50,6 +50,13 @@ endif()
 if (LINUX)
    find_package(Freetype REQUIRED)
    include_directories(${FREETYPE_INCLUDE_DIRS})
+elseif (WIN32)
+   set(FREETYPE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
+   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
+   else()
+      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win86/freetype.lib)
+   endif()
 endif()
 
 ###############################################################################
@@ -149,15 +156,20 @@ endif()
 ###############################################################################
 # Includes
 
-if (MACOSX OR WIN32)
+if (MACOSX)
    target_include_directories(libelements
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
       ${Boost_INCLUDE_DIRS}
    )
-endif()
-
-if (LINUX)
+elseif (WIN32)
+   target_include_directories(libelements
+      PUBLIC include
+      ${CAIRO_INCLUDE_DIRS}
+      ${FREETYPE_INCLUDE_DIRS}
+      ${Boost_INCLUDE_DIRS}
+   )
+elseif (LINUX)
    target_include_directories(libelements
       PUBLIC include
       ${CAIRO_INCLUDE_DIRS}
@@ -171,7 +183,7 @@ endif()
 ###############################################################################
 # Libraries and linking
 
-if (MACOSX OR WIN32)
+if (MACOSX)
    target_link_libraries(libelements
       infra
       json
@@ -179,9 +191,16 @@ if (MACOSX OR WIN32)
       ${Boost_FILESYSTEM_LIBRARY}
       ${Boost_SYSTEM_LIBRARY}
    )
-endif()
-
-if (LINUX)
+elseif (WIN32)
+   target_link_libraries(libelements
+      infra
+      json
+      ${CAIRO_LIBRARIES}
+      ${FREETYPE_LIBRARIES}
+      ${Boost_FILESYSTEM_LIBRARY}
+      ${Boost_SYSTEM_LIBRARY}
+   )
+elseif (LINUX)
    link_directories(${GTK3_LIBRARY_DIRS})
 
    target_link_libraries(libelements
@@ -193,9 +212,7 @@ if (LINUX)
       ${Boost_SYSTEM_LIBRARY}
       ${GTK3_LIBRARIES}
    )
-endif()
-
-if (MACOSX)
+elseif (MACOSX)
    target_compile_options(libelements PUBLIC "-fobjc-arc")
 endif()
 

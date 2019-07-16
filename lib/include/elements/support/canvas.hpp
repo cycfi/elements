@@ -10,6 +10,7 @@
 #include <elements/support/rect.hpp>
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
+#include <boost/filesystem.hpp>
 
 #include <vector>
 #include <functional>
@@ -18,12 +19,14 @@
 #include <cassert>
 #include <cairo.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(_WIN32)
 # include <map>
 #endif
 
 namespace cycfi { namespace elements
 {
+   namespace fs = boost::filesystem;
+
    class canvas
    {
    public:
@@ -189,6 +192,10 @@ namespace cycfi { namespace elements
       void              save();
       void              restore();
 
+#if defined(__linux__) || defined(_WIN32)
+      static void       load_fonts(fs::path resource_path);
+#endif
+
    private:
 
       friend class glyphs;
@@ -214,9 +221,8 @@ namespace cycfi { namespace elements
       canvas_state      _state;
       state_stack       _state_stack;
 
-#if defined(__linux__)
-
-      std::map<std::string, cairo_font_face_t*> _custom_fonts;
+#if defined(__linux__) || defined(_WIN32)
+      static std::map<std::string, cairo_font_face_t*> _fonts;
 #endif
    };
 }}

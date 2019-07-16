@@ -9,6 +9,7 @@
 #include <infra/assert.hpp>
 #include <boost/filesystem.hpp>
 #include <windows.h>
+#include <ShellScalingAPI.h>
 
 namespace cycfi { namespace elements
 {
@@ -60,6 +61,7 @@ namespace cycfi { namespace elements
    {
       init_app init;
       _app_name = app_config.application_title;
+      SetProcessDpiAwareness(PROCESS_SYSTEM_DPI_AWARE);
    }
 
    app::~app()

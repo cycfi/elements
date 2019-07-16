@@ -41,7 +41,14 @@ if (LINUX)
    )
    file(
       COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
+   )
+endif()
+
+if (WIN32)
+   file(
+      COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
+      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
    )
 endif()
 
@@ -80,7 +87,7 @@ endif()
 if (WIN32)
 
    set(CMAKE_EXE_LINKER_FLAGS
-      "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
+      "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib"
    )
 
    add_executable(
@@ -93,11 +100,14 @@ if (WIN32)
 
    if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
       set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x64/cairo.dll)
+      set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win64/freetype.dll)
    else()
       set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x86/cairo.dll)
+      set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win32/freetype.dll)
    endif()
 
    file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+   file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
    configure_file(
       ${CMAKE_CURRENT_LIST_DIR}/resources/config.json.in
@@ -160,4 +170,6 @@ if (MACOSX)
       MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/resources/macos/plist.in
    )
 endif()
+
+
 

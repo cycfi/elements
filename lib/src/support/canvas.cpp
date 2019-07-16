@@ -3,6 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
+#if defined(__linux__) || defined(_WIN32)
+
 #include <elements/support/canvas.hpp>
 #include <cairo-ft.h>
 #include <ft2build.h>
@@ -59,3 +61,5 @@ namespace cycfi { namespace elements
             activate_font(_fonts, value, it->path());
    }
 }}
+
+#endif

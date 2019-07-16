@@ -300,44 +300,7 @@ namespace cycfi { namespace elements
       cairo_select_font_face(&_context, face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
       cairo_set_font_size(&_context, size);
    }
-/*
-   inline void canvas::custom_font(char const* font, float size)
-   {
-#if defined(__APPLE__)
 
-      cairo_select_font_face(&_context, font, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-      cairo_set_font_size(&_context, size);
-
-#elif defined(__linux__)
-
-      FT_Library value;
-      FT_Error status = FT_Init_FreeType(&value);
-      if (status != 0)
-         return;
-
-      cairo_font_face_t* ct = nullptr;
-      auto fi = _custom_fonts.find(font);
-      if (_custom_fonts.find(font) == _custom_fonts.end())
-      {
-         FT_Face face;
-         std::string file = "./" + std::string{font} + ".ttf";
-         status = FT_New_Face(value, file.c_str(), 0, &face);
-         if (status != 0)
-            return;
-         ct = cairo_ft_font_face_create_for_ft_face(face, 0);
-         _custom_fonts[font] = ct;
-      }
-      else
-      {
-         ct = fi->second;
-      }
-
-      cairo_set_font_face(&_context, ct);
-      cairo_set_font_size(&_context, size);
-
-#endif
-   }
-*/
    namespace
    {
       inline point get_text_start(cairo_t& _context, point p, int align, char const* utf8)

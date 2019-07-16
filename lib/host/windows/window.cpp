@@ -12,39 +12,51 @@ namespace cycfi { namespace elements
 {
    namespace
    {
-      void DisableCloseButton(HWND hwnd)
+      struct window_info
+      {
+         window*     wptr = nullptr;
+         view_limits limits;
+      };
+
+      window_info* get_window_info(HWND hwnd)
+      {
+         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+         return reinterpret_cast<window_info*>(param);
+      }
+
+      void disable_close(HWND hwnd)
       {
          EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE,
             MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
       }
 
-      void DisableMinimizeButton(HWND hwnd)
+      void disable_minimize(HWND hwnd)
       {
          SetWindowLong(hwnd, GWL_STYLE,
             GetWindowLong(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
       }
 
-      void DisableMaximizeButton(HWND hwnd)
+      void disable_maximize(HWND hwnd)
       {
          SetWindowLong(hwnd, GWL_STYLE,
             GetWindowLong(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
       }
 
-      void DisableResizing(HWND hwnd)
+      void disable_resize(HWND hwnd)
       {
          SetWindowLong(hwnd, GWL_STYLE,
             GetWindowLong(hwnd, GWL_STYLE) & ~WS_SIZEBOX);
-         DisableMaximizeButton(hwnd);
+         disable_maximize(hwnd);
       }
 
-      LRESULT onClose(window* win)
+      LRESULT on_close(window* win)
       {
          if (win)
             win->on_close();
          return 0;
       }
 
-      BOOL CALLBACK EnumChildProc(HWND child, LPARAM lParam)
+      BOOL CALLBACK for_each_child(HWND child, LPARAM lParam)
       {
          LPRECT bounds = (LPRECT) lParam;
          MoveWindow(
@@ -59,24 +71,59 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      LRESULT onSize(HWND hwnd)
+      LRESULT on_size(HWND hwnd)
       {
          RECT bounds;
          GetClientRect(hwnd, &bounds);
-         EnumChildWindows(hwnd, EnumChildProc, (LPARAM) &bounds);
+         EnumChildWindows(hwnd, for_each_child, (LPARAM) &bounds);
          return 0;
       }
 
-      LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+      POINT window_frame_size(HWND hwnd)
       {
-         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-         auto* win = reinterpret_cast<window*>(param);
+         RECT content, frame;
+         POINT extra;
+         GetClientRect(hwnd, &content);
+         GetWindowRect(hwnd, &frame);
+         extra.x = (frame.right - frame.left) - content.right;
+         extra.y = (frame.bottom - frame.top) - content.bottom;
+         return extra;
+      }
+
+      void constrain_size(HWND hwnd, RECT& r, view_limits limits)
+      {
+         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         auto extra = window_frame_size(hwnd);
+         auto w = ((r.right - r.left) - extra.x) / scale;
+         auto h = ((r.bottom - r.top) - extra.y) / scale;
+
+         if (w > limits.max.x)
+            r.right = r.left + extra.x + (limits.max.x * scale);
+         if (w < limits.min.x)
+            r.right = r.left + extra.x + (limits.min.x * scale);
+         if (h > limits.max.y)
+            r.bottom = r.top + extra.y + (limits.max.y * scale);
+         if (h < limits.min.y)
+            r.bottom = r.top + extra.y + (limits.min.y * scale);
+      }
+
+      LRESULT CALLBACK handle_event(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+      {
+         auto* info = get_window_info(hwnd);
          switch (message)
          {
-            case WM_CLOSE: return onClose(win);
+            case WM_CLOSE: return on_close(info->wptr);
 
             case WM_DPICHANGED:
-            case WM_SIZE: return onSize(hwnd);
+            case WM_SIZE: return on_size(hwnd);
+
+            case WM_SIZING:
+               if (info)
+               {
+                  auto& r = *reinterpret_cast<RECT*>(lparam);
+                  constrain_size(hwnd, r, info->limits);
+               }
+               break;
 
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);
@@ -92,7 +139,7 @@ namespace cycfi { namespace elements
             windowClass.hbrBackground = NULL;
             windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
             windowClass.hInstance = NULL;
-            windowClass.lpfnWndProc = WndProc;
+            windowClass.lpfnWndProc = handle_event;
             windowClass.lpszClassName = "ElementsWindow";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClass(&windowClass))
@@ -114,43 +161,87 @@ namespace cycfi { namespace elements
          nullptr, nullptr, nullptr,
          nullptr
       );
-      SetWindowLongPtr(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+      window_info* info = new window_info{ this };
+      SetWindowLongPtr(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (!(style_ & closable))
-         DisableCloseButton(_window);
+         disable_close(_window);
       if (!(style_ & miniaturizable))
-         DisableMinimizeButton(_window);
+         disable_minimize(_window);
       if (!(style_ & resizable))
-         DisableResizing(_window);
+         disable_resize(_window);
 
       ShowWindow(_window, SW_RESTORE);
    }
 
    window::~window()
    {
+      delete get_window_info(_window);
       DeleteObject(_window);
    }
 
    point window::size() const
    {
-      return {};
+      RECT frame;
+      GetWindowRect(_window, &frame);
+      return {
+         float(frame.right - frame.left),
+         float(frame.bottom - frame.top)
+      };
    }
 
    void window::size(point const& p)
    {
+      RECT frame;
+      GetWindowRect(_window, &frame);
+      frame.right = frame.left + p.x;
+      frame.bottom = frame.top + p.y;
+      constrain_size(
+         _window, frame, get_window_info(_window)->limits);
+
+      MoveWindow(
+         _window, frame.left, frame.top,
+         frame.right - frame.left,
+         frame.bottom - frame.top,
+         true // repaint
+      );
    }
 
    void window::limits(view_limits limits_)
    {
+      get_window_info(_window)->limits = limits_;
+      RECT frame;
+      GetWindowRect(_window, &frame);
+      constrain_size(
+         _window, frame, get_window_info(_window)->limits);
+
+      MoveWindow(
+         _window, frame.left, frame.top,
+         frame.right - frame.left,
+         frame.bottom - frame.top,
+         true // repaint
+      );
    }
 
    point window::position() const
    {
-      return {};
+      RECT frame;
+      GetWindowRect(_window, &frame);
+      return { float(frame.left), float(frame.top) };
    }
 
    void window::position(point const& p)
    {
+      RECT frame;
+      GetWindowRect(_window, &frame);
+
+      MoveWindow(
+         _window, p.x, p.y,
+         frame.right - frame.left,
+         frame.bottom - frame.top,
+         true // repaint
+      );
    }
 }}
 

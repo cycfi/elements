@@ -29,7 +29,6 @@ namespace cycfi { namespace elements
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                                , color color_      = get_theme().text_box_font_color
-                               , int style         = canvas::normal
                               );
 
                               static_text_box(static_text_box&& rhs) = default;

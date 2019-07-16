@@ -22,10 +22,9 @@ namespace cycfi { namespace elements
     , char const* face
     , float size
     , color color_
-    , int style
    )
     : _text(text)
-    , _layout(_text.data(), _text.data() + _text.size(), face, size, style)
+    , _layout(_text.data(), _text.data() + _text.size(), face, size)
     , _color(color_)
    {}
 

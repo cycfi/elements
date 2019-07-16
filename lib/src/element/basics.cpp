@@ -50,8 +50,7 @@ namespace cycfi { namespace elements
       canvas_.fill_style(theme_.heading_font_color);
       canvas_.font(
          theme_.heading_font,
-         theme_.heading_font_size * _size,
-         theme_.heading_style
+         theme_.heading_font_size * _size
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 
@@ -84,8 +83,7 @@ namespace cycfi { namespace elements
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
          theme_.label_font,
-         theme_.label_font_size * _size,
-         theme_.label_style
+         theme_.label_font_size * _size
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 

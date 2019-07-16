@@ -128,14 +128,7 @@ namespace cycfi { namespace elements
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
-      enum font_style
-      {
-         normal   = 0,
-         bold     = 1,
-         italic   = 2
-      };
-
-      void              font(char const* face, float size = 16, int style = normal);
+      void              font(char const* face, float size = 16);
       void              custom_font(char const* font, float size = 16);
 
       ///////////////////////////////////////////////////////////////////////////////////

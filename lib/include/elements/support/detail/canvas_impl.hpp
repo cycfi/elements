@@ -285,11 +285,9 @@ namespace cycfi { namespace elements
       stroke();
    }
 
-   inline void canvas::font(char const* face, float size, int style)
+   inline void canvas::font(char const* face, float size)
    {
-      cairo_font_slant_t slant = (style & italic) ? CAIRO_FONT_SLANT_ITALIC : CAIRO_FONT_SLANT_NORMAL;
-      cairo_font_weight_t weight = (style & bold) ? CAIRO_FONT_WEIGHT_BOLD : CAIRO_FONT_WEIGHT_NORMAL;
-      cairo_select_font_face(&_context, face, slant, weight);
+      cairo_select_font_face(&_context, face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
       cairo_set_font_size(&_context, size);
    }
 

@@ -83,7 +83,6 @@ namespace cycfi { namespace elements
                            master_glyphs(
                               char const* first, char const* last
                             , char const* face, float size
-                            , int style = canvas::normal
                            );
 
                            master_glyphs(

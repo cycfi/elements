@@ -26,14 +26,12 @@ namespace cycfi { namespace elements
       color                basic_font_color           = rgba(220, 220, 220, 200);
 
       color                heading_font_color         = basic_font_color;
-      char const*          heading_font               = "Roboto";
+      char const*          heading_font               = "Roboto Bold";
       float                heading_font_size          = 14.0;
-      canvas::font_style   heading_style              = canvas::bold;
 
       color                label_font_color           = basic_font_color;
       char const*          label_font                 = "Open Sans";
       float                label_font_size            = 14.0;
-      canvas::font_style   label_style                = canvas::normal;
 
       color                icon_color                 = basic_font_color;
       char const*          icon_font                  = "elements_basic";

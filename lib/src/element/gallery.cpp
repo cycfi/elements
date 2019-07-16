@@ -189,8 +189,7 @@ namespace cycfi { namespace elements
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
          theme_.label_font,
-         theme_.label_font_size,
-         theme_.label_style
+         theme_.label_font_size
       );
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;

@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       float cx = bounds.left + (bounds.width() / 2);
       float cy = bounds.top + (bounds.height() / 2);
-      cnv.custom_font(thm.icon_font, size);
+      cnv.font(thm.icon_font, size);
       cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_text(point{ cx, cy }, codepoint_to_utf8(code).c_str());

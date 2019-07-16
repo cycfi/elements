@@ -290,7 +290,7 @@ namespace cycfi { namespace elements
       cairo_select_font_face(&_context, face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
       cairo_set_font_size(&_context, size);
    }
-
+/*
    inline void canvas::custom_font(char const* font, float size)
    {
 #if defined(__APPLE__)
@@ -327,7 +327,7 @@ namespace cycfi { namespace elements
 
 #endif
    }
-
+*/
    namespace
    {
       inline point get_text_start(cairo_t& _context, point p, int align, char const* utf8)

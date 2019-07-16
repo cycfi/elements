@@ -129,7 +129,7 @@ namespace cycfi { namespace elements
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
       void              font(char const* face, float size = 16);
-      void              custom_font(char const* font, float size = 16);
+      // void              custom_font(char const* font, float size = 16);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Text

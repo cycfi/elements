@@ -27,7 +27,8 @@ namespace cycfi { namespace elements
             cairo_surface_t* surface = cairo_win32_surface_create(hdc);
             cairo_t* context = cairo_create(surface);
 
-            cairo_scale(context, 2, 2);
+            auto scale = GetDpiForWindow(hwnd) / 96.0;
+            cairo_scale(context, scale, scale);
 
             view->draw(context,
                {
@@ -54,12 +55,6 @@ namespace cycfi { namespace elements
          switch (message)
          {
             case WM_PAINT: return onPaint(hwnd, view);
-
-            case WM_DPICHANGED:
-            {
-               static int xxx = 123;
-            }
-
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);
          }
@@ -126,20 +121,22 @@ namespace cycfi { namespace elements
 
    elements::size base_view::size() const
    {
+      float scale = GetDpiForWindow(_view) / 96.0;
       RECT r;
       GetWindowRect(_view, &r);
-      return { float(r.right-r.left) / 2, float(r.bottom-r.top) / 2 };
+      return { float(r.right-r.left) / scale, float(r.bottom-r.top) / scale };
    }
 
    void base_view::size(elements::size p)
    {
+      auto scale = GetDpiForWindow(_view) / 96.0;
       auto parent = GetParent(_view);
       RECT bounds;
       GetClientRect(parent, &bounds);
 
       MoveWindow(
          _view, bounds.left, bounds.top,
-         p.x, p.y,
+         p.x * scale, p.y * scale,
          true // repaint
       );
    }

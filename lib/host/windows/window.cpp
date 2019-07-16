@@ -74,12 +74,9 @@ namespace cycfi { namespace elements
          switch (message)
          {
             case WM_CLOSE: return onClose(win);
-            case WM_SIZE: return onSize(hwnd);
 
             case WM_DPICHANGED:
-            {
-               static int xxx = 123;
-            }
+            case WM_SIZE: return onSize(hwnd);
 
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);
@@ -118,8 +115,6 @@ namespace cycfi { namespace elements
          nullptr
       );
       SetWindowLongPtr(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
-
-      int iDpi = GetDpiForWindow(_window);
 
       if (!(style_ & closable))
          DisableCloseButton(_window);

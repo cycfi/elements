@@ -314,7 +314,7 @@ namespace cycfi { namespace elements
       virtual void      refresh(rect area);
 
       point             cursor_pos() const;
-      elements::size      size() const;
+      elements::size    size() const;
       void              size(elements::size p);
       host_view         host() const { return _view; }
 

@@ -18,6 +18,7 @@ namespace cycfi { namespace elements
    public:
 
       using Base::Base;
+      using Base::operator=;
 
                               indirect(indirect&& rhs) = default;
                               indirect(indirect const& rhs) = default;
@@ -102,6 +103,7 @@ namespace cycfi { namespace elements
                               shared_element(shared_element const& rhs) = default;
       shared_element&         operator=(shared_element&& rhs) = default;
       shared_element&         operator=(shared_element const& rhs) = default;
+      shared_element&         operator=(std::shared_ptr<Element> ptr);
 
       Element&                get();
       Element const&          get() const;
@@ -114,6 +116,9 @@ namespace cycfi { namespace elements
    template <typename Element>
    indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs);
+
+   indirect<shared_element<element>>
+   hold_base(std::shared_ptr<element> rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // indirect (inline) implementation
@@ -299,10 +304,24 @@ namespace cycfi { namespace elements
    }
 
    template <typename Element>
+   inline shared_element<Element>&
+   shared_element<Element>::operator=(std::shared_ptr<Element> ptr)
+   {
+      _ptr = ptr;
+      return *this;
+   }
+
+   template <typename Element>
    inline indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs)
    {
       return indirect<shared_element<Element>>{ rhs };
+   }
+
+   inline indirect<shared_element<element>>
+   hold_base(std::shared_ptr<element> rhs)
+   {
+      return indirect<shared_element<element>>{ rhs };
    }
 }}
 

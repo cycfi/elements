@@ -75,9 +75,8 @@
       context ctx{ *this, cnv, &_content, subj_bounds };
 
       // layout the subject only if the window bounds changes
-      if (_relayout || subj_bounds != _current_bounds)
+      if (subj_bounds != _current_bounds)
       {
-         _relayout = false;
          _current_bounds = subj_bounds;
          _content.layout(ctx);
       }
@@ -101,6 +100,32 @@
          cairo_surface_destroy(surface_);
          cairo_destroy(context_);
       }
+   }
+
+   void view::layout()
+   {
+      if (_current_bounds.is_empty())
+         return;
+
+      call(
+         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         *this, _current_bounds
+      );
+
+      refresh();
+   }
+
+   void view::layout(element &element)
+   {
+      if (_current_bounds.is_empty())
+         return;
+
+      call(
+         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         *this, _current_bounds
+      );
+
+      refresh(element);
    }
 
    void view::refresh()

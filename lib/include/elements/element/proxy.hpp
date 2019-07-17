@@ -51,8 +51,8 @@ namespace cycfi { namespace elements
 
    // Proxy
 
-      virtual element const& subject() const = 0;
-      virtual element&       subject() = 0;
+      virtual element const&  subject() const = 0;
+      virtual element&        subject() = 0;
 
    // Receiver
 
@@ -74,6 +74,7 @@ namespace cycfi { namespace elements
                                : Base(std::forward<T>(args)...)
                                , _subject(std::forward<Subject>(subject_)) {}
 
+      void                    subject(Subject&& subject_);
       virtual element const&  subject() const { return _subject; }
       virtual element&        subject() { return _subject; }
 
@@ -81,6 +82,12 @@ namespace cycfi { namespace elements
 
       subject_type            _subject;
    };
+
+   template <typename Subject, typename Base>
+   inline void proxy<Subject, Base>::subject(Subject&& subject_)
+   {
+      _subject = std::forward<Subject>(subject_);
+   }
 }}
 
 #endif

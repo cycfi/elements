@@ -228,9 +228,8 @@ auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3, MenuItem
          menu_background{}
       );
 
-   popup.menu(menu);
-
-   return popup;
+   popup.menu(std::move(menu));
+   return std::move(popup);
 }
 
 int main(int argc, const char* argv[])
@@ -247,37 +246,36 @@ int main(int argc, const char* argv[])
    auto mixed_menu_item = menu_item("Fixed-Sized and Stretchable Elements");
    auto flow_menu_item = menu_item("Flow Elements");
 
-   auto content = deck(
-      make_aligns(),
-      make_percentages(),
-      make_mixed(),
-      make_flow()
-   );
+   auto aligns = share(make_aligns());
+   auto percentages = share(make_percentages());
+   auto mixed = share(make_mixed());
+   auto flow = share(make_flow());
+   auto content = hold_base(aligns);
 
    view view_(_win);
 
    align_menu_item.on_click = [&]()
    {
-      content.select(0);
-      view_.refresh(content);
+      content = aligns;
+      view_.layout(content);
    };
 
    percentages_menu_item.on_click = [&]()
    {
-      content.select(1);
-      view_.refresh(content);
+      content = percentages;
+      view_.layout(content);
    };
 
    mixed_menu_item.on_click = [&]()
    {
-      content.select(2);
-      view_.refresh(content);
+      content = mixed;
+      view_.layout(content);
    };
 
    flow_menu_item.on_click = [&]()
    {
-      content.select(3);
-      view_.refresh(content);
+      content = flow;
+      view_.layout(content);
    };
 
    auto menu = make_popup_menu(

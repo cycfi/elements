@@ -40,6 +40,9 @@ namespace cycfi { namespace elements
       virtual void         focus(focus_request r) override;
       virtual void         poll() override;
 
+      void                 layout();
+      void                 layout(element &element);
+
       virtual void         refresh() override;
       virtual void         refresh(rect area) override;
       void                 refresh(element& element);
@@ -88,7 +91,6 @@ namespace cycfi { namespace elements
 
       bool                 set_limits();
 
-      bool                 _relayout = false;
       rect                 _dirty;
       rect                 _current_bounds;
       view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
@@ -140,8 +142,7 @@ namespace cycfi { namespace elements
          [e, this]
          {
             _content.push_back(e);
-            _relayout = true;
-            refresh(*e);
+            layout(*e);
          }
       );
    }
@@ -162,7 +163,7 @@ namespace cycfi { namespace elements
                refresh(*e);
                _content.erase(i);
                _content.reset();
-               _relayout = true;
+               layout();
             }
          }
       );

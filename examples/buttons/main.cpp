@@ -161,7 +161,7 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(make_controls(view_))
+         share(make_controls(view_)),
          share(background)
       }
    );

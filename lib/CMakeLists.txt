@@ -191,6 +191,7 @@ if (MACOSX)
       ${Boost_FILESYSTEM_LIBRARY}
       ${Boost_SYSTEM_LIBRARY}
    )
+   target_compile_options(libelements PUBLIC "-fobjc-arc")
 elseif (WIN32)
    target_link_libraries(libelements
       infra
@@ -212,7 +213,7 @@ elseif (LINUX)
       ${Boost_SYSTEM_LIBRARY}
       ${GTK3_LIBRARIES}
    )
-elseif (MACOSX)
-   target_compile_options(libelements PUBLIC "-fobjc-arc")
 endif()
+
+
 

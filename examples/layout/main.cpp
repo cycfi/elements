@@ -154,11 +154,20 @@ auto make_htile_mixed()
 
 auto make_flow()
 {
+   constexpr auto line_height = 30;
+   constexpr auto min_size = 10;
+   constexpr auto max_width = 100;
+   constexpr auto max_height = line_height;
+   constexpr auto num_elements = 40;
+
    static auto c = vector_composite<flowable_container>{};
-   for (int i = 0; i < 50; ++i)
+   for (int i = 0; i < num_elements; ++i)
    {
-      auto w = 10 + ((double(std::rand()) * 90) / RAND_MAX);
-      auto _box = margin({ 5, 5, 5, 5 }, fixed_size({ float(w), 20 }, rbox));
+      auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);
+      auto h = min_size + ((double(std::rand()) * (max_height - min_size)) / RAND_MAX);
+      auto _box = vsize(line_height, align_bottom(margin(
+         { 5, 5, 5, 5 }, fixed_size({ float(w), float(h) }, rbox)
+      )));
       c.push_back(share(_box));
    }
 

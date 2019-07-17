@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
        , std::vector<layout_info>& info)
       {
          double extra = size - total;
-         while (extra > 0.5)                    // loop while there's room to grow
+         for (int i = 1; i < 10; ++i) // loop no more than 10 times
          {
             double remove_stretch = 0.0;
             total = 0.0;
@@ -64,6 +64,10 @@ namespace cycfi { namespace elements
             }
             extra = size - total;
             max_stretch -= remove_stretch;
+
+            // return if there's no more room to grow or if we can't stretch anymore
+            if (max_stretch < 1 || extra < 0.5)
+               return;
          }
       }
    }

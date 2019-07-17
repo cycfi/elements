@@ -168,7 +168,7 @@ auto make_flow()
    );
 
    return margin({ 10, 10, 10, 10 },
-      group("VTile with Fixed-Sized, Aligned Elements", flow_pane, 0.9, false)
+      group("Flow Elements (randomly sized elements)", flow_pane, 0.9, false)
    );
 }
 

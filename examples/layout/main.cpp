@@ -247,12 +247,11 @@ int main(int argc, const char* argv[])
    auto mixed_menu_item = menu_item("Fixed-Sized and Stretchable Elements");
    auto flow_menu_item = menu_item("Flow Elements");
 
-   // Note: lower deck elements are at the top of the list (lower index)
    auto content = deck(
-      make_flow(),
-      make_mixed(),
+      make_aligns(),
       make_percentages(),
-      make_aligns()
+      make_mixed(),
+      make_flow()
    );
 
    view view_(_win);
@@ -294,8 +293,8 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(background),
-         share(main_element)
+         share(main_element),
+         share(background)
       }
    );
 

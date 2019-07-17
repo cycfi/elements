@@ -135,8 +135,8 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(background),
-         share(make_controls())
+         share(make_controls()),
+         share(background)
       }
    );
 

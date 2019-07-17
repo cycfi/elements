@@ -92,8 +92,8 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         share(background),
-         msg_box
+         msg_box,
+         share(background)
       }
    );
 

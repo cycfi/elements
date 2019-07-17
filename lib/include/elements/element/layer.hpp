@@ -80,17 +80,6 @@ namespace cycfi { namespace elements
       using container = typename composite::container_type;
       composite r{};
       r = container{{ share(std::forward<W>(elements))... }};
-      std::reverse(r.begin(), r.end());
-      return r;
-   }
-
-   template <typename... W>
-   inline auto rdeck(W&&... elements)
-   {
-      using composite = array_composite<sizeof...(elements), deck_element>;
-      using container = typename composite::container_type;
-      composite r{};
-      r = container{{ share(std::forward<W>(elements))... }};
       return r;
    }
 }}

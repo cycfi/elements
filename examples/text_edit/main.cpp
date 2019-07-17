@@ -83,8 +83,8 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-         make_bkd(),
-         make_edit_box()
+         make_edit_box(),
+         make_bkd()
       }
    );
 

@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         elements::element*     element  = nullptr;
+         elements::element*   element  = nullptr;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };

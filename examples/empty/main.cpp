@@ -16,12 +16,13 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
+                              // Add more content layers here. The order
+                              // specifies the layering. The lowest layer
+                              // is at the bottom of this list.
+
          share(background)    // Replace background with your main element,
                               // or keep it and add another layer on top of it.
 
-                              // Add more content layers here. The order
-                              // specifies the layering. The lowest layer
-                              // is at the top of this list.
       }
    );
 

@@ -149,10 +149,12 @@ namespace cycfi { namespace elements
 
    basic_dropdown_menu
    dropdown_menu(
-      std::string const &text, color body_color
+      std::string const &text, menu_position pos, color body_color
    )
    {
-      return make_button<basic_dropdown_menu>(text, icons::down_dir, 1.0, body_color);
+      auto menu = make_button<basic_dropdown_menu>(text, icons::down_dir, 1.0, body_color);
+      menu.position(pos);
+      return std::move(menu);
    }
 
    void draw_check_box(

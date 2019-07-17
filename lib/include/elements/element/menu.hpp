@@ -16,17 +16,30 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Dropdown Menu
    ////////////////////////////////////////////////////////////////////////////
+   enum class menu_position
+   {
+      bottom_right,
+      bottom_left,
+      top_right,
+      top_left
+   };
+
    class basic_dropdown_menu : public layered_button
    {
    public:
                               template <typename W1, typename W2>
-                              basic_dropdown_menu(W1&& off, W2&& on);
+                              basic_dropdown_menu(
+                                 W1&& off, W2&& on
+                               , menu_position pos = menu_position::bottom_right);
 
       virtual void            layout(context const& ctx);
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            focus(focus_request r);
+
+      menu_position           position() const              { return _position; }
+      void                    position(menu_position pos)   { _position = pos; }
 
                               template <typename Menu>
       void                    menu(Menu&& menu_);
@@ -36,11 +49,13 @@ namespace cycfi { namespace elements
       using popup_ptr = std::shared_ptr<basic_popup_element>;
 
       popup_ptr               _popup;
+      menu_position           _position;
    };
 
    template <typename W1, typename W2>
-   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on)
+   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on, menu_position pos)
     : layered_button(std::forward<W1>(off), std::forward<W2>(on))
+    , _position(pos)
    {}
 
    template <typename Menu>

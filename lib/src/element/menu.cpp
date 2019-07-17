@@ -12,10 +12,24 @@ namespace cycfi { namespace elements
       layered_button::layout(ctx);
 
       auto pu_limits = _popup->limits(ctx);
-      rect  bounds = {
-            ctx.bounds.left + 3, ctx.bounds.bottom,
-            ctx.bounds.left + 3 + pu_limits.min.x, full_extent
-         };
+      rect  bounds;
+
+      switch (_position)
+      {
+         case menu_position::bottom_right:
+            bounds = rect{
+               ctx.bounds.left + 3, ctx.bounds.bottom,
+               ctx.bounds.left + 3 + pu_limits.min.x, full_extent
+            };
+            break;
+
+         case menu_position::bottom_left:
+            bounds = rect{
+               ctx.bounds.right - (3 + pu_limits.min.x), ctx.bounds.bottom,
+               ctx.bounds.right - 3, full_extent
+            };
+            break;
+      }
 
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
       _popup->bounds(bounds);

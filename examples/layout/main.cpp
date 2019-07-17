@@ -20,7 +20,7 @@ auto rbox = min_size({ 5, 5 },
    )
 );
 
-auto make_vtile()
+auto make_vtile_aligns()
 {
    auto _box = top_margin(
       { 10 },
@@ -42,7 +42,7 @@ auto make_vtile()
    );
 }
 
-auto make_vtile2()
+auto make_vtile_stretch()
 {
    auto _box = top_margin(
       { 10 },
@@ -63,37 +63,33 @@ auto make_vtile2()
    );
 }
 
-auto make_vtile3()
+auto make_vtile_mixed()
 {
    auto _box = top_margin(
       { 10 },
       rbox
    );
 
+   auto _box2 = top_margin(
+      { 10 },
+      hsize(150, rbox)
+   );
+
    return margin(
       { 10, 50, 10, 10 },
       hmin_size(150,
          vtile(
-            vsize(40.0, _box),
+            halign(0.0, vsize(40.0, _box2)),
             vstretch(2.0, _box),
             vstretch(1.0, _box),
             vstretch(0.5, vmin_size(20, _box)),
-            vsize(40.0, _box)
+            halign(1.0, vsize(40.0, _box2))
          )
       )
    );
 }
 
-auto make_vtile_main()
-{
-   return htile(
-      margin({ 10, 10, 10, 10 }, group("Aligns", make_vtile(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Percentages", make_vtile2(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Mixed", make_vtile3(), 0.9, false))
-   );
-}
-
-auto make_htile()
+auto make_htile_aligns()
 {
    auto _box = left_margin(
       { 10 },
@@ -113,7 +109,7 @@ auto make_htile()
    );
 }
 
-auto make_htile2()
+auto make_htile_stretch()
 {
    auto _box = left_margin(
       { 10 },
@@ -132,42 +128,62 @@ auto make_htile2()
    );
 }
 
-auto make_htile3()
+auto make_htile_mixed()
 {
    auto _box = left_margin(
       { 10 },
       rbox
    );
 
+   auto _box2 = left_margin(
+      { 10 },
+      vsize(100, rbox)
+   );
+
    return margin(
       { 0, 50, 10, 10 },
       htile(
-         hsize(40.0, _box),
+         valign(0.0, hsize(40.0, _box2)),
          hstretch(2.0, _box),
          hstretch(1.0, _box),
          hstretch(0.5, hmin_size(20, _box)),
-         hsize(40.0, _box)
+         valign(1.0, hsize(40.0, _box2))
       )
    );
 }
 
-auto make_htile_main()
+auto make_aligns()
 {
    return htile(
-      margin({ 10, 10, 10, 10 }, group("Aligns", make_htile(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Stretch", make_htile2(), 0.9, false)),
-      margin({ 10, 10, 10, 10 }, group("Mixed", make_htile3(), 0.9, false))
+      margin({ 10, 10, 10, 10 }, group("VTile with Fixed-Sized, Aligned Elements", make_vtile_aligns(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("HTile with Fixed-Sized, Aligned Elements", make_htile_aligns(), 0.9, false))
+   );
+}
+
+auto make_percentages()
+{
+   return htile(
+      margin({ 10, 10, 10, 10 }, group("VTile with Stretchable Elements", make_vtile_stretch(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("HTile with Stretchable Elements", make_htile_stretch(), 0.9, false))
+   );
+}
+
+auto make_mixed()
+{
+   return htile(
+      margin({ 10, 10, 10, 10 }, group("VTile Fixed-Sized and Stretchable Elements", make_vtile_mixed(), 0.9, false)),
+      margin({ 10, 10, 10, 10 }, group("HTile Fixed-Sized and Stretchable Elements", make_htile_mixed(), 0.9, false))
    );
 }
 
 template <typename MenuItem>
-auto make_popup_menu(MenuItem& hmenu, MenuItem& vmenu)
+auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3)
 {
-   auto popup  = dropdown_menu("Orientation");
+   auto popup  = dropdown_menu("Layout", menu_position::bottom_left);
 
    auto menu =
       layer(
-         vtile(link(hmenu), link(vmenu)),
+         vtile(link(item1), link(item2), link(item3)),
          menu_background{}
       );
 
@@ -185,29 +201,39 @@ int main(int argc, const char* argv[])
    auto p = _win.position();
    _win.on_close = [&_app]() { _app.stop(); };
 
-   auto hmenu = menu_item("Horizontal");
-   auto vmenu = menu_item("Vertical");
+   auto align_menu_item = menu_item("Fixed-Sized, Aligned Elements");
+   auto percentages_menu_item = menu_item("Stretchable Elements");
+   auto mixed_menu_item = menu_item("Fixed-Sized and Stretchable Elements");
 
+   // Note: lower deck elements are at the top of the list (lower index)
    auto content = deck(
-      make_vtile_main(),   // vertical tiles aligns and stretch
-      make_htile_main()    // horizontal tiles aligns and stretch
+      make_mixed(),
+      make_percentages(),
+      make_aligns()
    );
 
    view view_(_win);
 
-   hmenu.on_click = [&]()
-   {
-      content.select(1);
-      view_.refresh(content);
-   };
-
-   vmenu.on_click = [&]()
+   align_menu_item.on_click = [&]()
    {
       content.select(0);
       view_.refresh(content);
    };
 
-   auto top = align_right(hsize(120, make_popup_menu(hmenu, vmenu)));
+   percentages_menu_item.on_click = [&]()
+   {
+      content.select(1);
+      view_.refresh(content);
+   };
+
+   mixed_menu_item.on_click = [&]()
+   {
+      content.select(2);
+      view_.refresh(content);
+   };
+
+   auto menu = make_popup_menu(align_menu_item, percentages_menu_item, mixed_menu_item);
+   auto top = align_right(hsize(120, menu));
    auto main_pane = pane(top, link(content), false);
    auto main_element = margin({ 10, 10, 10, 10 }, main_pane);
 

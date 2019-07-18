@@ -18,10 +18,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    enum class menu_position
    {
-      bottom_right,
-      bottom_left,
+      top_left,
       top_right,
-      top_left
+      bottom_left,
+      bottom_right
    };
 
    class basic_menu : public layered_button

@@ -16,15 +16,6 @@ namespace cycfi { namespace elements
 
       switch (_position)
       {
-         case menu_position::top_right:
-            bounds = rect{
-               ctx.bounds.left + 3,
-               ctx.bounds.top - pu_limits.min.y,
-               ctx.bounds.left + 3 + pu_limits.min.x,
-               ctx.bounds.top
-            };
-            break;
-
          case menu_position::top_left:
             bounds = rect{
                ctx.bounds.right - (3 + pu_limits.min.x),
@@ -34,12 +25,12 @@ namespace cycfi { namespace elements
             };
             break;
 
-         case menu_position::bottom_right:
+         case menu_position::top_right:
             bounds = rect{
                ctx.bounds.left + 3,
-               ctx.bounds.bottom,
+               ctx.bounds.top - pu_limits.min.y,
                ctx.bounds.left + 3 + pu_limits.min.x,
-               ctx.bounds.bottom + pu_limits.min.y
+               ctx.bounds.top
             };
             break;
 
@@ -48,6 +39,15 @@ namespace cycfi { namespace elements
                ctx.bounds.right - (3 + pu_limits.min.x),
                ctx.bounds.bottom,
                ctx.bounds.right - 3,
+               ctx.bounds.bottom + pu_limits.min.y
+            };
+            break;
+
+         case menu_position::bottom_right:
+            bounds = rect{
+               ctx.bounds.left + 3,
+               ctx.bounds.bottom,
+               ctx.bounds.left + 3 + pu_limits.min.x,
                ctx.bounds.bottom + pu_limits.min.y
             };
             break;

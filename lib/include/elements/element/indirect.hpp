@@ -118,7 +118,7 @@ namespace cycfi { namespace elements
    hold(std::shared_ptr<Element> rhs);
 
    indirect<shared_element<element>>
-   hold_base(std::shared_ptr<element> rhs);
+   hold_any(std::shared_ptr<element> rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // indirect (inline) implementation
@@ -319,7 +319,7 @@ namespace cycfi { namespace elements
    }
 
    inline indirect<shared_element<element>>
-   hold_base(std::shared_ptr<element> rhs)
+   hold_any(std::shared_ptr<element> rhs)
    {
       return indirect<shared_element<element>>{ rhs };
    }

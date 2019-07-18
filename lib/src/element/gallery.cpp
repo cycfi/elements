@@ -147,12 +147,14 @@ namespace cycfi { namespace elements
       return make_button<basic_latching_button<>>(text, icon_code, size, body_color);
    }
 
-   basic_dropdown_menu
-   dropdown_menu(
-      std::string const &text, menu_position pos, color body_color
-   )
+   basic_menu
+   button_menu(std::string const& text, menu_position pos, color body_color)
    {
-      auto menu = make_button<basic_dropdown_menu>(text, icons::down_dir, 1.0, body_color);
+      auto icon =
+         (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
+         icons::down_dir : icons::up_dir
+         ;
+      auto menu = make_button<basic_menu>(text, icon, 1.0, body_color);
       menu.position(pos);
       return std::move(menu);
    }

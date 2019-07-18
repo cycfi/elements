@@ -11,9 +11,9 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-auto make_popup_menu()
+auto make_popup_menu(char const* title, menu_position pos)
 {
-   auto popup  = dropdown_menu("Dropdown Menu");
+   auto popup  = button_menu(title, pos);
 
    auto menu =
       layer(
@@ -60,12 +60,13 @@ auto make_buttons(view& view_)
    return
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, make_popup_menu()),
+            top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
             top_margin(20, mbutton),
             top_margin(20, tbutton),
             top_margin(20, hold(lbutton)),
             top_margin(20, reset),
-            top_margin(20, note)
+            top_margin(20, note),
+            top_margin(20, make_popup_menu("Dropup Menu", menu_position::top_right))
          )
       );
 }

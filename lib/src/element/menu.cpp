@@ -7,7 +7,7 @@
 
 namespace cycfi { namespace elements
 {
-   void basic_dropdown_menu::layout(context const& ctx)
+   void basic_menu::layout(context const& ctx)
    {
       layered_button::layout(ctx);
 
@@ -16,17 +16,39 @@ namespace cycfi { namespace elements
 
       switch (_position)
       {
+         case menu_position::top_right:
+            bounds = rect{
+               ctx.bounds.left + 3,
+               ctx.bounds.top - pu_limits.min.y,
+               ctx.bounds.left + 3 + pu_limits.min.x,
+               ctx.bounds.top
+            };
+            break;
+
+         case menu_position::top_left:
+            bounds = rect{
+               ctx.bounds.right - (3 + pu_limits.min.x),
+               ctx.bounds.top - pu_limits.min.y,
+               ctx.bounds.right - 3,
+               ctx.bounds.top
+            };
+            break;
+
          case menu_position::bottom_right:
             bounds = rect{
-               ctx.bounds.left + 3, ctx.bounds.bottom,
-               ctx.bounds.left + 3 + pu_limits.min.x, full_extent
+               ctx.bounds.left + 3,
+               ctx.bounds.bottom,
+               ctx.bounds.left + 3 + pu_limits.min.x,
+               ctx.bounds.bottom + pu_limits.min.y
             };
             break;
 
          case menu_position::bottom_left:
             bounds = rect{
-               ctx.bounds.right - (3 + pu_limits.min.x), ctx.bounds.bottom,
-               ctx.bounds.right - 3, full_extent
+               ctx.bounds.right - (3 + pu_limits.min.x),
+               ctx.bounds.bottom,
+               ctx.bounds.right - 3,
+               ctx.bounds.bottom + pu_limits.min.y
             };
             break;
       }
@@ -36,7 +58,7 @@ namespace cycfi { namespace elements
       _popup->layout(new_ctx);
    }
 
-   element* basic_dropdown_menu::click(context const& ctx, mouse_button btn)
+   element* basic_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -67,12 +89,12 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   void basic_dropdown_menu::drag(context const& ctx, mouse_button btn)
+   void basic_menu::drag(context const& ctx, mouse_button btn)
    {
       ctx.view.refresh();
    }
 
-   bool basic_dropdown_menu::key(context const& ctx, key_info k)
+   bool basic_menu::key(context const& ctx, key_info k)
    {
       if (k.key == key_code::escape)
       {
@@ -84,7 +106,7 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   bool basic_dropdown_menu::focus(focus_request r)
+   bool basic_menu::focus(focus_request r)
    {
       return true;
    }

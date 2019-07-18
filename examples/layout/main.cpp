@@ -220,7 +220,7 @@ auto make_mixed()
 template <typename MenuItem>
 auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3, MenuItem& item4)
 {
-   auto popup  = dropdown_menu("Layout", menu_position::bottom_left);
+   auto popup  = button_menu("Layout", menu_position::bottom_left);
 
    auto menu =
       layer(
@@ -250,7 +250,7 @@ int main(int argc, const char* argv[])
    auto percentages = share(make_percentages());
    auto mixed = share(make_mixed());
    auto flow = share(make_flow());
-   auto content = hold_base(aligns);
+   auto content = hold_any(aligns);
 
    view view_(_win);
 

@@ -22,7 +22,6 @@ int main(int argc, const char* argv[])
 
          share(background)    // Replace background with your main element,
                               // or keep it and add another layer on top of it.
-
       }
    );
 

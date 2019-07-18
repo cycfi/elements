@@ -519,9 +519,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
-   basic_dropdown_menu
-   dropdown_menu(
-      std::string const &text
+   basic_menu button_menu(
+      std::string const& text
     , menu_position pos = menu_position::bottom_right
     , color body_color = get_theme().default_button_color
    );

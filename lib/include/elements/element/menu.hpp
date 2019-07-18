@@ -24,11 +24,11 @@ namespace cycfi { namespace elements
       top_left
    };
 
-   class basic_dropdown_menu : public layered_button
+   class basic_menu : public layered_button
    {
    public:
                               template <typename W1, typename W2>
-                              basic_dropdown_menu(
+                              basic_menu(
                                  W1&& off, W2&& on
                                , menu_position pos = menu_position::bottom_right);
 
@@ -53,13 +53,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename W1, typename W2>
-   inline basic_dropdown_menu::basic_dropdown_menu(W1&& off, W2&& on, menu_position pos)
+   inline basic_menu::basic_menu(W1&& off, W2&& on, menu_position pos)
     : layered_button(std::forward<W1>(off), std::forward<W2>(on))
     , _position(pos)
    {}
 
    template <typename Menu>
-   inline void basic_dropdown_menu::menu(Menu&& menu_)
+   inline void basic_menu::menu(Menu&& menu_)
    {
       _popup = std::dynamic_pointer_cast<basic_popup_element>(share(basic_popup(menu_)));
    }

@@ -25,6 +25,7 @@ namespace cycfi { namespace elements
          HBITMAP     offscreen_buff = nullptr;
          int         w = 0;
          int         h = 0;
+         bool        mouse_in_window = false;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -195,6 +196,18 @@ namespace cycfi { namespace elements
          };
       }
 
+      void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
+      {
+         float pos_x = GET_X_LPARAM(lparam);
+         float pos_y = GET_Y_LPARAM(lparam);
+
+         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         pos_x /= scale;
+         pos_y /= scale;
+
+         view->cursor({ pos_x, pos_y }, state);
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -217,22 +230,31 @@ namespace cycfi { namespace elements
             case WM_MOUSEMOVE:
                if (info->is_dragging)
                {
-                  // TRACKMOUSEEVENT tme;
-                  // tme.cbSize = sizeof(tme);
-                  // tme.hwndTrack = hwnd;
-                  // tme.dwFlags = TME_HOVER | TME_LEAVE;
-                  // tme.dwHoverTime = HOVER_DEFAULT;
-                  // TrackMouseEvent(&tme);
                   info->vptr->drag(get_button(hwnd, info, message, wparam, lparam));
+               }
+               else
+               {
+                  if (!info->mouse_in_window)
+                  {
+                     on_cursor(hwnd, info->vptr, lparam, cursor_tracking::entering);
+                     info->mouse_in_window = true;
+                  }
+                  TRACKMOUSEEVENT tme;
+                  tme.cbSize = sizeof(tme);
+                  tme.hwndTrack = hwnd;
+                  tme.dwFlags = TME_HOVER | TME_LEAVE;
+                  tme.dwHoverTime = 16;
+                  TrackMouseEvent(&tme);
                }
                break;
 
             case WM_MOUSELEAVE:
-               info->is_dragging = false;
+               info->mouse_in_window = false;
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::entering);
                break;
 
             case WM_MOUSEHOVER:
-               info->is_dragging = false;
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::hovering);
                break;
 
             case WM_TIMER:

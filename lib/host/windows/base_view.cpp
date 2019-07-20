@@ -218,7 +218,9 @@ namespace cycfi { namespace elements
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->start;
          info->start = now;
-         auto velocity = std::chrono::milliseconds(300) / elapsed;
+         auto velocity = float(std::chrono::milliseconds(100) / elapsed);
+         if (velocity > 50)
+            velocity = 50;
 
          dir.x *= velocity;
          dir.y *= velocity;

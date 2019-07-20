@@ -20,6 +20,11 @@ namespace cycfi { namespace elements
       {
          base_view*  vptr = nullptr;
          bool        is_dragging = false;
+         HDC         hdc = nullptr;
+         HDC         offscreen_hdc = nullptr;
+         HBITMAP     offscreen_buff = nullptr;
+         int         w = 0;
+         int         h = 0;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -28,9 +33,26 @@ namespace cycfi { namespace elements
          return reinterpret_cast<view_info*>(param);
       }
 
-      LRESULT on_paint(HWND hwnd, base_view* view)
+      void make_offscreen_dc(HDC hdc, view_info* info, int w, int h)
       {
-         if (view)
+         info->hdc = hdc;
+         info->w = w;
+         info->h = w;
+
+         // Free-up the previous off-screen DC
+         if (info->offscreen_buff)
+            DeleteObject(info->offscreen_buff);
+         if (info->offscreen_hdc)
+            DeleteDC(info->offscreen_hdc);
+
+         // Create an off-screen DC for double-buffering
+         info->offscreen_hdc = CreateCompatibleDC(hdc);
+         info->offscreen_buff = CreateCompatibleBitmap(hdc, w, h);
+      }
+
+      LRESULT on_paint(HWND hwnd, view_info* info)
+      {
+         if (base_view* view = info->vptr)
          {
             RECT dirty;
             GetUpdateRect(hwnd, &dirty, false);
@@ -44,13 +66,13 @@ namespace cycfi { namespace elements
             auto win_width = r.right-r.left;
             auto win_height = r.bottom-r.top;
 
-            // Create an off-screen DC for double-buffering
-            HDC offscreen_hdc = CreateCompatibleDC(hdc);
-            HBITMAP offscreen_buff = CreateCompatibleBitmap(hdc, win_width, win_height);
-            HANDLE offscreen_handle = SelectObject(offscreen_hdc, offscreen_buff);
+            if (hdc != info->hdc || win_width != info->w || win_height != info->h)
+               make_offscreen_dc(hdc, info, win_width, win_height);
+
+            HANDLE hold = SelectObject(info->offscreen_hdc, info->offscreen_buff);
 
             // Create the cairo surface and context.
-            cairo_surface_t* surface = cairo_win32_surface_create(offscreen_hdc);
+            cairo_surface_t* surface = cairo_win32_surface_create(info->offscreen_hdc);
             cairo_t* context = cairo_create(surface);
 
             auto scale = GetDpiForWindow(hwnd) / 96.0;
@@ -67,20 +89,15 @@ namespace cycfi { namespace elements
 
             // Cleanup.
             cairo_destroy(context);
-            cairo_surface_destroy (surface);
+            cairo_surface_destroy(surface);
 
             // Transfer the off-screen DC to the screen
             auto w = dirty.right-dirty.left;
             auto h = dirty.bottom-dirty.top;
-            BitBlt(hdc, dirty.left, dirty.top, w, h, offscreen_hdc
+            BitBlt(hdc, dirty.left, dirty.top, w, h, info->offscreen_hdc
               , dirty.left, dirty.top, SRCCOPY);
 
-            // Free-up the off-screen DC
-            SelectObject(offscreen_hdc, offscreen_handle);
-
-            DeleteObject(offscreen_buff);
-            DeleteDC(offscreen_hdc);
-
+            SelectObject(info->offscreen_hdc, hold);
             EndPaint(hwnd, &ps);
          }
          return 0;
@@ -185,7 +202,7 @@ namespace cycfi { namespace elements
          switch (message)
          {
             case WM_PAINT:
-               return on_paint(hwnd, info->vptr);
+               return on_paint(hwnd, info);
 
             case WM_ERASEBKGND:
                return true;
@@ -283,8 +300,16 @@ namespace cycfi { namespace elements
 
    base_view::~base_view()
    {
+      auto info = get_view_info(_view);
+
+      // Free-up the off-screen DC
+      if (info->offscreen_buff)
+         DeleteObject(info->offscreen_buff);
+      if (info->offscreen_hdc)
+         DeleteDC(info->offscreen_hdc);
+
       KillTimer(_view, IDT_TIMER1);
-      delete get_view_info(_view);
+      delete info;
       DeleteObject(_view);
    }
 

@@ -177,7 +177,7 @@ namespace cycfi { namespace elements
 
    struct basic_button_body : public element
    {
-      static float corner_radius;
+      constexpr static float corner_radius = 4.0;
 
                               basic_button_body(color body_color);
       virtual void            draw(context const& ctx);

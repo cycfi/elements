@@ -39,8 +39,18 @@ namespace cycfi { namespace elements
             HDC hdc = BeginPaint(hwnd, &ps);
             SetBkMode(hdc, TRANSPARENT);
 
+            RECT r;
+            GetWindowRect(hwnd, &r);
+            auto win_width = r.right-r.left;
+            auto win_height = r.bottom-r.top;
+
+            // Create an off-screen DC for double-buffering
+            HDC offscreen_hdc = CreateCompatibleDC(hdc);
+            HBITMAP offscreen_buff = CreateCompatibleBitmap(hdc, win_width, win_height);
+            HANDLE offscreen_handle = SelectObject(offscreen_hdc, offscreen_buff);
+
             // Create the cairo surface and context.
-            cairo_surface_t* surface = cairo_win32_surface_create(hdc);
+            cairo_surface_t* surface = cairo_win32_surface_create(offscreen_hdc);
             cairo_t* context = cairo_create(surface);
 
             auto scale = GetDpiForWindow(hwnd) / 96.0;
@@ -58,6 +68,18 @@ namespace cycfi { namespace elements
             // Cleanup.
             cairo_destroy(context);
             cairo_surface_destroy (surface);
+
+            // Transfer the off-screen DC to the screen
+            auto w = dirty.right-dirty.left;
+            auto h = dirty.bottom-dirty.top;
+            BitBlt(hdc, dirty.left, dirty.top, w, h, offscreen_hdc
+              , dirty.left, dirty.top, SRCCOPY);
+
+            // Free-up the off-screen DC
+            SelectObject(offscreen_hdc, offscreen_handle);
+
+            DeleteObject(offscreen_buff);
+            DeleteDC(offscreen_hdc);
 
             EndPaint(hwnd, &ps);
          }
@@ -164,6 +186,9 @@ namespace cycfi { namespace elements
          {
             case WM_PAINT:
                return on_paint(hwnd, info->vptr);
+
+            case WM_ERASEBKGND:
+               return true;
 
             case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
             case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:

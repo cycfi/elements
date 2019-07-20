@@ -9,6 +9,7 @@
 #include <cairo.h>
 #include <cairo-win32.h>
 #include <Windowsx.h>
+#include <chrono>
 
 namespace cycfi { namespace elements
 {
@@ -26,6 +27,10 @@ namespace cycfi { namespace elements
          int         w = 0;
          int         h = 0;
          bool        mouse_in_window = false;
+
+         using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+
+         time_point  start;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -208,6 +213,25 @@ namespace cycfi { namespace elements
          view->cursor({ pos_x, pos_y }, state);
       }
 
+      void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
+      {
+         auto now = std::chrono::steady_clock::now();
+         auto elapsed = now - info->start;
+         info->start = now;
+         auto velocity = std::chrono::milliseconds(300) / elapsed;
+
+         dir.x *= velocity;
+         dir.y *= velocity;
+
+         POINT pos;
+         pos.x = GET_X_LPARAM(lparam);
+         pos.y = GET_Y_LPARAM(lparam);
+         ScreenToClient(hwnd, &pos);
+
+         float scale = GetDpiForWindow(hwnd) / 96.0;
+         info->vptr->scroll(dir, { pos.x / scale, pos.y / scale });
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -255,6 +279,20 @@ namespace cycfi { namespace elements
 
             case WM_MOUSEHOVER:
                on_cursor(hwnd, info->vptr, lparam, cursor_tracking::hovering);
+               break;
+
+            case WM_MOUSEWHEEL:
+               {
+                  float delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.0f;
+                  on_scroll(hwnd, info, lparam, { 0, delta });
+               }
+               break;
+
+            case WM_MOUSEHWHEEL:
+               {
+                  float delta = -GET_WHEEL_DELTA_WPARAM(wparam) / 120.0f;
+                  on_scroll(hwnd, info, lparam, { delta, 0 });
+               }
                break;
 
             case WM_TIMER:
@@ -337,11 +375,11 @@ namespace cycfi { namespace elements
 
    point base_view::cursor_pos() const
    {
-      POINT p;
-      GetCursorPos(&p);
-      ScreenToClient(_view, &p);
+      POINT pos;
+      GetCursorPos(&pos);
+      ScreenToClient(_view, &pos);
       float scale = GetDpiForWindow(_view) / 96.0;
-      return { float(p.x) / scale, float(p.y) / scale };
+      return { float(pos.x) / scale, float(pos.y) / scale };
    }
 
    elements::size base_view::size() const

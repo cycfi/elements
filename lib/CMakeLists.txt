@@ -27,6 +27,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-Wno-missing-braces -Wno-comma")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-ftemplate-backtrace-limit=0")
 
+elseif (WIN32)
+
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
+      /wd4244 /wd4305 /wd4996 /wd4267 /wd4018")
+
 endif()
 
 ###############################################################################

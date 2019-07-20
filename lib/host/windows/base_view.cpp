@@ -337,7 +337,11 @@ namespace cycfi { namespace elements
 
    point base_view::cursor_pos() const
    {
-      return {};
+      POINT p;
+      GetCursorPos(&p);
+      ScreenToClient(_view, &p);
+      float scale = GetDpiForWindow(_view) / 96.0;
+      return { float(p.x) / scale, float(p.y) / scale };
    }
 
    elements::size base_view::size() const

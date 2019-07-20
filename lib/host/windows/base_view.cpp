@@ -8,12 +8,27 @@
 #include <elements/support/resource_paths.hpp>
 #include <cairo.h>
 #include <cairo-win32.h>
+#include <Windowsx.h>
 
 namespace cycfi { namespace elements
 {
    namespace
    {
-      LRESULT onPaint(HWND hwnd, base_view* view)
+      constexpr unsigned IDT_TIMER1 = 100;
+
+      struct view_info
+      {
+         base_view*  vptr = nullptr;
+         bool        is_dragging = false;
+      };
+
+      view_info* get_view_info(HWND hwnd)
+      {
+         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+         return reinterpret_cast<view_info*>(param);
+      }
+
+      LRESULT on_paint(HWND hwnd, base_view* view)
       {
          if (view)
          {
@@ -22,6 +37,7 @@ namespace cycfi { namespace elements
 
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
+            SetBkMode(hdc, TRANSPARENT);
 
             // Create the cairo surface and context.
             cairo_surface_t* surface = cairo_win32_surface_create(hdc);
@@ -48,13 +64,140 @@ namespace cycfi { namespace elements
          return 0;
       }
 
+      int get_mods()
+      {
+         int mods = 0;
+
+         auto&& test = [](int key)
+         {
+            return GetAsyncKeyState(key) & 0x8000;
+         };
+
+         if (test(VK_SHIFT))
+            mods |= mod_shift;
+         if (test(VK_CONTROL))
+            mods |= mod_control;
+         if (test(VK_MENU))
+            mods |= mod_alt;
+         if (test(VK_LWIN) || test(VK_RWIN))
+            mods |= mod_super;
+
+         return mods;
+      }
+
+      mouse_button get_button(
+         HWND hwnd, view_info* info, UINT message
+       , WPARAM wparam, LPARAM lparam)
+      {
+         float pos_x = GET_X_LPARAM(lparam);
+         float pos_y = GET_Y_LPARAM(lparam);
+
+         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         pos_x /= scale;
+         pos_y /= scale;
+
+         bool down = info->is_dragging;
+         switch (message)
+         {
+            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+            case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:
+            case WM_RBUTTONDBLCLK: case WM_RBUTTONDOWN:
+               if (!info->is_dragging)
+               {
+                  info->is_dragging = true;
+                  SetCapture(hwnd);
+               }
+               down = true;
+               break;
+
+            case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
+               down = false;
+               if (info->is_dragging)
+               {
+                  info->is_dragging = false;
+                  ReleaseCapture();
+               }
+               break;
+         }
+
+         int click_count = 1;
+         switch (message)
+         {
+            case WM_LBUTTONDBLCLK: case WM_MBUTTONDBLCLK: case WM_RBUTTONDBLCLK:
+               click_count = 2;
+         }
+
+         mouse_button::what which;
+         switch (message)
+         {
+            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK: case WM_LBUTTONUP:
+               which = mouse_button::left;
+               break;
+
+            case WM_MBUTTONDBLCLK:
+            case WM_MBUTTONDOWN:
+            case WM_MBUTTONUP:
+               which = mouse_button::middle;
+               break;
+
+            case WM_RBUTTONDBLCLK:
+            case WM_RBUTTONDOWN:
+            case WM_RBUTTONUP:
+               which = mouse_button::right;
+               break;
+         }
+
+         return {
+            down,
+            click_count,
+            mouse_button::left,
+            get_mods(),
+            { pos_x, pos_y }
+         };
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-         auto* view = reinterpret_cast<base_view*>(param);
+         auto* info = get_view_info(hwnd);
          switch (message)
          {
-            case WM_PAINT: return onPaint(hwnd, view);
+            case WM_PAINT:
+               return on_paint(hwnd, info->vptr);
+
+            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+            case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:
+            case WM_RBUTTONDBLCLK: case WM_RBUTTONDOWN:
+            case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
+               info->vptr->click(get_button(hwnd, info, message, wparam, lparam));
+               break;
+
+            case WM_MOUSEMOVE:
+               if (info->is_dragging)
+               {
+                  // TRACKMOUSEEVENT tme;
+                  // tme.cbSize = sizeof(tme);
+                  // tme.hwndTrack = hwnd;
+                  // tme.dwFlags = TME_HOVER | TME_LEAVE;
+                  // tme.dwHoverTime = HOVER_DEFAULT;
+                  // TrackMouseEvent(&tme);
+                  info->vptr->drag(get_button(hwnd, info, message, wparam, lparam));
+               }
+               break;
+
+            case WM_MOUSELEAVE:
+               info->is_dragging = false;
+               break;
+
+            case WM_MOUSEHOVER:
+               info->is_dragging = false;
+               break;
+
+            case WM_TIMER:
+               if (wparam == IDT_TIMER1)
+                  info->vptr->poll();
+               break;
+
             default:
                return DefWindowProc(hwnd, message, wparam, lparam);
          }
@@ -106,11 +249,17 @@ namespace cycfi { namespace elements
          true // repaint
       );
 
-      SetWindowLongPtr(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+      view_info* info = new view_info{ this };
+      SetWindowLongPtr(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
+
+      // Create 16ms (60Hz) timer
+      SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);
    }
 
    base_view::~base_view()
    {
+      KillTimer(_view, IDT_TIMER1);
+      delete get_view_info(_view);
       DeleteObject(_view);
    }
 
@@ -150,11 +299,12 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
+      auto scale = GetDpiForWindow(_view) / 96.0;
       RECT r;
-      r.left = area.left;
-      r.right = area.right;
-      r.top = area.top;
-      r.bottom = area.bottom;
+      r.left = area.left * scale;
+      r.right = area.right * scale;
+      r.top = area.top * scale;
+      r.bottom = area.bottom * scale;
       InvalidateRect(_view, &r, false);
    }
 

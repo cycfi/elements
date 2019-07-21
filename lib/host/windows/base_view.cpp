@@ -20,19 +20,21 @@ namespace cycfi { namespace elements
 
       struct view_info
       {
-         base_view*  vptr = nullptr;
-         bool        is_dragging = false;
-         HDC         hdc = nullptr;
-         HDC         offscreen_hdc = nullptr;
-         HBITMAP     offscreen_buff = nullptr;
-         int         w = 0;
-         int         h = 0;
-         bool        mouse_in_window = false;
+         base_view*     vptr = nullptr;
+         bool           is_dragging = false;
+         HDC            hdc = nullptr;
+         HDC            offscreen_hdc = nullptr;
+         HBITMAP        offscreen_buff = nullptr;
+         int            w = 0;
+         int            h = 0;
+         bool           mouse_in_window = false;
 
          using time_point = std::chrono::time_point<std::chrono::steady_clock>;
 
-         time_point  start;
-         double      velocity = 0;
+         time_point     click_start;
+         int            click_count = 0;
+         time_point     scroll_start;
+         double         velocity = 0;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -146,18 +148,29 @@ namespace cycfi { namespace elements
          bool down = info->is_dragging;
          switch (message)
          {
-            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
-            case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:
-            case WM_RBUTTONDBLCLK: case WM_RBUTTONDOWN:
-               if (!info->is_dragging)
+            case WM_LBUTTONDOWN:
+            case WM_MBUTTONDOWN:
+            case WM_RBUTTONDOWN:
                {
-                  info->is_dragging = true;
-                  SetCapture(hwnd);
+                  auto now = std::chrono::steady_clock::now();
+                  auto elapsed = now - info->click_start;
+                  info->click_start = now;
+                  if (elapsed > std::chrono::milliseconds(GetDoubleClickTime()))
+                     info->click_count = 1;
+                  else
+                     ++info->click_count;
+                  if (!info->is_dragging)
+                  {
+                     info->is_dragging = true;
+                     SetCapture(hwnd);
+                  }
+                  down = true;
                }
-               down = true;
                break;
 
-            case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
+            case WM_LBUTTONUP:
+            case WM_MBUTTONUP:
+            case WM_RBUTTONUP:
                down = false;
                if (info->is_dragging)
                {
@@ -168,26 +181,20 @@ namespace cycfi { namespace elements
          }
 
          int click_count = 1;
-         switch (message)
-         {
-            case WM_LBUTTONDBLCLK: case WM_MBUTTONDBLCLK: case WM_RBUTTONDBLCLK:
-               click_count = 2;
-         }
 
          mouse_button::what which;
          switch (message)
          {
-            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK: case WM_LBUTTONUP:
+            case WM_LBUTTONDOWN:
+            case WM_LBUTTONUP:
                which = mouse_button::left;
                break;
 
-            case WM_MBUTTONDBLCLK:
             case WM_MBUTTONDOWN:
             case WM_MBUTTONUP:
                which = mouse_button::middle;
                break;
 
-            case WM_RBUTTONDBLCLK:
             case WM_RBUTTONDOWN:
             case WM_RBUTTONUP:
                which = mouse_button::right;
@@ -196,7 +203,7 @@ namespace cycfi { namespace elements
 
          return {
             down,
-            click_count,
+            info->click_count,
             mouse_button::left,
             get_mods(),
             { pos_x, pos_y }
@@ -218,8 +225,8 @@ namespace cycfi { namespace elements
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
          auto now = std::chrono::steady_clock::now();
-         auto elapsed = now - info->start;
-         info->start = now;
+         auto elapsed = now - info->scroll_start;
+         info->scroll_start = now;
 
          std::chrono::duration<double, std::milli> fp_ms = elapsed;
          auto velocity = (1.0 / fp_ms.count());
@@ -453,12 +460,12 @@ namespace cycfi { namespace elements
       {
          cursors()
          {
-            _cursors[cursor_type::arrow] = LoadCursor(nullptr, IDC_ARROW);
-            _cursors[cursor_type::ibeam] = LoadCursor(nullptr, IDC_IBEAM);
-            _cursors[cursor_type::cross_hair] = LoadCursor(nullptr, IDC_CROSS);
-            _cursors[cursor_type::hand] = LoadCursor(nullptr, IDC_HAND);
-            _cursors[cursor_type::h_resize] = LoadCursor(nullptr, IDC_SIZEWE);
-            _cursors[cursor_type::v_resize] = LoadCursor(nullptr, IDC_SIZENS);
+            _cursors[cursor_type::arrow]        = LoadCursor(nullptr, IDC_ARROW);
+            _cursors[cursor_type::ibeam]        = LoadCursor(nullptr, IDC_IBEAM);
+            _cursors[cursor_type::cross_hair]   = LoadCursor(nullptr, IDC_CROSS);
+            _cursors[cursor_type::hand]         = LoadCursor(nullptr, IDC_HAND);
+            _cursors[cursor_type::h_resize]     = LoadCursor(nullptr, IDC_SIZEWE);
+            _cursors[cursor_type::v_resize]     = LoadCursor(nullptr, IDC_SIZENS);
          }
 
          std::map<cursor_type, HCURSOR> _cursors;

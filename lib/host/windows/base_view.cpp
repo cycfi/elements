@@ -16,6 +16,7 @@ namespace cycfi { namespace elements
    namespace
    {
       constexpr unsigned IDT_TIMER1 = 100;
+      HCURSOR current_cursor = nullptr;
 
       struct view_info
       {
@@ -305,6 +306,11 @@ namespace cycfi { namespace elements
                }
                break;
 
+            case WM_SETCURSOR:
+               if (LOWORD(lparam) == HTCLIENT && current_cursor != GetCursor())
+                  SetCursor(current_cursor);
+               break;
+
             case WM_TIMER:
                if (wparam == IDT_TIMER1)
                   info->vptr->poll();
@@ -443,20 +449,28 @@ namespace cycfi { namespace elements
 
    void set_cursor(cursor_type type)
    {
-      switch (type)
+      struct cursors
       {
-         case cursor_type::arrow:
-            break;
-         case cursor_type::ibeam:
-            break;
-         case cursor_type::cross_hair:
-            break;
-         case cursor_type::hand:
-            break;
-         case cursor_type::h_resize:
-            break;
-         case cursor_type::v_resize:
-            break;
+         cursors()
+         {
+            _cursors[cursor_type::arrow] = LoadCursor(nullptr, IDC_ARROW);
+            _cursors[cursor_type::ibeam] = LoadCursor(nullptr, IDC_IBEAM);
+            _cursors[cursor_type::cross_hair] = LoadCursor(nullptr, IDC_CROSS);
+            _cursors[cursor_type::hand] = LoadCursor(nullptr, IDC_HAND);
+            _cursors[cursor_type::h_resize] = LoadCursor(nullptr, IDC_SIZEWE);
+            _cursors[cursor_type::v_resize] = LoadCursor(nullptr, IDC_SIZENS);
+         }
+
+         std::map<cursor_type, HCURSOR> _cursors;
+      };
+      static cursors data;
+
+      HCURSOR cursor = data._cursors[type];
+      if (cursor != GetCursor())
+      {
+         current_cursor = cursor;
+         SetCursor(cursor);
+         ShowCursor(true);
       }
    }
 }}

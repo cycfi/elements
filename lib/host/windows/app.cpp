@@ -10,6 +10,8 @@
 #include <boost/filesystem.hpp>
 #include <windows.h>
 #include <ShellScalingAPI.h>
+#include <shlobj.h>
+#include <cstring>
 
 namespace cycfi { namespace elements
 {
@@ -22,6 +24,14 @@ namespace cycfi { namespace elements
       std::string application_id;
       std::string application_version;
    };
+
+   // UTF8 conversion utils defined in base_view.cpp
+
+   // Convert a wide Unicode string to an UTF8 string
+   std::string utf8_encode(std::wstring const& wstr);
+
+   // Convert an UTF8 string to a wide Unicode String
+   std::wstring utf8_decode(std::string const& str);
 }}
 
 
@@ -39,7 +49,7 @@ namespace cycfi { namespace elements
    {
       fs::path path = "config.json";
 
-	  std::string fp = fs::absolute(path).string();
+	   std::string fp = fs::absolute(path).string();
 
       CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
       auto r = json::load<config>(path);
@@ -81,6 +91,13 @@ namespace cycfi { namespace elements
    void app::stop()
    {
       _running = false;
+   }
+
+   fs::path app_data_path()
+   {
+      LPWSTR path = nullptr;
+      HRESULT hr = SHGetKnownFolderPath(FOLDERID_AppDataProgramData, KF_FLAG_CREATE, nullptr, &path);
+      return fs::path{ path };
    }
 }}
 

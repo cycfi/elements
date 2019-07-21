@@ -484,7 +484,7 @@ namespace cycfi { namespace elements
 
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
-            resource_paths.push_back(resource_path.string());
+            resource_paths.push_back(resource_path);
 
             canvas::load_fonts(resource_path);
          }

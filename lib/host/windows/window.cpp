@@ -194,20 +194,22 @@ namespace cycfi { namespace elements
 
    point window::size() const
    {
+      auto scale = GetDpiForWindow(_window) / 96.0;
       RECT frame;
       GetWindowRect(_window, &frame);
       return {
-         float(frame.right - frame.left),
-         float(frame.bottom - frame.top)
+         float((frame.right - frame.left) / scale),
+         float((frame.bottom - frame.top) / scale)
       };
    }
 
    void window::size(point const& p)
    {
+      auto scale = GetDpiForWindow(_window) / 96.0;
       RECT frame;
       GetWindowRect(_window, &frame);
-      frame.right = frame.left + p.x;
-      frame.bottom = frame.top + p.y;
+      frame.right = frame.left + (p.x * scale);
+      frame.bottom = frame.top + (p.y * scale);
       constrain_size(
          _window, frame, get_window_info(_window)->limits);
 
@@ -237,18 +239,20 @@ namespace cycfi { namespace elements
 
    point window::position() const
    {
+      auto scale = GetDpiForWindow(_window) / 96.0;
       RECT frame;
       GetWindowRect(_window, &frame);
-      return { float(frame.left), float(frame.top) };
+      return { float(frame.left / scale), float(frame.top / scale) };
    }
 
    void window::position(point const& p)
    {
+      auto scale = GetDpiForWindow(_window) / 96.0;
       RECT frame;
       GetWindowRect(_window, &frame);
 
       MoveWindow(
-         _window, p.x, p.y,
+         _window, p.x * scale, p.y * scale,
          frame.right - frame.left,
          frame.bottom - frame.top,
          true // repaint

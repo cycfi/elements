@@ -323,6 +323,26 @@ namespace cycfi { namespace elements
          info->vptr->scroll(dir, { pos.x / scale, pos.y / scale });
       }
 
+      LRESULT on_text(base_view& view, UINT message, WPARAM wparam)
+      {
+         if (message == WM_UNICHAR && wparam == UNICODE_NOCHAR)
+         {
+            // WM_UNICHAR is not sent by Windows, but is sent by some
+            // third-party input method engine
+            // Returning true here announces support for this message
+            return true;
+         }
+
+         bool const plain = message != WM_SYSCHAR;
+         uint32_t codepoint = wparam;
+         if (codepoint < 32 || (codepoint > 126 && codepoint < 160))
+            return 0;
+
+         if (plain)
+            view.text({ codepoint, get_mods() });
+         return 0;
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -406,6 +426,11 @@ namespace cycfi { namespace elements
             case WM_SYSKEYUP:
                on_key(hwnd, info, wparam, lparam);
                break;
+
+            case WM_CHAR:
+            case WM_SYSCHAR:
+            case WM_UNICHAR:
+               return on_text(*info->vptr, message, wparam);
 
             case WM_SETFOCUS:
                info->vptr->focus(focus_request::begin_focus);

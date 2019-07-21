@@ -161,13 +161,14 @@ namespace cycfi { namespace elements
       static init_window_class init;
 
       std::wstring wname = utf8_decode(name);
+      auto scale = GetDpiForSystem() / 96.0;
 
       _window = CreateWindow(
          L"ElementsWindow",
          wname.c_str(),
          WS_OVERLAPPEDWINDOW,
-         bounds.left, bounds.top,
-         bounds.width(), bounds.height(),
+         bounds.left * scale, bounds.top * scale,
+         bounds.width() * scale, bounds.height() * scale,
          nullptr, nullptr, nullptr,
          nullptr
       );

@@ -411,7 +411,7 @@ namespace cycfi { namespace elements
             break;
 
          case key_code::a:
-            if (k.modifiers & mod_super)
+            if (k.modifiers & mod_action)
             {
                _select_start = 0;
                _select_end = int(_text.size());
@@ -420,7 +420,7 @@ namespace cycfi { namespace elements
             break;
 
          case key_code::x:
-            if (k.modifiers & mod_super)
+            if (k.modifiers & mod_action)
             {
                cut(ctx.view, start, end);
                save_x = true;
@@ -430,7 +430,7 @@ namespace cycfi { namespace elements
             break;
 
          case key_code::c:
-            if (k.modifiers & mod_super)
+            if (k.modifiers & mod_action)
             {
                copy(ctx.view, start, end);
                handled = true;
@@ -438,7 +438,7 @@ namespace cycfi { namespace elements
             break;
 
          case key_code::v:
-            if (k.modifiers & mod_super)
+            if (k.modifiers & mod_action)
             {
                paste(ctx.view, start, end);
                save_x = true;
@@ -448,7 +448,7 @@ namespace cycfi { namespace elements
             break;
 
          case key_code::z:
-            if (k.modifiers & mod_super)
+            if (k.modifiers & mod_action)
             {
                if (_typing_state)
                {

@@ -13,6 +13,8 @@
 
 namespace cycfi { namespace elements
 {
+   key_code translate_key(WPARAM wparam, LPARAM lparam);
+
    namespace
    {
       constexpr unsigned IDT_TIMER1 = 100;
@@ -125,7 +127,7 @@ namespace cycfi { namespace elements
          if (test(VK_SHIFT))
             mods |= mod_shift;
          if (test(VK_CONTROL))
-            mods |= mod_control;
+            mods |= mod_control | mod_action;
          if (test(VK_MENU))
             mods |= mod_alt;
          if (test(VK_LWIN) || test(VK_RWIN))
@@ -261,11 +263,14 @@ namespace cycfi { namespace elements
             case WM_ERASEBKGND:
                return true;
 
-            case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
-            case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:
-            case WM_RBUTTONDBLCLK: case WM_RBUTTONDOWN:
+            case WM_LBUTTONDOWN:
+            case WM_MBUTTONDOWN:
+            case WM_RBUTTONDOWN:
+               SetFocus(hwnd);
+               // Fall through...
+
             case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
-               // $$$JDG$$$ todo: prevent double btn up and down
+               // $$$ JDG $$$ todo: prevent double btn up and down
                info->vptr->click(get_button(hwnd, info, message, wparam, lparam));
                break;
 
@@ -321,6 +326,47 @@ namespace cycfi { namespace elements
             case WM_TIMER:
                if (wparam == IDT_TIMER1)
                   info->vptr->poll();
+               break;
+
+            case WM_KEYDOWN:
+            case WM_SYSKEYDOWN:
+            case WM_KEYUP:
+            case WM_SYSKEYUP:
+            {
+               auto const key = translate_key(wparam, lparam);
+               auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
+               auto const mods = get_mods();
+
+               if (key == key_code::unknown)
+                  break;
+
+               if (action == key_action::release && wparam == VK_SHIFT)
+               {
+                  // HACK: Release both Shift keys on Shift up event, as when both
+                  //       are pressed the first release does not emit any event
+                  // NOTE: The other half of this is in _glfwPlatformPollEvents
+                  info->vptr->key({ key_code::left_shift, action, mods });
+                  info->vptr->key({ key_code::right_shift, action, mods });
+               }
+               else if (wparam == VK_SNAPSHOT)
+               {
+                  // HACK: Key down is not reported for the Print Screen key
+                  info->vptr->key({ key, key_action::press, mods });
+                  info->vptr->key({ key, key_action::release, mods });
+               }
+               else
+               {
+                  info->vptr->key({ key, action, mods });
+               }
+               break;
+            }
+
+            case WM_SETFOCUS:
+               info->vptr->focus(focus_request::begin_focus);
+               break;
+
+            case WM_KILLFOCUS:
+               info->vptr->focus(focus_request::end_focus);
                break;
 
             default:

@@ -87,11 +87,11 @@ namespace cycfi { namespace elements
          if (event->state & GDK_SHIFT_MASK)
             btn.modifiers |= mod_shift;
          if (event->state & GDK_CONTROL_MASK)
-            btn.modifiers |= mod_control;
+            btn.modifiers |= mod_control | mod_action;
          if (event->state & GDK_MOD1_MASK)
             btn.modifiers |= mod_alt;
          if (event->state & GDK_SUPER_MASK)
-            btn.modifiers |= mod_super;
+            btn.modifiers |= mod_action;
 
          btn.num_clicks = view->click_count;
          btn.pos = { float(event->x), float(event->y) };

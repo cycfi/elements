@@ -38,6 +38,28 @@ namespace cycfi { namespace elements
 {
    key_code translate_key(WPARAM wparam, LPARAM lparam);
 
+   // Convert a wide Unicode string to an UTF8 string
+   std::string utf8_encode(std::wstring const& wstr)
+   {
+      if (wstr.empty())
+         return {};
+      int size = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+      std::string result(size, 0);
+      WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &result[0], size, nullptr, nullptr);
+      return result;
+   }
+
+   // Convert an UTF8 string to a wide Unicode String
+   std::wstring utf8_decode(std::string const& str)
+   {
+      if (str.empty())
+         return {};
+      int size = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), nullptr, 0);
+      std::wstring result( size, 0 );
+      MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &result[0], size);
+      return result;
+   }
+
    namespace
    {
       constexpr unsigned IDT_TIMER1 = 100;
@@ -451,14 +473,14 @@ namespace cycfi { namespace elements
          init_view_class()
          {
             WNDCLASS windowClass = {0};
-            windowClass.hbrBackground = NULL;
-            windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-            windowClass.hInstance = NULL;
+            windowClass.hbrBackground = nullptr;
+            windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+            windowClass.hInstance = nullptr;
             windowClass.lpfnWndProc = WndProc;
-            windowClass.lpszClassName = "ElementsView";
+            windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClass(&windowClass))
-               MessageBox(nullptr, "Could not register class", "Error", MB_OK);
+               MessageBox(nullptr, L"Could not register class", L"Error", MB_OK);
 
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
@@ -474,7 +496,7 @@ namespace cycfi { namespace elements
       static init_view_class init;
 
       _view = CreateWindow(
-         "ElementsView",
+         L"ElementsView",
          nullptr,
          WS_CHILD | WS_VISIBLE,
          0, 0, 0, 0,
@@ -564,11 +586,51 @@ namespace cycfi { namespace elements
 
    std::string clipboard()
    {
-      return "";
+      if (!OpenClipboard(nullptr))
+         return {};
+
+      HANDLE object = GetClipboardData(CF_UNICODETEXT);
+      if (!object)
+         return {};
+
+      WCHAR* buffer = static_cast<WCHAR*>(GlobalLock(object));
+      if (!buffer)
+         return {};
+
+      std::wstring source{ buffer, std::char_traits<WCHAR>::length(buffer) };
+
+      GlobalUnlock(object);
+      CloseClipboard();
+
+      return utf8_encode(source);
    }
 
    void clipboard(std::string const& text)
    {
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
+      if (!len)
+         return;
+
+      HANDLE object = GlobalAlloc(GMEM_MOVEABLE, len * sizeof(WCHAR));
+      if (!object)
+         return;
+
+      WCHAR* buffer = static_cast<WCHAR*>(GlobalLock(object));
+      if (!buffer)
+      {
+         GlobalFree(object);
+         return;
+      }
+
+      MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, buffer, len);
+      GlobalUnlock(object);
+
+      if (!OpenClipboard(nullptr))
+         return;
+
+      EmptyClipboard();
+      SetClipboardData(CF_UNICODETEXT, object);
+      CloseClipboard();
    }
 
    void set_cursor(cursor_type type)

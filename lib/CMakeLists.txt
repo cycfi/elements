@@ -155,6 +155,7 @@ if (WIN32)
       WIN32_LEAN_AND_MEAN
       NOMINMAX
       BOOST_ALL_NO_LIB=1
+      _UNICODE
    )
 endif()
 

@@ -10,6 +10,14 @@ namespace elements = cycfi::elements;
 
 namespace cycfi { namespace elements
 {
+   // UTF8 conversion utils defined in base_view.cpp
+
+   // Convert a wide Unicode string to an UTF8 string
+   std::string utf8_encode(std::wstring const& wstr);
+
+   // Convert an UTF8 string to a wide Unicode String
+   std::wstring utf8_decode(std::string const& str);
+
    namespace
    {
       struct window_info
@@ -140,10 +148,10 @@ namespace cycfi { namespace elements
             windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
             windowClass.hInstance = NULL;
             windowClass.lpfnWndProc = handle_event;
-            windowClass.lpszClassName = "ElementsWindow";
+            windowClass.lpszClassName = L"ElementsWindow";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClass(&windowClass))
-               MessageBox(nullptr, "Could not register class", "Error", MB_OK);
+               MessageBox(nullptr, L"Could not register class", L"Error", MB_OK);
          }
       };
    }
@@ -152,9 +160,11 @@ namespace cycfi { namespace elements
    {
       static init_window_class init;
 
+      std::wstring wname = utf8_decode(name);
+
       _window = CreateWindow(
-         "ElementsWindow",
-         name.c_str(),
+         L"ElementsWindow",
+         wname.c_str(),
          WS_OVERLAPPEDWINDOW,
          bounds.left, bounds.top,
          bounds.width(), bounds.height(),

@@ -88,7 +88,7 @@ namespace cycfi { namespace elements
          state = new_state(ctx, btn.pos);
          begin_tracking(ctx, *state);
       }
-      else
+      else if (state)
       {
          end_tracking(ctx, *state);
          state.reset();

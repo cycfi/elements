@@ -31,6 +31,7 @@ namespace cycfi { namespace elements
          using time_point = std::chrono::time_point<std::chrono::steady_clock>;
 
          time_point  start;
+         double      velocity = 0;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -218,12 +219,18 @@ namespace cycfi { namespace elements
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->start;
          info->start = now;
-         auto velocity = float(std::chrono::milliseconds(100) / elapsed);
-         if (velocity > 50)
-            velocity = 50;
 
-         dir.x *= velocity;
-         dir.y *= velocity;
+         std::chrono::duration<double, std::milli> fp_ms = elapsed;
+         auto velocity = (1.0 / fp_ms.count());
+
+         if (elapsed > std::chrono::milliseconds(500))
+            info->velocity = velocity;
+         else
+            // Leaky integrator
+            info->velocity = velocity + 0.9 * (info->velocity - velocity);
+
+         dir.x *= info->velocity;
+         dir.y *= info->velocity;
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);
@@ -250,6 +257,7 @@ namespace cycfi { namespace elements
             case WM_MBUTTONDBLCLK: case WM_MBUTTONDOWN:
             case WM_RBUTTONDBLCLK: case WM_RBUTTONDOWN:
             case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
+               // $$$JDG$$$ todo: prevent double btn up and down
                info->vptr->click(get_button(hwnd, info, message, wparam, lparam));
                break;
 
@@ -285,14 +293,14 @@ namespace cycfi { namespace elements
 
             case WM_MOUSEWHEEL:
                {
-                  float delta = GET_WHEEL_DELTA_WPARAM(wparam) / 120.0f;
+                  float delta = GET_WHEEL_DELTA_WPARAM(wparam);
                   on_scroll(hwnd, info, lparam, { 0, delta });
                }
                break;
 
             case WM_MOUSEHWHEEL:
                {
-                  float delta = -GET_WHEEL_DELTA_WPARAM(wparam) / 120.0f;
+                  float delta = -GET_WHEEL_DELTA_WPARAM(wparam);
                   on_scroll(hwnd, info, lparam, { delta, 0 });
                }
                break;

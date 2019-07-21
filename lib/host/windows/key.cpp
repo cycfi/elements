@@ -207,45 +207,4 @@ namespace cycfi { namespace elements
          case 0x04a:  return key_code::kp_subtract;
       }
    }
-
-   // int translate_flags(NSUInteger flags)
-   // {
-      int mods = 0;
-
-      // if (flags & NSEventModifierFlagShift)
-      //    mods |= mod_shift;
-      // if (flags & NSEventModifierFlagControl)
-      //    mods |= mod_control;
-      // if (flags & NSEventModifierFlagOption)
-      //    mods |= mod_alt;
-      // if (flags & NSEventModifierFlagCommand)
-      //    mods |= mod_super;
-
-   //    return mods;
-   // }
-
-   // NSUInteger translate_key_to_modifier_flag(key_code key)
-   // {
-   //    switch (key)
-   //    {
-         // case key_code::left_shift:
-         // case key_code::right_shift:
-         //    return NSEventModifierFlagShift;
-
-         // case key_code::left_control:
-         // case key_code::right_control:
-         //    return NSEventModifierFlagControl;
-
-         // case key_code::left_alt:
-         // case key_code::right_alt:
-         //    return NSEventModifierFlagOption;
-
-         // case key_code::left_super:
-         // case key_code::right_super:
-         //    return NSEventModifierFlagCommand;
-
-         // default:
-         //    return 0;
-   //    }
-   // }
 }}

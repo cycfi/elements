@@ -2,6 +2,29 @@
    Copyright (c) 2016-2019 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
+
+   Key mapping ported to C++ from GLFW3
+
+   Copyright (c) 2009-2016 Camilla Berglund <elmindreda@glfw.org>
+
+   This software is provided 'as-is', without any express or implied
+   warranty. In no event will the authors be held liable for any damages
+   arising from the use of this software.
+
+   Permission is granted to anyone to use this software for any purpose,
+   including commercial applications, and to alter it and redistribute it
+   freely, subject to the following restrictions:
+
+   1. The origin of this software must not be misrepresented; you must not
+      claim that you wrote the original software. If you use this software
+      in a product, an acknowledgment in the product documentation would
+      be appreciated but is not required.
+
+   2. Altered source versions must be plainly marked as such, and must not
+      be misrepresented as being the original software.
+
+   3. This notice may not be removed or altered from any source
+      distribution.
 =============================================================================*/
 #include <elements/base_view.hpp>
 #include <elements/support/canvas.hpp>
@@ -22,6 +45,9 @@ namespace cycfi { namespace elements
 
       struct view_info
       {
+         using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+         using key_map = std::map<key_code, key_action>;
+
          base_view*     vptr = nullptr;
          bool           is_dragging = false;
          HDC            hdc = nullptr;
@@ -30,13 +56,11 @@ namespace cycfi { namespace elements
          int            w = 0;
          int            h = 0;
          bool           mouse_in_window = false;
-
-         using time_point = std::chrono::time_point<std::chrono::steady_clock>;
-
          time_point     click_start;
          int            click_count = 0;
          time_point     scroll_start;
          double         velocity = 0;
+         key_map        keys;
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -212,6 +236,54 @@ namespace cycfi { namespace elements
          };
       }
 
+      void handle_key(base_view& _view, view_info::key_map& keys, key_info k)
+      {
+         bool repeated = false;
+
+         if (k.action == key_action::release
+            && keys[k.key] == key_action::release)
+            return;
+
+         if (k.action == key_action::press
+            && keys[k.key] == key_action::press)
+            repeated = true;
+
+         keys[k.key] = k.action;
+
+         if (repeated)
+            k.action = key_action::repeat;
+
+         _view.key(k);
+      };
+
+      void on_key(HWND hwnd, view_info* info, WPARAM wparam, LPARAM lparam)
+      {
+         auto const key = translate_key(wparam, lparam);
+         auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
+         auto const mods = get_mods();
+
+         if (key == key_code::unknown)
+            return;
+
+         if (action == key_action::release && wparam == VK_SHIFT)
+         {
+            // HACK: Release both Shift keys on Shift up event, as when both
+            //       are pressed the first release does not emit any event
+            handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
+            handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
+         }
+         else if (wparam == VK_SNAPSHOT)
+         {
+            // HACK: Key down is not reported for the Print Screen key
+            handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
+            handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
+         }
+         else
+         {
+            handle_key(*info->vptr, info->keys, { key, action, mods });
+         }
+      }
+
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
       {
          float pos_x = GET_X_LPARAM(lparam);
@@ -332,34 +404,8 @@ namespace cycfi { namespace elements
             case WM_SYSKEYDOWN:
             case WM_KEYUP:
             case WM_SYSKEYUP:
-            {
-               auto const key = translate_key(wparam, lparam);
-               auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
-               auto const mods = get_mods();
-
-               if (key == key_code::unknown)
-                  break;
-
-               if (action == key_action::release && wparam == VK_SHIFT)
-               {
-                  // HACK: Release both Shift keys on Shift up event, as when both
-                  //       are pressed the first release does not emit any event
-                  // NOTE: The other half of this is in _glfwPlatformPollEvents
-                  info->vptr->key({ key_code::left_shift, action, mods });
-                  info->vptr->key({ key_code::right_shift, action, mods });
-               }
-               else if (wparam == VK_SNAPSHOT)
-               {
-                  // HACK: Key down is not reported for the Print Screen key
-                  info->vptr->key({ key, key_action::press, mods });
-                  info->vptr->key({ key, key_action::release, mods });
-               }
-               else
-               {
-                  info->vptr->key({ key, action, mods });
-               }
+               on_key(hwnd, info, wparam, lparam);
                break;
-            }
 
             case WM_SETFOCUS:
                info->vptr->focus(focus_request::begin_focus);

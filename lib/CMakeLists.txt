@@ -60,7 +60,7 @@ elseif (WIN32)
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
    else()
-      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win86/freetype.lib)
+      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
 endif()
 

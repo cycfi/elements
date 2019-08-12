@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
 
       window_info* get_window_info(HWND hwnd)
       {
-         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+         auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          return reinterpret_cast<window_info*>(param);
       }
 
@@ -40,20 +40,20 @@ namespace cycfi { namespace elements
 
       void disable_minimize(HWND hwnd)
       {
-         SetWindowLong(hwnd, GWL_STYLE,
-            GetWindowLong(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
+         SetWindowLongW(hwnd, GWL_STYLE,
+            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
       }
 
       void disable_maximize(HWND hwnd)
       {
-         SetWindowLong(hwnd, GWL_STYLE,
-            GetWindowLong(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
+         SetWindowLongW(hwnd, GWL_STYLE,
+            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
       }
 
       void disable_resize(HWND hwnd)
       {
-         SetWindowLong(hwnd, GWL_STYLE,
-            GetWindowLong(hwnd, GWL_STYLE) & ~WS_SIZEBOX);
+         SetWindowLongW(hwnd, GWL_STYLE,
+            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_SIZEBOX);
          disable_maximize(hwnd);
       }
 
@@ -134,7 +134,7 @@ namespace cycfi { namespace elements
                break;
 
             default:
-               return DefWindowProc(hwnd, message, wparam, lparam);
+               return DefWindowProcW(hwnd, message, wparam, lparam);
          }
          return 0;
       }
@@ -143,15 +143,15 @@ namespace cycfi { namespace elements
       {
          init_window_class()
          {
-            WNDCLASS windowClass = {0};
+            WNDCLASSW windowClass = {0};
             windowClass.hbrBackground = NULL;
             windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
             windowClass.hInstance = NULL;
             windowClass.lpfnWndProc = handle_event;
             windowClass.lpszClassName = L"ElementsWindow";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
-            if (!RegisterClass(&windowClass))
-               MessageBox(nullptr, L"Could not register class", L"Error", MB_OK);
+            if (!RegisterClassW(&windowClass))
+               MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
          }
       };
    }
@@ -163,7 +163,7 @@ namespace cycfi { namespace elements
       std::wstring wname = utf8_decode(name);
       auto scale = GetDpiForSystem() / 96.0;
 
-      _window = CreateWindow(
+      _window = CreateWindowW(
          L"ElementsWindow",
          wname.c_str(),
          WS_OVERLAPPEDWINDOW,
@@ -174,7 +174,7 @@ namespace cycfi { namespace elements
       );
 
       window_info* info = new window_info{ this };
-      SetWindowLongPtr(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
+      SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (!(style_ & closable))
          disable_close(_window);

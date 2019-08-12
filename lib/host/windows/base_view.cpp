@@ -87,7 +87,7 @@ namespace cycfi { namespace elements
 
       view_info* get_view_info(HWND hwnd)
       {
-         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+         auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          return reinterpret_cast<view_info*>(param);
       }
 
@@ -367,7 +367,7 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         auto param = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+         auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -463,7 +463,7 @@ namespace cycfi { namespace elements
                break;
 
             default:
-               return DefWindowProc(hwnd, message, wparam, lparam);
+               return DefWindowProcW(hwnd, message, wparam, lparam);
          }
          return 0;
       }
@@ -472,15 +472,15 @@ namespace cycfi { namespace elements
       {
          init_view_class()
          {
-            WNDCLASS windowClass = {0};
+            WNDCLASSW windowClass = {0};
             windowClass.hbrBackground = nullptr;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = nullptr;
             windowClass.lpfnWndProc = WndProc;
             windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
-            if (!RegisterClass(&windowClass))
-               MessageBox(nullptr, L"Could not register class", L"Error", MB_OK);
+            if (!RegisterClassW(&windowClass))
+               MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
 
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
@@ -495,7 +495,7 @@ namespace cycfi { namespace elements
    {
       static init_view_class init;
 
-      _view = CreateWindow(
+      _view = CreateWindowW(
          L"ElementsView",
          nullptr,
          WS_CHILD | WS_VISIBLE,
@@ -514,7 +514,7 @@ namespace cycfi { namespace elements
       );
 
       view_info* info = new view_info{ this };
-      SetWindowLongPtr(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
+      SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       // Create 16ms (60Hz) timer
       SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);

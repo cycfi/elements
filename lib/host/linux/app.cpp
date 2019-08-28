@@ -3,8 +3,28 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include "view_impl.hpp"
-#include <elements/support/assert.hpp>
+#include <elements/app.hpp>
+#include <infra/assert.hpp>
+#include <json/json_io.hpp>
+#include <string>
+#include <gtk/gtk.h>
+
+namespace cycfi { namespace elements
+{
+   namespace fs = boost::filesystem;
+
+   struct config
+   {
+      std::string application_title;
+      std::string application_id;
+   };
+}}
+
+BOOST_FUSION_ADAPT_STRUCT(
+   cycfi::elements::config,
+   (std::string, application_title)
+   (std::string, application_id)
+)
 
 namespace cycfi { namespace elements
 {
@@ -17,46 +37,46 @@ namespace cycfi { namespace elements
       return r.get();
    }
 
-   struct activate_info
+   config app_config;
+   int argc = 0;
+   const char** argv = nullptr;
+
+   struct init_app
    {
-      config const& cfg;
-      std::unique_ptr<base_view>& main_view;
-      host_view& host_view_;
+      init_app()
+      {
+         app_config = get_config();
+      }
    };
 
-   void activate(GtkApplication* app, gpointer user_data)
+   app::app(int argc_, const char* argv_[])
    {
-      auto pinfo = static_cast<activate_info*>(user_data);
-      GtkWidget* window = gtk_application_window_new(app);
-      gtk_window_set_title(
-         GTK_WINDOW(window), pinfo->cfg.application_name.c_str());
-      pinfo->host_view_.window = window;
-      pinfo->main_view = std::move(ph::new_view(&pinfo->host_view_));
-      make_main_window(*pinfo->main_view, window);
-      gtk_widget_show_all(window);
+      static init_app init;
+      _app_name = app_config.application_title;
+      argc = argc_;
+      argv = argv_;
+
+      _app = gtk_application_new(
+         _app_name.c_str()
+       , G_APPLICATION_FLAGS_NONE
+      );
    }
 
-///////////////////////////////////////////////////////////////////////////////
-// Application event loop entry
-
-   int app_main(int argc, const char* argv[])
+   app::~app()
    {
-      config cfg = get_config();
-      std::unique_ptr<base_view> main_view;
-      host_view host_view_;
-      activate_info info = { cfg, main_view, host_view_ };
+      g_object_unref(_app);
+   }
 
-      GtkApplication* app = gtk_application_new(
-         cfg.application_id.c_str(), G_APPLICATION_FLAGS_NONE
-      );
-
-      g_signal_connect(app, "activate", G_CALLBACK(activate), &info);
-
+   void app::run()
+   {
       int status = g_application_run(
-         G_APPLICATION(app), argc, const_cast<char**>(argv)
+         G_APPLICATION(_app), argc, const_cast<char**>(argv)
       );
-      g_object_unref(app);
-      return status;
+   }
+
+   void app::stop()
+   {
+      g_application_release(G_APPLICATION(_app));
    }
 }}
 

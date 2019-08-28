@@ -282,22 +282,18 @@ namespace cycfi { namespace elements
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__linux__)
    struct _host_view;
    using host_view = _host_view*;
 #elif defined(_WIN32)
    using host_view = HWND;
-#elif defined(__linux__)
-   using host_view = GtkWidget*;
 #endif
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__linux__)
    struct _host_window;
    using host_window = _host_window*;
 #elif defined(_WIN32)
    using host_window = HWND;
-#elif defined(__linux__)
-   using host_window = GtkWidget*;
 #endif
 
    class base_view : non_copyable

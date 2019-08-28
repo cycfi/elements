@@ -3,24 +3,41 @@
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
-#include "view_impl.hpp"
+#include <elements/app.hpp>
 #include <cairo.h>
+#include <elements/base_view.hpp>
+#include <json/json_io.hpp>
+#include <gtk/gtk.h>
+#include <string>
 
 namespace cycfi { namespace elements
 {
-   ///////////////////////////////////////////////////////////////////////////
-   // Main view creation callback
-   std::function<std::unique_ptr<base_view>(host_view* h)> new_view;
+   struct _host_view
+   {
+      ~_host_view();
+
+      cairo_surface_t* surface = nullptr;
+      GtkWidget* window = nullptr;
+
+      // Mouse button click tracking
+      std::uint32_t click_time = 0;
+      std::uint32_t click_count = 0;
+
+      // Scroll acceleration tracking
+      std::uint32_t scroll_time = 0;
+
+      point cursor_position;
+   };
 
    struct platform_access
    {
-      inline static host_view* get_host_view(base_view& main_view)
+      inline static _host_view* get_host_view(base_view& main_view)
       {
-         return main_view.h;
+         return main_view.host();
       }
    };
 
-   host_view::~host_view()
+   _host_view::~_host_view()
    {
       if (surface)
          cairo_surface_destroy(surface);
@@ -81,7 +98,7 @@ namespace cycfi { namespace elements
       }
 
       template <typename Event>
-      bool get_mouse(Event* event, mouse_button& btn, host_view* view)
+      bool get_mouse(Event* event, mouse_button& btn, _host_view* view)
       {
          btn.modifiers = 0;
          if (event->state & GDK_SHIFT_MASK)
@@ -98,7 +115,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      bool get_button(GdkEventButton* event, mouse_button& btn, host_view* view)
+      bool get_button(GdkEventButton* event, mouse_button& btn, _host_view* view)
       {
          if (event->button > 4)
             return false;
@@ -139,7 +156,7 @@ namespace cycfi { namespace elements
       gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
          auto& main_view = get(user_data);
-         host_view* view = platform_access::get_host_view(main_view);
+         _host_view* view = platform_access::get_host_view(main_view);
          mouse_button btn;
          if (get_mouse(event, btn, view))
          {
@@ -273,45 +290,47 @@ namespace cycfi { namespace elements
 
    point base_view::cursor_pos() const
    {
-      return h->cursor_position;
+      return _view->cursor_position;
    }
 
-   point base_view::size() const
+   elements::size base_view::size() const
    {
-      auto x = gtk_widget_get_allocated_width(h->window);
-      auto y = gtk_widget_get_allocated_height(h->window);
+      auto x = gtk_widget_get_allocated_width(_view->window);
+      auto y = gtk_widget_get_allocated_height(_view->window);
       return { float(x), float(y) };
    }
 
-   void base_view::size(point p)
+   void base_view::size(elements::size p)
    {
-       gtk_window_resize(GTK_WINDOW(h->window), p.x, p.y);
+      // $$$ Wrong: don't size the window!!! $$$
+      gtk_window_resize(GTK_WINDOW(_view->window), p.x, p.y);
    }
 
    void base_view::refresh()
    {
-      auto x = gtk_widget_get_allocated_width(h->window);
-      auto y = gtk_widget_get_allocated_height(h->window);
+      auto x = gtk_widget_get_allocated_width(_view->window);
+      auto y = gtk_widget_get_allocated_height(_view->window);
       refresh({ 0, 0, float(x), float(y) });
    }
 
    void base_view::refresh(rect area)
    {
-      gtk_widget_queue_draw_area(h->window,
+      gtk_widget_queue_draw_area(_view->window,
          area.left, area.top, area.width(), area.height());
    }
 
-   void base_view::limits(view_limits limits_)
-   {
-      GdkGeometry hints;
-      hints.min_width = limits_.min.x;
-      hints.min_height = limits_.min.y;
-      hints.max_width = limits_.max.x;
-      hints.max_height = limits_.max.y;
+   // Wrong $$$ This should not be here $$$
+   // void base_view::limits(view_limits limits_)
+   // {
+   //    GdkGeometry hints;
+   //    hints.min_width = limits_.min.x;
+   //    hints.min_height = limits_.min.y;
+   //    hints.max_width = limits_.max.x;
+   //    hints.max_height = limits_.max.y;
 
-      gtk_window_set_geometry_hints(GTK_WINDOW(h->window), nullptr,
-         &hints, GdkWindowHints(GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE));
-   }
+   //    gtk_window_set_geometry_hints(GTK_WINDOW(_view->window), nullptr,
+   //       &hints, GdkWindowHints(GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE));
+   // }
 
    std::string clipboard()
    {

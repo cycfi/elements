@@ -207,11 +207,15 @@ elseif (WIN32)
       ${Boost_SYSTEM_LIBRARY}
    )
 elseif (LINUX)
+
+   find_package(Threads)
+
    link_directories(${GTK3_LIBRARY_DIRS})
 
    target_link_libraries(libelements
       infra
       json
+      ${CMAKE_THREAD_LIBS_INIT}
       ${CAIRO_LIBRARIES}
       ${FREETYPE_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}

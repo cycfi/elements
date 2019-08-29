@@ -247,6 +247,13 @@ namespace cycfi { namespace elements
       );
    }
 
+   int poll_function(gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      base_view.poll();
+      return true;
+   }
+
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
       auto* content_view = gtk_drawing_area_new();
@@ -286,12 +293,16 @@ namespace cycfi { namespace elements
          // | GDK_SMOOTH_SCROLL_MASK
       );
 
+      // Create 16ms (60Hz) timer
+      g_timeout_add(16, poll_function, &view);
+
       return content_view;
    }
 
    // Defined in window.cpp
    GtkWidget* get_window(_host_window& h);
    void on_window_activate(_host_window& h, std::function<void()> f);
+   float get_scale(GtkWidget* widget);
 
    // Defined in app.cpp
    bool app_is_activated();
@@ -361,8 +372,13 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
+      auto scale = 1; // get_scale(_view->widget);
       gtk_widget_queue_draw_area(_view->widget,
-         area.left, area.top, area.width(), area.height());
+         area.left * scale,
+         area.top * scale,
+         area.width() * scale,
+         area.height() * scale
+      );
    }
 
    std::string clipboard()

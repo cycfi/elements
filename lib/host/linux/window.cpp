@@ -33,9 +33,9 @@ namespace cycfi { namespace elements
       h.on_activate.push_back(f);
    }
 
-   float get_scale(GtkWidget* window)
+   float get_scale(GtkWidget* widget)
    {
-      auto gdk_win = gtk_widget_get_window(window);
+      auto gdk_win = gtk_widget_get_window(widget);
       return 1.0f / gdk_window_get_scale_factor(gdk_win);
    }
 

@@ -19,6 +19,21 @@
 namespace cycfi { namespace elements
 {
    std::map<std::string, cairo_font_face_t*> canvas::_fonts;
+   static std::map<FT_Face, cairo_font_face_t*> font_faces;
+
+   struct font_deleter
+   {
+      ~font_deleter()
+      {
+         for (auto& p : font_faces)
+         {
+            FT_Done_Face(p.first);
+            cairo_font_face_destroy(p.second);
+         }
+      }
+   };
+
+   static font_deleter font_deleter_;
 
    void activate_font(
       std::map<std::string, cairo_font_face_t*>& fonts
@@ -40,6 +55,7 @@ namespace cycfi { namespace elements
          FT_Get_Sfnt_Name(face, i, &name);
          if (name.name_id == TT_NAME_ID_FULL_NAME)
          {
+            font_faces[face] = ct;
             fonts[std::string((char const*)name.string, name.string_len)] = ct;
             break;
          }

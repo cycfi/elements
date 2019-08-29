@@ -33,6 +33,12 @@ namespace cycfi { namespace elements
       h.on_activate.push_back(f);
    }
 
+   float get_scale(GtkWidget* window)
+   {
+      auto gdk_win = gtk_widget_get_window(window);
+      return 1.0f / gdk_window_get_scale_factor(gdk_win);
+   }
+
    window::window(std::string const& name, int style_, rect const& bounds)
     :  _window(new _host_window)
    {
@@ -69,12 +75,6 @@ namespace cycfi { namespace elements
    {
       g_object_unref(_window->host);
       delete _window;
-   }
-
-   float get_scale(GtkWidget* window)
-   {
-      auto gdk_win = gtk_widget_get_window(window);
-      return 1.0f / gdk_window_get_scale_factor(gdk_win);
    }
 
    point window::size() const

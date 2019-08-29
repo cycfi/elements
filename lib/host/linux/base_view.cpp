@@ -7,6 +7,8 @@
 #include <cairo.h>
 #include <elements/base_view.hpp>
 #include <elements/window.hpp>
+#include <elements/support/canvas.hpp>
+#include <elements/support/resource_paths.hpp>
 #include <json/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
@@ -294,13 +296,26 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
-   base_view::base_view(host_view h)
-    : _view(new _host_view)
+   struct init_view_class
    {
+      init_view_class()
+      {
+         auto pwd = fs::current_path();
+         auto resource_path = pwd / "resources";
+         resource_paths.push_back(resource_path);
+
+         canvas::load_fonts(resource_path);
+      }
+   };
+
+   base_view::base_view(host_view h)
+    : _view(h)
+   {
+      static init_view_class init;
    }
 
    base_view::base_view(host_window h)
-    : _view(new _host_view)
+    : base_view(new _host_view)
    {
       auto make_view =
          [this, h]()

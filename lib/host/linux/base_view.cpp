@@ -6,6 +6,7 @@
 #include <elements/app.hpp>
 #include <cairo.h>
 #include <elements/base_view.hpp>
+#include <elements/window.hpp>
 #include <json/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
@@ -17,7 +18,7 @@ namespace cycfi { namespace elements
       ~_host_view();
 
       cairo_surface_t* surface = nullptr;
-      GtkWidget* window = nullptr;
+      GtkWidget* widget = nullptr;
 
       // Mouse button click tracking
       std::uint32_t click_time = 0;
@@ -63,15 +64,14 @@ namespace cycfi { namespace elements
       {
          auto& view = get(user_data);
          auto* host_view = platform_access::get_host_view(view);
-         auto* window = host_view->window;
 
          if (host_view->surface)
             cairo_surface_destroy(host_view->surface);
 
          host_view->surface = gdk_window_create_similar_surface(
-            gtk_widget_get_window(window), CAIRO_CONTENT_COLOR,
-            gtk_widget_get_allocated_width(window),
-            gtk_widget_get_allocated_height(window)
+            gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
+            gtk_widget_get_allocated_width(widget),
+            gtk_widget_get_allocated_height(widget)
          );
 
          clear_surface(host_view->surface);
@@ -245,60 +245,78 @@ namespace cycfi { namespace elements
       );
    }
 
-   void make_view(base_view& view, GtkWidget* window)
+   GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
-      auto* drawing_area = gtk_drawing_area_new();
+      auto* content_view = gtk_drawing_area_new();
 
-      gtk_container_add(GTK_CONTAINER(window), drawing_area);
+      gtk_container_add(GTK_CONTAINER(parent), content_view);
 
-      g_signal_connect(G_OBJECT(drawing_area), "configure-event",
+      g_signal_connect(G_OBJECT(content_view), "configure-event",
          G_CALLBACK(on_configure), &view);
 
-      g_signal_connect(G_OBJECT(drawing_area), "draw",
+      g_signal_connect(G_OBJECT(content_view), "draw",
          G_CALLBACK(on_draw), &view);
 
-      g_signal_connect(drawing_area, "button-press-event",
+      g_signal_connect(content_view, "button-press-event",
          G_CALLBACK(on_button), &view);
-      g_signal_connect (drawing_area, "button-release-event",
+      g_signal_connect (content_view, "button-release-event",
          G_CALLBACK(on_button), &view);
-      g_signal_connect(drawing_area, "motion-notify-event",
+      g_signal_connect(content_view, "motion-notify-event",
          G_CALLBACK(on_motion), &view);
-      g_signal_connect(drawing_area, "scroll-event",
+      g_signal_connect(content_view, "scroll-event",
          G_CALLBACK(on_scroll), &view);
-      g_signal_connect(drawing_area, "enter-notify-event",
+      g_signal_connect(content_view, "enter-notify-event",
          G_CALLBACK(on_event_crossing), &view);
-      g_signal_connect(drawing_area, "leave-notify-event",
+      g_signal_connect(content_view, "leave-notify-event",
          G_CALLBACK(on_event_crossing), &view);
 
       // Ask to receive events the drawing area doesn't normally
       // subscribe to. In particular, we need to ask for the
       // button press and motion notify events that want to handle.
-      gtk_widget_set_events(drawing_area,
-         gtk_widget_get_events(drawing_area)
+      gtk_widget_set_events(content_view,
+         gtk_widget_get_events(content_view)
          | GDK_BUTTON_PRESS_MASK
          | GDK_BUTTON_RELEASE_MASK
          | GDK_POINTER_MOTION_MASK
          | GDK_SCROLL_MASK
          | GDK_ENTER_NOTIFY_MASK
          | GDK_LEAVE_NOTIFY_MASK
-                            // GDK_SMOOTH_SCROLL_MASK
+         // | GDK_SMOOTH_SCROLL_MASK
       );
+
+      return content_view;
    }
 
    // Defined in window.cpp
    GtkWidget* get_window(_host_window& h);
+   void on_window_activate(_host_window& h, std::function<void()> f);
+
+   // Defined in app.cpp
+   bool app_is_activated();
 
    base_view::base_view(host_view h)
+    : _view(new _host_view)
    {
    }
 
    base_view::base_view(host_window h)
+    : _view(new _host_view)
    {
-      // make_view(*this, get_window(h));
+      auto make_view =
+         [this, h]()
+         {
+            _view->widget = elements::make_view(*this, get_window(*h));
+         };
+
+      if (app_is_activated())
+         make_view();
+      else
+         on_window_activate(*h, make_view);
    }
 
    base_view::~base_view()
    {
+      delete _view;
    }
 
    point base_view::cursor_pos() const
@@ -308,43 +326,29 @@ namespace cycfi { namespace elements
 
    elements::size base_view::size() const
    {
-      // $$$ Wrong, not the window $$$
-      auto x = gtk_widget_get_allocated_width(_view->window);
-      auto y = gtk_widget_get_allocated_height(_view->window);
+      auto x = gtk_widget_get_allocated_width(_view->widget);
+      auto y = gtk_widget_get_allocated_height(_view->widget);
       return { float(x), float(y) };
    }
 
    void base_view::size(elements::size p)
    {
       // $$$ Wrong: don't size the window!!! $$$
-      gtk_window_resize(GTK_WINDOW(_view->window), p.x, p.y);
+      gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);
    }
 
    void base_view::refresh()
    {
-      auto x = gtk_widget_get_allocated_width(_view->window);
-      auto y = gtk_widget_get_allocated_height(_view->window);
+      auto x = gtk_widget_get_allocated_width(_view->widget);
+      auto y = gtk_widget_get_allocated_height(_view->widget);
       refresh({ 0, 0, float(x), float(y) });
    }
 
    void base_view::refresh(rect area)
    {
-      gtk_widget_queue_draw_area(_view->window,
+      gtk_widget_queue_draw_area(_view->widget,
          area.left, area.top, area.width(), area.height());
    }
-
-   // Wrong $$$ This should not be here $$$
-   // void base_view::limits(view_limits limits_)
-   // {
-   //    GdkGeometry hints;
-   //    hints.min_width = limits_.min.x;
-   //    hints.min_height = limits_.min.y;
-   //    hints.max_width = limits_.max.x;
-   //    hints.max_height = limits_.max.y;
-
-   //    gtk_window_set_geometry_hints(GTK_WINDOW(_view->window), nullptr,
-   //       &hints, GdkWindowHints(GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE));
-   // }
 
    std::string clipboard()
    {

@@ -7,6 +7,8 @@
 #include <infra/assert.hpp>
 #include <json/json_io.hpp>
 #include <string>
+#include <functional>
+#include <vector>
 #include <gtk/gtk.h>
 
 namespace cycfi { namespace elements
@@ -16,14 +18,18 @@ namespace cycfi { namespace elements
    struct config
    {
       std::string application_title;
+      std::string application_copyright;
       std::string application_id;
+      std::string application_version;
    };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
    cycfi::elements::config,
    (std::string, application_title)
+   (std::string, application_copyright)
    (std::string, application_id)
+   (std::string, application_version)
 )
 
 namespace cycfi { namespace elements
@@ -37,15 +43,43 @@ namespace cycfi { namespace elements
       return r.get();
    }
 
+   // Some app globals
    config app_config;
    int argc = 0;
    const char** argv = nullptr;
+   GtkApplication* the_app = nullptr;
+   bool is_activated = false;
+
+   std::vector<std::function<void()>> on_activate;
+
+   GtkApplication* get_app()
+   {
+      return the_app;
+   }
+
+   bool app_is_activated()
+   {
+      return is_activated;
+   }
+
+   void activate(GtkApplication* app, gpointer user_data)
+   {
+      is_activated = true;
+      for (auto f : on_activate)
+         f();
+      on_activate.clear();
+   }
 
    struct init_app
    {
       init_app()
       {
          app_config = get_config();
+         the_app = gtk_application_new(
+            app_config.application_id.c_str()
+          , G_APPLICATION_FLAGS_NONE
+         );
+         g_signal_connect(the_app, "activate", G_CALLBACK(activate), NULL);
       }
    };
 
@@ -55,11 +89,7 @@ namespace cycfi { namespace elements
       _app_name = app_config.application_title;
       argc = argc_;
       argv = argv_;
-
-      _app = gtk_application_new(
-         _app_name.c_str()
-       , G_APPLICATION_FLAGS_NONE
-      );
+      _app = the_app;
    }
 
    app::~app()

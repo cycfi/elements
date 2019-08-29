@@ -31,9 +31,9 @@ namespace cycfi { namespace elements
 
    struct platform_access
    {
-      inline static _host_view* get_host_view(base_view& main_view)
+      inline static _host_view* get_host_view(base_view& view)
       {
-         return main_view.host();
+         return view.host();
       }
    };
 
@@ -61,8 +61,8 @@ namespace cycfi { namespace elements
 
       gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
       {
-         auto& main_view = get(user_data);
-         auto* host_view = platform_access::get_host_view(main_view);
+         auto& view = get(user_data);
+         auto* host_view = platform_access::get_host_view(view);
          auto* window = host_view->window;
 
          if (host_view->surface)
@@ -80,8 +80,8 @@ namespace cycfi { namespace elements
 
       gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
-         auto& main_view = get(user_data);
-         auto* host_view = platform_access::get_host_view(main_view);
+         auto& view = get(user_data);
+         auto* host_view = platform_access::get_host_view(view);
          cairo_set_source_surface(cr, host_view->surface, 0, 0);
          cairo_paint(cr);
 
@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
          // exposed areas of the widget.
          double left, top, right, bottom;
          cairo_clip_extents(cr, &left, &top, &right, &bottom);
-         main_view.draw(
+         view.draw(
             cr,
             rect{ float(left), float(top), float(right), float(bottom) }
          );
@@ -146,17 +146,17 @@ namespace cycfi { namespace elements
 
       gboolean on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
       {
-         auto& main_view = get(user_data);
+         auto& view = get(user_data);
          mouse_button btn;
-         if (get_button(event, btn, platform_access::get_host_view(main_view)))
-            main_view.click(btn);
+         if (get_button(event, btn, platform_access::get_host_view(view)))
+            view.click(btn);
          return TRUE;
       }
 
       gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
-         auto& main_view = get(user_data);
-         _host_view* view = platform_access::get_host_view(main_view);
+         auto& base_view = get(user_data);
+         _host_view* view = platform_access::get_host_view(base_view);
          mouse_button btn;
          if (get_mouse(event, btn, view))
          {
@@ -183,17 +183,17 @@ namespace cycfi { namespace elements
             }
 
             if (btn.down)
-               main_view.drag(btn);
+               base_view.drag(btn);
             else
-               main_view.cursor(view->cursor_position, cursor_tracking::hovering);
+               base_view.cursor(view->cursor_position, cursor_tracking::hovering);
          }
          return TRUE;
       }
 
       gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
       {
-         auto& main_view = get(user_data);
-         auto* host_view = platform_access::get_host_view(main_view);
+         auto& base_view = get(user_data);
+         auto* host_view = platform_access::get_host_view(base_view);
          auto elapsed = std::max<float>(10.0f, event->time - host_view->scroll_time);
          static constexpr float _1s = 100;
          host_view->scroll_time = event->time;
@@ -224,7 +224,7 @@ namespace cycfi { namespace elements
                break;
          }
 
-         main_view.scroll(
+         base_view.scroll(
             { dx, dy },
             { float(event->x), float(event->y) }
          );
@@ -234,10 +234,10 @@ namespace cycfi { namespace elements
 
    gboolean on_event_crossing(GtkWidget* widget, GdkEventCrossing* event, gpointer user_data)
    {
-      auto& main_view = get(user_data);
-      auto* host_view = platform_access::get_host_view(main_view);
+      auto& base_view = get(user_data);
+      auto* host_view = platform_access::get_host_view(base_view);
       host_view->cursor_position = point{ float(event->x), float(event->y) };
-      main_view.cursor(
+      base_view.cursor(
          host_view->cursor_position,
          (event->type == GDK_ENTER_NOTIFY) ?
             cursor_tracking::entering :
@@ -245,33 +245,30 @@ namespace cycfi { namespace elements
       );
    }
 
-   void make_main_window(base_view& main_view, GtkWidget* window)
+   void make_view(base_view& view, GtkWidget* window)
    {
       auto* drawing_area = gtk_drawing_area_new();
 
       gtk_container_add(GTK_CONTAINER(window), drawing_area);
 
       g_signal_connect(G_OBJECT(drawing_area), "configure-event",
-         G_CALLBACK(on_configure), &main_view);
+         G_CALLBACK(on_configure), &view);
 
       g_signal_connect(G_OBJECT(drawing_area), "draw",
-         G_CALLBACK(on_draw), &main_view);
-
-      //gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-      gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+         G_CALLBACK(on_draw), &view);
 
       g_signal_connect(drawing_area, "button-press-event",
-         G_CALLBACK(on_button), &main_view);
+         G_CALLBACK(on_button), &view);
       g_signal_connect (drawing_area, "button-release-event",
-         G_CALLBACK(on_button), &main_view);
+         G_CALLBACK(on_button), &view);
       g_signal_connect(drawing_area, "motion-notify-event",
-         G_CALLBACK(on_motion), &main_view);
+         G_CALLBACK(on_motion), &view);
       g_signal_connect(drawing_area, "scroll-event",
-         G_CALLBACK(on_scroll), &main_view);
+         G_CALLBACK(on_scroll), &view);
       g_signal_connect(drawing_area, "enter-notify-event",
-         G_CALLBACK(on_event_crossing), &main_view);
+         G_CALLBACK(on_event_crossing), &view);
       g_signal_connect(drawing_area, "leave-notify-event",
-         G_CALLBACK(on_event_crossing), &main_view);
+         G_CALLBACK(on_event_crossing), &view);
 
       // Ask to receive events the drawing area doesn't normally
       // subscribe to. In particular, we need to ask for the
@@ -288,6 +285,22 @@ namespace cycfi { namespace elements
       );
    }
 
+   // Defined in window.cpp
+   GtkWidget* get_window(_host_window& h);
+
+   base_view::base_view(host_view h)
+   {
+   }
+
+   base_view::base_view(host_window h)
+   {
+      // make_view(*this, get_window(h));
+   }
+
+   base_view::~base_view()
+   {
+   }
+
    point base_view::cursor_pos() const
    {
       return _view->cursor_position;
@@ -295,6 +308,7 @@ namespace cycfi { namespace elements
 
    elements::size base_view::size() const
    {
+      // $$$ Wrong, not the window $$$
       auto x = gtk_widget_get_allocated_width(_view->window);
       auto y = gtk_widget_get_allocated_height(_view->window);
       return { float(x), float(y) };

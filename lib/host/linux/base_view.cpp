@@ -325,6 +325,13 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   gboolean on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      base_view.focus(event->in ?
+         focus_request::begin_focus : focus_request::end_focus);
+   }
+
    int poll_function(gpointer user_data)
    {
       auto& base_view = get(user_data);
@@ -372,10 +379,15 @@ namespace cycfi { namespace elements
          G_CALLBACK(on_key), &view);
       g_signal_connect(parent, "key-release-event",
          G_CALLBACK(on_key), &view);
+      g_signal_connect(parent, "focus-in-event",
+         G_CALLBACK(on_focus), &view);
+      g_signal_connect(parent, "focus-out-event",
+         G_CALLBACK(on_focus), &view);
 
       gtk_widget_set_events(parent,
          gtk_widget_get_events(parent)
          | GDK_KEY_PRESS_MASK
+         | GDK_FOCUS_CHANGE_MASK
       );
 
       // Subscribe to text entry commit

@@ -68,14 +68,6 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      void clear_surface(cairo_surface_t* surface)
-      {
-         cairo_t* cr = cairo_create(surface);
-         cairo_set_source_rgb(cr, 0, 0, 0); // $$$ fixme $$$
-         cairo_paint(cr);
-         cairo_destroy(cr);
-      }
-
       gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
       {
          auto& view = get(user_data);
@@ -89,8 +81,6 @@ namespace cycfi { namespace elements
             gtk_widget_get_allocated_width(widget),
             gtk_widget_get_allocated_height(widget)
          );
-
-         clear_surface(host_view->surface);
          return true;
       }
 
@@ -317,9 +307,7 @@ namespace cycfi { namespace elements
       _view.key(k);
    };
 
-gboolean on_key(
-      bool press, GtkWidget* widget
-    , GdkEventKey* event, gpointer user_data)
+   gboolean on_key(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view = platform_access::get_host_view(base_view);
@@ -330,21 +318,11 @@ gboolean on_key(
          return false;
 
       int modifiers = get_mods(event->state);
-      auto const action = press? key_action::release : key_action::press;
+      auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
       host_view->modifiers = modifiers;
 
       handle_key(base_view, host_view->keys, { key, action, modifiers });
       return true;
-   }
-
-   gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
-   {
-      return on_key(true, widget, event, user_data);
-   }
-
-   gboolean on_key_release(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
-   {
-      return on_key(false, widget, event, user_data);
    }
 
    int poll_function(gpointer user_data)
@@ -391,9 +369,9 @@ gboolean on_key(
 
       // Subscribe to parent events
       g_signal_connect(parent, "key-press-event",
-         G_CALLBACK(on_key_press), &view);
+         G_CALLBACK(on_key), &view);
       g_signal_connect(parent, "key-release-event",
-         G_CALLBACK(on_key_release), &view);
+         G_CALLBACK(on_key), &view);
 
       gtk_widget_set_events(parent,
          gtk_widget_get_events(parent)

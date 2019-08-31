@@ -245,6 +245,24 @@ namespace cycfi { namespace elements
             cursor_tracking::entering :
             cursor_tracking::leaving
       );
+      return TRUE;
+   }
+
+   // Defined in key.cpp
+   key_code translate_key(unsigned key);
+
+   gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto codepoint = gdk_keyval_to_unicode(event->keyval);
+      int modifiers = 0;
+
+      auto const key = translate_key(event->keyval);
+      base_view.key({ key, key_action::press, modifiers });
+
+      if (codepoint && !g_unichar_iscntrl(codepoint))
+         base_view.text({ codepoint, modifiers });
+      return TRUE;
    }
 
    int poll_function(gpointer user_data)
@@ -260,12 +278,11 @@ namespace cycfi { namespace elements
 
       gtk_container_add(GTK_CONTAINER(parent), content_view);
 
-      g_signal_connect(G_OBJECT(content_view), "configure-event",
+      // Subscribe to content_view events
+      g_signal_connect(content_view, "configure-event",
          G_CALLBACK(on_configure), &view);
-
-      g_signal_connect(G_OBJECT(content_view), "draw",
+      g_signal_connect(content_view, "draw",
          G_CALLBACK(on_draw), &view);
-
       g_signal_connect(content_view, "button-press-event",
          G_CALLBACK(on_button), &view);
       g_signal_connect (content_view, "button-release-event",
@@ -279,9 +296,6 @@ namespace cycfi { namespace elements
       g_signal_connect(content_view, "leave-notify-event",
          G_CALLBACK(on_event_crossing), &view);
 
-      // Ask to receive events the drawing area doesn't normally
-      // subscribe to. In particular, we need to ask for the
-      // button press and motion notify events that want to handle.
       gtk_widget_set_events(content_view,
          gtk_widget_get_events(content_view)
          | GDK_BUTTON_PRESS_MASK
@@ -293,6 +307,15 @@ namespace cycfi { namespace elements
          // | GDK_SMOOTH_SCROLL_MASK
       );
 
+      // Subscribe to parent events
+      g_signal_connect(parent, "key-press-event",
+         G_CALLBACK(on_key_press), &view);
+
+      gtk_widget_set_events(parent,
+         gtk_widget_get_events(parent)
+         | GDK_KEY_PRESS_MASK
+      );
+
       // Create 16ms (60Hz) timer
       g_timeout_add(16, poll_function, &view);
 
@@ -302,7 +325,6 @@ namespace cycfi { namespace elements
    // Defined in window.cpp
    GtkWidget* get_window(_host_window& h);
    void on_window_activate(_host_window& h, std::function<void()> f);
-   float get_scale(GtkWidget* widget);
 
    // Defined in app.cpp
    bool app_is_activated();

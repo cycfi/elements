@@ -136,21 +136,28 @@ namespace cycfi { namespace elements
          if (event->button > 4)
             return false;
 
-         static constexpr auto _250ms = 250;
+         gint dbl_click_time;
+         g_object_get(
+            gtk_settings_get_default()
+          , "gtk-double-click-time", &dbl_click_time
+          , nullptr
+         );
+
          switch (event->type)
          {
             case GDK_BUTTON_PRESS:
                btn.down = true;
-               if ((event->time - view->click_time) < _250ms)
+               if ((event->time - view->click_time) < dbl_click_time)
                   ++view->click_count;
                else
                   view->click_count = 1;
                view->click_time = event->time;
                break;
+
             case GDK_BUTTON_RELEASE:
                btn.down = false;
-               view->click_count = 0;
                break;
+
             default:
                return false;
          }

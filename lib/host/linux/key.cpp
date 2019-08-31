@@ -69,8 +69,10 @@ namespace cycfi { namespace elements
          case GDK_KEY_BackSpace:    return key_code::backspace;
          case GDK_KEY_Delete:       return key_code::_delete;
          case GDK_KEY_End:          return key_code::end;
+
          case GDK_KEY_Return:
          case GDK_KEY_ISO_Enter:    return key_code::enter;
+
          case GDK_KEY_Escape:       return key_code::escape;
          case GDK_KEY_Home:         return key_code::home;
          case GDK_KEY_Insert:       return key_code::insert;
@@ -79,11 +81,13 @@ namespace cycfi { namespace elements
          case GDK_KEY_Page_Up:      return key_code::page_up;
          case GDK_KEY_Pause:        return key_code::pause;
          case GDK_KEY_space:        return key_code::space;
+
          case GDK_KEY_Tab:
          case GDK_KEY_KP_Tab:
          case GDK_KEY_ISO_Left_Tab:
          case GDK_KEY_3270_BackTab:
                                     return key_code::tab;
+
          case GDK_KEY_Caps_Lock:    return key_code::caps_lock;
          case GDK_KEY_Num_Lock:     return key_code::num_lock;
          case GDK_KEY_Scroll_Lock:  return key_code::scroll_lock;
@@ -137,6 +141,7 @@ namespace cycfi { namespace elements
          case GDK_KEY_KP_7:  return key_code::kp_7;
          case GDK_KEY_KP_8:  return key_code::kp_8;
          case GDK_KEY_KP_9:  return key_code::kp_9;
+
          case GDK_KEY_KP_Add:       return key_code::kp_add;
          case GDK_KEY_KP_Decimal:   return key_code::kp_decimal;
          case GDK_KEY_KP_Divide:    return key_code::kp_divide;

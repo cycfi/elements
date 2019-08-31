@@ -486,11 +486,15 @@ gboolean on_key(
 
    std::string clipboard()
    {
-      return "";
+      GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+      gchar* text = gtk_clipboard_wait_for_text(clip);
+      return std::string(text);
    }
 
    void clipboard(std::string const& text)
    {
+      GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+      gtk_clipboard_set_text(clip, text.data(), text.size());
    }
 
    void set_cursor(cursor_type type)

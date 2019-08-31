@@ -9,6 +9,7 @@
 #include <elements/window.hpp>
 #include <elements/support/canvas.hpp>
 #include <elements/support/resource_paths.hpp>
+#include <elements/support/text_utils.hpp>
 #include <json/json_io.hpp>
 #include <gtk/gtk.h>
 #include <string>
@@ -17,6 +18,7 @@ namespace cycfi { namespace elements
 {
    struct _host_view
    {
+      _host_view();
       ~_host_view();
 
       cairo_surface_t* surface = nullptr;
@@ -30,6 +32,13 @@ namespace cycfi { namespace elements
       std::uint32_t scroll_time = 0;
 
       point cursor_position;
+
+      using key_map = std::map<key_code, key_action>;
+      key_map keys;
+
+      int modifiers = 0; // the latest modifiers
+
+      GtkIMContext* im_context;
    };
 
    struct platform_access
@@ -39,6 +48,11 @@ namespace cycfi { namespace elements
          return view.host();
       }
    };
+
+   _host_view::_host_view()
+    : im_context(gtk_im_context_simple_new())
+   {
+   }
 
    _host_view::~_host_view()
    {
@@ -152,7 +166,7 @@ namespace cycfi { namespace elements
          mouse_button btn;
          if (get_button(event, btn, platform_access::get_host_view(view)))
             view.click(btn);
-         return TRUE;
+         return true;
       }
 
       gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
@@ -189,7 +203,7 @@ namespace cycfi { namespace elements
             else
                base_view.cursor(view->cursor_position, cursor_tracking::hovering);
          }
-         return TRUE;
+         return true;
       }
 
       gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
@@ -230,7 +244,7 @@ namespace cycfi { namespace elements
             { dx, dy },
             { float(event->x), float(event->y) }
          );
-         return TRUE;
+         return true;
       }
    }
 
@@ -245,24 +259,85 @@ namespace cycfi { namespace elements
             cursor_tracking::entering :
             cursor_tracking::leaving
       );
-      return TRUE;
+      return true;
    }
 
    // Defined in key.cpp
    key_code translate_key(unsigned key);
 
-   gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
+   static void on_text_entry(GtkIMContext *context, const gchar* str, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      auto codepoint = gdk_keyval_to_unicode(event->keyval);
-      int modifiers = 0;
+      auto* host_view = platform_access::get_host_view(base_view);
+      auto cp = codepoint(str);
+      base_view.text({ cp, host_view->modifiers });
+   }
+
+   int get_mods(int state)
+   {
+      int mods = 0;
+      if (state & GDK_SHIFT_MASK)
+         mods |= mod_shift;
+      if (state & GDK_CONTROL_MASK)
+         mods |= mod_control | mod_action;
+      if (state & GDK_MOD1_MASK)
+         mods |= mod_alt;
+      if (state & GDK_SUPER_MASK)
+         mods |= mod_super;
+
+      return mods;
+   }
+
+   void handle_key(base_view& _view, _host_view::key_map& keys, key_info k)
+   {
+      bool repeated = false;
+
+      if (k.action == key_action::release)
+      {
+         keys.erase(k.key);
+         return;
+      }
+
+      if (k.action == key_action::press
+         && keys[k.key] == key_action::press)
+         repeated = true;
+
+      keys[k.key] = k.action;
+
+      if (repeated)
+         k.action = key_action::repeat;
+
+      _view.key(k);
+   };
+
+gboolean on_key(
+      bool press, GtkWidget* widget
+    , GdkEventKey* event, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto* host_view = platform_access::get_host_view(base_view);
+      gtk_im_context_filter_keypress(host_view->im_context, event);
 
       auto const key = translate_key(event->keyval);
-      base_view.key({ key, key_action::press, modifiers });
+      if (key == key_code::unknown)
+         return false;
 
-      if (codepoint && !g_unichar_iscntrl(codepoint))
-         base_view.text({ codepoint, modifiers });
-      return TRUE;
+      int modifiers = get_mods(event->state);
+      auto const action = press? key_action::release : key_action::press;
+      host_view->modifiers = modifiers;
+
+      handle_key(base_view, host_view->keys, { key, action, modifiers });
+      return true;
+   }
+
+   gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
+   {
+      return on_key(true, widget, event, user_data);
+   }
+
+   gboolean on_key_release(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
+   {
+      return on_key(false, widget, event, user_data);
    }
 
    int poll_function(gpointer user_data)
@@ -310,11 +385,17 @@ namespace cycfi { namespace elements
       // Subscribe to parent events
       g_signal_connect(parent, "key-press-event",
          G_CALLBACK(on_key_press), &view);
+      g_signal_connect(parent, "key-release-event",
+         G_CALLBACK(on_key_release), &view);
 
       gtk_widget_set_events(parent,
          gtk_widget_get_events(parent)
          | GDK_KEY_PRESS_MASK
       );
+
+      // Subscribe to text entry commit
+      g_signal_connect(view.host()->im_context, "commit",
+         G_CALLBACK(on_text_entry), &view);
 
       // Create 16ms (60Hz) timer
       g_timeout_add(16, poll_function, &view);

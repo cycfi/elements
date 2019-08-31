@@ -79,7 +79,11 @@ namespace cycfi { namespace elements
          case GDK_KEY_Page_Up:      return key_code::page_up;
          case GDK_KEY_Pause:        return key_code::pause;
          case GDK_KEY_space:        return key_code::space;
-         case GDK_KEY_Tab:          return key_code::tab;
+         case GDK_KEY_Tab:
+         case GDK_KEY_KP_Tab:
+         case GDK_KEY_ISO_Left_Tab:
+         case GDK_KEY_3270_BackTab:
+                                    return key_code::tab;
          case GDK_KEY_Caps_Lock:    return key_code::caps_lock;
          case GDK_KEY_Num_Lock:     return key_code::num_lock;
          case GDK_KEY_Scroll_Lock:  return key_code::scroll_lock;

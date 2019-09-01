@@ -491,7 +491,7 @@ namespace cycfi { namespace elements
       };
    }
 
-   base_view::base_view(host_window h)
+   base_view::base_view(host_window_handle h)
    {
       static init_view_class init;
 

@@ -401,8 +401,8 @@ namespace cycfi { namespace elements
    }
 
    // Defined in window.cpp
-   GtkWidget* get_window(_host_window& h);
-   void on_window_activate(_host_window& h, std::function<void()> f);
+   GtkWidget* get_window(host_window& h);
+   void on_window_activate(host_window& h, std::function<void()> f);
 
    // Defined in app.cpp
    bool app_is_activated();

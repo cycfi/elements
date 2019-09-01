@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
             backing : NSBackingStoreBuffered
             defer : NO
          ];
-      _window = (__bridge _host_window*) window_;
+      _window = (__bridge host_window*) window_;
 
       window_.appearance = [NSAppearance appearanceNamed : NSAppearanceNameVibrantDark];
       [window_ setTitle : [NSString stringWithUTF8String : name.c_str()]];

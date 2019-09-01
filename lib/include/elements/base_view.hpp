@@ -290,8 +290,8 @@ namespace cycfi { namespace elements
 #endif
 
 #if defined(__APPLE__) || defined(__linux__)
-   struct _host_window;
-   using host_window_handle = _host_window*;
+   struct host_window;
+   using host_window_handle = host_window*;
 #elif defined(_WIN32)
    using host_window_handle = HWND;
 #endif

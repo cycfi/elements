@@ -13,7 +13,7 @@ namespace elements = cycfi::elements;
 
 namespace cycfi { namespace elements
 {
-   struct _host_window
+   struct host_window
    {
       GtkWidget* host = nullptr;
       std::vector<std::function<void()>> on_activate;
@@ -23,12 +23,12 @@ namespace cycfi { namespace elements
    GtkApplication* get_app();
    bool app_is_activated();
 
-   GtkWidget* get_window(_host_window& h)
+   GtkWidget* get_window(host_window& h)
    {
       return h.host;
    }
 
-   void on_window_activate(_host_window& h, std::function<void()> f)
+   void on_window_activate(host_window& h, std::function<void()> f)
    {
       h.on_activate.push_back(f);
    }
@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    }
 
    window::window(std::string const& name, int style_, rect const& bounds)
-    :  _window(new _host_window)
+    :  _window(new host_window)
    {
       // Chicken and egg. GTK wants us to create windows only
       // after the app is activated. So we have a scheme to

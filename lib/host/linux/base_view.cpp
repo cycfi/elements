@@ -419,13 +419,13 @@ namespace cycfi { namespace elements
       }
    };
 
-   base_view::base_view(host_view_h h)
+   base_view::base_view(host_view_handle h)
     : _view(h)
    {
       static init_view_class init;
    }
 
-   base_view::base_view(host_window h)
+   base_view::base_view(host_window_handle h)
     : base_view(new host_view)
    {
       auto make_view =

@@ -237,8 +237,6 @@ int main(int argc, const char* argv[])
    app _app(argc, argv);
    window _win(_app.name(), window::standard, { 50, 50, 1024, 768 });
 
-   auto s = _win.size();
-   auto p = _win.position();
    _win.on_close = [&_app]() { _app.stop(); };
 
    auto align_menu_item = menu_item("Fixed-Sized, Aligned Elements");

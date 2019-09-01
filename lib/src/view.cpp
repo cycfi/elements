@@ -9,7 +9,7 @@
 
  namespace cycfi { namespace elements
  {
-   view::view(host_view h)
+   view::view(host_view_handle h)
     : base_view(h)
     , _work(_io)
    {}

@@ -82,6 +82,12 @@ if (LINUX)
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
    )
+
+   configure_file(
+      ${CMAKE_CURRENT_LIST_DIR}/resources/config.json.in
+      "${CMAKE_CURRENT_BINARY_DIR}/config.json"
+   )
+
 endif()
 
 if (WIN32)

@@ -10,7 +10,7 @@
 namespace cycfi { namespace elements
 {
    namespace fs = boost::filesystem;
-   std::vector<std::string> resource_paths;
+   std::vector<fs::path> resource_paths;
 
    std::string find_file(std::string_view file)
    {

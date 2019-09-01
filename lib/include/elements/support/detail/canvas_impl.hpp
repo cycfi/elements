@@ -29,10 +29,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline canvas::~canvas()
    {
-#if defined(__linux__)
-      for (auto& p : _custom_fonts)
-         cairo_font_face_destroy(p.second);
-#endif
    }
 
    inline cairo_t& canvas::cairo_context() const

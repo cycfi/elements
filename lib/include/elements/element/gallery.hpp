@@ -548,8 +548,8 @@ namespace cycfi { namespace elements
 
    struct menu_item_spacer_element : public element
    {
-      virtual view_limits limits(basic_context const& ctx) const;
-      virtual void          draw(context const& ctx);
+      virtual view_limits  limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
    };
 
    inline auto menu_item_spacer()

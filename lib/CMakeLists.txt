@@ -27,6 +27,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-Wno-missing-braces -Wno-comma")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-ftemplate-backtrace-limit=0")
 
+elseif (WIN32)
+
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4305 /wd4996 /wd4267 /wd4018")
+
 endif()
 
 ###############################################################################
@@ -55,7 +59,7 @@ elseif (WIN32)
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
    else()
-      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win86/freetype.lib)
+      set(FREETYPE_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
 endif()
 
@@ -150,6 +154,7 @@ if (WIN32)
       WIN32_LEAN_AND_MEAN
       NOMINMAX
       BOOST_ALL_NO_LIB=1
+      _UNICODE
    )
 endif()
 
@@ -202,11 +207,15 @@ elseif (WIN32)
       ${Boost_SYSTEM_LIBRARY}
    )
 elseif (LINUX)
+
+   find_package(Threads)
+
    link_directories(${GTK3_LIBRARY_DIRS})
 
    target_link_libraries(libelements
       infra
       json
+      ${CMAKE_THREAD_LIBS_INIT}
       ${CAIRO_LIBRARIES}
       ${FREETYPE_LIBRARIES}
       ${Boost_FILESYSTEM_LIBRARY}

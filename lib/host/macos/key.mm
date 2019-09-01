@@ -170,7 +170,7 @@ namespace cycfi { namespace elements
       if (flags & NSEventModifierFlagOption)
          mods |= mod_alt;
       if (flags & NSEventModifierFlagCommand)
-         mods |= mod_super;
+         mods |= mod_super | mod_action;
 
       return mods;
    }

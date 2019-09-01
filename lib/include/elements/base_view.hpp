@@ -126,8 +126,18 @@ namespace cycfi { namespace elements
    {
       mod_shift         = 0x0001,
       mod_control       = 0x0002,
+
+      // mod_super maps to the Alt key on PC keyboards
+      // and  maps to the Option key on MacOS
       mod_alt           = 0x0004,
+
+      // mod_super maps to the Windows key on PC keyboards
+      // and  maps to the Command key on MacOS
       mod_super         = 0x0008,
+
+      // mod_action maps to mod_control on Windows and Linux
+      // and maps to mod_super on MacOS
+      mod_action        = 0x0010,
    };
 
    enum class key_code : int16_t
@@ -272,22 +282,18 @@ namespace cycfi { namespace elements
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
 
-#if defined(__APPLE__)
-   struct _host_view;
-   using host_view = _host_view*;
+#if defined(__APPLE__) || defined(__linux__)
+   struct host_view;
+   using host_view_handle = host_view*;
 #elif defined(_WIN32)
-   using host_view = HWND;
-#elif defined(__linux__)
-   using host_view = GtkWidget*;
+   using host_view_handle = HWND;
 #endif
 
-#if defined(__APPLE__)
-   struct _host_window;
-   using host_window = _host_window*;
+#if defined(__APPLE__) || defined(__linux__)
+   struct host_window;
+   using host_window_handle = host_window*;
 #elif defined(_WIN32)
-   using host_window = HWND;
-#elif defined(__linux__)
-   using host_window = GtkWidget*;
+   using host_window_handle = HWND;
 #endif
 
    class base_view : non_copyable
@@ -295,9 +301,9 @@ namespace cycfi { namespace elements
    public:
 
 #if !defined(_WIN32)
-                        base_view(host_view h);
+                        base_view(host_view_handle h);
 #endif
-                        base_view(host_window h);
+                        base_view(host_window_handle h);
       virtual           ~base_view();
 
       virtual void      draw(cairo_t* ctx, rect area) {};
@@ -316,11 +322,11 @@ namespace cycfi { namespace elements
       point             cursor_pos() const;
       elements::size    size() const;
       void              size(elements::size p);
-      host_view         host() const { return _view; }
+      host_view_handle         host() const { return _view; }
 
    private:
 
-      host_view         _view;
+      host_view_handle         _view;
    };
 
    ////////////////////////////////////////////////////////////////////////////

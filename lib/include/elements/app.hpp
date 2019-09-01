@@ -9,6 +9,10 @@
 #include <string>
 #include <infra/support.hpp>
 
+#if defined(__linux__)
+typedef struct _GtkApplication GtkApplication;
+#endif
+
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -30,6 +34,8 @@ namespace cycfi { namespace elements
       void* _menubar;
 #elif defined(_WIN32)
       bool  _running = true;
+#elif defined(__linux__)
+      GtkApplication* _app;
 #endif
 
       std::string          _app_name;

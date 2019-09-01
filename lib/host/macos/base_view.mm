@@ -502,16 +502,16 @@ namespace cycfi { namespace elements
 {
    namespace
    {
-      ElementsView* get_mac_view(ph::host_view h)
+      ElementsView* get_mac_view(ph::host_view_handle h)
       {
          return (__bridge ElementsView*) h;
       }
    }
 
-   base_view::base_view(host_window h)
+   base_view::base_view(host_window_handle h)
    {
       ElementsView* content = [[ElementsView alloc] init];
-      _view = (__bridge host_view) content;
+      _view = (__bridge host_view_handle) content;
       content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
       [content elements_init : this];
 
@@ -521,14 +521,14 @@ namespace cycfi { namespace elements
       [get_mac_view(host()) attach_notifications];
    }
 
-   base_view::base_view(host_view h)
+   base_view::base_view(host_view_handle h)
    {
       NSView* parent_view = (__bridge NSView*) h;
       auto parent_frame = [parent_view frame];
       auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
       ElementsView* content = [[ElementsView alloc] initWithFrame : frame];
 
-      _view = (__bridge host_view) content;
+      _view = (__bridge host_view_handle) content;
       [content elements_init : this];
       [parent_view addSubview : content];
       [get_mac_view(host()) attach_notifications];

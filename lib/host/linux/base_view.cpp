@@ -16,10 +16,10 @@
 
 namespace cycfi { namespace elements
 {
-   struct _host_view
+   struct host_view
    {
-      _host_view();
-      ~_host_view();
+      host_view();
+      ~host_view();
 
       cairo_surface_t* surface = nullptr;
       GtkWidget* widget = nullptr;
@@ -43,18 +43,18 @@ namespace cycfi { namespace elements
 
    struct platform_access
    {
-      inline static _host_view* get_host_view(base_view& view)
+      inline static host_view* get_host_view(base_view& view)
       {
          return view.host();
       }
    };
 
-   _host_view::_host_view()
+   host_view::host_view()
     : im_context(gtk_im_context_simple_new())
    {
    }
 
-   _host_view::~_host_view()
+   host_view::~host_view()
    {
       if (surface)
          cairo_surface_destroy(surface);
@@ -71,12 +71,12 @@ namespace cycfi { namespace elements
       gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
       {
          auto& view = get(user_data);
-         auto* host_view = platform_access::get_host_view(view);
+         auto* host_view_h = platform_access::get_host_view(view);
 
-         if (host_view->surface)
-            cairo_surface_destroy(host_view->surface);
+         if (host_view_h->surface)
+            cairo_surface_destroy(host_view_h->surface);
 
-         host_view->surface = gdk_window_create_similar_surface(
+         host_view_h->surface = gdk_window_create_similar_surface(
             gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
             gtk_widget_get_allocated_width(widget),
             gtk_widget_get_allocated_height(widget)
@@ -87,8 +87,8 @@ namespace cycfi { namespace elements
       gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
          auto& view = get(user_data);
-         auto* host_view = platform_access::get_host_view(view);
-         cairo_set_source_surface(cr, host_view->surface, 0, 0);
+         auto* host_view_h = platform_access::get_host_view(view);
+         cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
          cairo_paint(cr);
 
          // Note that cr (cairo_t) is already clipped to only draw the
@@ -104,7 +104,7 @@ namespace cycfi { namespace elements
       }
 
       template <typename Event>
-      bool get_mouse(Event* event, mouse_button& btn, _host_view* view)
+      bool get_mouse(Event* event, mouse_button& btn, host_view* view)
       {
          btn.modifiers = 0;
          if (event->state & GDK_SHIFT_MASK)
@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      bool get_button(GdkEventButton* event, mouse_button& btn, _host_view* view)
+      bool get_button(GdkEventButton* event, mouse_button& btn, host_view* view)
       {
          if (event->button > 4)
             return false;
@@ -169,7 +169,7 @@ namespace cycfi { namespace elements
       gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
-         _host_view* view = platform_access::get_host_view(base_view);
+         host_view* view = platform_access::get_host_view(base_view);
          mouse_button btn;
          if (get_mouse(event, btn, view))
          {
@@ -206,10 +206,10 @@ namespace cycfi { namespace elements
       gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
-         auto* host_view = platform_access::get_host_view(base_view);
-         auto elapsed = std::max<float>(10.0f, event->time - host_view->scroll_time);
+         auto* host_view_h = platform_access::get_host_view(base_view);
+         auto elapsed = std::max<float>(10.0f, event->time - host_view_h->scroll_time);
          static constexpr float _1s = 100;
-         host_view->scroll_time = event->time;
+         host_view_h->scroll_time = event->time;
 
          float dx = 0;
          float dy = 0;
@@ -248,10 +248,10 @@ namespace cycfi { namespace elements
    gboolean on_event_crossing(GtkWidget* widget, GdkEventCrossing* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      auto* host_view = platform_access::get_host_view(base_view);
-      host_view->cursor_position = point{ float(event->x), float(event->y) };
+      auto* host_view_h = platform_access::get_host_view(base_view);
+      host_view_h->cursor_position = point{ float(event->x), float(event->y) };
       base_view.cursor(
-         host_view->cursor_position,
+         host_view_h->cursor_position,
          (event->type == GDK_ENTER_NOTIFY) ?
             cursor_tracking::entering :
             cursor_tracking::leaving
@@ -265,9 +265,9 @@ namespace cycfi { namespace elements
    static void on_text_entry(GtkIMContext *context, const gchar* str, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      auto* host_view = platform_access::get_host_view(base_view);
+      auto* host_view_h = platform_access::get_host_view(base_view);
       auto cp = codepoint(str);
-      base_view.text({ cp, host_view->modifiers });
+      base_view.text({ cp, host_view_h->modifiers });
    }
 
    int get_mods(int state)
@@ -285,7 +285,7 @@ namespace cycfi { namespace elements
       return mods;
    }
 
-   void handle_key(base_view& _view, _host_view::key_map& keys, key_info k)
+   void handle_key(base_view& _view, host_view::key_map& keys, key_info k)
    {
       bool repeated = false;
 
@@ -310,8 +310,8 @@ namespace cycfi { namespace elements
    gboolean on_key(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      auto* host_view = platform_access::get_host_view(base_view);
-      gtk_im_context_filter_keypress(host_view->im_context, event);
+      auto* host_view_h = platform_access::get_host_view(base_view);
+      gtk_im_context_filter_keypress(host_view_h->im_context, event);
 
       auto const key = translate_key(event->keyval);
       if (key == key_code::unknown)
@@ -319,9 +319,9 @@ namespace cycfi { namespace elements
 
       int modifiers = get_mods(event->state);
       auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
-      host_view->modifiers = modifiers;
+      host_view_h->modifiers = modifiers;
 
-      handle_key(base_view, host_view->keys, { key, action, modifiers });
+      handle_key(base_view, host_view_h->keys, { key, action, modifiers });
       return true;
    }
 
@@ -419,14 +419,14 @@ namespace cycfi { namespace elements
       }
    };
 
-   base_view::base_view(host_view h)
+   base_view::base_view(host_view_h h)
     : _view(h)
    {
       static init_view_class init;
    }
 
    base_view::base_view(host_window h)
-    : base_view(new _host_view)
+    : base_view(new host_view)
    {
       auto make_view =
          [this, h]()

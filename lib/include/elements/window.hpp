@@ -57,7 +57,7 @@ namespace cycfi { namespace elements
       void              limits(view_limits limits_);
       point             position() const;
       void              position(point const& p);
-      host_window       host() const { return _window; }
+      host_window_handle       host() const { return _window; }
 
       /////////////////////////////////////////////////////////////////////////
       // Notifications
@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
 
    private:
 
-      host_window       _window;
+      host_window_handle       _window;
    };
 }}
 

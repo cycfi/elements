@@ -322,7 +322,7 @@ namespace cycfi { namespace elements
       point             cursor_pos() const;
       elements::size    size() const;
       void              size(elements::size p);
-      host_view_handle         host() const { return _view; }
+      host_view_handle  host() const { return _view; }
 
    private:
 

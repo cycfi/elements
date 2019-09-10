@@ -527,6 +527,7 @@ namespace cycfi { namespace elements
       auto parent_frame = [parent_view frame];
       auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
       ElementsView* content = [[ElementsView alloc] initWithFrame : frame];
+      content.autoresizingMask = NSViewWidthSizable |  NSViewHeightSizable;
 
       _view = (__bridge host_view_handle) content;
       [content elements_init : this];

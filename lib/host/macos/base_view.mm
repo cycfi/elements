@@ -523,15 +523,17 @@ namespace cycfi { namespace elements
 
    base_view::base_view(host_view_handle h)
    {
+      auto const default_frame = NSMakeRect(0, 0, 100, 100);
       NSView* parent_view = (__bridge NSView*) h;
-      auto parent_frame = [parent_view frame];
+      auto parent_frame = parent_view? [parent_view frame] : default_frame;
       auto frame = NSMakeRect(0, 0, parent_frame.size.width, parent_frame.size.height);
       ElementsView* content = [[ElementsView alloc] initWithFrame : frame];
       content.autoresizingMask = NSViewWidthSizable |  NSViewHeightSizable;
 
       _view = (__bridge host_view_handle) content;
       [content elements_init : this];
-      [parent_view addSubview : content];
+      if (parent_view)
+         [parent_view addSubview : content];
       [get_mac_view(host()) attach_notifications];
    }
 

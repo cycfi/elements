@@ -508,6 +508,17 @@ namespace cycfi { namespace elements
       }
    }
 
+   base_view::base_view(extent size_)
+   {
+      auto frame = NSMakeRect(0, 0, size_.x, size_.y);
+      ElementsView* content = [[ElementsView alloc] initWithFrame : frame];
+      content.autoresizingMask = NSViewWidthSizable |  NSViewHeightSizable;
+
+      _view = (__bridge host_view_handle) content;
+      [content elements_init : this];
+      [get_mac_view(host()) attach_notifications];
+   }
+
    base_view::base_view(host_window_handle h)
    {
       ElementsView* content = [[ElementsView alloc] init];
@@ -555,15 +566,15 @@ namespace cycfi { namespace elements
       return { float(pos.x), float(frame_height - pos.y - 1) };
    }
 
-   elements::size base_view::size() const
+   extent base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
       return { float(frame.size.width), float(frame.size.height) };
    }
 
-   void base_view::size(elements::size p)
+   void base_view::size(elements::extent size_)
    {
-      [get_mac_view(host()) setFrameSize : NSSize{ p.x, p.y }];
+      [get_mac_view(host()) setFrameSize : NSSize{ size_.x, size_.y }];
    }
 
    void base_view::refresh()

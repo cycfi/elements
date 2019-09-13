@@ -26,6 +26,7 @@ namespace cycfi { namespace elements
    class view : public base_view
    {
    public:
+                           view(extent size_);
                            view(host_view_handle h);
                            view(window& win);
                            ~view();

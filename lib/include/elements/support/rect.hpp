@@ -20,11 +20,11 @@ namespace cycfi { namespace elements
       constexpr         rect(point origin, float right, float bottom)
                          : rect(origin.x, origin.y, right, bottom)
                         {}
-      constexpr         rect(float left, float top, size size_)
-                         : rect(left, top, left + size_.x, top + size_.y)
+      constexpr         rect(float left, float top, extent size)
+                         : rect(left, top, left + size.x, top + size.y)
                         {}
-      constexpr         rect(point origin, size size_)
-                         : rect(origin.x, origin.y, origin.x + size_.x, origin.y + size_.y)
+      constexpr         rect(point origin, extent size)
+                         : rect(origin.x, origin.y, origin.x + size.x, origin.y + size.y)
                         {}
 
                         rect(rect const &) = default;

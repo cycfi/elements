@@ -9,6 +9,11 @@
 
  namespace cycfi { namespace elements
  {
+   view::view(extent size_)
+    : base_view(size_)
+    , _work(_io)
+   {}
+
    view::view(host_view_handle h)
     : base_view(h)
     , _work(_io)

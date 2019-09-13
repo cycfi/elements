@@ -93,7 +93,7 @@ namespace cycfi { namespace elements
          cairo_surface_destroy(_surface);
    }
 
-   elements::size pixmap::size() const
+   extent pixmap::size() const
    {
       double scx, scy;
       cairo_surface_get_device_scale(_surface, &scx, &scy);

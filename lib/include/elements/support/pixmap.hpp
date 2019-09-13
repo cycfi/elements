@@ -37,7 +37,7 @@ namespace cycfi { namespace elements
       pixmap&           operator=(pixmap const& rhs) = delete;
       pixmap&           operator=(pixmap&& rhs);
 
-      elements::size      size() const;
+      extent            size() const;
       float             scale() const;
       void              scale(float val);
 

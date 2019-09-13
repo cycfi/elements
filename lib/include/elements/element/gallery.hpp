@@ -642,13 +642,13 @@ namespace cycfi { namespace elements
    inline auto message_box0(
       char const* message
     , std::uint32_t icon_id
-    , size size_ = get_theme().message_box_size
+    , extent size = get_theme().message_box_size
    )
    {
       auto textbox = static_text_box{ message };
       auto popup = share(
          align_center_middle(
-            fixed_size(size_,
+            fixed_size(size,
             layer(
                margin({ 20, 20, 20, 20 }, htile(
                   align_top(icon{ icon_id, 2.5 }),
@@ -664,7 +664,7 @@ namespace cycfi { namespace elements
       char const* message
     , std::uint32_t icon_id
     , char const* ok_text = "OK"
-    , size size_ = get_theme().message_box_size
+    , extent size = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -672,7 +672,7 @@ namespace cycfi { namespace elements
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size_,
+            fixed_size(size,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
@@ -706,7 +706,7 @@ namespace cycfi { namespace elements
     , std::uint32_t icon_id
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
-    , size size_ = get_theme().message_box_size
+    , extent size = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -715,7 +715,7 @@ namespace cycfi { namespace elements
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size_,
+            fixed_size(size,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(

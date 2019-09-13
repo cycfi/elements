@@ -303,6 +303,7 @@ namespace cycfi { namespace elements
 #if !defined(_WIN32)
                         base_view(host_view_handle h);
 #endif
+                        base_view(extent size_);
                         base_view(host_window_handle h);
       virtual           ~base_view();
 
@@ -320,8 +321,8 @@ namespace cycfi { namespace elements
       virtual void      refresh(rect area);
 
       point             cursor_pos() const;
-      elements::size    size() const;
-      void              size(elements::size p);
+      extent            size() const;
+      void              size(extent size_);
       host_view_handle  host() const { return _view; }
 
    private:

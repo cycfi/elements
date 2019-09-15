@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
       struct info
       {
          explicit          info(point start_)
-                           : start(start_)
+                            : start(start_)
                            {}
 
                            info(info const&) = default;

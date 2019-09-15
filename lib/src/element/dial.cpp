@@ -29,8 +29,16 @@ namespace cycfi { namespace elements
       clamp(val, 0.0, 1.0);
       _value = val;
       subject().value(_value);
-      if (on_change)
-         on_change(_value);
+   }
+
+   namespace
+   {
+      inline void edit_value(dial_base* this_, double val)
+      {
+         this_->value(val);
+         if (this_->on_change)
+            this_->on_change(this_->value());
+      }
    }
 
    double dial_base::value_from_point(context const& ctx, point p)
@@ -63,7 +71,7 @@ namespace cycfi { namespace elements
          double new_value = value_from_point(ctx, track_info.current);
          if (_value != new_value)
          {
-            value(new_value);
+            edit_value(this, new_value);
             ctx.view.refresh(ctx);
          }
       }
@@ -75,7 +83,7 @@ namespace cycfi { namespace elements
 
    bool dial_base::scroll(context const& ctx, point dir, point p)
    {
-      value(value() + dir.y * 0.005);
+      edit_value(this, value() + dir.y * 0.005);
       ctx.view.refresh(ctx);
       return true;
    }

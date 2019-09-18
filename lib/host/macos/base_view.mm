@@ -153,7 +153,9 @@ namespace
 ///////////////////////////////////////////////////////////////////////////////
 // ElementsView Interface
 
-@interface ElementsView : NSView <NSTextInputClient>
+#define ELEMENTS_VIEW_CLASS ELEMENTS_CLASS_PREFIX##ElementsView
+
+@interface ELEMENTS_VIEW_CLASS : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
    NSTrackingArea*                  _tracking_area;
@@ -163,6 +165,8 @@ namespace
    ph::base_view*                   _view;
 }
 @end
+
+@compatibility_alias ElementsView ELEMENTS_VIEW_CLASS;
 
 @implementation ElementsView
 

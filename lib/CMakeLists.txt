@@ -143,6 +143,13 @@ add_library(libelements
    ${ELEMENTS_HOST}
 )
 
+if (MACOSX)
+   target_compile_definitions(libelements
+      PUBLIC
+      ELEMENTS_CLASS_PREFIX=${ELEMENTS_CLASS_PREFIX}
+   )
+endif()
+
 set_target_properties(libelements
    PROPERTIES
    PREFIX lib OUTPUT_NAME elements

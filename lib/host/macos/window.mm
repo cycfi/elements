@@ -9,12 +9,16 @@
 
 namespace elements = cycfi::elements;
 
-@interface ElementsWindow : NSWindow
+#define ELEMENTS_WINDOW_CLASS ELEMENTS_CLASS_PREFIX##ElementsWindow
+
+@interface ELEMENTS_WINDOW_CLASS : NSWindow
 {
    elements::window* _pwin;
    NSRect _saved_frame;
 }
 @end
+
+@compatibility_alias ElementsWindow ELEMENTS_WINDOW_CLASS;
 
 @implementation ElementsWindow
 

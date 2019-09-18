@@ -160,9 +160,14 @@
       if (_current_bounds.is_empty())
          return;
 
-      call(
-         [&element](auto const& ctx, auto& _content) { _content.refresh(ctx, element); },
-         *this, _current_bounds
+      _io.post(
+         [this, &element]()
+         {
+            call(
+               [&element](auto const& ctx, auto& _content) { _content.refresh(ctx, element); },
+               *this, _current_bounds
+            );
+         }
       );
    }
 

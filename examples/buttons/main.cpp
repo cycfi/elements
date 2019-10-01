@@ -79,7 +79,7 @@ auto make_buttons(view& view_)
    return
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, make_selection_menu()),
+            top_margin(20, hmin_size(300, make_selection_menu())),
             top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
             top_margin(20, mbutton),
             top_margin(20, tbutton),

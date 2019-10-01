@@ -165,7 +165,7 @@ namespace cycfi { namespace elements
    {
       return
          htile(
-            align_middle(right_margin(5.0, label(title, size))),
+            align_middle(right_margin(10.0, label(title, size))),
             std::forward<Content>(content)
          );
    }

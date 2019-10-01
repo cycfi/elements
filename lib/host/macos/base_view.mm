@@ -564,10 +564,9 @@ namespace cycfi { namespace elements
    point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(host());
-      auto  frame = [ns_view frame];
-      auto  frame_height = frame.size.height;
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
-      return { float(pos.x), float(frame_height - pos.y - 1) };
+      pos = [ns_view convertPoint : pos fromView : nil];
+      return { float(pos.x), float(pos.y) };
    }
 
    extent base_view::size() const

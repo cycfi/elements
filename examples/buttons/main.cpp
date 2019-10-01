@@ -27,7 +27,8 @@ auto make_selection_menu()
       "Antimatter Soup",
       "Dark Beta Quarks",
       "Cosmic Infrared Shift"
-   );
+
+   ).first; // We return only the first, the menu. the second is a shared pointer to the label.
 }
 
 auto make_popup_menu(char const* title, menu_position pos)

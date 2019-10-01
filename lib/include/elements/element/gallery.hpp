@@ -639,7 +639,8 @@ namespace cycfi { namespace elements
    // Selection Menu
    ////////////////////////////////////////////////////////////////////////////
    template <typename First, typename... Rest>
-   inline basic_menu selection_menu(
+   inline std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
       std::function<void(std::string const& item)> on_select
     , First&& first, Rest&&... rest
    )
@@ -680,7 +681,7 @@ namespace cycfi { namespace elements
 
       menu_btn.menu(menu);
 
-      return std::move(menu_btn);
+      return { std::move(menu_btn), btn_text };
    }
 
    ////////////////////////////////////////////////////////////////////////////

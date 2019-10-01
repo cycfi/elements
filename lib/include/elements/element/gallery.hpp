@@ -281,6 +281,79 @@ namespace cycfi { namespace elements
       );
    }
 
+   template <typename Button, typename Label>
+   inline Button text_button(Label&& label)
+   {
+      auto btn_img_off = layer(label, frame{});
+      auto btn_img_on = left_top_margin({1, 1}, layer(label, frame{}));
+
+      return Button(std::move(btn_img_off), std::move(btn_img_on));
+   }
+
+   template <typename Button>
+   inline Button text_button(
+      std::string const& text
+    , float size = 1.0
+   )
+   {
+      return text_button<Button>(
+         margin(
+            button_margin,
+            align_left(label(text, size))
+         )
+      );
+   }
+
+   template <typename Button>
+   inline Button text_button(
+      std::uint32_t icon_code
+    , float size = 1.0
+   )
+   {
+      return text_button<Button>(
+         margin(
+            button_margin,
+            align_center(icon(icon_code, size))
+         )
+      );
+   }
+
+   template <typename Button>
+   inline Button text_button(
+      std::uint32_t icon_code
+    , std::string const& text
+    , float size = 1.0
+   )
+   {
+      return text_button<Button>(
+         margin(
+            button_margin,
+            htile(
+               align_left(right_margin(8, icon(icon_code, size))),
+               align_right(label(text, size))
+            )
+         )
+      );
+   }
+
+   template <typename Button>
+   inline Button text_button(
+      std::string const& text
+    , std::uint32_t icon_code
+    , float size = 1.0
+   )
+   {
+      return text_button<Button>(
+         margin(
+            button_margin,
+            htile(
+               align_left(label(text, size)),
+               align_right(left_margin(12, icon(icon_code, size)))
+            )
+         )
+      );
+   }
+
    layered_button
    button(
       std::string const& text
@@ -525,6 +598,11 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   basic_menu button_menu(
+      menu_position pos = menu_position::bottom_right
+    , color body_color = get_theme().default_button_color
+   );
+
    ////////////////////////////////////////////////////////////////////////////
    // Menu Background
    ////////////////////////////////////////////////////////////////////////////
@@ -555,6 +633,54 @@ namespace cycfi { namespace elements
    inline auto menu_item_spacer()
    {
       return menu_item_spacer_element{};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Selection Menu
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename First, typename... Rest>
+   inline basic_menu selection_menu(
+      std::function<void(std::string const& item)> on_select
+    , First&& first, Rest&&... rest
+   )
+   {
+      auto btn_text = share(label(std::forward<First>(first), 1.0));
+
+      auto menu_btn = text_button<basic_menu>(
+         margin(
+            button_margin,
+            htile(
+               align_left(hold(btn_text)),
+               align_right(left_margin(12, icon(icons::down_dir, 1.0)))
+            )
+         )
+      );
+
+      menu_btn.position(menu_position::bottom_right);
+
+      auto&& make_menu_item = [=](auto&& text)
+      {
+         auto e = menu_item(std::forward<decltype(text)>(text));
+         e.on_click = [=]()
+         {
+            btn_text->text(text);
+            on_select(text);
+         };
+         return e;
+      };
+
+      auto menu =
+         layer(
+            vtile(
+               make_menu_item(std::forward<First>(first)),
+               make_menu_item(std::forward<Rest>(rest))...
+            ),
+            menu_background{}
+         );
+
+      menu_btn.menu(menu);
+
+      return std::move(menu_btn);
    }
 
    ////////////////////////////////////////////////////////////////////////////

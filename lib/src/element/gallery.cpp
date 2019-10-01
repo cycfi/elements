@@ -157,6 +157,18 @@ namespace cycfi { namespace elements
       return std::move(menu);
    }
 
+   basic_menu
+   button_menu(menu_position pos, color body_color)
+   {
+      auto icon =
+         (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
+         icons::down_dir : icons::up_dir
+         ;
+      auto menu = make_button<basic_menu>(icon, 1.0, body_color);
+      menu.position(pos);
+      return std::move(menu);
+   }
+
    void draw_check_box(
      context const& ctx, std::string const& text, bool state, bool hilite
    )

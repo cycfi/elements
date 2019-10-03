@@ -41,6 +41,7 @@ namespace cycfi { namespace elements
 
       double                  value() const;
       virtual void            value(double val);
+      virtual void            edit_value(double val) { value(val);}
 
       rect                    track_bounds(context const& ctx) const;
       rect                    thumb_bounds(context const& ctx) const;
@@ -66,7 +67,7 @@ namespace cycfi { namespace elements
       using slider_base::value;
 
       slider_function         on_change;
-      virtual void            value(double val);
+      virtual void            edit_value(double val);
    };
 
    ////////////////////////////////////////////////////////////////////////////

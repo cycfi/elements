@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
       clamp(new_value, 0.0, 1.0);
       if (value() != new_value)
       {
-         value(new_value);
+         edit_value(new_value);
          ctx.view.refresh(ctx);
          return true;
       }
@@ -167,7 +167,7 @@ namespace cycfi { namespace elements
          double new_value = value_from_point(ctx, track_info.current);
          if (_value != new_value)
          {
-            value(new_value);
+            edit_value(new_value);
             ctx.view.refresh(ctx);
          }
       }
@@ -178,7 +178,7 @@ namespace cycfi { namespace elements
       double new_value = value_from_point(ctx, track_info.current);
       if (_value != new_value)
       {
-         value(new_value);
+         edit_value(new_value);
          ctx.view.refresh(ctx);
       }
    }
@@ -189,14 +189,14 @@ namespace cycfi { namespace elements
       _value = val;
    }
 
-   double  slider_base::value() const
+   double slider_base::value() const
    {
       return _value;
    }
 
-   void basic_slider_base::value(double val)
+   void basic_slider_base::edit_value(double val)
    {
-      slider_base::value(val);
+      slider_base::edit_value(val);
       if (on_change)
          on_change(val);
    }

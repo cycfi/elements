@@ -4,6 +4,8 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements.hpp>
+#include <algorithm>
+#include <random>
 
 using namespace cycfi::elements;
 
@@ -57,6 +59,55 @@ auto make_popup_menu(char const* title, menu_position pos)
    return popup;
 }
 
+auto make_dynamic_menu(char const* title, menu_position pos)
+{
+   auto popup  = button_menu(title, pos);
+
+   // This will be called every time the menu button is clicked
+   // We will simulate dynamic creation of the menu items here.
+   auto populate_menu =
+      [](auto& popup)
+      {
+         // Sample menu
+         char const* items[] =
+         {
+            "Seeker, look within",
+            "Empower yourself",
+            "Have you found your circuit?",
+            "Complexity to the next level",
+            "Ultra-angelic consciousness",
+            "Indigo Child",
+            "Vector of synchronicity",
+            "Aspiration is a constant",
+            "Strange Soup",
+            "Nonchalant Slave"
+         };
+
+         // Dynamically generate your menu here
+         vtile_composite list;
+         for (auto item : items)
+            list.push_back(share(menu_item(item)));
+
+         // Shuffle the items just for kicks
+         std::random_device rd;
+         std::mt19937 g(rd());
+         std::shuffle(list.begin(), list.end(), g);
+
+         auto menu =
+            layer(
+               list,
+               menu_background{}
+            );
+
+         // Install the menu
+         popup.menu(menu);
+      };
+
+   // Populate menu dynamically
+   popup.on_open_menu = populate_menu;
+   return popup;
+}
+
 constexpr auto bred     = colors::red.opacity(0.4);
 constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
 constexpr auto bblue    = colors::blue.opacity(0.4);
@@ -82,6 +133,7 @@ auto make_buttons(view& view_)
          vtile(
             top_margin(20, hmin_size(300, make_selection_menu())),
             top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
+            top_margin(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
             top_margin(20, mbutton),
             top_margin(20, tbutton),
             top_margin(20, hold(lbutton)),

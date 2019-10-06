@@ -7,10 +7,8 @@
 
 namespace cycfi { namespace elements
 {
-   void basic_menu::layout(context const& ctx)
+   void basic_menu::layout_menu(context const& ctx)
    {
-      layered_button::layout(ctx);
-
       auto pu_limits = _popup->limits(ctx);
       rect  bounds;
 
@@ -64,20 +62,28 @@ namespace cycfi { namespace elements
       {
          if (state(true))
          {
-            auto on_click = [this](context const& ctx, mouse_button btn)
-            {
-               _popup->close(ctx.view);
-               this->value(0);
-               ctx.view.refresh();
-            };
+            if (on_open_menu)
+               on_open_menu(*this);
 
-            _popup->open(ctx.view, on_click);
-            ctx.view.refresh();
+            if (_popup)
+            {
+               layout_menu(ctx);
+
+               auto on_click = [this](context const& ctx, mouse_button btn)
+               {
+                  _popup->close(ctx.view);
+                  this->value(0);
+                  ctx.view.refresh();
+               };
+
+               _popup->open(ctx.view, on_click);
+               ctx.view.refresh();
+            }
          }
       }
       else
       {
-         if (!value() || !hit_test(ctx, btn.pos))
+         if (_popup && (!value() || !hit_test(ctx, btn.pos)))
          {
             // simulate a menu click:
             btn.down = true;
@@ -96,7 +102,7 @@ namespace cycfi { namespace elements
 
    bool basic_menu::key(context const& ctx, key_info k)
    {
-      if (k.key == key_code::escape)
+      if (_popup && k.key == key_code::escape)
       {
          _popup->close(ctx.view);
          state(false);

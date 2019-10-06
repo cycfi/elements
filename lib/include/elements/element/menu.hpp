@@ -27,12 +27,14 @@ namespace cycfi { namespace elements
    class basic_menu : public layered_button
    {
    public:
+
+      using on_open_menu_function = std::function<void(basic_menu& menu)>;
+
                               template <typename W1, typename W2>
                               basic_menu(
                                  W1&& off, W2&& on
                                , menu_position pos = menu_position::bottom_right);
 
-      virtual void            layout(context const& ctx);
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
@@ -44,7 +46,11 @@ namespace cycfi { namespace elements
                               template <typename Menu>
       void                    menu(Menu&& menu_);
 
+      on_open_menu_function   on_open_menu;
+
    private:
+
+      void                    layout_menu(context const& ctx);
 
       using popup_ptr = std::shared_ptr<basic_popup_element>;
 

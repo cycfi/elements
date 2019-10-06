@@ -14,7 +14,6 @@
 #include <elements/support/context.hpp>
 #include <elements/support/glyphs.hpp>
 #include <elements/support/icon_ids.hpp>
-#include <elements/support/misc.hpp>
 #include <elements/support/pixmap.hpp>
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>

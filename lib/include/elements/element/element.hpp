@@ -8,7 +8,6 @@
 
 #include <elements/base_view.hpp>
 #include <elements/support/rect.hpp>
-#include <elements/support/misc.hpp>
 
 #include <memory>
 #include <string>

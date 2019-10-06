@@ -4,7 +4,7 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/window.hpp>
-#include <elements/support.hpp>
+#include <infra/support.hpp>
 #import <Cocoa/Cocoa.h>
 
 namespace elements = cycfi::elements;
@@ -148,8 +148,8 @@ namespace cycfi { namespace elements
 
 
       auto _size = [[window_ contentView] frame].size;
-      elements::clamp(_size.width, minx, limits_.max.x);
-      elements::clamp(_size.height, miny, limits_.max.y);
+      clamp(_size.width, minx, limits_.max.x);
+      clamp(_size.height, miny, limits_.max.y);
       [window_ setContentSize : _size];
    }
 

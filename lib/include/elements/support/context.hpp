@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_CONTEXT_APRIL_17_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_CONTEXT_APRIL_17_2016
+#if !defined(ELEMENTS_CONTEXT_APRIL_17_2016)
+#define ELEMENTS_CONTEXT_APRIL_17_2016
 
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>

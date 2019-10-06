@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_TEXT_APRIL_17_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_TEXT_APRIL_17_2016
+#if !defined(ELEMENTS_TEXT_APRIL_17_2016)
+#define ELEMENTS_TEXT_APRIL_17_2016
 
 #include <elements/support/glyphs.hpp>
 #include <elements/support/theme.hpp>

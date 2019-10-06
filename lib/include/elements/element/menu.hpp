@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_MENU_JUNE_4_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_MENU_JUNE_4_2016
+#if !defined(ELEMENTS_MENU_JUNE_4_2016)
+#define ELEMENTS_MENU_JUNE_4_2016
 
 #include <elements/element/element.hpp>
 #include <elements/element/button.hpp>

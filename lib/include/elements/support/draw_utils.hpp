@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_DRAW_UTILS_OCTOBER_27_2017)
-#define CYCFI_ELEMENTS_GUI_LIB_DRAW_UTILS_OCTOBER_27_2017
+#if !defined(ELEMENTS_DRAW_UTILS_OCTOBER_27_2017)
+#define ELEMENTS_DRAW_UTILS_OCTOBER_27_2017
 
 #include <elements/support/canvas.hpp>
 

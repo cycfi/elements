@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_GLYPHS_SEPTEMBER_26_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_GLYPHS_SEPTEMBER_26_2016
+#if !defined(ELEMENTS_GLYPHS_SEPTEMBER_26_2016)
+#define ELEMENTS_GLYPHS_SEPTEMBER_26_2016
 
 #include <infra/assert.hpp>
 #include <elements/support/canvas.hpp>

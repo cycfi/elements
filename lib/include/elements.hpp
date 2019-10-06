@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_FERBRUARY_17_2017)
-#define CYCFI_ELEMENTS_GUI_LIB_FERBRUARY_17_2017
+#if !defined(ELEMENTS_FERBRUARY_17_2017)
+#define ELEMENTS_FERBRUARY_17_2017
 
 #include <elements/app.hpp>
 #include <elements/window.hpp>

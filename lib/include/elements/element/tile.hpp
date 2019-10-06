@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_TILE_APRIL_13_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_TILE_APRIL_13_2016
+#if !defined(ELEMENTS_TILE_APRIL_13_2016)
+#define ELEMENTS_TILE_APRIL_13_2016
 
 #include <elements/element/composite.hpp>
 #include <memory>

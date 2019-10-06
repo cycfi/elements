@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_BASIC_APRIL_11_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_BASIC_APRIL_11_2016
+#if !defined(ELEMENTS_MISC_APRIL_11_2016)
+#define ELEMENTS_MISC_APRIL_11_2016
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
@@ -13,6 +13,30 @@
 
 namespace cycfi { namespace elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // Box: A simple colored box.
+   ////////////////////////////////////////////////////////////////////////////
+   struct box_element : element
+   {
+      box_element(color color_)
+       : _color(color_)
+      {}
+
+      void draw(context const& ctx)
+      {
+         auto& cnv = ctx.canvas;
+         cnv.fill_style(_color);
+         cnv.fill_rect(ctx.bounds);
+      }
+
+      color _color;
+   };
+
+   inline auto box(color color_)
+   {
+      return box_element{ color_ };
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Basic Element
    //

@@ -3,6 +3,9 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
+#if !defined(ELEMENTS_DETAIL_SCRATCH_CONTEXT_SEPTEMBER_26_2016)
+#define ELEMENTS_DETAIL_SCRATCH_CONTEXT_SEPTEMBER_26_2016
+
 #include "cairo.h"
 
 namespace cycfi { namespace elements { namespace detail
@@ -33,3 +36,5 @@ namespace cycfi { namespace elements { namespace detail
       cairo_t*          _context;
    };
 }}}
+
+#endif

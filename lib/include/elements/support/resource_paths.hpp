@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_RESOURCE_PATHS_JUNE_22_2019)
-#define CYCFI_ELEMENTS_GUI_LIB_RESOURCE_PATHS_JUNE_22_2019
+#if !defined(ELEMENTS_RESOURCE_PATHS_JUNE_22_2019)
+#define ELEMENTS_RESOURCE_PATHS_JUNE_22_2019
 
 #include <set>
 #include <string_view>

@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_MAY_4_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_MAY_4_2016
+#if !defined(ELEMENTS_MAY_4_2016)
+#define ELEMENTS_MAY_4_2016
 
 #include <elements/element/align.hpp>
-#include <elements/element/basics.hpp>
+#include <elements/element/misc.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/dial.hpp>

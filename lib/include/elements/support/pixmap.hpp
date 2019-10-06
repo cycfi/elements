@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_PIXMAP_SEPTEMBER_5_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_PIXMAP_SEPTEMBER_5_2016
+#if !defined(ELEMENTS_PIXMAP_SEPTEMBER_5_2016)
+#define ELEMENTS_PIXMAP_SEPTEMBER_5_2016
 
 #include <vector>
 #include <memory>

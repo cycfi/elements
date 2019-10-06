@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_SIZE_APRIL_14_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_SIZE_APRIL_14_2016
+#if !defined(ELEMENTS_SIZE_APRIL_14_2016)
+#define ELEMENTS_SIZE_APRIL_14_2016
 
 #include <elements/element/element.hpp>
 #include <memory>

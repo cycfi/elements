@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_SUPPORT_AUGUST_15_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_SUPPORT_AUGUST_15_2016
+#if !defined(ELEMENTS_SUPPORT_AUGUST_15_2016)
+#define ELEMENTS_SUPPORT_AUGUST_15_2016
 
 #include <infra/support.hpp>
 #include <infra/assert.hpp>

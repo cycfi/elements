@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(CYCFI_ELEMENTS_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016)
-#define CYCFI_ELEMENTS_GUI_LIB_WIDGET_DIAL_AUGUST_30_2016
+#if !defined(ELEMENTS_DIAL_AUGUST_30_2016)
+#define ELEMENTS_DIAL_AUGUST_30_2016
 
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>

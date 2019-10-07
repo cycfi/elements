@@ -99,6 +99,8 @@ auto make_dynamic_menu(char const* title, menu_position pos)
          std::mt19937 g(rd());
          std::shuffle(list.begin(), list.end(), g);
 
+         // Show only a portion of the menu, providing a scroller
+         // to allow scrolling over all the items.
          auto menu =
             layer(
                fixed_size({ 225, 150 }, vscroller(list)),

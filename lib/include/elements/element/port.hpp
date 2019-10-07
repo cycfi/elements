@@ -186,6 +186,20 @@ namespace cycfi { namespace elements
    {
       return { std::forward<Subject>(subject), traits };
    }
+
+   template <typename Subject>
+   inline proxy<Subject, scroller_base>
+   vscroller(Subject&& subject, int traits = 0)
+   {
+      return { std::forward<Subject>(subject), traits | no_hscroll };
+   }
+
+   template <typename Subject>
+   inline proxy<Subject, scroller_base>
+   hscroller(Subject&& subject, int traits = 0)
+   {
+      return { std::forward<Subject>(subject), traits | no_vscroll };
+   }
 }}
 
 #endif

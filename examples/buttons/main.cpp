@@ -80,7 +80,13 @@ auto make_dynamic_menu(char const* title, menu_position pos)
             "Vector of synchronicity",
             "Aspiration is a constant",
             "Strange Soup",
-            "Nonchalant Slave"
+            "Nonchalant Slave",
+            "Shiva will amplify your mind",
+            "This mission never ends",
+            "The future is now",
+            "Who are we?",
+            "One cannot self-actualize",
+            "Ennobling source of stardust"
          };
 
          // Dynamically generate your menu here
@@ -95,7 +101,7 @@ auto make_dynamic_menu(char const* title, menu_position pos)
 
          auto menu =
             layer(
-               list,
+               fixed_size({ 300, 150 }, vscroller(list)),
                menu_background{}
             );
 

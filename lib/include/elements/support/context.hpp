@@ -9,6 +9,7 @@
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>
 #include <cairo.h>
+#include <functional>
 
 namespace cycfi { namespace elements
 {
@@ -34,8 +35,10 @@ namespace cycfi { namespace elements
    };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
-   struct context : basic_context
+   class context : public basic_context
    {
+   public:
+
       context(context const& rhs, elements::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
        , parent(rhs.parent), bounds(bounds_)
@@ -54,9 +57,31 @@ namespace cycfi { namespace elements
       context(context const&) = default;
       context& operator=(context const&) = default;
 
-      elements::element*  element;
-      context const*    parent;
-      elements::rect      bounds;
+      using feedback_function = std::function<void(elements::element*)>;
+
+      template <typename F>
+      feedback_function feedback(F&& f) const
+      {
+         auto save = _feedback;
+         _feedback = std::forward<F>(f);
+         return save;
+      }
+
+      void give_feedback(elements::element* e) const
+      {
+         if (_feedback)
+            _feedback(e);
+         if (parent)
+            parent->give_feedback(e);
+      }
+
+      elements::element*            element;
+      context const*                parent;
+      elements::rect                bounds;
+
+   private:
+
+      mutable feedback_function     _feedback;
    };
 }}
 

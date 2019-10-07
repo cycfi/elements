@@ -101,7 +101,7 @@ auto make_dynamic_menu(char const* title, menu_position pos)
 
          auto menu =
             layer(
-               fixed_size({ 300, 150 }, vscroller(list)),
+               fixed_size({ 225, 150 }, vscroller(list)),
                menu_background{}
             );
 

@@ -69,11 +69,11 @@ namespace cycfi { namespace elements
             {
                layout_menu(ctx);
 
-               auto on_click = [this](context const& ctx, mouse_button btn)
+               auto on_click = [this](view& view_)
                {
-                  _popup->close(ctx.view);
+                  _popup->close(view_);
                   this->value(0);
-                  ctx.view.refresh();
+                  view_.refresh();
                };
 
                _popup->open(ctx.view, on_click);
@@ -141,8 +141,13 @@ namespace cycfi { namespace elements
 
    element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
-      if (/*btn.down && */on_click)
-         on_click();
+      if (ctx.bounds.includes(btn.pos))
+      {
+         if (on_click)
+            on_click();
+         ctx.give_feedback(this);
+         return this;
+      }
       return proxy_base::click(ctx, btn);
    }
 

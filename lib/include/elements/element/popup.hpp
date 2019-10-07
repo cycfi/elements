@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using click_function = std::function<void(context const& ctx, mouse_button btn)>;
+      using click_function = std::function<void(view& view_)>;
 
                               basic_popup_element(rect bounds = {})
                                : floating_element(bounds)

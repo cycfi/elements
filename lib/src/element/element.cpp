@@ -43,7 +43,7 @@ namespace cycfi { namespace elements
 
    element* element::click(context const& ctx, mouse_button btn)
    {
-      return 0;
+      return nullptr;
    }
 
    void element::drag(context const& ctx, mouse_button btn)

@@ -90,7 +90,8 @@ namespace cycfi { namespace elements { namespace icons
       lightbulb                     = 0xf0eb,
       mixer                         = 0xf1de,
       hand                          = 0xf256,
-      question                      = 0xe84c
+      question                      = 0xe84c,
+      menu                          = 0xf0c9
    };
 }}}
 

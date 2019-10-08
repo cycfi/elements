@@ -10,13 +10,15 @@
 
 namespace cycfi { namespace elements
 {
+   constexpr auto min_size = 64;
+
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation
    ////////////////////////////////////////////////////////////////////////////
    view_limits port_base::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return { { 0, 0 }, e_limits.max };
+      return { { min_size, min_size }, e_limits.max };
    }
 
    void port_base::prepare_subject(context& ctx)
@@ -49,7 +51,7 @@ namespace cycfi { namespace elements
    view_limits vport_base::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return { { e_limits.min.x, 0 }, e_limits.max };
+      return { { e_limits.min.x, min_size }, e_limits.max };
    }
 
    void vport_base::prepare_subject(context& ctx)
@@ -180,7 +182,7 @@ namespace cycfi { namespace elements
    {
       view_limits e_limits = subject().limits(ctx);
       return view_limits{
-         { allow_hscroll()? 0 : e_limits.min.x, allow_vscroll()? 0 : e_limits.min.y },
+         { allow_hscroll()? min_size : e_limits.min.x, allow_vscroll()? min_size : e_limits.min.y },
          { e_limits.max.x, e_limits.max.y }
       };
    }

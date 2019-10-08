@@ -20,11 +20,11 @@ constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 
 auto make_buttons(view& view_)
 {
-   auto mbutton            = button("Momentary Button");
-   auto tbutton            = toggle_button("Toggle Button", 1.0, bred);
-   auto lbutton            = share(latching_button("Latching Button", 1.0, bgreen));
-   auto reset              = button("Clear Latch", icons::lock_open, 1.0, bblue);
-   auto note               = button(icons::cog, "Setup", 1.0, brblue);
+   auto mbutton         = button("Momentary Button");
+   auto tbutton         = toggle_button("Toggle Button", 1.0, bred);
+   auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
+   auto reset           = button("Clear Latch", icons::lock_open, 1.0, bblue);
+   auto note            = button(icons::cog, "Setup", 1.0, brblue);
 
    reset.on_click =
       [lbutton, &view_](bool) mutable

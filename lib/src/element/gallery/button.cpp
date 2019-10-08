@@ -19,7 +19,7 @@ namespace cycfi { namespace elements
 
    layered_button
    button(
-      std::string const& text
+      std::string_view text
     , float size
     , color body_color
    )
@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    layered_button
    button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size
     , color body_color
    )
@@ -50,7 +50,7 @@ namespace cycfi { namespace elements
 
    layered_button
    button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size
     , color body_color
@@ -61,7 +61,7 @@ namespace cycfi { namespace elements
 
    basic_toggle_button<>
    toggle_button(
-      std::string const& text
+      std::string_view text
     , float size
     , color body_color
    )
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
    basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size
     , color body_color
    )
@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
 
    basic_toggle_button<>
    toggle_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size
     , color body_color
@@ -103,7 +103,7 @@ namespace cycfi { namespace elements
 
    basic_latching_button<>
    latching_button(
-      std::string const& text
+      std::string_view text
     , float size
     , color body_color
    )
@@ -124,7 +124,7 @@ namespace cycfi { namespace elements
    basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size
     , color body_color
    )
@@ -134,7 +134,7 @@ namespace cycfi { namespace elements
 
    basic_latching_button<>
    latching_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size
     , color body_color

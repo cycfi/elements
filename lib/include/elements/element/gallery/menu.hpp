@@ -10,6 +10,7 @@
 #include <elements/element/menu.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
+#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -17,7 +18,7 @@ namespace cycfi { namespace elements
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
    basic_menu button_menu(
-      std::string const& text
+      std::string_view text
     , menu_position pos = menu_position::bottom_right
     , color body_color = get_theme().default_button_color
    );
@@ -38,12 +39,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Items
    ////////////////////////////////////////////////////////////////////////////
-   inline auto menu_item_text(std::string const& text)
+   inline auto menu_item_text(std::string_view text)
    {
       return xside_margin({ 20, 20 }, align_left(label(text)));
    }
 
-   inline auto menu_item(std::string const& text)
+   inline auto menu_item(std::string_view text)
    {
       return basic_menu_item(menu_item_text(text));
    }
@@ -65,7 +66,7 @@ namespace cycfi { namespace elements
    template <typename First, typename... Rest>
    inline std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
-      std::function<void(std::string const& item)> on_select
+      std::function<void(std::string_view item)> on_select
     , First&& first, Rest&&... rest
    )
    {

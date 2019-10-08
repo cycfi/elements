@@ -8,7 +8,7 @@
 namespace cycfi { namespace elements
 {
    basic_menu
-   button_menu(std::string const& text, menu_position pos, color body_color)
+   button_menu(std::string_view text, menu_position pos, color body_color)
    {
       auto icon =
          (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?

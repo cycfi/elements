@@ -12,6 +12,7 @@
 #include <elements/element/margin.hpp>
 #include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
+#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -50,7 +51,7 @@ namespace cycfi { namespace elements
 
    template <typename Button>
    inline Button make_button(
-      std::string const& text
+      std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
@@ -85,7 +86,7 @@ namespace cycfi { namespace elements
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    )
@@ -106,7 +107,7 @@ namespace cycfi { namespace elements
 
    template <typename Button>
    inline Button make_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color
@@ -137,7 +138,7 @@ namespace cycfi { namespace elements
 
    template <typename Button>
    inline Button text_button(
-      std::string const& text
+      std::string_view text
     , float size = 1.0
    )
    {
@@ -166,7 +167,7 @@ namespace cycfi { namespace elements
    template <typename Button>
    inline Button text_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size = 1.0
    )
    {
@@ -183,7 +184,7 @@ namespace cycfi { namespace elements
 
    template <typename Button>
    inline Button text_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size = 1.0
    )
@@ -201,7 +202,7 @@ namespace cycfi { namespace elements
 
    layered_button
    button(
-      std::string const& text
+      std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
@@ -216,14 +217,14 @@ namespace cycfi { namespace elements
    layered_button
    button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    layered_button
    button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size
     , color body_color = get_theme().default_button_color
@@ -231,7 +232,7 @@ namespace cycfi { namespace elements
 
    basic_toggle_button<>
    toggle_button(
-      std::string const& text
+      std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
@@ -246,14 +247,14 @@ namespace cycfi { namespace elements
    basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_toggle_button<>
    toggle_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color
@@ -261,7 +262,7 @@ namespace cycfi { namespace elements
 
    basic_latching_button<>
    latching_button(
-      std::string const& text
+      std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
@@ -276,14 +277,14 @@ namespace cycfi { namespace elements
    basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
-    , std::string const& text
+    , std::string_view text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
 
    basic_latching_button<>
    latching_button(
-      std::string const& text
+      std::string_view text
     , std::uint32_t icon_code
     , float size = 1.0
     , color body_color = get_theme().default_button_color

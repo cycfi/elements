@@ -10,6 +10,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/support/theme.hpp>
 #include <functional>
+#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -136,7 +137,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct label : element
    {
-                              label(std::string const& text, float size_ = 1.0)
+                              label(std::string_view text, float size_ = 1.0)
                                : _text(text)
                                , _size(size_)
                               {}
@@ -145,7 +146,7 @@ namespace cycfi { namespace elements
       virtual void            draw(context const& ctx);
 
       std::string             text() const                     { return _text; }
-      void                    text(std::string const& text)    { _text = text; }
+      void                    text(std::string_view text)      { _text = text; }
 
       using element::text;
 

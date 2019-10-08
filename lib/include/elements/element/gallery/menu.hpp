@@ -69,50 +69,26 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Selection Menu
    ////////////////////////////////////////////////////////////////////////////
-   template <typename First, typename... Rest>
+   std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
+      std::function<void(std::string_view item)> on_select
+    , std::string_view init
+   );
+
+   std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
+      std::function<void(std::string_view item)> on_select
+    , std::size_t num_items, std::string_view items[]
+   );
+
+   template <int N>
    inline std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
-    , First&& first, Rest&&... rest
+    , std::string_view (&items)[N]
    )
    {
-      auto btn_text = share(label(std::forward<First>(first), 1.0));
-
-      auto menu_btn = text_button<basic_menu>(
-         margin(
-            button_margin,
-            htile(
-               align_left(hold(btn_text)),
-               align_right(left_margin(12, icon(icons::down_dir, 1.0)))
-            )
-         )
-      );
-
-      menu_btn.position(menu_position::bottom_right);
-
-      auto&& make_menu_item = [=](auto&& text)
-      {
-         auto e = menu_item(std::forward<decltype(text)>(text));
-         e.on_click = [=]()
-         {
-            btn_text->text(text);
-            on_select(text);
-         };
-         return e;
-      };
-
-      auto menu =
-         layer(
-            vtile(
-               make_menu_item(std::forward<First>(first)),
-               make_menu_item(std::forward<Rest>(rest))...
-            ),
-            menu_background{}
-         );
-
-      menu_btn.menu(menu);
-
-      return { std::move(menu_btn), btn_text };
+      return selection_menu(on_select, N, items);
    }
 }}
 

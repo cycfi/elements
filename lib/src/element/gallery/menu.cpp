@@ -85,4 +85,55 @@ namespace cycfi { namespace elements
       canvas_.line_width(1);
       canvas_.stroke();
    }
+
+   std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
+      std::function<void(std::string_view item)> on_select
+    , std::string_view init
+   )
+   {
+      auto btn_text = share(label(init, 1.0));
+
+      auto menu_btn = text_button<basic_menu>(
+         margin(
+            button_margin,
+            htile(
+               align_left(hold(btn_text)),
+               align_right(left_margin(12, icon(icons::down_dir, 1.0)))
+            )
+         )
+      );
+
+      menu_btn.position(menu_position::bottom_right);
+      return { std::move(menu_btn), btn_text };
+   }
+
+   std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
+      std::function<void(std::string_view item)> on_select
+    , std::size_t num_items, std::string_view items[]
+   )
+   {
+      auto r = selection_menu(on_select, num_items? items[0] : "");
+
+      if (num_items)
+      {
+         vtile_composite list;
+         for (auto i = 0; i != num_items; ++i)
+         {
+            auto e = menu_item(items[i]);
+            e.on_click = [btn_text = r.second, on_select, text = items[i]]()
+            {
+               btn_text->text(text);
+               on_select(text);
+            };
+            list.push_back(share(e));
+         }
+
+         auto menu = layer(list, menu_background{});
+         r.first.menu(menu);
+      }
+
+      return std::move(r);
+   }
 }}

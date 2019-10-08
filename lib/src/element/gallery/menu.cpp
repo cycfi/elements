@@ -31,6 +31,13 @@ namespace cycfi { namespace elements
       return std::move(menu);
    }
 
+   basic_menu icon_menu(uint32_t code, float size, menu_position pos)
+   {
+      auto menu = text_button<basic_menu>(code, size, /*no_frame*/ true);
+      menu.position(pos);
+      return std::move(menu);
+   }
+
    namespace
    {
       void draw_menu_background(cairo_t& _context, rect bounds, float radius)
@@ -63,7 +70,7 @@ namespace cycfi { namespace elements
 
    view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
    {
-      return { { 0, 0 }, { full_extent, get_theme().label_font_size } };
+      return { { 0, 20 }, { full_extent, get_theme().label_font_size } };
    }
 
    void menu_item_spacer_element::draw(context const& ctx)
@@ -74,7 +81,7 @@ namespace cycfi { namespace elements
       canvas_.begin_path();
       canvas_.move_to({ ctx.bounds.left, y });
       canvas_.line_to({ ctx.bounds.right, y });
-      canvas_.stroke_style(get_theme().frame_color.opacity(0.15));
+      canvas_.stroke_style(get_theme().frame_color.opacity(0.25));
       canvas_.line_width(1);
       canvas_.stroke();
    }

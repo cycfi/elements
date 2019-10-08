@@ -28,6 +28,12 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   basic_menu icon_menu(
+      uint32_t code
+    , float size
+    , menu_position pos = menu_position::bottom_right
+   );
+
    ////////////////////////////////////////////////////////////////////////////
    // Menu Background
    ////////////////////////////////////////////////////////////////////////////

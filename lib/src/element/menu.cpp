@@ -102,8 +102,20 @@ namespace cycfi { namespace elements
 
    bool basic_menu::key(context const& ctx, key_info k)
    {
-      if (_popup && k.key == key_code::escape)
+      if (_popup &&
+         (k.key == key_code::escape || k.key == key_code::enter))
       {
+         if (k.key == key_code::enter)
+         {
+            // simulate a menu click:
+            rect  bounds = _popup->bounds();
+            context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+            mouse_button btn{
+               true, 1, mouse_button::left, 0, ctx.view.cursor_pos()
+            };
+            _popup->click(new_ctx, btn);
+         }
+
          _popup->close(ctx.view);
          state(false);
          ctx.view.refresh();
@@ -141,14 +153,16 @@ namespace cycfi { namespace elements
 
    element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
+      element* result = nullptr;
       if (ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
          ctx.give_feedback(this);
-         return this;
+         result = this;
       }
-      return proxy_base::click(ctx, btn);
+      element* proxy_result = proxy_base::click(ctx, btn);
+      return result? result : proxy_result;
    }
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)

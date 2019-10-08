@@ -128,25 +128,35 @@ namespace cycfi { namespace elements
    }
 
    template <typename Button, typename Label>
-   inline Button text_button(Label&& label)
+   inline Button text_button(Label&& label, bool no_frame = false)
    {
-      auto btn_img_off = layer(label, frame{});
-      auto btn_img_on = left_top_margin({1, 1}, layer(label, frame{}));
-
-      return Button(std::move(btn_img_off), std::move(btn_img_on));
+      if (no_frame)
+      {
+         auto btn_img_off = label;
+         auto btn_img_on = left_top_margin({1, 1}, label);
+         return Button(std::move(btn_img_off), std::move(btn_img_on));
+      }
+      else
+      {
+         auto btn_img_off = layer(label, frame{});
+         auto btn_img_on = left_top_margin({1, 1}, layer(label, frame{}));
+         return Button(std::move(btn_img_off), std::move(btn_img_on));
+      }
    }
 
    template <typename Button>
    inline Button text_button(
       std::string_view text
     , float size = 1.0
+    , bool no_frame = false
    )
    {
       return text_button<Button>(
          margin(
             button_margin,
             align_left(label(text, size))
-         )
+         ),
+         no_frame
       );
    }
 
@@ -154,13 +164,15 @@ namespace cycfi { namespace elements
    inline Button text_button(
       std::uint32_t icon_code
     , float size = 1.0
+    , bool no_frame = false
    )
    {
       return text_button<Button>(
          margin(
             button_margin,
             align_center(icon(icon_code, size))
-         )
+         ),
+         no_frame
       );
    }
 
@@ -169,6 +181,7 @@ namespace cycfi { namespace elements
       std::uint32_t icon_code
     , std::string_view text
     , float size = 1.0
+    , bool no_frame = false
    )
    {
       return text_button<Button>(
@@ -178,7 +191,8 @@ namespace cycfi { namespace elements
                align_left(right_margin(8, icon(icon_code, size))),
                align_right(label(text, size))
             )
-         )
+         ),
+         no_frame
       );
    }
 
@@ -187,6 +201,7 @@ namespace cycfi { namespace elements
       std::string_view text
     , std::uint32_t icon_code
     , float size = 1.0
+    , bool no_frame = false
    )
    {
       return text_button<Button>(
@@ -196,7 +211,8 @@ namespace cycfi { namespace elements
                align_left(label(text, size)),
                align_right(left_margin(12, icon(icon_code, size)))
             )
-         )
+         ),
+         no_frame
       );
    }
 

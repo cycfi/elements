@@ -69,6 +69,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Selection Menu
    ////////////////////////////////////////////////////////////////////////////
+   struct menu_selector
+   {
+      virtual std::size_t        size() const = 0;
+      virtual std::string_view   operator[](std::size_t index) const = 0;
+   };
+
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
@@ -78,17 +84,70 @@ namespace cycfi { namespace elements
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
-    , std::size_t num_items, std::string_view items[]
+    , menu_selector const& items
    );
 
-   template <int N>
+   template <typename Sequence>
    inline std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
-    , std::string_view (&items)[N]
+    , Sequence const& seq
+    , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = 0
    )
    {
-      return selection_menu(on_select, N, items);
+      struct seq_menu_selector : menu_selector
+      {
+         seq_menu_selector(Sequence const& seq_)
+          : _seq(seq_)
+         {}
+
+         virtual std::size_t
+         size() const
+         {
+            return std::size(_seq);
+         }
+
+         virtual std::string_view
+         operator[](std::size_t index) const
+         {
+            return _seq[index];
+         }
+
+         Sequence const& _seq;
+      };
+
+      return selection_menu(on_select, seq_menu_selector{ seq });
+   }
+
+   template <typename T>
+   std::pair<basic_menu, std::shared_ptr<label>>
+   selection_menu(
+      std::function<void(std::string_view item)> on_select
+    , std::initializer_list<T> const& list
+   )
+   {
+      struct init_list_menu_selector : menu_selector
+      {
+         init_list_menu_selector(std::initializer_list<T> const& list_)
+          : _list(list_)
+         {}
+
+         virtual std::size_t
+         size() const
+         {
+            return _list.size();
+         }
+
+         virtual std::string_view
+         operator[](std::size_t index) const
+         {
+            return *(_list.begin()+index);
+         }
+
+         std::initializer_list<T> const& _list;
+      };
+
+      return selection_menu(on_select, init_list_menu_selector{ list });
    }
 }}
 

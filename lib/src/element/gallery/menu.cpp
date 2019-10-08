@@ -111,15 +111,15 @@ namespace cycfi { namespace elements
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
-    , std::size_t num_items, std::string_view items[]
+    , menu_selector const& items
    )
    {
-      auto r = selection_menu(on_select, num_items? items[0] : "");
+      auto r = selection_menu(on_select, items.size()? items[0] : "");
 
-      if (num_items)
+      if (items.size())
       {
          vtile_composite list;
-         for (auto i = 0; i != num_items; ++i)
+         for (auto i = 0; i != items.size(); ++i)
          {
             auto e = menu_item(items[i]);
             e.on_click = [btn_text = r.second, on_select, text = items[i]]()

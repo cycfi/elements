@@ -15,25 +15,23 @@ auto background = box(bkd_color);
 
 auto make_selection_menu()
 {
-   static std::string_view items[] =
-   {
-      "Quantum Feedback Loop",
-      "Psionic Wave Oscillator",
-      "Gaia Abiogenesis",
-      "Chaotic Synchronicity",
-      "Omega Quadrant",
-      "Photonic Mesh",
-      "Antimatter Soup",
-      "Dark Beta Quarks",
-      "Cosmic Infrared Shift"
-   };
-
    return selection_menu(
       [](std::string_view select)
       {
          // This will be called when an item is selected
       },
-      items
+      {
+         "Quantum Feedback Loop",
+         "Psionic Wave Oscillator",
+         "Gaia Abiogenesis",
+         "Chaotic Synchronicity",
+         "Omega Quadrant",
+         "Photonic Mesh",
+         "Antimatter Soup",
+         "Dark Beta Quarks",
+         "Cosmic Infrared Shift"
+      }
+
    ).first; // We return only the first, the menu. the second is a shared pointer to the label.
 }
 

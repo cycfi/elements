@@ -121,7 +121,7 @@ auto make_menus(view& view_)
    return
       margin({ 20, 0, 20, 20 },
          vtile(
-            top_margin(20, hmin_size(300, make_selection_menu())),
+            hmin_size(300, make_selection_menu()),
             top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
             top_margin(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
             top_margin(20, scroller(image{ "deep_space.jpg" })),

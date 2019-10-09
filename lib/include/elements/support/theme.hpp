@@ -25,6 +25,8 @@ namespace cycfi { namespace elements
       color                indicator_color            = rgba(0, 127, 255, 200);
       color                basic_font_color           = rgba(220, 220, 220, 200);
 
+      char const*          system_font                = "Lucida Grande";
+
       color                heading_font_color         = basic_font_color;
       char const*          heading_font               = "Roboto Bold";
       float                heading_font_size          = 14.0;

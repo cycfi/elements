@@ -79,6 +79,11 @@ auto make_basic_text()
          )
       );
 
+   auto symbols =
+      margin({ 10, 0, 10, 10 },
+         halign(0.5, label{ u8"⎋ ⌥ ⌘ ⇧ ⌃", get_theme().system_font, 2.0 })
+      );
+
    return
       margin(
          { 10, 0, 10, 10 },
@@ -98,7 +103,12 @@ auto make_basic_text()
                   el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
                   el(0.5, "Now, Joel rewrote my code using modern C++14.")
                ))),
-            top_margin(20, pane("Icons", std::move(icons))),
+            top_margin(20,
+               htile(
+                  pane("Icons", std::move(icons)),
+                  left_margin(20, pane("Symbols", std::move(symbols)))
+               )
+            ),
             empty()
          )
       );

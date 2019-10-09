@@ -135,12 +135,19 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////
-   struct label : element
+   class label : public element
    {
-                              label(std::string_view text, float size_ = 1.0)
-                               : _text(text)
-                               , _size(size_)
-                              {}
+   public:
+                              label(
+                                 std::string_view text
+                               , float size = 1.0
+                              );
+
+                              label(
+                                 std::string_view text
+                               , std::string_view font
+                               , float size = 1.0
+                              );
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
@@ -150,13 +157,16 @@ namespace cycfi { namespace elements
 
       using element::text;
 
+   private:
+
       std::string             _text;
+      std::string             _font;
       float                   _size;
    };
 
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    // Grid Lines
-   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    class vgrid_lines : public element
    {
    public:

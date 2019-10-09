@@ -65,11 +65,25 @@ namespace cycfi { namespace elements
       draw_box_vgradient(ctx.canvas, ctx.bounds, 4.0);
    }
 
+   label::label(std::string_view text, float size)
+    : _text(text)
+    , _font(get_theme().label_font)
+    , _size(size)
+   {}
+
+   label::label(std::string_view text, std::string_view font, float size)
+    : _text(text)
+    , _font(font.begin(), font.end())
+    , _size(size)
+   {}
+
    view_limits label::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(
-         ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size * _size
+         ctx.canvas, _text.c_str()
+       , _font.c_str()
+       , thm.label_font_size * _size
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -82,8 +96,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
-         theme_.label_font,
-         theme_.label_font_size * _size
+         _font.c_str()
+       , theme_.label_font_size * _size
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 

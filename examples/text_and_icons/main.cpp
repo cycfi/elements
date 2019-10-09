@@ -101,7 +101,7 @@ auto make_basic_text()
                   el(1.0, "Hello, Universe. I am Elements."),
                   el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
                   el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
-                  el(0.5, "Now, Joel rewrote my code using modern C++14.")
+                  el(0.5, "Now, Joel rewrote my code using modern C++17.")
                ))),
             top_margin(20,
                htile(

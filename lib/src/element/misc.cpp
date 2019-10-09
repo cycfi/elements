@@ -32,11 +32,25 @@ namespace cycfi { namespace elements
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
    }
 
+   heading::heading(std::string_view text, float size)
+    : _text(text)
+    , _font(get_theme().heading_font)
+    , _size(size)
+   {}
+
+   heading::heading(std::string_view text, std::string_view font, float size)
+    : _text(text)
+    , _font(font.begin(), font.end())
+    , _size(size)
+   {}
+
    view_limits heading::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(
-         ctx.canvas, _text.c_str(), thm.heading_font, thm.heading_font_size * _size
+         ctx.canvas, _text.c_str()
+       , _font.c_str()
+       , thm.heading_font_size * _size
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -49,8 +63,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.heading_font_color);
       canvas_.font(
-         theme_.heading_font,
-         theme_.heading_font_size * _size
+         _font.c_str()
+       , theme_.heading_font_size * _size
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 

@@ -105,10 +105,16 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct heading : element
    {
-                              heading(std::string const& text, float size_ = 1.0)
-                               : _text(text)
-                               , _size(size_)
-                              {}
+                              heading(
+                                 std::string_view text
+                               , float size_ = 1.0
+                              );
+
+                              heading(
+                                 std::string_view text
+                               , std::string_view font
+                               , float size = 1.0
+                              );
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual void            draw(context const& ctx);
@@ -119,6 +125,7 @@ namespace cycfi { namespace elements
       using element::text;
 
       std::string             _text;
+      std::string             _font;
       float                   _size;
    };
 

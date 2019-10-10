@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
          if (k.key == key_code::enter)
          {
             // simulate a menu click:
-            rect  bounds = _popup->bounds();
+            rect bounds = _popup->bounds();
             context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
             mouse_button btn{
                true, 1, mouse_button::left, 0, ctx.view.cursor_pos()
@@ -121,7 +121,33 @@ namespace cycfi { namespace elements
          ctx.view.refresh();
          return true;
       }
-      return false;
+
+      // simulate a menu key:
+      rect bounds = _popup->bounds();
+      context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+
+      bool hit = false;
+      auto ff = new_ctx.feedback(
+         [&hit](auto* e)
+         {
+            if (dynamic_cast<basic_menu_item_element*>(e))
+               hit = true;
+         }
+      );
+
+      if (_popup->key(new_ctx, k))
+      {
+         if (hit)
+         {
+            _popup->close(ctx.view);
+            state(false);
+            ctx.view.refresh();
+         }
+         return true;
+      }
+
+      // Call base key
+      return layered_button::key(ctx, k);
    }
 
    bool basic_menu::focus(focus_request r)
@@ -167,9 +193,14 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
-      // Simulate a click when we get a shortcut key
-      if (on_click && k.key == shortcut.key && k.modifiers == shortcut.modifiers)
-         on_click();
+      // Simulate a click when we get a matching shortcut key
+      if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+      {
+         if (on_click)
+            on_click();
+         ctx.give_feedback(this);
+         return true;
+      }
       return false;
    }
 

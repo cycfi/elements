@@ -50,7 +50,7 @@ namespace cycfi { namespace elements
       return xside_margin({ 20, 20 }, align_left(label(text)));
    }
 
-   inline auto menu_item_text(std::string_view text, shortcut_key_info shortcut)
+   inline auto menu_item_text(std::string_view text, shortcut_key shortcut)
    {
       return xside_margin({ 20, 20 },
          htile(
@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
       return basic_menu_item(menu_item_text(text));
    }
 
-   inline auto menu_item(std::string_view text, shortcut_key_info shortcut)
+   inline auto menu_item(std::string_view text, shortcut_key shortcut)
    {
       auto r = basic_menu_item(menu_item_text(text, shortcut));
       r.shortcut = shortcut;

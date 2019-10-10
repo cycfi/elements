@@ -73,7 +73,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Items
    ////////////////////////////////////////////////////////////////////////////
-   struct shortcut_key_info
+   struct shortcut_key
    {
       key_code    key = key_code::unknown;
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)
@@ -93,7 +93,7 @@ namespace cycfi { namespace elements
       virtual bool            is_control() const;
 
       menu_item_function      on_click;
-      shortcut_key_info       shortcut;
+      shortcut_key            shortcut;
    };
 
    template <typename Subject>

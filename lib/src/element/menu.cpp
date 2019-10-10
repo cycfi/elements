@@ -165,6 +165,14 @@ namespace cycfi { namespace elements
       return result? result : proxy_result;
    }
 
+   bool basic_menu_item_element::key(context const& ctx, key_info k)
+   {
+      // Simulate a click when we get a shortcut key
+      if (on_click && k.key == shortcut.key && k.modifiers == shortcut.modifiers)
+         on_click();
+      return false;
+   }
+
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       bool hit = ctx.bounds.includes(p);

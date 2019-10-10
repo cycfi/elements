@@ -193,7 +193,6 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
-      // Simulate a click when we get a matching shortcut key
       if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
       {
          if (on_click)

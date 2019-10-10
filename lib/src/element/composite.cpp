@@ -136,16 +136,16 @@ namespace cycfi { namespace elements
          if (focus_.key(ectx, k))
             return true;
       }
-      else
+
+      // If we reached here, then there's either no focus, or the
+      // focus did not handle the key press.
+      for (std::size_t ix = 0; ix < size(); ++ix)
       {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-         {
-            rect bounds = bounds_of(ctx, ix);
-            auto& e = at(ix);
-            context ectx{ ctx, &e, bounds };
-            if (e.key(ectx, k))
-               return true;
-         }
+         rect bounds = bounds_of(ctx, ix);
+         auto& e = at(ix);
+         context ectx{ ctx, &e, bounds };
+         if (e.key(ectx, k))
+            return true;
       }
 
       if (k.key == key_code::tab && size())

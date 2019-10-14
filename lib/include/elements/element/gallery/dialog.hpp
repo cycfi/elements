@@ -24,12 +24,12 @@ namespace cycfi { namespace elements
    template <typename Content>
    inline auto dialog0(
       Content&& content
-    , extent size = get_theme().message_box_size
+    , float width = get_theme().dialog_width
    )
    {
       auto popup = share(
          align_center_middle(
-            fixed_size(size,
+            hsize(width,
             layer(
                std::forward<Content>(content),
                panel{}
@@ -45,14 +45,14 @@ namespace cycfi { namespace elements
    inline auto dialog1(
       Content&& content
     , char const* ok_text = "OK"
-    , extent size = get_theme().message_box_size
+    , float width = get_theme().dialog_width
     , color ok_color = get_theme().indicator_color
    )
    {
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size,
+            hsize(width,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
       Content&& content
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
-    , extent size = get_theme().message_box_size
+    , float width = get_theme().dialog_width
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size,
+            hsize(width,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(

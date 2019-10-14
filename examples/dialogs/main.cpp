@@ -23,14 +23,15 @@ auto dialog_content()
    check_box3.value(true);
 
    return
-      group("The Thraxian Legacy",
-         margin({ 10, 35, 20, 20 },
+      simple_heading(
+         margin({ 10, 10, 10, 10 },
             vtile(
                top_margin(10, align_left(check_box1)),
                top_margin(10, align_left(check_box2)),
                top_margin(10, align_left(check_box3))
             )
          ),
+         "The Thraxian Legacy",
          1.1
       );
 }

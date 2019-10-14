@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    inline auto message_box0(
       char const* message
     , std::uint32_t icon_id
-    , float width = get_theme().message_box_width
+    , extent size = get_theme().message_box_size
    )
    {
       auto textbox = static_text_box{ message };
@@ -27,7 +27,7 @@ namespace cycfi { namespace elements
             align_top(icon{ icon_id, 2.5 }),
             left_margin(20, std::move(textbox))
          )),
-         width
+         size
       );
    }
 
@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
       char const* message
     , std::uint32_t icon_id
     , char const* ok_text = "OK"
-    , float width = get_theme().message_box_width
+    , extent size = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -49,7 +49,7 @@ namespace cycfi { namespace elements
             left_margin(20, std::move(textbox))
          ),
          ok_text,
-         width,
+         size,
          ok_color
       );
    }
@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
     , std::uint32_t icon_id
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
-    , float width = get_theme().message_box_width
+    , extent size = get_theme().message_box_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
          ),
          cancel_text,
          ok_text,
-         width,
+         size,
          ok_color
       );
    }

@@ -14,8 +14,18 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Caption
+   // Captions
    ////////////////////////////////////////////////////////////////////////////
+   template <typename Content>
+   inline auto simple_heading(Content&& content, std::string const& title, float size = 1.0)
+   {
+      return
+         vtile(
+            align_center(top_margin(5.0, heading(title, size))),
+            std::forward<Content>(content)
+         );
+   }
+
    template <typename Content>
    inline auto caption(Content&& content, std::string const& title, float size = 1.0)
    {
@@ -32,6 +42,16 @@ namespace cycfi { namespace elements
       return
          htile(
             align_middle(right_margin(10.0, label(title, size))),
+            std::forward<Content>(content)
+         );
+   }
+
+   template <typename Content>
+   inline auto top_caption(Content&& content, std::string const& title, float size = 1.0)
+   {
+      return
+         vtile(
+            align_center(top_margin(5.0, label(title, size))),
             std::forward<Content>(content)
          );
    }

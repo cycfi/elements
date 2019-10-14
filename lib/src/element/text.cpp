@@ -613,8 +613,8 @@ namespace cycfi { namespace elements
          // Check if p is within this row
          if ((p.y >= y) && (p.y < y + line_height))
          {
-            // Check if we are at the very start of the row
-            if (p.x == x)
+            // Check if we are at the very start of the row or beyond
+            if (p.x <= x)
             {
                found = row.begin();
                break;

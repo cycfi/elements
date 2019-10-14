@@ -24,7 +24,7 @@ auto make_message()
 }
 
 // A Choice Popup
-void make_choice(view& view_, app& _app)
+void make_choice(view& _view, app& _app)
 {
    char const* choice_text =
       "Our conversations with other lifeforms have led to a "
@@ -35,31 +35,33 @@ void make_choice(view& view_, app& _app)
 
    auto [cancel_button, ok_button, popup]
       = message_box2(choice_text, icons::question);
-   view_.add(popup);
+   _view.add(popup);
 
    auto&& dismiss =
-      [&view_, &_app, p = get(popup)]()
+      [&_view, &_app, p = get(popup)]()
       {
          if (auto popup = p.lock())
-            view_.remove(popup);
+            _view.remove(popup);
          _app.stop();
       };
 
    ok_button->on_click =
       [dismiss](bool)
       {
+          // Do something when the OK button is clicked
          dismiss();
       };
 
    cancel_button->on_click =
       [dismiss](bool)
       {
+          // Do something when the Cancel button is clicked
          dismiss();
       };
 }
 
 // An Alert Popup
-void make_alert(view& view_, app& _app)
+void make_alert(view& _view, app& _app)
 {
    char const* alert_text =
       "We are being called to explore the cosmos itself as an "
@@ -68,16 +70,18 @@ void make_alert(view& view_, app& _app)
       ;
 
    auto [ok_button, popup] = message_box1(alert_text, icons::attention);
-   view_.add(popup);
+   _view.add(popup);
 
    ok_button->on_click =
-      [&view_, &_app, p = get(popup)](bool)
+      [&_view, &_app, p = get(popup)](bool)
       {
+          // Do something when the OK button is clicked
+
          if (auto popup = p.lock())
-            view_.remove(popup);
+            _view.remove(popup);
 
          // Now let's make a choice.
-         make_choice(view_, _app);
+         make_choice(_view, _app);
       };
 }
 
@@ -87,27 +91,27 @@ int main(int argc, const char* argv[])
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
-   view view_(_win);
+   view _view(_win);
    auto msg_box = make_message();
 
-   view_.content(
+   _view.content(
       {
          msg_box,
          share(background)
       }
    );
 
-   view_.post(2s,
-      [&view_, msg_box]
+   _view.post(2s,
+              [&_view, msg_box]
       {
-         view_.remove(msg_box);
+         _view.remove(msg_box);
       }
    );
 
-   view_.post(3s,
-      [&view_, &_app]
+   _view.post(3s,
+              [&_view, &_app]
       {
-         make_alert(view_, _app);
+         make_alert(_view, _app);
       }
    );
 

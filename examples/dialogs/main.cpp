@@ -12,14 +12,58 @@ using namespace std::chrono_literals;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-auto make_message()
+auto dialog_content()
 {
-   char const* msg = "Patience... Wait for it...\n\n"
-      "The nexus is overflowing with supercharged waveforms. "
-      "Awareness is a constant. "
-      ;
+   auto  check_box1 = check_box("Alpha Stone");
+   auto  check_box2 = check_box("The Zorane Gambit");
+   auto  check_box3 = check_box("Cael Vosburgh's Exploration");
 
-   return message_box0(msg, icons::hand, { 400, 150 });
+   check_box1.value(true);
+   check_box2.value(true);
+   check_box3.value(true);
+
+   return
+      margin({ 10, 10, 20, 20 },
+         group("The Thraxian Legacy",
+            margin({ 10, 35, 20, 20 },
+               vtile(
+                  top_margin(10, align_left(check_box1)),
+                  top_margin(10, align_left(check_box2)),
+                  top_margin(10, align_left(check_box3))
+               )
+            )
+         )
+      );
+}
+
+auto make_dialog(view& _view, app& _app)
+{
+   auto [cancel_button, ok_button, popup]
+      = dialog2(dialog_content(), "Cancel", "OK", { 400, 240 });
+
+   auto&& dismiss =
+      [&_view, &_app, p = get(popup)]()
+      {
+         if (auto popup = p.lock())
+            _view.remove(popup);
+         _app.stop();
+      };
+
+   ok_button->on_click =
+      [dismiss](bool)
+      {
+         // Do something when the OK button is clicked
+         dismiss();
+      };
+
+   cancel_button->on_click =
+      [dismiss](bool)
+      {
+         // Do something when the Cancel button is clicked
+         dismiss();
+      };
+
+   return popup;
 }
 
 int main(int argc, const char* argv[])
@@ -28,12 +72,12 @@ int main(int argc, const char* argv[])
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
-   view view_(_win);
-   auto msg_box = make_message();
+   view _view(_win);
+   auto dialog = make_dialog(_view, _app);
 
-   view_.content(
+   _view.content(
       {
-         msg_box,
+         dialog,
          share(background)
       }
    );

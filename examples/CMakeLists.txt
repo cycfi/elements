@@ -13,5 +13,6 @@ add_subdirectory(sprite_sliders_and_knobs)
 add_subdirectory(text_edit)
 add_subdirectory(layout)
 add_subdirectory(popups)
+add_subdirectory(dialogs)
 
 

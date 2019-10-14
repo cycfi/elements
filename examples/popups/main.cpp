@@ -20,7 +20,7 @@ auto make_message()
       "Awareness is a constant. "
       ;
 
-   return message_box0(msg, icons::hand, { 400, 150 });
+   return message_box0(msg, icons::hand, { 400, 140 });
 }
 
 // A Choice Popup

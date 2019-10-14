@@ -59,7 +59,7 @@ namespace cycfi { namespace elements
       color                minor_grid_color           = indicator_color;
       float                minor_grid_width           = 0.4;
 
-      extent               message_box_size           = { 400, 180 };
+      extent               message_box_size           = { 400, 190 };
    };
 
    // Access to the global theme

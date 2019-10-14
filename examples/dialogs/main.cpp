@@ -23,23 +23,22 @@ auto dialog_content()
    check_box3.value(true);
 
    return
-      margin({ 10, 10, 20, 20 },
-         group("The Thraxian Legacy",
-            margin({ 10, 35, 20, 20 },
-               vtile(
-                  top_margin(10, align_left(check_box1)),
-                  top_margin(10, align_left(check_box2)),
-                  top_margin(10, align_left(check_box3))
-               )
+      group("The Thraxian Legacy",
+         margin({ 10, 35, 20, 20 },
+            vtile(
+               top_margin(10, align_left(check_box1)),
+               top_margin(10, align_left(check_box2)),
+               top_margin(10, align_left(check_box3))
             )
-         )
+         ),
+         1.1
       );
 }
 
 auto make_dialog(view& _view, app& _app)
 {
    auto [cancel_button, ok_button, popup]
-      = dialog2(dialog_content(), "Cancel", "OK", { 400, 240 });
+      = dialog2(dialog_content(), "Cancel", "OK", { 400, 230 });
 
    auto&& dismiss =
       [&_view, &_app, p = get(popup)]()

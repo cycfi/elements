@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
-                     std::forward<Content>(content),
+                     bottom_margin(20, std::forward<Content>(content)),
                      align_right(hsize(100, hold(ok_button)))
                   )
                ),
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
-                     std::forward<Content>(content),
+                     bottom_margin(20, std::forward<Content>(content)),
                      align_right(
                         htile(
                            hsize(100, hold(cancel_button)),

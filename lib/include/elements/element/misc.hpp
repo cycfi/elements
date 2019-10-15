@@ -89,7 +89,15 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual void draw(context const& ctx);
+                     panel(float opacity_ = get_theme().panel_color.alpha)
+                      : _opacity(opacity_)
+                     {}
+
+      virtual void   draw(context const& ctx);
+
+   private:
+
+      float          _opacity;
    };
 
    ////////////////////////////////////////////////////////////////////////////

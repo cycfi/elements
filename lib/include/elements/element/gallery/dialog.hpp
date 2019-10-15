@@ -24,16 +24,14 @@ namespace cycfi { namespace elements
    template <typename Content>
    inline auto dialog0(
       Content&& content
-    , extent size = get_theme().dialog_size
    )
    {
       auto popup = share(
          align_center_middle(
-            fixed_size(size,
             layer(
                std::forward<Content>(content),
-               panel{}
-         ))));
+               panel{ /* opacity */0.98 }
+         )));
 
       return popup;
    }
@@ -45,14 +43,12 @@ namespace cycfi { namespace elements
    inline auto dialog1(
       Content&& content
     , char const* ok_text = "OK"
-    , extent size = get_theme().dialog_size
     , color ok_color = get_theme().indicator_color
    )
    {
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
@@ -60,8 +56,8 @@ namespace cycfi { namespace elements
                      align_right(hsize(100, hold(ok_button)))
                   )
                ),
-               panel{}
-         )))));
+               panel{ /* opacity */0.98 }
+         ))));
 
       popup->on_key =
          [ok_ = get(ok_button)](auto k)
@@ -86,7 +82,6 @@ namespace cycfi { namespace elements
       Content&& content
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
-    , extent size = get_theme().dialog_size
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -94,7 +89,6 @@ namespace cycfi { namespace elements
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
-            fixed_size(size,
             layer(
                margin({ 20, 20, 20, 20 },
                   vtile(
@@ -107,8 +101,8 @@ namespace cycfi { namespace elements
                      )
                   )
                ),
-               panel{}
-         )))));
+               panel{ /* opacity */0.98 }
+         ))));
 
       popup->on_key =
          [ok_ = get(ok_button), cancel_ = get(cancel_button)](auto k)

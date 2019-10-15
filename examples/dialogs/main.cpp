@@ -23,7 +23,7 @@ auto dialog_content()
    check_box3.value(true);
 
    return
-      simple_heading(
+      hsize(300, simple_heading(
          margin({ 10, 10, 10, 10 },
             vtile(
                top_margin(10, align_left(check_box1)),
@@ -33,13 +33,13 @@ auto dialog_content()
          ),
          "The Thraxian Legacy",
          1.1
-      );
+      ));
 }
 
 auto make_dialog(view& _view, app& _app)
 {
    auto [cancel_button, ok_button, popup]
-      = dialog2(dialog_content(), "Cancel", "OK", { 400, 230 });
+      = dialog2(dialog_content());
 
    auto&& dismiss =
       [&_view, &_app, p = get(popup)]()

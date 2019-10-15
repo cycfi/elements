@@ -16,7 +16,12 @@ namespace cycfi { namespace elements
 
    void panel::draw(context const& ctx)
    {
-      draw_panel(ctx.canvas, ctx.bounds, get_theme().panel_color, 4.0);
+      draw_panel(
+         ctx.canvas
+       , ctx.bounds
+       , get_theme().panel_color.opacity(_opacity)
+       , 4.0
+      );
    }
 
    void frame::draw(context const& ctx)

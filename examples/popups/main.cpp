@@ -20,7 +20,7 @@ auto make_message()
       "Awareness is a constant. "
       ;
 
-   return message_box0(msg, icons::hand, { 400, 140 });
+   return message_box0(msg, icons::hand);
 }
 
 // A Choice Popup
@@ -102,14 +102,14 @@ int main(int argc, const char* argv[])
    );
 
    _view.post(2s,
-              [&_view, msg_box]
+      [&_view, msg_box]
       {
          _view.remove(msg_box);
       }
    );
 
    _view.post(3s,
-              [&_view, &_app]
+      [&_view, &_app]
       {
          make_alert(_view, _app);
       }

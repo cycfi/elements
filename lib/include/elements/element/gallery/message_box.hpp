@@ -18,16 +18,15 @@ namespace cycfi { namespace elements
    inline auto message_box0(
       char const* message
     , std::uint32_t icon_id
-    , extent size = get_theme().message_box_size
+    , extent text_box_size = get_theme().message_textbox_size
    )
    {
-      auto textbox = static_text_box{ message };
+      auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog0(
          margin({ 20, 20, 20, 20 }, htile(
             align_top(icon{ icon_id, 2.5 }),
             left_margin(20, std::move(textbox))
-         )),
-         size
+         ))
       );
    }
 
@@ -38,18 +37,17 @@ namespace cycfi { namespace elements
       char const* message
     , std::uint32_t icon_id
     , char const* ok_text = "OK"
-    , extent size = get_theme().message_box_size
+    , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto textbox = static_text_box{ message };
+      auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog1(
          htile(
             align_top(icon{ icon_id, 2.5 }),
             left_margin(20, std::move(textbox))
          ),
          ok_text,
-         size,
          ok_color
       );
    }
@@ -62,11 +60,11 @@ namespace cycfi { namespace elements
     , std::uint32_t icon_id
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
-    , extent size = get_theme().message_box_size
+    , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto textbox = static_text_box{ message };
+      auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog2(
          htile(
             align_top(icon{ icon_id, 2.5 }),
@@ -74,7 +72,6 @@ namespace cycfi { namespace elements
          ),
          cancel_text,
          ok_text,
-         size,
          ok_color
       );
    }

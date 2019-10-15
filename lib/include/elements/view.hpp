@@ -109,6 +109,32 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+
+   // dismiss returns a function for dismissing an added element, typically
+   // this is attached to a button's on_click function for closing the
+   // element added in the view's content list.
+   inline auto dismiss(view& _view, element_ptr e)
+   {
+      return [&_view, p = get(e)](bool)
+      {
+         if (auto e = p.lock())
+            _view.remove(e);
+      };
+   }
+
+   // Like above, but with a supplied function, f, that can be called when
+   // the element is dismissed.
+   template <typename F>
+   inline auto dismiss(view& _view, element_ptr e, F&& f)
+   {
+      return [&_view, p = get(e), f](bool)
+      {
+         if (auto e = p.lock())
+            _view.remove(e);
+         f();
+      };
+   }
+
    inline rect view::dirty() const
    {
       return _dirty;

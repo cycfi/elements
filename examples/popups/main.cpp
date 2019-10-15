@@ -37,27 +37,17 @@ void make_choice(view& _view, app& _app)
       = message_box2(choice_text, icons::question);
    _view.add(popup);
 
-   auto&& dismiss =
-      [&_view, &_app, p = get(popup)]()
-      {
-         if (auto popup = p.lock())
-            _view.remove(popup);
-         _app.stop();
-      };
-
-   ok_button->on_click =
-      [dismiss](bool)
-      {
-          // Do something when the OK button is clicked
-         dismiss();
-      };
-
-   cancel_button->on_click =
-      [dismiss](bool)
-      {
-          // Do something when the Cancel button is clicked
-         dismiss();
-      };
+   // We simply dismiss the popup and stop the app
+   // when either the OK or Cancel button is pressed.
+   // Normally, you'd want to hanbdle these separately.
+   cancel_button->on_click = ok_button->on_click =
+      dismiss(_view, popup,
+         [&_app]()
+         {
+            // Do something when the button is clicked
+            _app.stop();
+         }
+      );
 }
 
 // An Alert Popup
@@ -73,16 +63,13 @@ void make_alert(view& _view, app& _app)
    _view.add(popup);
 
    ok_button->on_click =
-      [&_view, &_app, p = get(popup)](bool)
-      {
-          // Do something when the OK button is clicked
-
-         if (auto popup = p.lock())
-            _view.remove(popup);
-
-         // Now let's make a choice.
-         make_choice(_view, _app);
-      };
+      dismiss(_view, popup,
+         [&_app, &_view]()
+         {
+            // When the OK button is clicked, let's make a choice.
+            make_choice(_view, _app);
+         }
+      );
 }
 
 int main(int argc, const char* argv[])

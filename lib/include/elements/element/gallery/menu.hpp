@@ -37,9 +37,18 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Background
    ////////////////////////////////////////////////////////////////////////////
-   struct menu_background : element
+   class menu_background : public element
    {
-      virtual void            draw(context const& ctx);
+   public:
+                        menu_background(float opacity_ = 0.8)
+                         : _opacity(opacity_)
+                        {}
+
+      virtual void      draw(context const& ctx);
+
+   private:
+
+      float             _opacity;
    };
 
    ////////////////////////////////////////////////////////////////////////////

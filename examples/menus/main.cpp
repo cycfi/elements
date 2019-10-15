@@ -53,7 +53,7 @@ auto make_popup_menu(char const* title, menu_position pos)
             menu_item("Dark Beta Quarks"),
             menu_item("Cosmic Infrared Shift")
          ),
-         menu_background{}
+         panel{}
       );
 
    popup.menu(menu);
@@ -106,7 +106,7 @@ auto make_dynamic_menu(char const* title, menu_position pos)
          auto menu =
             layer(
                vsize(150, vscroller(list)),
-               menu_background{}
+               panel{}
             );
 
          // Install the menu

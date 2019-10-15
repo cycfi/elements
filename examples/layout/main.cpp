@@ -225,7 +225,7 @@ auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3, MenuItem
    auto menu =
       layer(
          vtile(link(item1), link(item2), link(item3), link(item4)),
-         menu_background{}
+         panel{}
       );
 
    popup.menu(std::move(menu));

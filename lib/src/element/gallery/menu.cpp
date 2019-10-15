@@ -38,36 +38,6 @@ namespace cycfi { namespace elements
       return std::move(menu);
    }
 
-   namespace
-   {
-      void draw_menu_background(cairo_t& _context, rect bounds, float radius)
-      {
-         auto x = bounds.left;
-         auto y = bounds.top;
-         auto r = bounds.right;
-         auto b = bounds.bottom;
-         auto const a = M_PI/180.0;
-
-         cairo_new_sub_path(&_context);
-         cairo_move_to(&_context, r, y);
-         cairo_arc(&_context, r-radius, b-radius, radius, 0*a, 90*a);
-         cairo_arc(&_context, x+radius, b-radius, radius, 90*a, 180*a);
-         cairo_line_to(&_context, x, y);
-         cairo_close_path(&_context);
-      }
-   }
-
-   void menu_background::draw(context const& ctx)
-   {
-      auto&       canvas_ = ctx.canvas;
-      auto const& bounds = ctx.bounds;
-
-      canvas_.begin_path();
-      draw_menu_background(canvas_.cairo_context(), bounds, 5);
-      canvas_.fill_style(get_theme().panel_color.opacity(_opacity));
-      canvas_.fill();
-   }
-
    view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
    {
       auto height = get_theme().label_font_size;
@@ -131,7 +101,7 @@ namespace cycfi { namespace elements
             list.push_back(share(e));
          }
 
-         auto menu = layer(list, menu_background{});
+         auto menu = layer(list, panel{});
          r.first.menu(menu);
       }
 

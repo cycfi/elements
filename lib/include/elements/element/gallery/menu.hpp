@@ -37,19 +37,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Background
    ////////////////////////////////////////////////////////////////////////////
-   class menu_background : public element
-   {
-   public:
-                        menu_background(float opacity_ = 0.8)
-                         : _opacity(opacity_)
-                        {}
-
-      virtual void      draw(context const& ctx);
-
-   private:
-
-      float             _opacity;
-   };
+   using menu_background = panel; // We'll just use the panel now
 
    ////////////////////////////////////////////////////////////////////////////
    // Menu Items

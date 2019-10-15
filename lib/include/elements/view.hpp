@@ -139,6 +139,9 @@ namespace cycfi { namespace elements
       // We'll defer this call just to be safe, to give the trigger that
       // initiated this call (e.g. button on_click) a chance to return.
 
+      if (_content.empty() || _content.back() == e)
+         return;
+
       io().post(
          [e, this]
          {

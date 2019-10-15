@@ -102,8 +102,10 @@ namespace cycfi { namespace elements
 
    bool basic_menu::key(context const& ctx, key_info k)
    {
-      if (_popup &&
-         (k.key == key_code::escape || k.key == key_code::enter))
+      if (!_popup)
+         return false;
+
+      if (k.key == key_code::escape || k.key == key_code::enter)
       {
          if (k.key == key_code::enter)
          {

@@ -497,16 +497,19 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx);
       };
 
-      if (!proxy_base::key(ctx, k))
+      bool handled = proxy_base::key(ctx, k);
+      if (!handled)
       {
          switch (k.key)
          {
             case key_code::home:
                valign_(0);
+               handled = true;
                break;
 
             case key_code::end:
                valign_(1);
+               handled = true;
                break;
 
             case key_code::page_up:
@@ -521,6 +524,7 @@ namespace cycfi { namespace elements
                   double page = b.height() / sb.vscroll_bounds.height();
                   valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
                }
+               handled = true;
                break;
             }
 
@@ -528,6 +532,6 @@ namespace cycfi { namespace elements
                 break;
          }
       }
-      return false;
+      return handled;
    }
 }}

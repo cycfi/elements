@@ -455,6 +455,10 @@
          state == tracking::while_tracking)
          state = tracking::begin_tracking;
 
+      if (state == tracking::while_tracking &&
+         _tracking_element && _tracking_element != &e)
+         on_tracking(*_tracking_element, tracking::end_tracking);
+
       _tracking_element = &e;
       _tracking_state = state;
       _tracking_time = std::chrono::steady_clock::now();

@@ -19,7 +19,7 @@ namespace cycfi { namespace elements
    {
       bool hit = false;
       auto ff = ctx.feedback(
-         [&hit](auto* e)
+         [&hit](auto* e, std::string_view what)
          {
             if (dynamic_cast<basic_menu_item_element*>(e))
                hit = true;

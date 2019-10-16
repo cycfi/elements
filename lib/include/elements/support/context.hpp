@@ -10,6 +10,7 @@
 #include <elements/support/rect.hpp>
 #include <cairo.h>
 #include <functional>
+#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -57,7 +58,7 @@ namespace cycfi { namespace elements
       context(context const&) = default;
       context& operator=(context const&) = default;
 
-      using feedback_function = std::function<void(elements::element*)>;
+      using feedback_function = std::function<void(elements::element*, std::string_view what)>;
 
       template <typename F>
       feedback_function feedback(F&& f) const
@@ -67,12 +68,12 @@ namespace cycfi { namespace elements
          return save;
       }
 
-      void give_feedback(elements::element* e) const
+      void give_feedback(elements::element* e, char const* what) const
       {
          if (_feedback)
-            _feedback(e);
+            _feedback(e, what);
          if (parent)
-            parent->give_feedback(e);
+            parent->give_feedback(e, what);
       }
 
       elements::element*            element;

@@ -129,8 +129,8 @@ namespace cycfi { namespace elements
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
 
       bool hit = false;
-      auto ff = new_ctx.feedback(
-         [&hit](auto* e)
+      new_ctx.feedback(
+         [&hit](auto* e, std::string_view what)
          {
             if (dynamic_cast<basic_menu_item_element*>(e))
                hit = true;
@@ -186,7 +186,7 @@ namespace cycfi { namespace elements
       {
          if (on_click)
             on_click();
-         ctx.give_feedback(this);
+         ctx.give_feedback(this, "click");
          result = this;
       }
       element* proxy_result = proxy_base::click(ctx, btn);
@@ -199,7 +199,7 @@ namespace cycfi { namespace elements
       {
          if (on_click)
             on_click();
-         ctx.give_feedback(this);
+         ctx.give_feedback(this, "key");
          return true;
       }
       return false;

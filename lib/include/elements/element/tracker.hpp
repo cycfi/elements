@@ -57,6 +57,7 @@ namespace cycfi { namespace elements
       virtual void         begin_tracking(context const& ctx, info& track_info) = 0;
       virtual void         keep_tracking(context const& ctx, info& track_info) = 0;
       virtual void         end_tracking(context const& ctx, info& track_info) = 0;
+      void                 track_scroll(context const& ctx, point dir, point p);
 
    private:
 
@@ -86,10 +87,12 @@ namespace cycfi { namespace elements
       if (btn.down)
       {
          state = new_state(ctx, btn.pos);
+         this->on_begin_tracking(ctx);
          begin_tracking(ctx, *state);
       }
       else if (state)
       {
+         this->on_end_tracking(ctx);
          end_tracking(ctx, *state);
          state.reset();
       }
@@ -115,6 +118,11 @@ namespace cycfi { namespace elements
    inline bool tracker<Base>::is_control() const
    {
       return true;
+   }
+
+   template <typename Base>
+   inline void tracker<Base>::track_scroll(context const& ctx, point dir, point p)
+   {
    }
 }}
 

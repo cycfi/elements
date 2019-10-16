@@ -83,6 +83,7 @@ namespace cycfi { namespace elements
 
    bool dial_base::scroll(context const& ctx, point dir, point p)
    {
+      track_scroll(ctx, dir, p);
       edit_value(this, value() + dir.y * 0.005);
       ctx.view.refresh(ctx);
       return true;

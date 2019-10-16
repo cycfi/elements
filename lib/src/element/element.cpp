@@ -105,4 +105,14 @@ namespace cycfi { namespace elements
    void element::value(std::string val)
    {
    }
+
+   void element::on_begin_tracking(context const& ctx)
+   {
+      ctx.view.on_tracking(*this, view::begin_tracking);
+   }
+
+   void element::on_end_tracking(context const& ctx)
+   {
+      ctx.view.on_tracking(*this, view::end_tracking);
+   }
 }}

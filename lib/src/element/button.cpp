@@ -14,8 +14,18 @@ namespace cycfi { namespace elements
    {
       if (!ctx.bounds.includes(btn.pos))
          return nullptr;
-      if (!btn.down && on_click)
-         on_click(true);
+
+      if (btn.down)
+      {
+         on_begin_tracking(ctx);
+      }
+      else
+      {
+         on_end_tracking(ctx);
+         if (on_click)
+            on_click(true);
+      }
+
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return this;
@@ -69,7 +79,7 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
-   ////////////////////////////////////////////////////////////////////////////   element* basic_latching_button::click(context const& ctx, mouse_button btn)
+   ////////////////////////////////////////////////////////////////////////////
    element* layered_button::hit_test(context const& ctx, point p)
    {
       if (ctx.bounds.includes(p))
@@ -81,8 +91,18 @@ namespace cycfi { namespace elements
    {
       if (!ctx.bounds.includes(btn.pos))
          return 0;
-      if (!btn.down && on_click)
-         on_click(true);
+
+      if (btn.down)
+      {
+         on_begin_tracking(ctx);
+      }
+      else
+      {
+         on_end_tracking(ctx);
+         if (on_click)
+            on_click(true);
+      }
+
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return this;

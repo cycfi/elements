@@ -86,6 +86,11 @@ namespace cycfi { namespace elements
                            template <typename F>
       void                 post(F f);
 
+      enum tracking { begin_tracking, end_tracking };
+
+      using track_function = std::function<void(element& e, tracking state)>;
+      track_function on_tracking = [](element& e, tracking state) {};
+
    private:
 
       layer_composite      _content;

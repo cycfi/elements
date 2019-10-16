@@ -70,6 +70,11 @@ namespace cycfi { namespace elements
       virtual void            value(int val);
       virtual void            value(double val);
       virtual void            value(std::string val);
+
+   protected:
+
+      void                    on_begin_tracking(context const& ctx);
+      void                    on_end_tracking(context const& ctx);
    };
 
    ////////////////////////////////////////////////////////////////////////////

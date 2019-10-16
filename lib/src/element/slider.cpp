@@ -70,6 +70,7 @@ namespace cycfi { namespace elements
       clamp(new_value, 0.0, 1.0);
       if (value() != new_value)
       {
+         track_scroll(ctx, dir, p);
          edit_value(new_value);
          ctx.view.refresh(ctx);
          return true;

@@ -91,6 +91,8 @@ namespace cycfi { namespace elements
       using track_function = std::function<void(element& e, tracking state)>;
       track_function on_tracking = [](element& e, tracking state) {};
 
+      void                 manage_on_tracking(element& e, tracking state);
+
    private:
 
       layer_composite      _content;
@@ -109,6 +111,11 @@ namespace cycfi { namespace elements
 
       io_context           _io;
       io_context::work     _work;
+
+      using time_point = std::chrono::steady_clock::time_point;
+      element*             _tracking_element = nullptr;
+      tracking             _tracking_state = tracking::none;
+      time_point           _tracking_time;
    };
 
    ////////////////////////////////////////////////////////////////////////////

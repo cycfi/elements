@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
       virtual void            value(double val);
       virtual void            value(std::string val);
 
-      enum tracking { begin_tracking, while_tracking, end_tracking };
+      enum tracking { none, begin_tracking, while_tracking, end_tracking };
 
    protected:
 

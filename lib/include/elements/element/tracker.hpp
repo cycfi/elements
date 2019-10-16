@@ -124,6 +124,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline void tracker<Base>::track_scroll(context const& ctx, point dir, point p)
    {
+      this->on_tracking(ctx, element::while_tracking);
    }
 }}
 

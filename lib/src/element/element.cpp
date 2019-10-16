@@ -106,8 +106,8 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::on_tracking(context const& ctx, view::tracking state)
+   void element::on_tracking(context const& ctx, tracking state)
    {
-      ctx.view.on_tracking(*this, state);
+      ctx.view.manage_on_tracking(*this, state);
    }
 }}

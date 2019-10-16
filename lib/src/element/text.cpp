@@ -906,9 +906,8 @@ namespace cycfi { namespace elements
                { ctx.bounds.left, ctx.bounds.top + size.ascent }
               , _placeholder.c_str()
             );
-
-            draw_caret(ctx);
          }
+         draw_caret(ctx);
       }
       else
       {

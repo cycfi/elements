@@ -109,32 +109,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-
-   // dismiss returns a function for dismissing an added element, typically
-   // this is attached to a button's on_click function for closing the
-   // element added in the view's content list.
-   inline auto dismiss(view& _view, element_ptr e)
-   {
-      return [&_view, p = get(e)](bool)
-      {
-         if (auto e = p.lock())
-            _view.remove(e);
-      };
-   }
-
-   // Like above, but with a supplied function, f, that can be called when
-   // the element is dismissed.
-   template <typename F>
-   inline auto dismiss(view& _view, element_ptr e, F&& f)
-   {
-      return [&_view, p = get(e), f](bool)
-      {
-         if (auto e = p.lock())
-            _view.remove(e);
-         f();
-      };
-   }
-
    inline rect view::dirty() const
    {
       return _dirty;
@@ -164,18 +138,20 @@ namespace cycfi { namespace elements
    {
       // We'll defer this call just to be safe, to give the trigger that
       // initiated this call (e.g. button on_click) a chance to return.
+      if (e)
+      {
+         if (_content.empty()
+            || std::find(_content.begin(), _content.end(), e) != _content.end())
+            return;
 
-      if (_content.empty()
-         || std::find(_content.begin(), _content.end(), e) != _content.end())
-         return;
-
-      io().post(
-         [e, this]
-         {
-            _content.push_back(e);
-            layout(*e);
-         }
-      );
+         io().post(
+            [e, this]
+            {
+               _content.push_back(e);
+               layout(*e);
+            }
+         );
+      }
    }
 
    inline void view::remove(element_ptr e)
@@ -184,20 +160,22 @@ namespace cycfi { namespace elements
       // because we need to retain the trigger that initiated this call (e.g.
       // button on_click), otherwise there's nothing to return to. So, we
       // post a function that is called at idle time.
-
-      io().post(
-         [e, this]
-         {
-            auto i = std::find(_content.begin(), _content.end(), e);
-            if (i != _content.end())
+      if (e)
+      {
+         io().post(
+            [e, this]
             {
-               refresh(*e);
-               _content.erase(i);
-               _content.reset();
-               layout();
+               auto i = std::find(_content.begin(), _content.end(), e);
+               if (i != _content.end())
+               {
+                  refresh(*e);
+                  _content.erase(i);
+                  _content.reset();
+                  layout();
+               }
             }
-         }
-      );
+         );
+      }
    }
 
    inline view_limits view::limits() const

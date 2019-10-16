@@ -38,22 +38,27 @@ auto dialog_content()
 
 auto make_dialog(view& _view, app& _app)
 {
-   auto [cancel_button, ok_button, popup]
+   auto [cancel_button, ok_button, dialog]
       = dialog2(dialog_content());
 
    // We simply dismiss the dialog and stop the app
-   // when either the OK or Cancel button is pressed.
-   // Normally, you'd want to hanbdle these separately.
-   cancel_button->on_click = ok_button->on_click =
-      dismiss(_view, popup,
-         [&_app]()
-         {
-            // Do something when the button is clicked
-            _app.stop();
-         }
-      );
+   // when the OK button is pressed.
+   //    Note: we "get" a weak pointer to the dialog
+   //    so we will not create cycles between the dialog
+   //    and its OK button.
+   ok_button->on_click =
+      [&_app, &_view, eptr = get(dialog)](bool)
+      {
+         // Do something when the button is clicked:
+         _view.remove(eptr.lock());    // Close the dialog
+         _app.stop();                  // Stop the app
+      };
 
-   return popup;
+   // Normally, you'd want to handle these separately.
+   // Here we do the same for both the OK and Cancel buttons.
+   cancel_button->on_click = ok_button->on_click;
+
+   return dialog;
 }
 
 int main(int argc, const char* argv[])
@@ -63,11 +68,10 @@ int main(int argc, const char* argv[])
    _win.on_close = [&_app]() { _app.stop(); };
 
    view _view(_win);
-   auto dialog = make_dialog(_view, _app);
 
    _view.content(
       {
-         dialog,
+         make_dialog(_view, _app),
          share(background)
       }
    );

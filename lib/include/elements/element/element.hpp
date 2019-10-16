@@ -75,6 +75,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    using element_ptr = std::shared_ptr<element>;
    using element_const_ptr = std::shared_ptr<element const>;
+   using weak_element_ptr = std::weak_ptr<element>;
+   using weak_element_const_ptr = std::weak_ptr<element const>;
 
    template <typename Element>
    inline auto share(Element&& e)

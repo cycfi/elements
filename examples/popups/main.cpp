@@ -37,17 +37,22 @@ void make_choice(view& _view, app& _app)
       = message_box2(choice_text, icons::question);
    _view.add(popup);
 
-   // We simply dismiss the popup and stop the app
-   // when either the OK or Cancel button is pressed.
-   // Normally, you'd want to hanbdle these separately.
-   cancel_button->on_click = ok_button->on_click =
-      dismiss(_view, popup,
-         [&_app]()
-         {
-            // Do something when the button is clicked
-            _app.stop();
-         }
-      );
+   // We simply dismiss the dialog and stop the app
+   // when the OK button is pressed.
+   //    Note: we "get" a weak pointer to the popup
+   //    so we will not create cycles between the popup
+   //    and its OK button.
+   ok_button->on_click =
+      [&_app, &_view, eptr = get(popup)](bool)
+      {
+         // Do something when the button is clicked:
+         _view.remove(eptr.lock()); // Close the popup
+         _app.stop();               // Stop the app
+      };
+
+   // Normally, you'd want to handle these separately.
+   // Here we do the same for both the OK and Cancel buttons.
+   cancel_button->on_click = ok_button->on_click;
 }
 
 // An Alert Popup
@@ -62,14 +67,15 @@ void make_alert(view& _view, app& _app)
    auto [ok_button, popup] = message_box1(alert_text, icons::attention);
    _view.add(popup);
 
+   // Note: we "get" a weak pointer to the dialog so we will
+   // not create cycles between the popup and its OK button.
    ok_button->on_click =
-      dismiss(_view, popup,
-         [&_app, &_view]()
-         {
-            // When the OK button is clicked, let's make a choice.
-            make_choice(_view, _app);
-         }
-      );
+      [&_app, &_view, eptr = get(popup)](bool)
+      {
+         // Do something when the button is clicked:
+         _view.remove(eptr.lock());    // Close the popup
+         make_choice(_view, _app);     // Let's make a choice.
+      };
 }
 
 int main(int argc, const char* argv[])

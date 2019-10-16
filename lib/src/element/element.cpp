@@ -35,10 +35,10 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::refresh(context const& ctx, element& element)
+   void element::refresh(context const& ctx, element& element, int outward)
    {
       if (&element == this)
-         ctx.view.refresh(ctx);
+         ctx.view.refresh(ctx, outward);
    }
 
    element* element::click(context const& ctx, mouse_button btn)

@@ -113,18 +113,18 @@ namespace cycfi { namespace elements
       }
    }
 
-   void deck_element::refresh(context const& ctx, element& element)
+   void deck_element::refresh(context const& ctx, element& element, int outward)
    {
       if (&element == this)
       {
-         ctx.view.refresh(ctx);
+         ctx.view.refresh(ctx, outward);
       }
       else
       {
          rect bounds = bounds_of(ctx, _selected_index);
          auto& elem = at(_selected_index);
          context ectx{ ctx, &elem, bounds };
-         elem.refresh(ectx, element);
+         elem.refresh(ectx, element, outward);
       }
    }
 

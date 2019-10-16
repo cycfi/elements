@@ -47,17 +47,17 @@ namespace cycfi { namespace elements
       restore_subject(sctx);
    }
 
-   void proxy_base::refresh(context const& ctx, element& element)
+   void proxy_base::refresh(context const& ctx, element& element, int outward)
    {
       if (&element == this)
       {
-         ctx.view.refresh(ctx);
+         ctx.view.refresh(ctx, outward);
       }
       else
       {
          context sctx { ctx, &subject(), ctx.bounds };
          prepare_subject(sctx);
-         subject().refresh(sctx, element);
+         subject().refresh(sctx, element, outward);
          restore_subject(sctx);
       }
    }

@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
                            {}
 
       virtual void         draw(context const& ctx);
-      virtual void         refresh(context const& ctx, element& element);
+      virtual void         refresh(context const& ctx, element& element, int outward = 0);
       virtual hit_info     hit_element(context const& ctx, point p) const;
       virtual bool         focus(focus_request r);
 

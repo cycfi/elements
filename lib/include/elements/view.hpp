@@ -46,8 +46,8 @@ namespace cycfi { namespace elements
 
       virtual void         refresh() override;
       virtual void         refresh(rect area) override;
-      void                 refresh(element& element);
-      void                 refresh(context const& ctx);
+      void                 refresh(element& element, int outward = 0);
+      void                 refresh(context const& ctx, int outward = 0);
       rect                 dirty() const;
 
       struct undo_redo_task

@@ -48,8 +48,8 @@ namespace cycfi { namespace elements
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual void            refresh(context const& ctx, element& element);
-      void                    refresh(context const& ctx) { refresh(ctx, *this); }
+      virtual void            refresh(context const& ctx, element& element, int outward = 0);
+      void                    refresh(context const& ctx, int outward = 0) { refresh(ctx, *this, outward); }
 
    // Control
 

@@ -45,11 +45,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::refresh(context const& ctx, element& element)
+   void composite_base::refresh(context const& ctx, element& element, int outward)
    {
       if (&element == this)
       {
-         ctx.view.refresh(ctx);
+         ctx.view.refresh(ctx, outward);
       }
       else
       {
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
             rect bounds = bounds_of(ctx, ix);
             auto& e = at(ix);
             context ectx{ ctx, &e, bounds };
-            e.refresh(ectx, element);
+            e.refresh(ectx, element, outward);
          }
       }
    }

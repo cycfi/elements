@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
       virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual void            refresh(context const& ctx, element& element);
+      virtual void            refresh(context const& ctx, element& element, int outward = 0);
 
       using element::refresh;
 
@@ -160,9 +160,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline void
-   indirect<Base>::refresh(context const& ctx, element& element)
+   indirect<Base>::refresh(context const& ctx, element& element, int outward)
    {
-      this->get().refresh(ctx, element);
+      this->get().refresh(ctx, element, outward);
    }
 
    template <typename Base>

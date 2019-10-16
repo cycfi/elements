@@ -272,25 +272,35 @@
       );
    }
 
-   void view::refresh(element& element)
+   void view::refresh(element& element, int outward)
    {
       if (_current_bounds.is_empty())
          return;
 
       _io.post(
-         [this, &element]()
+         [this, &element, outward]()
          {
             call(
-               [&element](auto const& ctx, auto& _content) { _content.refresh(ctx, element); },
+               [&element, outward](auto const& ctx, auto& _content)
+               {
+                  _content.refresh(ctx, element, outward);
+               },
                *this, _current_bounds
             );
          }
       );
    }
 
-   void view::refresh(context const& ctx)
+   void view::refresh(context const& ctx, int outward)
    {
-      refresh(ctx.bounds);
+      context const* ctx_ptr = &ctx;
+      while (outward > 0 && ctx_ptr)
+      {
+         --outward;
+         ctx_ptr = ctx_ptr->parent;
+      }
+      if (ctx_ptr)
+         refresh(ctx_ptr->bounds);
    }
 
    void view::click(mouse_button btn)

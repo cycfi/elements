@@ -10,7 +10,7 @@
 
 namespace cycfi { namespace elements
 {
-   constexpr auto min_size = 64;
+   constexpr auto min_size = 32;
 
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation

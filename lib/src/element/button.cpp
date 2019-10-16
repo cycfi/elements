@@ -17,11 +17,11 @@ namespace cycfi { namespace elements
 
       if (btn.down)
       {
-         on_begin_tracking(ctx);
+         on_tracking(ctx, begin_tracking);
       }
       else
       {
-         on_end_tracking(ctx);
+         on_tracking(ctx, end_tracking);
          if (on_click)
             on_click(true);
       }
@@ -94,11 +94,11 @@ namespace cycfi { namespace elements
 
       if (btn.down)
       {
-         on_begin_tracking(ctx);
+         on_tracking(ctx, begin_tracking);
       }
       else
       {
-         on_end_tracking(ctx);
+         on_tracking(ctx, end_tracking);
          if (on_click)
             on_click(true);
       }

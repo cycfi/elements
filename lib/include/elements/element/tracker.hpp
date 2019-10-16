@@ -87,12 +87,12 @@ namespace cycfi { namespace elements
       if (btn.down)
       {
          state = new_state(ctx, btn.pos);
-         this->on_begin_tracking(ctx);
+         this->on_tracking(ctx, element::begin_tracking);
          begin_tracking(ctx, *state);
       }
       else if (state)
       {
-         this->on_end_tracking(ctx);
+         this->on_tracking(ctx, element::end_tracking);
          end_tracking(ctx, *state);
          state.reset();
       }
@@ -102,6 +102,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline void tracker<Base>::drag(context const& ctx, mouse_button btn)
    {
+      this->on_tracking(ctx, element::while_tracking);
       state->previous = state->current;
       state->current = btn.pos;
       state->current = state->current.move(-state->offset.x, -state->offset.y);

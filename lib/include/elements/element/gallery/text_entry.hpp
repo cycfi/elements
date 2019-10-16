@@ -50,10 +50,8 @@ namespace cycfi { namespace elements
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f
       };
-      return input_box(
-         basic_input_box{ placeholder, face, font_size }
-       , pad
-      );
+      auto tbox = share(basic_input_box{ placeholder, face, font_size });
+      return std::make_pair(std::move(input_box(hold(tbox), pad)), tbox);
    }
 
    inline auto input_box(

@@ -91,13 +91,13 @@ auto make_basic_text()
             pane("Text Input",
                margin({ 10, 5, 10, 5 },
                   vtile(
-                     left_caption(input_box("Show me the money"), "Gimme Some"),
-                     top_margin(10, left_caption(input_box("Show me more"), "Gimme Some More")),
+                     left_caption(input_box("Show me the money").first, "Gimme Some"),
+                     top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More")),
                      top_margin(10, left_caption(
                         htile(
-                           input_box(0.7),
-                           left_margin(10, input_box(0.7)),
-                           left_margin(10, input_box(0.7))
+                           input_box(0.7).first,
+                           left_margin(10, input_box(0.7).first),
+                           left_margin(10, input_box(0.7).first)
                         ),
                         "Cute Text Boxes"
                      ))

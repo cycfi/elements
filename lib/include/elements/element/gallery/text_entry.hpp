@@ -13,6 +13,7 @@
 #include <elements/element/text.hpp>
 #include <elements/element/size.hpp>
 #include <elements/support/text_utils.hpp>
+#include <type_traits>
 
 namespace cycfi { namespace elements
 {
@@ -22,7 +23,8 @@ namespace cycfi { namespace elements
    template <typename InputBox>
    inline auto input_box(
       InputBox&& text_input
-    , rect pad  = rect{ 5, 5, 5, 4 }
+    , rect pad
+    , typename std::enable_if<std::is_base_of<element, InputBox>::value>::type* = nullptr
    )
    {
       return layer(
@@ -38,25 +40,38 @@ namespace cycfi { namespace elements
    }
 
    inline auto input_box(
-      std::string const& placeholder
-    , rect pad = rect{ 5, 5, 5, 4 }
+      std::string_view placeholder
+    , char const* face
+    , float size // ratio relative to get_theme().text_box_font_size
    )
    {
+      auto font_size = get_theme().text_box_font_size * size;
+      auto pad = rect{
+         font_size * 0.3f, font_size * 0.3f
+       , font_size * 0.3f, font_size * 0.3f
+      };
       return input_box(
-         basic_input_box{ placeholder }
+         basic_input_box{ placeholder, face, font_size }
        , pad
       );
    }
 
    inline auto input_box(
-      char const* placeholder
-    , rect pad = rect{ 5, 5, 5, 4 }
+      std::string_view placeholder
+    , float size // ratio relative to get_theme().text_box_font_size
    )
    {
-      return input_box(
-         basic_input_box{ placeholder }
-       , pad
-      );
+      return input_box(placeholder, get_theme().text_box_font, size);
+   }
+
+   inline auto input_box(std::string_view placeholder)
+   {
+      return input_box(placeholder, get_theme().text_box_font, 1.0);
+   }
+
+   inline auto input_box(float size = 1.0)   // ratio relative to get_theme().text_box_font_size
+   {
+      return input_box("", get_theme().text_box_font, size);
    }
 }}
 

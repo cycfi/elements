@@ -10,6 +10,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <boost/asio.hpp>
+#include <string_view>
 #include <string>
 #include <vector>
 
@@ -143,9 +144,13 @@ namespace cycfi { namespace elements
       using text_function = std::function<std::string(std::string const& text)>;
       using enter_function = std::function<bool(std::string const& text)>;
 
-                              basic_input_box(std::string const& placeholder)
-                               : basic_text_box("")
-                               , _placeholder(placeholder)
+                              basic_input_box(
+                                 std::string_view placeholder
+                               , char const* face  = get_theme().text_box_font
+                               , float size        = get_theme().text_box_font_size
+                              )
+                               : basic_text_box("", face, size)
+                               , _placeholder(placeholder.begin(), placeholder.end())
                               {}
 
                               basic_input_box(basic_input_box&& rhs) = default;

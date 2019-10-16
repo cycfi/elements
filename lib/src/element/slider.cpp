@@ -68,14 +68,10 @@ namespace cycfi { namespace elements
    {
       double new_value = value() + (_is_horiz ? -dir.x : dir.y) * 0.005;
       clamp(new_value, 0.0, 1.0);
-      if (value() != new_value)
-      {
-         track_scroll(ctx, dir, p);
-         edit_value(new_value);
-         ctx.view.refresh(ctx);
-         return true;
-      }
-      return false;
+      track_scroll(ctx, dir, p);
+      edit_value(new_value);
+      ctx.view.refresh(ctx);
+      return true;
    }
 
    rect slider_base::track_bounds(context const& ctx) const

@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/app.hpp>
 #include <cairo.h>
+#include <infra/assert.hpp>
 #include <elements/base_view.hpp>
 #include <elements/window.hpp>
 #include <elements/support/canvas.hpp>
@@ -419,6 +420,13 @@ namespace cycfi { namespace elements
       }
    };
 
+   base_view::base_view(extent size_)
+    : base_view(new host_view)
+   {
+      // $$$ FIXME: Implement Me $$$
+      CYCFI_ASSERT(false, "Unimplemented");
+   }
+
    base_view::base_view(host_view_handle h)
     : _view(h)
    {
@@ -450,14 +458,14 @@ namespace cycfi { namespace elements
       return _view->cursor_position;
    }
 
-   elements::size base_view::size() const
+   elements::extent base_view::size() const
    {
       auto x = gtk_widget_get_allocated_width(_view->widget);
       auto y = gtk_widget_get_allocated_height(_view->widget);
       return { float(x), float(y) };
    }
 
-   void base_view::size(elements::size p)
+   void base_view::size(elements::extent p)
    {
       // $$$ Wrong: don't size the window!!! $$$
       gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);

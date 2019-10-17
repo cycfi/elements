@@ -159,6 +159,7 @@ namespace cycfi { namespace elements
          io().post(
             [e, this]
             {
+               focus(focus_request::end_focus);
                _content.push_back(e);
                layout(*e);
                focus(focus_request::begin_focus);
@@ -181,6 +182,7 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
+                  focus(focus_request::end_focus);
                   refresh(*e);
                   _content.erase(i);
                   _content.reset();

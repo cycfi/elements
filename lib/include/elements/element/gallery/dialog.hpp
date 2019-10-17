@@ -62,7 +62,8 @@ namespace cycfi { namespace elements
       popup->on_key =
          [ok_ = get(ok_button)](auto k)
          {
-            if (k.key == key_code::enter)
+            if (k.action == key_action::press &&
+               k.key == key_code::enter)
             {
                if (auto ok = ok_.lock())
                   ok->value(true);
@@ -110,17 +111,20 @@ namespace cycfi { namespace elements
             if (k.action == key_action::release)
                return false;
 
-            if (k.key == key_code::enter)
+            if (k.action == key_action::press)
             {
-               if (auto ok = ok_.lock())
-                  ok->value(true);
-               return true;
-            }
-            else if (k.key == key_code::escape)
-            {
-               if (auto cancel = cancel_.lock())
-                  cancel->value(true);
-               return true;
+               if (k.key == key_code::enter)
+               {
+                  if (auto ok = ok_.lock())
+                     ok->value(true);
+                  return true;
+               }
+               else if (k.key == key_code::escape)
+               {
+                  if (auto cancel = cancel_.lock())
+                     cancel->value(true);
+                  return true;
+               }
             }
             return false;
          };

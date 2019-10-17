@@ -105,23 +105,26 @@ namespace cycfi { namespace elements
       if (!_popup)
          return false;
 
-      if (k.key == key_code::escape || k.key == key_code::enter)
+      if (k.action == key_action::press)
       {
-         if (k.key == key_code::enter)
+         if (k.key == key_code::escape || k.key == key_code::enter)
          {
-            // simulate a menu click:
-            rect bounds = _popup->bounds();
-            context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
-            mouse_button btn{
-               true, 1, mouse_button::left, 0, ctx.view.cursor_pos()
-            };
-            _popup->click(new_ctx, btn);
-         }
+            if (k.key == key_code::enter)
+            {
+               // simulate a menu click:
+               rect bounds = _popup->bounds();
+               context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+               mouse_button btn{
+                  true, 1, mouse_button::left, 0, ctx.view.cursor_pos()
+               };
+               _popup->click(new_ctx, btn);
+            }
 
-         _popup->close(ctx.view);
-         state(false);
-         ctx.view.refresh();
-         return true;
+            _popup->close(ctx.view);
+            state(false);
+            ctx.view.refresh();
+            return true;
+         }
       }
 
       // simulate a menu key:

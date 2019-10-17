@@ -137,18 +137,7 @@ namespace cycfi { namespace elements
             return true;
       }
 
-      // If we reached here, then there's either no focus, or the
-      // focus did not handle the key press.
-      for (std::size_t ix = 0; ix < size(); ++ix)
-      {
-         rect bounds = bounds_of(ctx, ix);
-         auto& e = at(ix);
-         context ectx{ ctx, &e, bounds };
-         if (e.key(ectx, k))
-            return true;
-      }
-
-      if (k.key == key_code::tab && size())
+      if (k.action == key_action::press && k.key == key_code::tab && size())
       {
          auto next_focus = _focus;
          if ((next_focus == -1) || !(k.modifiers & mod_shift))
@@ -159,7 +148,8 @@ namespace cycfi { namespace elements
                   new_focus(ctx, next_focus);
                   return true;
                }
-            return false;
+            new_focus(ctx, -1);
+            return true;
          }
          else
          {
@@ -169,8 +159,20 @@ namespace cycfi { namespace elements
                   new_focus(ctx, next_focus);
                   return true;
                }
-            return false;
+            new_focus(ctx, -1);
+            return true;
          }
+      }
+
+      // If we reached here, then there's either no focus, or the
+      // focus did not handle the key press.
+      for (std::size_t ix = 0; ix < size(); ++ix)
+      {
+         rect bounds = bounds_of(ctx, ix);
+         auto& e = at(ix);
+         context ectx{ ctx, &e, bounds };
+         if (e.key(ectx, k))
+            return true;
       }
 
       return false;

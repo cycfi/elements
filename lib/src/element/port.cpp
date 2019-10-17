@@ -497,7 +497,7 @@ namespace cycfi { namespace elements
       };
 
       bool handled = proxy_base::key(ctx, k);
-      if (!handled)
+      if (!handled && k.action == key_action::press)
       {
          switch (k.key)
          {
@@ -514,15 +514,12 @@ namespace cycfi { namespace elements
             case key_code::page_up:
             case key_code::page_down:
             {
-               if (k.action == key_action::press)
-               {
-                  view_limits       e_limits = subject().limits(ctx);
-                  scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-                  rect b = scroll_bar_position(
-                      ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });
-                  double page = b.height() / sb.vscroll_bounds.height();
-                  valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
-               }
+               view_limits e_limits = subject().limits(ctx);
+               scrollbar_bounds sb = get_scrollbar_bounds(ctx);
+               rect b = scroll_bar_position(
+                  ctx, { valign(), e_limits.min.y, sb.vscroll_bounds });
+               double page = b.height() / sb.vscroll_bounds.height();
+               valign_(valign() + ((k.key == key_code::page_down) ? page : -page));
                handled = true;
                break;
             }

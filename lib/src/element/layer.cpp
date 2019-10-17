@@ -84,17 +84,17 @@ namespace cycfi { namespace elements
 
    void layer_element::focus_top()
    {
-      if (!composite_base::focus())
+      for (int ix = int(size())-1; ix >= 0; --ix)
       {
-         for (int ix = int(size())-1; ix >= 0; --ix)
+         auto& e = at(ix);
+         if (composite_base::focus() == &e)
+            break; // element at at(ix) is already the focus
+
+         if (e.is_control() && e.focus(focus_request::wants_focus))
          {
-            auto& e = at(ix);
-            if (e.is_control() && e.focus(focus_request::wants_focus))
-            {
-               e.focus(focus_request::begin_focus);
-               composite_base::focus(ix);
-               break;
-            }
+            e.focus(focus_request::begin_focus);
+            composite_base::focus(ix);
+            break;
          }
       }
    }

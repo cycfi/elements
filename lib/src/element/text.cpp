@@ -350,122 +350,125 @@ namespace cycfi { namespace elements
          }
       };
 
-      switch (k.key)
+      if (k.action == key_action::press)
       {
-         case key_code::enter:
-            {
-               _text.replace(start, end-start, "\n");
-               _select_start += 1;
-               _select_end = _select_start;
-               save_x = true;
-               add_undo(ctx, _typing_state, undo_f, capture_state());
-               handled = true;
-            }
-            break;
-
-         case key_code::backspace:
-         case key_code::_delete:
-            {
-               delete_();
-               save_x = true;
-               add_undo(ctx, _typing_state, undo_f, capture_state());
-               handled = true;
-            }
-            break;
-
-         case key_code::left:
-            if (_select_end != -1)
-            {
-               if (k.modifiers & mod_alt)
-                  prev_word();
-               else
-                  prev_char();
-               if (!(k.modifiers & mod_shift))
-                  _select_start = _select_end = std::min(_select_start, _select_end);
-            }
-            move_caret = true;
-            save_x = true;
-            handled = true;
-            break;
-
-         case key_code::right:
-            if (_select_end != -1)
-            {
-               if (k.modifiers & mod_alt)
-                  next_word();
-               else
-                  next_char();
-               if (!(k.modifiers & mod_shift))
-                  _select_start = _select_end = std::max(_select_start, _select_end);
-            }
-            move_caret = true;
-            save_x = true;
-            handled = true;
-            break;
-
-         case key_code::up:
-         case key_code::down:
-            if (_select_start != -1)
-               up_down();
-            handled = true;
-            break;
-
-         case key_code::a:
-            if (k.modifiers & mod_action)
-            {
-               _select_start = 0;
-               _select_end = int(_text.size());
-               handled = true;
-            }
-            break;
-
-         case key_code::x:
-            if (k.modifiers & mod_action)
-            {
-               cut(ctx.view, start, end);
-               save_x = true;
-               add_undo(ctx, _typing_state, undo_f, capture_state());
-               handled = true;
-            }
-            break;
-
-         case key_code::c:
-            if (k.modifiers & mod_action)
-            {
-               copy(ctx.view, start, end);
-               handled = true;
-            }
-            break;
-
-         case key_code::v:
-            if (k.modifiers & mod_action)
-            {
-               paste(ctx.view, start, end);
-               save_x = true;
-               add_undo(ctx, _typing_state, undo_f, capture_state());
-               handled = true;
-            }
-            break;
-
-         case key_code::z:
-            if (k.modifiers & mod_action)
-            {
-               if (_typing_state)
+         switch (k.key)
+         {
+            case key_code::enter:
                {
-                  ctx.view.add_undo({ _typing_state, undo_f });
-                  _typing_state = {}; // reset
+                  _text.replace(start, end-start, "\n");
+                  _select_start += 1;
+                  _select_end = _select_start;
+                  save_x = true;
+                  add_undo(ctx, _typing_state, undo_f, capture_state());
+                  handled = true;
                }
+               break;
 
-               if (k.modifiers & mod_shift)
-                  ctx.view.redo();
-               else
-                  ctx.view.undo();
+            case key_code::backspace:
+            case key_code::_delete:
+               {
+                  delete_();
+                  save_x = true;
+                  add_undo(ctx, _typing_state, undo_f, capture_state());
+                  handled = true;
+               }
+               break;
+
+            case key_code::left:
+               if (_select_end != -1)
+               {
+                  if (k.modifiers & mod_alt)
+                     prev_word();
+                  else
+                     prev_char();
+                  if (!(k.modifiers & mod_shift))
+                     _select_start = _select_end = std::min(_select_start, _select_end);
+               }
+               move_caret = true;
+               save_x = true;
                handled = true;
-            }
-            break;
+               break;
 
-         default:
-            break;
+            case key_code::right:
+               if (_select_end != -1)
+               {
+                  if (k.modifiers & mod_alt)
+                     next_word();
+                  else
+                     next_char();
+                  if (!(k.modifiers & mod_shift))
+                     _select_start = _select_end = std::max(_select_start, _select_end);
+               }
+               move_caret = true;
+               save_x = true;
+               handled = true;
+               break;
+
+            case key_code::up:
+            case key_code::down:
+               if (_select_start != -1)
+                  up_down();
+               handled = true;
+               break;
+
+            case key_code::a:
+               if (k.modifiers & mod_action)
+               {
+                  _select_start = 0;
+                  _select_end = int(_text.size());
+                  handled = true;
+               }
+               break;
+
+            case key_code::x:
+               if (k.modifiers & mod_action)
+               {
+                  cut(ctx.view, start, end);
+                  save_x = true;
+                  add_undo(ctx, _typing_state, undo_f, capture_state());
+                  handled = true;
+               }
+               break;
+
+            case key_code::c:
+               if (k.modifiers & mod_action)
+               {
+                  copy(ctx.view, start, end);
+                  handled = true;
+               }
+               break;
+
+            case key_code::v:
+               if (k.modifiers & mod_action)
+               {
+                  paste(ctx.view, start, end);
+                  save_x = true;
+                  add_undo(ctx, _typing_state, undo_f, capture_state());
+                  handled = true;
+               }
+               break;
+
+            case key_code::z:
+               if (k.modifiers & mod_action)
+               {
+                  if (_typing_state)
+                  {
+                     ctx.view.add_undo({ _typing_state, undo_f });
+                     _typing_state = {}; // reset
+                  }
+
+                  if (k.modifiers & mod_shift)
+                     ctx.view.redo();
+                  else
+                     ctx.view.undo();
+                  handled = true;
+               }
+               break;
+
+            default:
+               break;
+         }
       }
 
       if (move_caret)
@@ -931,39 +934,42 @@ namespace cycfi { namespace elements
 
    bool basic_input_box::key(context const& ctx, key_info k)
    {
-      switch (k.key)
+      if (k.action == key_action::press)
       {
-         case key_code::enter:
-            if (on_enter)
-               on_enter(text());
-            ctx.view.refresh(ctx);
-            ctx.view.focus(focus_request::end_focus);
-            return true;
-
-         case key_code::up:
-         case key_code::down:
-         case key_code::tab:
-            return false;
-
-         case key_code::home:
-            {
-               select_start(0);
-               select_end(0);
-               scroll_into_view(ctx, false);
+         switch (k.key)
+         {
+            case key_code::enter:
+               if (on_enter)
+                  on_enter(text());
+               ctx.view.refresh(ctx);
+               ctx.view.focus(focus_request::end_focus);
                return true;
-            }
 
-         case key_code::end:
-            {
-               int end = int(_text.size());
-               select_start(end);
-               select_end(end);
-               scroll_into_view(ctx, false);
-               return true;
-            }
+            case key_code::up:
+            case key_code::down:
+            case key_code::tab:
+               return false;
 
-         default:
-            break;
+            case key_code::home:
+               {
+                  select_start(0);
+                  select_end(0);
+                  scroll_into_view(ctx, false);
+                  return true;
+               }
+
+            case key_code::end:
+               {
+                  int end = int(_text.size());
+                  select_start(end);
+                  select_end(end);
+                  scroll_into_view(ctx, false);
+                  return true;
+               }
+
+            default:
+               break;
+         }
       }
       return basic_text_box::key(ctx, k);
    }

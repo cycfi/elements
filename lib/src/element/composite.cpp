@@ -128,51 +128,68 @@ namespace cycfi { namespace elements
 
    bool composite_base::key(context const& ctx, key_info k)
    {
+      auto&& try_key = [&](auto ix) -> bool
+      {
+         rect bounds = bounds_of(ctx, ix);
+         auto& e = at(ix);
+         context ectx{ ctx, &e, bounds };
+         return e.key(ectx, k);
+      };
+
+      auto&& try_focus = [&](auto ix) -> bool
+      {
+         if (at(ix).focus(focus_request::wants_focus))
+         {
+            new_focus(ctx, ix);
+            return true;
+         }
+         return false;
+      };
+
       if (_focus != -1)
       {
-         rect  bounds = bounds_of(ctx, _focus);
-         auto& focus_ = at(_focus);
-         context ectx{ ctx, &focus_, bounds };
-         if (focus_.key(ectx, k))
+         if (try_key(_focus))
             return true;
       }
 
       if (k.action == key_action::press && k.key == key_code::tab && size())
       {
          auto next_focus = _focus;
-         if ((next_focus == -1) || !(k.modifiers & mod_shift))
+         bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
+         if ((next_focus == -1) || !reverse)
          {
             while (++next_focus != size())
-               if (at(next_focus).focus(focus_request::wants_focus))
-               {
-                  new_focus(ctx, next_focus);
+               if (try_focus(next_focus))
                   return true;
-               }
-            new_focus(ctx, -1);
-            return true;
+            return false;
          }
          else
          {
             while (--next_focus >= 0)
                if (at(next_focus).focus(focus_request::wants_focus))
-               {
-                  new_focus(ctx, next_focus);
-                  return true;
-               }
-            new_focus(ctx, -1);
-            return true;
+                  if (try_focus(next_focus))
+                     return true;
+            return false;
          }
       }
 
       // If we reached here, then there's either no focus, or the
       // focus did not handle the key press.
-      for (std::size_t ix = 0; ix < size(); ++ix)
+      if (reverse_index())
       {
-         rect bounds = bounds_of(ctx, ix);
-         auto& e = at(ix);
-         context ectx{ ctx, &e, bounds };
-         if (e.key(ectx, k))
-            return true;
+         for (int ix = int(size())-1; ix >= 0; --ix)
+         {
+            if (try_key(ix))
+               return true;
+         }
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+         {
+            if (try_key(ix))
+               return true;
+         }
       }
 
       return false;

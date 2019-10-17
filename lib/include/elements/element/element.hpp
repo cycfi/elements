@@ -16,7 +16,7 @@
 namespace cycfi { namespace elements
 {
    struct basic_context;
-   struct context;
+   class context;
 
    ////////////////////////////////////////////////////////////////////////////
    // Elements

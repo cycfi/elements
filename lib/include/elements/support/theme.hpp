@@ -25,7 +25,13 @@ namespace cycfi { namespace elements
       color                indicator_color            = rgba(0, 127, 255, 200);
       color                basic_font_color           = rgba(220, 220, 220, 200);
 
+#if defined(__APPLE__)
       char const*          system_font                = "Lucida Grande";
+#elif defined(_WIN32)
+      char const*          system_font                = "Arial";
+#elif defined(__linux__)
+      char const*          system_font                = "Arial";
+#endif
 
       color                heading_font_color         = basic_font_color;
       char const*          heading_font               = "Roboto Bold";

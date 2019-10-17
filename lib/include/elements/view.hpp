@@ -19,7 +19,7 @@
 
 namespace cycfi { namespace elements
 {
-   struct context;
+   class context;
    class window;
    class idle_tasks;
 

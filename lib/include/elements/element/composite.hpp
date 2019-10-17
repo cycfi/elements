@@ -28,6 +28,7 @@ namespace cycfi { namespace elements
       virtual element&        at(std::size_t ix) const = 0;
    };
 
+   class context;
    class composite_base : public element, public container
    {
    public:

@@ -491,33 +491,48 @@ namespace cycfi { namespace elements
       };
    }
 
+   namespace
+   {
+      HWND make_window(base_view* _this, host_window_handle parent, RECT bounds)
+      {
+         static init_view_class init;
+
+         HWND _view = CreateWindowW(
+            L"ElementsView",
+            nullptr,
+            WS_CHILD | WS_VISIBLE,
+            0, 0, 0, 0,
+            parent, nullptr, nullptr,
+            nullptr
+         );
+
+         MoveWindow(
+            _view, bounds.left, bounds.top,
+            bounds.right-bounds.left, bounds.bottom-bounds.top,
+            true // repaint
+         );
+
+         view_info* info = new view_info{ _this };
+         SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
+
+         // Create 16ms (60Hz) timer
+         SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);
+
+         return _view;
+      }
+   }
+
+   base_view::base_view(extent size_)
+   {
+	   RECT bounds = { 0, 0, LONG(size_.x), LONG(size_.y) };
+	   _view = make_window(this, nullptr, bounds);
+   }
+
    base_view::base_view(host_window_handle h)
    {
-      static init_view_class init;
-
-      _view = CreateWindowW(
-         L"ElementsView",
-         nullptr,
-         WS_CHILD | WS_VISIBLE,
-         0, 0, 0, 0,
-         h, nullptr, nullptr,
-         nullptr
-      );
-
       RECT bounds;
       GetClientRect(h, &bounds);
-
-      MoveWindow(
-         _view, bounds.left, bounds.top,
-         bounds.right-bounds.left, bounds.bottom-bounds.top,
-         true // repaint
-      );
-
-      view_info* info = new view_info{ this };
-      SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
-
-      // Create 16ms (60Hz) timer
-      SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);
+      _view = make_window(this, h, bounds);
    }
 
    base_view::~base_view()
@@ -544,7 +559,7 @@ namespace cycfi { namespace elements
       return { float(pos.x) / scale, float(pos.y) / scale };
    }
 
-   elements::size base_view::size() const
+   elements::extent base_view::size() const
    {
       float scale = GetDpiForWindow(_view) / 96.0;
       RECT r;
@@ -552,7 +567,7 @@ namespace cycfi { namespace elements
       return { float(r.right-r.left) / scale, float(r.bottom-r.top) / scale };
    }
 
-   void base_view::size(elements::size p)
+   void base_view::size(elements::extent p)
    {
       auto scale = GetDpiForWindow(_view) / 96.0;
       auto parent = GetParent(_view);

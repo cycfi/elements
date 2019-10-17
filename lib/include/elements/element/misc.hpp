@@ -249,7 +249,9 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline bool key_intercept_element<Subject>::key(context const& ctx, key_info k)
    {
-      return on_key(k);
+      if (on_key(k))
+         return true;
+      return this->subject().key(ctx, k);
    }
 }}
 

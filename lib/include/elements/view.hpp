@@ -161,6 +161,7 @@ namespace cycfi { namespace elements
             {
                _content.push_back(e);
                layout(*e);
+               focus(focus_request::begin_focus);
             }
          );
       }
@@ -184,6 +185,7 @@ namespace cycfi { namespace elements
                   _content.erase(i);
                   _content.reset();
                   layout();
+                  focus(focus_request::begin_focus);
                }
             }
          );

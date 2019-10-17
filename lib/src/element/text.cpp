@@ -815,7 +815,13 @@ namespace cycfi { namespace elements
       auto info = glyph_info(ctx, &_text[_select_end]);
       if (info.str)
       {
-         if (!scrollable::find(ctx).scroll_into_view(info.bounds.inset(-15, 0)))
+         auto caret = rect{
+            info.bounds.left-1,
+            info.bounds.top,
+            info.bounds.left+1,
+            info.bounds.bottom
+         };
+         if (!scrollable::find(ctx).scroll_into_view(caret))
             ctx.view.refresh(ctx);
 
          if (save_x)

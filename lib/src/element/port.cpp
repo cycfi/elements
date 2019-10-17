@@ -449,7 +449,6 @@ namespace cycfi { namespace elements
 
    bool scroller_base::scroll_into_view(context const& ctx, rect r)
    {
-      constexpr auto scroll_clearance = 20;
       rect bounds = ctx.bounds;
 
       if (has_scrollbars())
@@ -472,7 +471,7 @@ namespace cycfi { namespace elements
             if (r.top < bounds.top)
                dp.y = bounds.top-r.top;
             else if (r.bottom > bounds.bottom)
-               dp.y = (bounds.bottom-r.bottom) - scroll_clearance;
+               dp.y = bounds.bottom-r.bottom;
          }
 
          if (allow_hscroll())
@@ -480,7 +479,7 @@ namespace cycfi { namespace elements
             if (r.left < bounds.left)
                dp.x = bounds.left-r.left;
             else if (r.right > bounds.right)
-               dp.x = bounds.right-r.right - scroll_clearance;
+               dp.x = bounds.right-r.right;
          }
 
          return scroll(ctx, dp, ctx.view.cursor_pos());

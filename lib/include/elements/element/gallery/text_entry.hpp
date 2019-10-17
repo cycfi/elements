@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
    template <typename InputBox>
    inline auto input_box(
       InputBox&& text_input
-    , rect pad
+    , rect pad = { 5, 5, 5, 5 }
     , typename std::enable_if<std::is_base_of<element, InputBox>::value>::type* = nullptr
    )
    {
@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
          margin(
             pad,
             scroller(
-               hsize(16384, std::move(text_input)),
+               hsize(16384, std::forward<InputBox>(text_input)),
                no_scrollbars | no_vscroll
             )
          ),

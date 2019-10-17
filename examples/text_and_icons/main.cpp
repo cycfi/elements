@@ -81,7 +81,7 @@ auto make_basic_text()
 
    auto symbols =
       margin({ 10, 0, 10, 10 },
-         halign(0.5, label{ u8"⎋ ⌥ ⌘ ⇧ ⌃", get_theme().system_font, 2.0 })
+         halign(0.5, label{u8"⎋ ⌥ ⌘ ⇧ ⌃", get_theme().symbols_font, 2.0 })
       );
 
    return

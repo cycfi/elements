@@ -25,12 +25,14 @@ namespace cycfi { namespace elements
       color                indicator_color            = rgba(0, 127, 255, 200);
       color                basic_font_color           = rgba(220, 220, 220, 200);
 
+// The symbols_font font is the OS supplied font that includes unicode symbols
+// such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
 #if defined(__APPLE__)
-      char const*          system_font                = "Lucida Grande";
+      char const*          symbols_font               = "Lucida Grande";
 #elif defined(_WIN32)
-      char const*          system_font                = "Arial";
+      char const*          symbols_font               = "Segoe UI Symbol";
 #elif defined(__linux__)
-      char const*          system_font                = "Arial";
+      char const*          symbols_font               = "Arial";
 #endif
 
       color                heading_font_color         = basic_font_color;

@@ -52,7 +52,7 @@ namespace cycfi { namespace elements
       return xside_margin({ 20, 20 },
          htile(
             align_left(label(text))
-          , align_right(label(diplay(shortcut.key, shortcut.modifiers), get_theme().system_font))
+          , align_right(label(diplay(shortcut.key, shortcut.modifiers), get_theme().symbols_font))
          )
       );
    }

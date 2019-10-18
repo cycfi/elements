@@ -16,7 +16,7 @@ namespace cycfi { namespace elements
          ;
       auto menu = make_button<basic_menu>(text, icon, 1.0, body_color);
       menu.position(pos);
-      return std::move(menu);
+      return menu;
    }
 
    basic_menu
@@ -28,14 +28,14 @@ namespace cycfi { namespace elements
          ;
       auto menu = make_button<basic_menu>(icon, 1.0, body_color);
       menu.position(pos);
-      return std::move(menu);
+      return menu;
    }
 
    basic_menu icon_menu(uint32_t code, float size, menu_position pos)
    {
       auto menu = text_button<basic_menu>(code, size, /*no_frame*/ true);
       menu.position(pos);
-      return std::move(menu);
+      return menu;
    }
 
    view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
@@ -105,6 +105,6 @@ namespace cycfi { namespace elements
          r.first.menu(menu);
       }
 
-      return std::move(r);
+      return r;
    }
 }}

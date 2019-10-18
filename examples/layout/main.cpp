@@ -229,7 +229,7 @@ auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3, MenuItem
       );
 
    popup.menu(std::move(menu));
-   return std::move(popup);
+   return popup;
 }
 
 int main(int argc, const char* argv[])

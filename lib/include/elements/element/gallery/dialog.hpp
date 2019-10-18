@@ -66,9 +66,14 @@ namespace cycfi { namespace elements
                k.key == key_code::enter)
             {
                if (auto ok = ok_.lock())
+               {
                   ok->value(true);
-               return true;
+                  if (ok->on_click)
+                     ok->on_click(true);
+               }
             }
+            // We always return false here so we can give the
+            // UI a chance to process the key.
             return false;
          };
 
@@ -116,16 +121,24 @@ namespace cycfi { namespace elements
                if (k.key == key_code::enter)
                {
                   if (auto ok = ok_.lock())
+                  {
                      ok->value(true);
-                  return true;
+                     if (ok->on_click)
+                        ok->on_click(true);
+                  }
                }
                else if (k.key == key_code::escape)
                {
                   if (auto cancel = cancel_.lock())
+                  {
                      cancel->value(true);
-                  return true;
+                     if (cancel->on_click)
+                        cancel->on_click(true);
+                  }
                }
             }
+            // We always return false here so we can give the
+            // UI a chance to process the key.
             return false;
          };
 

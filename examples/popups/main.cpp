@@ -33,26 +33,19 @@ void make_choice(view& _view, app& _app)
       "will we be awakened?"
       ;
 
-   auto [cancel_button, ok_button, popup]
-      = message_box2(choice_text, icons::question);
-   _view.add(popup);
-
-   // We simply dismiss the dialog and stop the app
-   // when the OK button is pressed.
-   //    Note: we "get" a weak pointer to the popup
-   //    so we will not create cycles between the popup
-   //    and its OK button.
-   ok_button->on_click =
-      [&_app, &_view, eptr = get(popup)](bool)
-      {
-         // Do something when the button is clicked:
-         _view.remove(eptr.lock()); // Close the popup
-         _app.stop();               // Stop the app
-      };
-
    // Normally, you'd want to handle these separately.
    // Here we do the same for both the OK and Cancel buttons.
-   cancel_button->on_click = ok_button->on_click;
+   auto&& on_ok_or_cancel =
+      [&_app]()
+      {
+         // Do something when the OK button is clicked:
+         _app.stop();   // Stop the app
+      };
+
+   auto popup = message_box2(
+      _view, choice_text, icons::question, on_ok_or_cancel, on_ok_or_cancel
+   );
+   _view.add(popup);
 }
 
 // An Alert Popup
@@ -64,18 +57,17 @@ void make_alert(view& _view, app& _app)
       "to come. The dreamtime is approaching a tipping point."
       ;
 
-   auto [ok_button, popup] = message_box1(alert_text, icons::attention);
-   _view.add(popup);
-
-   // Note: we "get" a weak pointer to the dialog so we will
-   // not create cycles between the popup and its OK button.
-   ok_button->on_click =
-      [&_app, &_view, eptr = get(popup)](bool)
+   auto&& on_ok =
+      [&_app, &_view]()
       {
-         // Do something when the button is clicked:
-         _view.remove(eptr.lock());    // Close the popup
-         make_choice(_view, _app);     // Let's make a choice.
+         // Let's make a choice, but delay a bit before doing so:
+         _view.post(300ms,
+            [&_app, &_view]() { make_choice(_view, _app); }
+         );
       };
+
+   auto popup = message_box1(_view, alert_text, icons::attention, on_ok);
+   _view.add(popup);
 }
 
 int main(int argc, const char* argv[])

@@ -33,9 +33,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Message Box 1 (single botton, e.g. OK)
    ////////////////////////////////////////////////////////////////////////////
+   template <typename F>
    inline auto message_box1(
-      char const* message
+      view& view_
+    , char const* message
     , std::uint32_t icon_id
+    , F&& on_ok
     , char const* ok_text = "OK"
     , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
@@ -43,10 +46,12 @@ namespace cycfi { namespace elements
    {
       auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog1(
+         view_,
          htile(
             align_top(icon{ icon_id, 2.5 }),
             left_margin(20, std::move(textbox))
          ),
+         std::forward<F>(on_ok),
          ok_text,
          ok_color
       );
@@ -55,9 +60,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Message Box 2 (two bottons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
+   template <typename F1, typename F2>
    inline auto message_box2(
-      char const* message
+      view& view_
+    , char const* message
     , std::uint32_t icon_id
+    , F1&& on_ok
+    , F2&& on_cancel
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
     , extent text_box_size = get_theme().message_textbox_size
@@ -66,10 +75,13 @@ namespace cycfi { namespace elements
    {
       auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog2(
+         view_,
          htile(
             align_top(icon{ icon_id, 2.5 }),
             left_margin(20, std::move(textbox))
          ),
+         std::forward<F1>(on_ok),
+         std::forward<F2>(on_cancel),
          cancel_text,
          ok_text,
          ok_color

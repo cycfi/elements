@@ -22,9 +22,7 @@ namespace cycfi { namespace elements
    // Dialog 0 (no button)
    ////////////////////////////////////////////////////////////////////////////
    template <typename Content>
-   inline auto dialog0(
-      Content&& content
-   )
+   inline auto dialog0(Content&& content)
    {
       auto popup = share(
          align_center_middle(
@@ -39,9 +37,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 1 (single botton, e.g. OK)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Content>
+   template <typename Content, typename F>
    inline auto dialog1(
-      Content&& content
+      view& view_
+    , Content&& content
+    , F on_ok
     , char const* ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
@@ -67,7 +67,6 @@ namespace cycfi { namespace elements
             {
                if (auto ok = ok_.lock())
                {
-                  ok->value(true);
                   if (ok->on_click)
                      ok->on_click(true);
                }
@@ -77,15 +76,34 @@ namespace cycfi { namespace elements
             return false;
          };
 
-      return std::pair{ ok_button, popup };
+      using namespace std::chrono_literals;
+
+      ok_button->on_click =
+         [&view_, eptr = get(popup), on_ok, btn = get(ok_button)](bool)
+         {
+            on_ok();
+            view_.post(100ms,
+               [&view_, btn, eptr]()
+               {
+                  if (auto b = btn.lock())
+                     b->value(false);
+                  view_.remove(eptr.lock()); // Close the dialog
+               }
+            );
+         };
+
+      return popup;
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 2 (two bottons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Content>
+   template <typename Content, typename F1, typename F2>
    inline auto dialog2(
-      Content&& content
+      view& view_
+    , Content&& content
+    , F1&& on_ok
+    , F2&& on_cancel
     , char const* cancel_text = "Cancel"
     , char const* ok_text = "OK"
     , color ok_color = get_theme().indicator_color
@@ -142,7 +160,37 @@ namespace cycfi { namespace elements
             return false;
          };
 
-      return std::tuple{ ok_button, cancel_button, popup };
+      using namespace std::chrono_literals;
+
+      ok_button->on_click =
+         [&view_, eptr = get(popup), on_ok, btn = get(ok_button)](bool)
+         {
+            on_ok();
+            view_.post(100ms,
+               [&view_, btn, eptr]()
+               {
+                  if (auto b = btn.lock())
+                     b->value(false);
+                  view_.remove(eptr.lock()); // Close the dialog
+               }
+            );
+         };
+
+      cancel_button->on_click =
+         [&view_, eptr = get(popup), on_cancel, btn = get(cancel_button)](bool)
+         {
+            on_cancel();
+            view_.post(100ms,
+               [&view_, btn, eptr]()
+               {
+                  if (auto b = btn.lock())
+                     b->value(false);
+                  view_.remove(eptr.lock()); // Close the dialog
+               }
+            );
+         };
+
+      return popup;
    }
 }}
 

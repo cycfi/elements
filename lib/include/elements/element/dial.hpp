@@ -255,7 +255,7 @@ namespace cycfi { namespace elements
    radial_labels(Subject&& subject, float font_size, S&&... s)
    {
       auto r = radial_labels_element<size, Subject, sizeof...(S)>
-         {std::move(subject), font_size};
+         { std::move(subject), font_size };
       r._labels = {{ std::move(s)... }};
       return r;
    }

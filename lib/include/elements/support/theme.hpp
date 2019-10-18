@@ -67,6 +67,7 @@ namespace cycfi { namespace elements
       color                minor_grid_color           = indicator_color;
       float                minor_grid_width           = 0.4;
 
+      float                dialog_button_size         = 100;
       extent               message_textbox_size       = { 300, 120 };
    };
 

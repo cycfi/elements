@@ -41,11 +41,12 @@ namespace cycfi { namespace elements
    inline auto dialog1(
       view& view_
     , Content&& content
-    , F on_ok
+    , F&& on_ok
     , char const* ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
    {
+      auto button_size = get_theme().dialog_button_size;
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
          key_intercept(align_center_middle(
@@ -53,7 +54,7 @@ namespace cycfi { namespace elements
                margin({ 20, 20, 20, 20 },
                   vtile(
                      bottom_margin(20, std::forward<Content>(content)),
-                     align_right(hsize(100, hold(ok_button)))
+                     align_right(hsize(button_size, hold(ok_button)))
                   )
                ),
                panel{ /* opacity */0.98 }
@@ -109,6 +110,7 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
+      auto button_size = get_theme().dialog_button_size;
       auto cancel_button = share(button(cancel_text, 1.0));
       auto ok_button = share(button(ok_text, 1.0, ok_color));
       auto popup = share(
@@ -119,8 +121,8 @@ namespace cycfi { namespace elements
                      bottom_margin(20, std::forward<Content>(content)),
                      align_right(
                         htile(
-                           hsize(100, hold(cancel_button)),
-                           left_margin(20, hsize(100, hold(ok_button)))
+                           hsize(button_size, hold(cancel_button)),
+                           left_margin(20, hsize(button_size, hold(ok_button)))
                         )
                      )
                   )

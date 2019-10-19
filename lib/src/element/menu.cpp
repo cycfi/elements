@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/menu.hpp>
 #include <elements/element/tile.hpp>
-#include <elements/element/indirect.hpp>
+#include <elements/element/port.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -176,6 +176,40 @@ namespace cycfi { namespace elements
       return result? result : proxy_result;
    }
 
+   namespace
+   {
+      template <typename F>
+      void find_composite(context const& ctx, F&& f)
+      {
+         auto p = ctx.parent;
+         while (p)
+         {
+            bool break_ = false;
+            auto&& find =
+               [&](context const& ctx, element* e)
+               {
+                  if (auto vt = dynamic_cast<vtile_element*>(e))
+                     f(ctx, vt, break_);
+               };
+
+            auto e = p->element;
+            find(*p, e);
+            proxy_base* proxy = dynamic_cast<proxy_base*>(e);
+
+            while (!break_ && proxy)
+            {
+               auto* subject = &proxy->subject();
+               find(*p, subject);
+               proxy = dynamic_cast<proxy_base*>(subject);
+            }
+
+            if (break_)
+               break;
+            p = p->parent;
+         }
+      }
+   }
+
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
       if (k.action == key_action::press)
@@ -188,7 +222,79 @@ namespace cycfi { namespace elements
             return true;
          }
 
-         if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+         else if (is_selected()
+            && (k.key == key_code::up || k.key == key_code::down))
+         {
+            find_composite(ctx,
+               [k, this, &ctx](context const& ctx, auto* c, bool& break_)
+               {
+                  rect bounds;
+                  bool found = false;
+                  if (k.key == key_code::down)
+                  {
+                     for (std::size_t i = 0; i != c->size(); ++i)
+                     {
+                        if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                        {
+                           if (e == this)
+                           {
+                              if (i == c->size()-1)
+                              {
+                                 break_ = true;
+                                 break;
+                              }
+                              found = true;
+                              e->select(false);
+                           }
+                           else if (found)
+                           {
+                              e->select(true);
+                              bounds = c->bounds_of(ctx, i);
+                              break_ = true;
+                              break;
+                           }
+                        }
+                     }
+                  }
+                  else
+                  {
+                     for (int i = c->size()-1; i >= 0; --i)
+                     {
+                        if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                        {
+                           if (e == this)
+                           {
+                              if (i == 0)
+                              {
+                                 break_ = true;
+                                 break;
+                              }
+                              found = true;
+                              e->select(false);
+                           }
+                           else if (found)
+                           {
+                              e->select(true);
+                              bounds = c->bounds_of(ctx, i);
+                              break_ = true;
+                              break;
+                           }
+                        }
+                     }
+                  }
+                  if (break_)
+                  {
+                     ctx.view.refresh(*c);
+                     if (bounds != rect{} &&
+                        !scrollable::find(ctx).scroll_into_view(bounds))
+                        ctx.view.refresh(ctx);
+                  }
+               }
+            );
+            return true;
+         }
+
+         else if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
          {
             if (on_click)
                on_click();
@@ -199,45 +305,13 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   namespace
-   {
-      template <typename F>
-      void find_composite(context const& ctx, F&& f)
-      {
-         auto p = ctx.parent;
-         while (p)
-         {
-            bool break_ = false;
-            auto&& find =
-               [&](element* e)
-               {
-                  if (auto vt = dynamic_cast<vtile_element*>(e))
-                     f(vt, break_);
-               };
-
-            auto e = p->element;
-            find(e);
-            proxy_base* proxy = dynamic_cast<proxy_base*>(e);
-
-            while (!break_ && proxy)
-            {
-               auto* subject = &proxy->subject();
-               find(subject);
-               proxy = dynamic_cast<proxy_base*>(subject);
-            }
-
-            p = p->parent;
-         }
-      }
-   }
-
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       bool hit = ctx.bounds.includes(p);
       if (status == cursor_tracking::leaving || hit)
       {
          find_composite(ctx,
-            [](auto* c, bool& break_)
+            [](auto const& ctx, auto* c, bool& break_)
             {
                for (std::size_t i = 0; i != c->size(); ++i)
                {

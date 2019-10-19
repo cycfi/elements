@@ -9,6 +9,7 @@
 #include <elements/element/element.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/popup.hpp>
+#include <elements/element/selectable.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
@@ -79,7 +80,7 @@ namespace cycfi { namespace elements
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)
    };
 
-   class basic_menu_item_element : public proxy_base
+   class basic_menu_item_element : public proxy_base, public selectable
    {
    public:
 

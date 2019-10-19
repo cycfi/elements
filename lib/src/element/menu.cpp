@@ -4,6 +4,8 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/menu.hpp>
+#include <elements/element/tile.hpp>
+#include <elements/element/indirect.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -105,28 +107,6 @@ namespace cycfi { namespace elements
       if (!_popup)
          return false;
 
-      if (k.action == key_action::press)
-      {
-         if (k.key == key_code::escape || k.key == key_code::enter)
-         {
-            if (k.key == key_code::enter)
-            {
-               // simulate a menu click:
-               rect bounds = _popup->bounds();
-               context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
-               mouse_button btn{
-                  true, 1, mouse_button::left, 0, ctx.view.cursor_pos()
-               };
-               _popup->click(new_ctx, btn);
-            }
-
-            _popup->close(ctx.view);
-            state(false);
-            ctx.view.refresh();
-            return true;
-         }
-      }
-
       // simulate a menu key:
       rect bounds = _popup->bounds();
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
@@ -162,7 +142,7 @@ namespace cycfi { namespace elements
 
    void basic_menu_item_element::draw(context const& ctx)
    {
-      if (ctx.bounds.includes(ctx.view.cursor_pos()))
+      if (is_selected())
       {
          auto& canvas_ = ctx.canvas;
 
@@ -198,21 +178,80 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
-      if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+      if (k.action == key_action::press)
       {
-         if (on_click)
-            on_click();
-         ctx.give_feedback(this, "key");
-         return true;
+         if (k.key == key_code::escape || k.key == key_code::enter)
+         {
+            if (k.key == key_code::enter && on_click)
+               on_click();
+            ctx.give_feedback(this, "key");
+            return true;
+         }
+
+         if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+         {
+            if (on_click)
+               on_click();
+            ctx.give_feedback(this, "key");
+            return true;
+         }
       }
       return false;
+   }
+
+   namespace
+   {
+      template <typename F>
+      void find_composite(context const& ctx, F&& f)
+      {
+         auto p = ctx.parent;
+         while (p)
+         {
+            bool break_ = false;
+            auto&& find =
+               [&](element* e)
+               {
+                  if (auto vt = dynamic_cast<vtile_element*>(e))
+                     f(vt, break_);
+               };
+
+            auto e = p->element;
+            find(e);
+            proxy_base* proxy = dynamic_cast<proxy_base*>(e);
+
+            while (!break_ && proxy)
+            {
+               auto* subject = &proxy->subject();
+               find(subject);
+               proxy = dynamic_cast<proxy_base*>(subject);
+            }
+
+            p = p->parent;
+         }
+      }
    }
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       bool hit = ctx.bounds.includes(p);
       if (status == cursor_tracking::leaving || hit)
+      {
+         find_composite(ctx,
+            [](auto* c, bool& break_)
+            {
+               for (std::size_t i = 0; i != c->size(); ++i)
+               {
+                  if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                  {
+                     e->select(false);
+                     break_ = true;
+                  }
+               }
+            }
+         );
+         select(hit);
          ctx.view.refresh();
+      }
       proxy_base::cursor(ctx, p, status);
       return hit;
    }

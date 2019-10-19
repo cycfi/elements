@@ -7,6 +7,9 @@
 #define ELEMENTS_COMPOSITE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
+#include <elements/support/context.hpp>
+
 #include <vector>
 #include <array>
 
@@ -129,6 +132,47 @@ namespace cycfi { namespace elements
       std::size_t             _last;
       container&              _container;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_composite utility finds the innermost composite given a context.
+   // If successful, returns a pointer to the composite base and pointer
+   // to its context.
+   ////////////////////////////////////////////////////////////////////////////
+   std::pair<composite_base*, context const*>
+   inline find_composite(context const& ctx)
+   {
+      std::pair<composite_base*, context const*> result = { nullptr, nullptr };
+      auto p = ctx.parent;
+      while (p)
+      {
+         auto&& find =
+            [&](context const& ctx, element* e) -> bool
+            {
+               if (auto c = dynamic_cast<composite_base*>(e))
+               {
+                  result.first = c;
+                  result.second = &ctx;
+                  return true;
+               }
+               return false;
+            };
+
+         auto e = p->element;
+         if (find(*p, e))
+            return result;
+
+         proxy_base* proxy = dynamic_cast<proxy_base*>(e);
+         while (proxy)
+         {
+            auto* subject = &proxy->subject();
+            if (find(*p, subject))
+               return result;
+            proxy = dynamic_cast<proxy_base*>(subject);
+         }
+         p = p->parent;
+      }
+      return result;
+   }
 }}
 
 #endif

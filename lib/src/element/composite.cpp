@@ -152,7 +152,8 @@ namespace cycfi { namespace elements
             return true;
       }
 
-      if (k.action == key_action::press && k.key == key_code::tab && size())
+      if ((k.action == key_action::press || k.action == key_action::repeat)
+         && k.key == key_code::tab && size())
       {
          auto next_focus = _focus;
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();

@@ -497,7 +497,7 @@ namespace cycfi { namespace elements
       };
 
       bool handled = proxy_base::key(ctx, k);
-      if (!handled && k.action == key_action::press)
+      if (!handled && (k.action == key_action::press || k.action == key_action::repeat))
       {
          switch (k.key)
          {

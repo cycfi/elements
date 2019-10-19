@@ -350,7 +350,7 @@ namespace cycfi { namespace elements
          }
       };
 
-      if (k.action == key_action::press)
+      if (k.action == key_action::press || k.action == key_action::repeat)
       {
          switch (k.key)
          {
@@ -934,7 +934,7 @@ namespace cycfi { namespace elements
 
    bool basic_input_box::key(context const& ctx, key_info k)
    {
-      if (k.action == key_action::press)
+      if (k.action == key_action::press || k.action == key_action::repeat)
       {
          switch (k.key)
          {

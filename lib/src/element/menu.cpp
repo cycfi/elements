@@ -4,7 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/menu.hpp>
-#include <elements/element/tile.hpp>
+#include <elements/element/composite.hpp>
 #include <elements/element/port.hpp>
 
 namespace cycfi { namespace elements
@@ -176,43 +176,9 @@ namespace cycfi { namespace elements
       return result? result : proxy_result;
    }
 
-   namespace
-   {
-      template <typename F>
-      void find_composite(context const& ctx, F&& f)
-      {
-         auto p = ctx.parent;
-         while (p)
-         {
-            bool break_ = false;
-            auto&& find =
-               [&](context const& ctx, element* e)
-               {
-                  if (auto vt = dynamic_cast<vtile_element*>(e))
-                     f(ctx, vt, break_);
-               };
-
-            auto e = p->element;
-            find(*p, e);
-            proxy_base* proxy = dynamic_cast<proxy_base*>(e);
-
-            while (!break_ && proxy)
-            {
-               auto* subject = &proxy->subject();
-               find(*p, subject);
-               proxy = dynamic_cast<proxy_base*>(subject);
-            }
-
-            if (break_)
-               break;
-            p = p->parent;
-         }
-      }
-   }
-
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
-      if (k.action == key_action::press)
+      if (k.action == key_action::press || k.action == key_action::repeat)
       {
          if (k.key == key_code::escape || k.key == key_code::enter)
          {
@@ -225,72 +191,65 @@ namespace cycfi { namespace elements
          else if (is_selected()
             && (k.key == key_code::up || k.key == key_code::down))
          {
-            find_composite(ctx,
-               [k, this, &ctx](context const& ctx, auto* c, bool& break_)
+            rect bounds;
+            auto [c, cctx] = find_composite(ctx);
+            auto&& refresh = [&](auto c, auto cctx, auto const& bounds)
+            {
+               cctx->view.refresh(*cctx);
+               scrollable::find(ctx).scroll_into_view(bounds);
+            };
+
+            if (c)
+            {
+               if (k.key == key_code::down)
                {
-                  rect bounds;
                   bool found = false;
-                  if (k.key == key_code::down)
+                  for (std::size_t i = 0; i != c->size(); ++i)
                   {
-                     for (std::size_t i = 0; i != c->size(); ++i)
+                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
                      {
-                        if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                        if (e == this)
                         {
-                           if (e == this)
-                           {
-                              if (i == c->size()-1)
-                              {
-                                 break_ = true;
-                                 break;
-                              }
-                              found = true;
-                              e->select(false);
-                           }
-                           else if (found)
-                           {
-                              e->select(true);
-                              bounds = c->bounds_of(ctx, i);
-                              break_ = true;
+                           if (i == c->size()-1)
                               break;
-                           }
+                           found = true;
+                           e->select(false);
+                        }
+                        else if (found)
+                        {
+                           e->select(true);
+                           bounds = c->bounds_of(*cctx, i);
+                           refresh(c, cctx, bounds);
+                           break;
                         }
                      }
-                  }
-                  else
-                  {
-                     for (int i = c->size()-1; i >= 0; --i)
-                     {
-                        if (auto e = dynamic_cast<selectable*>(&c->at(i)))
-                        {
-                           if (e == this)
-                           {
-                              if (i == 0)
-                              {
-                                 break_ = true;
-                                 break;
-                              }
-                              found = true;
-                              e->select(false);
-                           }
-                           else if (found)
-                           {
-                              e->select(true);
-                              bounds = c->bounds_of(ctx, i);
-                              break_ = true;
-                              break;
-                           }
-                        }
-                     }
-                  }
-                  if (break_)
-                  {
-                     ctx.view.refresh(*c);
-                     if (bounds != rect{} &&
-                        !scrollable::find(ctx).scroll_into_view(bounds))
-                        ctx.view.refresh(ctx);
                   }
                }
-            );
+               else
+               {
+                  bool found = false;
+                  for (int i = c->size()-1; i >= 0; --i)
+                  {
+                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                     {
+                        if (e == this)
+                        {
+                           if (i == 0)
+                              break;
+                           found = true;
+                           e->select(false);
+                        }
+                        else if (found)
+                        {
+                           e->select(true);
+                           bounds = c->bounds_of(*cctx, i);
+                           refresh(c, cctx, bounds);
+                           break;
+                        }
+                     }
+                  }
+               }
+            }
             return true;
          }
 
@@ -310,19 +269,15 @@ namespace cycfi { namespace elements
       bool hit = ctx.bounds.includes(p);
       if (status == cursor_tracking::leaving || hit)
       {
-         find_composite(ctx,
-            [](auto const& ctx, auto* c, bool& break_)
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
+         {
+            for (std::size_t i = 0; i != c->size(); ++i)
             {
-               for (std::size_t i = 0; i != c->size(); ++i)
-               {
-                  if (auto e = dynamic_cast<selectable*>(&c->at(i)))
-                  {
-                     e->select(false);
-                     break_ = true;
-                  }
-               }
+               if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                  e->select(false);
             }
-         );
+         }
          select(hit);
          ctx.view.refresh();
       }

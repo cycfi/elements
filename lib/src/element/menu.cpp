@@ -112,11 +112,24 @@ namespace cycfi { namespace elements
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
 
       bool hit = false;
+      basic_menu_item_element* first = nullptr;
+      basic_menu_item_element* last = nullptr;
       new_ctx.feedback(
-         [&hit](auto* e, std::string_view what)
+         [&hit, &first, &last](auto* e, std::string_view what)
          {
-            if (dynamic_cast<basic_menu_item_element*>(e))
-               hit = true;
+            if (auto me = dynamic_cast<basic_menu_item_element*>(e))
+            {
+               if (what == "key" || what == "click")
+               {
+                  hit = true;
+               }
+               else if (what == "arrows")
+               {
+                  if (!first)
+                     first = me;
+                  last = me;
+               }
+            }
          }
       );
 
@@ -127,6 +140,27 @@ namespace cycfi { namespace elements
             _popup->close(ctx.view);
             state(false);
             ctx.view.refresh();
+         }
+         return true;
+      }
+
+      if (k.action == key_action::press || k.action == key_action::repeat)
+      {
+         if (k.key == key_code::down)
+         {
+            if (first)
+            {
+               first->select(true);
+               ctx.view.refresh();
+            }
+         }
+         else if (k.key == key_code::up)
+         {
+            if (last)
+            {
+               last->select(true);
+               ctx.view.refresh();
+            }
          }
          return true;
       }
@@ -188,9 +222,14 @@ namespace cycfi { namespace elements
             return true;
          }
 
-         else if (is_selected()
-            && (k.key == key_code::up || k.key == key_code::down))
+         else if (k.key == key_code::up || k.key == key_code::down)
          {
+            if (!is_selected())
+            {
+               ctx.give_feedback(this, "arrows");
+               return false;
+            }
+
             rect bounds;
             auto [c, cctx] = find_composite(ctx);
             auto&& refresh = [&](auto c, auto cctx, auto const& bounds)

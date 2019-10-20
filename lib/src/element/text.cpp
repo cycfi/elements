@@ -93,9 +93,9 @@ namespace cycfi { namespace elements
          _layout.text(f, l);
    }
 
-   void static_text_box::text(std::string const& text)
+   void static_text_box::text(std::string_view text)
    {
-      _text = text;
+      replace_string(_text, text);
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
       _layout.break_lines(_current_size.x, _rows);
@@ -257,7 +257,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_text_box::text(std::string const& text_)
+   void basic_text_box::text(std::string_view text_)
    {
       static_text_box::text(text_);
       _select_start = std::min<int>(_select_start, text_.size());

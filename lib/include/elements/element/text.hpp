@@ -10,6 +10,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <boost/asio.hpp>
+
 #include <string_view>
 #include <string>
 #include <vector>
@@ -17,9 +18,31 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
+   // text_base mixin
+   ////////////////////////////////////////////////////////////////////////////
+   class text_base
+   {
+   public:
+
+      virtual                    ~text_base() = default;
+
+      virtual std::string_view   text() const = 0;
+      virtual char const*        c_str() const = 0;
+      virtual void               text(std::string_view text) = 0;
+
+      // A simple utility for replacing a std::string with the
+      // contents of a std::string_view
+      static void replace_string(std::string& dest, std::string_view text)
+      {
+         std::string str{ text.begin(), text.end() };
+         dest.swap(str);
+      }
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
-   class static_text_box : public element
+   class static_text_box : public element, public text_base
    {
    public:
 
@@ -38,8 +61,10 @@ namespace cycfi { namespace elements
       virtual void            layout(context const& ctx);
       virtual void            draw(context const& ctx);
 
-      std::string const&      text() const                     { return _text; }
-      virtual void            text(std::string const& text);
+      std::string_view        text() const override            { return _text; }
+      char const*             c_str() const override           { return _text.c_str(); }
+      void                    text(std::string_view text) override;
+
       virtual void            value(std::string val);
 
       using element::text;
@@ -75,11 +100,12 @@ namespace cycfi { namespace elements
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual void            text(std::string const& text);
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            focus(focus_request r);
       virtual bool            is_control() const;
+
+      virtual bool            text(context const& ctx, text_info info);
+      virtual void            text(std::string_view text);
 
       using element::focus;
       using static_text_box::text;
@@ -141,8 +167,8 @@ namespace cycfi { namespace elements
 
       using basic_text_box::text;
 
-      using text_function = std::function<std::string(std::string const& text)>;
-      using enter_function = std::function<bool(std::string const& text)>;
+      using text_function = std::function<std::string(std::string_view text)>;
+      using enter_function = std::function<bool(std::string_view text)>;
 
                               basic_input_box(
                                  std::string_view placeholder

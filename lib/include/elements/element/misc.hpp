@@ -8,6 +8,7 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <functional>
 #include <string_view>
@@ -111,30 +112,40 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Headings
    ////////////////////////////////////////////////////////////////////////////
-   struct heading : element
+   class heading : public element, public text_base
    {
-                              heading(
-                                 std::string_view text
-                               , float size_ = 1.0
-                              );
+   public:
+                           heading(
+                              std::string_view text
+                            , float size_ = 1.0
+                           );
 
-                              heading(
-                                 std::string_view text
-                               , std::string_view font
-                               , float size = 1.0
-                              );
+                           heading(
+                              std::string_view text
+                            , std::string_view font
+                            , float size = 1.0
+                           );
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      virtual view_limits  limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
 
-      std::string             text() const                     { return _text; }
-      void                    text(std::string const& text)    { _text = text; }
+      std::string_view     text() const override         { return _text; }
+      char const*          c_str() const override        { return _text.c_str(); }
+      void                 text(std::string_view text)   { replace_string(_text, text); }
+
+      std::string const&   font() const                  { return _font; }
+      void                 font(std::string_view font_)  { _font = font_; }
+
+      float                size() const                  { return _size; }
+      void                 size(float size_)             { _size = size_; }
 
       using element::text;
 
-      std::string             _text;
-      std::string             _font;
-      float                   _size;
+   private:
+
+      std::string          _text;
+      std::string          _font;
+      float                _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -150,39 +161,40 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Labels
    ////////////////////////////////////////////////////////////////////////////
-   class label : public element
+   class label : public element, public text_base
    {
    public:
-                              label(
-                                 std::string_view text
-                               , float size = 1.0
-                              );
+                           label(
+                              std::string_view text
+                            , float size = 1.0
+                           );
 
-                              label(
-                                 std::string_view text
-                               , std::string_view font
-                               , float size = 1.0
-                              );
+                           label(
+                              std::string_view text
+                            , std::string_view font
+                            , float size = 1.0
+                           );
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      virtual view_limits  limits(basic_context const& ctx) const;
+      virtual void         draw(context const& ctx);
 
-      std::string             text() const                        { return _text; }
-      void                    text(std::string_view text)         { _text = text; }
+      std::string_view     text() const override         { return _text; }
+      char const*          c_str() const override        { return _text.c_str(); }
+      void                 text(std::string_view text)   { replace_string(_text, text); }
 
-      std::string             font() const                        { return _font; }
-      void                    font(std::string_view font_)        { _font = font_; }
+      std::string const&   font() const                  { return _font; }
+      void                 font(std::string_view font_)  { _font = font_; }
 
-      float                   size() const                        { return _size; }
-      void                    size(float size_)                   { _size = size_; }
+      float                size() const                  { return _size; }
+      void                 size(float size_)             { _size = size_; }
 
       using element::text;
 
    private:
 
-      std::string             _text;
-      std::string             _font;
-      float                   _size;
+      std::string          _text;
+      std::string          _font;
+      float                _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////

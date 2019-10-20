@@ -95,6 +95,12 @@ namespace cycfi { namespace elements
 
       menu_item_function      on_click;
       shortcut_key            shortcut;
+
+      void                    scroll_into_view() { _scroll_into_view = true; }
+
+   private:
+
+      bool                    _scroll_into_view = false;
    };
 
    template <typename Subject>

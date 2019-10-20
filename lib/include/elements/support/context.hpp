@@ -58,7 +58,10 @@ namespace cycfi { namespace elements
       context(context const&) = default;
       context& operator=(context const&) = default;
 
-      using feedback_function = std::function<void(elements::element*, std::string_view what)>;
+      using feedback_function =
+         std::function<
+            void(context const& ctx, elements::element*, std::string_view what)
+         >;
 
       template <typename F>
       feedback_function feedback(F&& f) const
@@ -68,12 +71,12 @@ namespace cycfi { namespace elements
          return save;
       }
 
-      void give_feedback(elements::element* e, char const* what) const
+      void give_feedback(context const& ctx, char const* what, elements::element* e) const
       {
          if (_feedback)
-            _feedback(e, what);
+            _feedback(ctx, e, what);
          if (parent)
-            parent->give_feedback(e, what);
+            parent->give_feedback(ctx, what, e);
       }
 
       elements::element*            element;

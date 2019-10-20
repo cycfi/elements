@@ -126,18 +126,18 @@ namespace cycfi { namespace elements
                             , float size = 1.0
                            );
 
-      virtual view_limits  limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
 
-      std::string_view     text() const override         { return _text; }
-      char const*          c_str() const override        { return _text.c_str(); }
-      void                 text(std::string_view text)   { replace_string(_text, text); }
+      std::string_view     text() const override                  { return _text; }
+      char const*          c_str() const override                 { return _text.c_str(); }
+      void                 text(std::string_view text) override   { replace_string(_text, text); }
 
-      std::string const&   font() const                  { return _font; }
-      void                 font(std::string_view font_)  { _font = font_; }
+      std::string const&   font() const                           { return _font; }
+      void                 font(std::string_view font_)           { _font = font_; }
 
-      float                size() const                  { return _size; }
-      void                 size(float size_)             { _size = size_; }
+      float                size() const                           { return _size; }
+      void                 size(float size_)                      { _size = size_; }
 
       using element::text;
 
@@ -175,18 +175,18 @@ namespace cycfi { namespace elements
                             , float size = 1.0
                            );
 
-      virtual view_limits  limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
 
-      std::string_view     text() const override         { return _text; }
-      char const*          c_str() const override        { return _text.c_str(); }
-      void                 text(std::string_view text)   { replace_string(_text, text); }
+      std::string_view     text() const override                  { return _text; }
+      char const*          c_str() const override                 { return _text.c_str(); }
+      void                 text(std::string_view text) override   { replace_string(_text, text); }
 
-      std::string const&   font() const                  { return _font; }
-      void                 font(std::string_view font_)  { _font = font_; }
+      std::string const&   font() const                           { return _font; }
+      void                 font(std::string_view font_)           { _font = font_; }
 
-      float                size() const                  { return _size; }
-      void                 size(float size_)             { _size = size_; }
+      float                size() const                           { return _size; }
+      void                 size(float size_)                      { _size = size_; }
 
       using element::text;
 

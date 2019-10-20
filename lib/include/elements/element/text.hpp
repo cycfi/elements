@@ -57,15 +57,15 @@ namespace cycfi { namespace elements
 
                               static_text_box(static_text_box&& rhs) = default;
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            layout(context const& ctx);
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      void                    draw(context const& ctx) override;
 
       std::string_view        text() const override            { return _text; }
       char const*             c_str() const override           { return _text.c_str(); }
       void                    text(std::string_view text) override;
 
-      virtual void            value(std::string val);
+      void                    value(std::string val) override;
 
       using element::text;
 
@@ -96,16 +96,16 @@ namespace cycfi { namespace elements
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
 
-      virtual void            draw(context const& ctx);
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            focus(focus_request r);
-      virtual bool            is_control() const;
+      void                    draw(context const& ctx) override;
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    focus(focus_request r) override;
+      bool                    is_control() const override;
 
-      virtual bool            text(context const& ctx, text_info info);
-      virtual void            text(std::string_view text);
+      bool                    text(context const& ctx, text_info info) override;
+      void                    text(std::string_view text) override;
 
       using element::focus;
       using static_text_box::text;
@@ -181,17 +181,17 @@ namespace cycfi { namespace elements
 
                               basic_input_box(basic_input_box&& rhs) = default;
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual bool            key(context const& ctx, key_info k);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      bool                    text(context const& ctx, text_info info) override;
+      bool                    key(context const& ctx, key_info k) override;
 
       text_function           on_text;
       enter_function          on_enter;
 
    private:
 
-      virtual void            paste(view& v, int start, int end);
+      void                    paste(view& v, int start, int end) override;
 
       std::string             _placeholder;
    };

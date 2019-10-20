@@ -21,7 +21,6 @@ namespace cycfi { namespace elements
 
    private:
 
-      virtual void            on_select(bool state);
       bool                    _selected = false;
    };
 
@@ -36,11 +35,6 @@ namespace cycfi { namespace elements
    inline void selectable::select(bool state)
    {
       _selected = state;
-      on_select(state);
-   }
-
-   inline void selectable::on_select(bool state)
-   {
    }
 }}
 

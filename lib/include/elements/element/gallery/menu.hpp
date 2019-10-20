@@ -90,10 +90,7 @@ namespace cycfi { namespace elements
    };
 
    std::pair<basic_menu, std::shared_ptr<label>>
-   selection_menu(
-      std::function<void(std::string_view item)> on_select
-    , std::string_view init
-   );
+   selection_menu(std::string_view init);
 
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(

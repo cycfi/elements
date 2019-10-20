@@ -58,10 +58,7 @@ namespace cycfi { namespace elements
    }
 
    std::pair<basic_menu, std::shared_ptr<label>>
-   selection_menu(
-      std::function<void(std::string_view item)> on_select
-    , std::string_view init
-   )
+   selection_menu(std::string_view init)
    {
       auto btn_text = share(label(init, 1.0));
 
@@ -85,7 +82,7 @@ namespace cycfi { namespace elements
     , menu_selector const& items
    )
    {
-      auto r = selection_menu(on_select, items.size()? items[0] : "");
+      auto r = selection_menu(items.size()? items[0] : "");
 
       if (items.size())
       {

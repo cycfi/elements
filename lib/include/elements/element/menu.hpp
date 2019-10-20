@@ -30,6 +30,7 @@ namespace cycfi { namespace elements
    public:
 
       using on_open_menu_function = std::function<void(basic_menu& menu)>;
+      using layered_button::focus;
 
                               template <typename W1, typename W2>
                               basic_menu(

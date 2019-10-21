@@ -90,7 +90,7 @@ namespace cycfi { namespace elements
          if (composite_base::focus() == &e)
             break; // element at at(ix) is already the focus
 
-         if (e.is_control() && e.focus(focus_request::wants_focus))
+         if (e.focus(focus_request::wants_focus))
          {
             e.focus(focus_request::begin_focus);
             composite_base::focus(ix);

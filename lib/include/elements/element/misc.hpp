@@ -244,7 +244,8 @@ namespace cycfi { namespace elements
                               {}
 
       virtual bool            key(context const& ctx, key_info k);
-      virtual bool            is_control() const { return true; }
+      virtual bool            is_control() const      { return true; }
+      virtual bool            focus(focus_request r)  { this->subject().focus(r); return true; }
 
       using key_function = std::function<bool(key_info k)>;
 

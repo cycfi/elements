@@ -49,7 +49,7 @@ namespace cycfi { namespace elements
       using element::value;
 
                               static_text_box(
-                                 std::string const& text
+                                 std::string_view text
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                                , color color_      = get_theme().text_box_font_color
@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
    {
    public:
                               basic_text_box(
-                                 std::string const& text
+                                 std::string_view text
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               );

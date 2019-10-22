@@ -135,7 +135,7 @@ namespace cycfi { namespace elements
       view& view_
     , Content&& content
     , F&& on_ok
-    , char const* ok_text = "OK"
+    , std::string_view ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -162,8 +162,8 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , char const* ok_text = "OK"
-    , char const* cancel_text = "Cancel"
+    , std::string_view ok_text = "OK"
+    , std::string_view cancel_text = "Cancel"
     , color ok_color = get_theme().indicator_color
    )
    {
@@ -198,8 +198,8 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , char const* ok_text = "OK"
-    , char const* cancel_text = "Cancel"
+    , std::string_view ok_text = "OK"
+    , std::string_view cancel_text = "Cancel"
     , color cancel_color = get_theme().indicator_color
    )
    {

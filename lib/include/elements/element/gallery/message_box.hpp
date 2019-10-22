@@ -9,6 +9,7 @@
 #include <elements/element/text.hpp>
 #include <elements/element//gallery/button.hpp>
 #include <elements/element//gallery/dialog.hpp>
+#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -16,7 +17,7 @@ namespace cycfi { namespace elements
    // Message Box 0 (no button)
    ////////////////////////////////////////////////////////////////////////////
    inline auto message_box0(
-      char const* message
+      std::string_view message
     , std::uint32_t icon_id
     , extent text_box_size = get_theme().message_textbox_size
    )
@@ -36,10 +37,10 @@ namespace cycfi { namespace elements
    template <typename F>
    inline auto message_box1(
       view& view_
-    , char const* message
+    , std::string_view message
     , std::uint32_t icon_id
     , F&& on_ok
-    , char const* ok_text = "OK"
+    , std::string_view ok_text = "OK"
     , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
    )
@@ -63,12 +64,12 @@ namespace cycfi { namespace elements
    template <typename F1, typename F2>
    inline auto message_box2(
       view& view_
-    , char const* message
+    , std::string_view message
     , std::uint32_t icon_id
     , F1&& on_ok
     , F2&& on_cancel
-    , char const* cancel_text = "Cancel"
-    , char const* ok_text = "OK"
+    , std::string_view ok_text = "OK"
+    , std::string_view cancel_text = "Cancel"
     , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
    )
@@ -82,8 +83,8 @@ namespace cycfi { namespace elements
          ),
          std::forward<F1>(on_ok),
          std::forward<F2>(on_cancel),
-         cancel_text,
          ok_text,
+         cancel_text,
          ok_color
       );
    }
@@ -95,12 +96,12 @@ namespace cycfi { namespace elements
    template <typename F1, typename F2>
    inline auto message_box2r(
       view& view_
-    , char const* message
+    , std::string_view message
     , std::uint32_t icon_id
     , F1&& on_ok
     , F2&& on_cancel
-    , char const* cancel_text = "Cancel"
-    , char const* ok_text = "OK"
+    , std::string_view ok_text = "OK"
+    , std::string_view cancel_text = "Cancel"
     , extent text_box_size = get_theme().message_textbox_size
     , color ok_color = get_theme().indicator_color
    )
@@ -114,8 +115,8 @@ namespace cycfi { namespace elements
          ),
          std::forward<F1>(on_ok),
          std::forward<F2>(on_cancel),
-         cancel_text,
          ok_text,
+         cancel_text,
          ok_color
       );
    }

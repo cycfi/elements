@@ -171,7 +171,7 @@ namespace cycfi { namespace elements
       using enter_function = std::function<bool(std::string_view text)>;
 
                               basic_input_box(
-                                 std::string_view placeholder
+                                 std::string_view placeholder = ""
                                , char const* face  = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               )

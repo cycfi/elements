@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Message Box 1 (single botton, e.g. OK)
+   // Message Box 1 (single button, e.g. OK)
    ////////////////////////////////////////////////////////////////////////////
    template <typename F>
    inline auto message_box1(
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Message Box 2 (two bottons, e.g. Cancel and OK)
+   // Message Box 2 (two buttons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
    template <typename F1, typename F2>
    inline auto message_box2(
@@ -75,6 +75,38 @@ namespace cycfi { namespace elements
    {
       auto textbox = fixed_size(text_box_size, static_text_box{ message });
       return dialog2(
+         view_,
+         htile(
+            align_top(icon{ icon_id, 2.5 }),
+            left_margin(20, std::move(textbox))
+         ),
+         std::forward<F1>(on_ok),
+         std::forward<F2>(on_cancel),
+         cancel_text,
+         ok_text,
+         ok_color
+      );
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Message Box 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
+   // being the default that maps to both the enter and esc keys)
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F1, typename F2>
+   inline auto message_box2r(
+      view& view_
+    , char const* message
+    , std::uint32_t icon_id
+    , F1&& on_ok
+    , F2&& on_cancel
+    , char const* cancel_text = "Cancel"
+    , char const* ok_text = "OK"
+    , extent text_box_size = get_theme().message_textbox_size
+    , color ok_color = get_theme().indicator_color
+   )
+   {
+      auto textbox = fixed_size(text_box_size, static_text_box{ message });
+      return dialog2r(
          view_,
          htile(
             align_top(icon{ icon_id, 2.5 }),

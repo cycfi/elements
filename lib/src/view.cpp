@@ -300,7 +300,11 @@
          ctx_ptr = ctx_ptr->parent;
       }
       if (ctx_ptr)
-         refresh(ctx_ptr->bounds);
+      {
+         auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
+         auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
+         refresh({ tl.x, tl.y, br.x, br.y });
+      }
    }
 
    void view::click(mouse_button btn)

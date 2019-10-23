@@ -464,6 +464,86 @@ namespace cycfi { namespace elements
       clamp_max(l.max.y, _limits.max.y);
       return l;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Scaled
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct scale_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                              scale_element(point scale_, Subject&& subject)
+                               : base_type(std::forward<Subject>(subject))
+                               , _scale(scale_)
+                              {}
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual view_stretch    stretch() const;
+      virtual void            prepare_subject(context& ctx);
+      virtual void            prepare_subject(context& ctx, point& p);
+      virtual void            restore_subject(context& ctx);
+
+      point                   _scale;
+   };
+
+   template <typename Subject>
+   inline scale_element<Subject>
+   scale(point scale_, Subject&& subject)
+   {
+      return { scale_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline view_limits
+   scale_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto l = this->subject().limits(ctx);
+      l.min.x *= _scale.x;
+      l.min.y *= _scale.y;
+      l.max.x *= _scale.x;
+      l.max.y *= _scale.y;
+      clamp_max(l.max.x, full_extent);
+      clamp_max(l.max.y, full_extent);
+      return l;
+   }
+
+   template <typename Subject>
+   inline view_stretch
+   scale_element<Subject>::stretch() const
+   {
+      auto s = this->subject().stretch();
+      return { s.x * _scale.x, s.y * _scale.y };
+   }
+
+   template <typename Subject>
+   inline void scale_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto& canvas_ = ctx.canvas;
+      canvas_.save();
+      auto& bounds = ctx.bounds;
+      canvas_.scale(_scale);
+      auto  offset = point{ bounds.left / _scale.x, bounds.top / _scale.y };
+      bounds = {
+         offset.x
+       , offset.y
+       , offset.x + (bounds.width() / _scale.x)
+       , offset.y + (bounds.height() / _scale.y)
+      };
+   }
+
+   template <typename Subject>
+   void scale_element<Subject>::prepare_subject(context& ctx, point& p)
+   {
+      prepare_subject(ctx);
+      p = ctx.canvas.device_to_user(p);
+   }
+
+   template <typename Subject>
+   inline void scale_element<Subject>::restore_subject(context& ctx)
+   {
+      ctx.canvas.restore();
+   }
 }}
 
 #endif

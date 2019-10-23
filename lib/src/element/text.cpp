@@ -548,13 +548,18 @@ namespace cycfi { namespace elements
 
       if (_is_focus && has_caret && !_caret_started)
       {
+         auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
+         auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
+         caret_bounds = { tl.x, tl.y, br.x, br.y };
+
          _caret_started = true;
          ctx.view.post(500ms,
-                       [this, &_view = ctx.view, caret_bounds]() {
-                          _show_caret = !_show_caret;
-                          _view.refresh(caret_bounds);
-                          _caret_started = false;
-                       }
+            [this, &_view = ctx.view, caret_bounds]()
+            {
+               _show_caret = !_show_caret;
+               _view.refresh(caret_bounds);
+               _caret_started = false;
+            }
          );
       }
    }

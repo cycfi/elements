@@ -228,6 +228,24 @@ namespace cycfi { namespace elements
    {
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
+         auto&& equal =
+            [](auto k, auto shortcut)
+            {
+               int mask = 0xF;
+               switch (shortcut.key)
+               {
+                  case key_code::minus:
+                  case key_code::equal:
+                     mask &= ~mod_shift;
+                     break;
+                  default:
+                     break;
+               }
+               return (k.key == shortcut.key) &&
+                  ((k.modifiers & mask) == (shortcut.modifiers & mask))
+                  ;
+            };
+
          if (k.key == key_code::escape || k.key == key_code::enter)
          {
             if (k.key == key_code::enter && on_click)
@@ -235,7 +253,6 @@ namespace cycfi { namespace elements
             ctx.give_feedback(ctx, "key", this);
             return true;
          }
-
          else if (k.key == key_code::up || k.key == key_code::down)
          {
             if (!is_selected())
@@ -305,8 +322,7 @@ namespace cycfi { namespace elements
             }
             return true;
          }
-
-         else if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+         else if (equal(k, shortcut))
          {
             if (on_click)
                on_click();

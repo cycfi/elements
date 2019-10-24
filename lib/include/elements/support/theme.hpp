@@ -24,6 +24,7 @@ namespace cycfi { namespace elements
       color                controls_color             = rgba(18, 49, 85, 200);
       color                indicator_color            = rgba(0, 127, 255, 200);
       color                basic_font_color           = rgba(220, 220, 220, 200);
+      color                disabled_font_color        = rgba(127, 127, 127, 150);
 
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
@@ -76,6 +77,64 @@ namespace cycfi { namespace elements
 
    // Set the global theme
    void set_theme(theme const& thm);
+
+   template <typename T>
+   class scoped_theme_override
+   {
+   public:
+
+       scoped_theme_override(theme& thm, T theme::*pmem, T val)
+       : _thm(thm)
+       , _pmem(pmem)
+       , _save(thm.*pmem)
+      {
+         _thm.*_pmem = val;
+      }
+
+       scoped_theme_override(scoped_theme_override&& rhs)
+       : _thm(rhs._thm)
+       , _pmem(rhs._pmem)
+       , _save(rhs._thm.*_pmem)
+      {
+         rhs._pmem = nullptr;
+      }
+
+      ~scoped_theme_override()
+      {
+         if (_pmem)
+            _thm.*_pmem = _save;
+      }
+
+   private:
+
+      theme&      _thm;
+      T theme::*  _pmem;
+      T           _save;
+   };
+
+   class global_theme
+   {
+      template <typename T>
+      friend class scoped_theme_override;
+
+      friend theme const& get_theme();
+      friend void set_theme(theme const& thm);
+
+      template <typename T>
+      friend scoped_theme_override<T>
+      override_theme(T theme::*pmem, T val);
+
+      static theme _theme;
+   };
+
+   template <typename T>
+   scoped_theme_override<T>
+   override_theme(T theme::*pmem, T val)
+   {
+      return scoped_theme_override<T>{
+         global_theme::_theme, pmem, val
+      };
+   }
 }}
 
 #endif

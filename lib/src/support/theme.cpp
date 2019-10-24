@@ -9,15 +9,15 @@
 namespace cycfi { namespace elements
 {
    // The global theme
-   theme _theme;
+   theme global_theme::_theme;
 
    theme const& get_theme()
    {
-      return _theme;
+      return global_theme::_theme;
    }
 
    void set_theme(theme const& thm)
    {
-      _theme = thm;
+      global_theme::_theme = thm;
    }
 }}

@@ -11,16 +11,19 @@
  {
    view::view(extent size_)
     : base_view(size_)
+    , _main_element(make_scaled_content())
     , _work(_io)
    {}
 
    view::view(host_view_handle h)
     : base_view(h)
+    , _main_element(make_scaled_content())
     , _work(_io)
    {}
 
    view::view(window& win)
     : base_view(win.host())
+    , _main_element(make_scaled_content())
     , _work(_io)
    {
       on_change_limits = [&win](view_limits limits_)
@@ -46,7 +49,7 @@
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{ *this, cnv };
-      auto limits_ = _content.limits(bctx);
+      auto limits_ = _main_element.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
          resized = true;
@@ -77,17 +80,17 @@
       canvas cnv{ *context_ };
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
-      context ctx{ *this, cnv, &_content, subj_bounds };
+      context ctx{ *this, cnv, &_main_element, subj_bounds };
 
       // layout the subject only if the window bounds changes
       if (subj_bounds != _current_bounds)
       {
          _current_bounds = subj_bounds;
-         _content.layout(ctx);
+         _main_element.layout(ctx);
       }
 
       // draw the subject
-      _content.draw(ctx);
+      _main_element.draw(ctx);
    }
 
    namespace
@@ -98,9 +101,9 @@
          auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
          auto context_ = cairo_create(surface_);
          canvas cnv{ *context_ };
-         context ctx { self, cnv, &self.content(), _current_bounds };
+         context ctx { self, cnv, &self.main_element(), _current_bounds };
 
-         f(ctx, self.content());
+         f(ctx, self.main_element());
 
          cairo_surface_destroy(surface_);
          cairo_destroy(context_);
@@ -113,7 +116,7 @@
          return;
 
       call(
-         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
 
@@ -126,11 +129,22 @@
          return;
 
       call(
-         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
 
       refresh(element);
+   }
+
+   float view::scale() const
+   {
+      return _main_element._scale;
+   }
+
+   void view::scale(float val)
+   {
+      _main_element._scale = val;
+      refresh();
    }
 
    void view::refresh()
@@ -164,9 +178,9 @@
          [this, &element, outward]()
          {
             call(
-               [&element, outward](auto const& ctx, auto& _content)
+               [&element, outward](auto const& ctx, auto& _main_element)
                {
-                  _content.refresh(ctx, element, outward);
+                  _main_element.refresh(ctx, element, outward);
                },
                *this, _current_bounds
             );
@@ -197,10 +211,10 @@
          return;
 
       call(
-         [btn, this](auto const& ctx, auto& _content)
+         [btn, this](auto const& ctx, auto& _main_element)
          {
-            _content.click(ctx, btn);
-            _is_focus = _content.focus();
+            _main_element.click(ctx, btn);
+            _is_focus = _main_element.focus();
          },
          *this, _current_bounds
       );
@@ -213,7 +227,7 @@
          return;
 
       call(
-         [btn](auto const& ctx, auto& _content) { _content.drag(ctx, btn); },
+         [btn](auto const& ctx, auto& _main_element) { _main_element.drag(ctx, btn); },
          *this, _current_bounds
       );
    }
@@ -224,9 +238,9 @@
          return;
 
       call(
-         [p, status](auto const& ctx, auto& _content)
+         [p, status](auto const& ctx, auto& _main_element)
          {
-            if (!_content.cursor(ctx, p, status))
+            if (!_main_element.cursor(ctx, p, status))
                set_cursor(cursor_type::arrow);
          },
          *this, _current_bounds
@@ -239,7 +253,7 @@
          return;
 
       call(
-         [dir, p](auto const& ctx, auto& _content) { _content.scroll(ctx, dir, p); },
+         [dir, p](auto const& ctx, auto& _main_element) { _main_element.scroll(ctx, dir, p); },
          *this, _current_bounds
       );
    }
@@ -250,7 +264,7 @@
          return;
 
       call(
-         [k](auto const& ctx, auto& _content) { _content.key(ctx, k); },
+         [k](auto const& ctx, auto& _main_element) { _main_element.key(ctx, k); },
          *this, _current_bounds
       );
    }
@@ -261,7 +275,7 @@
          return;
 
       call(
-         [info](auto const& ctx, auto& _content) { _content.text(ctx, info); },
+         [info](auto const& ctx, auto& _main_element) { _main_element.text(ctx, info); },
          *this, _current_bounds
       );
    }
@@ -308,7 +322,7 @@
       if (_content.empty() || !_is_focus)
          return;
 
-      _content.focus(r);
+      _main_element.focus(r);
       refresh();
    }
 

@@ -6,8 +6,8 @@ using namespace cycfi::elements;
 auto bkd_color = rgba(62, 62, 62, 255);
 auto background = box(bkd_color);
 
-auto rbox = min_size({ 5, 5 },
-   basic(
+auto rbox = min_size({5, 5 },
+                          basic(
       [](context const& ctx)
       {
          auto& c = ctx.canvas;

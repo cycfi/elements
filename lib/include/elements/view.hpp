@@ -12,6 +12,8 @@
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <elements/element/layer.hpp>
+#include <elements/element/size.hpp>
+#include <elements/element/indirect.hpp>
 #include <boost/asio.hpp>
 #include <memory>
 #include <unordered_map>
@@ -26,29 +28,31 @@ namespace cycfi { namespace elements
    class view : public base_view
    {
    public:
-                           view(extent size_);
-                           view(host_view_handle h);
-                           view(window& win);
-                           ~view();
+                              view(extent size_);
+                              view(host_view_handle h);
+                              view(window& win);
+                              ~view();
 
-      virtual void         draw(cairo_t* ctx, rect area) override;
-      virtual void         click(mouse_button btn) override;
-      virtual void         drag(mouse_button btn) override;
-      virtual void         cursor(point p, cursor_tracking status) override;
-      virtual void         scroll(point dir, point p) override;
-      virtual void         key(key_info const& k) override;
-      virtual void         text(text_info const& info) override;
-      virtual void         focus(focus_request r) override;
-      virtual void         poll() override;
+      virtual void            draw(cairo_t* ctx, rect area) override;
+      virtual void            click(mouse_button btn) override;
+      virtual void            drag(mouse_button btn) override;
+      virtual void            cursor(point p, cursor_tracking status) override;
+      virtual void            scroll(point dir, point p) override;
+      virtual void            key(key_info const& k) override;
+      virtual void            text(text_info const& info) override;
+      virtual void            focus(focus_request r) override;
+      virtual void            poll() override;
 
-      void                 layout();
-      void                 layout(element &element);
+      void                    layout();
+      void                    layout(element &element);
+      float                   scale() const;
+      void                    scale(float val);
 
-      virtual void         refresh() override;
-      virtual void         refresh(rect area) override;
-      void                 refresh(element& element, int outward = 0);
-      void                 refresh(context const& ctx, int outward = 0);
-      rect                 dirty() const;
+      virtual void            refresh() override;
+      virtual void            refresh(rect area) override;
+      void                    refresh(element& element, int outward = 0);
+      void                    refresh(context const& ctx, int outward = 0);
+      rect                    dirty() const;
 
       struct undo_redo_task
       {
@@ -56,67 +60,74 @@ namespace cycfi { namespace elements
          std::function<void()> redo;
       };
 
-      void                 add_undo(undo_redo_task t);
-      bool                 has_undo();
-      bool                 has_redo();
-      bool                 undo();
-      bool                 redo();
+      void                    add_undo(undo_redo_task t);
+      bool                    has_undo();
+      bool                    has_redo();
+      bool                    undo();
+      bool                    redo();
 
       using content_type = layer_composite;
       using layers_type = layer_composite::container_type;
+      using scaled_content = scale_element<indirect<reference<layer_composite>>>;
 
-      content_type&        content();
-      content_type const&  content() const;
-      void                 content(layers_type&& layers);
-      void                 add(element_ptr e);
-      void                 remove(element_ptr e);
-      bool                 is_open(element_ptr e);
+      scaled_content&         main_element()         { return _main_element; }
+      scaled_content const&   main_element() const   { return _main_element; }
 
-      view_limits          limits() const;
-      mouse_button         current_button() const;
+      content_type&           content();
+      content_type const&     content() const;
+      void                    content(layers_type&& layers);
+      void                    add(element_ptr e);
+      void                    remove(element_ptr e);
+      bool                    is_open(element_ptr e);
+
+      view_limits             limits() const;
+      mouse_button            current_button() const;
 
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
       using io_context = boost::asio::io_context;
-      io_context&          io();
+      io_context&             io();
 
-                           template <typename T, typename F>
-      void                 post(T duration, F f);
+                              template <typename T, typename F>
+      void                    post(T duration, F f);
 
-                           template <typename F>
-      void                 post(F f);
+                              template <typename F>
+      void                    post(F f);
 
       using tracking = element::tracking;
 
       using track_function = std::function<void(element& e, tracking state)>;
       track_function on_tracking = [](element& e, tracking state) {};
 
-      void                 manage_on_tracking(element& e, tracking state);
+      void                    manage_on_tracking(element& e, tracking state);
 
    private:
 
-      layer_composite      _content;
+      scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }
 
-      bool                 set_limits();
+      layer_composite         _content;
+      scaled_content          _main_element;
 
-      rect                 _dirty;
-      rect                 _current_bounds;
-      view_limits          _current_limits = { { 0, 0 }, { full_extent, full_extent} };
-      mouse_button         _current_button;
-      bool                 _is_focus = false;
+      bool                    set_limits();
+
+      rect                    _dirty;
+      rect                    _current_bounds;
+      view_limits             _current_limits = { { 0, 0 }, { full_extent, full_extent} };
+      mouse_button            _current_button;
+      bool                    _is_focus = false;
 
       using undo_stack_type = std::stack<undo_redo_task>;
-      undo_stack_type      _undo_stack;
-      undo_stack_type      _redo_stack;
+      undo_stack_type         _undo_stack;
+      undo_stack_type         _redo_stack;
 
-      io_context           _io;
-      io_context::work     _work;
+      io_context              _io;
+      io_context::work        _work;
 
       using time_point = std::chrono::steady_clock::time_point;
-      element*             _tracking_element = nullptr;
-      tracking             _tracking_state = tracking::none;
-      time_point           _tracking_time;
+      element*                _tracking_element = nullptr;
+      tracking                _tracking_state = tracking::none;
+      time_point              _tracking_time;
    };
 
    ////////////////////////////////////////////////////////////////////////////

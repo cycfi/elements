@@ -39,17 +39,33 @@ auto make_popup_menu(char const* title, menu_position pos)
 {
    auto popup  = button_menu(title, pos);
 
+   auto quantum_feedback_loop = menu_item("Quantum Feedback Loop");
+   auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator");
+   auto photonic_mesh = menu_item("Photonic Mesh");
+   auto antimatter_soup = menu_item("Antimatter Soup");
+
+   // Here's how you dynamically enable or disable menu items:
+   // Just give it a function that returns the enabled state.
+   static bool enable = false; // just for demo; avoid statics!
+   photonic_mesh.is_enabled   = []{ return enable; };
+   antimatter_soup.is_enabled = []{ return enable; };
+
+   // Here's how you attach functions that will be called when a
+   // menu item is selected:
+   quantum_feedback_loop.on_click   = [](){ enable = true; };
+   psionic_wave_oscillator.on_click = [](){ enable = false; };
+
    auto menu =
       layer(
          vtile(
-            menu_item("Quantum Feedback Loop"),
-            menu_item("Psionic Wave Oscillator"),
+            quantum_feedback_loop,
+            psionic_wave_oscillator,
             menu_item("Gaia Abiogenesis"),
             menu_item_spacer(),
             menu_item("Chaotic Synchronicity"),
             menu_item("Omega Quadrant"),
-            menu_item("Photonic Mesh"),
-            menu_item("Antimatter Soup"),
+            photonic_mesh,
+            antimatter_soup,
             menu_item("Dark Beta Quarks"),
             menu_item("Cosmic Infrared Shift")
          ),

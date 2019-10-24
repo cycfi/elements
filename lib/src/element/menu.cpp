@@ -104,7 +104,7 @@ namespace cycfi { namespace elements
 
    bool basic_menu::key(context const& ctx, key_info k)
    {
-      if (!_popup)
+      if (!_popup || !ctx.view.is_open(_popup))
          return false;
 
       // simulate a menu key:
@@ -246,93 +246,106 @@ namespace cycfi { namespace elements
                   ;
             };
 
-         if (is_selected() && k.key == key_code::enter)
+         switch (k.key)
          {
-            if (on_click)
-               on_click();
-            ctx.give_feedback(ctx, "key", this);
-            return true;
-         }
-         else if (k.key == key_code::escape)
-         {
-            ctx.give_feedback(ctx, "key", this);
-            return true;
-         }
-         else if (k.key == key_code::up || k.key == key_code::down)
-         {
-            if (!is_selected())
-            {
-               ctx.give_feedback(ctx, "arrows", this);
-               return false;
-            }
-
-            rect bounds;
-            auto [c, cctx] = find_composite(ctx);
-            auto&& refresh = [&](auto c, auto cctx, auto const& bounds)
-            {
-               cctx->view.refresh(*cctx);
-               scrollable::find(ctx).scroll_into_view(bounds);
-            };
-
-            if (c)
-            {
-               if (k.key == key_code::down)
+            case key_code::enter:
+               if (is_selected())
                {
-                  bool found = false;
-                  for (std::size_t i = 0; i != c->size(); ++i)
+                  if (on_click)
+                     on_click();
+                  select(false);
+                  ctx.give_feedback(ctx, "key", this);
+                  return true;
+               }
+               break;
+
+            case key_code::escape:
+               {
+                  ctx.give_feedback(ctx, "key", this);
+                  return true;
+               }
+               break;
+
+            case key_code::up:
+            case key_code::down:
+               {
+                  if (!is_selected())
                   {
-                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                     ctx.give_feedback(ctx, "arrows", this);
+                     return false;
+                  }
+
+                  rect bounds;
+                  auto [c, cctx] = find_composite(ctx);
+                  auto&& refresh = [&](auto c, auto cctx, auto const& bounds)
+                  {
+                     cctx->view.refresh(*cctx);
+                     scrollable::find(ctx).scroll_into_view(bounds);
+                  };
+
+                  if (c)
+                  {
+                     if (k.key == key_code::down)
                      {
-                        if (e == this)
+                        bool found = false;
+                        for (std::size_t i = 0; i != c->size(); ++i)
                         {
-                           if (i == c->size()-1)
-                              break;
-                           found = true;
-                           e->select(false);
+                           if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                           {
+                              if (e == this)
+                              {
+                                 if (i == c->size()-1)
+                                    break;
+                                 found = true;
+                                 e->select(false);
+                              }
+                              else if (found)
+                              {
+                                 e->select(true);
+                                 bounds = c->bounds_of(*cctx, i);
+                                 refresh(c, cctx, bounds);
+                                 break;
+                              }
+                           }
                         }
-                        else if (found)
+                     }
+                     else
+                     {
+                        bool found = false;
+                        for (int i = c->size()-1; i >= 0; --i)
                         {
-                           e->select(true);
-                           bounds = c->bounds_of(*cctx, i);
-                           refresh(c, cctx, bounds);
-                           break;
+                           if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                           {
+                              if (e == this)
+                              {
+                                 if (i == 0)
+                                    break;
+                                 found = true;
+                                 e->select(false);
+                              }
+                              else if (found)
+                              {
+                                 e->select(true);
+                                 bounds = c->bounds_of(*cctx, i);
+                                 refresh(c, cctx, bounds);
+                                 break;
+                              }
+                           }
                         }
                      }
                   }
+                  return true;
                }
-               else
+               break;
+
+            default:
+               if (equal(k, shortcut))
                {
-                  bool found = false;
-                  for (int i = c->size()-1; i >= 0; --i)
-                  {
-                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
-                     {
-                        if (e == this)
-                        {
-                           if (i == 0)
-                              break;
-                           found = true;
-                           e->select(false);
-                        }
-                        else if (found)
-                        {
-                           e->select(true);
-                           bounds = c->bounds_of(*cctx, i);
-                           refresh(c, cctx, bounds);
-                           break;
-                        }
-                     }
-                  }
+                  if (on_click)
+                     on_click();
+                  ctx.give_feedback(ctx, "key", this);
+                  return true;
                }
-            }
-            return true;
-         }
-         else if (equal(k, shortcut))
-         {
-            if (on_click)
-               on_click();
-            ctx.give_feedback(ctx, "key", this);
-            return true;
          }
       }
       return false;

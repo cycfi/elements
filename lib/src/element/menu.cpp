@@ -183,7 +183,7 @@ namespace cycfi { namespace elements
 
    void basic_menu_item_element::draw(context const& ctx)
    {
-      if (is_selected())
+      if (is_selected() && is_enabled())
       {
          if (_scroll_into_view)
          {
@@ -199,21 +199,31 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      proxy_base::draw(ctx);
+      if (is_enabled())
+      {
+         proxy_base::draw(ctx);
+      }
+      else
+      {
+         auto r = override_theme(
+            &theme::label_font_color
+          , get_theme().disabled_font_color
+         );
+         proxy_base::draw(ctx);
+      }
    }
 
    element* basic_menu_item_element::hit_test(context const& ctx, point p)
    {
-      if (ctx.bounds.includes(p))
+      if (is_enabled() && ctx.bounds.includes(p))
          return this;
-      ctx.view.refresh(ctx);
-      return 0;
+      return nullptr;
    }
 
    element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
       element* result = nullptr;
-      if (ctx.bounds.includes(btn.pos))
+      if (is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
@@ -227,6 +237,9 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
+      if (!is_enabled())
+         return false;
+
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
          auto&& equal =
@@ -355,6 +368,9 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      if (!is_enabled())
+         return false;
+
       bool hit = ctx.bounds.includes(p);
       if (status == cursor_tracking::leaving || hit)
       {

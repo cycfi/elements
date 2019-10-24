@@ -86,6 +86,7 @@ namespace cycfi { namespace elements
    public:
 
       using menu_item_function = std::function<void()>;
+      using menu_enabled_function = std::function<bool()>;
 
       virtual void            draw(context const& ctx);
       virtual element*        hit_test(context const& ctx, point p);
@@ -94,10 +95,11 @@ namespace cycfi { namespace elements
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual bool            is_control() const;
 
+      menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;
       shortcut_key            shortcut;
 
-      void                    scroll_into_view() { _scroll_into_view = true; }
+      void                    scroll_into_view()   { _scroll_into_view = true; }
 
    private:
 

@@ -104,14 +104,14 @@ namespace cycfi { namespace elements
 
    bool basic_menu::key(context const& ctx, key_info k)
    {
-      if (!_popup || !ctx.view.is_open(_popup))
+      if (!_popup)
          return false;
 
       // simulate a menu key:
       rect bounds = _popup->bounds();
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
 
-      bool hit = false;
+      basic_menu_item_element* hit = nullptr;
       basic_menu_item_element* first = nullptr;
       basic_menu_item_element* last = nullptr;
       rect first_bounds, last_bounds;
@@ -122,7 +122,7 @@ namespace cycfi { namespace elements
             {
                if (what == "key" || what == "click")
                {
-                  hit = true;
+                  hit = me;
                }
                else if (what == "arrows")
                {
@@ -217,6 +217,7 @@ namespace cycfi { namespace elements
       {
          if (on_click)
             on_click();
+         select(false);
          ctx.give_feedback(ctx, "click", this);
          result = this;
       }
@@ -251,9 +252,9 @@ namespace cycfi { namespace elements
             case key_code::enter:
                if (is_selected())
                {
+                  select(false);
                   if (on_click)
                      on_click();
-                  select(false);
                   ctx.give_feedback(ctx, "key", this);
                   return true;
                }
@@ -261,6 +262,7 @@ namespace cycfi { namespace elements
 
             case key_code::escape:
                {
+                  select(false);
                   ctx.give_feedback(ctx, "key", this);
                   return true;
                }

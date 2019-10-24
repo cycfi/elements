@@ -473,7 +473,7 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              scale_element(point scale_, Subject&& subject)
+                              scale_element(float scale_, Subject&& subject)
                                : base_type(std::forward<Subject>(subject))
                                , _scale(scale_)
                               {}
@@ -484,12 +484,12 @@ namespace cycfi { namespace elements
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
 
-      point                   _scale;
+       float                  _scale;
    };
 
    template <typename Subject>
    inline scale_element<Subject>
-   scale(point scale_, Subject&& subject)
+   scale(float scale_, Subject&& subject)
    {
       return { scale_, std::forward<Subject>(subject) };
    }
@@ -499,10 +499,10 @@ namespace cycfi { namespace elements
    scale_element<Subject>::limits(basic_context const& ctx) const
    {
       auto l = this->subject().limits(ctx);
-      l.min.x *= _scale.x;
-      l.min.y *= _scale.y;
-      l.max.x *= _scale.x;
-      l.max.y *= _scale.y;
+      l.min.x *= _scale;
+      l.min.y *= _scale;
+      l.max.x *= _scale;
+      l.max.y *= _scale;
       clamp_max(l.max.x, full_extent);
       clamp_max(l.max.y, full_extent);
       return l;
@@ -513,7 +513,7 @@ namespace cycfi { namespace elements
    scale_element<Subject>::stretch() const
    {
       auto s = this->subject().stretch();
-      return { s.x * _scale.x, s.y * _scale.y };
+      return { s.x * _scale, s.y * _scale };
    }
 
    template <typename Subject>
@@ -522,13 +522,13 @@ namespace cycfi { namespace elements
       auto& canvas_ = ctx.canvas;
       canvas_.save();
       auto& bounds = ctx.bounds;
-      canvas_.scale(_scale);
-      auto  offset = point{ bounds.left / _scale.x, bounds.top / _scale.y };
+      canvas_.scale({ _scale, _scale });
+      auto  offset = point{ bounds.left / _scale, bounds.top / _scale };
       bounds = {
          offset.x
        , offset.y
-       , offset.x + (bounds.width() / _scale.x)
-       , offset.y + (bounds.height() / _scale.y)
+       , offset.x + (bounds.width() / _scale)
+       , offset.y + (bounds.height() / _scale)
       };
    }
 

@@ -94,7 +94,7 @@ auto make_controls(view& view_)
                pane("Scale = 1.0", make_column())
             )),
             align_top(margin({ 20, 20, 20, 20 },
-               scale({ 0.8, 0.8 }, pane("Scale = 0.8", make_column()))
+               scale(0.8, pane("Scale = 0.8", make_column()))
             ))
          )
       );

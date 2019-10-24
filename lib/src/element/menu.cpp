@@ -246,10 +246,15 @@ namespace cycfi { namespace elements
                   ;
             };
 
-         if (k.key == key_code::escape || k.key == key_code::enter)
+         if (is_selected() && k.key == key_code::enter)
          {
-            if (k.key == key_code::enter && on_click)
+            if (on_click)
                on_click();
+            ctx.give_feedback(ctx, "key", this);
+            return true;
+         }
+         else if (k.key == key_code::escape)
+         {
             ctx.give_feedback(ctx, "key", this);
             return true;
          }

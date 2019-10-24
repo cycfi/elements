@@ -70,6 +70,7 @@ namespace cycfi { namespace elements
       void                 content(layers_type&& layers);
       void                 add(element_ptr e);
       void                 remove(element_ptr e);
+      bool                 is_open(element_ptr e);
 
       view_limits          limits() const;
       mouse_button         current_button() const;
@@ -192,6 +193,12 @@ namespace cycfi { namespace elements
             }
          );
       }
+   }
+
+   inline bool view::is_open(element_ptr e)
+   {
+      auto i = std::find(_content.begin(), _content.end(), e);
+      return i != _content.end();
    }
 
    inline view_limits view::limits() const

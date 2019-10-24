@@ -24,7 +24,6 @@ namespace cycfi { namespace elements
       color                controls_color             = rgba(18, 49, 85, 200);
       color                indicator_color            = rgba(0, 127, 255, 200);
       color                basic_font_color           = rgba(220, 220, 220, 200);
-      color                disabled_font_color        = rgba(127, 127, 127, 150);
 
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)

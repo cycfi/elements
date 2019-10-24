@@ -207,7 +207,7 @@ namespace cycfi { namespace elements
       {
          auto r = override_theme(
             &theme::label_font_color
-          , get_theme().disabled_font_color
+          , get_theme().inactive_font_color
          );
          proxy_base::draw(ctx);
       }

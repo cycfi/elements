@@ -58,13 +58,13 @@ auto make_popup_menu(char const* title, menu_position pos)
    auto menu =
       layer(
          vtile(
+            photonic_mesh,
             quantum_feedback_loop,
             psionic_wave_oscillator,
             menu_item("Gaia Abiogenesis"),
             menu_item_spacer(),
             menu_item("Chaotic Synchronicity"),
             menu_item("Omega Quadrant"),
-            photonic_mesh,
             antimatter_soup,
             menu_item("Dark Beta Quarks"),
             menu_item("Cosmic Infrared Shift")

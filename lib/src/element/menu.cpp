@@ -114,7 +114,7 @@ namespace cycfi { namespace elements
       basic_menu_item_element* hit = nullptr;
       basic_menu_item_element* first = nullptr;
       basic_menu_item_element* last = nullptr;
-      rect first_bounds, last_bounds;
+
       new_ctx.feedback(
          [&](context const& ctx, auto* e, std::string_view what)
          {
@@ -124,15 +124,11 @@ namespace cycfi { namespace elements
                {
                   hit = me;
                }
-               else if (what == "arrows")
+               else if (what == "arrows" && me->is_enabled())
                {
                   if (!first)
-                  {
                      first = me;
-                     first_bounds = ctx.bounds;
-                  }
                   last = me;
-                  last_bounds = ctx.bounds;
                }
             }
          }
@@ -156,7 +152,7 @@ namespace cycfi { namespace elements
             if (first)
             {
                first->select(true);
-               ctx.view.refresh(first_bounds);
+               ctx.view.refresh(new_ctx);
                first->scroll_into_view();
             }
          }
@@ -165,7 +161,7 @@ namespace cycfi { namespace elements
             if (last)
             {
                last->select(true);
-               ctx.view.refresh(last_bounds);
+               ctx.view.refresh(new_ctx);
                last->scroll_into_view();
             }
          }
@@ -300,6 +296,7 @@ namespace cycfi { namespace elements
                      if (k.key == key_code::down)
                      {
                         bool found = false;
+                        bool new_selected = false;
                         for (std::size_t i = 0; i != c->size(); ++i)
                         {
                            if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
@@ -312,9 +309,12 @@ namespace cycfi { namespace elements
                                     break;
                                  found = true;
                                  e->select(false);
+                                 bounds = c->bounds_of(*cctx, i);
+                                 refresh(c, cctx, bounds);
                               }
                               else if (found)
                               {
+                                 new_selected = true;
                                  e->select(true);
                                  bounds = c->bounds_of(*cctx, i);
                                  refresh(c, cctx, bounds);
@@ -322,10 +322,13 @@ namespace cycfi { namespace elements
                               }
                            }
                         }
+                        if (!new_selected)
+                           select(true);
                      }
                      else
                      {
                         bool found = false;
+                        bool new_selected = false;
                         for (int i = c->size()-1; i >= 0; --i)
                         {
                            if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
@@ -338,9 +341,12 @@ namespace cycfi { namespace elements
                                     break;
                                  found = true;
                                  e->select(false);
+                                 bounds = c->bounds_of(*cctx, i);
+                                 refresh(c, cctx, bounds);
                               }
                               else if (found)
                               {
+                                 new_selected = true;
                                  e->select(true);
                                  bounds = c->bounds_of(*cctx, i);
                                  refresh(c, cctx, bounds);
@@ -348,6 +354,8 @@ namespace cycfi { namespace elements
                               }
                            }
                         }
+                        if (!new_selected)
+                           select(true);
                      }
                   }
                   return true;

@@ -283,80 +283,40 @@ namespace cycfi { namespace elements
                      return false;
                   }
 
-                  rect bounds;
                   auto [c, cctx] = find_composite(ctx);
-                  auto&& refresh = [&](auto c, auto cctx, auto const& bounds)
-                  {
-                     cctx->view.refresh(*cctx);
-                     scrollable::find(ctx).scroll_into_view(bounds);
-                  };
-
                   if (c)
                   {
-                     if (k.key == key_code::down)
+                     bool down = k.key == key_code::down;
+                     auto last = c->size()-1;
+                     bool found = false;
+                     bool new_selection = false;
+                     for (
+                        int i = down? 0 : last;
+                        i != (down? c->size() : -1);
+                        i += down? +1 : -1
+                     )
                      {
-                        bool found = false;
-                        bool new_selected = false;
-                        for (std::size_t i = 0; i != c->size(); ++i)
+                        auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i));
+                        if (e && e->is_enabled())
                         {
-                           if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
+                           if (e == this)
                            {
-                              if (!e->is_enabled())
-                                 continue;
-                              if (e == this)
-                              {
-                                 if (i == c->size()-1)
-                                    break;
+                              if (i != (down? last : 0))
                                  found = true;
-                                 e->select(false);
-                                 bounds = c->bounds_of(*cctx, i);
-                                 refresh(c, cctx, bounds);
-                              }
-                              else if (found)
-                              {
-                                 new_selected = true;
-                                 e->select(true);
-                                 bounds = c->bounds_of(*cctx, i);
-                                 refresh(c, cctx, bounds);
-                                 break;
-                              }
+                           }
+                           else if (found)
+                           {
+                              new_selection = true;
+                              e->select(true);
+                              rect bounds = c->bounds_of(*cctx, i);
+                              cctx->view.refresh(*cctx);
+                              scrollable::find(ctx).scroll_into_view(bounds);
+                              break;
                            }
                         }
-                        if (!new_selected)
-                           select(true);
                      }
-                     else
-                     {
-                        bool found = false;
-                        bool new_selected = false;
-                        for (int i = c->size()-1; i >= 0; --i)
-                        {
-                           if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
-                           {
-                              if (!e->is_enabled())
-                                 continue;
-                              if (e == this)
-                              {
-                                 if (i == 0)
-                                    break;
-                                 found = true;
-                                 e->select(false);
-                                 bounds = c->bounds_of(*cctx, i);
-                                 refresh(c, cctx, bounds);
-                              }
-                              else if (found)
-                              {
-                                 new_selected = true;
-                                 e->select(true);
-                                 bounds = c->bounds_of(*cctx, i);
-                                 refresh(c, cctx, bounds);
-                                 break;
-                              }
-                           }
-                        }
-                        if (!new_selected)
-                           select(true);
-                     }
+                     if (new_selection)
+                        select(false);
                   }
                   return true;
                }

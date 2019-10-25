@@ -237,9 +237,6 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
    {
-      if (!is_enabled())
-         return false;
-
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
          auto&& equal =
@@ -263,7 +260,7 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
-               if (is_selected())
+               if (is_selected() && is_enabled())
                {
                   select(false);
                   if (on_click)
@@ -305,8 +302,10 @@ namespace cycfi { namespace elements
                         bool found = false;
                         for (std::size_t i = 0; i != c->size(); ++i)
                         {
-                           if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                           if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
                            {
+                              if (!e->is_enabled())
+                                 continue;
                               if (e == this)
                               {
                                  if (i == c->size()-1)
@@ -329,8 +328,10 @@ namespace cycfi { namespace elements
                         bool found = false;
                         for (int i = c->size()-1; i >= 0; --i)
                         {
-                           if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+                           if (auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i)))
                            {
+                              if (!e->is_enabled())
+                                 continue;
                               if (e == this)
                               {
                                  if (i == 0)
@@ -354,7 +355,7 @@ namespace cycfi { namespace elements
                break;
 
             default:
-               if (equal(k, shortcut))
+               if (is_enabled() && equal(k, shortcut))
                {
                   if (on_click)
                      on_click();

@@ -289,7 +289,6 @@ namespace cycfi { namespace elements
                      bool down = k.key == key_code::down;
                      auto last = c->size()-1;
                      bool found = false;
-                     bool new_selection = false;
                      for (
                         int i = down? 0 : last;
                         i != (down? c->size() : -1);
@@ -306,7 +305,7 @@ namespace cycfi { namespace elements
                            }
                            else if (found)
                            {
-                              new_selection = true;
+                              select(false);
                               e->select(true);
                               rect bounds = c->bounds_of(*cctx, i);
                               cctx->view.refresh(*cctx);
@@ -315,8 +314,6 @@ namespace cycfi { namespace elements
                            }
                         }
                      }
-                     if (new_selection)
-                        select(false);
                   }
                   return true;
                }

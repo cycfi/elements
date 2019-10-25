@@ -350,7 +350,7 @@ namespace cycfi { namespace elements
             }
          }
          select(hit);
-         ctx.view.refresh();
+         cctx.view.refresh(*cctx);
       }
       proxy_base::cursor(ctx, p, status);
       return hit;

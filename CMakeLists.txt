@@ -16,7 +16,9 @@ add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(lib)
 
-if (NOT ELEMENTS_NO_EXAMPLES)
+option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)
+
+if (ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(examples)
 endif()
 

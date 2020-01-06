@@ -4,7 +4,14 @@
 
 Still a work in progress, but now I got Windows and Linux ports going in the develop branch.
 
-No docs, still, apart from build instructions for MacOS, but examples provided should be instructive. For now, here's a brief introduction: [Elements C++ GUI library](https://www.cycfi.com/2019/07/photon-micro-gui/)
+No docs, still, apart from build instructions for MacOS, but examples provided should be instructive. 
+For now, here's a brief introduction: [Elements C++ GUI library](
+https://www.cycfi.com/2019/07/photon-micro-gui/)
+
+Nevertheless, I value meaningful discussions, and I am very open to collaboration. 
+I invite you to join our mailing list so we can discuss plans, and ongoing developments.
+[https://groups.google.com/forum/#!forum/cycfi-discuss/join](
+https://groups.google.com/forum/#!forum/cycfi-discuss/join)
 
 ![alt Photon Sampler](docs/images/photon_sampler.jpg)
 
@@ -16,11 +23,6 @@ IDEs. Get the latest version with a C++17 compiler.
 
 Follow the [Setup and Installation guide](docs/setup.md) to get started using
 the library.
-
-I value meaningful discussions, and I am very open to collaboration. I invite you
-to join our mailing list so we can discuss plans, and ongoing developments.
-[https://groups.google.com/forum/#!forum/cycfi-discuss/join](
-https://groups.google.com/forum/#!forum/cycfi-discuss/join)
 
 The library is Open Source and released under the very liberal [MIT
 license](http://tinyurl.com/p6pekvo).

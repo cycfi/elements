@@ -3,10 +3,7 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-cmake_minimum_required(VERSION 3.7.2)
-
-project(elements)
-set(elements_root ${CMAKE_CURRENT_SOURCE_DIR})
+cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
 if (NOT DEFINED CYCFI_JSON_ROOT)
   set(CYCFI_JSON_ROOT ../json)

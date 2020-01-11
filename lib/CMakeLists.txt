@@ -189,16 +189,16 @@ endif()
 # Freetype
 
 if (MSVC)
-   target_include_directories(elements PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
+   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
    
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
+	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
    else()
-	  target_link_libraries(elements PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
+	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
 elseif (LINUX OR WIN32)
    pkg_check_modules(freetype REQUIRED IMPORTED_TARGET freetype)
-   target_link_libraries(elements PRIVATE PkgConfig::freetype)
+   target_link_libraries(elements PUBLIC PkgConfig::freetype)
 endif()
 
 ###############################################################################
@@ -215,7 +215,7 @@ endif()
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.61 REQUIRED COMPONENTS filesystem system)
   
-target_link_libraries(elements PRIVATE Boost::boost Boost::filesystem Boost::system)
+target_link_libraries(elements PUBLIC Boost::boost Boost::filesystem Boost::system)
 target_compile_definitions(elements PRIVATE BOOST_ALL_NO_LIB)
 
 ###############################################################################

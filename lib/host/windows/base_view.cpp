@@ -228,6 +228,8 @@ namespace cycfi { namespace elements
                break;
          }
 
+         int click_count = 1;
+
          mouse_button::what which;
          switch (message)
          {
@@ -250,7 +252,7 @@ namespace cycfi { namespace elements
          return {
             down,
             info->click_count,
-            which,
+            mouse_button::left,
             get_mods(),
             { pos_x, pos_y }
          };

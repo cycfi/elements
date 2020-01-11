@@ -251,3 +251,5 @@ endif()
 if (WIN32 AND NOT MSVC)
    target_link_libraries(elements PUBLIC ws2_32)
 endif()
+
+add_library(cycfi::elements ALIAS elements)

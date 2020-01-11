@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
       return menu;
    }
 
-   view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
+   view_limits menu_item_spacer_element::limits(basic_context const& /* ctx */) const
    {
       auto height = get_theme().label_font_size;
       return { { 0, height }, { full_extent, height } };

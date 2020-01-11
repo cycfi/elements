@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& ctx, point start)
+   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& /* ctx */, point start)
    {
       return std::make_unique<info>(start);
    }
@@ -122,7 +122,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline void tracker<Base>::track_scroll(context const& ctx, point dir, point p)
+   inline void tracker<Base>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
    }

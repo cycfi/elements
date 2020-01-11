@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   bool basic_button::cursor(context const& ctx, point p, cursor_tracking status)
+   bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
       _hilite = status != cursor_tracking::leaving;
       subject().value((_state? 2 : 0) + _hilite);

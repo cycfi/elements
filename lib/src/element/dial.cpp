@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       return value();
    }
 
-   void dial_base::begin_tracking(context const& ctx, info& track_info)
+   void dial_base::begin_tracking(context const& /* ctx */, info& /* track_info */)
    {
    }
 
@@ -77,7 +77,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dial_base::end_tracking(context const& ctx, info& track_info)
+   void dial_base::end_tracking(context const& /* ctx */, info& /* track_info */)
    {
    }
 
@@ -151,7 +151,7 @@ namespace cycfi { namespace elements
    void draw_radial_labels(
       canvas& cnv
     , circle cp
-    , float size
+    , float /* size */
     , float font_size
     , std::string const labels[]
     , std::size_t num_labels

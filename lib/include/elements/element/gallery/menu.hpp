@@ -8,6 +8,7 @@
 
 #include <elements/element/indirect.hpp>
 #include <elements/element/menu.hpp>
+#include <elements/element/size.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <string_view>
@@ -42,6 +43,15 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Items
    ////////////////////////////////////////////////////////////////////////////
+   std::pair<std::string, std::string>
+   diplay_shortcut(key_code k, int mod);
+
+   inline std::pair<std::string, std::string>
+   diplay_shortcut(key_info k)
+   {
+      return diplay_shortcut(k.key, k.modifiers);
+   }
+
    inline auto menu_item_text(std::string_view text)
    {
       return xside_margin({ 20, 20 }, align_left(label(text)));
@@ -49,10 +59,15 @@ namespace cycfi { namespace elements
 
    inline auto menu_item_text(std::string_view text, shortcut_key shortcut)
    {
-      return xside_margin({ 20, 20 },
+      auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
+      auto font = get_theme().symbols_font;
+      return xside_margin({ 20, 10 },
          htile(
-            align_left(label(text))
-          , align_right(label(diplay(shortcut.key, shortcut.modifiers), get_theme().symbols_font))
+            htile(
+               align_left(label(text))
+             , align_right(label(mod, font))
+            ),
+            left_margin(5, hsize(10, align_left(label(key))))
          )
       );
    }

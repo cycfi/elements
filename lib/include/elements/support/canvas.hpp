@@ -63,7 +63,7 @@ namespace cycfi { namespace elements
       void              stroke_preserve();
       void              clip();
       bool              hit_test(point p) const;
-      elements::rect      fill_extent() const;
+      elements::rect    fill_extent() const;
 
       void              move_to(point p);
       void              line_to(point p);
@@ -88,7 +88,7 @@ namespace cycfi { namespace elements
       struct color_stop
       {
          float             offset;
-         elements::color  color;
+         elements::color   color;
       };
 
       struct linear_gradient
@@ -132,7 +132,6 @@ namespace cycfi { namespace elements
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
       void              font(char const* face, float size = 16);
-      // void              custom_font(char const* font, float size = 16);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Text

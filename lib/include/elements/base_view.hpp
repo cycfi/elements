@@ -278,13 +278,6 @@ namespace cycfi { namespace elements
       int               modifiers;
    };
 
-   std::string diplay(key_code k, int mod);
-
-   inline std::string diplay(key_info k)
-   {
-      return diplay(k.key, k.modifiers);
-   }
-
    ////////////////////////////////////////////////////////////////////////////
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////

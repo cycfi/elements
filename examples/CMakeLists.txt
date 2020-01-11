@@ -14,5 +14,6 @@ add_subdirectory(text_edit)
 add_subdirectory(layout)
 add_subdirectory(popups)
 add_subdirectory(dialogs)
+add_subdirectory(scale)
 
 

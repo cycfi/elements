@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
     , _color(color_)
    {}
 
-   view_limits static_text_box::limits(basic_context const& ctx) const
+   view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
       sync();
 
@@ -204,7 +204,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking status)
+   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking /* status */)
    {
       if (ctx.bounds.includes(p))
       {
@@ -229,7 +229,7 @@ namespace cycfi { namespace elements
             typing_state = {}; // reset
          }
          ctx.view.add_undo({ undo_f, redo_f });
-      };
+      }
    }
 
    bool basic_text_box::text(context const& ctx, text_info info_)
@@ -742,7 +742,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::cut(view& v, int start, int end)
+   void basic_text_box::cut(view& /* v */, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -753,7 +753,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::copy(view& v, int start, int end)
+   void basic_text_box::copy(view& /* v */, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -763,7 +763,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::paste(view& v, int start, int end)
+   void basic_text_box::paste(view& /* v */, int start, int end)
    {
       if (start != -1)
       {
@@ -895,7 +895,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Input Text Box
    ////////////////////////////////////////////////////////////////////////////
-   view_limits basic_input_box::limits(basic_context const& ctx) const
+   view_limits basic_input_box::limits(basic_context const& /* ctx */) const
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
@@ -979,7 +979,7 @@ namespace cycfi { namespace elements
       return basic_text_box::key(ctx, k);
    }
 
-   void basic_input_box::paste(view& v, int start, int end)
+   void basic_input_box::paste(view& /* v */, int start, int end)
    {
       if (start != -1)
       {

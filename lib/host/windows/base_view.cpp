@@ -228,31 +228,32 @@ namespace cycfi { namespace elements
                break;
          }
 
-         int click_count = 1;
+         auto const which =
+             [message]()
+             {
+                 switch (message)
+                 {
+                     case WM_LBUTTONDOWN:
+                     case WM_LBUTTONUP:
+                         return mouse_button::left;
 
-         mouse_button::what which;
-         switch (message)
-         {
-            case WM_LBUTTONDOWN:
-            case WM_LBUTTONUP:
-               which = mouse_button::left;
-               break;
+                     case WM_MBUTTONDOWN:
+                     case WM_MBUTTONUP:
+                         return mouse_button::middle;
 
-            case WM_MBUTTONDOWN:
-            case WM_MBUTTONUP:
-               which = mouse_button::middle;
-               break;
+                     case WM_RBUTTONDOWN:
+                     case WM_RBUTTONUP:
+                         return mouse_button::right;
 
-            case WM_RBUTTONDOWN:
-            case WM_RBUTTONUP:
-               which = mouse_button::right;
-               break;
-         }
+                     default:
+                         return mouse_button::left;
+                 }
+             }();
 
          return {
             down,
             info->click_count,
-            mouse_button::left,
+            which,
             get_mods(),
             { pos_x, pos_y }
          };

@@ -93,22 +93,22 @@ namespace cycfi { namespace elements
 
       struct linear_gradient
       {
-         point start;
-         point end;
+         point start = {};
+         point end = {};
 
          void  add_color_stop(color_stop cs);
-         std::vector<color_stop> space;
+         std::vector<color_stop> space = {};
       };
 
       struct radial_gradient
       {
-         point c1;
-         float c1_radius;
+         point c1 = {};
+         float c1_radius = {};
          point c2 = c1;
          float c2_radius = c1_radius;
 
          void  add_color_stop(color_stop cs);
-         std::vector<color_stop> space;
+         std::vector<color_stop> space = {};
       };
 
       void              fill_style(linear_gradient const& gr);

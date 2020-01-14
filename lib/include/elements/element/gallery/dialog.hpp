@@ -64,11 +64,12 @@ namespace cycfi { namespace elements
                   if (auto ok = btn.lock())
                   {
                      if (ok->on_click)
+                     {
                         ok->on_click(true);
+                        return true;
+                     }
                   }
                }
-               // We always return false here so we can give the
-               // UI a chance to process the key.
                return false;
             };
       }

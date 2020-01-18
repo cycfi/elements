@@ -7,6 +7,7 @@
 #define ELEMENTS_PROXY_APRIL_10_2016
 
 #include <elements/element/element.hpp>
+#include <type_traits>
 
 namespace cycfi { namespace elements
 {
@@ -67,6 +68,7 @@ namespace cycfi { namespace elements
    {
    public:
 
+      static_assert(std::is_base_of_v<proxy_base, Base>, "proxy Base type needs to inherit from proxy_base");
       using subject_type = typename std::decay<Subject>::type;
 
                               template <typename... T>

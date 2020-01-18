@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Element>
-   inline auto get(std::shared_ptr<Element> ptr)
+   inline auto get(std::shared_ptr<Element> const& ptr)
    {
       return std::weak_ptr<Element>(ptr);
    }

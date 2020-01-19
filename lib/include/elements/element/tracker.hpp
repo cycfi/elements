@@ -9,6 +9,7 @@
 #include <elements/support/point.hpp>
 #include <elements/element/element.hpp>
 #include <memory>
+#include <type_traits>
 
 namespace cycfi { namespace elements
 {
@@ -19,6 +20,9 @@ namespace cycfi { namespace elements
    class tracker : public Base
    {
    public:
+
+      static_assert(std::is_base_of_v<element, Base>,
+                    "tracker Base type needs to be or inherit from element");
 
       struct info
       {

@@ -39,8 +39,8 @@ namespace cycfi { namespace elements
 
                               halign_element(float align, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
    };
 
    template <typename Subject>
@@ -107,8 +107,8 @@ namespace cycfi { namespace elements
 
                               valign_element(float align, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
    };
 
    template <typename Subject>

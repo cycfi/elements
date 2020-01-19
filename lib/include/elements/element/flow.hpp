@@ -19,7 +19,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual                 ~flowable() {}
+      virtual                 ~flowable() = default;
 
       virtual void            break_lines(
                                  std::vector<element_ptr>& rows
@@ -32,11 +32,11 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual void            break_lines(
+      void                    break_lines(
                                  std::vector<element_ptr>& rows
                                , basic_context const& ctx
                                , float width
-                              );
+                              ) override;
 
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
@@ -53,8 +53,8 @@ namespace cycfi { namespace elements
                                , _laid_out(false)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            layout(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
 
    private:
 

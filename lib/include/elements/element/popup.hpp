@@ -24,9 +24,9 @@ namespace cycfi { namespace elements
                                : floating_element(bounds)
                               {}
 
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      element*                hit_test(context const& ctx, point p) override;
+      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
       void                    open(view& view_, click_function on_click = {});
       void                    close(view& view_);

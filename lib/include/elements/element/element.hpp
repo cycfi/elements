@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
       using element_const_ptr = std::shared_ptr<element const>;
 
                               element() {}
-                              virtual ~element() {}
+                              virtual ~element() = default;
 
                               element(element&&) = default;
                               element(element const&) = default;

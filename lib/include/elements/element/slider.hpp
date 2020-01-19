@@ -30,17 +30,17 @@ namespace cycfi { namespace elements
                                : _value(init_value)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-      virtual void            layout(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
 
-      virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual void            begin_tracking(context const& ctx, info& track_info);
-      virtual void            keep_tracking(context const& ctx, info& track_info);
-      virtual void            end_tracking(context const& ctx, info& track_info);
+      bool                    scroll(context const& ctx, point dir, point p) override;
+      void                    begin_tracking(context const& ctx, info& track_info) override;
+      void                    keep_tracking(context const& ctx, info& track_info) override;
+      void                    end_tracking(context const& ctx, info& track_info) override;
 
       double                  value() const;
-      virtual void            value(double val);
+      void                    value(double val) override;
       virtual void            edit_value(double val) { value(val);}
 
       rect                    track_bounds(context const& ctx) const;
@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       using slider_base::value;
 
       slider_function         on_change;
-      virtual void            edit_value(double val);
+      void                    edit_value(double val) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -91,10 +91,10 @@ namespace cycfi { namespace elements
                                , _body(track)
                               {}
 
-      virtual element const&  thumb() const  { return _thumb; }
-      virtual element&        thumb()        { return _thumb; }
-      virtual element const&  track() const   { return _body; }
-      virtual element&        track()         { return _body; }
+      element const&          thumb() const override { return _thumb; }
+      element&                thumb()       override { return _thumb; }
+      element const&          track() const override { return _body; }
+      element&                track()       override { return _body; }
 
    private:
 
@@ -139,9 +139,9 @@ namespace cycfi { namespace elements
       using basic_selector_base::basic_selector_base;
       using basic_selector_base::value;
 
-      virtual bool         scroll(context const& ctx, point dir, point p);
-      virtual void         value(double val);
-      virtual void         value(int val);
+      bool                 scroll(context const& ctx, point dir, point p) override;
+      void                 value(double val) override;
+      void                 value(int val) override;
    };
 
    template <size_t num_states>
@@ -192,8 +192,8 @@ namespace cycfi { namespace elements
                                : _color(c)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
    private:
 
@@ -241,8 +241,8 @@ namespace cycfi { namespace elements
                                : _color(c)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
    private:
 
@@ -286,8 +286,8 @@ namespace cycfi { namespace elements
       using base_type = proxy<Subject>;
       using base_type::base_type;
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
    };
 
    template <int size, typename Subject>
@@ -341,7 +341,7 @@ namespace cycfi { namespace elements
       using base_type = slider_element_base<_size, Subject>;
       using base_type::base_type;
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
    };
 
    void draw_slider_marks(
@@ -394,7 +394,7 @@ namespace cycfi { namespace elements
                                , _font_size(font_size)
                               {}
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
 
       string_array            _labels;
       float                   _font_size;

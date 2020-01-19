@@ -86,8 +86,8 @@ namespace cycfi { namespace elements
 
    struct menu_item_spacer_element : public element
    {
-      virtual view_limits  limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
    };
 
    inline auto menu_item_spacer()
@@ -100,6 +100,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct menu_selector
    {
+      virtual ~menu_selector() = default;
+
       virtual std::size_t        size() const = 0;
       virtual std::string_view   operator[](std::size_t index) const = 0;
    };
@@ -127,14 +129,14 @@ namespace cycfi { namespace elements
           : _seq(seq_)
          {}
 
-         virtual std::size_t
-         size() const
+         std::size_t
+         size() const override
          {
             return std::size(_seq);
          }
 
-         virtual std::string_view
-         operator[](std::size_t index) const
+         std::string_view
+         operator[](std::size_t index) const override
          {
             return _seq[index];
          }
@@ -158,14 +160,14 @@ namespace cycfi { namespace elements
           : _list(list_)
          {}
 
-         virtual std::size_t
-         size() const
+         std::size_t
+         size() const override
          {
             return _list.size();
          }
 
-         virtual std::string_view
-         operator[](std::size_t index) const
+         std::string_view
+         operator[](std::size_t index) const override
          {
             return *(_list.begin()+index);
          }

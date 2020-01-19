@@ -7,8 +7,8 @@
 #define ELEMENTS_GALLERY_MESSAGE_BOX_JUNE_5_2016
 
 #include <elements/element/text.hpp>
-#include <elements/element//gallery/button.hpp>
-#include <elements/element//gallery/dialog.hpp>
+#include <elements/element/gallery/button.hpp>
+#include <elements/element/gallery/dialog.hpp>
 #include <string_view>
 
 namespace cycfi { namespace elements

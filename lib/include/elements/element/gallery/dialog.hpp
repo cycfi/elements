@@ -13,7 +13,7 @@
 #include <elements/element/size.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/indirect.hpp>
-#include <elements/element//gallery/button.hpp>
+#include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements

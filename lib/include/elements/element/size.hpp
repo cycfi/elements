@@ -7,6 +7,7 @@
 #define ELEMENTS_SIZE_APRIL_14_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -23,8 +24,8 @@ namespace cycfi { namespace elements
 
                               size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -72,8 +73,8 @@ namespace cycfi { namespace elements
 
                               hsize_element(float width, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -118,8 +119,8 @@ namespace cycfi { namespace elements
 
                               vsize_element(float height, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -166,8 +167,8 @@ namespace cycfi { namespace elements
 
                               min_size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -217,8 +218,8 @@ namespace cycfi { namespace elements
 
                               hmin_size_element(float width, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -264,8 +265,8 @@ namespace cycfi { namespace elements
 
                               vmin_size_element(float height, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -313,8 +314,8 @@ namespace cycfi { namespace elements
 
                               max_size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -441,7 +442,7 @@ namespace cycfi { namespace elements
                                , _limits(limits_)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
+      view_limits             limits(basic_context const& ctx) const override;
 
       view_limits             _limits;
    };
@@ -478,11 +479,11 @@ namespace cycfi { namespace elements
                                , _scale(scale_)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual view_stretch    stretch() const;
-      virtual void            prepare_subject(context& ctx);
-      virtual void            prepare_subject(context& ctx, point& p);
-      virtual void            restore_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      view_stretch            stretch() const override;
+      void                    prepare_subject(context& ctx) override;
+      void                    prepare_subject(context& ctx, point& p) override;
+      void                    restore_subject(context& ctx) override;
 
        float                  _scale;
    };

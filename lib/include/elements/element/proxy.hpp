@@ -24,13 +24,13 @@ namespace cycfi { namespace elements
 
    // Image
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual view_stretch    stretch() const;
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual void            draw(context const& ctx);
-      virtual void            layout(context const& ctx);
-      virtual void            refresh(context const& ctx, element& element, int outward = 0);
-      virtual bool            scroll(context const& ctx, point dir, point p);
+      view_limits             limits(basic_context const& ctx) const override;
+      view_stretch            stretch() const override;
+      element*                hit_test(context const& ctx, point p) override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
+      void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
@@ -39,16 +39,16 @@ namespace cycfi { namespace elements
 
    // Control
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
-      virtual bool            focus(focus_request r);
-      virtual element const*  focus() const;
-      virtual element*        focus();
-      virtual bool            is_control() const;
+      bool                    focus(focus_request r) override;
+      element const*          focus() const override;
+      element*                focus() override;
+      bool                    is_control() const override;
 
    // Proxy
 
@@ -57,10 +57,10 @@ namespace cycfi { namespace elements
 
    // Receiver
 
-      virtual void            value(bool val);
-      virtual void            value(int val);
-      virtual void            value(double val);
-      virtual void            value(std::string val);
+      void                    value(bool val) override;
+      void                    value(int val) override;
+      void                    value(double val) override;
+      void                    value(std::string val) override;
    };
 
    template <typename Subject, typename Base = proxy_base>
@@ -77,8 +77,8 @@ namespace cycfi { namespace elements
                                , _subject(std::forward<Subject>(subject_)) {}
 
       void                    subject(Subject&& subject_);
-      virtual element const&  subject() const { return _subject; }
-      virtual element&        subject() { return _subject; }
+      element const&          subject() const override { return _subject; }
+      element&                subject() override { return _subject; }
 
    private:
 

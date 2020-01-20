@@ -27,7 +27,7 @@ namespace cycfi { namespace elements
                            {}
 
                            info(info const&) = default;
-         virtual           ~info() {}
+         virtual           ~info() = default;
 
          point             start;
          point             current = start;
@@ -45,9 +45,9 @@ namespace cycfi { namespace elements
       tracker&             operator=(tracker const& rhs);
       tracker&             operator=(tracker&& rhs) = default;
 
-      virtual element*     click(context const& ctx, mouse_button btn);
-      virtual void         drag(context const& ctx, mouse_button btn);
-      virtual bool         is_control() const;
+      element*             click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      bool                 is_control() const override;
 
    protected:
 

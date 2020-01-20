@@ -23,8 +23,8 @@ namespace cycfi { namespace elements
                               image(pixmap_ptr pixmap_);
 
       point                   size() const;
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
       virtual rect            source_rect(context const& ctx) const;
 
    protected:
@@ -70,8 +70,8 @@ namespace cycfi { namespace elements
                               gizmo(char const* filename, float scale = 1);
                               gizmo(pixmap_ptr pixmap_);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
    };
 
    class hgizmo : public image
@@ -80,8 +80,8 @@ namespace cycfi { namespace elements
                               hgizmo(char const* filename, float scale = 1);
                               hgizmo(pixmap_ptr pixmap_);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
    };
 
    class vgizmo : public image
@@ -90,8 +90,8 @@ namespace cycfi { namespace elements
                               vgizmo(char const* filename, float scale = 1);
                               vgizmo(pixmap_ptr pixmap_);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -104,17 +104,17 @@ namespace cycfi { namespace elements
    public:
                               sprite(char const* filename, float height, float scale = 1);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
+      view_limits             limits(basic_context const& ctx) const override;
 
       std::size_t             num_frames() const;
       std::size_t             index() const              { return _index; }
       void                    index(std::size_t index_);
       point                   size() const;
 
-      virtual rect            source_rect(context const& ctx) const;
+      rect                    source_rect(context const& ctx) const override;
 
-      virtual void            value(int val);
-      virtual void            value(double val);
+      void                    value(int val) override;
+      void                    value(double val) override;
 
    private:
 

@@ -24,17 +24,16 @@ namespace cycfi { namespace elements
       using tracker<proxy_base>::value;
 
                            dial_base(double init_value = 0.0);
-      virtual              ~dial_base() {}
 
-      virtual void         prepare_subject(context& ctx);
+      void                 prepare_subject(context& ctx) override;
 
-      virtual bool         scroll(context const& ctx, point dir, point p);
-      virtual void         begin_tracking(context const& ctx, info& track_info);
-      virtual void         keep_tracking(context const& ctx, info& track_info);
-      virtual void         end_tracking(context const& ctx, info& track_info);
+      bool                 scroll(context const& ctx, point dir, point p) override;
+      void                 begin_tracking(context const& ctx, info& track_info) override;
+      void                 keep_tracking(context const& ctx, info& track_info) override;
+      void                 end_tracking(context const& ctx, info& track_info) override;
 
       double               value() const;
-      void                 value(double val);
+      void                 value(double val) override;
       virtual double       value_from_point(context const& ctx, point p);
 
       dial_function        on_change;
@@ -70,9 +69,9 @@ namespace cycfi { namespace elements
                                : _color(c), _value(0)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
-      virtual void            value(double val);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      void                    value(double val) override;
 
    private:
 
@@ -138,8 +137,8 @@ namespace cycfi { namespace elements
                                : base_type(std::forward<Subject>(subject))
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
    };
 
    template <std::size_t size, typename Subject>
@@ -181,7 +180,7 @@ namespace cycfi { namespace elements
       using base_type = radial_element_base<_size, Subject>;
       using base_type::base_type;
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
    };
 
    void draw_radial_marks(canvas& cnv, circle cp, float size, color c);
@@ -222,7 +221,7 @@ namespace cycfi { namespace elements
                                , _font_size(font_size)
                               {}
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
 
       string_array            _labels;
       float                   _font_size;

@@ -33,23 +33,23 @@ namespace cycfi { namespace elements
                               view(window& win);
                               ~view();
 
-      virtual void            draw(cairo_t* ctx, rect area) override;
-      virtual void            click(mouse_button btn) override;
-      virtual void            drag(mouse_button btn) override;
-      virtual void            cursor(point p, cursor_tracking status) override;
-      virtual void            scroll(point dir, point p) override;
-      virtual void            key(key_info const& k) override;
-      virtual void            text(text_info const& info) override;
-      virtual void            focus(focus_request r) override;
-      virtual void            poll() override;
+      void                    draw(cairo_t* ctx, rect area) override;
+      void                    click(mouse_button btn) override;
+      void                    drag(mouse_button btn) override;
+      void                    cursor(point p, cursor_tracking status) override;
+      void                    scroll(point dir, point p) override;
+      void                    key(key_info const& k) override;
+      void                    text(text_info const& info) override;
+      void                    focus(focus_request r) override;
+      void                    poll() override;
 
       void                    layout();
       void                    layout(element &element);
       float                   scale() const;
       void                    scale(float val);
 
-      virtual void            refresh() override;
-      virtual void            refresh(rect area) override;
+      void                    refresh() override;
+      void                    refresh(rect area) override;
       void                    refresh(element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0);
       rect                    dirty() const;

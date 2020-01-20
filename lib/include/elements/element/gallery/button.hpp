@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
       constexpr static float corner_radius = 4.0;
 
                               basic_button_body(color body_color);
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
 
       color                   body_color;
    };

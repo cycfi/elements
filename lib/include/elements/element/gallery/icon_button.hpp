@@ -37,8 +37,8 @@ namespace cycfi { namespace elements
                                , _body_color(body_color)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
       uint32_t                _code;
       float                   _size;

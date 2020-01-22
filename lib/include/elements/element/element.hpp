@@ -29,9 +29,6 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using element_ptr = std::shared_ptr<element>;
-      using element_const_ptr = std::shared_ptr<element const>;
-
                               element() {}
                               virtual ~element() = default;
 

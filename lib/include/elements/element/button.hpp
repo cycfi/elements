@@ -27,7 +27,7 @@ namespace cycfi { namespace elements
 
                         basic_button()
                          : _state(false)
-                         , _hilite(0)
+                         , _hilite(false)
                         {}
 
       element*          click(context const& ctx, mouse_button btn) override;

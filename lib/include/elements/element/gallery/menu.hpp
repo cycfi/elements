@@ -120,7 +120,7 @@ namespace cycfi { namespace elements
    selection_menu(
       std::function<void(std::string_view item)> on_select
     , Sequence const& seq
-    , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = 0
+    , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
    )
    {
       struct seq_menu_selector : menu_selector

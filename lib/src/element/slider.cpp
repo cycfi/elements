@@ -15,19 +15,18 @@ namespace cycfi { namespace elements
       auto  limits_ = track().limits(ctx);
       auto  tmb_limits = thumb().limits(ctx);
 
-      if ((_is_horiz = limits_.max.x > limits_.max.y))
+      // We multiply thumb min limits by 2 so that there is always some space to move it.
+      if (_is_horiz = limits_.max.x > limits_.max.y; _is_horiz)
       {
          limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y);
          limits_.max.y = std::max<float>(limits_.max.y, tmb_limits.max.y);
          limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x * 2);
-         limits_.max.x = std::max<float>(limits_.max.x, limits_.max.x);
       }
       else
       {
          limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x);
          limits_.max.x = std::max<float>(limits_.max.x, tmb_limits.max.x);
          limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y * 2);
-         limits_.max.y = std::max<float>(limits_.max.y, limits_.max.y);
       }
 
       return limits_;

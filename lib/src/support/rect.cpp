@@ -59,7 +59,7 @@ namespace cycfi { namespace elements
 
    rect center_v(rect r, rect encl)
    {
-      float dy = dy = (encl.height() - r.height()) / 2.0;
+      float dy = (encl.height() - r.height()) / 2.0;
       r = r.move_to(r.left, encl.top);
       r = r.move(0.0, dy);
       return r;

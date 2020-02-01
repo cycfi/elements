@@ -44,7 +44,6 @@ namespace cycfi { namespace elements
       virtual element*        hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            refresh(context const& ctx, element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0) { refresh(ctx, *this, outward); }
 
@@ -55,6 +54,7 @@ namespace cycfi { namespace elements
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            scroll(context const& ctx, point dir, point p);
 
       virtual bool            focus(focus_request r);
       virtual element const*  focus() const;

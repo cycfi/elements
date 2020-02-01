@@ -35,12 +35,12 @@ namespace cycfi { namespace elements
    void slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &thumb(), ctx.bounds };
+         context sctx { ctx, &track(), ctx.bounds };
          sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }
       {
-         context sctx { ctx, &track(), ctx.bounds };
+         context sctx { ctx, &thumb(), ctx.bounds };
          sctx.bounds = thumb_bounds(sctx);
          thumb().layout(sctx);
       }

@@ -21,9 +21,6 @@ namespace cycfi { namespace elements
    {
    public:
 
-      static_assert(std::is_base_of_v<element, Base>,
-                    "tracker Base type needs to be or inherit from element");
-
       struct info
       {
          explicit          info(point start_)

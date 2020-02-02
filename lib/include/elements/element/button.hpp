@@ -100,10 +100,6 @@ namespace cycfi { namespace elements
    class basic_toggle_button : public Base
    {
    public:
-
-      static_assert(std::is_base_of_v<layered_button, Base>,
-                    "basic_toggle_button Base type needs to be or inherit from layered_button");
-
                         template <typename W1>
                         basic_toggle_button(W1&& state);
 
@@ -172,10 +168,6 @@ namespace cycfi { namespace elements
    class basic_latching_button : public Base
    {
    public:
-
-      static_assert(std::is_base_of_v<layered_button, Base>,
-                    "basic_latching_button Base type needs to be or inherit from layered_button");
-
                         template <typename W1>
                         basic_latching_button(W1&& state);
 

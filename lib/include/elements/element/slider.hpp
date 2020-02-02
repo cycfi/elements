@@ -76,9 +76,6 @@ namespace cycfi { namespace elements
    {
    public:
 
-      static_assert(std::is_base_of_v<basic_slider_base, Base>,
-                    "basic_slider Base type needs to be or inherit from basic_slider_base");
-
       using thumb_type = typename std::decay<Thumb>::type;
       using track_type = typename std::decay<Track>::type;
 

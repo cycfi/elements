@@ -75,11 +75,9 @@ namespace cycfi { namespace elements
       return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
    }
 
-   bool layer_element::focus(focus_request r)
+   void layer_element::begin_focus()
    {
-      if (r == focus_request::begin_focus)
-         focus_top();
-      return composite_base::focus(r);
+      focus_top();
    }
 
    void layer_element::focus_top()
@@ -90,9 +88,9 @@ namespace cycfi { namespace elements
          if (composite_base::focus() == &e)
             break; // element at at(ix) is already the focus
 
-         if (e.focus(focus_request::wants_focus))
+         if (e.wants_focus())
          {
-            e.focus(focus_request::begin_focus);
+            e.begin_focus();
             composite_base::focus(ix);
             break;
          }
@@ -144,15 +142,19 @@ namespace cycfi { namespace elements
       return hit_info{ 0, rect{}, -1 };
    }
 
-   bool deck_element::focus(focus_request r)
+   void deck_element::begin_focus()
    {
       if (!composite_base::focus())
       {
          auto& e = at(_selected_index);
-         if (e.is_control() && e.focus(focus_request::wants_focus))
+         if (e.is_control() && e.wants_focus())
             composite_base::focus(_selected_index);
       }
-      return composite_base::focus(r);
+   }
+
+   void deck_element::end_focus()
+   {
+      begin_focus();
    }
 
    void deck_element::select(std::size_t index)

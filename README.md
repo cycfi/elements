@@ -8,6 +8,9 @@ No docs, still, apart from build instructions for MacOS, but examples provided s
 For now, here's a brief introduction: [Elements C++ GUI library](
 https://www.cycfi.com/2019/07/photon-micro-gui/)
 
+Update: I started a Wiki: more or less random collection of notes that will eventually 
+become part of the documentation. Follow this link: https://github.com/cycfi/elements/wiki
+
 Nevertheless, I value meaningful discussions, and I am very open to collaboration. 
 I invite you to join our mailing list so we can discuss plans, and ongoing developments.
 [https://groups.google.com/forum/#!forum/cycfi-discuss/join](

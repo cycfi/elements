@@ -204,6 +204,11 @@ namespace cycfi { namespace elements
          _index = index_;
    }
 
+   point sprite::size() const
+   {
+      return { pixmap().size().x, _height };
+   }
+
    rect sprite::source_rect(context const& /* ctx */) const
    {
       auto width = pixmap().size().x;

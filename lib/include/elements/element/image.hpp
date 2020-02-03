@@ -22,7 +22,7 @@ namespace cycfi { namespace elements
                               image(char const* filename, float scale = 1);
                               image(pixmap_ptr pixmap_);
 
-      point                   size() const;
+      virtual point           size() const;
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       virtual rect            source_rect(context const& ctx) const;
@@ -112,7 +112,7 @@ namespace cycfi { namespace elements
       std::size_t             num_frames() const;
       std::size_t             index() const              { return _index; }
       void                    index(std::size_t index_);
-      point                   size() const;
+      point                   size() const override;
 
       rect                    source_rect(context const& ctx) const override;
 

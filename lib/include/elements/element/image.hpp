@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
 
    protected:
 
-      elements::pixmap&         pixmap() const  { return *_pixmap.get(); }
+      elements::pixmap&       pixmap() const  { return *_pixmap.get(); }
 
    private:
 

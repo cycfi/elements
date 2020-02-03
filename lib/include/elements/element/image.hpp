@@ -102,6 +102,9 @@ namespace cycfi { namespace elements
    class sprite : public image
    {
    public:
+
+      using image::value;
+
                               sprite(char const* filename, float height, float scale = 1);
 
       view_limits             limits(basic_context const& ctx) const override;

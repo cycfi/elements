@@ -64,6 +64,7 @@ namespace cycfi { namespace elements
    public:
 
       static std::size_t const size = _size;
+      using element::value;
 
                               basic_knob_element(color c = colors::black)
                                : _color(c), _value(0)

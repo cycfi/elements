@@ -27,8 +27,8 @@ namespace cycfi { namespace elements
                                , _margin(margin_)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 

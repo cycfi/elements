@@ -11,6 +11,7 @@
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 #include <functional>
+#include <type_traits>
 
 namespace cycfi { namespace elements
 {
@@ -26,16 +27,16 @@ namespace cycfi { namespace elements
 
                         basic_button()
                          : _state(false)
-                         , _hilite(0)
+                         , _hilite(false)
                         {}
 
-      virtual element*  click(context const& ctx, mouse_button btn);
-      virtual bool      cursor(context const& ctx, point p, cursor_tracking status);
-      virtual void      drag(context const& ctx, mouse_button btn);
-      virtual bool      is_control() const;
+      element*          click(context const& ctx, mouse_button btn) override;
+      bool              cursor(context const& ctx, point p, cursor_tracking status) override;
+      void              drag(context const& ctx, mouse_button btn) override;
+      bool              is_control() const override;
 
-      virtual void      value(int new_state);
-      virtual void      value(bool new_state);
+      void              value(int new_state) override;
+      void              value(bool new_state) override;
       bool              value() const;
 
       button_function   on_click;
@@ -64,13 +65,13 @@ namespace cycfi { namespace elements
                         template <typename W1, typename W2>
                         layered_button(W1&& off, W2&& on);
 
-      virtual element*  hit_test(context const& ctx, point p) override;
-      virtual element*  click(context const& ctx, mouse_button btn) override;
-      virtual void      drag(context const& ctx, mouse_button btn) override;
-      virtual bool      is_control() const override;
+      element*          hit_test(context const& ctx, point p) override;
+      element*          click(context const& ctx, mouse_button btn) override;
+      void              drag(context const& ctx, mouse_button btn) override;
+      bool              is_control() const override;
 
-      virtual void      value(int new_state) override;
-      virtual void      value(bool new_state) override;
+      void              value(int new_state) override;
+      void              value(bool new_state) override;
       bool              value() const;
 
       button_function   on_click;
@@ -105,8 +106,8 @@ namespace cycfi { namespace elements
                         template <typename W1, typename W2>
                         basic_toggle_button(W1&& off, W2&& on);
 
-      virtual element*  click(context const& ctx, mouse_button btn);
-      virtual void      drag(context const& ctx, mouse_button btn);
+      element*          click(context const& ctx, mouse_button btn) override;
+      void              drag(context const& ctx, mouse_button btn) override;
 
    private:
 
@@ -173,7 +174,7 @@ namespace cycfi { namespace elements
                         template <typename W1, typename W2>
                         basic_latching_button(W1&& off, W2&& on);
 
-      virtual element*  click(context const& ctx, mouse_button btn);
+      element*          click(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>

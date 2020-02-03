@@ -184,7 +184,7 @@ namespace cycfi { namespace elements
 
       mouse_button get_button(
          HWND hwnd, view_info* info, UINT message
-       , WPARAM wparam, LPARAM lparam)
+       , WPARAM /* wparam */, LPARAM lparam)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
@@ -228,31 +228,32 @@ namespace cycfi { namespace elements
                break;
          }
 
-         int click_count = 1;
+         auto const which =
+             [message]()
+             {
+                 switch (message)
+                 {
+                     case WM_LBUTTONDOWN:
+                     case WM_LBUTTONUP:
+                         return mouse_button::left;
 
-         mouse_button::what which;
-         switch (message)
-         {
-            case WM_LBUTTONDOWN:
-            case WM_LBUTTONUP:
-               which = mouse_button::left;
-               break;
+                     case WM_MBUTTONDOWN:
+                     case WM_MBUTTONUP:
+                         return mouse_button::middle;
 
-            case WM_MBUTTONDOWN:
-            case WM_MBUTTONUP:
-               which = mouse_button::middle;
-               break;
+                     case WM_RBUTTONDOWN:
+                     case WM_RBUTTONUP:
+                         return mouse_button::right;
 
-            case WM_RBUTTONDOWN:
-            case WM_RBUTTONUP:
-               which = mouse_button::right;
-               break;
-         }
+                     default:
+                         return mouse_button::left;
+                 }
+             }();
 
          return {
             down,
             info->click_count,
-            mouse_button::left,
+            which,
             get_mods(),
             { pos_x, pos_y }
          };
@@ -276,9 +277,9 @@ namespace cycfi { namespace elements
             k.action = key_action::repeat;
 
          _view.key(k);
-      };
+      }
 
-      void on_key(HWND hwnd, view_info* info, WPARAM wparam, LPARAM lparam)
+      void on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
       {
          auto const key = translate_key(wparam, lparam);
          auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
@@ -306,7 +307,7 @@ namespace cycfi { namespace elements
          }
       }
 
-      void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
+      void on_cursor(HWND /* hwnd */, base_view* view, LPARAM lparam, cursor_tracking state)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
@@ -367,7 +368,6 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          auto* info = get_view_info(hwnd);
          switch (message)
          {

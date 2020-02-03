@@ -9,6 +9,7 @@
 #include <elements/support/point.hpp>
 #include <elements/element/element.hpp>
 #include <memory>
+#include <type_traits>
 
 namespace cycfi { namespace elements
 {
@@ -27,7 +28,7 @@ namespace cycfi { namespace elements
                            {}
 
                            info(info const&) = default;
-         virtual           ~info() {}
+         virtual           ~info() = default;
 
          point             start;
          point             current = start;
@@ -45,9 +46,9 @@ namespace cycfi { namespace elements
       tracker&             operator=(tracker const& rhs);
       tracker&             operator=(tracker&& rhs) = default;
 
-      virtual element*     click(context const& ctx, mouse_button btn);
-      virtual void         drag(context const& ctx, mouse_button btn);
-      virtual bool         is_control() const;
+      element*             click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      bool                 is_control() const override;
 
    protected:
 
@@ -110,7 +111,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& ctx, point start)
+   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& /* ctx */, point start)
    {
       return std::make_unique<info>(start);
    }
@@ -122,7 +123,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline void tracker<Base>::track_scroll(context const& ctx, point dir, point p)
+   inline void tracker<Base>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
    }

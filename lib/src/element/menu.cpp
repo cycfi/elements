@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   void basic_menu::drag(context const& ctx, mouse_button btn)
+   void basic_menu::drag(context const& ctx, mouse_button /* btn */)
    {
       ctx.view.refresh();
    }
@@ -116,7 +116,7 @@ namespace cycfi { namespace elements
       basic_menu_item_element* last = nullptr;
 
       new_ctx.feedback(
-         [&](context const& ctx, auto* e, std::string_view what)
+         [&](context const& /* ctx */, auto* e, std::string_view what)
          {
             if (auto me = dynamic_cast<basic_menu_item_element*>(e))
             {
@@ -172,7 +172,7 @@ namespace cycfi { namespace elements
       return layered_button::key(ctx, k);
    }
 
-   bool basic_menu::focus(focus_request r)
+   bool basic_menu::focus(focus_request /* r */)
    {
       return true;
    }

@@ -24,7 +24,7 @@ namespace cycfi { namespace elements
        : _color(color_)
       {}
 
-      void draw(context const& ctx)
+      void draw(context const& ctx) override
       {
          auto& cnv = ctx.canvas;
          cnv.fill_style(_color);
@@ -53,8 +53,8 @@ namespace cycfi { namespace elements
        : f(f)
       {}
 
-      virtual void
-      draw(context const& ctx)
+      void
+      draw(context const& ctx) override
       {
          f(ctx);
       }
@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
                       : _color(color_)
                      {}
 
-      void           draw(context const& ctx);
+      void           draw(context const& ctx) override;
       color          _color;
    };
 
@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
                       : _opacity(opacity_)
                      {}
 
-      virtual void   draw(context const& ctx);
+      void           draw(context const& ctx) override;
 
    private:
 
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct frame : public element
    {
-      virtual void   draw(context const& ctx);
+      void           draw(context const& ctx) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ namespace cycfi { namespace elements
                                , _minor_divisions(minor_divisions)
                               {}
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
 
    private:
 
@@ -224,8 +224,8 @@ namespace cycfi { namespace elements
    {
                               icon(std::uint32_t code_, float size_ = 1.0);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
       std::uint32_t           _code;
       float                   _size;
@@ -243,9 +243,9 @@ namespace cycfi { namespace elements
                                : base_type(std::forward<Subject>(subject))
                               {}
 
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            is_control() const      { return true; }
-      virtual bool            focus(focus_request r)  { this->subject().focus(r); return true; }
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    is_control() const override { return true; }
+      bool                    focus(focus_request r) override { this->subject().focus(r); return true; }
 
       using key_function = std::function<bool(key_info k)>;
 

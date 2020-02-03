@@ -216,7 +216,7 @@ namespace cycfi { namespace elements
          context ectx{ ctx, _cursor_info.element, _cursor_info.bounds };
          _cursor_info.element->cursor(ectx, p, cursor_tracking::leaving);
          _cursor_info = composite_base::hit_info{};
-      };
+      }
    }
 
    bool composite_base::cursor(context const& ctx, point p, cursor_tracking status)

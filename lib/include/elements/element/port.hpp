@@ -25,9 +25,9 @@ namespace cycfi { namespace elements
 
       ~port_base() {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
+      void                    draw(context const& ctx) override;
 
       double                  halign() const { return _halign; }
       void                    halign(double val) { _halign = val; }
@@ -57,9 +57,9 @@ namespace cycfi { namespace elements
 
       ~vport_base() {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
+      void                    draw(context const& ctx) override;
 
       double                  valign() const { return _valign; }
       void                    valign(double val) { _valign = val; }
@@ -85,6 +85,7 @@ namespace cycfi { namespace elements
    class scrollable
    {
    public:
+      virtual ~scrollable() = default;
 
       struct scrollable_context
       {
@@ -128,17 +129,17 @@ namespace cycfi { namespace elements
 
       ~scroller_base() {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      element*                hit_test(context const& ctx, point p) override;
+      void                    draw(context const& ctx) override;
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual bool            scroll_into_view(context const& ctx, rect r);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            is_control() const;
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
+      bool                    scroll_into_view(context const& ctx, rect r) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    is_control() const override;
 
       struct scrollbar_info
       {

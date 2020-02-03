@@ -25,8 +25,8 @@ namespace cycfi { namespace elements
                                : _text(text)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
       std::string             _text;
    };

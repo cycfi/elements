@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
       {}
 
       basic_context(basic_context const&) = default;
-      basic_context& operator=(basic_context const&) = default;
+      basic_context& operator=(basic_context const&) = delete;
 
       elements::view&        view;
       elements::canvas&      canvas;
@@ -52,11 +52,11 @@ namespace cycfi { namespace elements
 
       context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
-       , parent(0), bounds(bounds_)
+       , parent(nullptr), bounds(bounds_)
       {}
 
       context(context const&) = default;
-      context& operator=(context const&) = default;
+      context& operator=(context const&) = delete;
 
       using feedback_function =
          std::function<

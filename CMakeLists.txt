@@ -5,11 +5,7 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.9.6...3.15.0)
 
-if(APPLE)
-	project(elements LANGUAGES C CXX OBJC OBJCXX)
-else()
-	project(elements LANGUAGES C CXX)
-endif()
+project(elements LANGUAGES C CXX)
 
 set(DEFAULT_BUILD_TYPE "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)

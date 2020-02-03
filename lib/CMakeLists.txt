@@ -5,12 +5,6 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
-if(APPLE)
-	project(elements LANGUAGES C CXX OBJC OBJCXX)
-else()
-	project(elements LANGUAGES C CXX)
-endif()
-
 ###############################################################################
 # Sources (and Resources)
 

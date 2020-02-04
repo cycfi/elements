@@ -95,7 +95,7 @@ namespace cycfi { namespace elements
 
    void static_text_box::text(std::string_view text)
    {
-      replace_string(_text, text);
+      _text = text;
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
       _layout.break_lines(_current_size.x, _rows);

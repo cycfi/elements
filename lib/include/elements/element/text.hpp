@@ -29,14 +29,6 @@ namespace cycfi { namespace elements
       virtual std::string_view   text() const = 0;
       virtual char const*        c_str() const = 0;
       virtual void               text(std::string_view text) = 0;
-
-      // A simple utility for replacing a std::string with the
-      // contents of a std::string_view
-      static void replace_string(std::string& dest, std::string_view text)
-      {
-         std::string str{ text.begin(), text.end() };
-         dest.swap(str);
-      }
    };
 
    ////////////////////////////////////////////////////////////////////////////

@@ -149,6 +149,11 @@ target_include_directories(elements PUBLIC include)
 
 target_compile_features(elements PUBLIC cxx_std_17)
 
+if(IPO_SUPPORTED AND CMAKE_BUILD_TYPE STREQUAL "Release")
+   message(STATUS "Enabling LTO for elements")
+   set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
+
 if (NOT MSVC)
    find_package(PkgConfig REQUIRED)
 endif()

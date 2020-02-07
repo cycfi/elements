@@ -144,9 +144,9 @@ namespace cycfi { namespace elements
          init_window_class()
          {
             WNDCLASSW windowClass = {0};
-            windowClass.hbrBackground = NULL;
-            windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-            windowClass.hInstance = NULL;
+            windowClass.hbrBackground = nullptr;
+            windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+            windowClass.hInstance = nullptr;
             windowClass.lpfnWndProc = handle_event;
             windowClass.lpszClassName = L"ElementsWindow";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;

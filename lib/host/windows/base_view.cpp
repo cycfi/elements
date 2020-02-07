@@ -622,7 +622,7 @@ namespace cycfi { namespace elements
 
    void clipboard(std::string const& text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
       if (!len)
          return;
 

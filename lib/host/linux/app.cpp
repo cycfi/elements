@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
             app_config.application_id.c_str()
           , G_APPLICATION_FLAGS_NONE
          );
-         g_signal_connect(the_app, "activate", G_CALLBACK(activate), NULL);
+         g_signal_connect(the_app, "activate", G_CALLBACK(activate), nullptr);
       }
    };
 

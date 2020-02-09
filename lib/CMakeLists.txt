@@ -25,6 +25,7 @@ set(ELEMENTS_SOURCES
    src/element/misc.cpp
    src/element/popup.cpp
    src/element/port.cpp
+   src/element/progress_bar.cpp
    src/element/proxy.cpp
    src/element/slider.cpp
    src/element/text.cpp
@@ -70,6 +71,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/misc.hpp
    include/elements/element/popup.hpp
    include/elements/element/port.hpp
+   include/elements/element/progress_bar.hpp
    include/elements/element/proxy.hpp
    include/elements/element/selectable.hpp
    include/elements/element/size.hpp

@@ -95,7 +95,7 @@ namespace cycfi { namespace elements
 
    void static_text_box::text(std::string_view text)
    {
-      replace_string(_text, text);
+      _text = text;
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
       _layout.break_lines(_current_size.x, _rows);
@@ -837,24 +837,21 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool basic_text_box::focus(focus_request r)
+   bool basic_text_box::wants_focus() const
    {
-      switch (r)
-      {
-         case focus_request::wants_focus:
-            return true;
+      return true;
+   }
 
-         case focus_request::begin_focus:
-            _is_focus = true;
-            if (_select_start == -1)
-               _select_start = _select_end = 0;
-            return true;
+   void basic_text_box::begin_focus()
+   {
+      _is_focus = true;
+      if (_select_start == -1)
+         _select_start = _select_end = 0;
+   }
 
-         case focus_request::end_focus:
-            _is_focus = false;
-            return true;
-      }
-      return false;
+   void basic_text_box::end_focus()
+   {
+      _is_focus = false;
    }
 
    void basic_text_box::select_start(int pos)
@@ -947,7 +944,7 @@ namespace cycfi { namespace elements
                if (on_enter)
                   on_enter(text());
                ctx.view.refresh(ctx);
-               ctx.view.focus(focus_request::end_focus);
+               ctx.view.end_focus();
                return true;
 
             case key_code::up:

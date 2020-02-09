@@ -317,12 +317,21 @@
       return false;
    }
 
-   void view::focus(focus_request r)
+   void view::begin_focus()
    {
       if (_content.empty() || !_is_focus)
          return;
 
-      _main_element.focus(r);
+      _main_element.begin_focus();
+      refresh();
+   }
+
+   void view::end_focus()
+   {
+      if (_content.empty() || !_is_focus)
+         return;
+
+      _main_element.end_focus();
       refresh();
    }
 

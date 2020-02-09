@@ -45,7 +45,9 @@ namespace cycfi { namespace elements
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
-      bool                    focus(focus_request r) override;
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
       bool                    is_control() const override;

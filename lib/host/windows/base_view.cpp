@@ -455,11 +455,11 @@ namespace cycfi { namespace elements
                return on_text(*info->vptr, message, wparam);
 
             case WM_SETFOCUS:
-               info->vptr->focus(focus_request::begin_focus);
+               info->vptr->begin_focus();
                break;
 
             case WM_KILLFOCUS:
-               info->vptr->focus(focus_request::end_focus);
+               info->vptr->end_focus();
                break;
 
             default:
@@ -622,7 +622,7 @@ namespace cycfi { namespace elements
 
    void clipboard(std::string const& text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
       if (!len)
          return;
 

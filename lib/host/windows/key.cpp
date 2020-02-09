@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
          //       Right Alt we ignore this (synthetic) Left Ctrl message
          time = GetMessageTime();
 
-         if (PeekMessageW(&next, NULL, 0, 0, PM_NOREMOVE))
+         if (PeekMessageW(&next, nullptr, 0, 0, PM_NOREMOVE))
          {
             if (next.message == WM_KEYDOWN ||
                 next.message == WM_SYSKEYDOWN ||

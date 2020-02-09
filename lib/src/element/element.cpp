@@ -70,9 +70,17 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   bool element::focus(focus_request r)
+   bool element::wants_focus() const
    {
-      return r == focus_request::end_focus;
+      return false;
+   }
+
+   void element::begin_focus()
+   {
+   }
+
+   void element::end_focus()
+   {
    }
 
    element const* element::focus() const

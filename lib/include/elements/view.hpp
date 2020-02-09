@@ -40,7 +40,8 @@ namespace cycfi { namespace elements
       void                    scroll(point dir, point p) override;
       void                    key(key_info const& k) override;
       void                    text(text_info const& info) override;
-      void                    focus(focus_request r) override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
       void                    poll() override;
 
       void                    layout();
@@ -171,10 +172,10 @@ namespace cycfi { namespace elements
          io().post(
             [e, this]
             {
-               focus(focus_request::end_focus);
+               end_focus();
                _content.push_back(e);
                layout(*e);
-               focus(focus_request::begin_focus);
+               begin_focus();
             }
          );
       }
@@ -194,12 +195,12 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  focus(focus_request::end_focus);
+                  end_focus();
                   refresh(*e);
                   _content.erase(i);
                   _content.reset();
                   layout();
-                  focus(focus_request::begin_focus);
+                  begin_focus();
                }
             }
          );

@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
-      bool                    focus(focus_request r) override;
+      bool                    wants_focus() const override;
 
       menu_position           position() const              { return _position; }
       void                    position(menu_position pos)   { _position = pos; }

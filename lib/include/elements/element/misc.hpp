@@ -131,7 +131,7 @@ namespace cycfi { namespace elements
 
       std::string_view     text() const override                  { return _text; }
       char const*          c_str() const override                 { return _text.c_str(); }
-      void                 text(std::string_view text) override   { replace_string(_text, text); }
+      void                 text(std::string_view text) override   { _text = text; }
 
       std::string const&   font() const                           { return _font; }
       void                 font(std::string_view font_)           { _font = font_; }
@@ -180,7 +180,7 @@ namespace cycfi { namespace elements
 
       std::string_view     text() const override                  { return _text; }
       char const*          c_str() const override                 { return _text.c_str(); }
-      void                 text(std::string_view text) override   { replace_string(_text, text); }
+      void                 text(std::string_view text) override   { _text = text; }
 
       std::string const&   font() const                           { return _font; }
       void                 font(std::string_view font_)           { _font = font_; }
@@ -245,7 +245,7 @@ namespace cycfi { namespace elements
 
       bool                    key(context const& ctx, key_info k) override;
       bool                    is_control() const override { return true; }
-      bool                    focus(focus_request r) override { this->subject().focus(r); return true; }
+      bool                    wants_focus() const override { return true; }
 
       using key_function = std::function<bool(key_info k)>;
 

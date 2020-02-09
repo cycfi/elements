@@ -29,14 +29,6 @@ namespace cycfi { namespace elements
       virtual std::string_view   text() const = 0;
       virtual char const*        c_str() const = 0;
       virtual void               text(std::string_view text) = 0;
-
-      // A simple utility for replacing a std::string with the
-      // contents of a std::string_view
-      static void replace_string(std::string& dest, std::string_view text)
-      {
-         std::string str{ text.begin(), text.end() };
-         dest.swap(str);
-      }
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -101,7 +93,9 @@ namespace cycfi { namespace elements
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
-      bool                    focus(focus_request r) override;
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
       bool                    is_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;

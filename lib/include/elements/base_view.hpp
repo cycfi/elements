@@ -78,16 +78,6 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Focus request
-   ////////////////////////////////////////////////////////////////////////////
-   enum class focus_request
-   {
-      wants_focus,
-      begin_focus,
-      end_focus
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
    // Keyboard information
    //
    // Key mapping ported to C++ from GLFW3
@@ -314,7 +304,8 @@ namespace cycfi { namespace elements
       virtual void      scroll(point /* dir */, point /* p */) {}
       virtual void      key(key_info const& /* k */) {}
       virtual void      text(text_info const& /* info */) {}
-      virtual void      focus(focus_request /* r */) {}
+      virtual void      begin_focus() {}
+      virtual void      end_focus() {}
       virtual void      poll() {}
 
       virtual void      refresh();

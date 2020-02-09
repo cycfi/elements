@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
       {
          hit_info info = (btn.down)? hit_element(ctx, p) : _click_info;
 
-         if (info.element && focus(focus_request::wants_focus))
+         if (info.element && wants_focus())
          {
             if (_focus != info.index)
                new_focus(ctx, info.index);
@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
       // end the previous focus
       if (_focus != -1)
       {
-         at(_focus).focus(focus_request::end_focus);
+         at(_focus).end_focus();
          ctx.view.refresh(ctx);
       }
 
@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
       _focus = index;
       if (_focus != -1)
       {
-         at(_focus).focus(focus_request::begin_focus);
+         at(_focus).begin_focus();
          ctx.view.refresh(ctx);
       }
    }
@@ -138,7 +138,7 @@ namespace cycfi { namespace elements
 
       auto&& try_focus = [&](auto ix) -> bool
       {
-         if (at(ix).focus(focus_request::wants_focus))
+         if (at(ix).wants_focus())
          {
             new_focus(ctx, ix);
             return true;
@@ -167,7 +167,7 @@ namespace cycfi { namespace elements
          else
          {
             while (--next_focus >= 0)
-               if (at(next_focus).focus(focus_request::wants_focus))
+               if (at(next_focus).wants_focus())
                   if (try_focus(next_focus))
                      return true;
             return false;
@@ -267,41 +267,37 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   bool composite_base::focus(focus_request r)
+   bool composite_base::wants_focus() const
    {
-      switch (r)
-      {
-         case focus_request::wants_focus:
-            for (std::size_t ix = 0; ix != size(); ++ix)
-               if (at(ix).focus(focus_request::wants_focus))
-                  return true;
-            return false;
-
-         case focus_request::begin_focus:
-            if (_focus == -1)
-               _focus = _saved_focus;
-            if (_focus == -1)
-            {
-               for (std::size_t ix = 0; ix != size(); ++ix)
-                  if (at(ix).focus(focus_request::wants_focus))
-                  {
-                     _focus = ix;
-                     break;
-                  }
-            }
-            if (_focus != -1)
-               at(_focus).focus(focus_request::begin_focus);
+      for (std::size_t ix = 0; ix != size(); ++ix)
+         if (at(ix).wants_focus())
             return true;
-
-         case focus_request::end_focus:
-            if (_focus != -1)
-               at(_focus).focus(focus_request::end_focus);
-            _saved_focus = _focus;
-            _focus = -1;
-            return true;
-      }
-
       return false;
+   }
+
+   void composite_base::begin_focus()
+   {
+      if (_focus == -1)
+         _focus = _saved_focus;
+      if (_focus == -1)
+      {
+         for (std::size_t ix = 0; ix != size(); ++ix)
+            if (at(ix).wants_focus())
+            {
+               _focus = ix;
+               break;
+            }
+      }
+      if (_focus != -1)
+         at(_focus).begin_focus();
+   }
+
+   void composite_base::end_focus()
+   {
+      if (_focus != -1)
+         at(_focus).end_focus();
+      _saved_focus = _focus;
+      _focus = -1;
    }
 
    element const* composite_base::focus() const

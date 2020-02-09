@@ -128,9 +128,19 @@ namespace cycfi { namespace elements
       return r;
    }
 
-   bool proxy_base::focus(focus_request r)
+   bool proxy_base::wants_focus() const
    {
-      return subject().focus(r);
+      return subject().wants_focus();
+   }
+
+   void proxy_base::begin_focus()
+   {
+      return subject().begin_focus();
+   }
+
+   void proxy_base::end_focus()
+   {
+      return subject().end_focus();
    }
 
    element const* proxy_base::focus() const

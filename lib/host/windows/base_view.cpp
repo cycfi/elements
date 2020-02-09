@@ -455,11 +455,11 @@ namespace cycfi { namespace elements
                return on_text(*info->vptr, message, wparam);
 
             case WM_SETFOCUS:
-               info->vptr->focus(focus_request::begin_focus);
+               info->vptr->begin_focus();
                break;
 
             case WM_KILLFOCUS:
-               info->vptr->focus(focus_request::end_focus);
+               info->vptr->end_focus();
                break;
 
             default:

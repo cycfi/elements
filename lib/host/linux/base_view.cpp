@@ -329,8 +329,10 @@ namespace cycfi { namespace elements
    gboolean on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      base_view.focus(event->in ?
-         focus_request::begin_focus : focus_request::end_focus);
+      if (event->in)
+         base_view.begin_focus();
+      else
+         base_view.end_focus();
    }
 
    int poll_function(gpointer user_data)

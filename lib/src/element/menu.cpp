@@ -172,7 +172,7 @@ namespace cycfi { namespace elements
       return layered_button::key(ctx, k);
    }
 
-   bool basic_menu::focus(focus_request /* r */)
+   bool basic_menu::wants_focus() const
    {
       return true;
    }

@@ -44,7 +44,9 @@ namespace cycfi { namespace elements
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
 
-      virtual bool            focus(focus_request r);
+      virtual bool            wants_focus() const;
+      virtual void            begin_focus();
+      virtual void            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
       virtual bool            is_control() const;
@@ -202,9 +204,23 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline bool
-   indirect<Base>::focus(focus_request r)
+   indirect<Base>::wants_focus() const
    {
-      return this->get().focus(r);
+      return this->get().wants_focus();
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::begin_focus()
+   {
+      return this->get().begin_focus();
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::end_focus()
+   {
+      return this->get().end_focus();
    }
 
    template <typename Base>

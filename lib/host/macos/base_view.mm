@@ -492,12 +492,12 @@ namespace
 
 -(void) windowDidBecomeKey : (NSNotification*) notification
 {
-   _view->focus(ph::focus_request::begin_focus);
+   _view->begin_focus();
 }
 
 -(void) windowDidResignKey : (NSNotification*) notification
 {
-   _view->focus(ph::focus_request::end_focus);
+   _view->end_focus();
 }
 
 @end // @implementation ElementsView

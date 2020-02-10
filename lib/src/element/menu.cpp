@@ -115,18 +115,20 @@ namespace cycfi { namespace elements
       basic_menu_item_element* first = nullptr;
       basic_menu_item_element* last = nullptr;
 
-      new_ctx.listen(
-              [&](context const & /* ctx */, auto *e, std::string_view what) {
-                  if (auto me = dynamic_cast<basic_menu_item_element *>(e)) {
-                     if (what == "key" || what == "click") {
-                        hit = me;
-                     } else if (what == "arrows" && me->is_enabled()) {
-                        if (!first)
-                           first = me;
-                        last = me;
-                     }
-                  }
-              }
+      new_ctx.listen<basic_menu_item_element>(
+         [&](auto const& /* ctx */, auto& e, auto what)
+         {
+            if (what == "key" || what == "click")
+            {
+               hit = &e;
+            }
+            else if (what == "arrows" && e.is_enabled())
+            {
+               if (!first)
+                  first = &e;
+               last = &e;
+            }
+         }
       );
 
       if (_popup->key(new_ctx, k))

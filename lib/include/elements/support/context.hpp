@@ -58,17 +58,22 @@ namespace cycfi { namespace elements
       context(context const&) = default;
       context& operator=(context const&) = delete;
 
-      using listener_function =
-         std::function<
-            void(context const& ctx, elements::element*, std::string_view what)
-         >;
-
-      template <typename F>
-      listener_function listen(F&& f) const
+      context sub_context() const
       {
-         auto save = _listener;
-         _listener = std::forward<F>(f);
-         return save;
+         auto ctx = context{ *this };
+         ctx.parent = this;
+         return ctx;
+      }
+
+      template <typename T, typename F>
+      void listen(F&& f)
+      {
+         _listener =
+            [f](auto const& ctx, auto* e, auto what)
+            {
+               if (auto te = dynamic_cast<T*>(e))
+                  f(ctx, *te, what);
+            };
       }
 
       void notify(context const& ctx, std::string_view what, elements::element* e) const
@@ -85,7 +90,12 @@ namespace cycfi { namespace elements
 
    private:
 
-      mutable listener_function     _listener;
+      using listener_function =
+         std::function<
+            void(context const& ctx, elements::element*, std::string_view what)
+         >;
+
+      listener_function             _listener;
    };
 }}
 

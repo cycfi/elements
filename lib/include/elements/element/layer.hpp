@@ -60,7 +60,6 @@ namespace cycfi { namespace elements
       void                 refresh(context const& ctx, element& element, int outward = 0) override;
       hit_info             hit_element(context const& ctx, point p) const override;
       void                 begin_focus() override;
-      void                 end_focus() override;
 
       using element::refresh;
       using composite_base::focus;

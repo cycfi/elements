@@ -78,6 +78,7 @@ namespace cycfi { namespace elements
    void layer_element::begin_focus()
    {
       focus_top();
+      return composite_base::begin_focus();
    }
 
    void layer_element::focus_top()
@@ -150,11 +151,7 @@ namespace cycfi { namespace elements
          if (e.is_control() && e.wants_focus())
             composite_base::focus(_selected_index);
       }
-   }
-
-   void deck_element::end_focus()
-   {
-      begin_focus();
+      composite_base::begin_focus();
    }
 
    void deck_element::select(std::size_t index)

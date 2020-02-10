@@ -58,25 +58,25 @@ namespace cycfi { namespace elements
       context(context const&) = default;
       context& operator=(context const&) = delete;
 
-      using feedback_function =
+      using listener_function =
          std::function<
             void(context const& ctx, elements::element*, std::string_view what)
          >;
 
       template <typename F>
-      feedback_function feedback(F&& f) const
+      listener_function listen(F&& f) const
       {
-         auto save = _feedback;
-         _feedback = std::forward<F>(f);
+         auto save = _listener;
+         _listener = std::forward<F>(f);
          return save;
       }
 
-      void give_feedback(context const& ctx, char const* what, elements::element* e) const
+      void notify(context const& ctx, std::string_view what, elements::element* e) const
       {
-         if (_feedback)
-            _feedback(ctx, e, what);
+         if (_listener)
+            _listener(ctx, e, what);
          if (parent)
-            parent->give_feedback(ctx, what, e);
+            parent->notify(ctx, what, e);
       }
 
       elements::element*            element;
@@ -85,7 +85,7 @@ namespace cycfi { namespace elements
 
    private:
 
-      mutable feedback_function     _feedback;
+      mutable listener_function     _listener;
    };
 }}
 

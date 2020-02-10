@@ -115,23 +115,18 @@ namespace cycfi { namespace elements
       basic_menu_item_element* first = nullptr;
       basic_menu_item_element* last = nullptr;
 
-      new_ctx.feedback(
-         [&](context const& /* ctx */, auto* e, std::string_view what)
-         {
-            if (auto me = dynamic_cast<basic_menu_item_element*>(e))
-            {
-               if (what == "key" || what == "click")
-               {
-                  hit = me;
-               }
-               else if (what == "arrows" && me->is_enabled())
-               {
-                  if (!first)
-                     first = me;
-                  last = me;
-               }
-            }
-         }
+      new_ctx.listen(
+              [&](context const & /* ctx */, auto *e, std::string_view what) {
+                  if (auto me = dynamic_cast<basic_menu_item_element *>(e)) {
+                     if (what == "key" || what == "click") {
+                        hit = me;
+                     } else if (what == "arrows" && me->is_enabled()) {
+                        if (!first)
+                           first = me;
+                        last = me;
+                     }
+                  }
+              }
       );
 
       if (_popup->key(new_ctx, k))
@@ -224,7 +219,7 @@ namespace cycfi { namespace elements
          if (on_click)
             on_click();
          select(false);
-         ctx.give_feedback(ctx, "click", this);
+         ctx.notify(ctx, "click", this);
          result = this;
       }
       element* proxy_result = proxy_base::click(ctx, btn);
@@ -261,7 +256,7 @@ namespace cycfi { namespace elements
                   select(false);
                   if (on_click)
                      on_click();
-                  ctx.give_feedback(ctx, "key", this);
+                  ctx.notify(ctx, "key", this);
                   return true;
                }
                break;
@@ -269,7 +264,7 @@ namespace cycfi { namespace elements
             case key_code::escape:
                {
                   select(false);
-                  ctx.give_feedback(ctx, "key", this);
+                  ctx.notify(ctx, "key", this);
                   return true;
                }
                break;
@@ -279,7 +274,7 @@ namespace cycfi { namespace elements
                {
                   if (!is_selected())
                   {
-                     ctx.give_feedback(ctx, "arrows", this);
+                     ctx.notify(ctx, "arrows", this);
                      return false;
                   }
 
@@ -324,7 +319,7 @@ namespace cycfi { namespace elements
                {
                   if (on_click)
                      on_click();
-                  ctx.give_feedback(ctx, "key", this);
+                  ctx.notify(ctx, "key", this);
                   return true;
                }
          }

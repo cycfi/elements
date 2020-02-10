@@ -56,9 +56,14 @@ namespace cycfi { namespace elements
       auto  size = _layout.metrics();
       auto  new_y = _rows.size() * (size.ascent + size.descent + size.leading);
 
-      // Refresh the whole view if the size has changed
+      // Refresh the union of the old and new bounds if the size has changed
       if (_current_size.x != new_x || _current_size.y != new_y)
-         ctx.view.refresh();
+      {
+         if (_current_size.x != -1 && _current_size.y != -1)
+            ctx.view.refresh(max(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
+         else
+            ctx.view.refresh(ctx.bounds);
+      }
 
       _current_size.x = new_x;
       _current_size.y = new_y;

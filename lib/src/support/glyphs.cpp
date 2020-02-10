@@ -138,6 +138,7 @@ namespace cycfi { namespace elements
    master_glyphs::master_glyphs(
        char const* first, char const* last
      , char const* face, float size
+     , point start
    )
     : glyphs(first, last)
    {
@@ -145,15 +146,20 @@ namespace cycfi { namespace elements
       cnv.font(face, size);
       auto cr = scratch_context_.context();
       _scaled_font = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
-      build();
+      build(start);
    }
 
-   master_glyphs::master_glyphs(char const* first, char const* last, master_glyphs const& source)
+   master_glyphs::master_glyphs(
+      char const* first
+    , char const* last
+    , master_glyphs const& source
+    , point start
+   )
     : glyphs(first, last)
    {
       canvas cnv{ *scratch_context_.context() };
       _scaled_font = cairo_scaled_font_reference(source._scaled_font);
-      build();
+      build(start);
    }
 
    master_glyphs::master_glyphs(master_glyphs&& rhs)
@@ -205,7 +211,7 @@ namespace cycfi { namespace elements
       _scaled_font = nullptr;
    }
 
-   void master_glyphs::text(char const* first, char const* last)
+   void master_glyphs::text(char const* first, char const* last, point start)
    {
       if (_glyphs)
       {
@@ -220,7 +226,7 @@ namespace cycfi { namespace elements
 
       _first = first;
       _last = last;
-      build();
+      build(start);
    }
 
    void master_glyphs::break_lines(float width, std::vector<glyphs>& lines)
@@ -308,14 +314,14 @@ namespace cycfi { namespace elements
       lines.push_back(std::move(glyph_));
    }
 
-   void master_glyphs::build()
+   void master_glyphs::build(point start)
    {
       // reurn early if there's nothing to build
       if (_first == _last)
          return;
 
       auto stat = cairo_scaled_font_text_to_glyphs(
-         _scaled_font, 0, 0, _first, int(_last - _first),
+         _scaled_font, start.x, start.y, _first, int(_last - _first),
          &_glyphs, &_glyph_count, &_clusters, &_cluster_count,
          &_clusterflags);
 

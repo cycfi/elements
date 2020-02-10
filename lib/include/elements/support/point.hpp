@@ -35,6 +35,10 @@ namespace cycfi { namespace elements
    {
       using point::point;
 
+                  extent(point p)
+                   : point(p)
+                  {}
+
       point       move(float dx, float dy) const = delete;
       point       move_to(float x, float y) const = delete;
    };

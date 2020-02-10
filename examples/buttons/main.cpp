@@ -17,6 +17,7 @@ constexpr auto bred     = colors::red.opacity(0.4);
 constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
 constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
+constexpr auto pgold   = colors::gold.opacity(0.8);
 
 auto make_buttons(view& view_)
 {
@@ -25,7 +26,7 @@ auto make_buttons(view& view_)
    auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
    auto reset           = button("Clear Latch", icons::lock_open, 1.0, bblue);
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
-   auto prog_bar        = share(progress_bar(box(colors::black), box(colors::green)));
+   auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
    auto prog_advance    = button("Advance Progress Bar");
 
    reset.on_click =
@@ -54,7 +55,7 @@ auto make_buttons(view& view_)
             top_margin(20, hold(lbutton)),
             top_margin(20, reset),
             top_margin(20, note),
-            top_margin(20, vsize(35, hold(prog_bar))),
+            top_margin(20, vsize(25, hold(prog_bar))),
             top_margin(20, prog_advance)
          )
       );

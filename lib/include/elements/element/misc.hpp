@@ -40,6 +40,34 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // RBox: A simple colored rounded-box.
+   ////////////////////////////////////////////////////////////////////////////
+   struct rbox_element : element
+   {
+      rbox_element(color color_, float radius = 4)
+       : _color(color_)
+       , _radius(radius)
+      {}
+
+      void draw(context const& ctx) override
+      {
+         auto& cnv = ctx.canvas;
+         cnv.begin_path();
+         cnv.round_rect(ctx.bounds, _radius);
+         cnv.fill_style(_color);
+         cnv.fill();
+      }
+
+      color _color;
+      float _radius;
+   };
+
+   inline auto rbox(color color_, float radius = 4)
+   {
+      return rbox_element{ color_, radius };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Basic Element
    //
    // The basic element takes in a function that draws something

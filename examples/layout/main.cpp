@@ -5,7 +5,6 @@ using namespace cycfi::elements;
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);
 auto background = box(bkd_color);
-
 auto rbox_ = rbox(colors::gold.opacity(0.8));
 
 auto make_vtile_aligns()

@@ -31,7 +31,6 @@ namespace cycfi::elements
 
       rect                    background_bounds(context const& ctx) const;
       rect                    foreground_bounds(context const& ctx) const;
-      // value from point - seems unneeded
 
       virtual element const&  background() const = 0;
       virtual element&        background()       = 0;
@@ -39,8 +38,9 @@ namespace cycfi::elements
       virtual element&        foreground()       = 0;
 
    private:
-      double            _value;
-      bool              _is_horiz = true;
+
+      double                  _value;
+      bool                    _is_horiz = true;
    };
 
    class basic_progress_bar_base : public progress_bar_base
@@ -55,12 +55,13 @@ namespace cycfi::elements
    class basic_progress_bar : public Base
    {
    public:
+
       static_assert(std::is_base_of_v<element, Background>,
-                    "basic_progress_bar_base Background type needs to be or inherit from element");
+         "basic_progress_bar_base Background type needs to be or inherit from element");
       static_assert(std::is_base_of_v<element, Foreground>,
-                    "basic_progress_bar_base Foreground type needs to be or inherit from element");
+         "basic_progress_bar_base Foreground type needs to be or inherit from element");
       static_assert(std::is_base_of_v<basic_progress_bar_base, Base>,
-                    "basic_progress_bar_base Base type needs to be or inherit from basic_progress_bar_base");
+         "basic_progress_bar_base Base type needs to be or inherit from basic_progress_bar_base");
 
       using background_type = std::decay_t<Background>;
       using foreground_type = std::decay_t<Foreground>;

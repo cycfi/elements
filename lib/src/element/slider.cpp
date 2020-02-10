@@ -131,18 +131,12 @@ namespace cycfi { namespace elements
       auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
 
+      // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
       if (_is_horiz)
-      {
          new_value = (p.x - (bounds.left + (tmb_w / 2))) / (w - tmb_w);
-      }
       else
-      {
          new_value = 1.0 - ((p.y - (bounds.top + (tmb_h / 2))) / (h - tmb_h));
-         // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
-      }
-
-      clamp(new_value, 0.0, 1.0);
-      return new_value;
+      return clamp(new_value, 0.0, 1.0);
    }
 
    void slider_base::begin_tracking(context const& ctx, info& track_info)
@@ -181,8 +175,7 @@ namespace cycfi { namespace elements
 
    void slider_base::value(double val)
    {
-      clamp(val, 0.0, 1.0);
-      _value = val;
+      _value = clamp(val, 0.0, 1.0);
    }
 
    double slider_base::value() const

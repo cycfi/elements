@@ -21,13 +21,9 @@ namespace cycfi::elements
       bg_limits.min.x = std::max(bg_limits.min.x, fg_limits.min.x);
 
       if (bg_limits.max.x > bg_limits.max.y)
-      {
          bg_limits.max.y = std::max(bg_limits.max.y, fg_limits.max.y);
-      }
       else
-      {
          bg_limits.max.x = std::max(bg_limits.max.x, fg_limits.max.x);
-      }
 
       return bg_limits;
    }
@@ -65,7 +61,7 @@ namespace cycfi::elements
 
    void progress_bar_base::value(double val)
    {
-      _value = std::clamp(val, 0.0, 1.0);
+      _value = clamp(val, 0.0, 1.0);
    }
 
    rect progress_bar_base::background_bounds(context const& ctx) const
@@ -82,13 +78,9 @@ namespace cycfi::elements
       auto bounds = ctx.bounds;
 
       if (_is_horiz)
-      {
          bounds.width(bounds.width() * value());
-      }
       else
-      {
          bounds.height(bounds.height() * (1.0 - value()));
-      }
 
       return bounds;
    }

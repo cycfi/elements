@@ -26,8 +26,7 @@ namespace cycfi { namespace elements
 
    void dial_base::value(double val)
    {
-      clamp(val, 0.0, 1.0);
-      _value = val;
+      _value = clamp(val, 0.0, 1.0);
       subject().value(_value);
    }
 
@@ -52,11 +51,7 @@ namespace cycfi { namespace elements
 
       float val = (angle-start_angle) / range;
       if (std::abs(val - value()) < 0.6)
-      {
-         clamp(val, 0.0, 1.0);
-         return val;
-      }
-
+         return clamp(val, 0.0, 1.0);
       return value();
    }
 

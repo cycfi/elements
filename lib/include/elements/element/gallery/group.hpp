@@ -33,14 +33,14 @@ namespace cycfi { namespace elements
 
    template <typename Content>
    inline auto group(
-      std::string_view  title,
+      std::string       title,
       Content&&         content,
       float             label_size = 1.0,
       bool              center_heading = true
    )
    {
       return make_group(
-         left_top_margin({ 10, 10 }, heading{ title, label_size }),
+         left_top_margin({ 10, 10 }, heading{ std::move(title), label_size }),
          std::forward<Content>(content), center_heading
       );
    }
@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
    )
    {
       return make_unframed_group(
-         left_top_margin({ 10, 10 }, heading{ title, label_size }),
+         left_top_margin({ 10, 10 }, heading{ std::move(title), label_size }),
          std::forward<Content>(content), center_heading
       );
    }

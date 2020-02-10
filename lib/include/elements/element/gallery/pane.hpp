@@ -42,13 +42,13 @@ namespace cycfi { namespace elements
 
    template <typename Content>
    inline auto pane(
-      std::string const& title,
+      std::string title,
       Content&& content,
       float title_size = 1.0,
       bool center_heading = true
    )
    {
-      return pane(heading(title, title_size), content, center_heading);
+      return pane(heading(std::move(title), title_size), content, center_heading);
    }
 
    template <typename Content>

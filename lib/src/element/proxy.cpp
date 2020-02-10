@@ -173,7 +173,7 @@ namespace cycfi { namespace elements
       subject().value(val);
    }
 
-   void proxy_base::value(std::string val)
+   void proxy_base::value(std::string_view val)
    {
       subject().value(val);
    }

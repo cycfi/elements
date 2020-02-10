@@ -8,13 +8,13 @@
 namespace cycfi { namespace elements
 {
    basic_menu
-   button_menu(std::string_view text, menu_position pos, color body_color)
+   button_menu(std::string text, menu_position pos, color body_color)
    {
       auto icon =
          (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
          icons::down_dir : icons::up_dir
          ;
-      auto menu = make_button<basic_menu>(text, icon, 1.0, body_color);
+      auto menu = make_button<basic_menu>(std::move(text), icon, 1.0, body_color);
       menu.position(pos);
       return menu;
    }
@@ -58,9 +58,9 @@ namespace cycfi { namespace elements
    }
 
    std::pair<basic_menu, std::shared_ptr<label>>
-   selection_menu(std::string_view init)
+   selection_menu(std::string init)
    {
-      auto btn_text = share(label(init, 1.0));
+      auto btn_text = share(label(std::move(init), 1.0));
 
       auto menu_btn = text_button<basic_menu>(
          margin(
@@ -82,14 +82,14 @@ namespace cycfi { namespace elements
     , menu_selector const& items
    )
    {
-      auto r = selection_menu(items.size()? items[0] : "");
+      auto r = selection_menu(items.size()? std::string(items[0]) : "");
 
       if (items.size())
       {
          vtile_composite list;
          for (auto i = 0; i != items.size(); ++i)
          {
-            auto e = menu_item(items[i]);
+            auto e = menu_item(std::string(items[i]));
             e.on_click = [btn_text = r.second, on_select, text = items[i]]()
             {
                btn_text->text(text);

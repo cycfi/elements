@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
       void                    value(bool val) override;
       void                    value(int val) override;
       void                    value(double val) override;
-      void                    value(std::string val) override;
+      void                    value(std::string_view val) override;
    };
 
    template <typename Subject, typename Base = proxy_base>

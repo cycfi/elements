@@ -14,12 +14,13 @@ namespace cycfi { namespace elements
       auto&       canvas_ = ctx.canvas;
       auto        canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      color       indicator_color = theme_.indicator_color;
+      color const indicator_color = theme_.indicator_color;
+      float const bg_alfa = theme_.box_widget_bg_opacity;
       rect        box = ctx.bounds.move(15, 0);
 
       box.width(box.height());
 
-      color c1 = state ? indicator_color.level(1.5) : rgba(0, 0, 0, 32);
+      color c1 = state ? indicator_color.level(1.5) : rgb(0, 0, 0).opacity(bg_alfa);
 
       if (state && hilite)
          c1 = c1.level(1.3);

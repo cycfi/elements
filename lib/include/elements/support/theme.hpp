@@ -35,6 +35,8 @@ namespace cycfi { namespace elements
       char const*          symbols_font               = "Arial";
 #endif
 
+      float                box_widget_bg_opacity      = 32.0f / 255.0f;
+
       color                heading_font_color         = basic_font_color;
       char const*          heading_font               = "Roboto Bold";
       float                heading_font_size          = 14.0;

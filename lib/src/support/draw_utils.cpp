@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/draw_utils.hpp>
+#include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -85,8 +86,9 @@ namespace cycfi { namespace elements
          bounds.bottom_left()
       };
 
-      gradient.add_color_stop({ 0.0, rgba(255, 255, 255, 32) });
-      gradient.add_color_stop({ 1.0, rgba(0, 0, 0, 32) });
+      float const bg_alpha = get_theme().box_widget_bg_opacity;
+      gradient.add_color_stop({ 0.0, rgb(255, 255, 255).opacity(bg_alpha) });
+      gradient.add_color_stop({ 1.0, rgb(0, 0, 0).opacity(bg_alpha) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();

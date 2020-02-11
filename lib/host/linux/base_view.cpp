@@ -326,7 +326,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   gboolean on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
+   void on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       base_view.focus(event->in ?

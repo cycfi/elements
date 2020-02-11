@@ -282,7 +282,7 @@ namespace cycfi { namespace elements
       stroke();
    }
 
-   inline void canvas::font(char const* face, float size)
+   inline void canvas::font(char const* face)
    {
 #if defined(__linux__) || defined(_WIN32)
       auto fi = _fonts.find(face);
@@ -290,11 +290,32 @@ namespace cycfi { namespace elements
       {
          cairo_font_face_t* ct = fi->second;
          cairo_set_font_face(&_context, ct);
-         cairo_set_font_size(&_context, size);
          return;
       }
 #endif
       cairo_select_font_face(&_context, face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+   }
+
+   inline void canvas::font(char const* face, float size)
+   {
+      font(face);
+      font_size(size);
+   }
+
+   inline void canvas::font(elements::font const& font_)
+   {
+      if (font_._scaled_font)
+         cairo_set_scaled_font(&_context, font_._scaled_font);
+   }
+
+   inline void canvas::font(elements::font const& font_, float size)
+   {
+      font(font_);
+      font_size(size);
+   }
+
+   inline void canvas::font_size(float size)
+   {
       cairo_set_font_size(&_context, size);
    }
 

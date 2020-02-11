@@ -42,6 +42,15 @@ namespace cycfi { namespace elements
       return { info.size.x, height };
    }
 
+   point measure_text(canvas& cnv, char const* text, font const& font_, float size)
+   {
+      auto  state = cnv.new_state();
+      cnv.font(font_, size);
+      auto  info = cnv.measure_text(text);
+      auto  height = info.ascent + info.descent + info.leading;
+      return { info.size.x, height };
+   }
+
    namespace detail
    {
       char const* codepoint_to_utf8(unsigned cp, char str[8])

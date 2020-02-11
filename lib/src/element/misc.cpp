@@ -43,9 +43,9 @@ namespace cycfi { namespace elements
     , _size(size)
    {}
 
-   heading::heading(std::string_view text, std::string_view font, float size)
+   heading::heading(std::string_view text, char const* font, float size)
     : _text(text)
-    , _font(font.begin(), font.end())
+    , _font(font)
     , _size(size)
    {}
 
@@ -54,8 +54,8 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto  size = measure_text(
          ctx.canvas, _text.c_str()
-       , _font.c_str()
-       , thm.heading_font_size * _size
+       , _font
+       , thm.heading_font_size * _size // _size is a multiplier.
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -68,8 +68,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.heading_font_color);
       canvas_.font(
-         _font.c_str()
-       , theme_.heading_font_size * _size
+         _font
+       , theme_.heading_font_size * _size // _size is a multiplier.
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 
@@ -90,9 +90,9 @@ namespace cycfi { namespace elements
     , _size(size)
    {}
 
-   label::label(std::string_view text, std::string_view font, float size)
+   label::label(std::string_view text, char const* font, float size)
     : _text(text)
-    , _font(font.begin(), font.end())
+    , _font(font)
     , _size(size)
    {}
 
@@ -101,8 +101,8 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto  size = measure_text(
          ctx.canvas, _text.c_str()
-       , _font.c_str()
-       , thm.label_font_size * _size
+       , _font
+       , thm.label_font_size * _size // _size is a multiplier.
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -115,8 +115,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
-         _font.c_str()
-       , theme_.label_font_size * _size
+         _font
+       , theme_.label_font_size * _size // _size is a multiplier.
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 

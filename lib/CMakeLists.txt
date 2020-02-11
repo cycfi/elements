@@ -33,6 +33,7 @@ set(ELEMENTS_SOURCES
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/glyphs.cpp
+   src/support/font.cpp
    src/support/pixmap.cpp
    src/support/rect.cpp
    src/support/resource_paths.cpp
@@ -89,6 +90,7 @@ set(ELEMENTS_HEADERS
    include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
    include/elements/support/glyphs.hpp
+   include/elements/support/font.hpp
    include/elements/support/icon_ids.hpp
    include/elements/support/pixmap.hpp
    include/elements/support/point.hpp
@@ -174,7 +176,7 @@ target_compile_options(elements PRIVATE
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-   
+
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
    else()
@@ -191,7 +193,7 @@ endif()
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-   
+
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
    else()
@@ -215,7 +217,7 @@ endif()
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.61 REQUIRED COMPONENTS filesystem system)
-  
+
 target_link_libraries(elements PUBLIC Boost::boost Boost::filesystem Boost::system)
 target_compile_definitions(elements PRIVATE BOOST_ALL_NO_LIB)
 

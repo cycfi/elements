@@ -10,6 +10,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
+#include <elements/support/font.hpp>
 #include <functional>
 #include <string_view>
 
@@ -150,7 +151,7 @@ namespace cycfi { namespace elements
 
                            heading(
                               std::string_view text
-                            , std::string_view font
+                            , char const* font
                             , float size = 1.0
                            );
 
@@ -161,8 +162,8 @@ namespace cycfi { namespace elements
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 
-      std::string const&   font() const                           { return _font; }
-      void                 font(std::string_view font_)           { _font = font_; }
+      font const&          font() const                           { return _font; }
+      void                 font(char const* font_)                { _font = elements::font(font_); }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }
@@ -172,7 +173,7 @@ namespace cycfi { namespace elements
    private:
 
       std::string          _text;
-      std::string          _font;
+      elements::font       _font;
       float                _size;
    };
 
@@ -199,7 +200,7 @@ namespace cycfi { namespace elements
 
                            label(
                               std::string_view text
-                            , std::string_view font
+                            , char const* font
                             , float size = 1.0
                            );
 
@@ -210,8 +211,8 @@ namespace cycfi { namespace elements
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 
-      std::string const&   font() const                           { return _font; }
-      void                 font(std::string_view font_)           { _font = font_; }
+      font const&          font() const                           { return _font; }
+      void                 font(char const* font_)                { _font = elements::font(font_); }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }
@@ -221,7 +222,7 @@ namespace cycfi { namespace elements
    private:
 
       std::string          _text;
-      std::string          _font;
+      elements::font       _font;
       float                _size;
    };
 

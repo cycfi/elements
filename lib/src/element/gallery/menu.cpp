@@ -87,7 +87,7 @@ namespace cycfi { namespace elements
       if (items.size())
       {
          vtile_composite list;
-         for (auto i = 0; i != items.size(); ++i)
+         for (std::size_t i = 0; i != items.size(); ++i)
          {
             auto e = menu_item(items[i]);
             e.on_click = [btn_text = r.second, on_select, text = items[i]]()

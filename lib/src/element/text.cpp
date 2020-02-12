@@ -302,7 +302,7 @@ namespace cycfi { namespace elements
 
       auto next_char = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* end = _text.data() + _text.size();
             char const* p = next_utf8(end, &_text[_select_end]);
@@ -322,7 +322,7 @@ namespace cycfi { namespace elements
 
       auto next_word = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* p = &_text[_select_end];
             char const* end = _text.data() + _text.size();
@@ -856,13 +856,13 @@ namespace cycfi { namespace elements
 
    void basic_text_box::select_start(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_start = pos;
    }
 
    void basic_text_box::select_end(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_end = pos;
    }
 

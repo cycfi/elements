@@ -283,12 +283,12 @@ namespace cycfi { namespace elements
                   auto [c, cctx] = find_composite(ctx);
                   if (c)
                   {
-                     bool down = k.key == key_code::down;
-                     auto last = c->size()-1;
+                     bool const down = k.key == key_code::down;
+                     auto const last = static_cast<int>(c->size()) - 1;
                      bool found = false;
                      for (
                         int i = down? 0 : last;
-                        i != (down? c->size() : -1);
+                        i != (down? static_cast<int>(c->size()) : -1);
                         i += down? +1 : -1
                      )
                      {

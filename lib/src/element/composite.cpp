@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
          hit_info info = hit_element(ctx, p);
          return info.element;
       }
-      return 0;
+      return nullptr;
    }
 
    void composite_base::draw(context const& ctx)
@@ -159,7 +159,7 @@ namespace cycfi { namespace elements
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
          if ((next_focus == -1) || !reverse)
          {
-            while (++next_focus != size())
+            while (++next_focus != static_cast<int>(size()))
                if (try_focus(next_focus))
                   return true;
             return false;

@@ -209,7 +209,7 @@ namespace cycfi { namespace elements
       auto const& theme = get_theme();
 
       cnv.stroke_style(theme.ticks_color);
-      for (int i = 0; i != num_divs+1; ++i)
+      for (std::size_t i = 0; i != num_divs+1; ++i)
       {
          float inset = 0;
          if (i % (num_divs / major_divs))
@@ -264,7 +264,7 @@ namespace cycfi { namespace elements
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_style(theme.label_font_color);
 
-      for (int i = 0; i != num_labels; ++i)
+      for (std::size_t i = 0; i != num_labels; ++i)
       {
          point where = vertical?
             point{ reverse? bounds.left : bounds.right, pos } :

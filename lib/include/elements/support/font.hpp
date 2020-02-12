@@ -8,7 +8,7 @@
 
 extern "C"
 {
-   typedef struct _cairo_scaled_font cairo_scaled_font_t;
+   typedef struct _cairo_font_face cairo_font_face_t;
 }
 
 namespace cycfi { namespace elements
@@ -23,10 +23,8 @@ namespace cycfi { namespace elements
 
    private:
 
-      using scaled_font = cairo_scaled_font_t;
       friend class canvas;
-
-      scaled_font*         _handle   = nullptr;
+      cairo_font_face_t*  _handle   = nullptr;
    };
 }}
 

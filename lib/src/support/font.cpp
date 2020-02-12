@@ -4,17 +4,15 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/font.hpp>
-#include <elements/support/detail/scratch_context.hpp>
-#include <elements/support/canvas.hpp>
 #include <map>
 #include <mutex>
+#include <cairo.h>
 
 namespace cycfi { namespace elements
 {
    namespace
    {
-      detail::scratch_context scratch_context_;
-      std::map<std::string, cairo_scaled_font_t*> font_map;
+      std::map<std::string, cairo_font_face_t*> font_map;
       std::mutex font_map_mutex;
 
       struct cleanup
@@ -23,7 +21,7 @@ namespace cycfi { namespace elements
          {
             std::lock_guard<std::mutex> lock(font_map_mutex);
             for (auto [key, scaled_font] : font_map)
-               cairo_scaled_font_destroy(scaled_font);
+               cairo_font_face_destroy(scaled_font);
             font_map.clear();
          }
       };
@@ -36,33 +34,31 @@ namespace cycfi { namespace elements
       std::lock_guard<std::mutex> lock(font_map_mutex);
       if (auto it = font_map.find(face); it != font_map.end())
       {
-         _handle = cairo_scaled_font_reference(it->second);
+         _handle = cairo_font_face_reference(it->second);
       }
       else
       {
-         canvas cnv{ *scratch_context_.context() };
-         cnv.font(face);
-         auto cr = scratch_context_.context();
-         _handle = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
-         font_map[face] = cairo_scaled_font_reference(_handle);
+         // $$$ TODO: use a non-toy font selection facility $$$
+         _handle = cairo_toy_font_face_create(face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+         font_map[face] = cairo_font_face_reference(_handle);
       }
    }
 
    font::font(font const& rhs)
    {
-      _handle = cairo_scaled_font_reference(rhs._handle);
+      _handle = cairo_font_face_reference(rhs._handle);
    }
 
    font& font::operator=(font const& rhs)
    {
       if (&rhs != this)
-         _handle = cairo_scaled_font_reference(rhs._handle);
+         _handle = cairo_font_face_reference(rhs._handle);
       return *this;
    }
 
    font::~font()
    {
-      cairo_scaled_font_destroy(_handle);
+      cairo_font_face_destroy(_handle);
    }
 }}
 

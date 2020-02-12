@@ -11,6 +11,7 @@
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <functional>
+#include <string>
 #include <string_view>
 
 namespace cycfi { namespace elements
@@ -144,20 +145,20 @@ namespace cycfi { namespace elements
    {
    public:
                            heading(
-                              std::string_view text
+                              std::string text
                             , float size_ = 1.0
                            );
 
                            heading(
-                              std::string_view text
-                            , std::string_view font
+                              std::string text
+                            , std::string font
                             , float size = 1.0
                            );
 
       view_limits          limits(basic_context const& ctx) const override;
       void                 draw(context const& ctx) override;
 
-      std::string_view     text() const override                  { return _text; }
+      std::string const&   text() const override                  { return _text; }
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 
@@ -193,20 +194,20 @@ namespace cycfi { namespace elements
    {
    public:
                            label(
-                              std::string_view text
+                              std::string text
                             , float size = 1.0
                            );
 
                            label(
-                              std::string_view text
-                            , std::string_view font
+                              std::string text
+                            , std::string font
                             , float size = 1.0
                            );
 
       view_limits          limits(basic_context const& ctx) const override;
       void                 draw(context const& ctx) override;
 
-      std::string_view     text() const override                  { return _text; }
+      std::string const&   text() const override                  { return _text; }
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 

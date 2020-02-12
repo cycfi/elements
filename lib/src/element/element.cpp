@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::value(std::string /* val */)
+   void element::value(std::string_view /* val */)
    {
    }
 

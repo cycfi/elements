@@ -9,6 +9,7 @@
 #include <elements/support/text_utils.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -18,12 +19,12 @@ namespace cycfi { namespace elements
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
    static_text_box::static_text_box(
-      std::string_view text
+      std::string text
     , char const* face
     , float size
     , color color_
    )
-    : _text(text)
+    : _text(std::move(text))
     , _layout(_text.data(), _text.data() + _text.size(), face, size)
     , _color(color_)
    {}
@@ -101,7 +102,7 @@ namespace cycfi { namespace elements
       _layout.break_lines(_current_size.x, _rows);
    }
 
-   void static_text_box::value(std::string val)
+   void static_text_box::value(std::string_view val)
    {
       text(val);
    }
@@ -109,8 +110,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string_view text, char const* face, float size)
-    : static_text_box(text, face, size)
+   basic_text_box::basic_text_box(std::string text, char const* face, float size)
+    : static_text_box(std::move(text), face, size)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)

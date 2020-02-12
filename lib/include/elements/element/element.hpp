@@ -10,7 +10,7 @@
 #include <elements/support/rect.hpp>
 
 #include <memory>
-#include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -68,7 +68,7 @@ namespace cycfi { namespace elements
       virtual void            value(bool val);
       virtual void            value(int val);
       virtual void            value(double val);
-      virtual void            value(std::string val);
+      virtual void            value(std::string_view val);
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 

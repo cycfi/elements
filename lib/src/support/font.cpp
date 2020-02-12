@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
          cnv.font(face);
          auto cr = scratch_context_.context();
          _handle = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
-         font_map[face] = _handle;
+         font_map[face] = cairo_scaled_font_reference(_handle);
       }
    }
 

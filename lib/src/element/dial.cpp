@@ -170,7 +170,7 @@ namespace cycfi { namespace elements
          theme.label_font_size * font_size
       );
 
-      for (int i = 0; i != num_labels; ++i)
+      for (std::size_t i = 0; i != num_labels; ++i)
       {
          float angle = offset + (M_PI / 2) + (i * div);
          float sin_ = std::sin(angle);

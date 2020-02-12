@@ -40,18 +40,16 @@ namespace cycfi { namespace elements
     , FT_Library& value
     , fs::path font_path)
    {
-      cairo_font_face_t* ct = nullptr;
       FT_Face face;
       FT_Error status = FT_New_Face(value, font_path.string().c_str(), 0, &face);
       if (status != 0)
          return;
-      ct = cairo_ft_font_face_create_for_ft_face(face, 0);
+      cairo_font_face_t* ct = cairo_ft_font_face_create_for_ft_face(face, 0);
 
-      auto count = FT_Get_Sfnt_Name_Count(face);
-      for (int i = 0; i < count; ++i)
+      auto const count = FT_Get_Sfnt_Name_Count(face);
+      for (FT_UInt i = 0; i < count; ++i)
       {
          FT_SfntName name;
-         FT_Get_Sfnt_Name(face, i, &name);
          FT_Get_Sfnt_Name(face, i, &name);
          if (name.name_id == TT_NAME_ID_FULL_NAME)
          {

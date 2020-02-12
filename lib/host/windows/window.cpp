@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
       struct window_info
       {
          window*     wptr = nullptr;
-         view_limits limits;
+         view_limits limits = {};
       };
 
       window_info* get_window_info(HWND hwnd)
@@ -143,7 +143,7 @@ namespace cycfi { namespace elements
       {
          init_window_class()
          {
-            WNDCLASSW windowClass = {0};
+            WNDCLASSW windowClass = {};
             windowClass.hbrBackground = nullptr;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = nullptr;
@@ -173,7 +173,7 @@ namespace cycfi { namespace elements
          nullptr
       );
 
-      window_info* info = new window_info{ this };
+      auto* info = new window_info{ this };
       SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (!(style_ & closable))

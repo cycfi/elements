@@ -57,11 +57,11 @@ namespace cycfi { namespace elements
             size_t   src_stride = w * 4;
             size_t   dest_stride = cairo_image_surface_get_stride(_surface);
 
-            for (size_t y = 0; y != h; ++y)
+            for (int y = 0; y != h; ++y)
             {
                uint8_t* src = src_data + (y * src_stride);
                uint8_t* dest = dest_data + (y * dest_stride);
-               for (size_t x = 0; x != w; ++x)
+               for (int x = 0; x != w; ++x)
                {
                   // $$$ TODO: Deal with endian issues $$$
 

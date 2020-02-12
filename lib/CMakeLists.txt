@@ -197,9 +197,9 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
-elseif (LINUX OR WIN32)
-   pkg_check_modules(freetype REQUIRED IMPORTED_TARGET freetype)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype)
+elseif (UNIX OR WIN32)
+   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
 endif()
 
 ###############################################################################
@@ -243,7 +243,7 @@ target_link_libraries(elements PUBLIC
    json
 )
 
-if (LINUX OR (WIN32 AND NOT MSVC))
+if (UNIX OR (WIN32 AND NOT MSVC))
    find_package(Threads)
    target_link_libraries(elements PUBLIC Threads::Threads)
 endif()

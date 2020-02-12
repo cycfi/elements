@@ -38,33 +38,33 @@ namespace cycfi { namespace elements
       auto it = font_map.find(face);
       if (it != font_map.end())
       {
-         _scaled_font = cairo_scaled_font_reference(it->second);
+         _handle = cairo_scaled_font_reference(it->second);
       }
       else
       {
          canvas cnv{ *scratch_context_.context() };
          cnv.font(face);
          auto cr = scratch_context_.context();
-         _scaled_font = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
-         font_map[face] = _scaled_font;
+         _handle = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
+         font_map[face] = _handle;
       }
    }
 
    font::font(font const& rhs)
    {
-      _scaled_font = cairo_scaled_font_reference(rhs._scaled_font);
+      _handle = cairo_scaled_font_reference(rhs._handle);
    }
 
    font& font::operator=(font const& rhs)
    {
       if (&rhs != this)
-         _scaled_font = cairo_scaled_font_reference(rhs._scaled_font);
+         _handle = cairo_scaled_font_reference(rhs._handle);
       return *this;
    }
 
    font::~font()
    {
-      cairo_scaled_font_destroy(_scaled_font);
+      cairo_scaled_font_destroy(_handle);
    }
 }}
 

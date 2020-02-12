@@ -6,14 +6,16 @@
 #if !defined(ELEMENTS_FONTS_FEBRUARY_11_2020)
 #define ELEMENTS_FONTS_FEBRUARY_11_2020
 
-#include <cairo.h>
+extern "C"
+{
+   typedef struct _cairo_scaled_font cairo_scaled_font_t;
+}
 
 namespace cycfi { namespace elements
 {
    class font
    {
    public:
-
                            font(char const* face);
                            font(font const& rhs);
                            ~font();
@@ -24,7 +26,7 @@ namespace cycfi { namespace elements
       using scaled_font = cairo_scaled_font_t;
       friend class canvas;
 
-      scaled_font*         _scaled_font   = nullptr;
+      scaled_font*         _handle   = nullptr;
    };
 }}
 

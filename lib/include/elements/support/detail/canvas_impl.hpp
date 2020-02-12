@@ -304,8 +304,8 @@ namespace cycfi { namespace elements
 
    inline void canvas::font(elements::font const& font_)
    {
-      if (font_._scaled_font)
-         cairo_set_scaled_font(&_context, font_._scaled_font);
+      if (font_._handle)
+         cairo_set_scaled_font(&_context, font_._handle);
    }
 
    inline void canvas::font(elements::font const& font_, float size)

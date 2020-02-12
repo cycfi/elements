@@ -8,6 +8,10 @@
 #include <mutex>
 #include <cairo.h>
 
+#ifdef CAIRO_HAS_QUARTZ_FONT
+#include <cairo-quartz.h>
+#endif
+
 namespace cycfi { namespace elements
 {
    namespace
@@ -38,8 +42,16 @@ namespace cycfi { namespace elements
       }
       else
       {
-         // $$$ TODO: use a non-toy font selection facility $$$
+#ifdef CAIRO_HAS_QUARTZ_FONT
+         _handle = cairo_quartz_font_face_create_for_cgfont(
+            CGFontCreateWithFontName(
+               CFStringCreateWithCString(kCFAllocatorDefault, face, kCFStringEncodingUTF8)
+            )
+         );
+#else
+         // $$$ TODO: use a non-toy font selection facility for windows and linux $$$
          _handle = cairo_toy_font_face_create(face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+#endif
          font_map[face] = cairo_font_face_reference(_handle);
       }
    }

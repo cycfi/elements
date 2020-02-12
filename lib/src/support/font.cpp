@@ -34,9 +34,7 @@ namespace cycfi { namespace elements
    font::font(char const* face)
    {
       std::lock_guard<std::mutex> lock(font_map_mutex);
-
-      auto it = font_map.find(face);
-      if (it != font_map.end())
+      if (auto it = font_map.find(face); it != font_map.end())
       {
          _handle = cairo_scaled_font_reference(it->second);
       }

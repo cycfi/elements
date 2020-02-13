@@ -203,8 +203,6 @@ namespace cycfi { namespace elements
    private:
 
       friend class glyphs;
-      friend struct blur;
-      friend struct fill_blur;
 
       void              apply_fill_style();
       void              apply_stroke_style();

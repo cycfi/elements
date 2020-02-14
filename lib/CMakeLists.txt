@@ -189,6 +189,17 @@ else()
 endif()
 
 ###############################################################################
+# Pango
+
+if (MSVC)
+else()
+   pkg_check_modules(pango REQUIRED IMPORTED_TARGET pango)
+   pkg_check_modules(pangocairo REQUIRED IMPORTED_TARGET pangocairo)
+   target_link_libraries(elements PUBLIC PkgConfig::pango)
+   target_link_libraries(elements PUBLIC PkgConfig::pangocairo)
+endif()
+
+###############################################################################
 # Freetype
 
 if (MSVC)

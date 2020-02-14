@@ -48,6 +48,9 @@ void draw_text(cairo_t* cr)
 
       cairo_restore(cr);
    }
+
+   // free the layout object
+   g_object_unref(layout);
 }
 
 auto samples = basic(

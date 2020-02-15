@@ -10,7 +10,7 @@
 #include <elements/support/rect.hpp>
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
-#include <elements/support/font.hpp>
+#include <elements/support/font_x.hpp>
 #include <boost/filesystem.hpp>
 
 #include <vector>
@@ -134,8 +134,8 @@ namespace cycfi { namespace elements
       // Font
       void              font(char const* face);
       void              font(char const* face, float size);
-      void              font(elements::font const& font_);
-      void              font(elements::font const& font_, float size);
+      void              font(elements::font_x const& font_);
+      void              font(elements::font_x const& font_, float size);
       void              font_size(float size);
 
       ///////////////////////////////////////////////////////////////////////////////////

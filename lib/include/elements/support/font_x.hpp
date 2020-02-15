@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_FONTS_FEBRUARY_11_2020)
-#define ELEMENTS_FONTS_FEBRUARY_11_2020
+#if !defined(ELEMENTS_FONT_X_FEBRUARY_11_2020)
+#define ELEMENTS_FONT_X_FEBRUARY_11_2020
 
 extern "C"
 {
@@ -13,13 +13,13 @@ extern "C"
 
 namespace cycfi { namespace elements
 {
-   class font
+   class font_x
    {
    public:
-                           font(char const* face);
-                           font(font const& rhs);
-                           ~font();
-      font&                operator=(font const& rhs);
+                           font_x(char const* face);
+                           font_x(font_x const& rhs);
+                           ~font_x();
+      font_x&                operator=(font_x const& rhs);
 
    private:
 

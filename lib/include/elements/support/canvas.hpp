@@ -11,6 +11,7 @@
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
 #include <elements/support/font_x.hpp>
+#include <elements/support/text_layout.hpp>
 #include <boost/filesystem.hpp>
 
 #include <vector>
@@ -18,11 +19,16 @@
 #include <stack>
 #include <cmath>
 #include <cassert>
-#include <cairo.h>
 
 #if defined(__linux__) || defined(_WIN32)
 # include <map>
 #endif
+
+extern "C"
+{
+   typedef struct _cairo cairo_t;
+   typedef struct _PangoContext PangoContext;
+}
 
 namespace cycfi { namespace elements
 {
@@ -32,19 +38,14 @@ namespace cycfi { namespace elements
    {
    public:
 
-      explicit          canvas(cairo_t& context_)
-                         : _context(context_)
-                        {}
-
-                        canvas(canvas&& rhs)
-                         : _context(rhs._context)
-                        {}
-
+      explicit          canvas(cairo_t& context_);
+                        canvas(canvas&& rhs);
                         ~canvas();
 
                         canvas(canvas const& rhs) = delete;
       canvas&           operator=(canvas const& rhs) = delete;
       cairo_t&          cairo_context() const;
+      PangoContext*     pango_context() const;
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Transforms
@@ -167,6 +168,9 @@ namespace cycfi { namespace elements
       text_metrics      measure_text(char const* utf8);
       void              text_align(int align);
 
+      void              fill(point p, text_layout& layout);
+      void              stroke(point p, text_layout& layout);
+
       ///////////////////////////////////////////////////////////////////////////////////
       // Pixmaps
 
@@ -220,6 +224,7 @@ namespace cycfi { namespace elements
       using state_stack = std::stack<canvas_state>;
 
       cairo_t&          _context;
+      PangoContext*     _pango_context = nullptr;
       canvas_state      _state;
       state_stack       _state_stack;
 

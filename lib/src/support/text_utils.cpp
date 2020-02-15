@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       return { info.size.x, height };
    }
 
-   point measure_text(canvas& cnv, char const* text, font const& font_, float size)
+   point measure_text(canvas& cnv, char const* text, font_x const& font_, float size)
    {
       auto  state = cnv.new_state();
       cnv.font(font_, size);

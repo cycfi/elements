@@ -3,7 +3,7 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/support/font.hpp>
+#include <elements/support/font_x.hpp>
 #include <map>
 #include <mutex>
 #include <cairo.h>
@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
       cleanup cleanup_;
    }
 
-   font::font(char const* face)
+   font_x::font_x(char const* face)
    {
       std::lock_guard<std::mutex> lock(font_map_mutex);
       if (auto it = font_map.find(face); it != font_map.end())
@@ -56,19 +56,19 @@ namespace cycfi { namespace elements
       }
    }
 
-   font::font(font const& rhs)
+   font_x::font_x(font_x const& rhs)
    {
       _handle = cairo_font_face_reference(rhs._handle);
    }
 
-   font& font::operator=(font const& rhs)
+   font_x& font_x::operator=(font_x const& rhs)
    {
       if (&rhs != this)
          _handle = cairo_font_face_reference(rhs._handle);
       return *this;
    }
 
-   font::~font()
+   font_x::~font_x()
    {
       cairo_font_face_destroy(_handle);
    }

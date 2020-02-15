@@ -4,6 +4,8 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/canvas.hpp>
+#include <cairo.h>
+#include <pango/pangocairo.h>
 
 #ifdef __linux__
 # include <map>
@@ -19,6 +21,21 @@
 
 namespace cycfi { namespace elements
 {
+   canvas::canvas(cairo_t& context_)
+    : _context(context_)
+    , _pango_context(pango_cairo_create_context(&context_))
+   {}
+
+   canvas::canvas(canvas&& rhs)
+    : _context(rhs._context)
+    , _pango_context(rhs._pango_context)
+   {}
+
+   canvas::~canvas()
+   {
+      g_object_unref(_pango_context);
+   }
+
    void canvas::translate(point p)
    {
       cairo_translate(&_context, p.x, p.y);
@@ -338,6 +355,27 @@ namespace cycfi { namespace elements
          /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent)),
          /*size=*/      { float(extents.width), float(extents.height) }
       };
+   }
+
+   void canvas::fill(point p, text_layout& layout)
+   {
+      apply_fill_style();
+      pango_cairo_update_context(&_context, _pango_context);
+      pango_layout_context_changed(layout._ptr.get());
+
+      cairo_move_to(&_context, p.x, p.y);
+      pango_cairo_show_layout(&_context, layout._ptr.get());
+   }
+
+   void canvas::stroke(point p, text_layout& layout)
+   {
+      apply_stroke_style();
+      pango_cairo_update_context(&_context, _pango_context);
+      pango_layout_context_changed(layout._ptr.get());
+
+      cairo_move_to(&_context, p.x, p.y);
+      pango_cairo_layout_path(&_context, layout._ptr.get());
+      stroke();
    }
 
    void canvas::draw(pixmap const& pm, elements::rect src, elements::rect dest)

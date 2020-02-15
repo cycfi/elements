@@ -15,13 +15,14 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   inline canvas::~canvas()
-   {
-   }
-
    inline cairo_t& canvas::cairo_context() const
    {
       return _context;
+   }
+
+   inline PangoContext* canvas::pango_context() const
+   {
+      return _pango_context;
    }
 
    inline void canvas::circle(struct circle c)

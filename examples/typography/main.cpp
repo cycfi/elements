@@ -11,11 +11,10 @@ auto samples = basic(
    [](context const& ctx)
    {
       auto& cnv = ctx.canvas;
-      font_descr font_{"Open Sans" };
-      font_.size(24);
+      auto descr = font_descr{ "Roboto" }.size(24);
 
       text_layout layout_{ cnv };
-      layout_.font(font_);
+      layout_.font(descr);
 
       cnv.fill_style(get_theme().label_font_color);
 
@@ -23,13 +22,23 @@ auto samples = basic(
       cnv.fill({ 20, 20 }, layout_);
 
       layout_.text("Bold");
-      font_.weight(font_descr::bold);
-      layout_.font(font_);
+      layout_.font(descr.weight(font_descr::bold));
       cnv.fill({ 150, 20 }, layout_);
 
+      layout_.text("Light");
+      layout_.font(descr.weight(font_descr::light));
+      cnv.fill({ 240, 20 }, layout_);
+
+      layout_.text("Italic");
+      layout_.font(descr.style(font_descr::italic));
+      cnv.fill({ 330, 20 }, layout_);
+
+      layout_.text("Condensed");
+      layout_.font(descr.stretch(font_descr::condensed));
+      cnv.fill({ 420, 20 }, layout_);
+
       layout_.text("Outline");
-      font_.weight(font_descr::normal);
-      layout_.font(font_);
+      layout_.font(descr);
       cnv.stroke_style(get_theme().label_font_color);
       cnv.line_width(0.5);
       cnv.stroke({ 20, 60 }, layout_);

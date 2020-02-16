@@ -20,14 +20,11 @@ namespace cycfi { namespace elements
    public:
                            font_descr(char const* descr);
                            font_descr(font_descr const& rhs);
-                           font_descr(font_descr& rhs);
+                           font_descr(font_descr&& rhs);
                            ~font_descr();
 
-      font_descr&                operator=(font_descr const& rhs);
-      font_descr&                operator=(font_descr&& rhs);
-
-      void                 size(float pt);
-      float                size() const;
+      font_descr&          operator=(font_descr const& rhs);
+      font_descr&          operator=(font_descr&& rhs);
 
       enum
       {
@@ -45,16 +42,38 @@ namespace cycfi { namespace elements
          ultraheavy  = 1000
       };
 
-      void                 weight(int w);
-      int                  weight() const;
+      enum style_enum
+      {
+         style_normal,
+         oblique,
+         italic
+      };
+
+      enum stretch_enum
+      {
+         ultra_condensed,
+         extra_condensed,
+         condensed,
+         semi_condensed,
+         normal_stretch,
+         semi_expanded,
+         expanded,
+         extra_expanded,
+         ultra_expanded
+      };
+
+      font_descr           size(float pt) const;
+      font_descr           weight(int w) const;
+      font_descr           style(style_enum s) const;
+      font_descr           stretch(stretch_enum s) const;
 
    private:
 
       friend class canvas;
       friend class text_layout;
-      using font_descr_ptr = _PangoFontDescription*;
+      using impl_ptr = _PangoFontDescription*;
 
-      font_descr_ptr       _ptr = nullptr;
+      impl_ptr             _ptr = nullptr;
    };
 }}
 

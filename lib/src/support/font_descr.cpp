@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/support/font_descr.hpp>
 #include <pango/pangocairo.h>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -16,9 +17,16 @@ namespace cycfi { namespace elements
     : _ptr{ pango_font_description_copy(rhs._ptr) }
    {}
 
+   font_descr::font_descr(font_descr&& rhs)
+    : _ptr{ rhs._ptr }
+   {
+      rhs._ptr = nullptr;
+   }
+
    font_descr::~font_descr()
    {
-      pango_font_description_free(_ptr);
+      if (_ptr)
+         pango_font_description_free(_ptr);
    }
 
    font_descr& font_descr::operator=(font_descr const& rhs)
@@ -38,24 +46,32 @@ namespace cycfi { namespace elements
       return *this;
    }
 
-   void font_descr::size(float pt)
+   font_descr font_descr::size(float pt) const
    {
-      pango_font_description_set_size(_ptr, pt * PANGO_SCALE);
+      font_descr r = *this;
+      pango_font_description_set_size(r._ptr, pt * PANGO_SCALE);
+      return r;
    }
 
-   float font_descr::size() const
+   font_descr font_descr::weight(int w) const
    {
-      return pango_font_description_get_size(_ptr) / PANGO_SCALE;
+      font_descr r = *this;
+      pango_font_description_set_weight(r._ptr, PangoWeight(w));
+      return r;
    }
 
-   void font_descr::weight(int w)
+   font_descr font_descr::style(style_enum s) const
    {
-      pango_font_description_set_weight(_ptr, PangoWeight(w));
+      font_descr r = *this;
+      pango_font_description_set_style(r._ptr, PangoStyle(s));
+      return r;
    }
 
-   int font_descr::weight() const
+   font_descr font_descr::stretch(stretch_enum s) const
    {
-      return int(pango_font_description_get_weight(_ptr));
+      font_descr r = *this;
+      pango_font_description_set_stretch(r._ptr, PangoStretch(s));
+      return r;
    }
 }}
 

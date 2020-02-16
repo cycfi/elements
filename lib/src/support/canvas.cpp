@@ -364,7 +364,10 @@ namespace cycfi { namespace elements
       pango_layout_context_changed(layout._ptr.get());
 
       cairo_move_to(&_context, p.x, p.y);
-      pango_cairo_show_layout(&_context, layout._ptr.get());
+      // pango_cairo_show_layout(&_context, layout._ptr.get());
+
+      pango_cairo_layout_path(&_context, layout._ptr.get());
+      fill();
    }
 
    void canvas::stroke(point p, text_layout& layout)

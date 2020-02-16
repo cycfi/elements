@@ -9,9 +9,11 @@
 
 namespace cycfi { namespace elements
 {
-   font_descr::font_descr(char const* descr)
-    : _ptr{ pango_font_description_from_string(descr) }
-   {}
+   font_descr::font_descr(char const* family)
+    : _ptr{ pango_font_description_new() }
+   {
+      pango_font_description_set_family(_ptr, family);
+   }
 
    font_descr::font_descr(font_descr const& rhs)
     : _ptr{ pango_font_description_copy(rhs._ptr) }
@@ -71,6 +73,20 @@ namespace cycfi { namespace elements
    {
       font_descr r = *this;
       pango_font_description_set_stretch(r._ptr, PangoStretch(s));
+      return r;
+   }
+
+   font_descr font_descr::underline() const
+   {
+      font_descr r = *this;
+      r._line = line_underline;
+      return r;
+   }
+
+   font_descr font_descr::strikethrough() const
+   {
+      font_descr r = *this;
+      r._line = line_strikethrough;
       return r;
    }
 }}

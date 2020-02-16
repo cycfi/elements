@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    class font_descr
    {
    public:
-                           font_descr(char const* descr);
+                           font_descr(char const* family);
                            font_descr(font_descr const& rhs);
                            font_descr(font_descr&& rhs);
                            ~font_descr();
@@ -66,6 +66,8 @@ namespace cycfi { namespace elements
       font_descr           weight(int w) const;
       font_descr           style(style_enum s) const;
       font_descr           stretch(stretch_enum s) const;
+      font_descr           underline() const;
+      font_descr           strikethrough() const;
 
    private:
 
@@ -73,7 +75,10 @@ namespace cycfi { namespace elements
       friend class text_layout;
       using impl_ptr = _PangoFontDescription*;
 
+      enum line { line_none, line_underline, line_strikethrough };
+
       impl_ptr             _ptr = nullptr;
+      line                 _line = line_none;
    };
 }}
 

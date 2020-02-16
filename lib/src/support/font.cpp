@@ -140,10 +140,14 @@ namespace cycfi { namespace elements
                for (auto j = i->second.begin(); j != i->second.end(); ++j)
                {
                   auto const& item = *j;
+
+                  // Get biased score (lower is better). Give `weight` attribute
+                  // the highest bias (1.0), followed by `slant` (0.5) and then
+                  // `stretch` (0.25).
                   auto diff =
-                     std::abs(int(descr.weight) - int(item.weight)) +
-                     std::abs(int(descr.slant) - int(item.slant)) +
-                     std::abs(int(descr.stretch) - int(item.stretch))
+                     (std::abs(int(descr.weight) - int(item.weight)) * 1.0) +
+                     (std::abs(int(descr.slant) - int(item.slant)) * 0.5) +
+                     (std::abs(int(descr.stretch) - int(item.stretch)) * 0.25)
                      ;
                   if (diff < min)
                   {

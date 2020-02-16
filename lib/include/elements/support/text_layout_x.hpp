@@ -6,7 +6,7 @@
 #if !defined(ELEMENTS_TEXT_LAYOUT_FEBRUARY_15_2020)
 #define ELEMENTS_TEXT_LAYOUT_FEBRUARY_15_2020
 
-#include <elements/support/font_descr.hpp>
+#include <elements/support/font_descr_x.hpp>
 #include <string_view>
 #include <memory>
 
@@ -17,16 +17,16 @@ extern "C"
 
 namespace cycfi { namespace elements
 {
-   class text_layout
+   class text_layout_x
    {
    public:
-                           text_layout(canvas& cnv);
-                           text_layout(text_layout const& rhs) = default;
-                           ~text_layout()= default;
-      text_layout&         operator=(text_layout const& rhs)= default;
+                           text_layout_x(canvas& cnv);
+                           text_layout_x(text_layout_x const& rhs) = default;
+                           ~text_layout_x()= default;
+      text_layout_x&         operator=(text_layout_x const& rhs)= default;
 
       void                 text(std::string_view text_);
-      void                 font(elements::font_descr const& font_);
+      void                 font(elements::font_descr_x const& font_);
 
    private:
 

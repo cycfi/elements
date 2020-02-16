@@ -10,7 +10,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/support/font_x.hpp>
+#include <elements/support/font.hpp>
 #include <functional>
 #include <string_view>
 
@@ -162,8 +162,8 @@ namespace cycfi { namespace elements
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 
-      font_x const&          font() const                           { return _font; }
-      void                 font(char const* font_)                { _font = elements::font_x(font_); }
+      font const&          font() const                           { return _font; }
+      void                 font(char const* font_)                { _font = elements::font(font_); }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }
@@ -173,7 +173,7 @@ namespace cycfi { namespace elements
    private:
 
       std::string          _text;
-      elements::font_x       _font;
+      elements::font       _font;
       float                _size;
    };
 
@@ -211,8 +211,8 @@ namespace cycfi { namespace elements
       char const*          c_str() const override                 { return _text.c_str(); }
       void                 text(std::string_view text) override   { _text = text; }
 
-      font_x const&          font() const                           { return _font; }
-      void                 font(char const* font_)                { _font = elements::font_x(font_); }
+      font const&          font() const                           { return _font; }
+      void                 font(char const* font_)                { _font = elements::font(font_); }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }
@@ -222,7 +222,7 @@ namespace cycfi { namespace elements
    private:
 
       std::string          _text;
-      elements::font_x       _font;
+      elements::font       _font;
       float                _size;
    };
 

@@ -33,9 +33,7 @@ set(ELEMENTS_SOURCES
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/glyphs.cpp
-   src/support/font_x.cpp
-   src/support/font_descr.cpp
-   src/support/text_layout.cpp
+        src/support/font.cpp
    src/support/pixmap.cpp
    src/support/rect.cpp
    src/support/resource_paths.cpp
@@ -92,9 +90,7 @@ set(ELEMENTS_HEADERS
    include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
    include/elements/support/glyphs.hpp
-   include/elements/support/font_x.hpp
-   include/elements/support/font_descr.hpp
-   include/elements/support/text_layout.hpp
+        include/elements/support/font.hpp
    include/elements/support/icon_ids.hpp
    include/elements/support/pixmap.hpp
    include/elements/support/point.hpp
@@ -193,14 +189,12 @@ else()
 endif()
 
 ###############################################################################
-# Pango
+# Fontconfig
 
 if (MSVC)
 else()
-   pkg_check_modules(pango REQUIRED IMPORTED_TARGET pango)
-   pkg_check_modules(pangocairo REQUIRED IMPORTED_TARGET pangocairo)
-   target_link_libraries(elements PUBLIC PkgConfig::pango)
-   target_link_libraries(elements PUBLIC PkgConfig::pangocairo)
+   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 endif()
 
 ###############################################################################

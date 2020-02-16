@@ -7,7 +7,7 @@
 #define ELEMENTS_TEXT_UTILS_MAY_22_2016
 
 #include <elements/support/canvas.hpp>
-#include <elements/support/font_x.hpp>
+#include <elements/support/font.hpp>
 #include <string>
 #include <cctype>
 
@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
    point          measure_icon(canvas& cnv, uint32_t cp, float size);
    point          measure_text(canvas& cnv, char const* text, char const* face, float size);
-   point          measure_text(canvas& cnv, char const* text, font_x const& font_, float size);
+   point          measure_text(canvas& cnv, char const* text, font const& font_, float size);
    std::string    codepoint_to_utf8(unsigned codepoint);
    bool           is_space(unsigned codepoint);
    bool           is_newline(unsigned codepoint);

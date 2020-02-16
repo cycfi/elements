@@ -13,13 +13,13 @@ extern "C"
 
 namespace cycfi { namespace elements
 {
-   class font_x
+   class font
    {
    public:
-                           font_x(char const* face);
-                           font_x(font_x const& rhs);
-                           ~font_x();
-      font_x&                operator=(font_x const& rhs);
+                           font(char const* face);
+                           font(font const& rhs);
+                           ~font();
+      font&                operator=(font const& rhs);
 
    private:
 

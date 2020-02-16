@@ -15,16 +15,16 @@ namespace cycfi { namespace elements
 {
    class canvas;
 
-   class font_descr
+   class font_descr_x
    {
    public:
-                           font_descr(char const* family);
-                           font_descr(font_descr const& rhs);
-                           font_descr(font_descr&& rhs);
-                           ~font_descr();
+                           font_descr_x(char const* family);
+                           font_descr_x(font_descr_x const& rhs);
+                           font_descr_x(font_descr_x&& rhs);
+                           ~font_descr_x();
 
-      font_descr&          operator=(font_descr const& rhs);
-      font_descr&          operator=(font_descr&& rhs);
+      font_descr_x&          operator=(font_descr_x const& rhs);
+      font_descr_x&          operator=(font_descr_x&& rhs);
 
       enum
       {
@@ -62,17 +62,17 @@ namespace cycfi { namespace elements
          ultra_expanded
       };
 
-      font_descr           size(float pt) const;
-      font_descr           weight(int w) const;
-      font_descr           style(style_enum s) const;
-      font_descr           stretch(stretch_enum s) const;
-      font_descr           underline() const;
-      font_descr           strikethrough() const;
+      font_descr_x           size(float pt) const;
+      font_descr_x           weight(int w) const;
+      font_descr_x           style(style_enum s) const;
+      font_descr_x           stretch(stretch_enum s) const;
+      font_descr_x           underline() const;
+      font_descr_x           strikethrough() const;
 
    private:
 
       friend class canvas;
-      friend class text_layout;
+      friend class text_layout_x;
       using impl_ptr = _PangoFontDescription*;
 
       enum line { line_none, line_underline, line_strikethrough };

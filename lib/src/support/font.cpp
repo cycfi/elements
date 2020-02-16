@@ -3,10 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/support/font_x.hpp>
+#include <elements/support/font.hpp>
 #include <map>
 #include <mutex>
 #include <cairo.h>
+
+#include <fontconfig/fontconfig.h>
 
 #ifdef CAIRO_HAS_QUARTZ_FONT
 #include <cairo-quartz.h>
@@ -33,7 +35,7 @@ namespace cycfi { namespace elements
       cleanup cleanup_;
    }
 
-   font_x::font_x(char const* face)
+   font::font(char const* face)
    {
       std::lock_guard<std::mutex> lock(font_map_mutex);
       if (auto it = font_map.find(face); it != font_map.end())
@@ -56,19 +58,19 @@ namespace cycfi { namespace elements
       }
    }
 
-   font_x::font_x(font_x const& rhs)
+   font::font(font const& rhs)
    {
       _handle = cairo_font_face_reference(rhs._handle);
    }
 
-   font_x& font_x::operator=(font_x const& rhs)
+   font& font::operator=(font const& rhs)
    {
       if (&rhs != this)
          _handle = cairo_font_face_reference(rhs._handle);
       return *this;
    }
 
-   font_x::~font_x()
+   font::~font()
    {
       cairo_font_face_destroy(_handle);
    }

@@ -20,11 +20,6 @@ namespace cycfi { namespace elements
       return _context;
    }
 
-   inline PangoContext* canvas::pango_context() const
-   {
-      return _pango_context;
-   }
-
    inline void canvas::circle(struct circle c)
    {
       arc(point{ c.cx, c.cy }, c.radius, 0.0, 2 * M_PI);

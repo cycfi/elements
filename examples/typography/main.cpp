@@ -11,6 +11,12 @@ auto background = box(bkd_color);
 auto samples = basic(
    [](context const& ctx)
    {
+      font_descr descr{ "Open Sans" };
+      font f{ descr };
+
+
+
+
 /*
       FcConfig* config = FcInitLoadConfigAndFonts();
       //make pattern from font name
@@ -35,7 +41,7 @@ auto samples = basic(
       FcPatternDestroy(pat);
 */
 
-
+/*
       FcConfig* config = FcInitLoadConfigAndFonts();
       FcPattern* pat = FcPatternCreate();
       FcObjectSet* os = FcObjectSetBuild (FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_STYLE, FC_WEIGHT, FC_SLANT, FC_LANG, FC_FILE, (char *) 0);
@@ -70,7 +76,7 @@ auto samples = basic(
          }
       }
       if (fs) FcFontSetDestroy(fs);
-
+*/
 
 
 /*

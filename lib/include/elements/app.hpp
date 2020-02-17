@@ -10,7 +10,7 @@
 #include <infra/support.hpp>
 
 #if defined(__linux__)
-typedef struct _GtkApplication GtkApplication;
+using GtkApplication = struct _GtkApplication;
 #endif
 
 namespace cycfi { namespace elements

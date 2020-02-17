@@ -10,7 +10,7 @@
 
 extern "C"
 {
-   typedef struct _cairo_font_face cairo_font_face_t;
+   using cairo_font_face_t = struct _cairo_font_face;
 }
 
 namespace cycfi { namespace elements

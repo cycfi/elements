@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
 #endif
 
       color                heading_font_color         = basic_font_color;
-      font                 heading_font               = font_descr{ "Roboto" }.bold();
+      font                 heading_font               = font_descr{ "Roboto" }.medium();
       float                heading_font_size          = 14.0;
 
       color                label_font_color           = basic_font_color;

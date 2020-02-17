@@ -33,7 +33,7 @@ set(ELEMENTS_SOURCES
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/glyphs.cpp
-        src/support/font.cpp
+   src/support/font.cpp
    src/support/pixmap.cpp
    src/support/rect.cpp
    src/support/resource_paths.cpp
@@ -90,7 +90,7 @@ set(ELEMENTS_HEADERS
    include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
    include/elements/support/glyphs.hpp
-        include/elements/support/font.hpp
+   include/elements/support/font.hpp
    include/elements/support/icon_ids.hpp
    include/elements/support/pixmap.hpp
    include/elements/support/point.hpp

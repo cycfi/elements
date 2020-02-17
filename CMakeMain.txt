@@ -15,12 +15,15 @@ endif()
 
 set(ELEMENTS_RESOURCES
    ${ELEMENTS_ICON_FONT}
-   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Regular.ttf
-   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Bold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-SemiBold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSansCondensed-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Regular.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Medium.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Bold.ttf
 )
 
 if (LINUX)

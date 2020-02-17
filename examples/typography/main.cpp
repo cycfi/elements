@@ -1,8 +1,12 @@
+/*=============================================================================
+   Copyright (c) 2016-2019 Joel de Guzman
+
+   Distributed under the MIT License (https://opensource.org/licenses/MIT)
+=============================================================================*/
 #include <elements.hpp>
 #include <iostream>
 
 using namespace cycfi::elements;
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,8 +19,6 @@ using namespace cycfi::elements;
 #include FT_OUTLINE_H
 #include FT_BBOX_H
 #include FT_TYPE1_TABLES_H
-
-
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -36,13 +38,13 @@ auto samples = basic(
       cnv.font(font_descr{ "Open Sans" });
       cnv.fill_text({ 20, 40 }, "Regular");
 
-      cnv.font(font_descr{ "Open Sans", font_descr::bold });
+      cnv.font(font_descr{ "Open Sans" }.bold());
       cnv.fill_text({ 160, 40 }, "Bold");
 
-      cnv.font(font_descr{ "Open Sans", font_descr::light });
+      cnv.font(font_descr{ "Open Sans" }.light());
       cnv.fill_text({ 250, 40 }, "Light");
 
-      cnv.font(font_descr{ "Open Sans", font_descr::italic });
+      cnv.font(font_descr{ "Open Sans" }.italic());
       cnv.fill_text({ 340, 40 }, "Italic");
 
       // In this case, the font already describes the condensed 'stretch'
@@ -50,10 +52,10 @@ auto samples = basic(
       cnv.fill_text({ 430, 40 }, "Condensed");
 
       // In this case, the font already describes the condensed 'stretch'
-      cnv.font(font_descr{ "Open Sans Condensed", font_descr::italic });
+      cnv.font(font_descr{ "Open Sans Condensed" }.italic());
       cnv.fill_text({ 575, 40 }, "Condensed Italic" );
 
-      cnv.font(font_descr{ "Open Sans" });
+      cnv.font(font_descr{ "Open Sans" }.bold());
       cnv.line_width(0.5);
       cnv.stroke_text({ 20, 90 }, "Outline");
    }

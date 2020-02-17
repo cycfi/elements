@@ -29,8 +29,6 @@
 #include <algorithm>
 #include <vector>
 
-
-
 namespace cycfi { namespace elements
 {
    namespace
@@ -80,9 +78,9 @@ namespace cycfi { namespace elements
       {
          std::string    full_name;
          std::string    file;
-         uint8_t        weight   = font_descr::normal;
-         uint8_t        slant    = font_descr::slant_normal;
-         uint8_t        stretch  = font_descr::stretch_normal;
+         uint8_t        weight   = font_constants::weight_normal;
+         uint8_t        slant    = font_constants::slant_normal;
+         uint8_t        stretch  = font_constants::stretch_normal;
       };
 
       std::map<std::string, std::vector<font_entry>> font_map;
@@ -109,23 +107,25 @@ namespace cycfi { namespace elements
             return lerp(mina, maxa, (val-minb)/(maxb-minb));
          };
 
+         namespace fc = font_constants;
+
          if (w < fc_extralight)
-            return map(font_descr::thin, font_descr::extra_light, fc_thin, fc_extralight, w);
+            return map(fc::thin, fc::extra_light, fc_thin, fc_extralight, w);
          if (w < fc_light)
-            return map(font_descr::extra_light, font_descr::light, fc_extralight, fc_light, w);
+            return map(fc::extra_light, fc::light, fc_extralight, fc_light, w);
          if (w < fc_normal)
-            return map(font_descr::light, font_descr::normal, fc_light, fc_normal, w);
+            return map(fc::light, fc::weight_normal, fc_light, fc_normal, w);
          if (w < fc_medium)
-            return map(font_descr::normal, font_descr::medium, fc_normal, fc_medium, w);
+            return map(fc::weight_normal, fc::medium, fc_normal, fc_medium, w);
          if (w < fc_semibold)
-            return map(font_descr::medium, font_descr::semi_bold, fc_medium, fc_semibold, w);
+            return map(fc::medium, fc::semi_bold, fc_medium, fc_semibold, w);
          if (w < fc_bold)
-            return map(font_descr::semi_bold, font_descr::bold, fc_semibold, fc_bold, w);
+            return map(fc::semi_bold, fc::bold, fc_semibold, fc_bold, w);
          if (w < fc_extrabold)
-            return map(font_descr::bold, font_descr::extra_bold, fc_bold, fc_extrabold, w);
+            return map(fc::bold, fc::extra_bold, fc_bold, fc_extrabold, w);
          if (w < fc_black)
-            return map(font_descr::extra_bold, font_descr::black, fc_extrabold, fc_black, w);
-         return map(font_descr::black, 100, fc_black, 220, std::min(w, 220));
+            return map(fc::extra_bold, fc::black, fc_extrabold, fc_black, w);
+         return map(fc::black, 100, fc_black, 220, std::min(w, 220));
       }
 
       void init_font_map()
@@ -185,7 +185,7 @@ namespace cycfi { namespace elements
          if (font_map.empty())
             init_font_map();
 
-         std::istringstream str(std::string{ descr.families });
+         std::istringstream str(std::string{ descr._families });
          std::string family;
          while (getline(str, family, ','))
          {
@@ -202,9 +202,9 @@ namespace cycfi { namespace elements
                   // the highest bias (3.0), followed by `weight` (1.0) and then
                   // `stretch` (0.25).
                   auto diff =
-                     (std::abs(int(descr.weight) - int(item.weight)) * 1.0) +
-                     (std::abs(int(descr.slant) - int(item.slant)) * 3.0) +
-                     (std::abs(int(descr.stretch) - int(item.stretch)) * 0.25)
+                     (std::abs(int(descr._weight) - int(item.weight)) * 1.0) +
+                     (std::abs(int(descr._slant) - int(item.slant)) * 3.0) +
+                     (std::abs(int(descr._stretch) - int(item.stretch)) * 0.25)
                      ;
                   if (diff < min)
                   {

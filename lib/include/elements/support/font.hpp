@@ -15,14 +15,14 @@ extern "C"
 
 namespace cycfi { namespace elements
 {
-   struct font_descr
+   namespace font_constants
    {
       enum weight_enum
       {
 	      thin              = 10,
 	      extra_light       = 20,
 	      light             = 30,
-	      normal            = 40,
+	      weight_normal     = 40,
 	      medium            = 50,
 	      semi_bold         = 60,
 	      bold              = 70,
@@ -50,105 +50,44 @@ namespace cycfi { namespace elements
          extra_expanded	   = 75,
          ultra_expanded	   = 100
       };
+   }
 
-                           font_descr(std::string_view families_)
-                            : families(families_)
-                            , weight(normal)
-                            , slant(slant_normal)
-                            , stretch(stretch_normal)
-                           {}
+   struct font_descr
+   {
+      font_descr           normal() const;
 
-                           font_descr(
-                              std::string_view families_
-                            , weight_enum weight_
-                           )
-                            : families(families_)
-                            , weight(weight_)
-                            , slant(slant_normal)
-                            , stretch(stretch_normal)
-                           {}
+      font_descr           weight(font_constants::weight_enum w) const;
+      font_descr           thin() const;
+      font_descr           extra_light() const;
+      font_descr           light() const;
+      font_descr           weight_normal() const;
+      font_descr           medium() const;
+      font_descr           semi_bold() const;
+      font_descr           bold() const;
+      font_descr           extra_bold() const;
+      font_descr           black() const;
+      font_descr           extra_black() const;
 
-                           font_descr(
-                              std::string_view families_
-                            , slant_enum slant_
-                           )
-                            : families(families_)
-                            , weight(normal)
-                            , slant(slant_)
-                            , stretch(stretch_normal)
-                           {}
+      font_descr           style(font_constants::slant_enum s) const;
+      font_descr           slant_normal() const;
+      font_descr           italic() const;
+      font_descr           oblique() const;
 
-                           font_descr(
-                              std::string_view families_
-                            , stretch_enum stretch_
-                           )
-                            : families(families_)
-                            , weight(normal)
-                            , slant(slant_normal)
-                            , stretch(stretch_)
-                           {}
+      font_descr           stretch(font_constants::stretch_enum s) const;
+      font_descr           ultra_condensed() const;
+      font_descr           extra_condensed() const;
+      font_descr           condensed() const;
+      font_descr           semi_condensed() const;
+      font_descr           stretch_normal() const;
+      font_descr           semi_expanded() const;
+      font_descr           expanded() const;
+      font_descr           extra_expanded() const;
+      font_descr           ultra_expanded() const;
 
-                           font_descr(
-                              std::string_view families_
-                            , weight_enum weight_
-                            , slant_enum slant_
-                           )
-                            : families(families_)
-                            , weight(weight_)
-                            , slant(slant_)
-                            , stretch(stretch_normal)
-                           {}
-
-                           font_descr(
-                              std::string_view families_
-                            , weight_enum weight_
-                            , stretch_enum stretch_
-                           )
-                            : families(families_)
-                            , weight(weight_)
-                            , slant(slant_normal)
-                            , stretch(stretch_)
-                           {}
-
-                           font_descr(
-                              std::string_view families_
-                            , slant_enum slant_
-                            , stretch_enum stretch_
-                           )
-                            : families(families_)
-                            , weight(normal)
-                            , slant(slant_)
-                            , stretch(stretch_)
-                           {}
-
-                           font_descr(
-                              std::string_view families_
-                            , weight_enum weight_
-                            , slant_enum slant_
-                            , stretch_enum stretch_
-                           )
-                            : families(families_)
-                            , weight(weight_)
-                            , slant(slant_)
-                            , stretch(stretch_)
-                           {}
-
-                           font_descr(
-                              std::string_view families_
-                            , int weight_
-                            , int slant_ = slant_normal
-                            , int stretch_ = stretch_normal
-                           )
-                            : families(families_)
-                            , weight(normal)
-                            , slant(slant_normal)
-                            , stretch(stretch_)
-                           {}
-
-      std::string_view     families;
-      uint8_t              weight;
-      uint8_t              slant;
-      uint8_t              stretch;
+      std::string_view     _families;
+      uint8_t              _weight = font_constants::weight_normal;
+      uint8_t              _slant = font_constants::slant_normal;
+      uint8_t              _stretch = font_constants::stretch_normal;
    };
 
    class font
@@ -165,6 +104,193 @@ namespace cycfi { namespace elements
       friend class canvas;
       cairo_font_face_t*  _handle   = nullptr;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   inline font_descr font_descr::normal() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::weight_normal;
+      r._slant = font_constants::slant_normal;
+      r._stretch = font_constants::stretch_normal;
+      return r;
+   }
+
+   inline font_descr font_descr::weight(font_constants::weight_enum w) const
+   {
+      font_descr r = *this;
+      r._weight = w;
+      return r;
+   }
+
+   inline font_descr font_descr::thin() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::thin;
+      return r;
+   }
+
+   inline font_descr font_descr::extra_light() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::extra_light;
+      return r;
+   }
+
+   inline font_descr font_descr::light() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::light;
+      return r;
+   }
+
+   inline font_descr font_descr::weight_normal() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::weight_normal;
+      return r;
+   }
+
+   inline font_descr font_descr::medium() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::medium;
+      return r;
+   }
+
+   inline font_descr font_descr::semi_bold() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::semi_bold;
+      return r;
+   }
+
+   inline font_descr font_descr::bold() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::bold;
+      return r;
+   }
+
+   inline font_descr font_descr::extra_bold() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::extra_bold;
+      return r;
+   }
+
+   inline font_descr font_descr::black() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::black;
+      return r;
+   }
+
+   inline font_descr font_descr::extra_black() const
+   {
+      font_descr r = *this;
+      r._weight = font_constants::extra_black;
+      return r;
+   }
+
+   inline font_descr font_descr::style(font_constants::slant_enum s) const
+   {
+      font_descr r = *this;
+      r._slant = s;
+      return r;
+   }
+
+   inline font_descr font_descr::slant_normal() const
+   {
+      font_descr r = *this;
+      r._slant = font_constants::slant_normal;
+      return r;
+   }
+
+   inline font_descr font_descr::italic() const
+   {
+      font_descr r = *this;
+      r._slant = font_constants::italic;
+      return r;
+   }
+
+   inline font_descr font_descr::oblique() const
+   {
+      font_descr r = *this;
+      r._slant = font_constants::oblique;
+      return r;
+   }
+
+   inline font_descr font_descr::stretch(font_constants::stretch_enum s) const
+   {
+      font_descr r = *this;
+      r._stretch = s;
+      return r;
+   }
+
+   inline font_descr font_descr::ultra_condensed() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::ultra_condensed;
+      return r;
+   }
+
+   inline font_descr font_descr::extra_condensed() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::extra_condensed;
+      return r;
+   }
+
+   inline font_descr font_descr::condensed() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::condensed;
+      return r;
+   }
+
+   inline font_descr font_descr::semi_condensed() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::semi_condensed;
+      return r;
+   }
+
+   inline font_descr font_descr::stretch_normal() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::stretch_normal;
+      return r;
+   }
+
+   inline font_descr font_descr::semi_expanded() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::semi_expanded;
+      return r;
+   }
+
+   inline font_descr font_descr::expanded() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::expanded;
+      return r;
+   }
+
+   inline font_descr font_descr::extra_expanded() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::extra_expanded;
+      return r;
+   }
+
+   inline font_descr font_descr::ultra_expanded() const
+   {
+      font_descr r = *this;
+      r._stretch = font_constants::ultra_expanded;
+      return r;
+   }
 }}
 
 #endif

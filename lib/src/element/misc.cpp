@@ -43,9 +43,9 @@ namespace cycfi { namespace elements
     , _size(size)
    {}
 
-   heading::heading(std::string_view text, char const* font, float size)
+   heading::heading(std::string_view text, elements::font font_, float size)
     : _text(text)
-    , _font(font)
+    , _font(font_)
     , _size(size)
    {}
 
@@ -90,9 +90,9 @@ namespace cycfi { namespace elements
     , _size(size)
    {}
 
-   label::label(std::string_view text, char const* font, float size)
+   label::label(std::string_view text, elements::font font_, float size)
     : _text(text)
-    , _font(font)
+    , _font(font_)
     , _size(size)
    {}
 

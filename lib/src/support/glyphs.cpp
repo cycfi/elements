@@ -137,13 +137,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    master_glyphs::master_glyphs(
        char const* first, char const* last
-     , char const* face, float size
+     , font font_, float size
      , point start
    )
     : glyphs(first, last)
    {
       canvas cnv{ *scratch_context_.context() };
-      cnv.font(face, size);
+      cnv.font(font_, size);
       auto cr = scratch_context_.context();
       _scaled_font = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
       build(start);

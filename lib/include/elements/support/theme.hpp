@@ -28,28 +28,28 @@ namespace cycfi { namespace elements
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
 #if defined(__APPLE__)
-      char const*          symbols_font               = "Lucida Grande";
+      font                 symbols_font               = font_descr{ "Lucida Grande" };
 #elif defined(_WIN32)
-      char const*          symbols_font               = "Segoe UI Symbol";
+      font                 symbols_font               = font_descr{ "Segoe UI Symbol" };
 #elif defined(__linux__)
-      char const*          symbols_font               = "Arial";
+      font                 symbols_font               = font_descr{ "Arial" };
 #endif
 
       color                heading_font_color         = basic_font_color;
-      char const*          heading_font               = "Roboto Bold";
+      font                 heading_font               = font_descr{ "Roboto" }.bold();
       float                heading_font_size          = 14.0;
 
       color                label_font_color           = basic_font_color;
-      char const*          label_font                 = "Open Sans";
+      font                 label_font                 = font_descr{ "Open Sans" };
       float                label_font_size            = 14.0;
 
       color                icon_color                 = basic_font_color;
-      char const*          icon_font                  = "elements_basic";
+      font                 icon_font                  = font_descr{ "elements_basic" };
       float                icon_font_size             = 16.0;
       color                icon_button_color          = default_button_color;
 
       color                text_box_font_color        = basic_font_color;
-      char const*          text_box_font              = "Open Sans";
+      font                 text_box_font              = font_descr{ "Open Sans" };
       float                text_box_font_size         = 14.0;
       color                text_box_hilite_color      = rgba(0, 127, 255, 100);
       color                text_box_caret_color       = rgba(0, 190, 255, 255);

@@ -151,7 +151,7 @@ namespace cycfi { namespace elements
 
                            heading(
                               std::string_view text
-                            , char const* font
+                            , font font_
                             , float size = 1.0
                            );
 
@@ -163,7 +163,7 @@ namespace cycfi { namespace elements
       void                 text(std::string_view text) override   { _text = text; }
 
       font const&          font() const                           { return _font; }
-      void                 font(char const* font_)                { _font = elements::font(font_); }
+      void                 font(elements::font_descr descr)       { _font = elements::font(descr); }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }
@@ -200,7 +200,7 @@ namespace cycfi { namespace elements
 
                            label(
                               std::string_view text
-                            , char const* font
+                            , font font_
                             , float size = 1.0
                            );
 
@@ -212,7 +212,8 @@ namespace cycfi { namespace elements
       void                 text(std::string_view text) override   { _text = text; }
 
       font const&          font() const                           { return _font; }
-      void                 font(char const* font_)                { _font = elements::font(font_); }
+      void                 font(elements::font_descr descr)       { _font = elements::font(descr); }
+      void                 font(elements::font font_)             { _font = font_; }
 
       float                size() const                           { return _size; }
       void                 size(float size_)                      { _size = size_; }

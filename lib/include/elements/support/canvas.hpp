@@ -11,7 +11,6 @@
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
 #include <elements/support/font.hpp>
-#include <elements/support/text_layout_x.hpp>
 #include <boost/filesystem.hpp>
 
 #include <vector>
@@ -20,10 +19,6 @@
 #include <cmath>
 #include <cassert>
 
-#if defined(__linux__) || defined(_WIN32)
-# include <map>
-#endif
-
 extern "C"
 {
    typedef struct _cairo cairo_t;
@@ -31,8 +26,6 @@ extern "C"
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    class canvas
    {
    public:
@@ -131,8 +124,6 @@ namespace cycfi { namespace elements
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
-      void              font(char const* face);
-      void              font(char const* face, float size);
       void              font(elements::font const& font_);
       void              font(elements::font const& font_, float size);
       void              font_size(float size);
@@ -166,9 +157,6 @@ namespace cycfi { namespace elements
       text_metrics      measure_text(char const* utf8);
       void              text_align(int align);
 
-      void              fill(point p, text_layout_x& layout);
-      void              stroke(point p, text_layout_x& layout);
-
       ///////////////////////////////////////////////////////////////////////////////////
       // Pixmaps
 
@@ -198,10 +186,6 @@ namespace cycfi { namespace elements
       void              save();
       void              restore();
 
-#if defined(__linux__) || defined(_WIN32)
-      static void       load_fonts(fs::path resource_path);
-#endif
-
    private:
 
       friend class glyphs;
@@ -224,10 +208,6 @@ namespace cycfi { namespace elements
       cairo_t&          _context;
       canvas_state      _state;
       state_stack       _state_stack;
-
-#if defined(__linux__) || defined(_WIN32)
-      static std::map<std::string, cairo_font_face_t*> _fonts;
-#endif
    };
 }}
 

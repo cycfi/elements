@@ -84,7 +84,7 @@ namespace cycfi { namespace elements
    public:
                            master_glyphs(
                               char const* first, char const* last
-                            , char const* face, float size
+                            , font font_, float size
                             , point start = { 0, 0 }
                            );
 
@@ -96,7 +96,7 @@ namespace cycfi { namespace elements
 
                            master_glyphs(
                               std::string_view str
-                            , char const* face, float size
+                            , font font_, float size
                             , point start = { 0, 0 }
                            );
 
@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
 
                            master_glyphs(
                               std::string const& str
-                            , char const* face, float size
+                            , font font_, float size
                             , point start = { 0, 0 }
                            );
 
@@ -138,10 +138,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline master_glyphs::master_glyphs(
       std::string_view str
-    , char const* face, float size
+    , font font_, float size
     , point start
    )
-    : master_glyphs(str.begin(), str.end(), face, size, start)
+    : master_glyphs(str.begin(), str.end(), font_, size, start)
    {}
 
    inline master_glyphs::master_glyphs(
@@ -154,10 +154,10 @@ namespace cycfi { namespace elements
 
    inline master_glyphs::master_glyphs(
       std::string const& str
-    , char const* face, float size
+    , font font_, float size
     , point start
    )
-    : master_glyphs(str.data(), str.data() + str.size(), face, size, start)
+    : master_glyphs(str.data(), str.data() + str.size(), font_, size, start)
    {}
 
    inline master_glyphs::master_glyphs(

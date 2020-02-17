@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
 
                               static_text_box(
                                  std::string_view text
-                               , char const* face  = get_theme().text_box_font
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                                , color color_      = get_theme().text_box_font_color
                               );
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
    public:
                               basic_text_box(
                                  std::string_view text
-                               , char const* face  = get_theme().text_box_font
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               );
                               ~basic_text_box();
@@ -166,10 +166,10 @@ namespace cycfi { namespace elements
 
                               basic_input_box(
                                  std::string_view placeholder = ""
-                               , char const* face  = get_theme().text_box_font
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               )
-                               : basic_text_box("", face, size)
+                               : basic_text_box("", font_, size)
                                , _placeholder(placeholder.begin(), placeholder.end())
                               {}
 

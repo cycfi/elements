@@ -94,7 +94,6 @@ namespace cycfi { namespace elements
    {
    public:
                            font(font_descr descr);
-                           font(char const* face);
                            font(font const& rhs);
                            ~font();
       font&                operator=(font const& rhs);

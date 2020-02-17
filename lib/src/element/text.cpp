@@ -19,12 +19,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    static_text_box::static_text_box(
       std::string_view text
-    , char const* face
+    , elements::font font_
     , float size
     , color color_
    )
     : _text(text)
-    , _layout(_text.data(), _text.data() + _text.size(), face, size)
+    , _layout(_text.data(), _text.data() + _text.size(), font_, size)
     , _color(color_)
    {}
 
@@ -114,8 +114,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string_view text, char const* face, float size)
-    : static_text_box(text, face, size)
+   basic_text_box::basic_text_box(std::string_view text, font font_, float size)
+    : static_text_box(text, font_, size)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)

@@ -33,15 +33,6 @@ namespace cycfi { namespace elements
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 
-   point measure_text(canvas& cnv, char const* text, char const* face, float size)
-   {
-      auto  state = cnv.new_state();
-      cnv.font(face, size);
-      auto  info = cnv.measure_text(text);
-      auto  height = info.ascent + info.descent + info.leading;
-      return { info.size.x, height };
-   }
-
    point measure_text(canvas& cnv, char const* text, font const& font_, float size)
    {
       auto  state = cnv.new_state();

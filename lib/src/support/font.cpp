@@ -9,6 +9,7 @@
 #include <cairo.h>
 #include <cairo-ft.h>
 #include <fontconfig/fontconfig.h>
+#include <boost/filesystem.hpp>
 
 #ifndef __APPLE__
 # include <ft2build.h>
@@ -31,6 +32,7 @@
 
 namespace cycfi { namespace elements
 {
+   namespace fs = boost::filesystem;
    namespace
    {
       inline void ltrim(std::string& s)
@@ -131,6 +133,13 @@ namespace cycfi { namespace elements
       void init_font_map()
       {
          FcConfig*      config = FcInitLoadConfigAndFonts();
+
+#ifdef __APPLE__
+         auto resources_path = fs::current_path().parent_path() / "Resources";
+#else
+         auto resources_path = fs::current_path() / "resources";
+#endif
+         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.c_str());
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(
                                  FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT
@@ -279,29 +288,6 @@ namespace cycfi { namespace elements
       else
       {
          // $$$ TODO: Fallback in case we failed to load font $$$
-      }
-   }
-
-   font::font(char const* face)
-   {
-      std::lock_guard<std::mutex> lock(cairo_font_map_mutex);
-      if (auto it = cairo_font_map.find(face); it != cairo_font_map.end())
-      {
-         _handle = cairo_font_face_reference(it->second);
-      }
-      else
-      {
-#ifdef __APPLE__
-         _handle = cairo_quartz_font_face_create_for_cgfont(
-            CGFontCreateWithFontName(
-               CFStringCreateWithCString(kCFAllocatorDefault, face, kCFStringEncodingUTF8)
-            )
-         );
-#else
-         // $$$ TODO: use a non-toy font selection facility for windows and linux $$$
-         _handle = cairo_toy_font_face_create(face, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-#endif
-         cairo_font_map[face] = cairo_font_face_reference(_handle);
       }
    }
 

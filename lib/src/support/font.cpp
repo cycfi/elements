@@ -4,18 +4,32 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/font.hpp>
+#include <infra/assert.hpp>
+
+#include <cairo.h>
+#include <cairo-ft.h>
+#include <fontconfig/fontconfig.h>
+
+#ifndef __APPLE__
+# include <ft2build.h>
+# include <freetype/ttnameid.h>
+# include FT_SFNT_NAMES_H
+# include FT_FREETYPE_H
+# include FT_GLYPH_H
+# include FT_OUTLINE_H
+# include FT_BBOX_H
+# include FT_TYPE1_TABLES_H
+#else
+# include <cairo-quartz.h>
+#endif
+
 #include <map>
 #include <mutex>
 #include <sstream>
 #include <algorithm>
 #include <vector>
-#include <cairo.h>
 
-#include <fontconfig/fontconfig.h>
 
-#ifdef CAIRO_HAS_QUARTZ_FONT
-#include <cairo-quartz.h>
-#endif
 
 namespace cycfi { namespace elements
 {
@@ -64,11 +78,11 @@ namespace cycfi { namespace elements
 
       struct font_entry
       {
-         std::string full_name;
-         std::string file;
-         uint8_t     weight   = font_descr::normal;
-         uint8_t     slant    = font_descr::style_normal;
-         uint8_t     stretch  = font_descr::stretch_normal;
+         std::string    full_name;
+         std::string    file;
+         uint8_t        weight   = font_descr::normal;
+         uint8_t        slant    = font_descr::slant_normal;
+         uint8_t        stretch  = font_descr::stretch_normal;
       };
 
       std::map<std::string, std::vector<font_entry>> font_map;
@@ -138,7 +152,7 @@ namespace cycfi { namespace elements
 
                int weight;
                if (FcPatternGetInteger(font, FC_WEIGHT, 0, &weight) == FcResultMatch)
-                  entry.weight = map_fc_weight(weight); // map the weight
+                  entry.weight = map_fc_weight(weight); // map the weight (normalized 0 to 100)
 
                int slant;
                if (FcPatternGetInteger(font, FC_SLANT, 0, &slant) == FcResultMatch)
@@ -184,12 +198,12 @@ namespace cycfi { namespace elements
                {
                   auto const& item = *j;
 
-                  // Get biased score (lower is better). Give `weight` attribute
-                  // the highest bias (1.0), followed by `slant` (0.5) and then
+                  // Get biased score (lower is better). Give `slant` attribute
+                  // the highest bias (3.0), followed by `weight` (1.0) and then
                   // `stretch` (0.25).
                   auto diff =
                      (std::abs(int(descr.weight) - int(item.weight)) * 1.0) +
-                     (std::abs(int(descr.slant) - int(item.slant)) * 0.5) +
+                     (std::abs(int(descr.slant) - int(item.slant)) * 3.0) +
                      (std::abs(int(descr.stretch) - int(item.stretch)) * 0.25)
                      ;
                   if (diff < min)
@@ -204,11 +218,68 @@ namespace cycfi { namespace elements
          }
          return nullptr;
       }
+
+#ifndef __APPLE__
+      struct free_type_font_loader
+      {
+         free_type_font_loader()
+         {
+            FT_Error status = FT_Init_FreeType(&ft_lib_value);
+            CYCFI_ASSERT(status == 0, "Error: failed to initialize free type library.");
+         }
+
+         cairo_font_face_t* load(char const* font_path)
+         {
+            FT_Face face;
+            FT_Error status = FT_New_Face(ft_lib_value, font_path, 0, &face);
+            if (status != 0)
+               return nullptr;
+            return cairo_ft_font_face_create_for_ft_face(face, 0);
+         }
+
+         FT_Library ft_lib_value;
+      };
+#endif
    }
 
    font::font(font_descr descr)
    {
+#ifndef __APPLE__
+      static free_type_font_loader font_loader;
+#endif
+
       auto match_ptr = match(descr);
+      if (match_ptr)
+      {
+         std::lock_guard<std::mutex> lock(cairo_font_map_mutex);
+         if (auto it = cairo_font_map.find(match_ptr->full_name); it != cairo_font_map.end())
+         {
+            _handle = cairo_font_face_reference(it->second);
+         }
+         else
+         {
+#ifdef __APPLE__
+            _handle = cairo_quartz_font_face_create_for_cgfont(
+               CGFontCreateWithFontName(
+                  CFStringCreateWithCString(
+                     kCFAllocatorDefault
+                   , match_ptr->full_name.c_str()
+                   , kCFStringEncodingUTF8
+                  )
+               )
+            );
+#else
+            _handle = font_loader.load(match_ptr->file.c_str());
+#endif
+
+            if (_handle)
+               cairo_font_map[match_ptr->full_name] = cairo_font_face_reference(_handle);
+         }
+      }
+      else
+      {
+         // $$$ TODO: Fallback in case we failed to load font $$$
+      }
    }
 
    font::font(char const* face)
@@ -220,7 +291,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-#ifdef CAIRO_HAS_QUARTZ_FONT
+#ifdef __APPLE__
          _handle = cairo_quartz_font_face_create_for_cgfont(
             CGFontCreateWithFontName(
                CFStringCreateWithCString(kCFAllocatorDefault, face, kCFStringEncodingUTF8)

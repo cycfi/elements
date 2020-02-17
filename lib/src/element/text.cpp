@@ -9,6 +9,7 @@
 #include <elements/support/text_utils.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -18,12 +19,12 @@ namespace cycfi { namespace elements
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
    static_text_box::static_text_box(
-      std::string_view text
-    , elements::font font_
+      std::string text
+    , font font_
     , float size
     , color color_
    )
-    : _text(text)
+    : _text(std::move(text))
     , _layout(_text.data(), _text.data() + _text.size(), font_, size)
     , _color(color_)
    {}
@@ -106,7 +107,7 @@ namespace cycfi { namespace elements
       _layout.break_lines(_current_size.x, _rows);
    }
 
-   void static_text_box::value(std::string val)
+   void static_text_box::value(std::string_view val)
    {
       text(val);
    }
@@ -114,8 +115,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string_view text, font font_, float size)
-    : static_text_box(text, font_, size)
+   basic_text_box::basic_text_box(std::string text, font font_, float size)
+    : static_text_box(std::move(text), font_, size)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)
@@ -307,7 +308,7 @@ namespace cycfi { namespace elements
 
       auto next_char = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* end = _text.data() + _text.size();
             char const* p = next_utf8(end, &_text[_select_end]);
@@ -327,7 +328,7 @@ namespace cycfi { namespace elements
 
       auto next_word = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* p = &_text[_select_end];
             char const* end = _text.data() + _text.size();
@@ -861,13 +862,13 @@ namespace cycfi { namespace elements
 
    void basic_text_box::select_start(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_start = pos;
    }
 
    void basic_text_box::select_end(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_end = pos;
    }
 

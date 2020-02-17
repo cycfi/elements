@@ -37,14 +37,14 @@ namespace cycfi { namespace elements
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
    }
 
-   heading::heading(std::string_view text, float size)
-    : _text(text)
+   heading::heading(std::string text, float size)
+    : _text(std::move(text))
     , _font(get_theme().heading_font)
     , _size(size)
    {}
 
-   heading::heading(std::string_view text, elements::font font_, float size)
-    : _text(text)
+   heading::heading(std::string text, elements::font font_, float size)
+    : _text(std::move(text))
     , _font(font_)
     , _size(size)
    {}
@@ -84,14 +84,14 @@ namespace cycfi { namespace elements
       draw_box_vgradient(ctx.canvas, ctx.bounds, 4.0);
    }
 
-   label::label(std::string_view text, float size)
-    : _text(text)
+   label::label(std::string text, float size)
+    : _text(std::move(text))
     , _font(get_theme().label_font)
     , _size(size)
    {}
 
-   label::label(std::string_view text, elements::font font_, float size)
-    : _text(text)
+   label::label(std::string text, elements::font font_, float size)
+    : _text(std::move(text))
     , _font(font_)
     , _size(size)
    {}

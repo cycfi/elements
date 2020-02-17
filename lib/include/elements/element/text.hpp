@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
 
       virtual                    ~text_base() = default;
 
-      virtual std::string_view   text() const = 0;
+      virtual std::string const& text() const = 0;
       virtual char const*        c_str() const = 0;
       virtual void               text(std::string_view text) = 0;
    };
@@ -41,7 +41,7 @@ namespace cycfi { namespace elements
       using element::value;
 
                               static_text_box(
-                                 std::string_view text
+                                 std::string text
                                , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                                , color color_      = get_theme().text_box_font_color
@@ -53,11 +53,11 @@ namespace cycfi { namespace elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string_view        text() const override            { return _text; }
+      std::string const&      text() const override            { return _text; }
       char const*             c_str() const override           { return _text.c_str(); }
       void                    text(std::string_view text) override;
 
-      void                    value(std::string val) override;
+      void                    value(std::string_view val) override;
 
       using element::text;
 
@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
    {
    public:
                               basic_text_box(
-                                 std::string_view text
+                                 std::string text
                                , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               );
@@ -165,12 +165,12 @@ namespace cycfi { namespace elements
       using enter_function = std::function<bool(std::string_view text)>;
 
                               basic_input_box(
-                                 std::string_view placeholder = ""
+                                 std::string placeholder = ""
                                , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               )
                                : basic_text_box("", font_, size)
-                               , _placeholder(placeholder.begin(), placeholder.end())
+                               , _placeholder(std::move(placeholder))
                               {}
 
                               basic_input_box(basic_input_box&& rhs) = default;

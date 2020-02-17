@@ -11,6 +11,7 @@
 #include <elements/element/size.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
+#include <string>
 #include <string_view>
 
 namespace cycfi { namespace elements
@@ -19,7 +20,7 @@ namespace cycfi { namespace elements
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
    basic_menu button_menu(
-      std::string_view text
+      std::string text
     , menu_position pos = menu_position::bottom_right
     , color body_color = get_theme().default_button_color
    );
@@ -52,19 +53,19 @@ namespace cycfi { namespace elements
       return diplay_shortcut(k.key, k.modifiers);
    }
 
-   inline auto menu_item_text(std::string_view text)
+   inline auto menu_item_text(std::string text)
    {
-      return xside_margin({ 20, 20 }, align_left(label(text)));
+      return xside_margin({ 20, 20 }, align_left(label(std::move(text))));
    }
 
-   inline auto menu_item_text(std::string_view text, shortcut_key shortcut)
+   inline auto menu_item_text(std::string text, shortcut_key shortcut)
    {
       auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
       auto font = get_theme().symbols_font;
       return xside_margin({ 20, 10 },
          htile(
             htile(
-               align_left(label(text))
+               align_left(label(std::move(text)))
              , align_right(label(mod, font))
             ),
             left_margin(5, hsize(10, align_left(label(key))))
@@ -72,14 +73,14 @@ namespace cycfi { namespace elements
       );
    }
 
-   inline auto menu_item(std::string_view text)
+   inline auto menu_item(std::string text)
    {
-      return basic_menu_item(menu_item_text(text));
+      return basic_menu_item(menu_item_text(std::move(text)));
    }
 
-   inline auto menu_item(std::string_view text, shortcut_key shortcut)
+   inline auto menu_item(std::string text, shortcut_key shortcut)
    {
-      auto r = basic_menu_item(menu_item_text(text, shortcut));
+      auto r = basic_menu_item(menu_item_text(std::move(text), shortcut));
       r.shortcut = shortcut;
       return r;
    }
@@ -107,7 +108,7 @@ namespace cycfi { namespace elements
    };
 
    std::pair<basic_menu, std::shared_ptr<label>>
-   selection_menu(std::string_view init);
+   selection_menu(std::string init);
 
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(

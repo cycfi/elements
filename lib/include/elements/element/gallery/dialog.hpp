@@ -140,12 +140,12 @@ namespace cycfi { namespace elements
       view& view_
     , Content&& content
     , F&& on_ok
-    , std::string_view ok_text = "OK"
+    , std::string ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
       auto popup =
          detail::make_dialog_popup(
             vtile(
@@ -167,14 +167,14 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string_view ok_text = "OK"
-    , std::string_view cancel_text = "Cancel"
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
     , color ok_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto cancel_button = share(button(cancel_text, 1.0));
-      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto cancel_button = share(button(std::move(cancel_text), 1.0));
+      auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
       auto popup =
          detail::make_dialog_popup(
             vtile(
@@ -203,14 +203,14 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string_view ok_text = "OK"
-    , std::string_view cancel_text = "Cancel"
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
     , color cancel_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto cancel_button = share(button(cancel_text, 1.0, cancel_color));
-      auto ok_button = share(button(ok_text, 1.0));
+      auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));
+      auto ok_button = share(button(std::move(ok_text), 1.0));
       auto popup =
          detail::make_dialog_popup(
             vtile(

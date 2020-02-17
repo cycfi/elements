@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
       virtual void            value(bool val);
       virtual void            value(int val);
       virtual void            value(double val);
-      virtual void            value(std::string val);
+      virtual void            value(std::string_view val);
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -263,7 +263,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline void indirect<Base>::value(std::string val)
+   inline void indirect<Base>::value(std::string_view val)
    {
       this->get().value(val);
    }

@@ -78,11 +78,11 @@ namespace cycfi { namespace elements
          int            w = 0;
          int            h = 0;
          bool           mouse_in_window = false;
-         time_point     click_start;
+         time_point     click_start = {};
          int            click_count = 0;
-         time_point     scroll_start;
+         time_point     scroll_start = {};
          double         velocity = 0;
-         key_map        keys;
+         key_map        keys = {};
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -381,7 +381,7 @@ namespace cycfi { namespace elements
             case WM_MBUTTONDOWN:
             case WM_RBUTTONDOWN:
                SetFocus(hwnd);
-               // Fall through...
+               [[fallthrough]];
 
             case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
                // $$$ JDG $$$ todo: prevent double btn up and down
@@ -472,7 +472,7 @@ namespace cycfi { namespace elements
       {
          init_view_class()
          {
-            WNDCLASSW windowClass = {0};
+            WNDCLASSW windowClass = {};
             windowClass.hbrBackground = nullptr;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = nullptr;

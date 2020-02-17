@@ -35,6 +35,8 @@ namespace cycfi { namespace elements
       font                 symbols_font               = font_descr{ "Arial" };
 #endif
 
+      float                box_widget_bg_opacity      = 32.0f / 255.0f;
+
       color                heading_font_color         = basic_font_color;
       font                 heading_font               = font_descr{ "Roboto" }.medium();
       float                heading_font_size          = 14.0;

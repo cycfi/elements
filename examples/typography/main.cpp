@@ -11,7 +11,7 @@ auto background = box(bkd_color);
 auto samples = basic(
    [](context const& ctx)
    {
-      font_descr descr{ "Open Sans" };
+      auto descr = font_descr{ "Open Sans", font_descr::bold };
       font f{ descr };
 
 

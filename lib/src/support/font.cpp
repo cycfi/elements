@@ -24,21 +24,26 @@ namespace cycfi { namespace elements
       inline void ltrim(std::string& s)
       {
          s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-            [](int ch)
-            {
-               return !std::isspace(ch);
-            }
+            [](int ch) { return !std::isspace(ch); }
          ));
       }
 
       inline void rtrim(std::string& s)
       {
          s.erase(std::find_if(s.rbegin(), s.rend(),
-            [](int ch)
-            {
-               return !std::isspace(ch);
-            }
+            [](int ch) { return !std::isspace(ch); }
          ).base(), s.end());
+      }
+
+      inline void trim(std::string& s)
+      {
+         ltrim(s);
+         rtrim(s);
+      }
+
+      inline float lerp(float a, float b, float f)
+      {
+         return (a * (1.0 - f)) + (b * f);
       }
 
       std::map<std::string, cairo_font_face_t*> cairo_font_map;
@@ -68,6 +73,47 @@ namespace cycfi { namespace elements
 
       std::map<std::string, std::vector<font_entry>> font_map;
 
+      enum
+      {
+         fc_thin            = 0,
+         fc_extralight      = 40,
+         fc_light           = 50,
+         fc_semilight       = 55,
+         fc_book            = 75,
+         fc_normal          = 80,
+         fc_medium          = 100,
+         fc_semibold        = 180,
+         fc_bold            = 200,
+         fc_extrabold       = 205,
+         fc_black           = 210
+      };
+
+      int map_fc_weight(int w)
+      {
+         auto&& map = [](double mina, double maxa, double minb, double maxb, double val)
+         {
+            return lerp(mina, maxa, (val-minb)/(maxb-minb));
+         };
+
+         if (w < fc_extralight)
+            return map(font_descr::thin, font_descr::extra_light, fc_thin, fc_extralight, w);
+         if (w < fc_light)
+            return map(font_descr::extra_light, font_descr::light, fc_extralight, fc_light, w);
+         if (w < fc_normal)
+            return map(font_descr::light, font_descr::normal, fc_light, fc_normal, w);
+         if (w < fc_medium)
+            return map(font_descr::normal, font_descr::medium, fc_normal, fc_medium, w);
+         if (w < fc_semibold)
+            return map(font_descr::medium, font_descr::semi_bold, fc_medium, fc_semibold, w);
+         if (w < fc_bold)
+            return map(font_descr::semi_bold, font_descr::bold, fc_semibold, fc_bold, w);
+         if (w < fc_extrabold)
+            return map(font_descr::bold, font_descr::extra_bold, fc_bold, fc_extrabold, w);
+         if (w < fc_black)
+            return map(font_descr::extra_bold, font_descr::black, fc_extrabold, fc_black, w);
+         return map(font_descr::black, 100, fc_black, 220, std::min(w, 220));
+      }
+
       void init_font_map()
       {
          FcConfig*      config = FcInitLoadConfigAndFonts();
@@ -92,7 +138,7 @@ namespace cycfi { namespace elements
 
                int weight;
                if (FcPatternGetInteger(font, FC_WEIGHT, 0, &weight) == FcResultMatch)
-                  entry.weight = (weight * 105) / 210; // normalize 0 to 100
+                  entry.weight = map_fc_weight(weight); // map the weight
 
                int slant;
                if (FcPatternGetInteger(font, FC_SLANT, 0, &slant) == FcResultMatch)
@@ -103,8 +149,7 @@ namespace cycfi { namespace elements
                   entry.stretch = (width * 100) / 200; // normalize 0 to 100
 
                std::string key = (const char*) family;
-               ltrim(key);
-               rtrim(key);
+               trim(key);
 
                if (auto i = font_map.find(key); i != font_map.end())
                {
@@ -130,9 +175,7 @@ namespace cycfi { namespace elements
          std::string family;
          while (getline(str, family, ','))
          {
-            ltrim(family);
-            rtrim(family);
-
+            trim(family);
             if (auto i = font_map.find(family); i != font_map.end())
             {
                int min = 10000;

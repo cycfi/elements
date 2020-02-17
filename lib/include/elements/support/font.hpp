@@ -19,16 +19,16 @@ namespace cycfi { namespace elements
    {
       enum weight_enum
       {
-	      thin              = 10,
-	      extra_light       = 20,
-	      light             = 30,
-	      weight_normal     = 40,
-	      medium            = 50,
-	      semi_bold         = 60,
-	      bold              = 70,
-	      extra_bold        = 80,
-	      black             = 90,
-	      extra_black       = 95,
+         thin              = 10,
+         extra_light       = 20,
+         light             = 30,
+         weight_normal     = 40,
+         medium            = 50,
+         semi_bold         = 60,
+         bold              = 70,
+         extra_bold        = 80,
+         black             = 90,
+         extra_black       = 95,
       };
 
       enum slant_enum

@@ -93,10 +93,12 @@ namespace cycfi { namespace elements
    class font
    {
    public:
+                           font();
                            font(font_descr descr);
                            font(font const& rhs);
                            ~font();
       font&                operator=(font const& rhs);
+      explicit             operator bool() const;
 
    private:
 
@@ -289,6 +291,15 @@ namespace cycfi { namespace elements
       font_descr r = *this;
       r._stretch = font_constants::ultra_expanded;
       return r;
+   }
+
+   inline font::font()
+    : _handle(nullptr)
+   {}
+
+   inline font::operator bool() const
+   {
+      return _handle;
    }
 }}
 

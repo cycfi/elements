@@ -287,7 +287,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         // $$$ TODO: Fallback in case we failed to load font $$$
+         _handle = nullptr;
       }
    }
 
@@ -305,7 +305,8 @@ namespace cycfi { namespace elements
 
    font::~font()
    {
-      cairo_font_face_destroy(_handle);
+      if (_handle)
+         cairo_font_face_destroy(_handle);
    }
 }}
 

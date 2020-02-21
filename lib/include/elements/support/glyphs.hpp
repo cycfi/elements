@@ -141,7 +141,7 @@ namespace cycfi { namespace elements
     , font font_, float size
     , point start
    )
-    : master_glyphs(str.begin(), str.end(), font_, size, start)
+    : master_glyphs(str.data(), str.data() + str.size(), font_, size, start)
    {}
 
    inline master_glyphs::master_glyphs(
@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
     , master_glyphs const& source
     , point start
    )
-    : master_glyphs(str.begin(), str.end(), source, start)
+    : master_glyphs(str.data(), str.data() + str.size(), source, start)
    {}
 
    inline master_glyphs::master_glyphs(
@@ -170,7 +170,7 @@ namespace cycfi { namespace elements
 
    inline void master_glyphs::text(std::string_view str, point start)
    {
-      text(str.begin(), str.end(), start);
+      text(str.data(), str.data() + str.size(), start);
    }
 
    inline void master_glyphs::text(std::string const& str, point start)

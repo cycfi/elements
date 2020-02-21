@@ -174,9 +174,9 @@ namespace cycfi { namespace elements
                std::string key = (const char*) family;
                trim(key);
 
-               if (auto i = font_map.find(key); i != font_map.end())
+               if (auto it = font_map.find(key); it != font_map.end())
                {
-                  i->second.push_back(entry);
+                  it->second.push_back(entry);
                }
                else
                {

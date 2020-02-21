@@ -192,6 +192,13 @@ endif()
 # Fontconfig
 
 if (MSVC)
+   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
+
+   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
+   else()
+	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
+   endif()
 else()
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)

@@ -307,7 +307,7 @@ namespace cycfi { namespace elements
          }
       }
 
-      void on_cursor(HWND /* hwnd */, base_view* view, LPARAM lparam, cursor_tracking state)
+      void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);

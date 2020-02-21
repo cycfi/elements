@@ -174,7 +174,7 @@ target_compile_options(elements PRIVATE
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-   
+
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
    else()
@@ -191,7 +191,7 @@ endif()
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-   
+
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
    else()
@@ -214,9 +214,10 @@ endif()
 # Boost
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.61 REQUIRED COMPONENTS filesystem system)
-  
-target_link_libraries(elements PUBLIC Boost::boost Boost::filesystem Boost::system)
+find_package(Boost 1.61 REQUIRED COMPONENTS filesystem system date_time regex)
+
+target_link_libraries(
+   elements PUBLIC Boost::boost Boost::filesystem Boost::system Boost::date_time Boost::regex)
 target_compile_definitions(elements PRIVATE BOOST_ALL_NO_LIB)
 
 ###############################################################################

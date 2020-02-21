@@ -307,7 +307,7 @@ namespace cycfi { namespace elements
          }
       }
 
-      void on_cursor(HWND /* hwnd */, base_view* view, LPARAM lparam, cursor_tracking state)
+      void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
@@ -485,8 +485,6 @@ namespace cycfi { namespace elements
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
             resource_paths.push_back(resource_path);
-
-            canvas::load_fonts(resource_path);
          }
       };
    }

@@ -94,13 +94,22 @@ elseif (WIN32)
       if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
          set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x64/cairo.dll)
          set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win64/freetype.dll)
+         set(FONTCONFIG_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/fontconfig.dll)
+         set(ICONV_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/libiconv.dll)
+         set(XML2 ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/libxml2.dll)
       else()
          set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x86/cairo.dll)
          set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win32/freetype.dll)
+         set(FONTCONFIG_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/fontconfig.dll)
+         set(ICONV_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/libiconv.dll)
+         set(XML2 ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/libxml2.dll)
       endif()
 
       file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${FONTCONFIG_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${ICONV_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${XML2} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
       set_property(
          TARGET ${ELEMENTS_APP_PROJECT}

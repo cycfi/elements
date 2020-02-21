@@ -20,6 +20,11 @@
 # include FT_OUTLINE_H
 # include FT_BBOX_H
 # include FT_TYPE1_TABLES_H
+# ifdef _WIN32
+#  include <Windows.h>
+#  include "sysinfoapi.h"
+#  include "tchar.h"
+# endif
 #else
 # include <cairo-quartz.h>
 #endif
@@ -137,7 +142,13 @@ namespace cycfi { namespace elements
 #ifdef __APPLE__
          auto resources_path = fs::current_path().parent_path() / "Resources";
 #else
-         auto resources_path = fs::current_path() / "resources";
+         auto resources_path = (fs::current_path() / "resources").generic_string();
+#ifdef _WIN32
+         TCHAR windir[MAX_PATH];
+         GetWindowsDirectory(windir, MAX_PATH);
+         auto fonts_path = (fs::path(windir) / "fonts").generic_string();
+         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.c_str());
+#endif
 #endif
          FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.c_str());
          FcPattern*     pat = FcPatternCreate();

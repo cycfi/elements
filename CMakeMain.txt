@@ -6,6 +6,10 @@
 
 project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 
+if (UNIX AND NOT APPLE)
+   set(LINUX TRUE)
+endif()
+
 ###############################################################################
 # Sources (and Resources)
 
@@ -35,6 +39,7 @@ if (LINUX)
       COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
       DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
    )
+
 endif()
 
 if (WIN32)

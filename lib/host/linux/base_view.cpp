@@ -306,7 +306,7 @@ namespace cycfi { namespace elements
          k.action = key_action::repeat;
 
       _view.key(k);
-   };
+   }
 
    gboolean on_key(GtkWidget* /* widget */, GdkEventKey* event, gpointer user_data)
    {
@@ -326,7 +326,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   gboolean on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
+   void on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       if (event->in)
@@ -420,7 +420,7 @@ namespace cycfi { namespace elements
       }
    };
 
-   base_view::base_view(extent size_)
+   base_view::base_view(extent /* size_ */)
     : base_view(new host_view)
    {
       // $$$ FIXME: Implement Me $$$

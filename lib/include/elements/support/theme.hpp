@@ -14,63 +14,65 @@ namespace cycfi { namespace elements
    {
    public:
 
-      color                panel_color                = rgba(28, 30, 34, 192);
-      color                frame_color                = rgba(220, 220, 220, 80);
-      float                frame_corner_radius        = 3.0;
-      float                frame_stroke_width         = 1.0;
-      color                scrollbar_color            = rgba(80, 80, 80, 80);
-      color                default_button_color       = rgba(0, 0, 0, 0);
+                           theme();
 
-      color                controls_color             = rgba(18, 49, 85, 200);
-      color                indicator_color            = rgba(0, 127, 255, 200);
-      color                basic_font_color           = rgba(220, 220, 220, 200);
+      color                panel_color;
+      color                frame_color;
+      float                frame_corner_radius;
+      float                frame_stroke_width;
+      color                scrollbar_color;
+      color                default_button_color;
+
+      color                controls_color;
+      color                indicator_color;
+      color                basic_font_color;
 
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
 #if defined(__APPLE__)
-      font                 symbols_font               = font_descr{ "Lucida Grande" };
+      font                 symbols_font;
 #elif defined(_WIN32)
-      font                 symbols_font               = font_descr{ "Segoe UI Symbol" };
+      font                 symbols_font;
 #elif defined(__linux__)
-      font                 symbols_font               = font_descr{ "Arial" };
+      font                 symbols_font;
 #endif
 
-      float                box_widget_bg_opacity      = 32.0f / 255.0f;
+      float                box_widget_bg_opacity;
 
-      color                heading_font_color         = basic_font_color;
-      font                 heading_font               = font_descr{ "Roboto" }.medium();
-      float                heading_font_size          = 14.0;
+      color                heading_font_color;
+      font                 heading_font;
+      float                heading_font_size;
 
-      color                label_font_color           = basic_font_color;
-      font                 label_font                 = font_descr{ "Open Sans" };
-      float                label_font_size            = 14.0;
+      color                label_font_color;
+      font                 label_font;
+      float                label_font_size;
 
-      color                icon_color                 = basic_font_color;
-      font                 icon_font                  = font_descr{ "elements_basic" };
-      float                icon_font_size             = 16.0;
-      color                icon_button_color          = default_button_color;
+      color                icon_color;
+      font                 icon_font;
+      float                icon_font_size;
+      color                icon_button_color;
 
-      color                text_box_font_color        = basic_font_color;
-      font                 text_box_font              = font_descr{ "Open Sans" };
-      float                text_box_font_size         = 14.0;
-      color                text_box_hilite_color      = rgba(0, 127, 255, 100);
-      color                text_box_caret_color       = rgba(0, 190, 255, 255);
-      float                text_box_caret_width       = 1.2;
-      color                inactive_font_color        = rgba(127, 127, 127, 150);
+      color                text_box_font_color;
+      font                 text_box_font;
+      float                text_box_font_size;
+      color                text_box_hilite_color;
+      color                text_box_caret_color;
+      float                text_box_caret_width;
+      color                inactive_font_color;
 
-      color                ticks_color                = rgba(127, 127, 127, 150);
-      float                major_ticks_level          = 0.5;
-      float                major_ticks_width          = 1.5;
-      float                minor_ticks_level          = 0.4;
-      float                minor_ticks_width          = 0.7;
+      color                ticks_color;
+      float                major_ticks_level;
+      float                major_ticks_width;
+      float                minor_ticks_level;
+      float                minor_ticks_width;
 
-      color                major_grid_color           = frame_color;
-      float                major_grid_width           = 0.5;
-      color                minor_grid_color           = indicator_color;
-      float                minor_grid_width           = 0.4;
+      color                major_grid_color;
+      float                major_grid_width;
+      color                minor_grid_color;
+      float                minor_grid_width;
 
-      float                dialog_button_size         = 100;
-      extent               message_textbox_size       = { 300, 120 };
+      float                dialog_button_size;
+      extent               message_textbox_size;
    };
 
    // Access to the global theme

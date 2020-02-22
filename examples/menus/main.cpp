@@ -55,24 +55,28 @@ auto make_popup_menu(char const* title, menu_position pos)
    quantum_feedback_loop.on_click   = [](){ enable = true; };
    psionic_wave_oscillator.on_click = [](){ enable = false; };
 
+   auto sk1 = shortcut_key{ key_code::g, mod_super };
+   auto sk2 = shortcut_key{ key_code::c, mod_super+mod_shift };
+   auto sk3 = shortcut_key{ key_code::b, mod_super+mod_alt };
+
    auto menu =
       layer(
          vtile(
             photonic_mesh,
             quantum_feedback_loop,
             psionic_wave_oscillator,
-            menu_item("Gaia Abiogenesis"),
+            menu_item("Gaia Abiogenesis", sk1),
             menu_item_spacer(),
-            menu_item("Chaotic Synchronicity"),
+            menu_item("Chaotic Synchronicity", sk2),
             menu_item("Omega Quadrant"),
             antimatter_soup,
-            menu_item("Dark Beta Quarks"),
+            menu_item("Dark Beta Quarks", sk3),
             menu_item("Cosmic Infrared Shift")
          ),
          panel{}
       );
 
-   popup.menu(menu);
+   popup.menu(hsize(250, menu));
 
    return popup;
 }

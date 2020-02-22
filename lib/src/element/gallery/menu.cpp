@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
    std::pair<std::string, std::string>
    diplay_shortcut(key_code k, int mod)
    {
-      std::string r1, r2;
+      std::string mod_, key_;
       char shifted = 0;
 
       if (mod & mod_shift)
@@ -141,52 +141,52 @@ namespace cycfi { namespace elements
             case key_code::grave_accent:     shifted = '~'; break;
 
             default:
-               r1 += u8"⇧";
+               mod_ += u8"⇧";
                break;
          }
       }
 
       if (mod & mod_alt)
-         r1 += u8"⌥";
+         mod_ += u8"⌥";
       if (mod & mod_alt)
-         r1 += u8"⌃";
+         mod_ += u8"⌃";
       if (mod & mod_super)
 #if defined(__APPLE__)
-         r1 += u8"⌘";
+         mod_ += u8"⌘";
 #elif defined(_WIN32)
-         r1 += u8"⊞";
+         mod_ += u8"⊞";
 #elif defined(__linux__)
-         r1 += u8"◇";
+         mod_ += u8"◇";
 #else
-         r1 += u8"�";
+         mod_ += u8"�";
 #endif
 
       if (shifted)
       {
-         r2 += shifted;
+         key_ += shifted;
       }
       else
       {
          switch (k)
          {
-            default:                         r2 += u8"�"; break;
+            default:                         key_ += u8"�"; break;
 
-            case key_code::space:            r2 += ' '; break;
-            case key_code::apostrophe:       r2 += '\''; break;
-            case key_code::comma:            r2 += ','; break;
-            case key_code::minus:            r2 += '-'; break;
-            case key_code::period:           r2 += '.'; break;
-            case key_code::slash:            r2 += '/'; break;
+            case key_code::space:            key_ += ' '; break;
+            case key_code::apostrophe:       key_ += '\''; break;
+            case key_code::comma:            key_ += ','; break;
+            case key_code::minus:            key_ += '-'; break;
+            case key_code::period:           key_ += '.'; break;
+            case key_code::slash:            key_ += '/'; break;
 
             case key_code::_0: case key_code::_1: case key_code::_2:
             case key_code::_3: case key_code::_4: case key_code::_5:
             case key_code::_6: case key_code::_7: case key_code::_8:
             case key_code::_9:
-               r2 += '0' + (int(k) - int(key_code::_0));
+               key_ += '0' + (int(k) - int(key_code::_0));
                break;
 
-            case key_code::semicolon:        r2 += ';'; break;
-            case key_code::equal:            r2 += '='; break;
+            case key_code::semicolon:        key_ += ';'; break;
+            case key_code::equal:            key_ += '='; break;
 
             case key_code::a: case key_code::b: case key_code::c:
             case key_code::d: case key_code::e: case key_code::f:
@@ -197,32 +197,32 @@ namespace cycfi { namespace elements
             case key_code::s: case key_code::t: case key_code::u:
             case key_code::v: case key_code::w: case key_code::x:
             case key_code::y: case key_code::z:
-               r2 += 'A' + (int(k) - int(key_code::a));
+               key_ += 'A' + (int(k) - int(key_code::a));
                break;
 
-            case key_code::left_bracket:     r2 += '['; break;
-            case key_code::backslash:        r2 += '\\'; break;
-            case key_code::right_bracket:    r2 += ']'; break;
-            case key_code::grave_accent:     r2 += '`'; break;
-            case key_code::escape:           r2 += u8"⎋"; break;
-            case key_code::enter:            r2 += u8"⏎"; break;
-            case key_code::tab:              r2 += u8"⇥"; break;
-            case key_code::backspace:        r2 += u8"⌫"; break;
+            case key_code::left_bracket:     key_ += '['; break;
+            case key_code::backslash:        key_ += '\\'; break;
+            case key_code::right_bracket:    key_ += ']'; break;
+            case key_code::grave_accent:     key_ += '`'; break;
+            case key_code::escape:           key_ += u8"⎋"; break;
+            case key_code::enter:            key_ += u8"⏎"; break;
+            case key_code::tab:              key_ += u8"⇥"; break;
+            case key_code::backspace:        key_ += u8"⌫"; break;
             case key_code::insert:           break;
-            case key_code::_delete:          r2 += u8"⌫"; break;
-            case key_code::right:            r2 += u8"→"; break;
-            case key_code::left:             r2 += u8"←"; break;
-            case key_code::down:             r2 += u8"↓"; break;
-            case key_code::up:               r2 += u8"↑"; break;
-            case key_code::page_up:          r2 += u8"⇞"; break;
-            case key_code::page_down:        r2 += u8"⇟"; break;
-            case key_code::home:             r2 += u8"⇱"; break;
-            case key_code::end:              r2 += u8"⇲"; break;
-            case key_code::caps_lock:        r2 += u8"⇪"; break;
-            case key_code::scroll_lock:      r2 += u8"⤓"; break;
-            case key_code::num_lock:         r2 += u8"⇭"; break;
-            case key_code::print_screen:     r2 += u8"⎙"; break;
-            case key_code::pause:            r2 += u8"⎉"; break;
+            case key_code::_delete:          key_ += u8"⌫"; break;
+            case key_code::right:            key_ += u8"→"; break;
+            case key_code::left:             key_ += u8"←"; break;
+            case key_code::down:             key_ += u8"↓"; break;
+            case key_code::up:               key_ += u8"↑"; break;
+            case key_code::page_up:          key_ += u8"⇞"; break;
+            case key_code::page_down:        key_ += u8"⇟"; break;
+            case key_code::home:             key_ += u8"⇱"; break;
+            case key_code::end:              key_ += u8"⇲"; break;
+            case key_code::caps_lock:        key_ += u8"⇪"; break;
+            case key_code::scroll_lock:      key_ += u8"⤓"; break;
+            case key_code::num_lock:         key_ += u8"⇭"; break;
+            case key_code::print_screen:     key_ += u8"⎙"; break;
+            case key_code::pause:            key_ += u8"⎉"; break;
 
             case key_code::f1: case key_code::f2: case key_code::f3:
             case key_code::f4: case key_code::f5: case key_code::f6:
@@ -233,35 +233,27 @@ namespace cycfi { namespace elements
             case key_code::f19: case key_code::f20: case key_code::f21:
             case key_code::f22: case key_code::f23: case key_code::f24:
             case key_code::f25:
-               r2 += 'f' + std::to_string(1 + int(k) - int(key_code::f1));
+               key_ += 'f' + std::to_string(1 + int(k) - int(key_code::f1));
                break;
 
             case key_code::kp_0: case key_code::kp_1: case key_code::kp_2:
             case key_code::kp_3: case key_code::kp_4: case key_code::kp_5:
             case key_code::kp_6: case key_code::kp_7: case key_code::kp_8:
             case key_code::kp_9:
-               r2 += '0' + (int(k) - int(key_code::kp_0));
+               key_ += '0' + (int(k) - int(key_code::kp_0));
                break;
 
-            case key_code::kp_decimal:       r2 += '.'; break;
-            case key_code::kp_divide:        r2 += '/'; break;
-            case key_code::kp_multiply:      r2 += '*'; break;
-            case key_code::kp_subtract:      r2 += '-'; break;
-            case key_code::kp_add:           r2 += '+'; break;
-            case key_code::kp_enter:         r2 += u8"⌤"; break;
-            case key_code::kp_equal:         r2 += '='; break;
-            case key_code::left_shift:       r2 += u8"⇧"; break;
-            case key_code::left_control:     r2 += u8"⇧"; break;
-            case key_code::left_alt:         r2 += '='; break;
-            case key_code::left_super:       r2 += '='; break;
-            case key_code::right_shift:      r2 += '='; break;
-            case key_code::right_control:    r2 += u8"⌃"; break;
-            case key_code::right_alt:        r2 += u8"⌥"; break;
-            case key_code::right_super:      r2 += u8"⌘"; break;
-            case key_code::menu:             r2 += u8"☰"; break;
+            case key_code::kp_decimal:       key_ += '.'; break;
+            case key_code::kp_divide:        key_ += '/'; break;
+            case key_code::kp_multiply:      key_ += '*'; break;
+            case key_code::kp_subtract:      key_ += '-'; break;
+            case key_code::kp_add:           key_ += '+'; break;
+            case key_code::kp_enter:         key_ += u8"⌤"; break;
+            case key_code::kp_equal:         key_ += '='; break;
+            case key_code::menu:             key_ += u8"☰"; break;
          }
       }
 
-      return { r1, r2 };
+      return { mod_, key_ };
    }
 }}

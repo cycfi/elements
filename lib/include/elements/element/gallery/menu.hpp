@@ -61,7 +61,7 @@ namespace cycfi { namespace elements
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
    {
       auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
-      auto font = get_theme().symbols_font;
+      auto font = get_theme().system_font;
       return xside_margin({ 20, 10 },
          htile(
             htile(

@@ -146,19 +146,24 @@ namespace cycfi { namespace elements
          }
       }
 
+#if defined(__APPLE__)
       if (mod & mod_alt)
          mod_ += u8"⌥";
-      if (mod & mod_alt)
+      if (mod & mod_control)
          mod_ += u8"⌃";
       if (mod & mod_super)
-#if defined(__APPLE__)
          mod_ += u8"⌘";
-#elif defined(_WIN32)
-         mod_ += u8"⊞";
-#elif defined(__linux__)
-         mod_ += u8"◇";
 #else
-         mod_ += u8"�";
+      if (mod & mod_alt)
+         mod_ += "Alt+";
+      if (mod & mod_alt)
+         mod_ += "Ctrl+";
+      if (mod & mod_super)
+#if defined(_WIN32)
+         mod_ += u8"⊞";
+#else
+         mod_ += u8"◇";
+#endif
 #endif
 
       if (shifted)

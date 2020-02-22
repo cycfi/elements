@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
 #if defined(__APPLE__)
-    , symbols_font               { font_descr{ "Lucida Grande" } }
+    , system_font               {font_descr{"Lucida Grande" } }
 #elif defined(_WIN32)
     , symbols_font               { font_descr{ "Segoe UI Symbol" } }
 #elif defined(__linux__)

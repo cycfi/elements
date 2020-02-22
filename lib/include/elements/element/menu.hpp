@@ -77,6 +77,21 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct shortcut_key
    {
+                  shortcut_key(key_code key_, int modifiers_)
+                  : key(key_)
+                  , modifiers(modifiers_)
+                  {
+                     if (modifiers & mod_action)
+#if defined(__APPLE__)
+                        modifiers |= mod_command;
+#else
+                        modifiers |= mod_control;
+#endif
+                  }
+
+                  shortcut_key() = default;
+                  shortcut_key(shortcut_key const&) = default;
+
       key_code    key = key_code::unknown;
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)
    };

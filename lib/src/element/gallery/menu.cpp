@@ -141,7 +141,11 @@ namespace cycfi { namespace elements
             case key_code::grave_accent:     shifted = '~'; break;
 
             default:
+#if defined(__APPLE__)
                mod_ += u8"⇧";
+#else
+               mod_ += "Shift+";
+#endif
                break;
          }
       }
@@ -151,13 +155,13 @@ namespace cycfi { namespace elements
          mod_ += u8"⌥";
       if (mod & mod_control)
          mod_ += u8"⌃";
-      if (mod & mod_super)
+      if ((mod & mod_command) || (mod & mod_action))
          mod_ += u8"⌘";
 #else
+      if ((mod & mod_control) || (mod & mod_action))
+         mod_ += "Ctrl+";
       if (mod & mod_alt)
          mod_ += "Alt+";
-      if (mod & mod_alt)
-         mod_ += "Ctrl+";
       if (mod & mod_super)
 #if defined(_WIN32)
          mod_ += u8"⊞";

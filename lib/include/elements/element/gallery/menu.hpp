@@ -68,7 +68,11 @@ namespace cycfi { namespace elements
                align_left(label(std::move(text)))
              , align_right(label(mod, font))
             ),
+#if defined(__APPLE__)
             left_margin(5, hsize(10, align_left(label(key))))
+#else
+            hsize(10, align_left(label(key)))
+#endif
          )
       );
    }

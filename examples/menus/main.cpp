@@ -55,9 +55,9 @@ auto make_popup_menu(char const* title, menu_position pos)
    quantum_feedback_loop.on_click   = [](){ enable = true; };
    psionic_wave_oscillator.on_click = [](){ enable = false; };
 
-   auto sk1 = shortcut_key{ key_code::g, mod_super };
-   auto sk2 = shortcut_key{ key_code::c, mod_super+mod_shift };
-   auto sk3 = shortcut_key{ key_code::b, mod_super+mod_alt };
+   auto sk1 = shortcut_key{ key_code::g, mod_action };
+   auto sk2 = shortcut_key{ key_code::c, mod_action+mod_shift };
+   auto sk3 = shortcut_key{ key_code::b, mod_action+mod_alt };
 
    auto menu =
       layer(

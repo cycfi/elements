@@ -124,6 +124,7 @@ namespace cycfi { namespace elements
       // mod_super maps to the Windows key on PC keyboards
       // and maps to the Command key on MacOS
       mod_super         = 0x0008,
+      mod_command       = mod_super, // synonym for MacOS
 
       // mod_action maps to mod_control on Windows and Linux
       // and maps to mod_super on MacOS

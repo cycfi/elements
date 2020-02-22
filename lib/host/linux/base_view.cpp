@@ -138,7 +138,7 @@ namespace cycfi { namespace elements
          {
             case GDK_BUTTON_PRESS:
                btn.down = true;
-               if ((event->time - view->click_time) < dbl_click_time)
+               if ((event->time - view->click_time) < guint32(dbl_click_time))
                   ++view->click_count;
                else
                   view->click_count = 1;

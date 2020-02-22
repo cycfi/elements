@@ -76,7 +76,7 @@ auto make_popup_menu(char const* title, menu_position pos)
          panel{}
       );
 
-   popup.menu(hsize(250, menu));
+   popup.menu(hsize(300, menu));
 
    return popup;
 }

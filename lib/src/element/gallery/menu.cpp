@@ -159,7 +159,7 @@ namespace cycfi { namespace elements
          mod_ += u8"⌘";
 #else
       if ((mod & mod_control) || (mod & mod_action))
-         mod_ += "Ctrl+";
+         mod_ = "Ctrl+" + mod_;
       if (mod & mod_alt)
          mod_ += "Alt+";
       if (mod & mod_super)

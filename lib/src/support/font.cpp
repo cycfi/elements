@@ -90,7 +90,12 @@ namespace cycfi { namespace elements
          uint8_t        stretch  = font_constants::stretch_normal;
       };
 
-      std::map<std::string, std::vector<font_entry>> font_map;
+      using font_map_type = std::map<std::string, std::vector<font_entry>>;
+      font_map_type& font_map()
+      {
+         static font_map_type font_map_;
+         return font_map_;
+      }
 
       enum
       {
@@ -185,14 +190,14 @@ namespace cycfi { namespace elements
                std::string key = (const char*) family;
                trim(key);
 
-               if (auto it = font_map.find(key); it != font_map.end())
+               if (auto it = font_map().find(key); it != font_map().end())
                {
                   it->second.push_back(entry);
                }
                else
                {
-                  font_map[key] = {};
-                  font_map[key].push_back(entry);
+                  font_map()[key] = {};
+                  font_map()[key].push_back(entry);
                }
             }
          }
@@ -202,7 +207,7 @@ namespace cycfi { namespace elements
 
       font_entry const* match(font_descr descr)
       {
-         if (font_map.empty())
+         if (font_map().empty())
             init_font_map();
 
          std::istringstream str(std::string{ descr._families });
@@ -210,7 +215,7 @@ namespace cycfi { namespace elements
          while (getline(str, family, ','))
          {
             trim(family);
-            if (auto i = font_map.find(family); i != font_map.end())
+            if (auto i = font_map().find(family); i != font_map().end())
             {
                int min = 10000;
                std::vector<font_entry>::const_iterator best_match = i->second.end();

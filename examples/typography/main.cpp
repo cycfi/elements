@@ -8,18 +8,6 @@
 
 using namespace cycfi::elements;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <cairo.h>
-#include <cairo-ft.h>
-#include <ft2build.h>
-#include FT_SFNT_NAMES_H
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
-#include FT_OUTLINE_H
-#include FT_BBOX_H
-#include FT_TYPE1_TABLES_H
-
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);

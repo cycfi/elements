@@ -7,13 +7,6 @@
 
 namespace cycfi { namespace elements
 {
-   void background_fill::draw(context const& ctx)
-   {
-      auto&  cnv = ctx.canvas;
-      cnv.fill_style(_color);
-      cnv.fill_rect(ctx.bounds);
-   }
-
    void panel::draw(context const& ctx)
    {
       draw_panel(

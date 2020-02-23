@@ -30,6 +30,7 @@
       {
          win.limits(limits_);
       };
+      win.limits(_current_limits);
    }
 
    view::~view()

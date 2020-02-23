@@ -12,7 +12,7 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-auto samples = min_size({ 770, 100 }, basic(
+auto samples = basic(
    [](context const& ctx)
    {
       auto& cnv = ctx.canvas;
@@ -47,7 +47,7 @@ auto samples = min_size({ 770, 100 }, basic(
       cnv.line_width(0.5);
       cnv.stroke_text({ 20, 90 }, "Outline");
    }
-));
+);
 
 int main(int argc, const char* argv[])
 {

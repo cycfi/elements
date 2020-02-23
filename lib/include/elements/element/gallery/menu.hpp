@@ -61,12 +61,16 @@ namespace cycfi { namespace elements
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
    {
       auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
-      auto font = get_theme().system_font;
+#if defined(__APPLE__)
+      auto sk_font = get_theme().system_font;
+#else
+      auto sk_font = get_theme().label_font;
+#endif
       return xside_margin({ 20, 10 },
          htile(
             htile(
                align_left(label(std::move(text)))
-             , align_right(label(mod, font))
+             , align_right(label(mod, sk_font))
             ),
 #if defined(__APPLE__)
             left_margin(5, hsize(10, align_left(label(key))))

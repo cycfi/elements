@@ -308,19 +308,30 @@ namespace cycfi { namespace elements
       _view.key(k);
    }
 
-   gboolean on_key(GtkWidget* /* widget */, GdkEventKey* event, gpointer user_data)
+   gboolean on_key(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       gtk_im_context_filter_keypress(host_view_h->im_context, event);
 
-      auto const key = translate_key(event->keyval);
-      if (key == key_code::unknown)
-         return false;
-
       int modifiers = get_mods(event->state);
       auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
       host_view_h->modifiers = modifiers;
+
+      // We don't want the shift key handled when obtaining the keyval,
+      // so we do this again here, instead of relying on event->keyval
+      guint keyval = 0;
+      gdk_keymap_translate_keyboard_state(
+         gdk_keymap_get_for_display(gtk_widget_get_display(widget)),
+         event->hardware_keycode,
+         GdkModifierType(event->state & ~GDK_SHIFT_MASK),
+         event->group,
+         &keyval,
+         nullptr, nullptr, nullptr);
+
+      auto const key = translate_key(keyval);
+      if (key == key_code::unknown)
+         return false;
 
       handle_key(base_view, host_view_h->keys, { key, action, modifiers });
       return true;

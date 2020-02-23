@@ -1,6 +1,5 @@
 theme: jekyll-theme-minimal
 title: "Elements C++ GUI library"
-masthead_title: "Elements C++ GUI library"
-description: Elements is a lightweight, fine-grained, HDPI capable resolution independent, modular GUI library
+description: Elements is a lightweight, fine-grained, HDPI capable, resolution independent, modular C++ GUI library.
 name: "Joel de Guzman"
 logo: "/images/elements.png"

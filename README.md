@@ -31,6 +31,8 @@ license](http://tinyurl.com/p6pekvo).
 
 ## History
 
+<img style="float: right;" hspace="10" width="35%" src="docs/images/hdpi.png">
+
 Sometime in 2014, I started searching for a GUI library I can use for some of the projects I am developing given the requirements listed above.
 
 HDPI Matters. Zoom in and notice the standard DPI icons at the top (e.g. the Power Button from the VST3 Plug-in Test Host), vs. Elements’ vector dials.

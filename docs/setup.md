@@ -9,7 +9,7 @@ and dependencies that you need to satisfy in order to use the library:
 1. A C++17 compiler
 2. git
 3. cmake 3.5.1 or higher
-4. [Boost](https://www.boost.org/) 1.61 or higher
+4. [Boost](https://www.boost.org/) 1.68 or higher
 5. [Cairo](https://cairographics.org/)
 6. The [Cycfi infra library](https://github.com/cycfi/infra/)
 7. The [Cycfi json library](https://github.com/cycfi/json/)
@@ -43,24 +43,19 @@ variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT later (see below).
 
 ### Cairo
 
-Install using Brew: ```brew install cairo```
+Install using Brew:
+
+```
+brew install cairo
+```
 
 ### Boost
 
-*Download Boost*
+Install using Brew:
 
-From (https://www.boost.org/users/download/), get the latest Boost version.
-If you have it already, make sure you have version 1.61 or higher.
-
-*Build Boost*
-
-Many Boost libraries are header-only. You only need to build some of the
-non-header-only libraries:
-
-1. CD to boost directory
-2. Bootstrap Boost: ```./bootstrap.sh```
-3. Build Boost: ```./b2 -j+8 --with-filesystem --with-system stage```
-
+```
+brew install cairo
+```
 
 ### CMake
 
@@ -72,21 +67,43 @@ For MacOS, using Homebrew:
 ```
 brew install cmake
 ```
+
 ### Generating the Project using CMake
 
 There are multiple ways to generate a project file using CMake depending on
 your platform and desired IDE, but here is an example for MacOS 10.14:
 
+-------------------------------------------------------------------------------
+
 ### Using [XCode](https://developer.apple.com/xcode/):
 
-1. CD to the elements library: ```cd elements```
-2. Make a build directory inside the elements directory ```mkdir build```
-3. CD to the build directory: ```cd build```
-4. invoke cmake: cmake -GXcode -DBOOST_ROOT=your/boost/path ../
+1. CD to the elements library:
 
-If placed the cycfi infra and json somewhere else, then you need to set the
-cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake command line
-invocation:
+```
+cd elements
+```
+
+2. Make a build directory inside the elements directory
+
+```
+mkdir build
+```
+
+3. CD to the build directory:
+
+```
+cd build
+```
+
+4. invoke cmake:
+
+```
+cmake -GXcode ../
+```
+
+If you placed the cycfi infra and json somewhere else, then you need to set
+the cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT on the cmake
+command line invocation:
 
 ```
 -DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
@@ -94,13 +111,10 @@ invocation:
 
 ### Using [CLion](https://www.jetbrains.com/clion/):
 
-1. Simply open the CMakeLists.txt file using CLion.
-2. Open Preferences. Under Build, Execution, Deployment/CMake, add
-   -DBOOST_ROOT=your/boost/path to your CMake options
-
-If placed the cycfi infra and json somewhere else, then you need to add the
-cmake variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT too:
-
+Simply open the CMakeLists.txt file using CLion. If you placed the cycfi
+infra and json somewhere else, then you need to add the cmake variables
+CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT by opening Preferences and under Build,
+Execution, Deployment/CMake, add:
 ```
 -DCYCFI_INFRA_ROOT=cycfi/infra/path -CYCFI_JSON_ROOT=cycfi/json/path
 ```

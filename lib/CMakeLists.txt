@@ -232,7 +232,7 @@ endif()
 # Boost
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.61 REQUIRED COMPONENTS filesystem system date_time regex)
+find_package(Boost 1.68 REQUIRED COMPONENTS filesystem system date_time regex)
 
 target_link_libraries(elements PUBLIC Boost::boost Boost::filesystem Boost::system Boost::date_time Boost::regex)
 target_compile_definitions(elements PRIVATE BOOST_ALL_NO_LIB)

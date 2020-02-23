@@ -7,6 +7,7 @@
 #define ELEMENTS_FONT_X_FEBRUARY_11_2020
 
 #include <string_view>
+#include <boost/filesystem.hpp>
 
 extern "C"
 {
@@ -301,6 +302,11 @@ namespace cycfi { namespace elements
    {
       return _handle;
    }
+
+#ifdef __APPLE__
+   namespace fs = boost::filesystem;
+   fs::path get_user_fonts_directory();
+#endif
 }}
 
 #endif

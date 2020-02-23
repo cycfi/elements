@@ -68,8 +68,8 @@ namespace cycfi::elements
 
                               basic_progress_bar(Background&& bg, Foreground&& fg, double init_value)
                                : Base(init_value)
-                               , _foreground(std::forward<Background>(fg))
                                , _background(std::forward<Foreground>(bg))
+                               , _foreground(std::forward<Background>(fg))
                               {}
 
                               basic_progress_bar(Background const& bg, Foreground const& fg, double init_value)

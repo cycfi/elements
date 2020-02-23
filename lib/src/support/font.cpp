@@ -140,7 +140,7 @@ namespace cycfi { namespace elements
          FcConfig*      config = FcInitLoadConfigAndFonts();
 
 #ifdef __APPLE__
-         auto resources_path = fs::current_path().parent_path() / "Resources";
+         auto resources_path = get_user_fonts_directory();
 #else
          auto resources_path = (fs::current_path() / "resources").generic_string();
 #ifdef _WIN32

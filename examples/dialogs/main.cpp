@@ -45,7 +45,7 @@ auto make_dialog(view& _view, app& _app)
       };
 
    auto&& on_cancel =
-      [&_app]()
+      []()
       {
          // Do something on cancel
       };

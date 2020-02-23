@@ -65,21 +65,27 @@ namespace cycfi { namespace elements
          return (a * (1.0 - f)) + (b * f);
       }
 
-      std::map<std::string, cairo_font_face_t*> cairo_font_map;
-      std::mutex cairo_font_map_mutex;
+      using cairo_font_map_type = std::map<std::string, cairo_font_face_t*>;
 
-      struct cleanup
+      std::pair<cairo_font_map_type&, std::mutex&> get_cairo_font_map()
       {
-         ~cleanup()
-         {
-            std::lock_guard<std::mutex> lock(cairo_font_map_mutex);
-            for (auto [key, scaled_font] : cairo_font_map)
-               cairo_font_face_destroy(scaled_font);
-            cairo_font_map.clear();
-         }
-      };
+         static std::map<std::string, cairo_font_face_t*> cairo_font_map_;
+         static std::mutex cairo_font_map_mutex_;
 
-      cleanup cleanup_;
+         struct cleanup
+         {
+            ~cleanup()
+            {
+               std::lock_guard<std::mutex> lock(cairo_font_map_mutex_);
+               for (auto [key, scaled_font] : cairo_font_map_)
+                  cairo_font_face_destroy(scaled_font);
+               cairo_font_map_.clear();
+            }
+         };
+
+         static cleanup cleanup_;
+         return { cairo_font_map_, cairo_font_map_mutex_ };
+      }
 
       struct font_entry
       {
@@ -276,6 +282,7 @@ namespace cycfi { namespace elements
       auto match_ptr = match(descr);
       if (match_ptr)
       {
+         auto [cairo_font_map, cairo_font_map_mutex] = get_cairo_font_map();
          std::lock_guard<std::mutex> lock(cairo_font_map_mutex);
          if (auto it = cairo_font_map.find(match_ptr->full_name); it != cairo_font_map.end())
          {

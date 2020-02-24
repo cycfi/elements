@@ -4,7 +4,9 @@
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, HDPI capable, resolution independent, modular GUI library, designed with these requirements in mind:
+Elements is a lightweight, fine-grained, resolution independent, 
+modular GUI library. Elements is designed with these requirements 
+in mind:
 
 1. It should be open source with a liberal, non-viral license.
 2. It should be usable in any application and should play well

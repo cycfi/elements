@@ -10,7 +10,9 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
+#include <elements/support/font.hpp>
 #include <functional>
+#include <string>
 #include <string_view>
 
 namespace cycfi { namespace elements
@@ -24,7 +26,7 @@ namespace cycfi { namespace elements
        : _color(color_)
       {}
 
-      void draw(context const& ctx)
+      void draw(context const& ctx) override
       {
          auto& cnv = ctx.canvas;
          cnv.fill_style(_color);
@@ -37,6 +39,34 @@ namespace cycfi { namespace elements
    inline auto box(color color_)
    {
       return box_element{ color_ };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // RBox: A simple colored rounded-box.
+   ////////////////////////////////////////////////////////////////////////////
+   struct rbox_element : element
+   {
+      rbox_element(color color_, float radius = 4)
+       : _color(color_)
+       , _radius(radius)
+      {}
+
+      void draw(context const& ctx) override
+      {
+         auto& cnv = ctx.canvas;
+         cnv.begin_path();
+         cnv.round_rect(ctx.bounds, _radius);
+         cnv.fill_style(_color);
+         cnv.fill();
+      }
+
+      color _color;
+      float _radius;
+   };
+
+   inline auto rbox(color color_, float radius = 4)
+   {
+      return rbox_element{ color_, radius };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -53,8 +83,8 @@ namespace cycfi { namespace elements
        : f(f)
       {}
 
-      virtual void
-      draw(context const& ctx)
+      void
+      draw(context const& ctx) override
       {
          f(ctx);
       }
@@ -71,19 +101,6 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Background Fill
-   ////////////////////////////////////////////////////////////////////////////
-   struct background_fill : element
-   {
-                     background_fill(color color_)
-                      : _color(color_)
-                     {}
-
-      void           draw(context const& ctx);
-      color          _color;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
    // Panels
    ////////////////////////////////////////////////////////////////////////////
    class panel : public element
@@ -94,7 +111,7 @@ namespace cycfi { namespace elements
                       : _opacity(opacity_)
                      {}
 
-      virtual void   draw(context const& ctx);
+      void           draw(context const& ctx) override;
 
    private:
 
@@ -106,7 +123,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct frame : public element
    {
-      virtual void   draw(context const& ctx);
+      void           draw(context const& ctx) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -114,38 +131,38 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    class heading : public element, public text_base
    {
-   public:
-                           heading(
-                              std::string_view text
-                            , float size_ = 1.0
-                           );
+      public:
+                              heading(
+                                 std::string text
+                               , float size_ = 1.0
+                              );
 
-                           heading(
-                              std::string_view text
-                            , std::string_view font
-                            , float size = 1.0
-                           );
+                              heading(
+                                 std::string text
+                               , font font_
+                               , float size = 1.0
+                              );
 
-      view_limits          limits(basic_context const& ctx) const override;
-      void                 draw(context const& ctx) override;
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
-      std::string_view     text() const override                  { return _text; }
-      char const*          c_str() const override                 { return _text.c_str(); }
-      void                 text(std::string_view text) override   { replace_string(_text, text); }
+      std::string const&      text() const override                  { return _text; }
+      char const*             c_str() const override                 { return _text.c_str(); }
+      void                    text(std::string_view text) override   { _text = text; }
 
-      std::string const&   font() const                           { return _font; }
-      void                 font(std::string_view font_)           { _font = font_; }
+      elements::font const&   font() const                           { return _font; }
+      void                    font(elements::font_descr descr)       { _font = elements::font(descr); }
 
-      float                size() const                           { return _size; }
-      void                 size(float size_)                      { _size = size_; }
+      float                   size() const                           { return _size; }
+      void                    size(float size_)                      { _size = size_; }
 
       using element::text;
 
    private:
 
-      std::string          _text;
-      std::string          _font;
-      float                _size;
+      std::string             _text;
+      elements::font          _font;
+      float                   _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -155,7 +172,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -164,37 +181,38 @@ namespace cycfi { namespace elements
    class label : public element, public text_base
    {
    public:
-                           label(
-                              std::string_view text
-                            , float size = 1.0
-                           );
+                              label(
+                                 std::string text
+                               , float size = 1.0
+                              );
 
-                           label(
-                              std::string_view text
-                            , std::string_view font
-                            , float size = 1.0
-                           );
+                              label(
+                                 std::string text
+                               , font font_
+                               , float size = 1.0
+                              );
 
-      view_limits          limits(basic_context const& ctx) const override;
-      void                 draw(context const& ctx) override;
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
-      std::string_view     text() const override                  { return _text; }
-      char const*          c_str() const override                 { return _text.c_str(); }
-      void                 text(std::string_view text) override   { replace_string(_text, text); }
+      std::string const&      text() const override                  { return _text; }
+      char const*             c_str() const override                 { return _text.c_str(); }
+      void                    text(std::string_view text) override   { _text = text; }
 
-      std::string const&   font() const                           { return _font; }
-      void                 font(std::string_view font_)           { _font = font_; }
+      elements::font const&   font() const                           { return _font; }
+      void                    font(elements::font_descr descr)       { _font = elements::font(descr); }
+      void                    font(elements::font font_)             { _font = font_; }
 
-      float                size() const                           { return _size; }
-      void                 size(float size_)                      { _size = size_; }
+      float                   size() const                           { return _size; }
+      void                    size(float size_)                      { _size = size_; }
 
       using element::text;
 
    private:
 
-      std::string          _text;
-      std::string          _font;
-      float                _size;
+      std::string             _text;
+      elements::font          _font;
+      float                   _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -209,7 +227,7 @@ namespace cycfi { namespace elements
                                , _minor_divisions(minor_divisions)
                               {}
 
-      virtual void            draw(context const& ctx);
+      void                    draw(context const& ctx) override;
 
    private:
 
@@ -224,8 +242,8 @@ namespace cycfi { namespace elements
    {
                               icon(std::uint32_t code_, float size_ = 1.0);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
       std::uint32_t           _code;
       float                   _size;
@@ -243,9 +261,9 @@ namespace cycfi { namespace elements
                                : base_type(std::forward<Subject>(subject))
                               {}
 
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            is_control() const      { return true; }
-      virtual bool            focus(focus_request r)  { this->subject().focus(r); return true; }
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    is_control() const override { return true; }
+      bool                    wants_focus() const override { return true; }
 
       using key_function = std::function<bool(key_info k)>;
 

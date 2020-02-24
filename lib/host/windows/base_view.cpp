@@ -78,11 +78,11 @@ namespace cycfi { namespace elements
          int            w = 0;
          int            h = 0;
          bool           mouse_in_window = false;
-         time_point     click_start;
+         time_point     click_start = {};
          int            click_count = 0;
-         time_point     scroll_start;
+         time_point     scroll_start = {};
          double         velocity = 0;
-         key_map        keys;
+         key_map        keys = {};
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -184,7 +184,7 @@ namespace cycfi { namespace elements
 
       mouse_button get_button(
          HWND hwnd, view_info* info, UINT message
-       , WPARAM wparam, LPARAM lparam)
+       , WPARAM /* wparam */, LPARAM lparam)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
@@ -228,31 +228,32 @@ namespace cycfi { namespace elements
                break;
          }
 
-         int click_count = 1;
+         auto const which =
+             [message]()
+             {
+                 switch (message)
+                 {
+                     case WM_LBUTTONDOWN:
+                     case WM_LBUTTONUP:
+                         return mouse_button::left;
 
-         mouse_button::what which;
-         switch (message)
-         {
-            case WM_LBUTTONDOWN:
-            case WM_LBUTTONUP:
-               which = mouse_button::left;
-               break;
+                     case WM_MBUTTONDOWN:
+                     case WM_MBUTTONUP:
+                         return mouse_button::middle;
 
-            case WM_MBUTTONDOWN:
-            case WM_MBUTTONUP:
-               which = mouse_button::middle;
-               break;
+                     case WM_RBUTTONDOWN:
+                     case WM_RBUTTONUP:
+                         return mouse_button::right;
 
-            case WM_RBUTTONDOWN:
-            case WM_RBUTTONUP:
-               which = mouse_button::right;
-               break;
-         }
+                     default:
+                         return mouse_button::left;
+                 }
+             }();
 
          return {
             down,
             info->click_count,
-            mouse_button::left,
+            which,
             get_mods(),
             { pos_x, pos_y }
          };
@@ -276,9 +277,9 @@ namespace cycfi { namespace elements
             k.action = key_action::repeat;
 
          _view.key(k);
-      };
+      }
 
-      void on_key(HWND hwnd, view_info* info, WPARAM wparam, LPARAM lparam)
+      void on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
       {
          auto const key = translate_key(wparam, lparam);
          auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
@@ -367,7 +368,6 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -381,7 +381,7 @@ namespace cycfi { namespace elements
             case WM_MBUTTONDOWN:
             case WM_RBUTTONDOWN:
                SetFocus(hwnd);
-               // Fall through...
+               [[fallthrough]];
 
             case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
                // $$$ JDG $$$ todo: prevent double btn up and down
@@ -455,11 +455,11 @@ namespace cycfi { namespace elements
                return on_text(*info->vptr, message, wparam);
 
             case WM_SETFOCUS:
-               info->vptr->focus(focus_request::begin_focus);
+               info->vptr->begin_focus();
                break;
 
             case WM_KILLFOCUS:
-               info->vptr->focus(focus_request::end_focus);
+               info->vptr->end_focus();
                break;
 
             default:
@@ -472,7 +472,7 @@ namespace cycfi { namespace elements
       {
          init_view_class()
          {
-            WNDCLASSW windowClass = {0};
+            WNDCLASSW windowClass = {};
             windowClass.hbrBackground = nullptr;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = nullptr;
@@ -485,8 +485,6 @@ namespace cycfi { namespace elements
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
             resource_paths.push_back(resource_path);
-
-            canvas::load_fonts(resource_path);
          }
       };
    }
@@ -622,7 +620,7 @@ namespace cycfi { namespace elements
 
    void clipboard(std::string const& text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
       if (!len)
          return;
 

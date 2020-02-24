@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
       return is_activated;
    }
 
-   void activate(GtkApplication* app, gpointer user_data)
+   void activate(GtkApplication* /* app */, gpointer /* user_data */)
    {
       is_activated = true;
       for (auto f : on_activate)
@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
             app_config.application_id.c_str()
           , G_APPLICATION_FLAGS_NONE
          );
-         g_signal_connect(the_app, "activate", G_CALLBACK(activate), NULL);
+         g_signal_connect(the_app, "activate", G_CALLBACK(activate), nullptr);
       }
    };
 
@@ -99,7 +99,7 @@ namespace cycfi { namespace elements
 
    void app::run()
    {
-      int status = g_application_run(
+      g_application_run(
          G_APPLICATION(_app), argc, const_cast<char**>(argv)
       );
    }

@@ -62,16 +62,16 @@ namespace cycfi { namespace elements
       }
    }
 
-   void proxy_base::prepare_subject(context& ctx)
+   void proxy_base::prepare_subject(context& /* ctx */)
    {
    }
 
-   void proxy_base::prepare_subject(context& ctx, point& p)
+   void proxy_base::prepare_subject(context& ctx, point& /* p */)
    {
       prepare_subject(ctx);
    }
 
-   void proxy_base::restore_subject(context& ctx)
+   void proxy_base::restore_subject(context& /* ctx */)
    {
    }
 
@@ -128,9 +128,19 @@ namespace cycfi { namespace elements
       return r;
    }
 
-   bool proxy_base::focus(focus_request r)
+   bool proxy_base::wants_focus() const
    {
-      return subject().focus(r);
+      return subject().wants_focus();
+   }
+
+   void proxy_base::begin_focus()
+   {
+      return subject().begin_focus();
+   }
+
+   void proxy_base::end_focus()
+   {
+      return subject().end_focus();
    }
 
    element const* proxy_base::focus() const
@@ -163,7 +173,7 @@ namespace cycfi { namespace elements
       subject().value(val);
    }
 
-   void proxy_base::value(std::string val)
+   void proxy_base::value(std::string_view val)
    {
       subject().value(val);
    }

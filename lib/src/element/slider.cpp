@@ -15,19 +15,18 @@ namespace cycfi { namespace elements
       auto  limits_ = track().limits(ctx);
       auto  tmb_limits = thumb().limits(ctx);
 
-      if ((_is_horiz = limits_.max.x > limits_.max.y))
+      // We multiply thumb min limits by 2 so that there is always some space to move it.
+      if (_is_horiz = limits_.max.x > limits_.max.y; _is_horiz)
       {
          limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y);
          limits_.max.y = std::max<float>(limits_.max.y, tmb_limits.max.y);
          limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x * 2);
-         limits_.max.x = std::max<float>(limits_.max.x, limits_.max.x);
       }
       else
       {
          limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x);
          limits_.max.x = std::max<float>(limits_.max.x, tmb_limits.max.x);
          limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y * 2);
-         limits_.max.y = std::max<float>(limits_.max.y, limits_.max.y);
       }
 
       return limits_;
@@ -36,12 +35,12 @@ namespace cycfi { namespace elements
    void slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &thumb(), ctx.bounds };
+         context sctx { ctx, &track(), ctx.bounds };
          sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }
       {
-         context sctx { ctx, &track(), ctx.bounds };
+         context sctx { ctx, &thumb(), ctx.bounds };
          sctx.bounds = thumb_bounds(sctx);
          thumb().layout(sctx);
       }
@@ -132,18 +131,12 @@ namespace cycfi { namespace elements
       auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
 
+      // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
       if (_is_horiz)
-      {
          new_value = (p.x - (bounds.left + (tmb_w / 2))) / (w - tmb_w);
-      }
       else
-      {
          new_value = 1.0 - ((p.y - (bounds.top + (tmb_h / 2))) / (h - tmb_h));
-         // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-computed_value
-      }
-
-      clamp(new_value, 0.0, 1.0);
-      return new_value;
+      return clamp(new_value, 0.0, 1.0);
    }
 
    void slider_base::begin_tracking(context const& ctx, info& track_info)
@@ -182,8 +175,7 @@ namespace cycfi { namespace elements
 
    void slider_base::value(double val)
    {
-      clamp(val, 0.0, 1.0);
-      _value = val;
+      _value = clamp(val, 0.0, 1.0);
    }
 
    double slider_base::value() const
@@ -217,7 +209,7 @@ namespace cycfi { namespace elements
       auto const& theme = get_theme();
 
       cnv.stroke_style(theme.ticks_color);
-      for (int i = 0; i != num_divs+1; ++i)
+      for (std::size_t i = 0; i != num_divs+1; ++i)
       {
          float inset = 0;
          if (i % (num_divs / major_divs))
@@ -253,7 +245,7 @@ namespace cycfi { namespace elements
       canvas& cnv
     , rect bounds
     , float size
-    , float font_size
+    , float /* font_size */
     , std::string const labels[]
     , std::size_t num_labels
    )
@@ -272,7 +264,7 @@ namespace cycfi { namespace elements
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_style(theme.label_font_color);
 
-      for (int i = 0; i != num_labels; ++i)
+      for (std::size_t i = 0; i != num_labels; ++i)
       {
          point where = vertical?
             point{ reverse? bounds.left : bounds.right, pos } :

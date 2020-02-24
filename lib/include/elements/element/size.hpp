@@ -7,6 +7,7 @@
 #define ELEMENTS_SIZE_APRIL_14_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -23,8 +24,8 @@ namespace cycfi { namespace elements
 
                               size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -72,8 +73,8 @@ namespace cycfi { namespace elements
 
                               hsize_element(float width, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -118,8 +119,8 @@ namespace cycfi { namespace elements
 
                               vsize_element(float height, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -166,8 +167,8 @@ namespace cycfi { namespace elements
 
                               min_size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -217,8 +218,8 @@ namespace cycfi { namespace elements
 
                               hmin_size_element(float width, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -264,8 +265,8 @@ namespace cycfi { namespace elements
 
                               vmin_size_element(float height, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -313,8 +314,8 @@ namespace cycfi { namespace elements
 
                               max_size_element(point size, Subject&& subject);
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
 
    private:
 
@@ -429,72 +430,6 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
-   class fit_element : public proxy<Subject>
-   {
-   public:
-
-      using base_type = proxy<Subject>;
-
-                              fit_element(point size, Subject&& subject);
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            prepare_subject(context& ctx);
-      virtual void            prepare_subject(context& ctx, point& p);
-      virtual void            restore_subject(context& ctx);
-
-   private:
-
-      point                   _size;
-   };
-
-   template <typename Subject>
-   inline fit_element<Subject>::fit_element(point size, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
-    , _size(size)
-   {}
-
-   template <typename Subject>
-   inline fit_element<Subject>
-   fit_scaled(point size, Subject&& subject)
-   {
-      return { size, std::forward<Subject>(subject) };
-   }
-
-   template <typename Subject>
-   inline view_limits fit_element<Subject>::limits(basic_context const& ctx) const
-   {
-      return { _size, { full_extent, full_extent } };
-   }
-
-   template <typename Subject>
-   inline void fit_element<Subject>::prepare_subject(context& ctx)
-   {
-      auto& canvas_ = ctx.canvas;
-      canvas_.save();
-      auto& bounds = ctx.bounds;
-      auto  w = bounds.width();
-      auto  h = bounds.height();
-      auto  scale = point{ w/_size.x, h/_size.y };
-      canvas_.scale(scale);
-      auto  offset = point{ bounds.left / scale.x, bounds.top / scale.y };
-      bounds = { offset.x, offset.y, offset.x + _size.x, offset.y + _size.y };
-   }
-
-   template <typename Subject>
-   void fit_element<Subject>::prepare_subject(context& ctx, point& p)
-   {
-      prepare_subject(ctx);
-      p = ctx.canvas.device_to_user(p);
-   }
-
-   template <typename Subject>
-   inline void fit_element<Subject>::restore_subject(context& ctx)
-   {
-      ctx.canvas.restore();
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
    // Size limited
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
@@ -507,7 +442,7 @@ namespace cycfi { namespace elements
                                , _limits(limits_)
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
+      view_limits             limits(basic_context const& ctx) const override;
 
       view_limits             _limits;
    };
@@ -529,6 +464,86 @@ namespace cycfi { namespace elements
       clamp_max(l.max.x, _limits.max.x);
       clamp_max(l.max.y, _limits.max.y);
       return l;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Scaled
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct scale_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                              scale_element(float scale_, Subject&& subject)
+                               : base_type(std::forward<Subject>(subject))
+                               , _scale(scale_)
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      view_stretch            stretch() const override;
+      void                    prepare_subject(context& ctx) override;
+      void                    prepare_subject(context& ctx, point& p) override;
+      void                    restore_subject(context& ctx) override;
+
+       float                  _scale;
+   };
+
+   template <typename Subject>
+   inline scale_element<Subject>
+   scale(float scale_, Subject&& subject)
+   {
+      return { scale_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline view_limits
+   scale_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto l = this->subject().limits(ctx);
+      l.min.x *= _scale;
+      l.min.y *= _scale;
+      l.max.x *= _scale;
+      l.max.y *= _scale;
+      clamp_max(l.max.x, full_extent);
+      clamp_max(l.max.y, full_extent);
+      return l;
+   }
+
+   template <typename Subject>
+   inline view_stretch
+   scale_element<Subject>::stretch() const
+   {
+      auto s = this->subject().stretch();
+      return { s.x * _scale, s.y * _scale };
+   }
+
+   template <typename Subject>
+   inline void scale_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto& canvas_ = ctx.canvas;
+      canvas_.save();
+      auto& bounds = ctx.bounds;
+      canvas_.scale({ _scale, _scale });
+      auto  offset = point{ bounds.left / _scale, bounds.top / _scale };
+      bounds = {
+         offset.x
+       , offset.y
+       , offset.x + (bounds.width() / _scale)
+       , offset.y + (bounds.height() / _scale)
+      };
+   }
+
+   template <typename Subject>
+   void scale_element<Subject>::prepare_subject(context& ctx, point& p)
+   {
+      prepare_subject(ctx);
+      p = ctx.canvas.device_to_user(p);
+   }
+
+   template <typename Subject>
+   inline void scale_element<Subject>::restore_subject(context& ctx)
+   {
+      ctx.canvas.restore();
    }
 }}
 

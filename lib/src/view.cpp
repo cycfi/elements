@@ -9,141 +9,28 @@
 
  namespace cycfi { namespace elements
  {
-   std::string diplay(key_code k, int mod)
-   {
-      std::string r;
-
-      if (mod & mod_shift)
-         r += u8"⇧";
-      if (mod & mod_alt)
-         r += u8"⌥";
-      if (mod & mod_alt)
-         r += u8"⌃";
-      if (mod & mod_super)
-#if defined(__APPLE__)
-         r += u8"⌘";
-#elif defined(_WIN32)
-         r += u8"⊞";
-#elif defined(__linux__)
-         r += u8"◇";
-#else
-         r += u8"�";
-#endif
-      switch (k)
-      {
-         default:                         r += u8"�"; break;
-
-         case key_code::space:            r += ' '; break;
-         case key_code::apostrophe:       r += '\''; break;
-         case key_code::comma:            r += ','; break;
-         case key_code::minus:            r += '-'; break;
-         case key_code::period:           r += '.'; break;
-         case key_code::slash:            r += '/'; break;
-
-         case key_code::_0: case key_code::_1: case key_code::_2:
-         case key_code::_3: case key_code::_4: case key_code::_5:
-         case key_code::_6: case key_code::_7: case key_code::_8:
-         case key_code::_9:
-            r += '0' + (int(k) - int(key_code::_0));
-            break;
-
-         case key_code::semicolon:        r += ';'; break;
-         case key_code::equal:            r += '='; break;
-
-         case key_code::a: case key_code::b: case key_code::c:
-         case key_code::d: case key_code::e: case key_code::f:
-         case key_code::g: case key_code::h: case key_code::i:
-         case key_code::j: case key_code::k: case key_code::l:
-         case key_code::m: case key_code::n: case key_code::o:
-         case key_code::p: case key_code::q: case key_code::r:
-         case key_code::s: case key_code::t: case key_code::u:
-         case key_code::v: case key_code::w: case key_code::x:
-         case key_code::y: case key_code::z:
-            r += 'A' + (int(k) - int(key_code::a));
-            break;
-
-         case key_code::left_bracket:     r += '['; break;
-         case key_code::backslash:        r += '\\'; break;
-         case key_code::right_bracket:    r += ']'; break;
-         case key_code::grave_accent:     r += '`'; break;
-         case key_code::escape:           r += u8"⎋"; break;
-         case key_code::enter:            r += u8"⏎"; break;
-         case key_code::tab:              r += u8"⇥"; break;
-         case key_code::backspace:        r += u8"⌫"; break;
-         case key_code::insert:           break;
-         case key_code::_delete:          r += u8"⌫"; break;
-         case key_code::right:            r += u8"→"; break;
-         case key_code::left:             r += u8"←"; break;
-         case key_code::down:             r += u8"↓"; break;
-         case key_code::up:               r += u8"↑"; break;
-         case key_code::page_up:          r += u8"⇞"; break;
-         case key_code::page_down:        r += u8"⇟"; break;
-         case key_code::home:             r += u8"⇱"; break;
-         case key_code::end:              r += u8"⇲"; break;
-         case key_code::caps_lock:        r += u8"⇪"; break;
-         case key_code::scroll_lock:      r += u8"⤓"; break;
-         case key_code::num_lock:         r += u8"⇭"; break;
-         case key_code::print_screen:     r += u8"⎙"; break;
-         case key_code::pause:            r += u8"⎉"; break;
-
-         case key_code::f1: case key_code::f2: case key_code::f3:
-         case key_code::f4: case key_code::f5: case key_code::f6:
-         case key_code::f7: case key_code::f8: case key_code::f9:
-         case key_code::f10: case key_code::f11: case key_code::f12:
-         case key_code::f13: case key_code::f14: case key_code::f15:
-         case key_code::f16: case key_code::f17: case key_code::f18:
-         case key_code::f19: case key_code::f20: case key_code::f21:
-         case key_code::f22: case key_code::f23: case key_code::f24:
-         case key_code::f25:
-            r += 'f' + std::to_string(1 + int(k) - int(key_code::f1));
-            break;
-
-         case key_code::kp_0: case key_code::kp_1: case key_code::kp_2:
-         case key_code::kp_3: case key_code::kp_4: case key_code::kp_5:
-         case key_code::kp_6: case key_code::kp_7: case key_code::kp_8:
-         case key_code::kp_9:
-            r += '0' + (int(k) - int(key_code::kp_0));
-            break;
-
-         case key_code::kp_decimal:       r += '.'; break;
-         case key_code::kp_divide:        r += '/'; break;
-         case key_code::kp_multiply:      r += '*'; break;
-         case key_code::kp_subtract:      r += '-'; break;
-         case key_code::kp_add:           r += '+'; break;
-         case key_code::kp_enter:         r += u8"⌤"; break;
-         case key_code::kp_equal:         r += '='; break;
-         case key_code::left_shift:       r += u8"⇧"; break;
-         case key_code::left_control:     r += u8"⇧"; break;
-         case key_code::left_alt:         r += '='; break;
-         case key_code::left_super:       r += '='; break;
-         case key_code::right_shift:      r += '='; break;
-         case key_code::right_control:    r += u8"⌃"; break;
-         case key_code::right_alt:        r += u8"⌥"; break;
-         case key_code::right_super:      r += u8"⌘"; break;
-         case key_code::menu:             r += u8"☰"; break;
-      }
-
-      return r;
-   }
-
    view::view(extent size_)
     : base_view(size_)
+    , _main_element(make_scaled_content())
     , _work(_io)
    {}
 
    view::view(host_view_handle h)
     : base_view(h)
+    , _main_element(make_scaled_content())
     , _work(_io)
    {}
 
    view::view(window& win)
     : base_view(win.host())
+    , _main_element(make_scaled_content())
     , _work(_io)
    {
       on_change_limits = [&win](view_limits limits_)
       {
          win.limits(limits_);
       };
+      win.limits(_current_limits);
    }
 
    view::~view()
@@ -163,7 +50,7 @@
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{ *this, cnv };
-      auto limits_ = _content.limits(bctx);
+      auto limits_ = _main_element.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
          resized = true;
@@ -194,17 +81,17 @@
       canvas cnv{ *context_ };
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
-      context ctx{ *this, cnv, &_content, subj_bounds };
+      context ctx{ *this, cnv, &_main_element, subj_bounds };
 
       // layout the subject only if the window bounds changes
       if (subj_bounds != _current_bounds)
       {
          _current_bounds = subj_bounds;
-         _content.layout(ctx);
+         _main_element.layout(ctx);
       }
 
       // draw the subject
-      _content.draw(ctx);
+      _main_element.draw(ctx);
    }
 
    namespace
@@ -215,9 +102,9 @@
          auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
          auto context_ = cairo_create(surface_);
          canvas cnv{ *context_ };
-         context ctx { self, cnv, &self.content(), _current_bounds };
+         context ctx { self, cnv, &self.main_element(), _current_bounds };
 
-         f(ctx, self.content());
+         f(ctx, self.main_element());
 
          cairo_surface_destroy(surface_);
          cairo_destroy(context_);
@@ -230,7 +117,7 @@
          return;
 
       call(
-         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
 
@@ -243,11 +130,22 @@
          return;
 
       call(
-         [](auto const& ctx, auto& _content) { _content.layout(ctx); },
+         [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
 
       refresh(element);
+   }
+
+   float view::scale() const
+   {
+      return _main_element._scale;
+   }
+
+   void view::scale(float val)
+   {
+      _main_element._scale = val;
+      refresh();
    }
 
    void view::refresh()
@@ -281,9 +179,9 @@
          [this, &element, outward]()
          {
             call(
-               [&element, outward](auto const& ctx, auto& _content)
+               [&element, outward](auto const& ctx, auto& _main_element)
                {
-                  _content.refresh(ctx, element, outward);
+                  _main_element.refresh(ctx, element, outward);
                },
                *this, _current_bounds
             );
@@ -300,7 +198,11 @@
          ctx_ptr = ctx_ptr->parent;
       }
       if (ctx_ptr)
-         refresh(ctx_ptr->bounds);
+      {
+         auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
+         auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
+         refresh({ tl.x, tl.y, br.x, br.y });
+      }
    }
 
    void view::click(mouse_button btn)
@@ -310,10 +212,10 @@
          return;
 
       call(
-         [btn, this](auto const& ctx, auto& _content)
+         [btn, this](auto const& ctx, auto& _main_element)
          {
-            _content.click(ctx, btn);
-            _is_focus = _content.focus();
+            _main_element.click(ctx, btn);
+            _is_focus = _main_element.focus();
          },
          *this, _current_bounds
       );
@@ -326,7 +228,7 @@
          return;
 
       call(
-         [btn](auto const& ctx, auto& _content) { _content.drag(ctx, btn); },
+         [btn](auto const& ctx, auto& _main_element) { _main_element.drag(ctx, btn); },
          *this, _current_bounds
       );
    }
@@ -337,9 +239,9 @@
          return;
 
       call(
-         [p, status](auto const& ctx, auto& _content)
+         [p, status](auto const& ctx, auto& _main_element)
          {
-            if (!_content.cursor(ctx, p, status))
+            if (!_main_element.cursor(ctx, p, status))
                set_cursor(cursor_type::arrow);
          },
          *this, _current_bounds
@@ -352,7 +254,7 @@
          return;
 
       call(
-         [dir, p](auto const& ctx, auto& _content) { _content.scroll(ctx, dir, p); },
+         [dir, p](auto const& ctx, auto& _main_element) { _main_element.scroll(ctx, dir, p); },
          *this, _current_bounds
       );
    }
@@ -363,7 +265,7 @@
          return;
 
       call(
-         [k](auto const& ctx, auto& _content) { _content.key(ctx, k); },
+         [k](auto const& ctx, auto& _main_element) { _main_element.key(ctx, k); },
          *this, _current_bounds
       );
    }
@@ -374,7 +276,7 @@
          return;
 
       call(
-         [info](auto const& ctx, auto& _content) { _content.text(ctx, info); },
+         [info](auto const& ctx, auto& _main_element) { _main_element.text(ctx, info); },
          *this, _current_bounds
       );
    }
@@ -416,12 +318,21 @@
       return false;
    }
 
-   void view::focus(focus_request r)
+   void view::begin_focus()
    {
       if (_content.empty() || !_is_focus)
          return;
 
-      _content.focus(r);
+      _main_element.begin_focus();
+      refresh();
+   }
+
+   void view::end_focus()
+   {
+      if (_content.empty() || !_is_focus)
+         return;
+
+      _main_element.end_focus();
       refresh();
    }
 

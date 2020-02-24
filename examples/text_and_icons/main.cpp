@@ -70,18 +70,17 @@ auto make_basic_text()
    auto icons =
       margin({ 10, 0, 10, 10 },
          htile(
-            align_center(icon{ icons::docs,           1.5 }),
-            align_center(icon{ icons::right,          1.5 }),
-            align_center(icon{ icons::trash,          1.5 }),
-            align_center(icon{ icons::block,          1.5 }),
-            align_center(icon{ icons::cw,             1.5 }),
-            align_center(icon{ icons::attention,      1.5 })
+            align_center(icon{ icons::docs }),
+            align_center(icon{ icons::right }),
+            align_center(icon{ icons::trash }),
+            align_center(icon{ icons::block }),
+            align_center(icon{ icons::cw }),
+            align_center(icon{ icons::attention }),
+            align_center(icon{ icons::menu }),
+            align_center(icon{ icons::lightbulb }),
+            align_center(icon{ icons::sliders }),
+            align_center(icon{ icons::exchange })
          )
-      );
-
-   auto symbols =
-      margin({ 10, 0, 10, 10 },
-         halign(0.5, label{"⎋ ⌥ ⌘ ⇧ ⌃", get_theme().symbols_font, 2.0 })
       );
 
    return
@@ -105,18 +104,12 @@ auto make_basic_text()
                )),
             top_margin(20, pane("Static Text",
                vtile(
-                  eh("Elements UI"),
                   el(1.0, "Hello, Universe. I am Elements."),
                   el(1.0, "A cross-platform, fine-grained, highly modular C++ GUI library."),
                   el(0.0, "Based on a GUI framework written in the mid 90s named Pica."),
                   el(0.5, "Now, Joel rewrote my code using modern C++17.")
                ))),
-            top_margin(20,
-               htile(
-                  pane("Icons", std::move(icons)),
-                  left_margin(20, pane("Symbols", std::move(symbols)))
-               )
-            ),
+            top_margin(20, pane("Icons", std::move(icons))),
             empty()
          )
       );

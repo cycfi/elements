@@ -8,8 +8,10 @@
 
 #include <elements/element/indirect.hpp>
 #include <elements/element/menu.hpp>
+#include <elements/element/size.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
+#include <string>
 #include <string_view>
 
 namespace cycfi { namespace elements
@@ -18,7 +20,7 @@ namespace cycfi { namespace elements
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
    basic_menu button_menu(
-      std::string_view text
+      std::string text
     , menu_position pos = menu_position::bottom_right
     , color body_color = get_theme().default_button_color
    );
@@ -42,37 +44,59 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Menu Items
    ////////////////////////////////////////////////////////////////////////////
-   inline auto menu_item_text(std::string_view text)
+   std::pair<std::string, std::string>
+   diplay_shortcut(key_code k, int mod);
+
+   inline std::pair<std::string, std::string>
+   diplay_shortcut(key_info k)
    {
-      return xside_margin({ 20, 20 }, align_left(label(text)));
+      return diplay_shortcut(k.key, k.modifiers);
    }
 
-   inline auto menu_item_text(std::string_view text, shortcut_key shortcut)
+   inline auto menu_item_text(std::string text)
    {
-      return xside_margin({ 20, 20 },
+      return xside_margin({ 20, 20 }, align_left(label(std::move(text))));
+   }
+
+   inline auto menu_item_text(std::string text, shortcut_key shortcut)
+   {
+      auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
+#if defined(__APPLE__)
+      auto sk_font = get_theme().system_font;
+#else
+      auto sk_font = get_theme().label_font;
+#endif
+      return xside_margin({ 20, 10 },
          htile(
-            align_left(label(text))
-          , align_right(label(diplay(shortcut.key, shortcut.modifiers), get_theme().symbols_font))
+            htile(
+               align_left(label(std::move(text)))
+             , align_right(label(mod, sk_font))
+            ),
+#if defined(__APPLE__)
+            left_margin(5, hsize(10, align_left(label(key))))
+#else
+            hsize(10, align_left(label(key)))
+#endif
          )
       );
    }
 
-   inline auto menu_item(std::string_view text)
+   inline auto menu_item(std::string text)
    {
-      return basic_menu_item(menu_item_text(text));
+      return basic_menu_item(menu_item_text(std::move(text)));
    }
 
-   inline auto menu_item(std::string_view text, shortcut_key shortcut)
+   inline auto menu_item(std::string text, shortcut_key shortcut)
    {
-      auto r = basic_menu_item(menu_item_text(text, shortcut));
+      auto r = basic_menu_item(menu_item_text(std::move(text), shortcut));
       r.shortcut = shortcut;
       return r;
    }
 
    struct menu_item_spacer_element : public element
    {
-      virtual view_limits  limits(basic_context const& ctx) const;
-      virtual void         draw(context const& ctx);
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
    };
 
    inline auto menu_item_spacer()
@@ -85,12 +109,14 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct menu_selector
    {
+      virtual ~menu_selector() = default;
+
       virtual std::size_t        size() const = 0;
       virtual std::string_view   operator[](std::size_t index) const = 0;
    };
 
    std::pair<basic_menu, std::shared_ptr<label>>
-   selection_menu(std::string_view init);
+   selection_menu(std::string init);
 
    std::pair<basic_menu, std::shared_ptr<label>>
    selection_menu(
@@ -103,7 +129,7 @@ namespace cycfi { namespace elements
    selection_menu(
       std::function<void(std::string_view item)> on_select
     , Sequence const& seq
-    , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = 0
+    , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
    )
    {
       struct seq_menu_selector : menu_selector
@@ -112,14 +138,14 @@ namespace cycfi { namespace elements
           : _seq(seq_)
          {}
 
-         virtual std::size_t
-         size() const
+         std::size_t
+         size() const override
          {
             return std::size(_seq);
          }
 
-         virtual std::string_view
-         operator[](std::size_t index) const
+         std::string_view
+         operator[](std::size_t index) const override
          {
             return _seq[index];
          }
@@ -143,14 +169,14 @@ namespace cycfi { namespace elements
           : _list(list_)
          {}
 
-         virtual std::size_t
-         size() const
+         std::size_t
+         size() const override
          {
             return _list.size();
          }
 
-         virtual std::string_view
-         operator[](std::size_t index) const
+         std::string_view
+         operator[](std::size_t index) const override
          {
             return *(_list.begin()+index);
          }

@@ -9,9 +9,11 @@
 #include <infra/assert.hpp>
 #include <elements/support/canvas.hpp>
 #include <elements/support/text_utils.hpp>
+#include <cairo.h>
 #include <vector>
 #include <stdexcept>
-#include <cairo.h>
+#include <string_view>
+#include <string>
 
 namespace cycfi { namespace elements
 {
@@ -82,12 +84,38 @@ namespace cycfi { namespace elements
    public:
                            master_glyphs(
                               char const* first, char const* last
-                            , char const* face, float size
+                            , font font_, float size
+                            , point start = { 0, 0 }
                            );
 
                            master_glyphs(
                               char const* first, char const* last
                             , master_glyphs const& source
+                            , point start = { 0, 0 }
+                           );
+
+                           master_glyphs(
+                              std::string_view str
+                            , font font_, float size
+                            , point start = { 0, 0 }
+                           );
+
+                           master_glyphs(
+                              std::string_view str
+                            , master_glyphs const& source
+                            , point start = { 0, 0 }
+                           );
+
+                           master_glyphs(
+                              std::string const& str
+                            , font font_, float size
+                            , point start = { 0, 0 }
+                           );
+
+                           master_glyphs(
+                              std::string const& str
+                            , master_glyphs const& source
+                            , point start = { 0, 0 }
                            );
 
                            master_glyphs(master_glyphs&&);
@@ -96,16 +124,60 @@ namespace cycfi { namespace elements
                            ~master_glyphs();
 
       void                 break_lines(float width, std::vector<glyphs>& lines);
-      void                 text(char const* first, char const* last);
+      void                 text(char const* first, char const* last, point start = { 0, 0 });
+      void                 text(std::string_view str, point start = { 0, 0 });
+      void                 text(std::string const& str, point start = { 0, 0 });
 
    private:
                            master_glyphs(master_glyphs const&) = delete;
       master_glyphs&       operator=(master_glyphs const& rhs) = delete;
 
-      void                 build();
+      void                 build(point start = { 0, 0 });
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   inline master_glyphs::master_glyphs(
+      std::string_view str
+    , font font_, float size
+    , point start
+   )
+    : master_glyphs(str.data(), str.data() + str.size(), font_, size, start)
+   {}
+
+   inline master_glyphs::master_glyphs(
+      std::string_view str
+    , master_glyphs const& source
+    , point start
+   )
+    : master_glyphs(str.data(), str.data() + str.size(), source, start)
+   {}
+
+   inline master_glyphs::master_glyphs(
+      std::string const& str
+    , font font_, float size
+    , point start
+   )
+    : master_glyphs(str.data(), str.data() + str.size(), font_, size, start)
+   {}
+
+   inline master_glyphs::master_glyphs(
+      std::string const& str
+    , master_glyphs const& source
+    , point start
+   )
+    : master_glyphs(str.data(), str.data() + str.size(), source, start)
+   {}
+
+   inline void master_glyphs::text(std::string_view str, point start)
+   {
+      text(str.data(), str.data() + str.size(), start);
+   }
+
+   inline void master_glyphs::text(std::string const& str, point start)
+   {
+      text(str.data(), str.data() + str.size(), start);
+   }
+
    template <typename F>
    inline void glyphs::for_each(F f)
    {

@@ -10,6 +10,7 @@
 #include <elements/support/rect.hpp>
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
+#include <elements/support/font.hpp>
 #include <boost/filesystem.hpp>
 
 #include <vector>
@@ -17,28 +18,20 @@
 #include <stack>
 #include <cmath>
 #include <cassert>
-#include <cairo.h>
 
-#if defined(__linux__) || defined(_WIN32)
-# include <map>
-#endif
+extern "C"
+{
+   typedef struct _cairo cairo_t;
+}
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    class canvas
    {
    public:
 
-      explicit          canvas(cairo_t& context_)
-                         : _context(context_)
-                        {}
-
-                        canvas(canvas&& rhs)
-                         : _context(rhs._context)
-                        {}
-
+      explicit          canvas(cairo_t& context_);
+                        canvas(canvas&& rhs);
                         ~canvas();
 
                         canvas(canvas const& rhs) = delete;
@@ -63,7 +56,7 @@ namespace cycfi { namespace elements
       void              stroke_preserve();
       void              clip();
       bool              hit_test(point p) const;
-      elements::rect      fill_extent() const;
+      elements::rect    fill_extent() const;
 
       void              move_to(point p);
       void              line_to(point p);
@@ -88,27 +81,27 @@ namespace cycfi { namespace elements
       struct color_stop
       {
          float             offset;
-         elements::color  color;
+         elements::color   color;
       };
 
       struct linear_gradient
       {
-         point start;
-         point end;
+         point start = {};
+         point end = {};
 
          void  add_color_stop(color_stop cs);
-         std::vector<color_stop> space;
+         std::vector<color_stop> space = {};
       };
 
       struct radial_gradient
       {
-         point c1;
-         float c1_radius;
+         point c1 = {};
+         float c1_radius = {};
          point c2 = c1;
          float c2_radius = c1_radius;
 
          void  add_color_stop(color_stop cs);
-         std::vector<color_stop> space;
+         std::vector<color_stop> space = {};
       };
 
       void              fill_style(linear_gradient const& gr);
@@ -131,8 +124,9 @@ namespace cycfi { namespace elements
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Font
-      void              font(char const* face, float size = 16);
-      // void              custom_font(char const* font, float size = 16);
+      void              font(elements::font const& font_);
+      void              font(elements::font const& font_, float size);
+      void              font_size(float size);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Text
@@ -192,15 +186,9 @@ namespace cycfi { namespace elements
       void              save();
       void              restore();
 
-#if defined(__linux__) || defined(_WIN32)
-      static void       load_fonts(fs::path resource_path);
-#endif
-
    private:
 
       friend class glyphs;
-      friend struct blur;
-      friend struct fill_blur;
 
       void              apply_fill_style();
       void              apply_stroke_style();
@@ -220,10 +208,6 @@ namespace cycfi { namespace elements
       cairo_t&          _context;
       canvas_state      _state;
       state_stack       _state_stack;
-
-#if defined(__linux__) || defined(_WIN32)
-      static std::map<std::string, cairo_font_face_t*> _fonts;
-#endif
    };
 }}
 

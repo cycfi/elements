@@ -10,7 +10,7 @@
 
 namespace cycfi { namespace elements
 {
-   constexpr auto min_size = 32;
+   constexpr auto min_port_size = 32;
 
    ////////////////////////////////////////////////////////////////////////////
    // port_base class implementation
@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    view_limits port_base::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return { { min_size, min_size }, e_limits.max };
+      return {{min_port_size, min_port_size }, e_limits.max };
    }
 
    void port_base::prepare_subject(context& ctx)
@@ -51,7 +51,7 @@ namespace cycfi { namespace elements
    view_limits vport_base::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return { { e_limits.min.x, min_size }, e_limits.max };
+      return {{e_limits.min.x, min_port_size }, e_limits.max };
    }
 
    void vport_base::prepare_subject(context& ctx)
@@ -156,7 +156,7 @@ namespace cycfi { namespace elements
          _tracking == ((w > h)? tracking_h : tracking_v));
    }
 
-   rect scroller_base::scroll_bar_position(context const& ctx, scrollbar_info const& info)
+   rect scroller_base::scroll_bar_position(context const& /* ctx */, scrollbar_info const& info)
    {
       float x = info.bounds.left;
       float y = info.bounds.top;
@@ -182,8 +182,8 @@ namespace cycfi { namespace elements
    {
       view_limits e_limits = subject().limits(ctx);
       return view_limits{
-         { allow_hscroll()? min_size : e_limits.min.x, allow_vscroll()? min_size : e_limits.min.y },
-         { e_limits.max.x, e_limits.max.y }
+         { allow_hscroll() ? min_port_size : e_limits.min.x, allow_vscroll() ? min_port_size : e_limits.min.y },
+         { e_limits.max.x,                                   e_limits.max.y }
       };
    }
 
@@ -249,7 +249,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool scroller_base::scroll(context const& ctx, point dir, point p)
+   bool scroller_base::scroll(context const& ctx, point dir, point /* p */)
    {
       view_limits e_limits = subject().limits(ctx);
       bool redraw = false;

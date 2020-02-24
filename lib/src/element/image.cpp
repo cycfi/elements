@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
       return { 0, 0, ctx.bounds.width(), ctx.bounds.height() };
    }
 
-   view_limits image::limits(basic_context const& ctx) const
+   view_limits image::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
       return { { size_.x, size_.y }, { size_.x, size_.y } };
@@ -105,7 +105,7 @@ namespace cycfi { namespace elements
     : image(pixmap_)
    {}
 
-   view_limits gizmo::limits(basic_context const& ctx) const
+   view_limits gizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
       return { { size_.x, size_.y }, { full_extent, full_extent } };
@@ -133,7 +133,7 @@ namespace cycfi { namespace elements
     : image(pixmap_)
    {}
 
-   view_limits hgizmo::limits(basic_context const& ctx) const
+   view_limits hgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
       return { { size_.x, size_.y }, { size_.y, full_extent } };
@@ -161,7 +161,7 @@ namespace cycfi { namespace elements
     : image(pixmap_)
    {}
 
-   view_limits vgizmo::limits(basic_context const& ctx) const
+   view_limits vgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
       return { { size_.x, size_.y }, { size_.x, full_extent } };
@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
     , _height(height)
    {}
 
-   view_limits sprite::limits(basic_context const& ctx) const
+   view_limits sprite::limits(basic_context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
       return { { width, _height }, { width, _height } };
@@ -204,7 +204,12 @@ namespace cycfi { namespace elements
          _index = index_;
    }
 
-   rect sprite::source_rect(context const& ctx) const
+   point sprite::size() const
+   {
+      return { pixmap().size().x, _height };
+   }
+
+   rect sprite::source_rect(context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
       return rect{ 0, _height * _index, width, _height * (_index + 1) };

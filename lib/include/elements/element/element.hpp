@@ -10,7 +10,7 @@
 #include <elements/support/rect.hpp>
 
 #include <memory>
-#include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -29,11 +29,8 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using element_ptr = std::shared_ptr<element>;
-      using element_const_ptr = std::shared_ptr<element const>;
-
                               element() {}
-                              virtual ~element() {}
+                              virtual ~element() = default;
 
                               element(element&&) = default;
                               element(element const&) = default;
@@ -47,7 +44,6 @@ namespace cycfi { namespace elements
       virtual element*        hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            refresh(context const& ctx, element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0) { refresh(ctx, *this, outward); }
 
@@ -58,8 +54,11 @@ namespace cycfi { namespace elements
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            scroll(context const& ctx, point dir, point p);
 
-      virtual bool            focus(focus_request r);
+      virtual bool            wants_focus() const;
+      virtual void            begin_focus();
+      virtual void            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
       virtual bool            is_control() const;
@@ -69,7 +68,7 @@ namespace cycfi { namespace elements
       virtual void            value(bool val);
       virtual void            value(int val);
       virtual void            value(double val);
-      virtual void            value(std::string val);
+      virtual void            value(std::string_view val);
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 
@@ -92,7 +91,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Element>
-   inline auto get(std::shared_ptr<Element> ptr)
+   inline auto get(std::shared_ptr<Element> const& ptr)
    {
       return std::weak_ptr<Element>(ptr);
    }

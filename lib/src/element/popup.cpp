@@ -17,19 +17,18 @@ namespace cycfi { namespace elements
 
    element* basic_popup_element::click(context const& ctx, mouse_button btn)
    {
+      auto new_ctx = ctx.sub_context();
       bool hit = false;
-      auto ff = ctx.feedback(
-         [&hit](context const& ctx, auto* e, std::string_view what)
+      new_ctx.listen<basic_menu_item_element>(
+         [&hit](auto const& /* ctx */, auto& /* e */, auto /* what */)
          {
-            if (dynamic_cast<basic_menu_item_element*>(e))
-               hit = true;
+            hit = true;
          }
       );
 
-      auto r = floating_element::click(ctx, btn);
+      auto r = floating_element::click(new_ctx, btn);
       if (btn.down && ((r == nullptr) || hit) && _on_click)
-         _on_click(ctx.view);
-      ctx.feedback(ff);
+         _on_click(new_ctx.view);
       return r;
    }
 

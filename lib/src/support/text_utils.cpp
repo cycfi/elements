@@ -33,10 +33,10 @@ namespace cycfi { namespace elements
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 
-   point measure_text(canvas& cnv, char const* text, char const* face, float size)
+   point measure_text(canvas& cnv, char const* text, font const& font_, float size)
    {
       auto  state = cnv.new_state();
-      cnv.font(face, size);
+      cnv.font(font_, size);
       auto  info = cnv.measure_text(text);
       auto  height = info.ascent + info.descent + info.leading;
       return { info.size.x, height };
@@ -57,11 +57,11 @@ namespace cycfi { namespace elements
 
          switch (n)
          {
-            case 6: str[5] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x4000000;
-            case 5: str[4] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x200000;
-            case 4: str[3] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x10000;
-            case 3: str[2] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x800;
-            case 2: str[1] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0xc0;
+            case 6: str[5] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x4000000; [[fallthrough]];
+            case 5: str[4] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x200000;  [[fallthrough]];
+            case 4: str[3] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x10000;   [[fallthrough]];
+            case 3: str[2] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x800;     [[fallthrough]];
+            case 2: str[1] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0xc0;      [[fallthrough]];
             case 1: str[0] = cp;
          }
          return str;

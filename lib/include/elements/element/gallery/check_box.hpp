@@ -8,6 +8,8 @@
 
 #include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
+#include <string>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -21,12 +23,12 @@ namespace cycfi { namespace elements
    template <bool state>
    struct check_box_element : element
    {
-                              check_box_element(std::string const& text)
-                               : _text(text)
+                              check_box_element(std::string text)
+                               : _text(std::move(text))
                               {}
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            draw(context const& ctx);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
 
       std::string             _text;
    };
@@ -46,7 +48,7 @@ namespace cycfi { namespace elements
       draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
    }
 
-   inline basic_toggle_button<> check_box(std::string const& text)
+   inline basic_toggle_button<> check_box(std::string text)
    {
       return basic_toggle_button(
          check_box_element<false>{ text }

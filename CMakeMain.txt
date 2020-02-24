@@ -4,17 +4,10 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 
-project(${ELEMENTS_APP_PROJECT})
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   set (MACOSX YES)
-endif()
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-   set (LINUX YES)
+if (UNIX AND NOT APPLE)
+   set(LINUX TRUE)
 endif()
 
 ###############################################################################
@@ -26,12 +19,15 @@ endif()
 
 set(ELEMENTS_RESOURCES
    ${ELEMENTS_ICON_FONT}
-   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Regular.ttf
-   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Bold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-SemiBold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSans-Bold.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/OpenSansCondensed-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Light.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Regular.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Medium.ttf
+   ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Bold.ttf
 )
 
 if (LINUX)
@@ -43,6 +39,7 @@ if (LINUX)
       COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
       DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
    )
+
 endif()
 
 if (WIN32)
@@ -65,7 +62,7 @@ if (NOT DEFINED ELEMENTS_APP_SOURCES)
    set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 endif()
 
-if (MACOSX)
+if (APPLE)
    add_executable(
       ${ELEMENTS_APP_PROJECT}
       MACOSX_BUNDLE
@@ -73,9 +70,7 @@ if (MACOSX)
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
    )
-endif()
-
-if (LINUX)
+elseif (UNIX)
    add_executable(
       ${ELEMENTS_APP_PROJECT}
       ${ELEMENTS_APP_SOURCES}
@@ -87,16 +82,7 @@ if (LINUX)
       ${CMAKE_CURRENT_LIST_DIR}/resources/config.json.in
       "${CMAKE_CURRENT_BINARY_DIR}/config.json"
    )
-
-endif()
-
-if (WIN32)
-
-   set(CMAKE_EXE_LINKER_FLAGS
-      "${CMAKE_EXE_LINKER_FLAGS}
-      /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib"
-   )
-
+elseif (WIN32)
    add_executable(
       ${ELEMENTS_APP_PROJECT}
       WIN32
@@ -105,36 +91,50 @@ if (WIN32)
       ${ELEMENTS_APP_RESOURCES}
    )
 
-   if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
-      set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x64/cairo.dll)
-      set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win64/freetype.dll)
-   else()
-      set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x86/cairo.dll)
-      set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win32/freetype.dll)
-   endif()
+   if (MSVC)
+      target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
+         /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
+      )
 
-   file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-   file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
+         set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x64/cairo.dll)
+         set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win64/freetype.dll)
+         set(FONTCONFIG_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/fontconfig.dll)
+         set(ICONV_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/libiconv.dll)
+         set(XML2 ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x64/libxml2.dll)
+      else()
+         set(CAIRO_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/cairo/lib/x86/cairo.dll)
+         set(FREETYPE_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/freetype/win32/freetype.dll)
+         set(FONTCONFIG_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/fontconfig.dll)
+         set(ICONV_DLL ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/libiconv.dll)
+         set(XML2 ${CMAKE_CURRENT_LIST_DIR}/lib/external/fontconfig/x86/libxml2.dll)
+      endif()
+
+      file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${FONTCONFIG_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${ICONV_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+      file(COPY ${XML2} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+      set_property(
+         TARGET ${ELEMENTS_APP_PROJECT}
+         PROPERTY
+         VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      )
+   endif()
 
    configure_file(
       ${CMAKE_CURRENT_LIST_DIR}/resources/config.json.in
       "${CMAKE_CURRENT_BINARY_DIR}/config.json"
    )
-
-   set_property(
-      TARGET ${ELEMENTS_APP_PROJECT}
-      PROPERTY
-      VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-   )
-
 endif()
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(${ELEMENTS_APP_PROJECT}
+target_link_libraries(${ELEMENTS_APP_PROJECT} PRIVATE
    ${ELEMENTS_APP_DEPENDENCIES}
-   libelements
+   elements
 )
 
 if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)
@@ -145,8 +145,8 @@ target_include_directories(${ELEMENTS_APP_PROJECT}
    PRIVATE "${ELEMENTS_APP_INCLUDE_DIRECTORIES}"
 )
 
-if (MACOSX)
-   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
+if (APPLE)
+   target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE -framework AppKit)
 endif()
 
 ###############################################################################
@@ -156,14 +156,12 @@ if (NOT DEFINED ELEMENTS_APP_TITLE)
    set(ELEMENTS_APP_TITLE ${ELEMENTS_APP_PROJECT})
 endif()
 
-if (MACOSX)
+if (APPLE)
    set(MACOSX_BUNDLE_BUNDLE_NAME ${ELEMENTS_APP_TITLE})
    set(MACOSX_BUNDLE_COPYRIGHT ${ELEMENTS_APP_COPYRIGHT})
    set(MACOSX_BUNDLE_GUI_IDENTIFIER ${ELEMENTS_APP_ID})
    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${ELEMENTS_APP_VERSION})
-endif()
 
-if (MACOSX)
    set_source_files_properties(
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
@@ -178,5 +176,6 @@ if (MACOSX)
    )
 endif()
 
-
-
+if(IPO_SUPPORTED AND CMAKE_BUILD_TYPE STREQUAL "Release")
+   set_target_properties(${ELEMENTS_APP_PROJECT} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()

@@ -9,6 +9,7 @@
 #include <elements/support/text_utils.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -18,17 +19,17 @@ namespace cycfi { namespace elements
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
    static_text_box::static_text_box(
-      std::string_view text
-    , char const* face
+      std::string text
+    , font font_
     , float size
     , color color_
    )
-    : _text(text)
-    , _layout(_text.data(), _text.data() + _text.size(), face, size)
+    : _text(std::move(text))
+    , _layout(_text.data(), _text.data() + _text.size(), font_, size)
     , _color(color_)
    {}
 
-   view_limits static_text_box::limits(basic_context const& ctx) const
+   view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
       sync();
 
@@ -56,9 +57,14 @@ namespace cycfi { namespace elements
       auto  size = _layout.metrics();
       auto  new_y = _rows.size() * (size.ascent + size.descent + size.leading);
 
-      // Refresh the whole view if the size has changed
+      // Refresh the union of the old and new bounds if the size has changed
       if (_current_size.x != new_x || _current_size.y != new_y)
-         ctx.view.refresh();
+      {
+         if (_current_size.x != -1 && _current_size.y != -1)
+            ctx.view.refresh(max(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
+         else
+            ctx.view.refresh(ctx.bounds);
+      }
 
       _current_size.x = new_x;
       _current_size.y = new_y;
@@ -95,13 +101,13 @@ namespace cycfi { namespace elements
 
    void static_text_box::text(std::string_view text)
    {
-      replace_string(_text, text);
+      _text = text;
       _rows.clear();
       _layout.text(_text.data(), _text.data() + _text.size());
       _layout.break_lines(_current_size.x, _rows);
    }
 
-   void static_text_box::value(std::string val)
+   void static_text_box::value(std::string_view val)
    {
       text(val);
    }
@@ -109,8 +115,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string_view text, char const* face, float size)
-    : static_text_box(text, face, size)
+   basic_text_box::basic_text_box(std::string text, font font_, float size)
+    : static_text_box(std::move(text), font_, size)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)
@@ -204,7 +210,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking status)
+   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking /* status */)
    {
       if (ctx.bounds.includes(p))
       {
@@ -229,7 +235,7 @@ namespace cycfi { namespace elements
             typing_state = {}; // reset
          }
          ctx.view.add_undo({ undo_f, redo_f });
-      };
+      }
    }
 
    bool basic_text_box::text(context const& ctx, text_info info_)
@@ -302,7 +308,7 @@ namespace cycfi { namespace elements
 
       auto next_char = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* end = _text.data() + _text.size();
             char const* p = next_utf8(end, &_text[_select_end]);
@@ -322,7 +328,7 @@ namespace cycfi { namespace elements
 
       auto next_word = [this]()
       {
-         if (_select_end < _text.size())
+         if (_select_end < static_cast<int>(_text.size()))
          {
             char const* p = &_text[_select_end];
             char const* end = _text.data() + _text.size();
@@ -548,13 +554,18 @@ namespace cycfi { namespace elements
 
       if (_is_focus && has_caret && !_caret_started)
       {
+         auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
+         auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
+         caret_bounds = { tl.x, tl.y, br.x, br.y };
+
          _caret_started = true;
          ctx.view.post(500ms,
-                       [this, &_view = ctx.view, caret_bounds]() {
-                          _show_caret = !_show_caret;
-                          _view.refresh(caret_bounds);
-                          _caret_started = false;
-                       }
+            [this, &_view = ctx.view, caret_bounds]()
+            {
+               _show_caret = !_show_caret;
+               _view.refresh(caret_bounds);
+               _caret_started = false;
+            }
          );
       }
    }
@@ -737,7 +748,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::cut(view& v, int start, int end)
+   void basic_text_box::cut(view& /* v */, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -748,7 +759,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::copy(view& v, int start, int end)
+   void basic_text_box::copy(view& /* v */, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -758,7 +769,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::paste(view& v, int start, int end)
+   void basic_text_box::paste(view& /* v */, int start, int end)
    {
       if (start != -1)
       {
@@ -832,35 +843,32 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool basic_text_box::focus(focus_request r)
+   bool basic_text_box::wants_focus() const
    {
-      switch (r)
-      {
-         case focus_request::wants_focus:
-            return true;
+      return true;
+   }
 
-         case focus_request::begin_focus:
-            _is_focus = true;
-            if (_select_start == -1)
-               _select_start = _select_end = 0;
-            return true;
+   void basic_text_box::begin_focus()
+   {
+      _is_focus = true;
+      if (_select_start == -1)
+         _select_start = _select_end = 0;
+   }
 
-         case focus_request::end_focus:
-            _is_focus = false;
-            return true;
-      }
-      return false;
+   void basic_text_box::end_focus()
+   {
+      _is_focus = false;
    }
 
    void basic_text_box::select_start(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_start = pos;
    }
 
    void basic_text_box::select_end(int pos)
    {
-      if (pos == -1 || (pos >= 0 && pos <= _text.size()))
+      if (pos == -1 || (pos >= 0 && pos <= static_cast<int>(_text.size())))
          _select_end = pos;
    }
 
@@ -890,7 +898,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Input Text Box
    ////////////////////////////////////////////////////////////////////////////
-   view_limits basic_input_box::limits(basic_context const& ctx) const
+   view_limits basic_input_box::limits(basic_context const& /* ctx */) const
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
@@ -942,7 +950,7 @@ namespace cycfi { namespace elements
                if (on_enter)
                   on_enter(text());
                ctx.view.refresh(ctx);
-               ctx.view.focus(focus_request::end_focus);
+               ctx.view.end_focus();
                return true;
 
             case key_code::up:
@@ -974,7 +982,7 @@ namespace cycfi { namespace elements
       return basic_text_box::key(ctx, k);
    }
 
-   void basic_input_box::paste(view& v, int start, int end)
+   void basic_input_box::paste(view& /* v */, int start, int end)
    {
       if (start != -1)
       {

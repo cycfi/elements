@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       }
    };
 
-   app::app(int argc, const char* argv[])
+   app::app(int /* argc */, const char** /* argv */)
    {
       init_app init;
       _app_name = app_config.application_title;
@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
    void app::run()
    {
       MSG messages;
-      while (_running && GetMessage(&messages, NULL, 0, 0) > 0)
+      while (_running && GetMessage(&messages, nullptr, 0, 0) > 0)
       {
          TranslateMessage(&messages);
          DispatchMessage(&messages);
@@ -96,7 +96,7 @@ namespace cycfi { namespace elements
    fs::path app_data_path()
    {
       LPWSTR path = nullptr;
-      HRESULT hr = SHGetKnownFolderPath(FOLDERID_AppDataProgramData, KF_FLAG_CREATE, nullptr, &path);
+      SHGetKnownFolderPath(FOLDERID_AppDataProgramData, KF_FLAG_CREATE, nullptr, &path);
       return fs::path{ path };
    }
 }}

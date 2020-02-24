@@ -13,7 +13,7 @@
 #include <elements/element/size.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/indirect.hpp>
-#include <elements/element//gallery/button.hpp>
+#include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements
@@ -64,11 +64,12 @@ namespace cycfi { namespace elements
                   if (auto ok = btn.lock())
                   {
                      if (ok->on_click)
+                     {
                         ok->on_click(true);
+                        return true;
+                     }
                   }
                }
-               // We always return false here so we can give the
-               // UI a chance to process the key.
                return false;
             };
       }
@@ -77,7 +78,7 @@ namespace cycfi { namespace elements
       void link_key(PopupPtr popup, ButtonPtr btn1, ButtonPtr btn2)
       {
          popup->on_key =
-            [btn1 = get(btn1), btn2 = get(btn2)](auto k)
+            [btn1 = get(btn1), btn2 = get(btn2)](auto k) -> bool
             {
                if (k.action == key_action::release)
                   return false;
@@ -90,7 +91,10 @@ namespace cycfi { namespace elements
                      {
                         ok->value(true);
                         if (ok->on_click)
+                        {
                            ok->on_click(true);
+                           return true;
+                        }
                      }
                   }
                   else if (k.key == key_code::escape)
@@ -99,12 +103,13 @@ namespace cycfi { namespace elements
                      {
                         cancel->value(true);
                         if (cancel->on_click)
+                        {
                            cancel->on_click(true);
+                           return true;
+                        }
                      }
                   }
                }
-               // We always return false here so we can give the
-               // UI a chance to process the key.
                return false;
             };
       }
@@ -135,12 +140,12 @@ namespace cycfi { namespace elements
       view& view_
     , Content&& content
     , F&& on_ok
-    , std::string_view ok_text = "OK"
+    , std::string ok_text = "OK"
     , color ok_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
       auto popup =
          detail::make_dialog_popup(
             vtile(
@@ -162,14 +167,14 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string_view ok_text = "OK"
-    , std::string_view cancel_text = "Cancel"
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
     , color ok_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto cancel_button = share(button(cancel_text, 1.0));
-      auto ok_button = share(button(ok_text, 1.0, ok_color));
+      auto cancel_button = share(button(std::move(cancel_text), 1.0));
+      auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
       auto popup =
          detail::make_dialog_popup(
             vtile(
@@ -198,14 +203,14 @@ namespace cycfi { namespace elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string_view ok_text = "OK"
-    , std::string_view cancel_text = "Cancel"
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
     , color cancel_color = get_theme().indicator_color
    )
    {
       auto button_size = get_theme().dialog_button_size;
-      auto cancel_button = share(button(cancel_text, 1.0, cancel_color));
-      auto ok_button = share(button(ok_text, 1.0));
+      auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));
+      auto ok_button = share(button(std::move(ok_text), 1.0));
       auto popup =
          detail::make_dialog_popup(
             vtile(

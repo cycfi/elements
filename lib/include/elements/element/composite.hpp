@@ -24,7 +24,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual                 ~container() {}
+      virtual                 ~container() = default;
 
       virtual std::size_t     size() const = 0;
       bool                    empty() const { return size() == 0; }
@@ -38,28 +38,30 @@ namespace cycfi { namespace elements
 
    // Image
 
-      virtual view_limits     limits(basic_context const& ctx) const = 0;
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual void            draw(context const& ctx);
-      virtual void            layout(context const& ctx) = 0;
-      virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual void            refresh(context const& ctx, element& element, int outward = 0);
+      view_limits             limits(basic_context const& ctx) const override = 0;
+      element*                hit_test(context const& ctx, point p) override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override = 0;
+      bool                    scroll(context const& ctx, point dir, point p) override;
+      void                    refresh(context const& ctx, element& element, int outward = 0) override;
 
       using element::refresh;
 
    // Control
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
-      virtual bool            focus(focus_request r);
-      virtual element const*  focus() const;
-      virtual element*        focus();
-      virtual void            focus(std::size_t index);
-      virtual bool            is_control() const;
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
+      element const*          focus() const override;
+      element*                focus() override;
+      void                    focus(std::size_t index);
+      bool                    is_control() const override;
       virtual void            reset();
 
    // Composite

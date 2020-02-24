@@ -118,7 +118,7 @@ namespace cycfi { namespace elements
       *iter = curr;
    }
 
-   rect vtile_element::bounds_of(context const& ctx, std::size_t index) const
+   rect vtile_element::bounds_of(context const& /* ctx */, std::size_t index) const
    {
       if (index >= _tiles.size())
          return {};
@@ -192,7 +192,7 @@ namespace cycfi { namespace elements
       *iter = curr;
    }
 
-   rect htile_element::bounds_of(context const& ctx, std::size_t index) const
+   rect htile_element::bounds_of(context const& /* ctx */, std::size_t index) const
    {
       if (index >= _tiles.size())
          return {};

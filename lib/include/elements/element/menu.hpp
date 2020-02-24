@@ -37,10 +37,10 @@ namespace cycfi { namespace elements
                                  W1&& off, W2&& on
                                , menu_position pos = menu_position::bottom_right);
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            focus(focus_request r);
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    wants_focus() const override;
 
       menu_position           position() const              { return _position; }
       void                    position(menu_position pos)   { _position = pos; }
@@ -77,6 +77,21 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct shortcut_key
    {
+                  shortcut_key(key_code key_, int modifiers_)
+                  : key(key_)
+                  , modifiers(modifiers_)
+                  {
+                     if (modifiers & mod_action)
+#if defined(__APPLE__)
+                        modifiers |= mod_command;
+#else
+                        modifiers |= mod_control;
+#endif
+                  }
+
+                  shortcut_key() = default;
+                  shortcut_key(shortcut_key const&) = default;
+
       key_code    key = key_code::unknown;
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)
    };
@@ -86,18 +101,20 @@ namespace cycfi { namespace elements
    public:
 
       using menu_item_function = std::function<void()>;
+      using menu_enabled_function = std::function<bool()>;
 
-      virtual void            draw(context const& ctx);
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual bool            is_control() const;
+      void                    draw(context const& ctx) override;
+      element*                hit_test(context const& ctx, point p) override;
+      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    is_control() const override;
 
+      menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;
       shortcut_key            shortcut;
 
-      void                    scroll_into_view() { _scroll_into_view = true; }
+      void                    scroll_into_view()   { _scroll_into_view = true; }
 
    private:
 

@@ -42,9 +42,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    enum class cursor_tracking
    {
-      entering,   // Sent when the cursor is entering the view
-      hovering,   // Sent when the cursor is hovering over the view
-      leaving     // Sent when the cursor is leaving the view
+      entering,   // Sent when the cursor is entering
+      hovering,   // Sent when the cursor is hovering
+      leaving     // Sent when the cursor is leaving
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -75,16 +75,6 @@ namespace cycfi { namespace elements
    {
       uint32_t codepoint;
       int      modifiers;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Focus request
-   ////////////////////////////////////////////////////////////////////////////
-   enum class focus_request
-   {
-      wants_focus,
-      begin_focus,
-      end_focus
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -127,13 +117,14 @@ namespace cycfi { namespace elements
       mod_shift         = 0x0001,
       mod_control       = 0x0002,
 
-      // mod_super maps to the Alt key on PC keyboards
-      // and  maps to the Option key on MacOS
+      // mod_alt maps to the Alt key on PC keyboards
+      // and maps to the Option key on MacOS
       mod_alt           = 0x0004,
 
       // mod_super maps to the Windows key on PC keyboards
-      // and  maps to the Command key on MacOS
+      // and maps to the Command key on MacOS
       mod_super         = 0x0008,
+      mod_command       = mod_super, // synonym for MacOS
 
       // mod_action maps to mod_control on Windows and Linux
       // and maps to mod_super on MacOS
@@ -278,13 +269,6 @@ namespace cycfi { namespace elements
       int               modifiers;
    };
 
-   std::string diplay(key_code k, int mod);
-
-   inline std::string diplay(key_info k)
-   {
-      return diplay(k.key, k.modifiers);
-   }
-
    ////////////////////////////////////////////////////////////////////////////
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
@@ -314,14 +298,15 @@ namespace cycfi { namespace elements
                         base_view(host_window_handle h);
       virtual           ~base_view();
 
-      virtual void      draw(cairo_t* ctx, rect area) {};
-      virtual void      click(mouse_button btn) {}
-      virtual void      drag(mouse_button btn) {}
-      virtual void      cursor(point p, cursor_tracking status) {}
-      virtual void      scroll(point dir, point p) {}
-      virtual void      key(key_info const& k) {}
-      virtual void      text(text_info const& info) {}
-      virtual void      focus(focus_request r) {}
+      virtual void      draw(cairo_t* /* ctx */, rect /* area */) {};
+      virtual void      click(mouse_button /* btn */) {}
+      virtual void      drag(mouse_button /* btn */) {}
+      virtual void      cursor(point /* p */, cursor_tracking /* status */) {}
+      virtual void      scroll(point /* dir */, point /* p */) {}
+      virtual void      key(key_info const& /* k */) {}
+      virtual void      text(text_info const& /* info */) {}
+      virtual void      begin_focus() {}
+      virtual void      end_focus() {}
       virtual void      poll() {}
 
       virtual void      refresh();

@@ -18,12 +18,12 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            layout(context const& ctx);
-      virtual hit_info        hit_element(context const& ctx, point p) const;
-      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
-      virtual bool            focus(focus_request r);
-      virtual bool            reverse_index() const { return true; }
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      hit_info                hit_element(context const& ctx, point p) const override;
+      rect                    bounds_of(context const& ctx, std::size_t index) const override;
+      void                    begin_focus() override;
+      bool                    reverse_index() const override { return true; }
 
       using composite_base::focus;
 
@@ -56,10 +56,10 @@ namespace cycfi { namespace elements
                             : _selected_index(0)
                            {}
 
-      virtual void         draw(context const& ctx);
-      virtual void         refresh(context const& ctx, element& element, int outward = 0);
-      virtual hit_info     hit_element(context const& ctx, point p) const;
-      virtual bool         focus(focus_request r);
+      void                 draw(context const& ctx) override;
+      void                 refresh(context const& ctx, element& element, int outward = 0) override;
+      hit_info             hit_element(context const& ctx, point p) const override;
+      void                 begin_focus() override;
 
       using element::refresh;
       using composite_base::focus;

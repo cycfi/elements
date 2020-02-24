@@ -1,3 +1,8 @@
+/*=============================================================================
+   Copyright (c) 2016-2019 Joel de Guzman
+
+   Distributed under the MIT License (https://opensource.org/licenses/MIT)
+=============================================================================*/
 #include <elements.hpp>
 
 using namespace cycfi::elements;
@@ -5,26 +10,13 @@ using namespace cycfi::elements;
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);
 auto background = box(bkd_color);
-
-auto rbox = min_size({ 5, 5 },
-   basic(
-      [](context const& ctx)
-      {
-         auto& c = ctx.canvas;
-
-         c.begin_path();
-         c.round_rect(ctx.bounds, 4);
-         c.fill_style(colors::gold.opacity(0.8));
-         c.fill();
-      }
-   )
-);
+auto rbox_ = rbox(colors::gold.opacity(0.8));
 
 auto make_vtile_aligns()
 {
    auto _box = top_margin(
       { 10 },
-      hsize(150, rbox)
+      hsize(150, rbox_)
    );
 
    return margin(
@@ -46,7 +38,7 @@ auto make_vtile_stretch()
 {
    auto _box = top_margin(
       { 10 },
-      rbox
+      rbox_
    );
 
    return margin(
@@ -67,12 +59,12 @@ auto make_vtile_mixed()
 {
    auto _box = top_margin(
       { 10 },
-      rbox
+      rbox_
    );
 
    auto _box2 = top_margin(
       { 10 },
-      hsize(150, rbox)
+      hsize(150, rbox_)
    );
 
    return margin(
@@ -93,7 +85,7 @@ auto make_htile_aligns()
 {
    auto _box = left_margin(
       { 10 },
-      vsize(150, rbox)
+      vsize(150, rbox_)
    );
 
    return margin(
@@ -113,7 +105,7 @@ auto make_htile_stretch()
 {
    auto _box = left_margin(
       { 10 },
-      rbox
+      rbox_
    );
 
    return margin(
@@ -132,12 +124,12 @@ auto make_htile_mixed()
 {
    auto _box = left_margin(
       { 10 },
-      rbox
+      rbox_
    );
 
    auto _box2 = left_margin(
       { 10 },
-      vsize(150, rbox)
+      vsize(150, rbox_)
    );
 
    return margin(
@@ -166,7 +158,7 @@ auto make_flow()
       auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);
       auto h = min_size + ((double(std::rand()) * (max_height - min_size)) / RAND_MAX);
       auto _box = vsize(line_height, align_bottom(margin(
-         { 5, 5, 5, 5 }, fixed_size({ float(w), float(h) }, rbox)
+         { 5, 5, 5, 5 }, fixed_size({ float(w), float(h) }, rbox_)
       )));
       c.push_back(share(_box));
    }

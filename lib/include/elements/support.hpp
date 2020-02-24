@@ -12,6 +12,7 @@
 #include <elements/support/circle.hpp>
 #include <elements/support/color.hpp>
 #include <elements/support/context.hpp>
+#include <elements/support/font.hpp>
 #include <elements/support/glyphs.hpp>
 #include <elements/support/icon_ids.hpp>
 #include <elements/support/pixmap.hpp>

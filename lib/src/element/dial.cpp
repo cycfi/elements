@@ -26,8 +26,7 @@ namespace cycfi { namespace elements
 
    void dial_base::value(double val)
    {
-      clamp(val, 0.0, 1.0);
-      _value = val;
+      _value = clamp(val, 0.0, 1.0);
       subject().value(_value);
    }
 
@@ -52,15 +51,11 @@ namespace cycfi { namespace elements
 
       float val = (angle-start_angle) / range;
       if (std::abs(val - value()) < 0.6)
-      {
-         clamp(val, 0.0, 1.0);
-         return val;
-      }
-
+         return clamp(val, 0.0, 1.0);
       return value();
    }
 
-   void dial_base::begin_tracking(context const& ctx, info& track_info)
+   void dial_base::begin_tracking(context const& /* ctx */, info& /* track_info */)
    {
    }
 
@@ -77,7 +72,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dial_base::end_tracking(context const& ctx, info& track_info)
+   void dial_base::end_tracking(context const& /* ctx */, info& /* track_info */)
    {
    }
 
@@ -151,7 +146,7 @@ namespace cycfi { namespace elements
    void draw_radial_labels(
       canvas& cnv
     , circle cp
-    , float size
+    , float /* size */
     , float font_size
     , std::string const labels[]
     , std::size_t num_labels
@@ -175,7 +170,7 @@ namespace cycfi { namespace elements
          theme.label_font_size * font_size
       );
 
-      for (int i = 0; i != num_labels; ++i)
+      for (std::size_t i = 0; i != num_labels; ++i)
       {
          float angle = offset + (M_PI / 2) + (i * div);
          float sin_ = std::sin(angle);

@@ -26,17 +26,9 @@ namespace cycfi { namespace elements
 
       virtual                    ~text_base() = default;
 
-      virtual std::string_view   text() const = 0;
+      virtual std::string const& text() const = 0;
       virtual char const*        c_str() const = 0;
       virtual void               text(std::string_view text) = 0;
-
-      // A simple utility for replacing a std::string with the
-      // contents of a std::string_view
-      static void replace_string(std::string& dest, std::string_view text)
-      {
-         std::string str{ text.begin(), text.end() };
-         dest.swap(str);
-      }
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -49,8 +41,8 @@ namespace cycfi { namespace elements
       using element::value;
 
                               static_text_box(
-                                 std::string_view text
-                               , char const* face  = get_theme().text_box_font
+                                 std::string text
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                                , color color_      = get_theme().text_box_font_color
                               );
@@ -61,11 +53,11 @@ namespace cycfi { namespace elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string_view        text() const override            { return _text; }
+      std::string const&      text() const override            { return _text; }
       char const*             c_str() const override           { return _text.c_str(); }
       void                    text(std::string_view text) override;
 
-      void                    value(std::string val) override;
+      void                    value(std::string_view val) override;
 
       using element::text;
 
@@ -89,8 +81,8 @@ namespace cycfi { namespace elements
    {
    public:
                               basic_text_box(
-                                 std::string_view text
-                               , char const* face  = get_theme().text_box_font
+                                 std::string text
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               );
                               ~basic_text_box();
@@ -101,7 +93,9 @@ namespace cycfi { namespace elements
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
-      bool                    focus(focus_request r) override;
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
       bool                    is_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
@@ -171,12 +165,12 @@ namespace cycfi { namespace elements
       using enter_function = std::function<bool(std::string_view text)>;
 
                               basic_input_box(
-                                 std::string_view placeholder = ""
-                               , char const* face  = get_theme().text_box_font
+                                 std::string placeholder = ""
+                               , font font_        = get_theme().text_box_font
                                , float size        = get_theme().text_box_font_size
                               )
-                               : basic_text_box("", face, size)
-                               , _placeholder(placeholder.begin(), placeholder.end())
+                               : basic_text_box("", font_, size)
+                               , _placeholder(std::move(placeholder))
                               {}
 
                               basic_input_box(basic_input_box&& rhs) = default;

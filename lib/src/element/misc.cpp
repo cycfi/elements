@@ -7,13 +7,6 @@
 
 namespace cycfi { namespace elements
 {
-   void background_fill::draw(context const& ctx)
-   {
-      auto&  cnv = ctx.canvas;
-      cnv.fill_style(_color);
-      cnv.fill_rect(ctx.bounds);
-   }
-
    void panel::draw(context const& ctx)
    {
       draw_panel(
@@ -37,15 +30,15 @@ namespace cycfi { namespace elements
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
    }
 
-   heading::heading(std::string_view text, float size)
-    : _text(text)
+   heading::heading(std::string text, float size)
+    : _text(std::move(text))
     , _font(get_theme().heading_font)
     , _size(size)
    {}
 
-   heading::heading(std::string_view text, std::string_view font, float size)
-    : _text(text)
-    , _font(font.begin(), font.end())
+   heading::heading(std::string text, elements::font font_, float size)
+    : _text(std::move(text))
+    , _font(font_)
     , _size(size)
    {}
 
@@ -54,8 +47,8 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto  size = measure_text(
          ctx.canvas, _text.c_str()
-       , _font.c_str()
-       , thm.heading_font_size * _size
+       , _font
+       , thm.heading_font_size * _size // _size is a multiplier.
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -68,8 +61,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.heading_font_color);
       canvas_.font(
-         _font.c_str()
-       , theme_.heading_font_size * _size
+         _font
+       , theme_.heading_font_size * _size // _size is a multiplier.
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 
@@ -84,15 +77,15 @@ namespace cycfi { namespace elements
       draw_box_vgradient(ctx.canvas, ctx.bounds, 4.0);
    }
 
-   label::label(std::string_view text, float size)
-    : _text(text)
+   label::label(std::string text, float size)
+    : _text(std::move(text))
     , _font(get_theme().label_font)
     , _size(size)
    {}
 
-   label::label(std::string_view text, std::string_view font, float size)
-    : _text(text)
-    , _font(font.begin(), font.end())
+   label::label(std::string text, elements::font font_, float size)
+    : _text(std::move(text))
+    , _font(font_)
     , _size(size)
    {}
 
@@ -101,8 +94,8 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto  size = measure_text(
          ctx.canvas, _text.c_str()
-       , _font.c_str()
-       , thm.label_font_size * _size
+       , _font
+       , thm.label_font_size * _size // _size is a multiplier.
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -115,8 +108,8 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
-         _font.c_str()
-       , theme_.label_font_size * _size
+         _font
+       , theme_.label_font_size * _size // _size is a multiplier.
       );
       canvas_.text_align(canvas_.middle | canvas_.center);
 

@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
+      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* /* event */, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -85,7 +85,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
+      gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -138,7 +138,7 @@ namespace cycfi { namespace elements
          {
             case GDK_BUTTON_PRESS:
                btn.down = true;
-               if ((event->time - view->click_time) < dbl_click_time)
+               if ((event->time - view->click_time) < guint32(dbl_click_time))
                   ++view->click_count;
                else
                   view->click_count = 1;
@@ -158,7 +158,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
+      gboolean on_button(GtkWidget* /* widget */, GdkEventButton* event, gpointer user_data)
       {
          auto& view = get(user_data);
          mouse_button btn;
@@ -167,7 +167,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
+      gboolean on_motion(GtkWidget* /* widget */, GdkEventMotion* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
          host_view* view = platform_access::get_host_view(base_view);
@@ -204,7 +204,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
+      gboolean on_scroll(GtkWidget* /* widget */, GdkEventScroll* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(base_view);
@@ -246,7 +246,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   gboolean on_event_crossing(GtkWidget* widget, GdkEventCrossing* event, gpointer user_data)
+   gboolean on_event_crossing(GtkWidget* /* widget */, GdkEventCrossing* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
@@ -263,7 +263,7 @@ namespace cycfi { namespace elements
    // Defined in key.cpp
    key_code translate_key(unsigned key);
 
-   static void on_text_entry(GtkIMContext *context, const gchar* str, gpointer user_data)
+   static void on_text_entry(GtkIMContext* /* context */, const gchar* str, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
@@ -306,7 +306,7 @@ namespace cycfi { namespace elements
          k.action = key_action::repeat;
 
       _view.key(k);
-   };
+   }
 
    gboolean on_key(GtkWidget* widget, GdkEventKey* event, gpointer user_data)
    {
@@ -314,23 +314,36 @@ namespace cycfi { namespace elements
       auto* host_view_h = platform_access::get_host_view(base_view);
       gtk_im_context_filter_keypress(host_view_h->im_context, event);
 
-      auto const key = translate_key(event->keyval);
-      if (key == key_code::unknown)
-         return false;
-
       int modifiers = get_mods(event->state);
       auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
       host_view_h->modifiers = modifiers;
+
+      // We don't want the shift key handled when obtaining the keyval,
+      // so we do this again here, instead of relying on event->keyval
+      guint keyval = 0;
+      gdk_keymap_translate_keyboard_state(
+         gdk_keymap_get_for_display(gtk_widget_get_display(widget)),
+         event->hardware_keycode,
+         GdkModifierType(event->state & ~GDK_SHIFT_MASK),
+         event->group,
+         &keyval,
+         nullptr, nullptr, nullptr);
+
+      auto const key = translate_key(keyval);
+      if (key == key_code::unknown)
+         return false;
 
       handle_key(base_view, host_view_h->keys, { key, action, modifiers });
       return true;
    }
 
-   void on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
+   void on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
-      base_view.focus(event->in ?
-         focus_request::begin_focus : focus_request::end_focus);
+      if (event->in)
+         base_view.begin_focus();
+      else
+         base_view.end_focus();
    }
 
    int poll_function(gpointer user_data)
@@ -415,12 +428,10 @@ namespace cycfi { namespace elements
          auto pwd = fs::current_path();
          auto resource_path = pwd / "resources";
          resource_paths.push_back(resource_path);
-
-         canvas::load_fonts(resource_path);
       }
    };
 
-   base_view::base_view(extent size_)
+   base_view::base_view(extent /* size_ */)
     : base_view(new host_view)
    {
       // $$$ FIXME: Implement Me $$$

@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
       {}
 
       basic_context(basic_context const&) = default;
-      basic_context& operator=(basic_context const&) = default;
+      basic_context& operator=(basic_context const&) = delete;
 
       elements::view&        view;
       elements::canvas&      canvas;
@@ -52,31 +52,36 @@ namespace cycfi { namespace elements
 
       context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
-       , parent(0), bounds(bounds_)
+       , parent(nullptr), bounds(bounds_)
       {}
 
       context(context const&) = default;
-      context& operator=(context const&) = default;
+      context& operator=(context const&) = delete;
 
-      using feedback_function =
-         std::function<
-            void(context const& ctx, elements::element*, std::string_view what)
-         >;
-
-      template <typename F>
-      feedback_function feedback(F&& f) const
+      context sub_context() const
       {
-         auto save = _feedback;
-         _feedback = std::forward<F>(f);
-         return save;
+         auto ctx = context{ *this };
+         ctx.parent = this;
+         return ctx;
       }
 
-      void give_feedback(context const& ctx, char const* what, elements::element* e) const
+      template <typename T, typename F>
+      void listen(F&& f)
       {
-         if (_feedback)
-            _feedback(ctx, e, what);
+         _listener =
+            [f](auto const& ctx, auto* e, auto what)
+            {
+               if (auto te = dynamic_cast<T*>(e))
+                  f(ctx, *te, what);
+            };
+      }
+
+      void notify(context const& ctx, std::string_view what, elements::element* e) const
+      {
+         if (_listener)
+            _listener(ctx, e, what);
          if (parent)
-            parent->give_feedback(ctx, what, e);
+            parent->notify(ctx, what, e);
       }
 
       elements::element*            element;
@@ -85,7 +90,12 @@ namespace cycfi { namespace elements
 
    private:
 
-      mutable feedback_function     _feedback;
+      using listener_function =
+         std::function<
+            void(context const& ctx, elements::element*, std::string_view what)
+         >;
+
+      listener_function             _listener;
    };
 }}
 

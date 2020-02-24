@@ -18,9 +18,9 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            layout(context const& ctx);
-      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      rect                    bounds_of(context const& ctx, std::size_t index) const override;
 
    private:
 
@@ -48,9 +48,9 @@ namespace cycfi { namespace elements
    {
    public:
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual void            layout(context const& ctx);
-      virtual rect            bounds_of(context const& ctx, std::size_t index) const;
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      rect                    bounds_of(context const& ctx, std::size_t index) const override;
 
    private:
 

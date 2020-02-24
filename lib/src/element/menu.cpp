@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   void basic_menu::drag(context const& ctx, mouse_button btn)
+   void basic_menu::drag(context const& ctx, mouse_button /* btn */)
    {
       ctx.view.refresh();
    }
@@ -111,29 +111,22 @@ namespace cycfi { namespace elements
       rect bounds = _popup->bounds();
       context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
 
-      bool hit = false;
+      basic_menu_item_element* hit = nullptr;
       basic_menu_item_element* first = nullptr;
       basic_menu_item_element* last = nullptr;
-      rect first_bounds, last_bounds;
-      new_ctx.feedback(
-         [&](context const& ctx, auto* e, std::string_view what)
+
+      new_ctx.listen<basic_menu_item_element>(
+         [&](auto const& /* ctx */, auto& e, auto what)
          {
-            if (auto me = dynamic_cast<basic_menu_item_element*>(e))
+            if (what == "key" || what == "click")
             {
-               if (what == "key" || what == "click")
-               {
-                  hit = true;
-               }
-               else if (what == "arrows")
-               {
-                  if (!first)
-                  {
-                     first = me;
-                     first_bounds = ctx.bounds;
-                  }
-                  last = me;
-                  last_bounds = ctx.bounds;
-               }
+               hit = &e;
+            }
+            else if (what == "arrows" && e.is_enabled())
+            {
+               if (!first)
+                  first = &e;
+               last = &e;
             }
          }
       );
@@ -156,7 +149,7 @@ namespace cycfi { namespace elements
             if (first)
             {
                first->select(true);
-               ctx.view.refresh(first_bounds);
+               ctx.view.refresh(new_ctx);
                first->scroll_into_view();
             }
          }
@@ -165,7 +158,7 @@ namespace cycfi { namespace elements
             if (last)
             {
                last->select(true);
-               ctx.view.refresh(last_bounds);
+               ctx.view.refresh(new_ctx);
                last->scroll_into_view();
             }
          }
@@ -176,14 +169,14 @@ namespace cycfi { namespace elements
       return layered_button::key(ctx, k);
    }
 
-   bool basic_menu::focus(focus_request r)
+   bool basic_menu::wants_focus() const
    {
       return true;
    }
 
    void basic_menu_item_element::draw(context const& ctx)
    {
-      if (is_selected())
+      if (is_selected() && is_enabled())
       {
          if (_scroll_into_view)
          {
@@ -199,25 +192,36 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      proxy_base::draw(ctx);
+      if (is_enabled())
+      {
+         proxy_base::draw(ctx);
+      }
+      else
+      {
+         auto r = override_theme(
+            &theme::label_font_color
+          , get_theme().inactive_font_color
+         );
+         proxy_base::draw(ctx);
+      }
    }
 
    element* basic_menu_item_element::hit_test(context const& ctx, point p)
    {
-      if (ctx.bounds.includes(p))
+      if (is_enabled() && ctx.bounds.includes(p))
          return this;
-      ctx.view.refresh(ctx);
-      return 0;
+      return nullptr;
    }
 
    element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
       element* result = nullptr;
-      if (ctx.bounds.includes(btn.pos))
+      if (is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
-         ctx.give_feedback(ctx, "click", this);
+         select(false);
+         ctx.notify(ctx, "click", this);
          result = this;
       }
       element* proxy_result = proxy_base::click(ctx, btn);
@@ -228,90 +232,98 @@ namespace cycfi { namespace elements
    {
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
-         if (k.key == key_code::escape || k.key == key_code::enter)
-         {
-            if (k.key == key_code::enter && on_click)
-               on_click();
-            ctx.give_feedback(ctx, "key", this);
-            return true;
-         }
-
-         else if (k.key == key_code::up || k.key == key_code::down)
-         {
-            if (!is_selected())
+         auto&& equal =
+            [](auto k, auto shortcut)
             {
-               ctx.give_feedback(ctx, "arrows", this);
-               return false;
-            }
-
-            rect bounds;
-            auto [c, cctx] = find_composite(ctx);
-            auto&& refresh = [&](auto c, auto cctx, auto const& bounds)
-            {
-               cctx->view.refresh(*cctx);
-               scrollable::find(ctx).scroll_into_view(bounds);
+               int mask = 0xF;
+               switch (shortcut.key)
+               {
+                  case key_code::minus:
+                  case key_code::equal:
+                     mask &= ~mod_shift;
+                     break;
+                  default:
+                     break;
+               }
+               return (k.key == shortcut.key) &&
+                  ((k.modifiers & mask) == (shortcut.modifiers & mask))
+                  ;
             };
 
-            if (c)
-            {
-               if (k.key == key_code::down)
-               {
-                  bool found = false;
-                  for (std::size_t i = 0; i != c->size(); ++i)
-                  {
-                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
-                     {
-                        if (e == this)
-                        {
-                           if (i == c->size()-1)
-                              break;
-                           found = true;
-                           e->select(false);
-                        }
-                        else if (found)
-                        {
-                           e->select(true);
-                           bounds = c->bounds_of(*cctx, i);
-                           refresh(c, cctx, bounds);
-                           break;
-                        }
-                     }
-                  }
-               }
-               else
-               {
-                  bool found = false;
-                  for (int i = c->size()-1; i >= 0; --i)
-                  {
-                     if (auto e = dynamic_cast<selectable*>(&c->at(i)))
-                     {
-                        if (e == this)
-                        {
-                           if (i == 0)
-                              break;
-                           found = true;
-                           e->select(false);
-                        }
-                        else if (found)
-                        {
-                           e->select(true);
-                           bounds = c->bounds_of(*cctx, i);
-                           refresh(c, cctx, bounds);
-                           break;
-                        }
-                     }
-                  }
-               }
-            }
-            return true;
-         }
-
-         else if (k.key == shortcut.key && (k.modifiers & ~mod_action) == shortcut.modifiers)
+         switch (k.key)
          {
-            if (on_click)
-               on_click();
-            ctx.give_feedback(ctx, "key", this);
-            return true;
+            case key_code::enter:
+               if (is_selected() && is_enabled())
+               {
+                  select(false);
+                  if (on_click)
+                     on_click();
+                  ctx.notify(ctx, "key", this);
+                  return true;
+               }
+               break;
+
+            case key_code::escape:
+               {
+                  select(false);
+                  ctx.notify(ctx, "key", this);
+                  return true;
+               }
+               break;
+
+            case key_code::up:
+            case key_code::down:
+               {
+                  if (!is_selected())
+                  {
+                     ctx.notify(ctx, "arrows", this);
+                     return false;
+                  }
+
+                  auto [c, cctx] = find_composite(ctx);
+                  if (c)
+                  {
+                     bool const down = k.key == key_code::down;
+                     auto const last = static_cast<int>(c->size()) - 1;
+                     bool found = false;
+                     for (
+                        int i = down? 0 : last;
+                        i != (down? static_cast<int>(c->size()) : -1);
+                        i += down? +1 : -1
+                     )
+                     {
+                        auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i));
+                        if (e && e->is_enabled())
+                        {
+                           if (e == this)
+                           {
+                              if (i != (down? last : 0))
+                                 found = true;
+                           }
+                           else if (found)
+                           {
+                              select(false);
+                              e->select(true);
+                              rect bounds = c->bounds_of(*cctx, i);
+                              cctx->view.refresh(*cctx);
+                              scrollable::find(ctx).scroll_into_view(bounds);
+                              break;
+                           }
+                        }
+                     }
+                  }
+                  return true;
+               }
+               break;
+
+            default:
+               if (is_enabled() && equal(k, shortcut))
+               {
+                  if (on_click)
+                     on_click();
+                  ctx.notify(ctx, "key", this);
+                  return true;
+               }
          }
       }
       return false;
@@ -319,6 +331,9 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      if (!is_enabled())
+         return false;
+
       bool hit = ctx.bounds.includes(p);
       if (status == cursor_tracking::leaving || hit)
       {
@@ -332,7 +347,7 @@ namespace cycfi { namespace elements
             }
          }
          select(hit);
-         ctx.view.refresh();
+         cctx->view.refresh(*cctx);
       }
       proxy_base::cursor(ctx, p, status);
       return hit;

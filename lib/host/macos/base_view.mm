@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/base_view.hpp>
 #include <elements/support/resource_paths.hpp>
+#include <elements/support/font.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -55,17 +56,22 @@ namespace
       }
    }
 
+   void get_resource_path(char resource_path[])
+   {
+      CFBundleRef main_bundle = get_current_bundle();
+      CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
+      CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
+      CFRelease(resources_url);
+   }
+
    struct resource_setter
    {
       resource_setter()
       {
          // Before anything else, set the working directory so we can access
          // our resources
-         CFBundleRef main_bundle = get_current_bundle();
-         CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
          char resource_path[PATH_MAX];
-         CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
-         CFRelease(resources_url);
+         get_resource_path(resource_path);
          cycfi::elements::resource_paths.push_back(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
@@ -84,6 +90,14 @@ namespace cycfi { namespace elements
    key_code    translate_key(unsigned int key);
    int         translate_flags(NSUInteger flags);
    NSUInteger  translate_key_to_modifier_flag(key_code key);
+
+   // This is declared in font.hpp
+   fs::path get_user_fonts_directory()
+   {
+      char resource_path[PATH_MAX];
+      get_resource_path(resource_path);
+      return fs::path(resource_path);
+   }
 }}
 
 namespace
@@ -492,12 +506,12 @@ namespace
 
 -(void) windowDidBecomeKey : (NSNotification*) notification
 {
-   _view->focus(ph::focus_request::begin_focus);
+   _view->begin_focus();
 }
 
 -(void) windowDidResignKey : (NSNotification*) notification
 {
-   _view->focus(ph::focus_request::end_focus);
+   _view->end_focus();
 }
 
 @end // @implementation ElementsView
@@ -531,7 +545,6 @@ namespace cycfi { namespace elements
       [content elements_init : this];
 
       NSWindow* window_ = (__bridge NSWindow*) h;
-      bool b = [window_ isKindOfClass:[NSWindow class]];
       [window_ setContentView : content];
       [get_mac_view(host()) attach_notifications];
    }

@@ -24,7 +24,6 @@ url: "http://cycfi.github.io" # the base hostname & protocol for your site, e.g.
 # twitter_username: jekyllrb
 # github_username:  jekyll
 name: "Joel de Guzman"
-logo: "/assets/images/elements.png"
 
 # Build settings
 markdown: kramdown

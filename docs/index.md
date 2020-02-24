@@ -8,7 +8,7 @@ Elements is a lightweight, fine-grained, HDPI capable, resolution independent, m
 
 1. It should be open source with a liberal, non-viral license.
 2. It should be usable in any application and should play well
-   with other GUI   libraries and frameworks.
+   with other GUI libraries and frameworks.
 3. Corollary to the second requirement is that it can also be used
    to develop plugins (e.g. it should not own the event loop and can
    co-exist with elements within a plugin host such as VST and AU.
@@ -26,12 +26,6 @@ declarative interface with heavy emphasis on reuse.
 
 The Elements C++ GUI library is cross-platform. Follow the [Setup and
 Installation guide](setup) to get started using the library.
-
-## History
-
-While working in Japan in the 90s I wrote a lightweight GUI library named
-Pica. Elements is based on the design concepts of that library, rewritten
-from the ground up, using modern C++. [Read More...](history)
 
 ## <a name="jdeguzman"></a>About the Author
 

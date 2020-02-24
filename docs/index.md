@@ -54,10 +54,5 @@ peer-reviewed, Open Source, collaborative development effort.
 
 -------------------------------------------------------------------------------
 
-The library is Open Source and released under the very liberal [MIT
-license](http://tinyurl.com/p6pekvo).
-
-```
-Copyright (c) 2016-2020 Joel de Guzman
-Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
-```
+*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
+*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

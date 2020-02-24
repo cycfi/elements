@@ -1,5 +1,11 @@
 ## Setup and Installation
 
+### Table of Contents
+* [Requirements](#requirements)
+* [MacOS Installation](#macos)
+* [Windows Installation](#windows)
+* [Linux Installation](#linux)
+
 You are a modern c++ programmer. You are smart. You know your way around and
 you do not need any hand-holding :smiley: So here are the basic requirements
 and dependencies that you need to satisfy in order to use the library:
@@ -16,6 +22,8 @@ and dependencies that you need to satisfy in order to use the library:
 
 Nuff said? :stuck_out_tongue: Well OK, here are some more info, just for
 completeness' sake...
+
+-------------------------------------------------------------------------------
 
 ## Requirements
 
@@ -66,7 +74,7 @@ instructions are provided below for specific environments.
 
 ## MacOS
 
-### Install required libraries using Brew:
+### Install required libraries using [Homebrew](https://brew.sh/):
 
 ```
 brew install cairo
@@ -99,19 +107,13 @@ cd build
 cmake -GXcode ../
 ```
 
-### Using [CLion](https://www.jetbrains.com/clion/):
-
-Simply open the CMakeLists.txt file using CLion and build the project.
-
-### Building and Running the examples
-
 If successful, cmake will generate an XCode project in the build directory.
 Open the project file elements.xcodeproj and build all. You should see a
 couple of example applications.
 
-Tips:
-1. Resize the window and see the elements fluidly resize
-2. Use two-finger swipe to move the sliders and knobs
+### Using [CLion](https://www.jetbrains.com/clion/):
+
+Simply open the CMakeLists.txt file using CLion and build the project.
 
 -------------------------------------------------------------------------------
 
@@ -167,16 +169,58 @@ cmake -G"Visual Studio 16 2019" -DBOOST_ROOT=path/to/boost ..//
 
 *Replace path/to/boost with the directory where you installed boost.*
 
-### Building and Running the examples
-
 If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
 couple of example applications.
 
-Tips:
-1. Resize the window and see the elements fluidly resize
-2. Use two-finger swipe to move the sliders and knobs
-
 -------------------------------------------------------------------------------
 
 ## Linux
+
+### Install required libraries using [apt-get](https://linux.die.net/man/8/apt-get) (requires `sudo`).
+
+In addition to the requirements listed in the [requirements](#requirements)
+section, the [GTK3 library](https://www.gtk.org/) is also required by the
+Linux port of Elements.
+
+```
+sudo apt-get install libcairo2-dev
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libboost-all-dev
+```
+
+### Install CMake
+
+```
+sudo apt-get -y install cmake
+```
+
+### Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here are some examples for Linux:
+
+### Using UNIX makefiles:
+
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake.
+
+```
+cd elements
+mkdir build
+cd build
+cmake -G "Unix Makefiles" ../
+```
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+### Using [CLion](https://www.jetbrains.com/clion/):
+
+Simply open the CMakeLists.txt file using CLion and build the project.
+
+-------------------------------------------------------------------------------
+
+*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
+*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

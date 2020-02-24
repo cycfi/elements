@@ -16,7 +16,7 @@ Elements is a lightweight, fine-grained, HDPI capable, resolution independent, m
 5. Should not rely on a “visual” GUI editor or code generator.
    The GUI should be declared in the code.
 6. Declarative API using modern C++. Declarative C++ code
-   tells you what rather than how (imperative).
+   tells you *what* rather than *how* (imperative).
 
 Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a

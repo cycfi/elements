@@ -13,6 +13,21 @@
 
 namespace cycfi { namespace elements
 {
+   struct tracker_info
+   {
+      explicit          tracker_info(point start_)
+                         : start(start_)
+                        {}
+
+                        tracker_info(tracker_info const&) = default;
+      virtual           ~tracker_info() = default;
+
+      point             start;
+      point             current = start;
+      point             previous = start;
+      point             offset = point{ 0, 0 };
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    // tracker tracks the mouse movement.
    ////////////////////////////////////////////////////////////////////////////
@@ -21,48 +36,33 @@ namespace cycfi { namespace elements
    {
    public:
 
-      struct info
-      {
-         explicit          info(point start_)
-                            : start(start_)
-                           {}
+                               template <typename... T>
+                               tracker(T&&... args)
+                                : Base(args...)
+                               {}
 
-                           info(info const&) = default;
-         virtual           ~info() = default;
+                               tracker(tracker const& rhs);
+                               tracker(tracker&& rhs) = default;
+      tracker&                 operator=(tracker const& rhs);
+      tracker&                 operator=(tracker&& rhs) = default;
 
-         point             start;
-         point             current = start;
-         point             previous = start;
-         point             offset = point{ 0, 0 };
-      };
-
-                           template <typename... T>
-                           tracker(T&&... args)
-                            : Base(args...)
-                           {}
-
-                           tracker(tracker const& rhs);
-                           tracker(tracker&& rhs) = default;
-      tracker&             operator=(tracker const& rhs);
-      tracker&             operator=(tracker&& rhs) = default;
-
-      element*             click(context const& ctx, mouse_button btn) override;
-      void                 drag(context const& ctx, mouse_button btn) override;
-      bool                 is_control() const override;
+      element*                 click(context const& ctx, mouse_button btn) override;
+      void                     drag(context const& ctx, mouse_button btn) override;
+      bool                     is_control() const override;
 
    protected:
 
-      using info_ptr = std::unique_ptr<info>;
+      using tracker_info_ptr = std::unique_ptr<tracker_info>;
 
-      virtual info_ptr     new_state(context const& ctx, point start);
-      virtual void         begin_tracking(context const& ctx, info& track_info) = 0;
-      virtual void         keep_tracking(context const& ctx, info& track_info) = 0;
-      virtual void         end_tracking(context const& ctx, info& track_info) = 0;
-      void                 track_scroll(context const& ctx, point dir, point p);
+      virtual tracker_info_ptr new_state(context const& ctx, point start);
+      virtual void             begin_tracking(context const& ctx, tracker_info& track_info) = 0;
+      virtual void             keep_tracking(context const& ctx, tracker_info& track_info) = 0;
+      virtual void             end_tracking(context const& ctx, tracker_info& track_info) = 0;
+      void                     track_scroll(context const& ctx, point dir, point p);
 
    private:
 
-      info_ptr             state;
+      tracker_info_ptr         state;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -111,9 +111,9 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline typename tracker<Base>::info_ptr tracker<Base>::new_state(context const& /* ctx */, point start)
+   inline typename tracker<Base>::tracker_info_ptr tracker<Base>::new_state(context const& /* ctx */, point start)
    {
-      return std::make_unique<info>(start);
+      return std::make_unique<tracker_info>(start);
    }
 
    template <typename Base>

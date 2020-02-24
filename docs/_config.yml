@@ -24,7 +24,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 # github_username:  jekyll
 name: "Joel de Guzman"
-logo: "/images/elements.png"
+logo: "{{ site.url }}/images/elements.png"
 
 # Build settings
 markdown: kramdown

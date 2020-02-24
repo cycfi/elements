@@ -1,5 +1,3 @@
-# ![Elements-Logo](images/elements.png) Elements C++ GUI library
-
 ## Setup and Installation
 
 You are a modern c++ programmer. You are smart. You know your way around and

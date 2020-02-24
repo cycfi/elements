@@ -1,6 +1,6 @@
 # Elements C++ GUI library
 
-![alt Photon Sampler]({{ site.url }}/assets/images/photon_sampler.jpg)
+![alt Photon Sampler]({{ site.url }}/elements/assets/images/photon_sampler.jpg)
 
 ## Introduction
 

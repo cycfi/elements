@@ -19,8 +19,8 @@ email: djowel@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Elements is a lightweight, fine-grained, HDPI capable, resolution
   independent, modular C++ GUI library.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://cycfi.github.io/elements/" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/elements" # the subpath of your site, e.g. /blog
+url: "http://cycfi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 # github_username:  jekyll
 name: "Joel de Guzman"

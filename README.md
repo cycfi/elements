@@ -28,6 +28,10 @@ The Elements C++ GUI library is cross-platform. Follow the [Setup and
 Installation guide](http://cycfi.github.io/elements/setup) to get started
 using the library.
 
+## Gallery
+
+Follow this link for more screenshots: [Gallery](http://cycfi.github.io/elements/gallery).
+
 ## News
 
 - 12 August 2019: Windows port completed

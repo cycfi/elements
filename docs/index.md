@@ -27,6 +27,10 @@ declarative interface with heavy emphasis on reuse.
 The Elements C++ GUI library is cross-platform. Follow the [Setup and
 Installation guide](setup) to get started using the library.
 
+## Gallery
+
+Follow this link for more screenshots: [Gallery](gallery).
+
 ## <a name="jdeguzman"></a>About the Author
 
 Joel got into electronics and programming in the 80s because almost

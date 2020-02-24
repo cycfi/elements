@@ -1,14 +1,17 @@
-## Setup and Installation
+# Setup and Installation
 
-### Table of Contents
+## Table of Contents
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
 * [Linux Installation](#linux)
 
-You are a modern c++ programmer. You are smart. You know your way around and
-you do not need any hand-holding :smiley: So here are the basic requirements
-and dependencies that you need to satisfy in order to use the library:
+-------------------------------------------------------------------------------
+
+## Requirements
+
+Here are the basic requirements and dependencies that you need to satisfy in
+order to use the library:
 
 1. A C++17 compiler
 2. Git
@@ -19,13 +22,6 @@ and dependencies that you need to satisfy in order to use the library:
 7. The [Cycfi json library](https://github.com/cycfi/json/)
 8. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
 9. [freetype2](https://www.freetype.org/) (Windows and Linux only).
-
-Nuff said? :stuck_out_tongue: Well OK, here are some more info, just for
-completeness' sake...
-
--------------------------------------------------------------------------------
-
-## Requirements
 
 ### C++17
 

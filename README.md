@@ -22,6 +22,13 @@ Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
 declarative interface with heavy emphasis on reuse.
 
+## News
+
+- 12 August 2019: Windows port completed
+- 01 September 2019: Linux port completed
+- 22 February 2020: Improved font support
+- 23 February 2020: Setup and Installation guide updated for Windows and Linux.
+
 ## Setup and Installation
 
 The Elements C++ GUI library is cross-platform. Follow the [Setup and
@@ -31,13 +38,6 @@ using the library.
 ## Gallery
 
 Follow this link for more screenshots: [Gallery](http://cycfi.github.io/elements/gallery).
-
-## News
-
-- 12 August 2019: Windows port completed
-- 01 September 2019: Linux port completed
-- 22 February 2020: Improved font support
-- 23 February 2020: Setup and Installation guide updated for Windows and Linux.
 
 ## <a name="jdeguzman"></a>About the Author
 

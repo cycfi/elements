@@ -4,21 +4,19 @@
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, 
-modular GUI library. Elements is designed with these requirements 
-in mind:
+Elements is a lightweight, fine-grained, resolution independent, modular GUI library. Elements is designed with these requirements in mind:
 
 1. It should be open source with a liberal, non-viral license.
-2. It should be usable in any application and should play well
-   with other GUI libraries and frameworks.
-3. Corollary to the second requirement is that it can also be used
-   to develop plugins (e.g. it should not own the event loop and can
-   co-exist with elements within a plugin host such as VST and AU.
-4. It should be resolution independent and allows for HDPI displays.
+2. It should be usable in any application and should play well with other GUI
+   libraries and frameworks.
+3. Corollary to the second requirement is that it can also be used to develop
+   plugins. It should not own the event loop and should be able to co-exist
+   with components within a plugin host such as VST and AU.
+4. It should be resolution independent and allow for HDPI displays.
 5. Should not rely on a “visual” GUI editor or code generator.
-   The GUI should be declared in the code.
-6. Declarative API using modern C++. Declarative C++ code
-   tells you *what* rather than *how* (imperative).
+6. It should have a declarative API using modern C++. Declarative C++ code
+   tells you *what* rather than *how* (imperative). The GUI should be
+   declared in C++ code.
 
 Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a

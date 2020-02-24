@@ -1,6 +1,6 @@
-# Elements C++ GUI library
+# Gallery
 
-## Gallery
+It’s always a nice to have some pretty pictures:
 
 <div class="grid">
   <div class="col-1-2">

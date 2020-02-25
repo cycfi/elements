@@ -7,7 +7,7 @@
 
 using namespace cycfi::elements;
 
-#define VARIANT 3
+#define VARIANT 4
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -68,6 +68,23 @@ auto make_button()
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+#if (VARIANT == 4)
+
+auto track = hsize(10, box(colors::black));
+auto thumb =
+   layer(
+      margin(
+         { 25, 20, 25, 18 },
+         label("“Dogs are my favorite people”")
+      ),
+      rbox(colors::medium_blue, 10)
+   );
+
+auto funny_slider = slider(thumb, track);
+
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
@@ -82,6 +99,8 @@ int main(int argc, const char* argv[])
          share(blue_rbox),
 #elif (VARIANT == 3)
          share(align_center_middle(make_button())),
+#elif (VARIANT == 4)
+         share(align_center(funny_slider)),
 #endif
          share(background)
       }

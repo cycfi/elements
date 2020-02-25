@@ -7,6 +7,7 @@
 * [Aligns and Sizes](#aligns-and-sizes)
 * [Labels, Margins and Layers](#labels-margins-and-layers)
 * [Let's Make a Button](#lets-make-a-button)
+* [Sliders too!](#sliders-too)
 
 -------------------------------------------------------------------------------
 
@@ -304,6 +305,54 @@ And here it is in action:
 Oh, hey, Elements has a gallery —a collection of reusable element
 compositions, just like what we did above, but more refined. That gallery is
 constantly growing. The possibilities is endless. Composing elements is fun!
+
+## Sliders too!
+
+Guess what, we can make funny sliders too, using the same components we made
+in the previous sections!
+
+<video width="520" height="364" style="margin-left: 30px" controls loop>
+  <source type="video/mp4" src="{{ site.url }}/elements/assets/images/funny_slider.mp4">
+</video>
+
+Here's the code:
+
+```c++
+auto track = hsize(10, box(colors::black));
+auto thumb =
+   layer(
+      margin(
+         { 25, 20, 25, 18 },
+         label("“Dogs are my favorite people”")
+      ),
+      rbox(colors::medium_blue, 10)
+   );
+
+auto funny_slider = slider(thumb, track);
+```
+
+Notice the pattern? It's the same consistent way for composing and assembling
+parts. Start with smaller parts. Use them to build ever more complex parts.
+The `slider` has two parts: the `track` and the `thumb`. Here, we made a
+simple track using the same old box. We made it black. Then, we reused the
+same “Dogs are my favorite people” button for the thumb. The result looks
+silly, I should say :blush:, but hey, we are trying to make a point!
+
+Now, like before, we add our funny slider to our view:
+
+```c++
+   view_.content(
+      {
+         share(align_center(funny_slider)),
+         share(background)
+      }
+   );
+```
+
+But note that, in this case, we want to center the slider only horizontally,
+so we use `align_center` instead of `align_center_middle`.
+
+Ok, there you go! Now go and be creative and make your own controls!
 
 -------------------------------------------------------------------------------
 

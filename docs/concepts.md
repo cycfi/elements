@@ -182,7 +182,7 @@ If it's not obvious yet, let's spell it out for you.
 Step 1: We make a label:
 
 ```c++
-label("Hey There!")
+label("“Dogs are my favorite people”")
 ```
 
 Step 2: We add margin around it:

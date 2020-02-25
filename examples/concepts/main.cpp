@@ -7,39 +7,67 @@
 
 using namespace cycfi::elements;
 
-#define STEP 2
+#define VARIANT 3
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-#if (STEP == 1)
+///////////////////////////////////////////////////////////////////////////////
+#if (VARIANT == 1)
 
 auto blue_rbox =
    align_center_middle(
       fixed_size(
          { 100, 50 },
-         rbox(colors::blue, 15)
+         rbox(colors::medium_blue, 10)
       )
    );
 
 #endif
 
-#if (STEP == 2)
+///////////////////////////////////////////////////////////////////////////////
+#if (VARIANT == 2)
 
 auto blue_rbox =
    align_center_middle(
       layer(
          margin(
-            { 20, 20, 20, 20 },
-            label("Hey There!")
+            { 25, 20, 25, 18 },
+            label("“Dogs are my favorite people”")
          ),
-         rbox(colors::blue, 15)
+         rbox(colors::medium_blue, 10)
       )
    );
 
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+#if (VARIANT == 3)
+
+auto btn_rbox(color c)
+{
+   return
+      layer(
+         margin(
+            { 25, 20, 25, 18 },
+            label("“Dogs are my favorite people”")
+         ),
+         rbox(c, 10)
+      );
+}
+
+auto make_button()
+{
+   return layered_button(
+      btn_rbox(colors::medium_blue),            // Normal state
+      btn_rbox(colors::medium_blue.level(0.8))  // Pushed state
+   );
+}
+
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
@@ -50,8 +78,10 @@ int main(int argc, const char* argv[])
 
    view_.content(
       {
-#if (STEP >= 1)
+#if (VARIANT == 1 || VARIANT == 2)
          share(blue_rbox),
+#elif (VARIANT == 3)
+         share(align_center_middle(make_button())),
 #endif
          share(background)
       }

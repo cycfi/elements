@@ -97,11 +97,15 @@ background using `box`, passing in a color. A rounded box is created using
 `rbox`, passing in the color and the radius:
 
 ```c++
-auto blue_rbox = rbox(colors::navy_blue, 15);
+auto blue_rbox = rbox(colors::medium_blue, 10);
 ```
 
-We can actually use that already, as-is, by placing it in another layer in
-the view:
+For the color, this time, we specified the color by name from the `colors`
+namespace. The namespace includes all predefined colors from the [standard
+HTML Color Names](https://www.w3schools.com/colors/colors_names.asp).
+
+We can actually use `blue_rbox` already, as-is, by placing it in another
+layer in the view:
 
 ```c++
 view_.content(
@@ -115,15 +119,14 @@ view_.content(
 But like the `box`, the `rbox` is infinitely resizable and will hog the
 entire window. What we want is to give it a specific size and center it in
 the window. Elements are very lightweight. Most elements do not even have a
-size, nor know their position in the view.
-
-So we give it a 100x50 size by wrapping it in the `fixed_size` element:
+size, nor know their position in the view. So we give it a 100x50 size by
+wrapping it in the `fixed_size` element:
 
 ```c++
 auto blue_rbox =
    fixed_size(
       { 100, 50 },
-      rbox(colors::navy_blue, 15)
+      rbox(colors::medium_blue, 10)
    );
 ```
 
@@ -135,13 +138,13 @@ auto blue_rbox =
    align_center_middle(
       fixed_size(
          { 100, 50 },
-         rbox(colors::navy_blue, 15)
+         rbox(colors::medium_blue, 10)
       )
    );
 ```
 
 Without the alignment element, the main window would have been constrained to
-a fixed 100x50 size.
+a fixed 100x50 size. There's a multitude of alignment elements available.
 
 But now, we are seeing how fine-grained elements are composed. The `rbox` is
 placed inside the `fixed_size` element which is then placed inside a
@@ -157,17 +160,17 @@ Our goal this time is to place some text inside the blue box. The element we
 will use is the `label`. Most elements do not have a size, but as an
 exception, labels (simple text elements) do. So, instead of fixing the size
 of the box using `fixed_size`, we instead place the label alongside the box
-in a `layer` element, but add some margin. Here's how yo do it:
+in a `layer` element, but add some margin. Here's how you do it:
 
 ```c++
 auto blue_rbox =
    align_center_middle(
       layer(
          margin(
-            { 20, 20, 20, 20 },
-            label("Hey There!")
+            { 25, 20, 25, 18 },
+            label("“Dogs are my favorite people”")
          ),
-         rbox(colors::blue, 15)
+         rbox(colors::medium_blue, 10)
       )
    );
 ```
@@ -180,19 +183,22 @@ Step 1: We make a label:
 label("Hey There!")
 ```
 
-Step 2: We add a 20px margin around it:
+Step 2: We add margin around it:
 
 ```c++
 margin(
-   { 20, 20, 20, 20 },
-   label("Hey There!")
+   { 25, 20, 25, 18 },
+   label("“Dogs are my favorite people”")
 )
 ```
+
+Note that like the align elements, there's a multitude of margins such as
+`left_margin`, `right_margin`, etc.
 
 Step 3: We make a blue rounded box:
 
 ```c++
-rbox(colors::blue, 15)
+rbox(colors::medium_blue, 10)
 ```
 
 Step 4: We place the label and the blue rounded box as siblings in a `layer`
@@ -201,17 +207,17 @@ element:
 ```c++
 layer(
    margin(
-      { 20, 20, 20, 20 },
-      label("Hey There!")
+      { 25, 20, 25, 18 },
+      label("“Dogs are my favorite people”")
    ),
-   rbox(colors::blue, 15)
+   rbox(colors::medium_blue, 10)
 )
 ```
 
 Step 4: Then finally, we place it in the `align_center_middle` element.
 
-Tip: If the hierarchy gets a bit too deep, use the c++ `auto` to name
-sub-parts of the element composition.
+Tip: If the element hierarchy gets a bit too deep, use the c++ `auto` to name
+sub-parts of the element composition to make it easier to understand.
 
 The `layer` element is a composite element that holds zero or more 'child'
 elements. Some of you might have noticed that we already mentioned the
@@ -220,6 +226,17 @@ and Window](#app-and-window) section: "The content of the `view` typically
 contains multiple layers, much like typical graphics applications". Well,
 actually, this is the same `layer` thing here. The view's main content is a
 `layer` element.
+
+So now we have:
+
+![concepts_c]({{ site.url }}/elements/assets/images/concepts_c.png){: width="60%" }
+
+## Let's Make a Button
+
+<video width="520" height="337" controls>
+  <source type="video/mp4" src="{{ site.url }}/elements/assets/images/button.mp4">
+</video>
+
 
 -------------------------------------------------------------------------------
 

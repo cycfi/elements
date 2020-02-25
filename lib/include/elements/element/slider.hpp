@@ -85,12 +85,6 @@ namespace cycfi { namespace elements
                                , _body(std::forward<Track>(track))
                               {}
 
-                              inline basic_slider(Thumb const& thumb, Track const& track, double init_value)
-                               : Base(init_value)
-                               , _thumb(thumb)
-                               , _body(track)
-                              {}
-
       element const&          thumb() const override { return _thumb; }
       element&                thumb()       override { return _thumb; }
       element const&          track() const override { return _body; }

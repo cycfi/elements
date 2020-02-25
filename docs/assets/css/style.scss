@@ -36,3 +36,27 @@ img
 {
     border-radius: 5px;
 }
+
+.main-content .highlight pre, .main-content pre
+{
+    background-color: #ffffff;
+}
+
+.highlight .cp,
+.highlight .mi,
+.highlight .n, .highlight .nf,
+.highlight .o,
+.highlight .p,
+.highlight .k, .highlight .kt, .highlight .kv
+{
+    font-weight: normal;
+}
+
+.img-align-right
+{
+    float: right;
+    margin-right: 1em;
+    font-size: 11pt;
+    text-align: center;
+}
+

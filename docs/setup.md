@@ -5,6 +5,7 @@
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
 * [Linux Installation](#linux)
+* [Building and Running the examples](#building-and-running-the-examples)
 
 -------------------------------------------------------------------------------
 
@@ -215,6 +216,34 @@ If successful, cmake will generate Unix Make files in the build directory.
 ### Using [CLion](https://www.jetbrains.com/clion/):
 
 Simply open the CMakeLists.txt file using CLion and build the project.
+
+-------------------------------------------------------------------------------
+
+## Building and Running the examples
+
+<div class = "img-align-right" style="width:35%">
+  <img src="{{ site.url }}/elements/assets/images/examples.png" alt="Examples">
+  <p>CLion Project Tool Window</p>
+</div>
+
+If successful, cmake will generate a project file or makefiles in the build
+directory. Build the library and example programs using the generated
+makefiles or open the project file using your IDE and build all.
+
+You should see a couple of example applications in there that you can run.
+These examples are provided as starting points to get you up to speed in
+learning how to use the library. For simplicity, each example is contained in
+a single `main.cpp` source file.
+
+Feel free to inspect and mess with the examples. Each example demonstrates
+different aspects of the Elements library, from layout to control. You'd
+probably want to start with the “hello_universe” example, which is the
+Element's hello-world counterpart. You can copy the “empty” example and use
+it as a boilerplate for your own project.
+
+Tips:
+1. Resize the window and see the elements fluidly resize
+2. Use two-finger swipe to move the sliders and knobs
 
 -------------------------------------------------------------------------------
 

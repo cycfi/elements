@@ -41,6 +41,13 @@ namespace cycfi { namespace elements
       }
    }
 
+   void layer_element::draw(context const& ctx)
+   {
+      if (ctx.bounds != bounds)
+         layout(ctx);
+      composite_base::draw(ctx);
+   }
+
    layer_element::hit_info layer_element::hit_element(context const& ctx, point p) const
    {
       // we test from the highest index (topmost element)

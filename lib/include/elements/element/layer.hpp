@@ -20,6 +20,7 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    layout(context const& ctx) override;
+      void                    draw(context const& ctx) override;
       hit_info                hit_element(context const& ctx, point p) const override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
       void                    begin_focus() override;

@@ -6,6 +6,7 @@
 * [Background](#background)
 * [Aligns and Sizes](#aligns-and-sizes)
 * [Labels, Margins and Layers](#labels-margins-and-layers)
+* [Let's Make a Button](#lets-make-a-button)
 
 -------------------------------------------------------------------------------
 
@@ -233,10 +234,76 @@ So now we have:
 
 ## Let's Make a Button
 
-<video width="520" height="337" controls>
+To demonstrate the fine-grained and modular nature of Elements, it is perhaps
+illustrative to say that even the button element is not atomic and is
+actually composed of smaller parts. In this section, we will see how one
+creates a button from the basic parts that we have dealt with in the previous
+sections.
+
+A button is composed of two elements that represent its 1) normal and 2)
+pushed states. The basic concept here is that things like buttons do not know
+how to render themselves, but instead delegate that task to its subjects. The
+button takes care of the basic logic behind the the control, including user
+interaction and interface with the application via `on_click` callbacks, but
+delegates rendering to two external elements. We'll see shortly how that
+works.
+
+So we need two elements. Let's reuse the `blue_rbox` we wrote before. We need
+two, so this time, we will make a function that takes in a color. Hence, we
+differentiate the two button states (normal and pushed) by the color.
+
+```c++
+auto btn_rbox(color c)
+{
+   return
+      layer(
+         margin(
+            { 25, 20, 25, 18 },
+            label("“Dogs are my favorite people”")
+         ),
+         rbox(c, 10)
+      );
+}
+```
+
+Same as before, but with color options. Now, we have another function that
+creates the button for us:
+
+```c++
+auto make_button()
+{
+   return layered_button(
+      btn_rbox(colors::medium_blue),            // Normal state
+      btn_rbox(colors::medium_blue.level(0.8))  // Pushed state
+   );
+}
+```
+
+We have the normal state in medium_blue, and the pushed state, still
+medium_blue but with the level toned down by 0.8 (darker).
+
+And... that's it! Now we have a function that makes our button. We can now
+place this button in our view. Of course, like before, we keep in mind that
+we want to center the button:
+
+```c++
+   view_.content(
+      {
+         share(align_center_middle(make_button())),
+         share(background)
+      }
+   );
+```
+
+And here it is in action:
+
+<video width="520" height="337" style="margin-left: 30px" controls loop>
   <source type="video/mp4" src="{{ site.url }}/elements/assets/images/button.mp4">
 </video>
 
+Oh, hey, Elements has a gallery —a collection of reusable element
+compositions, just like what we did above, but more refined. That gallery is
+constantly growing. The possibilities is endless. Composing elements is fun!
 
 -------------------------------------------------------------------------------
 

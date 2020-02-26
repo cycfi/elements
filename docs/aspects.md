@@ -15,8 +15,7 @@ examples. The Elements C++ GUI library is:
 
 **Modular:** Elements is very lightweight and extremely modular. You compose
 very fine-grained, flyweight "elements" to form deep element hierarchies
-using a declarative interface with heavy emphasis on reuse. Even the most
-basic elements such as buttons are composed of even finer elements.
+using a declarative interface with heavy emphasis on reuse.
 
 **Declarative:** Elements exposes a declarative API using modern C++.
 Declarative C++ code tells you *what* rather than *how* (imperative, i.e.
@@ -26,14 +25,17 @@ elements, becomes very familiar and intuitive, much like using HTML.
 
 **Interoperable:** Elements is usable in any application and plays well with
 other GUI libraries and frameworks. The library is loosely coupled with the
-application and windowing system and co-exist with components within a host.
-It should be easy to integrate Elements with any existing application.
+application and windowing system and can co-exist with components within a
+host. It should be easy to integrate Elements with any existing application.
 
 ## Minimal Example
 
 Specific examples should make it clear. Let's start with a basic window with
 a dark grey background. Actually, this is the same as the 'empty' example
-provided in the ‘examples’ directory.
+provided in the ‘examples’ directory:
+[https://github.com/cycfi/elements/tree/master/examples/empty](https://github.com/cycfi/elements/tree/master/examples/empty)
+
+The examples presented here can be found here: [https://github.com/cycfi/elements/tree/master/examples/aspects](https://github.com/cycfi/elements/tree/master/examples/aspects)
 
 ```c++
 #include <elements.hpp>
@@ -191,7 +193,7 @@ auto blue_rbox =
    );
 ```
 
-If it's not obvious yet, let's spell it out for you.
+If it's not obvious yet, let's take it apart into its constituent pieces:
 
 Step 1: We make a label:
 
@@ -254,6 +256,9 @@ illustrative to say that even the button element is not atomic and is
 actually composed of smaller parts. In this section, we will see how one
 creates a button from the basic parts that we have dealt with in the previous
 sections.
+
+> Take note that this example is only for illustrative purposes. The library
+> provides easier ways to make buttons.
 
 A button is composed of two elements that represent its 1) normal and 2)
 pushed states. The basic concept here is that things like buttons do not know
@@ -351,6 +356,9 @@ The `slider` has two parts: the `track` and the `thumb`. Here, we made a
 simple track using the same old box. We made it black. Then, we reused the
 same “Dogs are my favorite people” button for the thumb. The result looks
 silly, I should say :blush:, but hey, we are trying to make a point!
+
+> Again, take note that this example is only for illustrative purposes. The
+> library provides easier, (but less funny :grin:) ways to make sliders.
 
 Now, like before, we add our funny slider to our view:
 

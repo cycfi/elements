@@ -10,21 +10,24 @@
 * [Sliders too!](#sliders-too)
 
 -------------------------------------------------------------------------------
-The three key aspects behind Elements are:
+This document explains the three key design aspects behind Elements through
+examples. The Elements C++ GUI library is:
 
-**Modularity:** Elements is very lightweight and extremely modular. You
-compose very fine-grained, flyweight "elements" to form deep element
-hierarchies using a declarative interface with heavy emphasis on reuse. Even
-the most basic elements such as buttons are composed of even finer elements.
+**Modular:** Elements is very lightweight and extremely modular. You compose
+very fine-grained, flyweight "elements" to form deep element hierarchies
+using a declarative interface with heavy emphasis on reuse. Even the most
+basic elements such as buttons are composed of even finer elements.
 
-**Declarativity:** Elements exposes a declarative API using modern C++.
+**Declarative:** Elements exposes a declarative API using modern C++.
 Declarative C++ code tells you *what* rather than *how* (imperative, i.e.
 control flow). There are no code generators. The GUI is declared entirely in
 C++ code. After a while, code reuse, using a palette of fine-grained
 elements, becomes very familiar and intuitive, much like using HTML.
 
-**Interoperability:** Elements is usable in any application and plays
-   well with other GUI libraries and frameworks.
+**Interoperable:** Elements is usable in any application and plays well with
+other GUI libraries and frameworks. The library is loosely coupled with the
+application and windowing system and co-exist with components within a host.
+It should be easy to integrate Elements with any existing application.
 
 ## Minimal Example
 
@@ -309,7 +312,7 @@ we want to center the button:
 
 And here it is in action:
 
-<video width="520" height="337" style="margin-left: 30px" controls loop>
+<video width="476" height="320" style="margin-left: 30px" controls loop>
   <source type="video/mp4" src="{{ site.url }}/elements/assets/images/button.mp4">
 </video>
 
@@ -322,7 +325,7 @@ constantly growing. The possibilities is endless. Composing elements is fun!
 Guess what, we can make funny sliders too, using the same components we made
 in the previous sections!
 
-<video width="520" height="364" style="margin-left: 30px" controls loop>
+<video width="476" height="320" style="margin-left: 30px" controls loop>
   <source type="video/mp4" src="{{ site.url }}/elements/assets/images/funny_slider.mp4">
 </video>
 

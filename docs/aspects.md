@@ -1,7 +1,7 @@
-# Concepts
+# Basic Aspects
 
 ## Table of Contents
-* [Flyweight](flyweight)
+* [Minimal Example](#minimal-example)
 * [App and Window](#app-and-window)
 * [Background](#background)
 * [Aligns and Sizes](#aligns-and-sizes)
@@ -10,16 +10,27 @@
 * [Sliders too!](#sliders-too)
 
 -------------------------------------------------------------------------------
+The three key aspects behind Elements are:
 
-## Flyweight
+**Modularity:** Elements is very lightweight and extremely modular. You
+compose very fine-grained, flyweight "elements" to form deep element
+hierarchies using a declarative interface with heavy emphasis on reuse. Even
+the most basic elements such as buttons are composed of even finer elements.
 
-Elements, is very lightweight and extremely modular. You compose very
-fine-grained, flyweight “elements” to form deep element hierarchies using a
-declarative interface with heavy emphasis on reuse. Specific examples should
-make it clear.
+**Declarativity:** Elements exposes a declarative API using modern C++.
+Declarative C++ code tells you *what* rather than *how* (imperative, i.e.
+control flow). There are no code generators. The GUI is declared entirely in
+C++ code. After a while, code reuse, using a palette of fine-grained
+elements, becomes very familiar and intuitive, much like using HTML.
 
-Let's start with a basic window with a dark grey background. Actually, this
-is the same as the 'empty' example provided in the ‘examples’ directory.
+**Interoperability:** Elements is usable in any application and plays
+   well with other GUI libraries and frameworks.
+
+## Minimal Example
+
+Specific examples should make it clear. Let's start with a basic window with
+a dark grey background. Actually, this is the same as the 'empty' example
+provided in the ‘examples’ directory.
 
 ```c++
 #include <elements.hpp>
@@ -90,7 +101,7 @@ view_.content(
 
 Running this example, you get:
 
-![concepts_a]({{ site.url }}/elements/assets/images/concepts_a.png){: width="60%" }
+![aspects_a]({{ site.url }}/elements/assets/images/aspects_a.png){: width="60%" }
 
 ## Aligns and Sizes
 
@@ -154,15 +165,15 @@ placed inside the `fixed_size` element which is then placed inside a
 
 Let's run this example:
 
-![concepts_b]({{ site.url }}/elements/assets/images/concepts_b.png){: width="60%" }
+![aspects_b]({{ site.url }}/elements/assets/images/aspects_b.png){: width="60%" }
 
 ## Labels, Margins and Layers
 
 Our goal this time is to place some text inside the blue box. The element we
 will use is the `label`. Most elements do not have a size, but as an
 exception, labels (simple text elements) do. So, instead of fixing the size
-of the box using `fixed_size`, we instead place the label alongside the box
-in a `layer` element, but add some margin. Here's how you do it:
+of the box using `fixed_size`, we place the label alongside the box in a
+`layer` element, but add some margin around the label. Here's how you do it:
 
 ```c++
 auto blue_rbox =
@@ -231,7 +242,7 @@ actually, this is the same `layer` thing here. The view's main content is a
 
 So now we have:
 
-![concepts_c]({{ site.url }}/elements/assets/images/concepts_c.png){: width="60%" }
+![aspects_c]({{ site.url }}/elements/assets/images/aspects_c.png){: width="60%" }
 
 ## Let's Make a Button
 
@@ -331,7 +342,7 @@ auto thumb =
 auto funny_slider = slider(thumb, track);
 ```
 
-Notice the pattern? It's the same consistent way for composing and assembling
+Notice the pattern? It's the same consistent way of composing and assembling
 parts. Start with smaller parts. Use them to build ever more complex parts.
 The `slider` has two parts: the `track` and the `thumb`. Here, we made a
 simple track using the same old box. We made it black. Then, we reused the

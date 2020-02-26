@@ -336,13 +336,6 @@
       refresh();
    }
 
-   void view::content(layers_type&& layers)
-   {
-      _content = std::forward<layers_type>(layers);
-      std::reverse(_content.begin(), _content.end());
-      set_limits();
-   }
-
    void view::poll()
    {
       _io.poll();

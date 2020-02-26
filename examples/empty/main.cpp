@@ -20,14 +20,12 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-                              // Add more content layers here. The order
-                              // specifies the layering. The lowest layer
-                              // is at the bottom of this list.
+                     // Add more content layers here. The order
+                     // specifies the layering. The lowest layer
+                     // is at the bottom of this list.
 
-         share(background)    // Replace background with your main element,
-                              // or keep it and add another layer on top of it.
-      }
+      background     // Replace background with your main element,
+                     // or keep it and add another layer on top of it.
    );
 
    _app.run();

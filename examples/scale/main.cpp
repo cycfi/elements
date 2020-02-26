@@ -109,10 +109,8 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(make_controls(view_)),
-         share(background)
-      }
+      make_controls(view_),
+      background
    );
 
    _app.run();

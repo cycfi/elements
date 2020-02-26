@@ -80,10 +80,8 @@ int main(int argc, const char* argv[])
    auto msg_box = make_message();
 
    _view.content(
-      {
-         msg_box,
-         share(background)
-      }
+      msg_box,
+      background
    );
 
    _view.post(2s,

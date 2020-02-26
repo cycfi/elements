@@ -94,16 +94,14 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
 #if (VARIANT == 1 || VARIANT == 2)
-         share(blue_rbox),
+      blue_rbox,
 #elif (VARIANT == 3)
-         share(align_center_middle(make_button())),
+      align_center_middle(make_button()),
 #elif (VARIANT == 4)
-         share(align_center(funny_slider)),
+      align_center(funny_slider),
 #endif
-         share(background)
-      }
+      background
    );
 
    _app.run();

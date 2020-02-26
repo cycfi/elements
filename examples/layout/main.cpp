@@ -280,10 +280,8 @@ int main(int argc, const char* argv[])
    auto main_element = margin({ 10, 10, 10, 10 }, main_pane);
 
    view_.content(
-      {
-         share(main_element),
-         share(background)
-      }
+      main_element,
+      background
    );
 
    _app.run();

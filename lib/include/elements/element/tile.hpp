@@ -31,13 +31,13 @@ namespace cycfi { namespace elements
 
    using vtile_composite = vector_composite<vtile_element>;
 
-   template <typename... W>
-   inline auto vtile(W&&... elements)
+   template <typename... E>
+   inline auto vtile(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), vtile_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
 
@@ -61,13 +61,13 @@ namespace cycfi { namespace elements
 
    using htile_composite = vector_composite<htile_element>;
 
-   template <typename... W>
-   inline auto htile(W&&... elements)
+   template <typename... E>
+   inline auto htile(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), htile_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
 }}

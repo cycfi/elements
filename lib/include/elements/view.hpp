@@ -76,7 +76,11 @@ namespace cycfi { namespace elements
 
       content_type&           content();
       content_type const&     content() const;
-      void                    content(layers_type&& layers);
+      void                    content(std::initializer_list<element_ptr> list);
+
+                              template <typename... E>
+      void                    content(E&&... elements);
+
       void                    add(element_ptr e);
       void                    remove(element_ptr e);
       bool                    is_open(element_ptr e);
@@ -157,6 +161,36 @@ namespace cycfi { namespace elements
    inline view::content_type const& view::content() const
    {
       return _content;
+   }
+
+   inline void view::content(std::initializer_list<element_ptr> list)
+   {
+      _content = list;
+      std::reverse(_content.begin(), _content.end());
+      set_limits();
+   }
+
+   namespace detail
+   {
+      template <typename E>
+      inline element_ptr add_element(E&& e)
+      {
+         return share(std::forward<E>(e));
+      }
+
+      template <typename E>
+      inline std::shared_ptr<E> add_element(std::shared_ptr<E> ep)
+      {
+         return ep;
+      }
+   }
+
+   template <typename... E>
+   inline void view::content(E&&... elements)
+   {
+      _content = { detail::add_element(std::forward<E>(elements))... };
+      std::reverse(_content.begin(), _content.end());
+      set_limits();
    }
 
    inline void view::add(element_ptr e)

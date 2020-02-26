@@ -148,10 +148,8 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(make_elements()),
-         share(background)
-      }
+      make_elements(),
+      background
    );
 
    _app.run();

@@ -36,13 +36,13 @@ namespace cycfi { namespace elements
 
    using layer_composite = vector_composite<layer_element>;
 
-   template <typename... W>
-   inline auto layer(W&&... elements)
+   template <typename... E>
+   inline auto layer(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), layer_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<E>(elements))... }};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -75,13 +75,13 @@ namespace cycfi { namespace elements
 
    using deck_composite = vector_composite<deck_element>;
 
-   template <typename... W>
-   inline auto deck(W&&... elements)
+   template <typename... E>
+   inline auto deck(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), deck_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<W>(elements))... }};
+      r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
 }}

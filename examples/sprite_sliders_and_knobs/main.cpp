@@ -134,10 +134,8 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(make_controls()),
-         share(background)
-      }
+      make_controls(),
+      background
    );
 
    link_controls(view_);

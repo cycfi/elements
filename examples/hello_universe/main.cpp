@@ -16,9 +16,7 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(scroller(image{ "space.jpg" }))
-      }
+      scroller(image{ "space.jpg" })
    );
 
    _app.run();

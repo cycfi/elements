@@ -55,9 +55,7 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(background)
-      }
+      background
    );
 
    _app.run();
@@ -98,9 +96,7 @@ resized. We set it as the view's content:
 
 ```c++
 view_.content(
-   {
-      share(background)
-   }
+   background
 );
 ```
 
@@ -127,10 +123,8 @@ layer in the view:
 
 ```c++
 view_.content(
-   {
-      share(blue_rbox),
-      share(background)
-   }
+   blue_rbox,
+   background
 );
 ```
 
@@ -308,10 +302,8 @@ we want to center the button:
 
 ```c++
    view_.content(
-      {
-         share(align_center_middle(make_button())),
-         share(background)
-      }
+      align_center_middle(make_button()),
+      background
    );
 ```
 
@@ -364,10 +356,8 @@ Now, like before, we add our funny slider to our view:
 
 ```c++
    view_.content(
-      {
-         share(align_center(funny_slider)),
-         share(background)
-      }
+      align_center(funny_slider),
+      background
    );
 ```
 

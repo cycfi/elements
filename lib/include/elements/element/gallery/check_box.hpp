@@ -7,9 +7,7 @@
 #define ELEMENTS_GALLERY_CHECK_BOX_JUNE_5_2016
 
 #include <elements/element/gallery/button.hpp>
-#include <elements/support/theme.hpp>
-#include <string>
-#include <utility>
+#include <elements/element/gallery/toggle_selector.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -21,46 +19,17 @@ namespace cycfi { namespace elements
    );
 
    template <bool state>
-   struct check_box_element : element
+   struct check_box_element : toggle_selector
    {
-                              check_box_element(std::string text)
-                               : _text(std::move(text))
-                              {}
+      using toggle_selector::toggle_selector;
 
-      view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    is_control() const override;
-
-      std::string             _text;
    };
-
-   template <bool state>
-   view_limits check_box_element<state>::limits(basic_context const& ctx) const
-   {
-      auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
-      size.x += 15 + size.y + 10 + 15;
-      return { { size.x, size.y }, { size.x, size.y } };
-   }
 
    template <bool state>
    void check_box_element<state>::draw(context const& ctx)
    {
       draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
-   }
-
-   template <bool state>
-   bool check_box_element<state>::cursor(context const& ctx, point p, cursor_tracking status)
-   {
-      ctx.view.refresh(ctx);
-      return true;
-   }
-
-   template <bool state>
-   bool check_box_element<state>::is_control() const
-   {
-      return true;
    }
 
    inline basic_toggle_button<> check_box(std::string text)

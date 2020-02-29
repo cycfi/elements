@@ -22,11 +22,8 @@ namespace cycfi { namespace elements
 
       color c1 = state ? indicator_color.level(1.5) : rgb(0, 0, 0).opacity(bg_alfa);
 
-      if (state && hilite)
-         c1 = c1.level(1.3);
-
       if (state)
-         draw_icon(canvas_, box, icons::ok, 14, c1.level(2.0));
+         draw_icon(canvas_, box, icons::ok, 14, c1.level(hilite ? 2.0 : 1.0));
 
       color outline_color = theme_.frame_color;
       canvas_.begin_path();

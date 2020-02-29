@@ -29,6 +29,8 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    is_control() const override;
 
       std::string             _text;
    };
@@ -46,6 +48,19 @@ namespace cycfi { namespace elements
    void check_box_element<state>::draw(context const& ctx)
    {
       draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
+   }
+
+   template <bool state>
+   bool check_box_element<state>::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      ctx.view.refresh(ctx);
+      return true;
+   }
+
+   template <bool state>
+   bool check_box_element<state>::is_control() const
+   {
+      return true;
    }
 
    inline basic_toggle_button<> check_box(std::string text)

@@ -17,26 +17,9 @@ namespace cycfi { namespace elements
    public:
 
       virtual                 ~selectable() = default;
-      bool                    is_selected() const;
-      virtual void            select(bool state);
-
-   private:
-
-      bool                    _selected = false;
+      virtual bool            is_selected() const = 0;
+      virtual void            select(bool state) = 0;
    };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Inlines
-   ////////////////////////////////////////////////////////////////////////////
-   inline bool selectable::is_selected() const
-   {
-      return _selected;
-   }
-
-   inline void selectable::select(bool state)
-   {
-      _selected = state;
-   }
 }}
 
 #endif

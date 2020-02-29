@@ -22,6 +22,7 @@ namespace cycfi { namespace elements
       using basic_latching_button::basic_latching_button;
 
       void              select(bool state) override;
+      bool              is_selected() const override;
       element*          click(context const& ctx, mouse_button btn) override;
    };
 

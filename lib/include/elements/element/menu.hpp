@@ -115,10 +115,13 @@ namespace cycfi { namespace elements
       shortcut_key            shortcut;
 
       void                    scroll_into_view()   { _scroll_into_view = true; }
+      bool                    is_selected() const override;
+      void                    select(bool state) override;
 
    private:
 
       bool                    _scroll_into_view = false;
+      bool                    _selected = false;
    };
 
    template <typename Subject>
@@ -126,6 +129,16 @@ namespace cycfi { namespace elements
    basic_menu_item(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
+   }
+
+   inline bool basic_menu_item_element::is_selected() const
+   {
+      return _selected;
+   }
+
+   inline void basic_menu_item_element::select(bool state)
+   {
+      _selected = state;
    }
 }}
 

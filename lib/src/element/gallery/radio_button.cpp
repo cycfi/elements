@@ -56,19 +56,22 @@ namespace cycfi { namespace elements
       canvas_.fill_text(point{ cx, cy }, text.c_str());
    }
 
+   bool basic_radio_button::is_selected() const
+   {
+      return value();
+   }
+
    void basic_radio_button::select(bool state)
    {
       if (state != is_selected())
-      {
-         selectable::select(state);
          value(state);
-      }
    }
 
    element* basic_radio_button::click(context const& ctx, mouse_button btn)
    {
+      bool was_selected = is_selected();
       auto r = basic_latching_button<>::click(ctx, btn);
-      if (!is_selected())
+      if (!was_selected)
       {
          auto [c, cctx] = find_composite(ctx);
          if (c)

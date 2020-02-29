@@ -85,7 +85,7 @@ namespace cycfi { namespace elements
                   }
                   else
                   {
-                     if (!e->is_selected())
+                     if (e->is_selected())
                      {
                         // Reset the radio button
                         e->select(false);

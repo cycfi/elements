@@ -93,6 +93,24 @@ namespace cycfi { namespace elements
    {
       _subject = std::forward<Subject>(subject_);
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_subject utility finds the outermost subject of the given type
+   // or nullptr if not found.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename E>
+   inline E* find_subject(element* e)
+   {
+      proxy_base* proxy = dynamic_cast<proxy_base*>(e);
+      while (proxy)
+      {
+         auto* subject = &proxy->subject();
+         if (auto e = dynamic_cast<E*>(subject))
+            return e;
+         proxy = dynamic_cast<proxy_base*>(subject);
+      }
+      return nullptr;
+   }
 }}
 
 #endif

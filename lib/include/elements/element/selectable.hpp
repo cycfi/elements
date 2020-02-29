@@ -9,7 +9,8 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // tracker tracks the mouse movement.
+   // selectable base class for selectable elements
+   // (e.g. menu items and radio buttons)
    ////////////////////////////////////////////////////////////////////////////
    class selectable
    {
@@ -17,7 +18,7 @@ namespace cycfi { namespace elements
 
       virtual                 ~selectable() = default;
       bool                    is_selected() const;
-      void                    select(bool state);
+      virtual void            select(bool state);
 
    private:
 

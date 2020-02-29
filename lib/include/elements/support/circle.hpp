@@ -7,6 +7,7 @@
 #define ELEMENTS_CIRCLE_APRIL_17_2016
 
 #include <elements/support/rect.hpp>
+#include <algorithm>
 
 namespace cycfi { namespace elements
 {
@@ -18,6 +19,7 @@ namespace cycfi { namespace elements
       constexpr   circle();
       constexpr   circle(float cx, float cy, float radius);
       constexpr   circle(point c, float radius);
+      constexpr   circle(rect r);
                   circle(circle const&) = default;
       circle&     operator=(circle const&) = default;
 
@@ -48,6 +50,10 @@ namespace cycfi { namespace elements
 
    inline constexpr circle::circle(point c, float radius)
     : cx(c.x), cy(c.y), radius(radius)
+   {}
+
+   inline constexpr circle::circle(rect r)
+    : circle(center_point(r), std::min(r.width(), r.height()))
    {}
 
    inline bool circle::operator==(circle const& other) const

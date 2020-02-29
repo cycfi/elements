@@ -84,6 +84,25 @@ auto make_more_buttons()
             )
          );
 
+   auto  radio_button1 = radio_button("Eons from now");
+   auto  radio_button2 = radio_button("Ultra-sentient particles");
+   auto  radio_button3 = radio_button("The stratosphere is electrified");
+
+   radio_button1.select(true);
+
+   auto  group4 =
+         group("Radio Buttons",
+            margin({ 10, 10, 20, 20 },
+               top_margin(25,
+                  vtile(
+                     top_margin(10, align_left(radio_button1)),
+                     top_margin(10, align_left(radio_button2)),
+                     top_margin(10, align_left(radio_button3))
+                  )
+               )
+            )
+         );
+
    auto indicator_color = get_theme().indicator_color;
 
    auto  group2 =
@@ -126,6 +145,7 @@ auto make_more_buttons()
 
    return vtile(
       margin({ 20, 20, 20, 20 }, group1),
+      margin({ 20, 20, 20, 20 }, group4),
       margin({ 20, 20, 20, 20 }, group2),
       margin({ 20, 20, 20, 20 }, group3)
    );

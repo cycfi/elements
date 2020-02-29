@@ -143,6 +143,7 @@ namespace cycfi { namespace elements
    std::pair<composite_base*, context const*>
    inline find_composite(context const& ctx)
    {
+      element* this_ = ctx.element;
       std::pair<composite_base*, context const*> result = { nullptr, nullptr };
       auto p = ctx.parent;
       while (p)
@@ -150,7 +151,7 @@ namespace cycfi { namespace elements
          auto&& find =
             [&](context const& ctx, element* e) -> bool
             {
-               if (auto c = dynamic_cast<composite_base*>(e))
+               if (auto c = dynamic_cast<composite_base*>(e); c && c != this_)
                {
                   result.first = c;
                   result.second = &ctx;

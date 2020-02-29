@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
    {
       return basic_toggle_button(
          check_box_element<false>{ text }
-       , check_box_element<true>{ text }
+       , check_box_element<true>{ std::move(text) }
       );
    }
 }}

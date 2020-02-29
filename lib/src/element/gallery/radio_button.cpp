@@ -78,9 +78,21 @@ namespace cycfi { namespace elements
                if (auto e = find_subject<basic_radio_button>(&c->at(i)))
                {
                   if (e == this)
+                  {
+                     // Set the radio button
                      e->select(true);
+                     // The base class::click should have called on_click already
+                  }
                   else
-                     e->select(false);
+                  {
+                     if (!e->is_selected())
+                     {
+                        // Reset the radio button
+                        e->select(false);
+                        if (e->on_click)
+                           e->on_click(false);
+                     }
+                  }
                }
             }
          }

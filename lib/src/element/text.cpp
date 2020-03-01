@@ -496,7 +496,7 @@ namespace cycfi { namespace elements
       return handled;
    }
 
-   bool basic_text_box::is_control() const
+   bool basic_text_box::wants_control() const
    {
       return true;
    }

@@ -48,6 +48,7 @@ namespace cycfi { namespace elements
 
    // Control
 
+      bool                    wants_control() const override;
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
@@ -61,7 +62,6 @@ namespace cycfi { namespace elements
       element const*          focus() const override;
       element*                focus() override;
       void                    focus(std::size_t index);
-      bool                    is_control() const override;
       virtual void            reset();
 
    // Composite

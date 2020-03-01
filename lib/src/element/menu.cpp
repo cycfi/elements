@@ -353,7 +353,7 @@ namespace cycfi { namespace elements
       return hit;
    }
 
-   bool basic_menu_item_element::is_control() const
+   bool basic_menu_item_element::wants_control() const
    {
       return true;
    }

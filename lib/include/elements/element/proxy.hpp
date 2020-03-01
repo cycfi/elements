@@ -38,6 +38,7 @@ namespace cycfi { namespace elements
 
    // Control
 
+      bool                    wants_control() const override;
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
@@ -50,7 +51,6 @@ namespace cycfi { namespace elements
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
-      bool                    is_control() const override;
 
    // Proxy
 

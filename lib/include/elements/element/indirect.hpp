@@ -46,29 +46,29 @@ namespace cycfi { namespace elements
 
    // Display
 
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual void            draw(context const& ctx);
-      virtual void            layout(context const& ctx);
-      virtual void            refresh(context const& ctx, element& element, int outward = 0);
+      view_limits             limits(basic_context const& ctx) const override;
+      element*                hit_test(context const& ctx, point p) override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
+      void                    refresh(context const& ctx, element& element, int outward = 0) override;
 
       using element::refresh;
 
    // Control
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
-      virtual bool            scroll(context const& ctx, point dir, point p);
+      bool                    wants_control() const override;
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
 
-      virtual bool            wants_focus() const;
-      virtual void            begin_focus();
-      virtual void            end_focus();
-      virtual element const*  focus() const;
-      virtual element*        focus();
-      virtual bool            is_control() const;
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
+      element const*          focus() const override;
+      element*                focus() override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -172,6 +172,13 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
+   inline bool
+   indirect<Base>::wants_control() const
+   {
+      return this->get().wants_control();
+   }
+
+   template <typename Base>
    inline element*
    indirect<Base>::click(context const& ctx, mouse_button btn)
    {
@@ -239,13 +246,6 @@ namespace cycfi { namespace elements
    indirect<Base>::focus()
    {
       return this->get().focus();
-   }
-
-   template <typename Base>
-   inline bool
-   indirect<Base>::is_control() const
-   {
-      return this->get().is_control();
    }
 
    ////////////////////////////////////////////////////////////////////////////

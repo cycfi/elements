@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
       element*                click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    is_control() const override;
+      bool                    wants_control() const override;
 
       menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;

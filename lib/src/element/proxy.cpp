@@ -153,8 +153,8 @@ namespace cycfi { namespace elements
       return subject().focus();
    }
 
-   bool proxy_base::is_control() const
+   bool proxy_base::wants_control() const
    {
-      return subject().is_control();
+      return subject().wants_control();
    }
 }}

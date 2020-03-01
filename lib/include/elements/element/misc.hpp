@@ -262,7 +262,7 @@ namespace cycfi { namespace elements
                               {}
 
       bool                    key(context const& ctx, key_info k) override;
-      bool                    is_control() const override { return true; }
+      bool                    wants_control() const override { return true; }
       bool                    wants_focus() const override { return true; }
 
       using key_function = std::function<bool(key_info k)>;

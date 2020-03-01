@@ -54,7 +54,7 @@ namespace cycfi { namespace elements
       for (int ix = int(size())-1; ix >= 0; --ix)
       {
          auto& e = at(ix);
-         if (e.is_control())
+         if (e.wants_control())
          {
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
@@ -137,7 +137,7 @@ namespace cycfi { namespace elements
    layer_element::hit_info deck_element::hit_element(context const& ctx, point p) const
    {
       auto& e = at(_selected_index);
-      if (e.is_control())
+      if (e.wants_control())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          if (bounds.includes(p))
@@ -155,7 +155,7 @@ namespace cycfi { namespace elements
       if (!composite_base::focus())
       {
          auto& e = at(_selected_index);
-         if (e.is_control() && e.wants_focus())
+         if (e.wants_control() && e.wants_focus())
             composite_base::focus(_selected_index);
       }
       composite_base::begin_focus();

@@ -321,7 +321,7 @@ namespace cycfi { namespace elements
       for (std::size_t ix = 0; ix < size(); ++ix)
       {
          auto& e = at(ix);
-         if (e.is_control())
+         if (e.wants_control())
          {
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
@@ -335,10 +335,10 @@ namespace cycfi { namespace elements
       return hit_info{ 0, rect{}, -1 };
    }
 
-   bool composite_base::is_control() const
+   bool composite_base::wants_control() const
    {
       for (std::size_t ix = 0; ix < size(); ++ix)
-         if (at(ix).is_control())
+         if (at(ix).wants_control())
             return true;
       return false;
    }

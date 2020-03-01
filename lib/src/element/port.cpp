@@ -442,7 +442,7 @@ namespace cycfi { namespace elements
       return subject().cursor(ctx, p, status);
    }
 
-   bool scroller_base::is_control() const
+   bool scroller_base::wants_control() const
    {
       return true;
    }

@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
       bool                    wants_focus() const override;
       void                    begin_focus() override;
       void                    end_focus() override;
-      bool                    is_control() const override;
+      bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
       void                    text(std::string_view text) override;

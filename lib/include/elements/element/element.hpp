@@ -44,6 +44,7 @@ namespace cycfi { namespace elements
 
    // Control
 
+      virtual bool            wants_control() const;
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
@@ -56,7 +57,6 @@ namespace cycfi { namespace elements
       virtual void            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
-      virtual bool            is_control() const;
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 

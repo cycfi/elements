@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx);
    }
 
-   bool basic_button::is_control() const
+   bool basic_button::wants_control() const
    {
       return true;
    }
@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx);
    }
 
-   bool layered_button::is_control() const
+   bool layered_button::wants_control() const
    {
       return true;
    }

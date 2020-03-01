@@ -93,7 +93,7 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   bool element::is_control() const
+   bool element::wants_control() const
    {
       return false;
    }

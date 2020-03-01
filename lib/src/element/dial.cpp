@@ -21,14 +21,14 @@ namespace cycfi { namespace elements
    void dial_base::prepare_subject(context& ctx)
    {
       proxy_base::prepare_subject(ctx);
-      if (auto* rcvr = find_subject<receiver<double>*>(&subject()))
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
          rcvr->value(_value);
    }
 
    void dial_base::value(double val)
    {
       _value = clamp(val, 0.0, 1.0);
-      if (auto* rcvr = find_subject<receiver<double>*>(&subject()))
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
          rcvr->value(_value);
    }
 

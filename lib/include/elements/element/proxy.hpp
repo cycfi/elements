@@ -88,8 +88,8 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // find_subject utility finds the outermost subject of the given type
-   // or nullptr if not found.
+   // find_subject utility finds the outermost subject of the given
+   // pointer type or nullptr if not found.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
    inline Ptr find_subject(element* e)

@@ -96,18 +96,18 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    // Images used as controls. Various frames are laid out in a single (big)
-   // image but only one frame is drawn at any single time. Useful for switches,
-   // knobs and basic (sprite) animation.
+   // image but only one frame is drawn at any single time. Useful for
+   // switches, knobs and basic (sprite) animation.
    //
    // Note on sprite_as_int and sprite_as_double: The tricky thing about
    // sprites is that they can act as both receiver<int> or receiver<double>
    // depending on usage. For example, buttons use it as a receiver<int>
-   // where the int value reflects its state (the current frame displayed).
-   // On the other hand, dials regard it as a receiver<double>, where the
-   // value 0.0 to 1.0 reflects its state from 0 to num_frames()-1. Alas,
-   // we cannot directly inherit from both because the overridden value()
-   // member function will have an ambiguous return type (double or int?).
-   // The sprite_as_int and sprite_as_double TMP trick solves this dilemma.
+   // where the int value reflects the current frame displayed. On the other
+   // hand, dials regard it as a receiver<double>, where the value 0.0 to 1.0
+   // reflects its state from 0 to num_frames()-1. Alas, we cannot directly
+   // inherit from both because the overridden value() member function will
+   // have an ambiguous return type (double or int?). The sprite_as_int and
+   // sprite_as_double TMP trick solves this dilemma.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Derived>
    struct sprite_as_int : receiver<int>

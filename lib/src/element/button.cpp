@@ -34,7 +34,7 @@ namespace cycfi { namespace elements
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
       _hilite = status != cursor_tracking::leaving;
-      if (auto* rcvr = find_subject<receiver<bool>>(&subject()))
+      if (auto* rcvr = find_subject<receiver<bool>*>(&subject()))
       {
          rcvr->value((_state ? 2 : 0) + _hilite);
          ctx.view.refresh(ctx);
@@ -63,7 +63,7 @@ namespace cycfi { namespace elements
       if (new_state != _state)
       {
          _state = new_state;
-         if (auto* rcvr = find_subject<receiver<double>>(&subject()))
+         if (auto* rcvr = find_subject<receiver<double>*>(&subject()))
             rcvr->value((_state? 2 : 0) + _hilite);
          return true;
       }

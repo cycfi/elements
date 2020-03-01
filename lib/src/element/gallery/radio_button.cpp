@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
          {
             for (std::size_t i = 0; i != c->size(); ++i)
             {
-               if (auto e = find_subject<basic_radio_button>(&c->at(i)))
+               if (auto e = find_subject<basic_radio_button*>(&c->at(i)))
                {
                   if (e == this)
                   {

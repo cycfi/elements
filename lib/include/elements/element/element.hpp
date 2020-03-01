@@ -29,7 +29,6 @@ namespace cycfi { namespace elements
    class element : public std::enable_shared_from_this<element>
    {
    public:
-
                               element() {}
                               virtual ~element() = default;
 

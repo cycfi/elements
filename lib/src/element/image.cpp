@@ -215,9 +215,9 @@ namespace cycfi { namespace elements
       return rect{ 0, _height * _index, width, _height * (_index + 1) };
    }
 
-   void sprite::value(int val)
+   double sprite::value() const
    {
-      index(val);
+      return index() / num_frames()-1;
    }
 
    void sprite::value(double val)

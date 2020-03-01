@@ -3,10 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_APRIL_10_2016)
-#define ELEMENTS_APRIL_10_2016
+#if !defined(ELEMENTS_ELEMENT_APRIL_10_2016)
+#define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
+#include <elements/element/receiver.hpp>
 #include <elements/support/rect.hpp>
 
 #include <memory>
@@ -62,13 +63,6 @@ namespace cycfi { namespace elements
       virtual element const*  focus() const;
       virtual element*        focus();
       virtual bool            is_control() const;
-
-   // Receiver
-
-      virtual void            value(bool val);
-      virtual void            value(int val);
-      virtual void            value(double val);
-      virtual void            value(std::string_view val);
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 

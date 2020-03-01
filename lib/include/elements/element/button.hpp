@@ -18,12 +18,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_button : public proxy_base
+   class basic_button : public proxy_base, public receiver<bool>
    {
    public:
 
       using button_function = std::function<void(bool)>;
-      using proxy_base::value;
 
                         basic_button()
                          : _state(false)
@@ -35,9 +34,8 @@ namespace cycfi { namespace elements
       void              drag(context const& ctx, mouse_button btn) override;
       bool              is_control() const override;
 
-      void              value(int new_state) override;
       void              value(bool new_state) override;
-      bool              value() const;
+      bool              value() const override;
 
       button_function   on_click;
 
@@ -54,13 +52,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
    ////////////////////////////////////////////////////////////////////////////
-   class layered_button : public array_composite<2, deck_element>
+   class layered_button
+    : public array_composite<2, deck_element>, public receiver<bool>
    {
    public:
 
       using base_type = array_composite<2, deck_element>;
       using button_function = std::function<void(bool)>;
-      using base_type::value;
 
                         template <typename W1, typename W2>
                         layered_button(W1&& off, W2&& on);
@@ -70,9 +68,8 @@ namespace cycfi { namespace elements
       void              drag(context const& ctx, mouse_button btn) override;
       bool              is_control() const override;
 
-      void              value(int new_state) override;
       void              value(bool new_state) override;
-      bool              value() const;
+      bool              value() const override;
 
       button_function   on_click;
 

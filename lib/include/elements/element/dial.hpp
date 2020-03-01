@@ -16,12 +16,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////
-   class dial_base : public tracker<proxy_base>
+   class dial_base : public tracker<proxy_base>, public receiver<double>
    {
    public:
 
       using dial_function = std::function<void(double pos)>;
-      using tracker<proxy_base>::value;
 
                            dial_base(double init_value = 0.0);
 
@@ -32,7 +31,7 @@ namespace cycfi { namespace elements
       void                 keep_tracking(context const& ctx, info& track_info) override;
       void                 end_tracking(context const& ctx, info& track_info) override;
 
-      double               value() const;
+      double               value() const override;
       void                 value(double val) override;
       virtual double       value_from_point(context const& ctx, point p);
 
@@ -59,12 +58,11 @@ namespace cycfi { namespace elements
    // Basic Knob (You can use this as the subject of dial)
    ////////////////////////////////////////////////////////////////////////////
    template <std::size_t _size>
-   class basic_knob_element : public element
+   class basic_knob_element : public element, public receiver<double>
    {
    public:
 
       static std::size_t const size = _size;
-      using element::value;
 
                               basic_knob_element(color c = colors::black)
                                : _color(c), _value(0)
@@ -72,6 +70,8 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+
+      double                  value() const override { return _value; }
       void                    value(double val) override;
 
    private:

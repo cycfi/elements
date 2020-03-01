@@ -56,13 +56,6 @@ namespace cycfi { namespace elements
 
       virtual element const&  subject() const = 0;
       virtual element&        subject() = 0;
-
-   // Receiver
-
-      void                    value(bool val) override;
-      void                    value(int val) override;
-      void                    value(double val) override;
-      void                    value(std::string_view val) override;
    };
 
    template <typename Subject, typename Base = proxy_base>

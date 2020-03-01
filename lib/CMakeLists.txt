@@ -51,6 +51,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
    include/elements/element/element.hpp
+   include/elements/element/receiver.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
    include/elements/element/gallery/button.hpp

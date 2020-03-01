@@ -98,22 +98,6 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void element::value(bool /* val */)
-   {
-   }
-
-   void element::value(int /* val */)
-   {
-   }
-
-   void element::value(double /* val */)
-   {
-   }
-
-   void element::value(std::string_view /* val */)
-   {
-   }
-
    void element::on_tracking(context const& ctx, tracking state)
    {
       ctx.view.manage_on_tracking(*this, state);

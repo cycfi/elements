@@ -14,7 +14,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Progress Bar
    ////////////////////////////////////////////////////////////////////////////
-   class progress_bar_base : public element
+   class progress_bar_base : public element, public receiver<double>
    {
    public:
                               progress_bar_base(double init_value)
@@ -25,8 +25,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
 
-      using element::value;
-      double                  value() const { return _value; }
+      double                  value() const override { return _value; }
       void                    value(double val) override;
 
       rect                    background_bounds(context const& ctx) const;

@@ -34,12 +34,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
-   class static_text_box : public element, public text_base
+   class static_text_box : public element, public text_base, public receiver<std::string>
    {
    public:
-
-      using element::value;
-
                               static_text_box(
                                  std::string text
                                , font font_        = get_theme().text_box_font
@@ -57,6 +54,7 @@ namespace cycfi { namespace elements
       char const*             c_str() const override           { return _text.c_str(); }
       void                    text(std::string_view text) override;
 
+      std::string const&      value() const override           { return _text; }
       void                    value(std::string_view val) override;
 
       using element::text;

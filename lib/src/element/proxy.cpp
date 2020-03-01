@@ -157,24 +157,4 @@ namespace cycfi { namespace elements
    {
       return subject().is_control();
    }
-
-   void proxy_base::value(bool val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(int val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(double val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(std::string_view val)
-   {
-      subject().value(val);
-   }
 }}

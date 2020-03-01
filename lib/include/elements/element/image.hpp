@@ -99,12 +99,9 @@ namespace cycfi { namespace elements
    // image but only one frame is drawn at any single time. Useful for switches,
    // knobs and basic (sprite) animation.
    ////////////////////////////////////////////////////////////////////////////
-   class sprite : public image
+   class sprite : public image, public receiver<double>
    {
    public:
-
-      using image::value;
-
                               sprite(char const* filename, float height, float scale = 1);
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -115,9 +112,8 @@ namespace cycfi { namespace elements
       point                   size() const override;
 
       rect                    source_rect(context const& ctx) const override;
-
-      void                    value(int val) override;
       void                    value(double val) override;
+      double                  value() const override;
 
    private:
 

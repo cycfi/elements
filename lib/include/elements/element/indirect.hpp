@@ -7,7 +7,7 @@
 #define ELEMENTS_REFERENCE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements
@@ -50,13 +50,30 @@ namespace cycfi { namespace elements
       virtual element const*  focus() const;
       virtual element*        focus();
       virtual bool            is_control() const;
+   };
 
-   // Receiver
+   template <typename Indirect, typename Element, typename Enable = void>
+   struct indirect_receiver {};
 
-      virtual void            value(bool val);
-      virtual void            value(int val);
-      virtual void            value(double val);
-      virtual void            value(std::string_view val);
+   template <typename Indirect, typename Element>
+   struct indirect_receiver<
+         Indirect, Element
+       , typename std::enable_if<std::is_base_of<receiver_base, Element>::value>::type
+    > : receiver_base
+   {
+      using receiver_type = typename Element::receiver_type;
+      using getter_type = typename Element::getter_type;
+      using param_type = typename Element::param_type;
+
+      virtual void value(param_type val)
+      {
+         static_cast<Indirect*>(this)->get().value(val);
+      }
+
+      virtual getter_type value() const
+      {
+         return static_cast<Indirect const*>(this)->get().value();
+      }
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -69,7 +86,9 @@ namespace cycfi { namespace elements
    // when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class reference : public element
+   class reference
+    : public element
+    , public indirect_receiver<reference<Element>, Element>
    {
    public:
 
@@ -96,7 +115,9 @@ namespace cycfi { namespace elements
    // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class shared_element : public element
+   class shared_element
+    : public element
+    , public indirect_receiver<reference<Element>, Element>
    {
    public:
 
@@ -242,30 +263,6 @@ namespace cycfi { namespace elements
    indirect<Base>::is_control() const
    {
       return this->get().is_control();
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(bool val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(int val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(double val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(std::string_view val)
-   {
-      this->get().value(val);
    }
 
    ////////////////////////////////////////////////////////////////////////////

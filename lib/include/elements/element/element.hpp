@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
                               element() {}
                               virtual ~element() = default;
 
-   // Image
+   // Display
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual view_stretch    stretch() const;

@@ -44,13 +44,12 @@ namespace cycfi { namespace elements
       using Base::Base;
       using Base::operator=;
 
-   // Image
+   // Display
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual element*        hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point dir, point p);
       virtual void            refresh(context const& ctx, element& element, int outward = 0);
 
       using element::refresh;
@@ -62,6 +61,7 @@ namespace cycfi { namespace elements
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            scroll(context const& ctx, point dir, point p);
 
       virtual bool            wants_focus() const;
       virtual void            begin_focus();

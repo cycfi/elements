@@ -32,11 +32,6 @@ namespace cycfi { namespace elements
                               element() {}
                               virtual ~element() = default;
 
-                              element(element&&) = default;
-                              element(element const&) = default;
-      element&                operator=(element&&) = default;
-      element&                operator=(element const&) = default;
-
    // Image
 
       virtual view_limits     limits(basic_context const& ctx) const;

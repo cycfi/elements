@@ -12,18 +12,37 @@
 
 namespace cycfi { namespace elements
 {
+   template <typename Indirect, typename Element, typename Enable = void>
+   struct indirect_receiver {};
+
+   template <typename Indirect, typename Element>
+   struct indirect_receiver<
+         Indirect, Element
+       , typename std::enable_if<std::is_base_of<receiver_base, Element>::value>::type
+    > : receiver_base
+   {
+      using receiver_type = typename Element::receiver_type;
+      using getter_type = typename Element::getter_type;
+      using param_type = typename Element::param_type;
+
+      virtual void value(param_type val)
+      {
+         static_cast<Indirect*>(this)->get().value(val);
+      }
+
+      virtual getter_type value() const
+      {
+         return static_cast<Indirect const*>(this)->get().value();
+      }
+   };
+
    template <typename Base>
-   class indirect : public Base
+   class indirect : public Base, public indirect_receiver<indirect<Base>, Base>
    {
    public:
 
       using Base::Base;
       using Base::operator=;
-
-                              indirect(indirect&& rhs) = default;
-                              indirect(indirect const& rhs) = default;
-      indirect&               operator=(indirect&& rhs) = default;
-      indirect&               operator=(indirect const& rhs) = default;
 
    // Image
 
@@ -52,30 +71,6 @@ namespace cycfi { namespace elements
       virtual bool            is_control() const;
    };
 
-   template <typename Indirect, typename Element, typename Enable = void>
-   struct indirect_receiver {};
-
-   template <typename Indirect, typename Element>
-   struct indirect_receiver<
-         Indirect, Element
-       , typename std::enable_if<std::is_base_of<receiver_base, Element>::value>::type
-    > : receiver_base
-   {
-      using receiver_type = typename Element::receiver_type;
-      using getter_type = typename Element::getter_type;
-      using param_type = typename Element::param_type;
-
-      virtual void value(param_type val)
-      {
-         static_cast<Indirect*>(this)->get().value(val);
-      }
-
-      virtual getter_type value() const
-      {
-         return static_cast<Indirect const*>(this)->get().value();
-      }
-   };
-
    ////////////////////////////////////////////////////////////////////////////
    // reference
    //
@@ -86,17 +81,11 @@ namespace cycfi { namespace elements
    // when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class reference
-    : public element
-    , public indirect_receiver<reference<Element>, Element>
+   class reference : public element
    {
    public:
 
       explicit                reference(Element& e);
-                              reference(reference&& rhs) = default;
-                              reference(reference const& rhs) = default;
-      reference&              operator=(reference&& rhs) = default;
-      reference&              operator=(reference const& rhs) = default;
 
       Element&                get();
       Element const&          get() const;
@@ -115,17 +104,11 @@ namespace cycfi { namespace elements
    // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class shared_element
-    : public element
-    , public indirect_receiver<reference<Element>, Element>
+   class shared_element : public element
    {
    public:
 
       explicit                shared_element(std::shared_ptr<Element> ptr);
-                              shared_element(shared_element&& rhs) = default;
-                              shared_element(shared_element const& rhs) = default;
-      shared_element&         operator=(shared_element&& rhs) = default;
-      shared_element&         operator=(shared_element const& rhs) = default;
       shared_element&         operator=(std::shared_ptr<Element> ptr);
 
       Element&                get();

@@ -35,7 +35,8 @@ a dark grey background. Actually, this is the same as the 'empty' example
 provided in the ‘examples’ directory:
 [https://github.com/cycfi/elements/tree/master/examples/empty](https://github.com/cycfi/elements/tree/master/examples/empty)
 
-The examples presented here can be found here: [https://github.com/cycfi/elements/tree/master/examples/aspects](https://github.com/cycfi/elements/tree/master/examples/aspects)
+The examples presented here can be found in this link:
+[https://github.com/cycfi/elements/tree/master/examples/aspects](https://github.com/cycfi/elements/tree/master/examples/aspects)
 
 ```c++
 #include <elements.hpp>
@@ -72,17 +73,18 @@ Like any other GUI libraries or frameworks, the `app` manages the main event
 loop, while the `window` manages application windows. However, take note that
 the `app` and the `window` classes are optional. There are certain
 situations, like e.g. building plugins or incorporating Elements in another
-framework such as QT, where you do not want Elements to have manage the event
-loop or windows. The important class of interest here is the `view`. In these
+framework such as QT, where you do not want Elements to manage the event loop
+or windows. The important class of interest here is the `view`. In these
 cases, you want to embed the `view` directly. You can directly construct a
 `view` given a platform window (or widget), as its main `content` view or
 child window (or widget).
 
 The `view` does not know anything about drawing or user interaction. Instead,
-it relies on its `content` to do these. Without `content`, it is an empty
-shell. And so this is where it starts to get interesting. The content of the
-`view` typically contains multiple layers, much like typical graphics
-applications. In this example, we only have one layer: the `background`.
+it relies on its client supplied `content` to do these. Without any
+`content`, it is an empty shell. And so this is where it starts to get
+interesting. The content of the `view` typically contains multiple layers,
+much like typical graphics applications. In this example, we only have one
+layer: the `background`.
 
 ## Background
 
@@ -114,9 +116,9 @@ background using `box`, passing in a color. A rounded box is created using
 auto blue_rbox = rbox(colors::medium_blue, 10);
 ```
 
-For the color, this time, we specified the color by name from the `colors`
-namespace. The namespace includes all predefined colors from the [standard
-HTML Color Names](https://www.w3schools.com/colors/colors_names.asp).
+The color, this time, is specified by name from the `colors` namespace. The
+namespace includes all predefined colors from the [standard HTML Color
+Names](https://www.w3schools.com/colors/colors_names.asp).
 
 We can actually use `blue_rbox` already, as-is, by placing it in another
 layer in the view:
@@ -131,8 +133,8 @@ view_.content(
 But like the `box`, the `rbox` is infinitely resizable and will hog the
 entire window. What we want is to give it a specific size and center it in
 the window. Elements are very lightweight. Most elements do not even have a
-size, nor know their position in the view. So we give it a 100x50 size by
-wrapping it in the `fixed_size` element:
+size, nor know their position in the view, making them relocatable. So we
+give it a 100x50 size by wrapping it in the `fixed_size` element:
 
 ```c++
 auto blue_rbox =
@@ -158,7 +160,7 @@ auto blue_rbox =
 Without the alignment element, the main window would have been constrained to
 a fixed 100x50 size. There's a multitude of alignment elements available.
 
-But now, we are seeing how fine-grained elements are composed. The `rbox` is
+So now, we are seeing how fine-grained elements are composed. The `rbox` is
 placed inside the `fixed_size` element which is then placed inside a
 `align_center_middle` element.
 
@@ -263,8 +265,9 @@ delegates rendering to two external elements. We'll see shortly how that
 works.
 
 So we need two elements. Let's reuse the `blue_rbox` we wrote before. We need
-two, so this time, we will make a function that takes in a color. Hence, we
-differentiate the two button states (normal and pushed) by the color.
+two, so this time, we will make a function that takes in a color and returns
+a button. Hence, we differentiate the two button states (normal and pushed)
+by the color.
 
 ```c++
 auto btn_rbox(color c)
@@ -294,7 +297,7 @@ auto make_button()
 ```
 
 We have the normal state in medium_blue, and the pushed state, still
-medium_blue but with the level toned down by 0.8 (darker).
+medium_blue but with the level down by 0.8 (darker).
 
 And... that's it! Now we have a function that makes our button. We can now
 place this button in our view. Of course, like before, we keep in mind that
@@ -315,7 +318,7 @@ And here it is in action:
 
 Oh, hey, Elements has a gallery —a collection of reusable element
 compositions, just like what we did above, but more refined. That gallery is
-constantly growing. The possibilities is endless. Composing elements is fun!
+constantly growing. The possibilities are endless. Composing elements is fun!
 
 ## Sliders too!
 

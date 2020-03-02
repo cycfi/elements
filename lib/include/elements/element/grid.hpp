@@ -3,39 +3,40 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_TILE_APRIL_13_2016)
-#define ELEMENTS_TILE_APRIL_13_2016
+#if !defined(ELEMENTS_GRID_MARCH_2_2020)
+#define ELEMENTS_GRID_MARCH_2_2020
 
 #include <elements/element/composite.hpp>
-#include <memory>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Vertical Tiles
+   // Vertical Grids
    ////////////////////////////////////////////////////////////////////////////
-   class vtile_element : public composite_base
+   class vgrid_element : public composite_base
    {
    public:
+                              vgrid_element(float const* grid_)
+                               : _grid(grid_)
+                              {}
 
       view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
 
    private:
 
-      std::vector<float>      _tiles;
+      float const*            _grid;
    };
 
-   using vtile_composite = vector_composite<vtile_element>;
+   using vgrid_composite = vector_composite<vgrid_element>;
 
    template <typename... E>
-   inline auto vtile(E&&... elements)
+   inline auto vgrid(float (&grid_)[sizeof...(E)], E&&... elements)
    {
-      using composite = array_composite<sizeof...(elements), vtile_element>;
+      using composite = array_composite<sizeof...(elements), vgrid_element>;
       using container = typename composite::container_type;
-      composite r{};
+      composite r{ grid_ };
       r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
@@ -43,28 +44,30 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Horizontal Tiles
    ////////////////////////////////////////////////////////////////////////////
-   class htile_element : public composite_base
+   class hgrid_element : public composite_base
    {
    public:
+                              hgrid_element(float const* grid_)
+                               : _grid(grid_)
+                              {}
 
       view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
 
    private:
 
-      std::vector<float>      _tiles;
+      float const*            _grid;
    };
 
-   using htile_composite = vector_composite<htile_element>;
+   using hgrid_composite = vector_composite<hgrid_element>;
 
    template <typename... E>
-   inline auto htile(E&&... elements)
+   inline auto hgrid(float (&grid_)[sizeof...(E)], E&&... elements)
    {
-      using composite = array_composite<sizeof...(elements), htile_element>;
+      using composite = array_composite<sizeof...(elements), hgrid_element>;
       using container = typename composite::container_type;
-      composite r{};
+      composite r{ grid_ };
       r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }

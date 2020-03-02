@@ -96,6 +96,7 @@ namespace cycfi { namespace elements
 
       using base_type = Base;
       using container_type = Container;
+      using Base::Base;
       using Container::Container;
       using Container::operator=;
 

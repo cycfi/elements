@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
    private:
 
       void                    focus_top();
-      rect                    bounds;
+      point                   _previous_size;
    };
 
    using layer_composite = vector_composite<layer_element>;

@@ -74,11 +74,11 @@ namespace cycfi { namespace elements
 
    void vtile_element::layout(context const& ctx)
    {
-      _left = ctx.bounds.left;
-      _right = ctx.bounds.right;
-      _tiles.resize(size()+1);
-
-      double const height = ctx.bounds.height();
+      auto const left = ctx.bounds.left;
+      auto const right = ctx.bounds.right;
+      auto const top = ctx.bounds.top;
+      auto const height = ctx.bounds.height();
+      _tiles.resize(size());
 
       // Collect min, max, and stretch information from each element. Also,
       // accumulate the maximum stretch (max_stretch) for later. Initially set the
@@ -102,27 +102,36 @@ namespace cycfi { namespace elements
 
       // Now we have the final layout. We can now layout the individual
       // elements.
-      double curr = ctx.bounds.top;
+      double curr = 0;
       auto iter = _tiles.begin();
       std::size_t i = 0;
       for (auto const& info : info)
       {
-         *iter++ = curr;
+         *iter++ = curr + info.alloc;
          auto prev = curr;
          curr += info.alloc;
 
          auto& elem = at(i++);
-         rect ebounds = { _left, float(prev), _right, float(curr) };
+         rect ebounds = { left, float(prev+top), right, float(curr+top) };
          elem.layout(context{ ctx, &elem, ebounds });
       }
-      *iter = curr;
    }
 
-   rect vtile_element::bounds_of(context const& /* ctx */, std::size_t index) const
+   void vtile_element::draw(context const& ctx)
+   {
+      if (_tiles.empty())
+         layout(ctx);
+      composite_base::draw(ctx);
+   }
+
+   rect vtile_element::bounds_of(context const& ctx, std::size_t index) const
    {
       if (index >= _tiles.size())
          return {};
-      return rect{ _left, _tiles[index], _right, _tiles[index+1] };
+      auto const left = ctx.bounds.left;
+      auto const right = ctx.bounds.right;
+      auto const top = ctx.bounds.top;
+      return rect{ left, (index? _tiles[index-1] : 0)+top, right, _tiles[index]+top };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -148,11 +157,11 @@ namespace cycfi { namespace elements
 
    void htile_element::layout(context const& ctx)
    {
-      _top = ctx.bounds.top;
-      _bottom = ctx.bounds.bottom;
-      _tiles.resize(size()+1);
-
-      double const width = ctx.bounds.width();
+      auto const top = ctx.bounds.top;
+      auto const bottom = ctx.bounds.bottom;
+      auto const left = ctx.bounds.left;
+      auto const width = ctx.bounds.width();
+      _tiles.resize(size());
 
       // Collect min, max, and stretch information from each element. Also,
       // accumulate the maximum stretch (max_stretch) for later. Initially
@@ -176,26 +185,35 @@ namespace cycfi { namespace elements
 
       // Now we have the final layout. We can now layout the individual
       // elements.
-      double curr = ctx.bounds.left;
+      double curr = 0;
       auto iter = _tiles.begin();
       std::size_t i = 0;
       for (auto const& info : info)
       {
-         *iter++ = curr;
+         *iter++ = curr + info.alloc;
          auto prev = curr;
          curr += info.alloc;
 
          auto& elem = at(i++);
-         rect ebounds = { float(prev), _top, float(curr), _bottom };
+         rect ebounds = { float(prev+left), top, float(curr+left), bottom };
          elem.layout(context{ ctx, &elem, ebounds });
       }
-      *iter = curr;
    }
 
-   rect htile_element::bounds_of(context const& /* ctx */, std::size_t index) const
+   void htile_element::draw(context const& ctx)
+   {
+      if (_tiles.empty())
+         layout(ctx);
+      composite_base::draw(ctx);
+   }
+
+   rect htile_element::bounds_of(context const& ctx, std::size_t index) const
    {
       if (index >= _tiles.size())
          return {};
-      return rect{ _tiles[index], _top, _tiles[index + 1], _bottom };
+      auto const top = ctx.bounds.top;
+      auto const bottom = ctx.bounds.bottom;
+      auto const left = ctx.bounds.left;
+      return rect{ (index? _tiles[index-1] : 0)+left, top, _tiles[index]+left, bottom };
    }
 }}

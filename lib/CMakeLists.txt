@@ -15,6 +15,7 @@ set(ELEMENTS_SOURCES
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
+   src/element/grid.cpp
    src/element/gallery/button.cpp
    src/element/gallery/check_box.cpp
    src/element/gallery/icon_button.cpp
@@ -54,6 +55,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/receiver.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
+   include/elements/element/grid.hpp
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp

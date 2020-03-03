@@ -1,4 +1,4 @@
-# Basic Aspects
+# Design Aspects
 
 ## Table of Contents
 * [Minimal Example](#minimal-example)

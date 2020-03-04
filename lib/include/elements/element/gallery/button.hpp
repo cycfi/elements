@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       return make_button<Button>(
          margin(
             button_margin,
-            align_center(label(std::move(text), size))
+            align_center(label(std::move(text)).relative_font_size(size))
          ),
          body_color
       );
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
             align_center(
                htile(
                   right_margin(8, icon(icon_code, size)),
-                  label(std::move(text), size)
+                  label(std::move(text)).relative_font_size(size)
                )
             )
          ),
@@ -119,7 +119,7 @@ namespace cycfi { namespace elements
             button_margin,
             align_center(
                htile(
-                  label(std::move(text), size),
+                  label(std::move(text)).relative_font_size(size),
                   left_margin(12, icon(icon_code, size))
                )
             )
@@ -155,7 +155,7 @@ namespace cycfi { namespace elements
       return text_button<Button>(
          margin(
             button_margin,
-            align_left(label(std::move(text), size))
+            align_left(label(std::move(text)).relative_font_size(size))
          ),
          no_frame
       );
@@ -190,7 +190,7 @@ namespace cycfi { namespace elements
             button_margin,
             htile(
                align_left(right_margin(8, icon(icon_code, size))),
-               align_right(label(std::move(text), size))
+               align_right(label(std::move(text)).relative_font_size(size))
             )
          ),
          no_frame
@@ -209,7 +209,7 @@ namespace cycfi { namespace elements
          margin(
             button_margin,
             htile(
-               align_left(label(std::move(text), size)),
+               align_left(label(std::move(text)).relative_font_size(size)),
                align_right(left_margin(12, icon(icon_code, size)))
             )
          ),

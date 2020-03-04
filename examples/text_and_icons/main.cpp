@@ -64,7 +64,7 @@ auto make_basic_text()
 
    auto el = [=](double align, char const* txt)
    {
-      return fr(halign(align, label{ txt }));
+      return fr(halign(align, label(txt)));
    };
 
    auto icons =

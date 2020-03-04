@@ -180,6 +180,7 @@ auto make_vgrid()
       hsize(150, rbox_)
    );
 
+   // Place the grid coordinates in a plain array
    static float grid[] = { 50, 100, 150, 200, 250, 300 };
 
    return margin(
@@ -205,7 +206,8 @@ auto make_hgrid()
       vsize(150, rbox_)
    );
 
-   static float grid[] = { 50, 100, 150, 200, 250, 300 };
+   // You can also place the grid coordinates a std::array
+   static std::array<float, 6> grid = { 50, 100, 150, 200, 250, 300 };
 
    return margin(
       { 0, 50, 10, 10 },

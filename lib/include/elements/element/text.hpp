@@ -20,15 +20,21 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // text_base mixin
    ////////////////////////////////////////////////////////////////////////////
-   class text_base
+   class read_only_text_base
    {
    public:
 
-      virtual                    ~text_base() = default;
+      virtual                    ~read_only_text_base() = default;
 
-      virtual std::string const& text() const = 0;
-      virtual char const*        c_str() const = 0;
-      virtual void               text(std::string_view text) = 0;
+      virtual std::string const& get_text() const = 0;
+      char const*                c_str() const { return get_text().c_str(); }
+   };
+
+   class text_base : public read_only_text_base
+   {
+   public:
+
+      virtual void               set_text(std::string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -50,9 +56,8 @@ namespace cycfi { namespace elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      text() const override            { return _text; }
-      char const*             c_str() const override           { return _text.c_str(); }
-      void                    text(std::string_view text) override;
+      std::string const&      get_text() const override            { return _text; }
+      void                    set_text(std::string_view text) override;
 
       std::string const&      value() const override           { return _text; }
       void                    value(std::string_view val) override;
@@ -97,10 +102,10 @@ namespace cycfi { namespace elements
       bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
-      void                    text(std::string_view text) override;
+      void                    set_text(std::string_view text) override;
 
       using element::focus;
-      using static_text_box::text;
+      using static_text_box::get_text;
 
       int                     select_start() const    { return _select_start; }
       void                    select_start(int pos);
@@ -157,7 +162,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using basic_text_box::text;
+      using basic_text_box::get_text;
 
       using text_function = std::function<std::string(std::string_view text)>;
       using enter_function = std::function<bool(std::string_view text)>;

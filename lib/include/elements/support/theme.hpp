@@ -36,10 +36,12 @@ namespace cycfi { namespace elements
       color                heading_font_color;
       font                 heading_font;
       float                heading_font_size;
+      int                  heading_text_align;
 
       color                label_font_color;
       font                 label_font;
       float                label_font_size;
+      int                  label_text_align;
 
       color                icon_color;
       font                 icon_font;

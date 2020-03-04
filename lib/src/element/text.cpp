@@ -99,7 +99,7 @@ namespace cycfi { namespace elements
          _layout.text(f, l);
    }
 
-   void static_text_box::text(std::string_view text)
+   void static_text_box::set_text(std::string_view text)
    {
       _text = text;
       _rows.clear();
@@ -109,7 +109,7 @@ namespace cycfi { namespace elements
 
    void static_text_box::value(std::string_view val)
    {
-      text(val);
+      set_text(val);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -263,9 +263,9 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_text_box::text(std::string_view text_)
+   void basic_text_box::set_text(std::string_view text_)
    {
-      static_text_box::text(text_);
+      static_text_box::set_text(text_);
       _select_start = std::min<int>(_select_start, text_.size());
       _select_end = std::min<int>(_select_end, text_.size());
    }
@@ -907,7 +907,7 @@ namespace cycfi { namespace elements
 
    void basic_input_box::draw(context const& ctx)
    {
-      if (text().empty())
+      if (get_text().empty())
       {
          if (!_placeholder.empty())
          {
@@ -936,7 +936,7 @@ namespace cycfi { namespace elements
    {
       bool r = basic_text_box::text(ctx, info);
       if (on_text)
-         text(on_text(text()));
+         set_text(on_text(get_text()));
       return r;
    }
 
@@ -948,7 +948,7 @@ namespace cycfi { namespace elements
          {
             case key_code::enter:
                if (on_enter)
-                  on_enter(text());
+                  on_enter(get_text());
                ctx.view.refresh(ctx);
                ctx.view.end_focus();
                return true;
@@ -1017,7 +1017,7 @@ namespace cycfi { namespace elements
             auto new_text = on_text(_text);
             if (new_text != _text)
             {
-               text(new_text);
+               set_text(new_text);
                select_all();
             }
          }

@@ -110,7 +110,7 @@ Running this example, you get:
 
 Now let's add a blue round rectangle. We've seen how to create a box: the
 background using `box`, passing in a color. A rounded box is created using
-`rbox`, passing in the color and the radius:
+`rbox`, passing in the color and the corner radius:
 
 ```c++
 auto blue_rbox = rbox(colors::medium_blue, 10);
@@ -133,8 +133,11 @@ view_.content(
 But like the `box`, the `rbox` is infinitely resizable and will hog the
 entire window. What we want is to give it a specific size and center it in
 the window. Elements are very lightweight. Most elements do not even have a
-size, nor know their position in the view, making them relocatable. So we
-give it a 100x50 size by wrapping it in the `fixed_size` element:
+size, nor know their position in the view (elements without position
+information are inherently relocatable —they can be placed anywhere; the
+position is supplied at rendering time).
+
+So we give it a 100x50 size by wrapping it in the `fixed_size` element:
 
 ```c++
 auto blue_rbox =

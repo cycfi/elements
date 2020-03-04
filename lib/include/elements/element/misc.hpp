@@ -134,6 +134,7 @@ namespace cycfi { namespace elements
       public:
 
       using font_type = elements::font const&;
+      using remove_gen = default_label;
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -148,6 +149,7 @@ namespace cycfi { namespace elements
    struct basic_label_base : Base, virtual text_base
    {
       using text_type = std::string const&;
+      using remove_gen = basic_label_base<Base>;
 
                               basic_label_base(std::string text)
                                : _text(text)
@@ -165,6 +167,7 @@ namespace cycfi { namespace elements
    struct label_with_font : Base
    {
       using font_type = elements::font const&;
+      using remove_gen = label_with_font<Base>;
 
                               label_with_font(Base const& base, font font_)
                                : Base(base), _font(font_)
@@ -180,6 +183,8 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_font_size : Base
    {
+      using remove_gen = label_with_font_size<Base>;
+
                               label_with_font_size(Base const& base, float size)
                                : Base(base), _size(size)
                               {}
@@ -194,6 +199,8 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_font_color : Base
    {
+      using remove_gen = label_with_font_color<Base>;
+
                               label_with_font_color(Base const& base, color color_)
                                : Base(base), _color(color_)
                               {}
@@ -208,6 +215,8 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_text_align : Base
    {
+      using remove_gen = label_with_text_align<Base>;
+
                               label_with_text_align(Base const& base, int align)
                                : Base(base), _align(align)
                               {}
@@ -223,12 +232,13 @@ namespace cycfi { namespace elements
    struct label_gen : Base
    {
       using Base::Base;
+      using remove_gen = typename Base::remove_gen;
 
       using font_type      = elements::font const&;
-      using gen_font       = label_gen<label_with_font<Base>>;
-      using gen_font_size  = label_gen<label_with_font_size<Base>>;
-      using gen_font_color = label_gen<label_with_font_color<Base>>;
-      using gen_text_align = label_gen<label_with_text_align<Base>>;
+      using gen_font       = label_gen<label_with_font<remove_gen>>;
+      using gen_font_size  = label_gen<label_with_font_size<remove_gen>>;
+      using gen_font_color = label_gen<label_with_font_color<remove_gen>>;
+      using gen_text_align = label_gen<label_with_text_align<remove_gen>>;
 
       gen_font                font(font_type font_) const;
       gen_font_size           font_size(float size) const;
@@ -300,9 +310,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct default_heading : default_label
    {
-      public:
-
       using font_type = elements::font const&;
+      using remove_gen = default_heading;
 
       virtual font_type       font() const;
       virtual float           font_size() const;

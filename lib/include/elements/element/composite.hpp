@@ -100,8 +100,8 @@ namespace cycfi { namespace elements
       using Container::Container;
       using Container::operator=;
 
-      virtual std::size_t     size() const               { return Container::size(); };
-      virtual element&        at(std::size_t ix) const   { return *(*this)[ix].get(); }
+      std::size_t             size() const override;
+      element&                at(std::size_t ix) const override;
 
       using Container::empty;
    };
@@ -126,8 +126,8 @@ namespace cycfi { namespace elements
                                , _container(container_)
                               {}
 
-      virtual std::size_t     size() const               { return _last - _first; };
-      virtual element&        at(std::size_t ix) const   { return _container.at(_first + ix); }
+      std::size_t             size() const override;
+      element&                at(std::size_t ix) const override;
 
    private:
 
@@ -135,6 +135,33 @@ namespace cycfi { namespace elements
       std::size_t             _last;
       container&              _container;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Container, typename Base>
+   inline std::size_t composite<Container, Base>::size() const
+   {
+      return Container::size();
+   };
+
+   template <typename Container, typename Base>
+   inline element& composite<Container, Base>::at(std::size_t ix) const
+   {
+      return *(*this)[ix].get();
+   }
+
+   template <typename Base>
+   inline std::size_t range_composite<Base>::size() const
+   {
+      return _last - _first;
+   };
+
+   template <typename Base>
+   inline element& range_composite<Base>::at(std::size_t ix) const
+   {
+      return _container.at(_first + ix);
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // find_composite utility finds the innermost composite given a context.

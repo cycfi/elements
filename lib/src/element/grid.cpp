@@ -18,8 +18,8 @@ namespace cycfi { namespace elements
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
-         auto height = _grid[i] - prev;
-         prev = _grid[i];
+         auto height = grid()[i] - prev;
+         prev = grid()[i];
 
          limits.min.y += height;
          limits.max.y += height;
@@ -41,11 +41,11 @@ namespace cycfi { namespace elements
       auto prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto height = _grid[i] - prev;
+         auto height = grid()[i] - prev;
          auto& elem = at(i);
          rect ebounds = { left, prev+top, right, prev+top+height };
          elem.layout(context{ ctx, &elem, ebounds });
-         prev = _grid[i];
+         prev = grid()[i];
       }
    }
 
@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
       auto top = ctx.bounds.top;
-      return rect{ left, (index ? _grid[index-1] : 0)+top, right, _grid[index]+top };
+      return rect{ left, (index ? grid()[index-1] : 0)+top, right, grid()[index]+top };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -69,8 +69,8 @@ namespace cycfi { namespace elements
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
-         auto width = _grid[i] - prev;
-         prev = _grid[i];
+         auto width = grid()[i] - prev;
+         prev = grid()[i];
 
          limits.min.x += width;
          limits.max.x += width;
@@ -92,11 +92,11 @@ namespace cycfi { namespace elements
       auto prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto width = _grid[i] - prev;
+         auto width = grid()[i] - prev;
          auto& elem = at(i++);
          rect ebounds = { prev+left, top, prev+left+width, bottom };
          elem.layout(context{ ctx, &elem, ebounds });
-         prev = _grid[i];
+         prev = grid()[i];
       }
    }
 
@@ -107,6 +107,6 @@ namespace cycfi { namespace elements
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
       auto left = ctx.bounds.left;
-      return rect{ (index? _grid[index-1] : 0)+left, top, _grid[index]+left, bottom };
+      return rect{ (index? grid()[index-1] : 0)+left, top, grid()[index]+left, bottom };
    }
 }}

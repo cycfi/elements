@@ -358,47 +358,6 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Labels
-   ////////////////////////////////////////////////////////////////////////////
-   /*
-   class label : public element, public text_base
-   {
-   public:
-                              label(
-                                 std::string text
-                               , float size = 1.0
-                              );
-
-                              label(
-                                 std::string text
-                               , font font_
-                               , float size = 1.0
-                              );
-
-      view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
-
-      std::string const&      text() const override                  { return _text; }
-      void                    text(std::string_view text) override   { _text = text; }
-
-      elements::font const&   font() const                           { return _font; }
-      void                    font(elements::font_descr descr)       { _font = elements::font(descr); }
-      void                    font(elements::font font_)             { _font = font_; }
-
-      float                   size() const                           { return _size; }
-      void                    size(float size_)                      { _size = size_; }
-
-      using element::text;
-
-   private:
-
-      std::string             _text;
-      elements::font          _font;
-      float                   _size;
-   };
-   */
-
-   ////////////////////////////////////////////////////////////////////////////
    // Grid Lines
    ////////////////////////////////////////////////////////////////////////////
    class vgrid_lines : public element

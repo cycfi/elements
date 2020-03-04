@@ -62,8 +62,6 @@ namespace cycfi { namespace elements
       std::string const&      value() const override           { return _text; }
       void                    value(std::string_view val) override;
 
-      using element::text;
-
    private:
 
       void                    sync() const;

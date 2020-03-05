@@ -64,7 +64,7 @@ namespace cycfi { namespace elements
 
       auto menu_btn = text_button<basic_menu>(
          margin(
-            button_margin,
+             get_theme().button_margin,
             htile(
                align_left(hold(btn_text)),
                align_right(left_margin(12, icon(icons::down_dir, 1.0)))

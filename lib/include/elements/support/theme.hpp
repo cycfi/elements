@@ -22,6 +22,7 @@ namespace cycfi { namespace elements
       float                frame_stroke_width;
       color                scrollbar_color;
       color                default_button_color;
+      rect                 button_margin;
 
       color                controls_color;
       color                indicator_color;

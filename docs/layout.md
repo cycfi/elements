@@ -4,6 +4,7 @@
 * [Limits](#limits)
 * [Size Elements](#size-elements)
 * [Stretch Elements](#stretch-elements)
+* [Scale Element](#scale-element)
 * [Align Elements](#align-elements)
 * [Margin Elements](#margin-elements)
 * [Floating Elements](#floating-element)
@@ -229,9 +230,81 @@ Effects:
 
 ## Stretch Elements
 
+Resizable elements are elements with minimum limits that are less than the
+maximum limits in either x or y dimensions or both. Resizable elements can
+therefore stretch if there is extra available space allocated to it beyond
+its minimum limit. When two or more resizable elements are placed side by
+side in an [htile](#htile) or [vtile](#vtile), the element's "stretchiness"
+determines how much extra space is given to it. The element's "stretchiness"
+is determined by the element's `stretch` member function:
+
+```c++
+virtual view_stretch stretch() const;
+```
+
+where `view_stretch` is a struct with declared as:
+
+```c++
+struct view_stretch
+{
+   float    x;
+   float    y;
+};
+```
+
+The `view_stretch` `x` and `y` members determine how much an element can
+stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
+2.0 means that the element is able to stretch twice as much compared to its
+siblings in an [htile](#htile) or [vtile](#vtile), assuming they have the
+default 1.0 stretchiness.
+
 ### hstretch
 
+![hstretch]({{ site.url }}/elements/assets/images/hstretch.png)
+
+Overrides the horizontal stretchiness of an an enclosed element (`subject`):
+
+```c++
+hstretch(stretch, subject)
+```
+
+Effects:
+1. The `subject` will assume the given `stretch` value.
+2. The stretch value has no effect to elements with fixed horizontal sizes.
+
+For example, the image below shows how three elements are laid out in an
+`htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
+
+![htile-stretch]({{ site.url }}/elements/assets/images/htile-stretch.png)
+
+The element with the `2.0` stretch value stretches twice as much compared to
+its siblings.
+
 ### vstretch
+
+![vstretch]({{ site.url }}/elements/assets/images/vstretch.png)
+
+Overrides the vertical stretchiness of an an enclosed element (`subject`):
+
+```c++
+vstretch(stretch, subject)
+```
+
+Effects:
+1. The `subject` will assume the given `stretch` value.
+2. The stretch value has no effect to elements with fixed vertical sizes.
+
+For example, the image below shows how three elements are laid out in an
+`htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
+
+![vtile-stretch]({{ site.url }}/elements/assets/images/vtile-stretch.png)
+
+The element with the `0.5` stretch value stretches half less, while the
+element with the `1.5` stretches half more than the default.
+
+## Scale Element
+
+The scale element
 
 ### scale
 

@@ -37,7 +37,7 @@ namespace cycfi { namespace elements
       return { { size.x, size.y }, { size.x, size.y } };
    }
 
-   inline bool toggle_selector::cursor(context const& ctx, point p, cursor_tracking status)
+   inline bool toggle_selector::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
    {
       ctx.view.refresh(ctx);
       return true;

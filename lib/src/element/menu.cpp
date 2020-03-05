@@ -71,14 +71,14 @@ namespace cycfi { namespace elements
             {
                layout_menu(ctx);
 
-               auto on_click = [this](view& view_)
+               auto on_click_ = [this](view& view_)
                {
                   _popup->close(view_);
                   this->value(0);
                   view_.refresh();
                };
 
-               _popup->open(ctx.view, on_click);
+               _popup->open(ctx.view, on_click_);
                ctx.view.refresh();
             }
          }

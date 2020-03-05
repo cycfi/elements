@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
    {
       return basic_radio_button(
          radio_button_element<false>{ text }
-       , radio_button_element<true>{ std::move(text) }
+       , radio_button_element<true>{ text }
       );
    }
 }}

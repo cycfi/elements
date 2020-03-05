@@ -170,12 +170,12 @@ namespace cycfi { namespace elements
       {
       public:
                         state(canvas& cnv_);
-                        state(state&& rhs);
+                        state(state&& rhs) noexcept;
                         state(state const&) = delete;
                         ~state();
 
          state&         operator=(state const&) = delete;
-         state&         operator=(state&& rhs);
+         state&         operator=(state&& rhs) noexcept;
 
       private:
 

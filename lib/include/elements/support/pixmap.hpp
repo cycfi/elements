@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
                               cairo_destroy(_context);
                         }
 
-                        pixmap_context(pixmap_context&& rhs)
+                        pixmap_context(pixmap_context&& rhs) noexcept
                          : _context(rhs._context)
                         {
                            rhs._context = nullptr;

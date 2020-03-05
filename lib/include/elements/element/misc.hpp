@@ -169,7 +169,7 @@ namespace cycfi { namespace elements
       using font_type = elements::font const&;
       using remove_gen = label_with_font<typename Base::remove_gen>;
 
-                              label_with_font(Base const& base, font font_)
+                              label_with_font(Base const& base, elements::font font_)
                                : Base(base), _font(font_)
                               {}
 

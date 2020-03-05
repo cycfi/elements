@@ -69,9 +69,17 @@ namespace cycfi { namespace elements
          container_grid<std::vector<float>, vgrid_element>
       >;
 
+#if defined(_MSC_VER)
+   template <std::size_t N, typename... E>
+   inline auto vgrid(float(&coords)[N], E&&... elements)
+   {
+      static_assert(N == sizeof...(elements),
+         "Error: coords should have the same number of elements.");
+#else
    template <typename... E>
    inline auto vgrid(float (&coords)[sizeof...(E)], E&&... elements)
    {
+#endif
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
       using container = typename composite::container_type;
       composite r{ coords, sizeof...(E) };
@@ -102,9 +110,17 @@ namespace cycfi { namespace elements
          container_grid<std::vector<float>, hgrid_element>
       >;
 
+#if defined(_MSC_VER)
+   template <std::size_t N, typename... E>
+   inline auto hgrid(float(&coords)[N], E&&... elements)
+   {
+      static_assert(N == sizeof...(elements),
+         "Error: coords should have the same number of elements.");
+#else
    template <typename... E>
    inline auto hgrid(float (&coords)[sizeof...(E)], E&&... elements)
    {
+#endif
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
       using container = typename composite::container_type;
       composite r{ coords, sizeof...(E) };

@@ -92,9 +92,9 @@ namespace cycfi { namespace elements
    // pointer type or nullptr if not found.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
-   inline Ptr find_subject(element* e)
+   inline Ptr find_subject(element* e_)
    {
-      proxy_base* proxy = dynamic_cast<proxy_base*>(e);
+      proxy_base* proxy = dynamic_cast<proxy_base*>(e_);
       while (proxy)
       {
          auto* subject = &proxy->subject();

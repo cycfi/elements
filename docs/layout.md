@@ -304,45 +304,260 @@ element with the `1.5` stretches half more than the default.
 
 ## Scale Element
 
-The scale element
+Elements is resolution independent and elements can be scaled up or down to
+suit. The default scale is 1.0 (no scale).
 
 ### scale
 
+The `scale` element changes the scale of its enclosed element (`subject`):
+
+```c++
+scale(scale_, subject)
+```
+
+Effects:
+1. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
+   the element up (zoom in), while a value < 1.0 scales down (zoom out).
+
 ## Align Elements
+
+An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
+dimensions, or both.
 
 ### halign
 
+![halign]({{ site.url }}/elements/assets/images/halign.png)
+
+Aligns the an enclosed element (`subject`) in the x dimension:
+
+```c++
+halign(align, subject)
+```
+
+Effects:
+1. Given a total allocated space `X`, `subject` will be positioned
+   horizontally to `X * align`.
+2. The `subject` will assume its minimum horizontal size: `limits().min.x`.
+
+Examples:
+1. `align = 0.0`: align `subject` to the left
+2. `align = 1.0`: align `subject` to the right
+3. `align = 0.5`: align `subject` to the center
+
 ### align_left
+
+![align_left]({{ site.url }}/elements/assets/images/align_left.png)
+
+Left-aligns the an enclosed element (`subject`):
+
+```c++
+align_left(subject)
+```
+
+Effects:
+1. Equivalent to `halign(0.0, subject)`
 
 ### align_center
 
+![align_center]({{ site.url }}/elements/assets/images/align_center.png)
+
+Center-aligns the an enclosed element (`subject`):
+
+```c++
+align_center(subject)
+```
+
+Effects:
+1. Equivalent to `halign(0.5, subject)`
+
 ### align_right
+
+![align_right]({{ site.url }}/elements/assets/images/align_right.png)
+
+Right-aligns the an enclosed element (`subject`):
+
+```c++
+align_right(subject)
+```
+
+Effects:
+1. Equivalent to `halign(1.0, subject)`
 
 ### valign
 
+![valign]({{ site.url }}/elements/assets/images/valign.png)
+
+Aligns the an enclosed element (`subject`) in the y dimension:
+
+```c++
+valign(align, subject)
+```
+
+Effects:
+1. Given a total allocated space `Y`, `subject` will be positioned vertically
+   to `Y * align`.
+2. The `subject` will assume its minimum vertical size: `limits().min.y`.
+
+Examples:
+1. `align = 0.0`: align `subject` to the top
+2. `align = 1.0`: align `subject` to the right
+3. `align = 0.5`: align `subject` to the middle
+
 ### align_top
+
+![align_top]({{ site.url }}/elements/assets/images/align_top.png)
+
+Aligns the an enclosed element (`subject`) to the top:
+
+```c++
+align_top(subject)
+```
+
+Effects:
+1. Equivalent to `valign(0.0, subject)`
 
 ### align_middle
 
+![align_middle]({{ site.url }}/elements/assets/images/align_middle.png)
+
+Aligns the an enclosed element (`subject`) to the middle:
+
+```c++
+align_middle(subject)
+```
+
+Effects:
+1. Equivalent to `valign(0.5, subject)`
+
 ### align_bottom
+
+![align_bottom]({{ site.url }}/elements/assets/images/align_bottom.png)
+
+Aligns the an enclosed element (`subject`) to the bottom:
+
+```c++
+align_bottom(subject)
+```
+
+Effects:
+1. Equivalent to `valign(1.0, subject)`
 
 ### align_left_top
 
+![align_left_top]({{ site.url }}/elements/assets/images/align_left_top.png)
+
+Aligns the an enclosed element (`subject`) to the left-top:
+
+```c++
+align_left_top(subject)
+```
+
+Effects:
+1. Equivalent to `align_left(align_top(subject))`
+
 ### align_center_top
+
+![align_center_top]({{ site.url }}/elements/assets/images/align_center_top.png)
+
+Aligns the an enclosed element (`subject`) to the center-top:
+
+```c++
+align_center_top(subject)
+```
+
+Effects:
+1. Equivalent to `align_center(align_top(subject))`
 
 ### align_right_top
 
+![align_right_top]({{ site.url }}/elements/assets/images/align_right_top.png)
+
+Aligns the an enclosed element (`subject`) to the right-top:
+
+```c++
+align_right_top(subject)
+```
+
+Effects:
+1. Equivalent to `align_right(align_top(subject))`
+
 ### align_left_middle
+
+![align_left_middle]({{ site.url }}/elements/assets/images/align_left_middle.png)
+
+Aligns the an enclosed element (`subject`) to the left-middle:
+
+```c++
+align_left_middle(subject)
+```
+
+Effects:
+1. Equivalent to `align_left(align_middle(subject))`
 
 ### align_center_middle
 
+![align_center_middle]({{ site.url }}/elements/assets/images/align_center_middle.png)
+
+Aligns the an enclosed element (`subject`) to the center-middle:
+
+```c++
+align_center_middle(subject)
+```
+
+Effects:
+1. Equivalent to `align_center(align_middle(subject))`
+
 ### align_right_middle
+
+![align_right_middle]({{ site.url }}/elements/assets/images/align_right_middle.png)
+
+Aligns the an enclosed element (`subject`) to the right-middle:
+
+```c++
+align_right_middle(subject)
+```
+
+Effects:
+1. Equivalent to `align_right(align_middle(subject))`
 
 ### align_left_bottom
 
+![align_left_bottom]({{ site.url }}/elements/assets/images/align_left_bottom.png)
+
+Aligns the an enclosed element (`subject`) to the left-bottom:
+
+```c++
+align_left_bottom(subject)
+```
+
+Effects:
+1. Equivalent to `align_left(align_bottom(subject))`
+
 ### align_center_bottom
 
+![align_center_bottom]({{ site.url }}/elements/assets/images/align_center_bottom.png)
+
+Aligns the an enclosed element (`subject`) to the center-bottom:
+
+```c++
+align_center_bottom(subject)
+```
+
+Effects:
+1. Equivalent to `align_center(align_bottom(subject))`
+
 ### align_right_bottom
+
+![align_right_bottom]({{ site.url }}/elements/assets/images/align_right_bottom.png)
+
+Aligns the an enclosed element (`subject`) to the right-bottom:
+
+```c++
+align_right_bottom(subject)
+```
+
+Effects:
+1. Equivalent to `align_right(align_bottom(subject))`
 
 ## Margin Elements
 

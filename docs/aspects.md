@@ -66,10 +66,10 @@ int main(int argc, const char* argv[])
 ## App and Window
 
 Here, we create an `app` and a `window`, and set the window's `on_close` to
-`stop` or quit the application. `_win.on_close` is called when the window is
+`stop` (quit) the application. `_win.on_close` is called when the window is
 closed by the user, thereby quitting the application.
 
-Like any other GUI libraries or frameworks, the `app` manages the main event
+Like any other GUI library or framework, the `app` manages the main event
 loop, while the `window` manages application windows. However, take note that
 the `app` and the `window` classes are optional. There are certain
 situations, like e.g. building plugins or incorporating Elements in another

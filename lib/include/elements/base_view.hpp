@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
       float    y;
    };
 
-   constexpr float         full_extent    = 1E6;
+   constexpr float         full_extent    = 1E30;
    constexpr view_limits   full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
 
    ////////////////////////////////////////////////////////////////////////////

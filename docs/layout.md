@@ -71,16 +71,28 @@ Examples:
 
 ## Size Elements
 
-Size elements override the size limits of an enclosed element.
+Size elements override the size limits of an enclosed element. There is a
+comprehensive list of size related elements in Elements that can be used for
+various purposes. This section catalogues all the available size elements.
 
 ### limit
 
-![limit]({{ site.url }}/elements/assets/images/limit.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/limit.png">
 
 Overrides all the limits of an element.
 
 ```c++
 limit(limits, subject)
+```
+
+where `limits` is a struct declared as:
+
+```c++
+struct view_limits
+{
+   point    min;
+   point    max;
+};
 ```
 
 Effects:
@@ -90,7 +102,7 @@ Effects:
 
 ### fixed_size
 
-![fixed_size]({{ site.url }}/elements/assets/images/fixed_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/fixed_size.png">
 
 Fixes the size of an enclosed element (`subject`):
 
@@ -105,7 +117,7 @@ Effects:
 
 ### hsize
 
-![hsize]({{ site.url }}/elements/assets/images/hsize.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hsize.png">
 
 Fixes the horizontal size of an enclosed element (`subject`):
 
@@ -121,7 +133,7 @@ Effects:
 
 ### vsize
 
-![vsize]({{ site.url }}/elements/assets/images/vsize.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vsize.png">
 
 Fixes the vertical size of an enclosed element (`subject`):
 
@@ -137,7 +149,7 @@ Effects:
 
 ### min_size
 
-![min_size]({{ site.url }}/elements/assets/images/min_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/min_size.png">
 
 Overrides the minimum size of an enclosed element (`subject`):
 
@@ -152,7 +164,7 @@ Effects:
 
 ### hmin_size
 
-![hmin_size]({{ site.url }}/elements/assets/images/hmin_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmin_size.png">
 
 Overrides the minimum width of an enclosed element (`subject`):
 
@@ -168,7 +180,7 @@ Effects:
 
 ### vmin_size
 
-![vmin_size]({{ site.url }}/elements/assets/images/vmin_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmin_size.png">
 
 Overrides the minimum height of an enclosed element (`subject`):
 
@@ -183,7 +195,7 @@ Effects:
 
 ### max_size
 
-![max_size]({{ site.url }}/elements/assets/images/max_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/max_size.png">
 
 Overrides the maximum size of an enclosed element (`subject`):
 
@@ -199,7 +211,7 @@ Effects:
 
 ### hmax_size
 
-![hmax_size]({{ site.url }}/elements/assets/images/hmax_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmax_size.png">
 
 Overrides the maximum width of an enclosed element (`subject`):
 
@@ -215,7 +227,7 @@ Effects:
 
 ### vmax_size
 
-![vmax_size]({{ site.url }}/elements/assets/images/vmax_size.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmax_size.png">
 
 Overrides the maximum height of an enclosed element (`subject`):
 
@@ -260,7 +272,7 @@ default 1.0 stretchiness.
 
 ### hstretch
 
-![hstretch]({{ site.url }}/elements/assets/images/hstretch.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hstretch.png">
 
 Overrides the horizontal stretchiness of an an enclosed element (`subject`):
 
@@ -275,14 +287,14 @@ Effects:
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
 
-![htile-stretch]({{ site.url }}/elements/assets/images/htile-stretch.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/htile-stretch.png">
 
 The element with the `2.0` stretch value stretches twice as much compared to
 its siblings.
 
 ### vstretch
 
-![vstretch]({{ site.url }}/elements/assets/images/vstretch.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vstretch.png">
 
 Overrides the vertical stretchiness of an an enclosed element (`subject`):
 
@@ -297,7 +309,7 @@ Effects:
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
 
-![vtile-stretch]({{ site.url }}/elements/assets/images/vtile-stretch.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vtile-stretch.png">
 
 The element with the `0.5` stretch value stretches half less, while the
 element with the `1.5` stretches half more than the default.
@@ -322,11 +334,13 @@ Effects:
 ## Align Elements
 
 An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
-dimensions, or both.
+dimensions, or both. There is a comprehensive list of align elements in
+Elements that can be used for various purposes. This section catalogues all
+the available align elements.
 
 ### halign
 
-![halign]({{ site.url }}/elements/assets/images/halign.png)
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/halign.png">
 
 Aligns the an enclosed element (`subject`) in the x dimension:
 
@@ -346,7 +360,7 @@ Examples:
 
 ### align_left
 
-![align_left]({{ site.url }}/elements/assets/images/align_left.png)
+<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_left.png">
 
 Left-aligns the an enclosed element (`subject`):
 
@@ -359,7 +373,7 @@ Effects:
 
 ### align_center
 
-![align_center]({{ site.url }}/elements/assets/images/align_center.png)
+<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_center.png">
 
 Center-aligns the an enclosed element (`subject`):
 
@@ -372,7 +386,7 @@ Effects:
 
 ### align_right
 
-![align_right]({{ site.url }}/elements/assets/images/align_right.png)
+<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_right.png">
 
 Right-aligns the an enclosed element (`subject`):
 
@@ -385,7 +399,7 @@ Effects:
 
 ### valign
 
-![valign]({{ site.url }}/elements/assets/images/valign.png)
+<img width="20%" height="20%" src="{{ site.url }}/elements/assets/images/valign.png">
 
 Aligns the an enclosed element (`subject`) in the y dimension:
 
@@ -405,7 +419,7 @@ Examples:
 
 ### align_top
 
-![align_top]({{ site.url }}/elements/assets/images/align_top.png)
+<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_top.png">
 
 Aligns the an enclosed element (`subject`) to the top:
 
@@ -418,7 +432,7 @@ Effects:
 
 ### align_middle
 
-![align_middle]({{ site.url }}/elements/assets/images/align_middle.png)
+<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_middle.png">
 
 Aligns the an enclosed element (`subject`) to the middle:
 
@@ -431,7 +445,7 @@ Effects:
 
 ### align_bottom
 
-![align_bottom]({{ site.url }}/elements/assets/images/align_bottom.png)
+<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the bottom:
 
@@ -444,7 +458,7 @@ Effects:
 
 ### align_left_top
 
-![align_left_top]({{ site.url }}/elements/assets/images/align_left_top.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_top.png">
 
 Aligns the an enclosed element (`subject`) to the left-top:
 
@@ -457,7 +471,7 @@ Effects:
 
 ### align_center_top
 
-![align_center_top]({{ site.url }}/elements/assets/images/align_center_top.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_top.png">
 
 Aligns the an enclosed element (`subject`) to the center-top:
 
@@ -470,7 +484,7 @@ Effects:
 
 ### align_right_top
 
-![align_right_top]({{ site.url }}/elements/assets/images/align_right_top.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_top.png">
 
 Aligns the an enclosed element (`subject`) to the right-top:
 
@@ -483,7 +497,7 @@ Effects:
 
 ### align_left_middle
 
-![align_left_middle]({{ site.url }}/elements/assets/images/align_left_middle.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_middle.png">
 
 Aligns the an enclosed element (`subject`) to the left-middle:
 
@@ -496,7 +510,7 @@ Effects:
 
 ### align_center_middle
 
-![align_center_middle]({{ site.url }}/elements/assets/images/align_center_middle.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_middle.png">
 
 Aligns the an enclosed element (`subject`) to the center-middle:
 
@@ -509,7 +523,7 @@ Effects:
 
 ### align_right_middle
 
-![align_right_middle]({{ site.url }}/elements/assets/images/align_right_middle.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_middle.png">
 
 Aligns the an enclosed element (`subject`) to the right-middle:
 
@@ -522,7 +536,7 @@ Effects:
 
 ### align_left_bottom
 
-![align_left_bottom]({{ site.url }}/elements/assets/images/align_left_bottom.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the left-bottom:
 
@@ -535,7 +549,7 @@ Effects:
 
 ### align_center_bottom
 
-![align_center_bottom]({{ site.url }}/elements/assets/images/align_center_bottom.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the center-bottom:
 
@@ -548,7 +562,7 @@ Effects:
 
 ### align_right_bottom
 
-![align_right_bottom]({{ site.url }}/elements/assets/images/align_right_bottom.png)
+<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the right-bottom:
 
@@ -561,19 +575,242 @@ Effects:
 
 ## Margin Elements
 
+Margins add some space around elements. There is a comprehensive list of
+margin elements in Elements that can be used for various purposes. This
+section catalogues all the available margin elements.
+
 ### margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/margin.png">
+
+Adds a margin all around an enclosed element (`subject`):
+
+```c++
+margin({ left, top, right, bottom }, subject)
+```
+
+Effects:
+1. Space is added to the left, top, right, and bottom of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `margin` does not violate the natural limits of the subject. `margin`
+   will respect the subject's min-max constraints and resizability.
+
 
 ### left_margin
 
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_margin.png">
+
+Adds a margin to the left of an enclosed element (`subject`):
+
+```c++
+left_margin(left, subject)
+```
+
+Effects:
+1. Space is added to the left of the subject with the given parameter.
+2. The element's limits is overridden to account for the additional space.
+3. The `left_margin` does not violate the natural limits of the subject.
+   `left_margin` will respect the subject's min-max constraints and
+   resizability.
+
 ### right_margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_margin.png">
+
+Adds a margin to the right of an enclosed element (`subject`):
+
+```c++
+right_margin(right, subject)
+```
+
+Effects:
+1. Space is added to the right of the subject with the given parameter.
+2. The element's limits is overridden to account for the additional space.
+3. The `right_margin` does not violate the natural limits of the subject.
+   `right_margin` will respect the subject's min-max constraints and
+   resizability.
 
 ### top_margin
 
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/top_margin.png">
+
+Adds a margin to the top of an enclosed element (`subject`):
+
+```c++
+top_margin(top, subject)
+```
+
+Effects:
+1. Space is added to the top of the subject with the given parameter.
+2. The element's limits is overridden to account for the additional space.
+3. The `top_margin` does not violate the natural limits of the subject.
+   `top_margin` will respect the subject's min-max constraints and
+   resizability.
+
 ### bottom_margin
 
-### xside_margin
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/bottom_margin.png">
 
-### yside_margin
+Adds a margin to the bottom of an enclosed element (`subject`):
+
+```c++
+bottom_margin(bottom, subject)
+```
+
+Effects:
+1. Space is added to the to the bottom of the subject with the given
+   parameter.
+2. The element's limits is overridden to account for the additional space.
+3. The `bottom_margin` does not violate the natural limits of the subject.
+   `bottom_margin` will respect the subject's min-max constraints and
+   resizability.
+
+### hmargin
+(same as `left_right_margin`)
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmargin.png">
+
+Adds a margin to the left and right sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+hmargin({ left, right }, subject)
+
+// variant 2
+hmargin(left, right, subject)
+
+// variant 3
+left_right_margin({ left, right }, subject)
+
+// variant 4
+left_right_margin(left, right, subject)
+```
+
+Effects:
+1. Space is added to the to the left and right sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `hmargin` (and variants) does not violate the natural limits of the
+   subject. `hmargin` (and variants) will respect the subject's min-max
+   constraints and resizability.
+
+### vmargin
+(same as `top_bottom_margin`)
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmargin.png">
+
+Adds a margin to the top and bottom sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+vmargin({ left, right }, subject)
+
+// variant 2
+vmargin(left, right, subject)
+
+// variant 3
+top_bottom_margin({ left, right }, subject)
+
+// variant 4
+top_bottom_margin(left, right, subject)
+```
+
+Effects:
+1. Space is added to the to the top and bottom sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `vmargin` (and variants) does not violate the natural limits of the
+   subject. `vmargin` (and variants) will respect the subject's min-max
+   constraints and resizability.
+
+### left_top_margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_top_margin.png">
+
+Adds a margin to the left and top sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+left_top_margin({ left, top }, subject)
+
+// variant 2
+left_top_margin(left, top, subject)
+```
+
+Effects:
+1. Space is added to the to the left and top sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `left_top_margin` (and variant) does not violate the natural limits of
+   the subject. `left_top_margin` (and variant) will respect the subject's
+   min-max constraints and resizability.
+
+### left_bottom_margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_bottom_margin.png">
+
+Adds a margin to the left and bottom sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+left_bottom_margin({ left, bottom }, subject)
+
+// variant 2
+left_bottom_margin(left, bottom, subject)
+```
+
+Effects:
+1. Space is added to the to the left and bottom sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `left_bottom_margin` (and variant) does not violate the natural limits
+   of the subject. `left_bottom_margin` (and variant) will respect the
+   subject's min-max constraints and resizability.
+
+### right_top_margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_top_margin.png">
+
+Adds a margin to the right and top sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+right_top_margin({ left, top }, subject)
+
+// variant 2
+right_top_margin(left, top, subject)
+```
+
+Effects:
+1. Space is added to the to the right and top sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `right_top_margin` (and variant) does not violate the natural limits
+   of the subject. `right_top_margin` (and variant) will respect the
+   subject's min-max constraints and resizability.
+
+### right_bottom_margin
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_top_margin.png">
+
+Adds a margin to the right and bottom sides of an enclosed element (`subject`):
+
+```c++
+// variant 1
+right_bottom_margin({ right, bottom }, subject)
+
+// variant 2
+right_bottom_margin(right, bottom, subject)
+```
+
+Effects:
+1. Space is added to the to the right and bottom sides of the subject with the
+   given parameters.
+2. The element's limits is overridden to account for the additional space.
+3. The `right_bottom_margin` (and variant) does not violate the natural
+   limits of the subject. `right_bottom_margin` (and variant) will respect
+   the subject's min-max constraints and resizability.
 
 ## Floating Element
 

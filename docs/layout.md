@@ -8,9 +8,9 @@
 * [Align Elements](#align-elements)
 * [Margin Elements](#margin-elements)
 * [Floating](#floating-element)
-* [Flow](#flow-element)
 * [Tiles and Grids](#tiles-and-grids)
-* [Layers Elements](#layers-elements)
+* [Layers](#layers)
+* [Flow](#flow-element)
 
 -------------------------------------------------------------------------------
 Elements provides a comprehensive set of elements for laying out elements the
@@ -18,10 +18,11 @@ view.
 
 ## Limits
 
-Each element provides a `min` and `max` limits: a hint that determine its
-actual extent and how it will be placed in the view depending on available
-window space. The element's `limits` member function determines the minimum
-and maximum extents of an element:
+Each element provides information on how it wants to be sized by means of
+`min` and `max` limits: a hint that determine its actual extent and how it
+will be placed in the view depending on available window space. The element's
+`limits` member function determines the minimum and maximum extents of an
+element:
 
 ```c++
 view_limits limits(basic_context const& ctx) const;
@@ -827,33 +828,101 @@ Effects:
    view, constrained to the subject's natural limits.
 2. The floating element does not violate the natural limits of the subject.
 
-## Flow
-
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/flow.png">
-
 ## Tiles and Grids
+
+Tiles are the most useful layout elements, seconded by Grids. Tiles are used
+everywhere for composing hierarchical elements in rows and columns. Grids are
+similar to tiles, but grids have fixed sizes while tiles allow elements to
+fluidly adjust depending on available space. Tiles are best used for
+composing UI elements while grids are best for composing tables.
 
 ### Horizontal Tiles and Grids
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
+Horizontal Tiles and Grids are composites that lay out one or more child
+elements in a row, respecting the horizontal size requirements of each
+element (`limits().min.x` and `limits().max.x`).
 
-### htile
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
 
 ### hgrid
 
+### htile
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile-stretch2.png">
+
 ### Vertical Tiles and Grids
+
+Vertical Tiles and Grids are composites that lay out one or more child
+elements in a column, respecting the vertical size requirements of each
+element (`limits().min.y` and `limits().max.y`).
 
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
 
-### vtile
-
 ### vgrid
 
-## Layers Elements
+### vtile
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile-stretch2.png">
+
+## Layers
 
 ### layer
 
 ### deck
+
+## Flow
+
+The flow composite element lays out its children much like the way text is
+laid out: lay out each element from left to right, fitting as much elements
+as possible following each child's minimum width (`limits().min.x`). Once a
+row is full, move to the next row and do the same until the end of the row is
+filled. Repeat the procedure until all the elements are laid out. The height
+of each row is determined by the maximum height (`limits().max.y`) of all the
+elements to be laid out in that row. The following graphic depicts a
+simplified layout scenario for child elements `a` to `r`.
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/flow.png">
+
+The child elements arranged in a `flow` composite are automatically re-flowed
+(re-layout) when the view size changes.
+
+### flowable_container
+
+To have elements laid out using `flow`, you need to make a `flowable_container`:
+
+```c++
+c = vector_composite<flowable_container>{};
+```
+
+The `vector_composite` creates a `std::vector<element_ptr>` that the client
+uses to manage the composite's children elements. The lifetime of the
+container, `c` is the client's responsibility.
+
+Here's an example usage:
+
+```c++
+vector_composite<flowable_container> _children; // A class member
+```
+
+Then `push_back` a child element, `child`:
+
+```c++
+_children.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flowable_container`.
+
+### flow
+
+Once we have a `flowable_container`, we can place its contents in a `flow`
+element:
+
+```c++
+flow(c)
+```
+
+where `c` is the `flowable_container` we populated prior.
 
 -------------------------------------------------------------------------------
 

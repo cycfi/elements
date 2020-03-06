@@ -814,6 +814,20 @@ Effects:
 
 ## Floating Element
 
+<img width="50%" height="50%" src="{{ site.url }}/elements/assets/images/floating.png">
+
+A floating element allows arbitrary placement of an enclosed element
+(`subject`) in the main view:
+
+```c++
+floating({ left, top, right, bottom }, subject)
+```
+
+Effects:
+1. The element will be placed exactly to the specified position in the main
+   view, constrained to the subject's natural limits.
+2. The floating element does not violate the natural limits of the subject.
+
 ## Flow Element
 
 ## Tile Elements

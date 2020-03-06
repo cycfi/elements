@@ -7,10 +7,9 @@
 * [Scale Element](#scale-element)
 * [Align Elements](#align-elements)
 * [Margin Elements](#margin-elements)
-* [Floating Elements](#floating-element)
-* [Flow Element](#flow-element)
-* [Tile Elements](#tile-elements)
-* [Grid Elements](#grid-elements)
+* [Floating](#floating-element)
+* [Flow](#flow-element)
+* [Tiles and Grids](#tiles-and-grids)
 * [Layers Elements](#layers-elements)
 
 -------------------------------------------------------------------------------
@@ -812,9 +811,9 @@ Effects:
    limits of the subject. `right_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
 
-## Floating Element
+## Floating
 
-<img width="50%" height="50%" src="{{ site.url }}/elements/assets/images/floating.png">
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/floating.png">
 
 A floating element allows arbitrary placement of an enclosed element
 (`subject`) in the main view:
@@ -828,17 +827,25 @@ Effects:
    view, constrained to the subject's natural limits.
 2. The floating element does not violate the natural limits of the subject.
 
-## Flow Element
+## Flow
 
-## Tile Elements
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/flow.png">
+
+## Tiles and Grids
+
+### Horizontal Tiles and Grids
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
 
 ### htile
 
-### vtile
-
-## Grid Elements
-
 ### hgrid
+
+### Vertical Tiles and Grids
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
+
+### vtile
 
 ### vgrid
 

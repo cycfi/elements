@@ -42,6 +42,8 @@ namespace cycfi { namespace elements
       virtual element_ptr     make_row(size_t first, size_t last);
    };
 
+   using flow_composite = vector_composite<flowable_container>;
+
    class flow_element : public vector_composite<vtile_element>
    {
    public:

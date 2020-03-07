@@ -152,7 +152,7 @@ auto make_flow()
    constexpr auto max_height = line_height;
    constexpr auto num_elements = 40;
 
-   static auto c = vector_composite<flowable_container>{};
+   static auto c = flow_composite{};
    for (int i = 0; i < num_elements; ++i)
    {
       auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);

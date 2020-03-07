@@ -9,7 +9,12 @@
 * [Margin Elements](#margin-elements)
 * [Floating](#floating-element)
 * [Tiles and Grids](#tiles-and-grids)
+* [Horizontal Grids](#horizontal-grids)
+* [Horizontal Tiles](#horizontal-tiles)
+* [Vertical Grids](#vertical-grids)
+* [Vertical Tiles](#vertical-tiles)
 * [Layers](#layers)
+* [Decks](#decks)
 * [Flow](#flow-element)
 
 -------------------------------------------------------------------------------
@@ -39,6 +44,53 @@ struct view_limits
 };
 ```
 
+For the purpose of this document, we will use these terms and expressions:
+
+limits
+: The limits of an element
+
+limits.min
+: The minimum limits of an element
+
+limits.min.x
+: The minimum horizontal limit of an element
+
+limits.min.y
+: The minimum vertical limit of an element
+
+limits.max
+: The maximum limits of an element
+
+limits.max.x
+: The maximum horizontal limit of an element
+
+limits.max.y
+: The maximum vertical limit of an element
+
+horizontal limits
+: (limits.min.x, limits.max.x)
+
+vertical limits
+: (limits.min.y, limits.max.y)
+
+minimum limits
+: (limits.min.x, limits.min.y)
+
+maximum limits
+: (limits.max.x, limits.max.y)
+
+minimum horizontal limit
+: limits.min.x
+
+maximum horizontal limit
+: limits.max.x
+
+minimum vertical limit
+: limits.min.y
+
+maximum vertical limit
+: limits.max.y
+
 By default, an element has full limits: it is infinitely resizable:
 
 ```c++
@@ -49,11 +101,14 @@ An element with `full_limits` can be resized from an empty point (zero x and
 y size) up to the full extent of the screen, and beyond (if possible).
 
 > :point_right: `full_extent` is actually an implementation defined huge
-number near the maximum limits of the coordinate's data type (also
+number near the *maximum limits* of the coordinate's data type (also
 implementation defined).
 
-An element has fixed size in either the `x` or `y` dimension, or both, if its
-`limits` has either `min.x == max.x` or `min.y == max.y`, or both.
+* An element has a fixed horizontal size if this expression is true:
+  `limits.min.x == limits.max.x`.
+
+* An element has a fixed vertical size if this expression is true:
+  `limits.min.y == limits.max.y`.
 
 Examples:
 
@@ -71,7 +126,7 @@ Examples:
 
 ## Size Elements
 
-Size elements override the size limits of an enclosed element. There is a
+Size elements override the *limits* of an enclosed element. There is a
 comprehensive list of size related elements in Elements that can be used for
 various purposes. This section catalogues all the available size elements.
 
@@ -79,26 +134,16 @@ various purposes. This section catalogues all the available size elements.
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/limit.png">
 
-Overrides all the limits of an element.
+Overrides the *limits* of an element.
 
 ```c++
 limit(limits, subject)
 ```
 
-where `limits` is a struct declared as:
-
-```c++
-struct view_limits
-{
-   point    min;
-   point    max;
-};
-```
-
 Effects:
-1. The limits of `subject` will be set to the specified `limits` constrained
-   by the natural `limits` of the `subject` (the natural limits of the
-   element will not be violated).
+1. The *limits* of `subject` will be set to the specified `limits`
+   constrained by the natural *limits* of the `subject` (the natural *limits*
+   of the element will not be violated).
 
 ### fixed_size
 
@@ -112,7 +157,7 @@ fixed_size({ width, height }, subject)
 
 Effects:
 1. `subject` will be laid out with a fixed `width` and `height`, constrained
-   by the natural `limits` of the `subject` (the natural limits of the
+   by the natural *limits* of the `subject` (the natural *limits* of the
    element will not be violated).
 
 ### hsize
@@ -127,15 +172,15 @@ hsize(width, subject)
 
 Effects:
 1. `subject` will be laid out with a fixed `width`, constrained by the
-   natural horizontal `limits` of the `subject` (the natural horizontal
-   limits of the element will not be violated).
-3. The natural vertical size of `subject` will not be affected.
+   natural *horizontal limits* of the `subject` (the natural *horizontal
+   limits* of the element will not be violated).
+3. The natural *vertical limits* of `subject` will not be affected.
 
 ### vsize
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vsize.png">
 
-Fixes the vertical size of an enclosed element (`subject`):
+Fixes the *vertical limits* of an enclosed element (`subject`):
 
 ```c++
 hsize(height, subject)
@@ -143,107 +188,109 @@ hsize(height, subject)
 
 Effects:
 1. `subject` will be laid out with a fixed `height`, constrained by the
-   natural vertical `limits` of the `subject` (the natural vertical limits of
-   the element will not be violated).
-3. The natural horizontal size of `subject` will not be affected.
+   natural *vertical limits* of the `subject` (the natural *vertical limits*
+   of the element will not be violated).
+3. The natural *horizontal limits* of `subject` will not be affected.
 
 ### min_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/min_size.png">
 
-Overrides the minimum size of an enclosed element (`subject`):
+Overrides the *minimum limits* of an enclosed element (`subject`):
 
 ```c++
 min_size({ width, height }, subject)
 ```
 
 Effects:
-1. The minimum size of `subject` will be set to the specified `width` and
-   `height`, constrained by the natural minumum `limits` of the `subject`
-   (the natural minumum limits of the element will not be violated)
+1. The *minimum limits* of `subject` will be set to the specified `width` and
+   `height`, constrained by the natural *minimum limits* of the `subject`.
+2. the natural *minimum limits* of the element will not be violated.
 
 ### hmin_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmin_size.png">
 
-Overrides the minimum width of an enclosed element (`subject`):
+Overrides the *minimum horizontal limit* of an enclosed element (`subject`):
 
 ```c++
 hmin_size(width, subject)
 ```
 
 Effects:
-1. The minimum width of `subject` will be set to the specified `width`
-   constrained by the natural horizontal minimum `limits` of the `subject`
-   (the natural horizontal minimum limits of the element will not be
-   violated)
+1. The *minimum horizontal limit* of `subject` will be set to the specified
+   `width` constrained by the natural *horizontal minimum limits* of the
+   `subject`.
+2. The natural *horizontal minimum limits* of the element will not be
+   violated.
 
 ### vmin_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmin_size.png">
 
-Overrides the minimum height of an enclosed element (`subject`):
+Overrides the *minimum vertical limit* of an enclosed element (`subject`):
 
 ```c++
 vmin_size(height, subject)
 ```
 
 Effects:
-1. The minimum height of `subject` will be set to the specified `height`
-   constrained by the natural vertical minimum `limits` of the `subject` (the
-   natural vertical minimum limits of the element will not be violated)
+1. The *minimum vertical limit* of `subject` will be set to the specified `height`
+   constrained by the natural vertical *minimum limits* of the `subject`.
+2. The natural vertical *minimum limits* of the element will not be violated.
 
 ### max_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/max_size.png">
 
-Overrides the maximum size of an enclosed element (`subject`):
+Overrides the *maximum limits* of an enclosed element (`subject`):
 
 ```c++
 max_size({ width, height }, subject)
 ```
 
 Effects:
-1. The maximum size of `subject` will be set to the specified `width` and
-   `height`, constrained by the natural maximum `limits` of the `subject`
-   (the natural maximum limits of the element will not be violated)
-
+1. The *maximum limits* of `subject` will be set to the specified `width` and
+   `height`, constrained by the natural *maximum limits* of the `subject`.
+2. The natural *maximum limits* of the element will not be violated.
 
 ### hmax_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmax_size.png">
 
-Overrides the maximum width of an enclosed element (`subject`):
+Overrides the *maximum horizontal limit* of an enclosed element (`subject`):
 
 ```c++
 hmax_size(width, subject)
 ```
 
 Effects:
-1. The maximum width of `subject` will be set to the specified `width`
-   constrained by the natural horizontal maximum `limits` of the `subject`
-   (the natural horizontal maximum limits of the element will not be
-   violated)
+1. The *maximum horizontal limit* of `subject` will be set to the specified
+   `width` constrained by the natural *maximum horizontal limit* of the
+   `subject`.
+2. The natural *maximum horizontal limit* of the element will not be
+   violated.
 
 ### vmax_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmax_size.png">
 
-Overrides the maximum height of an enclosed element (`subject`):
+Overrides the *maximum vertical limit* of an enclosed element (`subject`):
 
 ```c++
 vmax_size(height, subject)
 ```
 
 Effects:
-1. The maximum height of `subject` will be set to the specified `height`
-   constrained by the natural vertical maximum `limits` of the `subject` (the
-   natural vertical maximum limits of the element will not be violated)
+1. The *maximum vertical limit* of `subject` will be set to the specified
+   `height` constrained by the natural *maximum vertical limit* of the
+   `subject`
+2. The natural *maximum vertical limit* of the element will not be violated.
 
 ## Stretch Elements
 
-Resizable elements are elements with minimum limits that are less than the
-maximum limits in either x or y dimensions or both. Resizable elements can
+Resizable elements are elements with *minimum limits* that are less than the
+*maximum limits* in either x or y dimensions or both. Resizable elements can
 therefore stretch if there is extra available space allocated to it beyond
 its minimum limit. When two or more resizable elements are placed side by
 side in an [htile](#htile) or [vtile](#vtile), the element's "stretchiness"
@@ -282,7 +329,7 @@ hstretch(stretch, subject)
 
 Effects:
 1. The `subject` will assume the given `stretch` value.
-2. The stretch value has no effect to elements with fixed horizontal sizes.
+2. The stretch value has no effect to elements with fixed horizontal size.
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
@@ -304,7 +351,7 @@ vstretch(stretch, subject)
 
 Effects:
 1. The `subject` will assume the given `stretch` value.
-2. The stretch value has no effect to elements with fixed vertical sizes.
+2. The stretch value has no effect to elements with fixed *vertical limits*.
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
@@ -342,7 +389,7 @@ the available align elements.
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/halign.png">
 
-Aligns the an enclosed element (`subject`) in the x dimension:
+Aligns the an enclosed element (`subject`) in the x-axis:
 
 ```c++
 halign(align, subject)
@@ -351,7 +398,8 @@ halign(align, subject)
 Effects:
 1. Given a total allocated space `X`, `subject` will be positioned
    horizontally to `X * align`.
-2. The `subject` will assume its minimum horizontal size: `limits().min.x`.
+2. The `subject` will assume its *minimum horizontal limit*.
+3. $$$ TODO How about vertical effects? $$$
 
 Examples:
 1. `align = 0.0`: align `subject` to the left
@@ -401,7 +449,7 @@ Effects:
 
 <img width="20%" height="20%" src="{{ site.url }}/elements/assets/images/valign.png">
 
-Aligns the an enclosed element (`subject`) in the y dimension:
+Aligns the an enclosed element (`subject`) in the y-axis:
 
 ```c++
 valign(align, subject)
@@ -410,7 +458,7 @@ valign(align, subject)
 Effects:
 1. Given a total allocated space `Y`, `subject` will be positioned vertically
    to `Y * align`.
-2. The `subject` will assume its minimum vertical size: `limits().min.y`.
+2. The `subject` will assume its *minimum vertical limit*.
 
 Examples:
 1. `align = 0.0`: align `subject` to the top
@@ -592,10 +640,9 @@ margin({ left, top, right, bottom }, subject)
 Effects:
 1. Space is added to the left, top, right, and bottom of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `margin` does not violate the natural limits of the subject. `margin`
-   will respect the subject's min-max constraints and resizability.
-
+2. The element's *limits* is overridden to account for the additional space.
+3. The `margin` does not violate the natural *limits* of the subject.
+   `margin` will respect the subject's min-max constraints and resizability.
 
 ### left_margin
 
@@ -609,8 +656,8 @@ left_margin(left, subject)
 
 Effects:
 1. Space is added to the left of the subject with the given parameter.
-2. The element's limits is overridden to account for the additional space.
-3. The `left_margin` does not violate the natural limits of the subject.
+2. The element's *limits* is overridden to account for the additional space.
+3. The `left_margin` does not violate the natural *limits* of the subject.
    `left_margin` will respect the subject's min-max constraints and
    resizability.
 
@@ -626,8 +673,8 @@ right_margin(right, subject)
 
 Effects:
 1. Space is added to the right of the subject with the given parameter.
-2. The element's limits is overridden to account for the additional space.
-3. The `right_margin` does not violate the natural limits of the subject.
+2. The element's *limits* is overridden to account for the additional space.
+3. The `right_margin` does not violate the natural *limits* of the subject.
    `right_margin` will respect the subject's min-max constraints and
    resizability.
 
@@ -643,8 +690,8 @@ top_margin(top, subject)
 
 Effects:
 1. Space is added to the top of the subject with the given parameter.
-2. The element's limits is overridden to account for the additional space.
-3. The `top_margin` does not violate the natural limits of the subject.
+2. The element's *limits* is overridden to account for the additional space.
+3. The `top_margin` does not violate the natural *limits* of the subject.
    `top_margin` will respect the subject's min-max constraints and
    resizability.
 
@@ -661,8 +708,8 @@ bottom_margin(bottom, subject)
 Effects:
 1. Space is added to the to the bottom of the subject with the given
    parameter.
-2. The element's limits is overridden to account for the additional space.
-3. The `bottom_margin` does not violate the natural limits of the subject.
+2. The element's *limits* is overridden to account for the additional space.
+3. The `bottom_margin` does not violate the natural *limits* of the subject.
    `bottom_margin` will respect the subject's min-max constraints and
    resizability.
 
@@ -690,8 +737,8 @@ left_right_margin(left, right, subject)
 Effects:
 1. Space is added to the to the left and right sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `hmargin` (and variants) does not violate the natural limits of the
+2. The element's *limits* is overridden to account for the additional space.
+3. The `hmargin` (and variants) does not violate the natural *limits* of the
    subject. `hmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
 
@@ -719,8 +766,8 @@ top_bottom_margin(left, right, subject)
 Effects:
 1. Space is added to the to the top and bottom sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `vmargin` (and variants) does not violate the natural limits of the
+2. The element's *limits* is overridden to account for the additional space.
+3. The `vmargin` (and variants) does not violate the natural *limits* of the
    subject. `vmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
 
@@ -741,9 +788,9 @@ left_top_margin(left, top, subject)
 Effects:
 1. Space is added to the to the left and top sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `left_top_margin` (and variant) does not violate the natural limits of
-   the subject. `left_top_margin` (and variant) will respect the subject's
+2. The element's *limits* is overridden to account for the additional space.
+3. The `left_top_margin` (and variant) does not violate the natural *limits*
+   of the subject. `left_top_margin` (and variant) will respect the subject's
    min-max constraints and resizability.
 
 ### left_bottom_margin
@@ -763,10 +810,10 @@ left_bottom_margin(left, bottom, subject)
 Effects:
 1. Space is added to the to the left and bottom sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `left_bottom_margin` (and variant) does not violate the natural limits
-   of the subject. `left_bottom_margin` (and variant) will respect the
-   subject's min-max constraints and resizability.
+2. The element's *limits* is overridden to account for the additional space.
+3. The `left_bottom_margin` (and variant) does not violate the natural
+   *limits* of the subject. `left_bottom_margin` (and variant) will respect
+   the subject's min-max constraints and resizability.
 
 ### right_top_margin
 
@@ -785,8 +832,8 @@ right_top_margin(left, top, subject)
 Effects:
 1. Space is added to the to the right and top sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
-3. The `right_top_margin` (and variant) does not violate the natural limits
+2. The element's *limits* is overridden to account for the additional space.
+3. The `right_top_margin` (and variant) does not violate the natural *limits*
    of the subject. `right_top_margin` (and variant) will respect the
    subject's min-max constraints and resizability.
 
@@ -807,7 +854,7 @@ right_bottom_margin(right, bottom, subject)
 Effects:
 1. Space is added to the to the right and bottom sides of the subject with the
    given parameters.
-2. The element's limits is overridden to account for the additional space.
+2. The element's *limits* is overridden to account for the additional space.
 3. The `right_bottom_margin` (and variant) does not violate the natural
    limits of the subject. `right_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
@@ -825,59 +872,525 @@ floating({ left, top, right, bottom }, subject)
 
 Effects:
 1. The element will be placed exactly to the specified position in the main
-   view, constrained to the subject's natural limits.
-2. The floating element does not violate the natural limits of the subject.
+   view, constrained to the subject's natural *limits*.
+2. The floating element does not violate the natural *limits* of the subject.
 
 ## Tiles and Grids
 
 Tiles are the most useful layout elements, seconded by Grids. Tiles are used
-everywhere for composing hierarchical elements in rows and columns. Grids are
-similar to tiles, but grids have fixed sizes while tiles allow elements to
-fluidly adjust depending on available space. Tiles are best used for
-composing UI elements while grids are best for composing tables.
+everywhere for composing hierarchical elements in rows and columns, typical
+to all GUIs. Grids are similar to tiles, but grids have fixed sizes while
+tiles allow elements to fluidly adjust depending on available space. Tiles
+are best used for composing UI elements while grids are best for composing
+tables.
 
-### Horizontal Tiles and Grids
+### Horizontal Grids
 
-Horizontal Tiles and Grids are composites that lay out one or more child
-elements in a row, respecting the horizontal size requirements of each
-element (`limits().min.x` and `limits().max.x`).
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/hgrid.png">
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
+Horizontal Grids are composites that lay out one or more child elements in a
+row following externally supplied horizontal coordinates. Horizontal Grids
+have fixed horizontal sizes and computed vertical sizes following the natural
+`limits` of its children.
+
+Effects:
+1. The elements are laid out in a single row, left to right, immediately next
+   to each other with no intervening space.
+2. The elements are positioned horizontally using the supplied coordinates.
+3. The grid's *minimum vertical limit* is computed as the minimum of the
+   children elements' *minimum vertical limit*s.
+4. The grid's *maximum vertical limit* is computed as the maximum of the
+   children elements' *maximum vertical limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (horizontal) and computed (vertical) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
 
 ### hgrid
 
+Build a horizontal grid with a fixed number of elements:
+
+```c++
+hgrid(coords, e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements, and
+`coords` is an external container of horizontal coordinates, which can either
+be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
+to `eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
+grid element.
+
+Example:
+
+```c++
+static float coords[] = { 50, 100, 150, 200 };
+//...
+hgrid(coords, item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`hgrid_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+2. The number of supplied coordinates and elements should match, otherwise,
+   compiler error (no matching function for call to 'hgrid').
+3. The coordinates assume the first element's relative coordinate at `x=0`
+   (it is at the left-most position in the row). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final width of the grid.
+
+### hgrid_composite
+
+Create a horizontal grid with an indeterminate (dynamic) number of elements:
+
+```c++
+hgrid_composite c{ coords };
+```
+
+The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `hgrid_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+`coords` is an external container of horizontal coordinates, which is
+expected to be a `std::vector<float>`.
+
+Requirements:
+1. `hgrid_composite` is-a `std::vector<element_ptr>`.
+2. The number of items in the external coordinates vector `coords` must match
+   with the number of elements at any given time.
+3. The coordinates assume the first element's relative coordinate at `x=0`
+   (it is at the left-most position in the row). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final width of the grid.
+
+### Horizontal Tiles
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
+
+Horizontal Tiles are similar to Horizontal Grids, but allow elements to
+fluidly adjust horizontally depending on available space. Horizontal Tiles
+are best used for composing UI elements while Horizontal Grids are best for
+composing tables.
+
+Effects:
+1. The elements are laid out in a single row, left to right, immediately next
+   to each other with no intervening space.
+2. The elements are positioned horizontally using the children's natural
+   *limits*.
+3. Horizontal space is allocated using this algorithm:
+   1. Space is allocated for each child element following the child's natural
+      *minimum horizontal limit*.
+   2. If the allocated space exceeds the sum of all children elements'
+      *minimum horizontal limit*s, the extra space is given to each
+      horizontally resizable element (`limits.min.x < limits.max.x`).
+   3. The element's "stretchiness" determines how much extra space is given
+      to it according to the element's `stretch()` member function. A stretch
+      value of `1.0` is default. A stretchiness value of 2.0 means that the
+      element is able to stretch twice as much compared to its siblings.
+      Horizontally fixed-sized elements will not be stretched (element d in
+      the diagram). (Also see [Stretch Elements](#stretch-elements)).
+3. The tile's *minimum vertical limit* is computed as the minimum of the
+   children elements' *minimum vertical limit*s.
+4. The grid's *maximum vertical limit* is computed as the maximum of the
+   children elements' *maximum vertical limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (horizontal) and computed (vertical) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### htile
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile-stretch2.png">
+Build a horizontal tile with a fixed number of elements:
 
-### Vertical Tiles and Grids
+```c++
+htile(e1, e2, e3... eN)
+```
 
-Vertical Tiles and Grids are composites that lay out one or more child
-elements in a column, respecting the vertical size requirements of each
-element (`limits().min.y` and `limits().max.y`).
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+horizontal tile element.
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
+Example:
+
+```c++
+htile(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`htile_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### htile_composite
+
+Create a horizontal tile with an indeterminate (dynamic) number of elements:
+
+```c++
+htile_composite c;
+```
+
+The `htile_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `htile_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. `htile_composite` is-a `std::vector<element_ptr>`.
+
+### Vertical Grids
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vgrid.png">
+
+Vertical Grids are composites that lay out one or more child elements in a
+column following externally supplied vertical coordinates. Vertical Grids
+have fixed vertical sizes and computed horizontal sizes following the natural
+`limits` of its children.
+
+Effects:
+1. The elements are laid out in a single column, top to bottom, immediately
+   next to each other with no intervening space.
+2. The elements are positioned using the supplied coordinates.
+3. The grid's *minimum horizontal limit* is computed as the minimum of the
+   children elements' *minimum horizontal limit*s.
+4. The grid's *maximum horizontal limit* is computed as the maximum of the
+   children elements' *maximum horizontal limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (vertical) and computed (horizontal) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
 
 ### vgrid
 
+Build a vertical grid with a fixed number of elements:
+
+```c++
+vgrid(coords, e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements, and
+`coords` is an external container of vertical coordinates, which can either
+be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
+to `eN` are held in a `std::array<element_ptr, N>` managed by the vertical
+grid element.
+
+Example:
+
+```c++
+static float coords[] = { 50, 100, 150, 200 };
+//...
+vgrid(coords, item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`vgrid_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+2. The number of supplied coordinates and elements should match, otherwise,
+   compiler error (no matching function for call to 'vgrid').
+3. The coordinates assume the first element's relative coordinate at `y=0`
+   (it is at the top-most position in the column). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final height of the grid.
+
+### vgrid_composite
+
+Create a vertical grid with an indeterminate (dynamic) number of elements:
+
+```c++
+vgrid_composite c{ coords };
+```
+
+The `vgrid_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `vgrid_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items. Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+`coords` is an external container of vertical coordinates, which is
+expected to be a `std::vector<float>`.
+
+Requirements:
+1. The number of items in the external coordinates vector `coords` must match
+   with the number of elements at any given time.
+2. The coordinates assume the first element's relative coordinate at `y=0`
+   (it is at the top-most position in the column). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final height of the grid.
+
+### Vertical Tiles
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
+
+Vertical Tiles are similar to Vertical Grids, but allow elements to fluidly
+adjust vertically depending on available space. Vertical Tiles are best used
+for composing UI elements while Vertical Grids are best for composing tables.
+
+Effects:
+1. The elements are laid out in a single column, left to right, immediately
+   next to each other with no intervening space.
+2. The elements are positioned vertically using the children's natural
+   *limits*.
+3. Vertical space is allocated using this algorithm:
+   1. Space is allocated for each child element following the child's natural
+      *minimum vertical limit*.
+   2. If the allocated space exceeds the sum of all children elements'
+      *minimum vertical limit*s, the extra space is given to each
+      vertically resizable element (`limits.min.y < limits.max.y`).
+   3. The element's "stretchiness" determines how much extra space is given
+      to it according to the element's `stretch()` member function. A stretch
+      value of `1.0` is default. A stretchiness value of 2.0 means that the
+      element is able to stretch twice as much compared to its siblings.
+      Vertically fixed-sized elements will not be stretched (element b in the
+      diagram). (Also see [Stretch Elements](#stretch-elements)).
+3. The tile's *minimum horizontal limit* is computed as the minimum of the
+   children elements' *minimum horizontal limit*s.
+4. The grid's *maximum horizontal limit* is computed as the maximum of the
+   children elements' *maximum horizontal limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (vertical) and computed (horizontal) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### vtile
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile-stretch2.png">
+Build a vertical tile with a fixed number of elements:
+
+```c++
+vtile(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+vertical tile element.
+
+Example:
+
+```c++
+vtile(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`vtile_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### vtile_composite
+
+Create a vertical tile with an indeterminate (dynamic) number of elements:
+
+```c++
+vtile_composite c;
+```
+
+The `vtile_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `vtile_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. vtile_composite is-a `std::vector<element_ptr>`.
 
 ## Layers
 
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layer.png">
+
+Elements is 2D, but the z-axis pertains to top-to-bottom layering. Layers
+allow groups of elements to be placed in the z-axis where higher-level
+elements obscure or hide lower-level elements.
+
+Effects:
+1. The elements are laid out in the z-axis, top to bottom.
+2. Rendering is done bottom-up; the bottom-most elements are drawn first.
+3. UI control (such as mouse clicks) proceeds from top to bottom.
+   Higher-level elements are given control priority. If a higher-level
+   element does not process the event, lower-level elements are given a
+   chance.
+4. The layer's *minimum limit* is computed as the minimum of the children
+   elements' *minimum limit*s.
+5. The grid's *maximum limit* is computed as the maximum of the children
+   elements' *maximum limit*s.
+6. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+7. The computed (vertical) and (horizontal) coordinates may violate the
+   limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### layer
+
+Create a layer composite with a fixed number of elements:
+
+```c++
+layer(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+layer element.
+
+Example:
+
+```c++
+layer(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`layer_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### layer_composite
+
+Create a layer with an indeterminate (dynamic) number of elements:
+
+```c++
+layer_composite c;
+```
+
+The `layer_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `layer_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. layer_composite is-a `std::vector<element_ptr>`.
+
+### Decks
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/deck.png">
+
+The Deck is very similar to layers. Groups of elements to be placed in the
+z-axis. But unlike layers, only the top-most element is active.
+
+Effects:
+1. Everything listed in the layer's *Effects*, except 2 and 3.
+2. Only the top-most element is drawn.
+3. Only the top-most element is given the chance to process UI control.
 
 ### deck
 
+Create a deck composite with a fixed number of elements:
+
+```c++
+deck(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+deck element.
+
+Example:
+
+```c++
+deck(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`deck_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### deck_composite
+
+Create a deck with an indeterminate (dynamic) number of elements:
+
+```c++
+deck_composite c;
+```
+
+The `deck_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `deck_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. deck_composite is-a `std::vector<element_ptr>`.
+
 ## Flow
 
-The flow composite element lays out its children much like the way text is
-laid out: lay out each element from left to right, fitting as much elements
-as possible following each child's minimum width (`limits().min.x`). Once a
-row is full, move to the next row and do the same until the end of the row is
-filled. Repeat the procedure until all the elements are laid out. The height
-of each row is determined by the maximum height (`limits().max.y`) of all the
+The flow element, is a composite that lays out its children much like the way
+text is laid out: lay out each element from left to right, fitting as much
+elements as possible following each child's *maximum horizontal limit*. Once
+a row is full, move to the next row and do the same until the end of the row
+is filled. Repeat the procedure until all the elements are laid out. The
+height of each row is determined by the *maximum vertical limit* of all the
 elements to be laid out in that row. The following graphic depicts a
 simplified layout scenario for child elements `a` to `r`.
 
@@ -886,43 +1399,42 @@ simplified layout scenario for child elements `a` to `r`.
 The child elements arranged in a `flow` composite are automatically re-flowed
 (re-layout) when the view size changes.
 
-### flowable_container
+To have elements laid out using `flow`, you need to make a `flow_composite`.
 
-To have elements laid out using `flow`, you need to make a `flowable_container`:
+### flow_composite
+
+Create a `flow_composite` with an indeterminate (dynamic) number of elements:
 
 ```c++
-c = vector_composite<flowable_container>{};
+flow_composite c;
 ```
 
-The `vector_composite` creates a `std::vector<element_ptr>` that the client
-uses to manage the composite's children elements. The lifetime of the
-container, `c` is the client's responsibility.
-
-Here's an example usage:
-
-```c++
-vector_composite<flowable_container> _children; // A class member
-```
-
-Then `push_back` a child element, `child`:
+The `flow_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `flow_composite` just
+as you would a `std::vector`, such as `push_back` a child element, `child`.
+Just keep in mind that we are dealing with `element_ptr` items:
 
 ```c++
-_children.push_back(share(child));
+c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flowable_container`.
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. `flow_composite` is-a `std::vector<element_ptr>`.
 
 ### flow
 
-Once we have a `flowable_container`, we can place its contents in a `flow`
+Once we have a `flow_composite`, we can place its contents in a `flow`
 element:
 
 ```c++
 flow(c)
 ```
 
-where `c` is the `flowable_container` we populated prior.
+where `c` is the `flow_composite` we populated prior.
 
 -------------------------------------------------------------------------------
 

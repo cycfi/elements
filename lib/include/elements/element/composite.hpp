@@ -143,7 +143,7 @@ namespace cycfi { namespace elements
    inline std::size_t composite<Container, Base>::size() const
    {
       return Container::size();
-   };
+   }
 
    template <typename Container, typename Base>
    inline element& composite<Container, Base>::at(std::size_t ix) const
@@ -155,7 +155,7 @@ namespace cycfi { namespace elements
    inline std::size_t range_composite<Base>::size() const
    {
       return _last - _first;
-   };
+   }
 
    template <typename Base>
    inline element& range_composite<Base>::at(std::size_t ix) const

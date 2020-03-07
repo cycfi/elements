@@ -893,11 +893,11 @@ have fixed horizontal sizes and computed vertical sizes following the natural
 Effects:
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
-2. The elements are positioned using the supplied coordinates.
+2. The elements are positioned horizontally using the supplied coordinates.
 3. The grid's *minimum vertical limit* is computed as the minimum of the
-   child element's *minimum vertical limit*.
+   children elements' *minimum vertical limit*s.
 4. The grid's *maximum vertical limit* is computed as the maximum of the
-   child element's *maximum vertical limit*.
+   children elements' *maximum vertical limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
@@ -934,9 +934,10 @@ hgrid(coords, item1, item2, item3, item4)
 `hgrid_composite` (see below).
 
 Requirements:
-1. The number of supplied coordinates and elements should match, otherwise,
+1. e1` to `eN` are element objects.
+2. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'hgrid').
-2. The coordinates assume the first element's relative coordinate at `x=0`
+3. The coordinates assume the first element's relative coordinate at `x=0`
    (it is at the left-most position in the row). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final width of the grid.
@@ -966,18 +967,100 @@ c.push_back(share(child));
 expected to be a `std::vector<float>`.
 
 Requirements:
-1. The number of items in the external coordinates vector `coords` must match
+1. hgrid_composite is-a `std::vector<element_ptr>`.
+2. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
-2. The coordinates assume the first element's relative coordinate at `x=0`
+3. The coordinates assume the first element's relative coordinate at `x=0`
    (it is at the left-most position in the row). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final width of the grid.
 
 ### Horizontal Tiles
 
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
+
+Horizontal Tiles are similar to Horizontal Grids, but allow elements to
+fluidly adjust horizontally depending on available space. Horizontal Tiles
+are best used for composing UI elements while Horizontal Grids are best for
+composing tables.
+
+Effects:
+1. The elements are laid out in a single row, left to right, immediately next
+   to each other with no intervening space.
+2. The elements are positioned horizontally using the children's natural
+   *limits*.
+3. Horizontal space is allocated using this algorithm:
+   1. Space is allocated for each child element following the child's natural
+      *minimum horizontal limit*.
+   2. If the allocated space exceeds the sum of all children elements'
+      *minimum horizontal limit*s, the extra space is given to each
+      horizontally resizable element (`limits.min.x < limits.max.x`).
+   3. The element's "stretchiness" determines how much extra space is given
+      to it according to the element's `stretch()` member function. A stretch
+      value of `1.0` is default. A stretchiness value of 2.0 means that the
+      element is able to stretch twice as much compared to its siblings.
+      (Also see [Stretch Elements](#stretch-elements)).
+3. The tile's *minimum vertical limit* is computed as the minimum of the
+   children elements' *minimum vertical limit*s.
+4. The grid's *maximum vertical limit* is computed as the maximum of the
+   children elements' *maximum vertical limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (horizontal) and computed (vertical) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### htile
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
+Build a horizontal tile with a fixed number of elements:
+
+```c++
+htile(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+horizontal tile element.
+
+Example:
+
+```c++
+htile(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`htile_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### htile_composite
+
+Create a horizontal tile with an indeterminate (dynamic) number of elements:
+
+```c++
+htile_composite c;
+```
+
+The `htile_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `htile_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. hgrid_composite is-a `std::vector<element_ptr>`.
 
 ### Vertical Grids
 
@@ -993,9 +1076,9 @@ Effects:
    next to each other with no intervening space.
 2. The elements are positioned using the supplied coordinates.
 3. The grid's *minimum horizontal limit* is computed as the minimum of the
-   child element's *minimum horizontal limit*.
+   children elements' *minimum horizontal limit*s.
 4. The grid's *maximum horizontal limit* is computed as the maximum of the
-   child element's *maximum horizontal limit*.
+   children elements' *maximum horizontal limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.

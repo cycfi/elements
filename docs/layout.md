@@ -888,6 +888,30 @@ element (`limits.min.x` and `limits.max.x`).
 
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
 
+### Horizontal Grids
+
+Horizontal Grids are composites that lay out one or more child elements in a
+row following externally supplied horizontal coordinates. Horizontal Grids
+have fixed horizontal sizes and computed vertical sizes following the natural
+`limits` of its children.
+
+Effects:
+1. The elements are laid out in a single row, next to each other.
+2. The elements are positioned using the supplied coordinates.
+3. The grid's *minimum vertical limits* is computed as the minimum of the
+   child element's *minimum vertical limits*.
+4. The grid's *maximum vertical limits* is computed as the maximum of the
+   child element's *maximum vertical limits*.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (horizontal) and computed (vertical) coordinates may violate
+   the layout limits of any of the elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### hgrid
 
 Build a horizontal grid with a fixed number of elements:
@@ -896,9 +920,11 @@ Build a horizontal grid with a fixed number of elements:
 hgrid(coords, e1, e2, e3... eN)
 ```
 
-`e1` to `eN` are the child elements. `coords` is an external container of
-horizontal coordinates, which can either be a plain array of type `float[N]`,
-`std::array<float, N>`, where N is the number of items.
+Where N is the number of items, `e1` to `eN` are the child elements, and
+`coords` is an external container of horizontal coordinates, which can either
+be a plain array of type `float[N]`, `std::array<float, N>`. Elements `e1` to
+`eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
+grid element.
 
 Example:
 
@@ -908,6 +934,9 @@ static float coords[] = { 50, 100, 150, 200 };
 hgrid(coords, item1, item2, item3, item4)
 ```
 
+> :point_right: If the number of elements is not fixed, you can use an
+`hgrid_composite` (see below).
+
 Requirements:
 1. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'hgrid').
@@ -916,27 +945,33 @@ Requirements:
    second element is at index 0, the third at index 1, and so on. The last
    coordinate is the total and final width of the grid.
 
-Effects:
-1. Elements `e1` to `eN` are held in a `std::array<element_ptr, N>` managed
-   by the horizontal grid element, where `N` is the number of elements.
-2. The elements are laid out in a single row, next to each other.
-3. The elements are positioned using the supplied coordinates (see
-   requirement 2 above).
-4. The grid's *minimum vertical limits* is computed as the minimum of the
-   child element's *minimum vertical limits*.
-5. The grid's *maximum vertical limits* is computed as the maximum of the
-   child element's *maximum vertical limits*.
-6. The final computed minimum limit is clamped to ensure it is not greater
-   than the computed maximum limit. Likewise the computed maximum limit is
-   clamped to ensure it is not less than the computed minimum limit.
-7. The supplied (horizontal) and computed (vertical) coordinates may violate
-   the layout limits of any of the elements.
-   1. If the allocated size of a child element is lower than the element's
-      *minimum limits* in either dimension, the element will be cropped.
-   2. If a child element's *maximum limits* in either dimension is exceeded,
-      the element will be aligned to the top-left.
+### hgrid_composite
 
-### vgrid_composite
+Create a horizontal grid with an indeterminate (dynamic) number of elements:
+
+```c++
+hgrid_composite c{ coords };
+```
+
+The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `hgrid_composite`
+just as you would a `std::vector`, such as `push_back` a child element,
+`child`. Just keep in mind that we are dealing with `element_ptr` items:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+`coords` is an external container of horizontal coordinates, which is
+expected to be a `std::vector<float>`.
+
+Requirements:
+1. The number of items in the external coordinates vector `coords` must match
+   with the number of elements at any given time.
 
 ### htile
 
@@ -964,12 +999,12 @@ element (`limits.min.y` and `limits.max.y`).
 
 ## Flow
 
-The flow composite element lays out its children much like the way text is
-laid out: lay out each element from left to right, fitting as much elements
-as possible following each child's *maximum horizontal limits*. Once a row is
-full, move to the next row and do the same until the end of the row is
-filled. Repeat the procedure until all the elements are laid out. The height
-of each row is determined by the *maximum vertical limits* of all the
+The flow element, is a composite that lays out its children much like the way
+text is laid out: lay out each element from left to right, fitting as much
+elements as possible following each child's *maximum horizontal limits*. Once
+a row is full, move to the next row and do the same until the end of the row
+is filled. Repeat the procedure until all the elements are laid out. The
+height of each row is determined by the *maximum vertical limits* of all the
 elements to be laid out in that row. The following graphic depicts a
 simplified layout scenario for child elements `a` to `r`.
 
@@ -978,9 +1013,11 @@ simplified layout scenario for child elements `a` to `r`.
 The child elements arranged in a `flow` composite are automatically re-flowed
 (re-layout) when the view size changes.
 
+To have elements laid out using `flow`, you need to make a `flow_composite`.
+
 ### flow_composite
 
-To have elements laid out using `flow`, you need to make a `flow_composite`:
+Create a `flow_composite` with an indeterminate (dynamic) number of elements:
 
 ```c++
 flow_composite c;
@@ -988,7 +1025,7 @@ flow_composite c;
 
 The `flow_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
-container, `c` is the client's responsibility. You use `flow_composite` just
+container, `c`, is the client's responsibility. You use `flow_composite` just
 as you would a `std::vector`, such as `push_back` a child element, `child`.
 Just keep in mind that we are dealing with `element_ptr` items:
 

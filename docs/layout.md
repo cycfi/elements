@@ -14,6 +14,7 @@
 * [Vertical Grids](#vertical-grids)
 * [Vertical Tiles](#vertical-tiles)
 * [Layers](#layers)
+* [Decks](#decks)
 * [Flow](#flow-element)
 
 -------------------------------------------------------------------------------
@@ -43,8 +44,7 @@ struct view_limits
 };
 ```
 
-For the purpose of this document, we will use these terms and limit
-expressions:
+For the purpose of this document, we will use these terms and expressions:
 
 limits
 : The limits of an element
@@ -389,7 +389,7 @@ the available align elements.
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/halign.png">
 
-Aligns the an enclosed element (`subject`) in the x dimension:
+Aligns the an enclosed element (`subject`) in the x-axis:
 
 ```c++
 halign(align, subject)
@@ -449,7 +449,7 @@ Effects:
 
 <img width="20%" height="20%" src="{{ site.url }}/elements/assets/images/valign.png">
 
-Aligns the an enclosed element (`subject`) in the y dimension:
+Aligns the an enclosed element (`subject`) in the y-axis:
 
 ```c++
 valign(align, subject)
@@ -970,7 +970,7 @@ c.push_back(share(child));
 expected to be a `std::vector<float>`.
 
 Requirements:
-1. hgrid_composite is-a `std::vector<element_ptr>`.
+1. `hgrid_composite` is-a `std::vector<element_ptr>`.
 2. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
 3. The coordinates assume the first element's relative coordinate at `x=0`
@@ -1064,7 +1064,7 @@ c.push_back(share(child));
 > the `std::vector<element_ptr>` in `flow_composite`.
 
 Requirements:
-1. hgrid_composite is-a `std::vector<element_ptr>`.
+1. `htile_composite` is-a `std::vector<element_ptr>`.
 
 ### Vertical Grids
 
@@ -1119,9 +1119,10 @@ vgrid(coords, item1, item2, item3, item4)
 `vgrid_composite` (see below).
 
 Requirements:
-1. The number of supplied coordinates and elements should match, otherwise,
+1. e1` to `eN` are element objects.
+2. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'vgrid').
-2. The coordinates assume the first element's relative coordinate at `y=0`
+3. The coordinates assume the first element's relative coordinate at `y=0`
    (it is at the top-most position in the column). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final height of the grid.
@@ -1243,13 +1244,144 @@ c.push_back(share(child));
 > the `std::vector<element_ptr>` in `flow_composite`.
 
 Requirements:
-1. hgrid_composite is-a `std::vector<element_ptr>`.
+1. vtile_composite is-a `std::vector<element_ptr>`.
 
 ## Layers
 
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layer.png">
+
+Elements is 2D, but the z-axis pertains to top-to-bottom layering. Layers
+allow groups of elements to be placed in the z-axis where higher-level
+elements obscure or hide lower-level elements.
+
+Effects:
+1. The elements are laid out in the z-axis, top to bottom.
+2. Rendering is done bottom-up; the bottom-most elements are drawn first.
+3. UI control (such as mouse clicks) proceeds from top to bottom.
+   Higher-level elements are given control priority. If a higher-level
+   element does not process the event, lower-level elements are given a
+   chance.
+4. The layer's *minimum limit* is computed as the minimum of the children
+   elements' *minimum limit*s.
+5. The grid's *maximum limit* is computed as the maximum of the children
+   elements' *maximum limit*s.
+6. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+7. The computed (vertical) and (horizontal) coordinates may violate the
+   limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
 ### layer
 
+Create a layer composite with a fixed number of elements:
+
+```c++
+layer(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+layer element.
+
+Example:
+
+```c++
+layer(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`layer_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### layer_composite
+
+Create a layer with an indeterminate (dynamic) number of elements:
+
+```c++
+layer_composite c;
+```
+
+The `layer_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `layer_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. layer_composite is-a `std::vector<element_ptr>`.
+
+### Decks
+
+<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/deck.png">
+
+The Deck is very similar to layers. Groups of elements to be placed in the
+z-axis. But unlike layers, only the top-most element is active.
+
+Effects:
+1. Everything listed in the layer's *Effects*, except 2 and 3.
+2. Only the top-most element is drawn.
+3. Only the top-most element is given the chance to process UI control.
+
 ### deck
+
+Create a deck composite with a fixed number of elements:
+
+```c++
+deck(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+deck element.
+
+Example:
+
+```c++
+deck(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`deck_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### deck_composite
+
+Create a deck with an indeterminate (dynamic) number of elements:
+
+```c++
+deck_composite c;
+```
+
+The `deck_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `deck_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. deck_composite is-a `std::vector<element_ptr>`.
 
 ## Flow
 
@@ -1289,6 +1421,9 @@ c.push_back(share(child));
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. `flow_composite` is-a `std::vector<element_ptr>`.
 
 ### flow
 

@@ -9,6 +9,7 @@
 * [Margin Elements](#margin-elements)
 * [Floating](#floating-element)
 * [Tiles and Grids](#tiles-and-grids)
+* [Horizontal Grids](#horizontal-grids)
 * [Layers](#layers)
 * [Flow](#flow-element)
 
@@ -49,19 +50,19 @@ limits.min
 : The minimum limits of an element
 
 limits.min.x
-: The minimum horizontal limits of an element
+: The minimum horizontal limit of an element
 
 limits.min.y
-: The minimum vertical limits of an element
+: The minimum vertical limit of an element
 
 limits.max
 : The maximum limits of an element
 
 limits.max.x
-: The maximum horizontal limits of an element
+: The maximum horizontal limit of an element
 
 limits.max.y
-: The maximum vertical limits of an element
+: The maximum vertical limit of an element
 
 horizontal limits
 : (limits.min.x, limits.max.x)
@@ -75,16 +76,16 @@ minimum limits
 maximum limits
 : (limits.max.x, limits.max.y)
 
-minimum horizontal limits
+minimum horizontal limit
 : limits.min.x
 
-maximum horizontal limits
+maximum horizontal limit
 : limits.max.x
 
-minimum vertical limits
+minimum vertical limit
 : limits.min.y
 
-maximum vertical limits
+maximum vertical limit
 : limits.max.y
 
 By default, an element has full limits: it is infinitely resizable:
@@ -207,14 +208,14 @@ Effects:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmin_size.png">
 
-Overrides the *minimum horizontal limits* of an enclosed element (`subject`):
+Overrides the *minimum horizontal limit* of an enclosed element (`subject`):
 
 ```c++
 hmin_size(width, subject)
 ```
 
 Effects:
-1. The *minimum horizontal limits* of `subject` will be set to the specified
+1. The *minimum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *horizontal minimum limits* of the
    `subject`.
 2. The natural *horizontal minimum limits* of the element will not be
@@ -224,14 +225,14 @@ Effects:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmin_size.png">
 
-Overrides the *minimum vertical limits* of an enclosed element (`subject`):
+Overrides the *minimum vertical limit* of an enclosed element (`subject`):
 
 ```c++
 vmin_size(height, subject)
 ```
 
 Effects:
-1. The *minimum vertical limits* of `subject` will be set to the specified `height`
+1. The *minimum vertical limit* of `subject` will be set to the specified `height`
    constrained by the natural vertical *minimum limits* of the `subject`.
 2. The natural vertical *minimum limits* of the element will not be violated.
 
@@ -254,34 +255,34 @@ Effects:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmax_size.png">
 
-Overrides the *maximum horizontal limits* of an enclosed element (`subject`):
+Overrides the *maximum horizontal limit* of an enclosed element (`subject`):
 
 ```c++
 hmax_size(width, subject)
 ```
 
 Effects:
-1. The *maximum horizontal limits* of `subject` will be set to the specified
-   `width` constrained by the natural *maximum horizontal limits* of the
+1. The *maximum horizontal limit* of `subject` will be set to the specified
+   `width` constrained by the natural *maximum horizontal limit* of the
    `subject`.
-2. The natural *maximum horizontal limits* of the element will not be
+2. The natural *maximum horizontal limit* of the element will not be
    violated.
 
 ### vmax_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmax_size.png">
 
-Overrides the *maximum vertical limits* of an enclosed element (`subject`):
+Overrides the *maximum vertical limit* of an enclosed element (`subject`):
 
 ```c++
 vmax_size(height, subject)
 ```
 
 Effects:
-1. The *maximum vertical limits* of `subject` will be set to the specified
-   `height` constrained by the natural *maximum vertical limits* of the
+1. The *maximum vertical limit* of `subject` will be set to the specified
+   `height` constrained by the natural *maximum vertical limit* of the
    `subject`
-2. The natural *maximum vertical limits* of the element will not be violated.
+2. The natural *maximum vertical limit* of the element will not be violated.
 
 ## Stretch Elements
 
@@ -394,7 +395,7 @@ halign(align, subject)
 Effects:
 1. Given a total allocated space `X`, `subject` will be positioned
    horizontally to `X * align`.
-2. The `subject` will assume its *minimum horizontal limits*.
+2. The `subject` will assume its *minimum horizontal limit*.
 3. $$$ TODO How about vertical effects? $$$
 
 Examples:
@@ -454,7 +455,7 @@ valign(align, subject)
 Effects:
 1. Given a total allocated space `Y`, `subject` will be positioned vertically
    to `Y * align`.
-2. The `subject` will assume its *minimum vertical limits*.
+2. The `subject` will assume its *minimum vertical limit*.
 
 Examples:
 1. `align = 0.0`: align `subject` to the top
@@ -880,15 +881,9 @@ tiles allow elements to fluidly adjust depending on available space. Tiles
 are best used for composing UI elements while grids are best for composing
 tables.
 
-### Horizontal Tiles and Grids
-
-Horizontal Tiles and Grids are composites that lay out one or more child
-elements in a row, respecting the *horizontal limits* requirements of each
-element (`limits.min.x` and `limits.max.x`).
-
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
-
 ### Horizontal Grids
+
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/hgrid.png">
 
 Horizontal Grids are composites that lay out one or more child elements in a
 row following externally supplied horizontal coordinates. Horizontal Grids
@@ -896,17 +891,18 @@ have fixed horizontal sizes and computed vertical sizes following the natural
 `limits` of its children.
 
 Effects:
-1. The elements are laid out in a single row, next to each other.
+1. The elements are laid out in a single row, left to right, immediately next
+   to each other with no intervening space.
 2. The elements are positioned using the supplied coordinates.
-3. The grid's *minimum vertical limits* is computed as the minimum of the
-   child element's *minimum vertical limits*.
-4. The grid's *maximum vertical limits* is computed as the maximum of the
-   child element's *maximum vertical limits*.
+3. The grid's *minimum vertical limit* is computed as the minimum of the
+   child element's *minimum vertical limit*.
+4. The grid's *maximum vertical limit* is computed as the maximum of the
+   child element's *maximum vertical limit*.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
 6. The supplied (horizontal) and computed (vertical) coordinates may violate
-   the layout limits of any of the elements.
+   the limits of its children elements.
    1. If the allocated size of a child element is lower than the element's
       *minimum limits* in either dimension, the element will be cropped.
    2. If a child element's *maximum limits* in either dimension is exceeded,
@@ -922,8 +918,8 @@ hgrid(coords, e1, e2, e3... eN)
 
 Where N is the number of items, `e1` to `eN` are the child elements, and
 `coords` is an external container of horizontal coordinates, which can either
-be a plain array of type `float[N]`, `std::array<float, N>`. Elements `e1` to
-`eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
+be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
+to `eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
 grid element.
 
 Example:
@@ -940,10 +936,10 @@ hgrid(coords, item1, item2, item3, item4)
 Requirements:
 1. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'hgrid').
-2. The coordinates assume the first element's relative coordinate to be 0 (it
-   is at the leftmost position in the row). The relative coordinate of the
-   second element is at index 0, the third at index 1, and so on. The last
-   coordinate is the total and final width of the grid.
+2. The coordinates assume the first element's relative coordinate at `x=0`
+   (it is at the left-most position in the row). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final width of the grid.
 
 ### hgrid_composite
 
@@ -956,8 +952,8 @@ hgrid_composite c{ coords };
 The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `hgrid_composite`
-just as you would a `std::vector`, such as `push_back` a child element,
-`child`. Just keep in mind that we are dealing with `element_ptr` items:
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
 
 ```c++
 c.push_back(share(child));
@@ -972,24 +968,116 @@ expected to be a `std::vector<float>`.
 Requirements:
 1. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
+2. The coordinates assume the first element's relative coordinate at `x=0`
+   (it is at the left-most position in the row). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final width of the grid.
+
+### Horizontal Tiles
 
 ### htile
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile-stretch2.png">
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/htile.png">
 
-### Vertical Tiles and Grids
+### Vertical Grids
 
-Vertical Tiles and Grids are composites that lay out one or more child
-elements in a column, respecting the *vertical limits* requirements of each
-element (`limits.min.y` and `limits.max.y`).
+<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vgrid.png">
+
+Vertical Grids are composites that lay out one or more child elements in a
+column following externally supplied vertical coordinates. Vertical Grids
+have fixed vertical sizes and computed horizontal sizes following the natural
+`limits` of its children.
+
+Effects:
+1. The elements are laid out in a single column, top to bottom, immediately
+   next to each other with no intervening space.
+2. The elements are positioned using the supplied coordinates.
+3. The grid's *minimum horizontal limit* is computed as the minimum of the
+   child element's *minimum horizontal limit*.
+4. The grid's *maximum horizontal limit* is computed as the maximum of the
+   child element's *maximum horizontal limit*.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (vertical) and computed (horizontal) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
+
+### vgrid
+
+Build a vertical grid with a fixed number of elements:
+
+```c++
+vgrid(coords, e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements, and
+`coords` is an external container of vertical coordinates, which can either
+be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
+to `eN` are held in a `std::array<element_ptr, N>` managed by the vertical
+grid element.
+
+Example:
+
+```c++
+static float coords[] = { 50, 100, 150, 200 };
+//...
+vgrid(coords, item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`vgrid_composite` (see below).
+
+Requirements:
+1. The number of supplied coordinates and elements should match, otherwise,
+   compiler error (no matching function for call to 'vgrid').
+2. The coordinates assume the first element's relative coordinate at `y=0`
+   (it is at the top-most position in the column). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final height of the grid.
+
+### vgrid_composite
+
+Create a vertical grid with an indeterminate (dynamic) number of elements:
+
+```c++
+vgrid_composite c{ coords };
+```
+
+The `vgrid_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `vgrid_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items. Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+`coords` is an external container of vertical coordinates, which is
+expected to be a `std::vector<float>`.
+
+Requirements:
+1. The number of items in the external coordinates vector `coords` must match
+   with the number of elements at any given time.
+2. The coordinates assume the first element's relative coordinate at `y=0`
+   (it is at the top-most position in the column). The relative coordinate of
+   the second element is at index 0, the third at index 1, and so on. The
+   last coordinate is the total and final height of the grid.
+
+### Vertical Tiles
 
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
 
 ### vgrid
 
 ### vtile
-
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile-stretch2.png">
 
 ## Layers
 
@@ -1001,10 +1089,10 @@ element (`limits.min.y` and `limits.max.y`).
 
 The flow element, is a composite that lays out its children much like the way
 text is laid out: lay out each element from left to right, fitting as much
-elements as possible following each child's *maximum horizontal limits*. Once
+elements as possible following each child's *maximum horizontal limit*. Once
 a row is full, move to the next row and do the same until the end of the row
 is filled. Repeat the procedure until all the elements are laid out. The
-height of each row is determined by the *maximum vertical limits* of all the
+height of each row is determined by the *maximum vertical limit* of all the
 elements to be laid out in that row. The following graphic depicts a
 simplified layout scenario for child elements `a` to `r`.
 

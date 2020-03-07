@@ -50,10 +50,17 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // View Limits
    ////////////////////////////////////////////////////////////////////////////
+   constexpr float full_extent    = 1E30;
+
    struct view_limits
    {
-      point    min;
-      point    max;
+      point    min = { 0.0, 0.0 };
+      point    max = { full_extent, full_extent };
+   };
+
+   constexpr view_limits full_limits = {
+      { 0.0, 0.0 }
+    , { full_extent, full_extent }
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -61,12 +68,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct view_stretch
    {
-      float    x;
-      float    y;
+      float    x = 1.0;
+      float    y = 1.0;
    };
-
-   constexpr float         full_extent    = 1E30;
-   constexpr view_limits   full_limits    = { { 0.0, 0.0 }, { full_extent, full_extent } };
 
    ////////////////////////////////////////////////////////////////////////////
    // Text info

@@ -39,8 +39,8 @@ is a struct that gives us the `min` and `max` information:
 ```c++
 struct view_limits
 {
-   point    min;
-   point    max;
+   point    min = { 0.0, 0.0 };
+   point    max = { full_extent, full_extent };
 };
 ```
 
@@ -94,7 +94,10 @@ maximum vertical limit
 By default, an element has full limits: it is infinitely resizable:
 
 ```c++
-constexpr view_limits full_limits = { { 0.0, 0.0 }, { full_extent, full_extent } };
+constexpr view_limits full_limits = {
+   { 0.0, 0.0 }
+   , { full_extent, full_extent }
+};
 ```
 
 An element with `full_limits` can be resized from an empty point (zero x and
@@ -301,13 +304,13 @@ is determined by the element's `stretch` member function:
 virtual view_stretch stretch() const;
 ```
 
-where `view_stretch` is a struct with declared as:
+where `view_stretch` is a struct declared as:
 
 ```c++
 struct view_stretch
 {
-   float    x;
-   float    y;
+   float    x = 1.0;
+   float    y = 1.0;
 };
 ```
 

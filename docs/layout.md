@@ -10,6 +10,9 @@
 * [Floating](#floating-element)
 * [Tiles and Grids](#tiles-and-grids)
 * [Horizontal Grids](#horizontal-grids)
+* [Horizontal Tiles](#horizontal-tiles)
+* [Vertical Grids](#vertical-grids)
+* [Vertical Tiles](#vertical-tiles)
 * [Layers](#layers)
 * [Flow](#flow-element)
 
@@ -999,7 +1002,8 @@ Effects:
       to it according to the element's `stretch()` member function. A stretch
       value of `1.0` is default. A stretchiness value of 2.0 means that the
       element is able to stretch twice as much compared to its siblings.
-      (Also see [Stretch Elements](#stretch-elements)).
+      Horizontally fixed-sized elements will not be stretched (element d in
+      the diagram). (Also see [Stretch Elements](#stretch-elements)).
 3. The tile's *minimum vertical limit* is computed as the minimum of the
    children elements' *minimum vertical limit*s.
 4. The grid's *maximum vertical limit* is computed as the maximum of the
@@ -1158,9 +1162,88 @@ Requirements:
 
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/vtile.png">
 
-### vgrid
+Vertical Tiles are similar to Vertical Grids, but allow elements to fluidly
+adjust vertically depending on available space. Vertical Tiles are best used
+for composing UI elements while Vertical Grids are best for composing tables.
+
+Effects:
+1. The elements are laid out in a single column, left to right, immediately
+   next to each other with no intervening space.
+2. The elements are positioned vertically using the children's natural
+   *limits*.
+3. Vertical space is allocated using this algorithm:
+   1. Space is allocated for each child element following the child's natural
+      *minimum vertical limit*.
+   2. If the allocated space exceeds the sum of all children elements'
+      *minimum vertical limit*s, the extra space is given to each
+      vertically resizable element (`limits.min.y < limits.max.y`).
+   3. The element's "stretchiness" determines how much extra space is given
+      to it according to the element's `stretch()` member function. A stretch
+      value of `1.0` is default. A stretchiness value of 2.0 means that the
+      element is able to stretch twice as much compared to its siblings.
+      Vertically fixed-sized elements will not be stretched (element b in the
+      diagram). (Also see [Stretch Elements](#stretch-elements)).
+3. The tile's *minimum horizontal limit* is computed as the minimum of the
+   children elements' *minimum horizontal limit*s.
+4. The grid's *maximum horizontal limit* is computed as the maximum of the
+   children elements' *maximum horizontal limit*s.
+5. The final computed minimum limit is clamped to ensure it is not greater
+   than the computed maximum limit. Likewise the computed maximum limit is
+   clamped to ensure it is not less than the computed minimum limit.
+6. The supplied (vertical) and computed (horizontal) coordinates may violate
+   the limits of its children elements.
+   1. If the allocated size of a child element is lower than the element's
+      *minimum limits* in either dimension, the element will be cropped.
+   2. If a child element's *maximum limits* in either dimension is exceeded,
+      the element will be aligned to the top-left.
 
 ### vtile
+
+Build a vertical tile with a fixed number of elements:
+
+```c++
+vtile(e1, e2, e3... eN)
+```
+
+Where N is the number of items, `e1` to `eN` are the child elements. Elements
+`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+vertical tile element.
+
+Example:
+
+```c++
+vtile(item1, item2, item3, item4)
+```
+
+> :point_right: If the number of elements is not fixed, you can use an
+`vtile_composite` (see below).
+
+Requirements:
+1. e1` to `eN` are element objects.
+
+### vtile_composite
+
+Create a vertical tile with an indeterminate (dynamic) number of elements:
+
+```c++
+vtile_composite c;
+```
+
+The `vtile_composite` is basically a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The lifetime of the
+container, `c`, is the client's responsibility. You use `vtile_composite`
+just as you would a `std::vector`, such as `push_back` a child element. Just
+keep in mind that we are dealing with `element_ptr` items Example:
+
+```c++
+c.push_back(share(child));
+```
+
+> :point_right: `share` turns an element object into an `element_ptr` held by
+> the `std::vector<element_ptr>` in `flow_composite`.
+
+Requirements:
+1. hgrid_composite is-a `std::vector<element_ptr>`.
 
 ## Layers
 

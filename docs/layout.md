@@ -34,7 +34,7 @@ view_limits limits(basic_context const& ctx) const;
 ```
 
 See [Context](context) for information about `basic_context`. `view_limits`
-is a struct that gives us the `min` and `max` information:
+is a `struct` that gives us the `min` and `max` information:
 
 ```c++
 struct view_limits
@@ -43,6 +43,10 @@ struct view_limits
    point    max;
 };
 ```
+
+> :point_right: `full_extent` is an implementation defined huge number near
+the maximum limits of the coordinate's data type (also implementation
+defined).
 
 For the purpose of this document, we will use these terms and expressions:
 
@@ -99,10 +103,6 @@ constexpr view_limits full_limits = { { 0.0, 0.0 }, { full_extent, full_extent }
 
 An element with `full_limits` can be resized from an empty point (zero x and
 y size) up to the full extent of the screen, and beyond (if possible).
-
-> :point_right: `full_extent` is actually an implementation defined huge
-number near the *maximum limits* of the coordinate's data type (also
-implementation defined).
 
 * An element has a fixed horizontal size if this expression is true:
   `limits.min.x == limits.max.x`.
@@ -301,7 +301,7 @@ is determined by the element's `stretch` member function:
 virtual view_stretch stretch() const;
 ```
 
-where `view_stretch` is a struct with declared as:
+where `view_stretch` is a `struct` declared as:
 
 ```c++
 struct view_stretch

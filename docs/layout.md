@@ -1251,8 +1251,8 @@ Requirements:
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layer.png">
 
 Elements is 2D, but the z-axis pertains to top-to-bottom layering. Layers
-allow groups of elements to be placed in the z-axis where higher-level
-elements obscure or hide lower-level elements.
+allow elements to be placed in the z-axis where higher-level elements obscure
+or hide lower-level elements.
 
 Effects:
 1. The elements are laid out in the z-axis, top to bottom.
@@ -1327,8 +1327,8 @@ Requirements:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/deck.png">
 
-The Deck is very similar to layers. Groups of elements to be placed in the
-z-axis. But unlike layers, only the top-most element is active.
+The Deck is very similar to layers. Elements are placed in the z-axis. But
+unlike layers, only the top-most element is active.
 
 Effects:
 1. Everything listed in the layer's *Effects*, except 2 and 3.

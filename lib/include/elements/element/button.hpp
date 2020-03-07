@@ -189,8 +189,8 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline element* basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(btn.pos))
-         return 0;
+      if (this->value() || !ctx.bounds.includes(btn.pos))
+         return nullptr;
       if (btn.down)
          return layered_button::click(ctx, btn);
       else if (this->on_click)

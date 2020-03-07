@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
    {
       bool was_selected = is_selected();
       auto r = basic_latching_button<>::click(ctx, btn);
-      if (!was_selected)
+      if (!was_selected && value())
       {
          auto [c, cctx] = find_composite(ctx);
          if (c)

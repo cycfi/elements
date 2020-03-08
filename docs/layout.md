@@ -115,7 +115,7 @@ implementation defined).
 * An element has a fixed vertical size if this expression is true:
   `limits.min.y == limits.max.y`.
 
-Examples:
+#### Examples
 
 ```c++
 { { 100, 100 }, { 100, 100 } }; // Fixed size
@@ -152,10 +152,16 @@ Overrides the *limits* of an element.
 limit(limits, subject)
 ```
 
+#### Notation
+
+| limits  | Instance of `view_limits`  |
+| subject | Instance of `Element`      |
+
 #### Semantics
 1. The *limits* of `subject` will be set to the specified `limits`
    constrained by the natural *limits* of the `subject` (the natural *limits*
    of the element will not be violated).
+2. Returns instance of `Proxy`.
 
 ### fixed_size
 
@@ -169,10 +175,16 @@ Fixes the size of an enclosed element (`subject`).
 fixed_size({ width, height }, subject)
 ```
 
+#### Notation
+
+| width, height   | `float`               |
+| subject         | Instance of `Element` |
+
 #### Semantics
 1. `subject` will be laid out with a fixed `width` and `height`, constrained
    by the natural *limits* of the `subject` (the natural *limits* of the
    element will not be violated).
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -188,11 +200,17 @@ Fixes the horizontal size of an enclosed element (`subject`).
 hsize(width, subject)
 ```
 
+#### Notation
+
+| width     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. `subject` will be laid out with a fixed `width`, constrained by the
    natural *horizontal limits* of the `subject` (the natural *horizontal
    limits* of the element will not be violated).
-3. The natural *vertical limits* of `subject` will not be affected.
+2. The natural *vertical limits* of `subject` will not be affected.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -205,14 +223,20 @@ Fixes the *vertical limits* of an enclosed element (`subject`).
 #### Expression
 
 ```c++
-hsize(height, subject)
+vsize(height, subject)
 ```
+
+#### Notation
+
+| height    | `float`               |
+| subject   | Instance of `Element` |
 
 #### Semantics
 1. `subject` will be laid out with a fixed `height`, constrained by the
    natural *vertical limits* of the `subject` (the natural *vertical limits*
    of the element will not be violated).
-3. The natural *horizontal limits* of `subject` will not be affected.
+2. The natural *horizontal limits* of `subject` will not be affected.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -228,10 +252,16 @@ Overrides the *minimum limits* of an enclosed element (`subject`).
 min_size({ width, height }, subject)
 ```
 
+#### Notation
+
+| width, height   | `float`               |
+| subject         | Instance of `Element` |
+
 #### Semantics
 1. The *minimum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *minimum limits* of the `subject`.
 2. the natural *minimum limits* of the element will not be violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -247,12 +277,18 @@ Overrides the *minimum horizontal limit* of an enclosed element (`subject`).
 hmin_size(width, subject)
 ```
 
+#### Notation
+
+| width     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The *minimum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *horizontal minimum limits* of the
    `subject`.
 2. The natural *horizontal minimum limits* of the element will not be
    violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -268,10 +304,16 @@ Overrides the *minimum vertical limit* of an enclosed element (`subject`).
 vmin_size(height, subject)
 ```
 
+#### Notation
+
+| height     | `float`               |
+| subject    | Instance of `Element` |
+
 #### Semantics
 1. The *minimum vertical limit* of `subject` will be set to the specified `height`
    constrained by the natural vertical *minimum limits* of the `subject`.
 2. The natural vertical *minimum limits* of the element will not be violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -287,10 +329,16 @@ Overrides the *maximum limits* of an enclosed element (`subject`).
 max_size({ width, height }, subject)
 ```
 
+#### Notation
+
+| width, height   | `float`               |
+| subject         | Instance of `Element` |
+
 #### Semantics
 1. The *maximum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *maximum limits* of the `subject`.
 2. The natural *maximum limits* of the element will not be violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -306,12 +354,18 @@ Overrides the *maximum horizontal limit* of an enclosed element (`subject`).
 hmax_size(width, subject)
 ```
 
+#### Notation
+
+| width     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The *maximum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *maximum horizontal limit* of the
    `subject`.
 2. The natural *maximum horizontal limit* of the element will not be
    violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -327,11 +381,17 @@ Overrides the *maximum vertical limit* of an enclosed element (`subject`).
 vmax_size(height, subject)
 ```
 
+#### Notation
+
+| height    | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The *maximum vertical limit* of `subject` will be set to the specified
    `height` constrained by the natural *maximum vertical limit* of the
    `subject`
 2. The natural *maximum vertical limit* of the element will not be violated.
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -379,9 +439,15 @@ Overrides the horizontal stretchiness of an an enclosed element (`subject`).
 hstretch(stretch, subject)
 ```
 
+#### Notation
+
+| stretch   | Instance of `view_stretch` |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed horizontal size.
+2. Returns instance of `Proxy`.
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
@@ -405,9 +471,15 @@ Overrides the vertical stretchiness of an an enclosed element (`subject`).
 vstretch(stretch, subject)
 ```
 
+#### Notation
+
+| stretch   | Instance of `view_stretch` |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed *vertical limits*.
+2. Returns instance of `Proxy`.
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
@@ -436,9 +508,15 @@ The `scale` element changes the scale of its enclosed element (`subject`).
 scale(scale_, subject)
 ```
 
+#### Notation
+
+| scale_    | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
    the element up (zoom in), while a value < 1.0 scales down (zoom out).
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -463,16 +541,21 @@ Aligns the an enclosed element (`subject`) in the x-axis.
 halign(align, subject)
 ```
 
+#### Notation
+
+| align     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Given a total allocated space `X`, `subject` will be positioned
    horizontally to `X * align`.
 2. The `subject` will assume its *minimum horizontal limit*.
-3. $$$ TODO How about vertical Semantics? $$$
+3. Returns instance of `Proxy`.
 
-Examples:
-1. `align = 0.0`: align `subject` to the left
-2. `align = 1.0`: align `subject` to the right
-3. `align = 0.5`: align `subject` to the center
+#### Examples
+1. `halign(0.0) // align subject to the left`
+2. `halign(1.0) // align subject to the right`
+3. `halign(0.5) // align subject to the center`
 
 -------------------------------------------------------------------------------
 
@@ -488,8 +571,13 @@ Left-aligns the an enclosed element (`subject`).
 align_left(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `halign(0.0, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -505,8 +593,13 @@ Center-aligns the an enclosed element (`subject`).
 align_center(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `halign(0.5, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -522,8 +615,13 @@ Right-aligns the an enclosed element (`subject`).
 align_right(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `halign(1.0, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -539,15 +637,21 @@ Aligns the an enclosed element (`subject`) in the y-axis.
 valign(align, subject)
 ```
 
+#### Notation
+
+| align     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Given a total allocated space `Y`, `subject` will be positioned vertically
    to `Y * align`.
 2. The `subject` will assume its *minimum vertical limit*.
+3. Returns instance of `Proxy`.
 
-Examples:
-1. `align = 0.0`: align `subject` to the top
-2. `align = 1.0`: align `subject` to the right
-3. `align = 0.5`: align `subject` to the middle
+#### Examples
+1. `valign(0.0) // align subject to the top`
+2. `valign(1.0) // align subject to the right`
+3. `valign(0.5) // align subject to the middle`
 
 -------------------------------------------------------------------------------
 
@@ -563,8 +667,13 @@ Aligns the an enclosed element (`subject`) to the top.
 align_top(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `valign(0.0, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -580,8 +689,13 @@ Aligns the an enclosed element (`subject`) to the middle.
 align_middle(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `valign(0.5, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -597,8 +711,13 @@ Aligns the an enclosed element (`subject`) to the bottom.
 align_bottom(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `valign(1.0, subject)`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -614,8 +733,13 @@ Aligns the an enclosed element (`subject`) to the left-top.
 align_left_top(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_left(align_top(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -631,8 +755,13 @@ Aligns the an enclosed element (`subject`) to the center-top.
 align_center_top(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_center(align_top(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -648,8 +777,13 @@ Aligns the an enclosed element (`subject`) to the right-top.
 align_right_top(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_right(align_top(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -665,8 +799,13 @@ Aligns the an enclosed element (`subject`) to the left-middle.
 align_left_middle(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_left(align_middle(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -682,8 +821,13 @@ Aligns the an enclosed element (`subject`) to the center-middle.
 align_center_middle(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_center(align_middle(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -699,8 +843,13 @@ Aligns the an enclosed element (`subject`) to the right-middle.
 align_right_middle(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_right(align_middle(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -716,8 +865,13 @@ Aligns the an enclosed element (`subject`) to the left-bottom.
 align_left_bottom(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_left(align_bottom(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -733,8 +887,13 @@ Aligns the an enclosed element (`subject`) to the center-bottom.
 align_center_bottom(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_center(align_bottom(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -750,8 +909,13 @@ Aligns the an enclosed element (`subject`) to the right-bottom.
 align_right_bottom(subject)
 ```
 
+#### Notation
+
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Equivalent to `align_right(align_bottom(subject))`
+2. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -775,12 +939,18 @@ Adds a margin all around an enclosed element (`subject`).
 margin({ left, top, right, bottom }, subject)
 ```
 
+#### Notation
+
+| left, top, right, bottom    | `float`               |
+| subject                     | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the left, top, right, and bottom of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `margin` does not violate the natural *limits* of the subject.
    `margin` will respect the subject's min-max constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -796,12 +966,18 @@ Adds a margin to the left of an enclosed element (`subject`).
 left_margin(left, subject)
 ```
 
+#### Notation
+
+| left      | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the left of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `left_margin` does not violate the natural *limits* of the subject.
    `left_margin` will respect the subject's min-max constraints and
    resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -817,12 +993,18 @@ Adds a margin to the right of an enclosed element (`subject`).
 right_margin(right, subject)
 ```
 
+#### Notation
+
+| right     | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the right of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `right_margin` does not violate the natural *limits* of the subject.
    `right_margin` will respect the subject's min-max constraints and
    resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -838,12 +1020,18 @@ Adds a margin to the top of an enclosed element (`subject`).
 top_margin(top, subject)
 ```
 
+#### Notation
+
+| top       | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the top of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `top_margin` does not violate the natural *limits* of the subject.
    `top_margin` will respect the subject's min-max constraints and
    resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -859,6 +1047,11 @@ Adds a margin to the bottom of an enclosed element (`subject`).
 bottom_margin(bottom, subject)
 ```
 
+#### Notation
+
+| bottom    | `float`               |
+| subject   | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the to the bottom of the subject with the given
    parameter.
@@ -866,6 +1059,7 @@ bottom_margin(bottom, subject)
 3. The `bottom_margin` does not violate the natural *limits* of the subject.
    `bottom_margin` will respect the subject's min-max constraints and
    resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -892,6 +1086,11 @@ left_right_margin({ left, right }, subject)
 left_right_margin(left, right, subject)
 ```
 
+#### Notation
+
+| left, right  | `float`               |
+| subject      | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the to the left and right sides of the subject with the
    given parameters.
@@ -899,6 +1098,7 @@ left_right_margin(left, right, subject)
 3. The `hmargin` (and variants) does not violate the natural *limits* of the
    subject. `hmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -913,17 +1113,22 @@ Adds a margin to the top and bottom sides of an enclosed element (`subject`).
 
 ```c++
 // variant 1
-vmargin({ left, right }, subject)
+vmargin({ top, bottom }, subject)
 
 // variant 2
-vmargin(left, right, subject)
+vmargin(top, bottom, subject)
 
 // variant 3
-top_bottom_margin({ left, right }, subject)
+top_bottom_margin({ top, bottom }, subject)
 
 // variant 4
-top_bottom_margin(left, right, subject)
+top_bottom_margin(top, bottom, subject)
 ```
+
+#### Notation
+
+| top, bottom  | `float`               |
+| subject      | Instance of `Element` |
 
 #### Semantics
 1. Space is added to the to the top and bottom sides of the subject with the
@@ -932,6 +1137,7 @@ top_bottom_margin(left, right, subject)
 3. The `vmargin` (and variants) does not violate the natural *limits* of the
    subject. `vmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -951,6 +1157,11 @@ left_top_margin({ left, top }, subject)
 left_top_margin(left, top, subject)
 ```
 
+#### Notation
+
+| left, top    | `float`               |
+| subject      | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the to the left and top sides of the subject with the
    given parameters.
@@ -958,6 +1169,7 @@ left_top_margin(left, top, subject)
 3. The `left_top_margin` (and variant) does not violate the natural *limits*
    of the subject. `left_top_margin` (and variant) will respect the subject's
    min-max constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -977,6 +1189,11 @@ left_bottom_margin({ left, bottom }, subject)
 left_bottom_margin(left, bottom, subject)
 ```
 
+#### Notation
+
+| left, bottom | `float`               |
+| subject      | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the to the left and bottom sides of the subject with the
    given parameters.
@@ -984,6 +1201,7 @@ left_bottom_margin(left, bottom, subject)
 3. The `left_bottom_margin` (and variant) does not violate the natural
    *limits* of the subject. `left_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -997,11 +1215,16 @@ Adds a margin to the right and top sides of an enclosed element (`subject`).
 
 ```c++
 // variant 1
-right_top_margin({ left, top }, subject)
+right_top_margin({ right, top }, subject)
 
 // variant 2
-right_top_margin(left, top, subject)
+right_top_margin(right, top, subject)
 ```
+
+#### Notation
+
+| right, top   | `float`               |
+| subject      | Instance of `Element` |
 
 #### Semantics
 1. Space is added to the to the right and top sides of the subject with the
@@ -1010,6 +1233,7 @@ right_top_margin(left, top, subject)
 3. The `right_top_margin` (and variant) does not violate the natural *limits*
    of the subject. `right_top_margin` (and variant) will respect the
    subject's min-max constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -1029,6 +1253,11 @@ right_bottom_margin({ right, bottom }, subject)
 right_bottom_margin(right, bottom, subject)
 ```
 
+#### Notation
+
+| right, bottom   | `float`               |
+| subject         | Instance of `Element` |
+
 #### Semantics
 1. Space is added to the to the right and bottom sides of the subject with the
    given parameters.
@@ -1036,6 +1265,7 @@ right_bottom_margin(right, bottom, subject)
 3. The `right_bottom_margin` (and variant) does not violate the natural
    limits of the subject. `right_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
@@ -1052,21 +1282,27 @@ A floating element allows arbitrary placement of an enclosed element
 floating({ left, top, right, bottom }, subject)
 ```
 
+#### Notation
+
+| left, top, right, bottom | `float`               |
+| subject                  | Instance of `Element` |
+
 #### Semantics
 1. The element will be placed exactly to the specified position in the main
    view, constrained to the subject's natural *limits*.
 2. The floating element does not violate the natural *limits* of the subject.
+4. Returns instance of `Proxy`.
 
 -------------------------------------------------------------------------------
 
 ## Tiles and Grids
 
-Tiles are the most useful layout elements, seconded by Grids. Tiles are used
-everywhere for composing hierarchical elements in rows and columns, typical
-to all GUIs. Grids are similar to tiles, but grids have fixed sizes while
-tiles allow elements to fluidly adjust depending on available space. Tiles
-are best used for composing UI elements while grids are best for composing
-tables.
+Tiles are the most useful layout elements, followed by by Grids. Tiles are
+used everywhere for composing hierarchical elements in rows and columns,
+typical to all GUIs. Grids are similar to tiles, but grids have fixed sizes
+while tiles allow elements to fluidly adjust depending on available space.
+Tiles are best used for composing UI elements while grids are best for
+composing tables.
 
 ### Horizontal Grids
 
@@ -1104,14 +1340,18 @@ Build a horizontal grid with a fixed number of elements.
 #### Expression
 
 ```c++
-hgrid(coords, e1, e2, e3... eN)
+hgrid(coords, e1,...eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements, and
-`coords` is an external container of horizontal coordinates, which can either
-be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
-to `eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
-grid element.
+#### Notation
+
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+| `coords`        | External container of horizontal coordinates (more below)    |
+
+The External container, `coords`, can either be a plain array of type
+`float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in a
+`std::array<element_ptr, N>` managed by the horizontal grid element.
 
 #### Example
 
@@ -1125,13 +1365,16 @@ hgrid(coords, item1, item2, item3, item4)
 `hgrid_composite` (see below).
 
 #### Requirements
-1. e1` to `eN` are element objects.
-2. The number of supplied coordinates and elements should match, otherwise,
-   compiler error (no matching function for call to 'hgrid').
-3. The coordinates assume the first element's relative coordinate at `x=0`
+1. The number of supplied coordinates and elements should match, otherwise,
+   compiler error (no matching function for call to `hgrid`).
+2. The coordinates assume the first element's relative coordinate at `x=0`
    (it is at the left-most position in the row). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
+   the second element is at index `0`, the third at index `1`, and so on. The
    last coordinate is the total and final width of the grid.
+
+#### Semantics
+1. In addition to the semantics of Horizontal Grids, returns instance of
+   `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1145,27 +1388,30 @@ Create a horizontal grid with an indeterminate (dynamic) number of elements.
 hgrid_composite c{ coords };
 ```
 
+#### Notation
+
+| `coords`        | External container of horizontal coordinates, `std::vector<float>`    |
+| `c`             | Instance of type `hgrid_composite`                           |
+
 The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `hgrid_composite`
 just as you would a `std::vector`, such as `push_back` a child element. Just
-keep in mind that we are dealing with `element_ptr` items Example:
+keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-`coords` is an external container of horizontal coordinates, which is
-expected to be a `std::vector<float>`.
+> the `std::vector<element_ptr>` in `hgrid_composite`.
 
 #### Requirements
-1. `hgrid_composite` is-a `std::vector<element_ptr>`.
-2. The number of items in the external coordinates vector `coords` must match
+1. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
-3. The coordinates assume the first element's relative coordinate at `x=0`
+2. The coordinates assume the first element's relative coordinate at `x=0`
    (it is at the left-most position in the row). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final width of the grid.
@@ -1221,11 +1467,15 @@ Build a horizontal tile with a fixed number of elements.
 #### Expression
 
 ```c++
-htile(e1, e2, e3... eN)
+htile(e1,...eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements. Elements
-`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+#### Notation
+
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+
+Elements `e1,...eN` are held in a `std::array<element_ptr, N>` managed by the
 horizontal tile element.
 
 #### Example:
@@ -1237,8 +1487,9 @@ htile(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `htile_composite` (see below).
 
-#### Requirements
-1. e1` to `eN` are element objects.
+#### Semantics
+1. In addition to the semantics of Horizontal Tiles, returns instance of
+   `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1252,21 +1503,24 @@ Create a horizontal tile with an indeterminate (dynamic) number of elements.
 htile_composite c;
 ```
 
+#### Notation
+
+| `c`             | Instance of type `htile_composite`   |
+
 The `htile_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `htile_composite`
 just as you would a `std::vector`, such as `push_back` a child element. Just
-keep in mind that we are dealing with `element_ptr` items Example:
+keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-#### Requirements
-1. `htile_composite` is-a `std::vector<element_ptr>`.
+> the `std::vector<element_ptr>` in `htile_composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1306,16 +1560,21 @@ Build a vertical grid with a fixed number of elements.
 #### Expression
 
 ```c++
-vgrid(coords, e1, e2, e3... eN)
+vgrid(coords, e1,...eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements, and
-`coords` is an external container of vertical coordinates, which can either
-be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
-to `eN` are held in a `std::array<element_ptr, N>` managed by the vertical
-grid element.
+#### Notation
 
-#### Example:
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+| `coords`        | External container of vertical coordinates (more below)    |
+
+
+The External container, `coords` is an external can either be a plain array
+of type `float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in
+a `std::array<element_ptr, N>` managed by the vertical grid element.
+
+#### Example
 
 ```c++
 static float coords[] = { 50, 100, 150, 200 };
@@ -1327,13 +1586,16 @@ vgrid(coords, item1, item2, item3, item4)
 `vgrid_composite` (see below).
 
 #### Requirements
-1. e1` to `eN` are element objects.
-2. The number of supplied coordinates and elements should match, otherwise,
-   compiler error (no matching function for call to 'vgrid').
-3. The coordinates assume the first element's relative coordinate at `y=0`
+1. The number of supplied coordinates and elements should match, otherwise,
+   compiler error (no matching function for call to `vgrid`).
+2. The coordinates assume the first element's relative coordinate at `y=0`
    (it is at the top-most position in the column). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
+   the second element is at index `0`, the third at index `1`, and so on. The
    last coordinate is the total and final height of the grid.
+
+#### Semantics
+1. In addition to the semantics of Vertical Grids, returns instance of
+   `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1347,6 +1609,11 @@ Create a vertical grid with an indeterminate (dynamic) number of elements.
 vgrid_composite c{ coords };
 ```
 
+#### Notation
+
+| `coords`        | External container of vertical coordinates, `std::vector<float>`    |
+| `c`             | Instance of type `vgrid_composite`                           |
+
 The `vgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `vgrid_composite`
@@ -1358,10 +1625,7 @@ c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-`coords` is an external container of vertical coordinates, which is
-expected to be a `std::vector<float>`.
+> the `std::vector<element_ptr>` in `vgrid_composite`.
 
 #### Requirements
 1. The number of items in the external coordinates vector `coords` must match
@@ -1421,14 +1685,18 @@ Build a vertical tile with a fixed number of elements.
 #### Expression
 
 ```c++
-vtile(e1, e2, e3... eN)
+vtile(e1,...eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements. Elements
-`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+#### Notation
+
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+
+Elements `e1,...eN` are held in a `std::array<element_ptr, N>` managed by the
 vertical tile element.
 
-Example:
+#### Example
 
 ```c++
 vtile(item1, item2, item3, item4)
@@ -1437,8 +1705,9 @@ vtile(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `vtile_composite` (see below).
 
-#### Requirements
-1. e1` to `eN` are element objects.
+#### Semantics
+1. In addition to the semantics of Vertical Tiles, returns instance of
+   `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1446,25 +1715,30 @@ vtile(item1, item2, item3, item4)
 
 Create a vertical tile with an indeterminate (dynamic) number of elements:
 
+#### Expression
+
 ```c++
 vtile_composite c;
 ```
+
+#### Notation
+
+| `c`             | Instance of type `vtile_composite`   |
 
 The `vtile_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `vtile_composite`
 just as you would a `std::vector`, such as `push_back` a child element. Just
-keep in mind that we are dealing with `element_ptr` items Example:
+keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-#### Requirements
-1. vtile_composite is-a `std::vector<element_ptr>`.
+> the `std::vector<element_ptr>` in `vtile_composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1506,11 +1780,15 @@ Create a layer composite with a fixed number of elements.
 #### Expression
 
 ```c++
-layer(e1, e2, e3... eN)
+layer(e1,...eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements. Elements
-`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+#### Notation
+
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+
+Elements `e1,...eN` are held in a `std::array<element_ptr, N>` managed by the
 layer element.
 
 #### Example
@@ -1522,8 +1800,8 @@ layer(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `layer_composite` (see below).
 
-#### Requirements
-1. e1` to `eN` are element objects.
+#### Semantics
+1. In addition to the semantics of Layers, returns instance of `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1535,21 +1813,24 @@ Create a layer with an indeterminate (dynamic) number of elements:
 layer_composite c;
 ```
 
+#### Notation
+
+| `c`             | Instance of type `layer_composite`   |
+
 The `layer_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `layer_composite`
 just as you would a `std::vector`, such as `push_back` a child element. Just
-keep in mind that we are dealing with `element_ptr` items Example:
+keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-#### Requirements
-1. layer_composite is-a `std::vector<element_ptr>`.
+> the `std::vector<element_ptr>` in `layer_composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1577,8 +1858,12 @@ Create a deck composite with a fixed number of elements.
 deck(e1, e2, e3... eN)
 ```
 
-Where N is the number of items, `e1` to `eN` are the child elements. Elements
-`e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
+#### Notation
+
+| `N`             | The number of items                                          |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
+
+Elements `e1,...eN` are held in a `std::array<element_ptr, N>` managed by the
 deck element.
 
 #### Example
@@ -1591,7 +1876,7 @@ deck(item1, item2, item3, item4)
 `deck_composite` (see below).
 
 #### Requirements
-1. e1` to `eN` are element objects.
+1. In addition to the semantics of Deck, returns instance of `Composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1599,25 +1884,30 @@ deck(item1, item2, item3, item4)
 
 Create a deck with an indeterminate (dynamic) number of elements:
 
+#### Expression
+
 ```c++
 deck_composite c;
 ```
+
+#### Notation
+
+| `c`             | Instance of type `deck_composite`   |
 
 The `deck_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `deck_composite`
 just as you would a `std::vector`, such as `push_back` a child element. Just
-keep in mind that we are dealing with `element_ptr` items Example:
+keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
 ```
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
-> the `std::vector<element_ptr>` in `flow_composite`.
-
-#### Requirements
-1. deck_composite is-a `std::vector<element_ptr>`.
+> the `std::vector<element_ptr>` in `deck_composite`.
 
 -------------------------------------------------------------------------------
 
@@ -1651,11 +1941,17 @@ Create a `flow_composite` with an indeterminate (dynamic) number of elements.
 flow_composite c;
 ```
 
+#### Notation
+
+| `c`             | Instance of type `flow_composite`   |
+
 The `flow_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
 container, `c`, is the client's responsibility. You use `flow_composite` just
 as you would a `std::vector`, such as `push_back` a child element, `child`.
-Just keep in mind that we are dealing with `element_ptr` items:
+Just keep in mind that we are dealing with `element_ptr` items.
+
+#### Example
 
 ```c++
 c.push_back(share(child));
@@ -1663,9 +1959,6 @@ c.push_back(share(child));
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
-
-#### Requirements
-1. `flow_composite` is-a `std::vector<element_ptr>`.
 
 -------------------------------------------------------------------------------
 
@@ -1680,7 +1973,12 @@ element.
 flow(c)
 ```
 
-where `c` is the `flow_composite` we populated prior.
+#### Notation
+
+| `c`             | Instance of `flow_composite` |
+
+#### Semantics
+1. Returns instance of `Composite`.
 
 -------------------------------------------------------------------------------
 

@@ -129,7 +129,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic label
    ////////////////////////////////////////////////////////////////////////////
-   struct default_label : element, read_only_text_base
+   struct default_label : element, text_reader
    {
       public:
 
@@ -146,7 +146,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Base>
-   struct basic_label_base : Base, virtual text_base
+   struct basic_label_base : Base, text_writer
    {
       using text_type = std::string const&;
       using remove_gen = basic_label_base<typename Base::remove_gen>;

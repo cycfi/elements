@@ -18,29 +18,33 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // text_base mixin
+   // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
-   class read_only_text_base
+   class text_reader
    {
    public:
 
-      virtual                    ~read_only_text_base() = default;
-
+      virtual                    ~text_reader() = default;
       virtual std::string const& get_text() const = 0;
       char const*                c_str() const { return get_text().c_str(); }
    };
 
-   class text_base : public read_only_text_base
+   class text_writer
    {
    public:
 
+      virtual                    ~text_writer() = default;
       virtual void               set_text(std::string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
-   class static_text_box : public element, public text_base, public receiver<std::string>
+   class static_text_box
+    : public element
+    , public text_reader
+    , public text_writer
+    , public receiver<std::string>
    {
    public:
                               static_text_box(

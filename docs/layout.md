@@ -21,6 +21,8 @@
 The Elements Library provides a comprehensive set of elements for laying out
 elements the view.
 
+-------------------------------------------------------------------------------
+
 ## Limits
 
 Each element provides information on how it wants to be sized by means of
@@ -127,6 +129,8 @@ Examples:
 { { 100, 100 }, { 100, 200 } }; // Fixed width, semi-flexible height (100 to 200)
 ```
 
+-------------------------------------------------------------------------------
+
 ## Size Elements
 
 Size elements override the *limits* of an enclosed element. There is a
@@ -134,17 +138,21 @@ comprehensive list of size related elements in the Elements Library that can
 be used for various purposes. This section catalogues all the available size
 elements.
 
+-------------------------------------------------------------------------------
+
 ### limit
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/limit.png">
 
 Overrides the *limits* of an element.
 
+#### Expression
+
 ```c++
 limit(limits, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *limits* of `subject` will be set to the specified `limits`
    constrained by the natural *limits* of the `subject` (the natural *limits*
    of the element will not be violated).
@@ -153,143 +161,179 @@ Effects:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/fixed_size.png">
 
-Fixes the size of an enclosed element (`subject`):
+Fixes the size of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 fixed_size({ width, height }, subject)
 ```
 
-Effects:
+#### Semantics
 1. `subject` will be laid out with a fixed `width` and `height`, constrained
    by the natural *limits* of the `subject` (the natural *limits* of the
    element will not be violated).
+
+-------------------------------------------------------------------------------
 
 ### hsize
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hsize.png">
 
-Fixes the horizontal size of an enclosed element (`subject`):
+Fixes the horizontal size of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 hsize(width, subject)
 ```
 
-Effects:
+#### Semantics
 1. `subject` will be laid out with a fixed `width`, constrained by the
    natural *horizontal limits* of the `subject` (the natural *horizontal
    limits* of the element will not be violated).
 3. The natural *vertical limits* of `subject` will not be affected.
 
+-------------------------------------------------------------------------------
+
 ### vsize
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vsize.png">
 
-Fixes the *vertical limits* of an enclosed element (`subject`):
+Fixes the *vertical limits* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 hsize(height, subject)
 ```
 
-Effects:
+#### Semantics
 1. `subject` will be laid out with a fixed `height`, constrained by the
    natural *vertical limits* of the `subject` (the natural *vertical limits*
    of the element will not be violated).
 3. The natural *horizontal limits* of `subject` will not be affected.
 
+-------------------------------------------------------------------------------
+
 ### min_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/min_size.png">
 
-Overrides the *minimum limits* of an enclosed element (`subject`):
+Overrides the *minimum limits* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 min_size({ width, height }, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *minimum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *minimum limits* of the `subject`.
 2. the natural *minimum limits* of the element will not be violated.
+
+-------------------------------------------------------------------------------
 
 ### hmin_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmin_size.png">
 
-Overrides the *minimum horizontal limit* of an enclosed element (`subject`):
+Overrides the *minimum horizontal limit* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 hmin_size(width, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *minimum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *horizontal minimum limits* of the
    `subject`.
 2. The natural *horizontal minimum limits* of the element will not be
    violated.
 
+-------------------------------------------------------------------------------
+
 ### vmin_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmin_size.png">
 
-Overrides the *minimum vertical limit* of an enclosed element (`subject`):
+Overrides the *minimum vertical limit* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 vmin_size(height, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *minimum vertical limit* of `subject` will be set to the specified `height`
    constrained by the natural vertical *minimum limits* of the `subject`.
 2. The natural vertical *minimum limits* of the element will not be violated.
+
+-------------------------------------------------------------------------------
 
 ### max_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/max_size.png">
 
-Overrides the *maximum limits* of an enclosed element (`subject`):
+Overrides the *maximum limits* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 max_size({ width, height }, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *maximum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *maximum limits* of the `subject`.
 2. The natural *maximum limits* of the element will not be violated.
+
+-------------------------------------------------------------------------------
 
 ### hmax_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmax_size.png">
 
-Overrides the *maximum horizontal limit* of an enclosed element (`subject`):
+Overrides the *maximum horizontal limit* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 hmax_size(width, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *maximum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *maximum horizontal limit* of the
    `subject`.
 2. The natural *maximum horizontal limit* of the element will not be
    violated.
 
+-------------------------------------------------------------------------------
+
 ### vmax_size
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmax_size.png">
 
-Overrides the *maximum vertical limit* of an enclosed element (`subject`):
+Overrides the *maximum vertical limit* of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 vmax_size(height, subject)
 ```
 
-Effects:
+#### Semantics
 1. The *maximum vertical limit* of `subject` will be set to the specified
    `height` constrained by the natural *maximum vertical limit* of the
    `subject`
 2. The natural *maximum vertical limit* of the element will not be violated.
+
+-------------------------------------------------------------------------------
 
 ## Stretch Elements
 
@@ -321,17 +365,21 @@ stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
 siblings in an [htile](#htile) or [vtile](#vtile), assuming they have the
 default 1.0 stretchiness.
 
+-------------------------------------------------------------------------------
+
 ### hstretch
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hstretch.png">
 
-Overrides the horizontal stretchiness of an an enclosed element (`subject`):
+Overrides the horizontal stretchiness of an an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 hstretch(stretch, subject)
 ```
 
-Effects:
+#### Semantics
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed horizontal size.
 
@@ -343,17 +391,21 @@ For example, the image below shows how three elements are laid out in an
 The element with the `2.0` stretch value stretches twice as much compared to
 its siblings.
 
+-------------------------------------------------------------------------------
+
 ### vstretch
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vstretch.png">
 
-Overrides the vertical stretchiness of an an enclosed element (`subject`):
+Overrides the vertical stretchiness of an an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 vstretch(stretch, subject)
 ```
 
-Effects:
+#### Semantics
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed *vertical limits*.
 
@@ -365,22 +417,30 @@ For example, the image below shows how three elements are laid out in an
 The element with the `0.5` stretch value stretches half less, while the
 element with the `1.5` stretches half more than the default.
 
+-------------------------------------------------------------------------------
+
 ## Scale Element
 
 The Elements Library is resolution independent and elements can be scaled up
 or down to suit. The default scale is 1.0 (no scale).
 
+-------------------------------------------------------------------------------
+
 ### scale
 
-The `scale` element changes the scale of its enclosed element (`subject`):
+The `scale` element changes the scale of its enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 scale(scale_, subject)
 ```
 
-Effects:
+#### Semantics
 1. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
    the element up (zoom in), while a value < 1.0 scales down (zoom out).
+
+-------------------------------------------------------------------------------
 
 ## Align Elements
 
@@ -389,77 +449,97 @@ dimensions, or both. There is a comprehensive list of align elements in The
 Elements Library that can be used for various purposes. This section
 catalogues all the available align elements.
 
+-------------------------------------------------------------------------------
+
 ### halign
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/halign.png">
 
-Aligns the an enclosed element (`subject`) in the x-axis:
+Aligns the an enclosed element (`subject`) in the x-axis.
+
+#### Expression
 
 ```c++
 halign(align, subject)
 ```
 
-Effects:
+#### Semantics
 1. Given a total allocated space `X`, `subject` will be positioned
    horizontally to `X * align`.
 2. The `subject` will assume its *minimum horizontal limit*.
-3. $$$ TODO How about vertical effects? $$$
+3. $$$ TODO How about vertical Semantics? $$$
 
 Examples:
 1. `align = 0.0`: align `subject` to the left
 2. `align = 1.0`: align `subject` to the right
 3. `align = 0.5`: align `subject` to the center
 
+-------------------------------------------------------------------------------
+
 ### align_left
 
 <img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_left.png">
 
-Left-aligns the an enclosed element (`subject`):
+Left-aligns the an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 align_left(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `halign(0.0, subject)`
+
+-------------------------------------------------------------------------------
 
 ### align_center
 
 <img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_center.png">
 
-Center-aligns the an enclosed element (`subject`):
+Center-aligns the an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 align_center(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `halign(0.5, subject)`
+
+-------------------------------------------------------------------------------
 
 ### align_right
 
 <img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/align_right.png">
 
-Right-aligns the an enclosed element (`subject`):
+Right-aligns the an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 align_right(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `halign(1.0, subject)`
+
+-------------------------------------------------------------------------------
 
 ### valign
 
 <img width="20%" height="20%" src="{{ site.url }}/elements/assets/images/valign.png">
 
-Aligns the an enclosed element (`subject`) in the y-axis:
+Aligns the an enclosed element (`subject`) in the y-axis.
+
+#### Expression
 
 ```c++
 valign(align, subject)
 ```
 
-Effects:
+#### Semantics
 1. Given a total allocated space `Y`, `subject` will be positioned vertically
    to `Y * align`.
 2. The `subject` will assume its *minimum vertical limit*.
@@ -469,161 +549,211 @@ Examples:
 2. `align = 1.0`: align `subject` to the right
 3. `align = 0.5`: align `subject` to the middle
 
+-------------------------------------------------------------------------------
+
 ### align_top
 
 <img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_top.png">
 
-Aligns the an enclosed element (`subject`) to the top:
+Aligns the an enclosed element (`subject`) to the top.
+
+#### Expression
 
 ```c++
 align_top(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `valign(0.0, subject)`
+
+-------------------------------------------------------------------------------
 
 ### align_middle
 
 <img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_middle.png">
 
-Aligns the an enclosed element (`subject`) to the middle:
+Aligns the an enclosed element (`subject`) to the middle.
+
+#### Expression
 
 ```c++
 align_middle(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `valign(0.5, subject)`
+
+-------------------------------------------------------------------------------
 
 ### align_bottom
 
 <img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/align_bottom.png">
 
-Aligns the an enclosed element (`subject`) to the bottom:
+Aligns the an enclosed element (`subject`) to the bottom.
+
+#### Expression
 
 ```c++
 align_bottom(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `valign(1.0, subject)`
+
+-------------------------------------------------------------------------------
 
 ### align_left_top
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_top.png">
 
-Aligns the an enclosed element (`subject`) to the left-top:
+Aligns the an enclosed element (`subject`) to the left-top.
+
+#### Expression
 
 ```c++
 align_left_top(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_left(align_top(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_center_top
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_top.png">
 
-Aligns the an enclosed element (`subject`) to the center-top:
+Aligns the an enclosed element (`subject`) to the center-top.
+
+#### Expression
 
 ```c++
 align_center_top(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_center(align_top(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_right_top
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_top.png">
 
-Aligns the an enclosed element (`subject`) to the right-top:
+Aligns the an enclosed element (`subject`) to the right-top.
+
+#### Expression
 
 ```c++
 align_right_top(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_right(align_top(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_left_middle
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_middle.png">
 
-Aligns the an enclosed element (`subject`) to the left-middle:
+Aligns the an enclosed element (`subject`) to the left-middle.
+
+#### Expression
 
 ```c++
 align_left_middle(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_left(align_middle(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_center_middle
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_middle.png">
 
-Aligns the an enclosed element (`subject`) to the center-middle:
+Aligns the an enclosed element (`subject`) to the center-middle.
+
+#### Expression
 
 ```c++
 align_center_middle(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_center(align_middle(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_right_middle
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_middle.png">
 
-Aligns the an enclosed element (`subject`) to the right-middle:
+Aligns the an enclosed element (`subject`) to the right-middle.
+
+#### Expression
 
 ```c++
 align_right_middle(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_right(align_middle(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_left_bottom
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_left_bottom.png">
 
-Aligns the an enclosed element (`subject`) to the left-bottom:
+Aligns the an enclosed element (`subject`) to the left-bottom.
+
+#### Expression
 
 ```c++
 align_left_bottom(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_left(align_bottom(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_center_bottom
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_center_bottom.png">
 
-Aligns the an enclosed element (`subject`) to the center-bottom:
+Aligns the an enclosed element (`subject`) to the center-bottom.
+
+#### Expression
 
 ```c++
 align_center_bottom(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_center(align_bottom(subject))`
+
+-------------------------------------------------------------------------------
 
 ### align_right_bottom
 
 <img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/align_right_bottom.png">
 
-Aligns the an enclosed element (`subject`) to the right-bottom:
+Aligns the an enclosed element (`subject`) to the right-bottom.
+
+#### Expression
 
 ```c++
 align_right_bottom(subject)
 ```
 
-Effects:
+#### Semantics
 1. Equivalent to `align_right(align_bottom(subject))`
+
+-------------------------------------------------------------------------------
 
 ## Margin Elements
 
@@ -631,85 +761,105 @@ Margins add some space around elements. There is a comprehensive list of
 margin elements in the Elements Library that can be used for various
 purposes. This section catalogues all the available margin elements.
 
+-------------------------------------------------------------------------------
+
 ### margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/margin.png">
 
-Adds a margin all around an enclosed element (`subject`):
+Adds a margin all around an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 margin({ left, top, right, bottom }, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the left, top, right, and bottom of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `margin` does not violate the natural *limits* of the subject.
    `margin` will respect the subject's min-max constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### left_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_margin.png">
 
-Adds a margin to the left of an enclosed element (`subject`):
+Adds a margin to the left of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 left_margin(left, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the left of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `left_margin` does not violate the natural *limits* of the subject.
    `left_margin` will respect the subject's min-max constraints and
    resizability.
 
+-------------------------------------------------------------------------------
+
 ### right_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_margin.png">
 
-Adds a margin to the right of an enclosed element (`subject`):
+Adds a margin to the right of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 right_margin(right, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the right of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `right_margin` does not violate the natural *limits* of the subject.
    `right_margin` will respect the subject's min-max constraints and
    resizability.
 
+-------------------------------------------------------------------------------
+
 ### top_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/top_margin.png">
 
-Adds a margin to the top of an enclosed element (`subject`):
+Adds a margin to the top of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 top_margin(top, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the top of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `top_margin` does not violate the natural *limits* of the subject.
    `top_margin` will respect the subject's min-max constraints and
    resizability.
 
+-------------------------------------------------------------------------------
+
 ### bottom_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/bottom_margin.png">
 
-Adds a margin to the bottom of an enclosed element (`subject`):
+Adds a margin to the bottom of an enclosed element (`subject`).
+
+#### Expression
 
 ```c++
 bottom_margin(bottom, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the bottom of the subject with the given
    parameter.
 2. The element's *limits* is overridden to account for the additional space.
@@ -717,12 +867,16 @@ Effects:
    `bottom_margin` will respect the subject's min-max constraints and
    resizability.
 
+-------------------------------------------------------------------------------
+
 ### hmargin
 (same as `left_right_margin`)
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/hmargin.png">
 
-Adds a margin to the left and right sides of an enclosed element (`subject`):
+Adds a margin to the left and right sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -738,7 +892,7 @@ left_right_margin({ left, right }, subject)
 left_right_margin(left, right, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the left and right sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -746,12 +900,16 @@ Effects:
    subject. `hmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### vmargin
 (same as `top_bottom_margin`)
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/vmargin.png">
 
-Adds a margin to the top and bottom sides of an enclosed element (`subject`):
+Adds a margin to the top and bottom sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -767,7 +925,7 @@ top_bottom_margin({ left, right }, subject)
 top_bottom_margin(left, right, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the top and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -775,11 +933,15 @@ Effects:
    subject. `vmargin` (and variants) will respect the subject's min-max
    constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### left_top_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_top_margin.png">
 
-Adds a margin to the left and top sides of an enclosed element (`subject`):
+Adds a margin to the left and top sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -789,7 +951,7 @@ left_top_margin({ left, top }, subject)
 left_top_margin(left, top, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the left and top sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -797,11 +959,15 @@ Effects:
    of the subject. `left_top_margin` (and variant) will respect the subject's
    min-max constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### left_bottom_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/left_bottom_margin.png">
 
-Adds a margin to the left and bottom sides of an enclosed element (`subject`):
+Adds a margin to the left and bottom sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -811,7 +977,7 @@ left_bottom_margin({ left, bottom }, subject)
 left_bottom_margin(left, bottom, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the left and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -819,11 +985,15 @@ Effects:
    *limits* of the subject. `left_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### right_top_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_top_margin.png">
 
-Adds a margin to the right and top sides of an enclosed element (`subject`):
+Adds a margin to the right and top sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -833,7 +1003,7 @@ right_top_margin({ left, top }, subject)
 right_top_margin(left, top, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the right and top sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -841,11 +1011,15 @@ Effects:
    of the subject. `right_top_margin` (and variant) will respect the
    subject's min-max constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ### right_bottom_margin
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/right_top_margin.png">
 
-Adds a margin to the right and bottom sides of an enclosed element (`subject`):
+Adds a margin to the right and bottom sides of an enclosed element (`subject`).
+
+#### Expressions
 
 ```c++
 // variant 1
@@ -855,7 +1029,7 @@ right_bottom_margin({ right, bottom }, subject)
 right_bottom_margin(right, bottom, subject)
 ```
 
-Effects:
+#### Semantics
 1. Space is added to the to the right and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -863,21 +1037,27 @@ Effects:
    limits of the subject. `right_bottom_margin` (and variant) will respect
    the subject's min-max constraints and resizability.
 
+-------------------------------------------------------------------------------
+
 ## Floating
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/floating.png">
 
 A floating element allows arbitrary placement of an enclosed element
-(`subject`) in the main view:
+(`subject`) in the main view.
+
+#### Expression
 
 ```c++
 floating({ left, top, right, bottom }, subject)
 ```
 
-Effects:
+#### Semantics
 1. The element will be placed exactly to the specified position in the main
    view, constrained to the subject's natural *limits*.
 2. The floating element does not violate the natural *limits* of the subject.
+
+-------------------------------------------------------------------------------
 
 ## Tiles and Grids
 
@@ -897,7 +1077,7 @@ row following externally supplied horizontal coordinates. Horizontal Grids
 have fixed horizontal sizes and computed vertical sizes following the natural
 `limits` of its children.
 
-Effects:
+#### Semantics
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
 2. The elements are positioned horizontally using the supplied coordinates.
@@ -915,9 +1095,13 @@ Effects:
    2. If a child element's *maximum limits* in either dimension is exceeded,
       the element will be aligned to the top-left.
 
+-------------------------------------------------------------------------------
+
 ### hgrid
 
-Build a horizontal grid with a fixed number of elements:
+Build a horizontal grid with a fixed number of elements.
+
+#### Expression
 
 ```c++
 hgrid(coords, e1, e2, e3... eN)
@@ -929,7 +1113,7 @@ be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
 to `eN` are held in a `std::array<element_ptr, N>` managed by the horizontal
 grid element.
 
-Example:
+#### Example
 
 ```c++
 static float coords[] = { 50, 100, 150, 200 };
@@ -940,7 +1124,7 @@ hgrid(coords, item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `hgrid_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
 2. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'hgrid').
@@ -949,9 +1133,13 @@ Requirements:
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final width of the grid.
 
+-------------------------------------------------------------------------------
+
 ### hgrid_composite
 
-Create a horizontal grid with an indeterminate (dynamic) number of elements:
+Create a horizontal grid with an indeterminate (dynamic) number of elements.
+
+#### Expression
 
 ```c++
 hgrid_composite c{ coords };
@@ -973,7 +1161,7 @@ c.push_back(share(child));
 `coords` is an external container of horizontal coordinates, which is
 expected to be a `std::vector<float>`.
 
-Requirements:
+#### Requirements
 1. `hgrid_composite` is-a `std::vector<element_ptr>`.
 2. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
@@ -981,6 +1169,8 @@ Requirements:
    (it is at the left-most position in the row). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final width of the grid.
+
+-------------------------------------------------------------------------------
 
 ### Horizontal Tiles
 
@@ -991,7 +1181,7 @@ fluidly adjust horizontally depending on available space. Horizontal Tiles
 are best used for composing UI elements while Horizontal Grids are best for
 composing tables.
 
-Effects:
+#### Semantics
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
 2. The elements are positioned horizontally using the children's natural
@@ -1022,9 +1212,13 @@ Effects:
    2. If a child element's *maximum limits* in either dimension is exceeded,
       the element will be aligned to the top-left.
 
+-------------------------------------------------------------------------------
+
 ### htile
 
-Build a horizontal tile with a fixed number of elements:
+Build a horizontal tile with a fixed number of elements.
+
+#### Expression
 
 ```c++
 htile(e1, e2, e3... eN)
@@ -1034,7 +1228,7 @@ Where N is the number of items, `e1` to `eN` are the child elements. Elements
 `e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
 horizontal tile element.
 
-Example:
+#### Example:
 
 ```c++
 htile(item1, item2, item3, item4)
@@ -1043,12 +1237,16 @@ htile(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `htile_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
+
+-------------------------------------------------------------------------------
 
 ### htile_composite
 
-Create a horizontal tile with an indeterminate (dynamic) number of elements:
+Create a horizontal tile with an indeterminate (dynamic) number of elements.
+
+#### Expression
 
 ```c++
 htile_composite c;
@@ -1067,8 +1265,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
-Requirements:
+#### Requirements
 1. `htile_composite` is-a `std::vector<element_ptr>`.
+
+-------------------------------------------------------------------------------
 
 ### Vertical Grids
 
@@ -1079,7 +1279,7 @@ column following externally supplied vertical coordinates. Vertical Grids
 have fixed vertical sizes and computed horizontal sizes following the natural
 `limits` of its children.
 
-Effects:
+#### Semantics
 1. The elements are laid out in a single column, top to bottom, immediately
    next to each other with no intervening space.
 2. The elements are positioned using the supplied coordinates.
@@ -1097,9 +1297,13 @@ Effects:
    2. If a child element's *maximum limits* in either dimension is exceeded,
       the element will be aligned to the top-left.
 
+-------------------------------------------------------------------------------
+
 ### vgrid
 
-Build a vertical grid with a fixed number of elements:
+Build a vertical grid with a fixed number of elements.
+
+#### Expression
 
 ```c++
 vgrid(coords, e1, e2, e3... eN)
@@ -1111,7 +1315,7 @@ be a plain array of type `float[N]` or `std::array<float, N>`. Elements `e1`
 to `eN` are held in a `std::array<element_ptr, N>` managed by the vertical
 grid element.
 
-Example:
+#### Example:
 
 ```c++
 static float coords[] = { 50, 100, 150, 200 };
@@ -1122,7 +1326,7 @@ vgrid(coords, item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `vgrid_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
 2. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to 'vgrid').
@@ -1131,9 +1335,13 @@ Requirements:
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final height of the grid.
 
+-------------------------------------------------------------------------------
+
 ### vgrid_composite
 
-Create a vertical grid with an indeterminate (dynamic) number of elements:
+Create a vertical grid with an indeterminate (dynamic) number of elements.
+
+#### Expression
 
 ```c++
 vgrid_composite c{ coords };
@@ -1155,13 +1363,15 @@ c.push_back(share(child));
 `coords` is an external container of vertical coordinates, which is
 expected to be a `std::vector<float>`.
 
-Requirements:
+#### Requirements
 1. The number of items in the external coordinates vector `coords` must match
    with the number of elements at any given time.
 2. The coordinates assume the first element's relative coordinate at `y=0`
    (it is at the top-most position in the column). The relative coordinate of
    the second element is at index 0, the third at index 1, and so on. The
    last coordinate is the total and final height of the grid.
+
+-------------------------------------------------------------------------------
 
 ### Vertical Tiles
 
@@ -1171,7 +1381,7 @@ Vertical Tiles are similar to Vertical Grids, but allow elements to fluidly
 adjust vertically depending on available space. Vertical Tiles are best used
 for composing UI elements while Vertical Grids are best for composing tables.
 
-Effects:
+#### Semantics
 1. The elements are laid out in a single column, left to right, immediately
    next to each other with no intervening space.
 2. The elements are positioned vertically using the children's natural
@@ -1202,9 +1412,13 @@ Effects:
    2. If a child element's *maximum limits* in either dimension is exceeded,
       the element will be aligned to the top-left.
 
+-------------------------------------------------------------------------------
+
 ### vtile
 
-Build a vertical tile with a fixed number of elements:
+Build a vertical tile with a fixed number of elements.
+
+#### Expression
 
 ```c++
 vtile(e1, e2, e3... eN)
@@ -1223,8 +1437,10 @@ vtile(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `vtile_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
+
+-------------------------------------------------------------------------------
 
 ### vtile_composite
 
@@ -1247,8 +1463,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
-Requirements:
+#### Requirements
 1. vtile_composite is-a `std::vector<element_ptr>`.
+
+-------------------------------------------------------------------------------
 
 ## Layers
 
@@ -1258,7 +1476,7 @@ The Elements Library is 2D, but the z-axis pertains to top-to-bottom
 layering. Layers allow groups of elements to be placed in the z-axis where
 higher-level elements obscure or hide lower-level elements.
 
-Effects:
+#### Semantics
 1. The elements are laid out in the z-axis, top to bottom.
 2. Rendering is done bottom-up; the bottom-most elements are drawn first.
 3. UI control (such as mouse clicks) proceeds from top to bottom.
@@ -1279,9 +1497,13 @@ Effects:
    2. If a child element's *maximum limits* in either dimension is exceeded,
       the element will be aligned to the top-left.
 
+-------------------------------------------------------------------------------
+
 ### layer
 
-Create a layer composite with a fixed number of elements:
+Create a layer composite with a fixed number of elements.
+
+#### Expression
 
 ```c++
 layer(e1, e2, e3... eN)
@@ -1291,7 +1513,7 @@ Where N is the number of items, `e1` to `eN` are the child elements. Elements
 `e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
 layer element.
 
-Example:
+#### Example
 
 ```c++
 layer(item1, item2, item3, item4)
@@ -1300,8 +1522,10 @@ layer(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `layer_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
+
+-------------------------------------------------------------------------------
 
 ### layer_composite
 
@@ -1324,8 +1548,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
-Requirements:
+#### Requirements
 1. layer_composite is-a `std::vector<element_ptr>`.
+
+-------------------------------------------------------------------------------
 
 ### Decks
 
@@ -1334,14 +1560,18 @@ Requirements:
 The Deck is very similar to layers. Elements are placed in the z-axis. But
 unlike layers, only the top-most element is active.
 
-Effects:
-1. Everything listed in the layer's *Effects*, except 2 and 3.
+#### Semantics
+1. Everything listed in the layer's *Semantics*, except 2 and 3.
 2. Only the top-most element is drawn.
 3. Only the top-most element is given the chance to process UI control.
 
+-------------------------------------------------------------------------------
+
 ### deck
 
-Create a deck composite with a fixed number of elements:
+Create a deck composite with a fixed number of elements.
+
+#### Expression
 
 ```c++
 deck(e1, e2, e3... eN)
@@ -1351,7 +1581,7 @@ Where N is the number of items, `e1` to `eN` are the child elements. Elements
 `e1` to `eN` are held in a `std::array<element_ptr, N>` managed by the
 deck element.
 
-Example:
+#### Example
 
 ```c++
 deck(item1, item2, item3, item4)
@@ -1360,8 +1590,10 @@ deck(item1, item2, item3, item4)
 > :point_right: If the number of elements is not fixed, you can use an
 `deck_composite` (see below).
 
-Requirements:
+#### Requirements
 1. e1` to `eN` are element objects.
+
+-------------------------------------------------------------------------------
 
 ### deck_composite
 
@@ -1384,8 +1616,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
-Requirements:
+#### Requirements
 1. deck_composite is-a `std::vector<element_ptr>`.
+
+-------------------------------------------------------------------------------
 
 ## Flow
 
@@ -1405,9 +1639,13 @@ The child elements arranged in a `flow` composite are automatically re-flowed
 
 To have elements laid out using `flow`, you need to make a `flow_composite`.
 
+-------------------------------------------------------------------------------
+
 ### flow_composite
 
-Create a `flow_composite` with an indeterminate (dynamic) number of elements:
+Create a `flow_composite` with an indeterminate (dynamic) number of elements.
+
+#### Expression
 
 ```c++
 flow_composite c;
@@ -1426,13 +1664,17 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
-Requirements:
+#### Requirements
 1. `flow_composite` is-a `std::vector<element_ptr>`.
+
+-------------------------------------------------------------------------------
 
 ### flow
 
 Once we have a `flow_composite`, we can place its contents in a `flow`
-element:
+element.
+
+#### Expression
 
 ```c++
 flow(c)

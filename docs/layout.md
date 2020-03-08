@@ -18,8 +18,8 @@
 * [Flow](#flow-element)
 
 -------------------------------------------------------------------------------
-Elements provides a comprehensive set of elements for laying out elements the
-view.
+The Elements Library provides a comprehensive set of elements for laying out
+elements the view.
 
 ## Limits
 
@@ -127,8 +127,9 @@ Examples:
 ## Size Elements
 
 Size elements override the *limits* of an enclosed element. There is a
-comprehensive list of size related elements in Elements that can be used for
-various purposes. This section catalogues all the available size elements.
+comprehensive list of size related elements in the Elements Library that can
+be used for various purposes. This section catalogues all the available size
+elements.
 
 ### limit
 
@@ -363,8 +364,8 @@ element with the `1.5` stretches half more than the default.
 
 ## Scale Element
 
-Elements is resolution independent and elements can be scaled up or down to
-suit. The default scale is 1.0 (no scale).
+The Elements Library is resolution independent and elements can be scaled up
+or down to suit. The default scale is 1.0 (no scale).
 
 ### scale
 
@@ -381,9 +382,9 @@ Effects:
 ## Align Elements
 
 An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
-dimensions, or both. There is a comprehensive list of align elements in
-Elements that can be used for various purposes. This section catalogues all
-the available align elements.
+dimensions, or both. There is a comprehensive list of align elements in The
+Elements Library that can be used for various purposes. This section
+catalogues all the available align elements.
 
 ### halign
 
@@ -624,8 +625,8 @@ Effects:
 ## Margin Elements
 
 Margins add some space around elements. There is a comprehensive list of
-margin elements in Elements that can be used for various purposes. This
-section catalogues all the available margin elements.
+margin elements in the Elements Library that can be used for various
+purposes. This section catalogues all the available margin elements.
 
 ### margin
 
@@ -1250,9 +1251,9 @@ Requirements:
 
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layer.png">
 
-Elements is 2D, but the z-axis pertains to top-to-bottom layering. Layers
-allow groups of elements to be placed in the z-axis where higher-level
-elements obscure or hide lower-level elements.
+The Elements Library is 2D, but the z-axis pertains to top-to-bottom
+layering. Layers allow groups of elements to be placed in the z-axis where
+higher-level elements obscure or hide lower-level elements.
 
 Effects:
 1. The elements are laid out in the z-axis, top to bottom.

@@ -17,6 +17,8 @@ namespace cycfi { namespace elements
       using getter_type = T;
       using param_type = T;
 
+      virtual              ~receiver() = default;
+
       virtual void         value(param_type val) = 0;
       virtual getter_type  value() const = 0;
    };

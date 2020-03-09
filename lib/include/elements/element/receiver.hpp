@@ -8,7 +8,10 @@
 
 namespace cycfi { namespace elements
 {
-   struct receiver_base {};
+   struct receiver_base
+   {
+      virtual              ~receiver_base() = default;
+   };
 
    template <typename T>
    struct receiver : receiver_base
@@ -16,8 +19,6 @@ namespace cycfi { namespace elements
       using receiver_type = T;
       using getter_type = T;
       using param_type = T;
-
-      virtual              ~receiver() = default;
 
       virtual void         value(param_type val) = 0;
       virtual getter_type  value() const = 0;

@@ -25,7 +25,7 @@ namespace cycfi { namespace elements
    {
    public:
                               range_grid(float const* coords, std::size_t size)
-                               : _coords(coords)
+                               : _coords(coords), _size(size)
                               {}
 
       std::size_t             grid_size() const override    { return _size; }

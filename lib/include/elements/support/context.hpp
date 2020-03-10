@@ -8,7 +8,6 @@
 
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>
-#include <cairo.h>
 #include <functional>
 #include <string_view>
 

@@ -139,7 +139,7 @@ namespace cycfi { namespace elements
       return clamp(new_value, 0.0, 1.0);
    }
 
-   void slider_base::begin_tracking(context const& ctx, info& track_info)
+   void slider_base::begin_tracking(context const& ctx, tracker_info& track_info)
    {
       auto tmb_bounds = thumb_bounds(ctx);
       if (tmb_bounds.includes(track_info.current))
@@ -150,7 +150,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void slider_base::keep_tracking(context const& ctx, info& track_info)
+   void slider_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -163,7 +163,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void slider_base::end_tracking(context const& ctx, info& track_info)
+   void slider_base::end_tracking(context const& ctx, tracker_info& track_info)
    {
       double new_value = value_from_point(ctx, track_info.current);
       if (_value != new_value)

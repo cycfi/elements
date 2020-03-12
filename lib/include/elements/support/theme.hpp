@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -22,6 +22,7 @@ namespace cycfi { namespace elements
       float                frame_stroke_width;
       color                scrollbar_color;
       color                default_button_color;
+      rect                 button_margin;
 
       color                controls_color;
       color                indicator_color;
@@ -36,10 +37,12 @@ namespace cycfi { namespace elements
       color                heading_font_color;
       font                 heading_font;
       float                heading_font_size;
+      int                  heading_text_align;
 
       color                label_font_color;
       font                 label_font;
       float                label_font_size;
+      int                  label_text_align;
 
       color                icon_color;
       font                 icon_font;

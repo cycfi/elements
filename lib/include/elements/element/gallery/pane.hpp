@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       bool center_heading = true
    )
    {
-      return pane(heading(std::move(title), title_size), content, center_heading);
+      return pane(heading(std::move(title)).relative_font_size(title_size), content, center_heading);
    }
 
    template <typename Content>
@@ -59,7 +59,7 @@ namespace cycfi { namespace elements
       bool center_heading = true
    )
    {
-      return pane(heading(title, title_size), content, center_heading);
+      return pane(heading(title).relative_font_size(title_size), content, center_heading);
    }
 }}
 

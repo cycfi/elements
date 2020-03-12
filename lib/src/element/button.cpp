@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -34,8 +34,11 @@ namespace cycfi { namespace elements
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
       _hilite = status != cursor_tracking::leaving;
-      subject().value((_state? 2 : 0) + _hilite);
-      ctx.view.refresh(ctx);
+      if (auto* rcvr = find_subject<receiver<int>*>(this))
+      {
+         rcvr->value((_state ? 2 : 0) + _hilite);
+         ctx.view.refresh(ctx);
+      }
       return false;
    }
 
@@ -45,7 +48,7 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx);
    }
 
-   bool basic_button::is_control() const
+   bool basic_button::wants_control() const
    {
       return true;
    }
@@ -60,7 +63,8 @@ namespace cycfi { namespace elements
       if (new_state != _state)
       {
          _state = new_state;
-         subject().value((_state? 2 : 0) + _hilite);
+         if (auto* rcvr = find_subject<receiver<int>*>(this))
+            rcvr->value((_state? 2 : 0) + _hilite);
          return true;
       }
       return false;
@@ -70,11 +74,6 @@ namespace cycfi { namespace elements
    {
       if (_state != new_state)
          state(new_state);
-   }
-
-   void basic_button::value(int new_state)
-   {
-      value(bool(new_state));
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -114,7 +113,7 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx);
    }
 
-   bool layered_button::is_control() const
+   bool layered_button::wants_control() const
    {
       return true;
    }
@@ -139,10 +138,5 @@ namespace cycfi { namespace elements
    {
       if (_state != new_state)
          state(new_state);
-   }
-
-   void layered_button::value(int new_state)
-   {
-      value(bool(new_state));
    }
 }}

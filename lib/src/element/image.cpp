@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -181,47 +181,37 @@ namespace cycfi { namespace elements
       ctx.canvas.draw(pixmap(), src[2], dest[2]);
    }
 
-   sprite::sprite(char const* filename, float height, float scale)
+   basic_sprite::basic_sprite(char const* filename, float height, float scale)
     : image(filename, scale)
     , _index(0)
     , _height(height)
    {}
 
-   view_limits sprite::limits(basic_context const& /* ctx */) const
+   view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
       return { { width, _height }, { width, _height } };
    }
 
-   std::size_t sprite::num_frames() const
+   std::size_t basic_sprite::num_frames() const
    {
       return pixmap().size().y / _height;
    }
 
-   void sprite::index(std::size_t index_)
+   void basic_sprite::index(std::size_t index_)
    {
       if (index_ < num_frames())
          _index = index_;
    }
 
-   point sprite::size() const
+   point basic_sprite::size() const
    {
       return { pixmap().size().x, _height };
    }
 
-   rect sprite::source_rect(context const& /* ctx */) const
+   rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
       return rect{ 0, _height * _index, width, _height * (_index + 1) };
-   }
-
-   void sprite::value(int val)
-   {
-      index(val);
-   }
-
-   void sprite::value(double val)
-   {
-      index(val * (num_frames()-1));
    }
 }}

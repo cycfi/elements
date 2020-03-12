@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -41,6 +41,8 @@ namespace cycfi { namespace elements
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
    };
+
+   using flow_composite = vector_composite<flowable_container>;
 
    class flow_element : public vector_composite<vtile_element>
    {

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -442,7 +442,7 @@ namespace cycfi { namespace elements
       return subject().cursor(ctx, p, status);
    }
 
-   bool scroller_base::is_control() const
+   bool scroller_base::wants_control() const
    {
       return true;
    }

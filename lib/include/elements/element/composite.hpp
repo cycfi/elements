@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -36,24 +36,25 @@ namespace cycfi { namespace elements
    {
    public:
 
-   // Image
+   // Display
 
       view_limits             limits(basic_context const& ctx) const override = 0;
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override = 0;
-      bool                    scroll(context const& ctx, point dir, point p) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
 
       using element::refresh;
 
    // Control
 
+      bool                    wants_control() const override;
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
       void                    begin_focus() override;
@@ -61,7 +62,6 @@ namespace cycfi { namespace elements
       element const*          focus() const override;
       element*                focus() override;
       void                    focus(std::size_t index);
-      bool                    is_control() const override;
       virtual void            reset();
 
    // Composite
@@ -96,11 +96,12 @@ namespace cycfi { namespace elements
 
       using base_type = Base;
       using container_type = Container;
+      using Base::Base;
       using Container::Container;
       using Container::operator=;
 
-      virtual std::size_t     size() const               { return Container::size(); };
-      virtual element&        at(std::size_t ix) const   { return *(*this)[ix].get(); }
+      std::size_t             size() const override;
+      element&                at(std::size_t ix) const override;
 
       using Container::empty;
    };
@@ -125,8 +126,8 @@ namespace cycfi { namespace elements
                                , _container(container_)
                               {}
 
-      virtual std::size_t     size() const               { return _last - _first; };
-      virtual element&        at(std::size_t ix) const   { return _container.at(_first + ix); }
+      std::size_t             size() const override;
+      element&                at(std::size_t ix) const override;
 
    private:
 
@@ -136,6 +137,33 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Container, typename Base>
+   inline std::size_t composite<Container, Base>::size() const
+   {
+      return Container::size();
+   }
+
+   template <typename Container, typename Base>
+   inline element& composite<Container, Base>::at(std::size_t ix) const
+   {
+      return *(*this)[ix].get();
+   }
+
+   template <typename Base>
+   inline std::size_t range_composite<Base>::size() const
+   {
+      return _last - _first;
+   }
+
+   template <typename Base>
+   inline element& range_composite<Base>::at(std::size_t ix) const
+   {
+      return _container.at(_first + ix);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // find_composite utility finds the innermost composite given a context.
    // If successful, returns a pointer to the composite base and pointer
    // to its context.
@@ -143,6 +171,7 @@ namespace cycfi { namespace elements
    std::pair<composite_base*, context const*>
    inline find_composite(context const& ctx)
    {
+      element* this_ = ctx.element;
       std::pair<composite_base*, context const*> result = { nullptr, nullptr };
       auto p = ctx.parent;
       while (p)
@@ -150,7 +179,7 @@ namespace cycfi { namespace elements
          auto&& find =
             [&](context const& ctx, element* e) -> bool
             {
-               if (auto c = dynamic_cast<composite_base*>(e))
+               if (auto c = dynamic_cast<composite_base*>(e); c && c != this_)
                {
                   result.first = c;
                   result.second = &ctx;

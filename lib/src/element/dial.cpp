@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -21,13 +21,15 @@ namespace cycfi { namespace elements
    void dial_base::prepare_subject(context& ctx)
    {
       proxy_base::prepare_subject(ctx);
-      subject().value(_value);
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value);
    }
 
    void dial_base::value(double val)
    {
       _value = clamp(val, 0.0, 1.0);
-      subject().value(_value);
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value);
    }
 
    namespace

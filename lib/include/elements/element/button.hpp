@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -18,26 +18,24 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_button : public proxy_base
+   class basic_button : public proxy_base, public receiver<bool>
    {
    public:
 
       using button_function = std::function<void(bool)>;
-      using proxy_base::value;
 
                         basic_button()
                          : _state(false)
                          , _hilite(false)
                         {}
 
+      bool              wants_control() const override;
       element*          click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
-      bool              is_control() const override;
 
-      void              value(int new_state) override;
       void              value(bool new_state) override;
-      bool              value() const;
+      bool              value() const override;
 
       button_function   on_click;
 
@@ -54,25 +52,24 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
    ////////////////////////////////////////////////////////////////////////////
-   class layered_button : public array_composite<2, deck_element>
+   class layered_button
+    : public array_composite<2, deck_element>, public receiver<bool>
    {
    public:
 
       using base_type = array_composite<2, deck_element>;
       using button_function = std::function<void(bool)>;
-      using base_type::value;
 
                         template <typename W1, typename W2>
                         layered_button(W1&& off, W2&& on);
 
+      bool              wants_control() const override;
       element*          hit_test(context const& ctx, point p) override;
       element*          click(context const& ctx, mouse_button btn) override;
       void              drag(context const& ctx, mouse_button btn) override;
-      bool              is_control() const override;
 
-      void              value(int new_state) override;
       void              value(bool new_state) override;
-      bool              value() const;
+      bool              value() const override;
 
       button_function   on_click;
 
@@ -192,8 +189,8 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline element* basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(btn.pos))
-         return 0;
+      if (this->value() || !ctx.bounds.includes(btn.pos))
+         return nullptr;
       if (btn.down)
          return layered_button::click(ctx, btn);
       else if (this->on_click)

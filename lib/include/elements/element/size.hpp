@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -353,6 +353,53 @@ namespace cycfi { namespace elements
          ctx.bounds.width(_size.x);
       if (ctx.bounds.height() > _size.y)
          ctx.bounds.height(_size.x);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class hmax_size_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              hmax_size_element(float size, Subject&& subject);
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
+
+   private:
+
+      float                   _size;
+   };
+
+   template <typename Subject>
+   inline hmax_size_element<Subject>::hmax_size_element(float size, Subject&& subject)
+    : base_type(std::forward<Subject>(subject))
+    , _size(size)
+   {}
+
+   template <typename Subject>
+   inline hmax_size_element<Subject>
+   hmax_size(float size, Subject&& subject)
+   {
+      return { size, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline view_limits hmax_size_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      float size_x = _size;
+      clamp(size_x, e_limits.min.x, e_limits.max.x);
+      return { { e_limits.min.x, e_limits.min.y }, { size_x, e_limits.max.y } };
+   }
+
+   template <typename Subject>
+   inline void hmax_size_element<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.width() > _size)
+         ctx.bounds.width(_size);
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -21,7 +21,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, heading(std::move(title), size))),
+            align_center(top_margin(5.0, heading(std::move(title)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }
@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
       return
          vtile(
             std::forward<Content>(content),
-            align_center(top_margin(5.0, label(std::move(title), size)))
+            align_center(top_margin(5.0, label(std::move(title)).relative_font_size(size)))
          );
    }
 
@@ -41,7 +41,7 @@ namespace cycfi { namespace elements
    {
       return
          htile(
-            align_middle(right_margin(10.0, label(std::move(title), size))),
+            align_middle(right_margin(10.0, label(std::move(title)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }
@@ -51,7 +51,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, label(std::move(title), size))),
+            align_center(top_margin(5.0, label(std::move(title)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }

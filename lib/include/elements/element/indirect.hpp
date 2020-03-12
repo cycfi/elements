@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -7,56 +7,68 @@
 #define ELEMENTS_REFERENCE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements
 {
+   template <typename Indirect, typename Element, typename Enable = void>
+   struct indirect_receiver {};
+
+   template <typename Indirect, typename Element>
+   struct indirect_receiver<
+         Indirect, Element
+       , typename std::enable_if<std::is_base_of<receiver_base, Element>::value>::type
+    > : receiver_base
+   {
+      using receiver_type = typename Element::receiver_type;
+      using getter_type = typename Element::getter_type;
+      using param_type = typename Element::param_type;
+
+      virtual void value(param_type val)
+      {
+         static_cast<Indirect*>(this)->get().value(val);
+      }
+
+      virtual getter_type value() const
+      {
+         return static_cast<Indirect const*>(this)->get().value();
+      }
+   };
+
    template <typename Base>
-   class indirect : public Base
+   class indirect : public Base, public indirect_receiver<indirect<Base>, Base>
    {
    public:
 
       using Base::Base;
       using Base::operator=;
 
-                              indirect(indirect&& rhs) = default;
-                              indirect(indirect const& rhs) = default;
-      indirect&               operator=(indirect&& rhs) = default;
-      indirect&               operator=(indirect const& rhs) = default;
+   // Display
 
-   // Image
-
-      virtual view_limits     limits(basic_context const& ctx) const;
-      virtual element*        hit_test(context const& ctx, point p);
-      virtual void            draw(context const& ctx);
-      virtual void            layout(context const& ctx);
-      virtual bool            scroll(context const& ctx, point dir, point p);
-      virtual void            refresh(context const& ctx, element& element, int outward = 0);
+      view_limits             limits(basic_context const& ctx) const override;
+      element*                hit_test(context const& ctx, point p) override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
+      void                    refresh(context const& ctx, element& element, int outward = 0) override;
 
       using element::refresh;
 
    // Control
 
-      virtual element*        click(context const& ctx, mouse_button btn);
-      virtual void            drag(context const& ctx, mouse_button btn);
-      virtual bool            key(context const& ctx, key_info k);
-      virtual bool            text(context const& ctx, text_info info);
-      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      bool                    wants_control() const override;
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
 
-      virtual bool            wants_focus() const;
-      virtual void            begin_focus();
-      virtual void            end_focus();
-      virtual element const*  focus() const;
-      virtual element*        focus();
-      virtual bool            is_control() const;
-
-   // Receiver
-
-      virtual void            value(bool val);
-      virtual void            value(int val);
-      virtual void            value(double val);
-      virtual void            value(std::string_view val);
+      bool                    wants_focus() const override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
+      element const*          focus() const override;
+      element*                focus() override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -74,10 +86,6 @@ namespace cycfi { namespace elements
    public:
 
       explicit                reference(Element& e);
-                              reference(reference&& rhs) = default;
-                              reference(reference const& rhs) = default;
-      reference&              operator=(reference&& rhs) = default;
-      reference&              operator=(reference const& rhs) = default;
 
       Element&                get();
       Element const&          get() const;
@@ -101,10 +109,6 @@ namespace cycfi { namespace elements
    public:
 
       explicit                shared_element(std::shared_ptr<Element> ptr);
-                              shared_element(shared_element&& rhs) = default;
-                              shared_element(shared_element const& rhs) = default;
-      shared_element&         operator=(shared_element&& rhs) = default;
-      shared_element&         operator=(shared_element const& rhs) = default;
       shared_element&         operator=(std::shared_ptr<Element> ptr);
 
       Element&                get();
@@ -165,6 +169,13 @@ namespace cycfi { namespace elements
    indirect<Base>::refresh(context const& ctx, element& element, int outward)
    {
       this->get().refresh(ctx, element, outward);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::wants_control() const
+   {
+      return this->get().wants_control();
    }
 
    template <typename Base>
@@ -235,37 +246,6 @@ namespace cycfi { namespace elements
    indirect<Base>::focus()
    {
       return this->get().focus();
-   }
-
-   template <typename Base>
-   inline bool
-   indirect<Base>::is_control() const
-   {
-      return this->get().is_control();
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(bool val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(int val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(double val)
-   {
-      this->get().value(val);
-   }
-
-   template <typename Base>
-   inline void indirect<Base>::value(std::string_view val)
-   {
-      this->get().value(val);
    }
 
    ////////////////////////////////////////////////////////////////////////////

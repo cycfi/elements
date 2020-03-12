@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -46,9 +46,9 @@ namespace cycfi { namespace elements
       tracker&                 operator=(tracker const& rhs);
       tracker&                 operator=(tracker&& rhs) = default;
 
+      bool                     wants_control() const override;
       element*                 click(context const& ctx, mouse_button btn) override;
       void                     drag(context const& ctx, mouse_button btn) override;
-      bool                     is_control() const override;
 
    protected:
 
@@ -117,7 +117,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline bool tracker<Base>::is_control() const
+   inline bool tracker<Base>::wants_control() const
    {
       return true;
    }

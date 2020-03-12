@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -133,13 +133,13 @@ namespace cycfi { namespace elements
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
 
+      bool                    wants_control() const override;
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    scroll_into_view(context const& ctx, rect r) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
-      bool                    is_control() const override;
 
       struct scrollbar_info
       {

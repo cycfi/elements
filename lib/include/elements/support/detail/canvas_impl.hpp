@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -80,7 +80,7 @@ namespace cycfi { namespace elements
       cnv->save();
    }
 
-   inline canvas::state::state(state&& rhs)
+   inline canvas::state::state(state&& rhs) noexcept
     : cnv(rhs.cnv)
    {
       rhs.cnv = 0;
@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
          cnv->restore();
    }
 
-   inline canvas::state& canvas::state::operator=(state&& rhs)
+   inline canvas::state& canvas::state::operator=(state&& rhs) noexcept
    {
       cnv = rhs.cnv;
       rhs.cnv = 0;

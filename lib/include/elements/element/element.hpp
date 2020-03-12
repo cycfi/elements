@@ -1,12 +1,13 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_APRIL_10_2016)
-#define ELEMENTS_APRIL_10_2016
+#if !defined(ELEMENTS_ELEMENT_APRIL_10_2016)
+#define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
+#include <elements/element/receiver.hpp>
 #include <elements/support/rect.hpp>
 
 #include <memory>
@@ -28,16 +29,10 @@ namespace cycfi { namespace elements
    class element : public std::enable_shared_from_this<element>
    {
    public:
-
                               element() {}
                               virtual ~element() = default;
 
-                              element(element&&) = default;
-                              element(element const&) = default;
-      element&                operator=(element&&) = default;
-      element&                operator=(element const&) = default;
-
-   // Image
+   // Display
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual view_stretch    stretch() const;
@@ -49,6 +44,7 @@ namespace cycfi { namespace elements
 
    // Control
 
+      virtual bool            wants_control() const;
       virtual element*        click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
@@ -61,14 +57,6 @@ namespace cycfi { namespace elements
       virtual void            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
-      virtual bool            is_control() const;
-
-   // Receiver
-
-      virtual void            value(bool val);
-      virtual void            value(int val);
-      virtual void            value(double val);
-      virtual void            value(std::string_view val);
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 

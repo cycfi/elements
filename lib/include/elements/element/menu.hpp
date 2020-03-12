@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -108,17 +108,20 @@ namespace cycfi { namespace elements
       element*                click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    is_control() const override;
+      bool                    wants_control() const override;
 
       menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;
       shortcut_key            shortcut;
 
       void                    scroll_into_view()   { _scroll_into_view = true; }
+      bool                    is_selected() const override;
+      void                    select(bool state) override;
 
    private:
 
       bool                    _scroll_into_view = false;
+      bool                    _selected = false;
    };
 
    template <typename Subject>
@@ -126,6 +129,16 @@ namespace cycfi { namespace elements
    basic_menu_item(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
+   }
+
+   inline bool basic_menu_item_element::is_selected() const
+   {
+      return _selected;
+   }
+
+   inline void basic_menu_item_element::select(bool state)
+   {
+      _selected = state;
    }
 }}
 

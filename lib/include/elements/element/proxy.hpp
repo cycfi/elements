@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -22,7 +22,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-   // Image
+   // Display
 
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
@@ -30,7 +30,6 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
-      bool                    scroll(context const& ctx, point dir, point p) override;
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
@@ -39,30 +38,24 @@ namespace cycfi { namespace elements
 
    // Control
 
+      bool                    wants_control() const override;
       element*                click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
       void                    begin_focus() override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
-      bool                    is_control() const override;
 
    // Proxy
 
       virtual element const&  subject() const = 0;
       virtual element&        subject() = 0;
-
-   // Receiver
-
-      void                    value(bool val) override;
-      void                    value(int val) override;
-      void                    value(double val) override;
-      void                    value(std::string_view val) override;
    };
 
    template <typename Subject, typename Base = proxy_base>
@@ -92,6 +85,24 @@ namespace cycfi { namespace elements
    inline void proxy<Subject, Base>::subject(Subject&& subject_)
    {
       _subject = std::forward<Subject>(subject_);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_subject utility finds the outermost subject of the given
+   // pointer type or nullptr if not found.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Ptr>
+   inline Ptr find_subject(element* e_)
+   {
+      proxy_base* proxy = dynamic_cast<proxy_base*>(e_);
+      while (proxy)
+      {
+         auto* subject = &proxy->subject();
+         if (auto* e = dynamic_cast<Ptr>(subject))
+            return e;
+         proxy = dynamic_cast<proxy_base*>(subject);
+      }
+      return nullptr;
    }
 }}
 

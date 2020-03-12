@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -10,7 +10,7 @@ using namespace cycfi::elements;
 // Main window background
 auto make_bkd()
 {
-   return share(port(image{ "dark-bkd.jpg" }));
+   return port(image{ "dark-bkd.jpg" });
 }
 
 std::string const text =
@@ -63,14 +63,12 @@ std::string const text2 =
 auto make_edit_box()
 {
    return
-      share(
-         scroller(
-            margin(
-               { 20, 20, 20, 20 },
-               align_left_top(hsize(800, basic_text_box(text2+text)))
+      scroller(
+         margin(
+            { 20, 20, 20, 20 },
+            align_left_top(hsize(800, basic_text_box(text2+text)))
          )
-      )
-   );
+      );
 }
 
 int main(int argc, const char* argv[])
@@ -82,10 +80,8 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         make_edit_box(),
-         make_bkd()
-      }
+      make_edit_box(),
+      make_bkd()
    );
 
    _app.run();

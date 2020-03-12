@@ -1,10 +1,10 @@
 ###############################################################################
-#  Copyright (c) 2016-2019 Joel de Guzman
+#  Copyright (c) 2016-2020 Joel de Guzman
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 set(ELEMENTS_APP_PROJECT "Buttons")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2019 Joel de Guzman")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
 set(ELEMENTS_APP_ID "com.cycfi.buttons")
 set(ELEMENTS_APP_VERSION "1.0")
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -24,7 +24,7 @@ namespace cycfi { namespace elements
 
    element* element::hit_test(context const& ctx, point p)
    {
-      return (ctx.bounds.includes(p)) ? this : 0;
+      return (ctx.bounds.includes(p)) ? this : nullptr;
    }
 
    void element::draw(context const& /* ctx */)
@@ -93,25 +93,9 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   bool element::is_control() const
+   bool element::wants_control() const
    {
       return false;
-   }
-
-   void element::value(bool /* val */)
-   {
-   }
-
-   void element::value(int /* val */)
-   {
-   }
-
-   void element::value(double /* val */)
-   {
-   }
-
-   void element::value(std::string_view /* val */)
-   {
    }
 
    void element::on_tracking(context const& ctx, tracking state)

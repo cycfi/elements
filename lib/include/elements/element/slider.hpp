@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -20,11 +20,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////
-   class slider_base : public tracker<>
+   class slider_base : public tracker<>, public receiver<double>
    {
    public:
-
-      using tracker<>::value;
 
                               slider_base(double init_value)
                                : _value(init_value)
@@ -39,7 +37,7 @@ namespace cycfi { namespace elements
       void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
 
-      double                  value() const;
+      double                  value() const override;
       void                    value(double val) override;
       virtual void            edit_value(double val) { value(val);}
 
@@ -64,7 +62,6 @@ namespace cycfi { namespace elements
 
       using slider_function = std::function<void(double pos)>;
       using slider_base::slider_base;
-      using slider_base::value;
 
       slider_function         on_change;
       void                    edit_value(double val) override;
@@ -83,12 +80,6 @@ namespace cycfi { namespace elements
                                : Base(init_value)
                                , _thumb(std::forward<Thumb>(thumb))
                                , _body(std::forward<Track>(track))
-                              {}
-
-                              inline basic_slider(Thumb const& thumb, Track const& track, double init_value)
-                               : Base(init_value)
-                               , _thumb(thumb)
-                               , _body(track)
                               {}
 
       element const&          thumb() const override { return _thumb; }
@@ -123,7 +114,6 @@ namespace cycfi { namespace elements
       using selector_function = std::function<void(size_t pos)>;
       using slider_function = std::function<void(double pos)>;
       using slider_base::slider_base;
-      using slider_base::value;
 
       selector_function       on_change;
       void                    select(size_t val);
@@ -137,11 +127,9 @@ namespace cycfi { namespace elements
       static_assert(num_states > 1, "Error: not enough states.");
 
       using basic_selector_base::basic_selector_base;
-      using basic_selector_base::value;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 value(double val) override;
-      void                 value(int val) override;
    };
 
    template <size_t num_states>
@@ -159,12 +147,6 @@ namespace cycfi { namespace elements
       auto const        state = std::round(val * max);
       basic_selector_base::value(state / max);
       basic_selector_base::select(state);
-   }
-
-   template <size_t num_states>
-   inline void selector_base<num_states>::value(int val)
-   {
-      value(double(val) * (num_states-1));
    }
 
    template <size_t num_states, typename Thumb, typename Track>

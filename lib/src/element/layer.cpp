@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -33,12 +33,24 @@ namespace cycfi { namespace elements
 
    void layer_element::layout(context const& ctx)
    {
-      bounds = ctx.bounds;
       for (std::size_t ix = 0; ix != size(); ++ix)
       {
          auto& e = at(ix);
          e.layout(context{ ctx, &e, bounds_of(ctx, ix) });
       }
+   }
+
+   void layer_element::draw(context const& ctx)
+   {
+      auto width = ctx.bounds.width();
+      auto height = ctx.bounds.height();
+      if (_previous_size.x != width || _previous_size.y != height)
+      {
+         _previous_size.x = width;
+         _previous_size.y = height;
+         layout(ctx);
+      }
+      composite_base::draw(ctx);
    }
 
    layer_element::hit_info layer_element::hit_element(context const& ctx, point p) const
@@ -47,7 +59,7 @@ namespace cycfi { namespace elements
       for (int ix = int(size())-1; ix >= 0; --ix)
       {
          auto& e = at(ix);
-         if (e.is_control())
+         if (e.wants_control())
          {
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
@@ -63,8 +75,10 @@ namespace cycfi { namespace elements
 
    rect layer_element::bounds_of(context const& ctx, std::size_t index) const
    {
-      float width = ctx.bounds.width();
-      float height = ctx.bounds.height();
+      auto left = ctx.bounds.left;
+      auto top = ctx.bounds.top;
+      auto width = ctx.bounds.width();
+      auto height = ctx.bounds.height();
       auto  limits = at(index).limits(ctx);
 
       clamp_min(width, limits.min.x);
@@ -72,7 +86,7 @@ namespace cycfi { namespace elements
       clamp_min(height, limits.min.y);
       clamp_max(height, limits.max.y);
 
-      return { bounds.left, bounds.top, bounds.left + width, bounds.top + height };
+      return { left, top, left+width, top+height };
    }
 
    void layer_element::begin_focus()
@@ -130,7 +144,7 @@ namespace cycfi { namespace elements
    layer_element::hit_info deck_element::hit_element(context const& ctx, point p) const
    {
       auto& e = at(_selected_index);
-      if (e.is_control())
+      if (e.wants_control())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          if (bounds.includes(p))
@@ -148,7 +162,7 @@ namespace cycfi { namespace elements
       if (!composite_base::focus())
       {
          auto& e = at(_selected_index);
-         if (e.is_control() && e.wants_focus())
+         if (e.wants_control() && e.wants_focus())
             composite_base::focus(_selected_index);
       }
       composite_base::begin_focus();

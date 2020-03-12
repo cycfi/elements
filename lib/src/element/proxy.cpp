@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -153,28 +153,8 @@ namespace cycfi { namespace elements
       return subject().focus();
    }
 
-   bool proxy_base::is_control() const
+   bool proxy_base::wants_control() const
    {
-      return subject().is_control();
-   }
-
-   void proxy_base::value(bool val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(int val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(double val)
-   {
-      subject().value(val);
-   }
-
-   void proxy_base::value(std::string_view val)
-   {
-      subject().value(val);
+      return subject().wants_control();
    }
 }}

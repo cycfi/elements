@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -152,7 +152,7 @@ auto make_flow()
    constexpr auto max_height = line_height;
    constexpr auto num_elements = 40;
 
-   static auto c = vector_composite<flowable_container>{};
+   static auto c = flow_composite{};
    for (int i = 0; i < num_elements; ++i)
    {
       auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);
@@ -170,6 +170,56 @@ auto make_flow()
 
    return margin({ 10, 10, 10, 10 },
       group("Flow Elements (randomly sized elements)", flow_pane, 0.9, false)
+   );
+}
+
+auto make_vgrid()
+{
+   auto _box = top_margin(
+      { 10 },
+      hsize(150, rbox_)
+   );
+
+   // Place the grid coordinates in a plain array
+   static float grid[] = { 50, 100, 150, 200, 250, 300 };
+
+   return margin(
+      { 10, 40, 10, 10 },
+      hmin_size(150,
+         vgrid(
+            grid,
+            halign(0.0, _box),
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)
+         )
+      )
+   );
+}
+
+auto make_hgrid()
+{
+   auto _box = left_margin(
+      { 10 },
+      vsize(150, rbox_)
+   );
+
+   // You can also place the grid coordinates a std::array
+   static std::array<float, 6> grid = { 50, 100, 150, 200, 250, 300 };
+
+   return margin(
+      { 0, 50, 10, 10 },
+      hgrid(
+         grid,
+         valign(0.0, _box),
+         valign(0.2, _box),
+         valign(0.4, _box),
+         valign(0.6, _box),
+         valign(0.8, _box),
+         valign(1.0, _box)
+      )
    );
 }
 
@@ -209,14 +259,35 @@ auto make_mixed()
    );
 }
 
+auto make_grids()
+{
+   return htile(
+      margin({ 10, 10, 10, 10 },
+         group("VGrid with Fixed-Sized, Aligned Elements", make_vgrid(), 0.9, false)
+      ),
+      margin({ 10, 10, 10, 10 },
+         group("HGrid with Fixed-Sized, Aligned Elements", make_hgrid(), 0.9, false)
+      )
+   );
+}
+
 template <typename MenuItem>
-auto make_popup_menu(MenuItem& item1, MenuItem& item2, MenuItem& item3, MenuItem& item4)
+auto make_popup_menu(
+   MenuItem& item1,
+   MenuItem& item2,
+   MenuItem& item3,
+   MenuItem& item4,
+   MenuItem& item5
+)
 {
    auto popup  = button_menu("Layout", menu_position::bottom_left);
 
    auto menu =
       layer(
-         vtile(link(item1), link(item2), link(item3), link(item4)),
+         vtile(
+            link(item1), link(item2),
+            link(item3), link(item4), link(item5)
+         ),
          panel{}
       );
 
@@ -235,11 +306,13 @@ int main(int argc, const char* argv[])
    auto percentages_menu_item = menu_item("Stretchable Elements");
    auto mixed_menu_item = menu_item("Fixed-Sized and Stretchable Elements");
    auto flow_menu_item = menu_item("Flow Elements");
+   auto grid_menu_item = menu_item("Grid Elements");
 
    auto aligns = share(make_aligns());
    auto percentages = share(make_percentages());
    auto mixed = share(make_mixed());
    auto flow = share(make_flow());
+   auto grids = share(make_grids());
    auto content = hold_any(aligns);
 
    view view_(_win);
@@ -268,11 +341,18 @@ int main(int argc, const char* argv[])
       view_.layout(content);
    };
 
+   grid_menu_item.on_click = [&]()
+   {
+      content = grids;
+      view_.layout(content);
+   };
+
    auto menu = make_popup_menu(
       align_menu_item,
       percentages_menu_item,
       mixed_menu_item,
-      flow_menu_item
+      flow_menu_item,
+      grid_menu_item
    );
 
    auto top = align_right(hsize(120, menu));
@@ -280,10 +360,8 @@ int main(int argc, const char* argv[])
    auto main_element = margin({ 10, 10, 10, 10 }, main_pane);
 
    view_.content(
-      {
-         share(main_element),
-         share(background)
-      }
+      main_element,
+      background
    );
 
    _app.run();

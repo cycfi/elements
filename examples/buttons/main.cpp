@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -61,7 +61,7 @@ auto make_buttons(view& view_)
       );
 }
 
-auto make_more_buttons()
+auto make_controls(view& view_)
 {
    auto  check_box1 = check_box("Reionizing electrons");
    auto  check_box2 = check_box("The Nexus Meridian Unfolding");
@@ -71,7 +71,7 @@ auto make_more_buttons()
    check_box2.value(true);
    check_box3.value(true);
 
-   auto  group1 =
+   auto  check_boxes =
          group("Check boxes",
             margin({ 10, 10, 20, 20 },
                top_margin(25,
@@ -84,9 +84,28 @@ auto make_more_buttons()
             )
          );
 
+   auto  radio_button1 = radio_button("Eons from now");
+   auto  radio_button2 = radio_button("Ultra-sentient particles");
+   auto  radio_button3 = radio_button("The stratosphere is electrified");
+
+   radio_button1.select(true);
+
+   auto  radio_buttons =
+         group("Radio Buttons",
+            margin({ 10, 10, 20, 20 },
+               top_margin(25,
+                  vtile(
+                     top_margin(10, align_left(radio_button1)),
+                     top_margin(10, align_left(radio_button2)),
+                     top_margin(10, align_left(radio_button3))
+                  )
+               )
+            )
+         );
+
    auto indicator_color = get_theme().indicator_color;
 
-   auto  group2 =
+   auto  icon_buttons =
          group("Icon Buttons",
             margin({ 10, 10, 20, 10 },
                vtile(
@@ -108,7 +127,7 @@ auto make_more_buttons()
    sprite mail_button = sprite{ "mail_180x632.png", 158*button_scale, button_scale };
    sprite transpo_button = sprite{ "transpo_180x632.png", 158*button_scale, button_scale };
 
-   auto  group3 =
+   auto  sprite_buttons =
          group("Sprite Buttons",
             margin({ 10, 10, 20, 10 },
                vtile(
@@ -124,20 +143,18 @@ auto make_more_buttons()
             )
          );
 
-   return vtile(
-      margin({ 20, 20, 20, 20 }, group1),
-      margin({ 20, 20, 20, 20 }, group2),
-      margin({ 20, 20, 20, 20 }, group3)
-   );
-}
-
-auto make_controls(view& view_)
-{
    return
-      margin({ 20, 10, 20, 10 },
+      vtile(
          htile(
-            margin({ 20, 20, 20, 20 }, pane("Buttons", make_buttons(view_))),
-            margin({ 20, 20, 20, 20 }, pane("More Buttons", make_more_buttons()))
+            make_buttons(view_),
+            vtile(
+               margin({ 20, 20, 20, 20 }, check_boxes),
+               margin({ 20, 20, 20, 20 }, radio_buttons)
+            )
+         ),
+         htile(
+            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons)),
+            hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
          )
       );
 }
@@ -151,10 +168,8 @@ int main(int argc, const char* argv[])
    view view_(_win);
 
    view_.content(
-      {
-         share(make_controls(view_)),
-         share(background)
-      }
+      make_controls(view_),
+      background
    );
 
    _app.run();

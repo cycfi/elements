@@ -22,18 +22,30 @@ Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
 declarative interface with heavy emphasis on reuse.
 
-## Setup and Installation
-
-The Elements C++ GUI library is cross-platform. Follow the [Setup and
-Installation guide](http://cycfi.github.io/elements/setup) to get started
-using the library.
-
 ## News
 
 - 12 August 2019: Windows port completed
 - 01 September 2019: Linux port completed
 - 22 February 2020: Improved font support
 - 23 February 2020: Setup and Installation guide updated for Windows and Linux.
+
+## Setup and Installation
+
+The Elements C++ GUI library is cross-platform. Elements currently supports
+the MacOS, Windows and Linux. Follow the [Setup and Installation
+guide](http://cycfi.github.io/elements/setup) to get started using the
+library.
+
+## Design Aspects
+
+The Elements C++ GUI library is 1) Modular, 2) Declarative, and 3)
+Interoperable. This document explains these three key [Design
+Aspects](http://cycfi.github.io/elements/aspects) behind Elements through
+examples.
+
+## Gallery
+
+Follow this link for more screenshots: [Gallery](http://cycfi.github.io/elements/gallery).
 
 ## <a name="jdeguzman"></a>About the Author
 

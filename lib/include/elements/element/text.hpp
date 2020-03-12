@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -18,28 +18,35 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // text_base mixin
+   // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
-   class text_base
+   class text_reader
    {
    public:
 
-      virtual                    ~text_base() = default;
+      virtual                    ~text_reader() = default;
+      virtual std::string const& get_text() const = 0;
+      char const*                c_str() const { return get_text().c_str(); }
+   };
 
-      virtual std::string const& text() const = 0;
-      virtual char const*        c_str() const = 0;
-      virtual void               text(std::string_view text) = 0;
+   class text_writer
+   {
+   public:
+
+      virtual                    ~text_writer() = default;
+      virtual void               set_text(std::string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
-   class static_text_box : public element, public text_base
+   class static_text_box
+    : public element
+    , public text_reader
+    , public text_writer
+    , public receiver<std::string>
    {
    public:
-
-      using element::value;
-
                               static_text_box(
                                  std::string text
                                , font font_        = get_theme().text_box_font
@@ -53,13 +60,11 @@ namespace cycfi { namespace elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      text() const override            { return _text; }
-      char const*             c_str() const override           { return _text.c_str(); }
-      void                    text(std::string_view text) override;
+      std::string const&      get_text() const override            { return _text; }
+      void                    set_text(std::string_view text) override;
 
+      std::string const&      value() const override           { return _text; }
       void                    value(std::string_view val) override;
-
-      using element::text;
 
    private:
 
@@ -96,13 +101,13 @@ namespace cycfi { namespace elements
       bool                    wants_focus() const override;
       void                    begin_focus() override;
       void                    end_focus() override;
-      bool                    is_control() const override;
+      bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
-      void                    text(std::string_view text) override;
+      void                    set_text(std::string_view text) override;
 
       using element::focus;
-      using static_text_box::text;
+      using static_text_box::get_text;
 
       int                     select_start() const    { return _select_start; }
       void                    select_start(int pos);
@@ -159,7 +164,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using basic_text_box::text;
+      using basic_text_box::get_text;
 
       using text_function = std::function<std::string(std::string_view text)>;
       using enter_function = std::function<bool(std::string_view text)>;

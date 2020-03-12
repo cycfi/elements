@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -30,93 +30,29 @@ namespace cycfi { namespace elements
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
    }
 
-   heading::heading(std::string text, float size)
-    : _text(std::move(text))
-    , _font(get_theme().heading_font)
-    , _size(size)
-   {}
-
-   heading::heading(std::string text, elements::font font_, float size)
-    : _text(std::move(text))
-    , _font(font_)
-    , _size(size)
-   {}
-
-   view_limits heading::limits(basic_context const& ctx) const
+   view_limits default_label::limits(basic_context const& ctx) const
    {
-      auto& thm = get_theme();
       auto  size = measure_text(
-         ctx.canvas, _text.c_str()
-       , _font
-       , thm.heading_font_size * _size // _size is a multiplier.
+         ctx.canvas, c_str()
+       , font()
+       , font_size()
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
 
-   void heading::draw(context const& ctx)
+   void default_label::draw(context const& ctx)
    {
-      auto const&    theme_ = get_theme();
-      auto&          canvas_ = ctx.canvas;
-      auto           state = canvas_.new_state();
+      auto& canvas_ = ctx.canvas;
+      auto  state = canvas_.new_state();
 
-      canvas_.fill_style(theme_.heading_font_color);
-      canvas_.font(
-         _font
-       , theme_.heading_font_size * _size // _size is a multiplier.
-      );
-      canvas_.text_align(canvas_.middle | canvas_.center);
+      canvas_.fill_style(font_color());
+      canvas_.font(font(), font_size());
+      canvas_.text_align(text_align());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
 
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
-   }
-
-   void title_bar::draw(context const& ctx)
-   {
-      draw_box_vgradient(ctx.canvas, ctx.bounds, 4.0);
-   }
-
-   label::label(std::string text, float size)
-    : _text(std::move(text))
-    , _font(get_theme().label_font)
-    , _size(size)
-   {}
-
-   label::label(std::string text, elements::font font_, float size)
-    : _text(std::move(text))
-    , _font(font_)
-    , _size(size)
-   {}
-
-   view_limits label::limits(basic_context const& ctx) const
-   {
-      auto& thm = get_theme();
-      auto  size = measure_text(
-         ctx.canvas, _text.c_str()
-       , _font
-       , thm.label_font_size * _size // _size is a multiplier.
-      );
-      return { { size.x, size.y }, { size.x, size.y } };
-   }
-
-   void label::draw(context const& ctx)
-   {
-      auto const&    theme_ = get_theme();
-      auto&          canvas_ = ctx.canvas;
-      auto           state = canvas_.new_state();
-
-      canvas_.fill_style(theme_.label_font_color);
-      canvas_.font(
-         _font
-       , theme_.label_font_size * _size // _size is a multiplier.
-      );
-      canvas_.text_align(canvas_.middle | canvas_.center);
-
-      float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
-      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+      canvas_.fill_text(point{ cx, cy }, c_str());
    }
 
    void vgrid_lines::draw(context const& ctx)

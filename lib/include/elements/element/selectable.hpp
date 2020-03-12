@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -9,33 +9,17 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // tracker tracks the mouse movement.
+   // selectable base class for selectable elements
+   // (e.g. menu items and radio buttons)
    ////////////////////////////////////////////////////////////////////////////
    class selectable
    {
    public:
 
       virtual                 ~selectable() = default;
-      bool                    is_selected() const;
-      void                    select(bool state);
-
-   private:
-
-      bool                    _selected = false;
+      virtual bool            is_selected() const = 0;
+      virtual void            select(bool state) = 0;
    };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Inlines
-   ////////////////////////////////////////////////////////////////////////////
-   inline bool selectable::is_selected() const
-   {
-      return _selected;
-   }
-
-   inline void selectable::select(bool state)
-   {
-      _selected = state;
-   }
 }}
 
 #endif

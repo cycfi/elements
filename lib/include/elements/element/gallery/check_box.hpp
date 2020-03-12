@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -7,9 +7,7 @@
 #define ELEMENTS_GALLERY_CHECK_BOX_JUNE_5_2016
 
 #include <elements/element/gallery/button.hpp>
-#include <elements/support/theme.hpp>
-#include <string>
-#include <utility>
+#include <elements/element/gallery/toggle_selector.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -21,26 +19,12 @@ namespace cycfi { namespace elements
    );
 
    template <bool state>
-   struct check_box_element : element
+   struct check_box_element : toggle_selector
    {
-                              check_box_element(std::string text)
-                               : _text(std::move(text))
-                              {}
+      using toggle_selector::toggle_selector;
 
-      view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-
-      std::string             _text;
    };
-
-   template <bool state>
-   view_limits check_box_element<state>::limits(basic_context const& ctx) const
-   {
-      auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
-      size.x += 15 + size.y + 10 + 15;
-      return { { size.x, size.y }, { size.x, size.y } };
-   }
 
    template <bool state>
    void check_box_element<state>::draw(context const& ctx)

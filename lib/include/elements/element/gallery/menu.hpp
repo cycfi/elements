@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
          htile(
             htile(
                align_left(label(std::move(text)))
-             , align_right(label(mod, sk_font))
+             , align_right(label(mod).font(sk_font))
             ),
 #if defined(__APPLE__)
             left_margin(5, hsize(10, align_left(label(key))))
@@ -115,17 +115,17 @@ namespace cycfi { namespace elements
       virtual std::string_view   operator[](std::size_t index) const = 0;
    };
 
-   std::pair<basic_menu, std::shared_ptr<label>>
+   std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(std::string init);
 
-   std::pair<basic_menu, std::shared_ptr<label>>
+   std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
     , menu_selector const& items
    );
 
    template <typename Sequence>
-   inline std::pair<basic_menu, std::shared_ptr<label>>
+   inline std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
     , Sequence const& seq
@@ -157,7 +157,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename T>
-   std::pair<basic_menu, std::shared_ptr<label>>
+   std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
     , std::initializer_list<T> const& list

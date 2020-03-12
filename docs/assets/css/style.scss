@@ -15,3 +15,48 @@
     font-weight: normal;
     color: #152999e5;
 }
+
+.grid
+{
+    display: flex;
+}
+
+.col-1-2
+{
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.cole-1-2:last-child
+{
+    padding-left: 1rem;
+}
+
+img
+{
+    border-radius: 5px;
+}
+
+.main-content .highlight pre, .main-content pre
+{
+    background-color: #ffffff;
+}
+
+.highlight .cp,
+.highlight .mi,
+.highlight .n, .highlight .nf,
+.highlight .o,
+.highlight .p,
+.highlight .k, .highlight .kt, .highlight .kv
+{
+    font-weight: normal;
+}
+
+.img-align-right
+{
+    float: right;
+    margin-right: 1em;
+    font-size: 11pt;
+    text-align: center;
+}
+

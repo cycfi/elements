@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -80,10 +80,8 @@ int main(int argc, const char* argv[])
    auto msg_box = make_message();
 
    _view.content(
-      {
-         msg_box,
-         share(background)
-      }
+      msg_box,
+      background
    );
 
    _view.post(2s,

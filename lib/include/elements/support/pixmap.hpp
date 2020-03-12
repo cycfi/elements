@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
                               cairo_destroy(_context);
                         }
 
-                        pixmap_context(pixmap_context&& rhs)
+                        pixmap_context(pixmap_context&& rhs) noexcept
                          : _context(rhs._context)
                         {
                            rhs._context = nullptr;

@@ -24,8 +24,21 @@ declarative interface with heavy emphasis on reuse.
 
 ## Setup and Installation
 
-The Elements C++ GUI library is cross-platform. Follow the [Setup and
-Installation guide](setup) to get started using the library.
+The Elements C++ GUI library is cross-platform. Elements currently supports
+the MacOS, Windows and Linux. Follow the [Setup and Installation
+guide](http://cycfi.github.io/elements/setup) to get started using the
+library.
+
+## Design Aspects
+
+The Elements C++ GUI library is 1) Modular, 2) Declarative, and 3)
+Interoperable. This document explains these three key [Design
+Aspects](http://cycfi.github.io/elements/aspects) behind Elements through
+examples.
+
+## Gallery
+
+Follow this link for more screenshots: [Gallery](gallery).
 
 ## <a name="jdeguzman"></a>About the Author
 

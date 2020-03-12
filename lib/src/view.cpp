@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -334,13 +334,6 @@
 
       _main_element.end_focus();
       refresh();
-   }
-
-   void view::content(layers_type&& layers)
-   {
-      _content = std::forward<layers_type>(layers);
-      std::reverse(_content.begin(), _content.end());
-      set_limits();
    }
 
    void view::poll()

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2019 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -71,14 +71,14 @@ namespace cycfi { namespace elements
             {
                layout_menu(ctx);
 
-               auto on_click = [this](view& view_)
+               auto on_click_ = [this](view& view_)
                {
                   _popup->close(view_);
                   this->value(0);
                   view_.refresh();
                };
 
-               _popup->open(ctx.view, on_click);
+               _popup->open(ctx.view, on_click_);
                ctx.view.refresh();
             }
          }
@@ -353,7 +353,7 @@ namespace cycfi { namespace elements
       return hit;
    }
 
-   bool basic_menu_item_element::is_control() const
+   bool basic_menu_item_element::wants_control() const
    {
       return true;
    }

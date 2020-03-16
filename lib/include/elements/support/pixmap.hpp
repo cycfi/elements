@@ -94,8 +94,11 @@ namespace cycfi { namespace elements
 
    inline pixmap& pixmap::operator=(pixmap&& rhs)
    {
-      _surface = rhs._surface;
-      rhs._surface = nullptr;
+      if (this != &rhs)
+      {
+         _surface = rhs._surface;
+         rhs._surface = nullptr;
+      }
       return *this;
    }
 }}

@@ -1,5 +1,7 @@
 # ![Elements-Logo](docs/assets/images/elements.png) Elements C++ GUI library
 
+[![CMake Build Matrix](https://github.com/cycfi/elements/workflows/Build/badge.svg)](https://github.com/cycfi/elements/actions?query=workflow%3ABuild)
+
 ![alt Photon Sampler](docs/assets/images/photon_sampler.jpg)
 
 ## Introduction

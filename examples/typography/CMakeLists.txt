@@ -10,7 +10,6 @@ set(ELEMENTS_APP_ID "com.cycfi.typography")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_RESOURCES
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/OpenSansCondensed-Light.ttf
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/OpenSansCondensed-LightItalic.ttf
 )
 

@@ -4,6 +4,7 @@
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
+* [Windows Installation (Gtk)](#windows-gtk)
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
 
@@ -169,6 +170,66 @@ cmake -G"Visual Studio 16 2019" -DBOOST_ROOT=path/to/boost ..//
 If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
 couple of example applications.
+
+-------------------------------------------------------------------------------
+
+## Windows (Gtk)
+
+### Install MSYS2 toolchain and required libraries
+> MSYS2 is a software distro and building platform for Windows
+
+Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/). 
+
+Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-toolchains
+pacman -S ${MINGW_PACKAGE_PREFIX}-boost
+pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
+pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
+pacman -S make
+```
+
+### Install CMake
+
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
+```
+
+### Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here are some examples for MSYS2:
+
+### Using UNIX makefiles:
+
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake. -DWINDOWS_GRAPHICS_LIBRARY=gtk tells cmake to build with Gtk.
+
+```
+cd elements
+mkdir build
+cd build
+cmake ../ -G "Unix Makefiles" -DWINDOWS_GRAPHICS_LIBRARY=gtk
+```
+
+Note that GCC on MinGW may come across a multiple reference bug if you turn on LTO.
+To disable LTO, you should change
+```
+INTERPROCEDURAL_OPTIMIZATION TRUE
+```
+in `CMakeMain.txt` and `lib/CMakeLists.txt` to
+```
+INTERPROCEDURAL_OPTIMIZATION FALSE
+```
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+### Using [CLion](https://www.jetbrains.com/clion/):
+
+Simply open the CMakeLists.txt file using CLion and build the project.
+
 
 -------------------------------------------------------------------------------
 

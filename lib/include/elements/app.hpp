@@ -9,7 +9,7 @@
 #include <string>
 #include <infra/support.hpp>
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__WINDOWS_WITH_GTK__)
 using GtkApplication = struct _GtkApplication;
 #endif
 
@@ -32,10 +32,10 @@ namespace cycfi { namespace elements
 
 #if defined(__APPLE__)
       void* _menubar;
+#elif defined(__linux__) || defined(__WINDOWS_WITH_GTK__)
+      GtkApplication* _app;
 #elif defined(_WIN32)
       bool  _running = true;
-#elif defined(__linux__)
-      GtkApplication* _app;
 #endif
 
       std::string          _app_name;

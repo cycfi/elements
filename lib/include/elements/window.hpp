@@ -9,7 +9,7 @@
 #include <string>
 #include <functional>
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__WINDOWS_WITH_GTK__)
 # include <Windows.h>
 #endif
 

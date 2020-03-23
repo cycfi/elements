@@ -20,7 +20,7 @@
 # include FT_OUTLINE_H
 # include FT_BBOX_H
 # include FT_TYPE1_TABLES_H
-# ifdef _WIN32
+# if defined(_WIN32) && !defined(__WINDOWS_WITH_GTK__)
 #  include <Windows.h>
 #  include "sysinfoapi.h"
 #  include "tchar.h"
@@ -154,7 +154,7 @@ namespace cycfi { namespace elements
          auto resources_path = get_user_fonts_directory();
 #else
          auto resources_path = (fs::current_path() / "resources").generic_string();
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__WINDOWS_WITH_GTK__)
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
          auto fonts_path = (fs::path(windir) / "fonts").generic_string();

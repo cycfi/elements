@@ -17,7 +17,7 @@
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__WINDOWS_WITH_GTK__)
 # include <windows.h>
 #endif
 
@@ -277,14 +277,14 @@ namespace cycfi { namespace elements
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
 
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(__WINDOWS_WITH_GTK__)
    struct host_view;
    using host_view_handle = host_view*;
 #elif defined(_WIN32)
    using host_view_handle = HWND;
 #endif
 
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(__WINDOWS_WITH_GTK__)
    struct host_window;
    using host_window_handle = host_window*;
 #elif defined(_WIN32)
@@ -295,7 +295,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-#if !defined(_WIN32)
+#if !defined(_WIN32) || defined(__WINDOWS_WITH_GTK__)
                         base_view(host_view_handle h);
 #endif
                         base_view(extent size_);

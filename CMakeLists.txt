@@ -27,6 +27,15 @@ if (NOT DEFINED CYCFI_JSON_ROOT)
   set(CYCFI_JSON_ROOT ../json)
 endif()
 
+set(WINDOWS_GRAPHICS_LIBRARY "native" CACHE STRING "build with windows native gui api or gtk")
+if(WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk")
+    add_definitions(-D__WINDOWS_WITH_GTK__)
+    message(STATUS "Elements will be built with gtk")
+endif()
+
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>") 
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>") 
+
 add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(lib)

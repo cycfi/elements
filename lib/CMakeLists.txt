@@ -116,7 +116,7 @@ if (APPLE)
       host/macos/key.mm
       host/macos/window.mm
    )
-elseif (UNIX)
+elseif (UNIX OR (WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk"))
    set(ELEMENTS_HOST
       host/linux/app.cpp
       host/linux/base_view.cpp
@@ -228,7 +228,7 @@ endif()
 ###############################################################################
 # GTK (linux only)
 
-if (UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE OR (WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk"))
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
    target_link_libraries(elements PRIVATE PkgConfig::GTK3)
 endif()

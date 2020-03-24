@@ -168,12 +168,12 @@ if (NOT MSVC)
 endif()
 
 ###############################################################################
-# Get rid of certain warnings
+# Get rid of certain warnings, and make msvc support utf-8 without adding bom
 
 target_compile_options(elements PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
 ###############################################################################

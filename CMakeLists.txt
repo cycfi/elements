@@ -19,6 +19,9 @@ endif()
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT IPO_SUPPORTED)
+if(MINGW)
+    set(IPO_SUPPORTED FALSE)
+endif()
 if(IPO_SUPPORTED)
     message(STATUS "Link-time optimization supported. Will be enabled in Release build type")
 endif()
@@ -27,8 +30,11 @@ if (NOT DEFINED CYCFI_JSON_ROOT)
   set(CYCFI_JSON_ROOT ../json)
 endif()
 
+###############################################################################
+# UI Libraries
+
 if(WIN32)
-    set(HOST_UI_LIBRARY "win32" CACHE PROPERTY "gtk, cocoa or win32")
+    set(HOST_UI_LIBRARY "win32" CACHE STRING "gtk, cocoa or win32")
 elseif(UNIX AND NOT APPLE)
     set(HOST_UI_LIBRARY "gtk" CACHE STRING "gtk, cocoa or win32")
 elseif(APPLE)
@@ -47,10 +53,12 @@ elseif(HOST_UI_LIBRARY STREQUAL "win32")
     if(NOT WIN32)
         message(FATAL_ERROR "Only Windows support HOST_UI_LIBRARY=win32")
     endif()
+else()
+    message(FATAL_ERROR "Invalid HOST_UI_LIBRARY=" ${HOST_UI_LIBRARY}
+            ". Support gtk, cocoa and win32")
 endif()
 
-add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>") 
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>") 
+###############################################################################
 
 add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 

@@ -4,7 +4,7 @@
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
-* [Windows Installation (Gtk)](#windows-gtk)
+* [Windows Installation (MinGW + Gtk)](#Windows-(MinGW-+-Gtk))
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
 
@@ -151,7 +151,12 @@ Follow the instructions provided here: https://cmake.org/install/
 ### Generating the Project using CMake
 
 Assuming you have [Visual Studio
-2019](https://visualstudio.microsoft.com/vs/) installed:
+2019](https://visualstudio.microsoft.com/vs/) installed.
+
+You want NMake approach if you prefer `make`-style commandline tool, or 
+`Visual Studio 2019 GUI` approach otherwise.
+
+#### Visual Studio 2019 GUI
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -171,9 +176,29 @@ If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
 couple of example applications.
 
+#### NMake
+
+0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu. 
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake.
+
+```
+cd elements
+mkdir build
+cd build
+cmake -G"NMake Makefiles" -DBOOST_ROOT=path/to/boost ..//
+```
+
+*Replace path/to/boost with the directory where you installed boost.*
+
+If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake`
+to build the binary.
+
 -------------------------------------------------------------------------------
 
-## Windows (Gtk)
+## Windows (MinGW + Gtk)
 
 ### Install MSYS2 toolchain and required libraries
 > MSYS2 is a software distro and building platform for Windows
@@ -212,16 +237,6 @@ cd elements
 mkdir build
 cd build
 cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
-```
-
-Note that GCC on MinGW may come across a multiple reference bug if you turn on LTO.
-To disable LTO, you should change
-```
-INTERPROCEDURAL_OPTIMIZATION TRUE
-```
-in `CMakeMain.txt` and `lib/CMakeLists.txt` to
-```
-INTERPROCEDURAL_OPTIMIZATION FALSE
 ```
 
 If successful, cmake will generate Unix Make files in the build directory.

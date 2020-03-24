@@ -205,13 +205,13 @@ your platform and desired IDE, but here are some examples for MSYS2:
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
 3. CD to the build directory.
-4. invoke cmake. -DWINDOWS_GRAPHICS_LIBRARY=gtk tells cmake to build with Gtk.
+4. invoke cmake. -DHOST_UI_LIBRARY=gtk tells cmake to build with Gtk.
 
 ```
 cd elements
 mkdir build
 cd build
-cmake ../ -G "Unix Makefiles" -DWINDOWS_GRAPHICS_LIBRARY=gtk
+cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
 ```
 
 Note that GCC on MinGW may come across a multiple reference bug if you turn on LTO.

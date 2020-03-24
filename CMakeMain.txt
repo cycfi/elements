@@ -6,10 +6,6 @@
 
 project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 
-if (UNIX AND NOT APPLE OR (WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk"))
-   set(LINUX TRUE)
-endif()
-
 ###############################################################################
 # Sources (and Resources)
 
@@ -29,8 +25,8 @@ set(ELEMENTS_RESOURCES
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Medium.ttf
    ${CMAKE_CURRENT_LIST_DIR}/resources/fonts/Roboto-Bold.ttf
 )
-
-if (LINUX)
+# TODO: should I use native way or linux way? 或者这里用系统名称就好了？
+if (HOST_UI_LIBRARY STREQUAL "gtk")
    set(
       ELEMENTS_APP_RESOURCES
       ${ELEMENTS_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
@@ -62,7 +58,7 @@ if (NOT DEFINED ELEMENTS_APP_SOURCES)
    set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 endif()
 
-if (APPLE)
+if (HOST_UI_LIBRARY STREQUAL "cocoa")
    add_executable(
       ${ELEMENTS_APP_PROJECT}
       MACOSX_BUNDLE
@@ -70,9 +66,9 @@ if (APPLE)
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
    )
-elseif (UNIX OR (WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk"))
+elseif (HOST_UI_LIBRARY STREQUAL "gtk")
    add_executable(
-      ${ELEMENTS_APP_PROJECT}
+      ${ELEMENTS_APP_PROJECT} //SHOULD I add WIN32 or MACOSX_BUNDLE here? 或者直接用系统名称做这里的判断？
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
@@ -82,7 +78,7 @@ elseif (UNIX OR (WINDOWS_GRAPHICS_LIBRARY STREQUAL "gtk"))
       ${CMAKE_CURRENT_LIST_DIR}/resources/config.json.in
       "${CMAKE_CURRENT_BINARY_DIR}/config.json"
    )
-elseif (WIN32)
+elseif (HOST_UI_LIBRARY STREQUAL "win32")
    add_executable(
       ${ELEMENTS_APP_PROJECT}
       WIN32

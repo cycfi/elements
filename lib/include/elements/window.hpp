@@ -9,7 +9,7 @@
 #include <string>
 #include <functional>
 
-#if defined(_HOST_UI_LIBRARY_WIN32_)
+#if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 # include <Windows.h>
 #endif
 

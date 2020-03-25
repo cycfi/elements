@@ -20,7 +20,7 @@
 # include FT_OUTLINE_H
 # include FT_BBOX_H
 # include FT_TYPE1_TABLES_H
-# if defined(_HOST_UI_LIBRARY_WIN32_)
+# if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 #  include <Windows.h>
 #  include "sysinfoapi.h"
 #  include "tchar.h"
@@ -154,7 +154,7 @@ namespace cycfi { namespace elements
          auto resources_path = get_user_fonts_directory();
 #else
          auto resources_path = (fs::current_path() / "resources").generic_string();
-#if defined(_HOST_UI_LIBRARY_WIN32_)
+#if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
          auto fonts_path = (fs::path(windir) / "fonts").generic_string();

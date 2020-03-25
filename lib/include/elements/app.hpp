@@ -9,7 +9,7 @@
 #include <string>
 #include <infra/support.hpp>
 
-#if defined(__linux__)
+#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
 using GtkApplication = struct _GtkApplication;
 #endif
 
@@ -30,12 +30,12 @@ namespace cycfi { namespace elements
 
    private:
 
-#if defined(__APPLE__)
+#if defined(ELEMENTS_HOST_UI_LIBRARY_COCOA)
       void* _menubar;
-#elif defined(_WIN32)
-      bool  _running = true;
-#elif defined(__linux__)
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
       GtkApplication* _app;
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
+      bool  _running = true;
 #endif
 
       std::string          _app_name;

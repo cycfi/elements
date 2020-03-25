@@ -116,7 +116,7 @@ if (APPLE)
       host/macos/key.mm
       host/macos/window.mm
    )
-elseif (UNIX)
+elseif (HOST_UI_LIBRARY STREQUAL "gtk")
    set(ELEMENTS_HOST
       host/linux/app.cpp
       host/linux/base_view.cpp
@@ -168,12 +168,12 @@ if (NOT MSVC)
 endif()
 
 ###############################################################################
-# Get rid of certain warnings
+# Get rid of certain warnings, and make msvc support utf-8 without adding bom
 
 target_compile_options(elements PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
 ###############################################################################
@@ -228,7 +228,7 @@ endif()
 ###############################################################################
 # GTK (linux only)
 
-if (UNIX AND NOT APPLE)
+if (HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
    target_link_libraries(elements PRIVATE PkgConfig::GTK3)
 endif()

@@ -4,6 +4,7 @@
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
+* [Windows Installation (MinGW + Gtk)](#Windows-(MinGW-+-Gtk))
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
 
@@ -150,7 +151,12 @@ Follow the instructions provided here: https://cmake.org/install/
 ### Generating the Project using CMake
 
 Assuming you have [Visual Studio
-2019](https://visualstudio.microsoft.com/vs/) installed:
+2019](https://visualstudio.microsoft.com/vs/) installed.
+
+You want NMake approach if you prefer `make`-style commandline tool, or 
+`Visual Studio 2019 GUI` approach otherwise.
+
+#### Visual Studio 2019 GUI
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -169,6 +175,76 @@ cmake -G"Visual Studio 16 2019" -DBOOST_ROOT=path/to/boost ..//
 If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
 couple of example applications.
+
+#### NMake
+
+0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu. 
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake.
+
+```
+cd elements
+mkdir build
+cd build
+cmake -G"NMake Makefiles" -DBOOST_ROOT=path/to/boost ..//
+```
+
+*Replace path/to/boost with the directory where you installed boost.*
+
+If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake`
+to build the binary.
+
+-------------------------------------------------------------------------------
+
+## Windows (MinGW + Gtk)
+
+### Install MSYS2 toolchain and required libraries
+> MSYS2 is a software distro and building platform for Windows
+
+Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/). 
+
+Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-toolchains
+pacman -S ${MINGW_PACKAGE_PREFIX}-boost
+pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
+pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
+pacman -S make
+```
+
+### Install CMake
+
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
+```
+
+### Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here are some examples for MSYS2:
+
+### Using UNIX makefiles:
+
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake. -DHOST_UI_LIBRARY=gtk tells cmake to build with Gtk.
+
+```
+cd elements
+mkdir build
+cd build
+cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
+```
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+### Using [CLion](https://www.jetbrains.com/clion/):
+
+Simply open the CMakeLists.txt file using CLion and build the project.
+
 
 -------------------------------------------------------------------------------
 

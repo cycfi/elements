@@ -13,8 +13,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    struct config
    {
       std::string application_title;
@@ -36,11 +34,11 @@ namespace cycfi { namespace elements
 {
    config get_config()
    {
-      fs::path path = "config.json";
-      CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
+      std::filesystem::path path = "config.json";
+      CYCFI_ASSERT(std::filesystem::exists(path), "Error: config.json not exist.");
       auto r = json::load<config>(path);
       CYCFI_ASSERT(r, "Error: Invalid config.json.");
-      return r.get();
+      return *r;
    }
 
    // Some app globals

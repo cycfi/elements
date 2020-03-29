@@ -4,28 +4,27 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/resource_paths.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-   std::vector<fs::path> resource_paths;
+   std::vector<std::filesystem::path> resource_paths;
 
    std::string find_file(std::string_view file)
    {
       std::string full_path;
-      if (fs::path(file.data()).is_absolute())
+      if (std::filesystem::path(file.data()).is_absolute())
       {
-         if (fs::exists(full_path))
+         if (std::filesystem::exists(full_path))
             full_path = file;
       }
       else
       {
          for (auto const& path : resource_paths)
          {
-            fs::path target = fs::path(path) / file.data();
-            if (fs::exists(target))
+            std::filesystem::path target = std::filesystem::path(path) / file.data();
+            if (std::filesystem::exists(target))
             {
                full_path = target.string();
                break;

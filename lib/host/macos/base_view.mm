@@ -41,9 +41,7 @@ namespace
       return 0;
    }
 
-   namespace fs = boost::filesystem;
-
-   void activate_font(fs::path font_path)
+   void activate_font(std::filesystem::path font_path)
    {
       NSArray* available_fonts = [[NSFontManager sharedFontManager] availableFonts];
       if (![available_fonts containsObject : [NSString stringWithUTF8String : font_path.stem().c_str()]])
@@ -77,7 +75,7 @@ namespace
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
          // the user fonts ourself.
-         for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)
+         for (std::filesystem::directory_iterator it{ resource_path }; it != std::filesystem::directory_iterator{}; ++it)
             if (it->path().extension() == ".ttf")
                activate_font(it->path());
       }
@@ -92,11 +90,11 @@ namespace cycfi { namespace elements
    NSUInteger  translate_key_to_modifier_flag(key_code key);
 
    // This is declared in font.hpp
-   fs::path get_user_fonts_directory()
+   std::filesystem::path get_user_fonts_directory()
    {
       char resource_path[PATH_MAX];
       get_resource_path(resource_path);
-      return fs::path(resource_path);
+      return std::filesystem::path(resource_path);
    }
 }}
 

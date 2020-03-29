@@ -7,7 +7,6 @@
 #include <json/json.hpp>
 #include <json/json_io.hpp>
 #include <infra/assert.hpp>
-#include <boost/filesystem.hpp>
 #include <windows.h>
 #include <ShellScalingAPI.h>
 #include <shlobj.h>
@@ -15,8 +14,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    struct config
    {
       std::string application_title;
@@ -47,14 +44,14 @@ namespace cycfi { namespace elements
 {
    config get_config()
    {
-      fs::path path = "config.json";
+      std::filesystem::path path = "config.json";
 
-	   std::string fp = fs::absolute(path).string();
+      std::string fp = std::filesystem::absolute(path).string();
 
-      CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
+      CYCFI_ASSERT(std::filesystem::exists(path), "Error: config.json not exist.");
       auto r = json::load<config>(path);
       CYCFI_ASSERT(r, "Error: Invalid config.json.");
-      return r.get();
+      return *r;
    }
 
    config app_config;

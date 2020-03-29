@@ -37,7 +37,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
    namespace
    {
       inline void ltrim(std::string& s)
@@ -153,11 +152,11 @@ namespace cycfi { namespace elements
 #ifdef __APPLE__
          auto resources_path = get_user_fonts_directory();
 #else
-         auto resources_path = (fs::current_path() / "resources").generic_string();
+         auto resources_path = (std::filesystem::current_path() / "resources").generic_string();
 #ifdef _WIN32
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
-         auto fonts_path = (fs::path(windir) / "fonts").generic_string();
+         auto fonts_path = (std::filesystem::path(windir) / "fonts").generic_string();
          FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.c_str());
 #endif
 #endif

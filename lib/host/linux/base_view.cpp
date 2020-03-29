@@ -425,7 +425,7 @@ namespace cycfi { namespace elements
    {
       init_view_class()
       {
-         auto pwd = fs::current_path();
+         auto pwd = std::filesystem::current_path();
          auto resource_path = pwd / "resources";
          resource_paths.push_back(resource_path);
       }

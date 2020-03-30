@@ -207,7 +207,7 @@ Download MSYS2 from its [official website](https://www.msys2.org/) and install i
 
 Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
 ```
-pacman -S ${MINGW_PACKAGE_PREFIX}-toolchains
+pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
 pacman -S ${MINGW_PACKAGE_PREFIX}-boost
 pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
 pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3

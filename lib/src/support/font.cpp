@@ -153,15 +153,15 @@ namespace cycfi { namespace elements
 #ifdef __APPLE__
          auto resources_path = get_user_fonts_directory();
 #else
-         auto resources_path = (fs::current_path() / "resources").generic_string();
+         auto resources_path = fs::current_path() / "resources";
 #ifdef _WIN32
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
-         auto fonts_path = (fs::path(windir) / "fonts").generic_string();
-         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.c_str());
+         auto fonts_path = fs::path(windir) / "fonts";
+         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.wstring().c_str());
 #endif
 #endif
-         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.c_str());
+         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.wstring().c_str());
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(
                                  FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT

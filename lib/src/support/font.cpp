@@ -158,10 +158,10 @@ namespace cycfi { namespace elements
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
          auto fonts_path = fs::path(windir) / "fonts";
-         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.wstring().c_str());
+         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.string().c_str());
 #endif
 #endif
-         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.wstring().c_str());
+         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.string().c_str());
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(
                                  FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT

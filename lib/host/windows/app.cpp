@@ -7,7 +7,7 @@
 #include <json/json.hpp>
 #include <json/json_io.hpp>
 #include <infra/assert.hpp>
-#include <boost/filesystem.hpp>
+#include <elements/detail/filesystem.hpp>
 #include <windows.h>
 #include <ShellScalingAPI.h>
 #include <shlobj.h>

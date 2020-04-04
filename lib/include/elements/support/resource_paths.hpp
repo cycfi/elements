@@ -9,12 +9,10 @@
 #include <set>
 #include <string_view>
 #include <vector>
-#include <boost/filesystem.hpp>
+#include <elements/detail/filesystem.hpp>
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    // Resources (e.g. images) that are identified by file names can be
    // absolute or relative paths. For relative paths, the resource_paths
    // vector below are used to search for such files, in the order they

@@ -4,12 +4,11 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/resource_paths.hpp>
-#include <boost/filesystem.hpp>
+#include <elements/detail/filesystem.hpp>
 #include <string>
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
    std::vector<fs::path> resource_paths;
 
    std::string find_file(std::string_view file)

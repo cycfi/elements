@@ -9,7 +9,7 @@
 #include <cairo.h>
 #include <cairo-ft.h>
 #include <fontconfig/fontconfig.h>
-#include <boost/filesystem.hpp>
+#include <elements/detail/filesystem.hpp>
 
 #ifndef __APPLE__
 # include <ft2build.h>
@@ -37,7 +37,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
    namespace
    {
       inline void ltrim(std::string& s)

@@ -11,7 +11,7 @@
 #include <elements/support/circle.hpp>
 #include <elements/support/pixmap.hpp>
 #include <elements/support/font.hpp>
-#include <boost/filesystem.hpp>
+#include <elements/detail/filesystem.hpp>
 
 #include <vector>
 #include <functional>

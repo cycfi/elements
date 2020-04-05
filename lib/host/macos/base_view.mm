@@ -90,14 +90,6 @@ namespace cycfi { namespace elements
    key_code    translate_key(unsigned int key);
    int         translate_flags(NSUInteger flags);
    NSUInteger  translate_key_to_modifier_flag(key_code key);
-
-   // This is declared in font.hpp
-   fs::path get_user_fonts_directory()
-   {
-      char resource_path[PATH_MAX];
-      get_resource_path(resource_path);
-      return fs::path(resource_path);
-   }
 }}
 
 namespace

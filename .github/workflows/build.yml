@@ -1,0 +1,129 @@
+name: Build
+on: [push, pull_request]
+env:
+  BUILD_TYPE: Release
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: "Windows Latest MSVC"
+          os: windows-latest
+          cc: "cl"
+          cxx: "cl"
+          environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars32.bat"
+        - name: "Ubuntu Latest GCC"
+          os: ubuntu-latest
+          cc: "gcc-9"
+          cxx: "g++-9"
+          # If this env variable is present, we set BOOST_ROOT to its content
+          # Github workers put newer Boost versions there
+          boost_root: "BOOST_ROOT_1_72_0"
+        - name: "macOS Latest Clang"
+          os: macos-latest
+          cc: "clang"
+          cxx: "clang++"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: elements
+        submodules: 'recursive'
+    - name: Checkout infra repo
+      uses: actions/checkout@v2
+      with:
+        repository: cycfi/infra
+        path: infra
+    - name: Checkout json repo
+      uses: actions/checkout@v2
+      with:
+        repository: cycfi/json
+        path: json
+    - name: Install package dependencies
+      id: cmake_and_ninja
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(COMMAND choco install ninja)
+        elseif ("${{ runner.os }}" STREQUAL "Linux")
+          execute_process(COMMAND sudo apt-get install libcairo2-dev)
+          execute_process(COMMAND sudo apt-get install libgtk-3-dev)
+          execute_process(COMMAND sudo apt-get install ninja-build)
+        elseif ("${{ runner.os }}" STREQUAL "macOS")
+          execute_process(COMMAND brew install pkg-config)
+          execute_process(COMMAND brew install boost)
+          execute_process(COMMAND brew install cairo)
+          execute_process(COMMAND brew install fontconfig)
+          execute_process(COMMAND brew install ninja)
+        endif()
+    - name: Configure
+      shell: cmake -P {0}
+      working-directory: ./elements
+      run: |
+        set(ENV{CC} ${{ matrix.config.cc }})
+        set(ENV{CXX} ${{ matrix.config.cxx }})
+        # If the environment has boost_root defined, set BOOST_ROOT to it
+        if ( NOT "x${{ matrix.config.boost_root }}" STREQUAL "x")
+          set(ENV{BOOST_ROOT} $ENV{${{ matrix.config.boost_root }}})
+        endif()
+
+        # If we are on windows, run the environment script, parse it with cmake
+        # and set environment variables with it (required for Visual Studio)
+        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
+          execute_process(
+            COMMAND "${{ matrix.config.environment_script }}" && set
+            OUTPUT_FILE environment_script_output.txt
+          )
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+
+        execute_process(
+          COMMAND ${CMAKE_COMMAND}
+            -S .
+            -B build
+            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
+          RESULT_VARIABLE result
+          ERROR_VARIABLE error_message
+        )
+
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
+        endif()
+    - name: Build
+      shell: cmake -P {0}
+      working-directory: ./elements
+      run: |
+        # If we are on windows, run the environment script, parse it with cmake
+        # and set environment variables with it (required for Visual Studio)
+        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
+          execute_process(
+            COMMAND "${{ matrix.config.environment_script }}" && set
+            OUTPUT_FILE environment_script_output.txt
+          )
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} --build build
+          RESULT_VARIABLE result
+          ERROR_VARIABLE error_message
+        )
+
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
+        endif()

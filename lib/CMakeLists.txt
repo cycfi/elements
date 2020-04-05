@@ -239,6 +239,7 @@ endif()
 ###############################################################################
 # Boost headers
 find_package(Boost 1.68 REQUIRED)
+target_include_directories(elements PUBLIC "${Boost_INCLUDE_DIRS}")
 
 ###############################################################################
 # Global options

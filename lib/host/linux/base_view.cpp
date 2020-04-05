@@ -13,6 +13,7 @@
 #include <elements/support/text_utils.hpp>
 #include <json/json_io.hpp>
 #include <gtk/gtk.h>
+#include <map>
 #include <string>
 
 namespace cycfi { namespace elements

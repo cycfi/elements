@@ -30,18 +30,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        path: elements
         submodules: 'recursive'
-    - name: Checkout infra repo
-      uses: actions/checkout@v2
-      with:
-        repository: cycfi/infra
-        path: infra
-    - name: Checkout json repo
-      uses: actions/checkout@v2
-      with:
-        repository: cycfi/json
-        path: json
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}
@@ -61,7 +50,6 @@ jobs:
         endif()
     - name: Configure
       shell: cmake -P {0}
-      working-directory: ./elements
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
         set(ENV{CXX} ${{ matrix.config.cxx }})
@@ -101,7 +89,6 @@ jobs:
         endif()
     - name: Build
       shell: cmake -P {0}
-      working-directory: ./elements
       run: |
         # If we are on windows, run the environment script, parse it with cmake
         # and set environment variables with it (required for Visual Studio)

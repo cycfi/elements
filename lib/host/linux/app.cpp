@@ -4,7 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/app.hpp>
-#include <elements/detail/filesystem.hpp>
+#include <infra/filesystem.hpp>
 #include <infra/assert.hpp>
 #include <json/json_io.hpp>
 #include <string>

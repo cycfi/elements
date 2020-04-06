@@ -4,7 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/resource_paths.hpp>
-#include <elements/detail/filesystem.hpp>
+#include <infra/filesystem.hpp>
 #include <string>
 
 namespace cycfi { namespace elements

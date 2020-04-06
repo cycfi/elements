@@ -9,7 +9,7 @@
 #include <set>
 #include <string_view>
 #include <vector>
-#include <elements/detail/filesystem.hpp>
+#include <infra/filesystem.hpp>
 
 namespace cycfi { namespace elements
 {

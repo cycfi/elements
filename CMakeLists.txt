@@ -26,10 +26,6 @@ if(IPO_SUPPORTED)
     message(STATUS "Link-time optimization supported. Will be enabled in Release build type")
 endif()
 
-if (NOT DEFINED CYCFI_JSON_ROOT)
-  set(CYCFI_JSON_ROOT ../json)
-endif()
-
 ###############################################################################
 # UI Libraries
 
@@ -59,8 +55,6 @@ else()
 endif()
 
 ###############################################################################
-
-add_subdirectory(${CYCFI_JSON_ROOT} "${CMAKE_CURRENT_BINARY_DIR}/json")
 
 add_subdirectory(lib)
 

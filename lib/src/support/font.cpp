@@ -9,7 +9,7 @@
 #include <cairo.h>
 #include <cairo-ft.h>
 #include <fontconfig/fontconfig.h>
-#include <elements/detail/filesystem.hpp>
+#include <infra/filesystem.hpp>
 
 #ifndef __APPLE__
 # include <ft2build.h>

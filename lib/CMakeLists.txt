@@ -154,9 +154,11 @@ target_sources(elements
    PUBLIC ${ELEMENTS_HEADERS}
 )
 
-target_include_directories(elements PUBLIC
-  include
-  external/filesystem/include
+target_include_directories(elements
+   PUBLIC
+      include
+      infra/include
+      infra/external/filesystem/include
 )
 
 target_compile_features(elements PUBLIC cxx_std_17)
@@ -259,11 +261,6 @@ endif()
 
 ###############################################################################
 # Libraries and linking
-
-target_link_libraries(elements PUBLIC
-   infra
-   json
-)
 
 if (UNIX OR (WIN32 AND NOT MSVC))
    find_package(Threads)

@@ -11,7 +11,7 @@
 #include <memory>
 #include <map>
 #include <cairo-quartz.h>
-#include <boost/filesystem.hpp>
+#include <infra/filesystem.hpp>
 
 #if ! __has_feature(objc_arc)
 # error "ARC is off"
@@ -40,8 +40,6 @@ namespace
          return get_bundle_from_executable(info.dli_fname);
       return 0;
    }
-
-   namespace fs = boost::filesystem;
 
    void activate_font(fs::path font_path)
    {

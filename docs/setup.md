@@ -20,10 +20,18 @@ order to use the library:
 3. [CMake](https://cmake.org/) 3.9.6 or higher
 4. [Boost](https://www.boost.org/) 1.68 or higher
 5. [Cairo](https://cairographics.org/)
-6. The [Cycfi infra library](https://github.com/cycfi/infra/)
-7. The [Cycfi json library](https://github.com/cycfi/json/)
-8. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
-9. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+6. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
+7. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+
+Additionally, the following libraries are dragged as submodules:
+
+1. The [Cycfi infra library](https://github.com/cycfi/infra/)
+2. The [Cycfi json library](https://github.com/cycfi/json/)
+
+Infra provides some basic groundwork common to Cycfi libraries, including
+Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
+place your clone of the infra and json libraries in the same directory as
+you have the Elements C++ GUI library.
 
 ### C++17
 
@@ -41,18 +49,8 @@ latest version with a C++17 compiler.
 Elements C++ GUI library, plus the Cycfi Infra and JSON libraries:
 
 ```
-git clone https://github.com/cycfi/elements.git
-git clone https://github.com/cycfi/infra.git
-git clone https://github.com/cycfi/json.git
+git clone --recurse-submodules  https://github.com/cycfi/elements.git
 ```
-
-Infra provides some basic groundwork common to Cycfi libraries, including
-Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
-place your clone of the infra and json libraries in the same directory as
-you have the Elements C++ GUI library.
-
-If you wish to place them somewhere else, then you need to set the cmake
-variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT later (see below).
 
 ### CMake
 

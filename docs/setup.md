@@ -29,9 +29,7 @@ Additionally, the following libraries are dragged as submodules:
 2. The [Cycfi json library](https://github.com/cycfi/json/)
 
 Infra provides some basic groundwork common to Cycfi libraries, including
-Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
-place your clone of the infra and json libraries in the same directory as
-you have the Elements C++ GUI library.
+Elements. JSON provides Strict, type-safe, c++ to JSON I/O.
 
 ### C++17
 

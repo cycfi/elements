@@ -159,6 +159,7 @@ target_include_directories(elements
       include
       infra/include
       infra/external/filesystem/include
+      json/include
 )
 
 target_compile_features(elements PUBLIC cxx_std_17)
@@ -256,6 +257,8 @@ elseif (WIN32)
       WIN32_LEAN_AND_MEAN
       NOMINMAX
       _UNICODE
+      BOOST_DATE_TIME_NO_LIB
+      BOOST_REGEX_NO_LIB
    )
 endif()
 

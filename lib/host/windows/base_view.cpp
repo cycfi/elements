@@ -33,6 +33,7 @@
 #include <cairo-win32.h>
 #include <Windowsx.h>
 #include <chrono>
+#include <map>
 
 namespace cycfi { namespace elements
 {

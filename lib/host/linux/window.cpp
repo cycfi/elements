@@ -15,8 +15,6 @@ namespace cycfi { namespace elements
 {
    struct host_window
    {
-      gint maxx;
-      gint maxy;
       GtkWidget* host = nullptr;
       std::vector<std::function<void()>> on_activate;
    };
@@ -65,13 +63,6 @@ namespace cycfi { namespace elements
 
             position(bounds.top_left());
             size(bounds.bottom_right());
-
-            GdkRectangle workarea;
-            gdk_monitor_get_workarea(
-               gdk_display_get_primary_monitor(gdk_display_get_default()),
-               &workarea);
-            _window->maxx = workarea.width * 50;   // Something big, but not too big
-            _window->maxy = workarea.height * 50;  // Something big, but not too big
          };
 
       if (app_is_activated())
@@ -107,12 +98,13 @@ namespace cycfi { namespace elements
       auto set_limits =
          [this, limits_]()
          {
+            constexpr float max = 10E6;
             auto win = GTK_WINDOW(_window->host);
             GdkGeometry hints;
             hints.min_width = limits_.min.x;
-            hints.max_width = std::min<float>(limits_.max.x, float(_window->maxx));
+            hints.max_width = std::min<float>(limits_.max.x, max);
             hints.min_height = limits_.min.y;
-            hints.max_height = std::min<float>(limits_.max.y, float(_window->maxy));
+            hints.max_height = std::min<float>(limits_.max.y, max);
 
             gtk_window_set_geometry_hints(
                win,

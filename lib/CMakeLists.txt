@@ -116,7 +116,7 @@ if (APPLE)
       host/macos/key.mm
       host/macos/window.mm
    )
-elseif (UNIX)
+elseif (HOST_UI_LIBRARY STREQUAL "gtk")
    set(ELEMENTS_HOST
       host/linux/app.cpp
       host/linux/base_view.cpp
@@ -154,7 +154,13 @@ target_sources(elements
    PUBLIC ${ELEMENTS_HEADERS}
 )
 
-target_include_directories(elements PUBLIC include)
+target_include_directories(elements
+   PUBLIC
+      include
+      infra/include
+      infra/external/filesystem/include
+      json/include
+)
 
 target_compile_features(elements PUBLIC cxx_std_17)
 
@@ -168,12 +174,12 @@ if (NOT MSVC)
 endif()
 
 ###############################################################################
-# Get rid of certain warnings
+# Get rid of certain warnings, and make msvc support utf-8 without adding bom
 
 target_compile_options(elements PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
 ###############################################################################
@@ -228,19 +234,15 @@ endif()
 ###############################################################################
 # GTK (linux only)
 
-if (UNIX AND NOT APPLE)
+if (HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
    target_link_libraries(elements PRIVATE PkgConfig::GTK3)
 endif()
 
 ###############################################################################
-# Boost
-
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.68 REQUIRED COMPONENTS filesystem system date_time regex)
-
-target_link_libraries(elements PUBLIC Boost::boost Boost::filesystem Boost::system Boost::date_time Boost::regex)
-target_compile_definitions(elements PRIVATE BOOST_ALL_NO_LIB)
+# Boost headers
+find_package(Boost 1.68 REQUIRED)
+target_include_directories(elements PUBLIC "${Boost_INCLUDE_DIRS}")
 
 ###############################################################################
 # Global options
@@ -255,16 +257,13 @@ elseif (WIN32)
       WIN32_LEAN_AND_MEAN
       NOMINMAX
       _UNICODE
+      BOOST_DATE_TIME_NO_LIB
+      BOOST_REGEX_NO_LIB
    )
 endif()
 
 ###############################################################################
 # Libraries and linking
-
-target_link_libraries(elements PUBLIC
-   infra
-   json
-)
 
 if (UNIX OR (WIN32 AND NOT MSVC))
    find_package(Threads)

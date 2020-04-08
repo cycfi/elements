@@ -9,7 +9,7 @@
 #define STBI_NO_PNG 1
 #include <elements/support/detail/stb_image.h>
 #include <infra/assert.hpp>
-#include <boost/filesystem.hpp>
+#include <infra/filesystem.hpp>
 #include <string>
 
 namespace cycfi { namespace elements

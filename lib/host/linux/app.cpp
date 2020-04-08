@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/app.hpp>
+#include <infra/filesystem.hpp>
 #include <infra/assert.hpp>
 #include <json/json_io.hpp>
 #include <string>
@@ -13,8 +14,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
-
    struct config
    {
       std::string application_title;
@@ -40,7 +39,7 @@ namespace cycfi { namespace elements
       CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
       auto r = json::load<config>(path);
       CYCFI_ASSERT(r, "Error: Invalid config.json.");
-      return r.get();
+      return *r;
    }
 
    // Some app globals

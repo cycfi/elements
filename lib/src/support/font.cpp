@@ -9,7 +9,7 @@
 #include <cairo.h>
 #include <cairo-ft.h>
 #include <fontconfig/fontconfig.h>
-#include <boost/filesystem.hpp>
+#include <infra/filesystem.hpp>
 
 #ifndef __APPLE__
 # include <ft2build.h>
@@ -20,7 +20,7 @@
 # include FT_OUTLINE_H
 # include FT_BBOX_H
 # include FT_TYPE1_TABLES_H
-# ifdef _WIN32
+# if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 #  include <Windows.h>
 #  include "sysinfoapi.h"
 #  include "tchar.h"
@@ -37,7 +37,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace fs = boost::filesystem;
    namespace
    {
       inline void ltrim(std::string& s)
@@ -153,15 +152,15 @@ namespace cycfi { namespace elements
 #ifdef __APPLE__
          auto resources_path = get_user_fonts_directory();
 #else
-         auto resources_path = fs::current_path() / "resources";
-#ifdef _WIN32
+         auto resources_path = (fs::current_path() / "resources").generic_string();
+#if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
-         auto fonts_path = fs::path(windir) / "fonts";
-         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.string().c_str());
+         auto fonts_path = (fs::path(windir) / "fonts").generic_string();
+         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.c_str());
 #endif
 #endif
-         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.string().c_str());
+         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.c_str());
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(
                                  FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT

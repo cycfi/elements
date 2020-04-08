@@ -4,6 +4,7 @@
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
+* [Windows Installation (MinGW + Gtk)](#Windows-(MinGW-+-Gtk))
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
 
@@ -19,10 +20,18 @@ order to use the library:
 3. [CMake](https://cmake.org/) 3.9.6 or higher
 4. [Boost](https://www.boost.org/) 1.68 or higher
 5. [Cairo](https://cairographics.org/)
-6. The [Cycfi infra library](https://github.com/cycfi/infra/)
-7. The [Cycfi json library](https://github.com/cycfi/json/)
-8. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
-9. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+6. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
+7. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+
+Additionally, the following libraries are dragged as submodules:
+
+1. The [Cycfi infra library](https://github.com/cycfi/infra/)
+2. The [Cycfi json library](https://github.com/cycfi/json/)
+
+Infra provides some basic groundwork common to Cycfi libraries, including
+Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
+place your clone of the infra and json libraries in the same directory as
+you have the Elements C++ GUI library.
 
 ### C++17
 
@@ -40,18 +49,8 @@ latest version with a C++17 compiler.
 Elements C++ GUI library, plus the Cycfi Infra and JSON libraries:
 
 ```
-git clone https://github.com/cycfi/elements.git
-git clone https://github.com/cycfi/infra.git
-git clone https://github.com/cycfi/json.git
+git clone --recurse-submodules  https://github.com/cycfi/elements.git
 ```
-
-Infra provides some basic groundwork common to Cycfi libraries, including
-Elements. JSON provides Strict, type-safe, c++ to JSON I/O.  It's easiest to
-place your clone of the infra and json libraries in the same directory as
-you have the Elements C++ GUI library.
-
-If you wish to place them somewhere else, then you need to set the cmake
-variables CYCFI_INFRA_ROOT, and CYCFI_JSON_ROOT later (see below).
 
 ### CMake
 
@@ -150,7 +149,12 @@ Follow the instructions provided here: https://cmake.org/install/
 ### Generating the Project using CMake
 
 Assuming you have [Visual Studio
-2019](https://visualstudio.microsoft.com/vs/) installed:
+2019](https://visualstudio.microsoft.com/vs/) installed.
+
+You want NMake approach if you prefer `make`-style commandline tool, or 
+`Visual Studio 2019 GUI` approach otherwise.
+
+#### Visual Studio 2019 GUI
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -169,6 +173,76 @@ cmake -G"Visual Studio 16 2019" -DBOOST_ROOT=path/to/boost ..//
 If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
 couple of example applications.
+
+#### NMake
+
+0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu. 
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake.
+
+```
+cd elements
+mkdir build
+cd build
+cmake -G"NMake Makefiles" -DBOOST_ROOT=path/to/boost ..//
+```
+
+*Replace path/to/boost with the directory where you installed boost.*
+
+If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake`
+to build the binary.
+
+-------------------------------------------------------------------------------
+
+## Windows (MinGW + Gtk)
+
+### Install MSYS2 toolchain and required libraries
+> MSYS2 is a software distro and building platform for Windows
+
+Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/). 
+
+Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
+pacman -S ${MINGW_PACKAGE_PREFIX}-boost
+pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
+pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
+pacman -S make
+```
+
+### Install CMake
+
+```
+pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
+```
+
+### Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here are some examples for MSYS2:
+
+### Using UNIX makefiles:
+
+1. CD to the elements library.
+2. Make a build directory inside the elements directory.
+3. CD to the build directory.
+4. invoke cmake. -DHOST_UI_LIBRARY=gtk tells cmake to build with Gtk.
+
+```
+cd elements
+mkdir build
+cd build
+cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
+```
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+### Using [CLion](https://www.jetbrains.com/clion/):
+
+Simply open the CMakeLists.txt file using CLion and build the project.
+
 
 -------------------------------------------------------------------------------
 

@@ -24,7 +24,7 @@ namespace cycfi { namespace elements
 
    element* element::hit_test(context const& ctx, point p)
    {
-      return (ctx.bounds.includes(p)) ? this : 0;
+      return (ctx.bounds.includes(p)) ? this : nullptr;
    }
 
    void element::draw(context const& /* ctx */)

@@ -94,8 +94,11 @@ namespace cycfi { namespace elements
 
    inline canvas::state& canvas::state::operator=(state&& rhs) noexcept
    {
-      cnv = rhs.cnv;
-      rhs.cnv = 0;
+      if (this != &rhs)
+      {
+         cnv = rhs.cnv;
+         rhs.cnv = nullptr;
+      }
       return *this;
    }
 

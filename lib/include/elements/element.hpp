@@ -20,7 +20,7 @@
 #include <elements/element/menu.hpp>
 #include <elements/element/popup.hpp>
 #include <elements/element/port.hpp>
-//#include <elements/element/progress_bar.hpp>
+#include <elements/element/progress_bar.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/element/indirect.hpp>
 //#include <elements/element/size.hpp>

@@ -7,6 +7,7 @@
 #define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
+#include <elements/support/text_utils.hpp>
 #include <string>
 #include <utility>
 

@@ -31,17 +31,17 @@ set(ELEMENTS_SOURCES
    src/element/flow.cpp
    src/element/grid.cpp
    src/element/gallery/button.cpp
-   # src/element/gallery/check_box.cpp
-   # src/element/gallery/icon_button.cpp
+   src/element/gallery/check_box.cpp
+   src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
-   # src/element/gallery/radio_button.cpp
+   src/element/gallery/radio_button.cpp
    src/element/image.cpp
    src/element/layer.cpp
    src/element/menu.cpp
    src/element/misc.cpp
    src/element/popup.cpp
    src/element/port.cpp
-   # src/element/progress_bar.cpp
+   src/element/progress_bar.cpp
    src/element/proxy.cpp
    # src/element/slider.cpp
    # src/element/text.cpp
@@ -72,26 +72,26 @@ set(ELEMENTS_HEADERS
    # include/elements/element/grid.hpp
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
-   # include/elements/element/gallery/check_box.hpp
+   include/elements/element/gallery/check_box.hpp
    # include/elements/element/gallery/dial.hpp
    # include/elements/element/gallery/dialog.hpp
    include/elements/element/gallery/group.hpp
-   # include/elements/element/gallery/icon_button.hpp
-   # include/elements/element/gallery/menu.hpp
+   include/elements/element/gallery/icon_button.hpp
+   include/elements/element/gallery/menu.hpp
    # include/elements/element/gallery/message_box.hpp
-   # include/elements/element/gallery/pane.hpp
+   include/elements/element/gallery/pane.hpp
    # include/elements/element/gallery/text_entry.hpp
-   # include/elements/element/gallery/radio_button.hpp
+   include/elements/element/gallery/radio_button.hpp
    # include/elements/element/gallery.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp
    include/elements/element/layer.hpp
    include/elements/element/margin.hpp
-   # include/elements/element/menu.hpp
-   # include/elements/element/misc.hpp
-   # include/elements/element/popup.hpp
+   include/elements/element/menu.hpp
+   include/elements/element/misc.hpp
+   include/elements/element/popup.hpp
    include/elements/element/port.hpp
-   # include/elements/element/progress_bar.hpp
+   include/elements/element/progress_bar.hpp
    # include/elements/element/proxy.hpp
    # include/elements/element/selectable.hpp
    include/elements/element/size.hpp

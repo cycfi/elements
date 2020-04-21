@@ -8,6 +8,8 @@
 #include <random>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
+namespace colors = cycfi::artist::colors;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -152,10 +154,10 @@ auto make_controls(view& view_)
                margin({ 20, 20, 20, 20 }, radio_buttons)
             )
          ),
-         htile(
-            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons)),
-            hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
-         )
+         //htile( $$$ fixme $$$ sprites need to be scaled!
+            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons))//,
+            //hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
+         //)
       );
 }
 

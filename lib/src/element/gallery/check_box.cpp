@@ -7,6 +7,8 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::rgb;
+
    void draw_check_box(
      context const& ctx, std::string const& text, bool state, bool hilite
    )
@@ -38,12 +40,12 @@ namespace cycfi { namespace elements
 
       canvas_.fill_style(theme_.label_font_color);
       canvas_.font(
-         theme_.label_font,
-         theme_.label_font_size
+         theme_.label_font
+         // theme_.label_font_size $$$ fixme $$$
       );
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-      canvas_.fill_text(point{ cx, cy }, text.c_str());
+      canvas_.fill_text(text.c_str(), point{ cx, cy });
    }
 }}

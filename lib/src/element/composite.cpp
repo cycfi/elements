@@ -90,7 +90,7 @@ namespace cycfi { namespace elements
          }
          else
          {
-            _click_info.element = 0;
+            _click_info.element = nullptr;
          }
       }
       _drag_tracking = -1;

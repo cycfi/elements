@@ -4,13 +4,12 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/base_view.hpp>
-#include <elements/support/resource_paths.hpp>
-#include <elements/support/font.hpp>
+#include <artist/resources.hpp>
+#include <artist/font.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
 #include <map>
-#include <cairo-quartz.h>
 #include <infra/filesystem.hpp>
 
 #if ! __has_feature(objc_arc)
@@ -70,7 +69,7 @@ namespace
          // our resources
          char resource_path[PATH_MAX];
          get_resource_path(resource_path);
-         cycfi::elements::resource_paths.push_back(resource_path);
+         cycfi::artist::add_search_path(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
@@ -82,12 +81,16 @@ namespace
    };
 }
 
-namespace cycfi { namespace elements
+namespace cycfi::artist
 {
-   // These functions are defined in key.mm:
-   key_code    translate_key(unsigned int key);
-   int         translate_flags(NSUInteger flags);
-   NSUInteger  translate_key_to_modifier_flag(key_code key);
+   void init_paths()
+   {
+      // Before anything else, set the working directory so we can access
+      // our resources
+      char resource_path[PATH_MAX];
+      get_resource_path(resource_path);
+      add_search_path(resource_path);
+   }
 
    // This is declared in font.hpp
    fs::path get_user_fonts_directory()
@@ -96,6 +99,14 @@ namespace cycfi { namespace elements
       get_resource_path(resource_path);
       return fs::path(resource_path);
    }
+}
+
+namespace cycfi { namespace elements
+{
+   // These functions are defined in key.mm:
+   key_code    translate_key(unsigned int key);
+   int         translate_flags(NSUInteger flags);
+   NSUInteger  translate_key_to_modifier_flag(key_code key);
 }}
 
 namespace
@@ -267,12 +278,12 @@ namespace
 
 - (BOOL) canBecomeKeyWindow
 {
-    return YES;
+   return YES;
 }
 
 - (BOOL) canBecomeMainWindow
 {
-    return YES;
+   return YES;
 }
 
 - (void) drawRect : (NSRect)dirty
@@ -281,12 +292,9 @@ namespace
 
    auto w = [self bounds].size.width;
    auto h = [self bounds].size.height;
+   auto context = NSGraphicsContext.currentContext.CGContext;
 
-   auto context_ref = NSGraphicsContext.currentContext.CGContext;
-   cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
-   cairo_t* context = cairo_create(surface);
-
-   _view->draw(context,
+   _view->draw((cycfi::artist::canvas_impl*) context,
       {
          float(dirty.origin.x),
          float(dirty.origin.y),
@@ -294,9 +302,6 @@ namespace
          float(dirty.origin.y + dirty.size.height)
       }
    );
-
-   cairo_surface_destroy(surface);
-   cairo_destroy(context);
 }
 
 - (void) mouseDown : (NSEvent*) event

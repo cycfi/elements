@@ -8,15 +8,17 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
-#include <elements/element/text.hpp>
-#include <elements/support/theme.hpp>
-#include <elements/support/font.hpp>
+//#include <elements/element/text.hpp>
+//#include <elements/support/theme.hpp>
+//#include <elements/support/font.hpp>
 #include <functional>
 #include <string>
 #include <string_view>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
+   using artist::color;
+
    ////////////////////////////////////////////////////////////////////////////
    // Box: A simple colored box.
    ////////////////////////////////////////////////////////////////////////////
@@ -40,7 +42,7 @@ namespace cycfi { namespace elements
    {
       return box_element{ color_ };
    }
-
+/*
    ////////////////////////////////////////////////////////////////////////////
    // RBox: A simple colored rounded-box.
    ////////////////////////////////////////////////////////////////////////////
@@ -426,6 +428,8 @@ namespace cycfi { namespace elements
          return true;
       return this->subject().key(ctx, k);
    }
-}}
+
+   */
+}
 
 #endif

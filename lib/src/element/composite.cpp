@@ -236,7 +236,7 @@ namespace cycfi { namespace elements
             if (_cursor_info.element && _cursor_info.element != info.element)
                cursor_leaving(ctx, p, _cursor_info);
 
-            if (elements::intersects(info.bounds, view_bounds(ctx.view)))
+            if (artist::intersects(info.bounds, view_bounds(ctx.view)))
             {
                context ectx{ ctx, info.element, info.bounds };
                bool r = info.element->cursor(ectx, p, status);
@@ -258,7 +258,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (info.element && elements::intersects(info.bounds, view_bounds(ctx.view)))
+         if (info.element && artist::intersects(info.bounds, view_bounds(ctx.view)))
          {
             context ectx{ ctx, info.element, info.bounds };
             return info.element->scroll(ectx, dir, p);

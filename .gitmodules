@@ -4,3 +4,6 @@
 [submodule "lib/json"]
 	path = lib/json
 	url = https://github.com/cycfi/json.git
+[submodule "lib/artist"]
+	path = lib/artist
+	url = https://github.com/cycfi/artist.git

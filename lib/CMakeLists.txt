@@ -6,107 +6,121 @@
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
 ###############################################################################
+# Artist library
+
+set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
+set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
+
+if (ELEMENTS_QUARTZ_2D)
+   set(ARTIST_QUARTZ_2D ON CACHE BOOL "Artist graphics backend option")
+elseif (ELEMENTS_SKIA)
+   set(ARTIST_QUARTZ_2D ON CACHE BOOL "Artist graphics backend option")
+endif()
+
+add_subdirectory(artist)
+
+###############################################################################
 # Sources (and Resources)
 
 set(ELEMENTS_SOURCES
-   src/element/button.cpp
+   # src/element/button.cpp
    src/element/composite.cpp
-   src/element/dial.cpp
+   # src/element/dial.cpp
    src/element/element.cpp
-   src/element/floating.cpp
-   src/element/flow.cpp
-   src/element/grid.cpp
-   src/element/gallery/button.cpp
-   src/element/gallery/check_box.cpp
-   src/element/gallery/icon_button.cpp
-   src/element/gallery/menu.cpp
-   src/element/gallery/radio_button.cpp
-   src/element/image.cpp
+   # src/element/floating.cpp
+   # src/element/flow.cpp
+   # src/element/grid.cpp
+   # src/element/gallery/button.cpp
+   # src/element/gallery/check_box.cpp
+   # src/element/gallery/icon_button.cpp
+   # src/element/gallery/menu.cpp
+   # src/element/gallery/radio_button.cpp
+   # src/element/image.cpp
    src/element/layer.cpp
-   src/element/menu.cpp
-   src/element/misc.cpp
-   src/element/popup.cpp
-   src/element/port.cpp
-   src/element/progress_bar.cpp
+   # src/element/menu.cpp
+   # src/element/misc.cpp
+   # src/element/popup.cpp
+   # src/element/port.cpp
+   # src/element/progress_bar.cpp
    src/element/proxy.cpp
-   src/element/slider.cpp
-   src/element/text.cpp
-   src/element/tile.cpp
-   src/support/canvas.cpp
-   src/support/draw_utils.cpp
-   src/support/glyphs.cpp
-   src/support/font.cpp
-   src/support/pixmap.cpp
-   src/support/rect.cpp
-   src/support/resource_paths.cpp
-   src/support/text_utils.cpp
-   src/support/theme.cpp
+   # src/element/slider.cpp
+   # src/element/text.cpp
+   # src/element/tile.cpp
+   # src/support/canvas.cpp
+   # src/support/draw_utils.cpp
+   # src/support/glyphs.cpp
+   # src/support/font.cpp
+   # src/support/pixmap.cpp
+   # src/support/rect.cpp
+   # src/support/resource_paths.cpp
+   # src/support/text_utils.cpp
+   # src/support/theme.cpp
    src/view.cpp
 )
 
 set(ELEMENTS_HEADERS
    include/elements/app.hpp
    include/elements/base_view.hpp
-   include/elements/element/align.hpp
-   include/elements/element/button.hpp
+   # include/elements/element/align.hpp
+   # include/elements/element/button.hpp
    include/elements/element/composite.hpp
-   include/elements/element/dial.hpp
+   # include/elements/element/dial.hpp
    include/elements/element/element.hpp
-   include/elements/element/receiver.hpp
-   include/elements/element/floating.hpp
-   include/elements/element/flow.hpp
-   include/elements/element/grid.hpp
-   include/elements/element/gallery/button.hpp
-   include/elements/element/gallery/caption.hpp
-   include/elements/element/gallery/check_box.hpp
-   include/elements/element/gallery/dial.hpp
-   include/elements/element/gallery/dialog.hpp
-   include/elements/element/gallery/group.hpp
-   include/elements/element/gallery/icon_button.hpp
-   include/elements/element/gallery/menu.hpp
-   include/elements/element/gallery/message_box.hpp
-   include/elements/element/gallery/pane.hpp
-   include/elements/element/gallery/text_entry.hpp
-   include/elements/element/gallery/radio_button.hpp
-   include/elements/element/gallery.hpp
-   include/elements/element/image.hpp
+   # include/elements/element/receiver.hpp
+   # include/elements/element/floating.hpp
+   # include/elements/element/flow.hpp
+   # include/elements/element/grid.hpp
+   # include/elements/element/gallery/button.hpp
+   # include/elements/element/gallery/caption.hpp
+   # include/elements/element/gallery/check_box.hpp
+   # include/elements/element/gallery/dial.hpp
+   # include/elements/element/gallery/dialog.hpp
+   # include/elements/element/gallery/group.hpp
+   # include/elements/element/gallery/icon_button.hpp
+   # include/elements/element/gallery/menu.hpp
+   # include/elements/element/gallery/message_box.hpp
+   # include/elements/element/gallery/pane.hpp
+   # include/elements/element/gallery/text_entry.hpp
+   # include/elements/element/gallery/radio_button.hpp
+   # include/elements/element/gallery.hpp
+   # include/elements/element/image.hpp
    include/elements/element/indirect.hpp
    include/elements/element/layer.hpp
-   include/elements/element/margin.hpp
-   include/elements/element/menu.hpp
-   include/elements/element/misc.hpp
-   include/elements/element/popup.hpp
-   include/elements/element/port.hpp
-   include/elements/element/progress_bar.hpp
-   include/elements/element/proxy.hpp
-   include/elements/element/selectable.hpp
+   # include/elements/element/margin.hpp
+   # include/elements/element/menu.hpp
+   # include/elements/element/misc.hpp
+   # include/elements/element/popup.hpp
+   # include/elements/element/port.hpp
+   # include/elements/element/progress_bar.hpp
+   # include/elements/element/proxy.hpp
+   # include/elements/element/selectable.hpp
    include/elements/element/size.hpp
-   include/elements/element/slider.hpp
-   include/elements/element/text.hpp
-   include/elements/element/tile.hpp
-   include/elements/element/tracker.hpp
-   include/elements/element.hpp
-   include/elements/support/canvas.hpp
-   include/elements/support/circle.hpp
-   include/elements/support/color.hpp
-   include/elements/support/context.hpp
-   include/elements/support/detail/canvas_impl.hpp
-   include/elements/support/detail/scratch_context.hpp
-   include/elements/support/detail/stb_image.h
-   include/elements/support/draw_utils.hpp
-   include/elements/support/glyphs.hpp
-   include/elements/support/font.hpp
-   include/elements/support/icon_ids.hpp
-   include/elements/support/pixmap.hpp
-   include/elements/support/point.hpp
-   include/elements/support/rect.hpp
-   include/elements/support/resource_paths.hpp
-   include/elements/support/text_utils.hpp
-   include/elements/support/theme.hpp
-   include/elements/support.hpp
-   include/elements/view.hpp
-   include/elements/window.hpp
-   include/elements.hpp
+   # include/elements/element/slider.hpp
+   # include/elements/element/text.hpp
+   # include/elements/element/tile.hpp
+   # include/elements/element/tracker.hpp
+   # include/elements/element.hpp
+   # include/elements/support/canvas.hpp
+   # include/elements/support/circle.hpp
+   # include/elements/support/color.hpp
+   # include/elements/support/context.hpp
+   # include/elements/support/detail/canvas_impl.hpp
+   # include/elements/support/detail/scratch_context.hpp
+   # include/elements/support/detail/stb_image.h
+   # include/elements/support/draw_utils.hpp
+   # include/elements/support/glyphs.hpp
+   # include/elements/support/font.hpp
+   # include/elements/support/icon_ids.hpp
+   # include/elements/support/pixmap.hpp
+   # include/elements/support/point.hpp
+   # include/elements/support/rect.hpp
+   # include/elements/support/resource_paths.hpp
+   # include/elements/support/text_utils.hpp
+   # include/elements/support/theme.hpp
+   # include/elements/support.hpp
+   # include/elements/view.hpp
+   # include/elements/window.hpp
+   # include/elements.hpp
 )
 
 if (APPLE)
@@ -185,51 +199,51 @@ target_compile_options(elements PRIVATE
 ###############################################################################
 # Cairo
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
+# if (MSVC)
+#    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
 
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
-   endif()
-else()
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-	target_link_libraries(elements PUBLIC PkgConfig::cairo)
-endif()
+#    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+#       target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
+#    else()
+# 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
+#    endif()
+# else()
+# 	# TODO: add a min version specifiction
+# 	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+# 	target_link_libraries(elements PUBLIC PkgConfig::cairo)
+# endif()
 
 ###############################################################################
 # Fontconfig
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
+# if (MSVC)
+#    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
 
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
-   endif()
-else()
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
-endif()
+#    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+# 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
+#    else()
+# 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
+#    endif()
+# else()
+#    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+#    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
+# endif()
 
 ###############################################################################
 # Freetype
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
+# if (MSVC)
+#    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
 
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
-   endif()
-elseif (UNIX OR WIN32)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
-endif()
+#    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+# 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
+#    else()
+# 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
+#    endif()
+# elseif (UNIX OR WIN32)
+#    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+#    target_link_libraries(elements PUBLIC PkgConfig::freetype2)
+# endif()
 
 ###############################################################################
 # GTK (linux only)
@@ -274,5 +288,7 @@ endif()
 if (WIN32 AND NOT MSVC)
    target_link_libraries(elements PUBLIC ws2_32)
 endif()
+
+target_link_libraries(elements PUBLIC artist)
 
 add_library(cycfi::elements ALIAS elements)

@@ -6,19 +6,24 @@
 #if !defined(ELEMENTS_CONTEXT_APRIL_17_2016)
 #define ELEMENTS_CONTEXT_APRIL_17_2016
 
-#include <elements/support/point.hpp>
-#include <elements/support/rect.hpp>
+#include <artist/point.hpp>
+#include <artist/rect.hpp>
 #include <functional>
 #include <string_view>
 
-namespace cycfi { namespace elements
+namespace cycfi::artist
+{
+   class canvas;
+}
+
+namespace cycfi::elements
 {
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// Contexts
 	////////////////////////////////////////////////////////////////////////////////////////////////
    class view;
    class element;
-   class canvas;
+   using artist::canvas;
 
    struct basic_context
    {
@@ -96,6 +101,6 @@ namespace cycfi { namespace elements
 
       listener_function             _listener;
    };
-}}
+}
 
 #endif

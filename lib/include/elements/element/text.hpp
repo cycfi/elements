@@ -6,7 +6,6 @@
 #if !defined(ELEMENTS_TEXT_APRIL_17_2016)
 #define ELEMENTS_TEXT_APRIL_17_2016
 
-#include <elements/support/glyphs.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <boost/asio.hpp>
@@ -17,6 +16,8 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::color;
+
    ////////////////////////////////////////////////////////////////////////////
    // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////

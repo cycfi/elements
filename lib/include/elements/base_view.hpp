@@ -11,11 +11,11 @@
 #include <string>
 #include <cstdint>
 #include <functional>
-#include <cairo.h>
 
 #include <infra/support.hpp>
-#include <elements/support/point.hpp>
-#include <elements/support/rect.hpp>
+#include <artist/point.hpp>
+#include <artist/rect.hpp>
+#include <artist/canvas.hpp>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 # include <windows.h>
@@ -23,6 +23,11 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::canvas_impl;
+   using artist::point;
+   using artist::rect;
+   using artist::extent;
+
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
    ////////////////////////////////////////////////////////////////////////////
@@ -298,7 +303,7 @@ namespace cycfi { namespace elements
                         base_view(host_window_handle h);
       virtual           ~base_view();
 
-      virtual void      draw(cairo_t* /* ctx */, rect /* area */) {};
+      virtual void      draw(canvas_impl* /* ctx */, rect /* area */) {};
       virtual void      click(mouse_button /* btn */) {}
       virtual void      drag(mouse_button /* btn */) {}
       virtual void      cursor(point /* p */, cursor_tracking /* status */) {}

@@ -7,8 +7,11 @@
 #include <elements/window.hpp>
 #include <elements/support/context.hpp>
 
- namespace cycfi { namespace elements
- {
+namespace cycfi { namespace elements
+{
+   using artist::image;
+   using artist::offscreen_image;
+
    view::view(extent size_)
     : base_view(size_)
     , _main_element(make_scaled_content())
@@ -43,9 +46,9 @@
       if (_content.empty())
          return false;
 
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
+      image img{ size() };
+      offscreen_image offscr{ img };
+      canvas cnv{ offscr.context() };
       bool resized = false;
 
       // Update the limits and constrain the window size to the limits
@@ -59,12 +62,10 @@
             on_change_limits(limits_);
       }
 
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
       return resized;
    }
 
-   void view::draw(cairo_t* context_, rect dirty_)
+   void view::draw(canvas_impl* context_, rect dirty_)
    {
       if (_content.empty())
          return;
@@ -78,7 +79,7 @@
          return;
       }
 
-      canvas cnv{ *context_ };
+      canvas cnv{ context_ };
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
       context ctx{ *this, cnv, &_main_element, subj_bounds };
@@ -99,15 +100,12 @@
       template <typename F, typename This>
       void call(F f, This& self, rect _current_bounds)
       {
-         auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-         auto context_ = cairo_create(surface_);
-         canvas cnv{ *context_ };
+         image img{ self.size() };
+         offscreen_image offscr{ img };
+         canvas cnv{ offscr.context() };
          context ctx { self, cnv, &self.main_element(), _current_bounds };
 
          f(ctx, self.main_element());
-
-         cairo_surface_destroy(surface_);
-         cairo_destroy(context_);
       }
    }
 

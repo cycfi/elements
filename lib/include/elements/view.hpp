@@ -7,9 +7,9 @@
 #define ELEMENTS_VIEW_AUGUST_15_2016
 
 #include <elements/base_view.hpp>
-#include <elements/support/rect.hpp>
-#include <elements/support/canvas.hpp>
-#include <elements/support/theme.hpp>
+#include <artist/rect.hpp>
+#include <artist/canvas.hpp>
+//#include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
                               view(window& win);
                               ~view();
 
-      void                    draw(cairo_t* ctx, rect area) override;
+      void                    draw(canvas_impl* ctx, rect area) override;
       void                    click(mouse_button btn) override;
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;

@@ -584,7 +584,8 @@ namespace cycfi { namespace elements
    void scale_element<Subject>::prepare_subject(context& ctx, point& p)
    {
       prepare_subject(ctx);
-      p = ctx.canvas.device_to_user(p);
+      p.x *= _scale;
+      p.y *= _scale;
    }
 
    template <typename Subject>

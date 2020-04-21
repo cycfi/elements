@@ -4,7 +4,7 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 add_subdirectory(empty)
-# add_subdirectory(hello_universe)
+add_subdirectory(hello_universe)
 # add_subdirectory(text_and_icons)
 # add_subdirectory(buttons)
 # add_subdirectory(menus)

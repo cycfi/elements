@@ -13,12 +13,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
-   image::image(char const* filename, float scale)
-    : _pixmap(std::make_shared<elements::pixmap>(filename, scale))
+   image::image(fs::path const& path, float scale)
+    : _pixmap(std::make_shared<artist::image>(path))
+    , _scale(scale)
    {
    }
 
-   image::image(pixmap_ptr pixmap_)
+   image::image(image_ptr pixmap_)
     : _pixmap(pixmap_)
    {}
 
@@ -97,11 +98,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   gizmo::gizmo(char const* filename, float scale)
-    : image(filename, scale)
+   gizmo::gizmo(fs::path const& path, float scale)
+    : image(path, scale)
    {}
 
-   gizmo::gizmo(pixmap_ptr pixmap_)
+   gizmo::gizmo(image_ptr pixmap_)
     : image(pixmap_)
    {}
 
@@ -125,11 +126,11 @@ namespace cycfi { namespace elements
          ctx.canvas.draw(pixmap(), src[i], dest[i]);
    }
 
-   hgizmo::hgizmo(char const* filename, float scale)
-    : image(filename, scale)
+   hgizmo::hgizmo(fs::path const& path, float scale)
+    : image(path, scale)
    {}
 
-   hgizmo::hgizmo(pixmap_ptr pixmap_)
+   hgizmo::hgizmo(image_ptr pixmap_)
     : image(pixmap_)
    {}
 
@@ -153,11 +154,11 @@ namespace cycfi { namespace elements
       ctx.canvas.draw(pixmap(), src[2], dest[2]);
    }
 
-   vgizmo::vgizmo(char const* filename, float scale)
-    : image(filename, scale)
+   vgizmo::vgizmo(fs::path const& path, float scale)
+    : image(path, scale)
    {}
 
-   vgizmo::vgizmo(pixmap_ptr pixmap_)
+   vgizmo::vgizmo(image_ptr pixmap_)
     : image(pixmap_)
    {}
 
@@ -181,8 +182,8 @@ namespace cycfi { namespace elements
       ctx.canvas.draw(pixmap(), src[2], dest[2]);
    }
 
-   basic_sprite::basic_sprite(char const* filename, float height, float scale)
-    : image(filename, scale)
+   basic_sprite::basic_sprite(fs::path const& path, float height, float scale)
+    : image(path, scale)
     , _index(0)
     , _height(height)
    {}

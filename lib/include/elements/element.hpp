@@ -14,12 +14,12 @@
 //#include <elements/element/floating.hpp>
 #include <elements/element/flow.hpp>
 #include <elements/element/grid.hpp>
-//#include <elements/element/image.hpp>
+#include <elements/element/image.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/menu.hpp>
-//#include <elements/element/popup.hpp>
-//#include <elements/element/port.hpp>
+#include <elements/element/popup.hpp>
+#include <elements/element/port.hpp>
 //#include <elements/element/progress_bar.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/element/indirect.hpp>

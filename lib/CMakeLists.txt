@@ -35,7 +35,7 @@ set(ELEMENTS_SOURCES
    # src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    # src/element/gallery/radio_button.cpp
-   # src/element/image.cpp
+   src/element/image.cpp
    src/element/layer.cpp
    src/element/menu.cpp
    src/element/misc.cpp
@@ -83,7 +83,7 @@ set(ELEMENTS_HEADERS
    # include/elements/element/gallery/text_entry.hpp
    # include/elements/element/gallery/radio_button.hpp
    # include/elements/element/gallery.hpp
-   # include/elements/element/image.hpp
+   include/elements/element/image.hpp
    include/elements/element/indirect.hpp
    include/elements/element/layer.hpp
    include/elements/element/margin.hpp

@@ -7,20 +7,22 @@
 #define ELEMENTS_IMAGE_APRIL_24_2016
 
 #include <elements/element/element.hpp>
-#include <elements/support/canvas.hpp>
-#include <elements/support/pixmap.hpp>
+#include <artist/image.hpp>
+#include <artist/canvas.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
 {
+   using artist::image_ptr;
+
    ////////////////////////////////////////////////////////////////////////////
    // Images
    ////////////////////////////////////////////////////////////////////////////
    class image : public element
    {
    public:
-                              image(char const* filename, float scale = 1);
-                              image(pixmap_ptr pixmap_);
+                              image(fs::path const& path, float scale = 1);
+                              image(image_ptr pixmap_);
 
       virtual point           size() const;
       view_limits             limits(basic_context const& ctx) const override;
@@ -29,11 +31,12 @@ namespace cycfi { namespace elements
 
    protected:
 
-      elements::pixmap&       pixmap() const  { return *_pixmap.get(); }
+      artist::image&          pixmap() const  { return *_pixmap.get(); }
 
    private:
 
-      pixmap_ptr              _pixmap;
+      image_ptr               _pixmap;
+      float                   _scale;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -67,8 +70,8 @@ namespace cycfi { namespace elements
    class gizmo : public image
    {
    public:
-                              gizmo(char const* filename, float scale = 1);
-                              gizmo(pixmap_ptr pixmap_);
+                              gizmo(fs::path const& path, float scale = 1);
+                              gizmo(image_ptr pixmap_);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -77,8 +80,8 @@ namespace cycfi { namespace elements
    class hgizmo : public image
    {
    public:
-                              hgizmo(char const* filename, float scale = 1);
-                              hgizmo(pixmap_ptr pixmap_);
+                              hgizmo(fs::path const& path, float scale = 1);
+                              hgizmo(image_ptr pixmap_);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -87,8 +90,8 @@ namespace cycfi { namespace elements
    class vgizmo : public image
    {
    public:
-                              vgizmo(char const* filename, float scale = 1);
-                              vgizmo(pixmap_ptr pixmap_);
+                              vgizmo(fs::path const& path, float scale = 1);
+                              vgizmo(image_ptr pixmap_);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -126,7 +129,7 @@ namespace cycfi { namespace elements
    class basic_sprite : public image
    {
    public:
-                              basic_sprite(char const* filename, float height, float scale = 1);
+                              basic_sprite(fs::path const& path, float height, float scale = 1);
 
       view_limits             limits(basic_context const& ctx) const override;
 

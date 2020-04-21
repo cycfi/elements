@@ -8,6 +8,10 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::rgba;
+   using artist::rgb;
+   using artist::point;
+
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius)
    {
       auto gradient = canvas::linear_gradient{
@@ -39,6 +43,7 @@ namespace cycfi { namespace elements
       cnv.fill_style(c);
       cnv.fill();
 
+      // $$$ fixme $$$
       // Simulated blurred shadow. cairo does not have blur yet :-(
       {
          auto save = cnv.new_state();
@@ -46,7 +51,7 @@ namespace cycfi { namespace elements
          cnv.begin_path();
          cnv.rect(bounds.inset(-100, -100));
          cnv.round_rect(bounds.inset(0.5, 0.5), corner_radius);
-         cnv.fill_rule(canvas::fill_odd_even);
+         cnv.fill_rule(artist::path::fill_odd_even);
          cnv.clip();
 
          rect shr = bounds;
@@ -148,7 +153,7 @@ namespace cycfi { namespace elements
 
       // Draw the outline
       {
-         cnv.stroke_style(colors::black.opacity(0.1));
+         cnv.stroke_style(artist::colors::black.opacity(0.1));
          cnv.circle(cp.inset(inset));
          cnv.line_width(radius/30);
          cnv.stroke();
@@ -159,7 +164,7 @@ namespace cycfi { namespace elements
          cnv.begin_path();
          cnv.circle(cp);
          cnv.circle(cp.inset(inset));
-         cnv.fill_rule(canvas::fill_odd_even);
+         cnv.fill_rule(artist::path::fill_odd_even);
          cnv.clip();
 
          auto bounds = cp.bounds();
@@ -233,9 +238,9 @@ namespace cycfi { namespace elements
             { cp.cx, cp.cy + cp.radius }
          };
 
-         gradient.add_color_stop({ 0.0, colors::white.opacity(0.3) });
-         gradient.add_color_stop({ 0.5, colors::black.opacity(0.5) });
-         cnv.fill_rule(canvas::fill_odd_even);
+         gradient.add_color_stop({ 0.0, artist::colors::white.opacity(0.3) });
+         gradient.add_color_stop({ 0.5, artist::colors::black.opacity(0.5) });
+         cnv.fill_rule(artist::path::fill_odd_even);
          cnv.fill_style(gradient);
 
          circle cpf = cp;
@@ -267,12 +272,12 @@ namespace cycfi { namespace elements
       cnv.round_rect(bounds, r);
       cnv.clip();
 
-      cnv.fill_style(colors::black);
+      cnv.fill_style(artist::colors::black);
       cnv.round_rect(bounds, r);
       cnv.fill();
 
       auto lwidth = r/4;
-      cnv.stroke_style(colors::white.opacity(0.3));
+      cnv.stroke_style(artist::colors::white.opacity(0.3));
       cnv.round_rect(bounds.move(-lwidth, -lwidth), r*0.6);
       cnv.line_width(lwidth*1.5);
       cnv.stroke();

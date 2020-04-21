@@ -6,6 +6,7 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
+using namespace cycfi::artist;
 
 // Main window background color
 auto bkd_color = rgba(62, 62, 62, 255);

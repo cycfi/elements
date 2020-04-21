@@ -10,6 +10,10 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::color;
+   using artist::font;
+   using artist::extent;
+
    class theme
    {
    public:

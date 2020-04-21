@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/misc.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -24,7 +25,7 @@ namespace cycfi { namespace elements
       auto const&    bounds = ctx.bounds;
 
       canvas_.line_width(theme_.frame_stroke_width);
-      canvas_.stroke_style(colors::black.opacity(0.4));
+      canvas_.stroke_style(artist::colors::black.opacity(0.4));
       canvas_.stroke_round_rect(bounds.move(-1, -1), theme_.frame_corner_radius);
       canvas_.stroke_style(theme_.frame_color);
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
@@ -46,13 +47,13 @@ namespace cycfi { namespace elements
       auto  state = canvas_.new_state();
 
       canvas_.fill_style(font_color());
-      canvas_.font(font(), font_size());
+      canvas_.font(font()); // $$$ fixme $$$
       canvas_.text_align(text_align());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
 
-      canvas_.fill_text(point{ cx, cy }, c_str());
+      canvas_.fill_text(c_str(), point{ cx, cy });
    }
 
    void vgrid_lines::draw(context const& ctx)

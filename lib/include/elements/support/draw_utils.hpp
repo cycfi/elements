@@ -6,10 +6,15 @@
 #if !defined(ELEMENTS_DRAW_UTILS_OCTOBER_27_2017)
 #define ELEMENTS_DRAW_UTILS_OCTOBER_27_2017
 
-#include <elements/support/canvas.hpp>
+#include <artist/canvas.hpp>
 
 namespace cycfi { namespace elements
 {
+   using artist::color;
+   using artist::rect;
+   using artist::circle;
+   using artist::canvas;
+
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
    void draw_panel(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
    void draw_button(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);

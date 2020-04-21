@@ -11,15 +11,15 @@
 //#include <elements/support/canvas.hpp>
 //#include <elements/support/circle.hpp>
 //#include <elements/support/color.hpp>
-//#include <elements/support/context.hpp>
+#include <elements/support/context.hpp>
 //#include <elements/support/font.hpp>
 //#include <elements/support/glyphs.hpp>
-//#include <elements/support/icon_ids.hpp>
+#include <elements/support/icon_ids.hpp>
 //#include <elements/support/pixmap.hpp>
 //#include <elements/support/point.hpp>
 //#include <elements/support/rect.hpp>
-//#include <elements/support/draw_utils.hpp>
+#include <elements/support/draw_utils.hpp>
 //#include <elements/support/text_utils.hpp>
-//#include <elements/support/theme.hpp>
+#include <elements/support/theme.hpp>
 
 #endif

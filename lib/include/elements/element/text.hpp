@@ -14,10 +14,8 @@
 #include <string>
 #include <vector>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
-   using artist::color;
-
    ////////////////////////////////////////////////////////////////////////////
    // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
@@ -37,7 +35,7 @@ namespace cycfi { namespace elements
       virtual                    ~text_writer() = default;
       virtual void               set_text(std::string_view text) = 0;
    };
-
+/*
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -195,6 +193,7 @@ namespace cycfi { namespace elements
 
       std::string             _placeholder;
    };
-}}
+   */
+}
 
 #endif

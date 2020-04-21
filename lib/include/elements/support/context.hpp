@@ -44,17 +44,17 @@ namespace cycfi::elements
    {
    public:
 
-      context(context const& rhs, elements::rect bounds_)
+      context(context const& rhs, artist::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
        , parent(rhs.parent), bounds(bounds_)
       {}
 
-      context(context const& parent_, element* element_, elements::rect bounds_)
+      context(context const& parent_, element* element_, artist::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
        , parent(&parent_), bounds(bounds_)
       {}
 
-      context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
+      context(class view& view_, class canvas& canvas_, element* element_, artist::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
        , parent(nullptr), bounds(bounds_)
       {}
@@ -90,7 +90,7 @@ namespace cycfi::elements
 
       elements::element*            element;
       context const*                parent;
-      elements::rect                bounds;
+      artist::rect                  bounds;
 
    private:
 

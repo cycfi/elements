@@ -8,6 +8,9 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::rgba;
+   using artist::font_descr;
+
    theme::theme()
     : panel_color               { rgba(28, 30, 34, 192) }
     , frame_color               { rgba(220, 220, 220, 80) }

@@ -8,8 +8,8 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
-//#include <elements/element/text.hpp>
-//#include <elements/support/theme.hpp>
+#include <elements/element/text.hpp>
+#include <elements/support/theme.hpp>
 //#include <elements/support/font.hpp>
 #include <functional>
 #include <string>
@@ -42,7 +42,7 @@ namespace cycfi::elements
    {
       return box_element{ color_ };
    }
-/*
+
    ////////////////////////////////////////////////////////////////////////////
    // RBox: A simple colored rounded-box.
    ////////////////////////////////////////////////////////////////////////////
@@ -392,7 +392,7 @@ namespace cycfi::elements
       std::uint32_t           _code;
       float                   _size;
    };
-
+/*
    ////////////////////////////////////////////////////////////////////////////
    // Key Intercept
    ////////////////////////////////////////////////////////////////////////////

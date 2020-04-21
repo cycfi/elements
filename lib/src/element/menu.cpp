@@ -6,6 +6,7 @@
 #include <elements/element/menu.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/port.hpp>
+#include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements
 {

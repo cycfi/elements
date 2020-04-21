@@ -9,13 +9,19 @@
 #include <artist/canvas.hpp>
 #include <artist/font.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
+   using artist::canvas;
+   using artist::rect;
+   using artist::point;
+   using artist::color;
+   using artist::font;
+
    ////////////////////////////////////////////////////////////////////////////
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
    point          measure_icon(canvas& cnv, uint32_t cp, float size);
    point          measure_text(canvas& cnv, char const* text, font const& font_, float size);
-}}
+}
 
 #endif

@@ -14,6 +14,7 @@ namespace cycfi { namespace elements
          ctx.canvas
        , ctx.bounds
        , get_theme().panel_color.opacity(_opacity)
+       , get_theme().panel_shadow
        , 4.0
       );
    }

@@ -35,53 +35,16 @@ namespace cycfi { namespace elements
       cnv.stroke();
    }
 
-   void draw_panel(canvas& cnv, rect bounds, color c, float corner_radius)
+   void draw_panel(canvas& cnv, rect bounds, color c, float shadow, float corner_radius)
    {
       // Panel fill
+      auto save = cnv.new_state();
       cnv.begin_path();
       cnv.round_rect(bounds, corner_radius);
       cnv.fill_style(c);
+      if (shadow > 0)
+         cnv.shadow_style({ shadow, shadow }, shadow*2, artist::colors::black);
       cnv.fill();
-
-      // $$$ fixme $$$
-      // Simulated blurred shadow. cairo does not have blur yet :-(
-      {
-         auto save = cnv.new_state();
-
-         cnv.begin_path();
-         cnv.rect(bounds.inset(-100, -100));
-         cnv.round_rect(bounds.inset(0.5, 0.5), corner_radius);
-         cnv.fill_rule(artist::path::fill_odd_even);
-         cnv.clip();
-
-         rect shr = bounds;
-         shr.left -= 2;
-         shr.top -= 2;
-         shr.right += 6;
-         shr.bottom += 6;
-         cnv.begin_path();
-         cnv.round_rect(shr, corner_radius*2);
-         cnv.fill_style(rgba(0, 0, 0, 20));
-         cnv.fill();
-
-         shr.left += 1;
-         shr.top += 1;
-         shr.right -= 2;
-         shr.bottom -= 2;
-         cnv.begin_path();
-         cnv.round_rect(shr, corner_radius*1.5);
-         cnv.fill_style(rgba(0, 0, 0, 30));
-         cnv.fill();
-
-         shr.left += 1;
-         shr.top += 1;
-         shr.right -= 2;
-         shr.bottom -= 2;
-         cnv.begin_path();
-         cnv.round_rect(shr, corner_radius);
-         cnv.fill_style(rgba(0, 0, 0, 40));
-         cnv.fill();
-      }
    }
 
    void draw_button(canvas& cnv, rect bounds, color c, float corner_radius)

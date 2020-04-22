@@ -14,9 +14,10 @@ namespace cycfi { namespace elements
    using artist::rect;
    using artist::circle;
    using artist::canvas;
+   using artist::point;
 
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
-   void draw_panel(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
+   void draw_panel(canvas& cnv, rect bounds, color c, float shadow, float corner_radius = 4.0);
    void draw_button(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
    void draw_knob(canvas& cnv, circle cp, color c);
    void draw_indicator(canvas& cnv, rect bounds, color c);

@@ -13,6 +13,7 @@ namespace cycfi { namespace elements
 
    theme::theme()
     : panel_color               { rgba(28, 30, 34, 192) }
+    , panel_shadow              { 4 }
     , frame_color               { rgba(220, 220, 220, 80) }
     , frame_corner_radius       { 3.0 }
     , frame_stroke_width        { 1.0 }

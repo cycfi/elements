@@ -21,6 +21,7 @@ namespace cycfi { namespace elements
                            theme();
 
       color                panel_color;
+      float                panel_shadow;
       color                frame_color;
       float                frame_corner_radius;
       float                frame_stroke_width;

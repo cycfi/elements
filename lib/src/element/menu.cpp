@@ -351,7 +351,7 @@ namespace cycfi { namespace elements
          return false;
 
       bool hit = ctx.bounds.includes(p);
-      if (status == cursor_tracking::leaving || hit)
+      if (status == cursor_tracking::leaving || (hit && !is_selected()))
       {
          auto [c, cctx] = find_composite(ctx);
          if (c)

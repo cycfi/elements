@@ -154,10 +154,10 @@ auto make_controls(view& view_)
                margin({ 20, 20, 20, 20 }, radio_buttons)
             )
          ),
-         //htile( $$$ fixme $$$ sprites need to be scaled!
-            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons))//,
-            //hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
-         //)
+         htile(
+            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons)),
+            hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
+         )
       );
 }
 

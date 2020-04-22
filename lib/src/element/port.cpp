@@ -441,7 +441,7 @@ namespace cycfi { namespace elements
             return true;
          }
       }
-      return subject().cursor(ctx, p, status);
+      return port_base::cursor(ctx, p, status);
    }
 
    bool scroller_base::wants_control() const

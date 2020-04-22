@@ -98,9 +98,24 @@ namespace cycfi { namespace elements
       return this;
    }
 
-   void basic_menu::drag(context const& ctx, mouse_button /* btn */)
+   void basic_menu::drag(context const& ctx, mouse_button btn)
    {
-      ctx.view.refresh();
+      rect  bounds = _popup->bounds();
+      if (bounds.includes(btn.pos))
+      {
+         context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+         if (btn.down)
+         {
+            // simulate a menu hover (cursor):
+            _popup->cursor(new_ctx, btn.pos, cursor_tracking::hovering);
+         }
+         else
+         {
+            // simulate a menu click:
+            btn.down = true;
+            _popup->click(new_ctx, btn);
+         }
+      }
    }
 
    bool basic_menu::key(context const& ctx, key_info k)

@@ -11,7 +11,6 @@
 
 namespace cycfi::elements
 {
-
    view_limits progress_bar_base::limits(basic_context const& ctx) const
    {
       auto const fg_limits = foreground().limits(ctx);

@@ -11,7 +11,7 @@
 namespace cycfi { namespace elements
 {
    using artist::color;
-   using artist::font;
+   using artist::font_descr;
    using artist::extent;
 
    class theme
@@ -32,30 +32,26 @@ namespace cycfi { namespace elements
       color                indicator_color;
       color                basic_font_color;
 
-      font                 system_font;   // The system_font font is the font the OS
+      font_descr           system_font;   // The system_font font is the font the OS
                                           // uses for displaying text in OS UI elements
                                           // such as menus, window title-bars, etc.
 
       float                box_widget_bg_opacity;
 
       color                heading_font_color;
-      font                 heading_font;
-      float                heading_font_size;
+      font_descr           heading_font;
       int                  heading_text_align;
 
       color                label_font_color;
-      font                 label_font;
-      float                label_font_size;
+      font_descr           label_font;
       int                  label_text_align;
 
       color                icon_color;
-      font                 icon_font;
-      float                icon_font_size;
+      font_descr           icon_font;
       color                icon_button_color;
 
       color                text_box_font_color;
-      font                 text_box_font;
-      float                text_box_font_size;
+      font_descr           text_box_font;
       color                text_box_hilite_color;
       color                text_box_caret_color;
       float                text_box_caret_width;

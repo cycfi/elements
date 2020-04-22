@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
    template <bool state, bool hilite>
    inline view_limits icon_button_element<state, hilite>::limits(basic_context const& /* ctx */) const
    {
-      auto  size = _size * get_theme().icon_font_size * 1.8f;
+      auto  size = _size * get_theme().icon_font._size * 1.8f;
       return { { size, size }, { size, size } };
    }
 
@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
    inline void icon_button_element<state, hilite>::draw(context const& ctx)
    {
       draw_icon_button(
-         ctx, _code, _size * get_theme().icon_font_size, _body_color, state, hilite
+         ctx, _code, _size * get_theme().icon_font._size, _body_color, state, hilite
       );
    }
 

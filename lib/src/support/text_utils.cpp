@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       float cx = bounds.left + (bounds.width() / 2);
       float cy = bounds.top + (bounds.height() / 2);
-      cnv.font(thm.icon_font /*, size*/); // $$$ fixme $$$
+      cnv.font(thm.icon_font.size(size));
       cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_text(codepoint_to_utf8(code).c_str(), point{ cx, cy });
@@ -36,10 +36,10 @@ namespace cycfi { namespace elements
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 
-   point measure_text(canvas& cnv, char const* text, font const& font_, float size)
+   point measure_text(canvas& cnv, char const* text, font_descr font_, float size)
    {
       auto  state = cnv.new_state();
-      cnv.font(font_ /*, size*/); // $$$ fixme $$$
+      cnv.font(font_.size(size));
       auto  info = cnv.measure_text(text);
       auto  height = info.ascent + info.descent + info.leading;
       return { info.size.x, height };

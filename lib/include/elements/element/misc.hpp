@@ -135,7 +135,7 @@ namespace cycfi::elements
    {
       public:
 
-      using font_type = elements::font const&;
+      using font_type = font_descr;
       using remove_gen = default_label;
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -168,10 +168,10 @@ namespace cycfi::elements
    template <typename Base>
    struct label_with_font : Base
    {
-      using font_type = elements::font const&;
+      using font_type = font_descr;
       using remove_gen = label_with_font<typename Base::remove_gen>;
 
-                              label_with_font(Base const& base, elements::font font_)
+                              label_with_font(Base const& base, font_descr font_)
                                : Base(base), _font(font_)
                               {}
 
@@ -179,7 +179,7 @@ namespace cycfi::elements
 
    private:
 
-      elements::font         _font;
+       font_descr             _font;
    };
 
    template <typename Base>
@@ -236,7 +236,7 @@ namespace cycfi::elements
       using Base::Base;
       using remove_gen = typename Base::remove_gen;
 
-      using font_type      = elements::font const&;
+      using font_type      = font_descr;
       using gen_font       = label_gen<label_with_font<remove_gen>>;
       using gen_font_size  = label_gen<label_with_font_size<remove_gen>>;
       using gen_font_color = label_gen<label_with_font_color<remove_gen>>;
@@ -259,7 +259,7 @@ namespace cycfi::elements
 
    inline float default_label::font_size() const
    {
-      return get_theme().label_font_size;
+      return get_theme().label_font._size;
    }
 
    inline color default_label::font_color() const
@@ -290,7 +290,7 @@ namespace cycfi::elements
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::relative_font_size(float size) const
    {
-      return { *this, get_theme().label_font_size * size };
+      return { *this, get_theme().label_font._size * size };
    }
 
    template <typename Base>
@@ -312,7 +312,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    struct default_heading : default_label
    {
-      using font_type = elements::font const&;
+      using font_type = font_descr;
       using remove_gen = default_heading;
 
       virtual font_type       font() const;
@@ -331,7 +331,7 @@ namespace cycfi::elements
 
    inline float default_heading::font_size() const
    {
-      return get_theme().heading_font_size;
+      return get_theme().heading_font._size;
    }
 
    inline color default_heading::font_color() const

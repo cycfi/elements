@@ -74,6 +74,10 @@ namespace cycfi { namespace elements
 
    void vtile_element::layout(context const& ctx)
    {
+      if (_prev == ctx.bounds.size())
+         return;
+      _prev = ctx.bounds.size();
+
       auto const left = ctx.bounds.left;
       auto const right = ctx.bounds.right;
       auto const top = ctx.bounds.top;
@@ -157,6 +161,10 @@ namespace cycfi { namespace elements
 
    void htile_element::layout(context const& ctx)
    {
+      if (_prev == ctx.bounds.size())
+         return;
+      _prev = ctx.bounds.size();
+
       auto const top = ctx.bounds.top;
       auto const bottom = ctx.bounds.bottom;
       auto const left = ctx.bounds.left;

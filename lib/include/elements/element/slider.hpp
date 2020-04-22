@@ -170,7 +170,7 @@ namespace cycfi { namespace elements
 
       static unsigned const size = _size;
 
-                              basic_thumb_element(color c = colors::black)
+                              basic_thumb_element(color c = artist::colors::black)
                                : _color(c)
                               {}
 
@@ -202,7 +202,7 @@ namespace cycfi { namespace elements
    }
 
    template <unsigned size>
-   inline basic_thumb_element<size> basic_thumb(color c = colors::black)
+   inline basic_thumb_element<size> basic_thumb(color c = artist::colors::black)
    {
       return {c};
    }
@@ -219,7 +219,7 @@ namespace cycfi { namespace elements
       static bool const vertical = _vertical;
       static unsigned const min_length = 64;
 
-                              basic_track_element(color c = colors::black)
+                              basic_track_element(color c = artist::colors::black)
                                : _color(c)
                               {}
 
@@ -251,7 +251,7 @@ namespace cycfi { namespace elements
 
    template <unsigned size, bool vertical = false>
    inline basic_track_element<size, vertical>
-   basic_track(color c = colors::black)
+   basic_track(color c = artist::colors::black)
    {
       return {c};
    }
@@ -340,7 +340,7 @@ namespace cycfi { namespace elements
       // Draw linear lines
       draw_slider_marks(
          ctx.canvas, ctx.bounds, _size, _num_divs
-       , _major_divs, colors::light_gray);
+       , _major_divs, artist::colors::light_gray);
 
       // Draw the subject
       base_type::draw(ctx);

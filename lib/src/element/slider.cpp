@@ -271,7 +271,7 @@ namespace cycfi { namespace elements
             point{ pos, reverse? bounds.top : bounds.bottom }
             ;
 
-         cnv.fill_text(where, labels[vertical? (num_labels-i)-1 : i].c_str());
+         cnv.fill_text(labels[vertical? (num_labels-i)-1 : i].c_str(), where);
          pos += incr;
       }
    }

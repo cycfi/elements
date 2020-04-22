@@ -168,8 +168,8 @@ namespace cycfi { namespace elements
       cnv.fill_style(theme.label_font_color);
 
       cnv.font(
-         theme.label_font,
-         theme.label_font_size * font_size
+         theme.label_font
+         // theme.label_font_size * font_size // $$$ fixme $$$
       );
 
       for (std::size_t i = 0; i != num_labels; ++i)
@@ -178,7 +178,7 @@ namespace cycfi { namespace elements
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
 
-         cnv.fill_text({ cp.radius * cos_, cp.radius * sin_ }, labels[i].c_str());
+         cnv.fill_text(labels[i].c_str(), { cp.radius * cos_, cp.radius * sin_ });
       }
    }
 }}

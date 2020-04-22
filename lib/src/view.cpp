@@ -46,9 +46,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return false;
 
-      image img{ size() };
-      offscreen_image offscr{ img };
-      canvas cnv{ offscr.context() };
+      canvas cnv{ nullptr };
       bool resized = false;
 
       // Update the limits and constrain the window size to the limits
@@ -100,9 +98,7 @@ namespace cycfi { namespace elements
       template <typename F, typename This>
       void call(F f, This& self, rect _current_bounds)
       {
-         image img{ self.size() };
-         offscreen_image offscr{ img };
-         canvas cnv{ offscr.context() };
+         canvas cnv{ nullptr };
          context ctx { self, cnv, &self.main_element(), _current_bounds };
 
          f(ctx, self.main_element());
@@ -197,9 +193,12 @@ namespace cycfi { namespace elements
       }
       if (ctx_ptr)
       {
-         auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
-         auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
-         refresh({ tl.x, tl.y, br.x, br.y });
+         // $$$ fixme $$$
+         // auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
+         // auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
+         // refresh({ tl.x, tl.y, br.x, br.y });
+
+         refresh(ctx_ptr->bounds);
       }
    }
 

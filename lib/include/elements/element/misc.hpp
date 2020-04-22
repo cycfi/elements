@@ -392,7 +392,7 @@ namespace cycfi::elements
       std::uint32_t           _code;
       float                   _size;
    };
-/*
+
    ////////////////////////////////////////////////////////////////////////////
    // Key Intercept
    ////////////////////////////////////////////////////////////////////////////
@@ -428,8 +428,6 @@ namespace cycfi::elements
          return true;
       return this->subject().key(ctx, k);
    }
-
-   */
 }
 
 #endif

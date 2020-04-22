@@ -97,8 +97,6 @@ set(ELEMENTS_HEADERS
    include/elements/support/context.hpp
    include/elements/support/draw_utils.hpp
    include/elements/support/icon_ids.hpp
-   include/elements/support/point.hpp
-   include/elements/support/rect.hpp
    include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
    include/elements/support.hpp

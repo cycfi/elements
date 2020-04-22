@@ -47,7 +47,7 @@ namespace cycfi { namespace elements
       auto  state = canvas_.new_state();
 
       canvas_.fill_style(font_color());
-      canvas_.font(font()); // $$$ fixme $$$
+      canvas_.font(font().size(font_size()));
       canvas_.text_align(text_align());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);

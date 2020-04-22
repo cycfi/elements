@@ -49,10 +49,7 @@ namespace cycfi { namespace elements
       canvas_.stroke();
 
       canvas_.fill_style(theme_.label_font_color);
-      canvas_.font(
-         theme_.label_font
-         // theme_.label_font_size $$$ fixme $$$
-      );
+      canvas_.font(theme_.label_font);
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);

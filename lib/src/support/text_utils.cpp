@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
    {
       auto  state = cnv.new_state();
       auto& thm = get_theme();
-      cnv.font(thm.icon_font /*, size*/); // $$$ fixme $$$
+      cnv.font(thm.icon_font.size(size));
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 

@@ -37,8 +37,6 @@ namespace cycfi { namespace elements
 
    view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
-      sync();
-
       auto  m = _font.metrics();
       auto  min_line_height = m.ascent + m.descent + m.leading;
       float line_height =
@@ -55,8 +53,6 @@ namespace cycfi { namespace elements
 
    void static_text_box::layout(context const& ctx)
    {
-      sync();
-
       auto  new_x = ctx.bounds.width();
       _layout.flow(new_x);
 
@@ -89,27 +85,19 @@ namespace cycfi { namespace elements
       _layout.draw(cnv, p);
    }
 
-   void static_text_box::sync() const
-   {
-      // $$$ fixme $$$
-      // auto f = _text.data();
-      // auto l = _text.data() + _text.size();
-      // if (f != _layout.begin() || l != _layout.end())
-      //    _layout.text(f, l);
-   }
-
    void static_text_box::set_text(std::string_view text)
    {
-      // $$$ fixme $$$
-      // _text = text;
-      // _rows.clear();
-      // _layout.text(_text.data(), _text.data() + _text.size());
-      // _layout.break_lines(_current_size.x, _rows);
+      if (_text != text)
+      {
+         _text = text;
+         _layout.text(_text);
+         _layout.flow(_current_size.x);
+      }
    }
 
    void static_text_box::value(std::string_view val)
    {
-      // set_text(val);
+      set_text(val);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -517,7 +505,7 @@ namespace cycfi { namespace elements
       // Handle the case where text is empty
       if (_is_focus && _text.empty())
       {
-         auto  m = font().metrics();
+         auto  m = _font.metrics();
          auto  line_height = m.ascent + m.descent + m.leading;
          auto  width = theme.text_box_caret_width;
          auto  left = ctx.bounds.left;
@@ -623,49 +611,10 @@ namespace cycfi { namespace elements
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
 
-      auto  index = _layout.hit_test(p.x-x, p.y-y); // relative to top-left
+      auto  index = _layout.caret_index(p.x-x, p.y-y); // relative to top-left
       if (index != _layout.npos)
          return _text.data() + index;
       return nullptr;
-
-/*
-      auto  m = font().metrics();
-      auto  line_height = m.ascent + m.descent + m.leading;
-
-      char const* found = nullptr;
-      for (auto& row : _rows)
-      {
-         // Check if p is within this row
-         if ((p.y >= y) && (p.y < y + line_height))
-         {
-            // Check if we are at the very start of the row or beyond
-            if (p.x <= x)
-            {
-               found = row.begin();
-               break;
-            }
-
-            // Get the actual coordinates of the glyph
-            row.for_each(
-               [p, x, &found](char const* utf8, float left, float right)
-               {
-                  if ((p.x >= (x + left)) && (p.x < (x + right)))
-                  {
-                     found = utf8;
-                     return false;
-                  }
-                  return true;
-               }
-            );
-            // Assume it's at the end of the row if we haven't found a hit
-            if (!found)
-               found = row.end();
-            break;
-         }
-         y += line_height;
-      }
-      return found;
-*/
    }
 
    basic_text_box::glyph_metrics basic_text_box::glyph_info(context const& ctx, char const* s)
@@ -673,7 +622,7 @@ namespace cycfi { namespace elements
       auto  m = _font.metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
-      auto  pos = _layout.caret_pos(s - &_text[0]);
+      auto  pos = _layout.caret_point(s - &_text[0]);
 
       pos.x += x;
       pos.y += y;
@@ -683,72 +632,6 @@ namespace cycfi { namespace elements
       info.bounds = { pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent };
       info.line_height = m.leading + m.ascent + m.descent;
       return info;
-
-/*
-      auto  metrics = _font.metrics();
-      auto  x = ctx.bounds.left;
-      auto  y = ctx.bounds.top + metrics.ascent;
-      auto  descent = metrics.descent;
-      auto  ascent = metrics.ascent;
-      auto  leading = metrics.leading;
-      auto  line_height = ascent + descent + leading;
-
-      glyph_metrics info;
-      info.str = nullptr;
-      info.line_height = line_height;
-
-      // Check if s is at the very end
-      if (s == _text.data() + _text.size())
-      {
-         auto const& last_row = _rows.back();
-         auto        rightmost = x + last_row.width();
-         auto        bottom_y = y + (line_height * (_rows.size() - 1));
-
-         info.pos = { rightmost, bottom_y };
-         info.bounds = { rightmost, bottom_y - ascent, rightmost + 10, bottom_y + descent };
-         info.str = s;
-         return info;
-      }
-
-      glyphs*  prev_row = nullptr;
-      for (auto& row : _rows)
-      {
-         // Check if s is within this row
-         if (s >= row.begin() && s < row.end())
-         {
-            // Get the actual coordinates of the glyph
-            row.for_each(
-               [s, &info, x, y, ascent, descent](char const* utf8, float left, float right)
-               {
-                  if (utf8 >= s)
-                  {
-                     info.pos = { x + left, y };
-                     info.bounds = { x + left, y - ascent, x + right, y + descent };
-                     info.str = utf8;
-                     return false;
-                  }
-                  return true;
-               }
-            );
-            break;
-         }
-         // This handles the case where s is in between the start of the
-         // current row and the end of the previous.
-         else if (s < row.begin() && prev_row)
-         {
-            auto  rightmost = x + prev_row->width();
-            auto  prev_y = y - line_height;
-            info.pos = { rightmost, prev_y };
-            info.bounds = { rightmost, prev_y - ascent, rightmost + 10, prev_y + descent };
-            info.str = s;
-            break;
-         }
-         y += line_height;
-         prev_row = &row;
-      }
-
-      return info;
-*/
    }
 
    void basic_text_box::delete_()

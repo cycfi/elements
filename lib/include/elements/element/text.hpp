@@ -64,14 +64,9 @@ namespace cycfi::elements
 
       std::string const&      get_text() const override { return _text; }
       void                    set_text(std::string_view text) override;
-      font const&             font() const { return _font; }
 
       std::string const&      value() const override { return _text; }
       void                    value(std::string_view val) override;
-
-   private:
-
-      void                    sync() const;
 
    protected:
 

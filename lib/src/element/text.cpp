@@ -20,21 +20,20 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    static_text_box::static_text_box(
       std::string text
-    , font font_
-    , float size
+    , font_descr font_
     , color color_
    )
-    : _text(std::move(text))
-    , _layout(_text.data(), _text.data() + _text.size(), font_, size)
-    , _color(color_)
+    : _text{ std::move(text) }
+    , _font{ font_ }
+    , _layout{ _font, color_, _text }
    {}
 
    view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
       sync();
 
-      auto  size = _layout.metrics();
-      auto  min_line_height = size.ascent + size.descent + size.leading;
+      auto  m = _font.metrics();
+      auto  min_line_height = m.ascent + m.descent + m.leading;
       float line_height =
          (_current_size.y == -1) ?
          min_line_height :
@@ -51,17 +50,17 @@ namespace cycfi { namespace elements
    {
       sync();
 
-      _rows.clear();
       auto  new_x = ctx.bounds.width();
-      _layout.break_lines(new_x, _rows);
-      auto  size = _layout.metrics();
-      auto  new_y = _rows.size() * (size.ascent + size.descent + size.leading);
+      _layout.flow(new_x);
+
+      auto  m = _font.metrics();
+      auto  new_y = _layout.num_lines() * (m.ascent + m.descent + m.leading);
 
       // Refresh the union of the old and new bounds if the size has changed
       if (_current_size.x != new_x || _current_size.y != new_y)
       {
          if (_current_size.x != -1 && _current_size.y != -1)
-            ctx.view.refresh(max(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
+            ctx.view.refresh(max(ctx.bounds, rect(ctx.bounds.top_left(), extent{ _current_size })));
          else
             ctx.view.refresh(ctx.bounds);
       }
@@ -74,44 +73,38 @@ namespace cycfi { namespace elements
    {
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
-      auto  metrics = _layout.metrics();
-      auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
-      auto  x = ctx.bounds.left;
-      auto  y = ctx.bounds.top + metrics.ascent;
+      auto  m = _font.metrics();
+      auto  line_height = m.ascent + m.descent + m.leading;
+      auto  p = point{ ctx.bounds.left, ctx.bounds.top + m.ascent };
 
       cnv.rect(ctx.bounds);
       cnv.clip();
-      cnv.fill_style(_color);
-      for (auto& row : _rows)
-      {
-         row.draw({ x, y }, cnv);
-         y += line_height;
-         if (y > ctx.bounds.bottom + metrics.ascent)
-            break;
-      }
+      _layout.draw(cnv, p);
    }
 
    void static_text_box::sync() const
    {
-      auto f = _text.data();
-      auto l = _text.data() + _text.size();
-      if (f != _layout.begin() || l != _layout.end())
-         _layout.text(f, l);
+      // $$$ fixme $$$
+      // auto f = _text.data();
+      // auto l = _text.data() + _text.size();
+      // if (f != _layout.begin() || l != _layout.end())
+      //    _layout.text(f, l);
    }
 
    void static_text_box::set_text(std::string_view text)
    {
-      _text = text;
-      _rows.clear();
-      _layout.text(_text.data(), _text.data() + _text.size());
-      _layout.break_lines(_current_size.x, _rows);
+      // $$$ fixme $$$
+      // _text = text;
+      // _rows.clear();
+      // _layout.text(_text.data(), _text.data() + _text.size());
+      // _layout.break_lines(_current_size.x, _rows);
    }
 
    void static_text_box::value(std::string_view val)
    {
-      set_text(val);
+      // set_text(val);
    }
-
+/*
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -210,7 +203,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking /* status */)
+   bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (ctx.bounds.includes(p))
       {
@@ -748,7 +741,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::cut(view& /* v */, int start, int end)
+   void basic_text_box::cut(view& v, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -759,7 +752,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::copy(view& /* v */, int start, int end)
+   void basic_text_box::copy(view& v, int start, int end)
    {
       if (start != -1 && start != end)
       {
@@ -769,7 +762,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_text_box::paste(view& /* v */, int start, int end)
+   void basic_text_box::paste(view& v, int start, int end)
    {
       if (start != -1)
       {
@@ -898,7 +891,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Input Text Box
    ////////////////////////////////////////////////////////////////////////////
-   view_limits basic_input_box::limits(basic_context const& /* ctx */) const
+   view_limits basic_input_box::limits(basic_context const& ctx) const
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
@@ -982,7 +975,7 @@ namespace cycfi { namespace elements
       return basic_text_box::key(ctx, k);
    }
 
-   void basic_input_box::paste(view& /* v */, int start, int end)
+   void basic_input_box::paste(view& v, int start, int end)
    {
       if (start != -1)
       {
@@ -1023,4 +1016,5 @@ namespace cycfi { namespace elements
          }
       }
    }
+   */
 }}

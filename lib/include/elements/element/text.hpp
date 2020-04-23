@@ -8,7 +8,8 @@
 
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
-#include <boost/asio.hpp>
+#include <artist/text_layout.hpp>
+// #include <boost/asio.hpp>
 
 #include <string_view>
 #include <string>
@@ -16,6 +17,9 @@
 
 namespace cycfi::elements
 {
+   using artist::font_descr;
+   using artist::font;
+
    ////////////////////////////////////////////////////////////////////////////
    // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
@@ -35,7 +39,7 @@ namespace cycfi::elements
       virtual                    ~text_writer() = default;
       virtual void               set_text(std::string_view text) = 0;
    };
-/*
+
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -48,8 +52,7 @@ namespace cycfi::elements
    public:
                               static_text_box(
                                  std::string text
-                               , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font_size
+                               , font_descr font_  = get_theme().text_box_font
                                , color color_      = get_theme().text_box_font_color
                               );
 
@@ -59,10 +62,10 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      get_text() const override            { return _text; }
+      std::string const&      get_text() const override           { return _text; }
       void                    set_text(std::string_view text) override;
 
-      std::string const&      value() const override           { return _text; }
+      std::string const&      value() const override              { return _text; }
       void                    value(std::string_view val) override;
 
    private:
@@ -72,12 +75,11 @@ namespace cycfi::elements
    protected:
 
       std::string             _text;
-      mutable master_glyphs   _layout;
-      std::vector<glyphs>     _rows;
-      color                   _color;
+      font                    _font;
+      artist::text_layout     _layout;
       point                   _current_size = { -1, -1 };
    };
-
+/*
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -193,7 +195,7 @@ namespace cycfi::elements
 
       std::string             _placeholder;
    };
-   */
+*/
 }
 
 #endif

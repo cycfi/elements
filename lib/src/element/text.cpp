@@ -350,8 +350,11 @@ namespace cycfi { namespace elements
                p = prev_utf8(start, p);
             while (p != start && !word_break(p))
                p = prev_utf8(start, p);
-            char const* end = _text.data() + _text.size();
-            p = next_utf8(end, p);
+            if (p != start)
+            {
+               char const* end = _text.data() + _text.size();
+               p = next_utf8(end, p);
+            }
             _select_end = int(p - &_text[0]);
          }
       };

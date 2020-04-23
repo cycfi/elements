@@ -8,6 +8,8 @@
 
 namespace cycfi { namespace elements
 {
+   namespace colors = cycfi::artist::colors;
+
    void panel::draw(context const& ctx)
    {
       draw_panel(
@@ -26,7 +28,7 @@ namespace cycfi { namespace elements
       auto const&    bounds = ctx.bounds;
 
       canvas_.line_width(theme_.frame_stroke_width);
-      canvas_.stroke_style(artist::colors::black.opacity(0.4));
+      canvas_.stroke_style(colors::black.opacity(0.4));
       canvas_.stroke_round_rect(bounds.move(-1, -1), theme_.frame_corner_radius);
       canvas_.stroke_style(theme_.frame_color);
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);

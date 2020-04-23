@@ -4,13 +4,11 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/text_utils.hpp>
-#include <artist/detail/utf8_utils.hpp> // $$$ fixme $$$
+#include <infra/utf8_utils.hpp>
 #include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements
 {
-   using artist::codepoint_to_utf8;
-
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {
       auto  state = cnv.new_state();

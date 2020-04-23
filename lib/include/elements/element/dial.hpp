@@ -13,6 +13,8 @@
 
 namespace cycfi { namespace elements
 {
+   namespace colors = cycfi::artist::colors;
+
    ////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////
@@ -64,7 +66,7 @@ namespace cycfi { namespace elements
 
       static std::size_t const size = _size;
 
-                              basic_knob_element(color c = artist::colors::black)
+                              basic_knob_element(color c = colors::black)
                                : _color(c), _value(0)
                               {}
 
@@ -108,7 +110,7 @@ namespace cycfi { namespace elements
    }
 
    template <std::size_t size>
-   inline basic_knob_element<size> basic_knob(color c = artist::colors::black)
+   inline basic_knob_element<size> basic_knob(color c = colors::black)
    {
       return {c};
    }
@@ -195,7 +197,7 @@ namespace cycfi { namespace elements
 
       // Draw radial lines
       auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
-      draw_radial_marks(ctx.canvas, cp, size-2, artist::colors::light_gray);
+      draw_radial_marks(ctx.canvas, cp, size-2, colors::light_gray);
    }
 
    template <std::size_t size, typename Subject>

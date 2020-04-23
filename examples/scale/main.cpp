@@ -80,7 +80,7 @@ auto make_column()
          );
 
    return vtile(
-      // margin({ 20, 20, 20, 20 }, group0),
+      margin({ 20, 20, 20, 20 }, group0),
       margin({ 20, 20, 20, 20 }, group1),
       margin({ 20, 20, 20, 20 }, group2)
    );

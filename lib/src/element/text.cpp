@@ -162,9 +162,9 @@ namespace cycfi { namespace elements
             if (btn.num_clicks == 2)
             {
                while (last < _last && !word_break(last))
-                  last = next_utf8(_last, last);
+                  last = next_utf8(last, _last);
                while (first > _first && !word_break(first))
-                  first = prev_utf8(_first, first);
+                  first = prev_utf8(first, _first);
             }
             else if (btn.num_clicks == 3)
             {
@@ -311,7 +311,7 @@ namespace cycfi { namespace elements
          if (_select_end < static_cast<int>(_text.size()))
          {
             char const* end = _text.data() + _text.size();
-            char const* p = next_utf8(end, &_text[_select_end]);
+            char const* p = next_utf8(&_text[_select_end], end);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -321,7 +321,7 @@ namespace cycfi { namespace elements
          if (_select_end > 0)
          {
             char const* start = &_text[0];
-            char const* p = prev_utf8(start, &_text[_select_end]);
+            char const* p = prev_utf8(&_text[_select_end], start);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -333,9 +333,9 @@ namespace cycfi { namespace elements
             char const* p = &_text[_select_end];
             char const* end = _text.data() + _text.size();
             while (p != end && word_break(p))
-               p = next_utf8(end, p);
+               p = next_utf8(p, end);
             while (p != end && !word_break(p))
-               p = next_utf8(end, p);
+               p = next_utf8(p, end);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -345,13 +345,13 @@ namespace cycfi { namespace elements
          if (_select_end > 0)
          {
             char const* start = &_text[0];
-            char const* p = prev_utf8(start, &_text[_select_end]);
+            char const* p = prev_utf8(&_text[_select_end], start);
             while (p != start && word_break(p))
-               p = prev_utf8(start, p);
+               p = prev_utf8(p, start);
             while (p != start && !word_break(p))
-               p = prev_utf8(start, p);
+               p = prev_utf8(p, start);
             char const* end = _text.data() + _text.size();
-            p = next_utf8(end, p);
+            p = next_utf8(p, end);
             _select_end = int(p - &_text[0]);
          }
       };
@@ -670,10 +670,15 @@ namespace cycfi { namespace elements
       auto  m = _font.metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
+      auto  pos = _layout.caret_pos(s - &_text[0]);
 
-      auto p = _layout.caret_pos(s - &_text[0]);
-
+      pos.x += x;
+      pos.y += y;
       glyph_metrics info;
+      info.str = s;
+      info.pos = pos;
+      info.bounds = { pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent };
+      info.line_height = m.leading + m.ascent + m.descent;
       return info;
 
 /*
@@ -755,7 +760,7 @@ namespace cycfi { namespace elements
             {
                char const* start_p = &_text[0];
                char const* end_p = &_text[start];
-               char const* p = prev_utf8(start_p, end_p);
+               char const* p = prev_utf8(end_p, start_p);
                start = int(p - &_text[0]);
                _text.erase(start, end_p - p);
             }

@@ -6,6 +6,8 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
+namespace colors = cycfi::artist::colors;
 
 #define VARIANT 4
 

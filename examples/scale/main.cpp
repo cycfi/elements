@@ -8,6 +8,7 @@
 #include <random>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -79,7 +80,7 @@ auto make_column()
          );
 
    return vtile(
-      margin({ 20, 20, 20, 20 }, group0),
+      // margin({ 20, 20, 20, 20 }, group0),
       margin({ 20, 20, 20, 20 }, group1),
       margin({ 20, 20, 20, 20 }, group2)
    );

@@ -62,10 +62,11 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      get_text() const override           { return _text; }
+      std::string const&      get_text() const override { return _text; }
       void                    set_text(std::string_view text) override;
+      font const&             font() const { return _font; }
 
-      std::string const&      value() const override              { return _text; }
+      std::string const&      value() const override { return _text; }
       void                    value(std::string_view val) override;
 
    private:
@@ -75,11 +76,11 @@ namespace cycfi::elements
    protected:
 
       std::string             _text;
-      font                    _font;
+      class font              _font;
       artist::text_layout     _layout;
       point                   _current_size = { -1, -1 };
    };
-/*
+
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
@@ -88,8 +89,7 @@ namespace cycfi::elements
    public:
                               basic_text_box(
                                  std::string text
-                               , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font_size
+                               , font_descr font_ = get_theme().text_box_font
                               );
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
@@ -172,10 +172,9 @@ namespace cycfi::elements
 
                               basic_input_box(
                                  std::string placeholder = ""
-                               , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font_size
+                               , font_descr font_ = get_theme().text_box_font
                               )
-                               : basic_text_box("", font_, size)
+                               : basic_text_box("", font_)
                                , _placeholder(std::move(placeholder))
                               {}
 
@@ -195,7 +194,6 @@ namespace cycfi::elements
 
       std::string             _placeholder;
    };
-*/
 }
 
 #endif

@@ -25,7 +25,7 @@
 #include <elements/element/indirect.hpp>
 #include <elements/element/size.hpp>
 #include <elements/element/slider.hpp>
-//#include <elements/element/text.hpp>
+#include <elements/element/text.hpp>
 #include <elements/element/tile.hpp>
 
 // Include this last

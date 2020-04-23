@@ -6,14 +6,21 @@
 #include <elements/element/text.hpp>
 #include <elements/element/port.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/support/text_utils.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
+#include <artist/detail/utf8_utils.hpp> // $$$ fixme $$$
 #include <utility>
 
 namespace cycfi { namespace elements
 {
    using namespace std::chrono_literals;
+   using artist::next_utf8;
+   using artist::prev_utf8;
+   using artist::is_newline;
+   using artist::codepoint_to_utf8;
+   using artist::codepoint;
+   using artist::is_space;
+   using artist::is_punctuation;
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -104,12 +111,12 @@ namespace cycfi { namespace elements
    {
       // set_text(val);
    }
-/*
+
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string text, font font_, float size)
-    : static_text_box(std::move(text), font_, size)
+   basic_text_box::basic_text_box(std::string text, font_descr font_)
+    : static_text_box(std::move(text), font_)
     , _select_start(-1)
     , _select_end(-1)
     , _current_x(0)
@@ -249,7 +256,7 @@ namespace cycfi { namespace elements
          _text.replace(_select_start, _select_end-_select_start, text);
       _select_end = ++_select_start;
 
-      _layout.text(_text.data(), _text.data() + _text.size());
+      _layout.text(_text);
       layout(ctx);
 
       scroll_into_view(ctx, true);
@@ -479,7 +486,7 @@ namespace cycfi { namespace elements
       }
       else if (handled)
       {
-         _layout.text(_text.data(), _text.data() + _text.size());
+         _layout.text(_text);
          layout(ctx);
          ctx.view.refresh(ctx);
       }
@@ -507,8 +514,8 @@ namespace cycfi { namespace elements
       // Handle the case where text is empty
       if (_is_focus && _text.empty())
       {
-         auto  size = _layout.metrics();
-         auto  line_height = size.ascent + size.descent + size.leading;
+         auto  m = font().metrics();
+         auto  line_height = m.ascent + m.descent + m.leading;
          auto  width = theme.text_box_caret_width;
          auto  left = ctx.bounds.left;
          auto  top = ctx.bounds.top;
@@ -609,10 +616,18 @@ namespace cycfi { namespace elements
 
    char const* basic_text_box::caret_position(context const& ctx, point p)
    {
+      auto  m = _font.metrics();
       auto  x = ctx.bounds.left;
-      auto  y = ctx.bounds.top;
-      auto  metrics = _layout.metrics();
-      auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
+      auto  y = ctx.bounds.top + m.ascent;
+
+      auto  index = _layout.hit_test(p.x-x, p.y-y); // relative to top-left
+      if (index != _layout.npos)
+         return _text.data() + index;
+      return nullptr;
+
+/*
+      auto  m = font().metrics();
+      auto  line_height = m.ascent + m.descent + m.leading;
 
       char const* found = nullptr;
       for (auto& row : _rows)
@@ -647,11 +662,22 @@ namespace cycfi { namespace elements
          y += line_height;
       }
       return found;
+*/
    }
 
    basic_text_box::glyph_metrics basic_text_box::glyph_info(context const& ctx, char const* s)
    {
-      auto  metrics = _layout.metrics();
+      auto  m = _font.metrics();
+      auto  x = ctx.bounds.left;
+      auto  y = ctx.bounds.top + m.ascent;
+
+      auto p = _layout.caret_pos(s - &_text[0]);
+
+      glyph_metrics info;
+      return info;
+
+/*
+      auto  metrics = _font.metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + metrics.ascent;
       auto  descent = metrics.descent;
@@ -714,6 +740,7 @@ namespace cycfi { namespace elements
       }
 
       return info;
+*/
    }
 
    void basic_text_box::delete_()
@@ -893,8 +920,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits basic_input_box::limits(basic_context const& ctx) const
    {
-      auto  size = _layout.metrics();
-      auto  line_height = size.ascent + size.descent + size.leading;
+      auto  m = _font.metrics();
+      auto  line_height = m.ascent + m.descent + m.leading;
       return { { 32, line_height }, { full_extent, line_height } };
    }
 
@@ -908,13 +935,13 @@ namespace cycfi { namespace elements
 
             auto& canvas = ctx.canvas;
             auto& theme = get_theme();
-            auto  size = _layout.metrics();
+            auto  m = _font.metrics();
 
-            canvas.font(theme.text_box_font, theme.text_box_font_size);
+            canvas.font(theme.text_box_font);
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
-               { ctx.bounds.left, ctx.bounds.top + size.ascent }
-              , _placeholder.c_str()
+               _placeholder.c_str()
+             , { ctx.bounds.left, ctx.bounds.top + m.ascent }
             );
          }
          draw_caret(ctx);
@@ -1016,5 +1043,4 @@ namespace cycfi { namespace elements
          }
       }
    }
-   */
 }}

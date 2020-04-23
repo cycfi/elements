@@ -6,6 +6,8 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
+namespace colors = cycfi::artist::colors;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -87,21 +89,21 @@ auto make_basic_text()
       margin(
          { 10, 0, 10, 10 },
          vtile(
-            pane("Text Input",
-               margin({ 10, 5, 10, 5 },
-                  vtile(
-                     left_caption(input_box("Show me the money").first, "Gimme Some"),
-                     top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More")),
-                     top_margin(10, left_caption(
-                        htile(
-                           input_box(0.7).first,
-                           left_margin(10, input_box(0.7).first),
-                           left_margin(10, input_box(0.7).first)
-                        ),
-                        "Cute Text Boxes"
-                     ))
-                  )
-               )),
+            // pane("Text Input",
+            //    margin({ 10, 5, 10, 5 },
+            //       vtile(
+            //          // left_caption(input_box("Show me the money").first, "Gimme Some"),
+            //          top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More")),
+            //          top_margin(10, left_caption(
+            //             htile(
+            //                input_box(0.7).first,
+            //                left_margin(10, input_box(0.7).first),
+            //                left_margin(10, input_box(0.7).first)
+            //             ),
+            //             "Cute Text Boxes"
+            //          ))
+            //       )
+            //    )),
             top_margin(20, pane("Static Text",
                vtile(
                   el(0.5, label("Hello, Universe. This is Elements.")

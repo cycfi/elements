@@ -279,8 +279,8 @@ namespace cycfi { namespace elements
       auto up_down = [this, &ctx, k, &move_caret]()
       {
          bool up = k.key == key_code::up;
-         glyph_metrics info;
-         info = glyph_info(ctx, &_text[_select_end]);
+         caret_metrics info;
+         info = caret_info(ctx, &_text[_select_end]);
          if (info.str)
          {
             auto y = up ? -info.line_height : +info.line_height;
@@ -526,9 +526,9 @@ namespace cycfi { namespace elements
       // Draw the caret
       else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
       {
-         auto  start_info = glyph_info(ctx, _text.data() + _select_start);
+         auto  start_info = caret_info(ctx, _text.data() + _select_start);
          auto width = theme.text_box_caret_width;
-         rect& caret = start_info.bounds;
+         rect& caret = start_info.caret;
 
          if (_show_caret)
          {
@@ -571,12 +571,12 @@ namespace cycfi { namespace elements
 
       if (!_text.empty())
       {
-         auto  start_info = glyph_info(ctx, _text.data() + _select_start);
-         rect& r1 = start_info.bounds;
+         auto  start_info = caret_info(ctx, _text.data() + _select_start);
+         rect& r1 = start_info.caret;
          r1.right = ctx.bounds.right;
 
-         auto  end_info = glyph_info(ctx, _text.data() + _select_end);
-         rect& r2 = end_info.bounds;
+         auto  end_info = caret_info(ctx, _text.data() + _select_end);
+         rect& r2 = end_info.caret;
          r2.right = r2.left;
          r2.left = ctx.bounds.left;
 
@@ -617,7 +617,7 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-   basic_text_box::glyph_metrics basic_text_box::glyph_info(context const& ctx, char const* s)
+   basic_text_box::caret_metrics basic_text_box::caret_info(context const& ctx, char const* s)
    {
       auto  m = _font.metrics();
       auto  x = ctx.bounds.left;
@@ -626,10 +626,10 @@ namespace cycfi { namespace elements
 
       pos.x += x;
       pos.y += y;
-      glyph_metrics info;
+      caret_metrics info;
       info.str = s;
       info.pos = pos;
-      info.bounds = { pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent };
+      info.caret = { pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent };
       info.line_height = m.leading + m.ascent + m.descent;
       return info;
    }
@@ -737,14 +737,14 @@ namespace cycfi { namespace elements
       if (_select_end == -1)
          return;
 
-      auto info = glyph_info(ctx, &_text[_select_end]);
+      auto info = caret_info(ctx, &_text[_select_end]);
       if (info.str)
       {
          auto caret = rect{
-            info.bounds.left-1,
-            info.bounds.top,
-            info.bounds.left+1,
-            info.bounds.bottom
+            info.caret.left-1,
+            info.caret.top,
+            info.caret.left+1,
+            info.caret.bottom
          };
          if (!scrollable::find(ctx).scroll_into_view(caret))
             ctx.view.refresh(ctx);

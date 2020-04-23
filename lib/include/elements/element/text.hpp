@@ -123,16 +123,16 @@ namespace cycfi::elements
 
    private:
 
-      struct glyph_metrics
+      struct caret_metrics
       {
          char const* str;           // The start of the utf8 string
          point       pos;           // Position where glyph is drawn
-         rect        bounds;        // Glyph bounds
+         rect        caret;         // Caret bounds
          float       line_height;   // Line height
       };
 
       char const*             caret_position(context const& ctx, point p);
-      glyph_metrics           glyph_info(context const& ctx, char const* s);
+      caret_metrics           caret_info(context const& ctx, char const* s);
 
       virtual void            delete_();
       virtual void            cut(view& v, int start, int end);

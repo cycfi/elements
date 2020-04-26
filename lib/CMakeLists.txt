@@ -116,7 +116,7 @@ if (APPLE)
       host/macos/key.mm
       host/macos/window.mm
    )
-elseif (HOST_UI_LIBRARY STREQUAL "gtk")
+elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    set(ELEMENTS_HOST
       host/linux/app.cpp
       host/linux/base_view.cpp
@@ -234,7 +234,7 @@ endif()
 ###############################################################################
 # GTK (linux only)
 
-if (HOST_UI_LIBRARY STREQUAL "gtk")
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
    target_link_libraries(elements PRIVATE PkgConfig::GTK3)
 endif()
@@ -260,6 +260,22 @@ elseif (WIN32)
       BOOST_DATE_TIME_NO_LIB
       BOOST_REGEX_NO_LIB
    )
+endif()
+
+if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_GTK)
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "cocoa")
+    if(NOT APPLE)
+        message(FATAL_ERROR "Only macOS supports ELEMENTS_HOST_UI_LIBRARY=cocoa")
+    endif()
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_COCOA)
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
+    if(NOT WIN32)
+        message(FATAL_ERROR "Only Windows supports ELEMENTS_HOST_UI_LIBRARY=win32")
+    endif()
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_WIN32)
+else()
+    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, cocoa or win32.")
 endif()
 
 ###############################################################################

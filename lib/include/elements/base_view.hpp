@@ -285,6 +285,8 @@ namespace cycfi { namespace elements
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
    using host_view_handle = HWND;
    using host_window_handle = HWND;
+#else
+   #error no ELEMENTS_HOST_UI_LIBRARY_* set
 #endif
 
    class base_view : non_copyable

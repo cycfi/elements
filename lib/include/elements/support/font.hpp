@@ -97,8 +97,10 @@ namespace cycfi { namespace elements
                            font();
                            font(font_descr descr);
                            font(font const& rhs);
+                           font(font&& rhs) noexcept;
                            ~font();
       font&                operator=(font const& rhs);
+      font&                operator=(font&& rhs) noexcept;
       explicit             operator bool() const;
 
    private:

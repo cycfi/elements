@@ -34,6 +34,7 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -322,6 +323,17 @@ namespace cycfi { namespace elements
    {
       if (&rhs != this)
          _handle = cairo_font_face_reference(rhs._handle);
+      return *this;
+   }
+
+   font::font(font&& rhs) noexcept
+   {
+      std::swap(_handle, rhs._handle);
+   }
+
+   font& font::operator=(font&& rhs) noexcept
+   {
+      std::swap(_handle, rhs._handle);
       return *this;
    }
 

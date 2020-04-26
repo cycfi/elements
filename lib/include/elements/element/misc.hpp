@@ -14,6 +14,7 @@
 #include <functional>
 #include <string>
 #include <string_view>
+#include <utility>
 
 namespace cycfi { namespace elements
 {
@@ -152,11 +153,11 @@ namespace cycfi { namespace elements
       using remove_gen = basic_label_base<typename Base::remove_gen>;
 
                               basic_label_base(std::string text)
-                               : _text(text)
+                               : _text(std::move(text))
                               {}
 
-      virtual text_type       get_text() const                  { return _text; }
-      virtual void            set_text(std::string_view text)   { _text = text; }
+      text_type               get_text() const override                { return _text; }
+      void                    set_text(std::string_view text) override { _text = text; }
 
    private:
 
@@ -169,11 +170,11 @@ namespace cycfi { namespace elements
       using font_type = elements::font const&;
       using remove_gen = label_with_font<typename Base::remove_gen>;
 
-                              label_with_font(Base const& base, elements::font font_)
-                               : Base(base), _font(font_)
+                              label_with_font(Base base, elements::font font_)
+                               : Base(std::move(base)), _font(std::move(font_))
                               {}
 
-      virtual font_type       font() const { return _font; }
+      font_type               font() const override { return _font; }
 
    private:
 
@@ -185,11 +186,11 @@ namespace cycfi { namespace elements
    {
       using remove_gen = label_with_font_size<typename Base::remove_gen>;
 
-                              label_with_font_size(Base const& base, float size)
-                               : Base(base), _size(size)
+                              label_with_font_size(Base base, float size)
+                               : Base(std::move(base)), _size(size)
                               {}
 
-      virtual float           font_size() const { return _size; }
+      float                   font_size() const override { return _size; }
 
    private:
 
@@ -201,11 +202,11 @@ namespace cycfi { namespace elements
    {
       using remove_gen = label_with_font_color<typename Base::remove_gen>;
 
-                              label_with_font_color(Base const& base, color color_)
-                               : Base(base), _color(color_)
+                              label_with_font_color(Base base, color color_)
+                               : Base(std::move(base)), _color(color_)
                               {}
 
-      virtual color           font_color() const { return _color; }
+      color                   font_color() const override { return _color; }
 
    private:
 
@@ -217,11 +218,11 @@ namespace cycfi { namespace elements
    {
       using remove_gen = label_with_text_align<typename Base::remove_gen>;
 
-                              label_with_text_align(Base const& base, int align)
-                               : Base(base), _align(align)
+                              label_with_text_align(Base base, int align)
+                               : Base(std::move(base)), _align(align)
                               {}
 
-      virtual int             text_align() const { return _align; }
+      int                     text_align() const override { return _align; }
 
    private:
 
@@ -313,10 +314,10 @@ namespace cycfi { namespace elements
       using font_type = elements::font const&;
       using remove_gen = default_heading;
 
-      virtual font_type       font() const;
-      virtual float           font_size() const;
-      virtual color           font_color() const;
-      virtual int             text_align() const;
+      font_type               font() const override;
+      float                   font_size() const override;
+      color                   font_color() const override;
+      int                     text_align() const override;
    };
 
    using basic_heading = basic_label_base<default_heading>;

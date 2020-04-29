@@ -8,7 +8,7 @@
 
 namespace cycfi { namespace elements
 {
-   app::app(int argc, const char* argv[])
+   app::app(int argc, char* argv[])
    {
       [NSApplication sharedApplication];
       [NSApp setActivationPolicy : NSApplicationActivationPolicyRegular];

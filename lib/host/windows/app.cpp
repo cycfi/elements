@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
       }
    };
 
-   app::app(int /* argc */, const char** /* argv */)
+   app::app(int /* argc */, char** /* argv */)
    {
       init_app init;
       _app_name = app_config.application_title;

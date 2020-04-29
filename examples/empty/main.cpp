@@ -11,7 +11,7 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name());

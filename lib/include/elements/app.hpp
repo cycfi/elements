@@ -21,7 +21,7 @@ namespace cycfi { namespace elements
    class app : non_copyable
    {
    public:
-                           app(int argc, const char* argv[]);
+                           app(int argc, char* argv[]);
                            ~app();
 
       std::string const&   name() const { return _app_name; }

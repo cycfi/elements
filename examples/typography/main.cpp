@@ -49,7 +49,7 @@ auto samples = basic(
    }
 );
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name());

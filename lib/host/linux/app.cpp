@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
    // Some app globals
    config app_config;
    int argc = 0;
-   const char** argv = nullptr;
+   char** argv = nullptr;
    GtkApplication* the_app = nullptr;
    bool is_activated = false;
 
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
       }
    };
 
-   app::app(int argc_, const char* argv_[])
+   app::app(int argc_, char* argv_[])
    {
       static init_app init;
       _app_name = app_config.application_title;
@@ -98,9 +98,7 @@ namespace cycfi { namespace elements
 
    void app::run()
    {
-      g_application_run(
-         G_APPLICATION(_app), argc, const_cast<char**>(argv)
-      );
+      g_application_run(G_APPLICATION(_app), argc, argv);
    }
 
    void app::stop()

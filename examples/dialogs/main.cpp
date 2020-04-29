@@ -55,7 +55,7 @@ auto make_dialog(view& _view, app& _app)
    return dialog;
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name());

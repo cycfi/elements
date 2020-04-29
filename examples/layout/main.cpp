@@ -295,7 +295,7 @@ auto make_popup_menu(
    return popup;
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name(), window::standard, { 50, 50, 1024, 768 });

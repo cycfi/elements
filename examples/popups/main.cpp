@@ -70,7 +70,7 @@ void make_alert(view& _view, app& _app)
    _view.add(popup);
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name());

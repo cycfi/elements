@@ -7,6 +7,7 @@
 * [Windows Installation (MinGW + Gtk)](#Windows-(MinGW-+-Gtk))
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
+* [Building Outside the Project](#building-outside-the-project)
 
 -------------------------------------------------------------------------------
 

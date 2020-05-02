@@ -149,7 +149,7 @@ Follow the instructions provided here: https://cmake.org/install/
 Assuming you have [Visual Studio
 2019](https://visualstudio.microsoft.com/vs/) installed.
 
-You want NMake approach if you prefer `make`-style commandline tool, or 
+You want NMake approach if you prefer `make`-style commandline tool, or
 `Visual Studio 2019 GUI` approach otherwise.
 
 #### Visual Studio 2019 GUI
@@ -174,7 +174,7 @@ couple of example applications.
 
 #### NMake
 
-0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu. 
+0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
 3. CD to the build directory.
@@ -199,7 +199,7 @@ to build the binary.
 ### Install MSYS2 toolchain and required libraries
 > MSYS2 is a software distro and building platform for Windows
 
-Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/). 
+Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/).
 
 Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
 ```
@@ -316,6 +316,22 @@ it as a boilerplate for your own project.
 Tips:
 1. Resize the window and see the elements fluidly resize
 2. Use two-finger swipe to move the sliders and knobs
+
+-------------------------------------------------------------------------------
+
+## Building outside the project
+
+The examples are set up so that you can easily copy and paste any of the
+examples outside the project, set -DELEMENTS_ROOT="path/to/elements". And the
+example should immediately build without any hassle.
+
+Here's an example assuming the elements lib is in the same directory
+alongside the "hello_universe" example directory you copied:
+
+1. Copy an example directory (e.g."hello_universe").
+2. Make a build directory inside the hello_universe directory.
+3. CD to the build directory.
+4. cmake -GXcode -DELEMENTS_ROOT="../elements" ../
 
 -------------------------------------------------------------------------------
 

@@ -15,6 +15,9 @@ jobs:
           cc: "cl"
           cxx: "cl"
           environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars32.bat"
+          # If this env variable is present, we set BOOST_ROOT to its content
+          # Github workers put newer Boost versions there
+          boost_root: "BOOST_ROOT_1_72_0"
         - name: "Ubuntu Latest GCC"
           os: ubuntu-latest
           cc: "gcc-9"

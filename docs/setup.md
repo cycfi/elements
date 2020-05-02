@@ -319,7 +319,7 @@ Tips:
 
 -------------------------------------------------------------------------------
 
-## Building outside the project
+## Building Outside the Project
 
 The examples are set up so that you can easily copy and paste any of the
 examples outside the project, set -DELEMENTS_ROOT="path/to/elements". And the

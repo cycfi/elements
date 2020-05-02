@@ -103,6 +103,19 @@ auto make_controls(view& view_)
             )
          );
 
+   auto  tabs =
+         group("Tabs",
+            margin({ 10, 10, 20, 20 },
+               top_margin(25,
+                  htile(
+                     align_center(tab("dream")),
+                     align_center(tab("insanity")),
+                     align_center(tab("imagination"))
+                  )
+               )
+            )
+         );
+
    auto indicator_color = get_theme().indicator_color;
 
    auto  icon_buttons =
@@ -149,7 +162,8 @@ auto make_controls(view& view_)
             make_buttons(view_),
             vtile(
                margin({ 20, 20, 20, 20 }, check_boxes),
-               margin({ 20, 20, 20, 20 }, radio_buttons)
+               margin({ 20, 20, 20, 20 }, radio_buttons),
+               margin({ 20, 20, 20, 20 }, tabs)
             )
          ),
          htile(

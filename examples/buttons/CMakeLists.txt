@@ -15,4 +15,4 @@ set(ELEMENTS_APP_RESOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/transpo_180x632.png
 )
 
-include("../../CMakeMain.txt")
+include("${ELEMENTS_ROOT}/CMakeMain.txt")

@@ -18,6 +18,7 @@
 #endif
 
 namespace ph = cycfi::elements;
+namespace fs = cycfi::fs;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////

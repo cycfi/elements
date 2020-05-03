@@ -92,7 +92,7 @@ auto make_basic_text()
                   vtile(
                      left_caption(input_box("Show me the money").first, "Gimme Some"),
                      top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More")),
-                     top_margin(10, left_caption(
+                     yside_margin({ 10, 10 }, left_caption(
                         htile(
                            input_box(0.7).first,
                            left_margin(10, input_box(0.7).first),

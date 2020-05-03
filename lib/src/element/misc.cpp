@@ -46,9 +46,12 @@ namespace cycfi { namespace elements
       auto  state = canvas_.new_state();
       auto  align = text_align();
 
+      // default should reflect the theme's vertical label_text_align
+      if ((align & 0x1C) == 0)
+         align |= get_theme().label_text_align & 0x1C;
+
       canvas_.fill_style(font_color());
       canvas_.font(font(), font_size());
-      canvas_.text_align(align);
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)
@@ -76,6 +79,7 @@ namespace cycfi { namespace elements
             break;
       }
 
+      canvas_.text_align(align);
       canvas_.fill_text({ cx, cy }, c_str());
    }
 

@@ -164,8 +164,7 @@ target_include_directories(elements
 
 target_compile_features(elements PUBLIC cxx_std_17)
 
-if(IPO_SUPPORTED AND CMAKE_BUILD_TYPE STREQUAL "Release")
-   message(STATUS "Enabling LTO for elements")
+if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 

@@ -9,9 +9,11 @@ project(elements LANGUAGES C CXX)
 
 include(cmake/CMakeInclude.txt)
 
+option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)
+option(ELEMENTS_ENABLE_LTO "enable link time optimization for Elements targets" OFF)
+
 add_subdirectory(lib)
 
-option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)
 
 if (ELEMENTS_BUILD_EXAMPLES)
    set(ELEMENTS_ROOT ${PROJECT_SOURCE_DIR})

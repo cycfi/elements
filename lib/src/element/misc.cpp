@@ -44,15 +44,39 @@ namespace cycfi { namespace elements
    {
       auto& canvas_ = ctx.canvas;
       auto  state = canvas_.new_state();
+      auto  align = text_align();
 
       canvas_.fill_style(font_color());
       canvas_.font(font(), font_size());
-      canvas_.text_align(text_align());
+      canvas_.text_align(align);
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
-      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
+      switch (align & 0x3)
+      {
+         case canvas::left:
+            cx = ctx.bounds.left;
+            break;
+         case canvas::center:
+            break;
+         case canvas::right:
+            cx = ctx.bounds.right;
+            break;
+      }
 
-      canvas_.fill_text(point{ cx, cy }, c_str());
+      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
+      switch (align & 0x1C)
+      {
+         case canvas::top:
+            cy = ctx.bounds.top;
+            break;
+         case canvas::middle:
+            break;
+         case canvas::bottom:
+            cy = ctx.bounds.bottom;
+            break;
+      }
+
+      canvas_.fill_text({ cx, cy }, c_str());
    }
 
    void vgrid_lines::draw(context const& ctx)

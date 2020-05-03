@@ -62,9 +62,9 @@ auto make_basic_text()
       return fr(halign(0.5, heading{ txt }), 0);
    };
 
-   auto el = [=](double align, auto const& label_)
+   auto el = [=](auto const& label_)
    {
-      return fr(halign(align, label_));
+      return fr(halign(0.5, label_));
    };
 
    auto icons =
@@ -102,16 +102,25 @@ auto make_basic_text()
                      ))
                   )
                )),
-            top_margin(20, pane("Static Text",
+            top_margin(20, pane("Labels",
                vtile(
-                  el(0.5, label("Hello, Universe. This is Elements.")
+                  el(label("Hello, Universe. This is Elements.")
                      .font(font_descr{ "Open Sans" }.semi_bold())
                      .font_color(colors::antique_white)
                      .font_size(18)
                   ),
-                  el(1.0, label("A cross-platform, fine-grained, highly modular C++ GUI library.")),
-                  el(0.0, label("Based on a GUI framework written in the mid 90s named Pica.")),
-                  el(0.5, label("Now, Joel rewrote my code using modern C++17."))
+                  el(
+                     vtile(
+                        label("A cross-platform,")
+                           .text_align(canvas::center),
+                        label("fine-grained,")
+                           .text_align(canvas::left),
+                        label("highly modular C++ GUI library.")
+                           .text_align(canvas::right),
+                        label("Based on a GUI framework written in the mid 90s named Pica."),
+                        label("Now, Joel rewrote my code using modern C++17.")
+                     )
+                  )
                ))),
             top_margin(20, pane("Icons", std::move(icons))),
             empty()

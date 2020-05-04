@@ -26,7 +26,7 @@ declarative interface with heavy emphasis on reuse.
 
 ## News
 
-- 8 April 2020: Simplified installation (Infra ans Json are now header-only submodules)
+- 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
 - 23 February 2020: Setup and Installation guide updated for Windows and Linux.
 - 22 February 2020: Improved font support
 - 01 September 2019: Linux port completed

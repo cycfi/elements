@@ -83,7 +83,7 @@ auto make_basic_text()
          )
       );
 
-   static float grid[] = { 0.32, 1.0 };
+   static float const grid[] = { 0.32, 1.0 };
 
    auto my_label = [=](auto text)
    {

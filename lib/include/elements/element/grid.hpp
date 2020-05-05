@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
    inline auto vgrid(float(&coords)[N], E&&... elements)
 #else
    template <typename... E>
-   inline auto vgrid(float (&coords)[sizeof...(E)], E&&... elements)
+   inline auto vgrid(float const (&coords)[sizeof...(E)], E&&... elements)
 #endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
@@ -85,9 +85,9 @@ namespace cycfi { namespace elements
    }
 
    template <typename... E>
-   inline auto vgrid(std::array<float, sizeof...(E)>& coords, E&&... elements)
+   inline auto vgrid(std::array<float, sizeof...(E)> const& coords, E&&... elements)
    {
-      using plain_array = float (&)[sizeof...(E)];
+      using plain_array = float const (&)[sizeof...(E)];
       return vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 
@@ -112,7 +112,7 @@ namespace cycfi { namespace elements
    inline auto hgrid(float(&coords)[N], E&&... elements)
 #else
    template <typename... E>
-   inline auto hgrid(float (&coords)[sizeof...(E)], E&&... elements)
+   inline auto hgrid(float const (&coords)[sizeof...(E)], E&&... elements)
 #endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
@@ -123,9 +123,9 @@ namespace cycfi { namespace elements
    }
 
    template <typename... E>
-   inline auto hgrid(std::array<float, sizeof...(E)>& coords, E&&... elements)
+   inline auto hgrid(std::array<float, sizeof...(E)> const& coords, E&&... elements)
    {
-      using plain_array = float (&)[sizeof...(E)];
+      using plain_array = float const (&)[sizeof...(E)];
       return hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 }}

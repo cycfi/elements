@@ -14,15 +14,12 @@ namespace cycfi { namespace elements
    view_limits vgrid_element::limits(basic_context const& ctx) const
    {
       view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
-      auto prev = 0;
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
-         auto height = grid()[i] - prev;
-         prev = grid()[i];
 
-         limits.min.y += height;
-         limits.max.y += height;
+         limits.min.y += el.min.y;
+         limits.max.y += el.max.y;
          clamp_min(limits.min.x, el.min.x);
          clamp_max(limits.max.x, el.max.x);
       }
@@ -37,15 +34,17 @@ namespace cycfi { namespace elements
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
       auto top = ctx.bounds.top;
+      auto total_height = ctx.bounds.height();
 
       auto prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto height = grid()[i] - prev;
+         auto y = grid()[i] * total_height;
+         auto height = y - prev;
          auto& elem = at(i);
          rect ebounds = { left, prev+top, right, prev+top+height };
          elem.layout(context{ ctx, &elem, ebounds });
-         prev = grid()[i];
+         prev = y;
       }
    }
 
@@ -56,7 +55,13 @@ namespace cycfi { namespace elements
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
       auto top = ctx.bounds.top;
-      return rect{ left, (index ? grid()[index-1] : 0)+top, right, grid()[index]+top };
+      auto total_height = ctx.bounds.height();
+      return rect{
+         left
+       , (index ? (grid()[index-1] * total_height) : 0) + top
+       , right
+       , (grid()[index] * total_height) + top
+      };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -65,15 +70,12 @@ namespace cycfi { namespace elements
    view_limits hgrid_element::limits(basic_context const& ctx) const
    {
       view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
-      auto prev = 0;
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
-         auto width = grid()[i] - prev;
-         prev = grid()[i];
 
-         limits.min.x += width;
-         limits.max.x += width;
+         limits.min.x += el.min.x;
+         limits.max.x += el.max.x;
          clamp_min(limits.min.y, el.min.y);
          clamp_max(limits.max.y, el.max.y);
       }
@@ -88,15 +90,17 @@ namespace cycfi { namespace elements
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
       auto left = ctx.bounds.left;
+      auto total_width = ctx.bounds.width();
 
       auto prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto width = grid()[i] - prev;
-         auto& elem = at(i++);
+         auto x = grid()[i] * total_width;
+         auto width = x - prev;
+         auto& elem = at(i);
          rect ebounds = { prev+left, top, prev+left+width, bottom };
          elem.layout(context{ ctx, &elem, ebounds });
-         prev = grid()[i];
+         prev = x;
       }
    }
 
@@ -107,6 +111,12 @@ namespace cycfi { namespace elements
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
       auto left = ctx.bounds.left;
-      return rect{ (index? grid()[index-1] : 0)+left, top, grid()[index]+left, bottom };
+      auto total_width = ctx.bounds.width();
+      return rect{
+         (index? (grid()[index-1] * total_width) : 0) + left
+       , top
+       , (grid()[index] * total_width) + left
+       , bottom
+      };
    }
 }}

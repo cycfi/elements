@@ -83,45 +83,64 @@ auto make_basic_text()
          )
       );
 
+   static float grid[] = { 0.32, 1.0 };
+
+   auto my_label = [=](auto text)
+   {
+      return right_margin(10, label(text).text_align(canvas::right));
+   };
+
+   auto my_input = [=](auto caption, auto input)
+   {
+      return bottom_margin(10, hgrid(grid, my_label(caption), input));
+   };
+
+   auto text_input =
+      pane("Text Input",
+         margin({ 10, 5, 10, 5 },
+            vtile(
+               my_input("Gimme Some", input_box("Show me the money").first),
+               my_input("Gimme Some More", input_box("Show me more").first),
+               my_input("Cute Text Boxes",
+                  htile(
+                     input_box(0.7).first,
+                     left_margin(10, input_box(0.7).first),
+                     left_margin(10, input_box(0.7).first)
+                  )
+               )
+            )
+         ))
+      ;
+
+   auto labels =
+      top_margin(20, pane("Labels",
+         vtile(
+            el(label("Hello, Universe. This is Elements.")
+               .font(font_descr{ "Open Sans" }.semi_bold())
+               .font_color(colors::antique_white)
+               .font_size(18)
+            ),
+            el(
+               vtile(
+                  label("A cross-platform,")
+                     .text_align(canvas::center),
+                  label("fine-grained,")
+                     .text_align(canvas::left),
+                  label("highly modular C++ GUI library.")
+                     .text_align(canvas::right),
+                  label("Based on a GUI framework written in the mid 90s named Pica."),
+                  label("Now, Joel rewrote my code using modern C++17.")
+               )
+            )
+         )))
+      ;
+
    return
       margin(
          { 10, 0, 10, 10 },
          vtile(
-            pane("Text Input",
-               margin({ 10, 5, 10, 5 },
-                  vtile(
-                     left_caption(input_box("Show me the money").first, "Gimme Some"),
-                     top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More")),
-                     yside_margin({ 10, 10 }, left_caption(
-                        htile(
-                           input_box(0.7).first,
-                           left_margin(10, input_box(0.7).first),
-                           left_margin(10, input_box(0.7).first)
-                        ),
-                        "Cute Text Boxes"
-                     ))
-                  )
-               )),
-            top_margin(20, pane("Labels",
-               vtile(
-                  el(label("Hello, Universe. This is Elements.")
-                     .font(font_descr{ "Open Sans" }.semi_bold())
-                     .font_color(colors::antique_white)
-                     .font_size(18)
-                  ),
-                  el(
-                     vtile(
-                        label("A cross-platform,")
-                           .text_align(canvas::center),
-                        label("fine-grained,")
-                           .text_align(canvas::left),
-                        label("highly modular C++ GUI library.")
-                           .text_align(canvas::right),
-                        label("Based on a GUI framework written in the mid 90s named Pica."),
-                        label("Now, Joel rewrote my code using modern C++17.")
-                     )
-                  )
-               ))),
+            text_input,
+            labels,
             top_margin(20, pane("Icons", std::move(icons))),
             empty()
          )

@@ -1305,19 +1305,24 @@ while tiles allow elements to fluidly adjust depending on available space.
 Tiles are best used for composing UI elements while grids are best for
 composing tables.
 
+-------------------------------------------------------------------------------
+
 ### Horizontal Grids
 
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/hgrid.png">
 
 Horizontal Grids are composites that lay out one or more child elements in a
-row following externally supplied horizontal coordinates. Horizontal Grids
-have fixed horizontal sizes and computed vertical sizes following the natural
+row following externally supplied horizontal fractional positions. Horizontal
+Grids have computed horizontal and vertical sizes following the natural
 `limits` of its children.
 
 #### Semantics
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
-2. The elements are positioned horizontally using the supplied coordinates.
+2. The elements are positioned horizontally using the supplied fractional
+   positions. The fractional positions values range from 0.0 to 1.0, which
+   specify the child element's horizontal position from left (0.0) to right
+   (1.0).
 3. The grid's *minimum vertical limit* is computed as the minimum of the
    children elements' *minimum vertical limit*s.
 4. The grid's *maximum vertical limit* is computed as the maximum of the
@@ -1325,8 +1330,8 @@ have fixed horizontal sizes and computed vertical sizes following the natural
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
-6. The supplied (horizontal) and computed (vertical) coordinates may violate
-   the limits of its children elements.
+6. The supplied (horizontal) positions and computed (vertical) coordinates
+   may violate the limits of its children elements.
    1. If the allocated size of a child element is lower than the element's
       *minimum limits* in either dimension, the element will be cropped.
    2. If a child element's *maximum limits* in either dimension is exceeded,
@@ -1341,37 +1346,39 @@ Build a horizontal grid with a fixed number of elements.
 #### Expression
 
 ```c++
-hgrid(coords, e1,...eN)
+hgrid(positions, e1,...eN)
 ```
 
 #### Notation
 
-| `N`             | The number of items                                          |
-| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
-| `coords`        | External container of horizontal coordinates (more below)    |
+| `N`             | The number of items                                             |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below) |
+| `positions`     | External container of fractional positions (more below)         |
 
-The External container, `coords`, can either be a plain array of type
+The external container, `positions`, can either be a plain array of type
 `float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in a
 `std::array<element_ptr, N>` managed by the horizontal grid element.
 
 #### Example
 
 ```c++
-static float coords[] = { 50, 100, 150, 200 };
+static float positions[] = { 0.25, 0.5, 0.75, 1.0 };
 //...
-hgrid(coords, item1, item2, item3, item4)
+hgrid(positions, item1, item2, item3, item4)
 ```
 
 > :point_right: If the number of elements is not fixed, you can use an
 `hgrid_composite` (see below).
 
 #### Requirements
-1. The number of supplied coordinates and elements should match, otherwise,
+1. The number of supplied positions and elements should match, otherwise,
    compiler error (no matching function for call to `hgrid`).
-2. The coordinates assume the first element's relative coordinate at `x=0`
-   (it is at the left-most position in the row). The relative coordinate of
-   the second element is at index `0`, the third at index `1`, and so on. The
-   last coordinate is the total and final width of the grid.
+2. The positions assume the first element is at `x=0` (it is at the left-most
+   position in the row). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 #### Semantics
 1. In addition to the semantics of Horizontal Grids, returns instance of
@@ -1386,13 +1393,13 @@ Create a horizontal grid with an indeterminate (dynamic) number of elements.
 #### Expression
 
 ```c++
-hgrid_composite c{ coords };
+hgrid_composite c{ positions };
 ```
 
 #### Notation
 
-| `coords`        | External container of horizontal coordinates, `std::vector<float>`    |
-| `c`             | Instance of type `hgrid_composite`                           |
+| `positions`     | External container of fractional positions, `std::vector<float>` |
+| `c`             | Instance of type `hgrid_composite`                                 |
 
 The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
@@ -1410,12 +1417,14 @@ c.push_back(share(child));
 > the `std::vector<element_ptr>` in `hgrid_composite`.
 
 #### Requirements
-1. The number of items in the external coordinates vector `coords` must match
+1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
-2. The coordinates assume the first element's relative coordinate at `x=0`
-   (it is at the left-most position in the row). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
-   last coordinate is the total and final width of the grid.
+2. The positions assume the first element is at `x=0` (it is at the left-most
+   position in the row). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 -------------------------------------------------------------------------------
 
@@ -1530,14 +1539,17 @@ c.push_back(share(child));
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/vgrid.png">
 
 Vertical Grids are composites that lay out one or more child elements in a
-column following externally supplied vertical coordinates. Vertical Grids
-have fixed vertical sizes and computed horizontal sizes following the natural
+column following externally supplied vertical fractional positions. Vertical
+Grids have computed horizontal and vertical sizes following the natural
 `limits` of its children.
 
 #### Semantics
 1. The elements are laid out in a single column, top to bottom, immediately
    next to each other with no intervening space.
-2. The elements are positioned using the supplied coordinates.
+2. The elements are positioned vertically using the supplied fractional
+   positions. The fractional positions values range from 0.0 to 1.0, which
+   specify the child element's vertical position from top (0.0) to bottom
+   (1.0).
 3. The grid's *minimum horizontal limit* is computed as the minimum of the
    children elements' *minimum horizontal limit*s.
 4. The grid's *maximum horizontal limit* is computed as the maximum of the
@@ -1545,8 +1557,8 @@ have fixed vertical sizes and computed horizontal sizes following the natural
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
-6. The supplied (vertical) and computed (horizontal) coordinates may violate
-   the limits of its children elements.
+6. The supplied (vertical) positions and computed (horizontal) coordinates
+   may violate the limits of its children elements.
    1. If the allocated size of a child element is lower than the element's
       *minimum limits* in either dimension, the element will be cropped.
    2. If a child element's *maximum limits* in either dimension is exceeded,
@@ -1561,26 +1573,26 @@ Build a vertical grid with a fixed number of elements.
 #### Expression
 
 ```c++
-vgrid(coords, e1,...eN)
+vgrid(positions, e1,...eN)
 ```
 
 #### Notation
 
-| `N`             | The number of items                                          |
-| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
-| `coords`        | External container of vertical coordinates (more below)    |
+| `N`             | The number of items                                             |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below) |
+| `positions`     | External container of fractional positions (more below)         |
 
 
-The External container, `coords` is an external can either be a plain array
+The External container, `positions` is an external can either be a plain array
 of type `float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in
 a `std::array<element_ptr, N>` managed by the vertical grid element.
 
 #### Example
 
 ```c++
-static float coords[] = { 50, 100, 150, 200 };
+static float positions[] = { 0.25, 0.5, 0.75, 1.0 };
 //...
-vgrid(coords, item1, item2, item3, item4)
+vgrid(positions, item1, item2, item3, item4)
 ```
 
 > :point_right: If the number of elements is not fixed, you can use an
@@ -1589,10 +1601,12 @@ vgrid(coords, item1, item2, item3, item4)
 #### Requirements
 1. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to `vgrid`).
-2. The coordinates assume the first element's relative coordinate at `y=0`
-   (it is at the top-most position in the column). The relative coordinate of
-   the second element is at index `0`, the third at index `1`, and so on. The
-   last coordinate is the total and final height of the grid.
+2. The positions assume the first element is at `x=0` (it is at the top-most
+   position in the column). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 #### Semantics
 1. In addition to the semantics of Vertical Grids, returns instance of
@@ -1607,13 +1621,13 @@ Create a vertical grid with an indeterminate (dynamic) number of elements.
 #### Expression
 
 ```c++
-vgrid_composite c{ coords };
+vgrid_composite c{ positions };
 ```
 
 #### Notation
 
-| `coords`        | External container of vertical coordinates, `std::vector<float>`    |
-| `c`             | Instance of type `vgrid_composite`                           |
+| `positions`     | External container of fractional positions, `std::vector<float>`   |
+| `c`             | Instance of type `vgrid_composite`                                 |
 
 The `vgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
@@ -1629,12 +1643,14 @@ c.push_back(share(child));
 > the `std::vector<element_ptr>` in `vgrid_composite`.
 
 #### Requirements
-1. The number of items in the external coordinates vector `coords` must match
+1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
-2. The coordinates assume the first element's relative coordinate at `y=0`
-   (it is at the top-most position in the column). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
-   last coordinate is the total and final height of the grid.
+2. The positions assume the first element is at `x=0` (it is at the top-most
+   position in the column). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 -------------------------------------------------------------------------------
 

@@ -71,10 +71,10 @@ namespace cycfi { namespace elements
 
 #if defined(_MSC_VER)
    template <typename... E, std::size_t N = sizeof...(elements)>
-   inline auto vgrid(float(&coords)[N], E&&... elements)
+   inline auto vgrid(float const(&coords)[N], E&&... elements)
 #else
    template <typename... E>
-   inline auto vgrid(float const (&coords)[sizeof...(E)], E&&... elements)
+   inline auto vgrid(float const(&coords)[sizeof...(E)], E&&... elements)
 #endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
@@ -109,10 +109,10 @@ namespace cycfi { namespace elements
 
 #if defined(_MSC_VER)
    template <typename... E, std::size_t N = sizeof...(elements)>
-   inline auto hgrid(float(&coords)[N], E&&... elements)
+   inline auto hgrid(float const(&coords)[N], E&&... elements)
 #else
    template <typename... E>
-   inline auto hgrid(float const (&coords)[sizeof...(E)], E&&... elements)
+   inline auto hgrid(float const(&coords)[sizeof...(E)], E&&... elements)
 #endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;

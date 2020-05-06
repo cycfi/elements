@@ -195,7 +195,7 @@ namespace cycfi { namespace elements
          return nullptr;
       if (btn.down)
       {
-         auto r = layered_button::click(ctx, btn);
+         layered_button::click(ctx, btn);
          if (this->value() && this->on_click)
             this->on_click(true);
       }
@@ -205,7 +205,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline void basic_latching_button<Base>::drag(context const& ctx, mouse_button btn)
+   inline void basic_latching_button<Base>::drag(context const& /* ctx */, mouse_button /* btn */)
    {
    }
 

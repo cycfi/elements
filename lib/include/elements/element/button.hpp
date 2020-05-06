@@ -173,6 +173,7 @@ namespace cycfi { namespace elements
                         basic_latching_button(W1&& off, W2&& on);
 
       element*          click(context const& ctx, mouse_button btn) override;
+      void              drag(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>
@@ -193,10 +194,19 @@ namespace cycfi { namespace elements
       if (this->value() || !ctx.bounds.includes(btn.pos))
          return nullptr;
       if (btn.down)
-         return layered_button::click(ctx, btn);
+      {
+         auto r = layered_button::click(ctx, btn);
+         if (this->value() && this->on_click)
+            this->on_click(true);
+      }
       else if (this->on_click)
          this->on_click(true);
       return this;
+   }
+
+   template <typename Base>
+   inline void basic_latching_button<Base>::drag(context const& ctx, mouse_button btn)
+   {
    }
 
    ////////////////////////////////////////////////////////////////////////////

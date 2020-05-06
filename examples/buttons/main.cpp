@@ -107,12 +107,12 @@ auto make_controls(view& view_)
          group("Tabs",
             margin({ 10, 10, 20, 20 },
                top_margin(25,
-                  htile(
-                     align_center(tab("dream")),
-                     align_center(tab("insanity")),
-                     align_center(tab("imagination"))
+                  align_left(htile(
+                     tab("dream"),
+                     tab("insanity"),
+                     tab("imagination")
                   )
-               )
+               ))
             )
          );
 

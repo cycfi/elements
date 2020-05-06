@@ -7,33 +7,34 @@
 #define ELEMENTS_GALLERY_TAB_MAY_02_2020
 
 #include <elements/element/gallery/button.hpp>
-#include <elements/element/gallery/toggle_selector.hpp>
-#include <elements/element/selectable.hpp>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Radio Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_tab : public basic_latching_button<>, public selectable
-   {
-   public:
-
-      using basic_latching_button::basic_latching_button;
-
-      void              select(bool state) override;
-      bool              is_selected() const override;
-      element*          click(context const& ctx, mouse_button btn) override;
-   };
-
    void draw_tab(
       context const& ctx, std::string const& text, bool state, bool hilite
    );
 
-   template <bool state>
-   struct tab_element : toggle_selector
+   struct tab_element_base : element
    {
-      using toggle_selector::toggle_selector;
+                              tab_element_base(std::string text)
+                               : _text(std::move(text))
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    wants_control() const override;
+
+      std::string             _text;
+
+   };
+
+   template <bool state>
+   struct tab_element : tab_element_base
+   {
+      using tab_element_base::tab_element_base;
 
       void                    draw(context const& ctx) override;
    };
@@ -44,9 +45,9 @@ namespace cycfi { namespace elements
       draw_tab(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
    }
 
-   inline basic_tab tab(std::string text)
+   inline basic_choice tab(std::string text)
    {
-      return basic_tab(
+      return basic_choice(
          tab_element<false>{ text }
        , tab_element<true>{ text }
       );

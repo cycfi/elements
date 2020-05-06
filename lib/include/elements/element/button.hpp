@@ -8,6 +8,7 @@
 
 #include <elements/element/layer.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/element/selectable.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 #include <functional>
@@ -197,6 +198,20 @@ namespace cycfi { namespace elements
          this->on_click(true);
       return this;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic Choice
+   ////////////////////////////////////////////////////////////////////////////
+   class basic_choice : public basic_latching_button<>, public selectable
+   {
+   public:
+
+      using basic_latching_button::basic_latching_button;
+
+      void              select(bool state) override;
+      bool              is_selected() const override;
+      element*          click(context const& ctx, mouse_button btn) override;
+   };
 }}
 
 #endif

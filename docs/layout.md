@@ -123,7 +123,7 @@ implementation defined).
 ```
 
 ```c++
-{ { 100, 100 }, { 0, full_extent } }; // Fixed width, flexible height
+{ { 100, 100 }, { 100, full_extent } }; // Fixed width, flexible height
 ```
 
 ```c++
@@ -442,7 +442,7 @@ hstretch(stretch, subject)
 
 #### Notation
 
-| `stretch`    | Instance of `view_stretch` |
+| `stretch`    | A scalar value        |
 | `subject`    | Instance of `Element` |
 
 #### Semantics
@@ -474,7 +474,7 @@ vstretch(stretch, subject)
 
 #### Notation
 
-| `stretch`    | Instance of `view_stretch` |
+| `stretch`    | A scalar value        |
 | `subject`    | Instance of `Element` |
 
 #### Semantics
@@ -1300,10 +1300,14 @@ floating({ left, top, right, bottom }, subject)
 
 Tiles are the most useful layout elements, followed by by Grids. Tiles are
 used everywhere for composing hierarchical elements in rows and columns,
-typical to all GUIs. Grids are similar to tiles, but grids have fixed sizes
-while tiles allow elements to fluidly adjust depending on available space.
-Tiles are best used for composing UI elements while grids are best for
-composing tables.
+typical to all GUIs. Grids are similar to tiles. Both tiles and grids allow
+elements to fluidly adjust depending on available space. Tiles compute the
+layout of its elements using the children elements' size `limits` while grids
+lay out its elements using an externally supplied fractional coordinates that
+specify positions of the elements in the allocated space.
+
+Tiles are best used
+for composing UI elements while grids are best for composing tables.
 
 -------------------------------------------------------------------------------
 
@@ -1323,9 +1327,9 @@ Grids have computed horizontal and vertical sizes following the natural
    positions. The fractional positions values range from 0.0 to 1.0, which
    specify the child element's horizontal position from left (0.0) to right
    (1.0).
-3. The grid's *minimum vertical limit* is computed as the minimum of the
+3. The grid's *minimum vertical limit* is computed as the maximum of the
    children elements' *minimum vertical limit*s.
-4. The grid's *maximum vertical limit* is computed as the maximum of the
+4. The grid's *maximum vertical limit* is computed as the minimum of the
    children elements' *maximum vertical limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1416,6 +1420,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `hgrid_composite`.
 
+`hgrid_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 #### Requirements
 1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
@@ -1454,9 +1462,9 @@ composing tables.
       element is able to stretch twice as much compared to its siblings.
       Horizontally fixed-sized elements will not be stretched (element d in
       the diagram). (Also see [Stretch Elements](#stretch-elements)).
-3. The tile's *minimum vertical limit* is computed as the minimum of the
+3. The tile's *minimum vertical limit* is computed as the maximum of the
    children elements' *minimum vertical limit*s.
-4. The grid's *maximum vertical limit* is computed as the maximum of the
+4. The grid's *maximum vertical limit* is computed as the minimum of the
    children elements' *maximum vertical limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1532,6 +1540,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `htile_composite`.
 
+`htile_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ### Vertical Grids
@@ -1550,9 +1562,9 @@ Grids have computed horizontal and vertical sizes following the natural
    positions. The fractional positions values range from 0.0 to 1.0, which
    specify the child element's vertical position from top (0.0) to bottom
    (1.0).
-3. The grid's *minimum horizontal limit* is computed as the minimum of the
+3. The grid's *minimum horizontal limit* is computed as the maximum of the
    children elements' *minimum horizontal limit*s.
-4. The grid's *maximum horizontal limit* is computed as the maximum of the
+4. The grid's *maximum horizontal limit* is computed as the minumum of the
    children elements' *maximum horizontal limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1642,6 +1654,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `vgrid_composite`.
 
+`vgrid_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 #### Requirements
 1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
@@ -1679,9 +1695,9 @@ for composing UI elements while Vertical Grids are best for composing tables.
       element is able to stretch twice as much compared to its siblings.
       Vertically fixed-sized elements will not be stretched (element b in the
       diagram). (Also see [Stretch Elements](#stretch-elements)).
-3. The tile's *minimum horizontal limit* is computed as the minimum of the
+3. The tile's *minimum horizontal limit* is computed as the maximum of the
    children elements' *minimum horizontal limit*s.
-4. The grid's *maximum horizontal limit* is computed as the maximum of the
+4. The grid's *maximum horizontal limit* is computed as the minumum of the
    children elements' *maximum horizontal limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1756,6 +1772,10 @@ c.push_back(share(child));
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `vtile_composite`.
+
+`vtile_composite` is itself also an `element` and while it has
+`std::vector`'s interface, it can also be `share`d like any element, which
+allows you to build complex hierarchical structures.
 
 -------------------------------------------------------------------------------
 
@@ -1849,6 +1869,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `layer_composite`.
 
+`layer_composite` is itself also an `element` and while it has
+`std::vector`'s interface, it can also be `share`d like any element, which
+allows you to build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ### Decks
@@ -1856,12 +1880,12 @@ c.push_back(share(child));
 <img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/deck.png">
 
 The Deck is very similar to layers. Elements are placed in the z-axis. But
-unlike layers, only the top-most element is active.
+unlike layers, only selected element is active (top-most by default).
 
 #### Semantics
 1. Everything listed in the layer's *Semantics*, except 2 and 3.
-2. Only the top-most element is drawn.
-3. Only the top-most element is given the chance to process UI control.
+2. Only the active selected element element is drawn.
+3. Only the active selected element is given the chance to process UI control.
 
 -------------------------------------------------------------------------------
 
@@ -1926,6 +1950,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `deck_composite`.
 
+`deck_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ## Flow
@@ -1942,7 +1970,7 @@ simplified layout scenario for child elements `a` to `r`.
 <img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/flow.png">
 
 The child elements arranged in a `flow` composite are automatically re-flowed
-(re-layout) when the view size changes.
+(re-lay-out) when the view size changes.
 
 To have elements laid out using `flow`, you need to make a `flow_composite`.
 
@@ -1976,6 +2004,10 @@ c.push_back(share(child));
 
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
+
+`flow_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
 
 -------------------------------------------------------------------------------
 

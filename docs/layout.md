@@ -99,7 +99,7 @@ By default, an element has full limits: it is infinitely resizable:
 ```c++
 constexpr view_limits full_limits = {
    { 0.0, 0.0 }
-   , { full_extent, full_extent }
+ , { full_extent, full_extent }
 };
 ```
 

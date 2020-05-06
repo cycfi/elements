@@ -7,6 +7,7 @@
 #define ELEMENTS_PROXY_APRIL_10_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/indirect.hpp>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -92,15 +93,33 @@ namespace cycfi { namespace elements
    // pointer type or nullptr if not found.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
-   inline Ptr find_subject(element* e_)
+   inline Ptr find_element(element* e_)
    {
       if (auto* e = dynamic_cast<Ptr>(e_))
+         return e;
+
+      using E = std::remove_pointer_t<Ptr>;
+      using indirect_shared = indirect<shared_element<E>>;
+      if (auto* e = dynamic_cast<indirect_shared*>(e_))
+         return &e->get();
+
+      using indirect_reference = indirect<reference<E>>;
+      if (auto* e = dynamic_cast<indirect_reference*>(e_))
+         return &e->get();
+
+      return nullptr;
+   }
+
+   template <typename Ptr>
+   inline Ptr find_subject(element* e_)
+   {
+      if (auto* e = find_element<Ptr>(e_))
          return e;
       proxy_base* proxy = dynamic_cast<proxy_base*>(e_);
       while (proxy)
       {
          auto* subject = &proxy->subject();
-         if (auto* e = dynamic_cast<Ptr>(subject))
+         if (auto* e = find_element<Ptr>(subject))
             return e;
          proxy = dynamic_cast<proxy_base*>(subject);
       }

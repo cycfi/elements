@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
       rect        box = ctx.bounds;
       auto        corner_radius = get_theme().frame_corner_radius;
 
-      color c1 = (state ? colors::gray[40] : colors::black).opacity(0.5);
+      color c1 = (state ? colors::gray[60] : colors::black).opacity(0.5);
       color c2 = theme_.label_font_color;
 
       if (hilite)

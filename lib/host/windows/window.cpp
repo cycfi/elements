@@ -6,6 +6,8 @@
 #include <elements/window.hpp>
 #include <elements/support.hpp>
 
+#include "utils.hpp"
+
 namespace elements = cycfi::elements;
 
 namespace cycfi { namespace elements
@@ -100,7 +102,7 @@ namespace cycfi { namespace elements
 
       void constrain_size(HWND hwnd, RECT& r, view_limits limits)
       {
-         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         auto scale = get_scale_for_window(hwnd);
          auto extra = window_frame_size(hwnd);
          auto w = ((r.right - r.left) - extra.x) / scale;
          auto h = ((r.bottom - r.top) - extra.y) / scale;
@@ -161,7 +163,11 @@ namespace cycfi { namespace elements
       static init_window_class init;
 
       std::wstring wname = utf8_decode(name);
-      auto scale = GetDpiForSystem() / 96.0;
+      #ifdef ELEMENTS_HOST_ONLY_WIN7
+      auto scale = 1.0f;
+      #else
+      auto scale = GetDpiForSystem() / 96.0f;
+      #endif
 
       _window = CreateWindowW(
          L"ElementsWindow",
@@ -194,7 +200,7 @@ namespace cycfi { namespace elements
 
    point window::size() const
    {
-      auto scale = GetDpiForWindow(_window) / 96.0;
+      auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
       return {
@@ -205,7 +211,7 @@ namespace cycfi { namespace elements
 
    void window::size(point const& p)
    {
-      auto scale = GetDpiForWindow(_window) / 96.0;
+      auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
       frame.right = frame.left + (p.x * scale);
@@ -239,7 +245,7 @@ namespace cycfi { namespace elements
 
    point window::position() const
    {
-      auto scale = GetDpiForWindow(_window) / 96.0;
+      auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
       return { float(frame.left / scale), float(frame.top / scale) };
@@ -247,7 +253,7 @@ namespace cycfi { namespace elements
 
    void window::position(point const& p)
    {
-      auto scale = GetDpiForWindow(_window) / 96.0;
+      auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
 

@@ -185,11 +185,15 @@ namespace cycfi { namespace elements
    void scroller_base::prepare_subject(context& ctx)
    {
       view_limits    e_limits          = subject().limits(ctx);
-      double         elem_height       = e_limits.min.y;
-      double         available_height  = ctx.parent->bounds.height();
 
-      ctx.bounds.top -= (elem_height - available_height) * valign();
-      ctx.bounds.height(elem_height);
+      if (allow_vscroll())
+      {
+         double      elem_height       = e_limits.min.y;
+         double      available_height  = ctx.parent->bounds.height();
+
+         ctx.bounds.top -= (elem_height - available_height) * valign();
+         ctx.bounds.height(elem_height);
+      }
 
       if (allow_hscroll())
       {

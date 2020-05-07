@@ -125,6 +125,7 @@ elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    )
 elseif (WIN32)
    set(ELEMENTS_HOST
+      host/windows/utils.hpp
       host/windows/app.cpp
       host/windows/base_view.cpp
       host/windows/key.cpp
@@ -273,6 +274,10 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         message(FATAL_ERROR "Only Windows supports ELEMENTS_HOST_UI_LIBRARY=win32")
     endif()
     target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_WIN32)
+    if(ELEMENTS_HOST_ONLY_WIN7)
+        target_compile_definitions(elements PRIVATE ELEMENTS_HOST_ONLY_WIN7)
+        message(STATUS "Windows 7 compatibility enabled")
+    endif()
 else()
     message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, cocoa or win32.")
 endif()

@@ -130,6 +130,7 @@ namespace cycfi { namespace elements
       ~scroller_base() {}
 
       view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
 

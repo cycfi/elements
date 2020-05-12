@@ -19,7 +19,7 @@
 
 -------------------------------------------------------------------------------
 The Elements Library provides a comprehensive set of elements for laying out
-elements the view.
+elements in the view.
 
 -------------------------------------------------------------------------------
 

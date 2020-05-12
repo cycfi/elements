@@ -16,7 +16,6 @@ option(ELEMENTS_HOST_ONLY_WIN7 "If host UI library is win32, reduce elements fea
 
 add_subdirectory(lib)
 
-
 if (ELEMENTS_BUILD_EXAMPLES)
    set(ELEMENTS_ROOT ${PROJECT_SOURCE_DIR})
    add_subdirectory(examples)

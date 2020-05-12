@@ -440,6 +440,13 @@ namespace cycfi { namespace elements
       return { stretch, std::forward<Subject>(subject) };
    }
 
+   template <typename Subject>
+   inline hstretch_element<Subject>
+   no_hstretch(Subject&& subject)
+   {
+      return { 0.0f, std::forward<Subject>(subject) };
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
    class vstretch_element : public proxy<Subject>
@@ -474,6 +481,13 @@ namespace cycfi { namespace elements
    vstretch(float stretch, Subject&& subject)
    {
       return { stretch, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline vstretch_element<Subject>
+   no_vstretch(Subject&& subject)
+   {
+      return { 0.0f, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////

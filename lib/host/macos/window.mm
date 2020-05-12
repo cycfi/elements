@@ -144,7 +144,8 @@ namespace cycfi { namespace elements
       [window_ setContentMinSize : NSSize{ minx, miny }];
       [window_ setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
 
-
+      clamp_min(limits_.max.x, minx);
+      clamp_min(limits_.max.y, miny);
       auto _size = [[window_ contentView] frame].size;
       clamp(_size.width, minx, limits_.max.x);
       clamp(_size.height, miny, limits_.max.y);

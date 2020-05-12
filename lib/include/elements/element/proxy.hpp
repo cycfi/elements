@@ -94,8 +94,6 @@ namespace cycfi { namespace elements
    template <typename Ptr>
    inline Ptr find_subject(element* e_)
    {
-      if (auto* e = dynamic_cast<Ptr>(e_))
-         return e;
       proxy_base* proxy = dynamic_cast<proxy_base*>(e_);
       while (proxy)
       {

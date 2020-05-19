@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
       void                    prepare_subject(context& ctx) override;
 
       double                  halign() const override       { return 0; }
-      void                    halign(double val) override   {}
+      void                    halign(double /* val */) override {}
       double                  valign() const override       { return _valign; }
       void                    valign(double val) override   { _valign = val; }
 

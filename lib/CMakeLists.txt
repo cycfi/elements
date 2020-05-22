@@ -109,7 +109,9 @@ set(ELEMENTS_HEADERS
    include/elements.hpp
 )
 
-if (APPLE)
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "custom")
+   set(ELEMENTS_HOST)
+elseif (APPLE)
    set(ELEMENTS_HOST
       host/macos/app.mm
       host/macos/base_view.mm
@@ -275,6 +277,8 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         target_compile_definitions(elements PRIVATE ELEMENTS_HOST_ONLY_WIN7)
         message(STATUS "Windows 7 compatibility enabled")
     endif()
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "custom")
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_CUSTOM)
 else()
     message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, cocoa or win32.")
 endif()

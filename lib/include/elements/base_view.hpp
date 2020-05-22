@@ -285,6 +285,9 @@ namespace cycfi { namespace elements
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
    using host_view_handle = HWND;
    using host_window_handle = HWND;
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_CUSTOM)
+   using host_view_handle = void*;
+   using host_window_handle = void*;
 #else
    #error no ELEMENTS_HOST_UI_LIBRARY_* set
 #endif

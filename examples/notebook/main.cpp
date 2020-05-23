@@ -13,10 +13,6 @@ auto background = box(bkd_color);
 
 auto make_tabs(view& view_)
 {
-   auto tab1 = tab("Dream");
-   auto tab2 = tab("Insanity");
-   auto tab3 = tab("Imagination");
-
    auto make_page = [](auto text)
    {
       return layer(align_center_middle(label(text).font_size(100)), frame{});
@@ -29,7 +25,12 @@ auto make_tabs(view& view_)
          make_page("Imagination")
       );
 
-   return notebook(view_, page, tab1, tab2, tab3);
+   return notebook(
+      view_, page
+    , tab("Dream")
+    , tab("Insanity")
+    , tab("Imagination")
+   );
 }
 
 int main(int argc, char* argv[])

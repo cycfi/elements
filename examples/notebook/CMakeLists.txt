@@ -17,10 +17,10 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "Tabs")
-set(ELEMENTS_APP_TITLE "Tabs")
+set(ELEMENTS_APP_PROJECT "Notebook")
+set(ELEMENTS_APP_TITLE "Notebook")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
-set(ELEMENTS_APP_ID "com.cycfi.tabs")
+set(ELEMENTS_APP_ID "com.cycfi.notebook")
 set(ELEMENTS_APP_VERSION "1.0")
 
 include("${ELEMENTS_ROOT}/CMakeMain.txt")

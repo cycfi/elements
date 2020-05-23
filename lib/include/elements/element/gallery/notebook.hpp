@@ -38,12 +38,12 @@ namespace cycfi { namespace elements
       auto make_notebook(view& view_, Pages pages, Tab tab, RestTabs... rest)
       {
          if (pages->size() != sizeof...(RestTabs) + 1)
-            throw std::runtime_error{ "Error: The number of pages and tabs do not match." };
+            throw std::runtime_error{ "Error: The number of pages and notebook do not match." };
 
          // Select the first tab
          tab->select(true);
 
-         // Link the tabs
+         // Link the notebook
          link_tabs(view_, pages, 0, tab, rest...);
 
          return vtile(
@@ -59,7 +59,11 @@ namespace cycfi { namespace elements
    template <typename Pages, typename... Tab>
    auto notebook(view& view_, Pages&& pages_, Tab&&... tab)
    {
-      return detail::make_notebook(view_, share(pages_), share(tab)...);
+      return detail::make_notebook(
+         view_
+       , share(std::forward<Pages>(pages_))
+       , share(std::forward<Tab>(tab))...
+      );
    }
 }}
 

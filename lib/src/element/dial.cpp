@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/dial.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/view.hpp>
 #include <cmath>

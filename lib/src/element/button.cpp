@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/button.hpp>
+#include <elements/element/traversal.hpp>
 
 namespace cycfi { namespace elements
 {

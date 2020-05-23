@@ -139,4 +139,52 @@ namespace cycfi { namespace elements
       if (_state != new_state)
          state(new_state);
    }
+
+   bool basic_choice::is_selected() const
+   {
+      return value();
+   }
+
+   void basic_choice::select(bool state)
+   {
+      if (state != is_selected())
+         value(state);
+   }
+
+   element* basic_choice::click(context const& ctx, mouse_button btn)
+   {
+      bool was_selected = is_selected();
+      auto r = basic_latching_button<>::click(ctx, btn);
+      if (!was_selected && value())
+      {
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
+         {
+            for (std::size_t i = 0; i != c->size(); ++i)
+            {
+               if (auto e = find_element<basic_choice*>(&c->at(i)))
+               {
+                  if (e == this)
+                  {
+                     // Set the radio button
+                     e->select(true);
+                     // The base class::click should have called on_click already
+                  }
+                  else
+                  {
+                     if (e->is_selected())
+                     {
+                        // Reset the radio button
+                        e->select(false);
+                        if (e->on_click)
+                           e->on_click(false);
+                     }
+                  }
+               }
+            }
+         }
+         cctx->view.refresh(*cctx);
+      }
+      return r;
+   }
 }}

@@ -11,6 +11,7 @@
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/font.hpp>
+
 #include <functional>
 #include <string>
 #include <string_view>

@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2016-2020 Joel de Guzman, Michal Urbanski
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
@@ -148,6 +148,8 @@ source_group("Header Files\\elements"
    ${ELEMENTS_HEADERS}
 )
 
+add_subdirectory(infra)
+add_subdirectory(json)
 add_library(elements)
 
 target_sources(elements
@@ -155,15 +157,10 @@ target_sources(elements
    PUBLIC ${ELEMENTS_HEADERS}
 )
 
-target_include_directories(elements
-   PUBLIC
-      include
-      infra/include
-      infra/external/filesystem/include
-      json/include
-)
+target_include_directories(elements PUBLIC include)
 
 target_compile_features(elements PUBLIC cxx_std_17)
+target_link_libraries(elements PUBLIC cycfi::infra cycfi::json)
 
 if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)

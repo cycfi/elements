@@ -35,13 +35,13 @@ Elements. JSON provides Strict, type-safe, c++ to JSON I/O.
 ### C++17
 
 Elements currently supports the MacOS, Windows and Linux. In the Mac, we
-support both [XCode](https://developer.apple.com/xcode/) and
-[CLion](https://www.jetbrains.com/clion/) IDEs. Elements is tested with XCode
-10 and XCode 11. In Windows, we support Windows 10 with [Visual Studio
-2019](https://visualstudio.microsoft.com/vs/), although it will probably also
-work with older versions of the Visual Studio IDE. In Linux, we support both
-[Clang](https://clang.llvm.org/) and [g++](https://gcc.gnu.org/) Get the
-latest version with a C++17 compiler.
+support both [XCode](https://developer.apple.com/xcode/) IDE. Elements is
+tested with XCode 10 and XCode 11. In Windows, we support Windows 10 with
+[Visual Studio 2019](https://visualstudio.microsoft.com/vs/), although it
+will probably also work with older versions of the Visual Studio IDE. In
+Linux, we support both [Clang](https://clang.llvm.org/) and
+[g++](https://gcc.gnu.org/) Get the latest version with a C++17 compiler. The
+[CLion](https://www.jetbrains.com/clion/) IDE is supported on all platforms.
 
 ### Git
 

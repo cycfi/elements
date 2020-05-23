@@ -88,8 +88,8 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // find_subject utility finds the outermost subject of the given
-   // pointer type or nullptr if not found.
+   // find_subject utility finds the outermost subject of the given pointer
+   // type or nullptr if not found. Searches subjects of proxies only.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
    inline Ptr find_subject(element* e_)
@@ -103,6 +103,19 @@ namespace cycfi { namespace elements
          proxy = dynamic_cast<proxy_base*>(subject);
       }
       return nullptr;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_element utility finds the outermost subject of the given pointer
+   // type or nullptr if not found. Searches an element and if it is a proxy,
+   // searches its subject too.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Ptr>
+   inline Ptr find_element(element* e_)
+   {
+      if (auto* e = dynamic_cast<Ptr>(e_))
+         return e;
+      return find_subject<Ptr>(e_);
    }
 }}
 

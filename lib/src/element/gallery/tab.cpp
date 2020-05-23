@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2020 Michal Urbanski
+   Copyright (c) 2020 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/

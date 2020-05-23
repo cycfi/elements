@@ -13,68 +13,23 @@ auto background = box(bkd_color);
 
 auto make_tabs(view& view_)
 {
-   auto tab1 = share(tab("Dream"));
-   auto tab2 = share(tab("Insanity"));
-   auto tab3 = share(tab("Imagination"));
-   tab1->select(true);
+   auto tab1 = tab("Dream");
+   auto tab2 = tab("Insanity");
+   auto tab3 = tab("Imagination");
 
-   auto make_content = [](auto text)
+   auto make_page = [](auto text)
    {
       return layer(align_center_middle(label(text).font_size(100)), frame{});
    };
 
-   auto content1 = make_content("Dream");
-   auto content2 = make_content("Insanity");
-   auto content3 = make_content("Imagination");
-
-   auto content = share(
+   auto page =
       deck(
-         content1,
-         content2,
-         content3
-      ));
+         make_page("Dream"),
+         make_page("Insanity"),
+         make_page("Imagination")
+      );
 
-   tab1->on_click =
-      [content, &view_](bool state)
-      {
-         if (state)
-         {
-            content->select(0);
-            view_.refresh(*content);
-         }
-      };
-
-   tab2->on_click =
-      [content, &view_](bool state)
-      {
-         if (state)
-         {
-            content->select(1);
-            view_.refresh(*content);
-         }
-      };
-
-   tab3->on_click =
-      [content, &view_](bool state)
-      {
-         if (state)
-         {
-            content->select(2);
-            view_.refresh(*content);
-         }
-      };
-
-   return vtile(
-      margin(
-         { 5, 15, 20, 0 },
-         align_left(htile(
-            hold(tab1),
-            hold(tab2),
-            hold(tab3)
-         ))
-      ),
-      hold(content)
-   );
+   return notebook(view_, page, tab1, tab2, tab3);
 }
 
 int main(int argc, char* argv[])

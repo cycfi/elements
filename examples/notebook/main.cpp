@@ -18,15 +18,13 @@ auto make_tabs(view& view_)
       return layer(align_center_middle(label(text).font_size(100)), frame{});
    };
 
-   auto page =
-      deck(
+   return notebook(
+      view_
+    , deck(
          make_page("Dream"),
          make_page("Insanity"),
          make_page("Imagination")
-      );
-
-   return notebook(
-      view_, page
+      )
     , tab("Dream")
     , tab("Insanity")
     , tab("Imagination")

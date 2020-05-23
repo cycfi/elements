@@ -27,8 +27,9 @@ declarative interface with heavy emphasis on reuse.
 ## News
 
 - 23 May 2020: Work in progress `notebook` gallery factory (`notebook` branch).
-- 23 May 2020: Updated documentation (continuous from 11 March 2020).
 - 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
+- 11 March 2020: Added [Layout documentation](http://cycfi.github.io/elements/layout).
+- 3 March 2020: Added [Design Aspects documentation](http://cycfi.github.io/elements/aspects).
 - 23 February 2020: Setup and Installation guide updated for Windows and Linux.
 - 22 February 2020: Improved font support
 - 01 September 2019: Linux port completed

@@ -10,6 +10,9 @@
 #include <elements/element/tile.hpp>
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
+#include <elements/element/layer.hpp>
+#include <elements/element/layer.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 #include <stdexcept>
 
@@ -18,27 +21,32 @@ namespace cycfi { namespace elements
    namespace detail
    {
       template <typename Pages, typename Tab, typename... RestTabs>
-      void link_tabs(view& view_, Pages pages, std::size_t index, Tab tab, RestTabs... rest)
+      void link_tabs(view& view_, Pages pages_, std::size_t index, Tab tab_, RestTabs... rest)
       {
-         tab->on_click =
-            [index, pages, &view_](bool state)
-            {
-               if (state)
+         auto* tab = find_element<basic_choice*>(tab_.get());
+         auto pages = find_element<deck_element*>(pages_.get());
+         if (tab && pages)
+         {
+            tab->on_click =
+               [index, pages, &view_](bool state)
                {
-                  pages->select(index);
-                  view_.refresh(*pages);
-               }
-            };
+                  if (state)
+                  {
+                     pages->select(index);
+                     view_.refresh(*pages);
+                  }
+               };
+         }
 
          if constexpr(sizeof...(RestTabs) > 0)
-            link_tabs(view_, pages, index+1, rest...);
+            link_tabs(view_, pages_, index+1, rest...);
       }
 
       template <typename Pages, typename Tab, typename... RestTabs>
       auto make_notebook(view& view_, Pages pages, Tab tab, RestTabs... rest)
       {
          if (pages->size() != sizeof...(RestTabs) + 1)
-            throw std::runtime_error{ "Error: The number of pages and notebook do not match." };
+            throw std::runtime_error{ "Error: The number of pages and tabs do not match." };
 
          // Select the first tab
          tab->select(true);

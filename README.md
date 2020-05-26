@@ -37,7 +37,7 @@ declarative interface with heavy emphasis on reuse.
 
 ## Documentation
 
-1. [Gallery](gallery)
+1. [Gallery](http://cycfi.github.io/elements/gallery)
 2. [Setup and Installation](http://cycfi.github.io/elements/setup)
 3. [Design Aspects](http://cycfi.github.io/elements/aspects)
 4. [Layout](http://cycfi.github.io/elements/layout)

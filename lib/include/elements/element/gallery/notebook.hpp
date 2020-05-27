@@ -15,6 +15,7 @@
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 #include <stdexcept>
+#include <string>
 
 namespace cycfi { namespace elements
 {
@@ -24,7 +25,7 @@ namespace cycfi { namespace elements
       void link_tabs(view& view_, Pages pages_, std::size_t index, Tab tab_, RestTabs... rest)
       {
          auto* tab = find_element<basic_choice*>(tab_.get());
-         auto pages = find_element<deck_element*>(pages_.get());
+         auto* pages = find_element<deck_element*>(pages_.get());
          if (tab && pages)
          {
             tab->on_click =
@@ -42,35 +43,63 @@ namespace cycfi { namespace elements
             link_tabs(view_, pages_, index+1, rest...);
       }
 
-      template <typename Pages, typename Tab, typename... RestTabs>
-      auto make_notebook(view& view_, Pages pages, Tab tab, RestTabs... rest)
+      template <typename Pages, typename... Tabs>
+      auto vnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
       {
-         if (pages->size() != sizeof...(RestTabs) + 1)
-            throw std::runtime_error{ "Error: The number of pages and tabs do not match." };
-
-         // Select the first tab
-         tab->select(true);
-
          // Link the notebook
-         link_tabs(view_, pages, 0, tab, rest...);
+         link_tabs(view_, pages, tabs...);
 
          return vtile(
-            margin(
-               { 5, 15, 20, 0 },
-               align_left(htile(hold(tab), hold(rest)...))
-            ),
+            align_left(htile(hold(tabs)...)),
+            hold(pages)
+         );
+      }
+
+      template <typename Pages, typename... Tabs>
+      auto hnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
+      {
+         // Link the notebook
+         link_tabs(view_, pages, tabs...);
+
+         return htile(
+            align_top(vtile(hold(tabs)...)),
             hold(pages)
          );
       }
    }
 
-   template <typename Pages, typename... Tab>
-   auto notebook(view& view_, Pages&& pages_, Tab&&... tab)
+   template <typename Pages, typename Tab, typename... RestTabs>
+   void link_tabs(view& view_, Pages pages, Tab tab, RestTabs... rest)
    {
-      return detail::make_notebook(
+      auto const num_pages = pages->size();
+      auto const num_tabs = sizeof...(RestTabs) + 1;
+      if (num_pages != num_tabs)
+         throw std::runtime_error{ "Error: The number of pages (" + std::to_string(num_pages) + ") "
+            "and tabs (" + std::to_string(num_tabs) + ") do not match." };
+
+      // Select the first tab
+      tab->select(true);
+
+      detail::link_tabs(view_, pages, 0, tab, rest...);
+   }
+
+   template <typename Pages, typename... Tabs>
+   auto vnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
+   {
+      return detail::vnotebook(
          view_
-       , share(std::forward<Pages>(pages_))
-       , share(std::forward<Tab>(tab))...
+       , share(std::forward<Pages>(pages))
+       , share(std::forward<Tabs>(tabs))...
+      );
+   }
+
+   template <typename Pages, typename... Tabs>
+   auto hnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
+   {
+      return detail::hnotebook(
+         view_
+       , share(std::forward<Pages>(pages))
+       , share(std::forward<Tabs>(tabs))...
       );
    }
 }}

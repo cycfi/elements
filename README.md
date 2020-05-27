@@ -40,6 +40,8 @@ declarative interface with heavy emphasis on reuse.
 
 ## Documentation
 
+Documentation is work in progress. Stay tuned...
+
 1. [Gallery](http://cycfi.github.io/elements/gallery)
 2. [Setup and Installation](http://cycfi.github.io/elements/setup)
 3. [Design Aspects](http://cycfi.github.io/elements/aspects)

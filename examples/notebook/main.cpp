@@ -18,7 +18,7 @@ auto make_tabs(view& view_)
       return layer(align_center_middle(label(text).font_size(100)), frame{});
    };
 
-   return notebook(
+   return vnotebook(
       view_
     , deck(
          make_page("Dream"),

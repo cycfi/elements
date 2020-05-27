@@ -27,6 +27,9 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
+      void                    fixed_size(point size) { _size = size; }
+      point                   fixed_size() const { return _size; }
+
    private:
 
       point          _size;
@@ -76,6 +79,9 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
+      void                    hsize(float width) { _width = width; }
+      float                   hsize() const { return _width; }
+
    private:
 
       float                   _width;
@@ -121,6 +127,9 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    vsize(float height) { _height = height; }
+      float                   vsize() const { return _height; }
 
    private:
 
@@ -169,6 +178,9 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    min_size(point size) { _size = size; }
+      point                   min_size() const { return _size; }
 
    private:
 
@@ -221,6 +233,9 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
+      void                    hmin_size(float width) { _width = width; }
+      float                   hmin_size() const { return _width; }
+
    private:
 
       float                   _width;
@@ -267,6 +282,9 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    vmin_size(float height) { _height = height; }
+      float                   vmin_size() const { return _height; }
 
    private:
 
@@ -316,6 +334,9 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    max_size(point size) { _size = size; }
+      point                   max_size() const { return _size; }
 
    private:
 
@@ -368,6 +389,9 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
+      void                    hmax_size(float size) { _size = size; }
+      float                   hmax_size() const { return _size; }
+
    private:
 
       float                   _size;
@@ -416,6 +440,9 @@ namespace cycfi { namespace elements
 
       virtual view_stretch    stretch() const;
 
+      void                    hstretch(float stretch) { _stretch = stretch; }
+      float                   hstretch() const { return _stretch; }
+
    private:
 
       float                   _stretch;
@@ -459,6 +486,9 @@ namespace cycfi { namespace elements
 
       virtual view_stretch    stretch() const;
 
+      void                    vstretch(float stretch) { _stretch = stretch; }
+      float                   vstretch() const { return _stretch; }
+
    private:
 
       float                   _stretch;
@@ -494,8 +524,10 @@ namespace cycfi { namespace elements
    // Size limited
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   struct limit_element : public proxy<Subject>
+   class limit_element : public proxy<Subject>
    {
+   public:
+
       using base_type = proxy<Subject>;
 
                               limit_element(view_limits limits_, Subject&& subject)
@@ -504,6 +536,11 @@ namespace cycfi { namespace elements
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
+
+      void                    limit(view_limits limits) { _limits = limits; }
+      view_limits             limit() const { return _limits; }
+
+   private:
 
       view_limits             _limits;
    };
@@ -531,8 +568,10 @@ namespace cycfi { namespace elements
    // Scaled
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   struct scale_element : public proxy<Subject>
+   class scale_element : public proxy<Subject>
    {
+   public:
+
       using base_type = proxy<Subject>;
 
                               scale_element(float scale_, Subject&& subject)
@@ -546,7 +585,12 @@ namespace cycfi { namespace elements
       void                    prepare_subject(context& ctx, point& p) override;
       void                    restore_subject(context& ctx) override;
 
-       float                  _scale;
+      void                    scale(float scale_) { _scale = scale_; }
+      float                   scale() const { return _scale; }
+
+   private:
+
+      float                   _scale;
    };
 
    template <typename Subject>

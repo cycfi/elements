@@ -7,49 +7,54 @@
 #define ELEMENTS_GALLERY_TAB_MAY_02_2020
 
 #include <elements/element/gallery/button.hpp>
+#include <elements/element/proxy.hpp>
+#include <infra/support.hpp>
 
 namespace cycfi { namespace elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Radio Button
-   ////////////////////////////////////////////////////////////////////////////
-   void draw_tab(
-      context const& ctx, std::string const& text, bool state, bool hilite
-   );
+   void draw_tab(context const& ctx, bool state, bool hilite);
 
-   struct tab_element_base : element
+   template <bool state, typename Subject>
+   class tab_element : public proxy<Subject>
    {
-                              tab_element_base(std::string text)
-                               : _text(std::move(text))
-                              {}
+   public:
 
-      view_limits             limits(basic_context const& ctx) const override;
+      using base_type = proxy<Subject>;
+      using base_type::base_type;
+
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
-
-      std::string             _text;
-
-   };
-
-   template <bool state>
-   struct tab_element : tab_element_base
-   {
-      using tab_element_base::tab_element_base;
-
       void                    draw(context const& ctx) override;
    };
 
-   template <bool state>
-   void tab_element<state>::draw(context const& ctx)
+   template <bool state, typename Subject>
+   void tab_element<state, Subject>::draw(context const& ctx)
    {
-      draw_tab(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
+      draw_tab(ctx, state, ctx.bounds.includes(ctx.view.cursor_pos()));
+      base_type::draw(ctx);
    }
 
-   inline basic_choice tab(std::string text)
+   template <bool state, typename Subject>
+   bool tab_element<state, Subject>::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
    {
+      ctx.view.refresh(ctx);
+      return true;
+   }
+
+   template <bool state, typename Subject>
+   bool tab_element<state, Subject>::wants_control() const
+   {
+      return true;
+   }
+
+   template <typename Subject>
+   inline basic_choice tab(Subject&& subject)
+   {
+      using subject_type = remove_cvref_t<Subject>;
+
       return basic_choice(
-         tab_element<false>{ text }
-       , tab_element<true>{ text }
+         tab_element<false, subject_type>{ subject }
+       , tab_element<true, subject_type>{ subject }
       );
    }
 }}

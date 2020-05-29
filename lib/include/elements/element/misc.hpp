@@ -11,6 +11,7 @@
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/font.hpp>
+#include <infra/support.hpp>
 #include <functional>
 #include <string>
 #include <string_view>
@@ -400,8 +401,8 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              key_intercept_element(Subject&& subject)
-                               : base_type(std::forward<Subject>(subject))
+                              key_intercept_element(Subject subject)
+                               : base_type(std::move(subject))
                               {}
 
       bool                    key(context const& ctx, key_info k) override;
@@ -414,7 +415,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline key_intercept_element<Subject>
+   inline key_intercept_element<remove_cvref_t<Subject>>
    key_intercept(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };

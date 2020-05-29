@@ -11,6 +11,7 @@
 #include <elements/element/popup.hpp>
 #include <elements/element/selectable.hpp>
 #include <elements/view.hpp>
+#include <infra/support.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -125,7 +126,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, basic_menu_item_element>
+   inline proxy<remove_cvref_t<Subject>, basic_menu_item_element>
    basic_menu_item(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };

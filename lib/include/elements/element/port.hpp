@@ -7,6 +7,7 @@
 #define ELEMENTS_PORT_APRIL_24_2016
 
 #include <elements/element/proxy.hpp>
+#include <infra/support.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -51,7 +52,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, port_element>
+   inline proxy<remove_cvref_t<Subject>, port_element>
    port(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
@@ -80,7 +81,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, vport_element>
+   inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
@@ -193,21 +194,21 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    scroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits };
    }
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    vscroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits | no_hscroll };
    }
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    hscroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits | no_vscroll };

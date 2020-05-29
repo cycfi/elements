@@ -9,6 +9,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
 #include <elements/support.hpp>
+#include <infra/support.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements
@@ -43,7 +44,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, dial_base>
+   inline proxy<remove_cvref_t<Subject>, dial_base>
    dial(Subject&& subject, double init_value = 0.0)
    {
       return { std::forward<Subject>(subject), init_value };
@@ -134,8 +135,8 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              radial_element_base(Subject&& subject)
-                               : base_type(std::forward<Subject>(subject))
+                              radial_element_base(Subject subject)
+                               : base_type(std::move(subject))
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -199,7 +200,7 @@ namespace cycfi { namespace elements
    }
 
    template <std::size_t size, typename Subject>
-   inline radial_marks_element<size, Subject>
+   inline radial_marks_element<size, remove_cvref_t<Subject>>
    radial_marks(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
@@ -217,7 +218,7 @@ namespace cycfi { namespace elements
       using base_type = radial_element_base<_size, Subject>;
       using string_array = std::array<std::string, num_labels>;
 
-                              radial_labels_element(Subject&& subject, float font_size)
+                              radial_labels_element(Subject subject, float font_size)
                                : base_type(std::move(subject))
                                , _font_size(font_size)
                               {}
@@ -251,10 +252,10 @@ namespace cycfi { namespace elements
    }
 
    template <std::size_t size, typename Subject, typename... S>
-   inline radial_labels_element<size, Subject, sizeof...(S)>
+   inline radial_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
    radial_labels(Subject&& subject, float font_size, S&&... s)
    {
-      auto r = radial_labels_element<size, Subject, sizeof...(S)>
+      auto r = radial_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
          { std::move(subject), font_size };
       r._labels = {{ std::move(s)... }};
       return r;

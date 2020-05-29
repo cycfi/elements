@@ -124,7 +124,7 @@ namespace cycfi { namespace elements
       friend scoped_theme_override<T>
       override_theme(T theme::*pmem, T val);
 
-      static theme _theme;
+      static theme& _theme();
    };
 
    template <typename T>
@@ -132,7 +132,7 @@ namespace cycfi { namespace elements
    override_theme(T theme::*pmem, T val)
    {
       return scoped_theme_override<T>{
-         global_theme::_theme, pmem, val
+         global_theme::_theme(), pmem, val
       };
    }
 }}

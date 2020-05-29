@@ -150,18 +150,22 @@ namespace cycfi { namespace elements
       {
          FcConfig*      config = FcInitLoadConfigAndFonts();
 
+         std::vector<fs::path> paths = font_paths;
+
 #ifdef __APPLE__
-         auto resources_path = get_user_fonts_directory();
+         paths.push_back(get_user_fonts_directory());
 #else
-         auto resources_path = (fs::current_path() / "resources").generic_string();
+         if (paths.empty())
+            paths.push_back(fs::current_path() / "resources");
 #if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
          TCHAR windir[MAX_PATH];
          GetWindowsDirectory(windir, MAX_PATH);
-         auto fonts_path = (fs::path(windir) / "fonts").generic_string();
-         FcConfigAppFontAddDir(config, (FcChar8 const*)fonts_path.c_str());
+         paths.push_back(fs::path(windir) / "fonts");
 #endif
 #endif
-         FcConfigAppFontAddDir(config, (FcChar8 const*)resources_path.c_str());
+         for (auto& path : paths)
+            FcConfigAppFontAddDir(config, (FcChar8*)path.generic_string().c_str());
+
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(
                                  FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT
@@ -272,6 +276,8 @@ namespace cycfi { namespace elements
       };
 #endif
    }
+
+   std::vector<fs::path> font_paths;
 
    font::font(font_descr descr)
    {

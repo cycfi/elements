@@ -8,6 +8,7 @@
 
 #include <string_view>
 #include <infra/filesystem.hpp>
+#include <vector>
 
 extern "C"
 {
@@ -308,6 +309,8 @@ namespace cycfi { namespace elements
 #ifdef __APPLE__
    fs::path get_user_fonts_directory();
 #endif
+
+   extern std::vector<fs::path> font_paths;
 }}
 
 #endif

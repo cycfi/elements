@@ -8,6 +8,7 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
+#include <infra/support.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -22,10 +23,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              size_element(point size, Subject&& subject);
+                              size_element(point size, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    fixed_size(point size) { _size = size; }
+      point                   fixed_size() const { return _size; }
 
    private:
 
@@ -33,13 +37,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline size_element<Subject>::size_element(point size, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline size_element<Subject>::size_element(point size, Subject subject)
+    : base_type(std::move(subject))
     , _size(size)
    {}
 
    template <typename Subject>
-   inline size_element<Subject>
+   inline size_element<remove_cvref_t<Subject>>
    fixed_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -71,10 +75,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              hsize_element(float width, Subject&& subject);
+                              hsize_element(float width, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    hsize(float width) { _width = width; }
+      float                   hsize() const { return _width; }
 
    private:
 
@@ -82,13 +89,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline hsize_element<Subject>::hsize_element(float width, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline hsize_element<Subject>::hsize_element(float width, Subject subject)
+    : base_type(std::move(subject))
     , _width(width)
    {}
 
    template <typename Subject>
-   inline hsize_element<Subject>
+   inline hsize_element<remove_cvref_t<Subject>>
    hsize(float width, Subject&& subject)
    {
       return { width, std::forward<Subject>(subject) };
@@ -117,10 +124,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              vsize_element(float height, Subject&& subject);
+                              vsize_element(float height, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    vsize(float height) { _height = height; }
+      float                   vsize() const { return _height; }
 
    private:
 
@@ -128,13 +138,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline vsize_element<Subject>::vsize_element(float height, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline vsize_element<Subject>::vsize_element(float height, Subject subject)
+    : base_type(std::move(subject))
     , _height(height)
    {}
 
    template <typename Subject>
-   inline vsize_element<Subject>
+   inline vsize_element<remove_cvref_t<Subject>>
    vsize(float height, Subject&& subject)
    {
       return { height, std::forward<Subject>(subject) };
@@ -165,10 +175,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              min_size_element(point size, Subject&& subject);
+                              min_size_element(point size, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    min_size(point size) { _size = size; }
+      point                   min_size() const { return _size; }
 
    private:
 
@@ -176,13 +189,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline min_size_element<Subject>::min_size_element(point size, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline min_size_element<Subject>::min_size_element(point size, Subject subject)
+    : base_type(std::move(subject))
     , _size(size)
    {}
 
    template <typename Subject>
-   inline min_size_element<Subject>
+   inline min_size_element<remove_cvref_t<Subject>>
    min_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -216,10 +229,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              hmin_size_element(float width, Subject&& subject);
+                              hmin_size_element(float width, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    hmin_size(float width) { _width = width; }
+      float                   hmin_size() const { return _width; }
 
    private:
 
@@ -227,13 +243,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline hmin_size_element<Subject>::hmin_size_element(float width, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline hmin_size_element<Subject>::hmin_size_element(float width, Subject subject)
+    : base_type(std::move(subject))
     , _width(width)
    {}
 
    template <typename Subject>
-   inline hmin_size_element<Subject>
+   inline hmin_size_element<remove_cvref_t<Subject>>
    hmin_size(float width, Subject&& subject)
    {
       return { width, std::forward<Subject>(subject) };
@@ -263,10 +279,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              vmin_size_element(float height, Subject&& subject);
+                              vmin_size_element(float height, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    vmin_size(float height) { _height = height; }
+      float                   vmin_size() const { return _height; }
 
    private:
 
@@ -274,13 +293,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline vmin_size_element<Subject>::vmin_size_element(float height, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline vmin_size_element<Subject>::vmin_size_element(float height, Subject subject)
+    : base_type(std::move(subject))
     , _height(height)
    {}
 
    template <typename Subject>
-   inline vmin_size_element<Subject>
+   inline vmin_size_element<remove_cvref_t<Subject>>
    vmin_size(float height, Subject&& subject)
    {
       return { height, std::forward<Subject>(subject) };
@@ -312,10 +331,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              max_size_element(point size, Subject&& subject);
+                              max_size_element(point size, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    max_size(point size) { _size = size; }
+      point                   max_size() const { return _size; }
 
    private:
 
@@ -323,13 +345,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline max_size_element<Subject>::max_size_element(point size, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline max_size_element<Subject>::max_size_element(point size, Subject subject)
+    : base_type(std::move(subject))
     , _size(size)
    {}
 
    template <typename Subject>
-   inline max_size_element<Subject>
+   inline max_size_element<remove_cvref_t<Subject>>
    max_size(point size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -363,10 +385,13 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              hmax_size_element(float size, Subject&& subject);
+                              hmax_size_element(float size, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+
+      void                    hmax_size(float size) { _size = size; }
+      float                   hmax_size() const { return _size; }
 
    private:
 
@@ -374,13 +399,13 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline hmax_size_element<Subject>::hmax_size_element(float size, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline hmax_size_element<Subject>::hmax_size_element(float size, Subject subject)
+    : base_type(std::move(subject))
     , _size(size)
    {}
 
    template <typename Subject>
-   inline hmax_size_element<Subject>
+   inline hmax_size_element<remove_cvref_t<Subject>>
    hmax_size(float size, Subject&& subject)
    {
       return { size, std::forward<Subject>(subject) };
@@ -412,9 +437,12 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              hstretch_element(float stretch, Subject&& subject);
+                              hstretch_element(float stretch, Subject subject);
 
       virtual view_stretch    stretch() const;
+
+      void                    hstretch(float stretch) { _stretch = stretch; }
+      float                   hstretch() const { return _stretch; }
 
    private:
 
@@ -422,8 +450,8 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline hstretch_element<Subject>::hstretch_element(float stretch, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline hstretch_element<Subject>::hstretch_element(float stretch, Subject subject)
+    : base_type(std::move(subject))
     , _stretch(stretch)
    {}
 
@@ -434,17 +462,17 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
-   inline hstretch_element<Subject>
+   inline hstretch_element<remove_cvref_t<Subject>>
    hstretch(float stretch, Subject&& subject)
    {
       return { stretch, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline hstretch_element<Subject>
+   inline auto
    no_hstretch(Subject&& subject)
    {
-      return { 0.0f, std::forward<Subject>(subject) };
+      return hstretch(0.0f, std::forward<Subject>(subject));
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -455,9 +483,12 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject>;
 
-                              vstretch_element(float stretch, Subject&& subject);
+                              vstretch_element(float stretch, Subject subject);
 
       virtual view_stretch    stretch() const;
+
+      void                    vstretch(float stretch) { _stretch = stretch; }
+      float                   vstretch() const { return _stretch; }
 
    private:
 
@@ -465,8 +496,8 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline vstretch_element<Subject>::vstretch_element(float stretch, Subject&& subject)
-    : base_type(std::forward<Subject>(subject))
+   inline vstretch_element<Subject>::vstretch_element(float stretch, Subject subject)
+    : base_type(std::move(subject))
     , _stretch(stretch)
    {}
 
@@ -477,39 +508,46 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
-   inline vstretch_element<Subject>
+   inline vstretch_element<remove_cvref_t<Subject>>
    vstretch(float stretch, Subject&& subject)
    {
       return { stretch, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline vstretch_element<Subject>
+   inline auto
    no_vstretch(Subject&& subject)
    {
-      return { 0.0f, std::forward<Subject>(subject) };
+      return vstretch(0.0f, std::forward<Subject>(subject));
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Size limited
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   struct limit_element : public proxy<Subject>
+   class limit_element : public proxy<Subject>
    {
+   public:
+
       using base_type = proxy<Subject>;
 
-                              limit_element(view_limits limits_, Subject&& subject)
-                               : base_type(std::forward<Subject>(subject))
+                              limit_element(view_limits limits_, Subject subject)
+                               : base_type(std::move(subject))
                                , _limits(limits_)
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
 
+      void                    limit(view_limits limits) { _limits = limits; }
+      view_limits             limit() const { return _limits; }
+
+   private:
+
       view_limits             _limits;
    };
 
    template <typename Subject>
-   inline limit_element<Subject>
+   inline limit_element<remove_cvref_t<Subject>>
    limit(view_limits limits_, Subject&& subject)
    {
       return { limits_, std::forward<Subject>(subject) };
@@ -531,12 +569,14 @@ namespace cycfi { namespace elements
    // Scaled
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   struct scale_element : public proxy<Subject>
+   class scale_element : public proxy<Subject>
    {
+   public:
+
       using base_type = proxy<Subject>;
 
-                              scale_element(float scale_, Subject&& subject)
-                               : base_type(std::forward<Subject>(subject))
+                              scale_element(float scale_, Subject subject)
+                               : base_type(std::move(subject))
                                , _scale(scale_)
                               {}
 
@@ -546,11 +586,16 @@ namespace cycfi { namespace elements
       void                    prepare_subject(context& ctx, point& p) override;
       void                    restore_subject(context& ctx) override;
 
-       float                  _scale;
+      void                    scale(float scale_) { _scale = scale_; }
+      float                   scale() const { return _scale; }
+
+   private:
+
+      float                   _scale;
    };
 
    template <typename Subject>
-   inline scale_element<Subject>
+   inline scale_element<remove_cvref_t<Subject>>
    scale(float scale_, Subject&& subject)
    {
       return { scale_, std::forward<Subject>(subject) };

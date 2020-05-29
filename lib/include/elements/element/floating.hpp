@@ -7,6 +7,7 @@
 #define ELEMENTS_FLOATING_JUNE_9_2016
 
 #include <elements/element/proxy.hpp>
+#include <infra/support.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -32,7 +33,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, floating_element>
+   inline proxy<remove_cvref_t<Subject>, floating_element>
    floating(rect bounds, Subject&& subject)
    {
       return { std::forward<Subject>(subject), bounds };

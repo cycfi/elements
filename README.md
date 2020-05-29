@@ -26,29 +26,21 @@ declarative interface with heavy emphasis on reuse.
 
 ## News
 
+- 23 May 2020: Work in progress `notebook` gallery factory (`notebook` branch).
 - 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
+- 11 March 2020: Added [Layout documentation](http://cycfi.github.io/elements/layout).
+- 3 March 2020: Added [Design Aspects documentation](http://cycfi.github.io/elements/aspects).
 - 23 February 2020: Setup and Installation guide updated for Windows and Linux.
 - 22 February 2020: Improved font support
 - 01 September 2019: Linux port completed
 - 12 August 2019: Windows port completed
 
-## Setup and Installation
+## Documentation
 
-The Elements C++ GUI library is cross-platform. Elements currently supports
-the MacOS, Windows and Linux. Follow the [Setup and Installation
-guide](http://cycfi.github.io/elements/setup) to get started using the
-library.
-
-## Design Aspects
-
-The Elements C++ GUI library is 1) Modular, 2) Declarative, and 3)
-Interoperable. This document explains these three key [Design
-Aspects](http://cycfi.github.io/elements/aspects) behind Elements through
-examples.
-
-## Gallery
-
-Follow this link for more screenshots: [Gallery](http://cycfi.github.io/elements/gallery).
+1. [Gallery](gallery)
+2. [Setup and Installation](http://cycfi.github.io/elements/setup)
+3. [Design Aspects](http://cycfi.github.io/elements/aspects)
+4. [Layout](http://cycfi.github.io/elements/layout)
 
 ## <a name="jdeguzman"></a>About the Author
 

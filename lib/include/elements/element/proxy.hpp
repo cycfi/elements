@@ -65,26 +65,35 @@ namespace cycfi { namespace elements
 
       static_assert(std::is_base_of_v<proxy_base, Base>,
          "proxy Base type needs to be or inherit from proxy_base");
-      using subject_type = typename std::decay<Subject>::type;
+      static_assert(!std::is_reference_v<Subject>,
+         "Subject must not be a reference type - maybe you want to use reference class instead");
+      static_assert(!std::is_const_v<Subject>, "Subject must not be const");
 
                               template <typename... T>
-                              proxy(Subject&& subject_, T&&... args)
+                              proxy(Subject subject_, T&&... args)
                                : Base(std::forward<T>(args)...)
-                               , _subject(std::forward<Subject>(subject_)) {}
+                               , _subject(std::move(subject_)) {}
 
       void                    subject(Subject&& subject_);
+      void                    subject(Subject const& subject_);
       element const&          subject() const override { return _subject; }
       element&                subject() override { return _subject; }
 
    private:
 
-      subject_type            _subject;
+      Subject                 _subject;
    };
 
    template <typename Subject, typename Base>
    inline void proxy<Subject, Base>::subject(Subject&& subject_)
    {
-      _subject = std::forward<Subject>(subject_);
+      _subject = std::move(subject_);
+   }
+
+   template <typename Subject, typename Base>
+   inline void proxy<Subject, Base>::subject(Subject const& subject_)
+   {
+      _subject = subject_;
    }
 }}
 

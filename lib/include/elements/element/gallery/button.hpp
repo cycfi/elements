@@ -12,6 +12,7 @@
 #include <elements/element/margin.hpp>
 #include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
+#include <infra/support.hpp>
 #include <string_view>
 #include <utility>
 
@@ -309,14 +310,14 @@ namespace cycfi { namespace elements
    // Basic buttons
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   inline basic_toggle_button<proxy<Subject, basic_button>>
+   inline basic_toggle_button<proxy<remove_cvref_t<Subject>, basic_button>>
    toggle_button(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline proxy<Subject, basic_button>
+   inline proxy<remove_cvref_t<Subject>, basic_button>
    momentary_button(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };

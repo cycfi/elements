@@ -6,6 +6,9 @@
 #if !defined(ELEMENTS_RECEIVER_MARCH_1_2020)
 #define ELEMENTS_RECEIVER_MARCH_1_2020
 
+#include <string>
+#include <string_view>
+
 namespace cycfi { namespace elements
 {
    struct receiver_base

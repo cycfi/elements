@@ -7,7 +7,6 @@
 #define ELEMENTS_REFERENCE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/proxy.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements

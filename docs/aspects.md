@@ -36,7 +36,7 @@ provided in the ‘examples’ directory:
 [https://github.com/cycfi/elements/tree/master/examples/empty](https://github.com/cycfi/elements/tree/master/examples/empty)
 
 The examples presented here can be found in this link:
-[https://github.com/cycfi/elements/tree/master/examples/aspects](https://github.com/cycfi/elements/tree/master/examples/aspects)
+[https://github.com/cycfi/elements/tree/master/examples/doc_aspects](https://github.com/cycfi/elements/tree/master/examples/doc_aspects)
 
 ```c++
 #include <elements.hpp>
@@ -61,6 +61,7 @@ int main(int argc, const char* argv[])
 
    _app.run();
    return 0;
+}
 ```
 
 ## App and Window

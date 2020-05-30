@@ -14,16 +14,17 @@ namespace cycfi { namespace elements
    std::string find_file(std::string_view file)
    {
       std::string full_path;
-      if (fs::path(file.data()).is_absolute())
+      const fs::path file_path(file.data());
+      if (file_path.is_absolute())
       {
-         if (fs::exists(full_path))
+         if (fs::exists(file_path))
             full_path = file;
       }
       else
       {
          for (auto const& path : resource_paths)
          {
-            fs::path target = fs::path(path) / file.data();
+            const fs::path target = path / file_path;
             if (fs::exists(target))
             {
                full_path = target.string();

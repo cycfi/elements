@@ -18,16 +18,21 @@ auto make_tabs(view& view_)
       return layer(align_center_middle(label(text).font_size(100)), frame{});
    };
 
-   return vnotebook(
+   auto make_tab = [](auto text)
+   {
+      return tab(align_center(margin({15, 10, 15, 10}, label(text))));
+   };
+
+   return hnotebook(
       view_
     , deck(
          make_page("Dream"),
          make_page("Insanity"),
          make_page("Imagination")
       )
-    , tab("Dream")
-    , tab("Insanity")
-    , tab("Imagination")
+    , make_tab("Dream")
+    , make_tab("Insanity")
+    , make_tab("Imagination")
    );
 }
 

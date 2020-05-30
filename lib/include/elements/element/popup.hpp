@@ -8,6 +8,7 @@
 
 #include <elements/element/floating.hpp>
 #include <elements/view.hpp>
+#include <infra/support.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -37,7 +38,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, basic_popup_element>
+   inline proxy<remove_cvref_t<Subject>, basic_popup_element>
    basic_popup(Subject&& subject, rect bounds = {})
    {
       return { std::forward<Subject>(subject), bounds };

@@ -8,6 +8,7 @@
 
 #include <elements/element/button.hpp>
 #include <elements/element/misc.hpp>
+#include <elements/element/label.hpp>
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/tile.hpp>

@@ -15,6 +15,7 @@
 #include <elements/element/flow.hpp>
 #include <elements/element/grid.hpp>
 #include <elements/element/image.hpp>
+#include <elements/element/label.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/menu.hpp>

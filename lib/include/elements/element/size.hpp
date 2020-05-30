@@ -651,6 +651,78 @@ namespace cycfi { namespace elements
    {
       ctx.canvas.restore();
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Collapsible
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class hcollapsible_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+      using is_collapsed_function = std::function<bool()>;
+
+                              hcollapsible_element(Subject subject);
+      view_limits             limits(basic_context const& ctx) const override;
+      is_collapsed_function   is_collapsed = []{ return false; };
+   };
+
+   template <typename Subject>
+   inline hcollapsible_element<Subject>::hcollapsible_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <typename Subject>
+   inline view_limits hcollapsible_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      if (is_collapsed())
+         e_limits.min.x = e_limits.max.x = 0;
+      return e_limits;
+   }
+
+   template <typename Subject>
+   inline hcollapsible_element<remove_cvref_t<Subject>>
+   hcollapsible(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class vcollapsible_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+      using is_collapsed_function = std::function<bool()>;
+
+                              vcollapsible_element(Subject subject);
+      view_limits             limits(basic_context const& ctx) const override;
+      is_collapsed_function   is_collapsed = []{ return false; };
+   };
+
+   template <typename Subject>
+   inline vcollapsible_element<Subject>::vcollapsible_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <typename Subject>
+   inline view_limits vcollapsible_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      if (is_collapsed())
+         e_limits.min.y = e_limits.max.y = 0;
+      return e_limits;
+   }
+
+   template <typename Subject>
+   inline vcollapsible_element<remove_cvref_t<Subject>>
+   vcollapsible(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
 }}
 
 #endif

@@ -209,6 +209,41 @@ namespace cycfi { namespace elements
          return true;
       return this->subject().key(ctx, k);
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Hidable
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class hidable_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+      using is_hidden_function = std::function<bool()>;
+
+                              hidable_element(Subject subject);
+      void                    draw(context const& ctx) override;
+      is_hidden_function      is_hidden = []{ return false; };
+   };
+
+   template <typename Subject>
+   inline hidable_element<Subject>::hidable_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <typename Subject>
+   inline void hidable_element<Subject>::draw(context const& ctx)
+   {
+      if (!is_hidden())
+         this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline hidable_element<remove_cvref_t<Subject>>
+   hidable(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
 }}
 
 #endif

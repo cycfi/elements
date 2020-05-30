@@ -164,7 +164,7 @@ namespace cycfi { namespace elements
 #endif
 #endif
          for (auto& path : paths)
-            FcConfigAppFontAddDir(config, (FcChar8*)path.generic_string().c_str());
+            FcConfigAppFontAddDir(config, reinterpret_cast<FcChar8 const*>(path.generic_string().c_str()));
 
          FcPattern*     pat = FcPatternCreate();
          FcObjectSet*   os = FcObjectSetBuild(

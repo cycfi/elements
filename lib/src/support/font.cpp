@@ -150,7 +150,7 @@ namespace cycfi { namespace elements
       {
          FcConfig*      config = FcInitLoadConfigAndFonts();
 
-         std::vector<fs::path> paths = font_paths;
+         std::vector<fs::path> paths = font_paths();
 
 #ifdef __APPLE__
          paths.push_back(get_user_fonts_directory());
@@ -277,7 +277,11 @@ namespace cycfi { namespace elements
 #endif
    }
 
-   std::vector<fs::path> font_paths;
+   std::vector<fs::path>& font_paths()
+   {
+      static std::vector<fs::path> _paths;
+      return _paths;
+   }
 
    font::font(font_descr descr)
    {

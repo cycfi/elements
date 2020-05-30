@@ -310,7 +310,7 @@ namespace cycfi { namespace elements
    fs::path get_user_fonts_directory();
 #endif
 
-   extern std::vector<fs::path> font_paths;
+   std::vector<fs::path>& font_paths();
 }}
 
 #endif

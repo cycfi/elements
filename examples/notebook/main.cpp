@@ -20,7 +20,10 @@ auto make_tabs(view& view_)
 
    auto make_tab = [](auto text)
    {
-      return tab(align_center(margin({15, 10, 15, 10}, label(text))));
+      return tab(
+         align_center(margin({15, 10, 15, 10}, label(text)))
+       , align_center(margin({15, 10, 15, 10}, label(text)))
+      );
    };
 
    return hnotebook(

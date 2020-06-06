@@ -1,3 +1,5 @@
+---
+---
 # Design Aspects
 
 ## Table of Contents
@@ -105,7 +107,7 @@ view_.content(
 
 Running this example, you get:
 
-![aspects_a]({{ site.url }}/elements/assets/images/aspects_a.png){: width="60%" }
+![aspects_a](assets/images/aspects_a.png){: width="60%" }
 
 ## Aligns and Sizes
 
@@ -170,7 +172,7 @@ placed inside the `fixed_size` element which is then placed inside a
 
 Let's run this example:
 
-![aspects_b]({{ site.url }}/elements/assets/images/aspects_b.png){: width="60%" }
+![aspects_b](assets/images/aspects_b.png){: width="60%" }
 
 ## Labels, Margins and Layers
 
@@ -247,7 +249,7 @@ actually, this is the same `layer` thing here. The view's main content is a
 
 So now we have:
 
-![aspects_c]({{ site.url }}/elements/assets/images/aspects_c.png){: width="60%" }
+![aspects_c](assets/images/aspects_c.png){: width="60%" }
 
 ## Let's Make a Button
 
@@ -317,7 +319,7 @@ we want to center the button:
 And here it is in action:
 
 <video width="476" height="320" style="margin-left: 30px" controls loop>
-  <source type="video/mp4" src="{{ site.url }}/elements/assets/images/button.mp4">
+  <source type="video/mp4" src="assets/images/button.mp4">
 </video>
 
 Oh, hey, Elements has a gallery —a collection of reusable element
@@ -330,7 +332,7 @@ Guess what, we can make funny sliders too, using the same components we made
 in the previous sections!
 
 <video width="476" height="320" style="margin-left: 30px" controls loop>
-  <source type="video/mp4" src="{{ site.url }}/elements/assets/images/funny_slider.mp4">
+  <source type="video/mp4" src="assets/images/funny_slider.mp4">
 </video>
 
 Here's the code:

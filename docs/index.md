@@ -27,17 +27,10 @@ declarative interface with heavy emphasis on reuse.
 
 ## Documentation
 
-<<<<<<< HEAD
-1. [Gallery](http://cycfi.github.io/elements/gallery)
-2. [Setup and Installation](http://cycfi.github.io/elements/setup)
-3. [Design Aspects](http://cycfi.github.io/elements/aspects)
-4. [Layout](http://cycfi.github.io/elements/layout)
-=======
 1. [Gallery](gallery)
 2. [Setup and Installation](setup)
 3. [Design Aspects](aspects)
 4. [Layout](layout)
->>>>>>> 75c9213... Merge pull request #131 from redtide/docs-local-jekyll
 
 The Elements C++ GUI library is cross-platform. Elements currently supports
 the MacOS, Windows and Linux. Follow the [Setup and Installation

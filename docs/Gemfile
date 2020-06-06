@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 # Force gh-pages compatibility in RVM without gh-pages installed
 # see https://pages.github.com/versions/
-ruby "2.5.3"
+# ruby "2.6.0"
 
 # Uncomment to build our site in Travis-CI
 # see https://docs.travis-ci.com/user/languages/ruby/#default-build-script

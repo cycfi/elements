@@ -1,3 +1,5 @@
+---
+---
 # Context
 
 -------------------------------------------------------------------------------
@@ -19,9 +21,17 @@ struct basic_context
    elements::canvas&    canvas;
 };
 ```
-The `context` class inherits from `basic_context` and additionally includes a pointer to the "current" element being drawn, a pointer to its parent element in the elements hierarchy (that which contains it), and the element's `bounds`, a rectangle that indicates where the element needs to be drawn.
+The `context` class inherits from `basic_context` and additionally includes a
+pointer to the "current" element being drawn, a pointer to its parent element
+in the elements hierarchy (that which contains it), and the element's `bounds`,
+a rectangle that indicates where the element needs to be drawn.
 
-Only one `element` member function takes in a `basic_context` argument, the `limits` member function (more on that later). Other than that, all the other `element` member functions take in a `context` argument. The reason for this is that the at the point where the `limits` is called, the element's position and parent-child relationships in the elements hierarchy have not been established yet.
+Only one `element` member function takes in a `basic_context` argument,
+the `limits` member function (more on that later). Other than that,
+all the other `element` member functions take in a `context` argument.
+The reason for this is that the at the point where the `limits` is called,
+the element's position and parent-child relationships in the elements hierarchy
+have not been established yet.
 
 ```c++
 class context : public basic_context

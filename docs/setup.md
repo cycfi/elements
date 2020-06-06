@@ -1,3 +1,5 @@
+---
+---
 # Setup and Installation
 
 ## Table of Contents
@@ -69,7 +71,7 @@ instructions are provided below for specific environments.
 
 ## MacOS
 
-### Install required libraries using [Homebrew](https://brew.sh/):
+### Install required libraries using [Homebrew]:
 
 ```
 brew install cairo
@@ -88,7 +90,7 @@ brew install cmake
 There are multiple ways to generate a project file using CMake depending on
 your platform and desired IDE, but here are some examples for the MacOS:
 
-### Using [XCode](https://developer.apple.com/xcode/):
+### Using [XCode]:
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -106,7 +108,7 @@ If successful, cmake will generate an XCode project in the build directory.
 Open the project file elements.xcodeproj and build all. You should see a
 couple of example applications.
 
-### Using [CLion](https://www.jetbrains.com/clion/):
+### Using [CLion]:
 
 Simply open the CMakeLists.txt file using CLion and build the project.
 
@@ -124,7 +126,7 @@ The only thing you have to install is Boost:
 
 #### Download and build Boost
 
-From (https://www.boost.org/users/download/), get the latest Boost version.
+From (<https://www.boost.org/users/download/>), get the latest Boost version.
 If you have it already, make sure you have version 1.68 or higher. Many Boost
 libraries are header-only. You only need to build some of the non-header-only
 libraries:
@@ -175,7 +177,8 @@ couple of example applications.
 
 #### NMake
 
-0. Open a *Command Prompt for VS 2019* ({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.
+0. Open a *Command Prompt for VS 2019*
+({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
 3. CD to the build directory.
@@ -190,8 +193,8 @@ cmake -G"NMake Makefiles" -DBOOST_ROOT=path/to/boost ..//
 
 *Replace path/to/boost with the directory where you installed boost.*
 
-If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake`
-to build the binary.
+If successful, cmake will generate NMake Make files in the build directory.
+Invoke `nmake` to build the binary.
 
 -------------------------------------------------------------------------------
 
@@ -200,9 +203,11 @@ to build the binary.
 ### Install MSYS2 toolchain and required libraries
 > MSYS2 is a software distro and building platform for Windows
 
-Download MSYS2 from its [official website](https://www.msys2.org/) and install it. Its installation guide is on the [home page](https://www.msys2.org/).
+Download MSYS2 from its [official website](https://www.msys2.org/) and install it.
+Its installation guide is on the [home page](https://www.msys2.org/).
 
-Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
+Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu.
+Install tools and libraries:
 ```
 pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
 pacman -S ${MINGW_PACKAGE_PREFIX}-boost
@@ -238,7 +243,7 @@ cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
 
 If successful, cmake will generate Unix Make files in the build directory.
 
-### Using [CLion](https://www.jetbrains.com/clion/):
+### Using [CLion]:
 
 Simply open the CMakeLists.txt file using CLion and build the project.
 
@@ -247,7 +252,7 @@ Simply open the CMakeLists.txt file using CLion and build the project.
 
 ## Linux
 
-### Install required libraries using [apt-get](https://linux.die.net/man/8/apt-get) (requires `sudo`).
+### Install required libraries using [apt-get] (requires `sudo`)
 
 In addition to the requirements listed in the [requirements](#requirements)
 section, the [GTK3 library](https://www.gtk.org/) is also required by the
@@ -286,7 +291,7 @@ cmake -G "Unix Makefiles" ../
 
 If successful, cmake will generate Unix Make files in the build directory.
 
-### Using [CLion](https://www.jetbrains.com/clion/):
+### Using [CLion]:
 
 Simply open the CMakeLists.txt file using CLion and build the project.
 
@@ -295,7 +300,7 @@ Simply open the CMakeLists.txt file using CLion and build the project.
 ## Building and Running the examples
 
 <div class = "img-align-right" style="width:35%">
-  <img src="{{ site.url }}/elements/assets/images/examples.png" alt="Examples">
+  <img src="assets/images/examples.png" alt="Examples">
   <p>CLion Project Tool Window</p>
 </div>
 
@@ -339,3 +344,8 @@ alongside the "hello_universe" example directory you copied to:
 
 *Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
 *Distributed under the [MIT License](https://opensource.org/licenses/MIT)*
+
+[apt-get]: https://linux.die.net/man/8/apt-get
+[CLion]: https://www.jetbrains.com/clion/
+[Homebrew]: https://brew.sh/
+[XCode]: https://developer.apple.com/xcode/

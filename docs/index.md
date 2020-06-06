@@ -1,10 +1,13 @@
+---
+---
 # Elements C++ GUI library
 
-![alt Photon Sampler]({{ site.url }}/elements/assets/images/photon_sampler.jpg)
+![alt Photon Sampler](assets/images/photon_sampler.jpg)
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, modular GUI library. Elements is designed with these requirements in mind:
+Elements is a lightweight, fine-grained, resolution independent,
+modular GUI library. Elements is designed with these requirements in mind:
 
 1. It should be open source with a liberal, non-viral license.
 2. It should be usable in any application and should play well with other GUI
@@ -25,13 +28,13 @@ declarative interface with heavy emphasis on reuse.
 ## Documentation
 
 1. [Gallery](gallery)
-2. [Setup and Installation](http://cycfi.github.io/elements/setup)
-3. [Design Aspects](http://cycfi.github.io/elements/aspects)
-4. [Layout](http://cycfi.github.io/elements/layout)
+2. [Setup and Installation](setup)
+3. [Design Aspects](aspects)
+4. [Layout](layout)
 
 The Elements C++ GUI library is cross-platform. Elements currently supports
 the MacOS, Windows and Linux. Follow the [Setup and Installation
-guide](http://cycfi.github.io/elements/setup) to get started using the
+guide](setup) to get started using the
 library.
 
 ## <a name="jdeguzman"></a>About the Author

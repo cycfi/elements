@@ -14,6 +14,13 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
+defaults:
+- scope:
+    path: ""
+    type: "pages"
+  values:
+    layout: "default"
+
 title: "Elements C++ GUI library"
 email: djowel@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
@@ -44,3 +51,10 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
+# Using GitHub Jekyll v3.8.7, these are not ignored by default
+exclude:
+- elements.code-workspace
+- Gemfile
+- Gemfile.lock
+- jekyll.sh
+- README.md

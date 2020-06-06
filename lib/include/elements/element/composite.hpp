@@ -68,7 +68,9 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         elements::element*   element  = nullptr;
+         using weak_ptr = std::weak_ptr<elements::element>;
+
+         weak_ptr             element;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };

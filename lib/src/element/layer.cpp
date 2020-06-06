@@ -66,11 +66,11 @@ namespace cycfi { namespace elements
             {
                context ectx{ ctx, &e, bounds };
                if (e.hit_test(ectx, p))
-                  return hit_info{ &e, bounds, int(ix) };
+                  return hit_info{ e.shared_from_this(), bounds, int(ix) };
             }
          }
       }
-      return hit_info{ 0, rect{}, -1 };
+      return hit_info{ {}, rect{}, -1 };
    }
 
    rect layer_element::bounds_of(context const& ctx, std::size_t index) const
@@ -151,10 +151,10 @@ namespace cycfi { namespace elements
          {
             context ectx{ ctx, &e, bounds };
             if (e.hit_test(ectx, p))
-               return hit_info{ &e, bounds, int(_selected_index) };
+               return hit_info{ e.shared_from_this(), bounds, int(_selected_index) };
          }
       }
-      return hit_info{ 0, rect{}, -1 };
+      return hit_info{ {}, rect{}, -1 };
    }
 
    void deck_element::begin_focus()

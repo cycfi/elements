@@ -12,7 +12,7 @@ the rest will be installed locally in the `.bundle` directory.
 The current Gemfile configuration is set to use the same
 Jekyll version as [GitHub pages].
 
-The website will be available at <http://localhost:4000/>.
+The website will be available at <http://localhost:4000/elements/>.
 
 [elements]:     https://cycfi.github.io/elements/
 [Jekyll]:       https://jekyllrb.com/

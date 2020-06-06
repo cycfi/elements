@@ -1,10 +1,14 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman, Michal Urbanski
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/tile.hpp>
 #include <elements/support/context.hpp>
+
+#include <algorithm>
+#include <numeric>
+#include <limits>
 
 namespace cycfi { namespace elements
 {
@@ -13,7 +17,78 @@ namespace cycfi { namespace elements
       struct layout_info
       {
          float min, max, stretch, alloc;
+         std::size_t index;
       };
+
+      bool is_almost_zero(float val, int ulp = 1)
+      {
+         // unless the result is subnormal
+         return val < std::numeric_limits<float>::min() ||
+         // the machine epsilon has to be scaled to the magnitude of the values used
+         // and multiplied by the desired precision in ULPs (units in the last place)
+         val <= std::numeric_limits<float>::epsilon() * val * ulp;
+      }
+
+      auto range(layout_info info)
+      {
+         return info.max - info.min;
+      }
+
+      auto density(layout_info info)
+      {
+         auto r = range(info);
+
+         if (r <= 0.0f || is_almost_zero(r))
+            return std::numeric_limits<float>::max();
+         else
+            return info.stretch / r;
+      }
+
+      // Distribute space proportionally to each element stretchiness.
+      // Each element will get at least stretch / sum_stretch * free_space,
+      // but may get more if other elements reach their max size.
+      void allocate(float space, std::vector<layout_info>& elements)
+      {
+         auto const sum_min = std::accumulate(elements.begin(), elements.end(), 0.0f,
+            [](double sum, layout_info elem){ return sum + elem.min; });
+
+         if (sum_min >= space)
+            return;
+
+         // Sort elements by "density". If any elements would reach their max size,
+         // then they will be first. This simplifies the algorithm from O(n * n)
+         // to O(n log n) because any remaining free space can be redistributed
+         // according to the new sum of stretch proportions without having to redo
+         // space allocations for previous elements.
+         std::sort(elements.begin(), elements.end(),
+            [](layout_info lhs, layout_info rhs){ return density(lhs) > density(rhs); });
+         auto sum_stretch = std::accumulate(elements.begin(), elements.end(), 0.0f,
+            [](double sum, layout_info elem){ return sum + elem.stretch; });
+         auto free_space = space - sum_min;
+
+         for (auto& e : elements)
+         {
+            if (sum_stretch <= 0.0f || is_almost_zero(sum_stretch))
+               break;
+
+            auto const alloc = e.stretch / sum_stretch * free_space;
+            auto const r = range(e);
+            if (alloc >= r)
+            {
+               e.alloc += r;
+               sum_stretch -= e.stretch;
+               free_space -= r;
+            }
+            else
+            {
+               e.alloc += alloc;
+            }
+         }
+
+         // retain initial order needed for further calculations
+         std::sort(elements.begin(), elements.end(),
+            [](layout_info lhs, layout_info rhs){ return lhs.index < rhs.index; });
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -37,82 +112,43 @@ namespace cycfi { namespace elements
       return limits;
    }
 
-   namespace
-   {
-      // Compute the best fit for all elements
-      void allocate(
-         double size, double max_stretch, double total
-       , std::vector<layout_info>& info)
-      {
-         double extra = size - total;
-         for (int i = 1; i < 10; ++i) // loop no more than 10 times
-         {
-            double remove_stretch = 0.0;
-            total = 0.0;
-            for (auto& info : info)
-            {
-               if (info.alloc < info.max)       // This element can grow
-               {
-                  info.alloc += extra * info.stretch / max_stretch;
-                  if (info.alloc >= info.max)   // We exceeded its max
-                  {
-                     info.alloc = info.max;
-                     remove_stretch -= info.stretch;
-                  }
-               }
-               total += info.alloc;
-            }
-            extra = size - total;
-            max_stretch -= remove_stretch;
-
-            // return if there's no more room to grow or if we can't stretch anymore
-            if (max_stretch < 1 || extra < 0.5)
-               return;
-         }
-      }
-   }
-
    void vtile_element::layout(context const& ctx)
    {
-      auto const left = ctx.bounds.left;
-      auto const right = ctx.bounds.right;
-      auto const top = ctx.bounds.top;
-      auto const height = ctx.bounds.height();
-      _tiles.resize(size());
+      auto const sz = size();
 
-      // Collect min, max, and stretch information from each element. Also,
-      // accumulate the maximum stretch (max_stretch) for later. Initially set the
-      // allocation sizes of each element to its minimum.
-      double max_stretch = 0.0;
-      float total = 0.0;
-      std::vector<layout_info> info(size());
-      for (std::size_t i = 0; i != size(); ++i)
+      // Collect min, max, and stretch information from each element.
+      // Initially set the allocation sizes of each element to its minimum.
+      std::vector<layout_info> info(sz);
+      for (std::size_t i = 0; i != sz; ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
          info[i].stretch = elem.stretch().y;
-         total += (info[i].alloc = info[i].min = limits.min.y);
+         info[i].min = limits.min.y;
          info[i].max = limits.max.y;
-         if (info[i].alloc < info[i].max) // Can grow?
-            max_stretch += info[i].stretch;
+         info[i].alloc = limits.min.y;
+         info[i].index = i;
       }
 
+      auto const left = ctx.bounds.left;
+      auto const right = ctx.bounds.right;
+      auto const top = ctx.bounds.top;
+      auto const height = ctx.bounds.height();
       // Compute the best fit for all elements
-      allocate(height, max_stretch, total, info);
+      allocate(height, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.
-      double curr = 0;
-      auto iter = _tiles.begin();
-      std::size_t i = 0;
-      for (auto const& info : info)
+      _tiles.resize(sz);
+      auto curr = 0.0f;
+      for (std::size_t i = 0; i != sz; ++i)
       {
-         *iter++ = curr + info.alloc;
-         auto prev = curr;
-         curr += info.alloc;
+         _tiles[i] = curr + info[i].alloc;
+         auto const prev = curr;
+         curr += info[i].alloc;
 
-         auto& elem = at(i++);
-         rect ebounds = { left, float(prev+top), right, float(curr+top) };
+         auto& elem = at(i);
+         rect ebounds = { left, prev+top, right, curr+top };
          elem.layout(context{ ctx, &elem, ebounds });
       }
    }
@@ -157,45 +193,41 @@ namespace cycfi { namespace elements
 
    void htile_element::layout(context const& ctx)
    {
-      auto const top = ctx.bounds.top;
-      auto const bottom = ctx.bounds.bottom;
-      auto const left = ctx.bounds.left;
-      auto const width = ctx.bounds.width();
-      _tiles.resize(size());
+      auto const sz = size();
 
-      // Collect min, max, and stretch information from each element. Also,
-      // accumulate the maximum stretch (max_stretch) for later. Initially
-      // set the allocation sizes of each element to its minimum.
-      double max_stretch = 0.0;
-      double total = 0.0;
-      std::vector<layout_info> info(size());
-      for (std::size_t i = 0; i != size(); ++i)
+      // Collect min, max, and stretch information from each element.
+      // Initially set the allocation sizes of each element to its minimum.
+      std::vector<layout_info> info(sz);
+      for (std::size_t i = 0; i != sz; ++i)
       {
          auto& elem = at(i);
          auto limits = elem.limits(ctx);
          info[i].stretch = elem.stretch().x;
-         total += (info[i].alloc = info[i].min = limits.min.x);
+         info[i].min = limits.min.x;
          info[i].max = limits.max.x;
-         if (info[i].alloc < info[i].max) // Can stretch?
-            max_stretch += info[i].stretch;
+         info[i].alloc = limits.min.x;
+         info[i].index = i;
       }
 
+      auto const top = ctx.bounds.top;
+      auto const bottom = ctx.bounds.bottom;
+      auto const left = ctx.bounds.left;
+      auto const width = ctx.bounds.width();
       // Compute the best fit for all elements
-      allocate(width, max_stretch, total, info);
+      allocate(width, info);
 
       // Now we have the final layout. We can now layout the individual
       // elements.
-      double curr = 0;
-      auto iter = _tiles.begin();
-      std::size_t i = 0;
-      for (auto const& info : info)
+      _tiles.resize(sz);
+      auto curr = 0.0f;
+      for (std::size_t i = 0; i != sz; ++i)
       {
-         *iter++ = curr + info.alloc;
-         auto prev = curr;
-         curr += info.alloc;
+         _tiles[i] = curr + info[i].alloc;
+         auto const prev = curr;
+         curr += info[i].alloc;
 
-         auto& elem = at(i++);
-         rect ebounds = { float(prev+left), top, float(curr+left), bottom };
+         auto& elem = at(i);
+         rect ebounds = { prev+left, top, curr+left, bottom };
          elem.layout(context{ ctx, &elem, ebounds });
       }
    }

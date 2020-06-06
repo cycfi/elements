@@ -26,6 +26,9 @@ declarative interface with heavy emphasis on reuse.
 
 ## News
 
+- 26 May 2020: Introducing the [Artist 2D Canvas
+  Library](https://github.com/cycfi/artist). The Artist library will
+  eventually replace Element's 2d canvas implementation.
 - 23 May 2020: Work in progress `notebook` gallery factory (`notebook` branch).
 - 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
 - 11 March 2020: Added [Layout documentation](http://cycfi.github.io/elements/layout).
@@ -37,7 +40,9 @@ declarative interface with heavy emphasis on reuse.
 
 ## Documentation
 
-1. [Gallery](gallery)
+Documentation is work in progress. Stay tuned...
+
+1. [Gallery](http://cycfi.github.io/elements/gallery)
 2. [Setup and Installation](http://cycfi.github.io/elements/setup)
 3. [Design Aspects](http://cycfi.github.io/elements/aspects)
 4. [Layout](http://cycfi.github.io/elements/layout)

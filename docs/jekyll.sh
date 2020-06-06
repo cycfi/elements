@@ -9,4 +9,4 @@ if [ ! -d ".bundle" ]; then
 	bundle install
 fi
 
-bundle exec jekyll serve --watch --host=0.0.0.0
+bundle exec jekyll serve --watch

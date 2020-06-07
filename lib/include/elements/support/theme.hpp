@@ -18,6 +18,7 @@ namespace cycfi { namespace elements
 
       color                panel_color;
       color                frame_color;
+      color                frame_hilite_color;
       float                frame_corner_radius;
       float                frame_stroke_width;
       color                scrollbar_color;
@@ -25,14 +26,17 @@ namespace cycfi { namespace elements
       rect                 button_margin;
 
       color                controls_color;
+      float                controls_frame_stroke_width;
       color                indicator_color;
+      color                indicator_bright_color;
+      color                indicator_hilite_color;
       color                basic_font_color;
 
       font                 system_font;   // The system_font font is the font the OS
                                           // uses for displaying text in OS UI elements
                                           // such as menus, window title-bars, etc.
 
-      float                box_widget_bg_opacity;
+      float                element_background_opacity;
 
       color                heading_font_color;
       font                 heading_font;

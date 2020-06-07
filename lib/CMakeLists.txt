@@ -15,12 +15,13 @@ set(ELEMENTS_SOURCES
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
-   src/element/grid.cpp
    src/element/gallery/button.cpp
    src/element/gallery/check_box.cpp
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
+   src/element/gallery/tab.cpp
+   src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
    src/element/layer.cpp
@@ -35,8 +36,8 @@ set(ELEMENTS_SOURCES
    src/element/tile.cpp
    src/support/canvas.cpp
    src/support/draw_utils.cpp
-   src/support/glyphs.cpp
    src/support/font.cpp
+   src/support/glyphs.cpp
    src/support/pixmap.cpp
    src/support/rect.cpp
    src/support/resource_paths.cpp
@@ -46,17 +47,18 @@ set(ELEMENTS_SOURCES
 )
 
 set(ELEMENTS_HEADERS
+   include/elements.hpp
    include/elements/app.hpp
    include/elements/base_view.hpp
+   include/elements/element.hpp
    include/elements/element/align.hpp
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
    include/elements/element/element.hpp
-   include/elements/element/receiver.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
-   include/elements/element/grid.hpp
+   include/elements/element/gallery.hpp
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp
@@ -66,10 +68,12 @@ set(ELEMENTS_HEADERS
    include/elements/element/gallery/icon_button.hpp
    include/elements/element/gallery/menu.hpp
    include/elements/element/gallery/message_box.hpp
+   include/elements/element/gallery/notebook.hpp
    include/elements/element/gallery/pane.hpp
-   include/elements/element/gallery/text_entry.hpp
    include/elements/element/gallery/radio_button.hpp
-   include/elements/element/gallery.hpp
+   include/elements/element/gallery/tab.hpp
+   include/elements/element/gallery/text_entry.hpp
+   include/elements/element/grid.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp
    include/elements/element/label.hpp
@@ -87,7 +91,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/text.hpp
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
-   include/elements/element.hpp
+   include/elements/support.hpp
    include/elements/support/canvas.hpp
    include/elements/support/circle.hpp
    include/elements/support/color.hpp
@@ -96,19 +100,18 @@ set(ELEMENTS_HEADERS
    include/elements/support/detail/scratch_context.hpp
    include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
-   include/elements/support/glyphs.hpp
    include/elements/support/font.hpp
+   include/elements/support/glyphs.hpp
    include/elements/support/icon_ids.hpp
    include/elements/support/pixmap.hpp
    include/elements/support/point.hpp
+   include/elements/support/receiver.hpp
    include/elements/support/rect.hpp
    include/elements/support/resource_paths.hpp
    include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
-   include/elements/support.hpp
    include/elements/view.hpp
    include/elements/window.hpp
-   include/elements.hpp
 )
 
 if (APPLE)

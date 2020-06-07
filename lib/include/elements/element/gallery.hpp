@@ -14,8 +14,10 @@
 #include <elements/element/gallery/icon_button.hpp>
 #include <elements/element/gallery/menu.hpp>
 #include <elements/element/gallery/message_box.hpp>
+#include <elements/element/gallery/notebook.hpp>
 #include <elements/element/gallery/pane.hpp>
-#include <elements/element/gallery/text_entry.hpp>
 #include <elements/element/gallery/radio_button.hpp>
+#include <elements/element/gallery/tab.hpp>
+#include <elements/element/gallery/text_entry.hpp>
 
 #endif

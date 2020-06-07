@@ -8,9 +8,11 @@
 
 #include <elements/element/layer.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/element/selectable.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
+#include <elements/support/sender.hpp>
 #include <elements/view.hpp>
-#include <functional>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -18,7 +20,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
-   class basic_button : public proxy_base, public receiver<bool>
+   class basic_button : public proxy_base, public receiver<bool>, public sender<bool>
    {
    public:
 
@@ -37,6 +39,8 @@ namespace cycfi { namespace elements
       void              value(bool new_state) override;
       bool              value() const override;
 
+      void              send(bool val) override;
+      void              on_send(callback_function f) override;
       button_function   on_click;
 
    protected:
@@ -53,7 +57,7 @@ namespace cycfi { namespace elements
    // Layered Button
    ////////////////////////////////////////////////////////////////////////////
    class layered_button
-    : public array_composite<2, deck_element>, public receiver<bool>
+    : public array_composite<2, deck_element>, public receiver<bool>, public sender<bool>
    {
    public:
 
@@ -71,6 +75,8 @@ namespace cycfi { namespace elements
       void              value(bool new_state) override;
       bool              value() const override;
 
+      void              send(bool val) override;
+      void              on_send(callback_function f) override;
       button_function   on_click;
 
    protected:
@@ -172,6 +178,7 @@ namespace cycfi { namespace elements
                         basic_latching_button(W1&& off, W2&& on);
 
       element*          click(context const& ctx, mouse_button btn) override;
+      void              drag(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>
@@ -192,10 +199,70 @@ namespace cycfi { namespace elements
       if (this->value() || !ctx.bounds.includes(btn.pos))
          return nullptr;
       if (btn.down)
-         return layered_button::click(ctx, btn);
+      {
+         Base::click(ctx, btn);
+         if (this->value() && this->on_click)
+            this->on_click(true);
+      }
       else if (this->on_click)
          this->on_click(true);
       return this;
+   }
+
+   template <typename Base>
+   inline void basic_latching_button<Base>::drag(context const& /* ctx */, mouse_button /* btn */)
+   {
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic Choice
+   ////////////////////////////////////////////////////////////////////////////
+   struct basic_choice_base : public selectable
+   {
+      virtual sender<bool>&   get_sender() = 0;
+      void                    do_click(context const& ctx, bool val, bool was_selected);
+   };
+
+   template <typename Base = layered_button>
+   class basic_choice : public basic_latching_button<Base>, public basic_choice_base
+   {
+   public:
+
+      using basic_latching_button<Base>::basic_latching_button;
+
+      void              select(bool state) override;
+      bool              is_selected() const override;
+      element*          click(context const& ctx, mouse_button btn) override;
+      sender<bool>&     get_sender() override { return *this; }
+   };
+
+   template <typename Base>
+   inline bool basic_choice<Base>::is_selected() const
+   {
+      return this->value();
+   }
+
+   template <typename Base>
+   inline void basic_choice<Base>::select(bool state)
+   {
+      if (state != is_selected())
+         this->value(state);
+   }
+
+   template <typename Base>
+   element* basic_choice<Base>::click(context const& ctx, mouse_button btn)
+   {
+      bool was_selected = is_selected();
+      auto r = basic_latching_button<Base>::click(ctx, btn);
+      this->do_click(ctx, this->value(), was_selected);
+      return r;
+   }
+
+   template <typename Subject>
+   inline basic_choice<proxy<Subject, basic_button>>
+   choice(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
    }
 }}
 

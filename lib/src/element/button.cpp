@@ -76,6 +76,17 @@ namespace cycfi { namespace elements
          state(new_state);
    }
 
+   void basic_button::send(bool val)
+   {
+      if (on_click)
+         on_click(val);
+   }
+
+   void basic_button::on_send(callback_function f)
+   {
+      on_click = f;
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
    ////////////////////////////////////////////////////////////////////////////
@@ -138,5 +149,49 @@ namespace cycfi { namespace elements
    {
       if (_state != new_state)
          state(new_state);
+   }
+
+   void layered_button::send(bool val)
+   {
+      if (on_click)
+         on_click(val);
+   }
+
+   void layered_button::on_send(callback_function f)
+   {
+      on_click = f;
+   }
+
+   void basic_choice_base::do_click(context const& ctx, bool val, bool was_selected)
+   {
+      if (!was_selected && val)
+      {
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
+         {
+            for (std::size_t i = 0; i != c->size(); ++i)
+            {
+               if (auto e = find_element<basic_choice_base*>(&c->at(i)))
+               {
+                  if (e == this)
+                  {
+                     // Set the button
+                     e->select(true);
+                     // The base class::click should have called on_click already
+                  }
+                  else
+                  {
+                     if (e->is_selected())
+                     {
+                        // Reset the button
+                        e->select(false);
+                        e->get_sender().send(false);
+                     }
+                  }
+               }
+            }
+         }
+         cctx->view.refresh(*cctx);
+      }
    }
 }}

@@ -11,6 +11,7 @@
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <infra/support.hpp>
+
 #include <functional>
 #include <utility>
 

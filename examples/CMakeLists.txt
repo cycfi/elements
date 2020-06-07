@@ -16,6 +16,7 @@ add_subdirectory(popups)
 add_subdirectory(dialogs)
 add_subdirectory(scale)
 add_subdirectory(typography)
+add_subdirectory(notebook)
 add_subdirectory(doc_aspects)
 
 

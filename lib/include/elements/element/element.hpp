@@ -7,7 +7,7 @@
 #define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
-#include <elements/element/receiver.hpp>
+#include <elements/support/receiver.hpp>
 #include <elements/support/rect.hpp>
 
 #include <memory>

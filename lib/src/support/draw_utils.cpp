@@ -86,9 +86,9 @@ namespace cycfi { namespace elements
          bounds.bottom_left()
       };
 
-      float const bg_alpha = get_theme().box_widget_bg_opacity;
-      gradient.add_color_stop({ 0.0, rgb(255, 255, 255).opacity(bg_alpha) });
-      gradient.add_color_stop({ 1.0, rgb(0, 0, 0).opacity(bg_alpha) });
+      float const box_opacity = get_theme().element_background_opacity;
+      gradient.add_color_stop({ 0.0, rgb(255, 255, 255).opacity(box_opacity) });
+      gradient.add_color_stop({ 1.0, rgb(0, 0, 0).opacity(box_opacity) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();

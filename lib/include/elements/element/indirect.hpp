@@ -70,6 +70,12 @@ namespace cycfi { namespace elements
       element*                focus() override;
    };
 
+   struct indirect_base : element
+   {
+      virtual element&        get() = 0;
+      virtual element const&  get() const = 0;
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    // reference
    //
@@ -80,14 +86,14 @@ namespace cycfi { namespace elements
    // when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class reference : public element
+   class reference : public indirect_base
    {
    public:
 
       explicit                reference(Element& e);
 
-      Element&                get();
-      Element const&          get() const;
+      Element&                get() override;
+      Element const&          get() const override;
 
    private:
 
@@ -103,15 +109,15 @@ namespace cycfi { namespace elements
    // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Element>
-   class shared_element : public element
+   class shared_element : public indirect_base
    {
    public:
 
       explicit                shared_element(std::shared_ptr<Element> ptr);
       shared_element&         operator=(std::shared_ptr<Element> ptr);
 
-      Element&                get();
-      Element const&          get() const;
+      Element&                get() override;
+      Element const&          get() const override;
 
    private:
 

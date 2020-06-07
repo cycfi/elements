@@ -37,6 +37,21 @@ namespace cycfi { namespace elements
       virtual void         value(param_type str) = 0;
       virtual getter_type  value() const = 0;
    };
+
+   template <typename T>
+   struct basic_receiver : receiver<T>
+   {
+      using receiver_type = typename receiver<T>::receiver_type;
+      using getter_type = typename receiver<T>::getter_type;
+      using param_type = typename receiver<T>::param_type;
+
+      void                    value(int val) override { _val = val; }
+      int                     value() const override { return _val; }
+
+   private:
+
+      receiver_type           _val = receiver_type{};
+   };
 }}
 
 #endif

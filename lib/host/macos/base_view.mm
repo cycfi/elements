@@ -61,6 +61,7 @@ namespace
       CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
       CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
       CFRelease(resources_url);
+      CFRelease(main_bundle);
    }
 
    struct resource_setter
@@ -149,10 +150,8 @@ namespace
       NSRect const content_rect =
          [window contentRectForFrameRect:[window frame]];
 
-      if (xpos)
-         xpos = content_rect.origin.x;
-      if (ypos)
-         ypos = transformY(content_rect.origin.y + content_rect.size.height);
+      xpos = content_rect.origin.x;
+      ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
    void handle_text(ph::base_view& _view, ph::text_info info)

@@ -301,15 +301,16 @@ namespace cycfi { namespace elements
          else
          {
 #ifdef __APPLE__
-            _handle = cairo_quartz_font_face_create_for_cgfont(
-               CGFontCreateWithFontName(
-                  CFStringCreateWithCString(
-                     kCFAllocatorDefault
-                   , match_ptr->full_name.c_str()
-                   , kCFStringEncodingUTF8
-                  )
-               )
+
+            auto cfstr = CFStringCreateWithCString(
+               kCFAllocatorDefault
+             , match_ptr->full_name.c_str()
+             , kCFStringEncodingUTF8
             );
+            auto cgfont = CGFontCreateWithFontName(cfstr);
+            _handle = cairo_quartz_font_face_create_for_cgfont(cgfont);
+            CFRelease(cgfont);
+            CFRelease(cfstr);
 #else
             _handle = font_loader.load(match_ptr->file.c_str());
 #endif

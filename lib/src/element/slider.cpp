@@ -251,8 +251,6 @@ namespace cycfi { namespace elements
    )
    {
       bool reverse = size < 0;
-      size = abs(size);
-
       bool vertical = bounds.width() < bounds.height();
       auto w = bounds.width();
       auto h = bounds.height();

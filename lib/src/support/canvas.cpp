@@ -1,13 +1,65 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2020 Joel de Guzman, Michal Urbanski
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/canvas.hpp>
 #include <cairo.h>
 
+#include <memory>
+
 namespace cycfi { namespace elements
 {
+   namespace
+   {
+      struct cairo_pattern_deleter
+      {
+         void operator()(cairo_pattern_t* pattern) const
+         {
+            if (pattern)
+               cairo_pattern_destroy(pattern);
+         }
+      };
+
+      // use shared pointer instead of unique because std::function wants copyable types
+      using cairo_pattern_ptr = std::shared_ptr<cairo_pattern_t>;
+
+      cairo_pattern_ptr make_linear_pattern(canvas::linear_gradient const& gr)
+      {
+         cairo_pattern_t* pat = cairo_pattern_create_linear(
+            gr.start.x, gr.start.y, gr.end.x, gr.end.y
+         );
+
+         for (auto cs : gr.space)
+         {
+            cairo_pattern_add_color_stop_rgba(
+               pat, cs.offset,
+               cs.color.red, cs.color.green, cs.color.blue, cs.color.alpha
+            );
+         }
+
+         return cairo_pattern_ptr(pat, cairo_pattern_deleter{});
+      }
+
+      cairo_pattern_ptr make_radial_pattern(canvas::radial_gradient const& gr)
+      {
+         cairo_pattern_t* pat = cairo_pattern_create_radial(
+            gr.c1.x, gr.c1.y, gr.c1_radius,
+            gr.c2.x, gr.c2.y, gr.c2_radius
+         );
+
+         for (auto cs : gr.space)
+         {
+            cairo_pattern_add_color_stop_rgba(
+               pat, cs.offset,
+               cs.color.red, cs.color.green, cs.color.blue, cs.color.alpha
+            );
+         }
+
+         return cairo_pattern_ptr(pat, cairo_pattern_deleter{});
+      }
+   }
+
    canvas::canvas(cairo_t& context_)
     : _context(context_)
    {}
@@ -178,21 +230,9 @@ namespace cycfi { namespace elements
 
    void canvas::fill_style(linear_gradient const& gr)
    {
-      _state.fill_style = [this, gr]()
+      _state.fill_style = [this, pat = make_linear_pattern(gr)]()
       {
-         cairo_pattern_t* pat =
-            cairo_pattern_create_linear(
-               gr.start.x, gr.start.y, gr.end.x, gr.end.y
-            );
-
-         for (auto cs : gr.space)
-         {
-            cairo_pattern_add_color_stop_rgba(
-               pat, cs.offset,
-               cs.color.red, cs.color.green, cs.color.blue, cs.color.alpha
-            );
-         }
-         cairo_set_source(&_context, pat);
+         cairo_set_source(&_context, pat.get());
       };
       if (_state.pattern_set == _state.fill_set)
          _state.pattern_set = _state.none_set;
@@ -200,22 +240,9 @@ namespace cycfi { namespace elements
 
    void canvas::fill_style(radial_gradient const& gr)
    {
-      _state.fill_style = [this, gr]()
+      _state.fill_style = [this, pat = make_radial_pattern(gr)]()
       {
-         cairo_pattern_t* pat =
-            cairo_pattern_create_radial(
-               gr.c1.x, gr.c1.y, gr.c1_radius,
-               gr.c2.x, gr.c2.y, gr.c2_radius
-            );
-
-         for (auto cs : gr.space)
-         {
-            cairo_pattern_add_color_stop_rgba(
-               pat, cs.offset,
-               cs.color.red, cs.color.green, cs.color.blue, cs.color.alpha
-            );
-         }
-         cairo_set_source(&_context, pat);
+         cairo_set_source(&_context, pat.get());
       };
       if (_state.pattern_set == _state.fill_set)
          _state.pattern_set = _state.none_set;

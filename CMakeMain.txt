@@ -7,6 +7,36 @@
 project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 
 ###############################################################################
+# Sanitizers
+
+option(ASAN "Build with address sanitizer" OFF)
+option(TSAN "Build with thread sanitizer" OFF)
+option(UBSAN "Build with undefined Behavior sanitizer" OFF)
+
+macro(add_sanitizer flag)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=${flag} -fno-omit-frame-pointer")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${flag}")
+endmacro()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+   if (ASAN)
+      add_sanitizer("address")
+   endif()
+
+   if (TSAN)
+      add_sanitizer("thread")
+   endif()
+
+   if (UBSAN)
+      add_sanitizer("undefined")
+   endif()
+else()
+   if (ASAN OR TSAN OR UBSAN)
+      message(FATAL_ERROR "Compiler is not supported.")
+   endif()
+endif()
+
+###############################################################################
 # Sources (and Resources)
 
 if (NOT DEFINED ELEMENTS_ICON_FONT)

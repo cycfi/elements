@@ -1026,4 +1026,15 @@ namespace cycfi { namespace elements
          }
       }
    }
+
+   void basic_input_box::delete_()
+   {
+      basic_text_box::delete_();
+      if (on_text)
+      {
+         auto new_text = on_text(_text);
+         if (new_text != _text)
+            set_text(new_text);
+      }
+   }
 }}

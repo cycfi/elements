@@ -124,6 +124,10 @@ namespace cycfi { namespace elements
    protected:
 
       void                    scroll_into_view(context const& ctx, bool save_x);
+      virtual void            delete_();
+      virtual void            cut(view& v, int start, int end);
+      virtual void            copy(view& v, int start, int end);
+      virtual void            paste(view& v, int start, int end);
 
    private:
 
@@ -137,11 +141,6 @@ namespace cycfi { namespace elements
 
       char const*             caret_position(context const& ctx, point p);
       glyph_metrics           glyph_info(context const& ctx, char const* s);
-
-      virtual void            delete_();
-      virtual void            cut(view& v, int start, int end);
-      virtual void            copy(view& v, int start, int end);
-      virtual void            paste(view& v, int start, int end);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
@@ -184,6 +183,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    key(context const& ctx, key_info k) override;
+      void                    delete_() override;
 
       text_function           on_text;
       enter_function          on_enter;

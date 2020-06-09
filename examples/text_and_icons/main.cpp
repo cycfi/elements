@@ -95,11 +95,21 @@ auto make_basic_text()
       return bottom_margin(10, hgrid(grid, my_label(caption), input));
    };
 
+   // This is an example on how to add an on_text callback:
+   auto in = input_box("Show me the money");
+   in.second->on_text =
+      [](std::string_view text) -> std::string
+      {
+         if (text == "$1000000")
+            return "Thank You!!!";
+         return std::string(text.begin(), text.end());
+      };
+
    auto text_input =
       pane("Text Input",
          margin({ 10, 5, 10, 5 },
             vtile(
-               my_input("Gimme Some", input_box("Show me the money").first),
+               my_input("Gimme Some", in.first),
                my_input("Gimme Some More", input_box("Show me more").first),
                my_input("Cute Text Boxes",
                   htile(

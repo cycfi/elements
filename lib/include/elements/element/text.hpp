@@ -165,8 +165,7 @@ namespace cycfi { namespace elements
 
       using basic_text_box::get_text;
 
-      using text_function = std::function<std::string(std::string_view text)>;
-      using enter_function = std::function<bool(std::string_view text)>;
+      using text_function = std::function<void(std::string_view text)>;
 
                               basic_input_box(
                                  std::string placeholder = ""
@@ -186,7 +185,7 @@ namespace cycfi { namespace elements
       void                    delete_() override;
 
       text_function           on_text;
-      enter_function          on_enter;
+      text_function           on_enter;
 
    private:
 

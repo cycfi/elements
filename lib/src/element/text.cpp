@@ -939,7 +939,7 @@ namespace cycfi { namespace elements
    {
       bool r = basic_text_box::text(ctx, info);
       if (on_text)
-         set_text(on_text(get_text()));
+         on_text(get_text());
       return r;
    }
 
@@ -1016,14 +1016,7 @@ namespace cycfi { namespace elements
          select_end(start_);
 
          if (on_text)
-         {
-            auto new_text = on_text(_text);
-            if (new_text != _text)
-            {
-               set_text(new_text);
-               select_all();
-            }
-         }
+            on_text(_text);
       }
    }
 
@@ -1031,10 +1024,6 @@ namespace cycfi { namespace elements
    {
       basic_text_box::delete_();
       if (on_text)
-      {
-         auto new_text = on_text(_text);
-         if (new_text != _text)
-            set_text(new_text);
-      }
+         on_text(_text);
    }
 }}

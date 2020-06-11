@@ -12,7 +12,6 @@ namespace cycfi { namespace elements
       auto&       canvas_ = ctx.canvas;
       auto        canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      color const indicator_color = theme_.indicator_color;
       rect        box = ctx.bounds.move(15, 0);
 
       box.width(box.height());

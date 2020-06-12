@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
             auto e = menu_item(std::string(items[i]));
             e.on_click = [btn_text = r.second, on_select, text = items[i]]()
             {
-                btn_text->set_text(text);
+               btn_text->set_text(text);
                on_select(text);
             };
             list.push_back(share(e));

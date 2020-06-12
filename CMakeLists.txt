@@ -8,7 +8,9 @@ cmake_minimum_required(VERSION 3.9.6...3.15.0)
 
 project(elements LANGUAGES C CXX)
 
-include(cmake/CMakeInclude.txt)
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(ElementsConfigCommon)
 
 option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)
 option(ELEMENTS_ENABLE_LTO "enable link time optimization for Elements targets" OFF)

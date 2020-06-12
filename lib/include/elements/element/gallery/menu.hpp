@@ -160,12 +160,12 @@ namespace cycfi { namespace elements
    std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
       std::function<void(std::string_view item)> on_select
-    , std::initializer_list<T> const& list
+    , std::initializer_list<T> list
    )
    {
       struct init_list_menu_selector : menu_selector
       {
-         init_list_menu_selector(std::initializer_list<T> const& list_)
+         init_list_menu_selector(std::initializer_list<T> list_)
           : _list(list_)
          {}
 
@@ -181,7 +181,7 @@ namespace cycfi { namespace elements
             return *(_list.begin()+index);
          }
 
-         std::initializer_list<T> const& _list;
+         std::initializer_list<T> _list;
       };
 
       return selection_menu(on_select, init_list_menu_selector{ list });

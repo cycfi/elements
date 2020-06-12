@@ -61,6 +61,9 @@ namespace cycfi { namespace elements
 
    element* basic_menu::click(context const& ctx, mouse_button btn)
    {
+      if (!_popup)
+         return nullptr;
+
       if (btn.down)
       {
          if (state(true))
@@ -68,25 +71,22 @@ namespace cycfi { namespace elements
             if (on_open_menu)
                on_open_menu(*this);
 
-            if (_popup)
+            layout_menu(ctx);
+
+            auto on_click_ = [this](view& view_)
             {
-               layout_menu(ctx);
+               _popup->close(view_);
+               this->value(0);
+               view_.refresh();
+            };
 
-               auto on_click_ = [this](view& view_)
-               {
-                  _popup->close(view_);
-                  this->value(0);
-                  view_.refresh();
-               };
-
-               _popup->open(ctx.view, on_click_);
-               ctx.view.refresh();
-            }
+            _popup->open(ctx.view, on_click_);
+            ctx.view.refresh();
          }
       }
       else
       {
-         if (_popup && (!value() || !hit_test(ctx, btn.pos)))
+         if (!value() || !hit_test(ctx, btn.pos))
          {
             // simulate a menu click:
             btn.down = true;
@@ -100,6 +100,9 @@ namespace cycfi { namespace elements
 
    void basic_menu::drag(context const& ctx, mouse_button btn)
    {
+      if (!_popup)
+         return;
+
       rect  bounds = _popup->bounds();
       if (bounds.includes(btn.pos))
       {

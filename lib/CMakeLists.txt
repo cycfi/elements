@@ -1,5 +1,6 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman, Michal Urbanski
+#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2020 Michał Urbański
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################

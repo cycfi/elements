@@ -254,7 +254,7 @@ namespace cycfi { namespace elements
                if (FcPatternGetInteger(_pattern, object, 0, &x) == FcResultMatch)
                   return x;
                else
-                  return std::nullopt;
+                  return nullopt;
             }
 
             FcPattern* _pattern = nullptr;

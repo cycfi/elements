@@ -6,10 +6,10 @@
 #if !defined(ELEMENTS_CONTEXT_APRIL_17_2016)
 #define ELEMENTS_CONTEXT_APRIL_17_2016
 
+#include <infra/string_view.hpp>
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>
 #include <functional>
-#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
             };
       }
 
-      void notify(context const& ctx, std::string_view what, elements::element* e) const
+      void notify(context const& ctx, string_view what, elements::element* e) const
       {
          if (_listener)
             _listener(ctx, e, what);
@@ -91,7 +91,7 @@ namespace cycfi { namespace elements
 
       using listener_function =
          std::function<
-            void(context const& ctx, elements::element*, std::string_view what)
+            void(context const& ctx, elements::element*, string_view what)
          >;
 
       listener_function             _listener;

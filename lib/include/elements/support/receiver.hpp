@@ -6,8 +6,8 @@
 #if !defined(ELEMENTS_RECEIVER_MARCH_1_2020)
 #define ELEMENTS_RECEIVER_MARCH_1_2020
 
+#include <infra/string_view.hpp>
 #include <string>
-#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
    {
       using receiver_type = std::string;
       using getter_type = std::string const&;
-      using param_type = std::string_view;
+      using param_type = string_view;
 
       virtual void         value(param_type str) = 0;
       virtual getter_type  value() const = 0;

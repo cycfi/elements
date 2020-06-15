@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
 
    std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
-      std::function<void(std::string_view item)> on_select
+      std::function<void(string_view item)> on_select
     , menu_selector const& items
    )
    {

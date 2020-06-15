@@ -6,7 +6,7 @@
 #if !defined(ELEMENTS_FONT_X_FEBRUARY_11_2020)
 #define ELEMENTS_FONT_X_FEBRUARY_11_2020
 
-#include <string_view>
+#include <infra/string_view.hpp>
 #include <infra/filesystem.hpp>
 #include <vector>
 
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
       font_descr           extra_expanded() const;
       font_descr           ultra_expanded() const;
 
-      std::string_view     _families;
+      string_view          _families;
       uint8_t              _weight = font_constants::weight_normal;
       uint8_t              _slant = font_constants::slant_normal;
       uint8_t              _stretch = font_constants::stretch_normal;

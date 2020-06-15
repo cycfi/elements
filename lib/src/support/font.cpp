@@ -11,6 +11,7 @@
 #include <cairo-ft.h>
 #include <fontconfig/fontconfig.h>
 #include <infra/filesystem.hpp>
+#include <infra/optional.hpp>
 
 #ifndef __APPLE__
 # include <ft2build.h>
@@ -37,7 +38,6 @@
 #include <algorithm>
 #include <vector>
 #include <utility>
-#include <optional>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -232,23 +232,23 @@ namespace cycfi { namespace elements
                return _pattern;
             }
 
-            std::optional<int> get_weight() const
+            optional<int> get_weight() const
             {
                return get_int(FC_WEIGHT);
             }
 
-            std::optional<int> get_slant() const
+            optional<int> get_slant() const
             {
                return get_int(FC_SLANT);
             }
 
-            std::optional<int> get_width() const
+            optional<int> get_width() const
             {
                return get_int(FC_WIDTH);
             }
 
          private:
-            std::optional<int> get_int(char const* object) const
+            optional<int> get_int(char const* object) const
             {
                int x;
                if (FcPatternGetInteger(_pattern, object, 0, &x) == FcResultMatch)

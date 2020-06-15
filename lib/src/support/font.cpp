@@ -92,66 +92,38 @@ namespace cycfi { namespace elements
          struct load_none_tag {};
          struct no_init_tag {};
 
-         class library
+         class config
          {
          public:
-            library(no_init_tag)
+            config(no_init_tag)
             {
             }
 
-            library(load_none_tag)
-            : _config_ptr(nullptr)
-            , _is_initialized(FcInit() == FcTrue)
+            config(load_none_tag)
+            : _config_ptr((FcInit() == FcTrue) ? FcConfigCreate() : nullptr)
             {
             }
 
-            library(load_config_tag)
-            : _config_ptr(FcInitLoadConfig())
-            , _is_initialized(_config_ptr != nullptr)
+            config(load_config_tag)
+            : _config_ptr((FcInit() == FcTrue) ? FcInitLoadConfig() : nullptr)
             {
             }
 
-            library(load_config_and_fonts_tag)
-            : _config_ptr(FcInitLoadConfigAndFonts())
-            , _is_initialized(_config_ptr != nullptr)
+            config(load_config_and_fonts_tag)
+            : _config_ptr((FcInit() == FcTrue) ? FcInitLoadConfigAndFonts() : nullptr)
             {
             }
 
-            library(library const& other) = delete;
-            library& operator=(library const& other) = delete;
-
-            library(library&& other) noexcept
-            : library(no_init_tag{})
+            ~config()
             {
-               swap(*this, other);
-            }
-
-            library& operator=(library&& other) noexcept
-            {
-               swap(*this, other);
-               return *this;
-            }
-
-            ~library()
-            {
-               _config_ptr.reset();
-
-               if (_is_initialized)
-                  FcFini();
-            }
-
-            friend void swap(library& lhs, library& rhs) noexcept
-            {
-               std::swap(lhs._config_ptr, rhs._config_ptr);
-               std::swap(lhs._is_initialized, rhs._is_initialized);
             }
 
             explicit operator bool() const noexcept
             {
-               return _is_initialized;
+               return _config_ptr != nullptr;
             }
 
-            FcConfig* config()
+            FcConfig* get() const noexcept
             {
                return _config_ptr.get();
             }
@@ -163,21 +135,17 @@ namespace cycfi { namespace elements
             }
 
          private:
-            library(bool is_initialized)
-            : _is_initialized(is_initialized) {}
-
             font_config_ptr _config_ptr = nullptr;
-            bool _is_initialized = false;
          };
 
-         library& instance()
+         config& instance()
          {
-            static library lib(fc::load_config_and_fonts_tag{});
+            static config conf(fc::load_config_and_fonts_tag{});
 
-            if (!lib)
+            if (!conf)
               throw std::runtime_error("Failed to initialize font config library!");
 
-            return lib;
+            return conf;
          }
 
          struct pattern_empty_tag {};
@@ -447,14 +415,14 @@ namespace cycfi { namespace elements
          paths.push_back(fs::path(windir) / "fonts");
 #endif
 #endif
-         fc::library& lib = fc::instance();
+         fc::config& conf = fc::instance();
 
          for (auto& path : paths)
-            lib.app_font_add_dir(reinterpret_cast<FcChar8 const*>(path.generic_string().c_str()));
+            conf.app_font_add_dir(reinterpret_cast<FcChar8 const*>(path.generic_string().c_str()));
 
          fc::pattern pat(fc::pattern_empty_tag{});
          fc::object_set os(FC_FAMILY, FC_FULLNAME, FC_WIDTH, FC_WEIGHT, FC_SLANT, FC_FILE);
-         fc::font_set_ptr fs = fc::font_list(lib.config(), pat, os);
+         fc::font_set_ptr fs = fc::font_list(conf.get(), pat, os);
 
          for (int i = 0; i < fs->nfont; ++i)
          {

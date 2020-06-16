@@ -7,8 +7,8 @@
 #define ELEMENTS_RESOURCE_PATHS_JUNE_22_2019
 
 #include <set>
-#include <string_view>
 #include <vector>
+#include <infra/string_view.hpp>
 #include <infra/filesystem.hpp>
 
 namespace cycfi { namespace elements
@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    // Search for a file using the resource_paths. Returns an empty
    // string if file is not found.
-   std::string find_file(std::string_view file);
+   std::string find_file(string_view file);
 
    // Get the application data path
    fs::path app_data_path();

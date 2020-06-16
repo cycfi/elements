@@ -10,8 +10,8 @@
 #include <elements/element/text.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/font.hpp>
+#include <infra/string_view.hpp>
 #include <string>
-#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -44,8 +44,8 @@ namespace cycfi { namespace elements
                                : _text(std::move(text))
                               {}
 
-      text_type               get_text() const override                { return _text; }
-      void                    set_text(std::string_view text) override { _text = text; }
+      text_type               get_text() const override           { return _text; }
+      void                    set_text(string_view text) override { _text = std::string(text); }
 
    private:
 

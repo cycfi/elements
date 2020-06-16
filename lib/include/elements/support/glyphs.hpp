@@ -7,12 +7,12 @@
 #define ELEMENTS_GLYPHS_SEPTEMBER_26_2016
 
 #include <infra/assert.hpp>
+#include <infra/string_view.hpp>
 #include <elements/support/canvas.hpp>
 #include <elements/support/text_utils.hpp>
 #include <cairo.h>
 #include <vector>
 #include <stdexcept>
-#include <string_view>
 #include <string>
 
 namespace cycfi { namespace elements
@@ -95,13 +95,13 @@ namespace cycfi { namespace elements
                            );
 
                            master_glyphs(
-                              std::string_view str
+                              string_view str
                             , font font_, float size
                             , point start = { 0, 0 }
                            );
 
                            master_glyphs(
-                              std::string_view str
+                              string_view str
                             , master_glyphs const& source
                             , point start = { 0, 0 }
                            );
@@ -125,7 +125,7 @@ namespace cycfi { namespace elements
 
       void                 break_lines(float width, std::vector<glyphs>& lines);
       void                 text(char const* first, char const* last, point start = { 0, 0 });
-      void                 text(std::string_view str, point start = { 0, 0 });
+      void                 text(string_view str, point start = { 0, 0 });
       void                 text(std::string const& str, point start = { 0, 0 });
 
    private:
@@ -137,7 +137,7 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    inline master_glyphs::master_glyphs(
-      std::string_view str
+      string_view str
     , font font_, float size
     , point start
    )
@@ -145,7 +145,7 @@ namespace cycfi { namespace elements
    {}
 
    inline master_glyphs::master_glyphs(
-      std::string_view str
+      string_view str
     , master_glyphs const& source
     , point start
    )
@@ -168,7 +168,7 @@ namespace cycfi { namespace elements
     : master_glyphs(str.data(), str.data() + str.size(), source, start)
    {}
 
-   inline void master_glyphs::text(std::string_view str, point start)
+   inline void master_glyphs::text(string_view str, point start)
    {
       text(str.data(), str.data() + str.size(), start);
    }

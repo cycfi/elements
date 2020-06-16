@@ -9,7 +9,7 @@
 #include <elements/element/text.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <elements/element/gallery/dialog.hpp>
-#include <string_view>
+#include <infra/string_view.hpp>
 
 namespace cycfi { namespace elements
 {

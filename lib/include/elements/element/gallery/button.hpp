@@ -14,7 +14,7 @@
 #include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
 #include <infra/support.hpp>
-#include <string_view>
+#include <infra/string_view.hpp>
 #include <utility>
 
 namespace cycfi { namespace elements

@@ -515,7 +515,6 @@ namespace cycfi { namespace elements
             return _face;
          }
 
-         [[nodiscard]]
          FT_Face release()
          {
             return std::exchange(_face, nullptr);
@@ -595,10 +594,19 @@ namespace cycfi { namespace elements
                return nullptr;
 
             // extend the freetype font face lifetime to cairo's font face lifetime
-            cairo_status_t cairo_status = cairo_font_face_set_user_data(
-               cairo_face, &cairo_user_data_key(), ft_face.release(), &destroy_free_type_face);
+            cairo_status_t cairo_status = CAIRO_STATUS_SUCCESS;
+            cairo_user_data_key_t const& key = cairo_user_data_key();
+            if (cairo_font_face_get_user_data(cairo_face, &key) != ft_face.handle())
+            {
+               cairo_status = cairo_font_face_set_user_data(
+                  cairo_face, &key, ft_face.handle(), &destroy_free_type_face);
+            }
 
-            if (cairo_status != CAIRO_STATUS_SUCCESS)
+            if (cairo_status == CAIRO_STATUS_SUCCESS)
+            {
+               ft_face.release();
+            }
+            else
             {
                cairo_font_face_destroy(cairo_face);
                return nullptr;

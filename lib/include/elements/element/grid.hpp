@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
       >;
 
 #if defined(_MSC_VER)
-   template <typename... E, std::size_t N = sizeof...(elements)>
+   template <typename... E, std::size_t N = sizeof...(E)>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
 #else
    template <typename... E>
@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
       >;
 
 #if defined(_MSC_VER)
-   template <typename... E, std::size_t N = sizeof...(elements)>
+   template <typename... E, std::size_t N = sizeof...(E)>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
 #else
    template <typename... E>

@@ -26,7 +26,7 @@ declarative interface with heavy emphasis on reuse.
 
 ## News
 
-- 22 June 2020: Removed dependency on Json. This requires some API changes to
+- 22 June 2020: Removed dependency on Boost. This requires some API changes to
   the `app` with additional arguments. See examples.
 - 26 May 2020: Introducing the [Artist 2D Canvas
   Library](https://github.com/cycfi/artist). The Artist library will

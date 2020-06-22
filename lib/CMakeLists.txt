@@ -241,9 +241,8 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
 endif()
 
 ###############################################################################
-# Boost headers
-find_package(Boost 1.68 REQUIRED)
-target_include_directories(elements PUBLIC "${Boost_INCLUDE_DIRS}")
+# Asio headers
+target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/asio/asio/include)
 
 ###############################################################################
 # Global options

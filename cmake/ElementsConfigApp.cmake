@@ -141,11 +141,6 @@ elseif (WIN32)
          VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
       )
    endif()
-
-   configure_file(
-      ${ELEMENTS_ROOT}/resources/config.json.in
-      "${CMAKE_CURRENT_BINARY_DIR}/config.json"
-   )
 endif()
 
 target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE

@@ -7,8 +7,6 @@
 #include <elements/support/font.hpp>
 #include <elements/support/resource_paths.hpp>
 #include <infra/filesystem.hpp>
-#include <infra/assert.hpp>
-#include <json/json_io.hpp>
 #include <string>
 #include <functional>
 #include <vector>
@@ -16,59 +14,11 @@
 
 namespace cycfi { namespace elements
 {
-   struct config
-   {
-      std::string application_title;
-      std::string application_copyright;
-      std::string application_id;
-      std::string application_version;
-   };
-}}
-
-BOOST_FUSION_ADAPT_STRUCT(
-   cycfi::elements::config,
-   (std::string, application_title)
-   (std::string, application_copyright)
-   (std::string, application_id)
-   (std::string, application_version)
-)
-
-namespace cycfi { namespace elements
-{
    // Some app globals
-   fs::path config_path;
-   config app_config;
    int argc = 0;
    char** argv = nullptr;
    GtkApplication* the_app = nullptr;
    bool is_activated = false;
-
-   fs::path find_config()
-   {
-      const fs::path app_path = fs::path(argv[0]);
-      const fs::path app_dir = app_path.parent_path();
-
-      if (app_dir.filename() == "bin")
-      {
-         fs::path path = app_dir.parent_path() / "share" / app_path.filename();
-         if (fs::exists(path / "config.json"))
-            return path;
-      }
-
-      if (fs::exists(app_dir / "config.json"))
-         return app_dir;
-
-      return fs::current_path();
-   }
-
-   config get_config()
-   {
-      const fs::path path = config_path / "config.json";
-      CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
-      auto r = json::load<config>(path);
-      CYCFI_ASSERT(r, "Error: Invalid config.json.");
-      return *r;
-   }
 
    std::vector<std::function<void()>> on_activate;
 
@@ -92,29 +42,29 @@ namespace cycfi { namespace elements
 
    struct init_app
    {
-      init_app()
+      init_app(std::string id)
       {
-         config_path = find_config();
-         app_config = get_config();
-
-         const fs::path resources_path = config_path / "resources";
+         const fs::path resources_path = fs::current_path() / "resources";
          font_paths().push_back(resources_path);
          resource_paths.push_back(resources_path);
 
          the_app = gtk_application_new(
-            app_config.application_id.c_str()
+            id.c_str()
           , G_APPLICATION_FLAGS_NONE
          );
          g_signal_connect(the_app, "activate", G_CALLBACK(activate), nullptr);
       }
    };
 
-   app::app(int argc_, char* argv_[])
+   app::app(
+      int argc
+    , char* argv[]
+    , std::string name
+    , std::string id)
    {
       argc = argc_;
       argv = argv_;
-      static init_app init;
-      _app_name = app_config.application_title;
+      static init_app init{ id };
       _app = the_app;
    }
 

@@ -9,7 +9,7 @@ using namespace cycfi::elements;
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Hello Universe", "com.cycfi.hello-universe");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

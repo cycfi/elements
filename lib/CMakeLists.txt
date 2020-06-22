@@ -155,7 +155,6 @@ source_group("Header Files\\elements"
 )
 
 add_subdirectory(infra)
-add_subdirectory(json)
 add_library(elements)
 
 target_sources(elements
@@ -164,9 +163,8 @@ target_sources(elements
 )
 
 target_include_directories(elements PUBLIC include)
-
+target_link_libraries(elements PUBLIC cycfi::infra)
 target_compile_features(elements PUBLIC cxx_std_17)
-target_link_libraries(elements PUBLIC cycfi::infra cycfi::json)
 
 if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)

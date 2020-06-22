@@ -73,7 +73,7 @@ auto make_edit_box()
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "TextEdit", "com.cycfi.text-edit");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

@@ -11,7 +11,6 @@
 #include <elements/support/canvas.hpp>
 #include <elements/support/resource_paths.hpp>
 #include <elements/support/text_utils.hpp>
-#include <json/json_io.hpp>
 #include <gtk/gtk.h>
 #include <map>
 #include <string>

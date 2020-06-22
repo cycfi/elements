@@ -297,7 +297,7 @@ auto make_popup_menu(
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Layout", "com.cycfi.layout");
    window _win(_app.name(), window::standard, { 50, 50, 1024, 768 });
 
    _win.on_close = [&_app]() { _app.stop(); };

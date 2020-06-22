@@ -185,7 +185,7 @@ auto make_elements()
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Text and Icons", "com.cycfi.text-and-icons");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

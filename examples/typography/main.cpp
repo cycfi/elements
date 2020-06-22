@@ -51,7 +51,7 @@ auto samples = basic(
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Typography", "com.cycfi.typography");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

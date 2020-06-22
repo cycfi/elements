@@ -29,10 +29,9 @@ order to use the library:
 Additionally, the following libraries are dragged as submodules:
 
 1. The [Cycfi infra library](https://github.com/cycfi/infra/)
-2. The [Cycfi json library](https://github.com/cycfi/json/)
 
 Infra provides some basic groundwork common to Cycfi libraries, including
-Elements. JSON provides Strict, type-safe, c++ to JSON I/O.
+Elements.
 
 ### C++17
 
@@ -47,7 +46,7 @@ Linux, we support both [Clang](https://clang.llvm.org/) and
 
 ### Git
 
-Elements C++ GUI library, plus the Cycfi Infra and JSON libraries:
+Elements C++ GUI library, plus the Cycfi Infra library:
 
 ```
 git clone --recurse-submodules  https://github.com/cycfi/elements.git

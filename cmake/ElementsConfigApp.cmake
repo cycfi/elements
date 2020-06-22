@@ -59,10 +59,6 @@ set(ELEMENTS_RESOURCES
 )
 
 if (UNIX AND NOT APPLE)
-   set(
-      ELEMENTS_APP_RESOURCES
-      ${ELEMENTS_APP_RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.json
-   )
    file(
       COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
       DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
@@ -104,11 +100,6 @@ elseif (UNIX AND NOT APPLE)
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
-   )
-
-   configure_file(
-      ${ELEMENTS_ROOT}/resources/config.json.in
-      "${CMAKE_CURRENT_BINARY_DIR}/config.json"
    )
 elseif (WIN32)
    add_executable(

@@ -1,7 +1,0 @@
-{
-   "application_title" : "${ELEMENTS_APP_TITLE}",
-   "application_copyright" : "${ELEMENTS_APP_COPYRIGHT}",
-   "application_id" : "${ELEMENTS_APP_ID}",
-   "application_version" : "${ELEMENTS_APP_VERSION}"
-}
-

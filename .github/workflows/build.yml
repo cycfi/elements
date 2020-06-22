@@ -41,6 +41,7 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows")
           execute_process(COMMAND choco install ninja)
         elseif ("${{ runner.os }}" STREQUAL "Linux")
+          execute_process(COMMAND sudo apt-get update)
           execute_process(COMMAND sudo apt-get install libcairo2-dev)
           execute_process(COMMAND sudo apt-get install libgtk-3-dev)
           execute_process(COMMAND sudo apt-get install ninja-build)

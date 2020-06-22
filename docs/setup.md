@@ -21,10 +21,9 @@ order to use the library:
 1. A C++17 compiler
 2. Git
 3. [CMake](https://cmake.org/) 3.9.6 or higher
-4. [Boost](https://www.boost.org/) 1.68 or higher
-5. [Cairo](https://cairographics.org/)
-6. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
-7. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+4. [Cairo](https://cairographics.org/)
+5. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
+6. [freetype2](https://www.freetype.org/) (Windows and Linux only).
 
 Additionally, the following libraries are dragged as submodules:
 
@@ -60,8 +59,7 @@ for specific environments.
 
 ### Required Libraries
 
-Elements requires [Cairo](https://www.cairographics.org/) 1.16 or higher, and
-the [Boost Libraries](https://www.boost.org/) 1.68 or higher,
+Elements requires [Cairo](https://www.cairographics.org/) 1.16 or higher,
 [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and
 [freetype2](https://www.freetype.org/) (on Windows and Linux). Specific
 instructions are provided below for specific environments.
@@ -74,7 +72,6 @@ instructions are provided below for specific environments.
 
 ```
 brew install cairo
-brew install boost
 brew install fontconfig
 ```
 
@@ -121,27 +118,6 @@ The Windows port comes with the cairo, fontconfig and freetype2 binaries as
 part of the installation in the `lib/external` directory, so there is no need
 to have these libraries installed. CMake will take care of the dependencies.
 
-The only thing you have to install is Boost:
-
-#### Download and build Boost
-
-From (<https://www.boost.org/users/download/>), get the latest Boost version.
-If you have it already, make sure you have version 1.68 or higher. Many Boost
-libraries are header-only. You only need to build some of the non-header-only
-libraries:
-
-1. CD to boost directory
-2. Bootstrap Boost
-3. Build Boost
-
-```
-cd path/to/boost
-bootstrap.bat
-b2 -j+8 --with-filesystem --with-system --with-date_time --with-regex link=static stage
-```
-
-*Replace path/to/boost with the directory where you installed boost.*
-
 ### Install CMake
 
 Follow the instructions provided here: https://cmake.org/install/
@@ -165,10 +141,8 @@ You want NMake approach if you prefer `make`-style commandline tool, or
 cd elements
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -DBOOST_ROOT=path/to/boost ..//
+cmake -G"Visual Studio 16 2019" ..//
 ```
-
-*Replace path/to/boost with the directory where you installed boost.*
 
 If successful, cmake will generate a Visual Studio solution in the build
 directory. Open the project file elements.sln and build all. You should see a
@@ -187,10 +161,8 @@ couple of example applications.
 cd elements
 mkdir build
 cd build
-cmake -G"NMake Makefiles" -DBOOST_ROOT=path/to/boost ..//
+cmake -G"NMake Makefiles" ..//
 ```
-
-*Replace path/to/boost with the directory where you installed boost.*
 
 If successful, cmake will generate NMake Make files in the build directory.
 Invoke `nmake` to build the binary.
@@ -209,7 +181,6 @@ Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu.
 Install tools and libraries:
 ```
 pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
-pacman -S ${MINGW_PACKAGE_PREFIX}-boost
 pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
 pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
 pacman -S make

@@ -34,6 +34,7 @@ namespace cycfi { namespace elements
 
    void activate(GtkApplication* app, gpointer user_data)
    {
+      ignore(app, user_data);
       is_activated = true;
       for (auto f : on_activate)
          f();
@@ -59,13 +60,14 @@ namespace cycfi { namespace elements
    app::app(
       int         argc_
     , char*       argv_[]
-    , std::string // name
+    , std::string name
     , std::string id
    )
    {
       argc = argc_;
       argv = argv_;
       static init_app init{ id };
+      _app_name = name;
       _app = the_app;
    }
 

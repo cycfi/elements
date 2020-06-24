@@ -77,6 +77,7 @@ namespace cycfi { namespace elements
 
       gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
       {
+         ignore(event);
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
 
@@ -93,6 +94,7 @@ namespace cycfi { namespace elements
 
       gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
+         ignore(widget);
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
          cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
@@ -166,6 +168,7 @@ namespace cycfi { namespace elements
 
       gboolean on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
       {
+         ignore(widget);
          auto& view = get(user_data);
          mouse_button btn;
          if (get_button(event, btn, platform_access::get_host_view(view)))
@@ -175,6 +178,7 @@ namespace cycfi { namespace elements
 
       gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
+         ignore(widget);
          auto& base_view = get(user_data);
          host_view* view = platform_access::get_host_view(base_view);
          mouse_button btn;
@@ -212,6 +216,7 @@ namespace cycfi { namespace elements
 
       gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
       {
+         ignore(widget);
          auto& base_view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(base_view);
          auto elapsed = std::max<float>(10.0f, event->time - host_view_h->scroll_time);
@@ -289,6 +294,7 @@ namespace cycfi { namespace elements
 
    static void on_text_entry(GtkIMContext* context, const gchar* str, gpointer user_data)
    {
+      ignore(context);
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       auto cp = codepoint(str);
@@ -363,6 +369,7 @@ namespace cycfi { namespace elements
 
    void on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
    {
+      ignore(widget);
       auto& base_view = get(user_data);
       if (event->in)
          base_view.begin_focus();
@@ -458,6 +465,7 @@ namespace cycfi { namespace elements
    base_view::base_view(extent size_)
     : base_view(new host_view)
    {
+      ignore(size_);
       // $$$ FIXME: Implement Me $$$
       CYCFI_ASSERT(false, "Unimplemented");
    }

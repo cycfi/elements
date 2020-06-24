@@ -273,21 +273,18 @@ auto make_grids()
 
 template <typename MenuItem>
 auto make_popup_menu(
-   MenuItem& item1,
-   MenuItem& item2,
-   MenuItem& item3,
-   MenuItem& item4,
-   MenuItem& item5
+   MenuItem const& item1,
+   MenuItem const& item2,
+   MenuItem const& item3,
+   MenuItem const& item4,
+   MenuItem const& item5
 )
 {
    auto popup  = button_menu("Layout", menu_position::bottom_left);
 
    auto menu =
       layer(
-         vtile(
-            link(item1), link(item2),
-            link(item3), link(item4), link(item5)
-         ),
+         vtile(item1, item2, item3, item4, item5),
          panel{}
       );
 

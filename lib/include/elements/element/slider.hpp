@@ -403,7 +403,7 @@ namespace cycfi { namespace elements
 
       // Draw the labels
       draw_slider_labels(
-         ctx.canvas, ctx.bounds, size
+         ctx.canvas, ctx.bounds
        , _font_size, _labels.data(), num_labels);
    }
 

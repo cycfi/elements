@@ -27,12 +27,13 @@ namespace cycfi { namespace elements
 namespace cycfi { namespace elements
 {
    app::app(
-      int         // argc
-    , char**      // argv
+      int         argc
+    , char*       argv[]
     , std::string name
-    , std::string // id
+    , std::string id
    )
    {
+      ignore(argc, argv, id);
       _app_name = name;
 
 #if !defined(ELEMENTS_HOST_ONLY_WIN7)

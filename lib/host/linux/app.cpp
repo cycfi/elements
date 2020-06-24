@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
       return is_activated;
    }
 
-   void activate(GtkApplication* /* app */, gpointer /* user_data */)
+   void activate(GtkApplication* app, gpointer user_data)
    {
       is_activated = true;
       for (auto f : on_activate)

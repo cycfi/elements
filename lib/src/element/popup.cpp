@@ -20,7 +20,7 @@ namespace cycfi { namespace elements
       auto new_ctx = ctx.sub_context();
       bool hit = false;
       new_ctx.listen<basic_menu_item_element>(
-         [&hit](auto const& /* ctx */, auto& /* e */, auto /* what */)
+         [&hit](auto const& ctx, auto& e, auto what)
          {
             hit = true;
          }

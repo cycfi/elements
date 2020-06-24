@@ -178,9 +178,9 @@ endif()
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom
 
 target_compile_options(elements PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
+   $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0 -Werror>
+   $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0 -Werror>
+   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
 ###############################################################################
@@ -251,7 +251,10 @@ if (APPLE)
    target_compile_definitions(elements PRIVATE
       ELEMENTS_CLASS_PREFIX=${ELEMENTS_CLASS_PREFIX}
    )
-   target_compile_options(elements PUBLIC "-fobjc-arc")
+   target_compile_options(elements
+      PRIVATE -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0 -Werror
+      PUBLIC -fobjc-arc
+   )
 elseif (WIN32)
    target_compile_definitions(elements PUBLIC
       WIN32_LEAN_AND_MEAN

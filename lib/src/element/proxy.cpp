@@ -62,16 +62,16 @@ namespace cycfi { namespace elements
       }
    }
 
-   void proxy_base::prepare_subject(context& /* ctx */)
+   void proxy_base::prepare_subject(context& ctx)
    {
    }
 
-   void proxy_base::prepare_subject(context& ctx, point& /* p */)
+   void proxy_base::prepare_subject(context& ctx, point& p)
    {
       prepare_subject(ctx);
    }
 
-   void proxy_base::restore_subject(context& /* ctx */)
+   void proxy_base::restore_subject(context& ctx)
    {
    }
 

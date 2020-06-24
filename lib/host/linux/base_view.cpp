@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* /* event */, gpointer user_data)
+      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* event, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -91,7 +91,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
+      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -164,7 +164,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_button(GtkWidget* /* widget */, GdkEventButton* event, gpointer user_data)
+      gboolean on_button(GtkWidget* widget, GdkEventButton* event, gpointer user_data)
       {
          auto& view = get(user_data);
          mouse_button btn;
@@ -173,7 +173,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_motion(GtkWidget* /* widget */, GdkEventMotion* event, gpointer user_data)
+      gboolean on_motion(GtkWidget* widget, GdkEventMotion* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
          host_view* view = platform_access::get_host_view(base_view);
@@ -210,7 +210,7 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_scroll(GtkWidget* /* widget */, GdkEventScroll* event, gpointer user_data)
+      gboolean on_scroll(GtkWidget* widget, GdkEventScroll* event, gpointer user_data)
       {
          auto& base_view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(base_view);
@@ -287,7 +287,7 @@ namespace cycfi { namespace elements
    // Defined in key.cpp
    key_code translate_key(unsigned key);
 
-   static void on_text_entry(GtkIMContext* /* context */, const gchar* str, gpointer user_data)
+   static void on_text_entry(GtkIMContext* context, const gchar* str, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
+   void on_focus(GtkWidget* widget, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       if (event->in)
@@ -455,7 +455,7 @@ namespace cycfi { namespace elements
       }
    };
 
-   base_view::base_view(extent /* size_ */)
+   base_view::base_view(extent size_)
     : base_view(new host_view)
    {
       // $$$ FIXME: Implement Me $$$

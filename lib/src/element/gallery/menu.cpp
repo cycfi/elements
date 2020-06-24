@@ -33,12 +33,12 @@ namespace cycfi { namespace elements
 
    basic_menu icon_menu(uint32_t code, float size, menu_position pos)
    {
-      auto menu = text_button<basic_menu>(code, size, /*no_frame*/ true);
+      auto menu = text_button<basic_menu>(code, size, /* no_frame */ true);
       menu.position(pos);
       return menu;
    }
 
-   view_limits menu_item_spacer_element::limits(basic_context const& /* ctx */) const
+   view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
    {
       auto height = get_theme().label_font_size;
       return { { 0, height }, { full_extent, height } };

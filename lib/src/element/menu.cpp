@@ -135,7 +135,7 @@ namespace cycfi { namespace elements
       basic_menu_item_element* last = nullptr;
 
       new_ctx.listen<basic_menu_item_element>(
-         [&](auto const& /* ctx */, auto& e, auto what)
+         [&](auto const& ctx, auto& e, auto what)
          {
             if (what == "key" || what == "click")
             {

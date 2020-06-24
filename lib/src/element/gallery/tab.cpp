@@ -47,7 +47,7 @@ namespace cycfi { namespace elements
       canvas_.fill_text(point{ cx, cy }, _text.c_str());
    }
 
-   bool tab_element::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
+   bool tab_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       ctx.view.refresh(ctx);
       return true;

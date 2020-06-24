@@ -164,7 +164,7 @@ namespace cycfi { namespace elements
       cairo_line_to(&_context, p.x, p.y);
    }
 
-   void canvas::arc_to(point /* p1 */, point /* p2 */, float /* radius */)
+   void canvas::arc_to(point p1, point p2, float radius)
    {
       assert(false); // unimplemented
    }

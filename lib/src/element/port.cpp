@@ -151,7 +151,7 @@ namespace cycfi { namespace elements
          _tracking == ((w > h)? tracking_h : tracking_v));
    }
 
-   rect scroller_base::scroll_bar_position(context const& /* ctx */, scrollbar_info const& info)
+   rect scroller_base::scroll_bar_position(context const& ctx, scrollbar_info const& info)
    {
       float x = info.bounds.left;
       float y = info.bounds.top;
@@ -268,7 +268,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool scroller_base::scroll(context const& ctx, point dir, point /* p */)
+   bool scroller_base::scroll(context const& ctx, point dir, point p)
    {
       view_limits e_limits = subject().limits(ctx);
       bool redraw = false;

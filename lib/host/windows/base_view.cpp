@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
 
       mouse_button get_button(
          HWND hwnd, view_info* info, UINT message
-       , WPARAM /* wparam */, LPARAM lparam)
+       , WPARAM wparam, LPARAM lparam)
       {
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
@@ -282,7 +282,7 @@ namespace cycfi { namespace elements
          _view.key(k);
       }
 
-      void on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
+      void on_key(HWND hwnd, view_info* info, WPARAM wparam, LPARAM lparam)
       {
          auto const key = translate_key(wparam, lparam);
          auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;

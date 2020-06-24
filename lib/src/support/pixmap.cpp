@@ -8,12 +8,16 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PNG 1
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmisleading-indentation"
-#pragma GCC diagnostic ignored "-Wshift-negative-value"
-#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#if defined(__GNUC__) && !defined(__clang__)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wmisleading-indentation"
+# pragma GCC diagnostic ignored "-Wshift-negative-value"
+# pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#endif
 #include <elements/support/detail/stb_image.h>
-#pragma GCC diagnostic pop
+#if defined(__GNUC__) && !defined(__clang__)
+# pragma GCC diagnostic pop
+#endif
 
 #include <infra/assert.hpp>
 #include <infra/filesystem.hpp>

@@ -77,7 +77,10 @@ auto thumb =
          { 25, 20, 25, 18 },
          label("“Dogs are my favorite people”")
       ),
-      rbox(colors::medium_blue, 10)
+      margin(
+         { 5, 5, 5, 5 },
+         rbox(colors::medium_blue, 10)
+      )
    );
 
 auto funny_slider = slider(thumb, track);

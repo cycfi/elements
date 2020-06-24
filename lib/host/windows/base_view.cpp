@@ -414,7 +414,7 @@ namespace cycfi { namespace elements
 
             case WM_MOUSELEAVE:
                info->mouse_in_window = false;
-               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::entering);
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::leaving);
                break;
 
             case WM_MOUSEHOVER:

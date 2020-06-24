@@ -11,12 +11,14 @@ namespace cycfi { namespace elements
    app::app(
       int         argc
     , char*       argv[]
-    , std::string // name     Note: Unlike Windows and Linux, MacOS contains
-    , std::string // id             the app name and id in the plist.info file.
-                  //                We ignore the ctor params here and use those
-                  //                instead.
+    , std::string name     // Note: Unlike Windows and Linux, MacOS contains
+    , std::string id_      //       the app name and id in the plist.info file.
+                           //       We ignore the ctor params here and use those
+                           //       instead.
    )
    {
+      ignore(argc, argv, name, id_);
+
       [NSApplication sharedApplication];
       [NSApp setActivationPolicy : NSApplicationActivationPolicyRegular];
 

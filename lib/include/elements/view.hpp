@@ -103,7 +103,7 @@ namespace cycfi { namespace elements
       using tracking = element::tracking;
 
       using track_function = std::function<void(element& e, tracking state)>;
-      track_function on_tracking = [](element& e, tracking state) {};
+      track_function on_tracking = [](element& e, tracking state) { ignore(e, state); };
 
       void                    manage_on_tracking(element& e, tracking state);
 

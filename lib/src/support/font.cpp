@@ -69,12 +69,6 @@ namespace cycfi { namespace elements
          return (a * (1.0 - f)) + (b * f);
       }
 
-      auto const& cairo_user_data_key()
-      {
-         static const cairo_user_data_key_t key = {};
-         return key;
-      }
-
       namespace fc
       {
          struct font_config_deleter

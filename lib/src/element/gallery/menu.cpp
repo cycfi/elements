@@ -40,6 +40,7 @@ namespace cycfi { namespace elements
 
    view_limits menu_item_spacer_element::limits(basic_context const& ctx) const
    {
+      ignore(ctx);
       auto height = get_theme().label_font_size;
       return { { 0, height }, { full_extent, height } };
    }

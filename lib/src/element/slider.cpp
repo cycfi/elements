@@ -245,7 +245,6 @@ namespace cycfi { namespace elements
       canvas& cnv
     , rect bounds
     , float size
-    , float font_size
     , std::string const labels[]
     , std::size_t num_labels
    )

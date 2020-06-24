@@ -153,6 +153,8 @@ namespace cycfi { namespace elements
 
    rect scroller_base::scroll_bar_position(context const& ctx, scrollbar_info const& info)
    {
+      ignore(ctx);
+
       float x = info.bounds.left;
       float y = info.bounds.top;
       float w = info.bounds.width();
@@ -270,6 +272,7 @@ namespace cycfi { namespace elements
 
    bool scroller_base::scroll(context const& ctx, point dir, point p)
    {
+      ignore(p);
       view_limits e_limits = subject().limits(ctx);
       bool redraw = false;
 

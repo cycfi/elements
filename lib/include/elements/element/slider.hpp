@@ -137,6 +137,7 @@ namespace cycfi { namespace elements
    inline bool selector_base<num_states>::scroll(
       context const& ctx, point dir, point p)
    {
+      ignore(ctx, dir, p);
       // We don't allow selector move via the scroll wheel.
       return false;
    }
@@ -187,8 +188,9 @@ namespace cycfi { namespace elements
    inline view_limits basic_thumb_element<size>
       ::limits(basic_context const& ctx) const
    {
-	  auto pt = point{ float(size), float(size) };
-	  return view_limits{ pt, pt };
+      ignore(ctx);
+	   auto pt = point{ float(size), float(size) };
+	   return view_limits{ pt, pt };
    }
 
    template <unsigned size>
@@ -236,11 +238,12 @@ namespace cycfi { namespace elements
    inline view_limits basic_track_element<size, vertical>
       ::limits(basic_context const& ctx) const
    {
-	  auto sz = float(size);
-	  auto min_length_ = float(min_length);
-	  auto p1 = vertical ? point{ sz, min_length_ } : point{ min_length_, sz };
-	  auto p2 = vertical ? point{ sz, full_extent } : point{ full_extent, sz };
-	  return view_limits{ p1, p2 };
+      ignore(ctx);
+      auto sz = float(size);
+	   auto min_length_ = float(min_length);
+	   auto p1 = vertical ? point{ sz, min_length_ } : point{ min_length_, sz };
+	   auto p2 = vertical ? point{ sz, full_extent } : point{ full_extent, sz };
+	   return view_limits{ p1, p2 };
    }
 
    template <unsigned size, bool vertical>
@@ -387,7 +390,6 @@ namespace cycfi { namespace elements
       canvas& cnv
     , rect bounds
     , float size
-    , float font_size
     , std::string const labels[]
     , std::size_t _num_labels
    );

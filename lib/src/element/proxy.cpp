@@ -64,15 +64,18 @@ namespace cycfi { namespace elements
 
    void proxy_base::prepare_subject(context& ctx)
    {
+      ignore(ctx);
    }
 
    void proxy_base::prepare_subject(context& ctx, point& p)
    {
+      ignore(p);
       prepare_subject(ctx);
    }
 
    void proxy_base::restore_subject(context& ctx)
    {
+      ignore(ctx);
    }
 
    element* proxy_base::click(context const& ctx, mouse_button btn)

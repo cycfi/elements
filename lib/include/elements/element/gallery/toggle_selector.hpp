@@ -39,6 +39,7 @@ namespace cycfi { namespace elements
 
    inline bool toggle_selector::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      ignore(p, status);
       ctx.view.refresh(ctx);
       return true;
    }

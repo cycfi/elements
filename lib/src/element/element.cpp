@@ -14,6 +14,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits element::limits(basic_context const& ctx) const
    {
+      ignore(ctx);
       return full_limits;
    }
 
@@ -24,15 +25,18 @@ namespace cycfi { namespace elements
 
    element* element::hit_test(context const& ctx, point p)
    {
+      ignore(ctx);
       return (ctx.bounds.includes(p)) ? this : nullptr;
    }
 
    void element::draw(context const& ctx)
    {
+      ignore(ctx);
    }
 
    void element::layout(context const& ctx)
    {
+      ignore(ctx);
    }
 
    void element::refresh(context const& ctx, element& element, int outward)
@@ -43,30 +47,36 @@ namespace cycfi { namespace elements
 
    element* element::click(context const& ctx, mouse_button btn)
    {
+      ignore(ctx, btn);
       return nullptr;
    }
 
    void element::drag(context const& ctx, mouse_button btn)
    {
+      ignore(ctx, btn);
    }
 
    bool element::key(context const& ctx, key_info k)
    {
+      ignore(ctx, k);
       return false;
    }
 
    bool element::text(context const& ctx, text_info info)
    {
+      ignore(ctx, info);
       return false;
    }
 
    bool element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      ignore(ctx, p, status);
       return false;
    }
 
    bool element::scroll(context const& ctx, point dir, point p)
    {
+      ignore(ctx, dir, p);
       return false;
    }
 

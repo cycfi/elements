@@ -31,6 +31,7 @@ namespace cycfi { namespace elements
 
    view_limits static_text_box::limits(basic_context const& ctx) const
    {
+      ignore(ctx);
       sync();
 
       auto  size = _layout.metrics();
@@ -212,6 +213,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      ignore(status);
       if (ctx.bounds.includes(p))
       {
          set_cursor(cursor_type::ibeam);
@@ -753,6 +755,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::cut(view& v, int start, int end)
    {
+      ignore(v);
       if (start != -1 && start != end)
       {
          auto  end_ = std::max(start, end);
@@ -764,6 +767,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::copy(view& v, int start, int end)
    {
+      ignore(v);
       if (start != -1 && start != end)
       {
          auto  end_ = std::max(start, end);
@@ -774,6 +778,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::paste(view& v, int start, int end)
    {
+      ignore(v);
       if (start != -1)
       {
          auto  end_ = std::max(start, end);
@@ -903,6 +908,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits basic_input_box::limits(basic_context const& ctx) const
    {
+      ignore(ctx);
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
       return { { 32, line_height }, { full_extent, line_height } };
@@ -987,6 +993,7 @@ namespace cycfi { namespace elements
 
    void basic_input_box::paste(view& v, int start, int end)
    {
+      ignore(v);
       if (start != -1)
       {
          auto  end_ = std::max(start, end);

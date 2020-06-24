@@ -137,6 +137,7 @@ namespace cycfi { namespace elements
       new_ctx.listen<basic_menu_item_element>(
          [&](auto const& ctx, auto& e, auto what)
          {
+            ignore(ctx);
             if (what == "key" || what == "click")
             {
                hit = &e;

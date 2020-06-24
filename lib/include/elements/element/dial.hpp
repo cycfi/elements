@@ -84,7 +84,8 @@ namespace cycfi { namespace elements
    template <std::size_t size>
    inline view_limits basic_knob_element<size>::limits(basic_context const& ctx) const
    {
-	  auto pt = point{ float(size), float(size) };
+      ignore(ctx);
+	   auto pt = point{ float(size), float(size) };
       return view_limits{ pt, pt };
    }
 
@@ -232,7 +233,6 @@ namespace cycfi { namespace elements
    void draw_radial_labels(
       canvas& cnv
     , circle cp
-    , float size
     , float font_size
     , std::string const labels[]
     , std::size_t _num_labels
@@ -248,7 +248,7 @@ namespace cycfi { namespace elements
       // Draw the labels
       auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
       draw_radial_labels(
-         ctx.canvas, cp, size, _font_size, _labels.data(), num_labels);
+         ctx.canvas, cp, _font_size, _labels.data(), num_labels);
    }
 
    template <std::size_t size, typename Subject, typename... S>

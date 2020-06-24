@@ -129,6 +129,11 @@ namespace cycfi { namespace elements
       using gen_font_color = label_gen<label_with_font_color<remove_gen>>;
       using gen_text_align = label_gen<label_with_text_align<remove_gen>>;
 
+      using Base::font;
+      using Base::font_size;
+      using Base::font_color;
+      using Base::text_align;
+
       gen_font                font(font_type font_) const;
       gen_font_size           font_size(float size) const;
       gen_font_size           relative_font_size(float size) const;

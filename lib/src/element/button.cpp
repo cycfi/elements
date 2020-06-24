@@ -33,6 +33,7 @@ namespace cycfi { namespace elements
 
    bool basic_button::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      ignore(p);
       _hilite = status != cursor_tracking::leaving;
       if (auto* rcvr = find_subject<receiver<int>*>(this))
       {

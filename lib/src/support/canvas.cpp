@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/support/canvas.hpp>
 #include <cairo.h>
+#include <infra/support.hpp>
 
 #include <memory>
 
@@ -166,6 +167,7 @@ namespace cycfi { namespace elements
 
    void canvas::arc_to(point p1, point p2, float radius)
    {
+      ignore(p1, p2, radius);
       assert(false); // unimplemented
    }
 

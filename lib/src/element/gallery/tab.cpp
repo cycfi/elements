@@ -49,6 +49,7 @@ namespace cycfi { namespace elements
 
    bool tab_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      ignore(p, status);
       ctx.view.refresh(ctx);
       return true;
    }

@@ -24,6 +24,18 @@ Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
 declarative interface with heavy emphasis on reuse.
 
+## Status
+
+Please take note that Elements is still very much in flux as we are inching
+closer towards a version 1.0 release. The API and code is still undergoing
+continuous changes, and for that matter, Elements is not yet "production
+ready". But that should not prevent you from using Elements now! It is
+already in a very usable form, and more people using it will ultimately make
+it more robust when bugs are reported and fixed. API and usability matters
+and I very much welcome suggestions and contributions. Hey, this is an open
+source project! If you like the design, concepts and ideas behind Elements, I
+very much welcome collaboration.
+
 ## News
 
 - 22 June 2020: Removed dependency on Boost. This requires some API changes to

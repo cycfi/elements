@@ -70,8 +70,8 @@ namespace cycfi { namespace elements
 
    std::string codepoint_to_utf8(unsigned codepoint)
    {
-      std::string result{ 8 };
+      char result[8];
       detail::codepoint_to_utf8(codepoint, &result[0]);
-      return result;
+      return { result };
    }
 }}

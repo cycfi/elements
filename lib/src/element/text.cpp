@@ -254,7 +254,7 @@ namespace cycfi { namespace elements
          _text.insert(_select_start, text);
       else
          _text.replace(_select_start, _select_end-_select_start, text);
-      _select_end = ++_select_start;
+      _select_end = _select_start += text.length();
 
       _layout.text(_text.data(), _text.data() + _text.size());
       layout(ctx);

@@ -295,4 +295,9 @@ if (WIN32 AND NOT MSVC)
    target_link_libraries(elements PUBLIC ws2_32)
 endif()
 
+# Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
+if (WIN32) 
+   target_link_libraries(elements PUBLIC Shcore)
+endif()
+
 add_library(cycfi::elements ALIAS elements)

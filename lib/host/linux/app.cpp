@@ -40,11 +40,30 @@ namespace cycfi { namespace elements
       on_activate.clear();
    }
 
+   fs::path find_resources()
+   {
+      const fs::path app_path = fs::path(argv[0]);
+      const fs::path app_dir = app_path.parent_path();
+
+      if (app_dir.filename() == "bin")
+      {
+         fs::path path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+         if (fs::is_directory(path))
+            return path;
+      }
+
+      const fs::path app_resources_dir = app_dir / "resources";
+      if (fs::is_directory(app_resources_dir))
+         return app_resources_dir;
+
+      return fs::current_path() / "resources";
+   }
+
    struct init_app
    {
       init_app(std::string id)
       {
-         const fs::path resources_path = fs::current_path() / "resources";
+         const fs::path resources_path = find_resources();
          font_paths().push_back(resources_path);
          resource_paths.push_back(resources_path);
 

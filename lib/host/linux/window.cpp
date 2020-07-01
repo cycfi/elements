@@ -42,6 +42,8 @@ namespace cycfi { namespace elements
    window::window(std::string const& name, int style_, rect const& bounds)
     :  _window(new host_window)
    {
+      cycfi::ignore(style_);
+
       // Chicken and egg. GTK wants us to create windows only
       // after the app is activated. So we have a scheme to
       // defer actions. If the app is not activated make_window is
@@ -49,7 +51,7 @@ namespace cycfi { namespace elements
       // immediately.
 
       auto make_window =
-         [this, name, style_, bounds]()
+         [this, name, bounds]()
          {
             GtkWidget* win = gtk_application_window_new(get_app());
             g_object_ref(win);

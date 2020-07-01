@@ -1,6 +1,6 @@
 [submodule "lib/infra"]
 	path = lib/infra
-	url = https://github.com/cycfi/infra
+	url = https://github.com/cycfi/infra.git
 [submodule "lib/external/asio"]
 	path = lib/external/asio
 	url = https://github.com/chriskohlhoff/asio.git

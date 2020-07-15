@@ -73,6 +73,9 @@ namespace cycfi { namespace elements
 
     , dialog_button_size         { 100 }
     , message_textbox_size       { { 300, 120 } }
+
+    , dial_mode                  { }
+    , dial_linear_range          { 200 }
    {
    }
 

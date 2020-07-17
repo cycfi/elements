@@ -14,7 +14,7 @@
 
 namespace cycfi { namespace elements
 {
-   enum class dial_mode : int
+   enum class dial_mode_enum : int
    {
       radial = 0,
       linear,

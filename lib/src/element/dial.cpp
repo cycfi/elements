@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
          auto const& theme = get_theme();
          double new_value;
 
-         if (theme.dial_mode == dial_mode::radial)
+         if (theme.dial_mode == dial_mode_enum::radial)
          {
             new_value = value_from_point(ctx, track_info.current);
          }

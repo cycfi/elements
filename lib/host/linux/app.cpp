@@ -78,9 +78,10 @@ namespace cycfi { namespace elements
    app::app(
       int         argc_
     , char*       argv_[]
-    , std::string // name
+    , std::string name
     , std::string id
    )
+   : _app_name(name)
    {
       argc = argc_;
       argv = argv_;

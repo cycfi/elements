@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/theme.hpp>
+#include <elements/element/dial.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
@@ -73,6 +74,9 @@ namespace cycfi { namespace elements
 
     , dialog_button_size         { 100 }
     , message_textbox_size       { { 300, 120 } }
+
+    , dial_mode                  { dial_mode_enum::linear }
+    , dial_linear_range          { 200 }
    {
    }
 

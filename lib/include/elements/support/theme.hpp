@@ -10,6 +10,8 @@
 
 namespace cycfi { namespace elements
 {
+   enum class dial_mode_enum : int;
+
    class theme
    {
    public:
@@ -74,6 +76,9 @@ namespace cycfi { namespace elements
 
       float                dialog_button_size;
       extent               message_textbox_size;
+
+      dial_mode_enum       dial_mode;
+      float                dial_linear_range;
    };
 
    // Access to the global theme

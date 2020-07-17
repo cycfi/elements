@@ -15,8 +15,8 @@ namespace cycfi { namespace elements
 {
    struct tracker_info
    {
-      explicit          tracker_info(point start_)
-                         : start(start_)
+      explicit          tracker_info(point start_, int modifiers_ = 0)
+                         : start(start_), modifiers(modifiers_)
                         {}
 
                         tracker_info(tracker_info const&) = default;
@@ -26,6 +26,7 @@ namespace cycfi { namespace elements
       point             current = start;
       point             previous = start;
       point             offset = point{ 0, 0 };
+      int               modifiers = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ namespace cycfi { namespace elements
 
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
 
-      virtual tracker_info_ptr new_state(context const& ctx, point start);
+      virtual tracker_info_ptr new_state(context const& ctx, point start, int modifiers);
       virtual void             begin_tracking(context const& ctx, tracker_info& track_info) = 0;
       virtual void             keep_tracking(context const& ctx, tracker_info& track_info) = 0;
       virtual void             end_tracking(context const& ctx, tracker_info& track_info) = 0;
@@ -87,7 +88,7 @@ namespace cycfi { namespace elements
    {
       if (btn.down)
       {
-         state = new_state(ctx, btn.pos);
+         state = new_state(ctx, btn.pos, btn.modifiers);
          this->on_tracking(ctx, element::begin_tracking);
          begin_tracking(ctx, *state);
       }
@@ -107,13 +108,14 @@ namespace cycfi { namespace elements
       state->previous = state->current;
       state->current = btn.pos;
       state->current = state->current.move(-state->offset.x, -state->offset.y);
+      state->modifiers = btn.modifiers;
       keep_tracking(ctx, *state);
    }
 
    template <typename Base>
-   inline typename tracker<Base>::tracker_info_ptr tracker<Base>::new_state(context const& /* ctx */, point start)
+   inline typename tracker<Base>::tracker_info_ptr tracker<Base>::new_state(context const& /* ctx */, point start, int modifiers)
    {
-      return std::make_unique<tracker_info>(start);
+      return std::make_unique<tracker_info>(start, modifiers);
    }
 
    template <typename Base>

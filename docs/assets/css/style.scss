@@ -60,3 +60,26 @@ img
     text-align: center;
 }
 
+nav {
+    border-bottom: 1px solid #eaecea;
+
+    @include large {
+        max-width: 52rem;
+        margin: 0 auto;
+    }
+}
+
+nav li {
+    display: inline;
+}
+
+nav li a {
+    display: inline-block;
+    padding: 10px;
+    color: #444;
+}
+
+nav li a:hover, .anchorjs-link:hover {
+    text-decoration: none;
+    color: #152999e5;
+}

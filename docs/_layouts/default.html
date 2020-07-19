@@ -48,7 +48,7 @@
             <img src="assets/images/elements.png" alt="Logo" />
         </a>
 
-      {{ content }}
+      {% include anchor_headings.html html=content anchorClass="toc-anchor" anchorBody="#" %}
 
       <!-- <footer class="site-footer">
         {% if site.github.is_project_page %}

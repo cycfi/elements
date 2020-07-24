@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
     , system_font                { font_descr{ "DejaVu Sans" } }
 #endif
 
-    , element_background_opacity                {32.0f / 255.0f }
+    , element_background_opacity { 32.0f / 255.0f }
 
     , heading_font_color         { basic_font_color }
     , heading_font               { font_descr{ "Roboto" }.medium() }

@@ -653,8 +653,10 @@ namespace cycfi { namespace elements
             );
             auto cgfont = CGFontCreateWithFontName(cfstr);
             _handle = cairo_quartz_font_face_create_for_cgfont(cgfont);
-            CFRelease(cgfont);
-            CFRelease(cfstr);
+            if (cgfont)
+               CFRelease(cgfont);
+            if (cfstr)
+               CFRelease(cfstr);
 #else
             _handle = ft_lib.load_font(match_ptr->file.c_str());
 #endif

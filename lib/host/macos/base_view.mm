@@ -6,6 +6,7 @@
 #include <elements/base_view.hpp>
 #include <elements/support/resource_paths.hpp>
 #include <elements/support/font.hpp>
+#include <infra/assert.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -44,15 +45,11 @@ namespace
 
    void activate_font(fs::path font_path)
    {
-      NSArray* available_fonts = [[NSFontManager sharedFontManager] availableFonts];
-      if (![available_fonts containsObject : [NSString stringWithUTF8String : font_path.stem().c_str()]])
-      {
-         auto furl = [NSURL fileURLWithPath : [NSString stringWithUTF8String : font_path.c_str()]];
-         assert(furl);
+      auto furl = [NSURL fileURLWithPath : [NSString stringWithUTF8String : font_path.c_str()]];
+      CYCFI_ASSERT(furl, "Error: Unexpected missing font.");
 
-         CFErrorRef error = nullptr;
-         CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
-      }
+      CFErrorRef error = nullptr;
+      CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
    }
 
    void get_resource_path(char resource_path[])

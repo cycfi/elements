@@ -28,10 +28,11 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
 
-      virtual font_type       font() const;
-      virtual float           font_size() const;
-      virtual color           font_color() const;
-      virtual int             text_align() const;
+      virtual font_type       get_font() const;
+      virtual float           get_font_size() const;
+      virtual float           get_default_font_size() const;
+      virtual color           get_font_color() const;
+      virtual int             get_text_align() const;
    };
 
    template <typename Base>
@@ -62,7 +63,8 @@ namespace cycfi { namespace elements
                                : Base(std::move(base)), _font(std::move(font_))
                               {}
 
-      font_type               font() const override { return _font; }
+      font_type               get_font() const override  { return _font; }
+      void                    set_font(font_type font_)  { _font = font_; }
 
    private:
 
@@ -78,7 +80,9 @@ namespace cycfi { namespace elements
                                : Base(std::move(base)), _size(size)
                               {}
 
-      float                   font_size() const override { return _size; }
+      float                   get_font_size() const override      { return _size; }
+      void                    set_font_size(float size)           { _size = size; }
+      void                    set_relative_font_size(float size)  { _size = Base::get_default_font_size() * size; }
 
    private:
 
@@ -94,7 +98,8 @@ namespace cycfi { namespace elements
                                : Base(std::move(base)), _color(color_)
                               {}
 
-      color                   font_color() const override { return _color; }
+      color                   get_font_color() const override  { return _color; }
+      void                    set_font_color(color color_)     { _color = color_; }
 
    private:
 
@@ -110,7 +115,8 @@ namespace cycfi { namespace elements
                                : Base(std::move(base)), _align(align)
                               {}
 
-      int                     text_align() const override { return _align; }
+      int                     get_text_align() const override  { return _align; }
+      void                    text_align(int align)            { _align = align; }
 
    private:
 
@@ -139,22 +145,27 @@ namespace cycfi { namespace elements
    using basic_label = basic_label_base<default_label>;
    using label = label_gen<basic_label>;
 
-   inline default_label::font_type default_label::font() const
+   inline default_label::font_type default_label::get_font() const
    {
       return get_theme().label_font;
    }
 
-   inline float default_label::font_size() const
+   inline float default_label::get_font_size() const
    {
       return get_theme().label_font_size;
    }
 
-   inline color default_label::font_color() const
+   inline float default_label::get_default_font_size() const
+   {
+      return get_theme().label_font_size;
+   }
+
+   inline color default_label::get_font_color() const
    {
       return get_theme().label_font_color;
    }
 
-   inline int default_label::text_align() const
+   inline int default_label::get_text_align() const
    {
       return get_theme().label_text_align;
    }
@@ -177,7 +188,7 @@ namespace cycfi { namespace elements
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::relative_font_size(float size) const
    {
-      return { *this, get_theme().label_font_size * size };
+      return { *this, Base::get_default_font_size() * size };
    }
 
    template <typename Base>
@@ -202,31 +213,37 @@ namespace cycfi { namespace elements
       using font_type = elements::font const&;
       using remove_gen = default_heading;
 
-      font_type               font() const override;
-      float                   font_size() const override;
-      color                   font_color() const override;
-      int                     text_align() const override;
+      font_type               get_font() const override;
+      float                   get_font_size() const override;
+      float                   get_default_font_size() const override;
+      color                   get_font_color() const override;
+      int                     get_text_align() const override;
    };
 
    using basic_heading = basic_label_base<default_heading>;
    using heading = label_gen<basic_heading>;
 
-   inline default_heading::font_type default_heading::font() const
+   inline default_heading::font_type default_heading::get_font() const
    {
       return get_theme().heading_font;
    }
 
-   inline float default_heading::font_size() const
+   inline float default_heading::get_font_size() const
    {
       return get_theme().heading_font_size;
    }
 
-   inline color default_heading::font_color() const
+   inline float default_heading::get_default_font_size() const
+   {
+      return get_theme().heading_font_size;
+   }
+
+   inline color default_heading::get_font_color() const
    {
       return get_theme().heading_font_color;
    }
 
-   inline int default_heading::text_align() const
+   inline int default_heading::get_text_align() const
    {
       return get_theme().heading_text_align;
    }

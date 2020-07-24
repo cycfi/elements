@@ -12,7 +12,7 @@ namespace cycfi { namespace elements
       auto  size = measure_text(
          ctx.canvas, c_str()
        , font()
-       , font_size()
+       , get_font_size()
       );
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -21,14 +21,14 @@ namespace cycfi { namespace elements
    {
       auto& canvas_ = ctx.canvas;
       auto  state = canvas_.new_state();
-      auto  align = text_align();
+      auto  align = get_text_align();
 
       // default should reflect the theme's vertical label_text_align
       if ((align & 0x1C) == 0)
          align |= get_theme().label_text_align & 0x1C;
 
-      canvas_.fill_style(font_color());
-      canvas_.font(font(), font_size());
+      canvas_.fill_style(get_font_color());
+      canvas_.font(font(), get_font_size());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)

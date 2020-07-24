@@ -178,10 +178,15 @@ endif()
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom
 
 target_compile_options(elements PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
+   $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
+
+if (MSVC)
+   # Kinda silly to have to do this: https://bit.ly/2ZXjzzn
+   STRING(REGEX REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+endif()
 
 ###############################################################################
 # Cairo
@@ -296,7 +301,7 @@ if (WIN32 AND NOT MSVC)
 endif()
 
 # Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
-if (WIN32) 
+if (WIN32)
    target_link_libraries(elements PUBLIC Shcore)
 endif()
 

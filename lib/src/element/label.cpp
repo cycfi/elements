@@ -11,7 +11,7 @@ namespace cycfi { namespace elements
    {
       auto  size = measure_text(
          ctx.canvas, c_str()
-       , font()
+       , get_font()
        , get_font_size()
       );
       return { { size.x, size.y }, { size.x, size.y } };
@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
          align |= get_theme().label_text_align & 0x1C;
 
       canvas_.fill_style(get_font_color());
-      canvas_.font(font(), get_font_size());
+      canvas_.font(get_font(), get_font_size());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)

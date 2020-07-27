@@ -374,8 +374,3 @@ But note that, in this case, we want to center the slider only horizontally,
 so we use `align_center` instead of `align_center_middle`.
 
 Ok, there you go! Now go and be creative and make your own controls!
-
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

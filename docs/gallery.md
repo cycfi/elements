@@ -60,8 +60,3 @@ It’s always a nice to have some pretty pictures:
     </div>
   </div>
 </div>
-
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

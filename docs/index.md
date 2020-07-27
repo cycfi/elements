@@ -55,8 +55,3 @@ highly successful Open Source projects such as
 [Boost.Fusion](http://tinyurl.com/ybn5oq9v). These libraries are all part of
 the [Boost Libraries](http://tinyurl.com/jubgged), a well respected,
 peer-reviewed, Open Source, collaborative development effort.
-
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

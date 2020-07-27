@@ -310,11 +310,6 @@ alongside the "hello_universe" example directory you copied to:
 3. CD to the build directory.
 4. cmake -GXcode -DELEMENTS_ROOT="../elements" ../
 
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*
-
 [apt-get]: https://linux.die.net/man/8/apt-get
 [CLion]: https://www.jetbrains.com/clion/
 [Homebrew]: https://brew.sh/

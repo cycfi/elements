@@ -38,6 +38,8 @@ very much welcome collaboration.
 
 ## News
 
+- 28 July 2020: Added [simple animation example in develop](
+   https://github.com/cycfi/elements/blob/develop/examples/simple_animation/main.cpp)
 - 22 June 2020: Removed dependency on Boost. This requires some API changes to
   the `app` with additional arguments. See examples.
 - 26 May 2020: Introducing the [Artist 2D Canvas

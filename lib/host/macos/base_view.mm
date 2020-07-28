@@ -186,7 +186,7 @@ namespace
    _view = view_;
    _start = true;
    _task =
-      [NSTimer scheduledTimerWithTimeInterval : 0.016 // 60Hz
+      [NSTimer scheduledTimerWithTimeInterval : 0.01 // 1 millisecond quanta
            target : self
          selector : @selector(on_tick:)
          userInfo : nil

@@ -516,8 +516,8 @@ namespace cycfi { namespace elements
          view_info* info = new view_info{ _this };
          SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
-         // Create 16ms (60Hz) timer
-         SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);
+         // Create 1ms timer
+         SetTimer(_view, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
          return _view;
       }

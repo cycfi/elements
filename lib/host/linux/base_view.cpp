@@ -432,8 +432,8 @@ namespace cycfi { namespace elements
       g_signal_connect(view.host()->im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
 
-      // Create 16ms (60Hz) timer
-      g_timeout_add(16, poll_function, &view);
+      // Create 1ms timer
+      g_timeout_add(1, poll_function, &view);
 
       return content_view;
    }

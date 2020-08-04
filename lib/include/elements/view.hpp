@@ -114,7 +114,7 @@ namespace cycfi { namespace elements
       layer_composite         _content;
       scaled_content          _main_element;
 
-      bool                    set_limits();
+      void                    set_limits();
 
       rect                    _dirty;
       rect                    _current_bounds;

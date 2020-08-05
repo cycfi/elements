@@ -321,24 +321,7 @@ namespace cycfi { namespace elements
    void scroller_base::drag(context const& ctx, mouse_button btn)
    {
       if (_tracking == none || !reposition(ctx, btn.pos))
-      {
-         // scroll cursor into view:
-         auto mp = btn.pos;
-         if (!ctx.bounds.includes(mp))
-         {
-            point dp;
-            if (mp.x > ctx.bounds.right)
-               dp.x = ctx.bounds.right - mp.x;
-            else if (mp.x < ctx.bounds.left)
-               dp.x = ctx.bounds.left - mp.x;
-            if (mp.y > ctx.bounds.bottom)
-               dp.y = ctx.bounds.bottom - mp.y;
-            else if (mp.y < ctx.bounds.top)
-               dp.y = ctx.bounds.top - mp.y;
-            scroll(ctx, dp, mp);
-         }
          port_element::drag(ctx, btn);
-      }
    }
 
    bool scroller_base::reposition(context const& ctx, point p)

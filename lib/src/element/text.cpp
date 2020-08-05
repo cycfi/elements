@@ -205,8 +205,8 @@ namespace cycfi { namespace elements
       if (char const* pos = caret_position(ctx, btn.pos))
       {
          _select_end = int(pos-first);
-         _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
+         scroll_into_view(ctx, true);
       }
    }
 
@@ -822,7 +822,16 @@ namespace cycfi { namespace elements
    {
       if (_text.empty())
       {
+         auto caret = rect{
+            ctx.bounds.left-1,
+            ctx.bounds.top,
+            ctx.bounds.left+1,
+            ctx.bounds.bottom
+         };
+         scrollable::find(ctx).scroll_into_view(caret);
          ctx.view.refresh(ctx);
+         if (save_x)
+            _current_x = 0;
          return;
       }
 
@@ -999,11 +1008,12 @@ namespace cycfi { namespace elements
          std::string ins;
 
          // Copy clip ito ins, stop when a newline is found.
-         // Also, limit ins to 256 characters.
+         // Also, limit ins to input_box_text_limit characters.
          char const* p = &clip[0];
          char const* last = p + clip.size();
 
-         for (int i = 0; (i < 256) && (p != last); ++p, ++i)
+         auto max_chars = get_theme().input_box_text_limit;
+         for (int i = 0; (i < max_chars) && (p != last); ++p, ++i)
          {
             if (is_newline(uint8_t(*p)))
                break;

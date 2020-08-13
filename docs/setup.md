@@ -6,7 +6,7 @@
 * [Requirements](#requirements)
 * [MacOS Installation](#macos)
 * [Windows Installation](#windows)
-* [Windows Installation (MinGW + Gtk)](#Windows-(MinGW-+-Gtk))
+* [Windows Installation (MinGW + Gtk)](#windows-mingw--gtk)
 * [Linux Installation](#linux)
 * [Building and Running the examples](#building-and-running-the-examples)
 * [Building Outside the Project](#building-outside-the-project)
@@ -20,14 +20,14 @@ order to use the library:
 
 1. A C++17 compiler
 2. Git
-3. [CMake](https://cmake.org/) 3.9.6 or higher
-4. [Cairo](https://cairographics.org/)
-5. [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
-6. [freetype2](https://www.freetype.org/) (Windows and Linux only).
+3. [CMake] 3.9.6 or higher
+4. [Cairo]
+5. [fontconfig]
+6. [freetype2] (Windows and Linux only).
 
 Additionally, the following libraries are dragged as submodules:
 
-1. The [Cycfi infra library](https://github.com/cycfi/infra/)
+1. The [Cycfi infra library]
 
 Infra provides some basic groundwork common to Cycfi libraries, including
 Elements.
@@ -35,13 +35,11 @@ Elements.
 ### C++17
 
 Elements currently supports the MacOS, Windows and Linux. In the Mac, we
-support both [XCode](https://developer.apple.com/xcode/) IDE. Elements is
-tested with XCode 10 and XCode 11. In Windows, we support Windows 10 with
-[Visual Studio 2019](https://visualstudio.microsoft.com/vs/), although it
+support both [XCode] IDE. Elements is tested with XCode 10 and XCode 11.
+In Windows, we support Windows 10 with [Visual Studio 2019], although it
 will probably also work with older versions of the Visual Studio IDE. In
-Linux, we support both [Clang](https://clang.llvm.org/) and
-[g++](https://gcc.gnu.org/) Get the latest version with a C++17 compiler. The
-[CLion](https://www.jetbrains.com/clion/) IDE is supported on all platforms.
+Linux, we support both [Clang] and [g++]. Get the latest version with
+a C++17 compiler. The [CLion] IDE is supported on all platforms.
 
 ### Git
 
@@ -53,22 +51,23 @@ git clone --recurse-submodules  https://github.com/cycfi/elements.git
 
 ### CMake
 
-Make sure you have [CMake](https://cmake.org/) 3.9.6 or higher. Follow the
+Make sure you have [CMake] 3.9.6 or higher. Follow the
 installation procedure for your platform, or follow the instructions below
 for specific environments.
 
 ### Required Libraries
 
-Elements requires [Cairo](https://www.cairographics.org/) 1.16 or higher,
-[fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and
-[freetype2](https://www.freetype.org/) (on Windows and Linux). Specific
-instructions are provided below for specific environments.
+Elements requires [Cairo] 1.16 or higher, [fontconfig] and [freetype2]
+(on Windows and Linux).
+Specific instructions are provided below for specific environments.
 
 -------------------------------------------------------------------------------
 
 ## MacOS
 
-### Install required libraries using [Homebrew]:
+### Install required libraries
+
+This by using [Homebrew]:
 
 ```
 brew install cairo
@@ -86,7 +85,7 @@ brew install cmake
 There are multiple ways to generate a project file using CMake depending on
 your platform and desired IDE, but here are some examples for the MacOS:
 
-### Using [XCode]:
+### Using XCode
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -100,13 +99,13 @@ cd build
 cmake -GXcode ../
 ```
 
-If successful, cmake will generate an XCode project in the build directory.
+If successful, CMake will generate an [XCode] project in the build directory.
 Open the project file elements.xcodeproj and build all. You should see a
 couple of example applications.
 
-### Using [CLion]:
+### Using CLion
 
-Simply open the CMakeLists.txt file using CLion and build the project.
+Simply open the CMakeLists.txt file using [CLion] and build the project.
 
 -------------------------------------------------------------------------------
 
@@ -124,8 +123,7 @@ Follow the instructions provided here: https://cmake.org/install/
 
 ### Generating the Project using CMake
 
-Assuming you have [Visual Studio
-2019](https://visualstudio.microsoft.com/vs/) installed.
+Assuming you have [Visual Studio 2019] installed.
 
 You want NMake approach if you prefer `make`-style commandline tool, or
 `Visual Studio 2019 GUI` approach otherwise.
@@ -174,8 +172,8 @@ Invoke `nmake` to build the binary.
 ### Install MSYS2 toolchain and required libraries
 > MSYS2 is a software distro and building platform for Windows
 
-Download MSYS2 from its [official website](https://www.msys2.org/) and install it.
-Its installation guide is on the [home page](https://www.msys2.org/).
+Download [MSYS2] from its official website and install it.
+Its installation guide is on the home page.
 
 Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu.
 Install tools and libraries:
@@ -197,7 +195,7 @@ pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
 There are multiple ways to generate a project file using CMake depending on
 your platform and desired IDE, but here are some examples for MSYS2:
 
-### Using UNIX makefiles:
+### Using UNIX makefiles
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -213,20 +211,21 @@ cmake ../ -G "Unix Makefiles" -DHOST_UI_LIBRARY=gtk
 
 If successful, cmake will generate Unix Make files in the build directory.
 
-### Using [CLion]:
+### Using CLion
 
-Simply open the CMakeLists.txt file using CLion and build the project.
+Simply open the CMakeLists.txt file using [CLion] and build the project.
 
 
 -------------------------------------------------------------------------------
 
 ## Linux
 
-### Install required libraries using [apt-get] (requires `sudo`)
+### Install required libraries
 
 In addition to the requirements listed in the [requirements](#requirements)
-section, the [GTK3 library](https://www.gtk.org/) is also required by the
-Linux port of Elements.
+section, the [GTK3 library] is also required by the Linux port of Elements.
+
+On Debian and derived distributions using [apt-get] (requires `sudo`):
 
 ```
 sudo apt-get install libcairo2-dev
@@ -245,7 +244,7 @@ sudo apt-get -y install cmake
 There are multiple ways to generate a project file using CMake depending on
 your platform and desired IDE, but here are some examples for Linux:
 
-### Using UNIX makefiles:
+### Using UNIX makefiles
 
 1. CD to the elements library.
 2. Make a build directory inside the elements directory.
@@ -261,9 +260,9 @@ cmake -G "Unix Makefiles" ../
 
 If successful, cmake will generate Unix Make files in the build directory.
 
-### Using [CLion]:
+### Using CLion
 
-Simply open the CMakeLists.txt file using CLion and build the project.
+Simply open the CMakeLists.txt file using [CLion] and build the project.
 
 -------------------------------------------------------------------------------
 
@@ -310,7 +309,17 @@ alongside the "hello_universe" example directory you copied to:
 3. CD to the build directory.
 4. cmake -GXcode -DELEMENTS_ROOT="../elements" ../
 
-[apt-get]: https://linux.die.net/man/8/apt-get
-[CLion]: https://www.jetbrains.com/clion/
-[Homebrew]: https://brew.sh/
-[XCode]: https://developer.apple.com/xcode/
+[apt-get]:             https://linux.die.net/man/8/apt-get
+[Cairo]:               https://cairographics.org/
+[Clang]:               https://clang.llvm.org/
+[CLion]:               https://www.jetbrains.com/clion/
+[CMake]:               https://cmake.org/
+[Cycfi infra library]: https://github.com/cycfi/infra/
+[fontconfig]:          https://www.freedesktop.org/wiki/Software/fontconfig/
+[freetype2]:           https://www.freetype.org/
+[g++]:                 https://gcc.gnu.org/
+[GTK3 library]:        https://www.gtk.org/
+[Homebrew]:            https://brew.sh/
+[MSYS2]:               https://www.msys2.org/
+[Visual Studio 2019]:  https://visualstudio.microsoft.com/vs/
+[XCode]:               https://developer.apple.com/xcode/

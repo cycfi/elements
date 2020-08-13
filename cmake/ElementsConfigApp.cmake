@@ -52,6 +52,7 @@ set(ELEMENTS_RESOURCES
    ${ELEMENTS_ROOT}/resources/fonts/OpenSans-SemiBold.ttf
    ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Bold.ttf
    ${ELEMENTS_ROOT}/resources/fonts/OpenSansCondensed-Light.ttf
+   ${ELEMENTS_ROOT}/resources/fonts/WenQuanYiMicroHei.ttf
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Light.ttf
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Regular.ttf
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Medium.ttf

@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
    {
       char const* codepoint_to_utf8(unsigned cp, char str[8])
       {
-         int n = 0;
+         size_t n = 0;
          if (cp < 0x80) n = 1;
          else if (cp < 0x800) n = 2;
          else if (cp < 0x10000) n = 3;

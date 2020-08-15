@@ -25,11 +25,13 @@ std::string const text2 =
 
 auto make_edit_box()
 {
+   // set the font of text box to 文泉驿 open source font: http://wenq.org/wqy2/index.cgi
+   char const* font_family = "文泉驿微米黑, \"WenQuanYi Micro Hei\"";
    return
       scroller(
          margin(
             { 20, 20, 20, 20 },
-            align_left_top(hsize(800, basic_text_box(text2+text)))
+            align_left_top(hsize(800, basic_text_box(text2+text, font_descr{ font_family })))
          )
       );
 }
@@ -39,12 +41,6 @@ int main(int argc, char* argv[])
    app _app(argc, argv, "TextEdit", "com.cycfi.text-edit");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
-
-   // set the font of text box to 文泉驿 open source font: http://wenq.org/wqy2/index.cgi
-   auto r = override_theme(
-           &theme::text_box_font
-           , font({ font_descr{ "文泉驿微米黑" } })
-   );
 
    view view_(_win);
 

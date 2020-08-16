@@ -38,8 +38,6 @@ very much welcome collaboration.
 
 ## News
 
-- 16 August 2020: Feel free to join the Discord channel for discussion: 
-  https://discord.gg/NJkadSx and chat with the developers.
 - 28 July 2020: Added [simple animation example in develop](
    https://github.com/cycfi/elements/blob/develop/examples/simple_animation/main.cpp)
 - 22 June 2020: Removed dependency on Boost. This requires some API changes to
@@ -55,6 +53,10 @@ very much welcome collaboration.
 - 22 February 2020: Improved font support
 - 01 September 2019: Linux port completed
 - 12 August 2019: Windows port completed
+
+## Discord
+
+Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussion and chat with the developers.
 
 ## Documentation
 

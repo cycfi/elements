@@ -1856,7 +1856,7 @@ higher-level elements obscure or hide lower-level elements.
    chance.
 4. The layer's *minimum limit* is computed as the maximum of the children
    elements' *minimum limit*s.
-5. The grid's *maximum limit* is computed as the minimum of the children
+5. The layer's *maximum limit* is computed as the minimum of the children
    elements' *maximum limit*s.
 6. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is

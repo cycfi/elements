@@ -55,7 +55,7 @@ namespace cycfi { namespace elements
 
    inline auto menu_item_text(std::string text)
    {
-      return xside_margin({ 20, 20 }, align_left(label(std::move(text))));
+      return hmargin({ 20, 20 }, align_left(label(std::move(text))));
    }
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
@@ -66,7 +66,7 @@ namespace cycfi { namespace elements
 #else
       auto sk_font = get_theme().label_font;
 #endif
-      return xside_margin({ 20, 10 },
+      return hmargin({ 20, 10 },
          htile(
             htile(
                align_left(label(std::move(text)))

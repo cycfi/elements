@@ -862,7 +862,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::begin_focus()
    {
-      _is_focus = true;
+     _is_focus = true;
       if (_select_start == -1)
          _select_start = _select_end = 0;
    }
@@ -1035,5 +1035,29 @@ namespace cycfi { namespace elements
       basic_text_box::delete_();
       if (on_text)
          on_text(_text);
+   }
+
+   element* basic_input_box::click(context const& ctx, mouse_button btn)
+   {
+      if (_first_focus && select_start() != select_end())
+      {
+         _first_focus = false;
+         return this;
+      }
+      _first_focus = false;
+
+      return basic_text_box::click(ctx, btn);
+   }
+
+   void basic_input_box::begin_focus()
+   {
+      _first_focus = true;
+      basic_text_box::begin_focus();
+   }
+
+   void basic_input_box::end_focus()
+   {
+      _first_focus = false;
+      basic_text_box::end_focus();
    }
 }}

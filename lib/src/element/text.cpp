@@ -1012,8 +1012,8 @@ namespace cycfi { namespace elements
          char const* p = &clip[0];
          char const* last = p + clip.size();
 
-         auto max_chars = get_theme().input_box_text_limit;
-         for (int i = 0; (i < max_chars) && (p != last); ++p, ++i)
+         auto const max_chars = get_theme().input_box_text_limit;
+         for (std::size_t i = 0; (i < max_chars) && (p != last); ++p, ++i)
          {
             if (is_newline(uint8_t(*p)))
                break;

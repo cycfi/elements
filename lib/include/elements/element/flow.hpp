@@ -50,9 +50,8 @@ namespace cycfi { namespace elements
 
       using base_type = vector_composite<vtile_element>;
 
-                              flow_element(flowable& flowable_)
+                              flow_element(flowable_container& flowable_)
                                : _flowable(flowable_)
-                               , _laid_out(false)
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -60,11 +59,11 @@ namespace cycfi { namespace elements
 
    private:
 
-      flowable&               _flowable;
-      bool                    _laid_out;
+      flowable_container&     _flowable;
+      int                     _size = -1;
    };
 
-   inline auto flow(flowable& flowable_)
+   inline auto flow(flowable_container& flowable_)
    {
       return flow_element{ flowable_ };
    }

@@ -17,6 +17,8 @@ namespace cycfi { namespace elements
       view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
       if (_size == static_cast<int>(_flowable.size()))
          limits_.min.y = base_type::limits(ctx).min.y;
+      else
+         ctx.view.post([&view = ctx.view]{ view.layout(); });
       return limits_;
    }
 

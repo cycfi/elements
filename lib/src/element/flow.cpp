@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
    view_limits flow_element::limits(basic_context const& ctx) const
    {
       view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
-      if (!_flowable.needs_update())
+      if (!_flowable.needs_reflow())
          limits_.min.y = base_type::limits(ctx).min.y;
       return limits_;
    }
@@ -26,10 +26,10 @@ namespace cycfi { namespace elements
       _flowable.break_lines(*this, ctx, ctx.bounds.width());
       base_type::layout(ctx);
 
-      if (_flowable.needs_update())
+      if (_flowable.needs_reflow())
       {
          ctx.view.post([&view = ctx.view]{ view.layout(); });
-         _flowable.update_done();
+         _flowable.reflow_done();
       }
    }
 

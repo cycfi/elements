@@ -27,6 +27,15 @@ namespace cycfi { namespace elements
 
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
+
+      void                    update()                { _needs_update = true; }
+      bool                    needs_update() const    { return _needs_update; }
+      void                    update_done()           { _needs_update = false; }
+
+   private:
+
+      bool                    _needs_update = true;
+
    };
 
    using flow_composite = vector_composite<flowable_container>;

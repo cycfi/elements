@@ -29,15 +29,6 @@ namespace cycfi { namespace elements
       virtual std::size_t     size() const = 0;
       bool                    empty() const { return size() == 0; }
       virtual element&        at(std::size_t ix) const = 0;
-
-      void                    update()                { _needs_update = true; }
-      bool                    needs_update() const    { return _needs_update; }
-      void                    update_done()           { _needs_update = false; }
-
-   private:
-
-      bool                    _needs_update = true;
-
    };
 
    class context;

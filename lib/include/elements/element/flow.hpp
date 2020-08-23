@@ -15,20 +15,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
    ////////////////////////////////////////////////////////////////////////////
-   class flowable
-   {
-   public:
-
-      virtual                 ~flowable() = default;
-
-      virtual void            break_lines(
-                                 std::vector<element_ptr>& rows
-                               , basic_context const& ctx
-                               , float width
-                              ) = 0;
-   };
-
-   class flowable_container : public flowable, public container
+   class flowable_container : public container
    {
    public:
 
@@ -36,7 +23,7 @@ namespace cycfi { namespace elements
                                  std::vector<element_ptr>& rows
                                , basic_context const& ctx
                                , float width
-                              ) override;
+                              );
 
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
@@ -60,7 +47,6 @@ namespace cycfi { namespace elements
    private:
 
       flowable_container&     _flowable;
-      int                     _size = -1;
    };
 
    inline auto flow(flowable_container& flowable_)

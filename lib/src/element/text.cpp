@@ -156,27 +156,33 @@ namespace cycfi { namespace elements
       {
          if (btn.num_clicks != 1)
          {
-            char const* last = pos;
-            char const* first = pos;
+            char const* end = pos;
+            char const* start = pos;
+
+            auto fixup = [&]()
+            {
+               if (start != _first)
+                  start = next_utf8(_last, start);
+               _select_start = int(start - _first);
+               _select_end = int(end - _first);
+            };
 
             if (btn.num_clicks == 2)
             {
-               while (last < _last && !word_break(last))
-                  last = next_utf8(_last, last);
-               while (first > _first && !word_break(first))
-                  first = prev_utf8(_first, first);
+               while (end < _last && !word_break(end))
+                  end = next_utf8(_last, end);
+               while (start > _first && !word_break(start))
+                  start = prev_utf8(_first, start);
+               fixup();
             }
             else if (btn.num_clicks == 3)
             {
-               while (last < _last && !is_newline(uint8_t(*last)))
-                  last++;
-               while (first > _first && !is_newline(uint8_t(*first)))
-                  first--;
+               while (end < _last && !is_newline(uint8_t(*end)))
+                  end++;
+               while (start > _first && !is_newline(uint8_t(*start)))
+                  start--;
+               fixup();
             }
-            if (first != _first)
-                ++first;
-            _select_start = int(first - _first);
-            _select_end = int(last - _first);
          }
          else
          {
@@ -238,9 +244,17 @@ namespace cycfi { namespace elements
       }
    }
 
+   void break_()
+   {
+   }
+
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
       _show_caret = true;
+
+      auto s = _select_start;
+      auto e = _select_end;
+      auto before = _text;
 
       if (_select_start == -1)
          return false;

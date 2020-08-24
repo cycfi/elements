@@ -245,6 +245,9 @@ namespace cycfi { namespace elements
       if (_select_start == -1)
          return false;
 
+      if (_select_start > _select_end)
+         std::swap(_select_end, _select_start);
+
       std::string text = codepoint_to_utf8(info_.codepoint);
 
       if (!_typing_state)

@@ -629,13 +629,16 @@ namespace cycfi { namespace elements
       auto& canvas_ = ctx.canvas;
       canvas_.save();
       auto& bounds = ctx.bounds;
+      auto& view_bounds = ctx.view_bounds;
       canvas_.scale({ _scale, _scale });
       auto  offset = point{ bounds.left / _scale, bounds.top / _scale };
       bounds = {
-         offset.x
-       , offset.y
-       , offset.x + (bounds.width() / _scale)
-       , offset.y + (bounds.height() / _scale)
+         offset.x, offset.y
+       , offset.x + (bounds.width() / _scale), offset.y + (bounds.height() / _scale)
+      };
+      view_bounds = {
+         0, 0
+       , view_bounds.width() / _scale, view_bounds.height() / _scale
       };
    }
 

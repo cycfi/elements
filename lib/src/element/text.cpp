@@ -252,10 +252,6 @@ namespace cycfi { namespace elements
    {
       _show_caret = true;
 
-      auto s = _select_start;
-      auto e = _select_end;
-      auto before = _text;
-
       if (_select_start == -1)
          return false;
 

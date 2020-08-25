@@ -325,7 +325,7 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   inline void base_view::draw(cairo_t* /* ctx */, rect /* area */) {};
+   inline void base_view::draw(cairo_t* /* ctx */, rect /* area */) {}
    inline void base_view::click(mouse_button /* btn */) {}
    inline void base_view::drag(mouse_button /* btn */) {}
    inline void base_view::cursor(point /* p */, cursor_tracking /* status */) {}

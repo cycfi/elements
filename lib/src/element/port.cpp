@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 #include <algorithm>
 #include <cmath>
@@ -77,7 +78,7 @@ namespace cycfi { namespace elements
       auto const* ctx = &ctx_;
       while (ctx && ctx->element)
       {
-         auto* sp = dynamic_cast<scrollable*>(ctx->element);
+         auto* sp = find_element<scrollable*>(ctx->element);
          if (sp)
             return { ctx, sp };
          else

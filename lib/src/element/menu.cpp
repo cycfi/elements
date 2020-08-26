@@ -362,7 +362,7 @@ namespace cycfi { namespace elements
          {
             for (std::size_t i = 0; i != c->size(); ++i)
             {
-               if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+               if (auto e = find_element<selectable*>(&c->at(i)))
                   e->select(false);
             }
          }

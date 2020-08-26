@@ -7,6 +7,7 @@
 #include <elements/element/composite.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -311,7 +312,7 @@ namespace cycfi { namespace elements
                         i += down? +1 : -1
                      )
                      {
-                        auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i));
+                        auto e = find_element<basic_menu_item_element*>(&c->at(i));
                         if (e && e->is_enabled())
                         {
                            if (e == this)

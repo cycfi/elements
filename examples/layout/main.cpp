@@ -285,8 +285,8 @@ auto make_popup_menu(
    auto menu =
       layer(
          vtile(
-            link(item1), link(item2),
-            link(item3), link(item4), link(item5)
+            item1, item2,
+            item3, item4, item5
          ),
          panel{}
       );

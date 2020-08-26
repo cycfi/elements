@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
       void                    poll() override;
 
       void                    layout();
-      void                    layout(element &element);
+      void                    layout(element& element);
       float                   scale() const;
       void                    scale(float val);
 

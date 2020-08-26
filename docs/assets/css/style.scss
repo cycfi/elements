@@ -2,6 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
+@import "syntax-highlighting";
 
 .main-content h1,
 .main-content h2,
@@ -42,14 +43,12 @@ img
     background-color: #ffffff;
 }
 
-.highlight .cp,
-.highlight .mi,
-.highlight .n, .highlight .nf,
-.highlight .o,
-.highlight .p,
-.highlight .k, .highlight .kt, .highlight .kv
+.highlight
 {
-    font-weight: normal;
+    .cp, .mi, .n, .nc, .nf, .nl, .o, .p, .k, .kr, .kt, .kv
+    {
+        font-weight: normal;
+    }
 }
 
 .img-align-right

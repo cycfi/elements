@@ -52,7 +52,7 @@ git clone --recurse-submodules  https://github.com/cycfi/elements.git
 ### CMake
 
 Make sure you have [CMake] 3.9.6 or higher. Follow the
-installation procedure for your platform, or follow the instructions below
+[installation procedure] for your platform, or follow the instructions below
 for specific environments.
 
 ### Required Libraries
@@ -119,7 +119,7 @@ to have these libraries installed. CMake will take care of the dependencies.
 
 ### Install CMake
 
-Follow the instructions provided here: https://cmake.org/install/
+Follow the [installation procedure].
 
 ### Generating the Project using CMake
 
@@ -309,17 +309,18 @@ alongside the "hello_universe" example directory you copied to:
 3. CD to the build directory.
 4. cmake -GXcode -DELEMENTS_ROOT="../elements" ../
 
-[apt-get]:             https://linux.die.net/man/8/apt-get
-[Cairo]:               https://cairographics.org/
-[Clang]:               https://clang.llvm.org/
-[CLion]:               https://www.jetbrains.com/clion/
-[CMake]:               https://cmake.org/
-[Cycfi infra library]: https://github.com/cycfi/infra/
-[fontconfig]:          https://www.freedesktop.org/wiki/Software/fontconfig/
-[freetype2]:           https://www.freetype.org/
-[g++]:                 https://gcc.gnu.org/
-[GTK3 library]:        https://www.gtk.org/
-[Homebrew]:            https://brew.sh/
-[MSYS2]:               https://www.msys2.org/
-[Visual Studio 2019]:  https://visualstudio.microsoft.com/vs/
-[XCode]:               https://developer.apple.com/xcode/
+[apt-get]:                https://linux.die.net/man/8/apt-get
+[Cairo]:                  https://cairographics.org/
+[Clang]:                  https://clang.llvm.org/
+[CLion]:                  https://www.jetbrains.com/clion/
+[CMake]:                  https://cmake.org/
+[Cycfi infra library]:    https://github.com/cycfi/infra/
+[fontconfig]:             https://www.freedesktop.org/wiki/Software/fontconfig/
+[freetype2]:              https://www.freetype.org/
+[g++]:                    https://gcc.gnu.org/
+[GTK3 library]:           https://www.gtk.org/
+[Homebrew]:               https://brew.sh/
+[installation procedure]: https://cmake.org/install/
+[MSYS2]:                  https://www.msys2.org/
+[Visual Studio 2019]:     https://visualstudio.microsoft.com/vs/
+[XCode]:                  https://developer.apple.com/xcode/

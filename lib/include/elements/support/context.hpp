@@ -35,23 +35,27 @@ namespace cycfi { namespace elements
    };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
+   // Forward declaration, access to view bounds
+   rect view_bounds(elements::view const& v);
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class context : public basic_context
    {
    public:
 
       context(context const& rhs, elements::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
-       , parent(rhs.parent), bounds(bounds_)
+       , parent(rhs.parent), bounds(bounds_), view_bounds(rhs.view_bounds)
       {}
 
       context(context const& parent_, element* element_, elements::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
-       , parent(&parent_), bounds(bounds_)
+       , parent(&parent_), bounds(bounds_), view_bounds(parent_.view_bounds)
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
-       , parent(nullptr), bounds(bounds_)
+       , parent(nullptr), bounds(bounds_), view_bounds(elements::view_bounds(view_))
       {}
 
       context(context const&) = default;
@@ -86,6 +90,7 @@ namespace cycfi { namespace elements
       elements::element*            element;
       context const*                parent;
       elements::rect                bounds;
+      elements::rect                view_bounds;
 
    private:
 

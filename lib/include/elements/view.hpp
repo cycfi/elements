@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
       void                    poll() override;
 
       void                    layout();
-      void                    layout(element &element);
+      void                    layout(element& element);
       float                   scale() const;
       void                    scale(float val);
 
@@ -114,7 +114,7 @@ namespace cycfi { namespace elements
       layer_composite         _content;
       scaled_content          _main_element;
 
-      bool                    set_limits();
+      void                    set_limits();
 
       rect                    _dirty;
       rect                    _current_bounds;
@@ -138,6 +138,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline rect view_bounds(view const& v) // declared in context.hpp
+   {
+      auto size = v.size();
+      return rect{ 0, 0, size.x, size.y };
+   }
+
    inline rect view::dirty() const
    {
       return _dirty;

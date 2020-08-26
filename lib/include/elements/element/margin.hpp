@@ -160,35 +160,65 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // X-Side Margin
-   struct xside_margin_rect : static_empty_rect
+   // Horizontal / Left Right Margin
+   struct hmargin_rect : static_empty_rect
    {
-      xside_margin_rect(float left, float right) : left(left), right(right) {}
-      xside_margin_rect(float left_right) : left(left_right), right(left_right) {}
+      hmargin_rect(float left, float right) : left(left), right(right) {}
+      hmargin_rect(float left_right) : left(left_right), right(left_right) {}
       float left;
       float right;
    };
 
    template <typename Subject>
-   inline margin_element<xside_margin_rect, remove_cvref_t<Subject>>
-   xside_margin(xside_margin_rect margin_, Subject&& subject)
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   hmargin(hmargin_rect margin_, Subject&& subject)
+   {
+      return { margin_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   left_right_margin(hmargin_rect margin_, Subject&& subject)
+   {
+      return { margin_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   [[deprecated("Use hmargin(...) instead.")]]
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   xside_margin(hmargin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Y-Side Margin
-   struct yside_margin_rect : static_empty_rect
+   // Vertical / Top Bottom Margin
+   struct vmargin_rect : static_empty_rect
    {
-      yside_margin_rect(float top, float bottom) : top(top), bottom(bottom) {}
-      yside_margin_rect(float top_bottom) : top(top_bottom), bottom(top_bottom) {}
+      vmargin_rect(float top, float bottom) : top(top), bottom(bottom) {}
+      vmargin_rect(float top_bottom) : top(top_bottom), bottom(top_bottom) {}
       float top;
       float bottom;
    };
 
    template <typename Subject>
-   inline margin_element<yside_margin_rect, remove_cvref_t<Subject>>
-   yside_margin(yside_margin_rect margin_, Subject&& subject)
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   vmargin(vmargin_rect margin_, Subject&& subject)
+   {
+      return { margin_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   top_bottom_margin(vmargin_rect margin_, Subject&& subject)
+   {
+      return { margin_, std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   [[deprecated("Use vmargin(...) instead.")]]
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   yside_margin(vmargin_rect margin_, Subject&& subject)
    {
       return { margin_, std::forward<Subject>(subject) };
    }

@@ -12,15 +12,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
    ////////////////////////////////////////////////////////////////////////////
-   namespace
-   {
-      rect view_bounds(view const& v)
-      {
-         auto size = v.size();
-         return rect{ 0, 0, size.x, size.y };
-      }
-   }
-
    element* composite_base::hit_test(context const& ctx, point p)
    {
       if (!empty())
@@ -37,7 +28,7 @@ namespace cycfi { namespace elements
       for (std::size_t ix = 0; ix < size(); ++ix)
       {
          rect bounds = bounds_of(ctx, ix);
-         if (intersects(bounds, ctx.view.dirty()))
+         if (intersects(bounds, ctx.view_bounds))
          {
             auto& e = at(ix);
             context ectx{ ctx, &e, bounds };
@@ -242,7 +233,7 @@ namespace cycfi { namespace elements
             if (cptr && cptr != ptr)
                cursor_leaving(ctx, p, _cursor_info);
 
-            if (elements::intersects(info.bounds, view_bounds(ctx.view)))
+            if (elements::intersects(info.bounds, ctx.view_bounds))
             {
                context ectx{ ctx, ptr.get(), info.bounds };
                bool r = ptr->cursor(ectx, p, status);
@@ -264,7 +255,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (auto ptr = info.element.lock(); ptr && elements::intersects(info.bounds, view_bounds(ctx.view)))
+         if (auto ptr = info.element.lock(); ptr && elements::intersects(info.bounds, ctx.view_bounds))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
             return ptr->scroll(ectx, dir, p);

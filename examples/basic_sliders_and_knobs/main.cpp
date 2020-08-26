@@ -37,7 +37,7 @@ auto make_hslider(int index)
       make_markers<false>(),
       (index + 1) * 0.25
    ));
-   return align_middle(xside_margin({ 20, 20 }, hold(hsliders[index])));
+   return align_middle(hmargin({ 20, 20 }, hold(hsliders[index])));
 }
 
 auto make_hsliders()
@@ -58,7 +58,7 @@ auto make_vslider(int index)
       make_markers<true>(),
       (index + 1) * 0.25
    ));
-   return align_center(yside_margin({ 20, 20 }, hold(vsliders[index])));
+   return align_center(vmargin({ 20, 20 }, hold(vsliders[index])));
 }
 
 auto make_vsliders()
@@ -93,7 +93,7 @@ auto make_dial(int index)
 
 auto make_dials()
 {
-   return xside_margin(20,
+   return hmargin(20,
       vtile(
          make_dial(0),
          make_dial(1),

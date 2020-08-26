@@ -183,6 +183,10 @@ namespace cycfi { namespace elements
       bool                    key(context const& ctx, key_info k) override;
       void                    delete_() override;
 
+      element*                click(context const& ctx, mouse_button btn) override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
+
       text_function           on_text;
       text_function           on_enter;
 
@@ -191,6 +195,7 @@ namespace cycfi { namespace elements
       void                    paste(view& v, int start, int end) override;
 
       std::string             _placeholder;
+      bool                    _first_focus;
    };
 }}
 

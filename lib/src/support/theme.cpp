@@ -60,6 +60,7 @@ namespace cycfi { namespace elements
     , text_box_caret_color       { rgba(0, 190, 255, 255) }
     , text_box_caret_width       { 1.2 }
     , inactive_font_color        { rgba(127, 127, 127, 150) }
+    , input_box_text_limit       { 1024 }
 
     , ticks_color                { rgba(127, 127, 127, 150) }
     , major_ticks_level          { 0.5 }

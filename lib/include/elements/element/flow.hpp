@@ -15,20 +15,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
    ////////////////////////////////////////////////////////////////////////////
-   class flowable
-   {
-   public:
-
-      virtual                 ~flowable() = default;
-
-      virtual void            break_lines(
-                                 std::vector<element_ptr>& rows
-                               , basic_context const& ctx
-                               , float width
-                              ) = 0;
-   };
-
-   class flowable_container : public flowable, public container
+   class flowable_container : public container
    {
    public:
 
@@ -36,10 +23,19 @@ namespace cycfi { namespace elements
                                  std::vector<element_ptr>& rows
                                , basic_context const& ctx
                                , float width
-                              ) override;
+                              );
 
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
+
+      void                    reflow()                { _reflow = true; }
+      bool                    needs_reflow() const    { return _reflow; }
+      void                    reflow_done()           { _reflow = false; }
+
+   private:
+
+      bool                    _reflow = true;
+
    };
 
    using flow_composite = vector_composite<flowable_container>;
@@ -50,9 +46,8 @@ namespace cycfi { namespace elements
 
       using base_type = vector_composite<vtile_element>;
 
-                              flow_element(flowable& flowable_)
+                              flow_element(flowable_container& flowable_)
                                : _flowable(flowable_)
-                               , _laid_out(false)
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -60,11 +55,10 @@ namespace cycfi { namespace elements
 
    private:
 
-      flowable&               _flowable;
-      bool                    _laid_out;
+      flowable_container&     _flowable;
    };
 
-   inline auto flow(flowable& flowable_)
+   inline auto flow(flowable_container& flowable_)
    {
       return flow_element{ flowable_ };
    }

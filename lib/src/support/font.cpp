@@ -47,14 +47,14 @@ namespace cycfi { namespace elements
       inline void ltrim(std::string& s)
       {
          s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-            [](int ch) { return !std::isspace(ch); }
+            [](int ch) { return ch != ' ' && ch != '"'; }
          ));
       }
 
       inline void rtrim(std::string& s)
       {
          s.erase(std::find_if(s.rbegin(), s.rend(),
-            [](int ch) { return !std::isspace(ch); }
+            [](int ch) { return ch != ' ' && ch != '"'; }
          ).base(), s.end());
       }
 
@@ -69,12 +69,13 @@ namespace cycfi { namespace elements
          return (a * (1.0 - f)) + (b * f);
       }
 
+#ifndef __APPLE__
       auto const& cairo_user_data_key()
       {
          static const cairo_user_data_key_t key = {};
          return key;
       }
-
+#endif
       namespace fc
       {
          struct font_config_deleter

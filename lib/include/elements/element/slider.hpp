@@ -135,7 +135,7 @@ namespace cycfi { namespace elements
 
    template <size_t num_states>
    inline bool selector_base<num_states>::scroll(
-      context const& ctx, point dir, point p)
+      context const& /* ctx */, point /* dir */, point /* p */)
    {
       // We don't allow selector move via the scroll wheel.
       return false;
@@ -185,7 +185,7 @@ namespace cycfi { namespace elements
 
    template <unsigned size>
    inline view_limits basic_thumb_element<size>
-      ::limits(basic_context const& ctx) const
+      ::limits(basic_context const& /* ctx */) const
    {
 	  auto pt = point{ float(size), float(size) };
 	  return view_limits{ pt, pt };
@@ -234,7 +234,7 @@ namespace cycfi { namespace elements
 
    template <unsigned size, bool vertical>
    inline view_limits basic_track_element<size, vertical>
-      ::limits(basic_context const& ctx) const
+      ::limits(basic_context const& /* ctx */) const
    {
 	  auto sz = float(size);
 	  auto min_length_ = float(min_length);

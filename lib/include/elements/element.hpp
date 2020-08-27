@@ -28,6 +28,7 @@
 #include <elements/element/slider.hpp>
 #include <elements/element/text.hpp>
 #include <elements/element/tile.hpp>
+#include <elements/element/tooltip.hpp>
 
 // Include this last
 #include <elements/element/gallery.hpp>

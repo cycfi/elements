@@ -34,10 +34,7 @@ auto make_button(std::string text, color c, Label label, view& view_)
    tt.on_hover =
       [label, text, &view_, orig = label->get_text()](bool visible)
       {
-         if (visible)
-            label->set_text(text);
-         else
-            label->set_text(orig);
+         label->set_text(visible? text : orig);
          view_.refresh(*label.get(), 3);
       };
    return tt;
@@ -47,7 +44,7 @@ auto make_buttons(view& view_)
 {
    auto status = share(label("Have you found your vision quest?"));
    auto button1 = make_button("Eons from now", bred, status, view_);
-   auto button2 = make_button("Electrical impulses", bgreen, status, view_);
+   auto button2 = make_button("Take a stand against delusion", bgreen, status, view_);
    auto button3 = make_button("Totality is calling", bblue, status, view_);
    auto button4 = make_button("Four-dimensional superstructures", pgold, status, view_);
 

@@ -26,21 +26,35 @@ auto make_tip(std::string text)
    );
 }
 
-auto make_button(std::string text, color c)
+template <typename Label>
+auto make_button(std::string text, color c, Label label, view& view_)
 {
-   return tooltip(toggle_button(text, 1.0f, c), make_tip("This is " + text));
+   static int i = 1;
+   auto tt = tooltip(toggle_button("Option " + std::to_string(i++), 1.0f, c), make_tip(text));
+   tt.on_hover =
+      [label, text, &view_, orig = label->get_text()](bool visible)
+      {
+         if (visible)
+            label->set_text(text);
+         else
+            label->set_text(orig);
+         view_.refresh(*label.get(), 3);
+      };
+   return tt;
 }
 
 auto make_buttons(view& view_)
 {
-   auto button1 = make_button("Button 1", bred);
-   auto button2 = make_button("Button 2", bgreen);
-   auto button3 = make_button("Button 3", bblue);
-   auto button4 = make_button("Button 4", pgold);
+   auto status = share(label("Have you found your vision quest?"));
+   auto button1 = make_button("Eons from now", bred, status, view_);
+   auto button2 = make_button("Electrical impulses", bgreen, status, view_);
+   auto button3 = make_button("Totality is calling", bblue, status, view_);
+   auto button4 = make_button("Four-dimensional superstructures", pgold, status, view_);
 
    return
       margin({ 50, 20, 50, 40 },
          vtile(
+            align_center(top_margin(20, hold(status))),
             top_margin(20, button1),
             top_margin(20, button2),
             top_margin(20, button3),

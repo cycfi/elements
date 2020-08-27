@@ -8,6 +8,7 @@
 
 #include <elements/element/proxy.hpp>
 #include <infra/support.hpp>
+#include <functional>
 
 namespace cycfi { namespace elements
 {
@@ -33,7 +34,13 @@ namespace cycfi { namespace elements
       Subject const&          tip() const { return _tip; }
       Subject&                tip()       { return _tip; }
 
+      using on_hover_function = std::function<void(bool visible)>;
+
+      on_hover_function       on_hover = [](bool){};
+
    private:
+
+      rect                    tip_bounds(context const& ctx) const;
 
       enum status { tip_hidden, tip_delayed, tip_visible };
 
@@ -43,17 +50,21 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject, typename Tip>
+   inline rect tooltip_element<Subject, Tip>::tip_bounds(context const& ctx) const
+   {
+      auto limits_ = _tip.limits(ctx);
+      auto w = limits_.min.x;
+      auto h = limits_.min.y;
+      return rect{ 0, 0, w, h }.move_to(ctx.bounds.left, ctx.bounds.top-h);
+   }
+
+   template <typename Subject, typename Tip>
    inline void tooltip_element<Subject, Tip>::draw(context const& ctx)
    {
       base_type::draw(ctx);
       if (_tip_status == tip_visible)
       {
-         auto limits_ = _tip.limits(ctx);
-         auto w = limits_.min.x;
-         auto h = limits_.min.y;
-         auto tip_bounds = rect{ 0, 0, w, h}
-            .move_to(ctx.bounds.left, ctx.bounds.top-h);
-         context tctx { ctx, &_tip, tip_bounds };
+         context tctx { ctx, &_tip, tip_bounds(ctx) };
          _tip.draw(tctx);
       }
    }
@@ -66,13 +77,15 @@ namespace cycfi { namespace elements
          if (_tip_status != tip_visible)
          {
             _tip_status = tip_delayed;
+            auto refresh_rect = max(ctx.bounds, tip_bounds(ctx));
             ctx.view.post(std::chrono::duration_cast<std::chrono::milliseconds>(_delay),
-               [this, &view = ctx.view]()
+               [this, &view = ctx.view, refresh_rect]()
                {
                   if (_tip_status == tip_delayed)
                   {
+                     on_hover(true);
                      _tip_status = tip_visible;
-                     view.refresh();
+                     view.refresh(refresh_rect);
                   }
                }
             );
@@ -81,7 +94,8 @@ namespace cycfi { namespace elements
       else
       {
          _tip_status = tip_hidden;
-         ctx.view.refresh();
+         on_hover(false);
+         ctx.view.refresh(max(ctx.bounds, tip_bounds(ctx)));
       }
 
       return base_type::cursor(ctx, p, status);

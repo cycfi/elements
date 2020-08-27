@@ -21,7 +21,7 @@ constexpr auto pgold    = colors::gold.opacity(0.8);
 auto make_tip(std::string text)
 {
    return layer(
-      margin({ 20, 5, 20, 5 }, label(text))
+      margin({ 20, 8, 20, 8 }, label(text))
     , panel{}
    );
 }

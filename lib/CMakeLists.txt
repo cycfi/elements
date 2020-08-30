@@ -35,6 +35,7 @@ set(ELEMENTS_SOURCES
    src/element/slider.cpp
    src/element/text.cpp
    src/element/tile.cpp
+   src/element/tooltip.cpp
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/font.cpp

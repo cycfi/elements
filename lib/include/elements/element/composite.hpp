@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <array>
+#include <set>
 
 namespace cycfi { namespace elements
 {
@@ -66,11 +67,11 @@ namespace cycfi { namespace elements
 
    // Composite
 
+      using weak_element_ptr = std::weak_ptr<elements::element>;
+
       struct hit_info
       {
-         using weak_ptr = std::weak_ptr<elements::element>;
-
-         weak_ptr             element;
+         element_ptr          element;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };
@@ -79,15 +80,18 @@ namespace cycfi { namespace elements
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
       virtual bool            reverse_index() const { return false; }
 
+                              template <typename F>
+      void                    for_each(F&& f, bool reverse = false) const;
+
    private:
 
       void                    new_focus(context const& ctx, int index);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;
-      int                     _drag_tracking = -1;
-      hit_info                _click_info;
-      hit_info                _cursor_info;
+      int                     _click_tracking = -1;
+      int                     _cursor_tracking = -1;
+      std::set<int>           _cursor_hovering;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -163,6 +167,23 @@ namespace cycfi { namespace elements
    inline element& range_composite<Base>::at(std::size_t ix) const
    {
       return _container.at(_first + ix);
+   }
+
+   template <typename F>
+   inline void composite_base::for_each(F&& f, bool reverse) const
+   {
+      if (reverse_index() ^ reverse)
+      {
+         for (int ix = int(size())-1; ix >= 0; --ix)
+            if (!f(ix, at(ix)))
+               break;
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+            if (!f(ix, at(ix)))
+               break;
+      }
    }
 }}
 

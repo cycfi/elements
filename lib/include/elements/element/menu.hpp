@@ -55,9 +55,9 @@ namespace cycfi { namespace elements
 
       void                    layout_menu(context const& ctx);
 
-      using popup_ptr = std::shared_ptr<basic_popup_element>;
+      using popup_menu_ptr = std::shared_ptr<basic_popup_menu_element>;
 
-      popup_ptr               _popup;
+      popup_menu_ptr          _popup;
       menu_position           _position;
    };
 
@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
    template <typename Menu>
    inline void basic_menu::menu(Menu&& menu_)
    {
-      _popup = std::dynamic_pointer_cast<basic_popup_element>(share(basic_popup(menu_)));
+      _popup = share(basic_popup_menu(std::forward<Menu>(menu_)));
    }
 
    ////////////////////////////////////////////////////////////////////////////

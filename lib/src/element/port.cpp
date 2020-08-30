@@ -259,13 +259,12 @@ namespace cycfi { namespace elements
       {
          scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
          view_limits       e_limits = subject().limits(ctx);
-         point             mp = ctx.view.cursor_pos();
 
          if (sb.has_v)
-            draw_scroll_bar(ctx, { valign(), e_limits.min.y, sb.vscroll_bounds }, mp);
+            draw_scroll_bar(ctx, { valign(), e_limits.min.y, sb.vscroll_bounds }, _cursor);
 
          if (sb.has_h)
-            draw_scroll_bar(ctx, { halign(), e_limits.min.x, sb.hscroll_bounds }, mp);
+            draw_scroll_bar(ctx, { halign(), e_limits.min.x, sb.hscroll_bounds }, _cursor);
       }
    }
 
@@ -432,14 +431,20 @@ namespace cycfi { namespace elements
 
    bool scroller_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      _cursor = p;
       if (has_scrollbars())
       {
-         ctx.view.refresh(ctx);
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
          if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
          {
+            ctx.view.refresh(ctx);
             set_cursor(cursor_type::arrow);
             return true;
+         }
+         if (status == cursor_tracking::leaving)
+         {
+            ctx.view.refresh(ctx);
+            _cursor = { full_extent, full_extent };
          }
       }
       return port_element::cursor(ctx, p, status);
@@ -485,7 +490,7 @@ namespace cycfi { namespace elements
                dp.x = bounds.right-r.right;
          }
 
-         return scroll(ctx, dp, ctx.view.cursor_pos());
+         return scroll(ctx, dp, _cursor);
       }
       return false;
    }

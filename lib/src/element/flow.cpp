@@ -16,7 +16,15 @@ namespace cycfi { namespace elements
    {
       view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
       if (!_flowable.needs_reflow())
+      {
          limits_.min.y = base_type::limits(ctx).min.y;
+
+         for (std::size_t i = 0; i != _flowable.size();  ++i)
+         {
+            auto el = _flowable.at(i).limits(ctx);
+            clamp_min(limits_.min.x, el.min.x);
+         }
+      }
       return limits_;
    }
 

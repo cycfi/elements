@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       _popup->layout(new_ctx);
    }
 
-   element* basic_menu::click(context const& ctx, mouse_button btn)
+   bool basic_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
             _popup->click(new_ctx, btn);
          }
       }
-      return this;
+      return true;
    }
 
    void basic_menu::drag(context const& ctx, mouse_button btn)
@@ -234,19 +234,19 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-   element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
+   bool basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
-      element* result = nullptr;
+      bool result = false;
       if (is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
          select(false);
          ctx.notify(ctx, "click", this);
-         result = this;
+         result = true;
       }
-      element* proxy_result = proxy_base::click(ctx, btn);
-      return result? result : proxy_result;
+      auto proxy_result = proxy_base::click(ctx, btn);
+      return result || proxy_result;
    }
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)

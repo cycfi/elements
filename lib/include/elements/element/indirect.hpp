@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
    // Control
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
@@ -184,7 +184,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline element*
+   inline bool
    indirect<Base>::click(context const& ctx, mouse_button btn)
    {
       return this->get().click(ctx, btn);

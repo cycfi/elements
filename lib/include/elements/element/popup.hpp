@@ -54,7 +54,7 @@ namespace cycfi { namespace elements
       using click_function = std::function<void()>;
 
       element*                hit_test(context const& ctx, point p) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       click_function          on_click = [](){};
    };
 

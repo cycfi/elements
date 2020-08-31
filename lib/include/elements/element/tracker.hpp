@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       tracker&                 operator=(tracker&& rhs) = default;
 
       bool                     wants_control() const override;
-      element*                 click(context const& ctx, mouse_button btn) override;
+      bool                     click(context const& ctx, mouse_button btn) override;
       void                     drag(context const& ctx, mouse_button btn) override;
 
    protected:
@@ -84,7 +84,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline element* tracker<Base>::click(context const& ctx, mouse_button btn)
+   inline bool tracker<Base>::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
          end_tracking(ctx, *state);
          state.reset();
       }
-      return this;
+      return true;
    }
 
    template <typename Base>

@@ -302,7 +302,7 @@ namespace cycfi { namespace elements
       return redraw;
    }
 
-   element* scroller_base::click(context const& ctx, mouse_button btn)
+   bool scroller_base::click(context const& ctx, mouse_button btn)
    {
       if (has_scrollbars())
       {
@@ -310,7 +310,7 @@ namespace cycfi { namespace elements
          {
             _tracking = start;
             if (reposition(ctx, btn.pos))
-               return ctx.element;
+               return true;
          }
          _tracking = none;
          refresh(ctx);

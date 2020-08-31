@@ -54,7 +54,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   element* composite_base::click(context const& ctx, mouse_button btn)
+   bool composite_base::click(context const& ctx, mouse_button btn)
    {
       if (!empty())
       {
@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
                {
                   if (btn.down)
                      _click_tracking = info.index;
-                  return info.element.get();
+                  return true;
                }
             }
          }
@@ -81,11 +81,11 @@ namespace cycfi { namespace elements
             auto& e = at(_click_tracking);
             context ectx{ ctx, &e, bounds };
             if (e.click(ectx, btn))
-               return &e;
+               return true;
          }
       }
       _click_tracking = -1;
-      return 0;
+      return false;
    }
 
    void composite_base::drag(context const& ctx, mouse_button btn)

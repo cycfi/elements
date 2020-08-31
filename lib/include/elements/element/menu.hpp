@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
                                  W1&& off, W2&& on
                                , menu_position pos = menu_position::bottom_right);
 
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override;
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
 
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;

@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
       return element::hit_test(ctx, p);
    }
 
-   element* basic_popup_menu_element::click(context const& ctx, mouse_button btn)
+   bool basic_popup_menu_element::click(context const& ctx, mouse_button btn)
    {
       auto new_ctx = ctx.sub_context();
       bool hit = false;
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       );
 
       auto r = floating_element::click(new_ctx, btn);
-      if (btn.down && ((r == nullptr) || hit))
+      if (btn.down && (!r || hit))
          on_click();
       return r;
    }

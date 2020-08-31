@@ -41,9 +41,9 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx, outward);
    }
 
-   element* element::click(context const& /* ctx */, mouse_button /* btn */)
+   bool element::click(context const& /* ctx */, mouse_button /* btn */)
    {
-      return nullptr;
+      return false;
    }
 
    void element::drag(context const& /* ctx */, mouse_button /* btn */)

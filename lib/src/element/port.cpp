@@ -441,11 +441,7 @@ namespace cycfi { namespace elements
             set_cursor(cursor_type::arrow);
             return true;
          }
-         if (status == cursor_tracking::leaving)
-         {
-            ctx.view.refresh(ctx);
-            _cursor = { full_extent, full_extent };
-         }
+         ctx.view.refresh(ctx);
       }
       return port_element::cursor(ctx, p, status);
    }

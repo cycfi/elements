@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
          align |= get_theme().label_text_align & 0x1C;
 
       canvas_.fill_style(get_font_color());
-      canvas_.font(font()); // $$$ fixme $$$
+      canvas_.font(get_font().size(get_font_size()));
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)

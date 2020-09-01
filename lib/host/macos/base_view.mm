@@ -286,9 +286,6 @@ namespace
 - (void) drawRect : (NSRect)dirty
 {
    [super drawRect : dirty];
-
-   auto w = [self bounds].size.width;
-   auto h = [self bounds].size.height;
    auto context = NSGraphicsContext.currentContext.CGContext;
 
    _view->draw((cycfi::artist::canvas_impl*) context,

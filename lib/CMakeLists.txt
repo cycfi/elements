@@ -24,34 +24,34 @@ add_subdirectory(artist)
 # Sources (and Resources)
 
 set(ELEMENTS_SOURCES
-   # src/element/button.cpp
+   src/element/button.cpp
    src/element/composite.cpp
-   # src/element/dial.cpp
+   src/element/dial.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
-   # src/element/gallery/button.cpp
-   # src/element/gallery/check_box.cpp
-   # src/element/gallery/icon_button.cpp
-   # src/element/gallery/menu.cpp
-   # src/element/gallery/radio_button.cpp
-   # src/element/gallery/tab.cpp
+   src/element/gallery/button.cpp
+   src/element/gallery/check_box.cpp
+   src/element/gallery/icon_button.cpp
+   src/element/gallery/menu.cpp
+   src/element/gallery/radio_button.cpp
+   src/element/gallery/tab.cpp
    src/element/grid.cpp
    src/element/image.cpp
-   # src/element/label.cpp
+   src/element/label.cpp
    src/element/layer.cpp
-   # src/element/menu.cpp
+   src/element/menu.cpp
    src/element/misc.cpp
    src/element/popup.cpp
    src/element/port.cpp
    src/element/progress_bar.cpp
    src/element/proxy.cpp
-   # src/element/slider.cpp
-   # src/element/text.cpp
+   src/element/slider.cpp
+   src/element/text.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
-   # src/support/text_utils.cpp
+   src/support/text_utils.cpp
    src/support/theme.cpp
    src/view.cpp
 )
@@ -62,34 +62,34 @@ set(ELEMENTS_HEADERS
    include/elements/base_view.hpp
    include/elements/element.hpp
    include/elements/element/align.hpp
-   # include/elements/element/button.hpp
+   include/elements/element/button.hpp
    include/elements/element/composite.hpp
-   # include/elements/element/dial.hpp
+   include/elements/element/dial.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
    include/elements/element/gallery.hpp
-   # include/elements/element/gallery/button.hpp
+   include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp
    include/elements/element/gallery/dial.hpp
    include/elements/element/gallery/dialog.hpp
-   # include/elements/element/gallery/group.hpp
-   # include/elements/element/gallery/icon_button.hpp
+   include/elements/element/gallery/group.hpp
+   include/elements/element/gallery/icon_button.hpp
    include/elements/element/gallery/menu.hpp
    include/elements/element/gallery/message_box.hpp
    include/elements/element/gallery/notebook.hpp
    include/elements/element/gallery/pane.hpp
-   # include/elements/element/gallery/radio_button.hpp
+   include/elements/element/gallery/radio_button.hpp
    include/elements/element/gallery/tab.hpp
    include/elements/element/gallery/text_entry.hpp
    include/elements/element/grid.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp
-   # include/elements/element/label.hpp
+   include/elements/element/label.hpp
    include/elements/element/layer.hpp
    include/elements/element/margin.hpp
-   # include/elements/element/menu.hpp
+   include/elements/element/menu.hpp
    include/elements/element/misc.hpp
    include/elements/element/popup.hpp
    include/elements/element/port.hpp
@@ -97,8 +97,8 @@ set(ELEMENTS_HEADERS
    include/elements/element/proxy.hpp
    include/elements/element/selectable.hpp
    include/elements/element/size.hpp
-   # include/elements/element/slider.hpp
-   # include/elements/element/text.hpp
+   include/elements/element/slider.hpp
+   include/elements/element/text.hpp
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp
@@ -106,7 +106,7 @@ set(ELEMENTS_HEADERS
    include/elements/support/draw_utils.hpp
    include/elements/support/icon_ids.hpp
    include/elements/support/receiver.hpp
-   # include/elements/support/text_utils.hpp
+   include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
    include/elements/view.hpp
    include/elements/window.hpp

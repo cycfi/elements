@@ -5,13 +5,16 @@
 =============================================================================*/
 #include <elements/element/gallery/tab.hpp>
 #include <elements/support/draw_utils.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
+   namespace colors = artist::colors;
+
    view_limits tab_element::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
       size.x += 35;
       size.y += 10;
       return { { size.x, size.y }, { size.x, size.y } };
@@ -37,14 +40,11 @@ namespace cycfi { namespace elements
 
       draw_button(canvas_, box, c1, corner_radius);
       canvas_.fill_style(c2);
-      canvas_.font(
-         theme_.label_font,
-         theme_.label_font_size
-      );
+      canvas_.font(theme_.label_font);
       canvas_.text_align(canvas_.center | canvas_.middle);
       float cx = box.left + (box.width() / 2);
       float cy = box.top + (box.height() / 2);
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+      canvas_.fill_text(_text.c_str(), point{ cx, cy });
    }
 
    bool tab_element::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)

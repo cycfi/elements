@@ -52,9 +52,8 @@ namespace cycfi::elements
    public:
                               static_text_box(
                                  std::string text
-                               , font font_     = get_theme().text_box_font
-                               , float size     = get_theme().text_box_font_size
-                               , color color_   = get_theme().text_box_font_color
+                               , font_descr font_  = get_theme().text_box_font
+                               , color color_      = get_theme().text_box_font_color
                               );
 
                               static_text_box(static_text_box&& rhs) = default;
@@ -65,6 +64,7 @@ namespace cycfi::elements
 
       std::string const&      get_text() const override            { return _text; }
       void                    set_text(string_view text) override;
+      font const&             font() const { return _font; }
 
       std::string const&      value() const override           { return _text; }
       void                    value(string_view val) override;
@@ -89,8 +89,7 @@ namespace cycfi::elements
    public:
                               basic_text_box(
                                  std::string text
-                               , font font_  = get_theme().text_box_font
-                               , float size  = get_theme().text_box_font_size
+                               , font_descr font_ = get_theme().text_box_font
                               );
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
@@ -171,10 +170,9 @@ namespace cycfi::elements
 
                               basic_input_box(
                                  std::string placeholder = ""
-                                , font font_ = get_theme().text_box_font
-                                , float size = get_theme().text_box_font_size
+                               , font_descr font_ = get_theme().text_box_font
                               )
-                               : basic_text_box("", font_, size)
+                               : basic_text_box("", font_)
                                , _placeholder(std::move(placeholder))
                               {}
 

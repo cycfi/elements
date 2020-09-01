@@ -7,6 +7,7 @@
 #include <elements/element/composite.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/element/port.hpp>
+#include <elements/support/theme.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -208,7 +209,7 @@ namespace cycfi { namespace elements
          auto& canvas_ = ctx.canvas;
 
          canvas_.begin_path();
-         canvas_.round_rect(ctx.bounds, 2);
+         canvas_.add_round_rect(ctx.bounds, 2);
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }

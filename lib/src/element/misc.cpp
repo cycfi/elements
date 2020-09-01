@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
    view_limits icon::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font_size * _size;
+      float font_size = thm.icon_font._size * _size;
       point s = measure_icon(ctx.canvas, _code, font_size);
       return { { s.x, s.y }, { s.x, s.y } };
    }
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
    void icon::draw(context const& ctx)
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font_size * _size;
+      float font_size = thm.icon_font._size * _size;
       draw_icon(ctx.canvas, ctx.bounds, _code, font_size);
    }
 }}

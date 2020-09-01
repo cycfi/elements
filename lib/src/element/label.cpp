@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/label.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -28,7 +29,7 @@ namespace cycfi { namespace elements
          align |= get_theme().label_text_align & 0x1C;
 
       canvas_.fill_style(get_font_color());
-      canvas_.font(get_font(), get_font_size());
+      canvas_.font(font()); // $$$ fixme $$$
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)
@@ -57,7 +58,7 @@ namespace cycfi { namespace elements
       }
 
       canvas_.text_align(align);
-      canvas_.fill_text({ cx, cy }, c_str());
+      canvas_.fill_text(c_str(), point{ cx, cy });
    }
 }}
 

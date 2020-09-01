@@ -290,6 +290,8 @@ namespace cycfi { namespace elements
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
    using host_view_handle = HWND;
    using host_window_handle = HWND;
+#else
+   #error no ELEMENTS_HOST_UI_LIBRARY_* set
 #endif
 
    class base_view : non_copyable
@@ -297,35 +299,47 @@ namespace cycfi { namespace elements
    public:
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_COCOA) || defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
-                        base_view(host_view_handle h);
+                           base_view(host_view_handle h);
 #endif
-                        base_view(extent size_);
-                        base_view(host_window_handle h);
-      virtual           ~base_view();
+                           base_view(extent size_);
+                           base_view(host_window_handle h);
+      virtual              ~base_view();
 
-      virtual void      draw(canvas_impl* /* ctx */, rect /* area */) {};
-      virtual void      click(mouse_button /* btn */) {}
-      virtual void      drag(mouse_button /* btn */) {}
-      virtual void      cursor(point /* p */, cursor_tracking /* status */) {}
-      virtual void      scroll(point /* dir */, point /* p */) {}
-      virtual void      key(key_info const& /* k */) {}
-      virtual void      text(text_info const& /* info */) {}
-      virtual void      begin_focus() {}
-      virtual void      end_focus() {}
-      virtual void      poll() {}
+      virtual void         draw(canvas_impl* /* ctx */, rect /* area */);
+      virtual void         click(mouse_button btn);
+      virtual void         drag(mouse_button btn);
+      virtual void         cursor(point p, cursor_tracking status);
+      virtual void         scroll(point dir, point p);
+      virtual void         key(key_info const& k);
+      virtual void         text(text_info const& info);
+      virtual void         begin_focus();
+      virtual void         end_focus();
+      virtual void         poll();
 
-      virtual void      refresh();
-      virtual void      refresh(rect area);
+      virtual void         refresh();
+      virtual void         refresh(rect area);
 
-      point             cursor_pos() const;
-      extent            size() const;
-      void              size(extent size_);
-      host_view_handle  host() const { return _view; }
+      point                cursor_pos() const;
+      extent               size() const;
+      void                 size(extent size_);
+      host_view_handle     host() const { return _view; }
 
    private:
 
-      host_view_handle         _view;
+      host_view_handle     _view;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   inline void base_view::draw(canvas_impl* /* ctx */, rect /* area */) {}
+   inline void base_view::click(mouse_button /* btn */) {}
+   inline void base_view::drag(mouse_button /* btn */) {}
+   inline void base_view::cursor(point /* p */, cursor_tracking /* status */) {}
+   inline void base_view::scroll(point /* dir */, point /* p */) {}
+   inline void base_view::key(key_info const& /* k */) {}
+   inline void base_view::text(text_info const& /* info */) {}
+   inline void base_view::begin_focus() {}
+   inline void base_view::end_focus() {}
+   inline void base_view::poll() {}
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard

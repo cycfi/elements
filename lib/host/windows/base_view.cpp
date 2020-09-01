@@ -35,6 +35,8 @@
 #include <chrono>
 #include <map>
 
+#include "utils.hpp"
+
 namespace cycfi { namespace elements
 {
    key_code translate_key(WPARAM wparam, LPARAM lparam);
@@ -134,7 +136,7 @@ namespace cycfi { namespace elements
             cairo_surface_t* surface = cairo_win32_surface_create(info->offscreen_hdc);
             cairo_t* context = cairo_create(surface);
 
-            auto scale = GetDpiForWindow(hwnd) / 96.0;
+            auto scale = get_scale_for_window(hwnd);
             cairo_scale(context, scale, scale);
 
             view->draw(context,
@@ -190,7 +192,7 @@ namespace cycfi { namespace elements
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
 
-         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         auto scale = get_scale_for_window(hwnd);
          pos_x /= scale;
          pos_y /= scale;
 
@@ -313,7 +315,7 @@ namespace cycfi { namespace elements
          float pos_x = GET_X_LPARAM(lparam);
          float pos_y = GET_Y_LPARAM(lparam);
 
-         auto scale = GetDpiForWindow(hwnd) / 96.0;
+         auto scale = get_scale_for_window(hwnd);
          pos_x /= scale;
          pos_y /= scale;
 
@@ -343,7 +345,7 @@ namespace cycfi { namespace elements
          pos.y = GET_Y_LPARAM(lparam);
          ScreenToClient(hwnd, &pos);
 
-         float scale = GetDpiForWindow(hwnd) / 96.0;
+         float scale = get_scale_for_window(hwnd);
          info->vptr->scroll(dir, { pos.x / scale, pos.y / scale });
       }
 
@@ -412,7 +414,7 @@ namespace cycfi { namespace elements
 
             case WM_MOUSELEAVE:
                info->mouse_in_window = false;
-               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::entering);
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::leaving);
                break;
 
             case WM_MOUSEHOVER:
@@ -514,8 +516,8 @@ namespace cycfi { namespace elements
          view_info* info = new view_info{ _this };
          SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
-         // Create 16ms (60Hz) timer
-         SetTimer(_view, IDT_TIMER1, 16, (TIMERPROC) nullptr);
+         // Create 1ms timer
+         SetTimer(_view, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
          return _view;
       }
@@ -554,13 +556,13 @@ namespace cycfi { namespace elements
       POINT pos;
       GetCursorPos(&pos);
       ScreenToClient(_view, &pos);
-      float scale = GetDpiForWindow(_view) / 96.0;
+      float scale = get_scale_for_window(_view);
       return { float(pos.x) / scale, float(pos.y) / scale };
    }
 
    elements::extent base_view::size() const
    {
-      float scale = GetDpiForWindow(_view) / 96.0;
+      float scale = get_scale_for_window(_view);
       RECT r;
       GetWindowRect(_view, &r);
       return { float(r.right-r.left) / scale, float(r.bottom-r.top) / scale };
@@ -568,7 +570,7 @@ namespace cycfi { namespace elements
 
    void base_view::size(elements::extent p)
    {
-      auto scale = GetDpiForWindow(_view) / 96.0;
+      auto scale = get_scale_for_window(_view);
       auto parent = GetParent(_view);
       RECT bounds;
       GetClientRect(parent, &bounds);
@@ -589,7 +591,7 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
-      auto scale = GetDpiForWindow(_view) / 96.0;
+      auto scale = get_scale_for_window(_view);
       RECT r;
       r.left = area.left * scale;
       r.right = area.right * scale;

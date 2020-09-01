@@ -1,3 +1,5 @@
+---
+---
 # Layout
 
 ## Table of Contents
@@ -7,7 +9,7 @@
 * [Scale Element](#scale-element)
 * [Align Elements](#align-elements)
 * [Margin Elements](#margin-elements)
-* [Floating](#floating-element)
+* [Floating Element](#floating-element)
 * [Tiles and Grids](#tiles-and-grids)
 * [Horizontal Grids](#horizontal-grids)
 * [Horizontal Tiles](#horizontal-tiles)
@@ -15,11 +17,11 @@
 * [Vertical Tiles](#vertical-tiles)
 * [Layers](#layers)
 * [Decks](#decks)
-* [Flow](#flow-element)
+* [Flow Element](#flow-element)
 
 -------------------------------------------------------------------------------
 The Elements Library provides a comprehensive set of elements for laying out
-elements the view.
+elements in the view.
 
 -------------------------------------------------------------------------------
 
@@ -99,7 +101,7 @@ By default, an element has full limits: it is infinitely resizable:
 ```c++
 constexpr view_limits full_limits = {
    { 0.0, 0.0 }
-   , { full_extent, full_extent }
+ , { full_extent, full_extent }
 };
 ```
 
@@ -123,7 +125,7 @@ implementation defined).
 ```
 
 ```c++
-{ { 100, 100 }, { 0, full_extent } }; // Fixed width, flexible height
+{ { 100, 100 }, { 100, full_extent } }; // Fixed width, flexible height
 ```
 
 ```c++
@@ -143,7 +145,7 @@ elements.
 
 ### limit
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/limit.png">
+<img width="40%" height="40%" src="assets/images/layout/limit.png">
 
 Overrides the *limits* of an element.
 
@@ -159,6 +161,7 @@ limit(limits, subject)
 | `subject` | Instance of `Element`      |
 
 #### Semantics
+
 1. The *limits* of `subject` will be set to the specified `limits`
    constrained by the natural *limits* of the `subject` (the natural *limits*
    of the element will not be violated).
@@ -166,7 +169,7 @@ limit(limits, subject)
 
 ### fixed_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/fixed_size.png">
+<img width="40%" height="40%" src="assets/images/layout/fixed_size.png">
 
 Fixes the size of an enclosed element (`subject`).
 
@@ -182,6 +185,7 @@ fixed_size({ width, height }, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. `subject` will be laid out with a fixed `width` and `height`, constrained
    by the natural *limits* of the `subject` (the natural *limits* of the
    element will not be violated).
@@ -191,7 +195,7 @@ fixed_size({ width, height }, subject)
 
 ### hsize
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/hsize.png">
+<img width="40%" height="40%" src="assets/images/layout/hsize.png">
 
 Fixes the horizontal size of an enclosed element (`subject`).
 
@@ -207,6 +211,7 @@ hsize(width, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. `subject` will be laid out with a fixed `width`, constrained by the
    natural *horizontal limits* of the `subject` (the natural *horizontal
    limits* of the element will not be violated).
@@ -217,7 +222,7 @@ hsize(width, subject)
 
 ### vsize
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vsize.png">
+<img width="40%" height="40%" src="assets/images/layout/vsize.png">
 
 Fixes the *vertical limits* of an enclosed element (`subject`).
 
@@ -233,6 +238,7 @@ vsize(height, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. `subject` will be laid out with a fixed `height`, constrained by the
    natural *vertical limits* of the `subject` (the natural *vertical limits*
    of the element will not be violated).
@@ -243,7 +249,7 @@ vsize(height, subject)
 
 ### min_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/min_size.png">
+<img width="40%" height="40%" src="assets/images/layout/min_size.png">
 
 Overrides the *minimum limits* of an enclosed element (`subject`).
 
@@ -259,6 +265,7 @@ min_size({ width, height }, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. The *minimum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *minimum limits* of the `subject`.
 2. the natural *minimum limits* of the element will not be violated.
@@ -268,7 +275,7 @@ min_size({ width, height }, subject)
 
 ### hmin_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/hmin_size.png">
+<img width="40%" height="40%" src="assets/images/layout/hmin_size.png">
 
 Overrides the *minimum horizontal limit* of an enclosed element (`subject`).
 
@@ -284,6 +291,7 @@ hmin_size(width, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The *minimum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *horizontal minimum limits* of the
    `subject`.
@@ -295,7 +303,7 @@ hmin_size(width, subject)
 
 ### vmin_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vmin_size.png">
+<img width="40%" height="40%" src="assets/images/layout/vmin_size.png">
 
 Overrides the *minimum vertical limit* of an enclosed element (`subject`).
 
@@ -311,6 +319,7 @@ vmin_size(height, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The *minimum vertical limit* of `subject` will be set to the specified `height`
    constrained by the natural vertical *minimum limits* of the `subject`.
 2. The natural vertical *minimum limits* of the element will not be violated.
@@ -320,7 +329,7 @@ vmin_size(height, subject)
 
 ### max_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/max_size.png">
+<img width="40%" height="40%" src="assets/images/layout/max_size.png">
 
 Overrides the *maximum limits* of an enclosed element (`subject`).
 
@@ -336,6 +345,7 @@ max_size({ width, height }, subject)
 | subject            | Instance of `Element` |
 
 #### Semantics
+
 1. The *maximum limits* of `subject` will be set to the specified `width` and
    `height`, constrained by the natural *maximum limits* of the `subject`.
 2. The natural *maximum limits* of the element will not be violated.
@@ -345,7 +355,7 @@ max_size({ width, height }, subject)
 
 ### hmax_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/hmax_size.png">
+<img width="40%" height="40%" src="assets/images/layout/hmax_size.png">
 
 Overrides the *maximum horizontal limit* of an enclosed element (`subject`).
 
@@ -361,6 +371,7 @@ hmax_size(width, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The *maximum horizontal limit* of `subject` will be set to the specified
    `width` constrained by the natural *maximum horizontal limit* of the
    `subject`.
@@ -372,7 +383,7 @@ hmax_size(width, subject)
 
 ### vmax_size
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vmax_size.png">
+<img width="40%" height="40%" src="assets/images/layout/vmax_size.png">
 
 Overrides the *maximum vertical limit* of an enclosed element (`subject`).
 
@@ -388,6 +399,7 @@ vmax_size(height, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The *maximum vertical limit* of `subject` will be set to the specified
    `height` constrained by the natural *maximum vertical limit* of the
    `subject`
@@ -430,7 +442,7 @@ default 1.0 stretchiness.
 
 ### hstretch
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/hstretch.png">
+<img width="40%" height="40%" src="assets/images/layout/hstretch.png">
 
 Overrides the horizontal stretchiness of an an enclosed element (`subject`).
 
@@ -442,10 +454,11 @@ hstretch(stretch, subject)
 
 #### Notation
 
-| `stretch`    | Instance of `view_stretch` |
+| `stretch`    | A scalar value        |
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed horizontal size.
 2. Returns instance of `Proxy`.
@@ -453,7 +466,7 @@ hstretch(stretch, subject)
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/htile-stretch.png">
+<img width="40%" height="40%" src="assets/images/layout/htile-stretch.png">
 
 The element with the `2.0` stretch value stretches twice as much compared to
 its siblings.
@@ -462,7 +475,7 @@ its siblings.
 
 ### vstretch
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vstretch.png">
+<img width="40%" height="40%" src="assets/images/layout/vstretch.png">
 
 Overrides the vertical stretchiness of an an enclosed element (`subject`).
 
@@ -474,10 +487,11 @@ vstretch(stretch, subject)
 
 #### Notation
 
-| `stretch`    | Instance of `view_stretch` |
+| `stretch`    | A scalar value        |
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The `subject` will assume the given `stretch` value.
 2. The stretch value has no effect to elements with fixed *vertical limits*.
 2. Returns instance of `Proxy`.
@@ -485,7 +499,7 @@ vstretch(stretch, subject)
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vtile-stretch.png">
+<img width="40%" height="40%" src="assets/images/layout/vtile-stretch.png">
 
 The element with the `0.5` stretch value stretches half less, while the
 element with the `1.5` stretches half more than the default.
@@ -515,6 +529,7 @@ scale(scale_, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
    the element up (zoom in), while a value < 1.0 scales down (zoom out).
 2. Returns instance of `Proxy`.
@@ -532,7 +547,7 @@ catalogues all the available align elements.
 
 ### halign
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/halign.png">
+<img width="40%" height="40%" src="assets/images/layout/halign.png">
 
 Aligns the an enclosed element (`subject`) in the x-axis.
 
@@ -548,6 +563,7 @@ halign(align, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Given a total allocated space `X`, `subject` will be positioned
    horizontally to `X * align`.
 2. The `subject` will assume its *minimum horizontal limit*.
@@ -562,7 +578,7 @@ halign(align, subject)
 
 ### align_left
 
-<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/layout/align_left.png">
+<img width="30%" height="30%" src="assets/images/layout/align_left.png">
 
 Left-aligns the an enclosed element (`subject`).
 
@@ -577,6 +593,7 @@ align_left(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `halign(0.0, subject)`
 2. Returns instance of `Proxy`.
 
@@ -584,7 +601,7 @@ align_left(subject)
 
 ### align_center
 
-<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/layout/align_center.png">
+<img width="30%" height="30%" src="assets/images/layout/align_center.png">
 
 Center-aligns the an enclosed element (`subject`).
 
@@ -599,6 +616,7 @@ align_center(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `halign(0.5, subject)`
 2. Returns instance of `Proxy`.
 
@@ -606,7 +624,7 @@ align_center(subject)
 
 ### align_right
 
-<img width="30%" height="30%" src="{{ site.url }}/elements/assets/images/layout/align_right.png">
+<img width="30%" height="30%" src="assets/images/layout/align_right.png">
 
 Right-aligns the an enclosed element (`subject`).
 
@@ -621,6 +639,7 @@ align_right(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `halign(1.0, subject)`
 2. Returns instance of `Proxy`.
 
@@ -628,7 +647,7 @@ align_right(subject)
 
 ### valign
 
-<img width="20%" height="20%" src="{{ site.url }}/elements/assets/images/layout/valign.png">
+<img width="20%" height="20%" src="assets/images/layout/valign.png">
 
 Aligns the an enclosed element (`subject`) in the y-axis.
 
@@ -644,12 +663,14 @@ valign(align, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Given a total allocated space `Y`, `subject` will be positioned vertically
    to `Y * align`.
 2. The `subject` will assume its *minimum vertical limit*.
 3. Returns instance of `Proxy`.
 
 #### Examples
+
 1. `valign(0.0) // align subject to the top`
 2. `valign(1.0) // align subject to the right`
 3. `valign(0.5) // align subject to the middle`
@@ -658,7 +679,7 @@ valign(align, subject)
 
 ### align_top
 
-<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/layout/align_top.png">
+<img width="15%" height="15%" src="assets/images/layout/align_top.png">
 
 Aligns the an enclosed element (`subject`) to the top.
 
@@ -673,6 +694,7 @@ align_top(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `valign(0.0, subject)`
 2. Returns instance of `Proxy`.
 
@@ -680,7 +702,7 @@ align_top(subject)
 
 ### align_middle
 
-<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/layout/align_middle.png">
+<img width="15%" height="15%" src="assets/images/layout/align_middle.png">
 
 Aligns the an enclosed element (`subject`) to the middle.
 
@@ -695,6 +717,7 @@ align_middle(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `valign(0.5, subject)`
 2. Returns instance of `Proxy`.
 
@@ -702,7 +725,7 @@ align_middle(subject)
 
 ### align_bottom
 
-<img width="15%" height="15%" src="{{ site.url }}/elements/assets/images/layout/align_bottom.png">
+<img width="15%" height="15%" src="assets/images/layout/align_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the bottom.
 
@@ -717,6 +740,7 @@ align_bottom(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `valign(1.0, subject)`
 2. Returns instance of `Proxy`.
 
@@ -724,7 +748,7 @@ align_bottom(subject)
 
 ### align_left_top
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_left_top.png">
+<img width="25%" height="25%" src="assets/images/layout/align_left_top.png">
 
 Aligns the an enclosed element (`subject`) to the left-top.
 
@@ -739,6 +763,7 @@ align_left_top(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_left(align_top(subject))`
 2. Returns instance of `Proxy`.
 
@@ -746,7 +771,7 @@ align_left_top(subject)
 
 ### align_center_top
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_center_top.png">
+<img width="25%" height="25%" src="assets/images/layout/align_center_top.png">
 
 Aligns the an enclosed element (`subject`) to the center-top.
 
@@ -761,6 +786,7 @@ align_center_top(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_center(align_top(subject))`
 2. Returns instance of `Proxy`.
 
@@ -768,7 +794,7 @@ align_center_top(subject)
 
 ### align_right_top
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_right_top.png">
+<img width="25%" height="25%" src="assets/images/layout/align_right_top.png">
 
 Aligns the an enclosed element (`subject`) to the right-top.
 
@@ -783,6 +809,7 @@ align_right_top(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_right(align_top(subject))`
 2. Returns instance of `Proxy`.
 
@@ -790,7 +817,7 @@ align_right_top(subject)
 
 ### align_left_middle
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_left_middle.png">
+<img width="25%" height="25%" src="assets/images/layout/align_left_middle.png">
 
 Aligns the an enclosed element (`subject`) to the left-middle.
 
@@ -805,6 +832,7 @@ align_left_middle(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_left(align_middle(subject))`
 2. Returns instance of `Proxy`.
 
@@ -812,7 +840,7 @@ align_left_middle(subject)
 
 ### align_center_middle
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_center_middle.png">
+<img width="25%" height="25%" src="assets/images/layout/align_center_middle.png">
 
 Aligns the an enclosed element (`subject`) to the center-middle.
 
@@ -827,6 +855,7 @@ align_center_middle(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_center(align_middle(subject))`
 2. Returns instance of `Proxy`.
 
@@ -834,7 +863,7 @@ align_center_middle(subject)
 
 ### align_right_middle
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_right_middle.png">
+<img width="25%" height="25%" src="assets/images/layout/align_right_middle.png">
 
 Aligns the an enclosed element (`subject`) to the right-middle.
 
@@ -849,6 +878,7 @@ align_right_middle(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_right(align_middle(subject))`
 2. Returns instance of `Proxy`.
 
@@ -856,7 +886,7 @@ align_right_middle(subject)
 
 ### align_left_bottom
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_left_bottom.png">
+<img width="25%" height="25%" src="assets/images/layout/align_left_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the left-bottom.
 
@@ -871,6 +901,7 @@ align_left_bottom(subject)
 | subject   | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_left(align_bottom(subject))`
 2. Returns instance of `Proxy`.
 
@@ -878,7 +909,7 @@ align_left_bottom(subject)
 
 ### align_center_bottom
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_center_bottom.png">
+<img width="25%" height="25%" src="assets/images/layout/align_center_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the center-bottom.
 
@@ -893,6 +924,7 @@ align_center_bottom(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_center(align_bottom(subject))`
 2. Returns instance of `Proxy`.
 
@@ -900,7 +932,7 @@ align_center_bottom(subject)
 
 ### align_right_bottom
 
-<img width="25%" height="25%" src="{{ site.url }}/elements/assets/images/layout/align_right_bottom.png">
+<img width="25%" height="25%" src="assets/images/layout/align_right_bottom.png">
 
 Aligns the an enclosed element (`subject`) to the right-bottom.
 
@@ -915,6 +947,7 @@ align_right_bottom(subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Equivalent to `align_right(align_bottom(subject))`
 2. Returns instance of `Proxy`.
 
@@ -930,7 +963,7 @@ purposes. This section catalogues all the available margin elements.
 
 ### margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/margin.png">
+<img width="40%" height="40%" src="assets/images/layout/margin.png">
 
 Adds a margin all around an enclosed element (`subject`).
 
@@ -946,6 +979,7 @@ margin({ left, top, right, bottom }, subject)
 | `subject`                         | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the left, top, right, and bottom of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -957,7 +991,7 @@ margin({ left, top, right, bottom }, subject)
 
 ### left_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/left_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/left_margin.png">
 
 Adds a margin to the left of an enclosed element (`subject`).
 
@@ -973,6 +1007,7 @@ left_margin(left, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the left of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `left_margin` does not violate the natural *limits* of the subject.
@@ -984,7 +1019,7 @@ left_margin(left, subject)
 
 ### right_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/right_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/right_margin.png">
 
 Adds a margin to the right of an enclosed element (`subject`).
 
@@ -1000,6 +1035,7 @@ right_margin(right, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the right of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `right_margin` does not violate the natural *limits* of the subject.
@@ -1011,7 +1047,7 @@ right_margin(right, subject)
 
 ### top_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/top_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/top_margin.png">
 
 Adds a margin to the top of an enclosed element (`subject`).
 
@@ -1027,6 +1063,7 @@ top_margin(top, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the top of the subject with the given parameter.
 2. The element's *limits* is overridden to account for the additional space.
 3. The `top_margin` does not violate the natural *limits* of the subject.
@@ -1038,7 +1075,7 @@ top_margin(top, subject)
 
 ### bottom_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/bottom_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/bottom_margin.png">
 
 Adds a margin to the bottom of an enclosed element (`subject`).
 
@@ -1054,6 +1091,7 @@ bottom_margin(bottom, subject)
 | `subject`    | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the bottom of the subject with the given
    parameter.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1065,9 +1103,10 @@ bottom_margin(bottom, subject)
 -------------------------------------------------------------------------------
 
 ### hmargin
+
 (same as `left_right_margin`)
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/hmargin.png">
+<img width="40%" height="40%" src="assets/images/layout/hmargin.png">
 
 Adds a margin to the left and right sides of an enclosed element (`subject`).
 
@@ -1093,6 +1132,7 @@ left_right_margin(left, right, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the left and right sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1104,9 +1144,10 @@ left_right_margin(left, right, subject)
 -------------------------------------------------------------------------------
 
 ### vmargin
+
 (same as `top_bottom_margin`)
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/vmargin.png">
+<img width="40%" height="40%" src="assets/images/layout/vmargin.png">
 
 Adds a margin to the top and bottom sides of an enclosed element (`subject`).
 
@@ -1132,6 +1173,7 @@ top_bottom_margin(top, bottom, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the top and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1144,7 +1186,7 @@ top_bottom_margin(top, bottom, subject)
 
 ### left_top_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/left_top_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/left_top_margin.png">
 
 Adds a margin to the left and top sides of an enclosed element (`subject`).
 
@@ -1164,6 +1206,7 @@ left_top_margin(left, top, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the left and top sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1176,7 +1219,7 @@ left_top_margin(left, top, subject)
 
 ### left_bottom_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/left_bottom_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/left_bottom_margin.png">
 
 Adds a margin to the left and bottom sides of an enclosed element (`subject`).
 
@@ -1196,6 +1239,7 @@ left_bottom_margin(left, bottom, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the left and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1208,7 +1252,7 @@ left_bottom_margin(left, bottom, subject)
 
 ### right_top_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/right_top_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/right_top_margin.png">
 
 Adds a margin to the right and top sides of an enclosed element (`subject`).
 
@@ -1228,6 +1272,7 @@ right_top_margin(right, top, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the right and top sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1240,7 +1285,7 @@ right_top_margin(right, top, subject)
 
 ### right_bottom_margin
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/right_top_margin.png">
+<img width="40%" height="40%" src="assets/images/layout/right_top_margin.png">
 
 Adds a margin to the right and bottom sides of an enclosed element (`subject`).
 
@@ -1260,6 +1305,7 @@ right_bottom_margin(right, bottom, subject)
 | `subject`          | Instance of `Element` |
 
 #### Semantics
+
 1. Space is added to the to the right and bottom sides of the subject with the
    given parameters.
 2. The element's *limits* is overridden to account for the additional space.
@@ -1270,9 +1316,9 @@ right_bottom_margin(right, bottom, subject)
 
 -------------------------------------------------------------------------------
 
-## Floating
+## Floating Element
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/floating.png">
+<img width="40%" height="40%" src="assets/images/layout/floating.png">
 
 A floating element allows arbitrary placement of an enclosed element
 (`subject`) in the main view.
@@ -1289,6 +1335,7 @@ floating({ left, top, right, bottom }, subject)
 | `subject`                         | Instance of `Element` |
 
 #### Semantics
+
 1. The element will be placed exactly to the specified position in the main
    view, constrained to the subject's natural *limits*.
 2. The floating element does not violate the natural *limits* of the subject.
@@ -1300,33 +1347,43 @@ floating({ left, top, right, bottom }, subject)
 
 Tiles are the most useful layout elements, followed by by Grids. Tiles are
 used everywhere for composing hierarchical elements in rows and columns,
-typical to all GUIs. Grids are similar to tiles, but grids have fixed sizes
-while tiles allow elements to fluidly adjust depending on available space.
-Tiles are best used for composing UI elements while grids are best for
-composing tables.
+typical to all GUIs. Grids are similar to tiles. Both tiles and grids allow
+elements to fluidly adjust depending on available space. Tiles compute the
+layout of its elements using the children elements' size `limits` while grids
+lay out its elements using an externally supplied fractional coordinates that
+specify positions of the elements in the allocated space.
+
+Tiles are best used
+for composing UI elements while grids are best for composing tables.
+
+-------------------------------------------------------------------------------
 
 ### Horizontal Grids
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/hgrid.png">
+<img width="60%" height="60%" src="assets/images/layout/hgrid.png">
 
 Horizontal Grids are composites that lay out one or more child elements in a
-row following externally supplied horizontal coordinates. Horizontal Grids
-have fixed horizontal sizes and computed vertical sizes following the natural
+row following externally supplied horizontal fractional positions. Horizontal
+Grids have computed horizontal and vertical sizes following the natural
 `limits` of its children.
 
 #### Semantics
+
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
-2. The elements are positioned horizontally using the supplied coordinates.
-3. The grid's *minimum vertical limit* is computed as the minimum of the
+2. The elements are positioned horizontally using the supplied fractional
+   positions. The fractional positions values range from 0.0 to 1.0, which
+   specify the child element's horizontal position from left (0.0) to right
+   (1.0).
+3. The grid's *minimum vertical limit* is computed as the maximum of the
    children elements' *minimum vertical limit*s.
-4. The grid's *maximum vertical limit* is computed as the maximum of the
+4. The grid's *maximum vertical limit* is computed as the minimum of the
    children elements' *maximum vertical limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
-6. The supplied (horizontal) and computed (vertical) coordinates may violate
-   the limits of its children elements.
+6. The supplied (horizontal) positions and computed (vertical) coordinates
+   may violate the limits of its children elements.
    1. If the allocated size of a child element is lower than the element's
       *minimum limits* in either dimension, the element will be cropped.
    2. If a child element's *maximum limits* in either dimension is exceeded,
@@ -1341,39 +1398,43 @@ Build a horizontal grid with a fixed number of elements.
 #### Expression
 
 ```c++
-hgrid(coords, e1,...eN)
+hgrid(positions, e1,...eN)
 ```
 
 #### Notation
 
-| `N`             | The number of items                                          |
-| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
-| `coords`        | External container of horizontal coordinates (more below)    |
+| `N`             | The number of items                                             |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below) |
+| `positions`     | External container of fractional positions (more below)         |
 
-The External container, `coords`, can either be a plain array of type
+The external container, `positions`, can either be a plain array of type
 `float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in a
 `std::array<element_ptr, N>` managed by the horizontal grid element.
 
 #### Example
 
 ```c++
-static float coords[] = { 50, 100, 150, 200 };
+static float positions[] = { 0.25, 0.5, 0.75, 1.0 };
 //...
-hgrid(coords, item1, item2, item3, item4)
+hgrid(positions, item1, item2, item3, item4)
 ```
 
 > :point_right: If the number of elements is not fixed, you can use an
 `hgrid_composite` (see below).
 
 #### Requirements
-1. The number of supplied coordinates and elements should match, otherwise,
+
+1. The number of supplied positions and elements should match, otherwise,
    compiler error (no matching function for call to `hgrid`).
-2. The coordinates assume the first element's relative coordinate at `x=0`
-   (it is at the left-most position in the row). The relative coordinate of
-   the second element is at index `0`, the third at index `1`, and so on. The
-   last coordinate is the total and final width of the grid.
+2. The positions assume the first element is at `x=0` (it is at the left-most
+   position in the row). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 #### Semantics
+
 1. In addition to the semantics of Horizontal Grids, returns instance of
    `Composite`.
 
@@ -1386,13 +1447,13 @@ Create a horizontal grid with an indeterminate (dynamic) number of elements.
 #### Expression
 
 ```c++
-hgrid_composite c{ coords };
+hgrid_composite c{ positions };
 ```
 
 #### Notation
 
-| `coords`        | External container of horizontal coordinates, `std::vector<float>`    |
-| `c`             | Instance of type `hgrid_composite`                           |
+| `positions`     | External container of fractional positions, `std::vector<float>` |
+| `c`             | Instance of type `hgrid_composite`                                 |
 
 The `hgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
@@ -1409,19 +1470,26 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `hgrid_composite`.
 
+`hgrid_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 #### Requirements
-1. The number of items in the external coordinates vector `coords` must match
+
+1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
-2. The coordinates assume the first element's relative coordinate at `x=0`
-   (it is at the left-most position in the row). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
-   last coordinate is the total and final width of the grid.
+2. The positions assume the first element is at `x=0` (it is at the left-most
+   position in the row). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 -------------------------------------------------------------------------------
 
 ### Horizontal Tiles
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/htile.png">
+<img width="60%" height="60%" src="assets/images/layout/htile.png">
 
 Horizontal Tiles are similar to Horizontal Grids, but allow elements to
 fluidly adjust horizontally depending on available space. Horizontal Tiles
@@ -1429,6 +1497,7 @@ are best used for composing UI elements while Horizontal Grids are best for
 composing tables.
 
 #### Semantics
+
 1. The elements are laid out in a single row, left to right, immediately next
    to each other with no intervening space.
 2. The elements are positioned horizontally using the children's natural
@@ -1445,9 +1514,9 @@ composing tables.
       element is able to stretch twice as much compared to its siblings.
       Horizontally fixed-sized elements will not be stretched (element d in
       the diagram). (Also see [Stretch Elements](#stretch-elements)).
-3. The tile's *minimum vertical limit* is computed as the minimum of the
+3. The tile's *minimum vertical limit* is computed as the maximum of the
    children elements' *minimum vertical limit*s.
-4. The grid's *maximum vertical limit* is computed as the maximum of the
+4. The grid's *maximum vertical limit* is computed as the minimum of the
    children elements' *maximum vertical limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1489,6 +1558,7 @@ htile(item1, item2, item3, item4)
 `htile_composite` (see below).
 
 #### Semantics
+
 1. In addition to the semantics of Horizontal Tiles, returns instance of
    `Composite`.
 
@@ -1523,30 +1593,38 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `htile_composite`.
 
+`htile_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ### Vertical Grids
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/vgrid.png">
+<img width="60%" height="60%" src="assets/images/layout/vgrid.png">
 
 Vertical Grids are composites that lay out one or more child elements in a
-column following externally supplied vertical coordinates. Vertical Grids
-have fixed vertical sizes and computed horizontal sizes following the natural
+column following externally supplied vertical fractional positions. Vertical
+Grids have computed horizontal and vertical sizes following the natural
 `limits` of its children.
 
 #### Semantics
+
 1. The elements are laid out in a single column, top to bottom, immediately
    next to each other with no intervening space.
-2. The elements are positioned using the supplied coordinates.
-3. The grid's *minimum horizontal limit* is computed as the minimum of the
+2. The elements are positioned vertically using the supplied fractional
+   positions. The fractional positions values range from 0.0 to 1.0, which
+   specify the child element's vertical position from top (0.0) to bottom
+   (1.0).
+3. The grid's *minimum horizontal limit* is computed as the maximum of the
    children elements' *minimum horizontal limit*s.
-4. The grid's *maximum horizontal limit* is computed as the maximum of the
+4. The grid's *maximum horizontal limit* is computed as the minumum of the
    children elements' *maximum horizontal limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
    clamped to ensure it is not less than the computed minimum limit.
-6. The supplied (vertical) and computed (horizontal) coordinates may violate
-   the limits of its children elements.
+6. The supplied (vertical) positions and computed (horizontal) coordinates
+   may violate the limits of its children elements.
    1. If the allocated size of a child element is lower than the element's
       *minimum limits* in either dimension, the element will be cropped.
    2. If a child element's *maximum limits* in either dimension is exceeded,
@@ -1561,40 +1639,44 @@ Build a vertical grid with a fixed number of elements.
 #### Expression
 
 ```c++
-vgrid(coords, e1,...eN)
+vgrid(positions, e1,...eN)
 ```
 
 #### Notation
 
-| `N`             | The number of items                                          |
-| `e1,...eN`      | One or more child elements, instances of `Element` (more below)|
-| `coords`        | External container of vertical coordinates (more below)    |
+| `N`             | The number of items                                             |
+| `e1,...eN`      | One or more child elements, instances of `Element` (more below) |
+| `positions`     | External container of fractional positions (more below)         |
 
 
-The External container, `coords` is an external can either be a plain array
+The External container, `positions` is an external can either be a plain array
 of type `float[N]` or `std::array<float, N>`. Elements `e1,...eN` are held in
 a `std::array<element_ptr, N>` managed by the vertical grid element.
 
 #### Example
 
 ```c++
-static float coords[] = { 50, 100, 150, 200 };
+static float positions[] = { 0.25, 0.5, 0.75, 1.0 };
 //...
-vgrid(coords, item1, item2, item3, item4)
+vgrid(positions, item1, item2, item3, item4)
 ```
 
 > :point_right: If the number of elements is not fixed, you can use an
 `vgrid_composite` (see below).
 
 #### Requirements
+
 1. The number of supplied coordinates and elements should match, otherwise,
    compiler error (no matching function for call to `vgrid`).
-2. The coordinates assume the first element's relative coordinate at `y=0`
-   (it is at the top-most position in the column). The relative coordinate of
-   the second element is at index `0`, the third at index `1`, and so on. The
-   last coordinate is the total and final height of the grid.
+2. The positions assume the first element is at `x=0` (it is at the top-most
+   position in the column). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 #### Semantics
+
 1. In addition to the semantics of Vertical Grids, returns instance of
    `Composite`.
 
@@ -1607,13 +1689,13 @@ Create a vertical grid with an indeterminate (dynamic) number of elements.
 #### Expression
 
 ```c++
-vgrid_composite c{ coords };
+vgrid_composite c{ positions };
 ```
 
 #### Notation
 
-| `coords`        | External container of vertical coordinates, `std::vector<float>`    |
-| `c`             | Instance of type `vgrid_composite`                           |
+| `positions`     | External container of fractional positions, `std::vector<float>`   |
+| `c`             | Instance of type `vgrid_composite`                                 |
 
 The `vgrid_composite` is basically a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The lifetime of the
@@ -1628,25 +1710,33 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `vgrid_composite`.
 
+`vgrid_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 #### Requirements
-1. The number of items in the external coordinates vector `coords` must match
+
+1. The number of items in the external coordinates vector `positions` must match
    with the number of elements at any given time.
-2. The coordinates assume the first element's relative coordinate at `y=0`
-   (it is at the top-most position in the column). The relative coordinate of
-   the second element is at index 0, the third at index 1, and so on. The
-   last coordinate is the total and final height of the grid.
+2. The positions assume the first element is at `x=0` (it is at the top-most
+   position in the column). The fractional position of the second element is at
+   index `0`, the third at index `1`, and so on.
+3. The externally supplied positions should be sorted with increasing values
+   such that positions[n] <= positions[n+1]. The behavior is undefined if
+   this is violated.
 
 -------------------------------------------------------------------------------
 
 ### Vertical Tiles
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/vtile.png">
+<img width="60%" height="60%" src="assets/images/layout/vtile.png">
 
 Vertical Tiles are similar to Vertical Grids, but allow elements to fluidly
 adjust vertically depending on available space. Vertical Tiles are best used
 for composing UI elements while Vertical Grids are best for composing tables.
 
 #### Semantics
+
 1. The elements are laid out in a single column, left to right, immediately
    next to each other with no intervening space.
 2. The elements are positioned vertically using the children's natural
@@ -1663,9 +1753,9 @@ for composing UI elements while Vertical Grids are best for composing tables.
       element is able to stretch twice as much compared to its siblings.
       Vertically fixed-sized elements will not be stretched (element b in the
       diagram). (Also see [Stretch Elements](#stretch-elements)).
-3. The tile's *minimum horizontal limit* is computed as the minimum of the
+3. The tile's *minimum horizontal limit* is computed as the maximum of the
    children elements' *minimum horizontal limit*s.
-4. The grid's *maximum horizontal limit* is computed as the maximum of the
+4. The grid's *maximum horizontal limit* is computed as the minumum of the
    children elements' *maximum horizontal limit*s.
 5. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1707,6 +1797,7 @@ vtile(item1, item2, item3, item4)
 `vtile_composite` (see below).
 
 #### Semantics
+
 1. In addition to the semantics of Vertical Tiles, returns instance of
    `Composite`.
 
@@ -1741,26 +1832,31 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `vtile_composite`.
 
+`vtile_composite` is itself also an `element` and while it has
+`std::vector`'s interface, it can also be `share`d like any element, which
+allows you to build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ## Layers
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/layer.png">
+<img width="40%" height="40%" src="assets/images/layout/layer.png">
 
 The Elements Library is 2D, but the z-axis pertains to top-to-bottom
 layering. Layers allow groups of elements to be placed in the z-axis where
 higher-level elements obscure or hide lower-level elements.
 
 #### Semantics
+
 1. The elements are laid out in the z-axis, top to bottom.
 2. Rendering is done bottom-up; the bottom-most elements are drawn first.
 3. UI control (such as mouse clicks) proceeds from top to bottom.
    Higher-level elements are given control priority. If a higher-level
    element does not process the event, lower-level elements are given a
    chance.
-4. The layer's *minimum limit* is computed as the minimum of the children
+4. The layer's *minimum limit* is computed as the maximum of the children
    elements' *minimum limit*s.
-5. The grid's *maximum limit* is computed as the maximum of the children
+5. The layer's *maximum limit* is computed as the minimum of the children
    elements' *maximum limit*s.
 6. The final computed minimum limit is clamped to ensure it is not greater
    than the computed maximum limit. Likewise the computed maximum limit is
@@ -1802,6 +1898,7 @@ layer(item1, item2, item3, item4)
 `layer_composite` (see below).
 
 #### Semantics
+
 1. In addition to the semantics of Layers, returns instance of `Composite`.
 
 -------------------------------------------------------------------------------
@@ -1833,19 +1930,24 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `layer_composite`.
 
+`layer_composite` is itself also an `element` and while it has
+`std::vector`'s interface, it can also be `share`d like any element, which
+allows you to build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ### Decks
 
-<img width="40%" height="40%" src="{{ site.url }}/elements/assets/images/layout/deck.png">
+<img width="40%" height="40%" src="assets/images/layout/deck.png">
 
 The Deck is very similar to layers. Elements are placed in the z-axis. But
-unlike layers, only the top-most element is active.
+unlike layers, only selected element is active (top-most by default).
 
 #### Semantics
+
 1. Everything listed in the layer's *Semantics*, except 2 and 3.
-2. Only the top-most element is drawn.
-3. Only the top-most element is given the chance to process UI control.
+2. Only the active selected element element is drawn.
+3. Only the active selected element is given the chance to process UI control.
 
 -------------------------------------------------------------------------------
 
@@ -1877,6 +1979,7 @@ deck(item1, item2, item3, item4)
 `deck_composite` (see below).
 
 #### Requirements
+
 1. In addition to the semantics of Deck, returns instance of `Composite`.
 
 -------------------------------------------------------------------------------
@@ -1910,9 +2013,13 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `deck_composite`.
 
+`deck_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
-## Flow
+## Flow Element
 
 The flow element, is a composite that lays out its children much like the way
 text is laid out: lay out each element from left to right, fitting as much
@@ -1923,10 +2030,10 @@ height of each row is determined by the *maximum vertical limit* of all the
 elements to be laid out in that row. The following graphic depicts a
 simplified layout scenario for child elements `a` to `r`.
 
-<img width="60%" height="60%" src="{{ site.url }}/elements/assets/images/layout/flow.png">
+<img width="60%" height="60%" src="assets/images/layout/flow.png">
 
 The child elements arranged in a `flow` composite are automatically re-flowed
-(re-layout) when the view size changes.
+(re-lay-out) when the view size changes.
 
 To have elements laid out using `flow`, you need to make a `flow_composite`.
 
@@ -1961,6 +2068,10 @@ c.push_back(share(child));
 > :point_right: `share` turns an element object into an `element_ptr` held by
 > the `std::vector<element_ptr>` in `flow_composite`.
 
+`flow_composite` is itself also an `element` and while it has `std::vector`'s
+interface, it can also be `share`d like any element, which allows you to
+build complex hierarchical structures.
+
 -------------------------------------------------------------------------------
 
 ### flow
@@ -1979,9 +2090,5 @@ flow(c)
 | `c`             | Instance of `flow_composite` |
 
 #### Semantics
+
 1. Returns instance of `Composite`.
-
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

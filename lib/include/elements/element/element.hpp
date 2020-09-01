@@ -7,10 +7,9 @@
 #define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
-#include <elements/element/receiver.hpp>
 
+#include <infra/string_view.hpp>
 #include <memory>
-#include <string_view>
 #include <type_traits>
 
 namespace cycfi { namespace elements
@@ -44,7 +43,7 @@ namespace cycfi { namespace elements
    // Control
 
       virtual bool            wants_control() const;
-      virtual element*        click(context const& ctx, mouse_button btn);
+      virtual bool            click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);

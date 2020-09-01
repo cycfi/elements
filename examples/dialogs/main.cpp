@@ -56,9 +56,9 @@ auto make_dialog(view& _view, app& _app)
    return dialog;
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Dialogs", "com.cycfi.dialogs");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

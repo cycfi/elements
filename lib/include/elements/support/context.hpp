@@ -6,10 +6,10 @@
 #if !defined(ELEMENTS_CONTEXT_APRIL_17_2016)
 #define ELEMENTS_CONTEXT_APRIL_17_2016
 
+#include <infra/string_view.hpp>
 #include <artist/point.hpp>
 #include <artist/rect.hpp>
 #include <functional>
-#include <string_view>
 
 namespace cycfi::artist
 {
@@ -24,6 +24,7 @@ namespace cycfi::elements
    class view;
    class element;
    using artist::canvas;
+   using artist::rect;
 
    struct basic_context
    {
@@ -40,23 +41,27 @@ namespace cycfi::elements
    };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
+   // Forward declaration, access to view bounds
+   rect view_bounds(elements::view const& v);
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    class context : public basic_context
    {
    public:
 
       context(context const& rhs, artist::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
-       , parent(rhs.parent), bounds(bounds_)
+       , parent(rhs.parent), bounds(bounds_), view_bounds(rhs.view_bounds)
       {}
 
       context(context const& parent_, element* element_, artist::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
-       , parent(&parent_), bounds(bounds_)
+       , parent(&parent_), bounds(bounds_), view_bounds(parent_.view_bounds)
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, artist::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
-       , parent(nullptr), bounds(bounds_)
+       , parent(nullptr), bounds(bounds_), view_bounds(elements::view_bounds(view_))
       {}
 
       context(context const&) = default;
@@ -80,7 +85,7 @@ namespace cycfi::elements
             };
       }
 
-      void notify(context const& ctx, std::string_view what, elements::element* e) const
+      void notify(context const& ctx, string_view what, elements::element* e) const
       {
          if (_listener)
             _listener(ctx, e, what);
@@ -91,12 +96,14 @@ namespace cycfi::elements
       elements::element*            element;
       context const*                parent;
       artist::rect                  bounds;
+      artist::rect                	view_bounds;
+
 
    private:
 
       using listener_function =
          std::function<
-            void(context const& ctx, elements::element*, std::string_view what)
+            void(context const& ctx, elements::element*, string_view what)
          >;
 
       listener_function             _listener;

@@ -6,6 +6,7 @@
 #include <elements/base_view.hpp>
 #include <artist/resources.hpp>
 #include <artist/font.hpp>
+#include <infra/assert.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
@@ -17,6 +18,7 @@
 #endif
 
 namespace ph = cycfi::elements;
+namespace fs = cycfi::fs;
 using key_map = std::map<ph::key_code, ph::key_action>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,15 +44,11 @@ namespace
 
    void activate_font(fs::path font_path)
    {
-      NSArray* available_fonts = [[NSFontManager sharedFontManager] availableFonts];
-      if (![available_fonts containsObject : [NSString stringWithUTF8String : font_path.stem().c_str()]])
-      {
-         auto furl = [NSURL fileURLWithPath : [NSString stringWithUTF8String : font_path.c_str()]];
-         assert(furl);
+      auto furl = [NSURL fileURLWithPath : [NSString stringWithUTF8String : font_path.c_str()]];
+      CYCFI_ASSERT(furl, "Error: Unexpected missing font.");
 
-         CFErrorRef error = nullptr;
-         CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
-      }
+      CFErrorRef error = nullptr;
+      CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
    }
 
    void get_resource_path(char resource_path[])
@@ -59,6 +57,7 @@ namespace
       CFURLRef resources_url = CFBundleCopyResourcesDirectoryURL(main_bundle);
       CFURLGetFileSystemRepresentation(resources_url, TRUE, (UInt8*) resource_path, PATH_MAX);
       CFRelease(resources_url);
+      CFRelease(main_bundle);
    }
 
    struct resource_setter
@@ -159,10 +158,8 @@ namespace
       NSRect const content_rect =
          [window contentRectForFrameRect:[window frame]];
 
-      if (xpos)
-         xpos = content_rect.origin.x;
-      if (ypos)
-         ypos = transformY(content_rect.origin.y + content_rect.size.height);
+      xpos = content_rect.origin.x;
+      ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
    void handle_text(ph::base_view& _view, ph::text_info info)
@@ -200,7 +197,7 @@ namespace
    _view = view_;
    _start = true;
    _task =
-      [NSTimer scheduledTimerWithTimeInterval : 0.016 // 60Hz
+      [NSTimer scheduledTimerWithTimeInterval : 0.01 // 1 millisecond quanta
            target : self
          selector : @selector(on_tick:)
          userInfo : nil

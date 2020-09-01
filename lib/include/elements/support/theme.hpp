@@ -10,8 +10,9 @@
 
 namespace cycfi { namespace elements
 {
+   enum class dial_mode_enum : int;
    using artist::color;
-   using artist::font_descr;
+   using artist::font;
    using artist::extent;
 
    class theme
@@ -21,8 +22,8 @@ namespace cycfi { namespace elements
                            theme();
 
       color                panel_color;
-      float                panel_shadow;
       color                frame_color;
+      color                frame_hilite_color;
       float                frame_corner_radius;
       float                frame_stroke_width;
       color                scrollbar_color;
@@ -30,33 +31,41 @@ namespace cycfi { namespace elements
       rect                 button_margin;
 
       color                controls_color;
+      float                controls_frame_stroke_width;
       color                indicator_color;
+      color                indicator_bright_color;
+      color                indicator_hilite_color;
       color                basic_font_color;
 
-      font_descr           system_font;   // The system_font font is the font the OS
+      font                 system_font;   // The system_font font is the font the OS
                                           // uses for displaying text in OS UI elements
                                           // such as menus, window title-bars, etc.
 
-      float                box_widget_bg_opacity;
+      float                element_background_opacity;
 
       color                heading_font_color;
-      font_descr           heading_font;
+      font                 heading_font;
+      float                heading_font_size;
       int                  heading_text_align;
 
       color                label_font_color;
-      font_descr           label_font;
+      font                 label_font;
+      float                label_font_size;
       int                  label_text_align;
 
       color                icon_color;
-      font_descr           icon_font;
+      font                 icon_font;
+      float                icon_font_size;
       color                icon_button_color;
 
       color                text_box_font_color;
-      font_descr           text_box_font;
+      font                 text_box_font;
+      float                text_box_font_size;
       color                text_box_hilite_color;
       color                text_box_caret_color;
       float                text_box_caret_width;
       color                inactive_font_color;
+      std::size_t          input_box_text_limit;
 
       color                ticks_color;
       float                major_ticks_level;
@@ -71,6 +80,9 @@ namespace cycfi { namespace elements
 
       float                dialog_button_size;
       extent               message_textbox_size;
+
+      dial_mode_enum       dial_mode;
+      float                dial_linear_range;
    };
 
    // Access to the global theme
@@ -125,7 +137,7 @@ namespace cycfi { namespace elements
       friend scoped_theme_override<T>
       override_theme(T theme::*pmem, T val);
 
-      static theme _theme;
+      static theme& _theme();
    };
 
    template <typename T>
@@ -133,7 +145,7 @@ namespace cycfi { namespace elements
    override_theme(T theme::*pmem, T val)
    {
       return scoped_theme_override<T>{
-         global_theme::_theme, pmem, val
+         global_theme::_theme(), pmem, val
       };
    }
 }}

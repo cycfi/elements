@@ -6,12 +6,12 @@
 #if !defined(ELEMENTS_TEXT_APRIL_17_2016)
 #define ELEMENTS_TEXT_APRIL_17_2016
 
-#include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
+#include <elements/support/theme.hpp>
+#include <elements/support/receiver.hpp>
 #include <artist/text_layout.hpp>
-// #include <boost/asio.hpp>
 
-#include <string_view>
+#include <infra/string_view.hpp>
 #include <string>
 #include <vector>
 
@@ -37,7 +37,7 @@ namespace cycfi::elements
    public:
 
       virtual                    ~text_writer() = default;
-      virtual void               set_text(std::string_view text) = 0;
+      virtual void               set_text(string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -52,8 +52,9 @@ namespace cycfi::elements
    public:
                               static_text_box(
                                  std::string text
-                               , font_descr font_  = get_theme().text_box_font
-                               , color color_      = get_theme().text_box_font_color
+                               , font font_     = get_theme().text_box_font
+                               , float size     = get_theme().text_box_font_size
+                               , color color_   = get_theme().text_box_font_color
                               );
 
                               static_text_box(static_text_box&& rhs) = default;
@@ -62,11 +63,15 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      get_text() const override { return _text; }
-      void                    set_text(std::string_view text) override;
+      std::string const&      get_text() const override            { return _text; }
+      void                    set_text(string_view text) override;
 
-      std::string const&      value() const override { return _text; }
-      void                    value(std::string_view val) override;
+      std::string const&      value() const override           { return _text; }
+      void                    value(string_view val) override;
+
+   private:
+
+      void                    sync() const;
 
    protected:
 
@@ -84,13 +89,14 @@ namespace cycfi::elements
    public:
                               basic_text_box(
                                  std::string text
-                               , font_descr font_ = get_theme().text_box_font
+                               , font font_  = get_theme().text_box_font
+                               , float size  = get_theme().text_box_font_size
                               );
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
 
       void                    draw(context const& ctx) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
@@ -100,7 +106,7 @@ namespace cycfi::elements
       bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
-      void                    set_text(std::string_view text) override;
+      void                    set_text(string_view text) override;
 
       using element::focus;
       using static_text_box::get_text;
@@ -120,6 +126,10 @@ namespace cycfi::elements
    protected:
 
       void                    scroll_into_view(context const& ctx, bool save_x);
+      virtual void            delete_();
+      virtual void            cut(view& v, int start, int end);
+      virtual void            copy(view& v, int start, int end);
+      virtual void            paste(view& v, int start, int end);
 
    private:
 
@@ -133,11 +143,6 @@ namespace cycfi::elements
 
       char const*             caret_position(context const& ctx, point p);
       caret_metrics           caret_info(context const& ctx, char const* s);
-
-      virtual void            delete_();
-      virtual void            cut(view& v, int start, int end);
-      virtual void            copy(view& v, int start, int end);
-      virtual void            paste(view& v, int start, int end);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
@@ -162,14 +167,14 @@ namespace cycfi::elements
 
       using basic_text_box::get_text;
 
-      using text_function = std::function<std::string(std::string_view text)>;
-      using enter_function = std::function<bool(std::string_view text)>;
+      using text_function = std::function<void(string_view text)>;
 
                               basic_input_box(
                                  std::string placeholder = ""
-                               , font_descr font_ = get_theme().text_box_font
+                                , font font_ = get_theme().text_box_font
+                                , float size = get_theme().text_box_font_size
                               )
-                               : basic_text_box("", font_)
+                               : basic_text_box("", font_, size)
                                , _placeholder(std::move(placeholder))
                               {}
 
@@ -179,15 +184,21 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    key(context const& ctx, key_info k) override;
+      void                    delete_() override;
+
+      bool                    click(context const& ctx, mouse_button btn) override;
+      void                    begin_focus() override;
+      void                    end_focus() override;
 
       text_function           on_text;
-      enter_function          on_enter;
+      text_function           on_enter;
 
    private:
 
       void                    paste(view& v, int start, int end) override;
 
       std::string             _placeholder;
+      bool                    _first_focus;
    };
 }
 

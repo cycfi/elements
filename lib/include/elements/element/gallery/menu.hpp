@@ -11,8 +11,8 @@
 #include <elements/element/size.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
+#include <infra/string_view.hpp>
 #include <string>
-#include <string_view>
 
 namespace cycfi { namespace elements
 {
@@ -55,7 +55,7 @@ namespace cycfi { namespace elements
 
    inline auto menu_item_text(std::string text)
    {
-      return xside_margin({ 20, 20 }, align_left(label(std::move(text))));
+      return hmargin({ 20, 20 }, align_left(label(std::move(text))));
    }
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
@@ -66,7 +66,7 @@ namespace cycfi { namespace elements
 #else
       auto sk_font = get_theme().label_font;
 #endif
-      return xside_margin({ 20, 10 },
+      return hmargin({ 20, 10 },
          htile(
             htile(
                align_left(label(std::move(text)))
@@ -112,7 +112,7 @@ namespace cycfi { namespace elements
       virtual ~menu_selector() = default;
 
       virtual std::size_t        size() const = 0;
-      virtual std::string_view   operator[](std::size_t index) const = 0;
+      virtual string_view        operator[](std::size_t index) const = 0;
    };
 
    std::pair<basic_menu, std::shared_ptr<basic_label>>
@@ -120,14 +120,14 @@ namespace cycfi { namespace elements
 
    std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
-      std::function<void(std::string_view item)> on_select
+      std::function<void(string_view item)> on_select
     , menu_selector const& items
    );
 
    template <typename Sequence>
    inline std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
-      std::function<void(std::string_view item)> on_select
+      std::function<void(string_view item)> on_select
     , Sequence const& seq
     , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
    )
@@ -144,7 +144,7 @@ namespace cycfi { namespace elements
             return std::size(_seq);
          }
 
-         std::string_view
+         string_view
          operator[](std::size_t index) const override
          {
             return _seq[index];
@@ -159,13 +159,13 @@ namespace cycfi { namespace elements
    template <typename T>
    std::pair<basic_menu, std::shared_ptr<basic_label>>
    selection_menu(
-      std::function<void(std::string_view item)> on_select
-    , std::initializer_list<T> const& list
+      std::function<void(string_view item)> on_select
+    , std::initializer_list<T> list
    )
    {
       struct init_list_menu_selector : menu_selector
       {
-         init_list_menu_selector(std::initializer_list<T> const& list_)
+         init_list_menu_selector(std::initializer_list<T> list_)
           : _list(list_)
          {}
 
@@ -175,13 +175,13 @@ namespace cycfi { namespace elements
             return _list.size();
          }
 
-         std::string_view
+         string_view
          operator[](std::size_t index) const override
          {
             return *(_list.begin()+index);
          }
 
-         std::initializer_list<T> const& _list;
+         std::initializer_list<T> _list;
       };
 
       return selection_menu(on_select, init_list_menu_selector{ list });

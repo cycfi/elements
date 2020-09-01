@@ -4,9 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/app.hpp>
+#include <elements/support/font.hpp>
+#include <elements/support/resource_paths.hpp>
 #include <infra/filesystem.hpp>
-#include <infra/assert.hpp>
-#include <json/json_io.hpp>
 #include <string>
 #include <functional>
 #include <vector>
@@ -14,38 +14,9 @@
 
 namespace cycfi { namespace elements
 {
-   struct config
-   {
-      std::string application_title;
-      std::string application_copyright;
-      std::string application_id;
-      std::string application_version;
-   };
-}}
-
-BOOST_FUSION_ADAPT_STRUCT(
-   cycfi::elements::config,
-   (std::string, application_title)
-   (std::string, application_copyright)
-   (std::string, application_id)
-   (std::string, application_version)
-)
-
-namespace cycfi { namespace elements
-{
-   config get_config()
-   {
-      fs::path path = "config.json";
-      CYCFI_ASSERT(fs::exists(path), "Error: config.json not exist.");
-      auto r = json::load<config>(path);
-      CYCFI_ASSERT(r, "Error: Invalid config.json.");
-      return *r;
-   }
-
    // Some app globals
-   config app_config;
    int argc = 0;
-   const char** argv = nullptr;
+   char** argv = nullptr;
    GtkApplication* the_app = nullptr;
    bool is_activated = false;
 
@@ -69,25 +40,52 @@ namespace cycfi { namespace elements
       on_activate.clear();
    }
 
+   fs::path find_resources()
+   {
+      const fs::path app_path = fs::path(argv[0]);
+      const fs::path app_dir = app_path.parent_path();
+
+      if (app_dir.filename() == "bin")
+      {
+         fs::path path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+         if (fs::is_directory(path))
+            return path;
+      }
+
+      const fs::path app_resources_dir = app_dir / "resources";
+      if (fs::is_directory(app_resources_dir))
+         return app_resources_dir;
+
+      return fs::current_path() / "resources";
+   }
+
    struct init_app
    {
-      init_app()
+      init_app(std::string id)
       {
-         app_config = get_config();
+         const fs::path resources_path = find_resources();
+         font_paths().push_back(resources_path);
+         resource_paths.push_back(resources_path);
+
          the_app = gtk_application_new(
-            app_config.application_id.c_str()
+            id.c_str()
           , G_APPLICATION_FLAGS_NONE
          );
          g_signal_connect(the_app, "activate", G_CALLBACK(activate), nullptr);
       }
    };
 
-   app::app(int argc_, const char* argv_[])
+   app::app(
+      int         argc_
+    , char*       argv_[]
+    , std::string name
+    , std::string id
+   )
+   : _app_name(name)
    {
-      static init_app init;
-      _app_name = app_config.application_title;
       argc = argc_;
       argv = argv_;
+      static init_app init{ id };
       _app = the_app;
    }
 
@@ -98,9 +96,7 @@ namespace cycfi { namespace elements
 
    void app::run()
    {
-      g_application_run(
-         G_APPLICATION(_app), argc, const_cast<char**>(argv)
-      );
+      g_application_run(G_APPLICATION(_app), argc, argv);
    }
 
    void app::stop()

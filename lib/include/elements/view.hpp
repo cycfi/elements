@@ -14,7 +14,7 @@
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
 #include <elements/element/indirect.hpp>
-#include <boost/asio.hpp>
+#include <asio.hpp>
 #include <memory>
 #include <unordered_map>
 #include <chrono>
@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
       void                    poll() override;
 
       void                    layout();
-      void                    layout(element &element);
+      void                    layout(element& element);
       float                   scale() const;
       void                    scale(float val);
 
@@ -91,7 +91,7 @@ namespace cycfi { namespace elements
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
-      using io_context = boost::asio::io_context;
+      using io_context = asio::io_context;
       io_context&             io();
 
                               template <typename T, typename F>
@@ -114,7 +114,7 @@ namespace cycfi { namespace elements
       layer_composite         _content;
       scaled_content          _main_element;
 
-      bool                    set_limits();
+      void                    set_limits();
 
       rect                    _dirty;
       rect                    _current_bounds;
@@ -138,6 +138,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline rect view_bounds(view const& v) // declared in context.hpp
+   {
+      auto size = v.size();
+      return rect{ 0, 0, size.x, size.y };
+   }
+
    inline rect view::dirty() const
    {
       return _dirty;
@@ -265,7 +271,7 @@ namespace cycfi { namespace elements
    template <typename T, typename F>
    inline void view::post(T duration, F f)
    {
-      auto timer = std::make_shared<boost::asio::steady_timer>(_io);
+      auto timer = std::make_shared<asio::steady_timer>(_io);
       timer->expires_from_now(duration);
       timer->async_wait(
          [timer, f](auto const& err)

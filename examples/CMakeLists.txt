@@ -3,6 +3,8 @@
 #-
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
+
+
 add_subdirectory(empty)
 add_subdirectory(hello_universe)
 add_subdirectory(text_and_icons)
@@ -15,8 +17,9 @@ add_subdirectory(layout)
 add_subdirectory(popups)
 add_subdirectory(dialogs)
 add_subdirectory(scale)
-# add_subdirectory(typography)
+add_subdirectory(typography)
+add_subdirectory(notebook)
 add_subdirectory(doc_aspects)
-
-
+add_subdirectory(simple_animation)
+add_subdirectory(tooltip)
 

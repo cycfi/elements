@@ -12,26 +12,10 @@ auto make_bkd()
 {
    return port(image{ "dark-bkd.jpg" });
 }
-
-std::string const text =
-   "We are in the midst of an intergalatic condensing of beauty that will "
-   "clear a path toward the planet itself. The quantum leap of rebirth is "
-   "now happening worldwide. It is time to take healing to the next level. "
-   "Soon there will be a deepening of chi the likes of which the infinite "
-   "has never seen. The universe is approaching a tipping point. This "
-   "vision quest never ends. Imagine a condensing of what could be. "
-   "We can no longer afford to live with stagnation. Suffering is born "
-   "in the gap where stardust has been excluded. You must take a stand "
-   "against discontinuity.\n\n"
-
-   "Without complexity, one cannot dream. Stagnation is the antithesis of "
-   "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
-   "Yes, it is possible to eliminate the things that can destroy us, but not "
-   "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
-   "You may be ruled by desire without realizing it. Do not let it eliminate "
-   "the growth of your journey.\n\n"
-
-   "--New-Age Bullshit Generator"
+std::string const text1 =
+   "一千条路…\n"
+   "仁、义、礼、智、信…\n"
+   "开放包容、视野宽广\n\n"
 ;
 
 std::string const text2 =
@@ -60,20 +44,45 @@ std::string const text2 =
    "reflect, you will enter into infinite freedom that transcends understanding.\n\n"
 ;
 
+std::string const text3 =
+   "We are in the midst of an intergalatic condensing of beauty that will "
+   "clear a path toward the planet itself. The quantum leap of rebirth is "
+   "now happening worldwide. It is time to take healing to the next level. "
+   "Soon there will be a deepening of chi the likes of which the infinite "
+   "has never seen. The universe is approaching a tipping point. This "
+   "vision quest never ends. Imagine a condensing of what could be. "
+   "We can no longer afford to live with stagnation. Suffering is born "
+   "in the gap where stardust has been excluded. You must take a stand "
+   "against discontinuity.\n\n"
+
+   "Without complexity, one cannot dream. Stagnation is the antithesis of "
+   "life-force. Only a seeker of the galaxy may engender this wellspring of hope."
+   "Yes, it is possible to eliminate the things that can destroy us, but not "
+   "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
+   "You may be ruled by desire without realizing it. Do not let it eliminate "
+   "the growth of your journey.\n\n"
+;
+
 auto make_edit_box()
 {
+   // set the font of text box to 文泉驿 open source font: http://wenq.org/wqy2/index.cgi
+   char const* font_family = "文泉驿微米黑, \"WenQuanYi Micro Hei\"";
+   auto text = text1+text2+text3;
+
    return
       scroller(
          margin(
             { 20, 20, 20, 20 },
-            align_left_top(hsize(800, basic_text_box(text2+text)))
+            align_left_top(hsize(800,
+               basic_text_box(text, font_descr{ font_family }
+            )))
          )
       );
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "TextEdit", "com.cycfi.text-edit");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

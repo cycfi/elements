@@ -10,6 +10,7 @@
 #include <elements/element/tracker.hpp>
 #include <elements/view.hpp>
 #include <elements/support.hpp>
+#include <infra/support.hpp>
 
 #include <cmath>
 #include <functional>
@@ -136,7 +137,7 @@ namespace cycfi { namespace elements
 
    template <size_t num_states>
    inline bool selector_base<num_states>::scroll(
-      context const& ctx, point dir, point p)
+      context const& /* ctx */, point /* dir */, point /* p */)
    {
       // We don't allow selector move via the scroll wheel.
       return false;
@@ -186,7 +187,7 @@ namespace cycfi { namespace elements
 
    template <unsigned size>
    inline view_limits basic_thumb_element<size>
-      ::limits(basic_context const& ctx) const
+      ::limits(basic_context const& /* ctx */) const
    {
 	  auto pt = point{ float(size), float(size) };
 	  return view_limits{ pt, pt };
@@ -235,7 +236,7 @@ namespace cycfi { namespace elements
 
    template <unsigned size, bool vertical>
    inline view_limits basic_track_element<size, vertical>
-      ::limits(basic_context const& ctx) const
+      ::limits(basic_context const& /* ctx */) const
    {
 	  auto sz = float(size);
 	  auto min_length_ = float(min_length);
@@ -351,7 +352,7 @@ namespace cycfi { namespace elements
    template <
       std::size_t _size, std::size_t _num_divs = 50
     , std::size_t _major_divs = 10, typename Subject>
-   inline slider_marks_element<_size, _num_divs, _major_divs, Subject>
+   inline slider_marks_element<_size, _num_divs, _major_divs, remove_cvref_t<Subject>>
    slider_marks(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
@@ -371,10 +372,10 @@ namespace cycfi { namespace elements
       using string_array = std::array<std::string, num_labels>;
 
                               slider_labels_element(
-                                 Subject&& subject
+                                 Subject subject
                                , float font_size
                               )
-                               : base_type(std::forward<Subject>(subject))
+                               : base_type(std::move(subject))
                                , _font_size(font_size)
                               {}
 
@@ -407,10 +408,10 @@ namespace cycfi { namespace elements
    }
 
    template <int size, typename Subject, typename... S>
-   inline slider_labels_element<size, Subject, sizeof...(S)>
+   inline slider_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
    slider_labels(Subject&& subject, float font_size, S&&... s)
    {
-      auto r = slider_labels_element<size, Subject, sizeof...(S)>
+      auto r = slider_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
          {std::forward<Subject>(subject), font_size};
       r._labels = {{ std::move(s)... }};
       return r;

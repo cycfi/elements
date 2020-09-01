@@ -8,6 +8,7 @@
 
 #include <elements/element/proxy.hpp>
 #include <elements/support/context.hpp>
+#include <infra/support.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -37,43 +38,43 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject, align_element_base>;
 
-                              halign_element(float align, Subject&& subject);
+                              halign_element(float align, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
    };
 
    template <typename Subject>
-   inline halign_element<Subject>
+   inline halign_element<remove_cvref_t<Subject>>
    halign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<Subject>
+   inline halign_element<remove_cvref_t<Subject>>
    align_left(Subject&& subject)
    {
       return { 0.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<Subject>
+   inline halign_element<remove_cvref_t<Subject>>
    align_center(Subject&& subject)
    {
       return { 0.5, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<Subject>
+   inline halign_element<remove_cvref_t<Subject>>
    align_right(Subject&& subject)
    {
       return { 1.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline halign_element<Subject>::halign_element(float align, Subject&& subject)
-    : base_type(std::forward<Subject>(subject), align)
+   inline halign_element<Subject>::halign_element(float align, Subject subject)
+    : base_type(std::move(subject), align)
    {}
 
    template <typename Subject>
@@ -105,43 +106,43 @@ namespace cycfi { namespace elements
 
       using base_type = proxy<Subject, align_element_base>;
 
-                              valign_element(float align, Subject&& subject);
+                              valign_element(float align, Subject subject);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
    };
 
    template <typename Subject>
-   inline valign_element<Subject>
+   inline valign_element<remove_cvref_t<Subject>>
    valign(float align, Subject&& subject)
    {
       return { align, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<Subject>
+   inline valign_element<remove_cvref_t<Subject>>
    align_top(Subject&& subject)
    {
       return { 0.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<Subject>
+   inline valign_element<remove_cvref_t<Subject>>
    align_middle(Subject&& subject)
    {
       return { 0.5, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   inline valign_element<Subject>
+   inline valign_element<remove_cvref_t<Subject>>
    align_bottom(Subject&& subject)
    {
       return { 1.0, std::forward<Subject>(subject) };
    }
 
    template <typename Subject>
-   valign_element<Subject>::valign_element(float align, Subject&& subject)
-    : base_type(std::forward<Subject>(subject), align)
+   valign_element<Subject>::valign_element(float align, Subject subject)
+    : base_type(std::move(subject), align)
    {}
 
    template <typename Subject>

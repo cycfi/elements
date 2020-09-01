@@ -1,0 +1,17 @@
+- label: "Home"
+  url: "/"
+
+- label: "Gallery"
+  url: "gallery"
+
+- label: "Setup"
+  url: "setup"
+
+- label: "Aspects"
+  url: "aspects"
+
+- label: "Context"
+  url: "context"
+
+- label: "Layout"
+  url: "layout"

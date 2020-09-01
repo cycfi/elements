@@ -7,6 +7,7 @@
 #define ELEMENTS_PORT_APRIL_24_2016
 
 #include <elements/element/proxy.hpp>
+#include <infra/support.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -18,21 +19,31 @@ namespace cycfi { namespace elements
    {
    public:
 
-      port_base()
-       : _halign(0.0)
-       , _valign(0.0)
-      {}
+      void                    draw(context const& ctx) override;
 
-      ~port_base() {}
+      virtual double          halign() const = 0;
+      virtual void            halign(double val) = 0;
+      virtual double          valign() const = 0;
+      virtual void            valign(double val) = 0;
+   };
+
+   class port_element : public port_base
+   {
+   public:
+                              port_element()
+                               : _halign(0.0)
+                               , _valign(0.0)
+                              {}
+
+                              ~port_element() {}
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
-      void                    draw(context const& ctx) override;
 
-      double                  halign() const { return _halign; }
-      void                    halign(double val) { _halign = val; }
-      double                  valign() const { return _valign; }
-      void                    valign(double val) { _valign = val; }
+      double                  halign() const override       { return _halign; }
+      void                    halign(double val) override   { _halign = val; }
+      double                  valign() const override       { return _valign; }
+      void                    valign(double val) override   { _valign = val; }
 
    private:
 
@@ -41,28 +52,28 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, port_base>
+   inline proxy<remove_cvref_t<Subject>, port_element>
    port(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
    }
 
-   class vport_base : public proxy_base
+   class vport_element : public port_base
    {
    public:
+                              vport_element()
+                               : _valign(0.0)
+                              {}
 
-      vport_base()
-       : _valign(0.0)
-      {}
-
-      ~vport_base() {}
+                              ~vport_element() {}
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
-      void                    draw(context const& ctx) override;
 
-      double                  valign() const { return _valign; }
-      void                    valign(double val) { _valign = val; }
+      double                  halign() const override             { return 0; }
+      void                    halign(double /* val */) override   {}
+      double                  valign() const override             { return _valign; }
+      void                    valign(double val) override         { _valign = val; }
 
    private:
 
@@ -70,7 +81,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, vport_base>
+   inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
@@ -116,25 +127,26 @@ namespace cycfi { namespace elements
    };
 
    // Base proxy class for views that are scrollable
-   class scroller_base : public port_base, public scrollable
+   class scroller_base : public port_element, public scrollable
    {
    public:
 
-      static float            width;
+      static float            scrollbar_width;
 
-      scroller_base(int traits = 0)
-       : _tracking(none)
-       , _traits(traits)
-      {}
+                              scroller_base(int traits = 0)
+                               : _tracking(none)
+                               , _traits(traits)
+                              {}
 
-      ~scroller_base() {}
+                              ~scroller_base() {}
 
       view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    scroll_into_view(context const& ctx, rect r) override;
@@ -176,27 +188,28 @@ namespace cycfi { namespace elements
       bool              allow_hscroll() const { return !(_traits & no_hscroll); }
       bool              allow_vscroll() const { return !(_traits & no_vscroll); }
 
+      point             _cursor;
       point             _offset;
       tracking_status   _tracking;
       int               _traits;
    };
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    scroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits };
    }
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    vscroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits | no_hscroll };
    }
 
    template <typename Subject>
-   inline proxy<Subject, scroller_base>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
    hscroller(Subject&& subject, int traits = 0)
    {
       return { std::forward<Subject>(subject), traits | no_vscroll };

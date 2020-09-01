@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
 
    void slider_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view.dirty()))
+      if (intersects(ctx.bounds, ctx.view_bounds))
       {
          {
             context sctx { ctx, &track(), ctx.bounds };
@@ -251,8 +251,6 @@ namespace cycfi { namespace elements
    )
    {
       bool reverse = size < 0;
-      size = abs(size);
-
       bool vertical = bounds.width() < bounds.height();
       auto w = bounds.width();
       auto h = bounds.height();

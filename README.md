@@ -24,31 +24,48 @@ Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
 declarative interface with heavy emphasis on reuse.
 
+## Status
+
+Please take note that Elements is still very much in flux as we are inching
+closer towards a version 1.0 release. The API and code is still undergoing
+continuous changes, and for that matter, Elements is not yet "production
+ready". But that should not prevent you from using Elements now! It is
+already in a very usable form, and more people using it will ultimately make
+it more robust when bugs are reported and fixed. API and usability matters
+and I very much welcome suggestions and contributions. Hey, this is an open
+source project! If you like the design, concepts and ideas behind Elements, I
+very much welcome collaboration.
+
 ## News
 
-- 8 April 2020: Simplified installation (Infra ans Json are now header-only submodules)
+- 28 July 2020: Added [simple animation example in develop](
+   https://github.com/cycfi/elements/blob/develop/examples/simple_animation/main.cpp)
+- 22 June 2020: Removed dependency on Boost. This requires some API changes to
+  the `app` with additional arguments. See examples.
+- 26 May 2020: Introducing the [Artist 2D Canvas
+  Library](https://github.com/cycfi/artist). The Artist library will
+  eventually replace Element's 2d canvas implementation.
+- 23 May 2020: Work in progress `notebook` gallery factory (`notebook` branch).
+- 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
+- 11 March 2020: Added [Layout documentation](http://cycfi.github.io/elements/layout).
+- 3 March 2020: Added [Design Aspects documentation](http://cycfi.github.io/elements/aspects).
 - 23 February 2020: Setup and Installation guide updated for Windows and Linux.
 - 22 February 2020: Improved font support
 - 01 September 2019: Linux port completed
 - 12 August 2019: Windows port completed
 
-## Setup and Installation
+## Discord
 
-The Elements C++ GUI library is cross-platform. Elements currently supports
-the MacOS, Windows and Linux. Follow the [Setup and Installation
-guide](http://cycfi.github.io/elements/setup) to get started using the
-library.
+Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussion and chat with the developers.
 
-## Design Aspects
+## Documentation
 
-The Elements C++ GUI library is 1) Modular, 2) Declarative, and 3)
-Interoperable. This document explains these three key [Design
-Aspects](http://cycfi.github.io/elements/aspects) behind Elements through
-examples.
+Documentation is work in progress. Stay tuned...
 
-## Gallery
-
-Follow this link for more screenshots: [Gallery](http://cycfi.github.io/elements/gallery).
+1. [Gallery](http://cycfi.github.io/elements/gallery)
+2. [Setup and Installation](http://cycfi.github.io/elements/setup)
+3. [Design Aspects](http://cycfi.github.io/elements/aspects)
+4. [Layout](http://cycfi.github.io/elements/layout)
 
 ## <a name="jdeguzman"></a>About the Author
 

@@ -11,7 +11,6 @@
 #include <elements/support/canvas.hpp>
 #include <elements/support/resource_paths.hpp>
 #include <elements/support/text_utils.hpp>
-#include <json/json_io.hpp>
 #include <gtk/gtk.h>
 #include <map>
 #include <string>
@@ -41,6 +40,8 @@ namespace cycfi { namespace elements
       int modifiers = 0; // the latest modifiers
 
       GtkIMContext* im_context;
+
+      GdkCursorType active_cursor_type = GDK_ARROW;
    };
 
    struct platform_access
@@ -65,6 +66,10 @@ namespace cycfi { namespace elements
 
    namespace
    {
+      // Some globals
+      host_view* host_view_under_cursor = nullptr;
+      GdkCursorType view_cursor_type = GDK_ARROW;
+
       inline base_view& get(gpointer user_data)
       {
          return *reinterpret_cast<base_view*>(user_data);
@@ -247,17 +252,35 @@ namespace cycfi { namespace elements
       }
    }
 
-   gboolean on_event_crossing(GtkWidget* /* widget */, GdkEventCrossing* event, gpointer user_data)
+   static void change_window_cursor(GtkWidget* widget, GdkCursorType type)
+   {
+      GdkDisplay* display = gtk_widget_get_display(widget);
+      GdkWindow* window = gtk_widget_get_window(widget);
+      GdkCursor* cursor = gdk_cursor_new_for_display(display, type);
+      gdk_window_set_cursor(window, cursor);
+      g_object_unref(cursor);
+   }
+
+   gboolean on_event_crossing(GtkWidget* widget, GdkEventCrossing* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       host_view_h->cursor_position = point{ float(event->x), float(event->y) };
-      base_view.cursor(
-         host_view_h->cursor_position,
-         (event->type == GDK_ENTER_NOTIFY) ?
-            cursor_tracking::entering :
-            cursor_tracking::leaving
-      );
+      if (event->type == GDK_ENTER_NOTIFY)
+      {
+         base_view.cursor(host_view_h->cursor_position, cursor_tracking::entering);
+         host_view_under_cursor = host_view_h;
+         if (host_view_h->active_cursor_type != view_cursor_type)
+         {
+            change_window_cursor(widget, view_cursor_type);
+            host_view_h->active_cursor_type = view_cursor_type;
+         }
+      }
+      else
+      {
+         base_view.cursor(host_view_h->cursor_position, cursor_tracking::leaving);
+         host_view_under_cursor = nullptr;
+      }
       return true;
    }
 
@@ -409,8 +432,8 @@ namespace cycfi { namespace elements
       g_signal_connect(view.host()->im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
 
-      // Create 16ms (60Hz) timer
-      g_timeout_add(16, poll_function, &view);
+      // Create 1ms timer
+      g_timeout_add(1, poll_function, &view);
 
       return content_view;
    }
@@ -462,6 +485,8 @@ namespace cycfi { namespace elements
 
    base_view::~base_view()
    {
+      if (host_view_under_cursor == _view)
+         host_view_under_cursor = nullptr;
       delete _view;
    }
 
@@ -519,17 +544,30 @@ namespace cycfi { namespace elements
       switch (type)
       {
          case cursor_type::arrow:
+            view_cursor_type = GDK_ARROW;
             break;
          case cursor_type::ibeam:
+            view_cursor_type = GDK_XTERM;
             break;
          case cursor_type::cross_hair:
+            view_cursor_type = GDK_CROSSHAIR;
             break;
          case cursor_type::hand:
+            view_cursor_type = GDK_HAND2;
             break;
          case cursor_type::h_resize:
+            view_cursor_type = GDK_SB_H_DOUBLE_ARROW;
             break;
          case cursor_type::v_resize:
+            view_cursor_type = GDK_SB_V_DOUBLE_ARROW;
             break;
+      }
+
+      auto* host_view_h = host_view_under_cursor;
+      if (host_view_h && host_view_h->active_cursor_type != view_cursor_type)
+      {
+         change_window_cursor(host_view_under_cursor->widget, view_cursor_type);
+         host_view_h->active_cursor_type = view_cursor_type;
       }
    }
 }}

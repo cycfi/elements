@@ -1,0 +1,14 @@
+# EditorConfig configuration
+# http://editorconfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# UTF-8 charset, set indent to spaces with width of three,
+# with no trailing whitespaces and a newline ending every file.
+[*]
+charset = utf-8
+indent_size = 3
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true

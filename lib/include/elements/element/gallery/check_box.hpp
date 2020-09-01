@@ -14,30 +14,16 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Check Box
    ////////////////////////////////////////////////////////////////////////////
-   void draw_check_box(
-      context const& ctx, std::string const& text, bool state, bool hilite
-   );
-
-   template <bool state>
-   struct check_box_element : toggle_selector
+   struct check_box_element : toggle_selector, basic_receiver<int>
    {
       using toggle_selector::toggle_selector;
 
       void                    draw(context const& ctx) override;
    };
 
-   template <bool state>
-   void check_box_element<state>::draw(context const& ctx)
+   inline auto check_box(std::string text)
    {
-      draw_check_box(ctx, _text, state, ctx.bounds.includes(ctx.view.cursor_pos()));
-   }
-
-   inline basic_toggle_button<> check_box(std::string text)
-   {
-      return basic_toggle_button(
-         check_box_element<false>{ text }
-       , check_box_element<true>{ text }
-      );
+      return toggle_button(check_box_element{ text });
    }
 }}
 

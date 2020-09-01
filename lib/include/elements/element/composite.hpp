@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <array>
+#include <set>
 
 namespace cycfi { namespace elements
 {
@@ -49,7 +50,7 @@ namespace cycfi { namespace elements
    // Control
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
@@ -66,9 +67,11 @@ namespace cycfi { namespace elements
 
    // Composite
 
+      using weak_element_ptr = std::weak_ptr<elements::element>;
+
       struct hit_info
       {
-         elements::element*   element  = nullptr;
+         element_ptr          element;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };
@@ -77,15 +80,18 @@ namespace cycfi { namespace elements
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
       virtual bool            reverse_index() const { return false; }
 
+                              template <typename F>
+      void                    for_each(F&& f, bool reverse = false) const;
+
    private:
 
       void                    new_focus(context const& ctx, int index);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;
-      int                     _drag_tracking = -1;
-      hit_info                _click_info;
-      hit_info                _cursor_info;
+      int                     _click_tracking = -1;
+      int                     _cursor_tracking = -1;
+      std::set<int>           _cursor_hovering;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -163,46 +169,21 @@ namespace cycfi { namespace elements
       return _container.at(_first + ix);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // find_composite utility finds the innermost composite given a context.
-   // If successful, returns a pointer to the composite base and pointer
-   // to its context.
-   ////////////////////////////////////////////////////////////////////////////
-   std::pair<composite_base*, context const*>
-   inline find_composite(context const& ctx)
+   template <typename F>
+   inline void composite_base::for_each(F&& f, bool reverse) const
    {
-      element* this_ = ctx.element;
-      std::pair<composite_base*, context const*> result = { nullptr, nullptr };
-      auto p = ctx.parent;
-      while (p)
+      if (reverse_index() ^ reverse)
       {
-         auto&& find =
-            [&](context const& ctx, element* e) -> bool
-            {
-               if (auto c = dynamic_cast<composite_base*>(e); c && c != this_)
-               {
-                  result.first = c;
-                  result.second = &ctx;
-                  return true;
-               }
-               return false;
-            };
-
-         auto e = p->element;
-         if (find(*p, e))
-            return result;
-
-         proxy_base* proxy = dynamic_cast<proxy_base*>(e);
-         while (proxy)
-         {
-            auto* subject = &proxy->subject();
-            if (find(*p, subject))
-               return result;
-            proxy = dynamic_cast<proxy_base*>(subject);
-         }
-         p = p->parent;
+         for (int ix = int(size())-1; ix >= 0; --ix)
+            if (!f(ix, at(ix)))
+               break;
       }
-      return result;
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+            if (!f(ix, at(ix)))
+               break;
+      }
    }
 }}
 

@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
       _layout.draw(cnv, p);
    }
 
-   void static_text_box::set_text(std::string_view text)
+   void static_text_box::set_text(string_view text)
    {
       if (_text != text)
       {
@@ -88,7 +88,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void static_text_box::value(std::string_view val)
+   void static_text_box::value(string_view val)
    {
       set_text(val);
    }
@@ -116,18 +116,18 @@ namespace cycfi { namespace elements
       draw_caret(ctx);
    }
 
-   element* basic_text_box::click(context const& ctx, mouse_button btn)
+   bool basic_text_box::click(context const& ctx, mouse_button btn)
    {
       _show_caret = true;
 
       if (!btn.down) // released? return early
-         return this;
+         return true;
 
       if (_text.empty())
       {
          _select_start = _select_end = 0;
          scroll_into_view(ctx, false);
-         return this;
+         return true;
       }
 
       char const*   _first = _text.data();
@@ -137,8 +137,16 @@ namespace cycfi { namespace elements
       {
          if (btn.num_clicks != 1)
          {
-            char const* last = pos;
-            char const* first = pos;
+            char const* end = pos;
+            char const* start = pos;
+
+            auto fixup = [&]()
+            {
+               if (start != _first)
+                  start = next_utf8(_last, start);
+               _select_start = int(start - _first);
+               _select_end = int(end - _first);
+            };
 
             if (btn.num_clicks == 2)
             {
@@ -149,15 +157,12 @@ namespace cycfi { namespace elements
             }
             else if (btn.num_clicks == 3)
             {
-               while (last < _last && !is_newline(uint8_t(*last)))
-                  last++;
-               while (first > _first && !is_newline(uint8_t(*first)))
-                  first--;
+               while (end < _last && !is_newline(uint8_t(*end)))
+                  end++;
+               while (start > _first && !is_newline(uint8_t(*start)))
+                  start--;
+               fixup();
             }
-            if (first != _first)
-                ++first;
-            _select_start = int(first - _first);
-            _select_end = int(last - _first);
          }
          else
          {
@@ -177,7 +182,7 @@ namespace cycfi { namespace elements
          _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
       }
-      return this;
+      return true;
    }
 
    void basic_text_box::drag(context const& ctx, mouse_button btn)
@@ -186,8 +191,8 @@ namespace cycfi { namespace elements
       if (char const* pos = caret_position(ctx, btn.pos))
       {
          _select_end = int(pos-first);
-         _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
+         scroll_into_view(ctx, true);
       }
    }
 
@@ -219,12 +224,19 @@ namespace cycfi { namespace elements
       }
    }
 
+   void break_()
+   {
+   }
+
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
       _show_caret = true;
 
       if (_select_start == -1)
          return false;
+
+      if (_select_start > _select_end)
+         std::swap(_select_end, _select_start);
 
       std::string text = codepoint_to_utf8(info_.codepoint);
 
@@ -235,7 +247,7 @@ namespace cycfi { namespace elements
          _text.insert(_select_start, text);
       else
          _text.replace(_select_start, _select_end-_select_start, text);
-      _select_end = ++_select_start;
+      _select_end = _select_start += text.length();
 
       _layout.text(_text);
       layout(ctx);
@@ -244,7 +256,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_text_box::set_text(std::string_view text_)
+   void basic_text_box::set_text(string_view text_)
    {
       static_text_box::set_text(text_);
       _select_start = std::min<int>(_select_start, text_.size());
@@ -723,7 +735,16 @@ namespace cycfi { namespace elements
    {
       if (_text.empty())
       {
+         auto caret = rect{
+            ctx.bounds.left-1,
+            ctx.bounds.top,
+            ctx.bounds.left+1,
+            ctx.bounds.bottom
+         };
+         scrollable::find(ctx).scroll_into_view(caret);
          ctx.view.refresh(ctx);
+         if (save_x)
+            _current_x = 0;
          return;
       }
 
@@ -754,7 +775,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::begin_focus()
    {
-      _is_focus = true;
+     _is_focus = true;
       if (_select_start == -1)
          _select_start = _select_end = 0;
    }
@@ -840,7 +861,7 @@ namespace cycfi { namespace elements
    {
       bool r = basic_text_box::text(ctx, info);
       if (on_text)
-         set_text(on_text(get_text()));
+         on_text(get_text());
       return r;
    }
 
@@ -900,11 +921,12 @@ namespace cycfi { namespace elements
          std::string ins;
 
          // Copy clip ito ins, stop when a newline is found.
-         // Also, limit ins to 256 characters.
+         // Also, limit ins to input_box_text_limit characters.
          char const* p = &clip[0];
          char const* last = p + clip.size();
 
-         for (int i = 0; (i < 256) && (p != last); ++p, ++i)
+         auto const max_chars = get_theme().input_box_text_limit;
+         for (std::size_t i = 0; (i < max_chars) && (p != last); ++p, ++i)
          {
             if (is_newline(uint8_t(*p)))
                break;
@@ -917,14 +939,38 @@ namespace cycfi { namespace elements
          select_end(start_);
 
          if (on_text)
-         {
-            auto new_text = on_text(_text);
-            if (new_text != _text)
-            {
-               set_text(new_text);
-               select_all();
-            }
-         }
+            on_text(_text);
       }
+   }
+
+   void basic_input_box::delete_()
+   {
+      basic_text_box::delete_();
+      if (on_text)
+         on_text(_text);
+   }
+
+   bool basic_input_box::click(context const& ctx, mouse_button btn)
+   {
+      if (_first_focus && select_start() != select_end())
+      {
+         _first_focus = false;
+         return true;
+      }
+      _first_focus = false;
+
+      return basic_text_box::click(ctx, btn);
+   }
+
+   void basic_input_box::begin_focus()
+   {
+      _first_focus = true;
+      basic_text_box::begin_focus();
+   }
+
+   void basic_input_box::end_focus()
+   {
+      _first_focus = false;
+      basic_text_box::end_focus();
    }
 }}

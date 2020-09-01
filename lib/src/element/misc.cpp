@@ -8,7 +8,7 @@
 
 namespace cycfi { namespace elements
 {
-   namespace colors = cycfi::artist::colors;
+   namespace colors = artist::colors;
 
    void panel::draw(context const& ctx)
    {
@@ -16,7 +16,6 @@ namespace cycfi { namespace elements
          ctx.canvas
        , ctx.bounds
        , get_theme().panel_color.opacity(_opacity)
-       , get_theme().panel_shadow
        , 4.0
       );
    }
@@ -32,31 +31,6 @@ namespace cycfi { namespace elements
       canvas_.stroke_round_rect(bounds.move(-1, -1), theme_.frame_corner_radius);
       canvas_.stroke_style(theme_.frame_color);
       canvas_.stroke_round_rect(bounds, theme_.frame_corner_radius);
-   }
-
-   view_limits default_label::limits(basic_context const& ctx) const
-   {
-      auto  size = measure_text(
-         ctx.canvas, c_str()
-       , font()
-       , font_size()
-      );
-      return { { size.x, size.y }, { size.x, size.y } };
-   }
-
-   void default_label::draw(context const& ctx)
-   {
-      auto& canvas_ = ctx.canvas;
-      auto  state = canvas_.new_state();
-
-      canvas_.fill_style(font_color());
-      canvas_.font(font().size(font_size()));
-      canvas_.text_align(text_align());
-
-      float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
-      float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-
-      canvas_.fill_text(c_str(), point{ cx, cy });
    }
 
    void vgrid_lines::draw(context const& ctx)
@@ -100,7 +74,7 @@ namespace cycfi { namespace elements
    view_limits icon::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font._size * _size;
+      float font_size = thm.icon_font_size * _size;
       point s = measure_icon(ctx.canvas, _code, font_size);
       return { { s.x, s.y }, { s.x, s.y } };
    }
@@ -108,7 +82,7 @@ namespace cycfi { namespace elements
    void icon::draw(context const& ctx)
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font._size * _size;
+      float font_size = thm.icon_font_size * _size;
       draw_icon(ctx.canvas, ctx.bounds, _code, font_size);
    }
 }}

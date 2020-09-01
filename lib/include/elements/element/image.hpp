@@ -7,6 +7,7 @@
 #define ELEMENTS_IMAGE_APRIL_24_2016
 
 #include <elements/element/element.hpp>
+#include <elements/support/receiver.hpp>
 #include <artist/image.hpp>
 #include <artist/canvas.hpp>
 #include <memory>

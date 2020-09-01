@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/element/flow.hpp>
 #include <elements/support/context.hpp>
+#include <elements/view.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -14,8 +15,16 @@ namespace cycfi { namespace elements
    view_limits flow_element::limits(basic_context const& ctx) const
    {
       view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
-      if (_laid_out)
+      if (!_flowable.needs_reflow())
+      {
          limits_.min.y = base_type::limits(ctx).min.y;
+
+         for (std::size_t i = 0; i != _flowable.size();  ++i)
+         {
+            auto el = _flowable.at(i).limits(ctx);
+            clamp_min(limits_.min.x, el.min.x);
+         }
+      }
       return limits_;
    }
 
@@ -24,7 +33,12 @@ namespace cycfi { namespace elements
       clear();
       _flowable.break_lines(*this, ctx, ctx.bounds.width());
       base_type::layout(ctx);
-      _laid_out = true;
+
+      if (_flowable.needs_reflow())
+      {
+         ctx.view.post([&view = ctx.view]{ view.layout(); });
+         _flowable.reflow_done();
+      }
    }
 
    void flowable_container::break_lines(

@@ -41,28 +41,24 @@ namespace cycfi { namespace elements
       _io.stop();
    }
 
-   bool view::set_limits()
+   void view::set_limits()
    {
       if (_content.empty())
-         return false;
+         return;
 
       image img{ 1, 1 };
       offscreen_image offscr{ img };
       canvas cnv{ offscr.context() };
-      bool resized = false;
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{ *this, cnv };
       auto limits_ = _main_element.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
-         resized = true;
          _current_limits = limits_;
          if (on_change_limits)
             on_change_limits(limits_);
       }
-
-      return resized;
    }
 
    void view::draw(canvas_impl* context_, rect dirty_)
@@ -73,11 +69,7 @@ namespace cycfi { namespace elements
       _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
-      if (set_limits())
-      {
-         refresh();
-         return;
-      }
+      set_limits();
 
       canvas cnv{ context_ };
       auto size_ = size();
@@ -137,12 +129,12 @@ namespace cycfi { namespace elements
 
    float view::scale() const
    {
-      return _main_element._scale;
+      return _main_element.scale();
    }
 
    void view::scale(float val)
    {
-      _main_element._scale = val;
+      _main_element.scale(val);
       refresh();
    }
 

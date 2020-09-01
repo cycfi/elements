@@ -182,8 +182,8 @@ auto make_vgrid()
       hsize(150, rbox_)
    );
 
-   // Place the grid coordinates in a plain array
-   static float grid[] = { 50, 100, 150, 200, 250, 300 };
+   // Place the grid in a plain array
+   static float const grid[] = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
 
    return margin(
       { 10, 40, 10, 10 },
@@ -208,8 +208,8 @@ auto make_hgrid()
       vsize(150, rbox_)
    );
 
-   // You can also place the grid coordinates a std::array
-   static std::array<float, 6> grid = { 50, 100, 150, 200, 250, 300 };
+   // You can also place the grid a std::array
+   static std::array<float, 6> const grid = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
 
    return margin(
       { 0, 50, 10, 10 },
@@ -287,8 +287,8 @@ auto make_popup_menu(
    auto menu =
       layer(
          vtile(
-            link(item1), link(item2),
-            link(item3), link(item4), link(item5)
+            item1, item2,
+            item3, item4, item5
          ),
          panel{}
       );
@@ -297,9 +297,9 @@ auto make_popup_menu(
    return popup;
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
-   app _app(argc, argv);
+   app _app(argc, argv, "Layout", "com.cycfi.layout");
    window _win(_app.name(), window::standard, { 50, 50, 1024, 768 });
 
    _win.on_close = [&_app]() { _app.stop(); };

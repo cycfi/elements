@@ -23,6 +23,7 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+*.user
 /.vscode/
 /.idea/
 /build/

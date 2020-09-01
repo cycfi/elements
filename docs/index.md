@@ -1,10 +1,13 @@
+---
+---
 # Elements C++ GUI library
 
-![alt Photon Sampler]({{ site.url }}/elements/assets/images/photon_sampler.jpg)
+![alt Photon Sampler](assets/images/photon_sampler.jpg)
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, modular GUI library. Elements is designed with these requirements in mind:
+Elements is a lightweight, fine-grained, resolution independent,
+modular GUI library. Elements is designed with these requirements in mind:
 
 1. It should be open source with a liberal, non-viral license.
 2. It should be usable in any application and should play well with other GUI
@@ -22,25 +25,19 @@ Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
 declarative interface with heavy emphasis on reuse.
 
-## Setup and Installation
+## Documentation
+
+1. [Gallery](gallery)
+2. [Setup and Installation](setup)
+3. [Design Aspects](aspects)
+4. [Layout](layout)
 
 The Elements C++ GUI library is cross-platform. Elements currently supports
 the MacOS, Windows and Linux. Follow the [Setup and Installation
-guide](http://cycfi.github.io/elements/setup) to get started using the
+guide](setup) to get started using the
 library.
 
-## Design Aspects
-
-The Elements C++ GUI library is 1) Modular, 2) Declarative, and 3)
-Interoperable. This document explains these three key [Design
-Aspects](http://cycfi.github.io/elements/aspects) behind Elements through
-examples.
-
-## Gallery
-
-Follow this link for more screenshots: [Gallery](gallery).
-
-## <a name="jdeguzman"></a>About the Author
+## About the Author
 
 Joel got into electronics and programming in the 80s because almost
 everything in music, his first love, is becoming electronic and digital.
@@ -48,18 +45,16 @@ Since then, he builds his own guitars, effect boxes and synths. He enjoys
 playing distortion-laden rock guitar, composes and produces his own music in
 his home studio.
 
-Joel de Guzman is the principal architect and engineer at [Cycfi
-Research](https://www.cycfi.com/) and a consultant at [Ciere
-Consulting](https://ciere.com/). He is a software engineer specializing in
-advanced C++ and an advocate of Open Source. He has authored a number of
-highly successful Open Source projects such as
-[Boost.Spirit](http://tinyurl.com/ydhotlaf),
-[Boost.Phoenix](http://tinyurl.com/y6vkeo5t) and
-[Boost.Fusion](http://tinyurl.com/ybn5oq9v). These libraries are all part of
-the [Boost Libraries](http://tinyurl.com/jubgged), a well respected,
-peer-reviewed, Open Source, collaborative development effort.
+Joel de Guzman is the principal architect and engineer at [Cycfi Research]
+and a consultant at [Ciere Consulting]. He is a software engineer specializing
+in advanced C++ and an advocate of Open Source. He has authored a number of
+highly successful Open Source projects such as [Boost.Spirit], [Boost.Phoenix]
+and [Boost.Fusion]. These libraries are all part of the [Boost Libraries],
+a well respected, peer-reviewed, Open Source, collaborative development effort.
 
--------------------------------------------------------------------------------
-
-*Copyright (c) 2014-2020 Joel de Guzman. All rights reserved.*
-*Distributed under the [MIT License](https://opensource.org/licenses/MIT)*
+[Cycfi Research]:   https://www.cycfi.com/
+[Ciere Consulting]: https://ciere.com/
+[Boost.Spirit]:     https://tinyurl.com/ydhotlaf
+[Boost.Phoenix]:    https://tinyurl.com/y6vkeo5t
+[Boost.Fusion]:     https://tinyurl.com/ybn5oq9v
+[Boost Libraries]:  https://tinyurl.com/jubgged

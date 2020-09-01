@@ -3,10 +3,27 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-set(ELEMENTS_APP_PROJECT "Aspects")
-set(ELEMENTS_APP_TITLE "Aspects")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
-set(ELEMENTS_APP_ID "com.cycfi.aspects")
-set(ELEMENTS_APP_VERSION "1.0")
+cmake_minimum_required(VERSION 3.9.6...3.15.0)
+project(Aspects LANGUAGES C CXX VERSION "1.0.0")
 
-include("../../CMakeMain.txt")
+if (NOT ELEMENTS_ROOT)
+   message(FATAL_ERROR "ELEMENTS_ROOT is not set")
+endif()
+
+# Make sure ELEMENTS_ROOT is an absolute path to add to the CMake module path
+get_filename_component(ELEMENTS_ROOT "${ELEMENTS_ROOT}" ABSOLUTE)
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${ELEMENTS_ROOT}/cmake")
+
+# If we are building outside the project, you need to set ELEMENTS_ROOT:
+if (NOT ELEMENTS_BUILD_EXAMPLES)
+   include(ElementsConfigCommon)
+   set(ELEMENTS_BUILD_EXAMPLES OFF)
+   add_subdirectory(${ELEMENTS_ROOT} elements)
+endif()
+
+if (APPLE)
+   set(MACOSX_BUNDLE_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.cycfi.aspects")
+endif()
+
+include(ElementsConfigApp)

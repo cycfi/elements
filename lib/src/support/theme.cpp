@@ -41,7 +41,7 @@ namespace cycfi { namespace elements
     , element_background_opacity { 32.0f / 255.0f }
 
     , heading_font_color         { basic_font_color }
-    , heading_font               { font_descr{ "Roboto", 14.0 }.medium() }
+    , heading_font               { font_descr{ "Roboto", 15.0 }.medium() }
     , heading_text_align         { canvas::middle | canvas::center }
 
     , label_font_color           { basic_font_color }

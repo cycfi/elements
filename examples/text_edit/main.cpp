@@ -74,7 +74,7 @@ auto make_edit_box()
          margin(
             { 20, 20, 20, 20 },
             align_left_top(hsize(800,
-               basic_text_box(text, font_descr{ font_family }
+               basic_text_box(text, font_descr{ font_family, 14 }
             )))
          )
       );

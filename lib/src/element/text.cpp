@@ -143,7 +143,7 @@ namespace cycfi { namespace elements
             auto fixup = [&]()
             {
                if (start != _first)
-                  start = next_utf8(_last, start);
+                  start = next_utf8(start, _last);
                _select_start = int(start - _first);
                _select_end = int(end - _first);
             };

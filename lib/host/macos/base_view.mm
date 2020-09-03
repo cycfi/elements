@@ -13,6 +13,20 @@
 #include <map>
 #include <infra/filesystem.hpp>
 
+#if defined(ARTIST_SKIA)
+# include <GrContext.h>
+# include <gl/GrGLInterface.h>
+# include <SkImage.h>
+# include <SkSurface.h>
+# include <tools/sk_app/DisplayParams.h>
+# include <tools/sk_app/WindowContext.h>
+# include <tools/sk_app/mac/WindowContextFactory_mac.h>
+# include <OpenGL/gl.h>
+#elif defined(ARTIST_QUARTZ_2D)
+#else
+# error Unknown Graphics Backend
+#endif
+
 #if ! __has_feature(objc_arc)
 # error "ARC is off"
 #endif
@@ -20,6 +34,10 @@
 namespace ph = cycfi::elements;
 namespace fs = cycfi::fs;
 using key_map = std::map<ph::key_code, ph::key_action>;
+
+using cycfi::artist::canvas;
+using cycfi::artist::image;
+using cycfi::artist::offscreen_image;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -175,6 +193,10 @@ namespace
 
 #define ELEMENTS_VIEW_CLASS ELEMENTS_CLASS_PREFIX##ElementsView
 
+#if defined(ARTIST_SKIA)
+using skia_context = std::unique_ptr<sk_app::WindowContext>;
+#endif
+
 @interface ELEMENTS_VIEW_CLASS : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
@@ -183,6 +205,12 @@ namespace
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+
+#if defined(ARTIST_SKIA)
+   skia_context   _skia_context;
+   float          _scale;
+#endif
+
 }
 @end
 
@@ -208,6 +236,22 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+
+#if defined(ARTIST_SKIA)
+   sk_app::window_context_factory::MacWindowInfo info;
+   info.fMainView = self;
+   _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
+
+   NSRect user = { { 0, 0 }, { 100, 100 }};
+   NSRect backing_bounds = [self convertRectToBacking : user];
+   _scale = backing_bounds.size.height / user.size.height;
+
+   auto surface = _skia_context->getBackbufferSurface();
+   if (surface)
+      surface->getCanvas()->clear(SkColorSetARGB(255, 255, 255, 255)); // $$$ fixme $$$
+#endif
+
+   [self setPostsBoundsChangedNotifications : YES];
 }
 
 - (void) dealloc
@@ -223,14 +267,16 @@ namespace
 
 - (void) attach_notifications
 {
-   [[NSNotificationCenter defaultCenter]
+   auto* center = [NSNotificationCenter defaultCenter];
+
+   [center
       addObserver : self
          selector : @selector(windowDidBecomeKey:)
              name : NSWindowDidBecomeKeyNotification
            object : [self window]
    ];
 
-   [[NSNotificationCenter defaultCenter]
+   [center
       addObserver : self
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification
@@ -240,13 +286,15 @@ namespace
 
 - (void) detach_notifications
 {
-   [[NSNotificationCenter defaultCenter]
+   auto* center = [NSNotificationCenter defaultCenter];
+
+   [center
       removeObserver : self
                 name : NSWindowDidBecomeKeyNotification
               object : [self window]
    ];
 
-   [[NSNotificationCenter defaultCenter]
+   [center
       removeObserver : self
                 name : NSWindowDidResignMainNotification
               object : [self window]
@@ -286,9 +334,13 @@ namespace
 - (void) drawRect : (NSRect)dirty
 {
    [super drawRect : dirty];
-   auto context = NSGraphicsContext.currentContext.CGContext;
 
-   _view->draw((cycfi::artist::canvas_impl*) context,
+#if defined(ARTIST_QUARTZ_2D)
+   auto context = NSGraphicsContext.currentContext.CGContext;
+   auto cnv = canvas{ (cycfi::artist::canvas_impl*) context };
+
+   auto start = std::chrono::high_resolution_clock::now();
+   _view->draw(cnv,
       {
          float(dirty.origin.x),
          float(dirty.origin.y),
@@ -296,6 +348,57 @@ namespace
          float(dirty.origin.y + dirty.size.height)
       }
    );
+   auto stop = std::chrono::high_resolution_clock::now();
+   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+
+#elif defined(ARTIST_SKIA)
+
+   auto f = [self frame]; // $$$
+
+   auto [w, h] = [self frame].size;
+   w = std::ceil(w * _scale);
+   h = std::ceil(h * _scale);
+   if (_skia_context->width() != int(w) || _skia_context->height() != int(h))
+   {
+      _skia_context->resize(w, h);
+   }
+
+   auto surface = _skia_context->getBackbufferSurface();
+   if (surface)
+   {
+      auto start = std::chrono::high_resolution_clock::now();
+
+      SkCanvas* gpu_canvas = surface->getCanvas();
+      gpu_canvas->save();
+      auto cnv = canvas{ gpu_canvas };
+
+      // image img{float(w), float(h)};
+      {
+         // offscreen_image ctx{ img };
+         // canvas pm_cnv{ ctx.context() };
+         // pm_cnv.pre_scale(_scale);
+
+         _view->draw(cnv,
+            {
+               float(dirty.origin.x),
+               float(dirty.origin.y),
+               float(dirty.origin.x + dirty.size.width),
+               float(dirty.origin.y + dirty.size.height)
+            }
+         );
+      }
+      // cnv.draw(img);
+
+      gpu_canvas->restore();
+      surface->flush();
+      _skia_context->swapBuffers();
+
+      auto stop = std::chrono::high_resolution_clock::now();
+      auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+      NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+   }
+#endif
 }
 
 - (void) mouseDown : (NSEvent*) event

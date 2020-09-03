@@ -62,11 +62,11 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      get_text() const override            { return _text; }
+      std::string const&      get_text() const override           { return _text; }
       void                    set_text(string_view text) override;
       font const&             font() const { return _font; }
 
-      std::string const&      value() const override           { return _text; }
+      std::string const&      value() const override              { return _text; }
       void                    value(string_view val) override;
 
    private:

@@ -61,7 +61,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void view::draw(canvas_impl* context_, rect dirty_)
+   void view::draw(canvas& cnv, rect dirty_)
    {
       if (_content.empty())
          return;
@@ -71,7 +71,6 @@ namespace cycfi { namespace elements
       // Update the limits and constrain the window size to the limits
       set_limits();
 
-      canvas cnv{ context_ };
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
       context ctx{ *this, cnv, &_main_element, subj_bounds };

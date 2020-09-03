@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
                               view(window& win);
                               ~view();
 
-      void                    draw(canvas_impl* ctx, rect area) override;
+      void                    draw(canvas& cnv, rect area) override;
       void                    click(mouse_button btn) override;
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;

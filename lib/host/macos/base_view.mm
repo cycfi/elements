@@ -363,6 +363,10 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
 #elif defined(ARTIST_SKIA)
 
+   static double total = 0;
+   static int frame = 0;
+   auto start = std::chrono::high_resolution_clock::now();
+
    auto f = [self frame]; // $$$
 
    auto [w, h] = [self frame].size;
@@ -376,7 +380,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto surface = _skia_context->getBackbufferSurface();
    if (surface)
    {
-      auto start = std::chrono::high_resolution_clock::now();
 
       SkCanvas* gpu_canvas = surface->getCanvas();
       gpu_canvas->save();
@@ -386,7 +389,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       {
          // offscreen_image ctx{ img };
          // canvas pm_cnv{ ctx.context() };
-         // pm_cnv.pre_scale(_scale);
+         cnv.pre_scale(_scale);
 
          _view->draw(cnv,
             {
@@ -402,10 +405,16 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       gpu_canvas->restore();
       surface->flush();
       _skia_context->swapBuffers();
+   }
 
-      auto stop = std::chrono::high_resolution_clock::now();
-      auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-      NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+   auto stop = std::chrono::high_resolution_clock::now();
+   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+   total += elapsed;
+
+   if (frame++ == 30)
+   {
+      NSLog(@"Draw elapsed: %f fps", 30.0/total);
+      frame = total = 0;
    }
 #endif
 }

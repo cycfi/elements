@@ -336,8 +336,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [super drawRect : dirty];
 
 #if defined(ARTIST_QUARTZ_2D)
-   static double total = 0;
-   static int frame = 0;
    auto start = std::chrono::high_resolution_clock::now();
 
    auto context = NSGraphicsContext.currentContext.CGContext;
@@ -353,18 +351,11 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    auto stop = std::chrono::high_resolution_clock::now();
    auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-   total += elapsed;
 
-   if (frame++ == 30)
-   {
-      NSLog(@"Draw elapsed: %f fps", 30.0/total);
-      frame = total = 0;
-   }
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
 
 #elif defined(ARTIST_SKIA)
 
-   static double total = 0;
-   static int frame = 0;
    auto start = std::chrono::high_resolution_clock::now();
 
    auto f = [self frame]; // $$$
@@ -409,13 +400,8 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    auto stop = std::chrono::high_resolution_clock::now();
    auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-   total += elapsed;
 
-   if (frame++ == 30)
-   {
-      NSLog(@"Draw elapsed: %f fps", 30.0/total);
-      frame = total = 0;
-   }
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
 #endif
 }
 

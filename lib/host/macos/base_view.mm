@@ -358,41 +358,34 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    auto start = std::chrono::high_resolution_clock::now();
 
-   auto f = [self frame]; // $$$
-
    auto [w, h] = [self frame].size;
    w = std::ceil(w * _scale);
    h = std::ceil(h * _scale);
    if (_skia_context->width() != int(w) || _skia_context->height() != int(h))
-   {
       _skia_context->resize(w, h);
-      // auto surface = _skia_context->getBackbufferSurface();
-      // if (surface)
-      // {
-      //    surface->flush();
-      //    _skia_context->swapBuffers();
-      //    // [self setNeedsDisplay : YES];
-      //    return;
-      // }
-   }
 
    auto surface = _skia_context->getBackbufferSurface();
    if (surface)
    {
+      auto draw =
+         [&](auto& cnv_)
+         {
+            auto cnv = canvas{ cnv_ };
+            cnv.pre_scale(_scale);
+
+            _view->draw(cnv,
+               {
+                  float(dirty.origin.x),
+                  float(dirty.origin.y),
+                  float(dirty.origin.x + dirty.size.width),
+                  float(dirty.origin.y + dirty.size.height)
+               }
+            );
+         };
+
       SkCanvas* gpu_canvas = surface->getCanvas();
       gpu_canvas->save();
-      auto cnv = canvas{ gpu_canvas };
-      cnv.pre_scale(_scale);
-
-      _view->draw(cnv,
-         {
-            float(dirty.origin.x),
-            float(dirty.origin.y),
-            float(dirty.origin.x + dirty.size.width),
-            float(dirty.origin.y + dirty.size.height)
-         }
-      );
-
+      draw(gpu_canvas);
       gpu_canvas->restore();
       surface->flush();
       _skia_context->swapBuffers();

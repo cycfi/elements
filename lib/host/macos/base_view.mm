@@ -336,10 +336,12 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [super drawRect : dirty];
 
 #if defined(ARTIST_QUARTZ_2D)
+   static double total = 0;
+   static int frame = 0;
+   auto start = std::chrono::high_resolution_clock::now();
+
    auto context = NSGraphicsContext.currentContext.CGContext;
    auto cnv = canvas{ (cycfi::artist::canvas_impl*) context };
-
-   auto start = std::chrono::high_resolution_clock::now();
    _view->draw(cnv,
       {
          float(dirty.origin.x),
@@ -348,9 +350,16 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
          float(dirty.origin.y + dirty.size.height)
       }
    );
+
    auto stop = std::chrono::high_resolution_clock::now();
    auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+   total += elapsed;
+
+   if (frame++ == 30)
+   {
+      NSLog(@"Draw elapsed: %f fps", 30.0/total);
+      frame = total = 0;
+   }
 
 #elif defined(ARTIST_SKIA)
 

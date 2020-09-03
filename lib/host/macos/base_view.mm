@@ -366,32 +366,32 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    if (_skia_context->width() != int(w) || _skia_context->height() != int(h))
    {
       _skia_context->resize(w, h);
+      // auto surface = _skia_context->getBackbufferSurface();
+      // if (surface)
+      // {
+      //    surface->flush();
+      //    _skia_context->swapBuffers();
+      //    // [self setNeedsDisplay : YES];
+      //    return;
+      // }
    }
 
    auto surface = _skia_context->getBackbufferSurface();
    if (surface)
    {
-
       SkCanvas* gpu_canvas = surface->getCanvas();
       gpu_canvas->save();
       auto cnv = canvas{ gpu_canvas };
+      cnv.pre_scale(_scale);
 
-      // image img{float(w), float(h)};
-      {
-         // offscreen_image ctx{ img };
-         // canvas pm_cnv{ ctx.context() };
-         cnv.pre_scale(_scale);
-
-         _view->draw(cnv,
-            {
-               float(dirty.origin.x),
-               float(dirty.origin.y),
-               float(dirty.origin.x + dirty.size.width),
-               float(dirty.origin.y + dirty.size.height)
-            }
-         );
-      }
-      // cnv.draw(img);
+      _view->draw(cnv,
+         {
+            float(dirty.origin.x),
+            float(dirty.origin.y),
+            float(dirty.origin.x + dirty.size.width),
+            float(dirty.origin.y + dirty.size.height)
+         }
+      );
 
       gpu_canvas->restore();
       surface->flush();

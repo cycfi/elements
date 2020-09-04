@@ -35,10 +35,12 @@ int main(int argc, char* argv[])
       for (int x = 0; x < cols * square_area; x++)
       {
         if (x % square_side == 0)
+        {
           if (color == white)
             color = black;
           else
             color = white;
+        }
 
         row_slice[x] = color;
       }

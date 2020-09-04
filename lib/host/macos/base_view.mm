@@ -34,10 +34,7 @@
 namespace ph = cycfi::elements;
 namespace fs = cycfi::fs;
 using key_map = std::map<ph::key_code, ph::key_action>;
-
 using cycfi::artist::canvas;
-using cycfi::artist::image;
-using cycfi::artist::offscreen_image;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -336,8 +333,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [super drawRect : dirty];
 
 #if defined(ARTIST_QUARTZ_2D)
-   auto start = std::chrono::high_resolution_clock::now();
-
    auto context = NSGraphicsContext.currentContext.CGContext;
    auto cnv = canvas{ (cycfi::artist::canvas_impl*) context };
    _view->draw(cnv,
@@ -348,16 +343,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
          float(dirty.origin.y + dirty.size.height)
       }
    );
-
-   auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
-
 #elif defined(ARTIST_SKIA)
-
-   auto start = std::chrono::high_resolution_clock::now();
-
    auto [w, h] = [self frame].size;
    w = std::ceil(w * _scale);
    h = std::ceil(h * _scale);
@@ -390,11 +376,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       surface->flush();
       _skia_context->swapBuffers();
    }
-
-   auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
 #endif
 }
 

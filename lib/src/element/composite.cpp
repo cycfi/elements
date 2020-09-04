@@ -17,8 +17,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         auto ptr = info.element.lock();
-         return ptr.get();
+         return info.element.get();
       }
       return nullptr;
    }
@@ -55,46 +54,46 @@ namespace cycfi { namespace elements
       }
    }
 
-   element* composite_base::click(context const& ctx, mouse_button btn)
+   bool composite_base::click(context const& ctx, mouse_button btn)
    {
-      point p = btn.pos;
-
       if (!empty())
       {
-         hit_info info = (btn.down)? hit_element(ctx, p) : _click_info;
-
-         if (!info.element.expired() && wants_focus())
+         if (btn.down) // button down
          {
-            if (_focus != info.index)
-               new_focus(ctx, info.index);
-         }
-
-         if (auto ptr = info.element.lock())
-         {
-            _drag_tracking = info.index;
-            context ectx{ ctx, ptr.get(), info.bounds };
-            if (ptr->click(ectx, btn))
+            hit_info info = hit_element(ctx, btn.pos);
+            if (info.element)
             {
-               if (btn.down)
-                  _click_info = info;
-               return ptr.get();
+               if (wants_focus() && _focus != info.index)
+                  new_focus(ctx, info.index);
+
+               context ectx{ ctx, info.element.get(), info.bounds };
+               if (info.element->click(ectx, btn))
+               {
+                  if (btn.down)
+                     _click_tracking = info.index;
+                  return true;
+               }
             }
          }
-         else
+         else if (_click_tracking != -1) // button up
          {
-            _click_info.element.reset();
+            rect  bounds = bounds_of(ctx, _click_tracking);
+            auto& e = at(_click_tracking);
+            context ectx{ ctx, &e, bounds };
+            if (e.click(ectx, btn))
+               return true;
          }
       }
-      _drag_tracking = -1;
-      return 0;
+      _click_tracking = -1;
+      return false;
    }
 
    void composite_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_drag_tracking != -1)
+      if (_click_tracking != -1)
       {
-         rect  bounds = bounds_of(ctx, _drag_tracking);
-         auto& e = at(_drag_tracking);
+         rect  bounds = bounds_of(ctx, _click_tracking);
+         auto& e = at(_click_tracking);
          context ectx{ ctx, &e, bounds };
          e.drag(ectx, btn);
       }
@@ -201,50 +200,61 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   namespace
-   {
-      void cursor_leaving(context const& ctx, point p, composite_base::hit_info& _cursor_info)
-      {
-         if (auto ptr = _cursor_info.element.lock())
-         {
-            context ectx{ ctx, ptr.get(), _cursor_info.bounds };
-            ptr->cursor(ectx, p, cursor_tracking::leaving);
-         }
-         _cursor_info = composite_base::hit_info{};
-      }
-   }
-
    bool composite_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (status == cursor_tracking::leaving && !_cursor_info.element.expired())
-      {
-         cursor_leaving(ctx, p, _cursor_info);
-         return true;
-      }
+      if (_cursor_tracking >= int(size())) // just to be sure!
+         _cursor_tracking = -1;
 
-      if (!empty())
+      // Send cursor leaving to all currently hovering elements if cursor is
+      // leaving the composite.
+      if (status == cursor_tracking::leaving)
       {
-         hit_info info = hit_element(ctx, p);
-         if (auto ptr = info.element.lock())
+         for (auto ix : _cursor_hovering)
          {
-            auto cptr = _cursor_info.element.lock();
-
-            // If we're previously tracking an element, send it a 'leaving' message
-            if (cptr && cptr != ptr)
-               cursor_leaving(ctx, p, _cursor_info);
-
-            if (elements::intersects(info.bounds, ctx.view_bounds))
+            if (ix < int(size()))
             {
-               context ectx{ ctx, ptr.get(), info.bounds };
-               bool r = ptr->cursor(ectx, p, status);
-               _cursor_info = info;
-               return r;
+               auto& e = at(ix);
+               context ectx{ ctx, &e, bounds_of(ctx, ix) };
+               e.cursor(ectx, p, cursor_tracking::leaving);
             }
          }
-         else if (!_cursor_info.element.expired())
+         return false;
+      }
+
+      // Send cursor leaving to all currently hovering elements if p is
+      // outside the elements's bounds or if the element is no longer hit.
+      for (auto i = _cursor_hovering.begin(); i != _cursor_hovering.end();)
+      {
+         if (*i < int(size()))
          {
-            cursor_leaving(ctx, p, _cursor_info);
+            auto& e = at(*i);
+            rect  b = bounds_of(ctx, *i);
+            context ectx{ ctx, &e, b };
+            if (!b.includes(p) || !e.hit_test(ectx, p))
+            {
+               e.cursor(ectx, p, cursor_tracking::leaving);
+               i = _cursor_hovering.erase(i);
+               continue;
+            }
          }
+         ++i;
+      }
+
+      // Send cursor entering to newly hit element or hovering to current
+      // tracking element
+      hit_info info = hit_element(ctx, p);
+      if (info.element)
+      {
+         _cursor_tracking = info.index;
+         auto status = cursor_tracking::hovering;
+         if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
+         {
+            status = cursor_tracking::entering;
+            _cursor_hovering.insert(_cursor_tracking);
+         }
+         auto& e = at(_cursor_tracking);
+         context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
+         return e.cursor(ectx, p, status);
       }
 
       return false;
@@ -255,7 +265,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (auto ptr = info.element.lock(); ptr && elements::intersects(info.bounds, ctx.view_bounds))
+         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
             return ptr->scroll(ectx, dir, p);
@@ -315,21 +325,40 @@ namespace cycfi { namespace elements
 
    composite_base::hit_info composite_base::hit_element(context const& ctx, point p) const
    {
-      for (std::size_t ix = 0; ix < size(); ++ix)
-      {
-         auto& e = at(ix);
-         if (e.wants_control())
+      auto&& test_element =
+         [&](int ix, hit_info& info) -> bool
          {
-            rect bounds = bounds_of(ctx, ix);
-            if (bounds.includes(p))
+            auto& e = at(ix);
+            if (e.wants_control())
             {
-               context ectx{ ctx, &e, bounds };
-               if (e.hit_test(ectx, p))
-                  return hit_info{ e.shared_from_this(), bounds, int(ix) };
+               rect bounds = bounds_of(ctx, ix);
+               if (bounds.includes(p))
+               {
+                  context ectx{ ctx, &e, bounds };
+                  if (e.hit_test(ectx, p))
+                  {
+                     info = hit_info{ e.shared_from_this(), bounds, int(ix) };
+                     return true;
+                  }
+               }
             }
-         }
+            return false;
+         };
+
+      hit_info info = hit_info{ {}, rect{}, -1 };
+      if (reverse_index())
+      {
+         for (int ix = int(size())-1; ix >= 0; --ix)
+            if (test_element(ix, info))
+               break;
       }
-      return hit_info{ {}, rect{}, -1 };
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+            if (test_element(ix, info))
+               break;
+      }
+      return info;
    }
 
    bool composite_base::wants_control() const
@@ -344,8 +373,8 @@ namespace cycfi { namespace elements
    {
       _focus = -1;
       _saved_focus = -1;
-      _drag_tracking = -1;
-      _click_info = hit_info{};
-      _cursor_info = hit_info{};
+      _click_tracking = -1;
+      _cursor_tracking = -1;
+      _cursor_hovering.clear();
    }
 }}

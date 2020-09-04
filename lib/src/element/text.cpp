@@ -135,18 +135,18 @@ namespace cycfi { namespace elements
       draw_caret(ctx);
    }
 
-   element* basic_text_box::click(context const& ctx, mouse_button btn)
+   bool basic_text_box::click(context const& ctx, mouse_button btn)
    {
       _show_caret = true;
 
       if (!btn.down) // released? return early
-         return this;
+         return true;
 
       if (_text.empty())
       {
          _select_start = _select_end = 0;
          scroll_into_view(ctx, false);
-         return this;
+         return true;
       }
 
       char const*   _first = _text.data();
@@ -202,7 +202,7 @@ namespace cycfi { namespace elements
          _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
       }
-      return this;
+      return true;
    }
 
    void basic_text_box::drag(context const& ctx, mouse_button btn)
@@ -1050,12 +1050,12 @@ namespace cycfi { namespace elements
          on_text(_text);
    }
 
-   element* basic_input_box::click(context const& ctx, mouse_button btn)
+   bool basic_input_box::click(context const& ctx, mouse_button btn)
    {
       if (_first_focus && select_start() != select_end())
       {
          _first_focus = false;
-         return this;
+         return true;
       }
       _first_focus = false;
 

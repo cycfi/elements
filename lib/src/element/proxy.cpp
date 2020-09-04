@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
    {
    }
 
-   element* proxy_base::click(context const& ctx, mouse_button btn)
+   bool proxy_base::click(context const& ctx, mouse_button btn)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx, btn.pos);

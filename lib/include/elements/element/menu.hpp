@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
                                  W1&& off, W2&& on
                                , menu_position pos = menu_position::bottom_right);
 
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override;
@@ -55,9 +55,9 @@ namespace cycfi { namespace elements
 
       void                    layout_menu(context const& ctx);
 
-      using popup_ptr = std::shared_ptr<basic_popup_element>;
+      using popup_menu_ptr = std::shared_ptr<basic_popup_menu_element>;
 
-      popup_ptr               _popup;
+      popup_menu_ptr          _popup;
       menu_position           _position;
    };
 
@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
    template <typename Menu>
    inline void basic_menu::menu(Menu&& menu_)
    {
-      _popup = std::dynamic_pointer_cast<basic_popup_element>(share(basic_popup(menu_)));
+      _popup = share(basic_popup_menu(std::forward<Menu>(menu_)));
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
 
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;

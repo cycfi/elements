@@ -10,10 +10,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
-   element* basic_button::click(context const& ctx, mouse_button btn)
+   bool basic_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(btn.pos))
-         return nullptr;
+         return false;
 
       if (btn.down)
       {
@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
 
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
-      return this;
+      return true;
    }
 
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
@@ -97,10 +97,10 @@ namespace cycfi { namespace elements
       return 0;
    }
 
-   element* layered_button::click(context const& ctx, mouse_button btn)
+   bool layered_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.bounds.includes(btn.pos))
-         return 0;
+         return false;
 
       if (btn.down)
       {
@@ -115,7 +115,7 @@ namespace cycfi { namespace elements
 
       if (state(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
-      return this;
+      return true;
    }
 
    void layered_button::drag(context const& ctx, mouse_button btn)

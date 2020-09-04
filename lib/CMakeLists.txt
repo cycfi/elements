@@ -35,6 +35,7 @@ set(ELEMENTS_SOURCES
    src/element/slider.cpp
    src/element/text.cpp
    src/element/tile.cpp
+   src/element/tooltip.cpp
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/font.cpp
@@ -179,8 +180,8 @@ endif()
 
 target_compile_options(elements PRIVATE
    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:Clang>:-Werror -Wall -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:AppleClang>:-Werror -Wall -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
@@ -191,7 +192,7 @@ endif()
 
 if (APPLE)
    # Not sure why APPLE is not picking the target_compile_options above
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
 endif()
 
 ###############################################################################

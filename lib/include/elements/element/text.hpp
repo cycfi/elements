@@ -93,7 +93,7 @@ namespace cycfi { namespace elements
                               basic_text_box(basic_text_box&& rhs) = default;
 
       void                    draw(context const& ctx) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
@@ -183,7 +183,7 @@ namespace cycfi { namespace elements
       bool                    key(context const& ctx, key_info k) override;
       void                    delete_() override;
 
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    begin_focus() override;
       void                    end_focus() override;
 

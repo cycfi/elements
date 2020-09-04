@@ -146,7 +146,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    scroll_into_view(context const& ctx, rect r) override;
@@ -188,6 +188,7 @@ namespace cycfi { namespace elements
       bool              allow_hscroll() const { return !(_traits & no_hscroll); }
       bool              allow_vscroll() const { return !(_traits & no_vscroll); }
 
+      point             _cursor;
       point             _offset;
       tracking_status   _tracking;
       int               _traits;

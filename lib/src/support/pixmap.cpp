@@ -11,6 +11,7 @@
 #include <infra/assert.hpp>
 #include <infra/filesystem.hpp>
 #include <string>
+#include <iostream>
 
 namespace cycfi { namespace elements
 {
@@ -83,6 +84,31 @@ namespace cycfi { namespace elements
          throw failed_to_load_pixmap{ "Failed to load pixmap." };
 
       // Set scale and flag the surface as dirty
+      cairo_surface_set_device_scale(_surface, 1/scale, 1/scale);
+      cairo_surface_mark_dirty(_surface);
+   }
+
+   pixmap::pixmap(unsigned char* data, pixmap_fmt fmt, point size, float scale)
+    : _surface(nullptr)
+   {
+      cairo_format_t fmt_value = pixmap_fmt_map.at(pixmap_fmt::INVALID);
+      auto fmt_it = pixmap_fmt_map.find(fmt);
+      if (fmt_it != pixmap_fmt_map.end())
+        fmt_value = fmt_it->second;
+
+      if (fmt_value == CAIRO_FORMAT_INVALID)
+        throw failed_to_load_pixmap{ "Cannot load pixmap with unkown format or invalid format" };
+
+      int stride = cairo_format_stride_for_width(fmt_value, size.x);
+      _surface = cairo_image_surface_create_for_data(data, CAIRO_FORMAT_ARGB32, size.x, size.y, stride);
+
+      auto status = cairo_surface_status(_surface);
+      if (status != CAIRO_STATUS_SUCCESS)
+        throw failed_to_load_pixmap{ cairo_status_to_string(status) };
+
+      if (!_surface)
+        throw failed_to_load_pixmap{ "Failed to load pixmap from buffer." };
+
       cairo_surface_set_device_scale(_surface, 1/scale, 1/scale);
       cairo_surface_mark_dirty(_surface);
    }

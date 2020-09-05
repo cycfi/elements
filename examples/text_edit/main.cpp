@@ -61,6 +61,8 @@ std::string const text3 =
    "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
    "You may be ruled by desire without realizing it. Do not let it eliminate "
    "the growth of your journey.\n\n"
+
+   "⁠—Sawat Dalow Dalow"
 ;
 
 auto make_edit_box()

@@ -202,10 +202,10 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+   float                            _scale;
 
 #if defined(ARTIST_SKIA)
    skia_context   _skia_context;
-   float          _scale;
 #endif
 
 }
@@ -234,14 +234,14 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    _marked_text = [[NSMutableAttributedString alloc] init];
 
+   NSRect user = { { 0, 0 }, { 100, 100 }};
+   NSRect backing_bounds = [self convertRectToBacking : user];
+   _scale = backing_bounds.size.height / user.size.height;
+
 #if defined(ARTIST_SKIA)
    sk_app::window_context_factory::MacWindowInfo info;
    info.fMainView = self;
    _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
-
-   NSRect user = { { 0, 0 }, { 100, 100 }};
-   NSRect backing_bounds = [self convertRectToBacking : user];
-   _scale = backing_bounds.size.height / user.size.height;
 
    auto surface = _skia_context->getBackbufferSurface();
    if (surface)
@@ -255,6 +255,11 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    _task = nil;
    _view = nullptr;
+}
+
+- (float) hdpi_scale
+{
+   return _scale;
 }
 
 - (void) on_tick : (id) sender
@@ -650,6 +655,12 @@ namespace cycfi { namespace elements
       [ns_view detach_timer];
       [ns_view removeFromSuperview];
       _view = nil;
+   }
+
+   float base_view::hdpi_scale() const
+   {
+      auto ns_view = get_mac_view(host());
+      return [ns_view hdpi_scale];
    }
 
    point base_view::cursor_pos() const

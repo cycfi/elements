@@ -95,6 +95,7 @@ namespace cycfi { namespace elements
          offscreen_image offscr{ img };
          canvas cnv{ offscr.context() };
          context ctx { self, cnv, &self.main_element(), _current_bounds };
+         cnv.pre_scale(self.hdpi_scale());
 
          f(ctx, self.main_element());
       }

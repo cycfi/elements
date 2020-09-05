@@ -319,6 +319,7 @@ namespace cycfi { namespace elements
       virtual void         refresh();
       virtual void         refresh(rect area);
 
+      float                hdpi_scale() const;
       point                cursor_pos() const;
       extent               size() const;
       void                 size(extent size_);

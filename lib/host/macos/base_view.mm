@@ -706,14 +706,19 @@ namespace cycfi { namespace elements
       return [object UTF8String];
    }
 
-   void clipboard(std::string const& text)
+   void clipboard(std::string_view text)
    {
+      auto cf_string = CFStringCreateWithBytesNoCopy(
+         nullptr, (UInt8 const*)text.begin(), text.size(), kCFStringEncodingUTF8
+       , false, kCFAllocatorNull
+      );
+
       NSArray* types = [NSArray arrayWithObjects:NSPasteboardTypeString, nil];
 
       NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
       [pasteboard declareTypes:types owner:nil];
-      [pasteboard setString:[NSString stringWithUTF8String:text.c_str()]
-                    forType:NSPasteboardTypeString];
+      [pasteboard setString : (__bridge NSString*) cf_string
+                    forType : NSPasteboardTypeString];
    }
 
    void set_cursor(cursor_type type)

@@ -533,7 +533,7 @@ namespace cycfi { namespace elements
       return std::string(text);
    }
 
-   void clipboard(std::string const& text)
+   void clipboard(std::string_view text)
    {
       GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
       gtk_clipboard_set_text(clip, text.data(), text.size());

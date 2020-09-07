@@ -14,6 +14,7 @@
 #include <infra/string_view.hpp>
 #include <string>
 #include <vector>
+#include <set>
 
 namespace cycfi::elements
 {
@@ -49,6 +50,9 @@ namespace cycfi::elements
     , public receiver<std::string_view>
    {
    public:
+
+      using text_layout_const = artist::text_layout const;
+
                               static_text_box(
                                  std::string text
                                , font_descr font_  = get_theme().text_box_font
@@ -68,11 +72,14 @@ namespace cycfi::elements
       std::string_view        value() const override              { return _text; }
       void                    value(string_view val) override;
 
+      void                    insert(std::size_t pos, std::string_view text);
+      void                    replace(std::size_t pos, std::size_t len, std::string_view text);
+      void                    erase(std::size_t pos, std::size_t len);
+      text_layout_const&      get_layout() const { return _layout; }
+
    private:
 
       void                    sync() const;
-
-   protected:
 
       std::string             _text;
       class font              _font;
@@ -144,6 +151,8 @@ namespace cycfi::elements
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
+      using state_saver_ptr = std::shared_ptr<state_saver>;
+      using state_saver_set = std::set<state_saver_ptr>;
 
       state_saver_f           capture_state();
 
@@ -154,6 +163,7 @@ namespace cycfi::elements
       bool                    _is_focus : 1;
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
+      state_saver_set         _state_savers;
    };
 
    ////////////////////////////////////////////////////////////////////////////

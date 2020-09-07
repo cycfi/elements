@@ -621,9 +621,9 @@ namespace cycfi { namespace elements
       return utf8_encode(source);
    }
 
-   void clipboard(std::string const& text)
+   void clipboard(std::string_view text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), text.size(), nullptr, 0);
       if (!len)
          return;
 
@@ -638,7 +638,7 @@ namespace cycfi { namespace elements
          return;
       }
 
-      MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, buffer, len);
+      MultiByteToWideChar(CP_UTF8, 0, text.c_str(), text.size(), buffer, len);
       GlobalUnlock(object);
 
       if (!OpenClipboard(nullptr))

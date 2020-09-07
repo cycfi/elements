@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct basic_label_base : Base, text_writer
    {
-      using text_type = std::string const&;
+      using text_type = std::string_view;
       using remove_gen = basic_label_base<typename Base::remove_gen>;
 
                               basic_label_base(std::string text)

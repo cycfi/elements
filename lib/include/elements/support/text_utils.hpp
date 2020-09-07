@@ -8,6 +8,7 @@
 
 #include <artist/canvas.hpp>
 #include <artist/font.hpp>
+#include <string_view>
 
 namespace cycfi::elements
 {
@@ -21,7 +22,7 @@ namespace cycfi::elements
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);
    void           draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
    point          measure_icon(canvas& cnv, uint32_t cp, float size);
-   point          measure_text(canvas& cnv, char const* text, font_descr font_);
+   point          measure_text(canvas& cnv, std::string_view text, font_descr font_);
 }
 
 #endif

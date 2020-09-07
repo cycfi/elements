@@ -28,8 +28,7 @@ namespace cycfi::elements
    public:
 
       virtual                    ~text_reader() = default;
-      virtual std::string const& get_text() const = 0;
-      char const*                c_str() const { return get_text().c_str(); }
+      virtual std::string_view   get_text() const = 0;
    };
 
    class text_writer
@@ -47,7 +46,7 @@ namespace cycfi::elements
     : public element
     , public text_reader
     , public text_writer
-    , public receiver<std::string>
+    , public receiver<std::string_view>
    {
    public:
                               static_text_box(
@@ -62,11 +61,11 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string const&      get_text() const override           { return _text; }
+      std::string_view        get_text() const override           { return _text; }
       void                    set_text(string_view text) override;
       font const&             font() const { return _font; }
 
-      std::string const&      value() const override              { return _text; }
+      std::string_view        value() const override              { return _text; }
       void                    value(string_view val) override;
 
    private:

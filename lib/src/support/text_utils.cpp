@@ -34,7 +34,7 @@ namespace cycfi { namespace elements
       return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
    }
 
-   point measure_text(canvas& cnv, char const* text, font_descr font_)
+   point measure_text(canvas& cnv, std::string_view text, font_descr font_)
    {
       auto  state = cnv.new_state();
       cnv.font(font_);

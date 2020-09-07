@@ -28,16 +28,32 @@ namespace cycfi::elements
    {
    public:
 
-      virtual                    ~text_reader() = default;
-      virtual std::string_view   get_text() const = 0;
+      virtual                       ~text_reader() = default;
+      virtual std::string_view      get_text() const = 0;
    };
 
    class text_writer
    {
    public:
 
-      virtual                    ~text_writer() = default;
-      virtual void               set_text(string_view text) = 0;
+      virtual                       ~text_writer() = default;
+      virtual void                  set_text(string_view text) = 0;
+   };
+
+   class text_reader_u32
+   {
+   public:
+
+      virtual                       ~text_reader_u32() = default;
+      virtual std::u32string_view   get_text() const = 0;
+   };
+
+   class text_writer_u32
+   {
+   public:
+
+      virtual                       ~text_writer_u32() = default;
+      virtual void                  set_text(std::u32string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -45,16 +61,16 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    class static_text_box
     : public element
-    , public text_reader
-    , public text_writer
-    , public receiver<std::string_view>
+    , public text_reader_u32
+    , public text_writer_u32
+    , public receiver<std::u32string_view>
    {
    public:
 
       using text_layout_const = artist::text_layout const;
 
                               static_text_box(
-                                 std::string text
+                                 std::string_view text
                                , font_descr font_  = get_theme().text_box_font
                                , color color_      = get_theme().text_box_font_color
                               );
@@ -65,12 +81,12 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::string_view        get_text() const override           { return _text; }
-      void                    set_text(string_view text) override;
+      std::u32string_view     get_text() const override           { return _layout.text(); }
+      void                    set_text(std::u32string_view text) override;
       font const&             font() const { return _font; }
 
-      std::string_view        value() const override              { return _text; }
-      void                    value(string_view val) override;
+      std::u32string_view     value() const override              { return _layout.text(); }
+      void                    value(std::u32string_view val) override;
 
       void                    insert(std::size_t pos, std::string_view text);
       void                    replace(std::size_t pos, std::size_t len, std::string_view text);
@@ -81,9 +97,9 @@ namespace cycfi::elements
 
       void                    sync() const;
 
-      std::string             _text;
       class font              _font;
       artist::text_layout     _layout;
+      color                   _color;
       point                   _current_size = { -1, -1 };
    };
 
@@ -94,7 +110,7 @@ namespace cycfi::elements
    {
    public:
                               basic_text_box(
-                                 std::string text
+                                 std::string_view text
                                , font_descr font_ = get_theme().text_box_font
                               );
                               ~basic_text_box();
@@ -111,7 +127,7 @@ namespace cycfi::elements
       bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
-      void                    set_text(string_view text) override;
+      void                    set_text(std::u32string_view text) override;
 
       using element::focus;
       using static_text_box::get_text;
@@ -125,8 +141,8 @@ namespace cycfi::elements
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
-      virtual bool            word_break(char const* utf8) const;
-      virtual bool            line_break(char const* utf8) const;
+      virtual bool            word_break(char32_t const* utf8) const;
+      virtual bool            line_break(char32_t const* utf8) const;
 
    protected:
 
@@ -140,14 +156,14 @@ namespace cycfi::elements
 
       struct caret_metrics
       {
-         char const* str;           // The start of the utf8 string
-         point       pos;           // Position where glyph is drawn
-         rect        caret;         // Caret bounds
-         float       line_height;   // Line height
+         char32_t const*      str;           // The start of the string
+         point                pos;           // Position where glyph is drawn
+         rect                 caret;         // Caret bounds
+         float                line_height;   // Line height
       };
 
-      char const*             caret_position(context const& ctx, point p);
-      caret_metrics           caret_info(context const& ctx, char const* s);
+      char32_t const*         caret_position(context const& ctx, point p);
+      caret_metrics           caret_info(context const& ctx, char32_t const* s);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;

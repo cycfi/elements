@@ -12,7 +12,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    bool basic_button::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(btn.pos))
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
          return false;
 
       if (btn.down)
@@ -99,7 +99,7 @@ namespace cycfi { namespace elements
 
    bool layered_button::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(btn.pos))
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
          return false;
 
       if (btn.down)

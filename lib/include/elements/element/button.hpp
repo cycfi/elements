@@ -134,7 +134,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (!ctx.bounds.includes(btn.pos))
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
          ctx.view.refresh(ctx);
          return false;
@@ -196,7 +196,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (this->value() || !ctx.bounds.includes(btn.pos))
+      if (btn.state != mouse_button::left || this->value() || !ctx.bounds.includes(btn.pos))
          return false;
       if (btn.down)
       {
@@ -252,10 +252,14 @@ namespace cycfi { namespace elements
    template <typename Base>
    bool basic_choice<Base>::click(context const& ctx, mouse_button btn)
    {
-      bool was_selected = is_selected();
-      auto r = basic_latching_button<Base>::click(ctx, btn);
-      this->do_click(ctx, this->value(), was_selected);
-      return r;
+      if (btn.state == mouse_button::left)
+      {
+         bool was_selected = is_selected();
+         auto r = basic_latching_button<Base>::click(ctx, btn);
+         this->do_click(ctx, this->value(), was_selected);
+         return r;
+      }
+      return false;
    }
 
    template <typename Subject>

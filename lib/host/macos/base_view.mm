@@ -107,7 +107,7 @@ namespace
       return CGDisplayBounds(CGMainDisplayID()).size.height - y;
    }
 
-   ph::mouse_button get_button(NSEvent* event, NSView* self, bool down = true)
+   ph::mouse_button get_button(NSEvent* event, NSView* self, ph::mouse_button::what what, bool down = true)
    {
       auto pos = [event locationInWindow];
       auto click_count = [event clickCount];
@@ -117,7 +117,7 @@ namespace
       return {
          down,
          int(click_count),
-         ph::mouse_button::left,
+         what,
          mods,
          { float(pos.x), float(pos.y) }
       };
@@ -298,19 +298,64 @@ namespace
 
 - (void) mouseDown : (NSEvent*) event
 {
-   _view->click(get_button(event, self));
+   _view->click(get_button(event, self, ph::mouse_button::left));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseDown : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->click(get_button(event, self, ph::mouse_button::middle));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseDown : (NSEvent*) event
+{
+   _view->click(get_button(event, self, ph::mouse_button::right));
    [self displayIfNeeded];
 }
 
 - (void) mouseDragged : (NSEvent*) event
 {
-   _view->drag(get_button(event, self));
+   _view->drag(get_button(event, self, ph::mouse_button::left));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseDragged : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->drag(get_button(event, self, ph::mouse_button::middle));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseDragged : (NSEvent*) event
+{
+   _view->drag(get_button(event, self, ph::mouse_button::right));
    [self displayIfNeeded];
 }
 
 - (void) mouseUp : (NSEvent*) event
 {
-   _view->click(get_button(event, self, false));
+   _view->click(get_button(event, self, ph::mouse_button::left, false));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseUp : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->click(get_button(event, self, ph::mouse_button::middle, false));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseUp : (NSEvent*) event
+{
+   _view->click(get_button(event, self, ph::mouse_button::right, false));
    [self displayIfNeeded];
 }
 

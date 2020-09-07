@@ -137,6 +137,9 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::click(context const& ctx, mouse_button btn)
    {
+      if (btn.state != mouse_button::left)
+         return false;
+
       _show_caret = true;
 
       if (!btn.down) // released? return early
@@ -1052,6 +1055,9 @@ namespace cycfi { namespace elements
 
    bool basic_input_box::click(context const& ctx, mouse_button btn)
    {
+      if (btn.state != mouse_button::left)
+         return false;
+
       if (_first_focus && select_start() != select_end())
       {
          _first_focus = false;

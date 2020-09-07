@@ -304,7 +304,7 @@ namespace cycfi { namespace elements
 
    bool scroller_base::click(context const& ctx, mouse_button btn)
    {
-      if (has_scrollbars())
+      if (btn.state == mouse_button::left && has_scrollbars())
       {
          if (btn.down)
          {
@@ -320,7 +320,8 @@ namespace cycfi { namespace elements
 
    void scroller_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_tracking == none || !reposition(ctx, btn.pos))
+      if (btn.state == mouse_button::left &&
+         (_tracking == none || !reposition(ctx, btn.pos)))
          port_element::drag(ctx, btn);
    }
 

@@ -8,14 +8,12 @@
 #include <elements/support/theme.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
-#include <artist/unicode.hpp>
 #include <infra/utf8_utils.hpp>
 #include <utility>
 
 namespace cycfi { namespace elements
 {
    using namespace std::chrono_literals;
-   using artist::unicode::to_utf32;
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box

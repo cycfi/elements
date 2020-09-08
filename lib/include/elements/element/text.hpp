@@ -83,6 +83,7 @@ namespace cycfi::elements
 
       std::u32string_view     get_text() const override           { return _layout.text(); }
       void                    set_text(std::u32string_view text) override;
+      void                    set_text(std::string_view text);
       font const&             font() const { return _font; }
 
       std::u32string_view     value() const override              { return _layout.text(); }
@@ -109,6 +110,9 @@ namespace cycfi::elements
    class basic_text_box : public static_text_box
    {
    public:
+
+      using static_text_box::set_text;
+
                               basic_text_box(
                                  std::string_view text
                                , font_descr font_ = get_theme().text_box_font

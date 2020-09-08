@@ -84,6 +84,11 @@ namespace cycfi { namespace elements
       _layout.flow(_current_size.x);
    }
 
+   void static_text_box::set_text(std::string_view text_)
+   {
+      set_text(to_utf32(text_));
+   }
+
    void static_text_box::value(std::u32string_view val)
    {
       set_text(val);
@@ -91,21 +96,21 @@ namespace cycfi { namespace elements
 
    void static_text_box::insert(std::size_t pos, std::string_view text)
    {
-      std::u32string s{ get_text().data(), get_text().data()+get_text().size() };
+      std::u32string s{ get_text().data(), get_text().size() };
       s.insert(pos, to_utf32(text));
       set_text(s);
    }
 
    void static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
    {
-      std::u32string s{ get_text().data(), get_text().data()+get_text().size() };
+      std::u32string s{ get_text().data(), get_text().size() };
       s.replace(pos, len, to_utf32(text));
       set_text(s);
    }
 
    void static_text_box::erase(std::size_t pos, std::size_t len)
    {
-      std::u32string s{ get_text().data(), get_text().data()+get_text().size() };
+      std::u32string s{ get_text().data(), get_text().size() };
       s.erase(pos, len);
       set_text(s);
    }
@@ -204,9 +209,9 @@ namespace cycfi { namespace elements
             }
             else if (btn.num_clicks == 3)
             {
-               while (end < _last && !is_newline(uint8_t(*end)))
+               while (end < _last && !line_break(end))
                   end++;
-               while (start > _first && !is_newline(uint8_t(*start)))
+               while (start > _first && !line_break(start))
                   start--;
                fixup();
             }
@@ -294,7 +299,7 @@ namespace cycfi { namespace elements
          insert(_select_start, text);
       else
          replace(_select_start, _select_end-_select_start, text);
-      _select_end = _select_start += text.length();
+      _select_end = _select_start += 1;
 
       layout(ctx);
 
@@ -832,6 +837,8 @@ namespace cycfi { namespace elements
    bool basic_text_box::word_break(char32_t const* str) const
    {
       // $$$ optimize me $$$
+      if (str >= (get_text().data()+get_text().size()))
+         return false;
       auto cp = *str;
       return is_space(cp) || is_punctuation(cp);
    }
@@ -839,6 +846,8 @@ namespace cycfi { namespace elements
    bool basic_text_box::line_break(char32_t const* str) const
    {
       // $$$ optimize me $$$
+      if (str >= (get_text().data()+get_text().size()))
+         return false;
       auto cp = *str;
       return is_newline(cp);
    }

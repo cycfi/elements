@@ -24,11 +24,11 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
-   class text_reader
+   class text_reader_u8
    {
    public:
 
-      virtual                       ~text_reader() = default;
+      virtual                       ~text_reader_u8() = default;
       virtual std::string_view      get_text() const = 0;
    };
 

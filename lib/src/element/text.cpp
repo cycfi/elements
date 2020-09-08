@@ -275,10 +275,6 @@ namespace cycfi { namespace elements
       }
    }
 
-   void break_()
-   {
-   }
-
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
       _show_caret = true;

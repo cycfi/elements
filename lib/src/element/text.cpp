@@ -348,7 +348,7 @@ namespace cycfi { namespace elements
 
       auto next_char = [this, &_text]()
       {
-         if (_text.size() > 1 && _select_end < static_cast<int>(_text.size()-1))
+         if (_text.size() > 1 && _select_end < static_cast<int>(_text.size()))
             ++_select_end;
       };
 

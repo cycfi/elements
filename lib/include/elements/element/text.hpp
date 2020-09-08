@@ -94,6 +94,8 @@ namespace cycfi::elements
       void                    erase(std::size_t pos, std::size_t len);
       text_layout_const&      get_layout() const { return _layout; }
 
+      point                   current_size() const { return _current_size; };
+
    private:
 
       void                    sync() const;

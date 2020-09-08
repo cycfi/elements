@@ -70,7 +70,6 @@ namespace cycfi { namespace elements
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
       auto  m = _font.metrics();
-      // auto  line_height = m.ascent + m.descent + m.leading; $$$ fixme $$$
       auto  p = point{ ctx.bounds.left, ctx.bounds.top + m.ascent };
 
       cnv.add_rect(ctx.bounds);
@@ -524,7 +523,11 @@ namespace cycfi { namespace elements
       else if (handled)
       {
          layout(ctx);
-         ctx.view.refresh(ctx);
+         auto bounds = ctx.bounds;
+         auto size = current_size();
+         bounds.width(size.x);
+         bounds.height(size.y);
+         ctx.view.refresh(bounds);
       }
 
       if (handled)

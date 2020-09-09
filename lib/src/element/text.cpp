@@ -553,7 +553,7 @@ namespace cycfi { namespace elements
       // Handle the case where text is empty
       if (_is_focus && _text.empty())
       {
-         auto  m = font().metrics();
+         auto  m = get_font().metrics();
          auto  line_height = m.ascent + m.descent + m.leading;
          auto  width = theme.text_box_caret_width;
          auto  left = ctx.bounds.left;
@@ -656,7 +656,7 @@ namespace cycfi { namespace elements
 
    char32_t const* basic_text_box::caret_position(context const& ctx, point p)
    {
-      auto  m = font().metrics();
+      auto  m = get_font().metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
 
@@ -668,7 +668,7 @@ namespace cycfi { namespace elements
 
    basic_text_box::caret_metrics basic_text_box::caret_info(context const& ctx, char32_t const* s)
    {
-      auto  m = font().metrics();
+      auto  m = get_font().metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
       auto  pos = get_layout().caret_point(s - &get_text()[0]);
@@ -851,7 +851,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits basic_input_box::limits(basic_context const& /* ctx */) const
    {
-      auto  m = font().metrics();
+      auto  m = get_font().metrics();
       auto  line_height = m.ascent + m.descent + m.leading;
       return { { 32, line_height }, { full_extent, line_height } };
    }
@@ -866,7 +866,7 @@ namespace cycfi { namespace elements
 
             auto& canvas = ctx.canvas;
             auto& theme = get_theme();
-            auto  m = font().metrics();
+            auto  m = get_font().metrics();
 
             canvas.font(theme.text_box_font);
             canvas.fill_style(theme.inactive_font_color);

@@ -147,8 +147,8 @@ namespace cycfi::elements
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
-      virtual bool            word_break(char32_t const* utf8) const;
-      virtual bool            line_break(char32_t const* utf8) const;
+      virtual bool            word_break(int index) const;
+      virtual bool            line_break(int index) const;
 
    protected:
 

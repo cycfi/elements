@@ -14,6 +14,7 @@
 namespace cycfi { namespace elements
 {
    using namespace std::chrono_literals;
+   using text_layout = artist::text_layout;
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -180,44 +181,47 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      char32_t const* _first = _text.data();
-      char32_t const* _last = _first + _text.size();
+      // char32_t const* _first = _text.data();
+      // char32_t const* _last = _first + _text.size();
+
+      char32_t const* begin = _text.data();
+      int _size = _text.size();
 
       if (char32_t const* pos = caret_position(ctx, btn.pos))
       {
          if (btn.num_clicks != 1)
          {
-            char32_t const* end = pos;
-            char32_t const* start = pos;
+            int end = pos - begin;
+            int start = pos - begin;
 
             auto fixup = [&]()
             {
-               if (start != _first)
+               if (start > 0)
                   ++start;
-               _select_start = int(start - _first);
-               _select_end = int(end - _first);
+               _select_start = start;
+               _select_end = end;
             };
 
             if (btn.num_clicks == 2)
             {
-               while (end < _last && !word_break(end))
+               while (end < _size && !word_break(end))
                   ++end;
-               while (start > _first && !word_break(start))
+               while (start >= 0 && !word_break(start))
                   --start;
                fixup();
             }
             else if (btn.num_clicks == 3)
             {
-               while (end < _last && !line_break(end))
+               while (end < _size && !line_break(end))
                   end++;
-               while (start > _first && !line_break(start))
+               while (start >= 0 && !line_break(start))
                   start--;
                fixup();
             }
          }
          else
          {
-            auto hit = int(pos - _first);
+            auto hit = int(pos - begin);
             if ((btn.modifiers == mod_shift) && (_select_start != -1))
             {
                if (hit < _select_start)
@@ -362,29 +366,28 @@ namespace cycfi { namespace elements
       {
          if (_select_end < static_cast<int>(_text.size()))
          {
-            char32_t const* p = &_text[_select_end];
-            char32_t const* end = _text.data() + _text.size();
-            while (p != end && word_break(p))
-               ++p;
-            while (p != end && !word_break(p))
-               ++p;
-            _select_end = int(p - &_text[0]);
+            int pos = _select_end;
+            int size = _text.size();
+            while (pos != size && word_break(pos))
+               ++pos;
+            while (pos != size && !word_break(pos))
+               ++pos;
+            _select_end = pos;
          }
       };
 
-      auto prev_word = [this, &_text]()
+      auto prev_word = [this]()
       {
          if (_select_end > 0)
          {
-            char32_t const* start = &_text[0];
-            char32_t const* p = &_text[_select_end-1];
-            while (p != start && word_break(p))
-               --p;
-            while (p != start && !word_break(p))
-               --p;
-            if (p != start)
-               ++p;
-            _select_end = int(p - &_text[0]);
+            int pos = _select_end-1;
+            while (pos != 0 && word_break(pos))
+               --pos;
+            while (pos != 0 && !word_break(pos))
+               --pos;
+            if (pos != 0)
+               ++pos;
+            _select_end = pos;
          }
       };
 
@@ -833,22 +836,14 @@ namespace cycfi { namespace elements
       _select_start = _select_end = -1;
    }
 
-   bool basic_text_box::word_break(char32_t const* str) const
+   bool basic_text_box::word_break(int index) const
    {
-      // $$$ optimize me $$$
-      if (str >= (get_text().data()+get_text().size()))
-         return false;
-      auto cp = *str;
-      return is_space(cp) || is_punctuation(cp);
+      return get_layout().word_break(index) == text_layout::allow_break || line_break(index);
    }
 
-   bool basic_text_box::line_break(char32_t const* str) const
+   bool basic_text_box::line_break(int index) const
    {
-      // $$$ optimize me $$$
-      if (str >= (get_text().data()+get_text().size()))
-         return false;
-      auto cp = *str;
-      return is_newline(cp);
+      return get_layout().line_break(index) == text_layout::must_break;
    }
 
    ////////////////////////////////////////////////////////////////////////////

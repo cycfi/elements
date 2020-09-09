@@ -9,7 +9,6 @@
 #include <elements/base_view.hpp>
 #include <artist/rect.hpp>
 #include <artist/canvas.hpp>
-//#include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
@@ -18,6 +17,7 @@
 #include <memory>
 #include <unordered_map>
 #include <chrono>
+#include <stack>
 
 namespace cycfi { namespace elements
 {

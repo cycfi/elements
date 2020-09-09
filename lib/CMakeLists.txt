@@ -192,23 +192,6 @@ if (APPLE)
 endif()
 
 ###############################################################################
-# Cairo
-
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
-   endif()
-else()
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-	target_link_libraries(elements PUBLIC PkgConfig::cairo)
-endif()
-
-###############################################################################
 # Fontconfig
 
 if (MSVC)

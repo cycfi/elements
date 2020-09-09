@@ -37,6 +37,14 @@ else()
 endif()
 
 ###############################################################################
+# Linux Open GL
+
+if (UNIX AND NOT APPLE)
+   find_package(PkgConfig REQUIRED)
+   find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+endif()
+
+###############################################################################
 # Sources (and Resources)
 
 if (NOT DEFINED ELEMENTS_ICON_FONT)
@@ -151,6 +159,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
    ${ELEMENTS_APP_DEPENDENCIES}
    elements
+   ${OPENGL_LIBRARIES}
 )
 
 if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)

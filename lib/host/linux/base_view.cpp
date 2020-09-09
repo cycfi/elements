@@ -4,16 +4,32 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/app.hpp>
-#include <cairo.h>
 #include <infra/assert.hpp>
 #include <elements/base_view.hpp>
 #include <elements/window.hpp>
-#include <elements/support/canvas.hpp>
-#include <elements/support/resource_paths.hpp>
-#include <elements/support/text_utils.hpp>
+//#include <elements/support/text_utils.hpp> $$$ fixme $$$
+#include <artist/resources.hpp>
+#include <artist/canvas.hpp>
 #include <gtk/gtk.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+
+#include "GrContext.h"
+#include "gl/GrGLInterface.h"
+#include "SkSurface.h"
+
 #include <map>
 #include <string>
+
+namespace cycfi::artist
+{
+   void init_paths()
+   {
+      add_search_path(fs::current_path() / "resources");
+      add_search_path(fs::current_path() / "resources/fonts");
+      add_search_path(fs::current_path() / "resources/images");
+   }
+}
 
 namespace cycfi { namespace elements
 {
@@ -22,7 +38,6 @@ namespace cycfi { namespace elements
       host_view();
       ~host_view();
 
-      cairo_surface_t* surface = nullptr;
       GtkWidget* widget = nullptr;
 
       // Mouse button click tracking
@@ -40,8 +55,12 @@ namespace cycfi { namespace elements
       int modifiers = 0; // the latest modifiers
 
       GtkIMContext* im_context;
-
       GdkCursorType active_cursor_type = GDK_ARROW;
+
+      point                      _size;
+      sk_sp<const GrGLInterface> _xface;
+      sk_sp<GrContext>           _ctx;
+      sk_sp<SkSurface>           _surface;
    };
 
    struct platform_access
@@ -52,6 +71,12 @@ namespace cycfi { namespace elements
       }
    };
 
+   float get_scale(GtkWidget* widget); // $$$ fixme $$$
+   // {
+   //    auto gdk_win = gtk_widget_get_window(widget);
+   //    return 1.0f / gdk_window_get_scale_factor(gdk_win);
+   // }
+
    host_view::host_view()
     : im_context(gtk_im_context_simple_new())
    {
@@ -59,9 +84,9 @@ namespace cycfi { namespace elements
 
    host_view::~host_view()
    {
-      if (surface)
-         cairo_surface_destroy(surface);
-      surface = nullptr;
+//      if (surface)
+//         cairo_surface_destroy(surface);
+//      surface = nullptr;
    }
 
    namespace
@@ -75,39 +100,136 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      gboolean on_configure(GtkWidget* widget, GdkEventConfigure* /* event */, gpointer user_data)
+      // gboolean on_configure(GtkWidget* widget, GdkEventConfigure* /* event */, gpointer user_data)
+      // {
+      //    auto& view = get(user_data);
+      //    auto* host_view_h = platform_access::get_host_view(view);
+
+      //    if (host_view_h->surface)
+      //       cairo_surface_destroy(host_view_h->surface);
+
+      //    host_view_h->surface = gdk_window_create_similar_surface(
+      //       gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
+      //       gtk_widget_get_allocated_width(widget),
+      //       gtk_widget_get_allocated_height(widget)
+      //    );
+      //    return true;
+      // }
+
+      // gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
+      // {
+      //    auto& view = get(user_data);
+      //    auto* host_view_h = platform_access::get_host_view(view);
+      //    cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
+      //    cairo_paint(cr);
+
+      //    // Note that cr (cairo_t) is already clipped to only draw the
+      //    // exposed areas of the widget.
+      //    double left, top, right, bottom;
+      //    cairo_clip_extents(cr, &left, &top, &right, &bottom);
+      //    view.draw(
+      //       cr,
+      //       rect{ float(left), float(top), float(right), float(bottom) }
+      //    );
+
+      //    return false;
+      // }
+
+      void realize(GtkGLArea* area, gpointer user_data)
       {
+         gtk_gl_area_make_current(area);
+         if (gtk_gl_area_get_error(area) != nullptr)
+            return;
+
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
 
-         if (host_view_h->surface)
-            cairo_surface_destroy(host_view_h->surface);
-
-         host_view_h->surface = gdk_window_create_similar_surface(
-            gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
-            gtk_widget_get_allocated_width(widget),
-            gtk_widget_get_allocated_height(widget)
-         );
-         return true;
+         // glClearColor(1.0, 1.0, 1.0, 1.0);
+         // glClear(GL_COLOR_BUFFER_BIT);
+         host_view_h->_xface = GrGLMakeNativeInterface();
+         host_view_h->_ctx = GrContext::MakeGL(host_view_h->_xface);
       }
 
-      gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
+      gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
-         cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
-         cairo_paint(cr);
+         auto error = [](char const* msg) { throw std::runtime_error(msg); };
 
-         // Note that cr (cairo_t) is already clipped to only draw the
-         // exposed areas of the widget.
-         double left, top, right, bottom;
-         cairo_clip_extents(cr, &left, &top, &right, &bottom);
-         view.draw(
-            cr,
-            rect{ float(left), float(top), float(right), float(bottom) }
-         );
+         auto draw_f =
+            [&]()
+            {
+               auto w = gtk_widget_get_allocated_width(host_view_h->widget);
+               auto h = gtk_widget_get_allocated_height(host_view_h->widget);
+               if (host_view_h->_size.x != w || host_view_h->_size.y != h)
+               {
+                  host_view_h->_surface.reset();
+                  host_view_h->_size.x = w;
+                  host_view_h->_size.y = h;
+                  glViewport(0, 0, w, h);
+                  //host_view_h->_ctx->resize(w, h);
 
-         return false;
+                  // $$$ sawat $$$
+                  glClearColor(1.0, 1.0, 1.0, 1.0);
+                  glClear(GL_COLOR_BUFFER_BIT);
+
+               }
+
+               auto scale = 1.0 / get_scale(host_view_h->widget);
+
+               if (!host_view_h->_surface)
+               {
+                  GrGLint buffer;
+                  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
+                  GrGLFramebufferInfo info;
+                  info.fFBOID = (GrGLuint) buffer;
+                  SkColorType colorType = kRGBA_8888_SkColorType;
+
+
+                  info.fFormat = GL_RGBA8;
+                  GrBackendRenderTarget target(
+                     w * scale
+                   , h * scale
+                   , 0, 8, info
+                  );
+
+                  host_view_h->_surface =
+                     SkSurface::MakeFromBackendRenderTarget(
+                        host_view_h->_ctx.get(), target,
+                        kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr
+                     );
+
+                  if (!host_view_h->_surface)
+                     error("Error: SkSurface::MakeRenderTarget returned null");
+               }
+
+               SkCanvas* gpu_canvas = host_view_h->_surface->getCanvas();
+               gpu_canvas->save();
+
+               gpu_canvas->scale(scale, scale);
+               // auto cnv = canvas{ gpu_canvas };
+               // cnv.pre_scale(2);//host_view_h->_scale);
+
+               // view.draw(cnv, {0, 0, 100, 100});
+
+               SkPaint fillPaint;
+               SkPaint strokePaint;
+               strokePaint.setStyle(SkPaint::kStroke_Style);
+               strokePaint.setStrokeWidth(3.0f);
+
+               gpu_canvas->drawRect(SkRect::MakeXYWH(10, 10, 60, 20), fillPaint);
+               gpu_canvas->drawRect(SkRect::MakeXYWH(80, 10, 60, 20), strokePaint);
+
+               strokePaint.setStrokeWidth(5.0f);
+               gpu_canvas->drawOval(SkRect::MakeXYWH(150, 10, 60, 20), strokePaint);
+
+
+               gpu_canvas->restore();
+               host_view_h->_surface->flush();
+            };
+
+         draw_f();
+         return true;
       }
 
       template <typename Event>
@@ -377,17 +499,32 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   // $$$ TODO: Investigate $$$
+   // Somehow, this prevents us from having linker errors
+   // Without this, we get undefined reference to `glXGetCurrentContext'
+   auto proc = &glXGetProcAddress;
+
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
-      auto* content_view = gtk_drawing_area_new();
+      auto error = [](char const* msg) { throw std::runtime_error(msg); };
+      if (!proc)
+         error("Error: glXGetProcAddress is null");
+
+      auto* content_view = gtk_gl_area_new();
+      auto* host_view_h = platform_access::get_host_view(view);
 
       gtk_container_add(GTK_CONTAINER(parent), content_view);
 
+      g_signal_connect(content_view, "render",
+         G_CALLBACK(render), &view);
+      g_signal_connect(content_view, "realize",
+         G_CALLBACK(realize), &view);
+
       // Subscribe to content_view events
-      g_signal_connect(content_view, "configure-event",
-         G_CALLBACK(on_configure), &view);
-      g_signal_connect(content_view, "draw",
-         G_CALLBACK(on_draw), &view);
+      // g_signal_connect(content_view, "configure-event",
+      //    G_CALLBACK(on_configure), &view);
+      // g_signal_connect(content_view, "draw",
+      //    G_CALLBACK(on_draw), &view);
       g_signal_connect(content_view, "button-press-event",
          G_CALLBACK(on_button), &view);
       g_signal_connect (content_view, "button-release-event",
@@ -435,6 +572,8 @@ namespace cycfi { namespace elements
       // Create 1ms timer
       g_timeout_add(1, poll_function, &view);
 
+      // $$$ TODO: do this $$$
+      // host_view_h->_scale = gdk_window_get_scale_factor(w);
       return content_view;
    }
 
@@ -445,15 +584,15 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
-   struct init_view_class
-   {
-      init_view_class()
-      {
-         auto pwd = fs::current_path();
-         auto resource_path = pwd / "resources";
-         resource_paths.push_back(resource_path);
-      }
-   };
+//   struct init_view_class $$$ fixme $$$
+//   {
+//      init_view_class()
+//      {
+//         auto pwd = fs::current_path();
+//         auto resource_path = pwd / "resources";
+//         resource_paths.push_back(resource_path);
+//      }
+//   };
 
    base_view::base_view(extent /* size_ */)
     : base_view(new host_view)
@@ -465,7 +604,7 @@ namespace cycfi { namespace elements
    base_view::base_view(host_view_handle h)
     : _view(h)
    {
-      static init_view_class init;
+//      static init_view_class init; $$$ fixme $$$
    }
 
    base_view::base_view(host_window_handle h)
@@ -506,6 +645,11 @@ namespace cycfi { namespace elements
    {
       // $$$ Wrong: don't size the window!!! $$$
       gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);
+   }
+
+   float base_view::hdpi_scale() const
+   {
+      return get_scale(_view->widget);
    }
 
    void base_view::refresh()

@@ -4,8 +4,8 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/app.hpp>
-#include <elements/support/font.hpp>
-#include <elements/support/resource_paths.hpp>
+//#include <elements/support/font.hpp>
+#include <artist/resources.hpp>
 #include <infra/filesystem.hpp>
 #include <string>
 #include <functional>
@@ -40,6 +40,7 @@ namespace cycfi { namespace elements
       on_activate.clear();
    }
 
+/* $$$ TODO: fixme; remove for now $$$
    fs::path find_resources()
    {
       const fs::path app_path = fs::path(argv[0]);
@@ -58,14 +59,15 @@ namespace cycfi { namespace elements
 
       return fs::current_path() / "resources";
    }
-
+*/
    struct init_app
    {
       init_app(std::string id)
       {
-         const fs::path resources_path = find_resources();
-         font_paths().push_back(resources_path);
-         resource_paths.push_back(resources_path);
+         // $$$ TODO: fixme; remove for now $$$
+         // const fs::path resources_path = find_resources();
+         // font_paths().push_back(resources_path);
+         // resource_paths.push_back(resources_path);
 
          the_app = gtk_application_new(
             id.c_str()

@@ -20,7 +20,10 @@
 
 #include <map>
 #include <string>
-#include <iostream> // $$$ temp $$$
+
+#if defined ELEMENTS_PRINT_FPS
+# include <iostream>
+#endif
 
 namespace cycfi::artist
 {
@@ -64,11 +67,8 @@ namespace cycfi { namespace elements
       }
    };
 
-   float get_scale(GtkWidget* widget); // $$$ fixme $$$
-   // {
-   //    auto gdk_win = gtk_widget_get_window(widget);
-   //    return 1.0f / gdk_window_get_scale_factor(gdk_win);
-   // }
+   // Defined in app.cpp
+   float get_scale(GtkWidget* widget);
 
    host_view::host_view()
     : _im_context(gtk_im_context_simple_new())
@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
 
    host_view::~host_view()
    {
-      widget = nullptr;
+      _widget = nullptr;
    }
 
    namespace
@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
+      gboolean on_draw(GtkWidget* /*widget*/, cairo_t* cr, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -109,13 +109,11 @@ namespace cycfi { namespace elements
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
 
-         // glClearColor(1.0, 1.0, 1.0, 1.0);
-         // glClear(GL_COLOR_BUFFER_BIT);
          host_view_h->_xface = GrGLMakeNativeInterface();
          host_view_h->_ctx = GrContext::MakeGL(host_view_h->_xface);
       }
 
-      gboolean render(GtkGLArea* area, GdkGLContext* context, gpointer user_data)
+      gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
@@ -128,18 +126,9 @@ namespace cycfi { namespace elements
             host_view_h->_surface.reset();
             host_view_h->_size.x = w;
             host_view_h->_size.y = h;
-            // glViewport(0, 0, w, h);
-            //host_view_h->_ctx->resize(w, h);
-
-            std::cout << "resize" << std::endl;
-
-            // $$$ sawat $$$
-            // glClearColor(1.0, 1.0, 1.0, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
          }
 
-         auto scale = 1.0 / get_scale(host_view_h->_widget);
-         bool redraw = false;
+         auto scale = get_scale(host_view_h->_widget);
 
          if (!host_view_h->_surface)
          {
@@ -148,7 +137,6 @@ namespace cycfi { namespace elements
             GrGLFramebufferInfo info;
             info.fFBOID = (GrGLuint) buffer;
             SkColorType colorType = kRGBA_8888_SkColorType;
-
 
             info.fFormat = GL_RGBA8;
             GrBackendRenderTarget target(
@@ -163,18 +151,11 @@ namespace cycfi { namespace elements
                   kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr
                );
 
-            std::cout << "new surface" << std::endl;
-
             if (!host_view_h->_surface)
                error("Error: SkSurface::MakeRenderTarget returned null");
 
-            redraw = true;
-
             gtk_widget_draw(host_view_h->_widget, host_view_h->_cr);
             return true;
-
-            // gtk_gl_area_queue_render((GtkGLArea*)host_view_h->_widget);
-            // return false;
          }
 
          SkCanvas* gpu_canvas = host_view_h->_surface->getCanvas();
@@ -185,25 +166,21 @@ namespace cycfi { namespace elements
          double left, top, right, bottom;
          cairo_clip_extents(host_view_h->_cr, &left, &top, &right, &bottom);
 
-         // gpu_canvas->scale(scale, scale);
          auto cnv = canvas{ gpu_canvas };
-         cnv.pre_scale(scale);//host_view_h->_scale);
+         cnv.pre_scale(scale);
 
+#if defined ELEMENTS_PRINT_FPS
          auto start = std::chrono::steady_clock::now();
+#endif
          view.draw(cnv, { float(left), float(top), float(right), float(bottom) });
+
+#if defined ELEMENTS_PRINT_FPS
          auto stop = std::chrono::steady_clock::now();
          auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-
-         std::cout << "draw " << (1.0/elapsed) << " fps" << std::endl;
-
+         std::cout << (1.0/elapsed) << " fps" << std::endl;
+#endif
          gpu_canvas->restore();
          host_view_h->_surface->flush();
-         //_skia_context->swapBuffers();
-
-         // if (redraw)
-         //    render(area, context, user_data);
-
-         // glFlush();
          return true;
       }
 
@@ -302,7 +279,7 @@ namespace cycfi { namespace elements
             if (btn.down)
                base_view.drag(btn);
             else
-               base_view.cursor(view->cursor_position, cursor_tracking::hovering);
+               base_view.cursor(view->_cursor_position, cursor_tracking::hovering);
          }
          return true;
       }
@@ -362,10 +339,10 @@ namespace cycfi { namespace elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      host_view_h->cursor_position = point{ float(event->x), float(event->y) };
+      host_view_h->_cursor_position = point{ float(event->x), float(event->y) };
       if (event->type == GDK_ENTER_NOTIFY)
       {
-         base_view.cursor(host_view_h->cursor_position, cursor_tracking::entering);
+         base_view.cursor(host_view_h->_cursor_position, cursor_tracking::entering);
          host_view_under_cursor = host_view_h;
          if (host_view_h->_active_cursor_type != view_cursor_type)
          {
@@ -375,7 +352,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         base_view.cursor(host_view_h->cursor_position, cursor_tracking::leaving);
+         base_view.cursor(host_view_h->_cursor_position, cursor_tracking::leaving);
          host_view_under_cursor = nullptr;
       }
       return true;
@@ -486,8 +463,6 @@ namespace cycfi { namespace elements
          error("Error: glXGetProcAddress is null");
 
       auto* content_view = gtk_gl_area_new();
-      auto* host_view_h = platform_access::get_host_view(view);
-
       gtk_container_add(GTK_CONTAINER(parent), content_view);
 
       g_signal_connect(content_view, "render",
@@ -496,8 +471,6 @@ namespace cycfi { namespace elements
          G_CALLBACK(realize), &view);
 
       // Subscribe to content_view events
-      // g_signal_connect(content_view, "configure-event",
-      //    G_CALLBACK(on_configure), &view);
       g_signal_connect(content_view, "draw",
          G_CALLBACK(on_draw), &view);
       g_signal_connect(content_view, "button-press-event",
@@ -607,7 +580,7 @@ namespace cycfi { namespace elements
 
    point base_view::cursor_pos() const
    {
-      return _view->cursor_position;
+      return _view->_cursor_position;
    }
 
    elements::extent base_view::size() const
@@ -635,8 +608,6 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
-      // gtk_gl_area_queue_render((GtkGLArea*)_view->_widget);
-      // auto scale = 1; // get_scale(_view->_widget);
       gtk_widget_queue_draw_area(_view->_widget,
          area.left,
          area.top,

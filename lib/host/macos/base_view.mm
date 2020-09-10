@@ -333,8 +333,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    return YES;
 }
 
-#define ELEMENTS_PRINT_FPS
-
 - (void) drawRect : (NSRect)dirty
 {
    [super drawRect : dirty];

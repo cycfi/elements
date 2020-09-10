@@ -84,6 +84,7 @@ namespace cycfi { namespace elements
 
    host_view::~host_view()
    {
+      widget = nullptr;
    }
 
    namespace
@@ -185,12 +186,17 @@ namespace cycfi { namespace elements
          SkCanvas* gpu_canvas = host_view_h->_surface->getCanvas();
          gpu_canvas->save();
 
+         // Note that cr (cairo_t) is already clipped to only draw the
+         // exposed areas of the widget.
+         double left, top, right, bottom;
+         cairo_clip_extents(host_view_h->_cr, &left, &top, &right, &bottom);
+
          // gpu_canvas->scale(scale, scale);
          auto cnv = canvas{ gpu_canvas };
          cnv.pre_scale(scale);//host_view_h->_scale);
 
          auto start = std::chrono::steady_clock::now();
-         view.draw(cnv, {0, 0, w, h});
+         view.draw(cnv, { float(left), float(top), float(right), float(bottom) });
          auto stop = std::chrono::steady_clock::now();
          auto elapsed = std::chrono::duration<double>{ stop - start }.count();
 
@@ -602,6 +608,7 @@ namespace cycfi { namespace elements
       if (host_view_under_cursor == _view)
          host_view_under_cursor = nullptr;
       delete _view;
+      _view = nullptr;
    }
 
    point base_view::cursor_pos() const
@@ -629,21 +636,19 @@ namespace cycfi { namespace elements
 
    void base_view::refresh()
    {
-      auto x = gtk_widget_get_allocated_width(_view->widget);
-      auto y = gtk_widget_get_allocated_height(_view->widget);
-      refresh({ 0, 0, float(x), float(y) });
+      gtk_widget_queue_draw(_view->widget);
    }
 
    void base_view::refresh(rect area)
    {
-      gtk_gl_area_queue_render((GtkGLArea*)_view->widget);
+      // gtk_gl_area_queue_render((GtkGLArea*)_view->widget);
       // auto scale = 1; // get_scale(_view->widget);
-      // gtk_widget_queue_draw_area(_view->widget,
-      //    area.left * scale,
-      //    area.top * scale,
-      //    area.width() * scale,
-      //    area.height() * scale
-      // );
+      gtk_widget_queue_draw_area(_view->widget,
+         area.left,
+         area.top,
+         area.width(),
+         area.height()
+      );
    }
 
    std::string clipboard()

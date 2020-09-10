@@ -20,14 +20,13 @@
 
 #include <map>
 #include <string>
+#include <iostream> // $$$ temp $$$
 
 namespace cycfi::artist
 {
    void init_paths()
    {
       add_search_path(fs::current_path() / "resources");
-      add_search_path(fs::current_path() / "resources/fonts");
-      add_search_path(fs::current_path() / "resources/images");
    }
 }
 
@@ -61,6 +60,7 @@ namespace cycfi { namespace elements
       sk_sp<const GrGLInterface> _xface;
       sk_sp<GrContext>           _ctx;
       sk_sp<SkSurface>           _surface;
+      cairo_t*                   _cr;
    };
 
    struct platform_access
@@ -84,9 +84,6 @@ namespace cycfi { namespace elements
 
    host_view::~host_view()
    {
-//      if (surface)
-//         cairo_surface_destroy(surface);
-//      surface = nullptr;
    }
 
    namespace
@@ -100,40 +97,13 @@ namespace cycfi { namespace elements
          return *reinterpret_cast<base_view*>(user_data);
       }
 
-      // gboolean on_configure(GtkWidget* widget, GdkEventConfigure* /* event */, gpointer user_data)
-      // {
-      //    auto& view = get(user_data);
-      //    auto* host_view_h = platform_access::get_host_view(view);
-
-      //    if (host_view_h->surface)
-      //       cairo_surface_destroy(host_view_h->surface);
-
-      //    host_view_h->surface = gdk_window_create_similar_surface(
-      //       gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
-      //       gtk_widget_get_allocated_width(widget),
-      //       gtk_widget_get_allocated_height(widget)
-      //    );
-      //    return true;
-      // }
-
-      // gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
-      // {
-      //    auto& view = get(user_data);
-      //    auto* host_view_h = platform_access::get_host_view(view);
-      //    cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
-      //    cairo_paint(cr);
-
-      //    // Note that cr (cairo_t) is already clipped to only draw the
-      //    // exposed areas of the widget.
-      //    double left, top, right, bottom;
-      //    cairo_clip_extents(cr, &left, &top, &right, &bottom);
-      //    view.draw(
-      //       cr,
-      //       rect{ float(left), float(top), float(right), float(bottom) }
-      //    );
-
-      //    return false;
-      // }
+      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
+      {
+         auto& view = get(user_data);
+         auto* host_view_h = platform_access::get_host_view(view);
+         host_view_h->_cr = cr;
+         return false;
+      }
 
       void realize(GtkGLArea* area, gpointer user_data)
       {
@@ -150,85 +120,90 @@ namespace cycfi { namespace elements
          host_view_h->_ctx = GrContext::MakeGL(host_view_h->_xface);
       }
 
-      gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)
+      gboolean render(GtkGLArea* area, GdkGLContext* context, gpointer user_data)
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
          auto error = [](char const* msg) { throw std::runtime_error(msg); };
 
-         auto draw_f =
-            [&]()
-            {
-               auto w = gtk_widget_get_allocated_width(host_view_h->widget);
-               auto h = gtk_widget_get_allocated_height(host_view_h->widget);
-               if (host_view_h->_size.x != w || host_view_h->_size.y != h)
-               {
-                  host_view_h->_surface.reset();
-                  host_view_h->_size.x = w;
-                  host_view_h->_size.y = h;
-                  glViewport(0, 0, w, h);
-                  //host_view_h->_ctx->resize(w, h);
+         auto w = gtk_widget_get_allocated_width(host_view_h->widget);
+         auto h = gtk_widget_get_allocated_height(host_view_h->widget);
+         if (host_view_h->_size.x != w || host_view_h->_size.y != h)
+         {
+            host_view_h->_surface.reset();
+            host_view_h->_size.x = w;
+            host_view_h->_size.y = h;
+            // glViewport(0, 0, w, h);
+            //host_view_h->_ctx->resize(w, h);
 
-                  // $$$ sawat $$$
-                  glClearColor(1.0, 1.0, 1.0, 1.0);
-                  glClear(GL_COLOR_BUFFER_BIT);
+            std::cout << "resize" << std::endl;
 
-               }
+            // $$$ sawat $$$
+            // glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+         }
 
-               auto scale = 1.0 / get_scale(host_view_h->widget);
+         auto scale = 1.0 / get_scale(host_view_h->widget);
+         bool redraw = false;
 
-               if (!host_view_h->_surface)
-               {
-                  GrGLint buffer;
-                  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
-                  GrGLFramebufferInfo info;
-                  info.fFBOID = (GrGLuint) buffer;
-                  SkColorType colorType = kRGBA_8888_SkColorType;
-
-
-                  info.fFormat = GL_RGBA8;
-                  GrBackendRenderTarget target(
-                     w * scale
-                   , h * scale
-                   , 0, 8, info
-                  );
-
-                  host_view_h->_surface =
-                     SkSurface::MakeFromBackendRenderTarget(
-                        host_view_h->_ctx.get(), target,
-                        kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr
-                     );
-
-                  if (!host_view_h->_surface)
-                     error("Error: SkSurface::MakeRenderTarget returned null");
-               }
-
-               SkCanvas* gpu_canvas = host_view_h->_surface->getCanvas();
-               gpu_canvas->save();
-
-               gpu_canvas->scale(scale, scale);
-               // auto cnv = canvas{ gpu_canvas };
-               // cnv.pre_scale(2);//host_view_h->_scale);
-
-               // view.draw(cnv, {0, 0, 100, 100});
-
-               SkPaint fillPaint;
-               SkPaint strokePaint;
-               strokePaint.setStyle(SkPaint::kStroke_Style);
-               strokePaint.setStrokeWidth(3.0f);
-
-               gpu_canvas->drawRect(SkRect::MakeXYWH(10, 10, 60, 20), fillPaint);
-               gpu_canvas->drawRect(SkRect::MakeXYWH(80, 10, 60, 20), strokePaint);
-
-               strokePaint.setStrokeWidth(5.0f);
-               gpu_canvas->drawOval(SkRect::MakeXYWH(150, 10, 60, 20), strokePaint);
+         if (!host_view_h->_surface)
+         {
+            GrGLint buffer;
+            glGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
+            GrGLFramebufferInfo info;
+            info.fFBOID = (GrGLuint) buffer;
+            SkColorType colorType = kRGBA_8888_SkColorType;
 
 
-               gpu_canvas->restore();
-               host_view_h->_surface->flush();
-            };
+            info.fFormat = GL_RGBA8;
+            GrBackendRenderTarget target(
+               w * scale
+               , h * scale
+               , 0, 8, info
+            );
 
-         draw_f();
+            host_view_h->_surface =
+               SkSurface::MakeFromBackendRenderTarget(
+                  host_view_h->_ctx.get(), target,
+                  kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr
+               );
+
+            std::cout << "new surface" << std::endl;
+
+            if (!host_view_h->_surface)
+               error("Error: SkSurface::MakeRenderTarget returned null");
+
+            redraw = true;
+
+            gtk_widget_draw(host_view_h->widget, host_view_h->_cr);
+            return true;
+
+            // gtk_gl_area_queue_render((GtkGLArea*)host_view_h->widget);
+            // return false;
+         }
+
+         SkCanvas* gpu_canvas = host_view_h->_surface->getCanvas();
+         gpu_canvas->save();
+
+         // gpu_canvas->scale(scale, scale);
+         auto cnv = canvas{ gpu_canvas };
+         cnv.pre_scale(scale);//host_view_h->_scale);
+
+         auto start = std::chrono::steady_clock::now();
+         view.draw(cnv, {0, 0, w, h});
+         auto stop = std::chrono::steady_clock::now();
+         auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+
+         std::cout << "draw " << (1.0/elapsed) << " fps" << std::endl;
+
+         gpu_canvas->restore();
+         host_view_h->_surface->flush();
+         //_skia_context->swapBuffers();
+
+         // if (redraw)
+         //    render(area, context, user_data);
+
+         // glFlush();
          return true;
       }
 
@@ -523,8 +498,8 @@ namespace cycfi { namespace elements
       // Subscribe to content_view events
       // g_signal_connect(content_view, "configure-event",
       //    G_CALLBACK(on_configure), &view);
-      // g_signal_connect(content_view, "draw",
-      //    G_CALLBACK(on_draw), &view);
+      g_signal_connect(content_view, "draw",
+         G_CALLBACK(on_draw), &view);
       g_signal_connect(content_view, "button-press-event",
          G_CALLBACK(on_button), &view);
       g_signal_connect (content_view, "button-release-event",
@@ -661,13 +636,14 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
-      auto scale = 1; // get_scale(_view->widget);
-      gtk_widget_queue_draw_area(_view->widget,
-         area.left * scale,
-         area.top * scale,
-         area.width() * scale,
-         area.height() * scale
-      );
+      gtk_gl_area_queue_render((GtkGLArea*)_view->widget);
+      // auto scale = 1; // get_scale(_view->widget);
+      // gtk_widget_queue_draw_area(_view->widget,
+      //    area.left * scale,
+      //    area.top * scale,
+      //    area.width() * scale,
+      //    area.height() * scale
+      // );
    }
 
    std::string clipboard()

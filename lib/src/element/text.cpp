@@ -843,7 +843,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::line_break(int index) const
    {
-      return get_layout().line_break(index) == text_layout::must_break;
+      return index == 0 || get_layout().line_break(index) == text_layout::must_break;
    }
 
    ////////////////////////////////////////////////////////////////////////////

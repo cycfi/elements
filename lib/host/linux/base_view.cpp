@@ -37,30 +37,23 @@ namespace cycfi { namespace elements
       host_view();
       ~host_view();
 
-      GtkWidget* widget = nullptr;
-
-      // Mouse button click tracking
-      std::uint32_t click_time = 0;
-      std::uint32_t click_count = 0;
-
-      // Scroll acceleration tracking
-      std::uint32_t scroll_time = 0;
-
-      point cursor_position;
-
       using key_map = std::map<key_code, key_action>;
-      key_map keys;
 
-      int modifiers = 0; // the latest modifiers
+      GtkWidget*                 _widget = nullptr;   // The GTK widget
+      std::uint32_t              _click_time = 0;     // Mouse button click tracking
+      std::uint32_t              _click_count = 0;    // Mouse clicks count
+      std::uint32_t              _scroll_time = 0;    // Scroll acceleration tracking
+      point                      _cursor_position;    // Current cursor position
+      key_map                    _keys;               // The key map
+      int                        _modifiers = 0;      // the latest modifiers
+      GtkIMContext*              _im_context;         // GTK input method context
+      GdkCursorType              _active_cursor_type; // The cursor type
 
-      GtkIMContext* im_context;
-      GdkCursorType active_cursor_type = GDK_ARROW;
-
-      point                      _size;
-      sk_sp<const GrGLInterface> _xface;
-      sk_sp<GrContext>           _ctx;
-      sk_sp<SkSurface>           _surface;
-      cairo_t*                   _cr;
+      point                      _size;               // The current view size
+      sk_sp<const GrGLInterface> _xface;              // Skia Open GL Interface
+      sk_sp<GrContext>           _ctx;                // Skia OPen GL context
+      sk_sp<SkSurface>           _surface;            // Skia surface
+      cairo_t*                   _cr;                 // The current cairo context
    };
 
    struct platform_access
@@ -78,7 +71,8 @@ namespace cycfi { namespace elements
    // }
 
    host_view::host_view()
-    : im_context(gtk_im_context_simple_new())
+    : _im_context(gtk_im_context_simple_new())
+    , _active_cursor_type(GDK_ARROW)
    {
    }
 
@@ -127,8 +121,8 @@ namespace cycfi { namespace elements
          auto* host_view_h = platform_access::get_host_view(view);
          auto error = [](char const* msg) { throw std::runtime_error(msg); };
 
-         auto w = gtk_widget_get_allocated_width(host_view_h->widget);
-         auto h = gtk_widget_get_allocated_height(host_view_h->widget);
+         auto w = gtk_widget_get_allocated_width(host_view_h->_widget);
+         auto h = gtk_widget_get_allocated_height(host_view_h->_widget);
          if (host_view_h->_size.x != w || host_view_h->_size.y != h)
          {
             host_view_h->_surface.reset();
@@ -144,7 +138,7 @@ namespace cycfi { namespace elements
             glClear(GL_COLOR_BUFFER_BIT);
          }
 
-         auto scale = 1.0 / get_scale(host_view_h->widget);
+         auto scale = 1.0 / get_scale(host_view_h->_widget);
          bool redraw = false;
 
          if (!host_view_h->_surface)
@@ -176,10 +170,10 @@ namespace cycfi { namespace elements
 
             redraw = true;
 
-            gtk_widget_draw(host_view_h->widget, host_view_h->_cr);
+            gtk_widget_draw(host_view_h->_widget, host_view_h->_cr);
             return true;
 
-            // gtk_gl_area_queue_render((GtkGLArea*)host_view_h->widget);
+            // gtk_gl_area_queue_render((GtkGLArea*)host_view_h->_widget);
             // return false;
          }
 
@@ -226,7 +220,7 @@ namespace cycfi { namespace elements
          if (event->state & GDK_SUPER_MASK)
             btn.modifiers |= mod_action;
 
-         btn.num_clicks = view->click_count;
+         btn.num_clicks = view->_click_count;
          btn.pos = { float(event->x), float(event->y) };
          return true;
       }
@@ -247,11 +241,11 @@ namespace cycfi { namespace elements
          {
             case GDK_BUTTON_PRESS:
                btn.down = true;
-               if ((event->time - view->click_time) < guint32(dbl_click_time))
-                  ++view->click_count;
+               if ((event->time - view->_click_time) < guint32(dbl_click_time))
+                  ++view->_click_count;
                else
-                  view->click_count = 1;
-               view->click_time = event->time;
+                  view->_click_count = 1;
+               view->_click_time = event->time;
                break;
 
             case GDK_BUTTON_RELEASE:
@@ -283,7 +277,7 @@ namespace cycfi { namespace elements
          mouse_button btn;
          if (get_mouse(event, btn, view))
          {
-            view->cursor_position = btn.pos;
+            view->_cursor_position = btn.pos;
 
             if (event->state & GDK_BUTTON1_MASK)
             {
@@ -317,9 +311,9 @@ namespace cycfi { namespace elements
       {
          auto& base_view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(base_view);
-         auto elapsed = std::max<float>(10.0f, event->time - host_view_h->scroll_time);
+         auto elapsed = std::max<float>(10.0f, event->time - host_view_h->_scroll_time);
          static constexpr float _1s = 100;
-         host_view_h->scroll_time = event->time;
+         host_view_h->_scroll_time = event->time;
 
          float dx = 0;
          float dy = 0;
@@ -373,10 +367,10 @@ namespace cycfi { namespace elements
       {
          base_view.cursor(host_view_h->cursor_position, cursor_tracking::entering);
          host_view_under_cursor = host_view_h;
-         if (host_view_h->active_cursor_type != view_cursor_type)
+         if (host_view_h->_active_cursor_type != view_cursor_type)
          {
             change_window_cursor(widget, view_cursor_type);
-            host_view_h->active_cursor_type = view_cursor_type;
+            host_view_h->_active_cursor_type = view_cursor_type;
          }
       }
       else
@@ -395,7 +389,7 @@ namespace cycfi { namespace elements
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       auto cp = codepoint(str);
-      base_view.text({ cp, host_view_h->modifiers });
+      base_view.text({ cp, host_view_h->_modifiers });
    }
 
    int get_mods(int state)
@@ -439,11 +433,11 @@ namespace cycfi { namespace elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      gtk_im_context_filter_keypress(host_view_h->im_context, event);
+      gtk_im_context_filter_keypress(host_view_h->_im_context, event);
 
       int modifiers = get_mods(event->state);
       auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
-      host_view_h->modifiers = modifiers;
+      host_view_h->_modifiers = modifiers;
 
       // We don't want the shift key handled when obtaining the keyval,
       // so we do this again here, instead of relying on event->keyval
@@ -460,7 +454,7 @@ namespace cycfi { namespace elements
       if (key == key_code::unknown)
          return false;
 
-      handle_key(base_view, host_view_h->keys, { key, action, modifiers });
+      handle_key(base_view, host_view_h->_keys, { key, action, modifiers });
       return true;
    }
 
@@ -547,7 +541,7 @@ namespace cycfi { namespace elements
       );
 
       // Subscribe to text entry commit
-      g_signal_connect(view.host()->im_context, "commit",
+      g_signal_connect(view.host()->_im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
 
       // Create 1ms timer
@@ -594,7 +588,7 @@ namespace cycfi { namespace elements
       auto make_view =
          [this, h]()
          {
-            _view->widget = elements::make_view(*this, get_window(*h));
+            _view->_widget = elements::make_view(*this, get_window(*h));
          };
 
       if (app_is_activated())
@@ -618,32 +612,32 @@ namespace cycfi { namespace elements
 
    elements::extent base_view::size() const
    {
-      auto x = gtk_widget_get_allocated_width(_view->widget);
-      auto y = gtk_widget_get_allocated_height(_view->widget);
+      auto x = gtk_widget_get_allocated_width(_view->_widget);
+      auto y = gtk_widget_get_allocated_height(_view->_widget);
       return { float(x), float(y) };
    }
 
    void base_view::size(elements::extent p)
    {
       // $$$ Wrong: don't size the window!!! $$$
-      gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);
+      gtk_window_resize(GTK_WINDOW(_view->_widget), p.x, p.y);
    }
 
    float base_view::hdpi_scale() const
    {
-      return get_scale(_view->widget);
+      return get_scale(_view->_widget);
    }
 
    void base_view::refresh()
    {
-      gtk_widget_queue_draw(_view->widget);
+      gtk_widget_queue_draw(_view->_widget);
    }
 
    void base_view::refresh(rect area)
    {
-      // gtk_gl_area_queue_render((GtkGLArea*)_view->widget);
-      // auto scale = 1; // get_scale(_view->widget);
-      gtk_widget_queue_draw_area(_view->widget,
+      // gtk_gl_area_queue_render((GtkGLArea*)_view->_widget);
+      // auto scale = 1; // get_scale(_view->_widget);
+      gtk_widget_queue_draw_area(_view->_widget,
          area.left,
          area.top,
          area.width(),
@@ -689,10 +683,10 @@ namespace cycfi { namespace elements
       }
 
       auto* host_view_h = host_view_under_cursor;
-      if (host_view_h && host_view_h->active_cursor_type != view_cursor_type)
+      if (host_view_h && host_view_h->_active_cursor_type != view_cursor_type)
       {
-         change_window_cursor(host_view_under_cursor->widget, view_cursor_type);
-         host_view_h->active_cursor_type = view_cursor_type;
+         change_window_cursor(host_view_under_cursor->_widget, view_cursor_type);
+         host_view_h->_active_cursor_type = view_cursor_type;
       }
    }
 }}

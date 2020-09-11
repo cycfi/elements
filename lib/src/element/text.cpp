@@ -155,8 +155,8 @@ namespace cycfi { namespace elements
 
    basic_text_box::~basic_text_box()
    {
-      for (auto i = _state_savers.begin(); i != _state_savers.end(); )
-         i->get()->_this = nullptr;
+      for (auto& ss : _state_savers)
+         ss.get()->_this = nullptr;
    }
 
    void basic_text_box::draw(context const& ctx)

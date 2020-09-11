@@ -137,8 +137,8 @@ namespace cycfi { namespace elements
             bounds.bottom_left()
          };
 
-         gradient.add_color_stop({ 1.0, rgba(255, 255, 255, 64) });
          gradient.add_color_stop({ 0.0, rgba(0, 0, 0, 32) });
+         gradient.add_color_stop({ 1.0, rgba(255, 255, 255, 64) });
          cnv.fill_style(gradient);
 
          cnv.begin_path();
@@ -177,8 +177,8 @@ namespace cycfi { namespace elements
             hcp, radius*2
          };
 
-		 using cs = canvas::color_stop;
-		 gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
+         using cs = canvas::color_stop;
+         gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
          gradient.add_color_stop(cs{ 1.0f, { 0.6f, 0.6f, 0.6f, 0.0f } });
 
          cnv.fill_style(gradient);
@@ -212,6 +212,7 @@ namespace cycfi { namespace elements
          cnv.add_circle(cpf);
          cpf.radius *= 0.9;
          cnv.add_circle(cpf);
+         cnv.fill_rule(artist::path::fill_odd_even);
          cnv.clip();
 
          cnv.add_circle(cp);

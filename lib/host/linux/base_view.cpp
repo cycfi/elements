@@ -7,9 +7,11 @@
 #include <infra/assert.hpp>
 #include <elements/base_view.hpp>
 #include <elements/window.hpp>
-//#include <elements/support/text_utils.hpp> $$$ fixme $$$
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
+
+#include <limits.h>
+#include <unistd.h>
 #include <gtk/gtk.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -27,9 +29,43 @@
 
 namespace cycfi::artist
 {
+   namespace
+   {
+      fs::path exe_path()
+      {
+         char result[PATH_MAX];
+         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+         return std::string(result, (count > 0)? count : 0);
+      }
+
+      fs::path find_resources()
+      {
+         fs::path const app_path = exe_path();
+         fs::path const app_dir = app_path.parent_path();
+
+         if (app_dir.filename() == "bin")
+         {
+            fs::path const path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+            if (fs::is_directory(path))
+               return path;
+         }
+
+         fs::path const app_resources_dir = app_dir / "resources";
+         if (fs::is_directory(app_resources_dir))
+            return app_resources_dir;
+
+         return fs::current_path() / "resources";
+      }
+   }
+
    void init_paths()
    {
-      add_search_path(fs::current_path() / "resources");
+      add_search_path(find_resources());
+   }
+
+   fs::path get_user_fonts_directory()
+   {
+      return find_resources();
    }
 }
 
@@ -532,16 +568,6 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
-//   struct init_view_class $$$ fixme $$$
-//   {
-//      init_view_class()
-//      {
-//         auto pwd = fs::current_path();
-//         auto resource_path = pwd / "resources";
-//         resource_paths.push_back(resource_path);
-//      }
-//   };
-
    base_view::base_view(extent /* size_ */)
     : base_view(new host_view)
    {
@@ -552,7 +578,6 @@ namespace cycfi { namespace elements
    base_view::base_view(host_view_handle h)
     : _view(h)
    {
-//      static init_view_class init; $$$ fixme $$$
    }
 
    base_view::base_view(host_window_handle h)

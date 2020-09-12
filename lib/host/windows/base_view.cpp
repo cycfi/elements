@@ -27,15 +27,66 @@
       distribution.
 =============================================================================*/
 #include <elements/base_view.hpp>
-#include <elements/support/canvas.hpp>
-#include <elements/support/resource_paths.hpp>
-#include <cairo.h>
-#include <cairo-win32.h>
+#include <artist/canvas.hpp>
+#include <artist/resources.hpp>
+
+#ifndef UNICODE
+# define UNICODE
+#endif
+
+#include <SDKDDKVer.h>
+#include <windows.h>
+#include <gl/gl.h>
+
+#include <ShellScalingAPI.h>
 #include <Windowsx.h>
 #include <chrono>
 #include <map>
 
+#include <GrContext.h>
+#include <gl/GrGLInterface.h>
+#include <SkImage.h>
+#include <SkSurface.h>
+#include <tools/sk_app/DisplayParams.h>
+#include <tools/sk_app/WindowContext.h>
+#include <tools/sk_app/win/WindowContextFactory_win.h>
+
 #include "utils.hpp"
+
+namespace cycfi::artist
+{
+   namespace
+   {
+      fs::path find_resources()
+      {
+         // fs::path const app_path = exe_path();
+         // fs::path const app_dir = app_path.parent_path();
+
+         // if (app_dir.filename() == "bin")
+         // {
+         //    fs::path const path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+         //    if (fs::is_directory(path))
+         //       return path;
+         // }
+
+         // fs::path const app_resources_dir = app_dir / "resources";
+         // if (fs::is_directory(app_resources_dir))
+         //    return app_resources_dir;
+
+         return fs::current_path() / "resources";
+      }
+   }
+
+   void init_paths()
+   {
+      add_search_path(find_resources());
+   }
+
+   fs::path get_user_fonts_directory()
+   {
+      return find_resources();
+   }
+}
 
 namespace cycfi { namespace elements
 {
@@ -72,6 +123,7 @@ namespace cycfi { namespace elements
       {
          using time_point = std::chrono::time_point<std::chrono::steady_clock>;
          using key_map = std::map<key_code, key_action>;
+         using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
          base_view*     vptr = nullptr;
          bool           is_dragging = false;
@@ -86,29 +138,13 @@ namespace cycfi { namespace elements
          time_point     scroll_start = {};
          double         velocity = 0;
          key_map        keys = {};
+         skia_context   _skia_context;
       };
 
       view_info* get_view_info(HWND hwnd)
       {
          auto param = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
          return reinterpret_cast<view_info*>(param);
-      }
-
-      void make_offscreen_dc(HDC hdc, view_info* info, int w, int h)
-      {
-         info->hdc = hdc;
-         info->w = w;
-         info->h = w;
-
-         // Free-up the previous off-screen DC
-         if (info->offscreen_buff)
-            DeleteObject(info->offscreen_buff);
-         if (info->offscreen_hdc)
-            DeleteDC(info->offscreen_hdc);
-
-         // Create an off-screen DC for double-buffering
-         info->offscreen_hdc = CreateCompatibleDC(hdc);
-         info->offscreen_buff = CreateCompatibleBitmap(hdc, w, h);
       }
 
       LRESULT on_paint(HWND hwnd, view_info* info)
@@ -127,6 +163,7 @@ namespace cycfi { namespace elements
             auto win_width = r.right-r.left;
             auto win_height = r.bottom-r.top;
 
+/*
             if (hdc != info->hdc || win_width != info->w || win_height != info->h)
                make_offscreen_dc(hdc, info, win_width, win_height);
 
@@ -159,6 +196,8 @@ namespace cycfi { namespace elements
               , dirty.left, dirty.top, SRCCOPY);
 
             SelectObject(info->offscreen_hdc, hold);
+*/
+
             EndPaint(hwnd, &ps);
          }
          return 0;
@@ -484,10 +523,6 @@ namespace cycfi { namespace elements
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClassW(&windowClass))
                MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
-
-            auto pwd = fs::current_path();
-            auto resource_path = pwd / "resources";
-            resource_paths.push_back(resource_path);
          }
       };
    }
@@ -582,6 +617,11 @@ namespace cycfi { namespace elements
       );
    }
 
+   float base_view::hdpi_scale() const
+   {
+      return get_scale_for_window(_view);
+   }
+
    void base_view::refresh()
    {
       RECT bounds;
@@ -623,7 +663,7 @@ namespace cycfi { namespace elements
 
    void clipboard(std::string_view text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), text.size(), nullptr, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), nullptr, 0);
       if (!len)
          return;
 
@@ -638,7 +678,7 @@ namespace cycfi { namespace elements
          return;
       }
 
-      MultiByteToWideChar(CP_UTF8, 0, text.c_str(), text.size(), buffer, len);
+      MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), buffer, len);
       GlobalUnlock(object);
 
       if (!OpenClipboard(nullptr))

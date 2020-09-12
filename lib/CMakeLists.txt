@@ -251,6 +251,9 @@ elseif (WIN32)
       BOOST_DATE_TIME_NO_LIB
       BOOST_REGEX_NO_LIB
    )
+   set_property(TARGET elements PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded"
+   )
 endif()
 
 if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")

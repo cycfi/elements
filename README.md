@@ -42,6 +42,10 @@ very much welcome collaboration.
 
 ## News
 
+- 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+  port feature complete.
+- 10 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+  port feature complete.
 - 7 September 2020: MacOS [Artist 2D Canvas Library](https://github.com/cycfi/artist)
   port feature complete.
 - 22 June 2020: Removed dependency on Boost. This requires some API changes to

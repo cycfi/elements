@@ -126,7 +126,7 @@ elseif (WIN32)
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
       )
 
-      add_dependencies(${PROJECT_NAME} dlls)
+      add_dependencies(${PROJECT_NAME} windows_dlls)
 
 #      if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
 #         set(CAIRO_DLL ${ELEMENTS_ROOT}/lib/external/cairo/lib/x64/cairo.dll)

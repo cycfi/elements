@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
    {
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
-         this->tracking(false);
+         tracking(false);
          ctx.view.refresh(ctx);
          return false;
       }
@@ -193,36 +193,33 @@ namespace cycfi { namespace elements
       on_click = f;
    }
 
-   void basic_choice_base::do_click(context const& ctx, bool val, bool was_selected)
+   void basic_choice_base::do_click(context const& ctx)
    {
-      if (!was_selected && val)
+      auto [c, cctx] = find_composite(ctx);
+      if (c)
       {
-         auto [c, cctx] = find_composite(ctx);
-         if (c)
+         for (std::size_t i = 0; i != c->size(); ++i)
          {
-            for (std::size_t i = 0; i != c->size(); ++i)
+            if (auto e = find_element<basic_choice_base*>(&c->at(i)))
             {
-               if (auto e = find_element<basic_choice_base*>(&c->at(i)))
+               if (e == this)
                {
-                  if (e == this)
+                  // Set the button
+                  e->select(true);
+                  // The base class::click should have called on_click already
+               }
+               else
+               {
+                  if (e->is_selected())
                   {
-                     // Set the button
-                     e->select(true);
-                     // The base class::click should have called on_click already
-                  }
-                  else
-                  {
-                     if (e->is_selected())
-                     {
-                        // Reset the button
-                        e->select(false);
-                        e->get_sender().send(false);
-                     }
+                     // Reset the button
+                     e->select(false);
+                     e->get_sender().send(false);
                   }
                }
             }
          }
-         cctx->view.refresh(*cctx);
       }
+      cctx->view.refresh(*cctx);
    }
 }}

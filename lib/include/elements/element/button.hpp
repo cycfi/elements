@@ -198,7 +198,7 @@ namespace cycfi { namespace elements
                         basic_latching_button(W1&& off, W2&& on);
 
       bool              click(context const& ctx, mouse_button btn) override;
-      void              drag(context const& ctx, mouse_button btn) override;
+//      void              drag(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>
@@ -216,22 +216,32 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (btn.state != mouse_button::left || this->value() || !ctx.bounds.includes(btn.pos))
+      if (btn.down && this->value())
          return false;
+
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
+      {
+         this->tracking(false);
+         ctx.view.refresh(ctx);
+         return false;
+      }
+
       if (btn.down)
       {
-         Base::click(ctx, btn);
-         if (this->value() && this->on_click)
-            this->on_click(true);
+         this->tracking(true);
+         this->on_tracking(ctx, this->begin_tracking);
       }
-      else if (this->on_click)
-         this->on_click(true);
+      else
+      {
+         this->tracking(false);
+         this->on_tracking(ctx, this->end_tracking);
+         if (this->on_click)
+            this->on_click(true);
+         ctx.view.refresh(ctx);
+      }
+      if (btn.down && this->state(ctx.bounds.includes(btn.pos)))
+         ctx.view.refresh(ctx);
       return true;
-   }
-
-   template <typename Base>
-   inline void basic_latching_button<Base>::drag(context const& /* ctx */, mouse_button /* btn */)
-   {
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -240,7 +250,7 @@ namespace cycfi { namespace elements
    struct basic_choice_base : public selectable
    {
       virtual sender<bool>&   get_sender() = 0;
-      void                    do_click(context const& ctx, bool val, bool was_selected);
+      void                    do_click(context const& ctx);
    };
 
    template <typename Base = layered_button>
@@ -274,10 +284,17 @@ namespace cycfi { namespace elements
    {
       if (btn.state == mouse_button::left)
       {
-         bool was_selected = is_selected();
-         auto r = basic_latching_button<Base>::click(ctx, btn);
-         this->do_click(ctx, this->value(), was_selected);
-         return r;
+         if (btn.down)
+         {
+            return basic_latching_button<Base>::click(ctx, btn);
+         }
+         else
+         {
+            auto r = basic_latching_button<Base>::click(ctx, btn);
+            if (this->value())
+               this->do_click(ctx);
+            return r;
+         }
       }
       return false;
    }

@@ -691,5 +691,12 @@ namespace cycfi { namespace elements
             break;
       }
    }
+
+   point scroll_direction()
+   {
+      // -1.0:natural; +1.0:normal
+      float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? -1.0f : +1.0f;
+      return { dir, +1.0f };
+   }
 }}
 

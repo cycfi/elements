@@ -354,6 +354,10 @@ namespace cycfi { namespace elements
    };
 
    void set_cursor(cursor_type type);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Scroll direction
+   point scroll_direction();
 }}
 
 #endif

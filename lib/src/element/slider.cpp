@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
 
    void slider_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view_bounds))
+      if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
             context sctx { ctx, &track(), ctx.bounds };

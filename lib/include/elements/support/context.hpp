@@ -18,31 +18,46 @@ namespace cycfi::artist
 
 namespace cycfi::elements
 {
-	////////////////////////////////////////////////////////////////////////////////////////////////
-	// Contexts
-	////////////////////////////////////////////////////////////////////////////////////////////////
+ 	////////////////////////////////////////////////////////////////////////////////////////////////
+   // Forward declarations
+
    class view;
    class element;
    using artist::canvas;
    using artist::rect;
 
+   point    cursor_pos(view const& v);
+   rect     view_bounds(view const& v);
+   point    device_to_user(point p, canvas& cnv);
+   rect     device_to_user(rect const& r, canvas& cnv);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	// Contexts
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
    struct basic_context
    {
-      basic_context(elements::view& view_, elements::canvas& canvas_)
+      basic_context(elements::view& view_, elements::canvas& cnv)
        : view(view_)
-       , canvas(canvas_)
+       , canvas(cnv)
       {}
 
       basic_context(basic_context const&) = default;
       basic_context& operator=(basic_context const&) = delete;
 
+      rect view_bounds() const
+      {
+         return device_to_user(elements::view_bounds(view), canvas);
+      }
+
+      point cursor_pos() const
+      {
+         return device_to_user(elements::cursor_pos(view), canvas);
+      }
+
       elements::view&        view;
       elements::canvas&      canvas;
    };
-
-	////////////////////////////////////////////////////////////////////////////////////////////////
-   // Forward declaration, access to view bounds
-   rect view_bounds(elements::view const& v);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    class context : public basic_context
@@ -51,17 +66,17 @@ namespace cycfi::elements
 
       context(context const& rhs, artist::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
-       , parent(rhs.parent), bounds(bounds_), view_bounds(rhs.view_bounds)
+       , parent(rhs.parent), bounds(bounds_)
       {}
 
       context(context const& parent_, element* element_, artist::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
-       , parent(&parent_), bounds(bounds_), view_bounds(parent_.view_bounds)
+       , parent(&parent_), bounds(bounds_)
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, artist::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
-       , parent(nullptr), bounds(bounds_), view_bounds(elements::view_bounds(view_))
+       , parent(nullptr), bounds(bounds_)
       {}
 
       context(context const&) = default;
@@ -95,9 +110,7 @@ namespace cycfi::elements
 
       elements::element*            element;
       context const*                parent;
-      artist::rect                  bounds;
-      artist::rect                	view_bounds;
-
+      elements::rect                bounds;
 
    private:
 

@@ -138,6 +138,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline point cursor_pos(view const& v) // declared in context.hpp
+   {
+      return v.cursor_pos();
+   }
+
    inline rect view_bounds(view const& v) // declared in context.hpp
    {
       auto size = v.size();

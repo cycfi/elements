@@ -261,12 +261,13 @@ namespace cycfi { namespace elements
       {
          scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
          view_limits       e_limits = subject().limits(ctx);
+         point             mp = ctx.cursor_pos();
 
          if (sb.has_v)
-            draw_scroll_bar(ctx, { valign(), e_limits.min.y, sb.vscroll_bounds }, _cursor);
+            draw_scroll_bar(ctx, { valign(), e_limits.min.y, sb.vscroll_bounds }, mp);
 
          if (sb.has_h)
-            draw_scroll_bar(ctx, { halign(), e_limits.min.x, sb.hscroll_bounds }, _cursor);
+            draw_scroll_bar(ctx, { halign(), e_limits.min.x, sb.hscroll_bounds }, mp);
       }
    }
 
@@ -306,7 +307,7 @@ namespace cycfi { namespace elements
 
    bool scroller_base::click(context const& ctx, mouse_button btn)
    {
-      if (has_scrollbars())
+      if (btn.state == mouse_button::left && has_scrollbars())
       {
          if (btn.down)
          {
@@ -322,7 +323,8 @@ namespace cycfi { namespace elements
 
    void scroller_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_tracking == none || !reposition(ctx, btn.pos))
+      if (btn.state == mouse_button::left &&
+         (_tracking == none || !reposition(ctx, btn.pos)))
          port_element::drag(ctx, btn);
    }
 
@@ -433,7 +435,6 @@ namespace cycfi { namespace elements
 
    bool scroller_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      _cursor = p;
       if (has_scrollbars())
       {
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
@@ -488,7 +489,7 @@ namespace cycfi { namespace elements
                dp.x = bounds.right-r.right;
          }
 
-         return scroll(ctx, dp, _cursor);
+         return scroll(ctx, dp, ctx.cursor_pos());
       }
       return false;
    }

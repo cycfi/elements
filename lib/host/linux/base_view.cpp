@@ -685,5 +685,10 @@ namespace cycfi { namespace elements
          host_view_h->_active_cursor_type = view_cursor_type;
       }
    }
+
+   point scroll_direction()
+   {
+      return { +1.0f, +1.0f };
+   }
 }}
 

@@ -720,5 +720,10 @@ namespace cycfi { namespace elements
          ShowCursor(true);
       }
    }
+
+   point scroll_direction()
+   {
+      return { +1.0f, +1.0f };
+   }
 }}
 

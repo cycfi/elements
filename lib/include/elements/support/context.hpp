@@ -16,6 +16,15 @@ namespace cycfi::artist
    class canvas;
 }
 
+namespace cycfi::artist
+{
+ 	////////////////////////////////////////////////////////////////////////////////////////////////
+   // Forward declarations
+
+   point    device_to_user(point p, canvas& cnv);
+   rect     device_to_user(rect const& r, canvas& cnv);
+}
+
 namespace cycfi::elements
 {
  	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,11 +34,10 @@ namespace cycfi::elements
    class element;
    using artist::canvas;
    using artist::rect;
+   using artist::point;
 
    point    cursor_pos(view const& v);
    rect     view_bounds(view const& v);
-   point    device_to_user(point p, canvas& cnv);
-   rect     device_to_user(rect const& r, canvas& cnv);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// Contexts

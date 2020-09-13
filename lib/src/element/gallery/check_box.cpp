@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
          ;
 
       if (tracking)
-         c1 = c1.level(0.5);
+         c1 = c1.level(0.4);
 
       if (value || tracking)
          draw_icon(canvas_, box, icons::ok, 14, c1);

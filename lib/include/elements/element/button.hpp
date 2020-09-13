@@ -20,24 +20,34 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
+   struct button_state
+   {
+                        button_state()
+                         : value(false)
+                         , hilite(false)
+                         , tracking(false)
+                        {}
+
+      bool              value : 1;
+      bool              hilite : 1;
+      bool              tracking : 1;
+   };
+
    class basic_button : public proxy_base, public receiver<bool>, public sender<bool>
    {
    public:
 
       using button_function = std::function<void(bool)>;
 
-                        basic_button()
-                         : _state(false)
-                         , _hilite(false)
-                        {}
-
       bool              wants_control() const override;
       bool              click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
 
-      void              value(bool new_state) override;
-      bool              value() const override;
+      void              value(bool val) override;
+      bool              value() const override  { return _state.value; }
+      bool              tracking() const        { return _state.tracking; }
+      bool              hilite() const          { return _state.hilite; }
 
       void              send(bool val) override;
       void              on_send(callback_function f) override;
@@ -45,12 +55,15 @@ namespace cycfi { namespace elements
 
    protected:
 
-      bool              state(bool new_state);
+      bool              state(bool val);
+      void              tracking(bool val);
+      void              hilite(bool val);
 
    private:
 
-      bool              _state : 1;
-      bool              _hilite : 1;
+      bool              update_receiver();
+
+      button_state      _state;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -82,6 +95,8 @@ namespace cycfi { namespace elements
    protected:
 
       bool              state(bool new_state);
+      void              tracking(bool) {}
+      void              hilite(bool) {}
 
    private:
 
@@ -136,12 +151,14 @@ namespace cycfi { namespace elements
    {
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
+         this->tracking(false);
          ctx.view.refresh(ctx);
          return false;
       }
 
       if (btn.down)
       {
+         this->tracking(true);
          if (this->state(!this->value()))    // toggle the state
          {
             ctx.view.refresh(ctx);           // we need to save the current state, the state
@@ -150,9 +167,11 @@ namespace cycfi { namespace elements
       }
       else
       {
+         this->tracking(false);
          this->state(_current_state);
          if (this->on_click)
             this->on_click(this->value());
+         ctx.view.refresh(ctx);
       }
       return true;
    }
@@ -160,6 +179,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline void basic_toggle_button<Base>::drag(context const& ctx, mouse_button btn)
    {
+      this->hilite(ctx.bounds.includes(btn.pos));
       if (this->state(!_current_state ^ ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
    }

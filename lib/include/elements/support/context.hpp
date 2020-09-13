@@ -20,8 +20,10 @@ namespace cycfi { namespace elements
    class element;
    class canvas;
 
-   rect view_bounds(view const& v);
-   rect device_to_user(rect const& r, canvas& cnv);
+   point    cursor_pos(view const& v);
+   rect     view_bounds(view const& v);
+   point    device_to_user(point p, canvas& cnv);
+   rect     device_to_user(rect const& r, canvas& cnv);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// Contexts
@@ -40,6 +42,11 @@ namespace cycfi { namespace elements
       rect view_bounds() const
       {
          return device_to_user(elements::view_bounds(view), canvas);
+      }
+
+      point cursor_pos() const
+      {
+         return device_to_user(elements::cursor_pos(view), canvas);
       }
 
       elements::view&        view;

@@ -128,6 +128,12 @@ namespace cycfi { namespace elements
        , cnv.device_to_user(r.size())
       };
    }
+
+   // Declared in context.hpp
+   inline point device_to_user(point p, canvas& cnv)
+   {
+      return cnv.device_to_user(p);
+   }
 }}
 
 #endif

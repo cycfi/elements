@@ -412,7 +412,7 @@ namespace cycfi { namespace elements
             case key_code::backspace:
             case key_code::_delete:
                {
-                  delete_();
+                  delete_(k.key == key_code::_delete);
                   save_x = true;
                   add_undo(ctx, _typing_state, undo_f, capture_state());
                   handled = true;
@@ -686,7 +686,7 @@ namespace cycfi { namespace elements
       return info;
    }
 
-   void basic_text_box::delete_()
+   void basic_text_box::delete_(bool forward)
    {
       auto  start = std::min(_select_end, _select_start);
 
@@ -695,7 +695,9 @@ namespace cycfi { namespace elements
          auto end = std::max(_select_end, _select_start);
          if (start == end)
          {
-            if (start > 0)
+            if (forward)
+               erase(start, 1);
+            else if (start > 0)
                erase(--start, 1);
          }
          else
@@ -713,7 +715,7 @@ namespace cycfi { namespace elements
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
          clipboard(to_utf8(get_text().substr(start, end_-start_)));
-         delete_();
+         delete_(false);
       }
    }
 
@@ -972,9 +974,9 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_input_box::delete_()
+   void basic_input_box::delete_(bool forward)
    {
-      basic_text_box::delete_();
+      basic_text_box::delete_(forward);
       if (on_text)
          on_text(to_utf8(get_text()));
    }

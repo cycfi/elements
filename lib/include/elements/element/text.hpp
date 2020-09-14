@@ -153,7 +153,7 @@ namespace cycfi::elements
    protected:
 
       void                    scroll_into_view(context const& ctx, bool save_x);
-      virtual void            delete_();
+      virtual void            delete_(bool forward);
       virtual void            cut(view& v, int start, int end);
       virtual void            copy(view& v, int start, int end);
       virtual void            paste(view& v, int start, int end);
@@ -213,7 +213,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    key(context const& ctx, key_info k) override;
-      void                    delete_() override;
+      void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    begin_focus() override;

@@ -415,9 +415,6 @@ namespace
    float delta_x = [event scrollingDeltaX];
    float delta_y = [event scrollingDeltaY];
 
-   if (event.directionInvertedFromDevice)
-      delta_y = -delta_y;
-
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
@@ -699,9 +696,8 @@ namespace cycfi { namespace elements
 
    point scroll_direction()
    {
-      // -1.0:natural; +1.0:normal
-      float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? -1.0f : +1.0f;
-      return { dir, +1.0f };
+      float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
+      return { dir, dir };
    }
 }}
 

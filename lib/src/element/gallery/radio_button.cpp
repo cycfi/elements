@@ -18,16 +18,17 @@ namespace cycfi { namespace elements
       float       dot_radius = radius/2.5;
 
       box.width(size);
-      point       center = center_point(box);
-      bool        state = value() > 1;
-      bool        hilite = value() & 1;
+      point center = center_point(box);
+      auto  state = value();
+      auto  value = state.value;
+      auto  hilite = state.hilite;
+      auto  tracking = state.tracking;;
 
-      if (state)
+      if (value || tracking)
       {
-         color c1 = state ?
-            (hilite? theme_.indicator_hilite_color : theme_.indicator_bright_color) :
-            colors::black.opacity(theme_.element_background_opacity)
-            ;
+         color c1 = hilite? theme_.indicator_hilite_color : theme_.indicator_bright_color;
+         if (tracking)
+            c1 = c1.level(0.4);
 
          canvas_.begin_path();
          canvas_.fill_style(c1);

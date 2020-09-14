@@ -119,6 +119,21 @@ namespace cycfi { namespace elements
          _state.pattern_set = _state.stroke_set;
       }
    }
+
+   // Declared in context.hpp
+   inline rect device_to_user(rect const& r, canvas& cnv)
+   {
+      return {
+         cnv.device_to_user(r.top_left())
+       , cnv.device_to_user(r.size())
+      };
+   }
+
+   // Declared in context.hpp
+   inline point device_to_user(point p, canvas& cnv)
+   {
+      return cnv.device_to_user(p);
+   }
 }}
 
 #endif

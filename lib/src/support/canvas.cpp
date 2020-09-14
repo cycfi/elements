@@ -72,6 +72,17 @@ namespace cycfi { namespace elements
    {
    }
 
+   void canvas::pre_scale(float sc)
+   {
+      scale({ sc, sc });
+      _pre_scale = sc;
+   }
+
+   float canvas::pre_scale() const
+   {
+      return _pre_scale;
+   }
+
    void canvas::translate(point p)
    {
       cairo_translate(&_context, p.x, p.y);
@@ -89,8 +100,8 @@ namespace cycfi { namespace elements
 
    point canvas::device_to_user(point p)
    {
-      double x = p.x;
-      double y = p.y;
+      double x = p.x * _pre_scale;
+      double y = p.y * _pre_scale;
       cairo_device_to_user(&_context, &x, &y);
       return { float(x), float(y) };
    }
@@ -100,7 +111,7 @@ namespace cycfi { namespace elements
       double x = p.x;
       double y = p.y;
       cairo_user_to_device(&_context, &x, &y);
-      return { float(x), float(y) };
+      return { float(x / _pre_scale), float(y / _pre_scale) };
    }
 
    void canvas::begin_path()

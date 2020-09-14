@@ -614,6 +614,11 @@ namespace cycfi { namespace elements
       _view = nil;
    }
 
+   float base_view::hdpi_scale() const
+   {
+      return 1.0f; // This is already done properly by the cocoa->cairo context
+   }
+
    point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(host());
@@ -690,6 +695,13 @@ namespace cycfi { namespace elements
             [[NSCursor resizeUpDownCursor] set];
             break;
       }
+   }
+
+   point scroll_direction()
+   {
+      // -1.0:natural; +1.0:normal
+      float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? -1.0f : +1.0f;
+      return { dir, +1.0f };
    }
 }}
 

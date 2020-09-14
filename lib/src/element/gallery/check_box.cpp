@@ -15,15 +15,20 @@ namespace cycfi { namespace elements
       rect        box = ctx.bounds.move(15, 0);
 
       box.width(box.height());
-      bool        state = value() > 1;
-      bool        hilite = value() & 1;
+      auto  state = value();
+      auto  value = state.value;
+      auto  hilite = state.hilite;
+      auto  tracking = state.tracking;
 
-      color c1 = state ?
+      color c1 = (value || tracking) ?
          (hilite? theme_.indicator_hilite_color : theme_.indicator_bright_color) :
          colors::black.opacity(theme_.element_background_opacity)
          ;
 
-      if (state)
+      if (tracking)
+         c1 = c1.level(0.4);
+
+      if (value || tracking)
          draw_icon(canvas_, box, icons::ok, 14, c1);
 
       auto line_width = theme_.controls_frame_stroke_width;

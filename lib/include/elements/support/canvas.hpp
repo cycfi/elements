@@ -38,6 +38,9 @@ namespace cycfi { namespace elements
       canvas&           operator=(canvas const& rhs) = delete;
       cairo_t&          cairo_context() const;
 
+      void              pre_scale(float sc);
+      float             pre_scale() const;
+
       ///////////////////////////////////////////////////////////////////////////////////
       // Transforms
       void              translate(point p);
@@ -208,6 +211,7 @@ namespace cycfi { namespace elements
       cairo_t&          _context;
       canvas_state      _state;
       state_stack       _state_stack;
+      float             _pre_scale = 1.0f;
    };
 }}
 

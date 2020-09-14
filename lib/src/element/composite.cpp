@@ -27,7 +27,7 @@ namespace cycfi { namespace elements
       for (std::size_t ix = 0; ix < size(); ++ix)
       {
          rect bounds = bounds_of(ctx, ix);
-         if (intersects(bounds, ctx.view_bounds))
+         if (intersects(bounds, ctx.view_bounds()))
          {
             auto& e = at(ix);
             context ectx{ ctx, &e, bounds };
@@ -265,7 +265,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p);
-         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds))
+         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
             return ptr->scroll(ectx, dir, p);

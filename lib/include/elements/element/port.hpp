@@ -188,7 +188,6 @@ namespace cycfi { namespace elements
       bool              allow_hscroll() const { return !(_traits & no_hscroll); }
       bool              allow_vscroll() const { return !(_traits & no_vscroll); }
 
-      point             _cursor;
       point             _offset;
       tracking_status   _tracking;
       int               _traits;

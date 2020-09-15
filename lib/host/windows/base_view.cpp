@@ -643,11 +643,6 @@ namespace cycfi { namespace elements
       InvalidateRect(_view, &r, false);
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return get_scale_for_window(_view);
-   }
-
    std::string clipboard()
    {
       if (!OpenClipboard(nullptr))

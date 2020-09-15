@@ -269,6 +269,8 @@ namespace cycfi { namespace elements
                return false;
          }
 
+         btn.state = mouse_button::what(event->button-1);
+
          if (!get_mouse(event, btn, view))
             return false;
          return true;

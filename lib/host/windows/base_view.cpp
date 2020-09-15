@@ -517,9 +517,9 @@ namespace cycfi { namespace elements
          init_view_class()
          {
             WNDCLASSW windowClass = {};
-            windowClass.hbrBackground = nullptr;
+            windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-            windowClass.hInstance = nullptr;
+            windowClass.hInstance = GetModuleHandleW(nullptr);
             windowClass.lpfnWndProc = WndProc;
             windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -641,6 +641,11 @@ namespace cycfi { namespace elements
       r.top = area.top * scale;
       r.bottom = area.bottom * scale;
       InvalidateRect(_view, &r, false);
+   }
+
+   float base_view::hdpi_scale() const
+   {
+      return get_scale_for_window(_view);
    }
 
    std::string clipboard()

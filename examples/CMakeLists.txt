@@ -18,6 +18,6 @@ add_subdirectory(dialogs)
 add_subdirectory(scale)
 add_subdirectory(notebook)
 add_subdirectory(doc_aspects)
-add_subdirectory(simple_animation)
+add_subdirectory(rain)
 add_subdirectory(tooltip)
 

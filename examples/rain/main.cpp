@@ -24,7 +24,7 @@ struct rain_element : element
 
    constexpr static int total = 640;
    constexpr static auto accelleration = 0.05;
-   constexpr static auto repaint_color = rgb(0, 0, 1);
+   constexpr static auto repaint_color = rgb(0, 0, 0);
    constexpr static auto portion = 360.0f/total;
 
    using image = cycfi::artist::image;

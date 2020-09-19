@@ -56,11 +56,13 @@ struct rain_element : element
          opacity *= 0.8;
    }
 
-   void init(float h)
+   void init(extent size)
    {
+      offscreen = std::make_unique<image>(size);
+      opacity = 1.0;
       for (auto i = 0; i < total; ++i)
       {
-         dots[i] = h;
+         dots[i] = size.y;
          dots_vel[i] = 10;
       }
    }
@@ -70,11 +72,7 @@ struct rain_element : element
       auto size = ctx.bounds.size();
       auto& cnv = ctx.canvas;
       if (!offscreen || offscreen->size() != size)
-      {
-         offscreen = std::make_unique<image>(size);
-         init(size.y);
-         opacity = 1.0;
-      }
+         init(size);
 
       {
          auto ctx = offscreen_image{ *offscreen };

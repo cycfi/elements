@@ -97,25 +97,55 @@ namespace cycfi { namespace elements
    //    that determines the vertical position of the content.
    //
    //    The thumbwheel, like the dial, is a continuous device. If you need
-   //    the value to be quantized, you can do so using the on_change member,
-   //    by setting the quantized value whenever the value changes (i.e. when
-   //    on_change is called).
+   //    the value to be quantized, you can pass a non-zero value to the
+   //    constructor. For example, a quantize value of 0.25 will quantize the
+   //    possible values to 0.0, 0.25, 0.5, 0.75 and 1.0.
    ////////////////////////////////////////////////////////////////////////////
    struct basic_vthumbwheel_element : vport_element, basic_receiver<double>
    {
-      void value(param_type val) override
+      basic_vthumbwheel_element(float quantize_ = 0.0)
+       : _quantize(quantize_)
+      {}
+
+      void value(double val) override
       {
+         if (_quantize > 0)
+            val = std::round(val / _quantize) * _quantize;
          this->valign(val);
       }
+
+      float _quantize;
    };
 
    struct basic_hthumbwheel_element : hport_element, basic_receiver<double>
    {
-      void value(param_type val) override
+      basic_hthumbwheel_element(float quantize_ = 0.0)
+       : _quantize(quantize_)
+      {}
+
+      void value(double val) override
       {
+         if (_quantize > 0)
+            val = std::round(val / _quantize) * _quantize;
          this->halign(val);
       }
+
+      float _quantize;
    };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
+   basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0)
+   {
+      return { std::forward<Subject>(subject), quantize_ };
+   }
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
+   basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0)
+   {
+      return { std::forward<Subject>(subject), quantize_ };
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Basic Knob (You can use this as the subject of dial)

@@ -50,6 +50,32 @@ namespace cycfi { namespace elements
          link(static_cast<dial_base &>(image.at(1)))
       );
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // vthumb_wheel
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename... Label>
+   inline auto vthumb_wheel(double init_value = 0.0, Label&&... label)
+   {
+      auto body = basic_vthumbwheel(
+         vport(std::forward<Label>(label)...)
+       , 1.0 / sizeof...(Label)
+      );
+      return thumbwheel(std::move(body));
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // hthumb_wheel
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename... Label>
+   inline auto hthumb_wheel(double init_value = 0.0, Label&&... label)
+   {
+      auto body = basic_hthumbwheel(
+         hport(std::forward<Label>(label)...)
+       , 1.0 / sizeof...(Label)
+      );
+      return thumbwheel(std::move(body));
+   }
 }}
 
 #endif

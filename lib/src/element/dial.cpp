@@ -43,10 +43,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   double dial_base::value_from_point(context const& ctx, point p)
+   double dial_base::radial_value(context const& ctx, tracker_info& track_info)
    {
       using namespace radial_consts;
 
+      point p = track_info.current;
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
       if (angle < 0.0)
@@ -58,6 +59,29 @@ namespace cycfi { namespace elements
       return value();
    }
 
+   double dial_base::linear_value(context const& /*ctx*/, tracker_info& track_info)
+   {
+      using namespace radial_consts;
+
+      point delta { track_info.current.x - track_info.previous.x,
+                     track_info.current.y - track_info.previous.y };
+
+      double factor = 1.0 / get_theme().dial_linear_range;
+      if (track_info.modifiers & mod_shift)
+         factor /= 5.0;
+
+      float val = _value + factor * (delta.x - delta.y);
+      return clamp(val, 0.0, 1.0);
+   }
+
+   double dial_base::compute_value(context const& ctx, tracker_info& track_info)
+   {
+      return (get_theme().dial_mode == dial_mode_enum::radial)?
+         radial_value(ctx, track_info) :
+         linear_value(ctx, track_info)
+         ;
+   }
+
    void dial_base::begin_tracking(context const& /* ctx */, tracker_info& /* track_info */)
    {
    }
@@ -66,27 +90,7 @@ namespace cycfi { namespace elements
    {
       if (track_info.current != track_info.previous)
       {
-         auto const& theme = get_theme();
-         double new_value;
-
-         if (theme.dial_mode == dial_mode_enum::radial)
-         {
-            new_value = value_from_point(ctx, track_info.current);
-         }
-         else
-         {
-            point delta { track_info.current.x - track_info.previous.x,
-                          track_info.current.y - track_info.previous.y };
-
-            double factor = 1.0 / theme.dial_linear_range;
-            if (track_info.modifiers & mod_shift)
-               factor /= 5.0;
-
-            new_value = _value + factor * (delta.x - delta.y);
-         }
-
-         clamp(new_value, 0.0, 1.0);
-
+         double new_value = compute_value(ctx, track_info);
          if (_value != new_value)
          {
             edit_value(this, new_value);

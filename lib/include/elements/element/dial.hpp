@@ -40,9 +40,14 @@ namespace cycfi { namespace elements
 
       double               value() const override;
       void                 value(double val) override;
-      virtual double       value_from_point(context const& ctx, point p);
 
       dial_function        on_change;
+
+   protected:
+
+      virtual double       radial_value(context const& ctx, tracker_info& track_info);
+      virtual double       linear_value(context const& ctx, tracker_info& track_info);
+      virtual double       compute_value(context const& ctx, tracker_info& track_info);
 
    private:
 

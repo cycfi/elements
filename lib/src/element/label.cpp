@@ -10,7 +10,7 @@ namespace cycfi { namespace elements
 {
    view_limits default_label::limits(basic_context const& ctx) const
    {
-      auto  size = measure_text(ctx.canvas, get_text(), get_font());
+      auto  size = measure_text(ctx.canvas, get_text(), get_font().size(get_font_size()));
       return { { size.x, size.y }, { size.x, size.y } };
    }
 

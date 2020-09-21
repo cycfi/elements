@@ -55,7 +55,7 @@ auto make_thumbwheel(int index)
    auto make_label =
       [](char const* text)
       {
-         return hmargin({ 10, 15 }, label(text).font_size(64));
+         return margin({ 5, 3, 5, 3 }, heading(text).font_color(get_theme().indicator_hilite_color));
       };
 
    thumbwheels[index] = share(vthumbwheel(
@@ -72,12 +72,12 @@ auto make_thumbwheel(int index)
       make_label("0")
    ));
    return align_center(
-      margin({ 20, 20, 20, 20 },
-         layer(
-            hold(thumbwheels[index]),
-            frame{}
-         )
-   ));
+      layer(
+         hold(thumbwheels[index]),
+         //rbox(get_theme().indicator_color, 3)
+         frame{}
+      )
+   );
 }
 
 auto make_thumbwheels()

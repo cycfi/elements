@@ -355,7 +355,7 @@ namespace cycfi { namespace elements
          /*ascent=*/    float(font_extents.ascent),
          /*descent=*/   float(font_extents.descent),
          /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent)),
-         /*size=*/      { float(extents.width), float(extents.height) }
+         /*size=*/      { float(extents.x_advance + extents.x_bearing), float(extents.height) }
       };
    }
 

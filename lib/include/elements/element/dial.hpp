@@ -8,6 +8,7 @@
 
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
+#include <elements/element/port.hpp>
 #include <elements/support.hpp>
 #include <infra/support.hpp>
 #include <functional>
@@ -86,6 +87,35 @@ namespace cycfi { namespace elements
    {
       return { std::forward<Subject>(subject), init_value };
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic (vertical and horizontal) thumbwheels (You can use these as the
+   // subject of thumbwheel)
+   //
+   //    A thumbwheel subject can be constructed using a vport or hport (see
+   //    port.hpp) and a receiver<double> which recieves a 0.0 to 1.0 value
+   //    that determines the vertical position of the content.
+   //
+   //    The thumbwheel, like the dial, is a continuous device. If you need
+   //    the value to be quantized, you can do so using the on_change member,
+   //    by setting the quantized value whenever the value changes (i.e. when
+   //    on_change is called).
+   ////////////////////////////////////////////////////////////////////////////
+   struct basic_vthumbwheel_element : vport_element, basic_receiver<double>
+   {
+      void value(param_type val) override
+      {
+         this->valign(val);
+      }
+   };
+
+   struct basic_hthumbwheel_element : hport_element, basic_receiver<double>
+   {
+      void value(param_type val) override
+      {
+         this->halign(val);
+      }
+   };
 
    ////////////////////////////////////////////////////////////////////////////
    // Basic Knob (You can use this as the subject of dial)

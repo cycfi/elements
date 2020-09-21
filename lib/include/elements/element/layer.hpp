@@ -21,7 +21,7 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
-      hit_info                hit_element(context const& ctx, point p) const override;
+      hit_info                hit_element(context const& ctx, point p, bool control) const override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
       void                    begin_focus() override;
       bool                    reverse_index() const override { return true; }
@@ -59,7 +59,7 @@ namespace cycfi { namespace elements
 
       void                 draw(context const& ctx) override;
       void                 refresh(context const& ctx, element& element, int outward = 0) override;
-      hit_info             hit_element(context const& ctx, point p) const override;
+      hit_info             hit_element(context const& ctx, point p, bool control) const override;
       void                 begin_focus() override;
 
       using element::refresh;

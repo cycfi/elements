@@ -76,7 +76,7 @@ namespace cycfi { namespace elements
          int                  index    = -1;
       };
 
-      virtual hit_info        hit_element(context const& ctx, point p) const;
+      virtual hit_info        hit_element(context const& ctx, point p, bool control) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
       virtual bool            reverse_index() const { return false; }
 

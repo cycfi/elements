@@ -33,6 +33,7 @@ namespace cycfi { namespace elements
                            dial_base(double init_value = 0.0);
 
       void                 prepare_subject(context& ctx) override;
+      element*             hit_test(context const& ctx, point p) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
@@ -67,10 +68,15 @@ namespace cycfi { namespace elements
       return _value;
    }
 
+   inline element* dial_base::hit_test(context const& ctx, point p)
+   {
+      return element::hit_test(ctx, p);
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Thumbwheels
    ////////////////////////////////////////////////////////////////////////////
-   class thumbwheel_base : dial_base
+   class thumbwheel_base : public dial_base
    {
    public:
 
@@ -78,7 +84,7 @@ namespace cycfi { namespace elements
 
    protected:
 
-      virtual double       compute_value(context const& ctx, tracker_info& track_info);
+       double              compute_value(context const& ctx, tracker_info& track_info) override;
    };
 
    template <typename Subject>
@@ -101,36 +107,59 @@ namespace cycfi { namespace elements
    //    constructor. For example, a quantize value of 0.25 will quantize the
    //    possible values to 0.0, 0.25, 0.5, 0.75 and 1.0.
    ////////////////////////////////////////////////////////////////////////////
-   struct basic_vthumbwheel_element : vport_element, basic_receiver<double>
+   struct basic_thumbwheel_element : basic_receiver<double>
    {
-      basic_vthumbwheel_element(float quantize_ = 0.0)
+      basic_thumbwheel_element(float quantize_ = 0.0)
        : _quantize(quantize_)
       {}
+
+      virtual void   align(double val) = 0;
 
       void value(double val) override
       {
          if (_quantize > 0)
             val = std::round(val / _quantize) * _quantize;
-         this->valign(val);
+         align(val);
       }
 
       float _quantize;
    };
 
-   struct basic_hthumbwheel_element : hport_element, basic_receiver<double>
+   struct basic_vthumbwheel_element : vport_element, basic_thumbwheel_element
    {
-      basic_hthumbwheel_element(float quantize_ = 0.0)
-       : _quantize(quantize_)
-      {}
+      using basic_thumbwheel_element::basic_thumbwheel_element;
 
-      void value(double val) override
+      view_limits limits(basic_context const& ctx) const override
       {
-         if (_quantize > 0)
-            val = std::round(val / _quantize) * _quantize;
-         this->halign(val);
+         auto lim = port_base::limits(ctx);
+         auto num_elements = (1.0 / _quantize) + 1;
+         lim.min.y /= num_elements;
+         lim.max.y = lim.min.y;
+         return lim;
       }
 
-      float _quantize;
+      void align(double val) override
+      {
+         this->valign(1.0-val);
+      }
+   };
+
+   struct basic_hthumbwheel_element : hport_element, basic_thumbwheel_element
+   {
+      using basic_thumbwheel_element::basic_thumbwheel_element;
+
+      void align(double val) override
+      {
+         this->halign(1.0-val);
+      }
+
+      view_limits limits(basic_context const& ctx) const override
+      {
+         auto lim = port_base::limits(ctx);
+         lim.min.x *= _quantize;
+         lim.max.x = lim.min.x;
+         return lim;
+      }
    };
 
    template <typename Subject>

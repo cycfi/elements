@@ -11,6 +11,7 @@
 #include <elements/element/align.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/indirect.hpp>
+#include <elements/element/tile.hpp>
 #include <elements/element/gallery/caption.hpp>
 
 namespace cycfi { namespace elements
@@ -52,30 +53,43 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // vthumb_wheel
+   // vthumbwheel
    ////////////////////////////////////////////////////////////////////////////
-   template <typename... Label>
-   inline auto vthumb_wheel(double init_value = 0.0, Label&&... label)
+   template <typename FirstLabel, typename... Label>
+   inline auto vthumbwheel(double init_value, FirstLabel&& first_label, Label&&... label)
    {
       auto body = basic_vthumbwheel(
-         vport(std::forward<Label>(label)...)
+         vtile(std::forward<FirstLabel>(first_label), std::forward<Label>(label)...)
        , 1.0 / sizeof...(Label)
       );
-      return thumbwheel(std::move(body));
+      return thumbwheel(std::move(body), init_value);
+   }
+
+   template <typename... Label>
+   inline auto vthumbwheel(Label&&... label)
+   {
+     return vthumbwheel(0.0, std::forward<Label>(label)...);
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // hthumb_wheel
+   // hthumbwheel
    ////////////////////////////////////////////////////////////////////////////
-   template <typename... Label>
-   inline auto hthumb_wheel(double init_value = 0.0, Label&&... label)
+   template <typename FirstLabel, typename... Label>
+   inline auto hthumbwheel(double init_value, FirstLabel&& first_label, Label&&... label)
    {
       auto body = basic_hthumbwheel(
-         hport(std::forward<Label>(label)...)
+         htile(std::forward<FirstLabel>(first_label), std::forward<Label>(label)...)
        , 1.0 / sizeof...(Label)
       );
-      return thumbwheel(std::move(body));
+      return thumbwheel(std::move(body), init_value);
    }
+
+   template <typename... Label>
+   inline auto hthumbwheel(Label&&... label)
+   {
+     return hthumbwheel(0.0, std::forward<Label>(label)...);
+   }
+
 }}
 
 #endif

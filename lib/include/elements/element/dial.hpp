@@ -67,6 +67,27 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Thumbwheels
+   ////////////////////////////////////////////////////////////////////////////
+   class thumbwheel_base : dial_base
+   {
+   public:
+
+      using dial_base::dial_base;
+
+   protected:
+
+      virtual double       compute_value(context const& ctx, tracker_info& track_info);
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, thumbwheel_base>
+   thumbwheel(Subject&& subject, double init_value = 0.0)
+   {
+      return { std::forward<Subject>(subject), init_value };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Basic Knob (You can use this as the subject of dial)
    ////////////////////////////////////////////////////////////////////////////
    template <std::size_t _size>
@@ -99,8 +120,6 @@ namespace cycfi { namespace elements
       return view_limits{ pt, pt };
    }
 
-   void draw_indicator(canvas& cnv, circle cp, float val, color c);
-
    template <std::size_t size>
    inline void basic_knob_element<size>::draw(context const& ctx)
    {
@@ -110,7 +129,7 @@ namespace cycfi { namespace elements
       auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
 
       draw_knob(cnv, cp, _color);
-      draw_indicator(cnv, cp, _value, indicator_color);
+      draw_radial_indicator(cnv, cp, _value, indicator_color);
    }
 
    template <std::size_t size>
@@ -128,15 +147,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Radial Element Base (common base class for radial elements)
    ////////////////////////////////////////////////////////////////////////////
-   namespace radial_consts
-   {
-      constexpr double _2pi = 2 * M_PI;
-      constexpr double travel = 0.83;
-      constexpr double range = _2pi * travel;
-      constexpr double start_angle = _2pi * (1 - travel) / 2;
-      constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
-   }
-
    template <std::size_t _size, typename Subject>
    class radial_element_base : public proxy<Subject>
    {
@@ -196,8 +206,6 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
    };
 
-   void draw_radial_marks(canvas& cnv, circle cp, float size, color c);
-
    template <std::size_t size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
@@ -240,15 +248,6 @@ namespace cycfi { namespace elements
       float                   _font_size;
    };
 
-   void draw_radial_labels(
-      canvas& cnv
-    , circle cp
-    , float size
-    , float font_size
-    , std::string const labels[]
-    , std::size_t _num_labels
-   );
-
    template <std::size_t size, typename Subject, std::size_t num_labels>
    inline void
    radial_labels_element<size, Subject, num_labels>::draw(context const& ctx)
@@ -259,7 +258,7 @@ namespace cycfi { namespace elements
       // Draw the labels
       auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
       draw_radial_labels(
-         ctx.canvas, cp, size, _font_size, _labels.data(), num_labels);
+         ctx.canvas, cp, _font_size, _labels.data(), num_labels);
    }
 
    template <std::size_t size, typename Subject, typename... S>

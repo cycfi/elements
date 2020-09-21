@@ -58,10 +58,6 @@ namespace cycfi { namespace elements
 
       canvas_.text_align(align);
       canvas_.fill_text({ cx, cy }, c_str());
-
-      canvas_.rect(ctx.bounds);
-      canvas_.stroke_style(colors::red);
-      canvas_.stroke();
    }
 }}
 

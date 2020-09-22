@@ -55,21 +55,25 @@ auto make_thumbwheel(int index)
    auto make_label =
       [](char const* text)
       {
-         return margin({ 5, 3, 5, 3 }, heading(text).font_color(get_theme().indicator_hilite_color));
+         return margin({ 5, 3, 5, 3 },
+            heading(text)
+               .font_color(get_theme().indicator_hilite_color)
+               .font_size(32)
+         );
       };
 
    thumbwheels[index] = share(vthumbwheel(
-      make_label("10"),
-      make_label("9"),
-      make_label("8"),
-      make_label("7"),
-      make_label("6"),
-      make_label("5"),
-      make_label("4"),
-      make_label("3"),
-      make_label("2"),
-      make_label("1"),
-      make_label("0")
+      make_label("Item no. 10"),
+      make_label("Item no. 9"),
+      make_label("Item no. 8"),
+      make_label("Item no. 7"),
+      make_label("Item no. 6"),
+      make_label("Item no. 5"),
+      make_label("Item no. 4"),
+      make_label("Item no. 3"),
+      make_label("Item no. 2"),
+      make_label("Item no. 1"),
+      make_label("Item no. 0")
    ));
    return align_center(
       layer(

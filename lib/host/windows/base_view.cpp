@@ -517,9 +517,9 @@ namespace cycfi { namespace elements
          init_view_class()
          {
             WNDCLASSW windowClass = {};
-            windowClass.hbrBackground = nullptr;
+            windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-            windowClass.hInstance = nullptr;
+            windowClass.hInstance = GetModuleHandleW(nullptr);
             windowClass.lpfnWndProc = WndProc;
             windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;

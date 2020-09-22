@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
          virtual std::size_t     size() const = 0;
          virtual element_ptr     compose(std::size_t index) = 0;
          virtual limits          width_limits() const = 0;
-         virtual double          line_height(std::size_t index) const = 0;
+         virtual float           line_height(std::size_t index) const = 0;
       };
 
       using composer_ptr = std::shared_ptr<composer>;

@@ -18,7 +18,7 @@ public:
    std::size_t       size() const override;
    element_ptr       compose(std::size_t index) override;
    limits            width_limits() const override;
-   double            line_height(std::size_t index) const override;
+   float             line_height(std::size_t index) const override;
 };
 
 std::size_t composer::size() const
@@ -37,7 +37,7 @@ composer::limits composer::width_limits() const
    return { 220, full_extent };
 }
 
-double composer::line_height(std::size_t index) const
+float composer::line_height(std::size_t index) const
 {
    return 25;
 }

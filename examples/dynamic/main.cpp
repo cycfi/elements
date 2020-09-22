@@ -23,7 +23,7 @@ public:
 
 std::size_t composer::size() const
 {
-   return 100000;
+   return 1000000;
 }
 
 element_ptr composer::compose(std::size_t index)
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    auto content = share(dynamic{ std::make_shared<composer>() });
-   content->build();
+   content->update();
 
    view_.content(
       vscroller(hold(content)),

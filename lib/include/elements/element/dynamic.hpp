@@ -41,8 +41,7 @@ namespace cycfi { namespace elements
       view_limits                limits(basic_context const& ctx) const override;
       void                       draw(context const& ctx) override;
       void                       layout(context const& ctx) override;
-
-      void                       build();
+      void                       update();
 
    private:
 
@@ -56,6 +55,7 @@ namespace cycfi { namespace elements
 
       composer_ptr               _composer;
       std::vector<row_info>      _rows;
+      double                     _height;
       point                      _previous_size;
       int                        _layout_id = 0;
       std::size_t                _previous_window_start = 0;

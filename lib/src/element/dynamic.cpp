@@ -15,11 +15,10 @@ namespace cycfi { namespace elements
          auto w_limits = _composer->width_limits();
          if (auto size = _composer->size())
          {
-            view_limits l = {{ w_limits.min, 0 }, { w_limits.max, full_extent }};
-            for (std::size_t i = 0; i != size; ++i)
-               l.min.y += _composer->line_height(i);
-            l.max.y = l.min.y;
-            return l;
+            return {
+               { w_limits.min, float(_height) }
+             , { w_limits.max, float(_height) }
+            };
          }
       }
       return {{ 0, 0 }, { 0, 0 }};
@@ -104,7 +103,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic::build()
+   void dynamic::update()
    {
       if (_composer)
       {
@@ -118,6 +117,7 @@ namespace cycfi { namespace elements
                _rows.push_back({ y, line_height, nullptr });
                y += line_height;
             }
+            _height = y;
          }
       }
       ++_layout_id;

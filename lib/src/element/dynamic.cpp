@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
       auto  clip_extent = cnv.clip_extent();
       auto  top = ctx.bounds.top;
 
-      cnv.rect(ctx.bounds);
+      cnv.add_rect(ctx.bounds);
       cnv.clip();
 
       if (!intersects(ctx.bounds, clip_extent))

@@ -22,4 +22,5 @@ add_subdirectory(doc_aspects)
 add_subdirectory(simple_animation)
 add_subdirectory(thumbwheels)
 add_subdirectory(tooltip)
+add_subdirectory(dynamic)
 

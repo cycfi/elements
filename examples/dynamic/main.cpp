@@ -17,8 +17,8 @@ public:
 
    std::size_t       size() const override;
    element_ptr       compose(std::size_t index) override;
-   limits            width_limits() const override;
-   float             line_height(std::size_t index) const override;
+   limits            width_limits(basic_context const& ctx) const override;
+   float             line_height(std::size_t index, basic_context const& ctx) const override;
 };
 
 std::size_t composer::size() const
@@ -32,12 +32,12 @@ element_ptr composer::compose(std::size_t index)
    return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
 }
 
-composer::limits composer::width_limits() const
+composer::limits composer::width_limits(basic_context const& /*ctx*/) const
 {
    return { 220, full_extent };
 }
 
-float composer::line_height(std::size_t index) const
+float composer::line_height(std::size_t index, basic_context const& /*ctx*/) const
 {
    return 25;
 }

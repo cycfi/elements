@@ -8,11 +8,13 @@
 
 namespace cycfi { namespace elements
 {
-   view_limits dynamic::limits(basic_context const& /*ctx*/) const
+   view_limits dynamic::limits(basic_context const& ctx) const
    {
       if (_composer)
       {
-         auto w_limits = _composer->width_limits();
+         if (_update_request)
+            update(ctx);
+         auto w_limits = _composer->width_limits(ctx);
          if (auto size = _composer->size())
          {
             return {
@@ -105,6 +107,11 @@ namespace cycfi { namespace elements
 
    void dynamic::update()
    {
+      _update_request = true;
+   }
+
+   void dynamic::update(basic_context const& ctx) const
+   {
       if (_composer)
       {
          if (auto size = _composer->size())
@@ -113,7 +120,7 @@ namespace cycfi { namespace elements
             _rows.reserve(_composer->size());
             for (std::size_t i = 0; i != size; ++i)
             {
-               auto line_height = _composer->line_height(i);
+               auto line_height = _composer->line_height(i, ctx);
                _rows.push_back({ y, line_height, nullptr });
                y += line_height;
             }
@@ -121,6 +128,7 @@ namespace cycfi { namespace elements
          }
       }
       ++_layout_id;
+      _update_request = false;
    }
 }}
 

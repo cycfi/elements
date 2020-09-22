@@ -153,6 +153,13 @@ namespace cycfi { namespace elements
       cairo_clip(&_context);
    }
 
+   rect canvas::clip_extent() const
+   {
+      double x1, y1, x2, y2;
+      cairo_clip_extents(&_context, &x1, &y1, &x2, &y2);
+      return { float(x1), float(y1), float(x2), float(y2) };
+   }
+
    bool canvas::hit_test(point p) const
    {
       return cairo_in_fill(&_context, p.x, p.y);

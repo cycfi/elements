@@ -78,13 +78,15 @@ namespace cycfi { namespace elements
       auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + metrics.ascent;
+      auto  clip_extent = cnv.clip_extent();
 
       cnv.rect(ctx.bounds);
       cnv.clip();
       cnv.fill_style(_color);
       for (auto& row : _rows)
       {
-         row.draw({ x, y }, cnv);
+         if (y + metrics.descent > clip_extent.top)
+            row.draw({ x, y }, cnv);
          y += line_height;
          if (y > ctx.bounds.bottom + metrics.ascent)
             break;

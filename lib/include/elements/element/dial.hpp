@@ -107,59 +107,50 @@ namespace cycfi { namespace elements
    //    constructor. For example, a quantize value of 0.25 will quantize the
    //    possible values to 0.0, 0.25, 0.5, 0.75 and 1.0.
    ////////////////////////////////////////////////////////////////////////////
-   struct basic_thumbwheel_element : basic_receiver<double>
+   class basic_thumbwheel_element : public basic_receiver<double>
    {
+   public:
+
       basic_thumbwheel_element(float quantize_ = 0.0)
        : _quantize(quantize_)
       {}
 
-      virtual void   align(double val) = 0;
+      virtual void         align(double val) = 0;
+      virtual double       align() const = 0;
+      void                 value(double val) override;
 
-      void value(double val) override
-      {
-         if (_quantize > 0)
-            val = std::round(val / _quantize) * _quantize;
-         align(val);
-      }
+   protected:
 
-      float _quantize;
+      float                quantize() const { return _quantize; }
+      void                 make_aligner(context const& ctx);
+      void                 do_align(view& view_, rect const& bounds, double val);
+
+   private:
+
+      using align_function = std::function<void(double val)>;
+
+      float                _quantize;
+      align_function       _aligner;
    };
 
    struct basic_vthumbwheel_element : vport_element, basic_thumbwheel_element
    {
       using basic_thumbwheel_element::basic_thumbwheel_element;
 
-      view_limits limits(basic_context const& ctx) const override
-      {
-         auto lim = port_base::limits(ctx);
-         auto num_elements = (1.0 / _quantize) + 1;
-         lim.min.y /= num_elements;
-         lim.max.y = lim.min.y;
-         return lim;
-      }
-
-      void align(double val) override
-      {
-         this->valign(1.0-val);
-      }
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
+      void                 align(double val) override;
+      double               align() const override;
    };
 
    struct basic_hthumbwheel_element : hport_element, basic_thumbwheel_element
    {
       using basic_thumbwheel_element::basic_thumbwheel_element;
 
-      void align(double val) override
-      {
-         this->halign(1.0-val);
-      }
-
-      view_limits limits(basic_context const& ctx) const override
-      {
-         auto lim = port_base::limits(ctx);
-         lim.min.x *= _quantize;
-         lim.max.x = lim.min.x;
-         return lim;
-      }
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
+      void                 align(double val) override;
+      double               align() const override;
    };
 
    template <typename Subject>

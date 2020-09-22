@@ -32,11 +32,7 @@ namespace cycfi { namespace elements
       auto  clip_extent = cnv.clip_extent();
       auto  top = ctx.bounds.top;
 
-<<<<<<< HEAD
       cnv.add_rect(ctx.bounds);
-=======
-      cnv.rect(ctx.bounds);
->>>>>>> develop
       cnv.clip();
 
       if (!intersects(ctx.bounds, clip_extent))
@@ -60,9 +56,6 @@ namespace cycfi { namespace elements
          rctx.bounds.height(row.height);
          if (intersects(clip_extent, rctx.bounds))
          {
-<<<<<<< HEAD
-            if (row.layout_id != _layout_id)
-=======
             if (!row.elem_ptr)
             {
                row.elem_ptr = _composer->compose(it-_rows.begin());
@@ -70,7 +63,6 @@ namespace cycfi { namespace elements
                row.layout_id = _layout_id;
             }
             else if (row.layout_id != _layout_id)
->>>>>>> develop
             {
                row.elem_ptr->layout(rctx);
                row.layout_id = _layout_id;
@@ -87,11 +79,7 @@ namespace cycfi { namespace elements
       {
          for (auto i = _previous_window_start; i != _previous_window_end; ++i)
          {
-<<<<<<< HEAD
-            if (i < new_start && i >= new_end)
-=======
             if (i < new_start || i >= new_end)
->>>>>>> develop
             {
                _rows[i].elem_ptr.reset();
                _rows[i].layout_id = -1;
@@ -127,11 +115,7 @@ namespace cycfi { namespace elements
             for (std::size_t i = 0; i != size; ++i)
             {
                auto line_height = _composer->line_height(i);
-<<<<<<< HEAD
-               _rows.push_back({ y, line_height, _composer->compose(i) });
-=======
                _rows.push_back({ y, line_height, nullptr });
->>>>>>> develop
                y += line_height;
             }
          }

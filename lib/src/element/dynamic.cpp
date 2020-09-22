@@ -46,6 +46,8 @@ namespace cycfi { namespace elements
          }
       );
 
+      // Draw the rows within the visible bounds of the view
+      std::size_t new_start = it - _rows.begin();
       for (; it != _rows.end(); ++it)
       {
          auto& row = *it;
@@ -64,6 +66,23 @@ namespace cycfi { namespace elements
          if (rctx.bounds.top > clip_extent.bottom)
             break;
       }
+      std::size_t new_end = it - _rows.begin();
+
+      // Cleanup old rows
+      if (new_start != _previous_window_start || new_end != _previous_window_end)
+      {
+         for (auto i = _previous_window_start; i != _previous_window_end; ++i)
+         {
+            if (i < new_start && i >= new_end)
+            {
+               _rows[i].elem_ptr.reset();
+               _rows[i].layout_id = -1;
+            }
+         }
+      }
+
+      _previous_window_start = new_start;
+      _previous_window_end = new_end;
       _previous_size.x = ctx.bounds.width();
       _previous_size.y = ctx.bounds.height();
    }

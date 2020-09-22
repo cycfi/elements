@@ -58,6 +58,8 @@ namespace cycfi { namespace elements
       std::vector<row_info>      _rows;
       point                      _previous_size;
       int                        _layout_id = 0;
+      std::size_t                _previous_window_start = 0;
+      std::size_t                _previous_window_end = 0;
    };
 }}
 

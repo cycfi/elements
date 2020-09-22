@@ -22,4 +22,5 @@ add_subdirectory(notebook)
 add_subdirectory(doc_aspects)
 add_subdirectory(simple_animation)
 add_subdirectory(tooltip)
+add_subdirectory(dynamic)
 

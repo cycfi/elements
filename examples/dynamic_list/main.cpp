@@ -44,7 +44,7 @@ float composer::line_height(std::size_t index, basic_context const& /*ctx*/) con
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Dynamic", "com.cycfi.dynamic");
+   app _app(argc, argv, "Dynamic Lists", "com.cycfi.dynamic_lists");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

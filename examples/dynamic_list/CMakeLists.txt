@@ -4,7 +4,7 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.9.6...3.15.0)
-project(Dynamic LANGUAGES C CXX VERSION "1.0.0")
+project(DynamicLists LANGUAGES C CXX VERSION "1.0.0")
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -22,9 +22,9 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
 endif()
 
 if (APPLE)
-   set(MACOSX_BUNDLE_BUNDLE_NAME "Dynamic")
+   set(MACOSX_BUNDLE_BUNDLE_NAME "Dynamic Lists")
    set(MACOSX_BUNDLE_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
-   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.cycfi.dynamic")
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.cycfi.dynamic_lists")
 endif()
 
 include(ElementsConfigApp)

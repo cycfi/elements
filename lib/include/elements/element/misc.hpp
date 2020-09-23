@@ -83,8 +83,7 @@ namespace cycfi { namespace elements
        : f(f)
       {}
 
-      void
-      draw(context const& ctx) override
+      void draw(context const& ctx) override
       {
          f(ctx);
       }
@@ -95,9 +94,10 @@ namespace cycfi { namespace elements
    };
 
    template <typename F>
-   inline basic_element<F> basic(F f)
+   inline basic_element<F> basic(F&& f)
    {
-      return { f };
+      using ftype = remove_cvref_t<F>;
+      return { std::forward<ftype>(f) };
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -19,14 +19,17 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
+   auto&& draw_cell =
+      [](std::size_t index)
+      {
+         auto text = "This is item number " + std::to_string(index+1);
+         return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
+      };
+
    auto my_composer =
       basic_cell_composer(
-         1000000,                   // size (number of rows)
-         [](std::size_t index)      // Composer function
-         {
-            auto text = "This is item number " + std::to_string(index+1);
-            return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
-         }
+         1000000,                // size (number of rows)
+         draw_cell               // Composer function
       );
 
    auto content = share(dynamic_list{ my_composer });

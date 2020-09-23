@@ -129,13 +129,14 @@ namespace cycfi { namespace elements
    template <typename F>
    inline auto basic_cell_composer(std::size_t size, F&& compose)
    {
+      using ftype = remove_cvref_t<F>;
       using return_type =
          fixed_derived_limits_cell_composer<
             fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
+               function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ size, std::forward<F>(compose) });
+      return share(return_type{ size, std::forward<ftype>(compose) });
    }
 
    template <typename F>
@@ -143,13 +144,21 @@ namespace cycfi { namespace elements
       float min_width, float line_height, std::size_t size, F&& compose
    )
    {
+      using ftype = remove_cvref_t<F>;
       using return_type =
          static_limits_cell_composer<
             fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
+               function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ min_width, line_height, size, std::forward<F>(compose) });
+      return share(
+         return_type{
+            min_width
+          , line_height
+          , size
+          , std::forward<ftype>(compose)
+         }
+      );
    }
 
    template <typename F>
@@ -157,13 +166,22 @@ namespace cycfi { namespace elements
       float min_width, float max_width, float line_height, std::size_t size, F&& compose
    )
    {
+      using ftype = remove_cvref_t<F>;
       using return_type =
          static_limits_cell_composer<
             fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
+               function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ min_width, max_width, line_height, size, std::forward<F>(compose) });
+      return share(
+         return_type{
+            min_width
+          , max_width
+          , line_height
+          , size
+          , std::forward<ftype>(compose)
+         }
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////

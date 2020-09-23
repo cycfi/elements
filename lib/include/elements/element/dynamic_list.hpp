@@ -9,30 +9,133 @@
 #include <elements/element/element.hpp>
 #include <memory>
 #include <vector>
+#include <functional>
 
 namespace cycfi { namespace elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   class cell_composer : public std::enable_shared_from_this<cell_composer>
+   {
+   public:
+
+      struct limits
+      {
+         float min = 0;
+         float max = full_extent;
+      };
+
+      virtual std::size_t     size() const = 0;
+      virtual element_ptr     compose(std::size_t index) = 0;
+      virtual limits          width_limits(basic_context const& ctx) const = 0;
+      virtual float           line_height(std::size_t index, basic_context const& ctx) const = 0;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = cell_composer>
+   class static_limits_cell_composer : public Base
+   {
+   public:
+
+      using base_type = static_limits_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              static_limits_cell_composer(
+                                 float min_width, float line_height
+                               , Rest&& ...rest
+                              );
+
+                              template <typename... Rest>
+                              static_limits_cell_composer(
+                                 float min_width, float max_width, float line_height
+                               , Rest&& ...rest
+                              );
+
+      cell_composer::limits   width_limits(basic_context const& ctx) const override;
+      float                   line_height(std::size_t index, basic_context const& ctx) const override;
+
+   private:
+
+      float                   _line_height;
+       cell_composer::limits  _width_limits;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = cell_composer>
+   class fixed_length_cell_composer : public Base
+   {
+   public:
+
+      using base_type = fixed_length_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              fixed_length_cell_composer(std::size_t size, Rest&& ...rest)
+                               : Base(std::forward<Rest>(rest)...)
+                               , _size(size)
+                              {}
+
+      std::size_t             size() const override { return _size; }
+
+   private:
+
+      std::size_t             _size;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F, typename Base = cell_composer>
+   class function_cell_composer : public Base
+   {
+   public:
+
+      using base_type = function_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              function_cell_composer(F&& compose_, Rest&& ...rest)
+                               : Base(std::forward<Rest>(rest)...)
+                               , _compose(compose_)
+                              {}
+
+      virtual element_ptr     compose(std::size_t index) { return _compose(index); }
+
+   private:
+
+      F                       _compose;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_width, float line_height, std::size_t size, F&& compose
+   )
+   {
+      using return_type =
+         static_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<remove_cvref_t<F>>
+            >
+         >;
+      return share(return_type{ min_width, line_height, size, std::forward<F>(compose) });
+   }
+
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_width, float max_width, float line_height, std::size_t size, F&& compose
+   )
+   {
+      using return_type =
+         static_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<remove_cvref_t<F>>
+            >
+         >;
+      return share(return_type{ min_width, max_width, line_height, size, std::forward<F>(compose) });
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    class dynamic_list : public element
    {
    public:
 
-      class composer : public std::enable_shared_from_this<composer>
-      {
-      public:
-
-         struct limits
-         {
-            float min = 0;
-            float max = full_extent;
-         };
-
-         virtual std::size_t     size() const = 0;
-         virtual element_ptr     compose(std::size_t index) = 0;
-         virtual limits          width_limits(basic_context const& ctx) const = 0;
-         virtual float           line_height(std::size_t index, basic_context const& ctx) const = 0;
-      };
-
-      using composer_ptr = std::shared_ptr<composer>;
+      using composer_ptr = std::shared_ptr<cell_composer>;
 
                                  dynamic_list(composer_ptr composer)
                                   : _composer(composer)
@@ -67,6 +170,45 @@ namespace cycfi { namespace elements
       mutable int                _layout_id = 0;
       mutable bool               _update_request = true;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base>
+   template <typename... Rest>
+   inline static_limits_cell_composer<Base>::static_limits_cell_composer(
+      float min_width
+    , float line_height
+    , Rest&& ...rest
+   )
+    : Base(std::forward<Rest>(rest)...)
+    , _line_height{ line_height }
+    , _width_limits{ min_width, full_extent }
+   {}
+
+   template <typename Base>
+   template <typename... Rest>
+   inline static_limits_cell_composer<Base>::static_limits_cell_composer(
+      float min_width
+    , float max_width
+    , float line_height
+    , Rest&& ...rest
+   )
+    : Base(std::forward<Rest>(rest)...)
+    , _line_height(line_height)
+    , _width_limits{ min_width, max_width }
+   {}
+
+   template <typename Base>
+   inline cell_composer::limits
+   static_limits_cell_composer<Base>::width_limits(basic_context const& /*ctx*/) const
+   {
+      return _width_limits;
+   }
+
+   template <typename Base>
+   inline float static_limits_cell_composer<Base>::line_height(std::size_t /*index*/, basic_context const& /*ctx*/) const
+   {
+      return _line_height;
+   }
 }}
 
 #endif

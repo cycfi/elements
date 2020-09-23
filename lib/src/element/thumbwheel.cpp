@@ -192,14 +192,13 @@ namespace cycfi { namespace elements
 
    void basic_vthumbwheel_element::align(double val)
    {
-      auto new_val = 1.0-val;
-      clamp(new_val, 0.0, 1.0);
-      valign(new_val);
+      clamp(val, 0.0, 1.0);
+      valign(val);
    }
 
    double basic_vthumbwheel_element::align() const
    {
-      return 1.0-valign();
+      return valign();
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -221,13 +220,12 @@ namespace cycfi { namespace elements
 
    void basic_hthumbwheel_element::align(double val)
    {
-      auto new_val = 1.0-val;
-      clamp(new_val, 0.0, 1.0);
-      halign(new_val);
+      clamp(val, 0.0, 1.0);
+      halign(val);
    }
 
    double basic_hthumbwheel_element::align() const
    {
-      return 1.0-halign();
+      return halign();
    }
 }}

@@ -88,11 +88,9 @@ int main(int argc, char* argv[])
          )
       ),
 
-      // make_controls(),
       background
    );
 
-   // link_controls(view_);
    _app.run();
    return 0;
 }

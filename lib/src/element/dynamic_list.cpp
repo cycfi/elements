@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/dynamic.hpp>
+#include <elements/element/dynamic_list.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
 {
-   view_limits dynamic::limits(basic_context const& ctx) const
+   view_limits dynamic_list::limits(basic_context const& ctx) const
    {
       if (_composer)
       {
@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
       return {{ 0, 0 }, { 0, 0 }};
    }
 
-   void dynamic::draw(context const& ctx)
+   void dynamic_list::draw(context const& ctx)
    {
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
       _previous_size.y = ctx.bounds.height();
    }
 
-   void dynamic::layout(context const& ctx)
+   void dynamic_list::layout(context const& ctx)
    {
       if (_previous_size.x != ctx.bounds.width() ||
          _previous_size.y != ctx.bounds.height())
@@ -105,12 +105,14 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic::update()
+   void dynamic_list::update()
    {
       _update_request = true;
+      _rows.clear();
+      _height = 0;
    }
 
-   void dynamic::update(basic_context const& ctx) const
+   void dynamic_list::update(basic_context const& ctx) const
    {
       if (_composer)
       {

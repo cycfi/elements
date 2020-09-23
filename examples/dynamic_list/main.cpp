@@ -11,7 +11,7 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-class composer : public dynamic::composer
+class composer : public dynamic_list::composer
 {
 public:
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   auto content = share(dynamic{ std::make_shared<composer>() });
+   auto content = share(dynamic_list{std::make_shared<composer>() });
    content->update();
 
    view_.content(

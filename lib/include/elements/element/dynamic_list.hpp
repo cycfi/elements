@@ -12,7 +12,7 @@
 
 namespace cycfi { namespace elements
 {
-   class dynamic : public element
+   class dynamic_list : public element
    {
    public:
 
@@ -34,7 +34,7 @@ namespace cycfi { namespace elements
 
       using composer_ptr = std::shared_ptr<composer>;
 
-                                 dynamic(composer_ptr composer)
+                                 dynamic_list(composer_ptr composer)
                                   : _composer(composer)
                                  {}
 
@@ -63,7 +63,7 @@ namespace cycfi { namespace elements
       std::size_t                _previous_window_end = 0;
 
       mutable rows_vector        _rows;
-      mutable double             _height;
+      mutable double             _height = 0;
       mutable int                _layout_id = 0;
       mutable bool               _update_request = true;
    };

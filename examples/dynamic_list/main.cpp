@@ -21,8 +21,6 @@ int main(int argc, char* argv[])
 
    auto my_composer =
       basic_cell_composer(
-         220,                       // min width
-         25,                        // line_height
          1000000,                   // size (number of rows)
          [](std::size_t index)      // Composer function
          {

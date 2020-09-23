@@ -11,25 +11,6 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-class my_composer : public fixed_cell_composer<fixed_size_composer<>>
-{
-public:
-
-   my_composer()
-    : base_type{
-         25       // line_height
-       , 220      // min width
-       , 1000000  // size (number of rows)
-      }
-   {}
-
-   element_ptr compose(std::size_t index) override
-   {
-      auto text = "This is item number " + std::to_string(index+1);
-      return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
-   }
-};
-
 int main(int argc, char* argv[])
 {
    app _app(argc, argv, "Dynamic Lists", "com.cycfi.dynamic_lists");
@@ -38,7 +19,19 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   auto content = share(dynamic_list{ share(my_composer{}) });
+   auto my_composer =
+      basic_cell_composer(
+         220,                       // min width
+         25,                        // line_height
+         1000000,                   // size (number of rows)
+         [](std::size_t index)      // Composer function
+         {
+            auto text = "This is item number " + std::to_string(index+1);
+            return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
+         }
+      );
+
+   auto content = share(dynamic_list{ my_composer });
 
    view_.content(
       vscroller(hold(content)),

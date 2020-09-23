@@ -9,6 +9,7 @@
 #include <elements/element/element.hpp>
 #include <memory>
 #include <vector>
+#include <functional>
 
 namespace cycfi { namespace elements
 {
@@ -31,22 +32,21 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
-   class fixed_cell_composer : public Base
+   class static_limits_cell_composer : public Base
    {
    public:
 
-      using base_type = fixed_cell_composer<Base>;
+      using base_type = static_limits_cell_composer<Base>;
 
                               template <typename... Rest>
-                              fixed_cell_composer(
-                                 float line_height, float min_width
+                              static_limits_cell_composer(
+                                 float min_width, float line_height
                                , Rest&& ...rest
                               );
 
                               template <typename... Rest>
-                              fixed_cell_composer(
-                                 float line_height, float min_width
-                               , float max_width
+                              static_limits_cell_composer(
+                                 float min_width, float max_width, float line_height
                                , Rest&& ...rest
                               );
 
@@ -61,14 +61,14 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
-   class fixed_size_composer : public Base
+   class fixed_length_cell_composer : public Base
    {
    public:
 
-      using base_type = fixed_size_composer<Base>;
+      using base_type = fixed_length_cell_composer<Base>;
 
                               template <typename... Rest>
-                              fixed_size_composer(std::size_t size, Rest&& ...rest)
+                              fixed_length_cell_composer(std::size_t size, Rest&& ...rest)
                                : Base(std::forward<Rest>(rest)...)
                                , _size(size)
                               {}
@@ -79,6 +79,56 @@ namespace cycfi { namespace elements
 
       std::size_t             _size;
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F, typename Base = cell_composer>
+   class function_cell_composer : public Base
+   {
+   public:
+
+      using base_type = function_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              function_cell_composer(F&& compose_, Rest&& ...rest)
+                               : Base(std::forward<Rest>(rest)...)
+                               , _compose(compose_)
+                              {}
+
+      virtual element_ptr     compose(std::size_t index) { return _compose(index); }
+
+   private:
+
+      F                       _compose;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_width, float line_height, std::size_t size, F&& compose
+   )
+   {
+      using return_type =
+         static_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<remove_cvref_t<F>>
+            >
+         >;
+      return share(return_type{ min_width, line_height, size, std::forward<F>(compose) });
+   }
+
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_width, float max_width, float line_height, std::size_t size, F&& compose
+   )
+   {
+      using return_type =
+         static_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<remove_cvref_t<F>>
+            >
+         >;
+      return share(return_type{ min_width, max_width, line_height, size, std::forward<F>(compose) });
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    class dynamic_list : public element
@@ -124,38 +174,38 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base>
    template <typename... Rest>
-   inline fixed_cell_composer<Base>::fixed_cell_composer(
-      float line_height
-      , float min_width
-      , Rest&& ...rest
+   inline static_limits_cell_composer<Base>::static_limits_cell_composer(
+      float min_width
+    , float line_height
+    , Rest&& ...rest
    )
-      : Base(std::forward<Rest>(rest)...)
-      , _line_height{ line_height }
-      , _width_limits{ min_width, full_extent }
+    : Base(std::forward<Rest>(rest)...)
+    , _line_height{ line_height }
+    , _width_limits{ min_width, full_extent }
    {}
 
    template <typename Base>
    template <typename... Rest>
-   inline fixed_cell_composer<Base>::fixed_cell_composer(
-      float line_height
-      , float min_width
-      , float max_width
-      , Rest&& ...rest
+   inline static_limits_cell_composer<Base>::static_limits_cell_composer(
+      float min_width
+    , float max_width
+    , float line_height
+    , Rest&& ...rest
    )
-      : Base(std::forward<Rest>(rest)...)
-      , _line_height(line_height)
-      , _width_limits{ min_width, max_width }
+    : Base(std::forward<Rest>(rest)...)
+    , _line_height(line_height)
+    , _width_limits{ min_width, max_width }
    {}
 
    template <typename Base>
    inline cell_composer::limits
-   fixed_cell_composer<Base>::width_limits(basic_context const& /*ctx*/) const
+   static_limits_cell_composer<Base>::width_limits(basic_context const& /*ctx*/) const
    {
       return _width_limits;
    }
 
    template <typename Base>
-   inline float fixed_cell_composer<Base>::line_height(std::size_t /*index*/, basic_context const& /*ctx*/) const
+   inline float static_limits_cell_composer<Base>::line_height(std::size_t /*index*/, basic_context const& /*ctx*/) const
    {
       return _line_height;
    }

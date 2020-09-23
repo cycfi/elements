@@ -12,7 +12,7 @@
 
 namespace cycfi { namespace elements
 {
-   class dynamic : public element
+   class dynamic_list : public element
    {
    public:
 
@@ -28,13 +28,13 @@ namespace cycfi { namespace elements
 
          virtual std::size_t     size() const = 0;
          virtual element_ptr     compose(std::size_t index) = 0;
-         virtual limits          width_limits() const = 0;
-         virtual float           line_height(std::size_t index) const = 0;
+         virtual limits          width_limits(basic_context const& ctx) const = 0;
+         virtual float           line_height(std::size_t index, basic_context const& ctx) const = 0;
       };
 
       using composer_ptr = std::shared_ptr<composer>;
 
-                                 dynamic(composer_ptr composer)
+                                 dynamic_list(composer_ptr composer)
                                   : _composer(composer)
                                  {}
 
@@ -42,7 +42,8 @@ namespace cycfi { namespace elements
       void                       draw(context const& ctx) override;
       void                       layout(context const& ctx) override;
 
-      void                       build();
+      void                       update();
+      void                       update(basic_context const& ctx) const;
 
    private:
 
@@ -54,12 +55,17 @@ namespace cycfi { namespace elements
          int                     layout_id = -1;
       };
 
+      using rows_vector = std::vector<row_info>;
+
       composer_ptr               _composer;
-      std::vector<row_info>      _rows;
       point                      _previous_size;
-      int                        _layout_id = 0;
       std::size_t                _previous_window_start = 0;
       std::size_t                _previous_window_end = 0;
+
+      mutable rows_vector        _rows;
+      mutable double             _height = 0;
+      mutable int                _layout_id = 0;
+      mutable bool               _update_request = true;
    };
 }}
 

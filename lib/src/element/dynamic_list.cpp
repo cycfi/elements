@@ -3,29 +3,30 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/dynamic.hpp>
+#include <elements/element/dynamic_list.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
 {
-   view_limits dynamic::limits(basic_context const& /*ctx*/) const
+   view_limits dynamic_list::limits(basic_context const& ctx) const
    {
       if (_composer)
       {
-         auto w_limits = _composer->width_limits();
+         if (_update_request)
+            update(ctx);
+         auto w_limits = _composer->width_limits(ctx);
          if (auto size = _composer->size())
          {
-            view_limits l = {{ w_limits.min, 0 }, { w_limits.max, full_extent }};
-            for (std::size_t i = 0; i != size; ++i)
-               l.min.y += _composer->line_height(i);
-            l.max.y = l.min.y;
-            return l;
+            return {
+               { w_limits.min, float(_height) }
+             , { w_limits.max, float(_height) }
+            };
          }
       }
       return {{ 0, 0 }, { 0, 0 }};
    }
 
-   void dynamic::draw(context const& ctx)
+   void dynamic_list::draw(context const& ctx)
    {
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
@@ -93,7 +94,7 @@ namespace cycfi { namespace elements
       _previous_size.y = ctx.bounds.height();
    }
 
-   void dynamic::layout(context const& ctx)
+   void dynamic_list::layout(context const& ctx)
    {
       if (_previous_size.x != ctx.bounds.width() ||
          _previous_size.y != ctx.bounds.height())
@@ -104,7 +105,14 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic::build()
+   void dynamic_list::update()
+   {
+      _update_request = true;
+      _rows.clear();
+      _height = 0;
+   }
+
+   void dynamic_list::update(basic_context const& ctx) const
    {
       if (_composer)
       {
@@ -114,13 +122,15 @@ namespace cycfi { namespace elements
             _rows.reserve(_composer->size());
             for (std::size_t i = 0; i != size; ++i)
             {
-               auto line_height = _composer->line_height(i);
+               auto line_height = _composer->line_height(i, ctx);
                _rows.push_back({ y, line_height, nullptr });
                y += line_height;
             }
+            _height = y;
          }
       }
       ++_layout_id;
+      _update_request = false;
    }
 }}
 

@@ -10,7 +10,7 @@
 #include <elements/element/button.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/dial.hpp>
-#include <elements/element/dynamic.hpp>
+#include <elements/element/dynamic_list.hpp>
 #include <elements/element/floating.hpp>
 #include <elements/element/flow.hpp>
 #include <elements/element/grid.hpp>

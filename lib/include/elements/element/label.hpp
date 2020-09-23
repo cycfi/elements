@@ -8,8 +8,11 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/text.hpp>
+#include <elements/element/proxy.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/font.hpp>
+#include <elements/support/receiver.hpp>
 #include <infra/string_view.hpp>
 #include <string>
 
@@ -246,6 +249,59 @@ namespace cycfi { namespace elements
    inline int default_heading::get_text_align() const
    {
       return get_theme().heading_text_align;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // As label receives a value of type T and converts it to the label's text
+   // using a user-supplied function.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject, typename T, typename F>
+   class as_label_element : public receiver<T>, public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+      using param_type = typename receiver<T>::param_type;
+      using getter_type = typename receiver<T>::getter_type;
+
+                              as_label_element(F&& as_string, Subject subject);
+
+      void                    value(param_type val) override;
+      getter_type             value() const override;
+
+   private:
+
+      F                       _as_string;
+      T                       _value;
+   };
+
+   template <typename Subject, typename T, typename F>
+   inline as_label_element<Subject, T, F>::as_label_element(F&& as_string, Subject subject)
+    : _as_string(as_string)
+    , base_type(std::move(subject))
+   {}
+
+   template <typename Subject, typename T, typename F>
+   inline void as_label_element<Subject, T, F>::value(param_type val)
+   {
+      _value = val;
+      if (auto tw = find_subject<text_writer*>(this))
+         tw->set_text(_as_string(val));
+   }
+
+   template <typename Subject, typename T, typename F>
+   inline typename as_label_element<Subject, T, F>::getter_type
+   as_label_element<Subject, T, F>::value() const
+   {
+      return _value;
+   }
+
+   template <typename T, typename Subject, typename F>
+   inline as_label_element<remove_cvref_t<Subject>, T, remove_cvref_t<F>>
+   as_label(F&& as_string, Subject&& subject)
+   {
+      using ftype = remove_cvref_t<F>;
+      return { std::forward<ftype>(as_string), std::forward<Subject>(subject) };
    }
 }}
 

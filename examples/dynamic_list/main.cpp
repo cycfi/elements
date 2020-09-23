@@ -12,19 +12,19 @@ using namespace cycfi::artist;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-class composer : public dynamic::composer
+class composer : public dynamic_list::composer
 {
 public:
 
    std::size_t       size() const override;
    element_ptr       compose(std::size_t index) override;
-   limits            width_limits() const override;
-   float             line_height(std::size_t index) const override;
+   limits            width_limits(basic_context const& ctx) const override;
+   float             line_height(std::size_t index, basic_context const& ctx) const override;
 };
 
 std::size_t composer::size() const
 {
-   return 100000;
+   return 1000000;
 }
 
 element_ptr composer::compose(std::size_t index)
@@ -33,26 +33,26 @@ element_ptr composer::compose(std::size_t index)
    return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
 }
 
-composer::limits composer::width_limits() const
+composer::limits composer::width_limits(basic_context const& /*ctx*/) const
 {
    return { 220, full_extent };
 }
 
-float composer::line_height(std::size_t index) const
+float composer::line_height(std::size_t index, basic_context const& /*ctx*/) const
 {
    return 25;
 }
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Dynamic", "com.cycfi.dynamic");
+   app _app(argc, argv, "Dynamic Lists", "com.cycfi.dynamic_lists");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
    view view_(_win);
 
-   auto content = share(dynamic{ std::make_shared<composer>() });
-   content->build();
+   auto content = share(dynamic_list{std::make_shared<composer>() });
+   content->update();
 
    view_.content(
       vscroller(hold(content)),

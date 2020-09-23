@@ -20,5 +20,5 @@ add_subdirectory(notebook)
 add_subdirectory(doc_aspects)
 add_subdirectory(rain)
 add_subdirectory(tooltip)
-add_subdirectory(dynamic)
+add_subdirectory(dynamic_list)
 

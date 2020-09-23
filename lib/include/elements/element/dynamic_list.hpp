@@ -14,6 +14,8 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
+   // The cell composer abstract class
+   ////////////////////////////////////////////////////////////////////////////
    class cell_composer : public std::enable_shared_from_this<cell_composer>
    {
    public:
@@ -30,6 +32,8 @@ namespace cycfi { namespace elements
       virtual float           line_height(std::size_t index, basic_context const& ctx) const = 0;
    };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // This cell composer has fixed-sized width limits and line-height.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
    class static_limits_cell_composer : public Base
@@ -59,6 +63,36 @@ namespace cycfi { namespace elements
        cell_composer::limits  _width_limits;
    };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // This cell composer derives the width limits and line-height from the
+   // first element in the list (index 0). This cell composer has fixed-sized
+   // width limits and line-height.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = cell_composer>
+   class fixed_derived_limits_cell_composer : public Base
+   {
+   public:
+
+      using base_type = fixed_derived_limits_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              fixed_derived_limits_cell_composer(Rest&& ...rest);
+
+      cell_composer::limits   width_limits(basic_context const& ctx) const override;
+      float                   line_height(std::size_t index, basic_context const& ctx) const override;
+
+   private:
+
+      void                    get_limits(basic_context const& ctx) const;
+
+      using limits = cell_composer::limits;
+
+      mutable float           _line_height = -1;
+      mutable limits          _width_limits = { -1, full_extent };
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // This cell composer has fixed-length (number of list elements).
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
    class fixed_derived_limits_cell_composer : public Base
@@ -105,6 +139,8 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   // This cell composer composes the cell element using a provided function.
+   ////////////////////////////////////////////////////////////////////////////
    template <typename F, typename Base = cell_composer>
    class function_cell_composer : public Base
    {
@@ -126,6 +162,25 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   // basic_cell_composer given the number of elements and a compose function
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   inline auto basic_cell_composer(std::size_t size, F&& compose)
+   {
+      using ftype = remove_cvref_t<F>;
+      using return_type =
+         fixed_derived_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<ftype>
+            >
+         >;
+      return share(return_type{ size, std::forward<ftype>(compose) });
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // basic_cell_composer given the min_width, line_height, number of
+   // elements and a compose function.
+   ////////////////////////////////////////////////////////////////////////////
    template <typename F>
    inline auto basic_cell_composer(std::size_t size, F&& compose)
    {
@@ -143,29 +198,52 @@ namespace cycfi { namespace elements
       float min_width, float line_height, std::size_t size, F&& compose
    )
    {
+      using ftype = remove_cvref_t<F>;
       using return_type =
          static_limits_cell_composer<
             fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
+               function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ min_width, line_height, size, std::forward<F>(compose) });
+      return share(
+         return_type{
+            min_width
+          , line_height
+          , size
+          , std::forward<ftype>(compose)
+         }
+      );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // basic_cell_composer given the min_width, max_width, line_height, number
+   // of elements and a compose function.
+   ////////////////////////////////////////////////////////////////////////////
    template <typename F>
    inline auto basic_cell_composer(
       float min_width, float max_width, float line_height, std::size_t size, F&& compose
    )
    {
+      using ftype = remove_cvref_t<F>;
       using return_type =
          static_limits_cell_composer<
             fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
+               function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ min_width, max_width, line_height, size, std::forward<F>(compose) });
+      return share(
+         return_type{
+            min_width
+          , max_width
+          , line_height
+          , size
+          , std::forward<ftype>(compose)
+         }
+      );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // The main dynamic_list class
    ////////////////////////////////////////////////////////////////////////////
    class dynamic_list : public element
    {
@@ -207,6 +285,8 @@ namespace cycfi { namespace elements
       mutable bool               _update_request = true;
    };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base>
    template <typename... Rest>

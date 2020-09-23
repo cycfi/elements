@@ -61,6 +61,30 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
+   class fixed_derived_limits_cell_composer : public Base
+   {
+   public:
+
+      using base_type = fixed_derived_limits_cell_composer<Base>;
+
+                              template <typename... Rest>
+                              fixed_derived_limits_cell_composer(Rest&& ...rest);
+
+      cell_composer::limits   width_limits(basic_context const& ctx) const override;
+      float                   line_height(std::size_t index, basic_context const& ctx) const override;
+
+   private:
+
+      void                    get_limits(basic_context const& ctx) const;
+
+      using limits = cell_composer::limits;
+
+      mutable float           _line_height = -1;
+      mutable limits          _width_limits = { -1, full_extent };
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = cell_composer>
    class fixed_length_cell_composer : public Base
    {
    public:
@@ -102,6 +126,18 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   template <typename F>
+   inline auto basic_cell_composer(std::size_t size, F&& compose)
+   {
+      using return_type =
+         fixed_derived_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<remove_cvref_t<F>>
+            >
+         >;
+      return share(return_type{ size, std::forward<F>(compose) });
+   }
+
    template <typename F>
    inline auto basic_cell_composer(
       float min_width, float line_height, std::size_t size, F&& compose
@@ -208,6 +244,43 @@ namespace cycfi { namespace elements
    inline float static_limits_cell_composer<Base>::line_height(std::size_t /*index*/, basic_context const& /*ctx*/) const
    {
       return _line_height;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base>
+   template <typename... Rest>
+   inline fixed_derived_limits_cell_composer<Base>::fixed_derived_limits_cell_composer(
+      Rest&& ...rest
+   )
+    : Base(std::forward<Rest>(rest)...)
+    , _line_height{ -1 }
+    , _width_limits{ -1, full_extent }
+   {}
+
+   template <typename Base>
+   inline cell_composer::limits
+   fixed_derived_limits_cell_composer<Base>::width_limits(basic_context const& ctx) const
+   {
+      if (_width_limits.min == -1)
+         get_limits(ctx);
+      return _width_limits;
+   }
+
+   template <typename Base>
+   inline float fixed_derived_limits_cell_composer<Base>::line_height(std::size_t /*index*/, basic_context const& ctx) const
+   {
+      if (_line_height == -1)
+         get_limits(ctx);
+      return _line_height;
+   }
+
+   template <typename Base>
+   void fixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx) const
+   {
+      auto lim = const_cast<base_type*>(this)->compose(0)->limits(ctx);
+      _width_limits.min = lim.min.x;
+      _width_limits.max = lim.max.x;
+      _line_height = lim.min.y;
    }
 }}
 

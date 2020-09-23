@@ -11,36 +11,24 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-class composer : public dynamic_list::composer
+class my_composer : public fixed_cell_composer<fixed_size_composer<>>
 {
 public:
 
-   std::size_t       size() const override;
-   element_ptr       compose(std::size_t index) override;
-   limits            width_limits(basic_context const& ctx) const override;
-   float             line_height(std::size_t index, basic_context const& ctx) const override;
+   my_composer()
+    : base_type{
+         25       // line_height
+       , 220      // min width
+       , 1000000  // size (number of rows)
+      }
+   {}
+
+   element_ptr compose(std::size_t index) override
+   {
+      auto text = "This is item number " + std::to_string(index+1);
+      return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
+   }
 };
-
-std::size_t composer::size() const
-{
-   return 1000000;
-}
-
-element_ptr composer::compose(std::size_t index)
-{
-   auto text = "This is item number " + std::to_string(index);
-   return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
-}
-
-composer::limits composer::width_limits(basic_context const& /*ctx*/) const
-{
-   return { 220, full_extent };
-}
-
-float composer::line_height(std::size_t index, basic_context const& /*ctx*/) const
-{
-   return 25;
-}
 
 int main(int argc, char* argv[])
 {
@@ -50,8 +38,7 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   auto content = share(dynamic_list{std::make_shared<composer>() });
-   content->update();
+   auto content = share(dynamic_list{ share(my_composer{}) });
 
    view_.content(
       vscroller(hold(content)),

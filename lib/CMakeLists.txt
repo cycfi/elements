@@ -12,7 +12,7 @@ cmake_minimum_required(VERSION 3.7.2...3.15.0)
 set(ELEMENTS_SOURCES
    src/element/button.cpp
    src/element/composite.cpp
-   src/element/thumbwheel.cpp
+   src/element/dial.cpp
    src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
@@ -66,7 +66,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp
-   include/elements/element/gallery/thumbwheel.hpp
+        include/elements/element/gallery/dial.hpp
    include/elements/element/gallery/dialog.hpp
    include/elements/element/gallery/group.hpp
    include/elements/element/gallery/icon_button.hpp

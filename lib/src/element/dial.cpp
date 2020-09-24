@@ -64,8 +64,6 @@ namespace cycfi { namespace elements
 
    double dial_base::linear_value(context const& /*ctx*/, tracker_info& track_info)
    {
-      using namespace radial_consts;
-
       point delta{
          track_info.current.x - track_info.previous.x,
          track_info.current.y - track_info.previous.y

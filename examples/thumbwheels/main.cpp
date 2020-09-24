@@ -72,20 +72,21 @@ auto make_thumbwheel2(char const* unit, float offset, float scale, int precision
 
 auto make_thumbwheel3()
 {
+   using xy_position = thumbwheel_base::xy_position;
    auto label = make_label();
 
    auto&& draw =
-      [=](context const& ctx, double val)
+      [=](context const& ctx, xy_position val)
       {
          auto& cnv = ctx.canvas;
          cnv.begin_path();
          cnv.round_rect(ctx.bounds, get_theme().frame_corner_radius);
-         cnv.fill_style(colors::antique_white.level(val));
+         cnv.fill_style(color(1.0, 0.0, val[0]).level(val[1]));
          cnv.fill();
       };
 
-   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<double>(draw))));
-   tw->value(0.25);
+   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<xy_position>(draw))));
+   tw->value({ 0.25, 0.25 });
 
    return top_margin(20, hold(tw));
 }

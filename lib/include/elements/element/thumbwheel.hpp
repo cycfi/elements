@@ -12,19 +12,23 @@
 #include <elements/support.hpp>
 #include <infra/support.hpp>
 #include <functional>
+#include <array>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Thumbwheels
    ////////////////////////////////////////////////////////////////////////////
-   class thumbwheel_base : public tracker<proxy_base>, public receiver<double>
+   class thumbwheel_base :
+      public tracker<proxy_base>
+    , public receiver<std::array<double, 2>>
    {
    public:
 
-      using thumbwheel_function = std::function<void(double pos)>;
+      using thumbwheel_function = std::function<void(double x, double y)>;
+      using xy_position = std::array<double, 2>;
 
-                           thumbwheel_base(double init_value = 0.0);
+                           thumbwheel_base(double init_x = 0.0, double init_y = 0.0);
 
       void                 prepare_subject(context& ctx) override;
       element*             hit_test(context const& ctx, point p) override;
@@ -32,16 +36,16 @@ namespace cycfi { namespace elements
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
 
-      double               value() const override;
-      void                 value(double val) override;
+      xy_position          value() const override;
+      void                 value(xy_position val) override;
 
       thumbwheel_function  on_change;
 
    private:
 
-      double               compute_value(context const& ctx, tracker_info& track_info);
+      xy_position          compute_value(context const& ctx, tracker_info& track_info);
 
-      double               _value;
+      xy_position          _value;
    };
 
    template <typename Subject>
@@ -51,7 +55,7 @@ namespace cycfi { namespace elements
       return { std::forward<Subject>(subject), init_value };
    }
 
-   inline double thumbwheel_base::value() const
+   inline thumbwheel_base::xy_position thumbwheel_base::value() const
    {
       return _value;
    }

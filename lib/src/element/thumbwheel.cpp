@@ -16,37 +16,47 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // thumbwheel_base
    ////////////////////////////////////////////////////////////////////////////
-   thumbwheel_base::thumbwheel_base(double init_value)
-    : _value(init_value)
+   thumbwheel_base::thumbwheel_base(double init_x, double init_y)
+    : _value{ init_x, init_y }
    {
-      clamp(_value, 0.0, 1.0);
+      clamp(_value[0], 0.0, 1.0);
+      clamp(_value[1], 0.0, 1.0);
    }
 
    void thumbwheel_base::prepare_subject(context& ctx)
    {
       proxy_base::prepare_subject(ctx);
       if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value[1]);
+      else if (auto* rcvr = find_subject<receiver<xy_position>*>(this))
          rcvr->value(_value);
    }
 
-   void thumbwheel_base::value(double val)
+   void thumbwheel_base::value(xy_position val)
    {
-      _value = clamp(val, 0.0, 1.0);
+      _value[0] = clamp(val[0], 0.0, 1.0);
+      _value[1] = clamp(val[1], 0.0, 1.0);
       if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value[1]);
+      else if (auto* rcvr = find_subject<receiver<xy_position>*>(this))
          rcvr->value(_value);
    }
 
    namespace
    {
-      inline void edit_value(thumbwheel_base* this_, double val)
+      inline void edit_value(thumbwheel_base* this_, thumbwheel_base::xy_position val)
       {
          this_->value(val);
          if (this_->on_change)
-            this_->on_change(this_->value());
+         {
+            auto val = this_->value();
+            this_->on_change(val[0], val[1]);
+         }
       }
    }
 
-   double thumbwheel_base::compute_value(context const& /*ctx*/, tracker_info& track_info)
+   thumbwheel_base::xy_position
+   thumbwheel_base::compute_value(context const& /*ctx*/, tracker_info& track_info)
    {
       point delta{
          track_info.current.x - track_info.previous.x,
@@ -57,16 +67,17 @@ namespace cycfi { namespace elements
       if (track_info.modifiers & mod_shift)
          factor /= 5.0;
 
-      float val = _value + factor * (delta.x - delta.y);
-      return clamp(val, 0.0, 1.0);
+      double x = _value[0] + factor * delta.x;
+      double y = _value[1] + factor * -delta.y;
+      return { clamp(x, 0.0, 1.0), clamp(y, 0.0, 1.0) };
    }
 
    void thumbwheel_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
-         double new_value = compute_value(ctx, track_info);
-         if (_value != new_value)
+         auto new_value = compute_value(ctx, track_info);
+         if (_value[0] != new_value[0] || _value[1] != new_value[1])
          {
             edit_value(this, new_value);
             ctx.view.refresh(ctx);
@@ -78,9 +89,11 @@ namespace cycfi { namespace elements
    {
       auto sdir = scroll_direction();
       track_scroll(ctx, dir, p);
-      edit_value(this, value()
-         + (-sdir.y * dir.y * 0.005)
-         + (sdir.x * dir.x * 0.005)
+      edit_value(this,
+         {
+            _value[0] + (sdir.x * dir.x * 0.005),
+            _value[1] - (sdir.y * dir.y * 0.005)
+         }
       );
       ctx.view.refresh(ctx);
       return true;
@@ -121,7 +134,8 @@ namespace cycfi { namespace elements
       if (std::abs(diff) < (_quantize / 10))
       {
          align(val);
-         view_.refresh(bounds);
+         if (diff > 0)
+            view_.refresh(bounds);
       }
       else
       {

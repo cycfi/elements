@@ -80,7 +80,7 @@ auto make_xy_thumbwheel()
          auto& cnv = ctx.canvas;
          cnv.begin_path();
          cnv.round_rect(ctx.bounds, get_theme().frame_corner_radius);
-         cnv.fill_style(color(1.0, 0.0, val.x).level(val.y));
+         cnv.fill_style(color(val.x, 0.0, 1.0).level(val.y));
          cnv.fill();
       };
 

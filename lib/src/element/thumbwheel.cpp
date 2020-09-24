@@ -76,7 +76,7 @@ namespace cycfi { namespace elements
       if (track_info.current != track_info.previous)
       {
          auto new_value = compute_value(ctx, track_info);
-         if (_value.x != new_value.x || _value.y != new_value.y)
+         if (_value != new_value)
          {
             edit_value(this, new_value);
             ctx.view.refresh(ctx);

@@ -70,6 +70,25 @@ auto make_thumbwheel2(char const* unit, float offset, float scale, int precision
    );
 }
 
+auto make_thumbwheel3()
+{
+   auto label = make_label();
+
+   auto&& draw =
+      [=](context const& ctx, double val)
+      {
+         auto& cnv = ctx.canvas;
+         cnv.begin_path();
+         cnv.round_rect(ctx.bounds, get_theme().frame_corner_radius);
+         cnv.fill_style(colors::antique_white.level(val));
+         cnv.fill();
+      };
+
+   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<double>(draw))));
+
+   return top_margin(20, hold(tw));
+}
+
 int main(int argc, char* argv[])
 {
    app _app(argc, argv, "Thumbwheels", "com.cycfi.thumbwheels");
@@ -84,7 +103,8 @@ int main(int argc, char* argv[])
          vtile(
             align_center_middle(make_thumbwheel1()),
             align_center_middle(make_thumbwheel2(" Hz", 20, 100, 2)),
-            align_center_middle(make_thumbwheel2(" ms", 0, 10000, 0))
+            align_center_middle(make_thumbwheel2(" ms", 0, 10000, 0)),
+            align_center_middle(make_thumbwheel3())
          )
       ),
 

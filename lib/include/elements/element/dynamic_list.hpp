@@ -95,30 +95,6 @@ namespace cycfi { namespace elements
    // This cell composer has fixed-length (number of list elements).
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = cell_composer>
-   class fixed_derived_limits_cell_composer : public Base
-   {
-   public:
-
-      using base_type = fixed_derived_limits_cell_composer<Base>;
-
-                              template <typename... Rest>
-                              fixed_derived_limits_cell_composer(Rest&& ...rest);
-
-      cell_composer::limits   width_limits(basic_context const& ctx) const override;
-      float                   line_height(std::size_t index, basic_context const& ctx) const override;
-
-   private:
-
-      void                    get_limits(basic_context const& ctx) const;
-
-      using limits = cell_composer::limits;
-
-      mutable float           _line_height = -1;
-      mutable limits          _width_limits = { -1, full_extent };
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = cell_composer>
    class fixed_length_cell_composer : public Base
    {
    public:
@@ -181,18 +157,6 @@ namespace cycfi { namespace elements
    // basic_cell_composer given the min_width, line_height, number of
    // elements and a compose function.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename F>
-   inline auto basic_cell_composer(std::size_t size, F&& compose)
-   {
-      using return_type =
-         fixed_derived_limits_cell_composer<
-            fixed_length_cell_composer<
-               function_cell_composer<remove_cvref_t<F>>
-            >
-         >;
-      return share(return_type{ size, std::forward<F>(compose) });
-   }
-
    template <typename F>
    inline auto basic_cell_composer(
       float min_width, float line_height, std::size_t size, F&& compose

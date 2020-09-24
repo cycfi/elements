@@ -21,14 +21,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    class thumbwheel_base :
       public tracker<proxy_base>
-    , public receiver<std::array<double, 2>>
+    , public receiver<point>
    {
    public:
 
-      using xy_position = std::array<double, 2>;
-      using thumbwheel_function = std::function<void(xy_position)>;
+      using thumbwheel_function = std::function<void(point)>;
 
-                           thumbwheel_base(double init_x = 0.0, double init_y = 0.0);
+                           thumbwheel_base(point init = { 0.0f, 0.0f });
 
       void                 prepare_subject(context& ctx) override;
       element*             hit_test(context const& ctx, point p) override;
@@ -36,26 +35,26 @@ namespace cycfi { namespace elements
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
 
-      xy_position          value() const override;
-      void                 value(xy_position val) override;
+      point                value() const override;
+      void                 value(point val) override;
 
       thumbwheel_function  on_change;
 
    private:
 
-      xy_position          compute_value(context const& ctx, tracker_info& track_info);
+      point          compute_value(context const& ctx, tracker_info& track_info);
 
-      xy_position          _value;
+      point          _value;
    };
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, thumbwheel_base>
-   thumbwheel(Subject&& subject, double init_value = 0.0)
+   thumbwheel(Subject&& subject, point init = { 0.0f, 0.0f })
    {
-      return { std::forward<Subject>(subject), init_value };
+      return { std::forward<Subject>(subject), init };
    }
 
-   inline thumbwheel_base::xy_position thumbwheel_base::value() const
+   inline point thumbwheel_base::value() const
    {
       return _value;
    }

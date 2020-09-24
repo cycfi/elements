@@ -35,9 +35,7 @@ namespace cycfi { namespace elements
       element*             hit_test(context const& ctx, point p) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
-      void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
-      void                 end_tracking(context const& ctx, tracker_info& track_info) override;
 
       double               value() const override;
       void                 value(double val) override;

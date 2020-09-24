@@ -56,9 +56,9 @@ namespace cycfi { namespace elements
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
 
       virtual tracker_info_ptr new_state(context const& ctx, point start, int modifiers);
-      virtual void             begin_tracking(context const& ctx, tracker_info& track_info) = 0;
-      virtual void             keep_tracking(context const& ctx, tracker_info& track_info) = 0;
-      virtual void             end_tracking(context const& ctx, tracker_info& track_info) = 0;
+      virtual void             begin_tracking(context const& ctx, tracker_info& track_info) {};
+      virtual void             keep_tracking(context const& ctx, tracker_info& track_info) {};
+      virtual void             end_tracking(context const& ctx, tracker_info& track_info) {};
       void                     track_scroll(context const& ctx, point dir, point p);
 
    private:

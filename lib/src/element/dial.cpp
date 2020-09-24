@@ -85,10 +85,6 @@ namespace cycfi { namespace elements
          ;
    }
 
-   void dial_base::begin_tracking(context const& /* ctx */, tracker_info& /* track_info */)
-   {
-   }
-
    void dial_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
@@ -100,10 +96,6 @@ namespace cycfi { namespace elements
             ctx.view.refresh(ctx);
          }
       }
-   }
-
-   void dial_base::end_tracking(context const& /* ctx */, tracker_info& /* track_info */)
-   {
    }
 
    bool dial_base::scroll(context const& ctx, point dir, point p)

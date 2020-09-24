@@ -71,6 +71,27 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // hport_element class implementation
+   ////////////////////////////////////////////////////////////////////////////
+   view_limits hport_element::limits(basic_context const& ctx) const
+   {
+      view_limits e_limits = subject().limits(ctx);
+      return {{ min_port_size, e_limits.min.y }, e_limits.max };
+   }
+
+   void hport_element::prepare_subject(context& ctx)
+   {
+      view_limits    e_limits          = subject().limits(ctx);
+      double         elem_width        = e_limits.min.x;
+      double         available_width   = ctx.parent->bounds.width();
+
+      ctx.bounds.left -= (elem_width - available_width) * _halign;
+      ctx.bounds.width(elem_width);
+
+      subject().layout(ctx);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // scrollable class implementation
    ////////////////////////////////////////////////////////////////////////////
    scrollable::scrollable_context scrollable::find(context const& ctx_)

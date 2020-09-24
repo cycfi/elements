@@ -37,6 +37,7 @@ set(ELEMENTS_SOURCES
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
    src/element/gallery/tab.cpp
+   src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
@@ -49,6 +50,7 @@ set(ELEMENTS_SOURCES
    src/element/proxy.cpp
    src/element/slider.cpp
    src/element/text.cpp
+   src/element/thumbwheel.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
@@ -101,6 +103,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/size.hpp
    include/elements/element/slider.hpp
    include/elements/element/text.hpp
+   include/elements/element/thumbwheel.hpp
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp

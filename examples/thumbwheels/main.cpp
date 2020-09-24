@@ -71,22 +71,22 @@ auto make_thumbwheel2(char const* unit, float offset, float scale, int precision
    );
 }
 
-auto make_thumbwheel3()
+auto make_xy_thumbwheel()
 {
    auto label = make_label();
 
    auto&& draw =
-      [=](context const& ctx, double val)
+      [=](context const& ctx, point val)
       {
          auto& cnv = ctx.canvas;
          cnv.begin_path();
          cnv.add_round_rect(ctx.bounds, get_theme().frame_corner_radius);
-         cnv.fill_style(colors::antique_white.level(val));
+         cnv.fill_style(color(val.x, 0.0, 1.0).level(val.y));
          cnv.fill();
       };
 
-   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<double>(draw))));
-   tw->value(0.25);
+   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<point>(draw))));
+   tw->value({ 0.25f, 0.25f });
 
    return top_margin(20, hold(tw));
 }
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
             align_center_middle(make_thumbwheel1()),
             align_center_middle(make_thumbwheel2(" Hz", 20, 100, 2)),
             align_center_middle(make_thumbwheel2(" ms", 0, 10000, 0)),
-            align_center_middle(make_thumbwheel3())
+            align_center_middle(make_xy_thumbwheel())
          )
       ),
 

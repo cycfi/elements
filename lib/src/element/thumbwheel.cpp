@@ -16,9 +16,74 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // thumbwheel_base
    ////////////////////////////////////////////////////////////////////////////
-   double thumbwheel_base::compute_value(context const& ctx, tracker_info& track_info)
+   thumbwheel_base::thumbwheel_base(double init_value)
+    : _value(init_value)
    {
-      return linear_value(ctx, track_info);
+      clamp(_value, 0.0, 1.0);
+   }
+
+   void thumbwheel_base::prepare_subject(context& ctx)
+   {
+      proxy_base::prepare_subject(ctx);
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value);
+   }
+
+   void thumbwheel_base::value(double val)
+   {
+      _value = clamp(val, 0.0, 1.0);
+      if (auto* rcvr = find_subject<receiver<double>*>(this))
+         rcvr->value(_value);
+   }
+
+   namespace
+   {
+      inline void edit_value(thumbwheel_base* this_, double val)
+      {
+         this_->value(val);
+         if (this_->on_change)
+            this_->on_change(this_->value());
+      }
+   }
+
+   double thumbwheel_base::compute_value(context const& /*ctx*/, tracker_info& track_info)
+   {
+      point delta{
+         track_info.current.x - track_info.previous.x,
+         track_info.current.y - track_info.previous.y
+      };
+
+      double factor = 1.0 / get_theme().dial_linear_range;
+      if (track_info.modifiers & mod_shift)
+         factor /= 5.0;
+
+      float val = _value + factor * (delta.x - delta.y);
+      return clamp(val, 0.0, 1.0);
+   }
+
+   void thumbwheel_base::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (track_info.current != track_info.previous)
+      {
+         double new_value = compute_value(ctx, track_info);
+         if (_value != new_value)
+         {
+            edit_value(this, new_value);
+            ctx.view.refresh(ctx);
+         }
+      }
+   }
+
+   bool thumbwheel_base::scroll(context const& ctx, point dir, point p)
+   {
+      auto sdir = scroll_direction();
+      track_scroll(ctx, dir, p);
+      edit_value(this, value()
+         + (-sdir.y * dir.y * 0.005)
+         + (sdir.x * dir.x * 0.005)
+      );
+      ctx.view.refresh(ctx);
+      return true;
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -42,13 +42,11 @@ namespace cycfi { namespace elements
 
       dial_function        on_change;
 
-   protected:
-
-      virtual double       radial_value(context const& ctx, tracker_info& track_info);
-      virtual double       linear_value(context const& ctx, tracker_info& track_info);
-      virtual double       compute_value(context const& ctx, tracker_info& track_info);
-
    private:
+
+      double               radial_value(context const& ctx, tracker_info& track_info);
+      double               linear_value(context const& ctx, tracker_info& track_info);
+      double               compute_value(context const& ctx, tracker_info& track_info);
 
       double               _value;
    };

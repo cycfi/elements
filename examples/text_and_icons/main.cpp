@@ -11,7 +11,7 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-auto box = basic(
+auto box = draw(
    [](context const& ctx)
    {
       auto& c = ctx.canvas;

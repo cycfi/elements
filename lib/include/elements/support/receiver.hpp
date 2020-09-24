@@ -45,12 +45,12 @@ namespace cycfi { namespace elements
       using getter_type = typename receiver<T>::getter_type;
       using param_type = typename receiver<T>::param_type;
 
-      void                    value(T val) override { _val = val; }
-      T                       value() const override { return _val; }
+      void                 value(T val) override { _val = val; }
+      T                    value() const override { return _val; }
 
    private:
 
-      receiver_type           _val = receiver_type{};
+      receiver_type        _val = receiver_type{};
    };
 }}
 

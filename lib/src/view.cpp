@@ -218,7 +218,10 @@ namespace cycfi { namespace elements
          return;
 
       call(
-         [btn](auto const& ctx, auto& _main_element) { _main_element.drag(ctx, btn); },
+         [btn](auto const& ctx, auto& _main_element)
+         {
+            _main_element.drag(ctx, btn);
+         },
          *this, _current_bounds
       );
    }
@@ -244,7 +247,10 @@ namespace cycfi { namespace elements
          return;
 
       call(
-         [dir, p](auto const& ctx, auto& _main_element) { _main_element.scroll(ctx, dir, p); },
+         [dir, p](auto const& ctx, auto& _main_element)
+         {
+            _main_element.scroll(ctx, dir, p);
+         },
          *this, _current_bounds
       );
    }
@@ -255,7 +261,10 @@ namespace cycfi { namespace elements
          return;
 
       call(
-         [k](auto const& ctx, auto& _main_element) { _main_element.key(ctx, k); },
+         [k](auto const& ctx, auto& _main_element)
+         {
+            _main_element.key(ctx, k);
+         },
          *this, _current_bounds
       );
    }
@@ -266,7 +275,10 @@ namespace cycfi { namespace elements
          return;
 
       call(
-         [info](auto const& ctx, auto& _main_element) { _main_element.text(ctx, info); },
+         [info](auto const& ctx, auto& _main_element)
+         {
+            _main_element.text(ctx, info);
+         },
          *this, _current_bounds
       );
    }

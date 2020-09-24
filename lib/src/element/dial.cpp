@@ -13,6 +13,9 @@
 
 namespace cycfi { namespace elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // dial_base
+   ////////////////////////////////////////////////////////////////////////////
    dial_base::dial_base(double init_value)
     : _value(init_value)
    {
@@ -43,10 +46,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   double dial_base::value_from_point(context const& ctx, point p)
+   double dial_base::radial_value(context const& ctx, tracker_info& track_info)
    {
       using namespace radial_consts;
 
+      point p = track_info.current;
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
       if (angle < 0.0)
@@ -58,6 +62,29 @@ namespace cycfi { namespace elements
       return value();
    }
 
+   double dial_base::linear_value(context const& /*ctx*/, tracker_info& track_info)
+   {
+      point delta{
+         track_info.current.x - track_info.previous.x,
+         track_info.current.y - track_info.previous.y
+      };
+
+      double factor = 1.0 / get_theme().dial_linear_range;
+      if (track_info.modifiers & mod_shift)
+         factor /= 5.0;
+
+      float val = _value + factor * (delta.x - delta.y);
+      return clamp(val, 0.0, 1.0);
+   }
+
+   double dial_base::compute_value(context const& ctx, tracker_info& track_info)
+   {
+      return (get_theme().dial_mode == dial_mode_enum::radial)?
+         radial_value(ctx, track_info) :
+         linear_value(ctx, track_info)
+         ;
+   }
+
    void dial_base::begin_tracking(context const& /* ctx */, tracker_info& /* track_info */)
    {
    }
@@ -66,27 +93,7 @@ namespace cycfi { namespace elements
    {
       if (track_info.current != track_info.previous)
       {
-         auto const& theme = get_theme();
-         double new_value;
-
-         if (theme.dial_mode == dial_mode_enum::radial)
-         {
-            new_value = value_from_point(ctx, track_info.current);
-         }
-         else
-         {
-            point delta { track_info.current.x - track_info.previous.x,
-                          track_info.current.y - track_info.previous.y };
-
-            double factor = 1.0 / theme.dial_linear_range;
-            if (track_info.modifiers & mod_shift)
-               factor /= 5.0;
-
-            new_value = _value + factor * (delta.x - delta.y);
-         }
-
-         clamp(new_value, 0.0, 1.0);
-
+         double new_value = compute_value(ctx, track_info);
          if (_value != new_value)
          {
             edit_value(this, new_value);
@@ -111,98 +118,112 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void draw_indicator(canvas& cnv, circle cp, float val, color c)
+   ////////////////////////////////////////////////////////////////////////////
+   // thumbwheel_base
+   ////////////////////////////////////////////////////////////////////////////
+   double thumbwheel_base::compute_value(context const& ctx, tracker_info& track_info)
    {
-      constexpr float w_factor = 0.1;  // relative width of the indicator
-      constexpr float h_factor = 0.2;  // relative height of the indicator
-      using namespace radial_consts;
-
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      cnv.translate({ center.x, center.y });
-      cnv.rotate(offset + (val * range));
-
-      float r = cp.radius * 0.85;
-      float ind_w = r * w_factor;
-      float ind_h = r * h_factor;
-      rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
-      ind_r = ind_r.move(0, r*0.6);
-
-      draw_indicator(cnv, ind_r, c);
+      return linear_value(ctx, track_info);
    }
 
-   void draw_radial_marks(canvas& cnv, circle cp, float size, color c)
+   ////////////////////////////////////////////////////////////////////////////
+   // basic_thumbwheel_element
+   ////////////////////////////////////////////////////////////////////////////
+   void basic_thumbwheel_element::value(double val)
    {
-      using namespace radial_consts;
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      constexpr auto num_divs = 50;
-      float div = range / num_divs;
-      auto const& theme = get_theme();
+      if (_quantize > 0 && _aligner)
+         _aligner(std::round(val / _quantize) * _quantize);
+      else
+         align(val);
+   }
 
-      cnv.translate({ center.x, center.y });
-      cnv.stroke_style(theme.ticks_color);
-      for (int i = 0; i != num_divs+1; ++i)
+   void basic_thumbwheel_element::make_aligner(context const& ctx)
+   {
+      if (_quantize > 0)
       {
-         float from = cp.radius;
-         if (i % (num_divs / 10))
-         {
-            // Minor ticks
-            from -= size / 4;
-            cnv.line_width(theme.minor_ticks_width);
-            cnv.stroke_style(c.level(theme.minor_ticks_level));
-         }
-         else
-         {
-            // Major ticks
-            cnv.line_width(theme.major_ticks_width);
-            cnv.stroke_style(c.level(theme.major_ticks_level));
-         }
-
-         float angle = offset + (M_PI / 2) + (i * div);
-         float sin_ = std::sin(angle);
-         float cos_ = std::cos(angle);
-         float to = cp.radius - (size / 2);
-
-         cnv.move_to({ from * cos_, from * sin_ });
-         cnv.line_to({ to * cos_, to * sin_ });
-         cnv.stroke();
+         _aligner =
+            [this, &view = ctx.view, bounds = ctx.bounds](double val)
+            {
+               view.post(
+                  [this, &view, val, bounds]()
+                  {
+                     do_align(view, bounds, val);
+                  }
+               );
+            };
       }
    }
 
-   void draw_radial_labels(
-      canvas& cnv
-    , circle cp
-    , float /* size */
-    , float font_size
-    , std::string const labels[]
-    , std::size_t num_labels
-   )
+   void basic_thumbwheel_element::do_align(view& view_, rect const& bounds, double val)
    {
-      if (num_labels < 2)
-         return; // Nothing to do
-
-      using namespace radial_consts;
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      float div = range / (num_labels-1);
-      auto const& theme = get_theme();
-
-      cnv.translate({ center.x, center.y });
-      cnv.text_align(cnv.middle | cnv.center);
-      cnv.fill_style(theme.label_font_color);
-
-      cnv.font(
-         theme.label_font.size(theme.label_font._size * font_size)
-      );
-
-      for (std::size_t i = 0; i != num_labels; ++i)
+      auto curr = align();
+      auto diff = val - curr;
+      if (std::abs(diff) < (_quantize / 10))
       {
-         float angle = offset + (M_PI / 2) + (i * div);
-         float sin_ = std::sin(angle);
-         float cos_ = std::cos(angle);
-
-         cnv.fill_text(labels[i].c_str(), { cp.radius * cos_, cp.radius * sin_ });
+         align(val);
+         view_.refresh(bounds);
       }
+      else
+      {
+         align(curr + diff/10);
+         view_.refresh(bounds);
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // basic_vthumbwheel_element
+   ////////////////////////////////////////////////////////////////////////////
+   view_limits basic_vthumbwheel_element::limits(basic_context const& ctx) const
+   {
+      auto lim = port_base::limits(ctx);
+      auto num_elements = (1.0 / quantize()) + 1;
+      lim.min.y /= num_elements;
+      lim.max.y = lim.min.y;
+      return lim;
+   }
+
+   void basic_vthumbwheel_element::draw(context const& ctx)
+   {
+      make_aligner(ctx);
+      vport_element::draw(ctx);
+   }
+
+   void basic_vthumbwheel_element::align(double val)
+   {
+      clamp(val, 0.0, 1.0);
+      valign(val);
+   }
+
+   double basic_vthumbwheel_element::align() const
+   {
+      return valign();
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // basic_hthumbwheel_element
+   ////////////////////////////////////////////////////////////////////////////
+   view_limits basic_hthumbwheel_element::limits(basic_context const& ctx) const
+   {
+      auto lim = port_base::limits(ctx);
+      lim.min.x *= quantize();
+      lim.max.x = lim.min.x;
+      return lim;
+   }
+
+   void basic_hthumbwheel_element::draw(context const& ctx)
+   {
+      make_aligner(ctx);
+      hport_element::draw(ctx);
+   }
+
+   void basic_hthumbwheel_element::align(double val)
+   {
+      clamp(val, 0.0, 1.0);
+      halign(val);
+   }
+
+   double basic_hthumbwheel_element::align() const
+   {
+      return halign();
    }
 }}

@@ -27,7 +27,7 @@ set(ELEMENTS_SOURCES
    src/element/button.cpp
    src/element/composite.cpp
    src/element/dial.cpp
-        src/element/dynamic_list.cpp
+   src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
@@ -66,7 +66,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
-        include/elements/element/dynamic_list.hpp
+   include/elements/element/dynamic_list.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
@@ -74,7 +74,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp
-   include/elements/element/gallery/dial.hpp
+   include/elements/element/gallery/thumbwheel.hpp
    include/elements/element/gallery/dialog.hpp
    include/elements/element/gallery/group.hpp
    include/elements/element/gallery/icon_button.hpp

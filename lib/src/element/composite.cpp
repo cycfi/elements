@@ -16,7 +16,7 @@ namespace cycfi { namespace elements
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, p);
+         hit_info info = hit_element(ctx, p, false);
          return info.element.get();
       }
       return nullptr;
@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       {
          if (btn.down) // button down
          {
-            hit_info info = hit_element(ctx, btn.pos);
+            hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element)
             {
                if (wants_focus() && _focus != info.index)
@@ -242,7 +242,7 @@ namespace cycfi { namespace elements
 
       // Send cursor entering to newly hit element or hovering to current
       // tracking element
-      hit_info info = hit_element(ctx, p);
+      hit_info info = hit_element(ctx, p, true);
       if (info.element)
       {
          _cursor_tracking = info.index;
@@ -264,7 +264,7 @@ namespace cycfi { namespace elements
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, p);
+         hit_info info = hit_element(ctx, p, true);
          if (auto ptr = info.element; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
@@ -323,13 +323,13 @@ namespace cycfi { namespace elements
          _focus = int(index);
    }
 
-   composite_base::hit_info composite_base::hit_element(context const& ctx, point p) const
+   composite_base::hit_info composite_base::hit_element(context const& ctx, point p, bool control) const
    {
       auto&& test_element =
          [&](int ix, hit_info& info) -> bool
          {
             auto& e = at(ix);
-            if (e.wants_control())
+            if (!control || e.wants_control())
             {
                rect bounds = bounds_of(ctx, ix);
                if (bounds.includes(p))

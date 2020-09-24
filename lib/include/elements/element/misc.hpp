@@ -70,34 +70,75 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Basic Element
+   // Draw Element
    //
-   // The basic element takes in a function that draws something
+   // The draw element takes in a function that draws something
    ////////////////////////////////////////////////////////////////////////////
    template <typename F>
-   class basic_element : public element
+   class draw_element : public element
    {
    public:
 
-      basic_element(F f)
-       : f(f)
+      draw_element(F draw)
+       : _draw(draw)
       {}
 
-      void
-      draw(context const& ctx) override
+      void draw(context const& ctx) override
       {
-         f(ctx);
+         _draw(ctx);
       }
 
    private:
 
-      F f;
+      F _draw;
    };
 
    template <typename F>
-   inline basic_element<F> basic(F f)
+   [[deprecated("Use draw(F&& _draw) instead.")]]
+   inline draw_element<F> basic(F&& _draw)
    {
-      return { f };
+      using ftype = remove_cvref_t<F>;
+      return { std::forward<ftype>(_draw) };
+   }
+
+   template <typename F>
+   inline draw_element<F> draw(F&& _draw)
+   {
+      using ftype = remove_cvref_t<F>;
+      return { std::forward<ftype>(_draw) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Draw Value Element
+   //
+   // The draw_value_element takes in a function that draws something based
+   // on the received value (see support/receiver.hpp)
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename T, typename F>
+   class draw_value_element : public basic_receiver<T>, public element
+   {
+   public:
+
+      draw_value_element(F draw)
+       : _draw(draw)
+      {}
+
+      void draw(context const& ctx) override
+      {
+         _draw(ctx, this->value());
+      }
+
+   private:
+
+      F _draw;
+      T _value;
+   };
+
+   template <typename T, typename F>
+   inline draw_value_element<T, remove_cvref_t<F>> draw_value(F&& f)
+   {
+      using ftype = remove_cvref_t<F>;
+      return { std::forward<ftype>(f) };
    }
 
    ////////////////////////////////////////////////////////////////////////////

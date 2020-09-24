@@ -8,8 +8,8 @@
 
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
-#include <elements/support/receiver.hpp>
-#include <elements/support/theme.hpp>
+#include <elements/element/port.hpp>
+#include <elements/support.hpp>
 #include <infra/support.hpp>
 #include <functional>
 
@@ -38,6 +38,7 @@ namespace cycfi { namespace elements
                            dial_base(double init_value = 0.0);
 
       void                 prepare_subject(context& ctx) override;
+      element*             hit_test(context const& ctx, point p) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
@@ -46,9 +47,14 @@ namespace cycfi { namespace elements
 
       double               value() const override;
       void                 value(double val) override;
-      virtual double       value_from_point(context const& ctx, point p);
 
       dial_function        on_change;
+
+   protected:
+
+      virtual double       radial_value(context const& ctx, tracker_info& track_info);
+      virtual double       linear_value(context const& ctx, tracker_info& track_info);
+      virtual double       compute_value(context const& ctx, tracker_info& track_info);
 
    private:
 
@@ -65,6 +71,105 @@ namespace cycfi { namespace elements
    inline double dial_base::value() const
    {
       return _value;
+   }
+
+   inline element* dial_base::hit_test(context const& ctx, point p)
+   {
+      return element::hit_test(ctx, p);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Thumbwheels
+   ////////////////////////////////////////////////////////////////////////////
+   class thumbwheel_base : public dial_base
+   {
+   public:
+
+      using dial_base::dial_base;
+
+   protected:
+
+       double              compute_value(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, thumbwheel_base>
+   thumbwheel(Subject&& subject, double init_value = 0.0)
+   {
+      return { std::forward<Subject>(subject), init_value };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Basic (vertical and horizontal) thumbwheels (You can use these as the
+   // subject of thumbwheel)
+   //
+   //    A thumbwheel subject can be constructed using a vport or hport (see
+   //    port.hpp) and a receiver<double> which recieves a 0.0 to 1.0 value
+   //    that determines the vertical position of the content.
+   //
+   //    The thumbwheel, like the dial, is a continuous device. If you need
+   //    the value to be quantized, you can pass a non-zero value to the
+   //    constructor. For example, a quantize value of 0.25 will quantize the
+   //    possible values to 0.0, 0.25, 0.5, 0.75 and 1.0.
+   ////////////////////////////////////////////////////////////////////////////
+   class basic_thumbwheel_element : public basic_receiver<double>
+   {
+   public:
+
+      basic_thumbwheel_element(float quantize_ = 0.0)
+       : _quantize(quantize_)
+      {}
+
+      virtual void         align(double val) = 0;
+      virtual double       align() const = 0;
+      void                 value(double val) override;
+
+   protected:
+
+      float                quantize() const { return _quantize; }
+      void                 make_aligner(context const& ctx);
+      void                 do_align(view& view_, rect const& bounds, double val);
+
+   private:
+
+      using align_function = std::function<void(double val)>;
+
+      float                _quantize;
+      align_function       _aligner;
+   };
+
+   struct basic_vthumbwheel_element : vport_element, basic_thumbwheel_element
+   {
+      using basic_thumbwheel_element::basic_thumbwheel_element;
+
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
+      void                 align(double val) override;
+      double               align() const override;
+   };
+
+   struct basic_hthumbwheel_element : hport_element, basic_thumbwheel_element
+   {
+      using basic_thumbwheel_element::basic_thumbwheel_element;
+
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 draw(context const& ctx) override;
+      void                 align(double val) override;
+      double               align() const override;
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
+   basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0)
+   {
+      return { std::forward<Subject>(subject), quantize_ };
+   }
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
+   basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0)
+   {
+      return { std::forward<Subject>(subject), quantize_ };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -100,8 +205,6 @@ namespace cycfi { namespace elements
       return view_limits{ pt, pt };
    }
 
-   void draw_indicator(canvas& cnv, circle cp, float val, color c);
-
    template <std::size_t size>
    inline void basic_knob_element<size>::draw(context const& ctx)
    {
@@ -111,7 +214,7 @@ namespace cycfi { namespace elements
       auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
 
       draw_knob(cnv, cp, _color);
-      draw_indicator(cnv, cp, _value, indicator_color);
+      draw_radial_indicator(cnv, cp, _value, indicator_color);
    }
 
    template <std::size_t size>
@@ -129,15 +232,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Radial Element Base (common base class for radial elements)
    ////////////////////////////////////////////////////////////////////////////
-   namespace radial_consts
-   {
-      constexpr double _2pi = 2 * M_PI;
-      constexpr double travel = 0.83;
-      constexpr double range = _2pi * travel;
-      constexpr double start_angle = _2pi * (1 - travel) / 2;
-      constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
-   }
-
    template <std::size_t _size, typename Subject>
    class radial_element_base : public proxy<Subject>
    {
@@ -197,8 +291,6 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
    };
 
-   void draw_radial_marks(canvas& cnv, circle cp, float size, color c);
-
    template <std::size_t size, typename Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
@@ -241,15 +333,6 @@ namespace cycfi { namespace elements
       float                   _font_size;
    };
 
-   void draw_radial_labels(
-      canvas& cnv
-    , circle cp
-    , float size
-    , float font_size
-    , std::string const labels[]
-    , std::size_t _num_labels
-   );
-
    template <std::size_t size, typename Subject, std::size_t num_labels>
    inline void
    radial_labels_element<size, Subject, num_labels>::draw(context const& ctx)
@@ -260,7 +343,7 @@ namespace cycfi { namespace elements
       // Draw the labels
       auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
       draw_radial_labels(
-         ctx.canvas, cp, size, _font_size, _labels.data(), num_labels);
+         ctx.canvas, cp, _font_size, _labels.data(), num_labels);
    }
 
    template <std::size_t size, typename Subject, typename... S>

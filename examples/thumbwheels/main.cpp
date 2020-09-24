@@ -85,6 +85,7 @@ auto make_thumbwheel3()
       };
 
    auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<double>(draw))));
+   tw->value(0.25);
 
    return top_margin(20, hold(tw));
 }

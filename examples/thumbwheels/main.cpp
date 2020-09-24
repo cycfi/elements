@@ -70,9 +70,9 @@ auto make_thumbwheel2(char const* unit, float offset, float scale, int precision
    );
 }
 
-auto make_thumbwheel3()
+auto make_xy_thumbwheel()
 {
-   using xy_position = thumbwheel_base::xy_position;
+   using xy_position = std::array<double, 2>;
    auto label = make_label();
 
    auto&& draw =
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
             align_center_middle(make_thumbwheel1()),
             align_center_middle(make_thumbwheel2(" Hz", 20, 100, 2)),
             align_center_middle(make_thumbwheel2(" ms", 0, 10000, 0)),
-            align_center_middle(make_thumbwheel3())
+            align_center_middle(make_xy_thumbwheel())
          )
       ),
 

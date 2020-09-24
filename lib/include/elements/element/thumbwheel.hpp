@@ -25,8 +25,8 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using thumbwheel_function = std::function<void(double x, double y)>;
       using xy_position = std::array<double, 2>;
+      using thumbwheel_function = std::function<void(xy_position)>;
 
                            thumbwheel_base(double init_x = 0.0, double init_y = 0.0);
 

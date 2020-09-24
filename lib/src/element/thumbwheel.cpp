@@ -50,7 +50,7 @@ namespace cycfi { namespace elements
          if (this_->on_change)
          {
             auto val = this_->value();
-            this_->on_change(val[0], val[1]);
+            this_->on_change(val);
          }
       }
    }

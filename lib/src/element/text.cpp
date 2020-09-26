@@ -297,15 +297,30 @@ namespace cycfi { namespace elements
       if (!_typing_state)
          _typing_state = capture_state();
 
+      bool do_replace = false;
       if (_select_start == _select_end)
+      {
          insert(_select_start, text);
+      }
       else
+      {
          replace(_select_start, _select_end-_select_start, text);
-      _select_end = _select_start += 1;
+         do_replace = true;
+      }
 
       layout(ctx);
 
-      scroll_into_view(ctx, true);
+      if (do_replace)
+      {
+         _select_end = _select_start;
+         scroll_into_view(ctx, true);
+         _select_end = _select_start += 1;
+      }
+      else
+      {
+         _select_end = _select_start += 1;
+         scroll_into_view(ctx, true);
+      }
       return true;
    }
 

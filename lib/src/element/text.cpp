@@ -268,16 +268,31 @@ namespace cycfi { namespace elements
       if (!_typing_state)
          _typing_state = capture_state();
 
+      bool replace = false;
       if (_select_start == _select_end)
+      {
          _text.insert(_select_start, text);
+      }
       else
+      {
          _text.replace(_select_start, _select_end-_select_start, text);
-      _select_end = _select_start += text.length();
+         replace = true;
+      }
 
       _layout.text(_text.data(), _text.data() + _text.size());
       layout(ctx);
 
-      scroll_into_view(ctx, true);
+      if (replace)
+      {
+         _select_end = _select_start;
+         scroll_into_view(ctx, true);
+         _select_end = _select_start += text.length();
+      }
+      else
+      {
+         _select_end = _select_start += text.length();
+         scroll_into_view(ctx, true);
+      }
       return true;
    }
 

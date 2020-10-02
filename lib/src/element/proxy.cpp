@@ -22,6 +22,11 @@ namespace cycfi { namespace elements
       return subject().stretch();
    }
 
+   unsigned proxy_base::span() const
+   {
+      return subject().span();
+   }
+
    element* proxy_base::hit_test(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };

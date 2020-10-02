@@ -47,6 +47,8 @@ namespace cycfi { namespace elements
    // Display
 
       view_limits             limits(basic_context const& ctx) const override;
+      view_stretch            stretch() const override;
+      unsigned                span() const override;
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
@@ -140,6 +142,18 @@ namespace cycfi { namespace elements
    indirect<Base>::limits(basic_context const& ctx) const
    {
       return this->get().limits(ctx);
+   }
+
+   template <typename Base>
+   view_stretch indirect<Base>::stretch() const
+   {
+      return this->get().stretch();
+   }
+
+   template <typename Base>
+   unsigned indirect<Base>::span() const
+   {
+      return this->get().span();
    }
 
    template <typename Base>

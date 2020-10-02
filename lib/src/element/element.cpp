@@ -22,6 +22,11 @@ namespace cycfi { namespace elements
       return { 1.0f, 1.0f };
    }
 
+   unsigned element::span() const
+   {
+      return 1;
+   }
+
    element* element::hit_test(context const& ctx, point p)
    {
       return (ctx.bounds.includes(p)) ? this : nullptr;

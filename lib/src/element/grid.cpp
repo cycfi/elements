@@ -31,21 +31,31 @@ namespace cycfi { namespace elements
 
    void vgrid_element::layout(context const& ctx)
    {
+      _positions.resize(size()+1);
+
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
       auto top = ctx.bounds.top;
       auto total_height = ctx.bounds.height();
+      std::size_t gi = 0;
 
-      auto prev = 0;
+      _num_spans = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+         _num_spans += at(i).span();
+
+      float prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto y = grid()[i] * total_height;
-         auto height = y - prev;
          auto& elem = at(i);
+         gi += elem.span()-1;
+         auto y = grid_coord(gi++) * total_height;
+         auto height = y - prev;
          rect ebounds = { left, prev+top, right, prev+top+height };
          elem.layout(context{ ctx, &elem, ebounds });
+         _positions[i] = prev+top;
          prev = y;
       }
+      _positions[size()] = total_height+top;
    }
 
    rect vgrid_element::bounds_of(context const& ctx, std::size_t index) const
@@ -54,14 +64,7 @@ namespace cycfi { namespace elements
          return {};
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
-      auto top = ctx.bounds.top;
-      auto total_height = ctx.bounds.height();
-      return rect{
-         left
-       , (index ? (grid()[index-1] * total_height) : 0) + top
-       , right
-       , (grid()[index] * total_height) + top
-      };
+      return { left, _positions[index], right, _positions[index+1] };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -87,21 +90,31 @@ namespace cycfi { namespace elements
 
    void hgrid_element::layout(context const& ctx)
    {
+      _positions.resize(size()+1);
+
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
       auto left = ctx.bounds.left;
       auto total_width = ctx.bounds.width();
+      std::size_t gi = 0;
 
-      auto prev = 0;
+      _num_spans = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+         _num_spans += at(i).span();
+
+      float prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
       {
-         auto x = grid()[i] * total_width;
-         auto width = x - prev;
          auto& elem = at(i);
+         gi += elem.span()-1;
+         auto x = grid_coord(gi++) * total_width;
+         auto width = x - prev;
          rect ebounds = { prev+left, top, prev+left+width, bottom };
          elem.layout(context{ ctx, &elem, ebounds });
+         _positions[i] = prev+left;
          prev = x;
       }
+      _positions[size()] = total_width+left;
    }
 
    rect hgrid_element::bounds_of(context const& ctx, std::size_t index) const
@@ -110,13 +123,6 @@ namespace cycfi { namespace elements
          return {};
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
-      auto left = ctx.bounds.left;
-      auto total_width = ctx.bounds.width();
-      return rect{
-         (index? (grid()[index-1] * total_width) : 0) + left
-       , top
-       , (grid()[index] * total_width) + left
-       , bottom
-      };
+      return { _positions[index], top, _positions[index+1], bottom };
    }
 }}

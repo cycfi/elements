@@ -34,6 +34,7 @@ namespace cycfi { namespace elements
 
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual view_stretch    stretch() const;
+      virtual unsigned        span() const;
       virtual element*        hit_test(context const& ctx, point p);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);

@@ -46,6 +46,7 @@ namespace cycfi { namespace elements
       void              translate(point p);
       void              rotate(float rad);
       void              scale(point p);
+      void              skew(float sx, float sy);
       point             device_to_user(point p);
       point             user_to_device(point p);
 

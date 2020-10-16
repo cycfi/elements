@@ -98,6 +98,13 @@ namespace cycfi { namespace elements
       cairo_scale(&_context, p.x, p.y);
    }
 
+   void canvas::skew(float sx, float sy)
+   {
+      cairo_matrix_t mat;
+      cairo_matrix_init(&mat, 1, 0, sx, 1, 50, sy);
+      cairo_transform(&_context, &mat);
+   }
+
    point canvas::device_to_user(point p)
    {
       double x = p.x * _pre_scale;

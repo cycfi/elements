@@ -101,7 +101,7 @@ namespace cycfi { namespace elements
    void canvas::skew(float sx, float sy)
    {
       cairo_matrix_t mat;
-      cairo_matrix_init(&mat, 1, 0, sx, 1, 50, sy);
+      cairo_matrix_init(&mat, 1, 0, sx, 1, 0, sy);
       cairo_transform(&_context, &mat);
    }
 

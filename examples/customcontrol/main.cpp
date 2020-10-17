@@ -82,10 +82,6 @@ public:
 
    bool cursor(context const& ctx, point p, cursor_tracking status)
    {
-      bool hit = ctx.bounds.includes(p);
-
-      if (!hit)
-         return false;
       switch (status)
       {
          case cursor_tracking::hovering:
@@ -96,7 +92,7 @@ public:
          case cursor_tracking::leaving:
             _mouse_over = false;
       };
-      return true;
+      return false;
    }
 
    bool click(context const& ctx, mouse_button btn)

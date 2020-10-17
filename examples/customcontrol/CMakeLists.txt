@@ -4,7 +4,7 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.9.6...3.15.0)
-project(customcontrol LANGUAGES C CXX)
+project(CustomControl LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -21,10 +21,10 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "customcontrol")
-set(ELEMENTS_APP_TITLE "custom control")
+set(ELEMENTS_APP_PROJECT "CustomControl")
+set(ELEMENTS_APP_TITLE "Custom control")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Aravindhan K")
-set(ELEMENTS_APP_ID "com.cycfi.customcontrol")
+set(ELEMENTS_APP_ID "com.cycfi.custom_control")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/wall.jpg)

@@ -4,20 +4,22 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements.hpp>
+#include <infra/support.hpp>
 
 using namespace cycfi::elements;
+using namespace cycfi;
 
-//Function to calculate distance
+// Function to calculate distance
 float distance(point a, point b)
 {
    return sqrt(pow(b.x - a.x, 2) +  pow(b.y - a.y, 2) * 1.0);
 }
 
-class custom_control : public element
+class custom_control : public tracker<>
 {
 public:
 
-   void draw(context const& ctx)
+   void draw(context const& ctx) override
    {
       // Draw a background.
       ctx.canvas.fill_style(color(0.8, 0.8, 0.8));
@@ -28,7 +30,7 @@ public:
       // Draw a circle.
       ctx.canvas.line_width(1.0);
       ctx.canvas.stroke_style(color(0, 0, 0.5));
-      auto outer_ring = circle(center_point(ctx.bounds), ctx.bounds.width() / 2.5);
+      auto outer_ring = circle(center_point(ctx.bounds), _radius);
       ctx.canvas.circle(outer_ring);
       ctx.canvas.stroke();
 
@@ -80,14 +82,22 @@ public:
       }
    }
 
-   bool cursor(context const& ctx, point p, cursor_tracking status)
+   void keep_tracking(context const& ctx, tracker_info& track_info) override
+   {
+      auto center = center_point(ctx.bounds);
+      _radius = std::abs(distance(center, track_info.current));
+      clamp(_radius, 50, ctx.bounds.width()/2);
+      ctx.view.refresh(ctx.bounds);
+   }
+
+   bool cursor(context const& ctx, point p, cursor_tracking status) override
    {
       switch (status)
       {
          case cursor_tracking::hovering:
          case cursor_tracking::entering:
             _mouse_over = true;
-            ctx.view.refresh(*this);
+            ctx.view.refresh(ctx.bounds);
             break;
          case cursor_tracking::leaving:
             _mouse_over = false;
@@ -95,8 +105,11 @@ public:
       return false;
    }
 
-   bool click(context const& ctx, mouse_button btn)
+   bool click(context const& ctx, mouse_button btn) override
    {
+      // Call the tracker<> click member function
+      tracker<>::click(ctx, btn);
+
       if (btn.state == mouse_button::left)
       {
          // lock the knob clicked over if any.
@@ -110,21 +123,12 @@ public:
       return true;
    }
 
-   bool wants_focus() const
-   {
-      return true;
-   }
-
-   bool wants_control() const
-   {
-      return true;
-   }
-
 private:
 
    bool _mouse_over = false;
    int _choosen_knob = -1;
    std::array<point, 4> _knobs;
+   float _radius = 150;
 };
 
 int main(int argc, char* argv[])

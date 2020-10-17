@@ -22,4 +22,5 @@ add_subdirectory(simple_animation)
 add_subdirectory(thumbwheels)
 add_subdirectory(tooltip)
 add_subdirectory(dynamic_list)
+add_subdirectory(customcontrol)
 

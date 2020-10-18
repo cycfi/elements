@@ -49,8 +49,8 @@ public:
    bool        cursor(context const& ctx, point p, cursor_tracking status) override;
 
    // Receiver API
-   float       value() const override;
-   void        value(float val) override;
+   float       value() const override     { return _radius; }
+   void        value(float val) override  { _radius = val; }
 
    // Provide an on_change callback
    using on_change_f = std::function<void(float)>;
@@ -128,16 +128,6 @@ void my_custom_control::draw(context const& ctx)
       ctx.canvas.circle(circle(cursor_pos.x, cursor_pos.y, 10.0));
       ctx.canvas.stroke();
    }
-}
-
-float my_custom_control::value() const
-{
-   return _radius;
-}
-
-void my_custom_control::value(float val)
-{
-   _radius = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

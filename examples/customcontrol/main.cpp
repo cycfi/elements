@@ -19,6 +19,18 @@ float distance(point a, point b)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// There are may ways to structure an application using elements. This
+// example is the recommended. This example demonstrates:
+//
+//    1. How to make shared elements that connect to each other via
+//       callbacks.
+//    2. How to make custom elements that can interact with other elements.
+//    3. How to create element class member variables that are either held
+//       by value or by shared_ptr.
+//    4. How to hold or link the elements in a composition.
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
 // A Custom control element
 ///////////////////////////////////////////////////////////////////////////////
 class my_custom_control : public tracker<>, public receiver<float>

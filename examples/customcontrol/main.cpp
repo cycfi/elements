@@ -19,14 +19,17 @@ float distance(point a, point b)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// There are may ways to structure an application using elements. This
-// example is the recommended. This example demonstrates:
+// There are may ways to structure an application using elements. The user is
+// not forced to do it one way or another. However, this specific examplar is
+// the recommended way and can be considered as good practice.
+//
+// This example demonstrates:
 //
 //    1. How to make shared elements that connect to each other via
 //       callbacks.
 //    2. How to make custom elements that can interact with other elements.
-//    3. How to create element class member variables that are either held
-//       by value or by shared_ptr.
+//    3. How to create element class member variables that are either held by
+//       value or by shared_ptr.
 //    4. How to hold or link the elements in a composition.
 ///////////////////////////////////////////////////////////////////////////////
 

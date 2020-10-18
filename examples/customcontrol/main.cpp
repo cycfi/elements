@@ -41,6 +41,7 @@ class my_custom_control : public tracker<>, public receiver<float>
 public:
 
    using point_array = std::array<point, 4>;
+   constexpr static float default_value = 100;
 
    // Element API
    void        draw(context const& ctx) override;
@@ -61,7 +62,7 @@ private:
    bool        _mouse_over = false;
    int         _choosen_knob = -1;
    point_array _knobs;
-   float       _radius = 150;
+   float       _radius = default_value;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,17 +194,22 @@ public:
 
 private:
 
+   constexpr static float default_value = my_custom_control::default_value;
    using dial_ptr = std::shared_ptr<dial_base>;
+   using label_ptr = decltype(share(label("")));
 
    auto              make_control();
    auto              make_button();
    auto              make_dial();
+   auto              make_label();
+   void              set_value(float val);
    auto              make_control_panel();
 
    window            _win;
    view              _view;
    my_custom_control _my_control;
    dial_ptr          _dial;
+   label_ptr         _label;
 };
 
 auto my_app::make_control()
@@ -227,14 +233,11 @@ auto my_app::make_button()
    btn->on_click =
       [this](bool /*state*/)
       {
-         _my_control.value(150);             // Reset _my_control radius
-         _dial->value(1.0);                  // Reset _dial value
-         _view.refresh(_my_control);
-         _view.refresh(*_dial);
+         set_value(default_value);           // Reset default value
       };
 
    return
-      margin({ 50, 20, 50, 20 },
+      margin({ 50, 10, 50, 10 },
          hold(btn)                           // Hold our shared button
       );
 }
@@ -247,28 +250,42 @@ auto my_app::make_dial()
       150 * knob_scale, knob_scale
    };
 
-   _dial = share(dial(knob, 1.0));           // Share a dial
+   _dial = share(dial(knob, 0.5));           // Share a dial
 
    // Attach an on_change function
    _dial->on_change =
       [this](double val)
       {
-         val = 50 + (val * 100);
-         _my_control.value(val);             // Adjust _my_control radius
-         _view.refresh(_my_control);
+         // Un-normalize from 0.0...1.0 to 50...150
+         set_value(50 + (val * 100));
       };
 
-   // Connect our control to the dial via _my_control.on_change
+   // Connect our control via _my_control.on_change
    _my_control.on_change =
       [this](double val)
       {
-         val = (val - 50) / 100;
-         _dial->value(val);                  // Adjust _dial value
-         _view.refresh(*_dial);
+         set_value(val);
       };
 
-
    return align_center_middle(hold(_dial));  // Hold the dial
+}
+
+auto my_app::make_label()
+{
+   _label = share(label(""));                // Share a label
+   return align_center_middle(hold(_label)); // Hold the label
+}
+
+void my_app::set_value(float val)
+{
+   _my_control.value(val);                   // Set _my_control radius
+   _dial->value((val - 50) / 100);           // Set _dial value (normalized to 0.0...1.0)
+
+   // Set the label text
+   _label->set_text("Radius: " + std::to_string(int(std::round(val))));
+
+   // Refresh the view
+   _view.refresh();
 }
 
 auto my_app::make_control_panel()
@@ -276,9 +293,10 @@ auto my_app::make_control_panel()
    return margin(
       { 50, 20, 50, 20 },
       layer(
-         vtile(
-            make_dial(),
-            make_button()
+         vgrid(
+            span(5, make_dial()),
+            span(1, make_label()),
+            span(1, make_button())
          ),
          panel{},
          background
@@ -300,6 +318,9 @@ my_app::my_app(int argc, char* argv[])
       ),
       background              // Background layer
    );
+
+   // Set the default value
+   set_value(default_value);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

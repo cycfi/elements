@@ -19,7 +19,7 @@ float distance(point a, point b)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// There are may ways to structure an application using elements. The user is
+// There are many ways to structure an application using elements. The user is
 // not forced to do it one way or another. However, this specific examplar is
 // the recommended way and can be considered as good practice.
 //

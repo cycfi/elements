@@ -94,18 +94,24 @@ namespace cycfi { namespace elements
       set_text(val);
    }
 
-   void static_text_box::insert(std::size_t pos, std::string_view text)
+   std::size_t static_text_box::insert(std::size_t pos, std::string_view text)
    {
       std::u32string s{ get_text().data(), get_text().size() };
-      s.insert(pos, to_utf32(text));
+      auto utf32 = to_utf32(text);
+      auto size = utf32.size();
+      s.insert(pos, std::move(utf32));
       set_text(s);
+      return size;
    }
 
-   void static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
+   std::size_t static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
    {
       std::u32string s{ get_text().data(), get_text().size() };
-      s.replace(pos, len, to_utf32(text));
+      auto utf32 = to_utf32(text);
+      auto size = utf32.size();
+      s.replace(pos, len, std::move(utf32));
       set_text(s);
+      return size;
    }
 
    void static_text_box::erase(std::size_t pos, std::size_t len)
@@ -183,9 +189,6 @@ namespace cycfi { namespace elements
          scroll_into_view(ctx, false);
          return true;
       }
-
-      // char32_t const* _first = _text.data();
-      // char32_t const* _last = _first + _text.size();
 
       char32_t const* begin = _text.data();
       int _size = _text.size();
@@ -751,8 +754,7 @@ namespace cycfi { namespace elements
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
          std::string ins = clipboard();
-         replace(start, end_-start_, ins);
-         start += ins.size();
+         start += replace(start, end_-start_, ins);
          _select_end = _select_start = start;
       }
    }
@@ -979,8 +981,7 @@ namespace cycfi { namespace elements
             ins += *p;
          }
 
-         replace(start_, end_-start_, ins);
-         start_ += ins.size();
+         start_ += replace(start_, end_-start_, ins);
          select_start(start_);
          select_end(start_);
 

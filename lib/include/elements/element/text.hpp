@@ -89,8 +89,8 @@ namespace cycfi::elements
       std::u32string_view     value() const override              { return _layout.text(); }
       void                    value(std::u32string_view val) override;
 
-      void                    insert(std::size_t pos, std::string_view text);
-      void                    replace(std::size_t pos, std::size_t len, std::string_view text);
+      std::size_t             insert(std::size_t pos, std::string_view text);
+      std::size_t             replace(std::size_t pos, std::size_t len, std::string_view text);
       void                    erase(std::size_t pos, std::size_t len);
       text_layout_const&      get_layout() const { return _layout; }
 

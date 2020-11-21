@@ -24,7 +24,9 @@ namespace cycfi { namespace elements
    inline auto input_box(
       InputBox&& text_input
     , rect pad = { 5, 5, 5, 5 }
-    , typename std::enable_if<std::is_base_of<element, InputBox>::value>::type* = nullptr
+    , typename std::enable_if<
+         std::is_base_of<element, remove_cvref_t<InputBox>>::value
+      >::type* = nullptr
    )
    {
       return layer(

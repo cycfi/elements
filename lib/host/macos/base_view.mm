@@ -123,13 +123,13 @@ namespace
       };
    }
 
-   void handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
+   bool handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
    {
       using ph::key_action;
       bool repeated = false;
 
       if (k.action == key_action::release && keys[k.key] == key_action::release)
-         return;
+         return false;
 
       if (k.action == key_action::press && keys[k.key] == key_action::press)
          repeated = true;
@@ -139,7 +139,7 @@ namespace
       if (repeated)
          k.action = key_action::repeat;
 
-      _view.key(k);
+      return _view.key(k);
    }
 
    void get_window_pos(NSWindow* window, int& xpos, int& ypos)
@@ -426,8 +426,10 @@ namespace
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
    [self interpretKeyEvents : [NSArray arrayWithObject:event]];
+   if (!handled)
+      [[self nextResponder] keyUp : event];
 }
 
 - (void) flagsChanged : (NSEvent*) event
@@ -459,7 +461,9 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   if (!handled)
+      [[self nextResponder] keyUp : event];
 }
 
 - (BOOL) hasMarkedText

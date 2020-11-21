@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;
       void                    scroll(point dir, point p) override;
-      void                    key(key_info const& k) override;
+      bool                    key(key_info const& k) override;
       void                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;

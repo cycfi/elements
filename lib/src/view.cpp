@@ -261,18 +261,20 @@
       );
    }
 
-   void view::key(key_info const& k)
+   bool view::key(key_info const& k)
    {
       if (_content.empty())
-         return;
+         return false;
 
+      bool handled = false;
       call(
-         [k](auto const& ctx, auto& _main_element)
+         [k, &handled](auto const& ctx, auto& _main_element)
          {
-            _main_element.key(ctx, k);
+             handled = _main_element.key(ctx, k);
          },
          *this, _current_bounds
       );
+      return handled;
    }
 
    void view::text(text_info const& info)

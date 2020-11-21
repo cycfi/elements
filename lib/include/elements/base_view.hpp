@@ -306,7 +306,7 @@ namespace cycfi { namespace elements
       virtual void         cursor(point p, cursor_tracking status);
       virtual void         scroll(point dir, point p);
       virtual bool         key(key_info const& k);
-      virtual void         text(text_info const& info);
+      virtual bool         text(text_info const& info);
       virtual void         begin_focus();
       virtual void         end_focus();
       virtual void         poll();
@@ -332,7 +332,7 @@ namespace cycfi { namespace elements
    inline void base_view::cursor(point /* p */, cursor_tracking /* status */) {}
    inline void base_view::scroll(point /* dir */, point /* p */) {}
    inline bool base_view::key(key_info const& /* k */) { return false; }
-   inline void base_view::text(text_info const& /* info */) {}
+   inline bool base_view::text(text_info const& /* info */) { return false; }
    inline void base_view::begin_focus() {}
    inline void base_view::end_focus() {}
    inline void base_view::poll() {}

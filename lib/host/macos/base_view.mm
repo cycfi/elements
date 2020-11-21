@@ -151,11 +151,11 @@ namespace
       ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
-   void handle_text(ph::base_view& _view, ph::text_info info)
+   bool handle_text(ph::base_view& _view, ph::text_info info)
    {
       if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
-         return;
-      _view.text(info);
+         return false;
+      return _view.text(info);
    }
 }
 
@@ -172,6 +172,7 @@ namespace
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+   bool                             _text_inserted;
 }
 @end
 
@@ -197,6 +198,7 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+   _text_inserted = false;
 }
 
 - (void) dealloc
@@ -427,8 +429,9 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
    bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
-   [self interpretKeyEvents : [NSArray arrayWithObject:event]];
-   if (!handled)
+   _text_inserted = false;
+   [self interpretKeyEvents : [NSArray arrayWithObject : event]];
+   if (!handled && !_text_inserted)
       [[self nextResponder] keyUp : event];
 }
 
@@ -524,7 +527,7 @@ namespace
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
-- (void) insertText:(id)string replacementRange : (NSRange)replacementRange
+- (void) insertText : (id)string replacementRange : (NSRange)replacementRange
 {
    auto*       event = [NSApp currentEvent];
    auto const  mods = ph::translate_flags([event modifierFlags]);
@@ -534,10 +537,10 @@ namespace
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)
    {
-     const unichar codepoint = [characters characterAtIndex:i];
-     if ((codepoint & 0xff00) == 0xf700)
-        continue;
-     handle_text(*_view, { codepoint, mods });
+      const unichar codepoint = [characters characterAtIndex:i];
+      if ((codepoint & 0xff00) == 0xf700)
+         continue;
+      _text_inserted = handle_text(*_view, { codepoint, mods });
    }
 }
 

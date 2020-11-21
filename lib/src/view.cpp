@@ -277,18 +277,20 @@
       return handled;
    }
 
-   void view::text(text_info const& info)
+   bool view::text(text_info const& info)
    {
       if (_content.empty())
-         return;
+         return false;
 
+      bool handled = false;
       call(
-         [info](auto const& ctx, auto& _main_element)
+         [info, &handled](auto const& ctx, auto& _main_element)
          {
-            _main_element.text(ctx, info);
+             handled = _main_element.text(ctx, info);
          },
          *this, _current_bounds
       );
+      return handled;
    }
 
    void view::add_undo(undo_redo_task f)

@@ -33,21 +33,21 @@ namespace cycfi { namespace elements
       if (pos == std::string::npos)
          throw failed_to_load_pixmap{ "Unknown file type." };
 
-      std::string full_path = find_file(filename);
-      if (full_path == "")
+      fs::path full_path = find_file(filename);
+      if (full_path.empty())
          throw failed_to_load_pixmap{ "File does not exist." };
 
       auto  ext = path.substr(pos);
       if (ext == ".png" || ext == ".PNG")
       {
          // For PNGs, use Cairo's native PNG loader
-         _surface = cairo_image_surface_create_from_png(full_path.c_str());
+         _surface = cairo_image_surface_create_from_png(full_path.string().c_str());
       }
       else
       {
          // For everything else, use stb_image
          int w, h, components;
-         uint8_t* src_data = stbi_load(full_path.c_str(), &w, &h, &components, 4);
+         uint8_t* src_data = stbi_load(full_path.string().c_str(), &w, &h, &components, 4);
 
          if (src_data)
          {

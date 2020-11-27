@@ -69,7 +69,7 @@ namespace
          // our resources
          char resource_path[PATH_MAX];
          get_resource_path(resource_path);
-         cycfi::elements::resource_paths.push_back(resource_path);
+         cycfi::elements::add_search_path(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load

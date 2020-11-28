@@ -34,7 +34,6 @@
 #include <Windowsx.h>
 #include <chrono>
 #include <map>
-
 #include "utils.hpp"
 
 namespace cycfi { namespace elements
@@ -84,7 +83,8 @@ namespace cycfi { namespace elements
          time_point     click_start = {};
          int            click_count = 0;
          time_point     scroll_start = {};
-         double         velocity = 0;
+         double         velocity = 1.0;
+         point          scroll_dir;
          key_map        keys = {};
       };
 
@@ -320,18 +320,24 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
+         constexpr auto acceleration = 1.1;
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->scroll_start;
          info->scroll_start = now;
 
          std::chrono::duration<double, std::milli> fp_ms = elapsed;
-         auto velocity = (1.0 / fp_ms.count());
 
-         if (elapsed > std::chrono::milliseconds(500))
-            info->velocity = velocity;
+         bool reset_accel =
+            elapsed > std::chrono::milliseconds(250) ||
+            (info->scroll_dir.x > 0 != dir.x > 0) ||
+            (info->scroll_dir.y > 0 != dir.y > 0)
+            ;
+         info->scroll_dir = dir;
+
+         if (reset_accel)
+            info->velocity = 1.0;
          else
-            // Leaky integrator
-            info->velocity = velocity + 0.9 * (info->velocity - velocity);
+            info->velocity *= acceleration;
 
          dir.x *= info->velocity;
          dir.y *= info->velocity;
@@ -367,6 +373,8 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
+         constexpr auto mouse_wheel_line_delta = 120.0f;
+
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -420,14 +428,14 @@ namespace cycfi { namespace elements
             case WM_MOUSEWHEEL:
                {
                   float delta = GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { 0, delta });
+                  on_scroll(hwnd, info, lparam, { 0, delta / mouse_wheel_line_delta });
                }
                break;
 
             case WM_MOUSEHWHEEL:
                {
                   float delta = -GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { delta, 0 });
+                  on_scroll(hwnd, info, lparam, { delta / mouse_wheel_line_delta, 0 });
                }
                break;
 

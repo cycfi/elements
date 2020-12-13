@@ -44,6 +44,10 @@ jobs:
           execute_process(COMMAND brew install pkg-config)
           execute_process(COMMAND brew install cairo)
           execute_process(COMMAND brew install fontconfig)
+          execute_process(COMMAND brew install bzip2)
+          execute_process(COMMAND brew install expat)
+          execute_process(COMMAND brew install zlib)
+          execute_process(COMMAND brew install libpng)
           execute_process(COMMAND brew install ninja)
         endif()
     - name: Configure

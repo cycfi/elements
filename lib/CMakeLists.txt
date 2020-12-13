@@ -211,6 +211,19 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
    endif()
+elseif (APPLE)
+	# TODO: add a min version specifiction
+	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+   target_include_directories(elements PUBLIC ${cairo_INCLUDE_DIRS})
+
+   #message(STATUS "Cairo libs: ${cairo_STATIC_LINK_LIBRARIES}")
+
+
+   # $$$ hack static link $$$
+   target_link_libraries(elements PUBLIC "/usr/local/Cellar/cairo/1.16.0_3/lib/libcairo.a")
+   target_link_libraries(elements PUBLIC "/usr/local/Cellar/libpng/1.6.37/lib/libpng.a")
+   target_link_libraries(elements PUBLIC "/usr/local/Cellar/pixman/0.40.0/lib/libpixman-1.a")
+   target_link_libraries(elements PUBLIC "/usr/local/Cellar/zlib/1.2.11/lib/libz.a")
 else()
 	# TODO: add a min version specifiction
 	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)

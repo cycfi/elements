@@ -69,7 +69,7 @@ namespace
          // our resources
          char resource_path[PATH_MAX];
          get_resource_path(resource_path);
-         cycfi::elements::resource_paths.push_back(resource_path);
+         cycfi::elements::add_search_path(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
@@ -123,13 +123,13 @@ namespace
       };
    }
 
-   void handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
+   bool handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
    {
       using ph::key_action;
       bool repeated = false;
 
       if (k.action == key_action::release && keys[k.key] == key_action::release)
-         return;
+         return false;
 
       if (k.action == key_action::press && keys[k.key] == key_action::press)
          repeated = true;
@@ -139,7 +139,7 @@ namespace
       if (repeated)
          k.action = key_action::repeat;
 
-      _view.key(k);
+      return _view.key(k);
    }
 
    void get_window_pos(NSWindow* window, int& xpos, int& ypos)
@@ -151,11 +151,11 @@ namespace
       ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
-   void handle_text(ph::base_view& _view, ph::text_info info)
+   bool handle_text(ph::base_view& _view, ph::text_info info)
    {
       if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
-         return;
-      _view.text(info);
+         return false;
+      return _view.text(info);
    }
 }
 
@@ -172,6 +172,7 @@ namespace
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+   bool                             _text_inserted;
 }
 @end
 
@@ -197,6 +198,7 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+   _text_inserted = false;
 }
 
 - (void) dealloc
@@ -426,8 +428,11 @@ namespace
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   handle_key(_keys, *_view, { key, ph::key_action::press, mods });
-   [self interpretKeyEvents : [NSArray arrayWithObject:event]];
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   _text_inserted = false;
+   [self interpretKeyEvents : [NSArray arrayWithObject : event]];
+   if (!handled && !_text_inserted)
+      [[self nextResponder] keyUp : event];
 }
 
 - (void) flagsChanged : (NSEvent*) event
@@ -459,7 +464,9 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   if (!handled)
+      [[self nextResponder] keyUp : event];
 }
 
 - (BOOL) hasMarkedText
@@ -520,7 +527,7 @@ namespace
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
-- (void) insertText:(id)string replacementRange : (NSRange)replacementRange
+- (void) insertText : (id)string replacementRange : (NSRange)replacementRange
 {
    auto*       event = [NSApp currentEvent];
    auto const  mods = ph::translate_flags([event modifierFlags]);
@@ -530,10 +537,10 @@ namespace
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)
    {
-     const unichar codepoint = [characters characterAtIndex:i];
-     if ((codepoint & 0xff00) == 0xf700)
-        continue;
-     handle_text(*_view, { codepoint, mods });
+      const unichar codepoint = [characters characterAtIndex:i];
+      if ((codepoint & 0xff00) == 0xf700)
+         continue;
+      _text_inserted = handle_text(*_view, { codepoint, mods });
    }
 }
 

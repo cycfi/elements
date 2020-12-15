@@ -453,7 +453,7 @@ namespace cycfi { namespace elements
       {
          auto pwd = fs::current_path();
          auto resource_path = pwd / "resources";
-         resource_paths.push_back(resource_path);
+         add_search_path(resource_path);
       }
    };
 

@@ -53,13 +53,13 @@ namespace cycfi { namespace elements
       composite_base::draw(ctx);
    }
 
-   layer_element::hit_info layer_element::hit_element(context const& ctx, point p) const
+   layer_element::hit_info layer_element::hit_element(context const& ctx, point p, bool control) const
    {
       // we test from the highest index (topmost element)
       for (int ix = int(size())-1; ix >= 0; --ix)
       {
          auto& e = at(ix);
-         if (e.wants_control())
+         if (!control || e.wants_control())
          {
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
@@ -118,7 +118,7 @@ namespace cycfi { namespace elements
    void deck_element::draw(context const& ctx)
    {
       rect bounds = bounds_of(ctx, _selected_index);
-      if (intersects(bounds, ctx.view_bounds))
+      if (intersects(bounds, ctx.view_bounds()))
       {
          auto& elem = at(_selected_index);
          context ectx{ ctx, &elem, bounds };
@@ -141,10 +141,10 @@ namespace cycfi { namespace elements
       }
    }
 
-   layer_element::hit_info deck_element::hit_element(context const& ctx, point p) const
+   layer_element::hit_info deck_element::hit_element(context const& ctx, point p, bool control) const
    {
       auto& e = at(_selected_index);
-      if (e.wants_control())
+      if (!control || e.wants_control())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          if (bounds.includes(p))

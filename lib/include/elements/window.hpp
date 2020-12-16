@@ -37,37 +37,37 @@ namespace cycfi { namespace elements
        , standard       = with_title | closable | miniaturizable | resizable
       };
 
-                        window(
-                           std::string const& name
-                         , int style_ = standard
-                         , rect const& bounds = rect{ 20, 20, 660, 500 }
-                        );
+                           window(
+                              std::string const& name
+                            , int style_ = standard
+                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                           );
 
-                        window(
-                           int style_ = standard
-                         , rect const& bounds = rect{ 20, 20, 660, 500 }
-                        )
-                         : window("", style_, bounds)
-                        {}
+                           window(
+                              int style_ = standard
+                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                           )
+                            : window("", style_, bounds)
+                           {}
 
-                        ~window();
+                           ~window();
 
-      point             size() const;
-      void              size(point const& p);
-      void              limits(view_limits limits_);
-      point             position() const;
-      void              position(point const& p);
-      host_window_handle       host() const { return _window; }
+      point                size() const;
+      void                 size(point const& p);
+      void                 limits(view_limits limits_);
+      point                position() const;
+      void                 position(point const& p);
+      host_window_handle   host() const { return _window; }
 
       /////////////////////////////////////////////////////////////////////////
       // Notifications
       using callback_fn = std::function<void()>;
 
-      callback_fn       on_close;
+      callback_fn          on_close;
 
    private:
 
-      host_window_handle       _window;
+      host_window_handle   _window;
    };
 }}
 

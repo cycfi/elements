@@ -41,6 +41,8 @@ namespace cycfi { namespace elements
       constexpr void    width(float width_);
       constexpr float   height() const;
       constexpr void    height(float height_);
+      constexpr extent  size() const;
+      constexpr void    size(extent size_);
 
       constexpr point   top_left() const;
       constexpr point   bottom_right() const;
@@ -143,6 +145,17 @@ namespace cycfi { namespace elements
    constexpr void rect::height(float height_)
    {
       bottom = top + height_;
+   }
+
+   constexpr extent rect::size() const
+   {
+      return { width(), height() };
+   }
+
+   constexpr void rect::size(extent size_)
+   {
+      right = left + size_.x;
+      bottom = top + size_.y;
    }
 
    constexpr point rect::top_left() const

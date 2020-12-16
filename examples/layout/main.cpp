@@ -173,54 +173,147 @@ auto make_flow()
    );
 }
 
-auto make_vgrid()
+auto make_hvgrid()
 {
-   auto _box = top_margin(
-      { 10 },
-      hsize(150, rbox_)
-   );
+   auto _box = margin({ 10, 10, 10, 10 }, rbox_);
 
    // Place the grid in a plain array
-   static float const grid[] = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
-
-   return margin(
-      { 10, 40, 10, 10 },
-      hmin_size(150,
-         vgrid(
-            grid,
-            halign(0.0, _box),
-            halign(0.2, _box),
-            halign(0.4, _box),
-            halign(0.6, _box),
-            halign(0.8, _box),
-            halign(1.0, _box)
-         )
-      )
-   );
-}
-
-auto make_hgrid()
-{
-   auto _box = left_margin(
-      { 10 },
-      vsize(150, rbox_)
-   );
+   static float const vgrid_coords[] = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
 
    // You can also place the grid a std::array
-   static std::array<float, 6> const grid = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
+   static std::array<float, 6> const hgrid_coords = { 0.25, 0.45, 0.6, 0.75, 0.9, 1.0 };
 
-   return margin(
-      { 0, 50, 10, 10 },
-      hgrid(
-         grid,
-         valign(0.0, _box),
-         valign(0.2, _box),
-         valign(0.4, _box),
-         valign(0.6, _box),
-         valign(0.8, _box),
-         valign(1.0, _box)
-      )
-   );
+   // All elements with span 1
+   auto&& make_hgrid1 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,
+               _box,
+               _box,
+               _box,
+               _box,
+               _box,
+               _box
+            );
+      };
+
+   // 2nd element has span 2
+   auto&& make_hgrid2 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,
+               _box,
+               span(2, _box),
+               _box,
+               _box,
+               _box
+            );
+      };
+
+   // 2nd element has span 3, 3rd has span 2
+   auto&& make_hgrid3 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,
+               _box,
+               span(3, _box),
+               span(2, _box)
+            );
+      };
+
+   // 1st element has span 6
+   auto&& make_hgrid4 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,
+               span(6, _box)
+            );
+      };
+
+   return
+      top_margin(50, vgrid(
+         vgrid_coords,
+         make_hgrid1(),
+         make_hgrid2(),
+         make_hgrid1(),
+         make_hgrid3(),
+         make_hgrid1(),
+         make_hgrid4()
+      ));
+}
+
+auto make_fixed_hvgrid()
+{
+   auto _box = margin({ 10, 10, 10, 10 }, rbox_);
+
+   // All elements with span 1
+   auto&& make_hgrid1 =
+      [_box]()
+      {
+         return
+            hgrid(
+               _box,
+               _box,
+               _box,
+               _box,
+               _box,
+               _box
+            );
+      };
+
+   // 2nd element has span 2
+   auto&& make_hgrid2 =
+      [_box]()
+      {
+         return
+            hgrid(
+               _box,
+               span(2, _box),
+               _box,
+               _box,
+               _box
+            );
+      };
+
+   // 2nd element has span 3, 3rd has span 2
+   auto&& make_hgrid3 =
+      [_box]()
+      {
+         return
+            hgrid(
+               _box,
+               span(3, _box),
+               span(2, _box)
+            );
+      };
+
+   // 1st element has span 6
+   auto&& make_hgrid4 =
+      [_box]()
+      {
+         return
+            hgrid(
+               span(6, _box)
+            );
+      };
+
+   return
+      top_margin(50, vgrid(
+         make_hgrid1(),
+         make_hgrid2(),
+         make_hgrid1(),
+         make_hgrid3(),
+         make_hgrid1(),
+         make_hgrid4()
+      ));
 }
 
 auto make_aligns()
@@ -263,10 +356,10 @@ auto make_grids()
 {
    return htile(
       margin({ 10, 10, 10, 10 },
-         group("VGrid with Fixed-Sized, Aligned Elements", make_vgrid(), 0.9, false)
+         group("Equally-partitioned H and V Grids with Spans", make_fixed_hvgrid(), 0.9, false)
       ),
       margin({ 10, 10, 10, 10 },
-         group("HGrid with Fixed-Sized, Aligned Elements", make_hgrid(), 0.9, false)
+         group("Variable-partitioned H and V Grids with Spans", make_hvgrid(), 0.9, false)
       )
    );
 }

@@ -4,28 +4,44 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/support/resource_paths.hpp>
-#include <infra/filesystem.hpp>
-#include <infra/string_view.hpp>
-#include <string>
+#include <mutex>
+#include <vector>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
-   std::vector<fs::path> resource_paths;
-
-   std::string find_file(string_view file)
+   std::pair<std::vector<fs::path>&, std::mutex&>
+   get_resource_paths()
    {
-      std::string full_path;
-      const fs::path file_path(file.data());
-      if (file_path.is_absolute())
+      static std::vector<fs::path> resource_paths;
+      static std::mutex resource_paths_mutex;
+      return { resource_paths, resource_paths_mutex };
+   }
+
+   void add_search_path(fs::path const& path, bool search_first)
+   {
+      auto [resource_paths, resource_paths_mutex] = get_resource_paths();
+      std::lock_guard<std::mutex> guard(resource_paths_mutex);
+      if (search_first)
+         resource_paths.insert(resource_paths.begin(), path);
+      else
+         resource_paths.push_back(path);
+   }
+
+   fs::path find_file(fs::path const& file)
+   {
+      fs::path full_path;
+      if (fs::path(file).is_absolute())
       {
-         if (fs::exists(file_path))
-            full_path = std::string(file);
+         if (fs::exists(file))
+            full_path = file;
       }
       else
       {
+         auto [resource_paths, resource_paths_mutex] = get_resource_paths();
+         std::lock_guard<std::mutex> guard(resource_paths_mutex);
          for (auto const& path : resource_paths)
          {
-            const fs::path target = path / file_path;
+            fs::path target = fs::path(path) / file;
             if (fs::exists(target))
             {
                full_path = target.string();
@@ -35,4 +51,4 @@ namespace cycfi { namespace elements
       }
       return full_path;
    }
-}}
+}

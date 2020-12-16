@@ -46,6 +46,7 @@
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
       canvas cnv{ *context_ };
+      cnv.pre_scale(hdpi_scale());
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{ *this, cnv };
@@ -72,6 +73,7 @@
       set_limits();
 
       canvas cnv{ *context_ };
+      cnv.pre_scale(hdpi_scale());
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
       context ctx{ *this, cnv, &_main_element, subj_bounds };
@@ -95,6 +97,7 @@
          auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
          auto context_ = cairo_create(surface_);
          canvas cnv{ *context_ };
+         cnv.pre_scale(self.hdpi_scale());
          context ctx { self, cnv, &self.main_element(), _current_bounds };
 
          f(ctx, self.main_element());
@@ -221,7 +224,10 @@
          return;
 
       call(
-         [btn](auto const& ctx, auto& _main_element) { _main_element.drag(ctx, btn); },
+         [btn](auto const& ctx, auto& _main_element)
+         {
+            _main_element.drag(ctx, btn);
+         },
          *this, _current_bounds
       );
    }
@@ -247,31 +253,44 @@
          return;
 
       call(
-         [dir, p](auto const& ctx, auto& _main_element) { _main_element.scroll(ctx, dir, p); },
+         [dir, p](auto const& ctx, auto& _main_element)
+         {
+            _main_element.scroll(ctx, dir, p);
+         },
          *this, _current_bounds
       );
    }
 
-   void view::key(key_info const& k)
+   bool view::key(key_info const& k)
    {
       if (_content.empty())
-         return;
+         return false;
 
+      bool handled = false;
       call(
-         [k](auto const& ctx, auto& _main_element) { _main_element.key(ctx, k); },
+         [k, &handled](auto const& ctx, auto& _main_element)
+         {
+             handled = _main_element.key(ctx, k);
+         },
          *this, _current_bounds
       );
+      return handled;
    }
 
-   void view::text(text_info const& info)
+   bool view::text(text_info const& info)
    {
       if (_content.empty())
-         return;
+         return false;
 
+      bool handled = false;
       call(
-         [info](auto const& ctx, auto& _main_element) { _main_element.text(ctx, info); },
+         [info, &handled](auto const& ctx, auto& _main_element)
+         {
+             handled = _main_element.text(ctx, info);
+         },
          *this, _current_bounds
       );
+      return handled;
    }
 
    void view::add_undo(undo_redo_task f)

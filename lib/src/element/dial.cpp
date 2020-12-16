@@ -13,6 +13,9 @@
 
 namespace cycfi { namespace elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // dial_base
+   ////////////////////////////////////////////////////////////////////////////
    dial_base::dial_base(double init_value)
     : _value(init_value)
    {
@@ -43,10 +46,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   double dial_base::value_from_point(context const& ctx, point p)
+   double dial_base::radial_value(context const& ctx, tracker_info& track_info)
    {
       using namespace radial_consts;
 
+      point p = track_info.current;
       point center = center_point(ctx.bounds);
       double angle = -std::atan2(p.x-center.x, p.y-center.y);
       if (angle < 0.0)
@@ -58,35 +62,34 @@ namespace cycfi { namespace elements
       return value();
    }
 
-   void dial_base::begin_tracking(context const& /* ctx */, tracker_info& /* track_info */)
+   double dial_base::linear_value(context const& /*ctx*/, tracker_info& track_info)
    {
+      point delta{
+         track_info.current.x - track_info.previous.x,
+         track_info.current.y - track_info.previous.y
+      };
+
+      double factor = 1.0 / get_theme().dial_linear_range;
+      if (track_info.modifiers & mod_shift)
+         factor /= 5.0;
+
+      float val = _value + factor * (delta.x - delta.y);
+      return clamp(val, 0.0, 1.0);
+   }
+
+   double dial_base::compute_value(context const& ctx, tracker_info& track_info)
+   {
+      return (get_theme().dial_mode == dial_mode_enum::radial)?
+         radial_value(ctx, track_info) :
+         linear_value(ctx, track_info)
+         ;
    }
 
    void dial_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
-         auto const& theme = get_theme();
-         double new_value;
-
-         if (theme.dial_mode == dial_mode_enum::radial)
-         {
-            new_value = value_from_point(ctx, track_info.current);
-         }
-         else
-         {
-            point delta { track_info.current.x - track_info.previous.x,
-                          track_info.current.y - track_info.previous.y };
-
-            double factor = 1.0 / theme.dial_linear_range;
-            if (track_info.modifiers & mod_shift)
-               factor /= 5.0;
-
-            new_value = _value + factor * (delta.x - delta.y);
-         }
-
-         clamp(new_value, 0.0, 1.0);
-
+         double new_value = compute_value(ctx, track_info);
          if (_value != new_value)
          {
             edit_value(this, new_value);
@@ -95,111 +98,15 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dial_base::end_tracking(context const& /* ctx */, tracker_info& /* track_info */)
-   {
-   }
-
    bool dial_base::scroll(context const& ctx, point dir, point p)
    {
+      auto sdir = scroll_direction();
       track_scroll(ctx, dir, p);
-      edit_value(this, value() + dir.y * 0.005);
+      edit_value(this, value()
+         + (-sdir.y * dir.y * 0.005)
+         + (sdir.x * dir.x * 0.005)
+      );
       ctx.view.refresh(ctx);
       return true;
-   }
-
-   void draw_indicator(canvas& cnv, circle cp, float val, color c)
-   {
-      constexpr float w_factor = 0.1;  // relative width of the indicator
-      constexpr float h_factor = 0.2;  // relative height of the indicator
-      using namespace radial_consts;
-
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      cnv.translate({ center.x, center.y });
-      cnv.rotate(offset + (val * range));
-
-      float r = cp.radius * 0.85;
-      float ind_w = r * w_factor;
-      float ind_h = r * h_factor;
-      rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
-      ind_r = ind_r.move(0, r*0.6);
-
-      draw_indicator(cnv, ind_r, c);
-   }
-
-   void draw_radial_marks(canvas& cnv, circle cp, float size, color c)
-   {
-      using namespace radial_consts;
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      constexpr auto num_divs = 50;
-      float div = range / num_divs;
-      auto const& theme = get_theme();
-
-      cnv.translate({ center.x, center.y });
-      cnv.stroke_style(theme.ticks_color);
-      for (int i = 0; i != num_divs+1; ++i)
-      {
-         float from = cp.radius;
-         if (i % (num_divs / 10))
-         {
-            // Minor ticks
-            from -= size / 4;
-            cnv.line_width(theme.minor_ticks_width);
-            cnv.stroke_style(c.level(theme.minor_ticks_level));
-         }
-         else
-         {
-            // Major ticks
-            cnv.line_width(theme.major_ticks_width);
-            cnv.stroke_style(c.level(theme.major_ticks_level));
-         }
-
-         float angle = offset + (M_PI / 2) + (i * div);
-         float sin_ = std::sin(angle);
-         float cos_ = std::cos(angle);
-         float to = cp.radius - (size / 2);
-
-         cnv.move_to({ from * cos_, from * sin_ });
-         cnv.line_to({ to * cos_, to * sin_ });
-         cnv.stroke();
-      }
-   }
-
-   void draw_radial_labels(
-      canvas& cnv
-    , circle cp
-    , float /* size */
-    , float font_size
-    , std::string const labels[]
-    , std::size_t num_labels
-   )
-   {
-      if (num_labels < 2)
-         return; // Nothing to do
-
-      using namespace radial_consts;
-      auto state = cnv.new_state();
-      auto center = cp.center();
-      float div = range / (num_labels-1);
-      auto const& theme = get_theme();
-
-      cnv.translate({ center.x, center.y });
-      cnv.text_align(cnv.middle | cnv.center);
-      cnv.fill_style(theme.label_font_color);
-
-      cnv.font(
-         theme.label_font,
-         theme.label_font_size * font_size
-      );
-
-      for (std::size_t i = 0; i != num_labels; ++i)
-      {
-         float angle = offset + (M_PI / 2) + (i * div);
-         float sin_ = std::sin(angle);
-         float cos_ = std::cos(angle);
-
-         cnv.fill_text({ cp.radius * cos_, cp.radius * sin_ }, labels[i].c_str());
-      }
    }
 }}

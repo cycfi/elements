@@ -22,6 +22,11 @@ namespace cycfi { namespace elements
       return { 1.0f, 1.0f };
    }
 
+   unsigned element::span() const
+   {
+      return 1;
+   }
+
    element* element::hit_test(context const& ctx, point p)
    {
       return (ctx.bounds.includes(p)) ? this : nullptr;
@@ -41,9 +46,9 @@ namespace cycfi { namespace elements
          ctx.view.refresh(ctx, outward);
    }
 
-   element* element::click(context const& /* ctx */, mouse_button /* btn */)
+   bool element::click(context const& /* ctx */, mouse_button /* btn */)
    {
-      return nullptr;
+      return false;
    }
 
    void element::drag(context const& /* ctx */, mouse_button /* btn */)

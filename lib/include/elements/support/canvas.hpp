@@ -38,11 +38,15 @@ namespace cycfi { namespace elements
       canvas&           operator=(canvas const& rhs) = delete;
       cairo_t&          cairo_context() const;
 
+      void              pre_scale(float sc);
+      float             pre_scale() const;
+
       ///////////////////////////////////////////////////////////////////////////////////
       // Transforms
       void              translate(point p);
       void              rotate(float rad);
       void              scale(point p);
+      void              skew(float sx, float sy);
       point             device_to_user(point p);
       point             user_to_device(point p);
 
@@ -55,6 +59,7 @@ namespace cycfi { namespace elements
       void              stroke();
       void              stroke_preserve();
       void              clip();
+      elements::rect    clip_extent() const;
       bool              hit_test(point p) const;
       elements::rect    fill_extent() const;
 
@@ -208,6 +213,7 @@ namespace cycfi { namespace elements
       cairo_t&          _context;
       canvas_state      _state;
       state_stack       _state_stack;
+      float             _pre_scale = 1.0f;
    };
 }}
 

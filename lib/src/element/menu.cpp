@@ -7,6 +7,7 @@
 #include <elements/element/composite.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -59,7 +60,7 @@ namespace cycfi { namespace elements
       _popup->layout(new_ctx);
    }
 
-   element* basic_menu::click(context const& ctx, mouse_button btn)
+   bool basic_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -72,14 +73,15 @@ namespace cycfi { namespace elements
             {
                layout_menu(ctx);
 
-               auto on_click_ = [this](view& view_)
-               {
-                  _popup->close(view_);
-                  this->value(0);
-                  view_.refresh();
-               };
+               _popup->on_click =
+                  [this, &view_ = ctx.view]()
+                  {
+                     _popup->close(view_);
+                     this->value(0);
+                     view_.refresh();
+                  };
 
-               _popup->open(ctx.view, on_click_);
+               _popup->open(ctx.view);
                ctx.view.refresh();
             }
          }
@@ -95,7 +97,7 @@ namespace cycfi { namespace elements
             _popup->click(new_ctx, btn);
          }
       }
-      return this;
+      return true;
    }
 
    void basic_menu::drag(context const& ctx, mouse_button btn)
@@ -181,7 +183,7 @@ namespace cycfi { namespace elements
                last->scroll_into_view();
             }
          }
-         return true;
+         return false;
       }
 
       // Call base key
@@ -232,19 +234,19 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-   element* basic_menu_item_element::click(context const& ctx, mouse_button btn)
+   bool basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
-      element* result = nullptr;
+      bool result = false;
       if (is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
          select(false);
          ctx.notify(ctx, "click", this);
-         result = this;
+         result = true;
       }
-      element* proxy_result = proxy_base::click(ctx, btn);
-      return result? result : proxy_result;
+      auto proxy_result = proxy_base::click(ctx, btn);
+      return result || proxy_result;
    }
 
    bool basic_menu_item_element::key(context const& ctx, key_info k)
@@ -311,7 +313,7 @@ namespace cycfi { namespace elements
                         i += down? +1 : -1
                      )
                      {
-                        auto e = dynamic_cast<basic_menu_item_element*>(&c->at(i));
+                        auto e = find_element<basic_menu_item_element*>(&c->at(i));
                         if (e && e->is_enabled())
                         {
                            if (e == this)
@@ -361,7 +363,7 @@ namespace cycfi { namespace elements
          {
             for (std::size_t i = 0; i != c->size(); ++i)
             {
-               if (auto e = dynamic_cast<selectable*>(&c->at(i)))
+               if (auto e = find_element<selectable*>(&c->at(i)))
                   e->select(false);
             }
          }

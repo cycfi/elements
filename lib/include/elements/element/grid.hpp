@@ -17,7 +17,20 @@ namespace cycfi { namespace elements
    struct grid_base : public composite_base
    {
       virtual std::size_t     grid_size() const = 0;
-      virtual float const*    grid() const = 0;
+      virtual float           grid_coord(std::size_t i) const = 0;
+      virtual std::size_t     num_spans() const = 0;
+   };
+
+   template <typename Base>
+   class equal_grid : public Base
+   {
+   public:
+
+      std::size_t             grid_size() const override
+                              { return std::numeric_limits<std::size_t>::max(); }
+
+      float                   grid_coord(std::size_t i) const override
+                              { return float(i+1) / this->num_spans(); }
    };
 
    template <typename Base>
@@ -29,7 +42,8 @@ namespace cycfi { namespace elements
                               {}
 
       std::size_t             grid_size() const override    { return _size; }
-      float const*            grid() const override         { return _coords; }
+      float                   grid_coord(std::size_t i) const override
+                              { return (i < _size)? _coords[i] : 1.0f; }
 
    private:
 
@@ -46,7 +60,8 @@ namespace cycfi { namespace elements
                               {}
 
       std::size_t             grid_size() const override    { return _container.size(); }
-      float const*            grid() const override         { return _container.data(); }
+      float                   grid_coord(std::size_t i) const override
+                              { return (i < _container.size())? _container[i] : 1.0f; }
 
    private:
 
@@ -63,32 +78,43 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
+      std::size_t             num_spans() const override { return _num_spans; }
+
+   private:
+
+      std::vector<float>      _positions;
+      std::size_t             _num_spans;
    };
 
    using vgrid_composite = vector_composite<
          container_grid<std::vector<float>, vgrid_element>
       >;
 
-#if defined(_MSC_VER)
-   template <typename... E, std::size_t N = sizeof...(E)>
+   template <std::size_t N, typename... E>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
-#else
-   template <typename... E>
-   inline auto vgrid(float const(&coords)[sizeof...(E)], E&&... elements)
-#endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
       using container = typename composite::container_type;
-      composite r{ coords, sizeof...(E) };
+      composite r{ coords, N };
       r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
 
-   template <typename... E>
-   inline auto vgrid(std::array<float, sizeof...(E)> const& coords, E&&... elements)
+   template <std::size_t N, typename... E>
+   inline auto vgrid(std::array<float, N> const& coords, E&&... elements)
    {
-      using plain_array = float const (&)[sizeof...(E)];
+      using plain_array = float const (&)[N];
       return vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+   }
+
+   template <typename... E>
+   inline auto vgrid(E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), equal_grid<vgrid_element>>;
+      using container = typename composite::container_type;
+      composite r{};
+      r = container{{ share(std::forward<E>(elements))... }};
+      return r;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -101,32 +127,43 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
+      std::size_t             num_spans() const override { return _num_spans; }
+
+   private:
+
+      std::vector<float>      _positions;
+      std::size_t             _num_spans;
    };
 
    using hgrid_composite = vector_composite<
          container_grid<std::vector<float>, hgrid_element>
       >;
 
-#if defined(_MSC_VER)
-   template <typename... E, std::size_t N = sizeof...(E)>
+   template <std::size_t N, typename... E>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
-#else
-   template <typename... E>
-   inline auto hgrid(float const(&coords)[sizeof...(E)], E&&... elements)
-#endif
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
       using container = typename composite::container_type;
-      composite r{ coords, sizeof...(E) };
+      composite r{ coords, N };
       r = container{{ share(std::forward<E>(elements))... }};
       return r;
    }
 
-   template <typename... E>
-   inline auto hgrid(std::array<float, sizeof...(E)> const& coords, E&&... elements)
+   template <std::size_t N, typename... E>
+   inline auto hgrid(std::array<float, N> const& coords, E&&... elements)
    {
-      using plain_array = float const (&)[sizeof...(E)];
+      using plain_array = float const (&)[N];
       return hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+   }
+
+   template <typename... E>
+   inline auto hgrid(E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), equal_grid<hgrid_element>>;
+      using container = typename composite::container_type;
+      composite r{};
+      r = container{{ share(std::forward<E>(elements))... }};
+      return r;
    }
 }}
 

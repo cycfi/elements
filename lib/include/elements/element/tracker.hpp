@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       tracker&                 operator=(tracker&& rhs) = default;
 
       bool                     wants_control() const override;
-      element*                 click(context const& ctx, mouse_button btn) override;
+      bool                     click(context const& ctx, mouse_button btn) override;
       void                     drag(context const& ctx, mouse_button btn) override;
 
    protected:
@@ -56,9 +56,9 @@ namespace cycfi { namespace elements
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
 
       virtual tracker_info_ptr new_state(context const& ctx, point start, int modifiers);
-      virtual void             begin_tracking(context const& ctx, tracker_info& track_info) = 0;
-      virtual void             keep_tracking(context const& ctx, tracker_info& track_info) = 0;
-      virtual void             end_tracking(context const& ctx, tracker_info& track_info) = 0;
+      virtual void             begin_tracking(context const& ctx, tracker_info& track_info);
+      virtual void             keep_tracking(context const& ctx, tracker_info& track_info);
+      virtual void             end_tracking(context const& ctx, tracker_info& track_info);
       void                     track_scroll(context const& ctx, point dir, point p);
 
    private:
@@ -69,7 +69,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-
    template <typename Base>
    tracker<Base>::tracker(tracker const& rhs)
     : Base(rhs)
@@ -84,7 +83,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline element* tracker<Base>::click(context const& ctx, mouse_button btn)
+   inline bool tracker<Base>::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -98,7 +97,7 @@ namespace cycfi { namespace elements
          end_tracking(ctx, *state);
          state.reset();
       }
-      return this;
+      return true;
    }
 
    template <typename Base>
@@ -122,6 +121,21 @@ namespace cycfi { namespace elements
    inline bool tracker<Base>::wants_control() const
    {
       return true;
+   }
+
+   template <typename Base>
+   void tracker<Base>::begin_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
+   {
+   }
+
+   template <typename Base>
+   void tracker<Base>::keep_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
+   {
+   }
+
+   template <typename Base>
+   void tracker<Base>::end_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
+   {
    }
 
    template <typename Base>

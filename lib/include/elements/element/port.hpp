@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
       void                    prepare_subject(context& ctx) override;
 
       double                  halign() const override             { return 0; }
-      void                    halign(double /* val */) override   {}
+      void                    halign(double /*val*/) override     {}
       double                  valign() const override             { return _valign; }
       void                    valign(double val) override         { _valign = val; }
 
@@ -83,6 +83,35 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   class hport_element : public port_base
+   {
+   public:
+                              hport_element()
+                               : _halign(0.0)
+                              {}
+
+                              ~hport_element() {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
+
+      double                  halign() const override             { return _halign; }
+      void                    halign(double val) override         { _halign = val; }
+      double                  valign() const override             { return 0; }
+      void                    valign(double /*val*/) override     {}
+
+   private:
+
+      double                  _halign;
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, hport_element>
+   hport(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
    }
@@ -146,7 +175,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    scroll_into_view(context const& ctx, rect r) override;

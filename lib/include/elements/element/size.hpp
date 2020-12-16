@@ -439,7 +439,7 @@ namespace cycfi { namespace elements
 
                               hstretch_element(float stretch, Subject subject);
 
-      virtual view_stretch    stretch() const;
+      view_stretch            stretch() const override;
 
       void                    hstretch(float stretch) { _stretch = stretch; }
       float                   hstretch() const { return _stretch; }
@@ -485,7 +485,7 @@ namespace cycfi { namespace elements
 
                               vstretch_element(float stretch, Subject subject);
 
-      virtual view_stretch    stretch() const;
+      view_stretch            stretch() const override;
 
       void                    vstretch(float stretch) { _stretch = stretch; }
       float                   vstretch() const { return _stretch; }
@@ -519,6 +519,39 @@ namespace cycfi { namespace elements
    no_vstretch(Subject&& subject)
    {
       return vstretch(0.0f, std::forward<Subject>(subject));
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Span elements
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class span_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              span_element(unsigned span, Subject subject);
+
+      unsigned                span() const override   { return _span; }
+      void                    span(float span)        { _span = span; }
+
+   private:
+
+      unsigned                _span;
+   };
+
+   template <typename Subject>
+   inline span_element<Subject>::span_element(unsigned span, Subject subject)
+    : base_type(std::move(subject))
+    , _span(span)
+   {}
+
+   template <typename Subject>
+   inline span_element<remove_cvref_t<Subject>>
+   span(unsigned span, Subject&& subject)
+   {
+      return { span, std::forward<Subject>(subject) };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -628,18 +661,8 @@ namespace cycfi { namespace elements
    {
       auto& canvas_ = ctx.canvas;
       canvas_.save();
-      auto& bounds = ctx.bounds;
-      auto& view_bounds = ctx.view_bounds;
       canvas_.scale({ _scale, _scale });
-      auto  offset = point{ bounds.left / _scale, bounds.top / _scale };
-      bounds = {
-         offset.x, offset.y
-       , offset.x + (bounds.width() / _scale), offset.y + (bounds.height() / _scale)
-      };
-      view_bounds = {
-         0, 0
-       , view_bounds.width() / _scale, view_bounds.height() / _scale
-      };
+      ctx.bounds = device_to_user(ctx.bounds, ctx.canvas);
    }
 
    template <typename Subject>

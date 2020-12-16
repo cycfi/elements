@@ -10,6 +10,7 @@
 #include <elements/element/button.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/dial.hpp>
+#include <elements/element/dynamic_list.hpp>
 #include <elements/element/floating.hpp>
 #include <elements/element/flow.hpp>
 #include <elements/element/grid.hpp>
@@ -27,7 +28,9 @@
 #include <elements/element/size.hpp>
 #include <elements/element/slider.hpp>
 #include <elements/element/text.hpp>
+#include <elements/element/thumbwheel.hpp>
 #include <elements/element/tile.hpp>
+#include <elements/element/tooltip.hpp>
 
 // Include this last
 #include <elements/element/gallery.hpp>

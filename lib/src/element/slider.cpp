@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
 
    void slider_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view_bounds))
+      if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
             context sctx { ctx, &track(), ctx.bounds };
@@ -65,7 +65,8 @@ namespace cycfi { namespace elements
 
    bool slider_base::scroll(context const& ctx, point dir, point p)
    {
-      double new_value = value() + (_is_horiz ? -dir.x : dir.y) * 0.005;
+      auto sdir = scroll_direction();
+      double new_value = value() + (_is_horiz ? dir.x * sdir.x : dir.y * -sdir.y) * 0.005;
       clamp(new_value, 0.0, 1.0);
       track_scroll(ctx, dir, p);
       edit_value(new_value);

@@ -159,6 +159,8 @@ namespace cycfi { namespace elements
                return false;
          }
 
+         btn.state = mouse_button::what(event->button-1);
+
          if (!get_mouse(event, btn, view))
             return false;
          return true;
@@ -451,7 +453,7 @@ namespace cycfi { namespace elements
       {
          auto pwd = fs::current_path();
          auto resource_path = pwd / "resources";
-         resource_paths.push_back(resource_path);
+         add_search_path(resource_path);
       }
    };
 
@@ -508,6 +510,11 @@ namespace cycfi { namespace elements
       gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);
    }
 
+   float base_view::hdpi_scale() const
+   {
+      return 1.0f; // This is already done properly by the gtk->cairo context
+   }
+
    void base_view::refresh()
    {
       auto x = gtk_widget_get_allocated_width(_view->widget);
@@ -517,12 +524,11 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
-      auto scale = 1; // get_scale(_view->widget);
       gtk_widget_queue_draw_area(_view->widget,
-         area.left * scale,
-         area.top * scale,
-         area.width() * scale,
-         area.height() * scale
+         area.left,
+         area.top,
+         area.width(),
+         area.height()
       );
    }
 
@@ -569,6 +575,11 @@ namespace cycfi { namespace elements
          change_window_cursor(host_view_under_cursor->widget, view_cursor_type);
          host_view_h->active_cursor_type = view_cursor_type;
       }
+   }
+
+   point scroll_direction()
+   {
+      return { +1.0f, +1.0f };
    }
 }}
 

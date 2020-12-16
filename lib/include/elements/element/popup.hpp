@@ -19,27 +19,48 @@ namespace cycfi { namespace elements
    {
    public:
 
-      using click_function = std::function<void(view& view_)>;
+      using cursor_function = std::function<void(point p, cursor_tracking status)>;
 
                               basic_popup_element(rect bounds = {})
                                : floating_element(bounds)
                               {}
 
+      bool                    wants_control() const override { return true; }
       element*                hit_test(context const& ctx, point p) override;
-      element*                click(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
-      void                    open(view& view_, click_function on_click = {});
+      bool                    is_open(view& view_) const;
+      void                    open(view& view_);
       void                    close(view& view_);
 
-   private:
-
-      click_function          _on_click;
+      cursor_function         on_cursor = [](auto, auto){};
    };
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, basic_popup_element>
    basic_popup(Subject&& subject, rect bounds = {})
+   {
+      return { std::forward<Subject>(subject), bounds };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Popup Menu
+   ////////////////////////////////////////////////////////////////////////////
+   class basic_popup_menu_element : public basic_popup_element
+   {
+   public:
+
+      using basic_popup_element::basic_popup_element;
+      using click_function = std::function<void()>;
+
+      element*                hit_test(context const& ctx, point p) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
+      click_function          on_click = [](){};
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_popup_menu_element>
+   basic_popup_menu(Subject&& subject, rect bounds = {})
    {
       return { std::forward<Subject>(subject), bounds };
    }

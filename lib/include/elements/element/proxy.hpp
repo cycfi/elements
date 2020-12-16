@@ -26,6 +26,7 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
+      unsigned                span() const override;
       element*                hit_test(context const& ctx, point p) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
@@ -39,7 +40,7 @@ namespace cycfi { namespace elements
    // Control
 
       bool                    wants_control() const override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;

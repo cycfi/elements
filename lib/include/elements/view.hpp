@@ -38,8 +38,8 @@ namespace cycfi { namespace elements
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;
       void                    scroll(point dir, point p) override;
-      void                    key(key_info const& k) override;
-      void                    text(text_info const& info) override;
+      bool                    key(key_info const& k) override;
+      bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
       void                    poll() override;
@@ -138,6 +138,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline point cursor_pos(view const& v) // declared in context.hpp
+   {
+      return v.cursor_pos();
+   }
+
    inline rect view_bounds(view const& v) // declared in context.hpp
    {
       auto size = v.size();

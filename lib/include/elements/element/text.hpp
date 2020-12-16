@@ -93,7 +93,7 @@ namespace cycfi { namespace elements
                               basic_text_box(basic_text_box&& rhs) = default;
 
       void                    draw(context const& ctx) override;
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
@@ -123,7 +123,7 @@ namespace cycfi { namespace elements
    protected:
 
       void                    scroll_into_view(context const& ctx, bool save_x);
-      virtual void            delete_();
+      virtual void            delete_(bool forward);
       virtual void            cut(view& v, int start, int end);
       virtual void            copy(view& v, int start, int end);
       virtual void            paste(view& v, int start, int end);
@@ -181,9 +181,9 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    key(context const& ctx, key_info k) override;
-      void                    delete_() override;
+      void                    delete_(bool forward) override;
 
-      element*                click(context const& ctx, mouse_button btn) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       void                    begin_focus() override;
       void                    end_focus() override;
 

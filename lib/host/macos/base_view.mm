@@ -69,7 +69,7 @@ namespace
          // our resources
          char resource_path[PATH_MAX];
          get_resource_path(resource_path);
-         cycfi::elements::resource_paths.push_back(resource_path);
+         cycfi::elements::add_search_path(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
@@ -107,7 +107,7 @@ namespace
       return CGDisplayBounds(CGMainDisplayID()).size.height - y;
    }
 
-   ph::mouse_button get_button(NSEvent* event, NSView* self, bool down = true)
+   ph::mouse_button get_button(NSEvent* event, NSView* self, ph::mouse_button::what what, bool down = true)
    {
       auto pos = [event locationInWindow];
       auto click_count = [event clickCount];
@@ -117,19 +117,19 @@ namespace
       return {
          down,
          int(click_count),
-         ph::mouse_button::left,
+         what,
          mods,
          { float(pos.x), float(pos.y) }
       };
    }
 
-   void handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
+   bool handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
    {
       using ph::key_action;
       bool repeated = false;
 
       if (k.action == key_action::release && keys[k.key] == key_action::release)
-         return;
+         return false;
 
       if (k.action == key_action::press && keys[k.key] == key_action::press)
          repeated = true;
@@ -139,7 +139,7 @@ namespace
       if (repeated)
          k.action = key_action::repeat;
 
-      _view.key(k);
+      return _view.key(k);
    }
 
    void get_window_pos(NSWindow* window, int& xpos, int& ypos)
@@ -151,11 +151,11 @@ namespace
       ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
-   void handle_text(ph::base_view& _view, ph::text_info info)
+   bool handle_text(ph::base_view& _view, ph::text_info info)
    {
       if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
-         return;
-      _view.text(info);
+         return false;
+      return _view.text(info);
    }
 }
 
@@ -172,6 +172,7 @@ namespace
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+   bool                             _text_inserted;
 }
 @end
 
@@ -197,6 +198,7 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+   _text_inserted = false;
 }
 
 - (void) dealloc
@@ -298,19 +300,64 @@ namespace
 
 - (void) mouseDown : (NSEvent*) event
 {
-   _view->click(get_button(event, self));
+   _view->click(get_button(event, self, ph::mouse_button::left));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseDown : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->click(get_button(event, self, ph::mouse_button::middle));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseDown : (NSEvent*) event
+{
+   _view->click(get_button(event, self, ph::mouse_button::right));
    [self displayIfNeeded];
 }
 
 - (void) mouseDragged : (NSEvent*) event
 {
-   _view->drag(get_button(event, self));
+   _view->drag(get_button(event, self, ph::mouse_button::left));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseDragged : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->drag(get_button(event, self, ph::mouse_button::middle));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseDragged : (NSEvent*) event
+{
+   _view->drag(get_button(event, self, ph::mouse_button::right));
    [self displayIfNeeded];
 }
 
 - (void) mouseUp : (NSEvent*) event
 {
-   _view->click(get_button(event, self, false));
+   _view->click(get_button(event, self, ph::mouse_button::left, false));
+   [self displayIfNeeded];
+}
+
+- (void) otherMouseUp : (NSEvent*) event
+{
+   if ([event buttonNumber] == 2)
+   {
+      _view->click(get_button(event, self, ph::mouse_button::middle, false));
+      [self displayIfNeeded];
+   }
+}
+
+- (void) rightMouseUp : (NSEvent*) event
+{
+   _view->click(get_button(event, self, ph::mouse_button::right, false));
    [self displayIfNeeded];
 }
 
@@ -370,9 +417,6 @@ namespace
    float delta_x = [event scrollingDeltaX];
    float delta_y = [event scrollingDeltaY];
 
-   if (event.directionInvertedFromDevice)
-      delta_y = -delta_y;
-
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
@@ -384,8 +428,11 @@ namespace
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   handle_key(_keys, *_view, { key, ph::key_action::press, mods });
-   [self interpretKeyEvents : [NSArray arrayWithObject:event]];
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   _text_inserted = false;
+   [self interpretKeyEvents : [NSArray arrayWithObject : event]];
+   if (!handled && !_text_inserted)
+      [[self nextResponder] keyUp : event];
 }
 
 - (void) flagsChanged : (NSEvent*) event
@@ -417,7 +464,9 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   if (!handled)
+      [[self nextResponder] keyUp : event];
 }
 
 - (BOOL) hasMarkedText
@@ -478,7 +527,7 @@ namespace
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
-- (void) insertText:(id)string replacementRange : (NSRange)replacementRange
+- (void) insertText : (id)string replacementRange : (NSRange)replacementRange
 {
    auto*       event = [NSApp currentEvent];
    auto const  mods = ph::translate_flags([event modifierFlags]);
@@ -488,10 +537,10 @@ namespace
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)
    {
-     const unichar codepoint = [characters characterAtIndex:i];
-     if ((codepoint & 0xff00) == 0xf700)
-        continue;
-     handle_text(*_view, { codepoint, mods });
+      const unichar codepoint = [characters characterAtIndex:i];
+      if ((codepoint & 0xff00) == 0xf700)
+         continue;
+      _text_inserted = handle_text(*_view, { codepoint, mods });
    }
 }
 
@@ -567,6 +616,11 @@ namespace cycfi { namespace elements
       [ns_view detach_timer];
       [ns_view removeFromSuperview];
       _view = nil;
+   }
+
+   float base_view::hdpi_scale() const
+   {
+      return 1.0f; // This is already done properly by the cocoa->cairo context
    }
 
    point base_view::cursor_pos() const
@@ -645,6 +699,12 @@ namespace cycfi { namespace elements
             [[NSCursor resizeUpDownCursor] set];
             break;
       }
+   }
+
+   point scroll_direction()
+   {
+      float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
+      return { dir, dir };
    }
 }}
 

@@ -43,7 +43,7 @@ namespace cycfi::elements
 
    void progress_bar_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view_bounds))
+      if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
             context sctx { ctx, &background(), ctx.bounds };

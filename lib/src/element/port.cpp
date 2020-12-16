@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 #include <algorithm>
 #include <cmath>
@@ -29,7 +30,7 @@ namespace cycfi { namespace elements
    view_limits port_element::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return {{min_port_size, min_port_size }, e_limits.max };
+      return {{ min_port_size, min_port_size }, e_limits.max };
    }
 
    void port_element::prepare_subject(context& ctx)
@@ -54,7 +55,7 @@ namespace cycfi { namespace elements
    view_limits vport_element::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
-      return {{e_limits.min.x, min_port_size }, e_limits.max };
+      return {{ e_limits.min.x, min_port_size }, e_limits.max };
    }
 
    void vport_element::prepare_subject(context& ctx)
@@ -70,6 +71,27 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // hport_element class implementation
+   ////////////////////////////////////////////////////////////////////////////
+   view_limits hport_element::limits(basic_context const& ctx) const
+   {
+      view_limits e_limits = subject().limits(ctx);
+      return {{ min_port_size, e_limits.min.y }, e_limits.max };
+   }
+
+   void hport_element::prepare_subject(context& ctx)
+   {
+      view_limits    e_limits          = subject().limits(ctx);
+      double         elem_width        = e_limits.min.x;
+      double         available_width   = ctx.parent->bounds.width();
+
+      ctx.bounds.left -= (elem_width - available_width) * _halign;
+      ctx.bounds.width(elem_width);
+
+      subject().layout(ctx);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // scrollable class implementation
    ////////////////////////////////////////////////////////////////////////////
    scrollable::scrollable_context scrollable::find(context const& ctx_)
@@ -77,7 +99,7 @@ namespace cycfi { namespace elements
       auto const* ctx = &ctx_;
       while (ctx && ctx->element)
       {
-         auto* sp = dynamic_cast<scrollable*>(ctx->element);
+         auto* sp = find_element<scrollable*>(ctx->element);
          if (sp)
             return { ctx, sp };
          else
@@ -258,7 +280,7 @@ namespace cycfi { namespace elements
       {
          scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
          view_limits       e_limits = subject().limits(ctx);
-         point             mp = ctx.view.cursor_pos();
+         point             mp = ctx.cursor_pos();
 
          if (sb.has_v)
             draw_scroll_bar(ctx, { valign(), e_limits.min.y, sb.vscroll_bounds }, mp);
@@ -302,15 +324,15 @@ namespace cycfi { namespace elements
       return redraw;
    }
 
-   element* scroller_base::click(context const& ctx, mouse_button btn)
+   bool scroller_base::click(context const& ctx, mouse_button btn)
    {
-      if (has_scrollbars())
+      if (btn.state == mouse_button::left && has_scrollbars())
       {
          if (btn.down)
          {
             _tracking = start;
             if (reposition(ctx, btn.pos))
-               return ctx.element;
+               return true;
          }
          _tracking = none;
          refresh(ctx);
@@ -320,7 +342,8 @@ namespace cycfi { namespace elements
 
    void scroller_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_tracking == none || !reposition(ctx, btn.pos))
+      if (btn.state == mouse_button::left &&
+         (_tracking == none || !reposition(ctx, btn.pos)))
          port_element::drag(ctx, btn);
    }
 
@@ -433,13 +456,14 @@ namespace cycfi { namespace elements
    {
       if (has_scrollbars())
       {
-         ctx.view.refresh(ctx);
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
          if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
          {
+            ctx.view.refresh(ctx);
             set_cursor(cursor_type::arrow);
             return true;
          }
+         ctx.view.refresh(ctx);
       }
       return port_element::cursor(ctx, p, status);
    }
@@ -484,7 +508,7 @@ namespace cycfi { namespace elements
                dp.x = bounds.right-r.right;
          }
 
-         return scroll(ctx, dp, ctx.view.cursor_pos());
+         return scroll(ctx, dp, ctx.cursor_pos());
       }
       return false;
    }

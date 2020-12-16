@@ -22,6 +22,11 @@ namespace cycfi { namespace elements
       return subject().stretch();
    }
 
+   unsigned proxy_base::span() const
+   {
+      return subject().span();
+   }
+
    element* proxy_base::hit_test(context const& ctx, point p)
    {
       context sctx { ctx, &subject(), ctx.bounds };
@@ -75,7 +80,7 @@ namespace cycfi { namespace elements
    {
    }
 
-   element* proxy_base::click(context const& ctx, mouse_button btn)
+   bool proxy_base::click(context const& ctx, mouse_button btn)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx, btn.pos);

@@ -13,6 +13,7 @@ set(ELEMENTS_SOURCES
    src/element/button.cpp
    src/element/composite.cpp
    src/element/dial.cpp
+   src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
@@ -22,6 +23,7 @@ set(ELEMENTS_SOURCES
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
    src/element/gallery/tab.cpp
+   src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
@@ -34,7 +36,9 @@ set(ELEMENTS_SOURCES
    src/element/proxy.cpp
    src/element/slider.cpp
    src/element/text.cpp
+   src/element/thumbwheel.cpp
    src/element/tile.cpp
+   src/element/tooltip.cpp
    src/support/canvas.cpp
    src/support/draw_utils.cpp
    src/support/font.cpp
@@ -56,6 +60,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
+   include/elements/element/dynamic_list.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
@@ -63,7 +68,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/gallery/button.hpp
    include/elements/element/gallery/caption.hpp
    include/elements/element/gallery/check_box.hpp
-   include/elements/element/gallery/dial.hpp
+   include/elements/element/gallery/thumbwheel.hpp
    include/elements/element/gallery/dialog.hpp
    include/elements/element/gallery/group.hpp
    include/elements/element/gallery/icon_button.hpp
@@ -90,6 +95,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/size.hpp
    include/elements/element/slider.hpp
    include/elements/element/text.hpp
+   include/elements/element/thumbwheel.hpp
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp
@@ -179,8 +185,8 @@ endif()
 
 target_compile_options(elements PRIVATE
    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:Clang>:-Werror -Wall -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:AppleClang>:-Werror -Wall -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
+   $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
 )
 
@@ -191,7 +197,11 @@ endif()
 
 if (APPLE)
    # Not sure why APPLE is not picking the target_compile_options above
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
+endif()
+
+if (APPLE)
+   set(lib_dir "/usr/local/opt")
 endif()
 
 ###############################################################################
@@ -205,6 +215,14 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
    endif()
+elseif (APPLE)
+	# TODO: add a min version specifiction
+	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+   target_include_directories(elements PUBLIC ${cairo_INCLUDE_DIRS})
+   target_link_libraries(elements PUBLIC "${lib_dir}/cairo/lib/libcairo.a")            # Static link
+   target_link_libraries(elements PRIVATE "${lib_dir}/libpng/lib/libpng.a")            # Static link
+   target_link_libraries(elements PRIVATE "${lib_dir}/pixman/lib/libpixman-1.a")       # Static link
+   target_link_libraries(elements PRIVATE "${lib_dir}/zlib/lib/libz.a")                # Static link
 else()
 	# TODO: add a min version specifiction
 	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
@@ -222,6 +240,11 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
    endif()
+elseif (APPLE)
+   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+   target_include_directories(elements PUBLIC ${fontconfig_INCLUDE_DIRS})
+   target_link_libraries(elements PUBLIC "${lib_dir}/fontconfig/lib/libfontconfig.a")  # Static link
+   target_link_libraries(elements PUBLIC "${lib_dir}/expat/lib/libexpat.a")            # Static link
 else()
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
@@ -238,6 +261,11 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
+elseif (APPLE)
+   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+   target_include_directories(elements PUBLIC ${freetype2_INCLUDE_DIRS})
+   target_link_libraries(elements PUBLIC "${lib_dir}/freetype2/lib/libfreetype.a")     # Static link
+   target_link_libraries(elements PUBLIC "${lib_dir}/bzip2/lib/libbz2.a")              # Static link
 elseif (UNIX OR WIN32)
    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
    target_link_libraries(elements PUBLIC PkgConfig::freetype2)

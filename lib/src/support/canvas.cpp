@@ -72,6 +72,17 @@ namespace cycfi { namespace elements
    {
    }
 
+   void canvas::pre_scale(float sc)
+   {
+      scale({ sc, sc });
+      _pre_scale = sc;
+   }
+
+   float canvas::pre_scale() const
+   {
+      return _pre_scale;
+   }
+
    void canvas::translate(point p)
    {
       cairo_translate(&_context, p.x, p.y);
@@ -87,10 +98,17 @@ namespace cycfi { namespace elements
       cairo_scale(&_context, p.x, p.y);
    }
 
+   void canvas::skew(float sx, float sy)
+   {
+      cairo_matrix_t mat;
+      cairo_matrix_init(&mat, 1, 0, sx, 1, 0, sy);
+      cairo_transform(&_context, &mat);
+   }
+
    point canvas::device_to_user(point p)
    {
-      double x = p.x;
-      double y = p.y;
+      double x = p.x * _pre_scale;
+      double y = p.y * _pre_scale;
       cairo_device_to_user(&_context, &x, &y);
       return { float(x), float(y) };
    }
@@ -100,7 +118,7 @@ namespace cycfi { namespace elements
       double x = p.x;
       double y = p.y;
       cairo_user_to_device(&_context, &x, &y);
-      return { float(x), float(y) };
+      return { float(x / _pre_scale), float(y / _pre_scale) };
    }
 
    void canvas::begin_path()
@@ -140,6 +158,13 @@ namespace cycfi { namespace elements
    void canvas::clip()
    {
       cairo_clip(&_context);
+   }
+
+   rect canvas::clip_extent() const
+   {
+      double x1, y1, x2, y2;
+      cairo_clip_extents(&_context, &x1, &y1, &x2, &y2);
+      return { float(x1), float(y1), float(x2), float(y2) };
    }
 
    bool canvas::hit_test(point p) const
@@ -344,7 +369,7 @@ namespace cycfi { namespace elements
          /*ascent=*/    float(font_extents.ascent),
          /*descent=*/   float(font_extents.descent),
          /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent)),
-         /*size=*/      { float(extents.width), float(extents.height) }
+         /*size=*/      { float(extents.x_advance + extents.x_bearing), float(extents.height) }
       };
    }
 

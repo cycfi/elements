@@ -78,13 +78,15 @@ namespace cycfi { namespace elements
       auto  line_height = metrics.ascent + metrics.descent + metrics.leading;
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + metrics.ascent;
+      auto  clip_extent = cnv.clip_extent();
 
       cnv.rect(ctx.bounds);
       cnv.clip();
       cnv.fill_style(_color);
       for (auto& row : _rows)
       {
-         row.draw({ x, y }, cnv);
+         if (y + metrics.descent > clip_extent.top)
+            row.draw({ x, y }, cnv);
          y += line_height;
          if (y > ctx.bounds.bottom + metrics.ascent)
             break;
@@ -135,18 +137,21 @@ namespace cycfi { namespace elements
       draw_caret(ctx);
    }
 
-   element* basic_text_box::click(context const& ctx, mouse_button btn)
+   bool basic_text_box::click(context const& ctx, mouse_button btn)
    {
+      if (btn.state != mouse_button::left)
+         return false;
+
       _show_caret = true;
 
       if (!btn.down) // released? return early
-         return this;
+         return true;
 
       if (_text.empty())
       {
          _select_start = _select_end = 0;
          scroll_into_view(ctx, false);
-         return this;
+         return true;
       }
 
       char const*   _first = _text.data();
@@ -202,7 +207,7 @@ namespace cycfi { namespace elements
          _current_x = btn.pos.x-ctx.bounds.left;
          ctx.view.refresh(ctx);
       }
-      return this;
+      return true;
    }
 
    void basic_text_box::drag(context const& ctx, mouse_button btn)
@@ -263,16 +268,31 @@ namespace cycfi { namespace elements
       if (!_typing_state)
          _typing_state = capture_state();
 
+      bool replace = false;
       if (_select_start == _select_end)
+      {
          _text.insert(_select_start, text);
+      }
       else
+      {
          _text.replace(_select_start, _select_end-_select_start, text);
-      _select_end = _select_start += text.length();
+         replace = true;
+      }
 
       _layout.text(_text.data(), _text.data() + _text.size());
       layout(ctx);
 
-      scroll_into_view(ctx, true);
+      if (replace)
+      {
+         _select_end = _select_start;
+         scroll_into_view(ctx, true);
+         _select_end = _select_start += text.length();
+      }
+      else
+      {
+         _select_end = _select_start += text.length();
+         scroll_into_view(ctx, true);
+      }
       return true;
    }
 
@@ -390,7 +410,7 @@ namespace cycfi { namespace elements
             case key_code::backspace:
             case key_code::_delete:
                {
-                  delete_();
+                  delete_(k.key == key_code::_delete);
                   save_x = true;
                   add_undo(ctx, _typing_state, undo_f, capture_state());
                   handled = true;
@@ -739,7 +759,7 @@ namespace cycfi { namespace elements
       return info;
    }
 
-   void basic_text_box::delete_()
+   void basic_text_box::delete_(bool forward)
    {
       auto  start = std::min(_select_end, _select_start);
       auto  end = std::max(_select_end, _select_start);
@@ -747,7 +767,15 @@ namespace cycfi { namespace elements
       {
          if (start == end)
          {
-            if (start > 0)
+            if (forward)
+            {
+               char const* start_p = &_text[start];
+               char const* end_p = &_text[0] + _text.size();
+               char const* p = next_utf8(end_p, start_p);
+               start = int(start_p - &_text[0]);
+               _text.erase(start, p - start_p);
+            }
+            else if (start > 0)
             {
                char const* start_p = &_text[0];
                char const* end_p = &_text[start];
@@ -771,7 +799,7 @@ namespace cycfi { namespace elements
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
          clipboard(_text.substr(start, end_-start_));
-         delete_();
+         delete_(false);
       }
    }
 
@@ -1043,19 +1071,22 @@ namespace cycfi { namespace elements
       }
    }
 
-   void basic_input_box::delete_()
+   void basic_input_box::delete_(bool forward)
    {
-      basic_text_box::delete_();
+      basic_text_box::delete_(forward);
       if (on_text)
          on_text(_text);
    }
 
-   element* basic_input_box::click(context const& ctx, mouse_button btn)
+   bool basic_input_box::click(context const& ctx, mouse_button btn)
    {
+      if (btn.state != mouse_button::left)
+         return false;
+
       if (_first_focus && select_start() != select_end())
       {
          _first_focus = false;
-         return this;
+         return true;
       }
       _first_focus = false;
 

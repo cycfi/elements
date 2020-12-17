@@ -4,7 +4,7 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.9.6...3.15.0)
-project(Popups LANGUAGES C CXX VERSION "1.0.0")
+project(Popups LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -21,9 +21,10 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-if (APPLE)
-   set(MACOSX_BUNDLE_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
-   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.cycfi.popups")
-endif()
+set(ELEMENTS_APP_PROJECT "Popups")
+set(ELEMENTS_APP_TITLE "Popups")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
+set(ELEMENTS_APP_ID "com.cycfi.popups")
+set(ELEMENTS_APP_VERSION "1.0")
 
 include(ElementsConfigApp)

@@ -4,6 +4,8 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 
+project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
+
 ###############################################################################
 # Sanitizers
 
@@ -86,7 +88,7 @@ endif()
 
 if (APPLE)
    add_executable(
-      ${PROJECT_NAME}
+      ${ELEMENTS_APP_PROJECT}
       MACOSX_BUNDLE
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
@@ -94,14 +96,14 @@ if (APPLE)
    )
 elseif (UNIX AND NOT APPLE)
    add_executable(
-      ${PROJECT_NAME}
+      ${ELEMENTS_APP_PROJECT}
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
       ${ELEMENTS_APP_RESOURCES}
    )
 elseif (WIN32)
    add_executable(
-      ${PROJECT_NAME}
+      ${ELEMENTS_APP_PROJECT}
       WIN32
       ${ELEMENTS_APP_SOURCES}
       ${ELEMENTS_RESOURCES}
@@ -109,7 +111,7 @@ elseif (WIN32)
    )
 
    if (MSVC)
-      target_link_options(${PROJECT_NAME} PRIVATE
+      target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
       )
 
@@ -134,21 +136,21 @@ elseif (WIN32)
       file(COPY ${XML2} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
       set_property(
-         TARGET ${PROJECT_NAME}
+         TARGET ${ELEMENTS_APP_PROJECT}
          PROPERTY
          VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
       )
    endif()
 endif()
 
-target_compile_options(${PROJECT_NAME} PRIVATE
+target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
 )
 
 ###############################################################################
 # Libraries and linking
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(${ELEMENTS_APP_PROJECT} PRIVATE
    ${ELEMENTS_APP_DEPENDENCIES}
    elements
 )
@@ -157,21 +159,26 @@ if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)
    set(ELEMENTS_APP_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif()
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(${ELEMENTS_APP_PROJECT}
    PRIVATE "${ELEMENTS_APP_INCLUDE_DIRECTORIES}"
 )
 
 if (APPLE)
-   target_link_options(${PROJECT_NAME} PRIVATE -framework AppKit)
+   target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE -framework AppKit)
 endif()
 
 ###############################################################################
 # Resource file properties
 
+if (NOT DEFINED ELEMENTS_APP_TITLE)
+   set(ELEMENTS_APP_TITLE ${ELEMENTS_APP_PROJECT})
+endif()
+
 if (APPLE)
-   set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
-   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${PROJECT_NAME})
-   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
+   set(MACOSX_BUNDLE_BUNDLE_NAME ${ELEMENTS_APP_TITLE})
+   set(MACOSX_BUNDLE_COPYRIGHT ${ELEMENTS_APP_COPYRIGHT})
+   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${ELEMENTS_APP_ID})
+   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${ELEMENTS_APP_VERSION})
 
    set_source_files_properties(
       ${ELEMENTS_RESOURCES}
@@ -181,12 +188,12 @@ if (APPLE)
    )
 
    set_target_properties(
-      ${PROJECT_NAME}
+      ${ELEMENTS_APP_PROJECT}
       PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${ELEMENTS_ROOT}/resources/macos/plist.in
    )
 endif()
 
 if(IPO_SUPPORTED AND CMAKE_BUILD_TYPE STREQUAL "Release")
-   set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+   set_target_properties(${ELEMENTS_APP_PROJECT} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()

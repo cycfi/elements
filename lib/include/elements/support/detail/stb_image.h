@@ -6782,6 +6782,8 @@ static void *stbi__load_gif_main(stbi__context *s, int **delays, int *x, int *y,
          *delays = 0;
       }
 
+      (void)out_size; (void)delays_size; // avoid warnings
+
       do {
          u = stbi__gif_load_next(s, &g, comp, req_comp, two_back);
          if (u == (stbi_uc *) s) u = 0;  // end of animated gif marker

@@ -97,8 +97,7 @@ namespace cycfi { namespace elements
    [[deprecated("Use draw(F&& _draw) instead.")]]
    inline draw_element<F> basic(F&& _draw)
    {
-      using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(_draw) };
+      return { std::forward<remove_cvref_t<F>>(_draw) };
    }
 
    template <typename F>

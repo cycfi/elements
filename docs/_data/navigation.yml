@@ -1,6 +1,9 @@
 - label: "Home"
   url: "/"
 
+- label: "About"
+  url: "about"
+
 - label: "Gallery"
   url: "gallery"
 

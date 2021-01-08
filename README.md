@@ -6,7 +6,8 @@
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, modular GUI library. Elements is designed with these requirements in mind:
+Elements is a lightweight, fine-grained, resolution independent, modular GUI library. 
+Elements is designed with these requirements in mind:
 
 1. It should be open source with a liberal, non-viral license.
 2. It should be usable in any application and should play well with other GUI
@@ -19,6 +20,9 @@ Elements is a lightweight, fine-grained, resolution independent, modular GUI lib
 6. It should have a declarative API using modern C++. Declarative C++ code
    tells you *what* rather than *how* (imperative). The GUI should be
    declared in C++ code.
+7. Keep it simple. Make it easy to use right out of the box, with a lot of examples.
+8. Porting to a new host target should be as easy as possible, requiring 
+   porting of only a few files.
 
 Elements, is extremely lightweight… and modular. You compose very
 fine-grained, flyweight “elements” to form deep element hierarchies using a
@@ -38,8 +42,13 @@ very much welcome collaboration.
 
 ## News
 
-- 28 July 2020: Added [simple animation example in develop](
-   https://github.com/cycfi/elements/blob/develop/examples/simple_animation/main.cpp)
+- 25 September 2020: Added [thumbwheels](https://github.com/cycfi/elements/issues/231).
+- 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+  port feature complete.
+- 10 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+  port feature complete.
+- 7 September 2020: MacOS [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+  port feature complete.
 - 22 June 2020: Removed dependency on Boost. This requires some API changes to
   the `app` with additional arguments. See examples.
 - 26 May 2020: Introducing the [Artist 2D Canvas

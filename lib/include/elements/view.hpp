@@ -18,6 +18,7 @@
 #include <memory>
 #include <unordered_map>
 #include <chrono>
+#include <map>
 
 namespace cycfi { namespace elements
 {
@@ -130,9 +131,9 @@ namespace cycfi { namespace elements
       io_context::work        _work;
 
       using time_point = std::chrono::steady_clock::time_point;
-      element*                _tracking_element = nullptr;
-      tracking                _tracking_state = tracking::none;
-      time_point              _tracking_time;
+      using tracking_map = std::map<element*, time_point>;
+
+      tracking_map            _tracking;
    };
 
    ////////////////////////////////////////////////////////////////////////////

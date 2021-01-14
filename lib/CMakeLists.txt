@@ -44,7 +44,9 @@ set(ELEMENTS_SOURCES
    src/support/font.cpp
    src/support/glyphs.cpp
    src/support/pixmap.cpp
+   src/support/receiver.cpp
    src/support/rect.cpp
+   src/support/text_utils.cpp
    src/support/resource_paths.cpp
    src/support/text_utils.cpp
    src/support/theme.cpp
@@ -187,7 +189,7 @@ target_compile_options(elements PRIVATE
    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /utf-8>
+   $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /wd4456 /utf-8>
 )
 
 if (MSVC)

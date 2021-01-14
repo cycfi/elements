@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       {
          info->hdc = hdc;
          info->w = w;
-         info->h = w;
+         info->h = h;
 
          // Free-up the previous off-screen DC
          if (info->offscreen_buff)
@@ -258,13 +258,13 @@ namespace cycfi { namespace elements
          };
       }
 
-      void handle_key(base_view& _view, view_info::key_map& keys, key_info k)
+      bool handle_key(base_view& _view, view_info::key_map& keys, key_info k)
       {
          bool repeated = false;
 
          if (k.action == key_action::release
             && keys[k.key] == key_action::release)
-            return;
+            return false;
 
          if (k.action == key_action::press
             && keys[k.key] == key_action::press)
@@ -275,35 +275,35 @@ namespace cycfi { namespace elements
          if (repeated)
             k.action = key_action::repeat;
 
-         _view.key(k);
+         return _view.key(k);
       }
 
-      void on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
+      bool on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
       {
          auto const key = translate_key(wparam, lparam);
          auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
          auto const mods = get_mods();
 
          if (key == key_code::unknown)
-            return;
+            return false;
 
          if (action == key_action::release && wparam == VK_SHIFT)
          {
             // HACK: Release both Shift keys on Shift up event, as when both
             //       are pressed the first release does not emit any event
-            handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
-            handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
+            return r1 || r2;
          }
          else if (wparam == VK_SNAPSHOT)
          {
             // HACK: Key down is not reported for the Print Screen key
-            handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
-            handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
+            return r1 || r2;
          }
-         else
-         {
-            handle_key(*info->vptr, info->keys, { key, action, mods });
-         }
+
+         return handle_key(*info->vptr, info->keys, { key, action, mods });
       }
 
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
@@ -351,13 +351,13 @@ namespace cycfi { namespace elements
          info->vptr->scroll(dir, { pos.x / scale, pos.y / scale });
       }
 
-      LRESULT on_text(base_view& view, UINT message, WPARAM wparam)
+      bool on_text(base_view& view, UINT message, WPARAM wparam)
       {
          if (message == WM_UNICHAR && wparam == UNICODE_NOCHAR)
          {
             // WM_UNICHAR is not sent by Windows, but is sent by some
-            // third-party input method engine
-            // Returning true here announces support for this message
+            // third-party input method engine Returning true here announces
+            // support for this message
             return true;
          }
 
@@ -367,8 +367,8 @@ namespace cycfi { namespace elements
             return 0;
 
          if (plain)
-            view.text({ codepoint, get_mods() });
-         return 0;
+            return view.text({ codepoint, get_mods() });
+         return false;
       }
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
@@ -453,7 +453,16 @@ namespace cycfi { namespace elements
             case WM_SYSKEYDOWN:
             case WM_KEYUP:
             case WM_SYSKEYUP:
-               on_key(hwnd, info, wparam, lparam);
+               {
+                  bool handled = on_key(hwnd, info, wparam, lparam);
+                  if (!handled)
+                  {
+                     HWND rootHWnd = GetAncestor(hwnd, GA_ROOT);
+                     SendMessage(rootHWnd, message, wparam, lparam);
+                     return DefWindowProc(hwnd, message, wparam, lparam);
+                  }
+                  return handled;
+               }
                break;
 
             case WM_CHAR:

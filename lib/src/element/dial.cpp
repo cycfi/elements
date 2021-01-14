@@ -46,6 +46,12 @@ namespace cycfi { namespace elements
       }
    }
 
+   void dial_base::edit(view& view_, param_type val)
+   {
+      edit_value(this, val);
+      receiver<double>::notify_edit(view_);
+   }
+
    double dial_base::radial_value(context const& ctx, tracker_info& track_info)
    {
       using namespace radial_consts;

@@ -252,6 +252,42 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Click Intercept
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct click_intercept_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                              click_intercept_element(Subject subject)
+                               : base_type(std::move(subject))
+                              {}
+
+      bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    wants_control() const override { return true; }
+      bool                    wants_focus() const override { return true; }
+
+      using click_function = std::function<bool(mouse_button btn)>;
+
+      click_function          on_click = [](auto){ return false; };
+   };
+
+   template <typename Subject>
+   inline click_intercept_element<remove_cvref_t<Subject>>
+   click_intercept(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   template <typename Subject>
+   inline bool click_intercept_element<Subject>::click(context const& ctx, mouse_button btn)
+   {
+      if (on_click(btn))
+         return true;
+      return this->subject().click(ctx, btn);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Hidable
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>

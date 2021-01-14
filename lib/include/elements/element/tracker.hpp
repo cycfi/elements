@@ -22,6 +22,9 @@ namespace cycfi { namespace elements
                         tracker_info(tracker_info const&) = default;
       virtual           ~tracker_info() = default;
 
+      point             distance() const;    // Distance from start state
+      point             movement() const;    // Movement from previous state
+
       point             start;
       point             current = start;
       point             previous = start;
@@ -69,6 +72,16 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   inline point tracker_info::distance() const
+   {
+      return { current.x-start.x, current.y-start.y };
+   }
+
+   inline point tracker_info::movement() const
+   {
+      return { current.x-previous.x, current.y-previous.y };
+   }
+
    template <typename Base>
    tracker<Base>::tracker(tracker const& rhs)
     : Base(rhs)
@@ -103,12 +116,12 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline void tracker<Base>::drag(context const& ctx, mouse_button btn)
    {
-      this->on_tracking(ctx, element::while_tracking);
       state->previous = state->current;
       state->current = btn.pos;
       state->current = state->current.move(-state->offset.x, -state->offset.y);
       state->modifiers = btn.modifiers;
       keep_tracking(ctx, *state);
+      this->on_tracking(ctx, element::while_tracking);
    }
 
    template <typename Base>

@@ -39,6 +39,7 @@ namespace cycfi { namespace elements
 
       double               value() const override;
       void                 value(double val) override;
+      void                 edit(view& view_, double val) override;
 
       dial_function        on_change;
 

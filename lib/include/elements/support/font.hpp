@@ -306,7 +306,7 @@ namespace cycfi { namespace elements
       return _handle;
    }
 
-#ifdef __APPLE__
+#if defined(__APPLE__)
    fs::path get_user_fonts_directory();
 #endif
 

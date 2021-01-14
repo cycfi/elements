@@ -50,6 +50,7 @@ namespace cycfi { namespace elements
       bool              hilite() const          { return _state.hilite; }
 
       void              send(bool val) override;
+      void              edit(view& view_, bool val) override;
       void              on_send(callback_function f) override;
       button_function   on_click;
 
@@ -65,6 +66,12 @@ namespace cycfi { namespace elements
 
       button_state      _state;
    };
+
+   inline void basic_button::edit(view& view_, bool val)
+   {
+      send(val);
+      receiver<bool>::notify_edit(view_);
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button

@@ -82,9 +82,13 @@ namespace cycfi { namespace elements
                               template <typename... E>
       void                    content(E&&... elements);
 
+      using layers_vector = std::vector<element_ptr>;
+
       void                    add(element_ptr e);
       void                    remove(element_ptr e);
+      void                    move_to_front(element_ptr e);
       bool                    is_open(element_ptr e);
+      layers_vector const&    layers() const;
 
       view_limits             limits() const;
       mouse_button            current_button() const;
@@ -257,6 +261,33 @@ namespace cycfi { namespace elements
    {
       auto i = std::find(_content.begin(), _content.end(), e);
       return i != _content.end();
+   }
+
+   inline void view::move_to_front(element_ptr e)
+   {
+      if (e && _content.back() != e)
+      {
+         io().post(
+            [e, this]
+            {
+               auto i = std::find(_content.begin(), _content.end(), e);
+               if (i != _content.end())
+               {
+                  end_focus();
+                  _content.erase(i);
+                  _content.insert(_content.end(), e);
+                  _content.reset();
+                  layout();
+                  begin_focus();
+               }
+            }
+         );
+      }
+   }
+
+   inline view::layers_vector const& view::layers() const
+   {
+      return _content;
    }
 
    inline view_limits view::limits() const

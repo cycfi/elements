@@ -11,6 +11,7 @@ cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
 set(ELEMENTS_SOURCES
    src/element/button.cpp
+   src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
    src/element/dynamic_list.cpp

@@ -35,33 +35,38 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // tracker tracks the mouse movement.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = element>
+   template <typename Base = element, typename TrackerInfo = tracker_info>
    class tracker : public Base
    {
    public:
 
-                               template <typename... T>
-                               tracker(T&&... args)
-                                : Base(args...)
-                               {}
+      using tracker_info = TrackerInfo;
 
-                               tracker(tracker const& rhs);
-                               tracker(tracker&& rhs) = default;
-      tracker&                 operator=(tracker const& rhs);
-      tracker&                 operator=(tracker&& rhs) = default;
+                              template <typename... T>
+                              tracker(T&&... args)
+                               : Base(args...)
+                              {}
 
-      bool                     wants_control() const override;
-      bool                     click(context const& ctx, mouse_button btn) override;
-      void                     drag(context const& ctx, mouse_button btn) override;
+                              tracker(tracker const& rhs);
+                              tracker(tracker&& rhs) = default;
+      tracker&                operator=(tracker const& rhs);
+      tracker&                operator=(tracker&& rhs) = default;
+
+      bool                    wants_control() const override { return true; }
+      bool                    click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+
+      tracker_info*           get_state() { return state.get(); }
+      tracker_info const*     get_state() const { return state.get(); }
 
    protected:
 
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
 
       virtual tracker_info_ptr new_state(context const& ctx, point start, int modifiers);
-      virtual void             begin_tracking(context const& ctx, tracker_info& track_info);
-      virtual void             keep_tracking(context const& ctx, tracker_info& track_info);
-      virtual void             end_tracking(context const& ctx, tracker_info& track_info);
+      virtual void             begin_tracking(context const& /*ctx*/, tracker_info& /*track_info*/) {}
+      virtual void             keep_tracking(context const& /*ctx*/, tracker_info& /*track_info*/) {}
+      virtual void             end_tracking(context const& /*ctx*/, tracker_info& /*track_info*/) {}
       void                     track_scroll(context const& ctx, point dir, point p);
 
    private:
@@ -82,21 +87,23 @@ namespace cycfi { namespace elements
       return { current.x-previous.x, current.y-previous.y };
    }
 
-   template <typename Base>
-   tracker<Base>::tracker(tracker const& rhs)
+   template <typename Base, typename TrackerInfo>
+   tracker<Base, TrackerInfo>::tracker(tracker const& rhs)
     : Base(rhs)
    {}
 
-   template <typename Base>
-   tracker<Base>& tracker<Base>::operator=(tracker const& rhs)
+   template <typename Base, typename TrackerInfo>
+   tracker<Base, TrackerInfo>&
+   tracker<Base, TrackerInfo>::operator=(tracker const& rhs)
    {
       Base::operator=(rhs);
       state.reset();
       return *this;
    }
 
-   template <typename Base>
-   inline bool tracker<Base>::click(context const& ctx, mouse_button btn)
+   template <typename Base, typename TrackerInfo>
+   inline bool
+   tracker<Base, TrackerInfo>::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -113,46 +120,31 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   template <typename Base>
-   inline void tracker<Base>::drag(context const& ctx, mouse_button btn)
+   template <typename Base, typename TrackerInfo>
+   inline void
+   tracker<Base, TrackerInfo>::drag(context const& ctx, mouse_button btn)
    {
-      state->previous = state->current;
-      state->current = btn.pos;
-      state->current = state->current.move(-state->offset.x, -state->offset.y);
-      state->modifiers = btn.modifiers;
-      keep_tracking(ctx, *state);
-      this->on_tracking(ctx, element::while_tracking);
+      if (state)
+      {
+         state->previous = state->current;
+         state->current = btn.pos;
+         state->current = state->current.move(-state->offset.x, -state->offset.y);
+         state->modifiers = btn.modifiers;
+         keep_tracking(ctx, *state);
+         this->on_tracking(ctx, element::while_tracking);
+      }
    }
 
-   template <typename Base>
-   inline typename tracker<Base>::tracker_info_ptr tracker<Base>::new_state(context const& /* ctx */, point start, int modifiers)
+   template <typename Base, typename TrackerInfo>
+   inline typename tracker<Base, TrackerInfo>::tracker_info_ptr
+   tracker<Base, TrackerInfo>::new_state(context const& /* ctx */, point start, int modifiers)
    {
       return std::make_unique<tracker_info>(start, modifiers);
    }
 
-   template <typename Base>
-   inline bool tracker<Base>::wants_control() const
-   {
-      return true;
-   }
-
-   template <typename Base>
-   void tracker<Base>::begin_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
-   {
-   }
-
-   template <typename Base>
-   void tracker<Base>::keep_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
-   {
-   }
-
-   template <typename Base>
-   void tracker<Base>::end_tracking(context const& /*ctx*/, tracker_info& /*track_info*/)
-   {
-   }
-
-   template <typename Base>
-   inline void tracker<Base>::track_scroll(context const& ctx, point /* dir */, point /* p */)
+   template <typename Base, typename TrackerInfo>
+   inline void
+   tracker<Base, TrackerInfo>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
    }

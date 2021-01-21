@@ -79,6 +79,8 @@ namespace cycfi { namespace elements
       void                    subject(Subject const& subject_);
       element const&          subject() const override { return _subject; }
       element&                subject() override { return _subject; }
+      Subject const&          actual_subject() const { return _subject; }
+      Subject&                actual_subject() { return _subject; }
 
    private:
 

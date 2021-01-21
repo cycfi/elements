@@ -64,7 +64,7 @@ namespace cycfi { namespace elements
 
       auto menu_btn = text_button<basic_menu>(
          margin(
-             get_theme().button_margin,
+            get_theme().button_margin,
             htile(
                align_left(hold(btn_text)),
                align_right(left_margin(12, icon(icons::down_dir, 1.0)))
@@ -80,6 +80,7 @@ namespace cycfi { namespace elements
    selection_menu(
       std::function<void(string_view item)> on_select
     , menu_selector const& items
+    , float text_align
    )
    {
       auto r = selection_menu(items.size()? std::string(items[0]) : "");
@@ -89,7 +90,7 @@ namespace cycfi { namespace elements
          vtile_composite list;
          for (std::size_t i = 0; i != items.size(); ++i)
          {
-            auto e = share(menu_item(std::string(items[i])));
+            auto e = share(menu_item(std::string(items[i]), text_align));
             auto label = find_subject<text_reader*>(e.get());
             if (label)
             {

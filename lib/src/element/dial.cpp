@@ -9,8 +9,6 @@
 #include <elements/view.hpp>
 #include <cmath>
 
-#include <iostream>
-
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////

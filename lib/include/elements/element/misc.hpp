@@ -9,6 +9,7 @@
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/element/text.hpp>
+#include <elements/element/size.hpp>
 #include <elements/support/theme.hpp>
 #include <infra/support.hpp>
 
@@ -17,6 +18,20 @@
 
 namespace cycfi { namespace elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // spacers: empty horizontal or vertical element with specified width or
+   // height.
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto vspacer(float size)
+   {
+      return vsize(size, element{});
+   }
+
+   inline auto hspacer(float size)
+   {
+      return hsize(size, element{});
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Box: A simple colored box.
    ////////////////////////////////////////////////////////////////////////////
@@ -146,7 +161,6 @@ namespace cycfi { namespace elements
    class panel : public element
    {
    public:
-
                      panel(float opacity_ = get_theme().panel_color.alpha)
                       : _opacity(opacity_)
                      {}

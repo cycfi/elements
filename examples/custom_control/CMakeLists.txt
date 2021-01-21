@@ -22,9 +22,9 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
 endif()
 
 set(ELEMENTS_APP_PROJECT "CustomControl")
-set(ELEMENTS_APP_TITLE "Custom control")
+set(ELEMENTS_APP_TITLE "Custom Control")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Aravindhan K")
-set(ELEMENTS_APP_ID "com.cycfi.custom_control")
+set(ELEMENTS_APP_ID "com.cycfi.custom-control")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_RESOURCES

@@ -42,6 +42,7 @@ very much welcome collaboration.
 
 ## News
 
+- 19 January 2020: Added Child Windows to develop (will merge to master in due time). [Example](https://bit.ly/3iLMJt2) 
 - 25 September 2020: Added [thumbwheels](https://github.com/cycfi/elements/issues/231).
 - 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
   port feature complete.

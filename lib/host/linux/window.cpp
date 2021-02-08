@@ -104,6 +104,19 @@ namespace cycfi { namespace elements
             hints.min_height = limits_.min.y;
             hints.max_height = std::min<float>(limits_.max.y, max);
 
+            if (auto child = gtk_bin_get_child(GTK_BIN(win)))
+            {
+               // Find the difference between the child height and window height
+               // to determine the titlebar height.
+               auto window_height = gtk_widget_get_allocated_height(
+                  _window->host
+               );
+               auto child_height = gtk_widget_get_allocated_height(child);
+
+               hints.min_height += (window_height - child_height);
+               hints.max_height += (window_height - child_height);
+            }
+
             gtk_window_set_geometry_hints(
                win,
                _window->host,

@@ -269,6 +269,21 @@ namespace cycfi { namespace elements
                return false;
          }
 
+         switch (event->button)
+         {
+            case 1:
+               btn.state = mouse_button::left;
+               break;
+            case 2:
+               btn.state = mouse_button::middle;
+               break;
+            case 3:
+               btn.state = mouse_button::right;
+               break;
+            default:
+               return false;
+         }
+
          if (!get_mouse(event, btn, view))
             return false;
          return true;

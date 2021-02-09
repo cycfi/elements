@@ -574,7 +574,7 @@ namespace cycfi { namespace elements
       {
          auto pwd = fs::current_path();
          auto resource_path = pwd / "resources";
-         add_search_path(resource_path);
+         artist::add_search_path(resource_path);
       }
    };
 

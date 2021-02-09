@@ -133,6 +133,7 @@ namespace cycfi { namespace elements
          int            _click_count = 0;
          time_point     _scroll_start = {};
          double         _velocity = 0;
+         point          _scroll_dir;
          key_map        _keys = {};
          skia_context   _skia_context;
       };
@@ -336,19 +337,19 @@ namespace cycfi { namespace elements
          {
             // HACK: Release both Shift keys on Shift up event, as when both
             //       are pressed the first release does not emit any event
-            bool r1 = handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
-            bool r2 = handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
+            bool r1 = handle_key(*info->_vptr, info->_keys, { key_code::left_shift, action, mods });
+            bool r2 = handle_key(*info->_vptr, info->_keys, { key_code::right_shift, action, mods });
             return r1 || r2;
          }
          else if (wparam == VK_SNAPSHOT)
          {
             // HACK: Key down is not reported for the Print Screen key
-            bool r1 = handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
-            bool r2 = handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
+            bool r1 = handle_key(*info->_vptr, info->_keys, { key, key_action::press, mods });
+            bool r2 = handle_key(*info->_vptr, info->_keys, { key, key_action::release, mods });
             return r1 || r2;
          }
 
-         return handle_key(*info->vptr, info->keys, { key, action, mods });
+         return handle_key(*info->_vptr, info->_keys, { key, action, mods });
       }
 
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
@@ -374,15 +375,15 @@ namespace cycfi { namespace elements
 
          bool reset_accel =
             elapsed > std::chrono::milliseconds(250) ||
-            (info->scroll_dir.x > 0 != dir.x > 0) ||
-            (info->scroll_dir.y > 0 != dir.y > 0)
+            (info->_scroll_dir.x > 0 != dir.x > 0) ||
+            (info->_scroll_dir.y > 0 != dir.y > 0)
             ;
-         info->scroll_dir = dir;
+         info->_scroll_dir = dir;
 
          if (reset_accel)
-            info->velocity = 1.0;
+            info->_velocity = 1.0;
          else
-            info->velocity *= acceleration;
+            info->_velocity *= acceleration;
 
          dir.x *= info->_velocity;
          dir.y *= info->_velocity;
@@ -545,7 +546,7 @@ namespace cycfi { namespace elements
 
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
-            add_search_path(resource_path);
+            artist::add_search_path(resource_path);
          }
       };
    }

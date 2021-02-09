@@ -33,11 +33,23 @@ namespace cycfi { namespace elements
       bool              tracking : 1;
    };
 
-   class basic_button : public proxy_base, public receiver<bool>, public sender<bool>
+   ////////////////////////////////////////////////////////////////////////////
+   // button_base: commmon base class for buttons
+   ////////////////////////////////////////////////////////////////////////////
+   struct button_base
+   {
+      using button_function = std::function<void(bool)>;
+
+      button_function   on_click;
+   };
+
+   class basic_button
+    : public button_base
+    , public proxy_base
+    , public receiver<bool>
+    , public sender<bool>
    {
    public:
-
-      using button_function = std::function<void(bool)>;
 
       bool              wants_control() const override;
       bool              click(context const& ctx, mouse_button btn) override;
@@ -50,8 +62,8 @@ namespace cycfi { namespace elements
       bool              hilite() const          { return _state.hilite; }
 
       void              send(bool val) override;
+      void              edit(view& view_, bool val) override;
       void              on_send(callback_function f) override;
-      button_function   on_click;
 
    protected:
 
@@ -66,16 +78,23 @@ namespace cycfi { namespace elements
       button_state      _state;
    };
 
+   inline void basic_button::edit(view& view_, bool val)
+   {
+      send(val);
+      receiver<bool>::notify_edit(view_);
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Layered Button
    ////////////////////////////////////////////////////////////////////////////
    class layered_button
-    : public array_composite<2, deck_element>, public receiver<bool>, public sender<bool>
+    : public button_base
+    , public array_composite<2, deck_element>, public receiver<bool>
+    , public sender<bool>
    {
    public:
 
       using base_type = array_composite<2, deck_element>;
-      using button_function = std::function<void(bool)>;
 
                         template <typename W1, typename W2>
                         layered_button(W1&& off, W2&& on);
@@ -90,7 +109,6 @@ namespace cycfi { namespace elements
 
       void              send(bool val) override;
       void              on_send(callback_function f) override;
-      button_function   on_click;
 
    protected:
 

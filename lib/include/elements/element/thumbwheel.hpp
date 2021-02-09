@@ -36,6 +36,7 @@ namespace cycfi { namespace elements
 
       point                value() const override;
       void                 value(point val) override;
+      void                 edit(view& view_, point val) override;
 
       thumbwheel_function  on_change;
 

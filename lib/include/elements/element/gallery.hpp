@@ -19,5 +19,6 @@
 #include <elements/element/gallery/radio_button.hpp>
 #include <elements/element/gallery/tab.hpp>
 #include <elements/element/gallery/text_entry.hpp>
+#include <elements/element/gallery/child_window.hpp>
 
 #endif

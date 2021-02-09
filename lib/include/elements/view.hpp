@@ -18,6 +18,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <stack>
+#include <map>
 
 namespace cycfi { namespace elements
 {
@@ -38,8 +39,8 @@ namespace cycfi { namespace elements
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;
       void                    scroll(point dir, point p) override;
-      void                    key(key_info const& k) override;
-      void                    text(text_info const& info) override;
+      bool                    key(key_info const& k) override;
+      bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
       void                    poll() override;
@@ -81,9 +82,13 @@ namespace cycfi { namespace elements
                               template <typename... E>
       void                    content(E&&... elements);
 
+      using layers_vector = std::vector<element_ptr>;
+
       void                    add(element_ptr e);
       void                    remove(element_ptr e);
+      void                    move_to_front(element_ptr e);
       bool                    is_open(element_ptr e);
+      layers_vector const&    layers() const;
 
       view_limits             limits() const;
       mouse_button            current_button() const;
@@ -130,9 +135,9 @@ namespace cycfi { namespace elements
       io_context::work        _work;
 
       using time_point = std::chrono::steady_clock::time_point;
-      element*                _tracking_element = nullptr;
-      tracking                _tracking_state = tracking::none;
-      time_point              _tracking_time;
+      using tracking_map = std::map<element*, time_point>;
+
+      tracking_map            _tracking;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -256,6 +261,33 @@ namespace cycfi { namespace elements
    {
       auto i = std::find(_content.begin(), _content.end(), e);
       return i != _content.end();
+   }
+
+   inline void view::move_to_front(element_ptr e)
+   {
+      if (e && _content.back() != e)
+      {
+         io().post(
+            [e, this]
+            {
+               auto i = std::find(_content.begin(), _content.end(), e);
+               if (i != _content.end())
+               {
+                  end_focus();
+                  _content.erase(i);
+                  _content.insert(_content.end(), e);
+                  _content.reset();
+                  layout();
+                  begin_focus();
+               }
+            }
+         );
+      }
+   }
+
+   inline view::layers_vector const& view::layers() const
+   {
+      return _content;
    }
 
    inline view_limits view::limits() const

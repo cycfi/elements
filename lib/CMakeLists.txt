@@ -25,6 +25,7 @@ add_subdirectory(artist)
 
 set(ELEMENTS_SOURCES
    src/element/button.cpp
+   src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
    src/element/dynamic_list.cpp
@@ -55,6 +56,7 @@ set(ELEMENTS_SOURCES
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
    src/support/text_utils.cpp
+   src/support/receiver.cpp
    src/support/theme.cpp
    src/view.cpp
 )
@@ -183,7 +185,7 @@ target_compile_options(elements PRIVATE
    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
    $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Wpedantic -ftemplate-backtrace-limit=0>
-   $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /wd5030 /wd4201 /utf-8>
+   $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /wd4456 /utf-8>
 )
 
 if (MSVC)
@@ -194,6 +196,10 @@ endif()
 if (APPLE)
    # Not sure why APPLE is not picking the target_compile_options above
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
+endif()
+
+if (APPLE)
+   set(lib_dir "/usr/local/opt")
 endif()
 
 ###############################################################################
@@ -207,6 +213,11 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
    endif()
+elseif (APPLE)
+   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+   target_include_directories(elements PUBLIC ${fontconfig_INCLUDE_DIRS})
+   target_link_libraries(elements PUBLIC "${lib_dir}/fontconfig/lib/libfontconfig.a")  # Static link
+   target_link_libraries(elements PUBLIC "${lib_dir}/expat/lib/libexpat.a")            # Static link
 else()
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
@@ -223,6 +234,11 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
+elseif (APPLE)
+   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+   target_include_directories(elements PUBLIC ${freetype2_INCLUDE_DIRS})
+   target_link_libraries(elements PUBLIC "${lib_dir}/freetype2/lib/libfreetype.a")     # Static link
+   target_link_libraries(elements PUBLIC "${lib_dir}/bzip2/lib/libbz2.a")              # Static link
 elseif (UNIX OR WIN32)
    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
    target_link_libraries(elements PUBLIC PkgConfig::freetype2)

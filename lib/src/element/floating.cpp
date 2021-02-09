@@ -30,5 +30,8 @@ namespace cycfi { namespace elements
          ctx.bounds.height(e_limits.min.y);
       else if (h > e_limits.max.y)
          ctx.bounds.height(e_limits.max.y);
+
+      ctx.bounds = center(ctx.bounds, this->bounds());
+      this->bounds(ctx.bounds);
    }
 }}

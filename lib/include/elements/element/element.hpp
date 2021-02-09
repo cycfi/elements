@@ -16,6 +16,7 @@ namespace cycfi { namespace elements
 {
    struct basic_context;
    class context;
+   class view;
 
    ////////////////////////////////////////////////////////////////////////////
    // Elements
@@ -62,6 +63,7 @@ namespace cycfi { namespace elements
    protected:
 
       void                    on_tracking(context const& ctx, tracking state);
+      void                    on_tracking(view& view_, tracking state);
    };
 
    ////////////////////////////////////////////////////////////////////////////

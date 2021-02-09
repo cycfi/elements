@@ -44,10 +44,9 @@ namespace cycfi { namespace elements
    {
       init_app(std::string id)
       {
-         // $$$ TODO: fixme; remove for now $$$
-         // const fs::path resources_path = find_resources();
-         // font_paths().push_back(resources_path);
-         // resource_paths.push_back(resources_path);
+         const fs::path resources_path = find_resources();
+         font_paths().push_back(resources_path);
+         add_search_path(resources_path);
 
          the_app = gtk_application_new(
             id.c_str()

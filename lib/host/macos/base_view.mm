@@ -149,13 +149,13 @@ namespace
       };
    }
 
-   void handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
+   bool handle_key(key_map& keys, ph::base_view& _view, ph::key_info k)
    {
       using ph::key_action;
       bool repeated = false;
 
       if (k.action == key_action::release && keys[k.key] == key_action::release)
-         return;
+         return false;
 
       if (k.action == key_action::press && keys[k.key] == key_action::press)
          repeated = true;
@@ -165,7 +165,7 @@ namespace
       if (repeated)
          k.action = key_action::repeat;
 
-      _view.key(k);
+      return _view.key(k);
    }
 
    void get_window_pos(NSWindow* window, int& xpos, int& ypos)
@@ -177,11 +177,11 @@ namespace
       ypos = transformY(content_rect.origin.y + content_rect.size.height);
    }
 
-   void handle_text(ph::base_view& _view, ph::text_info info)
+   bool handle_text(ph::base_view& _view, ph::text_info info)
    {
       if (info.codepoint < 32 || (info.codepoint > 126 && info.codepoint < 160))
-         return;
-      _view.text(info);
+         return false;
+      return _view.text(info);
    }
 }
 
@@ -208,6 +208,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    skia_context   _skia_context;
 #endif
 
+   bool                             _text_inserted;
 }
 @end
 
@@ -249,6 +250,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 #endif
 
    [self setPostsBoundsChangedNotifications : YES];
+   _text_inserted = false;
 }
 
 - (void) dealloc
@@ -536,8 +538,11 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   handle_key(_keys, *_view, { key, ph::key_action::press, mods });
-   [self interpretKeyEvents : [NSArray arrayWithObject:event]];
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   _text_inserted = false;
+   [self interpretKeyEvents : [NSArray arrayWithObject : event]];
+   if (!handled && !_text_inserted)
+      [[self nextResponder] keyUp : event];
 }
 
 - (void) flagsChanged : (NSEvent*) event
@@ -569,7 +574,9 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   if (!handled)
+      [[self nextResponder] keyUp : event];
 }
 
 - (BOOL) hasMarkedText
@@ -630,7 +637,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
 }
 
-- (void) insertText:(id)string replacementRange : (NSRange)replacementRange
+- (void) insertText : (id)string replacementRange : (NSRange)replacementRange
 {
    auto*       event = [NSApp currentEvent];
    auto const  mods = ph::translate_flags([event modifierFlags]);
@@ -640,10 +647,10 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)
    {
-     const unichar codepoint = [characters characterAtIndex:i];
-     if ((codepoint & 0xff00) == 0xf700)
-        continue;
-     handle_text(*_view, { codepoint, mods });
+      const unichar codepoint = [characters characterAtIndex:i];
+      if ((codepoint & 0xff00) == 0xf700)
+         continue;
+      _text_inserted = handle_text(*_view, { codepoint, mods });
    }
 }
 

@@ -14,11 +14,6 @@
 
 namespace cycfi { namespace elements
 {
-   using canvas = artist::canvas;
-   using color = artist::color;
-   using circle = artist::circle;
-   namespace colors = artist::colors;
-
    enum class dial_mode_enum : int
    {
       linear,
@@ -44,6 +39,7 @@ namespace cycfi { namespace elements
 
       double               value() const override;
       void                 value(double val) override;
+      void                 edit(view& view_, double val) override;
 
       dial_function        on_change;
 

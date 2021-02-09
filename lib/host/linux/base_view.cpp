@@ -568,6 +568,16 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
+   struct init_view_class
+   {
+      init_view_class()
+      {
+         auto pwd = fs::current_path();
+         auto resource_path = pwd / "resources";
+         add_search_path(resource_path);
+      }
+   };
+
    base_view::base_view(extent /* size_ */)
     : base_view(new host_view)
    {

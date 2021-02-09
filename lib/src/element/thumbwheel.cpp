@@ -45,10 +45,16 @@ namespace cycfi { namespace elements
          this_->value(val);
          if (this_->on_change)
          {
-            auto val = this_->value();
-            this_->on_change(val);
+            auto new_val = this_->value();
+            this_->on_change(new_val);
          }
       }
+   }
+
+   void thumbwheel_base::edit(view& view_, point val)
+   {
+      edit_value(this, val);
+      receiver<point>::notify_edit(view_);
    }
 
    point thumbwheel_base::compute_value(context const& /*ctx*/, tracker_info& track_info)

@@ -303,13 +303,13 @@ namespace cycfi { namespace elements
          };
       }
 
-      void handle_key(base_view& _view, view_info::key_map& keys, key_info k)
+      bool handle_key(base_view& _view, view_info::key_map& keys, key_info k)
       {
          bool repeated = false;
 
          if (k.action == key_action::release
             && keys[k.key] == key_action::release)
-            return;
+            return false;
 
          if (k.action == key_action::press
             && keys[k.key] == key_action::press)
@@ -320,35 +320,35 @@ namespace cycfi { namespace elements
          if (repeated)
             k.action = key_action::repeat;
 
-         _view.key(k);
+         return _view.key(k);
       }
 
-      void on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
+      bool on_key(HWND /* hwnd */, view_info* info, WPARAM wparam, LPARAM lparam)
       {
          auto const key = translate_key(wparam, lparam);
          auto const action = ((lparam >> 31) & 1) ? key_action::release : key_action::press;
          auto const mods = get_mods();
 
          if (key == key_code::unknown)
-            return;
+            return false;
 
          if (action == key_action::release && wparam == VK_SHIFT)
          {
             // HACK: Release both Shift keys on Shift up event, as when both
             //       are pressed the first release does not emit any event
-            handle_key(*info->_vptr, info->_keys, {key_code::left_shift, action, mods });
-            handle_key(*info->_vptr, info->_keys, {key_code::right_shift, action, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
+            return r1 || r2;
          }
          else if (wparam == VK_SNAPSHOT)
          {
             // HACK: Key down is not reported for the Print Screen key
-            handle_key(*info->_vptr, info->_keys, {key, key_action::press, mods });
-            handle_key(*info->_vptr, info->_keys, {key, key_action::release, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
+            return r1 || r2;
          }
-         else
-         {
-            handle_key(*info->_vptr, info->_keys, {key, action, mods });
-         }
+
+         return handle_key(*info->vptr, info->keys, { key, action, mods });
       }
 
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
@@ -365,18 +365,24 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
+         constexpr auto acceleration = 1.1;
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->_scroll_start;
          info->_scroll_start = now;
 
          std::chrono::duration<double, std::milli> fp_ms = elapsed;
-         auto velocity = (1.0 / fp_ms.count());
 
-         if (elapsed > std::chrono::milliseconds(500))
-            info->_velocity = velocity;
+         bool reset_accel =
+            elapsed > std::chrono::milliseconds(250) ||
+            (info->scroll_dir.x > 0 != dir.x > 0) ||
+            (info->scroll_dir.y > 0 != dir.y > 0)
+            ;
+         info->scroll_dir = dir;
+
+         if (reset_accel)
+            info->velocity = 1.0;
          else
-            // Leaky integrator
-            info->_velocity = velocity + 0.9 * (info->_velocity - velocity);
+            info->velocity *= acceleration;
 
          dir.x *= info->_velocity;
          dir.y *= info->_velocity;
@@ -390,13 +396,13 @@ namespace cycfi { namespace elements
          info->_vptr->scroll(dir, {pos.x / scale, pos.y / scale });
       }
 
-      LRESULT on_text(base_view& view, UINT message, WPARAM wparam)
+      bool on_text(base_view& view, UINT message, WPARAM wparam)
       {
          if (message == WM_UNICHAR && wparam == UNICODE_NOCHAR)
          {
             // WM_UNICHAR is not sent by Windows, but is sent by some
-            // third-party input method engine
-            // Returning true here announces support for this message
+            // third-party input method engine Returning true here announces
+            // support for this message
             return true;
          }
 
@@ -406,12 +412,14 @@ namespace cycfi { namespace elements
             return 0;
 
          if (plain)
-            view.text({ codepoint, get_mods() });
-         return 0;
+            return view.text({ codepoint, get_mods() });
+         return false;
       }
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
+         constexpr auto mouse_wheel_line_delta = 120.0f;
+
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -465,14 +473,14 @@ namespace cycfi { namespace elements
             case WM_MOUSEWHEEL:
                {
                   float delta = GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { 0, delta });
+                  on_scroll(hwnd, info, lparam, { 0, delta / mouse_wheel_line_delta });
                }
                break;
 
             case WM_MOUSEHWHEEL:
                {
                   float delta = -GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { delta, 0 });
+                  on_scroll(hwnd, info, lparam, { delta / mouse_wheel_line_delta, 0 });
                }
                break;
 
@@ -490,7 +498,16 @@ namespace cycfi { namespace elements
             case WM_SYSKEYDOWN:
             case WM_KEYUP:
             case WM_SYSKEYUP:
-               on_key(hwnd, info, wparam, lparam);
+               {
+                  bool handled = on_key(hwnd, info, wparam, lparam);
+                  if (!handled)
+                  {
+                     HWND rootHWnd = GetAncestor(hwnd, GA_ROOT);
+                     SendMessage(rootHWnd, message, wparam, lparam);
+                     return DefWindowProc(hwnd, message, wparam, lparam);
+                  }
+                  return handled;
+               }
                break;
 
             case WM_CHAR:
@@ -525,6 +542,10 @@ namespace cycfi { namespace elements
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClassW(&windowClass))
                MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
+
+            auto pwd = fs::current_path();
+            auto resource_path = pwd / "resources";
+            add_search_path(resource_path);
          }
       };
    }

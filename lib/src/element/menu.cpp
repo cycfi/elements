@@ -183,7 +183,7 @@ namespace cycfi { namespace elements
                last->scroll_into_view();
             }
          }
-         return true;
+         return false;
       }
 
       // Call base key

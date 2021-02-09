@@ -246,15 +246,15 @@ namespace cycfi { namespace elements
       if (info.element)
       {
          _cursor_tracking = info.index;
-         auto status_ = cursor_tracking::hovering;
+         status = cursor_tracking::hovering;
          if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
-             status_ = cursor_tracking::entering;
+             status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = at(_cursor_tracking);
          context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
-         return e.cursor(ectx, p, status_);
+         return e.cursor(ectx, p, status);
       }
 
       return false;

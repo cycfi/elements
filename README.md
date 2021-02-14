@@ -1,8 +1,8 @@
-# ![Elements-Logo](docs/assets/images/elements.png) Elements C++ GUI library
+# ![Elements-Logo](https://cycfi.github.io/assets/img/elements/elements.png) Elements C++ GUI library
 
 [![CMake Build Matrix](https://github.com/cycfi/elements/workflows/Build/badge.svg)](https://github.com/cycfi/elements/actions?query=workflow%3ABuild)
 
-![alt Photon Sampler](docs/assets/images/photon_sampler.jpg)
+![alt Photon Sampler](https://cycfi.github.io/assets/img/elements/photon_sampler.jpg)
 
 ## Introduction
 
@@ -42,10 +42,11 @@ very much welcome collaboration.
 
 ## News
 
+- 19 January 2020: Added Child Windows to develop (will merge to master in due time). [See Example](https://bit.ly/3iLMJt2).
 - 25 September 2020: Added [thumbwheels](https://github.com/cycfi/elements/issues/231).
 - 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
   port feature complete.
-- 10 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
+- 10 September 2020: Windows [Artist 2D Canvas Library](https://github.com/cycfi/artist)
   port feature complete.
 - 7 September 2020: MacOS [Artist 2D Canvas Library](https://github.com/cycfi/artist)
   port feature complete.

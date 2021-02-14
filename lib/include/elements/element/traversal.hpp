@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // find_subject utility finds the outermost subject of the given pointer
+   // find_subject utility finds the outermost subject with the given pointer
    // type or nullptr if not found. Searches subjects of proxies only.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
@@ -47,7 +47,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // find_element utility finds the outermost subject of the given pointer
+   // find_element utility finds the outermost subject with the given pointer
    // type or nullptr if not found. Searches an element and if it is a proxy,
    // searches its subject too.
    ////////////////////////////////////////////////////////////////////////////
@@ -99,6 +99,24 @@ namespace cycfi { namespace elements
          p = p->parent;
       }
       return result;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_parent utility finds the innermost parent with the given pointer
+   // type or nullptr if not found, given a context. If successful, returns a
+   // pointer to the parent.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Ptr>
+   inline Ptr find_parent(context const& ctx)
+   {
+      auto p = ctx.parent;
+      while (p)
+      {
+         if (auto* e = detail::find_element_impl<Ptr>(p->element))
+            return e;
+         p = p->parent;
+      }
+      return nullptr;
    }
 }}
 

@@ -246,7 +246,7 @@ namespace cycfi { namespace elements
       if (info.element)
       {
          _cursor_tracking = info.index;
-         auto status = cursor_tracking::hovering;
+         status = cursor_tracking::hovering;
          if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
             status = cursor_tracking::entering;

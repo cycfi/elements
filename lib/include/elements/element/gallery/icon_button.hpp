@@ -24,6 +24,13 @@ namespace cycfi { namespace elements
     , bool hilite
    );
 
+   void draw_plain_icon_button(
+      context const& ctx
+    , uint32_t code
+    , float size
+    , bool hilite
+   );
+
    template <bool state, bool hilite = state>
    struct icon_button_element : element
    {
@@ -45,11 +52,29 @@ namespace cycfi { namespace elements
       color                   _body_color;
    };
 
+   template <bool hilite>
+   struct plain_icon_button_element : element
+   {
+                              plain_icon_button_element(
+                                 uint32_t code
+                               , float size
+                              )
+                               : _code(code)
+                               , _size(size)
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+
+      uint32_t                _code;
+      float                   _size;
+   };
+
    template <bool state, bool hilite>
    inline view_limits icon_button_element<state, hilite>::limits(basic_context const& /* ctx */) const
    {
       auto  size = _size * get_theme().icon_font_size * 1.8f;
-      return { { size, size }, { size, size } };
+      return {{size, size}, {size, size}};
    }
 
    template <bool state, bool hilite>
@@ -60,6 +85,21 @@ namespace cycfi { namespace elements
       );
    }
 
+   template <bool hilite>
+   inline view_limits plain_icon_button_element<hilite>::limits(basic_context const& /* ctx */) const
+   {
+      auto  size = _size * get_theme().icon_font_size * 1.8f;
+      return {{size, size}, {size, size}};
+   }
+
+   template <bool hilite>
+   inline void plain_icon_button_element<hilite>::draw(context const& ctx)
+   {
+      draw_plain_icon_button(
+         ctx, _code, _size * get_theme().icon_font_size, hilite
+      );
+   }
+
    inline basic_toggle_button<> toggle_icon_button(
       uint32_t code
     , float size
@@ -67,8 +107,8 @@ namespace cycfi { namespace elements
    )
    {
       return {
-         icon_button_element<false>{ code, size, body_color }
-       , icon_button_element<true>{ code, size, body_color }
+         icon_button_element<false>{code, size, body_color}
+       , icon_button_element<true>{code, size, body_color}
       };
    }
 
@@ -80,8 +120,20 @@ namespace cycfi { namespace elements
    )
    {
       return {
-         icon_button_element<true, true>{ code1, size, body_color }
-       , icon_button_element<true, true>{ code2, size, body_color }
+         icon_button_element<true, true>{code1, size, body_color}
+       , icon_button_element<true, true>{code2, size, body_color}
+      };
+   }
+
+   inline basic_toggle_button<> plain_toggle_icon_button(
+      uint32_t code1
+    , uint32_t code2
+    , float size
+   )
+   {
+      return {
+         plain_icon_button_element<true>{code1, size}
+       , plain_icon_button_element<true>{code2, size}
       };
    }
 
@@ -92,8 +144,16 @@ namespace cycfi { namespace elements
    )
    {
       return {
-         icon_button_element<false>{ code, size, body_color }
-       , icon_button_element<true>{ code, size, body_color }
+         icon_button_element<false>{code, size, body_color}
+       , icon_button_element<true>{code, size, body_color}
+      };
+   }
+
+   inline layered_button plain_icon_button(uint32_t code, float size)
+   {
+      return {
+         plain_icon_button_element<false>{code, size}
+       , plain_icon_button_element<true>{code, size}
       };
    }
 }}

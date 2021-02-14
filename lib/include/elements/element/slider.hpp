@@ -40,6 +40,7 @@ namespace cycfi { namespace elements
 
       double                  value() const override;
       void                    value(double val) override;
+      void                    edit(view& view_, double val) override;
       virtual void            edit_value(double val) { value(val);}
 
       rect                    track_bounds(context const& ctx) const;
@@ -56,6 +57,12 @@ namespace cycfi { namespace elements
       double                  _value;
       mutable bool            _is_horiz = false;
    };
+
+   inline void slider_base::edit(view& view_, double val)
+   {
+      edit_value(val);
+      receiver<double>::notify_edit(view_);
+   }
 
    class basic_slider_base : public slider_base
    {

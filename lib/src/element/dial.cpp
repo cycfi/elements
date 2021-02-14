@@ -9,8 +9,6 @@
 #include <elements/view.hpp>
 #include <cmath>
 
-#include <iostream>
-
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -44,6 +42,12 @@ namespace cycfi { namespace elements
          if (this_->on_change)
             this_->on_change(this_->value());
       }
+   }
+
+   void dial_base::edit(view& view_, param_type val)
+   {
+      edit_value(this, val);
+      receiver<double>::notify_edit(view_);
    }
 
    double dial_base::radial_value(context const& ctx, tracker_info& track_info)

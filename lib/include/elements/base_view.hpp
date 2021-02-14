@@ -121,14 +121,15 @@ namespace cycfi { namespace elements
       mod_shift         = 0x0001,
       mod_control       = 0x0002,
 
-      // mod_alt maps to the Alt key on PC keyboards
+      // mod_alt (alias mod_option) maps to the Alt key on PC keyboards
       // and maps to the Option key on MacOS
       mod_alt           = 0x0004,
+      mod_option        = mod_alt,     // synonym for mod_alt
 
       // mod_super maps to the Windows key on PC keyboards
       // and maps to the Command key on MacOS
       mod_super         = 0x0008,
-      mod_command       = mod_super, // synonym for MacOS
+      mod_command       = mod_super,   // synonym for MacOS
 
       // mod_action maps to mod_control on Windows and Linux
       // and maps to mod_super on MacOS

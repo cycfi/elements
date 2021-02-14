@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
          if (_update_request)
             update(ctx);
          auto w_limits = _composer->width_limits(ctx);
-         if (auto size = _composer->size())
+         if (_composer->size())
          {
             return {
                { w_limits.min, float(_height) }

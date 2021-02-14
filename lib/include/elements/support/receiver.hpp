@@ -11,9 +11,17 @@
 
 namespace cycfi { namespace elements
 {
+   class element;
+   class view;
+
    struct receiver_base
    {
+      enum editing { none, begin_editing, while_editing, end_editing };
+
       virtual              ~receiver_base() = default;
+      void                 begin_edit(view& view_);
+      void                 notify_edit(view& view_);
+      void                 end_edit(view& view_);
    };
 
    template <typename T>
@@ -25,6 +33,7 @@ namespace cycfi { namespace elements
 
       virtual void         value(param_type val) = 0;
       virtual getter_type  value() const = 0;
+      virtual void         edit(view& view_, param_type val);
    };
 
    template <>
@@ -36,6 +45,7 @@ namespace cycfi { namespace elements
 
       virtual void         value(param_type str) = 0;
       virtual getter_type  value() const = 0;
+      virtual void         edit(view& view_, param_type val);
    };
 
    template <typename T>
@@ -45,13 +55,29 @@ namespace cycfi { namespace elements
       using getter_type = typename receiver<T>::getter_type;
       using param_type = typename receiver<T>::param_type;
 
-      void                 value(T val) override { _val = val; }
+      void                 value(param_type val) override { _val = val; }
       T                    value() const override { return _val; }
 
    private:
 
       receiver_type        _val = receiver_type{};
    };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename T>
+   inline void receiver<T>::edit(view& view_, param_type val)
+   {
+      value(val);
+      receiver_base::notify_edit(view_);
+   }
+
+   inline void receiver<std::string>::edit(view& view_, param_type val)
+   {
+      value(val);
+      receiver_base::notify_edit(view_);
+   }
 }}
 
 #endif

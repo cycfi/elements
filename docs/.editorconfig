@@ -1,5 +1,0 @@
-[*.html]
-indent_size = 2
-
-[*.{css,scss,js}]
-indent_size = 4

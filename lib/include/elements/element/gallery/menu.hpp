@@ -53,9 +53,9 @@ namespace cycfi { namespace elements
       return diplay_shortcut(k.key, k.modifiers);
    }
 
-   inline auto menu_item_text(std::string text)
+   inline auto menu_item_text(std::string text, float text_align = 0.0f /*align left*/)
    {
-      return hmargin({ 20, 20 }, align_left(label(std::move(text))));
+      return hmargin({ 20, 20 }, halign(text_align, label(std::move(text))));
    }
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
@@ -81,9 +81,9 @@ namespace cycfi { namespace elements
       );
    }
 
-   inline auto menu_item(std::string text)
+   inline auto menu_item(std::string text, float text_align = 0.0f /*align left*/)
    {
-      return basic_menu_item(menu_item_text(std::move(text)));
+      return basic_menu_item(menu_item_text(std::move(text), text_align));
    }
 
    inline auto menu_item(std::string text, shortcut_key shortcut)
@@ -122,6 +122,7 @@ namespace cycfi { namespace elements
    selection_menu(
       std::function<void(string_view item)> on_select
     , menu_selector const& items
+    , float text_align = 0.0f // align left
    );
 
    template <typename Sequence>
@@ -161,6 +162,7 @@ namespace cycfi { namespace elements
    selection_menu(
       std::function<void(string_view item)> on_select
     , std::initializer_list<T> list
+    , float text_align = 0.0f // align left
    )
    {
       struct init_list_menu_selector : menu_selector
@@ -184,7 +186,7 @@ namespace cycfi { namespace elements
          std::initializer_list<T> _list;
       };
 
-      return selection_menu(on_select, init_list_menu_selector{ list });
+      return selection_menu(on_select, init_list_menu_selector{ list }, text_align);
    }
 }}
 

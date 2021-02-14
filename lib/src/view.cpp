@@ -351,33 +351,35 @@
    void view::poll()
    {
       _io.poll();
-      if (_tracking_state != tracking::none)
+      if (!_tracking.empty())
       {
-         using namespace std::chrono_literals;
-         auto now = std::chrono::steady_clock::now();
-         if ((now - _tracking_time) > 1s)
+         for (auto it = _tracking.cbegin(); it != _tracking.cend(); /**/)
          {
-            on_tracking(*_tracking_element, tracking::end_tracking);
-            _tracking_time = now;
-            _tracking_element = nullptr;
-            _tracking_state = tracking::none;
+            using namespace std::chrono_literals;
+            auto now = std::chrono::steady_clock::now();
+            if ((now - it->second) > 1s)
+            {
+               on_tracking(*it->first, tracking::end_tracking);
+               _tracking.erase(it++);
+            }
+            else
+            {
+               ++it;
+            }
          }
       }
    }
 
    void view::manage_on_tracking(element& e, tracking state)
    {
-      if (_tracking_state == tracking::none &&
-         state == tracking::while_tracking)
-         state = tracking::begin_tracking;
+      // Simulate a begin_tracking if needed
+      if (_tracking.find(&e) == _tracking.end() && state == tracking::while_tracking)
+         on_tracking(e, tracking::begin_tracking);
 
-      if (state == tracking::while_tracking &&
-         _tracking_element && _tracking_element != &e)
-         on_tracking(*_tracking_element, tracking::end_tracking);
-
-      _tracking_element = &e;
-      _tracking_state = state;
-      _tracking_time = std::chrono::steady_clock::now();
+      _tracking[&e] = std::chrono::steady_clock::now();
       on_tracking(e, state);
+
+      if (state == tracking::end_tracking)
+         _tracking.erase(&e);
    }
 }}

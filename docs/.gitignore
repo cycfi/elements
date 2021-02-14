@@ -1,7 +1,0 @@
-_site
-.bundle
-.sass-cache
-.jekyll-metadata
-/Gemfile.lock
-/404.html
-*.code-workspace

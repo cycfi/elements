@@ -524,9 +524,15 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
+      // queue_draw_area's arguments are in "widget coordinates", which are
+      // relative to the widget's allocation when the widget in question has no
+      // GdkWindow (i.e. GtkGLArea).
+      GtkAllocation alloc;
+      gtk_widget_get_allocation(_view->widget, &alloc);
+
       gtk_widget_queue_draw_area(_view->widget,
-         area.left,
-         area.top,
+         area.left + alloc.x,
+         area.top + alloc.y,
          area.width(),
          area.height()
       );

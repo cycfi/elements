@@ -106,6 +106,25 @@ namespace cycfi { namespace elements
             hints.min_height = limits_.min.y;
             hints.max_height = std::min<float>(limits_.max.y, max);
 
+            if (auto child = gtk_bin_get_child(GTK_BIN(win)))
+            {
+               // Find the difference between the child size and window size to
+               // determine the window decoration size, which is then used to
+               // offset the hints.
+               GtkAllocation window_alloc, child_alloc;
+               gtk_widget_get_allocation(_window->host, &window_alloc);
+               gtk_widget_get_allocation(child, &child_alloc);
+
+               int decoration_width = window_alloc.width - child_alloc.width;
+               int decoration_height = window_alloc.height - child_alloc.height;
+
+               hints.min_width += decoration_width;
+               hints.max_width += decoration_width;
+
+               hints.min_height += decoration_height;
+               hints.max_height += decoration_height;
+            }
+
             gtk_window_set_geometry_hints(
                win,
                _window->host,

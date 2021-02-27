@@ -542,13 +542,16 @@ namespace cycfi { namespace elements
       if (_select_start == -1)
          return;
 
+      if (!_is_focus) //No caret if not focused
+         return;
+
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
       rect caret_bounds;
       bool has_caret = false;
 
       // Handle the case where text is empty
-      if (_is_focus && _text.empty())
+      if (_text.empty())
       {
          auto  size = _layout.metrics();
          auto  line_height = size.ascent + size.descent + size.leading;
@@ -569,7 +572,7 @@ namespace cycfi { namespace elements
          caret_bounds = rect{ left, top, left+width, top + line_height };
       }
       // Draw the caret
-      else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
+      else if (_select_start == _select_end)
       {
          auto  start_info = glyph_info(ctx, _text.data() + _select_start);
          auto width = theme.text_box_caret_width;
@@ -585,10 +588,10 @@ namespace cycfi { namespace elements
          }
 
          has_caret = true;
-         caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
+         caret_bounds = rect{caret.left - 0.5f, caret.top, caret.left + width + 0.5f, caret.bottom};
       }
 
-      if (_is_focus && has_caret && !_caret_started)
+      if (has_caret && !_caret_started)
       {
          auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
          auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());

@@ -15,8 +15,8 @@ auto background = rbox(bkd_color, 5);
 // Function to calculate distance
 float distance(point a, point b)
 {
-  double c = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
-  return sqrt(c);
+  float c = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
+  return sqrtf(c);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

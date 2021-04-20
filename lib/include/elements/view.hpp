@@ -275,8 +275,7 @@ namespace cycfi { namespace elements
                if (i != _content.end())
                {
                   end_focus();
-                  _content.erase(i);
-                  _content.insert(_content.end(), e);
+                  std::rotate(i, i+1, _content.end());
                   _content.reset();
                   layout();
                   begin_focus();

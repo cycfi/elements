@@ -82,10 +82,6 @@ source_group(Resources
 ###############################################################################
 # The executable App
 
-if (NOT DEFINED ELEMENTS_APP_SOURCES)
-   set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
-endif()
-
 if (APPLE)
    add_executable(
       ${ELEMENTS_APP_PROJECT}

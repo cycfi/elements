@@ -186,7 +186,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   template<typename C>
+   template <typename C>
    void move_to_front(C& composite, element_ptr e)
    {
       if (e && composite.back() != e)
@@ -200,7 +200,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   template<typename C>
+   template <typename C>
    void move_to_back(C& composite, element_ptr e)
    {
       if (e && composite.front() != e)

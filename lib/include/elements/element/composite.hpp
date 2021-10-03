@@ -185,6 +185,34 @@ namespace cycfi { namespace elements
                break;
       }
    }
+
+   template <typename C>
+   void move_to_front(C& composite, element_ptr e)
+   {
+      if (e && composite.back() != e)
+      {
+         auto i = std::find(composite.begin(), composite.end(), e);
+         if (i != composite.end())
+         {
+            std::rotate(i, i+1, composite.end());
+            composite.reset();
+         }
+      }
+   }
+
+   template <typename C>
+   void move_to_back(C& composite, element_ptr e)
+   {
+      if (e && composite.front() != e)
+      {
+         auto i = std::find(composite.begin(), composite.end(), e);
+         if (i != composite.end())
+         {
+            std::rotate(composite.begin(), i, i+1);
+            composite.reset();
+         }
+      }
+   }
 }}
 
 #endif

@@ -27,4 +27,6 @@ set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
 set(ELEMENTS_APP_ID "com.cycfi.text-and-icons")
 set(ELEMENTS_APP_VERSION "1.0")
 
+set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
 include(ElementsConfigApp)

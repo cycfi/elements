@@ -189,6 +189,12 @@ namespace cycfi { namespace elements
       if (!(style_ & resizable))
          disable_resize(_window);
 
+      // Sets the app icon for the window to show on the titlebar.
+      // The IDI_ELEMENTS_APP_ICON icon id should be defined in a resource file.
+      HICON hIcon = LoadIcon(GetModuleHandle(nullptr), TEXT("IDI_ELEMENTS_APP_ICON"));
+      if (hIcon)
+         ::SendMessage(_window, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+
       ShowWindow(_window, SW_RESTORE);
    }
 

@@ -11,33 +11,31 @@ using namespace cycfi::elements;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-class fixed_base : public default_label
+template<size_t Size>
+class fixed_size_base : public default_label
 {
 public:
     view_limits limits(const basic_context &ctx) const override
     {
-        // Give enough space for 4 characters
-        //(a track is not supposed to have more than 9999 lines, that would be huge)
-        point size = measure_text(ctx.canvas, "1234567890" ,get_font(), 16);
+
+        point size = measure_text(ctx.canvas, "9" ,get_font(), 16);
+        size.x *= Size;
         return { { size.x, size.y }, { size.x, size.y } };
     }
 };
 
-using basic_fixed = basic_label_base<fixed_base>;
-using fixed_label = label_gen<basic_fixed>;
+template<size_t Size>
+using basic_fixed_size = basic_label_base<fixed_size_base<Size>>;
+
+template<size_t Size>
+using fixed_size_label = label_gen<basic_fixed_size<Size>>;
 
 inline auto  make_icon_label(std::string name, int i)
 {
 
-    auto h = htile(fixed_label(name), hspacer(50), icon_button(i,1));
+    auto h = htile(fixed_size_label<10>(name), hspacer(50), icon_button(i,1));
     return share(h);
 }
-
-
-enum custom_icons
-{
-
-};
 
 int main(int argc, char* argv[])
 {

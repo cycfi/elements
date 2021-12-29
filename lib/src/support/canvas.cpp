@@ -218,7 +218,7 @@ namespace cycfi { namespace elements
       auto r = bounds.right;
       auto b = bounds.bottom;
       auto const a = M_PI/180.0;
-      radius = std::min(radius, std::min(bounds.width(), bounds.height()));
+      radius = std::min(radius, std::min(bounds.width(), bounds.height()) / 2);
 
       cairo_new_sub_path(&_context);
       cairo_arc(&_context, r-radius, y+radius, radius, -90*a, 0*a);

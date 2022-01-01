@@ -38,6 +38,8 @@ namespace cycfi { namespace elements
       void* _menubar;
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
       GtkApplication* _app;
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
       bool  _running = true;
 #endif

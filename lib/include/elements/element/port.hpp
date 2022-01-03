@@ -182,6 +182,9 @@ namespace cycfi { namespace elements
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
 
+      std::function<void(point p)> on_scroll = [](point){};
+      void set_position(point p );
+
       struct scrollbar_info
       {
          double   pos;

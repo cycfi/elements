@@ -4,9 +4,7 @@
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.9.6...3.15.0)
-project(EmptyStarter LANGUAGES C CXX)
-
-set(ELEMENTS_ROOT "/home/johann/Documents/Elements/elements")
+project(SyncScrollbars LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -23,10 +21,12 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "EmptyStarter")
-set(ELEMENTS_APP_TITLE "Empty Starter")
+set(ELEMENTS_APP_PROJECT "SyncScrollbars")
+set(ELEMENTS_APP_TITLE "Sync Scrollbars")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
 set(ELEMENTS_APP_ID "com.cycfi.empty-starter")
 set(ELEMENTS_APP_VERSION "1.0")
+
+set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 include(ElementsConfigApp)

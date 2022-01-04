@@ -183,7 +183,7 @@ namespace cycfi { namespace elements
       bool                    key(context const& ctx, key_info k) override;
 
       std::function<void(point p)> on_scroll = [](point){};
-      void set_position(point p );
+      void set_position(point p);
 
       struct scrollbar_info
       {

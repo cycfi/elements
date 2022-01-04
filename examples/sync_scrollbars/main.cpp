@@ -6,7 +6,6 @@
 #include <elements.hpp>
 #include<string>
 using namespace cycfi::elements;
-using namespace cycfi::artist;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -15,7 +14,7 @@ auto background = box(bkd_color);
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Empty Starter", "com.cycfi.empty-starter");
+   app _app(argc, argv, "SyncScrollbars", "com.cycfi.sync-scrollbars");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
@@ -28,27 +27,32 @@ int main(int argc, char* argv[])
        return share(label( "                        hello                              " + std::to_string(index)));
    };
 
-   auto comp = basic_vertical_cell_composer(10'000, make_cell);
-   auto l = share(vdynamic_list(comp));
+   // First dynamic list
+   auto comp = basic_cell_composer(10'000, make_cell);
+   auto l = share(dynamic_list(comp));
 
-   auto comp2 = basic_vertical_cell_composer(10'000, make_cell);
-   auto l2 = share(vdynamic_list(comp2));
+   // Second dynamic list
+   auto comp2 = basic_cell_composer(10'000, make_cell);
+   auto l2 = share(dynamic_list(comp2));
 
+   // Scrollers
    auto scr = vscroller(margin({20, 20, 20, 20}, hold(l)));
    auto scr2 = vscroller(margin({20, 20, 20, 20}, hold(l2)));
-   scr.on_scroll = [&](point bnds)
+   // Second scrollers will follow first scroller position
+   scr.on_scroll = [&](point p)
    {
-     scr2.set_position(bnds);
+     scr2.set_position(p);
      view_.layout();
      view_.refresh();
    };
 
    view_.content(
-
-               htile(scr, hspacer(100), link(scr2) ),
-
-      background     // Replace background with your main element,
-                     // or keep it and add another layer on top of it.
+    	   htile(
+		scr, 
+		hspacer(100), 
+		link(scr2) 
+		),
+      background     
    );
 
    _app.run();

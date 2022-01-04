@@ -6,13 +6,11 @@
 #include <elements/element/port.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
-#include <elements/support/theme.hpp>
 #include <algorithm>
 #include <cmath>
 
 namespace cycfi { namespace elements
 {
-   using artist::color;
    constexpr auto min_port_size = 32;
 
    ////////////////////////////////////////////////////////////////////////////
@@ -21,7 +19,7 @@ namespace cycfi { namespace elements
    void port_base::draw(context const& ctx)
    {
       auto state = ctx.canvas.new_state();
-      ctx.canvas.add_rect(ctx.bounds);
+      ctx.canvas.rect(ctx.bounds);
       ctx.canvas.clip();
       proxy_base::draw(ctx);
    }
@@ -120,7 +118,7 @@ namespace cycfi { namespace elements
       void draw_scrollbar_fill(canvas& _canvas, rect r, color fill_color)
       {
          _canvas.begin_path();
-         _canvas.add_rect(r);
+         _canvas.rect(r);
          _canvas.fill_style(fill_color);
          _canvas.fill();
       }
@@ -132,10 +130,10 @@ namespace cycfi { namespace elements
       )
       {
          _canvas.begin_path();
-         _canvas.add_round_rect(b, radius);
+         _canvas.round_rect(b, radius);
          _canvas.fill_style(fill_color);
 
-         if (is_tracking || _canvas.point_in_path(mp))
+         if (is_tracking || _canvas.hit_test(mp))
             _canvas.fill_style(fill_color.opacity(0.8));
 
          _canvas.fill_preserve();
@@ -295,7 +293,6 @@ namespace cycfi { namespace elements
    bool scroller_base::scroll(context const& ctx, point dir, point /* p */)
    {
       view_limits e_limits = subject().limits(ctx);
-      double alx, aly;
       bool redraw = false;
 
       if (allow_hscroll())
@@ -303,7 +300,7 @@ namespace cycfi { namespace elements
          double dx = (-dir.x / (e_limits.min.x - ctx.bounds.width()));
          if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
          {
-            alx = halign() + dx;
+            double alx = halign() + dx;
             clamp(alx, 0.0, 1.0);
             halign(alx);
             redraw = true;
@@ -315,20 +312,17 @@ namespace cycfi { namespace elements
          double dy = (-dir.y / (e_limits.min.y - ctx.bounds.height()));
          if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
          {
-            aly = valign() + dy;
+            double aly = valign() + dy;
             clamp(aly, 0.0, 1.0);
             valign(aly);
             redraw = true;
-
          }
       }
 
-      if (redraw)
-      {
-         on_scroll(point(alx, aly));
+      if (redraw) {
+         on_scroll(point(halign(), valign()));
          ctx.view.refresh(ctx);
       }
-
       return redraw;
    }
 
@@ -373,7 +367,6 @@ namespace cycfi { namespace elements
 
       auto valign_ = [&](double align)
       {
-         p.y = align;
          clamp(align, 0.0, 1.0);
          valign(align);
          on_scroll(point(halign(), align));
@@ -382,10 +375,9 @@ namespace cycfi { namespace elements
 
       auto halign_ = [&](double align)
       {
-         p.x = align;
          clamp(align, 0.0, 1.0);
          halign(align);
-         on_scroll(point(align, halign()));
+         on_scroll(point(align, valign()));
          ctx.view.refresh(ctx);
       };
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2022 Johann Philippe
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -10,7 +10,6 @@ using namespace cycfi::elements;
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
-
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +23,10 @@ int main(int argc, char* argv[])
 
    auto && make_cell = [&](size_t index)
    {
-       return share(label( "                        hello                              " + std::to_string(index)));
+      return share(label(
+         "                        hello"
+         "                              " + std::to_string(index)
+      ));
    };
 
    // First dynamic list
@@ -41,18 +43,18 @@ int main(int argc, char* argv[])
    // Second scrollers will follow first scroller position
    scr.on_scroll = [&](point p)
    {
-     scr2.set_position(p);
-     view_.layout();
-     view_.refresh();
+      scr2.set_position(p);
+      view_.layout();
+      view_.refresh();
    };
 
    view_.content(
-    	   htile(
-		scr, 
-		hspacer(100), 
-		link(scr2) 
+    	htile(
+         scr,
+         hspacer(100),
+         link(scr2)
 		),
-      background     
+      background
    );
 
    _app.run();

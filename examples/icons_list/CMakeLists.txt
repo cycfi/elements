@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2022 Johann Philippe
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################

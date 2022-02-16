@@ -204,7 +204,11 @@ if (APPLE)
 endif()
 
 if (APPLE)
-   set(lib_dir "/usr/local/opt")
+   if(DEFINED ENV{HOMEBREW_PREFIX})
+     set(lib_dir $ENV{HOMEBREW_PREFIX}/opt)
+   else()
+     set(lib_dir "/usr/local/opt")
+   endif()
 endif()
 
 ###############################################################################

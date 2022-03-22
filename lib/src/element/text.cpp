@@ -801,7 +801,13 @@ namespace cycfi { namespace elements
       if (_select_end == -1)
          return;
 
-      auto info = caret_info(ctx, &get_text()[_select_end]);
+      basic_text_box::caret_metrics info;
+      if (_select_end >= get_text().size()) {
+          info = caret_info(ctx, U"");
+      } else {
+          info = caret_info(ctx, &get_text()[_select_end]);
+      }
+
       if (info.str)
       {
          auto caret = rect{

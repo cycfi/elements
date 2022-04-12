@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
       {
          for (auto i = _previous_window_start; i != _previous_window_end; ++i)
          {
-            if (i < new_start || i >= new_end)
+            if ((i < new_start || i >= new_end) && i < _cells.size())
             {
                _cells[i].layout_id = -1;
             }

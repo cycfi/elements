@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/window.hpp>
 #include <X11/Xlib.h>
-#include <X11/Xlib.h>
+#include <iostream>
 
 namespace cycfi { namespace elements
 {
@@ -31,6 +31,7 @@ namespace cycfi { namespace elements
         XSetWindowAttributes attributes;
         attributes.background_pixel = XWhitePixel(display, screen);
 
+        // TODO SubstructureNotify for detecting child resizing
         _window->host = XCreateWindow(
             display,
             RootWindow(display, screen),
@@ -42,7 +43,7 @@ namespace cycfi { namespace elements
             CWBackPixel,
             &attributes);
 
-        XSelectInput(display, _window->host, ExposureMask | KeyPressMask);
+        XSelectInput(display, _window->host, ExposureMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask);
         XMapWindow(display, _window->host);
         XStoreName(display, _window->host, name.c_str());
 
@@ -60,22 +61,32 @@ namespace cycfi { namespace elements
 
     point window::size() const
     {
-        return point(); // TODO
+        Window root;
+        int x, y;
+        unsigned int w = 0, h = 0, border_w, depth;
+        XGetGeometry(get_display(), _window->host, &root, &x, &y, &w, &h, &border_w, &depth);
+        return {static_cast<float>(w), static_cast<float>(h)};
     }
 
     void window::size(point const& p)
     {
-        (void)p; // TODO
+        XResizeWindow(get_display(), _window->host, p.x, p.y);
     }
 
     void window::limits(view_limits limits_)
     {
+        std::cerr << "window::limits(view_limits)" << std::endl;
         (void)limits_; // TODO
     }
 
     point window::position() const
     {
-        return point(); // TODO
+        Display* display = get_display();
+        int screen = DefaultScreen(display);
+        int x, y;
+        Window child;
+        XTranslateCoordinates(display, _window->host, RootWindow(display, screen), 0, 0, &x, &y, &child );
+        return {static_cast<float>(x), static_cast<float>(y)};
     }
 
     void window::position(point const& p)

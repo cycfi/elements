@@ -20,6 +20,7 @@ namespace cycfi { namespace elements
 
    std::unordered_map<Window, base_view*> gs_windows_map;
 
+   // The singleton connection to the X11 server - all API calls are relative to this connection
    Display* the_display = XOpenDisplay(nullptr);
    Display* get_display()
    {
@@ -61,36 +62,39 @@ namespace cycfi { namespace elements
 
    app::~app()
    {
-      XCloseDisplay(the_display);
+      //XCloseDisplay(the_display);
    }
 
    void app::run()
    {
-      XEvent event;
-      while (1)
-      {
-         XNextEvent(the_display, &event);
-         switch(event.type)
-         {
-            case Expose:
-            {
-               XClearWindow(the_display, event.xexpose.window);
-               base_view* view = gs_windows_map[event.xexpose.window];
-               if (view)
-                  on_draw(view);
+      do {} while(tick());
+   }
 
-               break;
-            }
-            case ClientMessage:
-            {
-               Atom wm_delete_window = XInternAtom(the_display, "WM_DELETE_WINDOW", True);
-               if (static_cast<Atom>(event.xclient.data.l[0]) == wm_delete_window) {
-                  return;
-               }
-               break;
-            }
+   bool on_event(base_view *, const XEvent&);
+
+   bool app::tick()
+   {
+      XEvent event;
+      bool result = true;
+
+      while(XPending(the_display) > 0) {
+         XNextEvent(the_display, &event);
+
+         base_view* view = gs_windows_map[event.xany.window];
+         if(view) {
+            result &= on_event(view, event);
+            view->poll();
          }
       }
+
+      // Poll everyone at least once
+      for(auto &[window, view]: gs_windows_map) {
+         if(view) {
+            view->poll();
+         }
+      }
+
+      return result;
    }
 
    void app::stop()

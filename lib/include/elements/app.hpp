@@ -30,6 +30,7 @@ namespace cycfi { namespace elements
 
       std::string const&   name() const { return _app_name; }
       void                 run();
+      bool                 tick();
       void                 stop();
 
    private:

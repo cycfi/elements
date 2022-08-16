@@ -142,7 +142,6 @@ elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
    set(ELEMENTS_HOST
       host/x11/app.cpp
       host/x11/base_view.cpp
-      host/x11/key.cpp
       host/x11/window.cpp
    )
 elseif (WIN32)

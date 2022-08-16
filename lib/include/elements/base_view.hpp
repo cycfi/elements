@@ -329,9 +329,6 @@ namespace cycfi { namespace elements
 
       host_view_handle     _view;
    };
-#if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
-   void on_draw(base_view *);
-#endif
    ////////////////////////////////////////////////////////////////////////////
    inline void base_view::draw(cairo_t* /* ctx */, rect /* area */) {}
    inline void base_view::click(mouse_button /* btn */) {}

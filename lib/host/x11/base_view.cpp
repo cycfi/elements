@@ -38,6 +38,8 @@ namespace cycfi { namespace elements
       host_view *host_view_under_cursor = nullptr;
    }
 
+   extern std::unordered_map<Window, base_view*> gs_windows_map;
+
    host_view::host_view(base_view& view, Window parent)
    {
       Display* display = get_display();
@@ -46,7 +48,7 @@ namespace cycfi { namespace elements
 
       XGetWindowAttributes(display, parent, &attributes);
 
-      Window content_view = XCreateSimpleWindow
+      x_window = XCreateSimpleWindow
       (
          display,
          parent,
@@ -58,14 +60,12 @@ namespace cycfi { namespace elements
          XWhitePixel(display, screen),
          XWhitePixel(display, screen)
       );
-      x_window = content_view;
 
 
       // TODO StructureNotify on parent
 
 
-      extern std::unordered_map<Window, base_view*> gs_windows_map;
-      gs_windows_map[content_view] = &view;
+      gs_windows_map[x_window] = &view;
 
       /* Debug: paint window background magenta
       XColor bgcolor;
@@ -75,13 +75,13 @@ namespace cycfi { namespace elements
       bgcolor.blue = 65000;
 
       if (XAllocColor(display, cmap, &bgcolor))
-         XSetWindowBackground(display, content_view, bgcolor.pixel);
+         XSetWindowBackground(display, x_window, bgcolor.pixel);
       */
 
       XSelectInput
       (
          display,
-         content_view,
+         x_window,
          ExposureMask
          | ButtonPressMask
          | ButtonReleaseMask
@@ -94,13 +94,13 @@ namespace cycfi { namespace elements
          | SubstructureNotifyMask
       );
 
-      XMapWindow(display, content_view);
+      XMapWindow(display, x_window);
 
       XFlush(display);
 
       surface = cairo_xlib_surface_create(
          display,
-         content_view,
+         x_window,
          attributes.visual,
          attributes.width,
          attributes.height
@@ -115,6 +115,7 @@ namespace cycfi { namespace elements
       cairo_surface_destroy(surface);
       if (host_view_under_cursor == this)
          host_view_under_cursor = nullptr;
+      gs_windows_map.erase(x_window);
    }
 
    static void on_draw(base_view *view, rect area)

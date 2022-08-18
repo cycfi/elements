@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/window.hpp>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <iostream>
 
 namespace cycfi { namespace elements
@@ -75,8 +76,14 @@ namespace cycfi { namespace elements
 
     void window::limits(view_limits limits_)
     {
-        std::cerr << "window::limits(view_limits)" << std::endl;
-        (void)limits_; // TODO
+        XSizeHints hints = {};
+        hints.flags = PMinSize | PMaxSize;
+        hints.min_width = limits_.min.x;
+        hints.min_height = limits_.min.y;
+        hints.max_width = limits_.max.x;
+        hints.max_height = limits_.max.y;
+
+        XSetWMNormalHints(get_display(), _window->host, &hints);
     }
 
     point window::position() const

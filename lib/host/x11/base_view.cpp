@@ -43,27 +43,13 @@ namespace cycfi { namespace elements
    host_view::host_view(base_view& view, Window parent)
    {
       Display* display = get_display();
-      int screen = DefaultScreen(display);
       XWindowAttributes attributes;
 
       XGetWindowAttributes(display, parent, &attributes);
 
-      x_window = XCreateSimpleWindow
-      (
-         display,
-         parent,
-         0,
-         0,
-         attributes.width,
-         attributes.height,
-         0, // border_width
-         XWhitePixel(display, screen),
-         XWhitePixel(display, screen)
-      );
-
-
-      // TODO StructureNotify on parent
-
+      // directly reuse parent's XWindow since there's a 1:1 correspondence
+      // between window and base_view
+      x_window = parent;
 
       gs_windows_map[x_window] = &view;
 
@@ -91,10 +77,7 @@ namespace cycfi { namespace elements
          | FocusChangeMask
          | KeyPressMask
          | KeyReleaseMask
-         | SubstructureNotifyMask
       );
-
-      XMapWindow(display, x_window);
 
       XFlush(display);
 
@@ -120,11 +103,18 @@ namespace cycfi { namespace elements
 
    static void on_draw(base_view *view, rect area)
    {
+      auto* host_view_h = view->host();
+      Display* display = get_display();
+      XWindowAttributes attributes;
+      XGetWindowAttributes(display, host_view_h->x_window, &attributes);
+
+      cairo_xlib_surface_set_size(host_view_h->surface, attributes.width, attributes.height);
+
       cairo_push_group_with_content(view->host()->context, CAIRO_CONTENT_COLOR);
       view->draw(view->host()->context, area);
       cairo_pop_group_to_source(view->host()->context);
       cairo_paint(view->host()->context);
-      XFlush(get_display());
+      XFlush(display);
    }
 
    static void on_draw(base_view *view, const XExposeEvent& event)
@@ -136,12 +126,6 @@ namespace cycfi { namespace elements
    static void on_draw(base_view *view)
    {
       auto* host_view_h = view->host();
-      Display* display = get_display();
-      XWindowAttributes attributes;
-      XGetWindowAttributes(display, host_view_h->x_window, &attributes);
-
-      // TODO move to resize handler
-      cairo_xlib_surface_set_size(host_view_h->surface, attributes.width, attributes.height);
 
       double left, top, right, bottom;
       cairo_clip_extents(host_view_h->context, &left, &top, &right, &bottom);

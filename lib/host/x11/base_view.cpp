@@ -120,7 +120,10 @@ namespace cycfi { namespace elements
 
    static void on_draw(base_view *view, rect area)
    {
+      cairo_push_group_with_content(view->host()->context, CAIRO_CONTENT_COLOR);
       view->draw(view->host()->context, area);
+      cairo_pop_group_to_source(view->host()->context);
+      cairo_paint(view->host()->context);
       XFlush(get_display());
    }
 

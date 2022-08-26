@@ -5,6 +5,19 @@
 =============================================================================*/
 #include <elements/element/gallery/menu.hpp>
 
+
+// Instead of
+// std::string s = u8"string",
+// write 
+// std::string s = u8_compat("string").
+//
+// In C++20, u8"strings" are not compatible with std::string anymore.
+// Practically, one must either use std::u8string (which is not available in C++17),
+// or force u8"strings" to keep creating const char*'s (even with C++20).
+// This macro does the latter.
+#define u8_compat(str) reinterpret_cast<const char*>(u8##str);
+
+
 namespace cycfi { namespace elements
 {
    basic_menu
@@ -148,7 +161,7 @@ namespace cycfi { namespace elements
 
             default:
 #if defined(__APPLE__)
-               mod_ += u8"⇧";
+               mod_ += u8_compat("⇧");
 #else
                mod_ += "Shift+";
 #endif
@@ -158,11 +171,11 @@ namespace cycfi { namespace elements
 
 #if defined(__APPLE__)
       if (mod & mod_alt)
-         mod_ += u8"⌥";
+         mod_ += u8_compat("⌥");
       if (mod & mod_control)
-         mod_ += u8"⌃";
+         mod_ += u8_compat("⌃");
       if ((mod & mod_command) || (mod & mod_action))
-         mod_ += u8"⌘";
+         mod_ += u8_compat("⌘");
 #else
       if ((mod & mod_control) || (mod & mod_action))
          mod_ = "Ctrl+" + mod_;
@@ -170,9 +183,9 @@ namespace cycfi { namespace elements
          mod_ += "Alt+";
       if (mod & mod_super)
 #if defined(_WIN32)
-         mod_ += u8"⊞";
+         mod_ += u8_compat("⊞");
 #else
-         mod_ += u8"◇";
+         mod_ += u8_compat("◇");
 #endif
 #endif
 
@@ -184,7 +197,7 @@ namespace cycfi { namespace elements
       {
          switch (k)
          {
-            default:                         key_ += u8"�"; break;
+            default:                         key_ += u8_compat("�"); break;
 
             case key_code::space:            key_ += ' '; break;
             case key_code::apostrophe:       key_ += '\''; break;
@@ -219,25 +232,25 @@ namespace cycfi { namespace elements
             case key_code::backslash:        key_ += '\\'; break;
             case key_code::right_bracket:    key_ += ']'; break;
             case key_code::grave_accent:     key_ += '`'; break;
-            case key_code::escape:           key_ += u8"⎋"; break;
-            case key_code::enter:            key_ += u8"⏎"; break;
-            case key_code::tab:              key_ += u8"⇥"; break;
-            case key_code::backspace:        key_ += u8"⌫"; break;
+            case key_code::escape:           key_ += u8_compat("⎋"); break;
+            case key_code::enter:            key_ += u8_compat("⏎"); break;
+            case key_code::tab:              key_ += u8_compat("⇥"); break;
+            case key_code::backspace:        key_ += u8_compat("⌫"); break;
             case key_code::insert:           break;
-            case key_code::_delete:          key_ += u8"⌫"; break;
-            case key_code::right:            key_ += u8"→"; break;
-            case key_code::left:             key_ += u8"←"; break;
-            case key_code::down:             key_ += u8"↓"; break;
-            case key_code::up:               key_ += u8"↑"; break;
-            case key_code::page_up:          key_ += u8"⇞"; break;
-            case key_code::page_down:        key_ += u8"⇟"; break;
-            case key_code::home:             key_ += u8"⇱"; break;
-            case key_code::end:              key_ += u8"⇲"; break;
-            case key_code::caps_lock:        key_ += u8"⇪"; break;
-            case key_code::scroll_lock:      key_ += u8"⤓"; break;
-            case key_code::num_lock:         key_ += u8"⇭"; break;
-            case key_code::print_screen:     key_ += u8"⎙"; break;
-            case key_code::pause:            key_ += u8"⎉"; break;
+            case key_code::_delete:          key_ += u8_compat("⌫"); break;
+            case key_code::right:            key_ += u8_compat("→"); break;
+            case key_code::left:             key_ += u8_compat("←"); break;
+            case key_code::down:             key_ += u8_compat("↓"); break;
+            case key_code::up:               key_ += u8_compat("↑"); break;
+            case key_code::page_up:          key_ += u8_compat("⇞"); break;
+            case key_code::page_down:        key_ += u8_compat("⇟"); break;
+            case key_code::home:             key_ += u8_compat("⇱"); break;
+            case key_code::end:              key_ += u8_compat("⇲"); break;
+            case key_code::caps_lock:        key_ += u8_compat("⇪"); break;
+            case key_code::scroll_lock:      key_ += u8_compat("⤓"); break;
+            case key_code::num_lock:         key_ += u8_compat("⇭"); break;
+            case key_code::print_screen:     key_ += u8_compat("⎙"); break;
+            case key_code::pause:            key_ += u8_compat("⎉"); break;
 
             case key_code::f1: case key_code::f2: case key_code::f3:
             case key_code::f4: case key_code::f5: case key_code::f6:
@@ -263,9 +276,9 @@ namespace cycfi { namespace elements
             case key_code::kp_multiply:      key_ += '*'; break;
             case key_code::kp_subtract:      key_ += '-'; break;
             case key_code::kp_add:           key_ += '+'; break;
-            case key_code::kp_enter:         key_ += u8"⌤"; break;
+            case key_code::kp_enter:         key_ += u8_compat("⌤"); break;
             case key_code::kp_equal:         key_ += '='; break;
-            case key_code::menu:             key_ += u8"☰"; break;
+            case key_code::menu:             key_ += u8_compat("☰"); break;
          }
       }
 

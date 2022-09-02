@@ -65,19 +65,14 @@ namespace cycfi { namespace elements
       //XCloseDisplay(the_display);
    }
 
-   void app::run()
-   {
-      do {} while(tick());
-   }
-
    bool on_event(base_view *, const XEvent&);
 
-   bool app::tick()
+   static bool event_loop(bool block_for_event)
    {
       XEvent event;
       bool result = true;
 
-      while(XPending(the_display) > 0) {
+      while(block_for_event || XPending(the_display) > 0) {
          XNextEvent(the_display, &event);
 
          base_view* view = gs_windows_map[event.xany.window];
@@ -95,6 +90,16 @@ namespace cycfi { namespace elements
       }
 
       return result;
+   }
+
+   bool app::tick()
+   {
+      return event_loop(false);
+   }
+
+   void app::run()
+   {
+      do {} while(event_loop(true));
    }
 
    void app::stop()

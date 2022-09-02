@@ -10,12 +10,14 @@
 #include <elements/support/resource_paths.hpp>
 
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 
 #include <iostream>
 #include <unordered_map>
+#include <string>
 
 namespace cycfi { namespace elements
 {
@@ -30,6 +32,10 @@ namespace cycfi { namespace elements
       cairo_surface_t* surface = nullptr;
       cairo_t* context = nullptr;
       unsigned int last_cursor_shape = XC_X_cursor;
+
+      using key_map = std::unordered_map<key_code, key_action>;
+      key_map keys;
+      XIC x_ic;
    };
 
    namespace {
@@ -90,6 +96,15 @@ namespace cycfi { namespace elements
       );
 
       context = cairo_create(surface);
+
+      // Create an input context so X delivers user's typed text to us
+      // (not just individual keystrokes)
+      // ref https://tedyin.com/posts/a-brief-intro-to-linux-input-method-framework/
+      XIM xim = XOpenIM(display, nullptr, nullptr, nullptr);
+      x_ic = XCreateIC(xim,
+                       XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+                       XNClientWindow, x_window, NULL);
+      XSetICFocus(x_ic);
    }
 
    host_view::~host_view()
@@ -99,6 +114,9 @@ namespace cycfi { namespace elements
       if (host_view_under_cursor == this)
          host_view_under_cursor = nullptr;
       gs_windows_map.erase(x_window);
+      XIM xim = XIMOfIC(x_ic);
+      XDestroyIC(x_ic);
+      XCloseIM(xim);
    }
 
    static void on_draw(base_view *view, rect area)
@@ -185,8 +203,86 @@ namespace cycfi { namespace elements
       }
    }
 
+   static void handle_key(base_view* _view, key_info k)
+   {
+      bool repeated = false;
+      auto& keys = _view->host()->keys;
+
+      if (k.action == key_action::release
+         && keys[k.key] == key_action::release)
+         return;
+
+      if (k.action == key_action::press
+         && keys[k.key] == key_action::press)
+         repeated = true;
+
+      keys[k.key] = k.action;
+
+      if (repeated)
+         k.action = key_action::repeat;
+
+      _view->key(k);
+   }
+
+   // Defined in key.cpp
+   key_code translate_key(KeySym key);
+
    static void on_key(base_view *view, const XKeyEvent& event)
    {
+      auto& state = event.state;
+      int mods = 0;
+      if (state & ShiftMask)
+         mods |= mod_shift;
+      if (state & ControlMask)
+         mods |= mod_control | mod_action;
+      if (state & Mod1Mask)
+         mods |= mod_alt;
+      if (state & Mod4Mask)
+         mods |= mod_super;
+
+      KeySym raw;
+      bool has_keysym = false;
+      if(event.type == KeyPress) {
+         // detect text entry from the input context (only for KeyPress per Xlib docs)
+         Status status;
+         std::wstring s;
+         size_t c = 4; // arbitrary initial size, should work for most inputs
+         do {
+            s.resize(c);
+            c = XwcLookupString(view->host()->x_ic, const_cast<XKeyEvent*>(&event),
+                                s.data(), s.size(),
+                                &raw, &status);
+         } while(status == XBufferOverflow);
+         if(status == XLookupChars || status == XLookupBoth) {
+            for(const auto& cp: s) {
+               if (cp < 32 || (cp > 126 && cp < 160)) {
+                  // skip control chars
+                  continue;
+               }
+
+               // FIXME: wchar_t is different than uint32_t
+               view->text({ static_cast<uint32_t>(cp), mods });
+            }
+         }
+         if(status == XLookupKeySym || status == XLookupBoth) {
+            has_keysym = true;
+         }
+      }
+      else {
+         raw = XLookupKeysym(const_cast<XKeyEvent*>(&event), 0);
+         if(raw != NoSymbol) {
+            has_keysym = true;
+         }
+      }
+
+      if(has_keysym) {
+         KeySym upper, lower;
+         XConvertCase(raw, &lower, &upper);
+         key_code key = translate_key(lower);
+
+         auto const action = event.type == KeyPress ? key_action::press : key_action::release;
+         handle_key(view, { key, action, mods });
+      }
    }
 
    bool on_event(base_view *view, const XEvent& event)
@@ -215,7 +311,16 @@ namespace cycfi { namespace elements
             break;
          case KeyPress:
          case KeyRelease:
+            // allow input method to filter keystrokes
+            if (XFilterEvent(const_cast<XEvent*>(&event), None))
+               break;
+
             on_key(view, event.xkey);
+            break;
+         case MappingNotify:
+            if(event.xmapping.request == MappingKeyboard || event.xmapping.request == MappingModifier) {
+               XRefreshKeyboardMapping(const_cast<XMappingEvent*>(&event.xmapping));
+            }
             break;
          case ClientMessage:
          {

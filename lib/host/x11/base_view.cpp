@@ -33,6 +33,9 @@ namespace cycfi { namespace elements
       cairo_t* context = nullptr;
       unsigned int last_cursor_shape = XC_X_cursor;
 
+      Time click_time = 0;
+      uint32_t click_count = 0;
+
       using key_map = std::unordered_map<key_code, key_action>;
       key_map keys;
       XIC x_ic;
@@ -42,6 +45,11 @@ namespace cycfi { namespace elements
       // set_cursor is not provided with a base_view context, so we must keep
       // track of the one the user is pointing to
       host_view *host_view_under_cursor = nullptr;
+
+      // X11 does not detect double clicks; it lets the application (framework)
+      // do it.  Both GTK and Qt default to 400ms for double click time, so
+      // copy that behavior.
+      static constexpr Time dbl_click_time = 400;
    }
 
    extern std::unordered_map<Window, base_view*> gs_windows_map;
@@ -167,10 +175,18 @@ namespace cycfi { namespace elements
    {
       mouse_button btn = {};
       get_mouse(event, btn);
+
+      auto& click_count = view->host()->click_count;
+      if ((event.time - view->host()->click_time) < dbl_click_time)
+         ++click_count;
+      else
+         click_count = 1;
+      view->host()->click_time = event.time;
+
       btn.state = (event.button == Button1) ? mouse_button::left
                 : (event.button == Button2) ? mouse_button::middle
                 :                             mouse_button::right;
-      btn.num_clicks = 1; // TODO count double click like GTK
+      btn.num_clicks = view->host()->click_count;
       btn.down = event.type == ButtonPress;
 
       view->click(btn);

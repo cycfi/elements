@@ -99,6 +99,11 @@ namespace cycfi { namespace elements
       g_application_run(G_APPLICATION(_app), argc, argv);
    }
 
+   bool app::tick()
+   {
+      return gtk_main_iteration();
+   }
+
    void app::stop()
    {
       g_application_release(G_APPLICATION(_app));

@@ -177,6 +177,7 @@ namespace cycfi { namespace elements
    // Helper for converting char8_t[] string literals to char[]
    ////////////////////////////////////////////////////////////////////////////
 
+#if __cplusplus >= 202002L // C++20
    // see https://developercommunity.visualstudio.com/t/C20-String-literal-operator-template-u/1318552
 #ifdef __INTELLISENSE__
    consteval const char* operator""_as_char([[maybe_unused]] const char8_t*, [[maybe_unused]] std::size_t)
@@ -216,6 +217,12 @@ namespace cycfi { namespace elements
    constexpr auto& operator""_as_char()
    {
       return make_as_char_buffer<L>(std::make_index_sequence<decltype(L)::size>());
+   }
+#endif
+#else
+   constexpr const char* operator""_as_char(const char* src, std::size_t)
+   {
+      return src;
    }
 #endif
 

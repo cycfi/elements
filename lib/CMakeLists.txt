@@ -207,14 +207,6 @@ if (APPLE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
 endif()
 
-if (APPLE)
-   if(DEFINED ENV{HOMEBREW_PREFIX})
-     set(lib_dir $ENV{HOMEBREW_PREFIX}/opt)
-   else()
-     set(lib_dir "/usr/local/opt")
-   endif()
-endif()
-
 ###############################################################################
 # Cairo
 
@@ -226,14 +218,6 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
    endif()
-elseif (APPLE)
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-   target_include_directories(elements PUBLIC ${cairo_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/cairo/lib/libcairo.a")            # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/libpng/lib/libpng.a")            # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/pixman/lib/libpixman-1.a")       # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/zlib/lib/libz.a")                # Static link
 else()
 	# TODO: add a min version specifiction
 	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
@@ -251,11 +235,6 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
    endif()
-elseif (APPLE)
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_include_directories(elements PUBLIC ${fontconfig_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/fontconfig/lib/libfontconfig.a")  # Static link
-   target_link_libraries(elements PUBLIC "${lib_dir}/expat/lib/libexpat.a")            # Static link
 else()
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
@@ -272,12 +251,7 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
-elseif (APPLE)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_include_directories(elements PUBLIC ${freetype2_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/freetype2/lib/libfreetype.a")     # Static link
-   target_link_libraries(elements PUBLIC "${lib_dir}/bzip2/lib/libbz2.a")              # Static link
-elseif (UNIX OR WIN32)
+else()
    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
    target_link_libraries(elements PUBLIC PkgConfig::freetype2)
 endif()

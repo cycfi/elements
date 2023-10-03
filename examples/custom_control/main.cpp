@@ -7,6 +7,7 @@
 #include <infra/support.hpp>
 
 using namespace cycfi::elements;
+using namespace cycfi::artist;
 using namespace cycfi;
 
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -81,7 +82,7 @@ void my_custom_control::draw(context const& ctx)
    ctx.canvas.line_width(1.0);
    ctx.canvas.stroke_style(color(0, 0, 0.5));
    auto outer_ring = circle(center_point(ctx.bounds), _radius);
-   ctx.canvas.circle(outer_ring);
+   ctx.canvas.add_circle(outer_ring);
    ctx.canvas.stroke();
 
    // Center points for four knobs.
@@ -99,7 +100,7 @@ void my_custom_control::draw(context const& ctx)
       ctx.canvas.line_width(1.0);
       ctx.canvas.stroke_style(color(0, 0, 0.6));
       ctx.canvas.fill_style(color(1.0, 1.0, 1.0));
-      ctx.canvas.circle(circle(knob, 5.0));
+      ctx.canvas.add_circle(circle(knob, 5.0));
       ctx.canvas.fill_preserve();
       ctx.canvas.stroke();
 
@@ -109,7 +110,7 @@ void my_custom_control::draw(context const& ctx)
       {
          ctx.canvas.line_width(2.0);
          ctx.canvas.stroke_style(color(0, 0, 0.8));
-         ctx.canvas.circle(circle(knob, 7.0));
+         ctx.canvas.add_circle(circle(knob, 7.0));
          ctx.canvas.stroke();
       }
    }
@@ -119,7 +120,7 @@ void my_custom_control::draw(context const& ctx)
    {
       ctx.canvas.line_width(2.0);
       ctx.canvas.stroke_style(color(0, 0.8, 0));
-      ctx.canvas.circle(circle(_knobs[_choosen_knob], 7.0));
+      ctx.canvas.add_circle(circle(_knobs[_choosen_knob], 7.0));
       ctx.canvas.stroke();
    }
 
@@ -127,7 +128,7 @@ void my_custom_control::draw(context const& ctx)
    {
       ctx.canvas.line_width(1.0);
       ctx.canvas.stroke_style(color(0, 0.5, 0.5, 0.2));
-      ctx.canvas.circle(circle(cursor_pos.x, cursor_pos.y, 10.0));
+      ctx.canvas.add_circle(circle(cursor_pos.x, cursor_pos.y, 10.0));
       ctx.canvas.stroke();
    }
 }
@@ -215,6 +216,7 @@ private:
 
 auto my_app::make_control()
 {
+   using cycfi::elements::image;
    return
       layer(
          align_center_middle(

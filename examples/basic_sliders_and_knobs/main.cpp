@@ -6,6 +6,7 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -83,8 +84,8 @@ auto make_dial(int index)
 
    auto markers = radial_labels<15>(
       hold(dials[index]),
-      0.7,                                   // Label font size (relative size)
-      "0", "1", "2", "3", "4",               // Labels
+      0.7,                                // Label font size (relative size)
+      "0", "1", "2", "3", "4",            // Labels
       "5", "6", "7", "8", "9", "10"
    );
 

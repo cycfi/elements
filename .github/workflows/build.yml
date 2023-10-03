@@ -14,7 +14,7 @@ jobs:
           os: windows-latest
           cc: "cl"
           cxx: "cl"
-          environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars32.bat"
           # If this env variable is present, we set BOOST_ROOT to its content
         - name: "Ubuntu Latest GCC"
           os: ubuntu-latest

@@ -4,16 +4,13 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/label.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
    view_limits default_label::limits(basic_context const& ctx) const
    {
-      auto  size = measure_text(
-         ctx.canvas, c_str()
-       , get_font()
-       , get_font_size()
-      );
+      auto  size = measure_text(ctx.canvas, get_text(), get_font().size(get_font_size()));
       return { { size.x, size.y }, { size.x, size.y } };
    }
 
@@ -28,7 +25,7 @@ namespace cycfi { namespace elements
          align |= get_theme().label_text_align & 0x1C;
 
       canvas_.fill_style(get_font_color());
-      canvas_.font(get_font(), get_font_size());
+      canvas_.font(get_font().size(get_font_size()));
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)
@@ -57,7 +54,7 @@ namespace cycfi { namespace elements
       }
 
       canvas_.text_align(align);
-      canvas_.fill_text({ cx, cy }, c_str());
+      canvas_.fill_text(get_text(), point{ cx, cy });
    }
 }}
 

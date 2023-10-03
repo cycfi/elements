@@ -7,6 +7,7 @@
 
 using namespace cycfi::elements;
 using namespace std::chrono_literals;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);

@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
       {
          auto& cnv = ctx.canvas;
          cnv.begin_path();
-         cnv.round_rect(ctx.bounds, _radius);
+         cnv.add_round_rect(ctx.bounds, _radius);
          cnv.fill_style(_color);
          cnv.fill();
       }

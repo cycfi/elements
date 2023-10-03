@@ -146,7 +146,7 @@ namespace cycfi { namespace elements
          init_window_class()
          {
             WNDCLASSW windowClass = {};
-            windowClass.hbrBackground = nullptr;
+            windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = GetModuleHandleW(nullptr);
             windowClass.lpfnWndProc = handle_event;

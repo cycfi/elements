@@ -6,11 +6,13 @@
 #include <elements/element/port.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
+#include <elements/support/theme.hpp>
 #include <algorithm>
 #include <cmath>
 
 namespace cycfi { namespace elements
 {
+   using artist::color;
    constexpr auto min_port_size = 32;
 
    ////////////////////////////////////////////////////////////////////////////
@@ -19,7 +21,7 @@ namespace cycfi { namespace elements
    void port_base::draw(context const& ctx)
    {
       auto state = ctx.canvas.new_state();
-      ctx.canvas.rect(ctx.bounds);
+      ctx.canvas.add_rect(ctx.bounds);
       ctx.canvas.clip();
       proxy_base::draw(ctx);
    }
@@ -118,7 +120,7 @@ namespace cycfi { namespace elements
       void draw_scrollbar_fill(canvas& _canvas, rect r, color fill_color)
       {
          _canvas.begin_path();
-         _canvas.rect(r);
+         _canvas.add_rect(r);
          _canvas.fill_style(fill_color);
          _canvas.fill();
       }
@@ -130,10 +132,10 @@ namespace cycfi { namespace elements
       )
       {
          _canvas.begin_path();
-         _canvas.round_rect(b, radius);
+         _canvas.add_round_rect(b, radius);
          _canvas.fill_style(fill_color);
 
-         if (is_tracking || _canvas.hit_test(mp))
+         if (is_tracking || _canvas.point_in_path(mp))
             _canvas.fill_style(fill_color.opacity(0.8));
 
          _canvas.fill_preserve();

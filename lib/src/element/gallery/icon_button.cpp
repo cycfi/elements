@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/gallery/icon_button.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {

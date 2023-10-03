@@ -7,8 +7,6 @@
 #define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
-#include <elements/support/receiver.hpp>
-#include <elements/support/rect.hpp>
 
 #include <infra/string_view.hpp>
 #include <memory>
@@ -18,6 +16,7 @@ namespace cycfi { namespace elements
 {
    struct basic_context;
    class context;
+   class view;
 
    ////////////////////////////////////////////////////////////////////////////
    // Elements

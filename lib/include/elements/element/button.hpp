@@ -216,6 +216,7 @@ namespace cycfi { namespace elements
                         basic_latching_button(W1&& off, W2&& on);
 
       bool              click(context const& ctx, mouse_button btn) override;
+//      void              drag(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>
@@ -254,8 +255,9 @@ namespace cycfi { namespace elements
          this->on_tracking(ctx, this->end_tracking);
          if (this->on_click)
             this->on_click(true);
+         ctx.view.refresh(ctx);
       }
-      if (this->state(ctx.bounds.includes(btn.pos)))
+      if (btn.down && this->state(ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return true;
    }

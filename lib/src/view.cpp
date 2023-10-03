@@ -7,8 +7,11 @@
 #include <elements/window.hpp>
 #include <elements/support/context.hpp>
 
- namespace cycfi { namespace elements
- {
+namespace cycfi { namespace elements
+{
+   using artist::image;
+   using artist::offscreen_image;
+
    view::view(extent size_)
     : base_view(size_)
     , _main_element(make_scaled_content())
@@ -43,10 +46,9 @@
       if (_content.empty())
          return;
 
-      auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-      auto context_ = cairo_create(surface_);
-      canvas cnv{ *context_ };
-      cnv.pre_scale(hdpi_scale());
+      image img{ 1, 1 };
+      offscreen_image offscr{ img };
+      canvas cnv{ offscr.context() };
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{ *this, cnv };
@@ -57,12 +59,9 @@
          if (on_change_limits)
             on_change_limits(limits_);
       }
-
-      cairo_surface_destroy(surface_);
-      cairo_destroy(context_);
    }
 
-   void view::draw(cairo_t* context_, rect dirty_)
+   void view::draw(canvas& cnv, rect dirty_)
    {
       if (_content.empty())
          return;
@@ -72,8 +71,6 @@
       // Update the limits and constrain the window size to the limits
       set_limits();
 
-      canvas cnv{ *context_ };
-      cnv.pre_scale(hdpi_scale());
       auto size_ = size();
       rect subj_bounds = { 0, 0, size_.x, size_.y };
       context ctx{ *this, cnv, &_main_element, subj_bounds };
@@ -94,16 +91,13 @@
       template <typename F, typename This>
       void call(F f, This& self, rect _current_bounds)
       {
-         auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
-         auto context_ = cairo_create(surface_);
-         canvas cnv{ *context_ };
-         cnv.pre_scale(self.hdpi_scale());
+         image img{ 1, 1 };
+         offscreen_image offscr{ img };
+         canvas cnv{ offscr.context() };
          context ctx { self, cnv, &self.main_element(), _current_bounds };
+         cnv.pre_scale(self.hdpi_scale());
 
          f(ctx, self.main_element());
-
-         cairo_surface_destroy(surface_);
-         cairo_destroy(context_);
       }
    }
 
@@ -270,7 +264,7 @@
       call(
          [k, &handled](auto const& ctx, auto& _main_element)
          {
-             handled = _main_element.key(ctx, k);
+            handled = _main_element.key(ctx, k);
          },
          *this, _current_bounds
       );
@@ -286,7 +280,7 @@
       call(
          [info, &handled](auto const& ctx, auto& _main_element)
          {
-             handled = _main_element.text(ctx, info);
+            handled = _main_element.text(ctx, info);
          },
          *this, _current_bounds
       );

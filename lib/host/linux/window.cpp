@@ -36,11 +36,11 @@ namespace cycfi { namespace elements
    float get_scale(GtkWidget* widget)
    {
       auto gdk_win = gtk_widget_get_window(widget);
-      return 1.0f / gdk_window_get_scale_factor(gdk_win);
+      return gdk_window_get_scale_factor(gdk_win);
    }
 
    window::window(std::string const& name, int style_, rect const& bounds)
-    :  _window(new host_window)
+    : _window(new host_window)
    {
       // Chicken and egg. GTK wants us to create windows only
       // after the app is activated. So we have a scheme to
@@ -80,17 +80,15 @@ namespace cycfi { namespace elements
    point window::size() const
    {
       auto win = GTK_WINDOW(_window->host);
-      auto scale = get_scale(_window->host);
       gint width, height;
       gtk_window_get_size(win, &width, &height);
-      return { float(width) / scale, float(height) / scale };
+      return { float(width), float(height) };
    }
 
    void window::size(point const& p)
    {
       auto win = GTK_WINDOW(_window->host);
-      auto scale = get_scale(_window->host);
-      gtk_window_resize(win, p.x * scale, p.y * scale);
+      gtk_window_resize(win, p.x, p.y);
    }
 
    void window::limits(view_limits limits_)
@@ -151,7 +149,7 @@ namespace cycfi { namespace elements
          {
             auto win = GTK_WINDOW(_window->host);
             auto scale = get_scale(_window->host);
-            gtk_window_move(win, p.x * scale, p.y * scale);
+            gtk_window_move(win, p.x / scale, p.y / scale);
          };
 
       if (app_is_activated())

@@ -7,6 +7,7 @@
 #define ELEMENTS_REFERENCE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
+#include <elements/support/receiver.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements

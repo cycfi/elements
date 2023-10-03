@@ -246,7 +246,7 @@ namespace cycfi { namespace elements
       canvas& cnv
     , rect bounds
     , float size
-    , float /* font_size */
+    , float font_size
     , std::string const labels[]
     , std::size_t num_labels
    )
@@ -260,6 +260,10 @@ namespace cycfi { namespace elements
       auto state = cnv.new_state();
       auto const& theme = get_theme();
 
+      cnv.font(
+         theme.label_font.size(theme.label_font._size * font_size)
+      );
+
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_style(theme.label_font_color);
 
@@ -270,7 +274,7 @@ namespace cycfi { namespace elements
             point{ pos, reverse? bounds.top : bounds.bottom }
             ;
 
-         cnv.fill_text(where, labels[vertical? (num_labels-i)-1 : i].c_str());
+         cnv.fill_text(labels[vertical? (num_labels-i)-1 : i].c_str(), where);
          pos += incr;
       }
    }

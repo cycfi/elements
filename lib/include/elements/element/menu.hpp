@@ -91,7 +91,6 @@ namespace cycfi { namespace elements
                   }
 
                   shortcut_key() = default;
-                  shortcut_key(shortcut_key const&) = default;
 
       key_code    key = key_code::unknown;
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)

@@ -7,6 +7,7 @@
 #define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
+#include <elements/element/activator.hpp>
 #include <elements/support/text_utils.hpp>
 #include <string>
 #include <utility>
@@ -17,7 +18,7 @@ namespace cycfi { namespace elements
    // toggle_selector (e.g. check_box and radio_button where the small button
    // at the left followed by some text at the right of the button.)
    ////////////////////////////////////////////////////////////////////////////
-   struct toggle_selector : element
+   struct toggle_selector : activator
    {
                               toggle_selector(std::string text)
                                : _text(std::move(text))
@@ -26,11 +27,8 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
-      void                    enable(bool state = true) override;
-      bool                    is_enabled() const override;
 
       std::string             _text;
-      bool                    _is_enabled = true;
    };
 
    inline view_limits toggle_selector::limits(basic_context const& ctx) const
@@ -51,17 +49,6 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-
-   inline void toggle_selector::enable(bool state)
-   {
-      _is_enabled = state;
-   }
-
-   inline bool toggle_selector::is_enabled() const
-   {
-      return _is_enabled;
-   }
-
 }}
 
 #endif

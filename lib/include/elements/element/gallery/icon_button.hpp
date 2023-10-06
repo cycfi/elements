@@ -7,6 +7,7 @@
 #define ELEMENTS_GALLERY_ICON_BUTTON_JUNE_5_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/activator.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
@@ -34,7 +35,7 @@ namespace cycfi { namespace elements
    );
 
    template <bool state, bool hilite = state>
-   struct icon_button_element : element
+   struct icon_button_element : activator
    {
                               icon_button_element(
                                  uint32_t code
@@ -48,17 +49,14 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-      void                    enable(bool state_ = true) override;
-      bool                    is_enabled() const override;
 
       uint32_t                _code;
       float                   _size;
       color                   _body_color;
-      bool                    _is_enabled = true;
    };
 
    template <bool hilite>
-   struct plain_icon_button_element : element
+   struct plain_icon_button_element : activator
    {
                               plain_icon_button_element(
                                  uint32_t code
@@ -70,12 +68,9 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-      void                    enable(bool state = true) override;
-      bool                    is_enabled() const override;
 
       uint32_t                _code;
       float                   _size;
-      bool                    _is_enabled = true;
    };
 
    template <bool state, bool hilite>
@@ -93,18 +88,6 @@ namespace cycfi { namespace elements
       );
    }
 
-   template <bool state, bool hilite>
-   inline void icon_button_element<state, hilite>::enable(bool state_)
-   {
-      _is_enabled = state_;
-   }
-
-   template <bool state, bool hilite>
-   inline bool icon_button_element<state, hilite>::is_enabled() const
-   {
-      return _is_enabled;
-   }
-
    template <bool hilite>
    inline view_limits plain_icon_button_element<hilite>::limits(basic_context const& /* ctx */) const
    {
@@ -118,18 +101,6 @@ namespace cycfi { namespace elements
       draw_plain_icon_button(
          ctx, _code, _size * get_theme().icon_font._size, hilite, is_enabled()
       );
-   }
-
-   template <bool hilite>
-   void plain_icon_button_element<hilite>::enable(bool state)
-   {
-      _is_enabled = state;
-   }
-
-   template <bool hilite>
-   bool plain_icon_button_element<hilite>::is_enabled() const
-   {
-      return _is_enabled;
    }
 
    inline basic_toggle_button<> toggle_icon_button(

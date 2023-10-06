@@ -19,16 +19,6 @@ namespace cycfi { namespace elements
       draw_button_base(ctx, ctx.bounds, body_color, is_enabled(), corner_radius);
    }
 
-   void basic_button_body::enable(bool state)
-   {
-      _is_enabled = state;
-   }
-
-   bool basic_button_body::is_enabled() const
-   {
-      return _is_enabled;
-   }
-
    layered_button
    button(
       std::string text

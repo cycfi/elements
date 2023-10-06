@@ -6,6 +6,7 @@
 #if !defined(ELEMENTS_GALLERY_BUTTON_JUNE_5_2016)
 #define ELEMENTS_GALLERY_BUTTON_JUNE_5_2016
 
+#include <elements/element/activator.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/misc.hpp>
 #include <elements/element/label.hpp>
@@ -22,17 +23,14 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
-   struct basic_button_body : public element
+   struct basic_button_body : public activator
    {
       constexpr static float corner_radius = 4.0;
 
                               basic_button_body(color body_color);
       void                    draw(context const& ctx) override;
-      void                    enable(bool state = true) override;
-      bool                    is_enabled() const override;
 
       color                   body_color;
-      bool                    _is_enabled = true;
    };
 
    inline basic_button_body::basic_button_body(color body_color)

@@ -26,7 +26,8 @@ namespace cycfi { namespace elements
       auto  hilite = state.hilite;
       auto  tracking = state.tracking;;
 
-      if (value || tracking)
+      // Draw dot
+      if (is_enabled() && (value || tracking))
       {
          color c1 = hilite? theme_.indicator_hilite_color : theme_.indicator_bright_color;
          if (tracking)
@@ -38,8 +39,12 @@ namespace cycfi { namespace elements
          canvas_.fill();
       }
 
+      // Draw outer circle
       auto line_width = theme_.controls_frame_stroke_width;
-      color outline_color = hilite? theme_.frame_hilite_color : theme_.frame_color;
+      color outline_color = (is_enabled() && hilite)? theme_.frame_hilite_color : theme_.frame_color;
+      if (!is_enabled())
+         outline_color = outline_color.opacity(outline_color.alpha * theme_.disabled_opacity);
+
       canvas_.line_width(line_width);
       canvas_.begin_path();
       canvas_.add_circle(circle(center, radius-1));
@@ -47,13 +52,21 @@ namespace cycfi { namespace elements
       canvas_.stroke();
 
       // Pseudo glow
-      auto glow_width = hilite? line_width*2 : line_width;
-      canvas_.add_circle(circle(center, radius-(glow_width/3)));
-      canvas_.line_width(glow_width);
-      canvas_.stroke_style(outline_color.opacity(0.1));
-      canvas_.stroke();
+      if (is_enabled())
+      {
+         auto glow_width = hilite? line_width*2 : line_width;
+         canvas_.add_circle(circle(center, radius-(glow_width/3)));
+         canvas_.line_width(glow_width);
+         canvas_.stroke_style(outline_color.opacity(0.1));
+         canvas_.stroke();
+      }
 
-      canvas_.fill_style(theme_.label_font_color);
+      // Draw text
+      auto text_c = is_enabled()?
+         theme_.label_font_color :
+         theme_.label_font_color.opacity(theme_.label_font_color.alpha * theme_.disabled_opacity)
+         ;
+      canvas_.fill_style(text_c);
       canvas_.font(theme_.label_font);
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;

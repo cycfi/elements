@@ -36,6 +36,7 @@ namespace cycfi { namespace elements
       color                indicator_bright_color;
       color                indicator_hilite_color;
       color                basic_font_color;
+      float                disabled_opacity;
 
       font_descr           system_font;   // The system_font font is the font the OS
                                           // uses for displaying text in OS UI elements

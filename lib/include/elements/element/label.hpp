@@ -32,12 +32,16 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       virtual font_type       get_font() const;
       virtual float           get_font_size() const;
       virtual float           get_default_font_size() const;
       virtual color           get_font_color() const;
       virtual int             get_text_align() const;
+
+      bool                    _is_enabled = true;
    };
 
    template <typename Base>

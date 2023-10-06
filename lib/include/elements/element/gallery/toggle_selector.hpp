@@ -26,8 +26,11 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       std::string             _text;
+      bool                    _is_enabled = true;
    };
 
    inline view_limits toggle_selector::limits(basic_context const& ctx) const
@@ -48,6 +51,17 @@ namespace cycfi { namespace elements
    {
       return true;
    }
+
+   inline void toggle_selector::enable(bool state)
+   {
+      _is_enabled = state;
+   }
+
+   inline bool toggle_selector::is_enabled() const
+   {
+      return _is_enabled;
+   }
+
 }}
 
 #endif

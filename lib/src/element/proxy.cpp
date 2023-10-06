@@ -82,6 +82,9 @@ namespace cycfi { namespace elements
 
    bool proxy_base::click(context const& ctx, mouse_button btn)
    {
+      if (!subject().is_enabled())
+         return false;
+
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx, btn.pos);
       auto r = subject().click(sctx, btn);
@@ -131,6 +134,16 @@ namespace cycfi { namespace elements
       auto r = subject().scroll(sctx, dir, p);
       restore_subject(sctx);
       return r;
+   }
+
+   void proxy_base::enable(bool state)
+   {
+      subject().enable(state);
+   }
+
+   bool proxy_base::is_enabled() const
+   {
+      return subject().is_enabled();
    }
 
    bool proxy_base::wants_focus() const

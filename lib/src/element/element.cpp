@@ -75,6 +75,15 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   void element::enable(bool /*state*/)
+   {
+   }
+
+   bool element::is_enabled() const
+   {
+      return true;
+   }
+
    bool element::wants_focus() const
    {
       return false;

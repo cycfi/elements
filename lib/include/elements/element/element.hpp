@@ -51,6 +51,8 @@ namespace cycfi { namespace elements
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual bool            scroll(context const& ctx, point dir, point p);
+      virtual void            enable(bool state = true);
+      virtual bool            is_enabled() const;
 
       virtual bool            wants_focus() const;
       virtual void            begin_focus();

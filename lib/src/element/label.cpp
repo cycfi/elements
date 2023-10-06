@@ -24,7 +24,11 @@ namespace cycfi { namespace elements
       if ((align & 0x1C) == 0)
          align |= get_theme().label_text_align & 0x1C;
 
-      canvas_.fill_style(get_font_color());
+      auto text_c = get_font_color();
+      if (!is_enabled())
+         text_c = text_c.opacity(text_c.alpha * get_theme().disabled_opacity);
+
+      canvas_.fill_style(text_c);
       canvas_.font(get_font().size(get_font_size()));
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
@@ -55,6 +59,16 @@ namespace cycfi { namespace elements
 
       canvas_.text_align(align);
       canvas_.fill_text(get_text(), point{ cx, cy });
+   }
+
+   void default_label::enable(bool state)
+   {
+      _is_enabled = state;
+   }
+
+   bool default_label::is_enabled() const
+   {
+      return _is_enabled;
    }
 }}
 

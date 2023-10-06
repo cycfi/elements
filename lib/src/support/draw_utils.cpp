@@ -48,23 +48,29 @@ namespace cycfi { namespace elements
       cnv.fill();
    }
 
-   void draw_button(canvas& cnv, rect bounds, color c, float corner_radius)
+   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, float corner_radius)
    {
-      auto gradient = canvas::linear_gradient{
-         bounds.top_left(),
-         bounds.bottom_left()
-      };
+      auto const& theme_ = get_theme();
 
-      float const box_opacity = get_theme().element_background_opacity;
+      auto gradient = canvas::linear_gradient{
+            bounds.top_left(),
+            bounds.bottom_left()
+         };
+
+      float box_opacity = get_theme().element_background_opacity;
+      if (!enabled)
+         box_opacity *= theme_.disabled_opacity;
+
       gradient.add_color_stop({ 0.0, rgb(255, 255, 255).opacity(box_opacity) });
       gradient.add_color_stop({ 1.0, rgb(0, 0, 0).opacity(box_opacity) });
       cnv.fill_style(gradient);
 
       cnv.begin_path();
       cnv.add_round_rect(bounds.inset(1, 1), corner_radius-1);
-      cnv.fill_style(c);
+      cnv.fill_style(enabled? c : c.opacity(c.alpha * theme_.disabled_opacity));
       cnv.fill();
       cnv.add_round_rect(bounds.inset(1, 1), corner_radius-1);
+
       cnv.fill_style(gradient);
       cnv.fill();
 

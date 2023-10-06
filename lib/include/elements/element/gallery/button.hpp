@@ -28,8 +28,11 @@ namespace cycfi { namespace elements
 
                               basic_button_body(color body_color);
       void                    draw(context const& ctx) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       color                   body_color;
+      bool                    _is_enabled = true;
    };
 
    inline basic_button_body::basic_button_body(color body_color)
@@ -327,7 +330,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Drawing button utility
    ////////////////////////////////////////////////////////////////////////////
-   void draw_button_base(context const& ctx, rect bounds, color color_, float corner_radius);
+   void draw_button_base(
+      context const& ctx, rect bounds, color color_, bool enabled, float corner_radius
+   );
 }}
 
 #endif

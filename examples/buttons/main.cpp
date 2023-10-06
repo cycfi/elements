@@ -30,6 +30,9 @@ auto make_buttons(view& view_)
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
    auto prog_advance    = button("Advance Progress Bar");
+   auto disabled_button = button("Disabled Button");
+
+   disabled_button.enable(false); // Disable this
 
    reset.on_click =
       [lbutton, &view_](bool) mutable
@@ -58,7 +61,8 @@ auto make_buttons(view& view_)
             top_margin(20, reset),
             top_margin(20, note),
             top_margin(20, vsize(25, hold(prog_bar))),
-            top_margin(20, prog_advance)
+            top_margin(20, prog_advance),
+            top_margin(20, disabled_button)
          )
       );
 }
@@ -68,10 +72,12 @@ auto make_controls(view& view_)
    auto  check_box1 = check_box("Reionizing electrons");
    auto  check_box2 = check_box("The Nexus Meridian Unfolding");
    auto  check_box3 = check_box("Serenity Dreamscape Exploration");
+   auto  check_box4 = check_box("Forever Disabled");
 
    check_box1.value(true);
    check_box2.value(true);
    check_box3.value(true);
+   check_box4.enable(false); // Disable this one
 
    auto  check_boxes =
          group("Check boxes",
@@ -80,7 +86,8 @@ auto make_controls(view& view_)
                   vtile(
                      top_margin(10, align_left(check_box1)),
                      top_margin(10, align_left(check_box2)),
-                     top_margin(10, align_left(check_box3))
+                     top_margin(10, align_left(check_box3)),
+                     top_margin(10, align_left(check_box4))
                   )
                )
             )
@@ -89,8 +96,10 @@ auto make_controls(view& view_)
    auto  radio_button1 = radio_button("Eons from now");
    auto  radio_button2 = radio_button("Ultra-sentient particles");
    auto  radio_button3 = radio_button("The stratosphere is electrified");
+   auto  radio_button4 = radio_button("No, no, not me");
 
    radio_button1.select(true);
+   radio_button4.enable(false); // Disable this one
 
    auto  radio_buttons =
          group("Radio Buttons",
@@ -99,13 +108,17 @@ auto make_controls(view& view_)
                   vtile(
                      top_margin(10, align_left(radio_button1)),
                      top_margin(10, align_left(radio_button2)),
-                     top_margin(10, align_left(radio_button3))
+                     top_margin(10, align_left(radio_button3)),
+                     top_margin(10, align_left(radio_button4))
                   )
                )
             )
          );
 
    auto indicator_color = get_theme().indicator_color;
+
+   auto disabled_icon_button = icon_button(icons::power, 1.2);
+   disabled_icon_button.enable(false);
 
    auto  icon_buttons =
          group("Icon Buttons",
@@ -116,7 +129,8 @@ auto make_controls(view& view_)
                         align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
                         align_center(icon_button(icons::magnifying_glass, 1.2)),
                         align_center(icon_button(icons::left_circled, 1.2)),
-                        align_center(toggle_icon_button(icons::left, icons::right, 1.2))
+                        align_center(toggle_icon_button(icons::left, icons::right, 1.2)),
+                        align_center(disabled_icon_button)
                      )
                   )
                )

@@ -21,12 +21,13 @@ namespace cycfi { namespace elements
       auto  value = state.value;
       auto  hilite = state.hilite;
       auto  tracking = state.tracking;
+      auto  enabled = state.enabled;
 
       // Draw check mark
-      if (is_enabled())
+      if (enabled)
       {
          color icon_c = (value || tracking) ?
-            ((is_enabled() && hilite)? theme_.indicator_hilite_color : theme_.indicator_bright_color) :
+            ((enabled && hilite)? theme_.indicator_hilite_color : theme_.indicator_bright_color) :
             colors::black.opacity(theme_.element_background_opacity)
             ;
 
@@ -39,8 +40,8 @@ namespace cycfi { namespace elements
 
       // Draw box
       auto line_width = theme_.controls_frame_stroke_width;
-      color outline_color = (is_enabled() && hilite)? theme_.frame_hilite_color : theme_.frame_color;
-      if (!is_enabled())
+      color outline_color = (enabled && hilite)? theme_.frame_hilite_color : theme_.frame_color;
+      if (!enabled)
          outline_color = outline_color.opacity(outline_color.alpha * theme_.disabled_opacity);
 
       canvas_.line_width(line_width);
@@ -50,7 +51,7 @@ namespace cycfi { namespace elements
       canvas_.stroke();
 
       // Pseudo glow
-      if (is_enabled())
+      if (enabled)
       {
          auto glow_width = hilite? line_width*2 : line_width;
          auto inset = glow_width/3;
@@ -62,7 +63,7 @@ namespace cycfi { namespace elements
       }
 
       // Draw text
-      auto text_c = is_enabled()?
+      auto text_c = enabled?
          theme_.label_font_color :
          theme_.label_font_color.opacity(theme_.label_font_color.alpha * theme_.disabled_opacity)
          ;

@@ -61,6 +61,17 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   void basic_button::enable(bool state)
+   {
+      _state.enabled = state;
+      update_receiver();
+   }
+
+   bool basic_button::is_enabled() const
+   {
+      return _state.enabled;
+   }
+
    bool basic_button::state(bool val)
    {
       if (val != _state.value)

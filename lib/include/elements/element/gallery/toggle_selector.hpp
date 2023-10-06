@@ -7,7 +7,7 @@
 #define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
-#include <elements/element/activator.hpp>
+#include <elements/element/element.hpp>
 #include <elements/support/text_utils.hpp>
 #include <string>
 #include <utility>
@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
    // toggle_selector (e.g. check_box and radio_button where the small button
    // at the left followed by some text at the right of the button.)
    ////////////////////////////////////////////////////////////////////////////
-   struct toggle_selector : activator
+   struct toggle_selector : element
    {
                               toggle_selector(std::string text)
                                : _text(std::move(text))

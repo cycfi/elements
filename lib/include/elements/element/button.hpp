@@ -26,11 +26,13 @@ namespace cycfi { namespace elements
                          : value(false)
                          , hilite(false)
                          , tracking(false)
+                         , enabled(true)
                         {}
 
       bool              value : 1;
       bool              hilite : 1;
       bool              tracking : 1;
+      bool              enabled : 1;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -55,6 +57,9 @@ namespace cycfi { namespace elements
       bool              click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
+
+      void              enable(bool state = true) override;
+      bool              is_enabled() const override;
 
       void              value(bool val) override;
       bool              value() const override  { return _state.value; }

@@ -37,6 +37,9 @@ namespace cycfi { namespace elements
     : body_color(body_color)
    {}
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a generic layered button
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button, typename Label>
    inline Button make_button(
       Label&& label
@@ -51,6 +54,9 @@ namespace cycfi { namespace elements
       return Button(std::move(btn_img_off), std::move(btn_img_on));
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered button with text label
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button make_button(
       std::string text
@@ -67,6 +73,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered button with icon label
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
@@ -85,6 +94,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button make_button(
       std::uint32_t icon_code
@@ -107,6 +119,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button make_button(
       std::string text
@@ -129,6 +144,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a generic layered text button with label and optional frame
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button, typename Label>
    inline Button text_button(Label&& label, bool no_frame = false)
    {
@@ -146,6 +164,9 @@ namespace cycfi { namespace elements
       }
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered text button with text label and optional frame
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button text_button(
       std::string text
@@ -162,6 +183,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered text button with icon label and optional frame
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button text_button(
       std::uint32_t icon_code
@@ -178,6 +202,10 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered text button with icon (left) and text (right) labels
+   // and optional frame
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button text_button(
       std::uint32_t icon_code
@@ -198,6 +226,10 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a layered text button with text (left) and icon (right) labels
+   // and optional frame
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Button>
    inline Button text_button(
       std::string text
@@ -218,6 +250,9 @@ namespace cycfi { namespace elements
       );
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with text label
+   ////////////////////////////////////////////////////////////////////////////
    layered_button
    button(
       std::string text
@@ -225,6 +260,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with icon label
+   ////////////////////////////////////////////////////////////////////////////
    layered_button
    button(
       std::uint32_t icon_code
@@ -232,6 +270,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    layered_button
    button(
       std::uint32_t icon_code
@@ -240,6 +281,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    layered_button
    button(
       std::string text
@@ -248,6 +292,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with text label
+   ////////////////////////////////////////////////////////////////////////////
    basic_toggle_button<>
    toggle_button(
       std::string text
@@ -255,6 +302,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with icon label
+   ////////////////////////////////////////////////////////////////////////////
    basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
@@ -262,6 +312,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    basic_toggle_button<>
    toggle_button(
       std::uint32_t icon_code
@@ -270,6 +323,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    basic_toggle_button<>
    toggle_button(
       std::string text
@@ -278,6 +334,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with text label
+   ////////////////////////////////////////////////////////////////////////////
    basic_latching_button<>
    latching_button(
       std::string text
@@ -285,6 +344,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with icon label
+   ////////////////////////////////////////////////////////////////////////////
    basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
@@ -292,6 +354,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    basic_latching_button<>
    latching_button(
       std::uint32_t icon_code
@@ -300,6 +365,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    );
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
    basic_latching_button<>
    latching_button(
       std::string text
@@ -311,6 +379,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic buttons
    ////////////////////////////////////////////////////////////////////////////
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a generic (non-layered) basic toggle button
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
    inline basic_toggle_button<proxy<remove_cvref_t<Subject>, basic_button>>
    toggle_button(Subject&& subject)
@@ -318,6 +390,9 @@ namespace cycfi { namespace elements
       return { std::forward<Subject>(subject) };
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a generic (non-layered) basic momentary button
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, basic_button>
    momentary_button(Subject&& subject)

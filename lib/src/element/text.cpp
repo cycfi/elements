@@ -802,7 +802,7 @@ namespace cycfi { namespace elements
          return;
 
       basic_text_box::caret_metrics info;
-      if (_select_end >= get_text().size())
+      if (_select_end >= int(get_text().size()))
          info = caret_info(ctx, U"");
       else
          info = caret_info(ctx, &get_text()[_select_end]);

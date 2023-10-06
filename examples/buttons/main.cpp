@@ -19,7 +19,7 @@ constexpr auto bred     = colors::red.opacity(0.4);
 constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
 constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
-constexpr auto pgold   = colors::gold.opacity(0.8);
+constexpr auto pgold    = colors::gold.opacity(0.8);
 
 auto make_buttons(view& view_)
 {

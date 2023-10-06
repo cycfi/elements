@@ -216,7 +216,6 @@ namespace cycfi { namespace elements
                         basic_latching_button(W1&& off, W2&& on);
 
       bool              click(context const& ctx, mouse_button btn) override;
-//      void              drag(context const& ctx, mouse_button btn) override;
    };
 
    template <typename Base>

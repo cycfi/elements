@@ -274,14 +274,6 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void composite_base::enable(bool state)
-   {
-      // Enable/disable all children
-      for (std::size_t ix = 0; ix != size(); ++ix)
-         at(ix).enable(state);
-      activator::enable(state);
-   }
-
    bool composite_base::wants_focus() const
    {
       for (std::size_t ix = 0; ix != size(); ++ix)

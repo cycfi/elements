@@ -23,16 +23,18 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
-   struct button_element : element, basic_receiver<button_state>
+   class button_element : public element, public basic_receiver<button_state>
    {
-      enum icon_placement { icon_none, icon_left, icon_right };
+   public:
+
+      enum icon_placement_enum { icon_none, icon_left, icon_right };
 
                               button_element(
-                                 std::string text
+                                      std::string text
                                , float size
                                , color body_color = get_theme().default_button_color
                                , std::uint32_t icon_code = 0
-                               , icon_placement icon_placement_ = icon_none
+                               , icon_placement_enum icon_placement_ = icon_none
                               )
                                : _body_color{body_color}
                                , _text{std::move(text)}
@@ -46,11 +48,22 @@ namespace cycfi { namespace elements
       bool                    wants_control() const override;
       void                    draw(context const& ctx) override;
 
+      void                    body_color(color body_color_);
+      color                   body_color() const;
+      void                    label(std::string text_);
+      std::string const&      label() const;
+      void                    icon(std::uint32_t icon_code);
+      std::uint32_t           icon() const;
+      void                    icon_placement(icon_placement_enum icon_placement_);
+      icon_placement_enum     icon_placement() const;
+
+   private:
+
       color                   _body_color;
       std::string             _text;
       float                   _size;
       std::uint32_t           _icon_code;
-      icon_placement          _icon_placement;
+      icon_placement_enum     _icon_placement;
    };
 
    struct basic_button_body : public activator
@@ -66,6 +79,49 @@ namespace cycfi { namespace elements
    inline basic_button_body::basic_button_body(color body_color)
     : body_color(body_color)
    {}
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   inline void button_element::body_color(color body_color_)
+   {
+      _body_color = body_color_;
+   }
+
+   inline color button_element::body_color() const
+   {
+      return _body_color;
+   }
+
+   inline void button_element::label(std::string text_)
+   {
+      std::swap(_text, text_);
+   }
+
+   inline std::string const& button_element::label() const
+   {
+      return _text;
+   }
+
+   inline void button_element::icon(std::uint32_t icon_code)
+   {
+      _icon_code = icon_code;
+   }
+
+   inline std::uint32_t button_element::icon() const
+   {
+      return _icon_code;
+   }
+
+   inline void button_element::icon_placement(icon_placement_enum icon_placement_)
+   {
+      _icon_placement = icon_placement_;
+   }
+
+   inline button_element::icon_placement_enum button_element::icon_placement() const
+   {
+      return _icon_placement;
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Make a generic layered button
@@ -212,7 +268,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return momentary_button<Base>(button_element{text, size, body_color});
+      return momentary_button<Base>(
+         button_element{std::move(text), size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -226,7 +283,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return momentary_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_left});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_left}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -240,7 +299,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return momentary_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_right});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_right}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -252,7 +313,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return toggle_button<Base>(button_element{text, size, body_color});
+      return toggle_button<Base>(
+         button_element{std::move(text), size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -266,7 +328,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return toggle_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_left});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_left}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -280,7 +344,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return toggle_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_right});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_right}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -292,7 +358,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return latching_button<Base>(button_element{text, size, body_color});
+      return latching_button<Base>(
+         button_element{std::move(text), size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -306,7 +373,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return latching_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_left});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_left}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -320,7 +389,9 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return latching_button<Base>(
-         button_element{text, size, body_color, icon_code, button_element::icon_right});
+         button_element{std::move(text), size, body_color
+       , icon_code, button_element::icon_right}
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -33,13 +33,15 @@ auto make_buttons(view& view_)
    auto disabled_button = button("Disabled Button");
 
    disabled_button.enable(false); // Disable this
+   reset->enable(false); // Disable initially
 
    lbutton->on_click =
       [reset = get(reset), &view_](bool) mutable
       {
          if (auto p = reset.lock())
          {
-            p->actual_subject()._icon_code = icons::lock;
+            p->actual_subject().icon(icons::lock);
+            p->enable(true);
             view_.refresh(*p);
          }
       };
@@ -55,7 +57,8 @@ auto make_buttons(view& view_)
 
          if (auto p = reset.lock())
          {
-            p->actual_subject()._icon_code = icons::lock_open;
+            p->actual_subject().icon(icons::lock_open);
+            p->enable(false);
             view_.refresh(*p);
          }
       };

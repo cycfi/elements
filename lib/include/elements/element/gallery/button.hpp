@@ -23,6 +23,24 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
+   struct button_element : element, basic_receiver<button_state>
+   {
+                              button_element(std::string text, float size, color body_color)
+                               : _body_color{body_color}
+                               , _text{std::move(text)}
+                               , _size{size}
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    wants_control() const override;
+      void                    draw(context const& ctx) override;
+
+      color                   _body_color;
+      std::string             _text;
+      float                   _size;
+   };
+
    struct basic_button_body : public activator
    {
       constexpr static float corner_radius = 4.0;
@@ -251,16 +269,6 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a momentary button with text label
-   ////////////////////////////////////////////////////////////////////////////
-   layered_button
-   button(
-      std::string text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with icon label
    ////////////////////////////////////////////////////////////////////////////
    layered_button
@@ -293,16 +301,6 @@ namespace cycfi { namespace elements
    );
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a toggle button with text label
-   ////////////////////////////////////////////////////////////////////////////
-   basic_toggle_button<>
-   toggle_button(
-      std::string text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
    // Make a toggle button with icon label
    ////////////////////////////////////////////////////////////////////////////
    basic_toggle_button<>
@@ -330,16 +328,6 @@ namespace cycfi { namespace elements
    toggle_button(
       std::string text
     , std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a latching button with text label
-   ////////////////////////////////////////////////////////////////////////////
-   basic_latching_button<>
-   latching_button(
-      std::string text
     , float size = 1.0
     , color body_color = get_theme().default_button_color
    );
@@ -381,6 +369,16 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
 
    ////////////////////////////////////////////////////////////////////////////
+   // Make a generic (non-layered) basic momentary button
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_button>
+   momentary_button(Subject&& subject)
+   {
+      return { std::forward<Subject>(subject) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Make a generic (non-layered) basic toggle button
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
@@ -391,13 +389,46 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a generic (non-layered) basic momentary button
+   // Make a generic (non-layered) basic latching button
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>
-   inline proxy<remove_cvref_t<Subject>, basic_button>
-   momentary_button(Subject&& subject)
+   inline basic_latching_button<proxy<remove_cvref_t<Subject>, basic_button>>
+   latching_button(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with text label
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto button(
+      std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return momentary_button(button_element{text, size, body_color});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with text label
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto toggle_button(
+      std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return toggle_button(button_element{text, size, body_color});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with text label
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto latching_button(
+      std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return latching_button(button_element{text, size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////

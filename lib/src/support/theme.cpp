@@ -20,6 +20,7 @@ namespace cycfi { namespace elements
     , scrollbar_color            { rgba(80, 80, 80, 80) }
     , default_button_color       { rgba(0, 0, 0, 0) }
     , button_margin              { 10, 5, 10, 5 }
+    , button_corner_radius       { 4.0 }
 
     , controls_color             { rgba(18, 49, 85, 200) }
     , controls_frame_stroke_width{ 1.5 }

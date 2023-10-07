@@ -17,11 +17,11 @@ namespace cycfi { namespace elements
       rect        box = ctx.bounds.move(15, 0);
 
       box.width(box.height());
-      auto  state = value();
-      auto  value = state.value;
-      auto  hilite = state.hilite;
-      auto  tracking = state.tracking;
-      auto  enabled = state.enabled;
+      auto state = value();
+      auto value = state.value;
+      auto hilite = state.hilite;
+      auto tracking = state.tracking;
+      auto enabled = state.enabled;
 
       // Draw check mark
       if (enabled)

@@ -122,7 +122,7 @@ namespace cycfi { namespace elements
       auto font = theme.label_font;
 
       // Measure the text width
-      auto size = measure_text(ctx.canvas, _text.c_str(), font.size(font._size * _size));
+      auto size = measure_text(ctx.canvas, _label.c_str(), font.size(font._size * _size));
 
       // Add space for the icon if necessary
       if (_icon_placement != icon_none)
@@ -177,7 +177,7 @@ namespace cycfi { namespace elements
       font = font.size(font._size * _size);
 
       // Measure text and icon
-      auto text_size = measure_text(ctx.canvas, _text.c_str(), font.size(font._size * _size));
+      auto text_size = measure_text(ctx.canvas, _label.c_str(), font.size(font._size * _size));
       auto icon_space = (_size * theme.icon_font._size) + 8;
       auto size = text_size;
 
@@ -196,12 +196,12 @@ namespace cycfi { namespace elements
       if (_icon_placement == icon_left)
          text_offset += icon_space;
 
-      // Draw text
+      // Draw label
       auto text_pos = center_point(bounds).move(text_offset, 0);
       canvas_.fill_style(text_c);
       canvas_.font(font);
       canvas_.text_align(canvas_.left | canvas_.middle);
-      canvas_.fill_text(_text.c_str(), text_pos);
+      canvas_.fill_text(_label.c_str(), text_pos);
 
       // Draw icon
       if (_icon_placement != icon_none)

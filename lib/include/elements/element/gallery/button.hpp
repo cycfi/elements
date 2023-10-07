@@ -25,10 +25,20 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct button_element : element, basic_receiver<button_state>
    {
-                              button_element(std::string text, float size, color body_color)
+      enum icon_placement { icon_none, icon_left, icon_right };
+
+                              button_element(
+                                 std::string text
+                               , float size
+                               , color body_color = get_theme().default_button_color
+                               , std::uint32_t icon_code = 0
+                               , icon_placement icon_placement_ = icon_none
+                              )
                                : _body_color{body_color}
                                , _text{std::move(text)}
                                , _size{size}
+                               , _icon_code{icon_code}
+                               , _icon_placement{icon_placement_}
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -39,6 +49,8 @@ namespace cycfi { namespace elements
       color                   _body_color;
       std::string             _text;
       float                   _size;
+      std::uint32_t           _icon_code;
+      icon_placement          _icon_placement;
    };
 
    struct basic_button_body : public activator
@@ -86,27 +98,6 @@ namespace cycfi { namespace elements
          margin(
             get_theme().button_margin,
             align_center(label(std::move(text)).relative_font_size(size))
-         ),
-         body_color
-      );
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a layered button with icon label
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Button>
-   inline Button make_button(
-      std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   )
-   {
-      return make_button<Button>(
-         margin(
-            get_theme().button_margin,
-            align_center(
-               icon(icon_code, size)
-            )
          ),
          body_color
       );
@@ -204,21 +195,21 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a layered text button with icon label and optional frame
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Button>
-   inline Button text_button(
-      std::uint32_t icon_code
-    , float size = 1.0
-    , bool no_frame = false
-   )
-   {
-      return text_button<Button>(
-         margin(
-            get_theme().button_margin,
-            align_center(icon(icon_code, size))
-         ),
-         no_frame
-      );
-   }
+   // template <typename Button>
+   // inline Button text_button(
+   //    std::uint32_t icon_code
+   //  , float size = 1.0
+   //  , bool no_frame = false
+   // )
+   // {
+   //    return text_button<Button>(
+   //       margin(
+   //          get_theme().button_margin,
+   //          align_center(icon(icon_code, size))
+   //       ),
+   //       no_frame
+   //    );
+   // }
 
    ////////////////////////////////////////////////////////////////////////////
    // Make a layered text button with icon (left) and text (right) labels
@@ -268,101 +259,36 @@ namespace cycfi { namespace elements
       );
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a momentary button with icon label
-   ////////////////////////////////////////////////////////////////////////////
-   layered_button
-   button(
-      std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
+   // ////////////////////////////////////////////////////////////////////////////
+   // // Make a momentary button with icon label
+   // ////////////////////////////////////////////////////////////////////////////
+   // layered_button
+   // button(
+   //    std::uint32_t icon_code
+   //  , float size = 1.0
+   //  , color body_color = get_theme().default_button_color
+   // );
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a momentary button with icon (left) and text (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   layered_button
-   button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
+   // ////////////////////////////////////////////////////////////////////////////
+   // // Make a toggle button with icon label
+   // ////////////////////////////////////////////////////////////////////////////
+   // basic_toggle_button<>
+   // toggle_button(
+   //    std::uint32_t icon_code
+   //  , float size = 1.0
+   //  , color body_color = get_theme().default_button_color
+   // );
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a momentary button with text (left) and icon (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   layered_button
-   button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size
-    , color body_color = get_theme().default_button_color
-   );
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a toggle button with icon label
-   ////////////////////////////////////////////////////////////////////////////
-   basic_toggle_button<>
-   toggle_button(
-      std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a toggle button with icon (left) and text (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   basic_toggle_button<>
-   toggle_button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a toggle button with text (left) and icon (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   basic_toggle_button<>
-   toggle_button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a latching button with icon label
-   ////////////////////////////////////////////////////////////////////////////
-   basic_latching_button<>
-   latching_button(
-      std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a latching button with icon (left) and text (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   basic_latching_button<>
-   latching_button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a latching button with text (left) and icon (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   basic_latching_button<>
-   latching_button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   );
+   // ////////////////////////////////////////////////////////////////////////////
+   // // Make a latching button with icon label
+   // ////////////////////////////////////////////////////////////////////////////
+   // basic_latching_button<>
+   // latching_button(
+   //    std::uint32_t icon_code
+   //  , float size = 1.0
+   //  , color body_color = get_theme().default_button_color
+   // );
 
    ////////////////////////////////////////////////////////////////////////////
    // Basic buttons
@@ -410,6 +336,32 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto button(
+      std::uint32_t icon_code
+    , std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return momentary_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_left});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto button(
+      std::string text
+    , std::uint32_t icon_code
+    , float size
+    , color body_color = get_theme().default_button_color)
+   {
+      return momentary_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_right});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Make a toggle button with text label
    ////////////////////////////////////////////////////////////////////////////
    inline auto toggle_button(
@@ -421,6 +373,32 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto toggle_button(
+      std::uint32_t icon_code
+    , std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return toggle_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_left});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto toggle_button(
+      std::string text
+    , std::uint32_t icon_code
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return toggle_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_right});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Make a latching button with text label
    ////////////////////////////////////////////////////////////////////////////
    inline auto latching_button(
@@ -429,6 +407,32 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       return latching_button(button_element{text, size, body_color});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with icon (left) and text (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto latching_button(
+      std::uint32_t icon_code
+    , std::string text
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return latching_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_left});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button with text (left) and icon (right) labels
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto latching_button(
+      std::string text
+    , std::uint32_t icon_code
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color)
+   {
+      return latching_button(
+         button_element{text, size, body_color, icon_code, button_element::icon_right});
    }
 
    ////////////////////////////////////////////////////////////////////////////

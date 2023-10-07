@@ -26,7 +26,7 @@ auto make_buttons(view& view_)
    auto mbutton         = button("Momentary Button");
    auto tbutton         = toggle_button("Toggle Button", 1.0, bred);
    auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
-   auto reset           = button("Clear Latch", icons::lock_open, 1.0, bblue);
+   auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
    auto prog_advance    = button("Advance Progress Bar");
@@ -34,11 +34,30 @@ auto make_buttons(view& view_)
 
    disabled_button.enable(false); // Disable this
 
-   reset.on_click =
-      [lbutton, &view_](bool) mutable
+   lbutton->on_click =
+      [reset = get(reset), &view_](bool) mutable
       {
-         lbutton->value(0);
-         view_.refresh(*lbutton);
+         if (auto p = reset.lock())
+         {
+            p->actual_subject()._icon_code = icons::lock;
+            view_.refresh(*p);
+         }
+      };
+
+   reset->on_click =
+      [lbutton = get(lbutton), reset = get(reset), &view_](bool) mutable
+      {
+         if (auto p = lbutton.lock())
+         {
+            p->value(0);
+            view_.refresh(*p);
+         }
+
+         if (auto p = reset.lock())
+         {
+            p->actual_subject()._icon_code = icons::lock_open;
+            view_.refresh(*p);
+         }
       };
 
    prog_advance.on_click =
@@ -58,7 +77,7 @@ auto make_buttons(view& view_)
             top_margin(20, mbutton),
             top_margin(20, tbutton),
             top_margin(20, hold(lbutton)),
-            top_margin(20, reset),
+            top_margin(20, hold(reset)),
             top_margin(20, note),
             top_margin(20, vsize(25, hold(prog_bar))),
             top_margin(20, prog_advance),

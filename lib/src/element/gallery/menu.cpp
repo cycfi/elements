@@ -20,17 +20,18 @@ namespace cycfi { namespace elements
       return menu;
    }
 
-   basic_menu
-   button_menu(menu_position pos, color body_color)
-   {
-      auto icon =
-         (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
-         icons::down_dir : icons::up_dir
-         ;
-      auto menu = make_button<basic_menu>(icon, 1.0, body_color);
-      menu.position(pos);
-      return menu;
-   }
+// $$$ For removal $$$
+//   basic_menu
+//   button_menu(menu_position pos, color body_color)
+//   {
+//      auto icon =
+//         (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
+//         icons::down_dir : icons::up_dir
+//         ;
+//      auto menu = make_button<basic_menu>(icon, 1.0, body_color);
+//      menu.position(pos);
+//      return menu;
+//   }
 
    view_limits menu_item_spacer_element::limits(basic_context const& /* ctx */) const
    {

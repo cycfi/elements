@@ -14,106 +14,16 @@ namespace cycfi { namespace elements
       draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
    }
 
-   void basic_button_body::draw(context const& ctx)
+   bool button_element_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
    {
-      draw_button_base(ctx, ctx.bounds, body_color, is_enabled(), corner_radius);
+      ctx.view.refresh(ctx);
+      return true;
    }
 
-   // layered_button
-   // button(
-   //    std::uint32_t icon_code
-   //  , float size
-   //  , color body_color
-   // )
-   // {
-   //    return make_button<layered_button>(icon_code, size, body_color);
-   // }
-
-//   layered_button
-//   button(
-//      std::uint32_t icon_code
-//    , std::string text
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<layered_button>(icon_code, std::move(text), size, body_color);
-//   }
-
-//   layered_button
-//   button(
-//      std::string text
-//    , std::uint32_t icon_code
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<layered_button>(std::move(text), icon_code, size, body_color);
-//   }
-
-//    basic_toggle_button<>
-//    toggle_button(
-//       std::uint32_t icon_code
-//     , float size
-//     , color body_color
-//    )
-//    {
-//       return make_button<basic_toggle_button<>>(icon_code, size, body_color);
-//    }
-
-//   basic_toggle_button<>
-//   toggle_button(
-//      std::uint32_t icon_code
-//    , std::string text
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<basic_toggle_button<>>(icon_code, std::move(text), size, body_color);
-//   }
-
-//   basic_toggle_button<>
-//   toggle_button(
-//      std::string text
-//    , std::uint32_t icon_code
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<basic_toggle_button<>>(std::move(text), icon_code, size, body_color);
-//   }
-
-   // basic_latching_button<>
-   // latching_button(
-   //    std::uint32_t icon_code
-   //  , float size
-   //  , color body_color
-   // )
-   // {
-   //    return make_button<basic_latching_button<>>(icon_code, size, body_color);
-   // }
-
-//   basic_latching_button<>
-//   latching_button(
-//      std::uint32_t icon_code
-//    , std::string text
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<basic_latching_button<>>(icon_code, std::move(text), size, body_color);
-//   }
-//
-//   basic_latching_button<>
-//   latching_button(
-//      std::string text
-//    , std::uint32_t icon_code
-//    , float size
-//    , color body_color
-//   )
-//   {
-//      return make_button<basic_latching_button<>>(std::move(text), icon_code, size, body_color);
-//   }
+   bool button_element_base::wants_control() const
+   {
+      return true;
+   }
 
    view_limits button_element::limits(basic_context const& ctx) const
    {
@@ -136,23 +46,13 @@ namespace cycfi { namespace elements
       };
    }
 
-   bool button_element::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
-   {
-      ctx.view.refresh(ctx);
-      return true;
-   }
-
-   bool button_element::wants_control() const
-   {
-      return true;
-   }
-
    void button_element::draw(context const& ctx)
    {
-      auto& canvas_ = ctx.canvas;
-      auto canvas_state = canvas_.new_state();
+      auto& cnv = ctx.canvas;
+      auto canvas_state = cnv.new_state();
       auto const& theme = get_theme();
       auto bounds = ctx.bounds;
+      auto margin = theme.button_margin;
 
       auto state = value();
       auto value = state.value;
@@ -163,8 +63,8 @@ namespace cycfi { namespace elements
       // Draw the body
       if (value)
       {
-         bounds = bounds.move(1, 1);
          body_color = body_color.opacity(0.5);
+         bounds = bounds.move(1, 1);
       }
       else
       {
@@ -192,24 +92,40 @@ namespace cycfi { namespace elements
       if (hilite && enabled)
          text_c = text_c.level(1.5);
 
-      float text_offset = -size.x/2;
-      if (_icon_placement == icon_left)
-         text_offset += icon_space;
+      auto mid_x = bounds.left + (bounds.width() / 2);
+      auto mid_y = bounds.top + (bounds.height() / 2);
 
       // Draw label
-      auto text_pos = center_point(bounds).move(text_offset, 0);
-      canvas_.fill_style(text_c);
-      canvas_.font(font);
-      canvas_.text_align(canvas_.left | canvas_.middle);
-      canvas_.fill_text(_label.c_str(), text_pos);
+      point text_pos;
+
+      switch (_align)
+      {
+         case align_left:
+            text_pos = point{bounds.left + margin.left + icon_space, mid_y};
+            break;
+         case align_center:
+            {
+               float pos_x = mid_x - (size.x/2);
+               text_pos = point(pos_x + (_icon_placement == icon_left? icon_space : 0), mid_y);
+            }
+            break;
+         case align_right:
+            text_pos = point{bounds.right - (size.x + margin.right), mid_y};
+            break;
+      }
+
+      cnv.fill_style(text_c);
+      cnv.font(font);
+      cnv.text_align(cnv.left | cnv.middle);
+      cnv.fill_text(_label.c_str(), text_pos);
 
       // Draw icon
       if (_icon_placement != icon_none)
       {
          auto icon_pos = text_pos.move((_icon_placement == icon_left)? -icon_space : text_size.x + 8, 0);
          auto icon_font = theme.icon_font;
-         canvas_.font(icon_font.size(_size * icon_font._size));
-         canvas_.fill_text(codepoint_to_utf8(_icon_code).c_str(), icon_pos);
+         cnv.font(icon_font.size(_size * icon_font._size));
+         cnv.fill_text(codepoint_to_utf8(_icon_code).c_str(), icon_pos);
       }
    }
 }}

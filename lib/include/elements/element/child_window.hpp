@@ -91,7 +91,7 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void closable_element<Subject>::prepare_subject(context& ctx)
    {
-      auto btn = find_subject<button_base*>(this);
+      auto btn = find_subject<basic_button*>(this);
       if (btn)
       {
          btn->on_click =

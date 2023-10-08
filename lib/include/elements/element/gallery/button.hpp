@@ -6,7 +6,6 @@
 #if !defined(ELEMENTS_GALLERY_BUTTON_JUNE_5_2016)
 #define ELEMENTS_GALLERY_BUTTON_JUNE_5_2016
 
-#include <elements/element/activator.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/misc.hpp>
 #include <elements/element/label.hpp>
@@ -23,76 +22,79 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
-   class button_element : public element, public basic_receiver<button_state>
+   struct button_config
+   {
+      enum icon_placement_enum { icon_none, icon_left, icon_right };
+      enum label_align_enum { align_left, align_center, align_right };
+
+      std::string          label;
+      float                size = 1.0f;
+      color                body_color = get_theme().default_button_color;
+      std::uint32_t        icon_code = 0;
+      icon_placement_enum  icon_placement = icon_none;
+      label_align_enum     align = align_center;
+   };
+
+   struct button_element_base : element, basic_receiver<button_state>
+   {
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    wants_control() const override;
+
+   };
+
+   class button_element : public button_element_base
    {
    public:
 
-      enum icon_placement_enum { icon_none, icon_left, icon_right };
+      using icon_placement_enum = button_config::icon_placement_enum;
+      static constexpr icon_placement_enum icon_none = button_config::icon_none;
+      static constexpr icon_placement_enum icon_left = button_config::icon_left;
+      static constexpr icon_placement_enum icon_right = button_config::icon_right;
 
-                              button_element(
-                                 std::string label
-                               , float size
-                               , color body_color = get_theme().default_button_color
-                               , std::uint32_t icon_code = 0
-                               , icon_placement_enum icon_placement_ = icon_none
-                              )
-                               : _body_color{body_color}
-                               , _label{std::move(label)}
-                               , _size{size}
-                               , _icon_code{icon_code}
-                               , _icon_placement{icon_placement_}
+      using label_align_enum = button_config::label_align_enum;
+      static constexpr label_align_enum align_left = button_config::align_left;
+      static constexpr label_align_enum align_center = button_config::align_center;
+      static constexpr label_align_enum align_right = button_config::align_right;
+
+                              template <typename Config>
+                              button_element(Config const& cfg)
+                               : _label{std::move(cfg.label)}
+                               , _size{cfg.size}
+                               , _body_color{cfg.body_color}
+                               , _icon_code{cfg.icon_code}
+                               , _icon_placement{cfg.icon_placement}
+                               , _align{cfg.align}
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
-      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    wants_control() const override;
       void                    draw(context const& ctx) override;
 
-      void                    body_color(color body_color_);
-      color                   body_color() const;
       void                    label(std::string text_);
       std::string const&      label() const;
+      void                    size(float size_);
+      float                   size() const;
+      void                    body_color(color body_color_);
+      color                   body_color() const;
       void                    icon(std::uint32_t icon_code);
       std::uint32_t           icon() const;
       void                    icon_placement(icon_placement_enum icon_placement_);
       icon_placement_enum     icon_placement() const;
+      void                    align(label_align_enum align_);
+      label_align_enum        align() const;
 
    private:
 
-      color                   _body_color;
       std::string             _label;
       float                   _size;
+      color                   _body_color;
       std::uint32_t           _icon_code;
       icon_placement_enum     _icon_placement;
+      label_align_enum        _align;
    };
-
-   struct basic_button_body : public activator
-   {
-      constexpr static float corner_radius = 4.0;
-
-                              basic_button_body(color body_color);
-      void                    draw(context const& ctx) override;
-
-      color                   body_color;
-   };
-
-   inline basic_button_body::basic_button_body(color body_color)
-    : body_color(body_color)
-   {}
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   inline void button_element::body_color(color body_color_)
-   {
-      _body_color = body_color_;
-   }
-
-   inline color button_element::body_color() const
-   {
-      return _body_color;
-   }
-
    inline void button_element::label(std::string text_)
    {
       std::swap(_label, text_);
@@ -101,6 +103,26 @@ namespace cycfi { namespace elements
    inline std::string const& button_element::label() const
    {
       return _label;
+   }
+
+   inline void button_element::size(float size_)
+   {
+      _size = size_;
+   }
+
+   inline float button_element::size() const
+   {
+      return _size;
+   }
+
+   inline void button_element::body_color(color body_color_)
+   {
+      _body_color = body_color_;
+   }
+
+   inline color button_element::body_color() const
+   {
+      return _body_color;
    }
 
    inline void button_element::icon(std::uint32_t icon_code)
@@ -123,114 +145,18 @@ namespace cycfi { namespace elements
       return _icon_placement;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a generic layered button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Button, typename Label>
-   inline Button make_button(
-      Label&& label
-    , color body_color = get_theme().default_button_color)
+   inline void button_element::align(label_align_enum align_)
    {
-      auto btn_body_off = basic_button_body(body_color.level(0.9));
-      auto btn_body_on = basic_button_body(body_color.opacity(0.5));
+      _align = align_;
+   }
 
-      auto btn_img_off = layer(label, btn_body_off);
-      auto btn_img_on = left_top_margin({1, 1}, layer(label, btn_body_on));
-
-      return Button(std::move(btn_img_off), std::move(btn_img_on));
+   inline button_element::label_align_enum button_element::align() const
+   {
+      return _align;
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a layered button with text label
-   ////////////////////////////////////////////////////////////////////////////
-   // template <typename Button>
-   // inline Button make_button(
-   //    std::string text
-   //  , float size = 1.0
-   //  , color body_color = get_theme().default_button_color
-   // )
-   // {
-   //    return make_button<Button>(
-   //       margin(
-   //          get_theme().button_margin,
-   //          align_center(label(std::move(text)).relative_font_size(size))
-   //       ),
-   //       body_color
-   //    );
-   // }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a layered button with icon (left) and text (right) labels
-   ////////////////////////////////////////////////////////////////////////////
-   // template <typename Button>
-   // inline Button make_button(
-   //    std::uint32_t icon_code
-   //  , std::string text
-   //  , float size = 1.0
-   //  , color body_color = get_theme().default_button_color
-   // )
-   // {
-   //    return make_button<Button>(
-   //       margin(
-   //          get_theme().button_margin,
-   //          align_center(
-   //             htile(
-   //                right_margin(8, icon(icon_code, size)),
-   //                label(std::move(text)).relative_font_size(size)
-   //             )
-   //          )
-   //       ),
-   //       body_color
-   //    );
-   // }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a layered button with label (left) and icon (right)
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Button>
-   inline Button make_button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size = 1.0
-    , color body_color = get_theme().default_button_color
-   )
-   {
-      return make_button<Button>(
-         margin(
-            get_theme().button_margin,
-            align_center(
-               htile(
-                  label(std::move(text)).relative_font_size(size),
-                  left_margin(12, icon(icon_code, size))
-               )
-            )
-         ),
-         body_color
-      );
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a generic layered text button with label and optional frame
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Button, typename Label>
-   inline Button text_button(Label&& label, bool no_frame = false)
-   {
-      if (no_frame)
-      {
-         auto btn_img_off = label;
-         auto btn_img_on = left_top_margin({1, 1}, label);
-         return Button(std::move(btn_img_off), std::move(btn_img_on));
-      }
-      else
-      {
-         auto btn_img_off = layer(label, frame{});
-         auto btn_img_on = left_top_margin({1, 1}, layer(label, frame{}));
-         return Button(std::move(btn_img_off), std::move(btn_img_on));
-      }
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a generic (non-layered) basic momentary button
+   // Make a generic basic momentary button
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = basic_button, typename Subject>
    inline proxy<remove_cvref_t<Subject>, Base>
@@ -240,7 +166,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a generic (non-layered) basic toggle button
+   // Make a generic basic toggle button
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = basic_button, typename Subject>
    inline basic_toggle_button<proxy<remove_cvref_t<Subject>, Base>>
@@ -250,13 +176,22 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a generic (non-layered) basic latching button
+   // Make a generic basic latching button
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = basic_button, typename Subject>
    inline basic_latching_button<proxy<remove_cvref_t<Subject>, Base>>
    latching_button(Subject&& subject)
    {
       return { std::forward<Subject>(subject) };
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a momentary button using button_config
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = basic_button>
+   inline auto button(button_config const& cfg)
+   {
+      return momentary_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -268,8 +203,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return momentary_button<Base>(
-         button_element{std::move(label), size, body_color});
+      auto cfg = button_config{std::move(label), size, body_color};
+      return momentary_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -279,13 +214,13 @@ namespace cycfi { namespace elements
    inline auto button(
       std::uint32_t icon_code
     , std::string label
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color)
    {
-      return momentary_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_left}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_left};
+      return momentary_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -298,10 +233,19 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      return momentary_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_right}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_right};
+      return momentary_button<Base>(button_element{cfg});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a toggle button using button_config
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = basic_button>
+   inline auto toggle_button(button_config const& cfg)
+   {
+      return toggle_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -313,8 +257,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return toggle_button<Base>(
-         button_element{std::move(label), size, body_color});
+      auto cfg = button_config{std::move(label), size, body_color};
+      return toggle_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -324,13 +268,13 @@ namespace cycfi { namespace elements
    inline auto toggle_button(
       std::uint32_t icon_code
     , std::string label
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color)
    {
-      return toggle_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_left}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_left};
+      return toggle_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -340,13 +284,22 @@ namespace cycfi { namespace elements
    inline auto toggle_button(
       std::string label
     , std::uint32_t icon_code
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color)
    {
-      return toggle_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_right}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_right};
+      return toggle_button<Base>(button_element{cfg});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make a latching button using button_config
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Base = basic_button>
+   inline auto latching_button(button_config const& cfg)
+   {
+      return latching_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -358,8 +311,8 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      return latching_button<Base>(
-         button_element{std::move(label), size, body_color});
+      auto cfg = button_config{std::move(label), size, body_color};
+      return latching_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -369,13 +322,13 @@ namespace cycfi { namespace elements
    inline auto latching_button(
       std::uint32_t icon_code
     , std::string label
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color)
    {
-      return latching_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_left}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_left};
+      return latching_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -385,13 +338,13 @@ namespace cycfi { namespace elements
    inline auto latching_button(
       std::string label
     , std::uint32_t icon_code
-    , float size = 1.0
+    , float size
     , color body_color = get_theme().default_button_color)
    {
-      return latching_button<Base>(
-         button_element{std::move(label), size, body_color
-       , icon_code, button_element::icon_right}
-      );
+      auto cfg = button_config{
+         std::move(label), size, body_color
+       , icon_code, button_config::icon_right};
+      return latching_button<Base>(button_element{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////

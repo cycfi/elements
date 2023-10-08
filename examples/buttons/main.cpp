@@ -21,6 +21,60 @@ constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
+struct my_custom_button : button_element_base
+{
+   view_limits             limits(basic_context const& ctx) const override;
+   void                    draw(context const& ctx) override;
+};
+
+view_limits my_custom_button::limits(basic_context const& ctx) const
+{
+   // Returns the min and max limits. The example below sets the
+   // vertical size to exactly 40, while the horizontal size has a
+   // minimum of 30 and fully stretchable to `full_extent`.
+   return {{200, 30}, {full_extent, 30}};
+}
+
+void my_custom_button::draw(context const& ctx)
+{
+   auto& cnv = ctx.canvas;    // The artist canvas
+   auto bounds = ctx.bounds;  // The bounding rectangle
+
+   // This is the state of the button. Adjust the rendering based on these if
+   // necessary. For this simple example, we wiill deal only with `value` and
+   // `hilite`.
+
+   auto state = value();
+   bool value = state.value;        // button is on or off
+   bool hilite = state.hilite;      // cursor is hovering over the button
+   bool enabled = state.enabled;    // button is enabled or disabled
+
+   bounds = bounds.inset(1, 1);
+   if (value)
+      bounds = bounds.move(1, 1);   // Simulate click
+
+   // Render the button using the artist library
+   cnv.fill_style(colors::dark_slate_blue);
+   cnv.fill_round_rect(bounds, 8);
+   cnv.line_width(1);
+   cnv.stroke_style(
+      hilite?
+         colors::antique_white.opacity(0.5) :
+         colors::antique_white.opacity(0.3)
+      );
+   cnv.stroke_round_rect(bounds, 8);
+
+   cnv.font(font_descr{ "Roboto", 14.0 }.italic());
+   cnv.fill_style(hilite? pgold.level(1.2) : pgold);
+   cnv.text_align(cnv.center | cnv.middle);
+   cnv.fill_text("My Custom Button", center_point(bounds));
+}
+
+auto make_custom_button()
+{
+   return momentary_button(my_custom_button());
+}
+
 auto make_buttons(view& view_)
 {
    auto mbutton         = button("Momentary Button");
@@ -29,8 +83,15 @@ auto make_buttons(view& view_)
    auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
-   auto prog_advance    = button("Advance Progress Bar");
+   auto prog_advance    = icon_button(icons::plus);
    auto disabled_button = button("Disabled Button");
+   auto left            = button(icons::left_circled, "Left", 1.0, bred);
+   auto center          = button("Center", 1.0, bblue);
+   auto right           = button("Right", icons::right_circled, 1.0, bgreen);
+   auto custom          = make_custom_button();
+
+   left->align(button_element::align_left);
+   right->align(button_element::align_right);
 
    disabled_button.enable(false); // Disable this
    reset->enable(false); // Disable initially
@@ -40,7 +101,7 @@ auto make_buttons(view& view_)
       {
          if (auto p = reset.lock())
          {
-            p->actual_subject().icon(icons::lock);
+            (*p)->icon(icons::lock);
             p->enable(true);
             view_.refresh(*p);
          }
@@ -57,7 +118,7 @@ auto make_buttons(view& view_)
 
          if (auto p = reset.lock())
          {
-            p->actual_subject().icon(icons::lock_open);
+            (*p)->icon(icons::lock_open);
             p->enable(false);
             view_.refresh(*p);
          }
@@ -82,9 +143,13 @@ auto make_buttons(view& view_)
             top_margin(20, hold(lbutton)),
             top_margin(20, hold(reset)),
             top_margin(20, note),
-            top_margin(20, vsize(25, hold(prog_bar))),
-            top_margin(20, prog_advance),
-            top_margin(20, disabled_button)
+            top_margin(20, htile(
+               right_margin(3, valign(0.5, prog_advance)),
+               vsize(27, hold(prog_bar))
+            )),
+            top_margin(20, disabled_button),
+            top_margin(20, htile(left, center, right)),
+            top_margin(20, custom)
          )
       );
 }
@@ -139,7 +204,7 @@ auto make_controls(view& view_)
 
    auto indicator_color = get_theme().indicator_color;
 
-   auto disabled_icon_button = icon_button(icons::power, 1.2);
+   auto disabled_icon_button = icon_button(icons::block, 1.2);
    disabled_icon_button.enable(false);
 
    auto  icon_buttons =

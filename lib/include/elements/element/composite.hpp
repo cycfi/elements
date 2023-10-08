@@ -7,7 +7,6 @@
 #define ELEMENTS_COMPOSITE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/activator.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/support/context.hpp>
 
@@ -34,7 +33,7 @@ namespace cycfi { namespace elements
    };
 
    class context;
-   class composite_base : public activator, public container
+   class composite_base : public element, public container
    {
    public:
 

@@ -84,6 +84,11 @@ namespace cycfi { namespace elements
       Subject const&          actual_subject() const { return _subject; }
       Subject&                actual_subject() { return _subject; }
 
+      Subject const*          operator->() const { return &_subject; }
+      Subject*                operator->() { return &_subject; }
+      Subject const*          operator*() const { return &_subject; }
+      Subject*                operator*() { return &_subject; }
+
    private:
 
       Subject                 _subject;

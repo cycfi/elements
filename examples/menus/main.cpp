@@ -155,7 +155,7 @@ auto make_menus(view& view_)
 
 auto make_controls(view& view_)
 {
-   return margin({ 20, 20, 20, 20 }, pane("Menus", make_menus(view_)));
+   return margin({ 20, 20, 20, 20 }, make_menus(view_));
 }
 
 int main(int argc, char* argv[])

@@ -7,7 +7,6 @@
 #define ELEMENTS_LABELS_APRIL_11_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/activator.hpp>
 #include <elements/element/text.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/element/traversal.hpp>
@@ -24,21 +23,27 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic label
    ////////////////////////////////////////////////////////////////////////////
-   struct default_label : activator, text_reader_u8
+   struct default_label : element, text_reader_u8
    {
-      public:
+   public:
 
       using font_type = font_descr;
       using remove_gen = default_label;
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       virtual font_type       get_font() const;
       virtual float           get_font_size() const;
       virtual float           get_default_font_size() const;
       virtual color           get_font_color() const;
       virtual int             get_text_align() const;
+
+   private:
+
+      bool                    _is_enabled = true;
    };
 
    template <typename Base>

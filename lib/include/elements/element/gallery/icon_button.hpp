@@ -7,7 +7,6 @@
 #define ELEMENTS_GALLERY_ICON_BUTTON_JUNE_5_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/activator.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
@@ -120,7 +119,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline auto icon_button(
       uint32_t code
-    , float size
+    , float size = 1.0f
     , color body_color = get_theme().default_button_color
    )
    {
@@ -130,7 +129,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Make momentary icon_button without a body
    ////////////////////////////////////////////////////////////////////////////
-   inline auto plain_icon_button(uint32_t code, float size)
+   inline auto plain_icon_button(uint32_t code, float size = 1.0f)
    {
       return momentary_button(plain_icon_button_element{ code, size });
    }

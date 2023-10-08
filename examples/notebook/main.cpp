@@ -16,19 +16,22 @@ auto make_tabs(view& view_)
 {
    auto make_page = [](auto text)
    {
-      return layer(align_center_middle(label(text).font_size(100)), frame{});
+      return layer(
+         align_center_middle(label(text).font_size(100)),
+         frame{}
+      );
    };
 
    return vnotebook(
-      view_
-    , deck(
+      view_,
+      deck(
          make_page("Dream"),
          make_page("Insanity"),
          make_page("Imagination")
-      )
-    , tab("Dream")
-    , tab("Insanity")
-    , tab("Imagination")
+      ),
+      tab("Dream"),
+      tab("Insanity"),
+      tab("Imagination")
    );
 }
 

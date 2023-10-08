@@ -60,5 +60,15 @@ namespace cycfi { namespace elements
       canvas_.text_align(align);
       canvas_.fill_text(get_text(), point{ cx, cy });
    }
+
+   void default_label::enable(bool state)
+   {
+      _is_enabled = state;
+   }
+
+   bool default_label::is_enabled() const
+   {
+      return _is_enabled;
+   }
 }}
 

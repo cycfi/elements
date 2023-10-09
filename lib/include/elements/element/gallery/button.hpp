@@ -22,137 +22,169 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
    ////////////////////////////////////////////////////////////////////////////
-   struct button_config
-   {
-      enum icon_placement_enum { icon_none, icon_left, icon_right };
-      enum label_align_enum { align_left, align_center, align_right };
-
-      std::string          label;
-      float                size = 1.0f;
-      color                body_color = get_theme().default_button_color;
-      std::uint32_t        icon_code = 0;
-      icon_placement_enum  icon_placement = icon_none;
-      label_align_enum     align = align_center;
-   };
-
    struct button_renderer_base : element, basic_receiver<button_state>
    {
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
    };
 
-   class button_renderer : public button_renderer_base
+   struct default_button_renderer : button_renderer_base, text_reader_u8
    {
    public:
 
-      using icon_placement_enum = button_config::icon_placement_enum;
-      static constexpr icon_placement_enum icon_none = button_config::icon_none;
-      static constexpr icon_placement_enum icon_left = button_config::icon_left;
-      static constexpr icon_placement_enum icon_right = button_config::icon_right;
+      using base_type = default_button_renderer;
 
-      using label_align_enum = button_config::label_align_enum;
-      static constexpr label_align_enum align_left = button_config::align_left;
-      static constexpr label_align_enum align_center = button_config::align_center;
-      static constexpr label_align_enum align_right = button_config::align_right;
-
-                              template <typename Config>
-                              button_renderer(Config const& cfg)
-                               : _label{std::move(cfg.label)}
-                               , _size{cfg.size}
-                               , _body_color{cfg.body_color}
-                               , _icon_code{cfg.icon_code}
-                               , _icon_placement{cfg.icon_placement}
-                               , _align{cfg.align}
-                              {}
+      enum icon_placement { icon_none, icon_left, icon_right };
+      enum label_alignment { align_left, align_center, align_right };
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
 
-      void                    label(std::string text_);
-      std::string const&      label() const;
-      void                    size(float size_);
-      float                   size() const;
-      void                    body_color(color body_color_);
-      color                   body_color() const;
-      void                    icon(std::uint32_t icon_code);
-      std::uint32_t           icon() const;
-      void                    icon_placement(icon_placement_enum icon_placement_);
-      icon_placement_enum     icon_placement() const;
-      void                    align(label_align_enum align_);
-      label_align_enum        align() const;
+      virtual float           get_size() const;
+      virtual color           get_body_color() const;
+      virtual std::uint32_t   get_icon() const;
+      virtual icon_placement  get_icon_placement() const;
+      virtual label_alignment get_label_alignment() const;
+   };
+
+   template <typename Base>
+   struct basic_button_renderer_base : Base, text_writer
+   {
+      using text_type = std::string_view;
+      using base_type = basic_button_renderer_base<typename Base::base_type>;
+
+                              basic_button_renderer_base(std::string text)
+                               : _text(std::move(text))
+                              {}
+
+      text_type               get_text() const override;
+      void                    set_text(string_view text) override;
 
    private:
 
-      std::string             _label;
-      float                   _size;
-      color                   _body_color;
-      std::uint32_t           _icon_code;
-      icon_placement_enum     _icon_placement;
-      label_align_enum        _align;
+      std::string             _text;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Inlines
-   ////////////////////////////////////////////////////////////////////////////
-   inline void button_renderer::label(std::string text_)
+   template <typename Base>
+   struct button_renderer_with_size : Base
    {
-      std::swap(_label, text_);
-   }
+      using base_type = button_renderer_with_size<typename Base::base_type>;
 
-   inline std::string const& button_renderer::label() const
-   {
-      return _label;
-   }
+                              button_renderer_with_size(Base base, float size)
+                               : Base(std::move(base)), _size(size)
+                              {}
 
-   inline void button_renderer::size(float size_)
-   {
-      _size = size_;
-   }
+      float                   get_size() const override;
+      void                    set_size(float size);
 
-   inline float button_renderer::size() const
-   {
-      return _size;
-   }
+   private:
 
-   inline void button_renderer::body_color(color body_color_)
-   {
-      _body_color = body_color_;
-   }
+      float                   _size;
+   };
 
-   inline color button_renderer::body_color() const
+   template <typename Base>
+   struct button_renderer_with_body_color : Base
    {
-      return _body_color;
-   }
+      using base_type = button_renderer_with_body_color<typename Base::base_type>;
 
-   inline void button_renderer::icon(std::uint32_t icon_code)
-   {
-      _icon_code = icon_code;
-   }
+                              button_renderer_with_body_color(Base base, color color_)
+                               : Base(std::move(base)), _color(color_)
+                              {}
 
-   inline std::uint32_t button_renderer::icon() const
-   {
-      return _icon_code;
-   }
+      color                   get_body_color() const override;
+      void                    set_body_color(color color_);
 
-   inline void button_renderer::icon_placement(icon_placement_enum icon_placement_)
-   {
-      _icon_placement = icon_placement_;
-   }
+   private:
 
-   inline button_renderer::icon_placement_enum button_renderer::icon_placement() const
-   {
-      return _icon_placement;
-   }
+      color                   _color;
+   };
 
-   inline void button_renderer::align(label_align_enum align_)
+   template <typename Base>
+   struct button_renderer_with_icon : Base
    {
-      _align = align_;
-   }
+      using icon_placement = default_button_renderer::icon_placement;
+      using base_type = button_renderer_with_icon<typename Base::base_type>;
 
-   inline button_renderer::label_align_enum button_renderer::align() const
+                              button_renderer_with_icon(Base base, std::uint32_t code)
+                               : Base(std::move(base)), _code(code)
+                              {}
+
+      std::uint32_t           get_icon() const override;
+      void                    set_icon(std::uint32_t code);
+      icon_placement          get_icon_placement() const override;
+
+   private:
+
+      std::uint32_t           _code;
+      icon_placement          _icon_placement;
+   };
+
+   template <typename Base>
+   struct button_renderer_with_icon_placement : Base
    {
-      return _align;
-   }
+      using icon_placement = default_button_renderer::icon_placement;
+      using base_type = button_renderer_with_icon_placement<typename Base::base_type>;
+
+                              button_renderer_with_icon_placement(Base base, icon_placement placement)
+                               : Base(std::move(base)), _icon_placement(placement)
+                              {}
+
+      icon_placement          get_icon_placement() const override;
+      void                    set_icon_placement(icon_placement placement);
+      void                    icon_left();
+      void                    icon_right();
+
+   private:
+
+      icon_placement          _icon_placement;
+   };
+
+   template <typename Base>
+   struct button_renderer_with_label_alignment : Base
+   {
+      using label_alignment = default_button_renderer::label_alignment;
+      using base_type = button_renderer_with_label_alignment<typename Base::base_type>;
+
+                              button_renderer_with_label_alignment(Base base, label_alignment alignment)
+                               : Base(std::move(base)), _label_alignment(alignment)
+                              {}
+
+      label_alignment         get_label_alignment() const override;
+      void                    set_label_alignment(label_alignment alignment);
+      void                    align_right();
+      void                    align_left();
+
+   private:
+
+      label_alignment         _label_alignment;
+   };
+
+   template <typename Base>
+   struct button_renderer_gen : Base
+   {
+      using Base::Base;
+      using base_type = typename Base::base_type;
+      using icon_placement_t = default_button_renderer::icon_placement;
+      using label_alignment_t = default_button_renderer::label_alignment;
+
+      using gen_size             = button_renderer_gen<button_renderer_with_size<base_type>>;
+      using gen_body_color       = button_renderer_gen<button_renderer_with_body_color<base_type>>;
+      using gen_icon             = button_renderer_gen<button_renderer_with_icon<base_type>>;
+      using gen_icon_placement   = button_renderer_gen<button_renderer_with_icon_placement<base_type>>;
+      using gen_label_alignment  = button_renderer_gen<button_renderer_with_label_alignment<base_type>>;
+
+      gen_size                size(float size) const;
+      gen_body_color          body_color(color color_) const;
+      gen_icon                icon(std::uint32_t code) const;
+      gen_icon_placement      icon_left() const;
+      gen_icon_placement      icon_right() const;
+      gen_label_alignment     align_left() const;
+      gen_label_alignment     align_center() const;
+      gen_label_alignment     align_right() const;
+   };
+
+   using basic_button_renderer = basic_button_renderer_base<default_button_renderer>;
+   using button_renderer = button_renderer_gen<basic_button_renderer>;
 
    ////////////////////////////////////////////////////////////////////////////
    // Make a generic basic momentary button
@@ -185,15 +217,6 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a momentary button using button_config
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
-   inline auto button(button_config const& cfg)
-   {
-      return momentary_button<Base>(button_renderer{cfg});
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with label
    ////////////////////////////////////////////////////////////////////////////
    template <typename Base = basic_button>
@@ -202,8 +225,11 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{std::move(label), size, body_color};
-      return momentary_button<Base>(button_renderer{cfg});
+      return momentary_button<Base>(
+         button_renderer{std::move(label)}
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -216,10 +242,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_left};
-      return momentary_button<Base>(button_renderer{cfg});
+      return momentary_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_left()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -232,19 +261,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_right};
-      return momentary_button<Base>(button_renderer{cfg});
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a toggle button using button_config
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
-   inline auto toggle_button(button_config const& cfg)
-   {
-      return toggle_button<Base>(button_renderer{cfg});
+      return momentary_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_right()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -256,8 +279,11 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{std::move(label), size, body_color};
-      return toggle_button<Base>(button_renderer{cfg});
+      return toggle_button<Base>(
+         button_renderer{std::move(label)}
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -270,10 +296,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_left};
-      return toggle_button<Base>(button_renderer{cfg});
+      return momentary_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_left()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -286,19 +315,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_right};
-      return toggle_button<Base>(button_renderer{cfg});
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a latching button using button_config
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
-   inline auto latching_button(button_config const& cfg)
-   {
-      return latching_button<Base>(button_renderer{cfg});
+      return toggle_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_right()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -310,8 +333,11 @@ namespace cycfi { namespace elements
     , float size = 1.0
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{std::move(label), size, body_color};
-      return latching_button<Base>(button_renderer{cfg});
+      return latching_button<Base>(
+         button_renderer{std::move(label)}
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -324,10 +350,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_left};
-      return latching_button<Base>(button_renderer{cfg});
+      return latching_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_left()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -340,10 +369,13 @@ namespace cycfi { namespace elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      auto cfg = button_config{
-         std::move(label), size, body_color
-       , icon_code, button_config::icon_right};
-      return latching_button<Base>(button_renderer{cfg});
+      return latching_button<Base>(
+         button_renderer{std::move(label)}
+            .icon(icon_code)
+            .icon_right()
+            .size(size)
+            .body_color(body_color)
+      );
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -352,6 +384,194 @@ namespace cycfi { namespace elements
    void draw_button_base(
       context const& ctx, rect bounds, color color_, bool enabled, float corner_radius
    );
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   inline float default_button_renderer::get_size() const
+   {
+      return 1.0f;
+   }
+
+   inline color default_button_renderer::get_body_color() const
+   {
+      return get_theme().default_button_color;
+   }
+
+   inline std::uint32_t default_button_renderer::get_icon() const
+   {
+      return 0;
+   }
+
+   inline default_button_renderer::icon_placement default_button_renderer::get_icon_placement() const
+   {
+      return icon_none;
+   }
+
+   inline default_button_renderer::label_alignment default_button_renderer::get_label_alignment() const
+   {
+      return align_center;
+   }
+
+   template <typename Base>
+   inline std::string_view basic_button_renderer_base<Base>::get_text() __const
+   {
+      return _text;
+   }
+
+   template <typename Base>
+   inline void basic_button_renderer_base<Base>::set_text(string_view text)
+   {
+      _text = std::string(text);
+   }
+
+   template <typename Base>
+   inline float button_renderer_with_size<Base>::get_size() const
+   {
+      return _size;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_size<Base>::set_size(float size)
+   {
+      _size = size;
+   }
+
+   template <typename Base>
+   inline color button_renderer_with_body_color<Base>::get_body_color() const
+   {
+      return _color;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_body_color<Base>::set_body_color(color color_)
+   {
+      _color = color_;
+   }
+
+   template <typename Base>
+   inline std::uint32_t button_renderer_with_icon<Base>::get_icon() const
+   {
+      return _code;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_icon<Base>:: set_icon(std::uint32_t code)
+   {
+      _code = code;
+   }
+
+   template <typename Base>
+   inline button_renderer::icon_placement
+   button_renderer_with_icon<Base>::get_icon_placement() const
+   {
+      return icon_placement::icon_right;
+   }
+
+   template <typename Base>
+   inline default_button_renderer::icon_placement
+   button_renderer_with_icon_placement<Base>::get_icon_placement() const
+   {
+      return _icon_placement;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_icon_placement<Base>::set_icon_placement(icon_placement placement)
+   {
+      _icon_placement = placement;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_icon_placement<Base>::icon_left()
+   {
+      _icon_placement = icon_placement::icon_left;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_icon_placement<Base>::icon_right()
+   {
+      _icon_placement = icon_placement::icon_right;
+   }
+
+   template <typename Base>
+   inline default_button_renderer::label_alignment
+   button_renderer_with_label_alignment<Base>::get_label_alignment() const
+   {
+      return _label_alignment;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_label_alignment<Base>::set_label_alignment(label_alignment alignment)
+   {
+      _label_alignment = alignment;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_label_alignment<Base>::align_right()
+   {
+      _label_alignment = label_alignment::align_right;
+   }
+
+   template <typename Base>
+   inline void button_renderer_with_label_alignment<Base>::align_left()
+   {
+      _label_alignment = label_alignment::align_left;
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_size
+   button_renderer_gen<Base>::size(float size) const
+   {
+      return { *this, size };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_body_color
+   button_renderer_gen<Base>::body_color(color color_) const
+   {
+      return { *this, color_ };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_icon
+   button_renderer_gen<Base>::icon(std::uint32_t code) const
+   {
+      return { *this, code }; }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_icon_placement
+   button_renderer_gen<Base>::icon_left() const
+   {
+      return { *this, icon_placement_t::icon_left };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_icon_placement
+   button_renderer_gen<Base>::icon_right() const
+   {
+      return { *this, icon_placement_t::icon_right };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_label_alignment
+   button_renderer_gen<Base>::align_left() const
+   {
+      return { *this, label_alignment_t::align_left };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_label_alignment
+   button_renderer_gen<Base>::align_center() const
+   {
+      return { *this, label_alignment_t::align_center };
+   }
+
+   template <typename Base>
+   inline typename button_renderer_gen<Base>::gen_label_alignment
+   button_renderer_gen<Base>::align_right() const
+   {
+      return { *this, label_alignment_t::align_right };
+   }
 }}
 
 #endif

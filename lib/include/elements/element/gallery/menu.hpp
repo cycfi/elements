@@ -8,7 +8,11 @@
 
 #include <elements/element/indirect.hpp>
 #include <elements/element/menu.hpp>
+#include <elements/element/label.hpp>
+#include <elements/element/align.hpp>
 #include <elements/element/size.hpp>
+#include <elements/element/margin.hpp>
+#include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <infra/string_view.hpp>

@@ -30,9 +30,6 @@ namespace cycfi { namespace elements
       using font_type = font_descr;
       using base_type = default_label;
 
-      // Note: base_type cleans up the type when applying label_gen such
-      // that label_gen<label_gen<xxx<T>>> simply becomes label_gen<xxx<T>>
-
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       void                    enable(bool state = true) override;
@@ -161,6 +158,9 @@ namespace cycfi { namespace elements
    using basic_label = basic_label_base<default_label>;
    using label = label_gen<basic_label>;
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
    inline default_label::font_type default_label::get_font() const
    {
       return get_theme().label_font;

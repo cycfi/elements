@@ -18,7 +18,6 @@ class fixed_size_base : public default_label
 public:
     view_limits limits(const basic_context &ctx) const override
     {
-
         point size = measure_text(ctx.canvas, "9" ,get_font());
         size.x *= Size;
         return { { size.x, size.y }, { size.x, size.y } };

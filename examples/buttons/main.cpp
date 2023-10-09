@@ -21,6 +21,12 @@ constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
+///////////////////////////////////////////////////////////////////////////////
+// Now we have custom buttons. It uses the same button logic as with standard
+// element buttons, but you supply the code for drawing the button.
+//
+// Here's how to make a custom button.
+///////////////////////////////////////////////////////////////////////////////
 struct my_custom_button : button_renderer_base
 {
    view_limits             limits(basic_context const& ctx) const override;
@@ -85,13 +91,32 @@ auto make_buttons(view& view_)
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
    auto prog_advance    = icon_button(icons::plus);
    auto disabled_button = button("Disabled Button");
-   auto left            = button(icons::left_circled, "Left", 1.0, bred);
-   auto center          = button("Center", 1.0, bblue);
-   auto right           = button("Right", icons::right_circled, 1.0, bgreen);
-   auto custom          = make_custom_button();
 
-   left->align(button_renderer::align_left);
-   right->align(button_renderer::align_right);
+   // This is the new way of making buttons that is consistent with the label
+   // element interface. The old way will still be available, but this new
+   // interface gives better clarity and flexibility at the expense of
+   // verbosity.
+
+   auto left            =  momentary_button(
+                              button_renderer{"Left"}
+                                 .align_left()
+                                 .icon(icons::left_circled)
+                                 .icon_left()
+                                 .body_color(bred)
+                           );
+   auto center          =  momentary_button(
+                              button_renderer{"Center"}
+                                 .body_color(bblue)
+                           );
+   auto right           =  momentary_button(
+                              button_renderer{"Right"}
+                                 .align_right()
+                                 .icon(icons::right_circled)
+                                 .body_color(bgreen)
+                           );
+
+   // Now we have custom buttons
+   auto custom          = make_custom_button();
 
    disabled_button.enable(false); // Disable this
    reset->enable(false); // Disable initially

@@ -25,18 +25,18 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   view_limits button_renderer::limits(basic_context const& ctx) const
+   view_limits default_button_renderer::limits(basic_context const& ctx) const
    {
       auto const& theme = get_theme();
       auto margin = theme.button_margin;
       auto font = theme.label_font;
 
       // Measure the text width
-      auto size = measure_text(ctx.canvas, _label.c_str(), font.size(font._size * _size));
+      auto size = measure_text(ctx.canvas, get_text(), font.size(font._size * get_size()));
 
       // Add space for the icon if necessary
-      if (_icon_placement != icon_none)
-         size.x += (_size * theme.icon_font._size) + 8;
+      if (get_icon_placement() != icon_none)
+         size.x += (get_size() * theme.icon_font._size) + 8;
 
       auto x_space = margin.left + margin.right;
       auto y_space = margin.top + margin.bottom;
@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
       };
    }
 
-   void button_renderer::draw(context const& ctx)
+   void default_button_renderer::draw(context const& ctx)
    {
       auto& cnv = ctx.canvas;
       auto canvas_state = cnv.new_state();
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       auto value = state.value;
       auto hilite = state.hilite;
       auto enabled = state.enabled;
-      auto body_color = _body_color;
+      auto body_color = get_body_color();
 
       // Draw the body
       if (value)
@@ -74,14 +74,14 @@ namespace cycfi { namespace elements
 
       // Adjust the font size
       auto font = theme.label_font;
-      font = font.size(font._size * _size);
+      font = font.size(font._size * get_size());
 
       // Measure text and icon
-      auto text_size = measure_text(ctx.canvas, _label.c_str(), font.size(font._size * _size));
-      auto icon_space = (_size * theme.icon_font._size) + 8;
+      auto text_size = measure_text(ctx.canvas, get_text(), font.size(font._size * get_size()));
+      auto icon_space = (get_size() * theme.icon_font._size) + 8;
       auto size = text_size;
 
-      if (_icon_placement != icon_none)
+      if (get_icon_placement() != icon_none)
          size.x += icon_space;
 
       auto text_c = enabled?
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       // Draw label
       point text_pos;
 
-      switch (_align)
+      switch (get_label_alignment())
       {
          case align_left:
             text_pos = point{bounds.left + margin.left + icon_space, mid_y};
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
          case align_center:
             {
                float pos_x = mid_x - (size.x/2);
-               text_pos = point(pos_x + (_icon_placement == icon_left? icon_space : 0), mid_y);
+               text_pos = point(pos_x + (get_icon_placement() == icon_left? icon_space : 0), mid_y);
             }
             break;
          case align_right:
@@ -117,15 +117,15 @@ namespace cycfi { namespace elements
       cnv.fill_style(text_c);
       cnv.font(font);
       cnv.text_align(cnv.left | cnv.middle);
-      cnv.fill_text(_label.c_str(), text_pos);
+      cnv.fill_text(get_text(), text_pos);
 
       // Draw icon
-      if (_icon_placement != icon_none)
+      if (get_icon_placement() != icon_none)
       {
-         auto icon_pos = text_pos.move((_icon_placement == icon_left)? -icon_space : text_size.x + 8, 0);
+         auto icon_pos = text_pos.move((get_icon_placement() == icon_left)? -icon_space : text_size.x + 8, 0);
          auto icon_font = theme.icon_font;
-         cnv.font(icon_font.size(_size * icon_font._size));
-         cnv.fill_text(codepoint_to_utf8(_icon_code).c_str(), icon_pos);
+         cnv.font(icon_font.size(get_size() * icon_font._size));
+         cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), icon_pos);
       }
    }
 }}

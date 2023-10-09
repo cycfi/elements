@@ -9,7 +9,7 @@ namespace cycfi { namespace elements
 {
    namespace colors = artist::colors;
 
-   void check_box_renderer::draw(context const& ctx)
+   void check_box_styler::draw(context const& ctx)
    {
       auto&       canvas_ = ctx.canvas;
       auto        canvas_state = canvas_.new_state();

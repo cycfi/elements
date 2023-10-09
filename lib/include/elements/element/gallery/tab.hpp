@@ -13,9 +13,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Tab
    ////////////////////////////////////////////////////////////////////////////
-   struct tab_renderer : element, basic_receiver<int>
+   struct tab_styler : element, basic_receiver<int>
    {
-                              tab_renderer(std::string text)
+                              tab_styler(std::string text)
                                : _text(std::move(text))
                               {}
 
@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
 
    inline auto tab(std::string text)
    {
-      return choice(tab_renderer{text });
+      return choice(tab_styler{text });
    }
 }}
 

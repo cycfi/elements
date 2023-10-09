@@ -14,18 +14,18 @@ namespace cycfi { namespace elements
       draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
    }
 
-   bool button_renderer_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
+   bool button_styler_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
    {
       ctx.view.refresh(ctx);
       return true;
    }
 
-   bool button_renderer_base::wants_control() const
+   bool button_styler_base::wants_control() const
    {
       return true;
    }
 
-   view_limits default_button_renderer::limits(basic_context const& ctx) const
+   view_limits default_button_styler::limits(basic_context const& ctx) const
    {
       auto const& theme = get_theme();
       auto margin = theme.button_margin;
@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
       };
    }
 
-   void default_button_renderer::draw(context const& ctx)
+   void default_button_styler::draw(context const& ctx)
    {
       auto& cnv = ctx.canvas;
       auto canvas_state = cnv.new_state();

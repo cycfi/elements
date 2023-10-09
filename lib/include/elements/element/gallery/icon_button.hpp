@@ -15,9 +15,9 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon Buttons
    ////////////////////////////////////////////////////////////////////////////
-   struct icon_button_renderer_base : element, basic_receiver<button_state>
+   struct icon_button_styler_base : element, basic_receiver<button_state>
    {
-                              icon_button_renderer_base(float size)
+                              icon_button_styler_base(float size)
                                : _size(size)
                               {}
 
@@ -29,14 +29,14 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon button with body
    ////////////////////////////////////////////////////////////////////////////
-   struct icon_button_renderer : icon_button_renderer_base
+   struct icon_button_styler : icon_button_styler_base
    {
-                              icon_button_renderer(
+                              icon_button_styler(
                                  uint32_t code
                                , float size
                                , color body_color = get_theme().default_button_color
                               )
-                               : icon_button_renderer_base(size)
+                               : icon_button_styler_base(size)
                                , _code(code)
                                , _body_color(body_color)
                               {}
@@ -50,15 +50,15 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon button with body and two alternating icons
    ////////////////////////////////////////////////////////////////////////////
-   struct icon_button_element2 : icon_button_renderer_base
+   struct icon_button_styler2 : icon_button_styler_base
    {
-                              icon_button_element2(
+                              icon_button_styler2(
                                  uint32_t code1
                                , uint32_t code2
                                , float size
                                , color body_color = get_theme().default_button_color
                               )
-                               : icon_button_renderer_base(size)
+                               : icon_button_styler_base(size)
                                , _code1(code1)
                                , _code2(code2)
                                , _body_color(body_color)
@@ -74,13 +74,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon button without body
    ////////////////////////////////////////////////////////////////////////////
-   struct plain_icon_button_element : icon_button_renderer_base
+   struct plain_icon_button_element : icon_button_styler_base
    {
                               plain_icon_button_element(
                                  uint32_t code
                                , float size
                               )
-                               : icon_button_renderer_base(size)
+                               : icon_button_styler_base(size)
                                , _code(code)
                               {}
 
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return toggle_button(icon_button_renderer{code, size, body_color });
+      return toggle_button(icon_button_styler{code, size, body_color });
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return toggle_button(icon_button_element2{ code1, code2, size, body_color });
+      return toggle_button(icon_button_styler2{ code1, code2, size, body_color });
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return momentary_button(icon_button_renderer{code, size, body_color });
+      return momentary_button(icon_button_styler{code, size, body_color });
    }
 
    ////////////////////////////////////////////////////////////////////////////

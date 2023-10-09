@@ -53,13 +53,13 @@ namespace cycfi { namespace elements
       draw_plain_icon_button(ctx, code, size, state, hilite, enabled);
    }
 
-   view_limits icon_button_renderer_base::limits(basic_context const& /*ctx*/) const
+   view_limits icon_button_styler_base::limits(basic_context const& /*ctx*/) const
    {
       auto  size = _size * get_theme().icon_font._size * 1.8f;
       return {{size, size}, {size, size}};
    }
 
-   void icon_button_renderer::draw(context const& ctx)
+   void icon_button_styler::draw(context const& ctx)
    {
       auto  state = value();
       auto  value = state.value;
@@ -72,7 +72,7 @@ namespace cycfi { namespace elements
       );
    }
 
-   void  icon_button_element2::draw(context const& ctx)
+   void  icon_button_styler2::draw(context const& ctx)
    {
       auto  state = value();
       auto  value = state.value;

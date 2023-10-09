@@ -27,7 +27,7 @@ constexpr auto pgold    = colors::gold.opacity(0.8);
 //
 // Here's how to make a custom button.
 ///////////////////////////////////////////////////////////////////////////////
-struct my_custom_button : button_renderer_base
+struct my_custom_button : button_styler_base
 {
    view_limits             limits(basic_context const& ctx) const override;
    void                    draw(context const& ctx) override;
@@ -98,18 +98,18 @@ auto make_buttons(view& view_)
    // verbosity.
 
    auto left            =  momentary_button(
-                              button_renderer{"Left"}
+                              button_styler{"Left"}
                                  .align_left()
                                  .icon(icons::left_circled)
                                  .icon_left()
                                  .body_color(bred)
                            );
    auto center          =  momentary_button(
-                              button_renderer{"Center"}
+                              button_styler{"Center"}
                                  .body_color(bblue)
                            );
    auto right           =  momentary_button(
-                              button_renderer{"Right"}
+                              button_styler{"Right"}
                                  .align_right()
                                  .icon(icons::right_circled)
                                  .body_color(bgreen)

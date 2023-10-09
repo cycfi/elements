@@ -11,7 +11,7 @@ namespace cycfi { namespace elements
 {
    namespace colors = artist::colors;
 
-   view_limits tab_element::limits(basic_context const& ctx) const
+   view_limits tab_renderer::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
       auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font);
@@ -20,7 +20,7 @@ namespace cycfi { namespace elements
       return { { size.x, size.y }, { size.x, size.y } };
    }
 
-   void tab_element::draw(context const& ctx)
+   void tab_renderer::draw(context const& ctx)
    {
       auto&       canvas_ = ctx.canvas;
       auto const& theme_ = get_theme();
@@ -47,13 +47,13 @@ namespace cycfi { namespace elements
       canvas_.fill_text(_text.c_str(), point{ cx, cy });
    }
 
-   bool tab_element::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
+   bool tab_renderer::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
    {
       ctx.view.refresh(ctx);
       return true;
    }
 
-   bool tab_element::wants_control() const
+   bool tab_renderer::wants_control() const
    {
       return true;
    }

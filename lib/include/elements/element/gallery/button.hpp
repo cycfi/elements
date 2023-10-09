@@ -35,14 +35,13 @@ namespace cycfi { namespace elements
       label_align_enum     align = align_center;
    };
 
-   struct button_element_base : element, basic_receiver<button_state>
+   struct button_renderer_base : element, basic_receiver<button_state>
    {
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
-
    };
 
-   class button_element : public button_element_base
+   class button_renderer : public button_renderer_base
    {
    public:
 
@@ -57,7 +56,7 @@ namespace cycfi { namespace elements
       static constexpr label_align_enum align_right = button_config::align_right;
 
                               template <typename Config>
-                              button_element(Config const& cfg)
+                              button_renderer(Config const& cfg)
                                : _label{std::move(cfg.label)}
                                , _size{cfg.size}
                                , _body_color{cfg.body_color}
@@ -95,62 +94,62 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   inline void button_element::label(std::string text_)
+   inline void button_renderer::label(std::string text_)
    {
       std::swap(_label, text_);
    }
 
-   inline std::string const& button_element::label() const
+   inline std::string const& button_renderer::label() const
    {
       return _label;
    }
 
-   inline void button_element::size(float size_)
+   inline void button_renderer::size(float size_)
    {
       _size = size_;
    }
 
-   inline float button_element::size() const
+   inline float button_renderer::size() const
    {
       return _size;
    }
 
-   inline void button_element::body_color(color body_color_)
+   inline void button_renderer::body_color(color body_color_)
    {
       _body_color = body_color_;
    }
 
-   inline color button_element::body_color() const
+   inline color button_renderer::body_color() const
    {
       return _body_color;
    }
 
-   inline void button_element::icon(std::uint32_t icon_code)
+   inline void button_renderer::icon(std::uint32_t icon_code)
    {
       _icon_code = icon_code;
    }
 
-   inline std::uint32_t button_element::icon() const
+   inline std::uint32_t button_renderer::icon() const
    {
       return _icon_code;
    }
 
-   inline void button_element::icon_placement(icon_placement_enum icon_placement_)
+   inline void button_renderer::icon_placement(icon_placement_enum icon_placement_)
    {
       _icon_placement = icon_placement_;
    }
 
-   inline button_element::icon_placement_enum button_element::icon_placement() const
+   inline button_renderer::icon_placement_enum button_renderer::icon_placement() const
    {
       return _icon_placement;
    }
 
-   inline void button_element::align(label_align_enum align_)
+   inline void button_renderer::align(label_align_enum align_)
    {
       _align = align_;
    }
 
-   inline button_element::label_align_enum button_element::align() const
+   inline button_renderer::label_align_enum button_renderer::align() const
    {
       return _align;
    }
@@ -191,7 +190,7 @@ namespace cycfi { namespace elements
    template <typename Base = basic_button>
    inline auto button(button_config const& cfg)
    {
-      return momentary_button<Base>(button_element{cfg});
+      return momentary_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -204,7 +203,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       auto cfg = button_config{std::move(label), size, body_color};
-      return momentary_button<Base>(button_element{cfg});
+      return momentary_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -220,7 +219,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_left};
-      return momentary_button<Base>(button_element{cfg});
+      return momentary_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -236,7 +235,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_right};
-      return momentary_button<Base>(button_element{cfg});
+      return momentary_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -245,7 +244,7 @@ namespace cycfi { namespace elements
    template <typename Base = basic_button>
    inline auto toggle_button(button_config const& cfg)
    {
-      return toggle_button<Base>(button_element{cfg});
+      return toggle_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -258,7 +257,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       auto cfg = button_config{std::move(label), size, body_color};
-      return toggle_button<Base>(button_element{cfg});
+      return toggle_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -274,7 +273,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_left};
-      return toggle_button<Base>(button_element{cfg});
+      return toggle_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -290,7 +289,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_right};
-      return toggle_button<Base>(button_element{cfg});
+      return toggle_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -299,7 +298,7 @@ namespace cycfi { namespace elements
    template <typename Base = basic_button>
    inline auto latching_button(button_config const& cfg)
    {
-      return latching_button<Base>(button_element{cfg});
+      return latching_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -312,7 +311,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color)
    {
       auto cfg = button_config{std::move(label), size, body_color};
-      return latching_button<Base>(button_element{cfg});
+      return latching_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -328,7 +327,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_left};
-      return latching_button<Base>(button_element{cfg});
+      return latching_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -344,7 +343,7 @@ namespace cycfi { namespace elements
       auto cfg = button_config{
          std::move(label), size, body_color
        , icon_code, button_config::icon_right};
-      return latching_button<Base>(button_element{cfg});
+      return latching_button<Base>(button_renderer{cfg});
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -21,7 +21,7 @@ constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
-struct my_custom_button : button_element_base
+struct my_custom_button : button_renderer_base
 {
    view_limits             limits(basic_context const& ctx) const override;
    void                    draw(context const& ctx) override;
@@ -90,8 +90,8 @@ auto make_buttons(view& view_)
    auto right           = button("Right", icons::right_circled, 1.0, bgreen);
    auto custom          = make_custom_button();
 
-   left->align(button_element::align_left);
-   right->align(button_element::align_right);
+   left->align(button_renderer::align_left);
+   right->align(button_renderer::align_right);
 
    disabled_button.enable(false); // Disable this
    reset->enable(false); // Disable initially

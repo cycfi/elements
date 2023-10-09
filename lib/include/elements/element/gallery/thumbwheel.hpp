@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic (vertical and horizontal) thumbwheels (You can use these as the
-   // subject of thumbwheel)
+   // subject of thumbwheel).
    //
    //    A thumbwheel subject can be constructed using a vport or hport (see
    //    port.hpp) and a receiver<double> which recieves a 0.0 to 1.0 value

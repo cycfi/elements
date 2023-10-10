@@ -414,7 +414,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline std::string_view basic_button_styler_base<Base>::get_text() __const
+   inline std::string_view basic_button_styler_base<Base>::get_text() const
    {
       return _text;
    }

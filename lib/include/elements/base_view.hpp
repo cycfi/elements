@@ -279,6 +279,12 @@ namespace cycfi { namespace elements
       int               modifiers;
    };
 
+   struct drop_info
+   {
+      std::vector<fs::path>   paths;
+      point                   where;
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
@@ -315,6 +321,8 @@ namespace cycfi { namespace elements
       virtual bool         text(text_info const& info);
       virtual void         begin_focus();
       virtual void         end_focus();
+      virtual void         track_drop(drop_info const& info);
+      virtual bool         drop(drop_info const& info);
       virtual void         poll();
 
       virtual void         refresh();
@@ -341,6 +349,11 @@ namespace cycfi { namespace elements
    inline bool base_view::text(text_info const& /* info */) { return false; }
    inline void base_view::begin_focus() {}
    inline void base_view::end_focus() {}
+   inline void base_view::track_drop(drop_info const& /*info*/) {}
+   inline bool base_view::drop(drop_info const& /*info*/)
+   {
+      return false;
+   }
    inline void base_view::poll() {}
 
    ////////////////////////////////////////////////////////////////////////////

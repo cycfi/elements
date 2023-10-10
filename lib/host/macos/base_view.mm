@@ -689,7 +689,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    }
 }
 
-- (BOOL)performDragOperation : (id <NSDraggingInfo>) sender
+- (BOOL) performDragOperation : (id <NSDraggingInfo>) sender
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
@@ -701,27 +701,35 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    return NO;
 }
 
-- (BOOL)wantsPeriodicDraggingUpdates
+- (BOOL) wantsPeriodicDraggingUpdates
 {
    return YES;
 }
 
-- (NSDragOperation)draggingEntered : (id <NSDraggingInfo>) sender
+- (NSDragOperation) draggingEntered : (id <NSDraggingInfo>) sender
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
    if (info.paths.size())
-      _view->track_drop(info);
+      _view->track_drop(info, ph::cursor_tracking::entering);
    return NSDragOperationGeneric;
 }
 
-- (NSDragOperation)draggingUpdated : (id<NSDraggingInfo>) sender
+- (NSDragOperation) draggingUpdated : (id<NSDraggingInfo>) sender
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
    if (info.paths.size())
-      _view->track_drop(info);
+      _view->track_drop(info, ph::cursor_tracking::hovering);
    return NSDragOperationGeneric;
+}
+
+- (void) draggingExited : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.paths.size())
+      _view->track_drop(info, ph::cursor_tracking::leaving);
 }
 
 @end // @implementation ElementsView

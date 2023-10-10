@@ -175,4 +175,14 @@ namespace cycfi { namespace elements
    {
       return subject().wants_control();
    }
+
+   void proxy_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   {
+      subject().track_drop(ctx, info, status);
+   }
+
+   bool proxy_base::drop(context const& ctx, drop_info const& info)
+   {
+      return subject().drop(ctx, info);
+   }
 }}

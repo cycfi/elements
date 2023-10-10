@@ -11,6 +11,7 @@
 #include <elements/element/composite.hpp>
 #include <elements/element/child_window.hpp>
 #include <elements/element/dial.hpp>
+#include <elements/element/drop.hpp>
 #include <elements/element/dynamic_list.hpp>
 #include <elements/element/floating.hpp>
 #include <elements/element/flow.hpp>

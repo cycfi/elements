@@ -17,11 +17,16 @@ namespace cycfi { namespace elements
     : _pixmap(std::make_shared<artist::image>(path))
     , _scale(scale)
    {
+      if (!_pixmap->impl())
+         throw std::runtime_error{ "Error: Invalid image." };
    }
 
    image::image(image_ptr pixmap_)
     : _pixmap(pixmap_)
-   {}
+   {
+      if (!_pixmap->impl())
+         throw std::runtime_error{ "Error: Invalid image." };
+   }
 
    point image::size() const
    {

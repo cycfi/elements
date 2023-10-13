@@ -366,7 +366,7 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         constexpr auto acceleration = 1.1;
+         constexpr auto acceleration = 1.08;
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->_scroll_start;
          info->_scroll_start = now;

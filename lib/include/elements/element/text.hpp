@@ -146,6 +146,9 @@ namespace cycfi { namespace elements
 
       state_saver_f           capture_state();
 
+      using this_handle = std::shared_ptr<basic_text_box*>;
+      using this_weak_handle = std::weak_ptr<basic_text_box*>;
+
       int                     _select_start;
       int                     _select_end;
       float                   _current_x;
@@ -153,6 +156,7 @@ namespace cycfi { namespace elements
       bool                    _is_focus : 1;
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
+      this_handle             _this_handle;
    };
 
    ////////////////////////////////////////////////////////////////////////////

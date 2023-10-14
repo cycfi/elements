@@ -128,7 +128,9 @@ namespace cycfi { namespace elements
    {}
 
    basic_text_box::~basic_text_box()
-   {}
+   {
+      _this_handle.reset();
+   }
 
    void basic_text_box::draw(context const& ctx)
    {
@@ -539,6 +541,10 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw_caret(context const& ctx)
    {
+      // Make sure _this_handle is initialized to this
+      if (!_this_handle)
+         _this_handle = std::make_shared<basic_text_box*>(this);
+
       if (_select_start == -1)
          return;
 
@@ -598,12 +604,16 @@ namespace cycfi { namespace elements
          caret_bounds = { tl.x, tl.y, br.x, br.y };
 
          _caret_started = true;
+         this_weak_handle wp = _this_handle;
          ctx.view.post(500ms,
-            [this, &_view = ctx.view, caret_bounds]()
+            [wp, &_view = ctx.view, caret_bounds]()
             {
-               _show_caret = !_show_caret;
-               _view.refresh(caret_bounds);
-               _caret_started = false;
+               if (auto p = wp.lock())
+               {
+                  (*p)->_show_caret = !(*p)->_show_caret;
+                  _view.refresh(caret_bounds);
+                  (*p)->_caret_started = false;
+               }
             }
          );
       }

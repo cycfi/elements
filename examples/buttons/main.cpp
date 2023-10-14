@@ -124,7 +124,7 @@ auto make_buttons(view& view_)
       {
          if (auto p = reset.lock())
          {
-            (*p)->icon(icons::lock);
+            (*p)->set_icon(icons::lock);
             p->enable(true);
             view_.refresh(*p);
          }
@@ -141,7 +141,7 @@ auto make_buttons(view& view_)
 
          if (auto p = reset.lock())
          {
-            (*p)->icon(icons::lock_open);
+            (*p)->set_icon(icons::lock_open);
             p->enable(false);
             view_.refresh(*p);
          }

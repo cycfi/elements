@@ -670,6 +670,7 @@ namespace cycfi { namespace elements
       {
          _handle = nullptr;
       }
+      _size = descr._size;
    }
 
    font::font(font const& rhs)

@@ -675,23 +675,29 @@ namespace cycfi { namespace elements
    font::font(font const& rhs)
    {
       _handle = cairo_font_face_reference(rhs._handle);
+      _size = rhs._size;
    }
 
    font& font::operator=(font const& rhs)
    {
       if (&rhs != this)
+      {
          _handle = cairo_font_face_reference(rhs._handle);
+         _size = rhs._size;
+      }
       return *this;
    }
 
    font::font(font&& rhs) noexcept
    {
       std::swap(_handle, rhs._handle);
+      std::swap(_size, rhs._size);
    }
 
    font& font::operator=(font&& rhs) noexcept
    {
       std::swap(_handle, rhs._handle);
+      std::swap(_size, rhs._size);
       return *this;
    }
 

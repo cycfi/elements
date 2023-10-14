@@ -77,7 +77,7 @@ namespace cycfi { namespace elements
       font = font.size(font._size * get_size());
 
       // Measure text and icon
-      auto text_size = measure_text(ctx.canvas, get_text().c_str(), font, font._size * get_size());
+      auto text_size = measure_text(ctx.canvas, get_text().c_str(), font, font._size);
       auto icon_space = (get_size() * theme.icon_font._size) + 8;
       auto size = text_size;
 

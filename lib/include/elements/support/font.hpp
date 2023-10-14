@@ -110,6 +110,7 @@ namespace cycfi { namespace elements
 
       friend class canvas;
       cairo_font_face_t*  _handle   = nullptr;
+      float               _size     = 12;
    };
 
    ////////////////////////////////////////////////////////////////////////////

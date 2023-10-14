@@ -283,6 +283,7 @@ namespace cycfi { namespace elements
    {
       if (font_._handle)
          cairo_set_font_face(&_context, font_._handle);
+      font_size(font_._size);
    }
 
    void canvas::font(elements::font const& font_, float size)

@@ -6,7 +6,6 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
-using namespace cycfi::artist;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -18,7 +17,7 @@ auto box = draw(
       auto& c = ctx.canvas;
 
       c.begin_path();
-      c.add_round_rect(ctx.bounds, 4);
+      c.round_rect(ctx.bounds, 4);
       c.fill_style(colors::gold.opacity(0.8));
       c.fill();
    }

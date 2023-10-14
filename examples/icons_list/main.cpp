@@ -6,7 +6,6 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
-using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -19,7 +18,7 @@ public:
     view_limits limits(const basic_context &ctx) const override
     {
 
-        point size = measure_text(ctx.canvas, "9" ,get_font());
+        point size = measure_text(ctx.canvas, "9" ,get_font(), 16);
         size.x *= Size;
         return { { size.x, size.y }, { size.x, size.y } };
     }

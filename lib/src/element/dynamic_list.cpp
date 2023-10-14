@@ -362,7 +362,7 @@ namespace cycfi { namespace elements
       if (!_cells.empty())
       {
          hit_info info = hit_element(ctx, p, true);
-         if (auto ptr = info.element; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
+         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
             return ptr->scroll(ectx, dir, p);

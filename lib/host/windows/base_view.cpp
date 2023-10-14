@@ -27,66 +27,14 @@
       distribution.
 =============================================================================*/
 #include <elements/base_view.hpp>
-#include <artist/canvas.hpp>
-#include <artist/resources.hpp>
-
-#ifndef UNICODE
-# define UNICODE
-#endif
-
-#include <SDKDDKVer.h>
-#include <windows.h>
-#include <gl/gl.h>
-
-#include <ShellScalingAPI.h>
+#include <elements/support/canvas.hpp>
+#include <elements/support/resource_paths.hpp>
+#include <cairo.h>
+#include <cairo-win32.h>
 #include <Windowsx.h>
 #include <chrono>
 #include <map>
-
-#if defined ELEMENTS_PRINT_FPS
-# include <iostream>
-#endif
-
-#include <GrContext.h>
-#include <gl/GrGLInterface.h>
-#include <SkImage.h>
-#include <SkSurface.h>
-#include <tools/sk_app/DisplayParams.h>
-#include <tools/sk_app/WindowContext.h>
-#include <tools/sk_app/win/WindowContextFactory_win.h>
-
 #include "utils.hpp"
-
-namespace cycfi::artist
-{
-   namespace
-   {
-      fs::path find_resources()
-      {
-         TCHAR exe_path[MAX_PATH];
-         GetModuleFileName(nullptr, exe_path, MAX_PATH);
-
-         fs::path const app_path = exe_path;
-         fs::path const app_dir = app_path.parent_path();
-
-         fs::path const app_resources_dir = app_dir / "resources";
-         if (fs::is_directory(app_resources_dir))
-            return app_resources_dir;
-
-         return fs::current_path() / "resources";
-      }
-   }
-
-   void init_paths()
-   {
-      add_search_path(find_resources());
-   }
-
-   fs::path get_user_fonts_directory()
-   {
-      return find_resources();
-   }
-}
 
 namespace cycfi { namespace elements
 {
@@ -123,19 +71,21 @@ namespace cycfi { namespace elements
       {
          using time_point = std::chrono::time_point<std::chrono::steady_clock>;
          using key_map = std::map<key_code, key_action>;
-         using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
-         base_view*     _vptr = nullptr;
-         bool           _is_dragging = false;
-         HDC            _hdc = nullptr;
-         bool           _mouse_in_window = false;
-         time_point     _click_start = {};
-         int            _click_count = 0;
-         time_point     _scroll_start = {};
-         double         _velocity = 0;
-         point          _scroll_dir;
-         key_map        _keys = {};
-         skia_context   _skia_context;
+         base_view*     vptr = nullptr;
+         bool           is_dragging = false;
+         HDC            hdc = nullptr;
+         HDC            offscreen_hdc = nullptr;
+         HBITMAP        offscreen_buff = nullptr;
+         int            w = 0;
+         int            h = 0;
+         bool           mouse_in_window = false;
+         time_point     click_start = {};
+         int            click_count = 0;
+         time_point     scroll_start = {};
+         double         velocity = 1.0;
+         point          scroll_dir;
+         key_map        keys = {};
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -144,9 +94,26 @@ namespace cycfi { namespace elements
          return reinterpret_cast<view_info*>(param);
       }
 
+      void make_offscreen_dc(HDC hdc, view_info* info, int w, int h)
+      {
+         info->hdc = hdc;
+         info->w = w;
+         info->h = h;
+
+         // Free-up the previous off-screen DC
+         if (info->offscreen_buff)
+            DeleteObject(info->offscreen_buff);
+         if (info->offscreen_hdc)
+            DeleteDC(info->offscreen_hdc);
+
+         // Create an off-screen DC for double-buffering
+         info->offscreen_hdc = CreateCompatibleDC(hdc);
+         info->offscreen_buff = CreateCompatibleBitmap(hdc, w, h);
+      }
+
       LRESULT on_paint(HWND hwnd, view_info* info)
       {
-         if (base_view* view = info->_vptr)
+         if (base_view* view = info->vptr)
          {
             RECT dirty;
             GetUpdateRect(hwnd, &dirty, false);
@@ -155,52 +122,39 @@ namespace cycfi { namespace elements
             HDC hdc = BeginPaint(hwnd, &ps);
             SetBkMode(hdc, TRANSPARENT);
 
-#if defined ELEMENTS_PRINT_FPS
-            auto start = std::chrono::high_resolution_clock::now();
-#endif
-
             RECT r;
             GetWindowRect(hwnd, &r);
             auto win_width = r.right-r.left;
             auto win_height = r.bottom-r.top;
-            auto const& _skia_context = info->_skia_context;
 
-            if (_skia_context->width() != win_width || _skia_context->height() != win_height)
-               _skia_context->resize(win_width, win_height);
+            if (hdc != info->hdc || win_width != info->w || win_height != info->h)
+               make_offscreen_dc(hdc, info, win_width, win_height);
 
-            auto surface = _skia_context->getBackbufferSurface();
-            if (surface)
-            {
-               auto draw =
-                  [&](auto& cnv_)
-                  {
-                     auto scale = get_scale_for_window(hwnd);
-                     auto cnv = canvas{ cnv_ };
-                     cnv.pre_scale(scale);
+            HANDLE hold = SelectObject(info->offscreen_hdc, info->offscreen_buff);
 
-                     view->draw(cnv,
-                        {
-                           float(dirty.left),
-                           float(dirty.top),
-                           float(dirty.right),
-                           float(dirty.bottom)
-                        }
-                     );
-                  };
+            // Create the cairo surface and context.
+            cairo_surface_t* surface = cairo_win32_surface_create(info->offscreen_hdc);
+            cairo_t* context = cairo_create(surface);
+            view->draw(context,
+               {
+                  float(dirty.left),
+                  float(dirty.top),
+                  float(dirty.right),
+                  float(dirty.bottom)
+               }
+            );
 
-               SkCanvas* gpu_canvas = surface->getCanvas();
-               gpu_canvas->save();
-               draw(gpu_canvas);
-               gpu_canvas->restore();
-               surface->flush();
-               _skia_context->swapBuffers();
-            }
+            // Cleanup.
+            cairo_destroy(context);
+            cairo_surface_destroy(surface);
 
-#if defined ELEMENTS_PRINT_FPS
-            auto stop = std::chrono::high_resolution_clock::now();
-            auto elapsed = std::chrono::duration<double>{ stop - start }.count();
-            std::cout << (1.0/elapsed) << " fps" << std::endl;
-#endif
+            // Transfer the off-screen DC to the screen
+            auto w = dirty.right-dirty.left;
+            auto h = dirty.bottom-dirty.top;
+            BitBlt(hdc, dirty.left, dirty.top, w, h, info->offscreen_hdc
+              , dirty.left, dirty.top, SRCCOPY);
+
+            SelectObject(info->offscreen_hdc, hold);
             EndPaint(hwnd, &ps);
          }
          return 0;
@@ -238,7 +192,7 @@ namespace cycfi { namespace elements
          pos_x /= scale;
          pos_y /= scale;
 
-         bool down = info->_is_dragging;
+         bool down = info->is_dragging;
          switch (message)
          {
             case WM_LBUTTONDOWN:
@@ -246,15 +200,15 @@ namespace cycfi { namespace elements
             case WM_RBUTTONDOWN:
                {
                   auto now = std::chrono::steady_clock::now();
-                  auto elapsed = now - info->_click_start;
-                  info->_click_start = now;
+                  auto elapsed = now - info->click_start;
+                  info->click_start = now;
                   if (elapsed > std::chrono::milliseconds(GetDoubleClickTime()))
-                     info->_click_count = 1;
+                     info->click_count = 1;
                   else
-                     ++info->_click_count;
-                  if (!info->_is_dragging)
+                     ++info->click_count;
+                  if (!info->is_dragging)
                   {
-                     info->_is_dragging = true;
+                     info->is_dragging = true;
                      SetCapture(hwnd);
                   }
                   down = true;
@@ -265,9 +219,9 @@ namespace cycfi { namespace elements
             case WM_MBUTTONUP:
             case WM_RBUTTONUP:
                down = false;
-               if (info->_is_dragging)
+               if (info->is_dragging)
                {
-                  info->_is_dragging = false;
+                  info->is_dragging = false;
                   ReleaseCapture();
                }
                break;
@@ -297,7 +251,7 @@ namespace cycfi { namespace elements
 
          return {
             down,
-            info->_click_count,
+            info->click_count,
             which,
             get_mods(),
             { pos_x, pos_y }
@@ -337,19 +291,19 @@ namespace cycfi { namespace elements
          {
             // HACK: Release both Shift keys on Shift up event, as when both
             //       are pressed the first release does not emit any event
-            bool r1 = handle_key(*info->_vptr, info->_keys, { key_code::left_shift, action, mods });
-            bool r2 = handle_key(*info->_vptr, info->_keys, { key_code::right_shift, action, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key_code::left_shift, action, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key_code::right_shift, action, mods });
             return r1 || r2;
          }
          else if (wparam == VK_SNAPSHOT)
          {
             // HACK: Key down is not reported for the Print Screen key
-            bool r1 = handle_key(*info->_vptr, info->_keys, { key, key_action::press, mods });
-            bool r2 = handle_key(*info->_vptr, info->_keys, { key, key_action::release, mods });
+            bool r1 = handle_key(*info->vptr, info->keys, { key, key_action::press, mods });
+            bool r2 = handle_key(*info->vptr, info->keys, { key, key_action::release, mods });
             return r1 || r2;
          }
 
-         return handle_key(*info->_vptr, info->_keys, { key, action, mods });
+         return handle_key(*info->vptr, info->keys, { key, action, mods });
       }
 
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
@@ -368,25 +322,25 @@ namespace cycfi { namespace elements
       {
          constexpr auto acceleration = 1.1;
          auto now = std::chrono::steady_clock::now();
-         auto elapsed = now - info->_scroll_start;
-         info->_scroll_start = now;
+         auto elapsed = now - info->scroll_start;
+         info->scroll_start = now;
 
          std::chrono::duration<double, std::milli> fp_ms = elapsed;
 
          bool reset_accel =
             elapsed > std::chrono::milliseconds(250) ||
-            (info->_scroll_dir.x > 0 != dir.x > 0) ||
-            (info->_scroll_dir.y > 0 != dir.y > 0)
+            (info->scroll_dir.x > 0 != dir.x > 0) ||
+            (info->scroll_dir.y > 0 != dir.y > 0)
             ;
-         info->_scroll_dir = dir;
+         info->scroll_dir = dir;
 
          if (reset_accel)
-            info->_velocity = 1.0;
+            info->velocity = 1.0;
          else
-            info->_velocity *= acceleration;
+            info->velocity *= acceleration;
 
-         dir.x *= info->_velocity;
-         dir.y *= info->_velocity;
+         dir.x *= info->velocity;
+         dir.y *= info->velocity;
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);
@@ -394,7 +348,7 @@ namespace cycfi { namespace elements
          ScreenToClient(hwnd, &pos);
 
          float scale = get_scale_for_window(hwnd);
-         info->_vptr->scroll(dir, {pos.x / scale, pos.y / scale });
+         info->vptr->scroll(dir, { pos.x / scale, pos.y / scale });
       }
 
       bool on_text(base_view& view, UINT message, WPARAM wparam)
@@ -438,20 +392,20 @@ namespace cycfi { namespace elements
 
             case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
                // $$$ JDG $$$ todo: prevent double btn up and down
-               info->_vptr->click(get_button(hwnd, info, message, wparam, lparam));
+               info->vptr->click(get_button(hwnd, info, message, wparam, lparam));
                break;
 
             case WM_MOUSEMOVE:
-               if (info->_is_dragging)
+               if (info->is_dragging)
                {
-                  info->_vptr->drag(get_button(hwnd, info, message, wparam, lparam));
+                  info->vptr->drag(get_button(hwnd, info, message, wparam, lparam));
                }
                else
                {
-                  if (!info->_mouse_in_window)
+                  if (!info->mouse_in_window)
                   {
-                     on_cursor(hwnd, info->_vptr, lparam, cursor_tracking::entering);
-                     info->_mouse_in_window = true;
+                     on_cursor(hwnd, info->vptr, lparam, cursor_tracking::entering);
+                     info->mouse_in_window = true;
                   }
                   TRACKMOUSEEVENT tme;
                   tme.cbSize = sizeof(tme);
@@ -463,12 +417,12 @@ namespace cycfi { namespace elements
                break;
 
             case WM_MOUSELEAVE:
-               info->_mouse_in_window = false;
-               on_cursor(hwnd, info->_vptr, lparam, cursor_tracking::leaving);
+               info->mouse_in_window = false;
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::leaving);
                break;
 
             case WM_MOUSEHOVER:
-               on_cursor(hwnd, info->_vptr, lparam, cursor_tracking::hovering);
+               on_cursor(hwnd, info->vptr, lparam, cursor_tracking::hovering);
                break;
 
             case WM_MOUSEWHEEL:
@@ -492,7 +446,7 @@ namespace cycfi { namespace elements
 
             case WM_TIMER:
                if (wparam == IDT_TIMER1)
-                  info->_vptr->poll();
+                  info->vptr->poll();
                break;
 
             case WM_KEYDOWN:
@@ -514,14 +468,14 @@ namespace cycfi { namespace elements
             case WM_CHAR:
             case WM_SYSCHAR:
             case WM_UNICHAR:
-               return on_text(*info->_vptr, message, wparam);
+               return on_text(*info->vptr, message, wparam);
 
             case WM_SETFOCUS:
-               info->_vptr->begin_focus();
+               info->vptr->begin_focus();
                break;
 
             case WM_KILLFOCUS:
-               info->_vptr->end_focus();
+               info->vptr->end_focus();
                break;
 
             default:
@@ -535,9 +489,9 @@ namespace cycfi { namespace elements
          init_view_class()
          {
             WNDCLASSW windowClass = {};
-            windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
+            windowClass.hbrBackground = nullptr;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-            windowClass.hInstance = GetModuleHandleW(nullptr);
+            windowClass.hInstance = nullptr;
             windowClass.lpfnWndProc = WndProc;
             windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -546,7 +500,7 @@ namespace cycfi { namespace elements
 
             auto pwd = fs::current_path();
             auto resource_path = pwd / "resources";
-            artist::add_search_path(resource_path);
+            add_search_path(resource_path);
          }
       };
    }
@@ -556,37 +510,29 @@ namespace cycfi { namespace elements
       HWND make_window(base_view* _this, host_window_handle parent, RECT bounds)
       {
          static init_view_class init;
-         auto style = WS_CHILD | WS_VISIBLE;
 
-         HWND hwnd = CreateWindowW(
+         HWND _view = CreateWindowW(
             L"ElementsView",
             nullptr,
-            style,
-            CW_USEDEFAULT, CW_USEDEFAULT, // position x, y
-            1, 1,                         // width, height
-            parent, nullptr,              // parent window, menu
-            nullptr, nullptr              // instance, param
+            WS_CHILD | WS_VISIBLE,
+            0, 0, 0, 0,
+            parent, nullptr, nullptr,
+            nullptr
          );
 
-         auto dpi = GetDpiForWindow(hwnd);
-         AdjustWindowRectExForDpi(&bounds, style, false, WS_EX_APPWINDOW, dpi);
-
          MoveWindow(
-            hwnd, bounds.left, bounds.top,
-            bounds.right - bounds.left,
-            bounds.bottom - bounds.top,
-            false
+            _view, bounds.left, bounds.top,
+            bounds.right-bounds.left, bounds.bottom-bounds.top,
+            true // repaint
          );
 
          view_info* info = new view_info{ _this };
-         SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
-
-         info->_skia_context = sk_app::window_context_factory::MakeGLForWin(hwnd, sk_app::DisplayParams());
+         SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
          // Create 1ms timer
-         SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);
+         SetTimer(_view, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
-         return hwnd;
+         return _view;
       }
    }
 
@@ -606,6 +552,13 @@ namespace cycfi { namespace elements
    base_view::~base_view()
    {
       auto info = get_view_info(_view);
+
+      // Free-up the off-screen DC
+      if (info->offscreen_buff)
+         DeleteObject(info->offscreen_buff);
+      if (info->offscreen_hdc)
+         DeleteDC(info->offscreen_hdc);
+
       KillTimer(_view, IDT_TIMER1);
       delete info;
       DeleteObject(_view);
@@ -642,11 +595,6 @@ namespace cycfi { namespace elements
       );
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return get_scale_for_window(_view);
-   }
-
    void base_view::refresh()
    {
       RECT bounds;
@@ -663,6 +611,11 @@ namespace cycfi { namespace elements
       r.top = area.top * scale;
       r.bottom = area.bottom * scale;
       InvalidateRect(_view, &r, false);
+   }
+
+   float base_view::hdpi_scale() const
+   {
+      return get_scale_for_window(_view);
    }
 
    std::string clipboard()
@@ -686,12 +639,11 @@ namespace cycfi { namespace elements
       return utf8_encode(source);
    }
 
-   void clipboard(std::string_view text)
+   void clipboard(std::string const& text)
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), nullptr, 0);
+      auto len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
       if (!len)
          return;
-      ++len; // null terminator
 
       HANDLE object = GlobalAlloc(GMEM_MOVEABLE, len * sizeof(WCHAR));
       if (!object)
@@ -704,8 +656,7 @@ namespace cycfi { namespace elements
          return;
       }
 
-      MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), buffer, len);
-      buffer[text.size()] = 0;
+      MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, buffer, len);
       GlobalUnlock(object);
 
       if (!OpenClipboard(nullptr))

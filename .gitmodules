@@ -4,6 +4,3 @@
 [submodule "lib/external/asio"]
 	path = lib/external/asio
 	url = https://github.com/chriskohlhoff/asio.git
-[submodule "lib/artist"]
-	path = lib/artist
-	url = https://github.com/cycfi/artist.git

@@ -39,14 +39,6 @@ else()
 endif()
 
 ###############################################################################
-# Linux Open GL
-
-if (UNIX AND NOT APPLE)
-   find_package(PkgConfig REQUIRED)
-   find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-endif()
-
-###############################################################################
 # Sources (and Resources)
 
 if (NOT DEFINED ELEMENTS_ICON_FONT)
@@ -115,29 +107,25 @@ elseif (WIN32)
    )
 
    if (MSVC)
-
-      set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
-         MSVC_RUNTIME_LIBRARY "MultiThreaded"
-      )
-
       target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
       )
 
-      add_dependencies(${PROJECT_NAME} windows_dlls)
-
       if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
+         set(CAIRO_DLL ${ELEMENTS_ROOT}/lib/external/cairo/lib/x64/cairo.dll)
          set(FREETYPE_DLL ${ELEMENTS_ROOT}/lib/external/freetype/win64/freetype.dll)
          set(FONTCONFIG_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/fontconfig.dll)
          set(ICONV_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/libiconv.dll)
          set(XML2 ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/libxml2.dll)
       else()
+         set(CAIRO_DLL ${ELEMENTS_ROOT}/lib/external/cairo/lib/x86/cairo.dll)
          set(FREETYPE_DLL ${ELEMENTS_ROOT}/lib/external/freetype/win32/freetype.dll)
          set(FONTCONFIG_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/fontconfig.dll)
          set(ICONV_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/libiconv.dll)
          set(XML2 ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/libxml2.dll)
       endif()
 
+      file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${FONTCONFIG_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${ICONV_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -161,7 +149,6 @@ target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE
 target_link_libraries(${ELEMENTS_APP_PROJECT} PRIVATE
    ${ELEMENTS_APP_DEPENDENCIES}
    elements
-   ${OPENGL_LIBRARIES}
 )
 
 if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)

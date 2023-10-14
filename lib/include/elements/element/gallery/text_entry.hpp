@@ -43,16 +43,16 @@ namespace cycfi { namespace elements
 
    inline auto input_box(
       std::string placeholder
-    , font_descr font_
+    , font font_
     , float size // ratio relative to get_theme().text_box_font_size
    )
    {
-      auto font_size = get_theme().text_box_font._size * size;
+      auto font_size = get_theme().text_box_font_size * size;
       auto pad = rect{
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f
       };
-      auto tbox = share(basic_input_box{ std::move(placeholder), font_.size(font_size) });
+      auto tbox = share(basic_input_box{ std::move(placeholder), font_, font_size });
       return std::make_pair(input_box(hold(tbox), pad), tbox);
    }
 

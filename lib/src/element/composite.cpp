@@ -249,7 +249,7 @@ namespace cycfi { namespace elements
          status = cursor_tracking::hovering;
          if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
-             status = cursor_tracking::entering;
+            status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = at(_cursor_tracking);
@@ -265,7 +265,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p, true);
-         if (auto ptr = info.element; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
+         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
          {
             context ectx{ ctx, ptr.get(), info.bounds };
             return ptr->scroll(ectx, dir, p);

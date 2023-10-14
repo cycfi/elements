@@ -4,12 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/misc.hpp>
-#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
    void panel::draw(context const& ctx)
    {
       draw_panel(
@@ -107,7 +104,7 @@ namespace cycfi { namespace elements
    view_limits icon::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font._size * _size;
+      float font_size = thm.icon_font_size * _size;
       point s = measure_icon(ctx.canvas, _code, font_size);
       return { { s.x, s.y }, { s.x, s.y } };
    }
@@ -115,7 +112,7 @@ namespace cycfi { namespace elements
    void icon::draw(context const& ctx)
    {
       auto& thm = get_theme();
-      float font_size = thm.icon_font._size * _size;
+      float font_size = thm.icon_font_size * _size;
       draw_icon(ctx.canvas, ctx.bounds, _code, font_size);
    }
 }}

@@ -26,7 +26,6 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _tiles;
-      extent                  _prev;
    };
 
    using vtile_composite = vector_composite<vtile_element>;
@@ -56,7 +55,6 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _tiles;
-      extent                  _prev;
    };
 
    using htile_composite = vector_composite<htile_element>;

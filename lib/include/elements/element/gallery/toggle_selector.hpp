@@ -7,7 +7,6 @@
 #define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
-#include <elements/support/text_utils.hpp>
 #include <string>
 #include <utility>
 
@@ -36,7 +35,7 @@ namespace cycfi { namespace elements
    inline view_limits toggle_selector::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
       size.x += 15 + size.y + 10 + 15;
       return { { size.x, size.y }, { size.x, size.y } };
    }

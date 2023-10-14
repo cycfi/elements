@@ -11,9 +11,6 @@
 namespace cycfi { namespace elements
 {
    enum class dial_mode_enum : int;
-   using artist::color;
-   using artist::font_descr;
-   using artist::extent;
 
    class theme
    {
@@ -38,26 +35,30 @@ namespace cycfi { namespace elements
       color                basic_font_color;
       float                disabled_opacity;
 
-      font_descr           system_font;   // The system_font font is the font the OS
+      font                 system_font;   // The system_font font is the font the OS
                                           // uses for displaying text in OS UI elements
                                           // such as menus, window title-bars, etc.
 
       float                element_background_opacity;
 
       color                heading_font_color;
-      font_descr           heading_font;
+      font                 heading_font;
+      float                heading_font_size;
       int                  heading_text_align;
 
       color                label_font_color;
-      font_descr           label_font;
+      font                 label_font;
+      float                label_font_size;
       int                  label_text_align;
 
       color                icon_color;
-      font_descr           icon_font;
+      font                 icon_font;
+      float                icon_font_size;
       color                icon_button_color;
 
       color                text_box_font_color;
-      font_descr           text_box_font;
+      font                 text_box_font;
+      float                text_box_font_size;
       color                text_box_hilite_color;
       color                text_box_caret_color;
       float                text_box_caret_width;

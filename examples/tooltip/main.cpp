@@ -8,7 +8,6 @@
 #include <random>
 
 using namespace cycfi::elements;
-using namespace cycfi::artist;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -31,10 +30,9 @@ template <typename Label>
 auto make_button(std::string text, color c, Label label, view& view_)
 {
    static int i = 1;
-   std::string orig{ label->get_text().data(), label->get_text().size() };
    auto tt = tooltip(toggle_button("Option " + std::to_string(i++), 1.0f, c), make_tip(text));
    tt.on_hover =
-      [label, text, &view_, orig](bool visible)
+      [label, text, &view_, orig = label->get_text()](bool visible)
       {
          label->set_text(visible? text : orig);
          view_.refresh(*label.get(), 3);

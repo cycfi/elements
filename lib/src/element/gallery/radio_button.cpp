@@ -7,8 +7,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
    void radio_button_element::draw(context const& ctx)
    {
       auto&       canvas_ = ctx.canvas;
@@ -35,7 +33,7 @@ namespace cycfi { namespace elements
 
          canvas_.begin_path();
          canvas_.fill_style(c1);
-         canvas_.add_circle(circle(center, dot_radius));
+         canvas_.circle(circle(center, dot_radius));
          canvas_.fill();
       }
 
@@ -47,7 +45,7 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(line_width);
       canvas_.begin_path();
-      canvas_.add_circle(circle(center, radius-1));
+      canvas_.circle(circle(center, radius-1));
       canvas_.stroke_style(outline_color);
       canvas_.stroke();
 
@@ -55,7 +53,7 @@ namespace cycfi { namespace elements
       if (is_enabled())
       {
          auto glow_width = hilite? line_width*2 : line_width;
-         canvas_.add_circle(circle(center, radius-(glow_width/3)));
+         canvas_.circle(circle(center, radius-(glow_width/3)));
          canvas_.line_width(glow_width);
          canvas_.stroke_style(outline_color.opacity(0.1));
          canvas_.stroke();
@@ -71,6 +69,6 @@ namespace cycfi { namespace elements
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-      canvas_.fill_text(_text.c_str(), point{ cx, cy });
+      canvas_.fill_text(point{ cx, cy }, _text.c_str());
    }
 }}

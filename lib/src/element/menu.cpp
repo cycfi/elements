@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
       }
 
       // Call base key
-      return layered_button::key(ctx, k);
+      return basic_button::key(ctx, k);
    }
 
    bool basic_menu::wants_focus() const

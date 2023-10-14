@@ -984,7 +984,7 @@ namespace cycfi { namespace elements
             auto  size = _layout.metrics();
 
             canvas.text_align(canvas::left);
-            canvas.font(theme.text_box_font, theme.text_box_font_size);
+            canvas.font(theme.text_box_font, theme.text_box_font._size);
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
                { ctx.bounds.left, ctx.bounds.top + size.ascent }

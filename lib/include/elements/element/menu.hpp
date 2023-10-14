@@ -26,17 +26,14 @@ namespace cycfi { namespace elements
       bottom_right
    };
 
-   class basic_menu : public layered_button
+   class basic_menu : public basic_button
    {
    public:
 
       using on_open_menu_function = std::function<void(basic_menu& menu)>;
-      using layered_button::focus;
+      using basic_button::focus;
 
-                              template <typename W1, typename W2>
-                              basic_menu(
-                                 W1&& off, W2&& on
-                               , menu_position pos = menu_position::bottom_right);
+                              basic_menu(menu_position pos = menu_position::bottom_right);
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
@@ -61,10 +58,8 @@ namespace cycfi { namespace elements
       menu_position           _position;
    };
 
-   template <typename W1, typename W2>
-   inline basic_menu::basic_menu(W1&& off, W2&& on, menu_position pos)
-    : layered_button(std::forward<W1>(off), std::forward<W2>(on))
-    , _position(pos)
+   inline basic_menu::basic_menu(menu_position pos)
+    : _position(pos)
    {}
 
    template <typename Menu>
@@ -96,7 +91,18 @@ namespace cycfi { namespace elements
       int         modifiers = 0; // same as modifiers in key_info (see base_view.hpp)
    };
 
-   class basic_menu_item_element : public proxy_base, public selectable
+   template <typename Derived>
+   struct basic_menu_item_element_base : proxy_base
+   {
+      bool is_enabled() const override
+      {
+         return static_cast<Derived const*>(this)->is_enabled();
+      }
+   };
+
+   class basic_menu_item_element
+    : public basic_menu_item_element_base<basic_menu_item_element>
+    , public selectable
    {
    public:
 

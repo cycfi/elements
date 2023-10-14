@@ -61,6 +61,17 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   void basic_button::enable(bool state)
+   {
+      _state.enabled = state;
+      update_receiver();
+   }
+
+   bool basic_button::is_enabled() const
+   {
+      return _state.enabled;
+   }
+
    bool basic_button::state(bool val)
    {
       if (val != _state.value)
@@ -117,84 +128,6 @@ namespace cycfi { namespace elements
    }
 
    void basic_button::on_send(callback_function f)
-   {
-      on_click = f;
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Layered Button
-   ////////////////////////////////////////////////////////////////////////////
-   element* layered_button::hit_test(context const& ctx, point p)
-   {
-      if (ctx.bounds.includes(p))
-         return this;
-      return 0;
-   }
-
-   bool layered_button::click(context const& ctx, mouse_button btn)
-   {
-      if (!is_enabled())
-         return false;
-
-      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
-         return false;
-
-      if (btn.down)
-      {
-         on_tracking(ctx, begin_tracking);
-      }
-      else
-      {
-         on_tracking(ctx, end_tracking);
-         if (on_click)
-            on_click(true);
-      }
-
-      if (state(btn.down && ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx);
-      return true;
-   }
-
-   void layered_button::drag(context const& ctx, mouse_button btn)
-   {
-      if (state(ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx);
-   }
-
-   bool layered_button::wants_control() const
-   {
-      return true;
-   }
-
-   bool layered_button::value() const
-   {
-      return _state;
-   }
-
-   bool layered_button::state(bool new_state)
-   {
-      if (new_state != _state)
-      {
-         _state = new_state;
-         deck_element::select(_state);
-         return true;
-      }
-      return false;
-   }
-
-   void layered_button::value(bool new_state)
-   {
-      if (_state != new_state)
-         state(new_state);
-   }
-
-   void layered_button::send(bool val)
-   {
-      if (on_click)
-         on_click(val);
-   }
-
-   void layered_button::on_send(callback_function f)
    {
       on_click = f;
    }

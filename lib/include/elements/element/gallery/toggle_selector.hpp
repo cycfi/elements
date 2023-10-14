@@ -7,6 +7,8 @@
 #define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
+#include <elements/element/element.hpp>
+#include <elements/support/text_utils.hpp>
 #include <string>
 #include <utility>
 
@@ -25,17 +27,14 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
-      void                    enable(bool state = true) override;
-      bool                    is_enabled() const override;
 
       std::string             _text;
-      bool                    _is_enabled = true;
    };
 
    inline view_limits toggle_selector::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
       size.x += 15 + size.y + 10 + 15;
       return { { size.x, size.y }, { size.x, size.y } };
    }
@@ -50,17 +49,6 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-
-   inline void toggle_selector::enable(bool state)
-   {
-      _is_enabled = state;
-   }
-
-   inline bool toggle_selector::is_enabled() const
-   {
-      return _is_enabled;
-   }
-
 }}
 
 #endif

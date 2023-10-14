@@ -47,7 +47,7 @@ namespace cycfi { namespace elements
     , float size // ratio relative to get_theme().text_box_font_size
    )
    {
-      auto font_size = get_theme().text_box_font_size * size;
+      auto font_size = get_theme().text_box_font._size * size;
       auto pad = rect{
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f

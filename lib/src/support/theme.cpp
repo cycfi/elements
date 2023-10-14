@@ -18,6 +18,7 @@ namespace cycfi { namespace elements
     , scrollbar_color            { rgba(80, 80, 80, 80) }
     , default_button_color       { rgba(0, 0, 0, 0) }
     , button_margin              { 10, 5, 10, 5 }
+    , button_corner_radius       { 4.0 }
 
     , controls_color             { rgba(18, 49, 85, 200) }
     , controls_frame_stroke_width{ 1.5 }
@@ -30,7 +31,7 @@ namespace cycfi { namespace elements
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)
 #if defined(__APPLE__)
-    , system_font                { font_descr{"Lucida Grande" } }
+    , system_font                { font_descr{ "Lucida Grande" } }
 #elif defined(_WIN32)
     , system_font                { font_descr{ "Segoe UI Symbol" } }
 #elif defined(__linux__)
@@ -40,23 +41,19 @@ namespace cycfi { namespace elements
     , element_background_opacity { 32.0f / 255.0f }
 
     , heading_font_color         { basic_font_color }
-    , heading_font               { font_descr{ "Roboto" }.medium() }
-    , heading_font_size          { 14.0 }
+    , heading_font               { font_descr{ "Roboto", 15.0 }.medium() }
     , heading_text_align         { canvas::middle | canvas::center }
 
     , label_font_color           { basic_font_color }
-    , label_font                 { font_descr{ "Open Sans" } }
-    , label_font_size            { 14.0 }
+    , label_font                 { font_descr{ "Open Sans", 14.0 } }
     , label_text_align           { canvas::middle | canvas::center }
 
     , icon_color                 { basic_font_color }
-    , icon_font                  { font_descr{ "elements_basic" } }
-    , icon_font_size             { 16.0 }
+    , icon_font                  { font_descr{ "elements_basic", 16.0 } }
     , icon_button_color          { default_button_color }
 
     , text_box_font_color        { basic_font_color }
-    , text_box_font              { font_descr{ "Open Sans" } }
-    , text_box_font_size         { 14.0 }
+    , text_box_font              { font_descr{ "Open Sans", 14.0 } }
     , text_box_hilite_color      { rgba(0, 127, 255, 100) }
     , text_box_caret_color       { rgba(0, 190, 255, 255) }
     , text_box_caret_width       { 1.2 }

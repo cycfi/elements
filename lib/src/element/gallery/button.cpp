@@ -14,144 +14,119 @@ namespace cycfi { namespace elements
       draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
    }
 
-   void basic_button_body::draw(context const& ctx)
+   bool button_styler_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
    {
-      draw_button_base(ctx, ctx.bounds, body_color, is_enabled(), corner_radius);
+      ctx.view.refresh(ctx);
+      return true;
    }
 
-   void basic_button_body::enable(bool state)
+   bool button_styler_base::wants_control() const
    {
-      _is_enabled = state;
+      return true;
    }
 
-   bool basic_button_body::is_enabled() const
+   view_limits default_button_styler::limits(basic_context const& ctx) const
    {
-      return _is_enabled;
+      auto const& theme = get_theme();
+      auto margin = theme.button_margin;
+      auto font = theme.label_font;
+
+      // Measure the text width
+      auto size = measure_text(ctx.canvas, get_text().c_str(), font, font._size * get_size());
+
+      // Add space for the icon if necessary
+      if (get_icon_placement() != icon_none)
+         size.x += (get_size() * theme.icon_font._size) + 8;
+
+      auto x_space = margin.left + margin.right;
+      auto y_space = margin.top + margin.bottom;
+      return {
+         { size.x + x_space, size.y + y_space }
+       , { full_extent, size.y + y_space }
+      };
    }
 
-   layered_button
-   button(
-      std::string text
-    , float size
-    , color body_color
-   )
+   void default_button_styler::draw(context const& ctx)
    {
-      return make_button<layered_button>(std::move(text), size, body_color);
-   }
+      auto& cnv = ctx.canvas;
+      auto canvas_state = cnv.new_state();
+      auto const& theme = get_theme();
+      auto bounds = ctx.bounds;
+      auto margin = theme.button_margin;
 
-   layered_button
-   button(
-      std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<layered_button>(icon_code, size, body_color);
-   }
+      auto state = value();
+      auto value = state.value;
+      auto hilite = state.hilite;
+      auto enabled = state.enabled;
+      auto body_color = get_body_color();
 
-   layered_button
-   button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<layered_button>(icon_code, std::move(text), size, body_color);
-   }
+      // Draw the body
+      if (value)
+      {
+         body_color = body_color.opacity(0.5);
+         bounds = bounds.move(1, 1);
+      }
+      else
+      {
+         body_color = body_color.level(0.9);
+      }
+      draw_button_base(ctx, bounds, body_color, enabled, theme.button_corner_radius);
 
-   layered_button
-   button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<layered_button>(std::move(text), icon_code, size, body_color);
-   }
+      // Adjust the font size
+      auto font = theme.label_font;
+      font = font.size(font._size * get_size());
 
-   basic_toggle_button<>
-   toggle_button(
-      std::string text
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_toggle_button<>>(std::move(text), size, body_color);
-   }
+      // Measure text and icon
+      auto text_size = measure_text(ctx.canvas, get_text().c_str(), font, font._size * get_size());
+      auto icon_space = (get_size() * theme.icon_font._size) + 8;
+      auto size = text_size;
 
-   basic_toggle_button<>
-   toggle_button(
-      std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_toggle_button<>>(icon_code, size, body_color);
-   }
+      if (get_icon_placement() != icon_none)
+         size.x += icon_space;
 
-   basic_toggle_button<>
-   toggle_button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_toggle_button<>>(icon_code, std::move(text), size, body_color);
-   }
+      auto text_c = enabled?
+         theme.label_font_color :
+         theme.label_font_color.opacity(theme.label_font_color.alpha * theme.disabled_opacity)
+         ;
 
-   basic_toggle_button<>
-   toggle_button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_toggle_button<>>(std::move(text), icon_code, size, body_color);
-   }
+      if (hilite && enabled)
+         text_c = text_c.level(1.5);
 
-   basic_latching_button<>
-   latching_button(
-      std::string text
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_latching_button<>>(std::move(text), size, body_color);
-   }
+      auto mid_x = bounds.left + (bounds.width() / 2);
+      auto mid_y = bounds.top + (bounds.height() / 2);
 
-   basic_latching_button<>
-   latching_button(
-      std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_latching_button<>>(icon_code, size, body_color);
-   }
+      // Draw label
+      point text_pos;
 
-   basic_latching_button<>
-   latching_button(
-      std::uint32_t icon_code
-    , std::string text
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_latching_button<>>(icon_code, std::move(text), size, body_color);
-   }
+      switch (get_label_alignment())
+      {
+         case align_left:
+            text_pos = point{bounds.left + margin.left + icon_space, mid_y};
+            break;
+         case align_center:
+            {
+               float pos_x = mid_x - (size.x/2);
+               text_pos = point(pos_x + (get_icon_placement() == icon_left? icon_space : 0), mid_y);
+            }
+            break;
+         case align_right:
+            text_pos = point{bounds.right - (size.x + margin.right), mid_y};
+            break;
+      }
 
-   basic_latching_button<>
-   latching_button(
-      std::string text
-    , std::uint32_t icon_code
-    , float size
-    , color body_color
-   )
-   {
-      return make_button<basic_latching_button<>>(std::move(text), icon_code, size, body_color);
+      cnv.fill_style(text_c);
+      cnv.font(font);
+      cnv.text_align(cnv.left | cnv.middle);
+      cnv.fill_text(text_pos, get_text().c_str());
+
+      // Draw icon
+      if (get_icon_placement() != icon_none)
+      {
+         auto icon_pos = text_pos.move((get_icon_placement() == icon_left)? -icon_space : text_size.x + 8, 0);
+         auto icon_font = theme.icon_font;
+         cnv.font(icon_font.size(get_size() * icon_font._size));
+         cnv.fill_text(icon_pos, codepoint_to_utf8(get_icon()).c_str());
+      }
    }
 }}
+

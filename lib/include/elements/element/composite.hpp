@@ -56,8 +56,6 @@ namespace cycfi { namespace elements
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
-      void                    enable(bool state = true) override;
-      bool                    is_enabled() const override;
 
       bool                    wants_focus() const override;
       void                    begin_focus() override;
@@ -94,7 +92,6 @@ namespace cycfi { namespace elements
       int                     _click_tracking = -1;
       int                     _cursor_tracking = -1;
       std::set<int>           _cursor_hovering;
-      bool                    _is_enabled = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////

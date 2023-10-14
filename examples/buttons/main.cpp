@@ -19,24 +19,132 @@ constexpr auto bblue    = colors::blue.opacity(0.4);
 constexpr auto brblue   = colors::royal_blue.opacity(0.4);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
+///////////////////////////////////////////////////////////////////////////////
+// Now we have custom buttons. It uses the same button logic as with standard
+// element buttons, but you supply the code for drawing the button.
+//
+// Here's how to make a custom button.
+///////////////////////////////////////////////////////////////////////////////
+struct my_custom_button : button_styler_base
+{
+   view_limits             limits(basic_context const& ctx) const override;
+   void                    draw(context const& ctx) override;
+};
+
+view_limits my_custom_button::limits(basic_context const& ctx) const
+{
+   // Returns the min and max limits. The example below sets the
+   // vertical size to exactly 40, while the horizontal size has a
+   // minimum of 30 and fully stretchable to `full_extent`.
+   return {{200, 30}, {full_extent, 30}};
+}
+
+void my_custom_button::draw(context const& ctx)
+{
+   auto& cnv = ctx.canvas;    // The artist canvas
+   auto bounds = ctx.bounds;  // The bounding rectangle
+
+   // This is the state of the button. Adjust the rendering based on these if
+   // necessary. For this simple example, we wiill deal only with `value` and
+   // `hilite`.
+
+   auto state = value();
+   bool value = state.value;        // button is on or off
+   bool hilite = state.hilite;      // cursor is hovering over the button
+   bool enabled = state.enabled;    // button is enabled or disabled
+
+   bounds = bounds.inset(1, 1);
+   if (value)
+      bounds = bounds.move(1, 1);   // Simulate click
+
+   // Render the button using the artist library
+   cnv.fill_style(colors::dark_slate_blue);
+   cnv.fill_round_rect(bounds, 8);
+   cnv.line_width(1);
+   cnv.stroke_style(
+      hilite?
+         colors::antique_white.opacity(0.5) :
+         colors::antique_white.opacity(0.3)
+      );
+   cnv.stroke_round_rect(bounds, 8);
+
+   cnv.font(font_descr{ "Roboto", 14.0 }.italic());
+   cnv.fill_style(hilite? pgold.level(1.2) : pgold);
+   cnv.text_align(cnv.center | cnv.middle);
+   cnv.fill_text(center_point(bounds), "My Custom Button");
+}
+
+auto make_custom_button()
+{
+   return momentary_button(my_custom_button());
+}
+
 auto make_buttons(view& view_)
 {
    auto mbutton         = button("Momentary Button");
    auto tbutton         = toggle_button("Toggle Button", 1.0, bred);
    auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
-   auto reset           = button("Clear Latch", icons::lock_open, 1.0, bblue);
+   auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
-   auto prog_advance    = button("Advance Progress Bar");
+   auto prog_advance    = icon_button(icons::plus);
    auto disabled_button = button("Disabled Button");
 
-   disabled_button.enable(false); // Disable this
+   // This is the new way of making buttons that is consistent with the label
+   // element interface. The old way will still be available, but this new
+   // interface gives better clarity and flexibility at the expense of
+   // verbosity.
 
-   reset.on_click =
-      [lbutton, &view_](bool) mutable
+   auto left            =  momentary_button(
+                              button_styler{"Left"}
+                                 .align_left()
+                                 .icon(icons::left_circled)
+                                 .icon_left()
+                                 .body_color(bred)
+                           );
+   auto center          =  momentary_button(
+                              button_styler{"Center"}
+                                 .body_color(bblue)
+                           );
+   auto right           =  momentary_button(
+                              button_styler{"Right"}
+                                 .align_right()
+                                 .icon(icons::right_circled)
+                                 .body_color(bgreen)
+                           );
+
+   // Now we have custom buttons
+   auto custom          = make_custom_button();
+
+   disabled_button.enable(false); // Disable this
+   reset->enable(false); // Disable initially
+
+   lbutton->on_click =
+      [reset = get(reset), &view_](bool) mutable
       {
-         lbutton->value(0);
-         view_.refresh(*lbutton);
+         if (auto p = reset.lock())
+         {
+            (*p)->icon(icons::lock);
+            p->enable(true);
+            view_.refresh(*p);
+         }
+      };
+
+   reset->on_click =
+      [lbutton = get(lbutton), reset = get(reset), &view_](bool) mutable
+      {
+         if (auto p = lbutton.lock())
+         {
+            p->value(0);
+            view_.refresh(*p);
+         }
+
+         if (auto p = reset.lock())
+         {
+            (*p)->icon(icons::lock_open);
+            p->enable(false);
+            view_.refresh(*p);
+         }
       };
 
    prog_advance.on_click =
@@ -56,11 +164,15 @@ auto make_buttons(view& view_)
             top_margin(20, mbutton),
             top_margin(20, tbutton),
             top_margin(20, hold(lbutton)),
-            top_margin(20, reset),
+            top_margin(20, hold(reset)),
             top_margin(20, note),
-            top_margin(20, vsize(25, hold(prog_bar))),
-            top_margin(20, prog_advance),
-            top_margin(20, disabled_button)
+            top_margin(20, htile(
+               right_margin(3, valign(0.5, prog_advance)),
+               vsize(27, hold(prog_bar))
+            )),
+            top_margin(20, disabled_button),
+            top_margin(20, htile(left, center, right)),
+            top_margin(20, custom)
          )
       );
 }
@@ -115,7 +227,7 @@ auto make_controls(view& view_)
 
    auto indicator_color = get_theme().indicator_color;
 
-   auto disabled_icon_button = icon_button(icons::power, 1.2);
+   auto disabled_icon_button = icon_button(icons::block, 1.2);
    disabled_icon_button.enable(false);
 
    auto  icon_buttons =

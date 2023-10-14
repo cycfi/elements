@@ -57,6 +57,7 @@ namespace cycfi { namespace elements
    struct font_descr
    {
       font_descr           normal() const;
+      font_descr           size(float size_) const;
 
       font_descr           weight(font_constants::weight_enum w) const;
       font_descr           thin() const;
@@ -87,6 +88,7 @@ namespace cycfi { namespace elements
       font_descr           ultra_expanded() const;
 
       string_view          _families;
+      float                _size = 12;
       uint8_t              _weight = font_constants::weight_normal;
       uint8_t              _slant = font_constants::slant_normal;
       uint8_t              _stretch = font_constants::stretch_normal;
@@ -119,6 +121,13 @@ namespace cycfi { namespace elements
       r._weight = font_constants::weight_normal;
       r._slant = font_constants::slant_normal;
       r._stretch = font_constants::stretch_normal;
+      return r;
+   }
+
+   inline font_descr font_descr::size(float size_) const
+   {
+      font_descr r = *this;
+      r._size = size_;
       return r;
    }
 

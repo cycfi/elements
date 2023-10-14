@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Check Box
    ////////////////////////////////////////////////////////////////////////////
-   struct check_box_element : toggle_selector, basic_receiver<button_state>
+   struct check_box_styler : toggle_selector, basic_receiver<button_state>
    {
       using toggle_selector::toggle_selector;
 
@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    inline auto check_box(std::string text)
    {
-      return toggle_button(check_box_element{ text });
+      return toggle_button(check_box_styler{text });
    }
 }}
 

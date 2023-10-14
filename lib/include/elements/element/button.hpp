@@ -26,35 +26,31 @@ namespace cycfi { namespace elements
                          : value(false)
                          , hilite(false)
                          , tracking(false)
+                         , enabled(true)
                         {}
 
       bool              value : 1;
       bool              hilite : 1;
       bool              tracking : 1;
-   };
-
-   ////////////////////////////////////////////////////////////////////////////
-   // button_base: commmon base class for buttons
-   ////////////////////////////////////////////////////////////////////////////
-   struct button_base
-   {
-      using button_function = std::function<void(bool)>;
-
-      button_function   on_click;
+      bool              enabled : 1;
    };
 
    class basic_button
-    : public button_base
-    , public proxy_base
+    : public proxy_base
     , public receiver<bool>
     , public sender<bool>
    {
    public:
 
+      using button_function = std::function<void(bool)>;
+
       bool              wants_control() const override;
       bool              click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
+
+      void              enable(bool state = true) override;
+      bool              is_enabled() const override;
 
       void              value(bool val) override;
       bool              value() const override  { return _state.value; }
@@ -64,6 +60,8 @@ namespace cycfi { namespace elements
       void              send(bool val) override;
       void              edit(view& view_, bool val) override;
       void              on_send(callback_function f) override;
+
+      button_function   on_click;
 
    protected:
 
@@ -85,62 +83,14 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Layered Button
-   ////////////////////////////////////////////////////////////////////////////
-   class layered_button
-    : public button_base
-    , public array_composite<2, deck_element>, public receiver<bool>
-    , public sender<bool>
-   {
-   public:
-
-      using base_type = array_composite<2, deck_element>;
-
-                        template <typename W1, typename W2>
-                        layered_button(W1&& off, W2&& on);
-
-      bool              wants_control() const override;
-      element*          hit_test(context const& ctx, point p) override;
-      bool              click(context const& ctx, mouse_button btn) override;
-      void              drag(context const& ctx, mouse_button btn) override;
-
-      void              value(bool new_state) override;
-      bool              value() const override;
-
-      void              send(bool val) override;
-      void              on_send(callback_function f) override;
-
-   protected:
-
-      bool              state(bool new_state);
-      void              tracking(bool) {}
-      void              hilite(bool) {}
-
-   private:
-
-      bool              _state;
-   };
-
-   template <typename W1, typename W2>
-   inline layered_button::layered_button(W1&& off, W2&& on)
-    : _state(false)
-   {
-      (*this)[0] = share(std::forward<W1>(off));
-      (*this)[1] = share(std::forward<W2>(on));
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
    // Toggle Button
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = layered_button>
+   template <typename Base>
    class basic_toggle_button : public Base
    {
    public:
-                        template <typename W1>
-                        basic_toggle_button(W1&& state);
 
-                        template <typename W1, typename W2>
-                        basic_toggle_button(W1&& off, W2&& on);
+      using Base::Base;
 
       bool              click(context const& ctx, mouse_button btn) override;
       void              drag(context const& ctx, mouse_button btn) override;
@@ -149,20 +99,6 @@ namespace cycfi { namespace elements
 
       bool              _current_state;
    };
-
-   template <typename Base>
-   template <typename W1>
-   inline basic_toggle_button<Base>::basic_toggle_button(W1&& state)
-    : Base(std::forward<W1>(state))
-    , _current_state(false)
-   {}
-
-   template <typename Base>
-   template <typename W1, typename W2>
-   inline basic_toggle_button<Base>::basic_toggle_button(W1&& off, W2&& on)
-    : Base(std::forward<W1>(off), std::forward<W2>(on))
-    , _current_state(false)
-   {}
 
    template <typename Base>
    inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
@@ -205,30 +141,15 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Latching Button
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = layered_button>
+   template <typename Base>
    class basic_latching_button : public Base
    {
    public:
-                        template <typename W1>
-                        basic_latching_button(W1&& state);
 
-                        template <typename W1, typename W2>
-                        basic_latching_button(W1&& off, W2&& on);
+      using Base::Base;
 
       bool              click(context const& ctx, mouse_button btn) override;
    };
-
-   template <typename Base>
-   template <typename W1>
-   inline basic_latching_button<Base>::basic_latching_button(W1&& state)
-    : Base(std::forward<W1>(state))
-   {}
-
-   template <typename Base>
-   template <typename W1, typename W2>
-   inline basic_latching_button<Base>::basic_latching_button(W1&& off, W2&& on)
-    : Base(std::forward<W1>(off), std::forward<W2>(on))
-   {}
 
    template <typename Base>
    inline bool basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
@@ -269,7 +190,7 @@ namespace cycfi { namespace elements
       void                    do_click(context const& ctx);
    };
 
-   template <typename Base = layered_button>
+   template <typename Base>
    class basic_choice : public basic_latching_button<Base>, public basic_choice_base
    {
    public:

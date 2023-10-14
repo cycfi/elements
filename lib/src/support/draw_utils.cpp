@@ -366,7 +366,7 @@ namespace cycfi { namespace elements
 
       cnv.font(
          theme.label_font,
-         theme.label_font_size * font_size
+         theme.label_font._size * font_size
       );
 
       for (std::size_t i = 0; i != num_labels; ++i)

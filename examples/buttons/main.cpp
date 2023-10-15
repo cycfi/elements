@@ -41,7 +41,7 @@ view_limits my_custom_button::limits(basic_context const& ctx) const
 
 void my_custom_button::draw(context const& ctx)
 {
-   auto& cnv = ctx.canvas;    // The artist canvas
+   auto& cnv = ctx.canvas;    // The canvas
    auto bounds = ctx.bounds;  // The bounding rectangle
 
    // This is the state of the button. Adjust the rendering based on these if
@@ -57,7 +57,7 @@ void my_custom_button::draw(context const& ctx)
    if (value)
       bounds = bounds.move(1, 1);   // Simulate click
 
-   // Render the button using the artist library
+   // Render the button using the library
    cnv.fill_style(colors::dark_slate_blue);
    cnv.fill_round_rect(bounds, 8);
    cnv.line_width(1);

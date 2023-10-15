@@ -9,6 +9,7 @@
 #include <utility>
 #include <memory>
 #include <string>
+#include <vector>
 #include <cstdint>
 #include <functional>
 #include <cairo.h>

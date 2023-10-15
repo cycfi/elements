@@ -13,14 +13,19 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
-   image::image(char const* filename, float scale)
-    : _pixmap(std::make_shared<elements::pixmap>(filename, scale))
+   image::image(fs::path const& path, float scale)
+    : _pixmap(std::make_shared<elements::pixmap>(path, scale))
    {
+      if (!_pixmap)
+         throw std::runtime_error{ "Error: Invalid image." };
    }
 
    image::image(pixmap_ptr pixmap_)
     : _pixmap(pixmap_)
-   {}
+   {
+      if (!_pixmap)
+         throw std::runtime_error{ "Error: Invalid image." };
+   }
 
    point image::size() const
    {

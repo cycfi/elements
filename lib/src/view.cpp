@@ -348,6 +348,36 @@
       refresh();
    }
 
+   void view::track_drop(drop_info const& info, cursor_tracking status)
+   {
+      if (_content.empty())
+         return;
+
+      call(
+         [info, status](auto const& ctx, auto& _main_element)
+         {
+            _main_element.track_drop(ctx, info, status);
+         },
+         *this, _current_bounds
+      );
+   }
+
+   bool view::drop(drop_info const& info)
+   {
+      if (_content.empty())
+         return false;
+
+      bool handled = false;
+      call(
+         [info, &handled](auto const& ctx, auto& _main_element)
+         {
+            handled = _main_element.drop(ctx, info);
+         },
+         *this, _current_bounds
+      );
+      return handled;
+   }
+
    void view::poll()
    {
       _io.poll();

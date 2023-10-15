@@ -65,6 +65,9 @@ namespace cycfi { namespace elements
       void                    focus(std::size_t index);
       virtual void            reset();
 
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
+
    // Composite
 
       using weak_element_ptr = std::weak_ptr<elements::element>;

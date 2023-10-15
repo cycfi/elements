@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
    };
 
    inline void title_bar::draw(context const& ctx)
@@ -202,17 +202,17 @@ namespace cycfi { namespace elements
    {
    public:
 
-                              vgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
+                     vgrid_lines(float major_divisions, float minor_divisions)
+                      : _major_divisions(major_divisions)
+                      , _minor_divisions(minor_divisions)
+                     {}
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
 
    private:
 
-      float                   _major_divisions;
-      float                   _minor_divisions;
+      float          _major_divisions;
+      float          _minor_divisions;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -222,17 +222,17 @@ namespace cycfi { namespace elements
    {
    public:
 
-                              hgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
+                     hgrid_lines(float major_divisions, float minor_divisions)
+                      : _major_divisions(major_divisions)
+                      , _minor_divisions(minor_divisions)
+                     {}
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
 
    private:
 
-      float                   _major_divisions;
-      float                   _minor_divisions;
+      float          _major_divisions;
+      float          _minor_divisions;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -240,13 +240,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct icon : element
    {
-                              icon(std::uint32_t code_, float size_ = 1.0);
+                     icon(std::uint32_t code_, float size_ = 1.0);
 
-      view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
+      view_limits    limits(basic_context const& ctx) const override;
+      void           draw(context const& ctx) override;
 
-      std::uint32_t           _code;
-      float                   _size;
+      std::uint32_t  _code;
+      float          _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -257,17 +257,17 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              key_intercept_element(Subject subject)
-                               : base_type(std::move(subject))
-                              {}
+                     key_intercept_element(Subject subject)
+                      : base_type(std::move(subject))
+                     {}
 
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
+      bool           key(context const& ctx, key_info k) override;
+      bool           wants_control() const override { return true; }
+      bool           wants_focus() const override { return true; }
 
       using key_function = std::function<bool(key_info k)>;
 
-      key_function            on_key = [](auto){ return false; };
+      key_function   on_key = [](auto){ return false; };
    };
 
    template <typename Subject>
@@ -293,17 +293,17 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              click_intercept_element(Subject subject)
-                               : base_type(std::move(subject))
-                              {}
+                     click_intercept_element(Subject subject)
+                      : base_type(std::move(subject))
+                     {}
 
-      bool                    click(context const& ctx, mouse_button btn) override;
-      bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
+      bool           click(context const& ctx, mouse_button btn) override;
+      bool           wants_control() const override { return true; }
+      bool           wants_focus() const override { return true; }
 
       using click_function = std::function<bool(mouse_button btn)>;
 
-      click_function          on_click = [](auto){ return false; };
+      click_function on_click = [](auto){ return false; };
    };
 
    template <typename Subject>

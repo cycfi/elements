@@ -61,6 +61,9 @@ namespace cycfi { namespace elements
       virtual element const*  focus() const;
       virtual element*        focus();
 
+      virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
+      virtual bool            drop(context const& ctx, drop_info const& info);
+
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 
    protected:

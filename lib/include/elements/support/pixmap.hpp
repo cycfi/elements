@@ -10,6 +10,7 @@
 #include <memory>
 #include <cairo.h>
 #include <elements/support/point.hpp>
+#include <infra/filesystem.hpp>
 #include <stdexcept>
 
 namespace cycfi { namespace elements
@@ -29,7 +30,7 @@ namespace cycfi { namespace elements
    public:
 
       explicit          pixmap(point size, float scale = 1);
-      explicit          pixmap(char const* filename, float scale = 1);
+      explicit          pixmap(fs::path const& path, float scale = 1);
                         pixmap(pixmap const& rhs) = delete;
                         pixmap(pixmap&& rhs);
                         ~pixmap();

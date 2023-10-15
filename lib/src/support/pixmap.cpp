@@ -25,19 +25,17 @@ namespace cycfi { namespace elements
       cairo_surface_mark_dirty(_surface);
    }
 
-   pixmap::pixmap(char const* filename, float scale)
+   pixmap::pixmap(fs::path const& path, float scale)
     : _surface(nullptr)
    {
-      auto  path = std::string(filename);
-      auto  pos = path.find_last_of(".");
-      if (pos == std::string::npos)
+      auto ext = path.extension();
+      if (ext.empty())
          throw failed_to_load_pixmap{ "Unknown file type." };
 
-      fs::path full_path = find_file(filename);
+      fs::path full_path = find_file(path);
       if (full_path.empty())
          throw failed_to_load_pixmap{ "File does not exist." };
 
-      auto  ext = path.substr(pos);
       if (ext == ".png" || ext == ".PNG")
       {
          // For PNGs, use Cairo's native PNG loader

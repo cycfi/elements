@@ -9,6 +9,7 @@
 #include <elements/element/element.hpp>
 #include <elements/support/canvas.hpp>
 #include <elements/support/pixmap.hpp>
+#include <infra/filesystem.hpp>
 #include <memory>
 
 namespace cycfi { namespace elements
@@ -19,7 +20,7 @@ namespace cycfi { namespace elements
    class image : public element
    {
    public:
-                              image(char const* filename, float scale = 1);
+                              image(fs::path const& path, float scale = 1);
                               image(pixmap_ptr pixmap_);
 
       virtual point           size() const;

@@ -70,6 +70,10 @@ namespace cycfi { namespace elements
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
+
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
+
    };
 
    struct indirect_base : element
@@ -265,6 +269,18 @@ namespace cycfi { namespace elements
    indirect<Base>::focus()
    {
       return this->get().focus();
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   {
+      this->get().track_drop(ctx, info, status);
+   }
+
+   template <typename Base>
+   inline bool indirect<Base>::drop(context const& ctx, drop_info const& info)
+   {
+      return this->get().drop(ctx, info);
    }
 
    ////////////////////////////////////////////////////////////////////////////

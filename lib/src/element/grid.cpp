@@ -13,17 +13,35 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits vgrid_element::limits(basic_context const& ctx) const
    {
+      _num_spans = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+         _num_spans += at(i).span();
+
       view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
+      std::size_t gi = 0;
+      float prev = 0;
+      float desired_total_min = 0;
+
       for (std::size_t i = 0; i != size();  ++i)
       {
-         auto el = at(i).limits(ctx);
+         auto& elem = at(i);
+         gi += elem.span()-1;
+         auto y = grid_coord(gi++);
+         auto height = y - prev;
+         auto factor = 1.0/height;
+         prev = y;
 
-         limits.min.y += el.min.y;
+         auto el = elem.limits(ctx);
+         auto elem_desired_total_min = el.min.y * factor;
+         if (desired_total_min < elem_desired_total_min)
+            desired_total_min = elem_desired_total_min;
+
          limits.max.y += el.max.y;
          clamp_min(limits.min.x, el.min.x);
          clamp_max(limits.max.x, el.max.x);
       }
 
+      limits.min.y = desired_total_min;
       clamp_min(limits.max.x, limits.min.x);
       clamp_max(limits.max.y, full_extent);
       return limits;
@@ -38,10 +56,6 @@ namespace cycfi { namespace elements
       auto top = ctx.bounds.top;
       auto total_height = ctx.bounds.height();
       std::size_t gi = 0;
-
-      _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
 
       float prev = 0;
       for (std::size_t i = 0; i != size(); ++i)
@@ -72,17 +86,35 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits hgrid_element::limits(basic_context const& ctx) const
    {
+      _num_spans = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+         _num_spans += at(i).span();
+
       view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
+      std::size_t gi = 0;
+      float prev = 0;
+      float desired_total_min = 0;
+
       for (std::size_t i = 0; i != size();  ++i)
       {
-         auto el = at(i).limits(ctx);
+         auto& elem = at(i);
+         gi += elem.span()-1;
+         auto x = grid_coord(gi++);
+         auto width = x - prev;
+         auto factor = 1.0/width;
+         prev = x;
 
-         limits.min.x += el.min.x;
+         auto el = elem.limits(ctx);
+         auto elem_desired_total_min = el.min.x * factor;
+         if (desired_total_min < elem_desired_total_min)
+            desired_total_min = elem_desired_total_min;
+
          limits.max.x += el.max.x;
          clamp_min(limits.min.y, el.min.y);
          clamp_max(limits.max.y, el.max.y);
       }
 
+      limits.min.x = desired_total_min;
       clamp_min(limits.max.y, limits.min.y);
       clamp_max(limits.max.x, full_extent);
       return limits;
@@ -97,10 +129,6 @@ namespace cycfi { namespace elements
       auto left = ctx.bounds.left;
       auto total_width = ctx.bounds.width();
       std::size_t gi = 0;
-
-      _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
 
       float prev = 0;
       for (std::size_t i = 0; i != size(); ++i)

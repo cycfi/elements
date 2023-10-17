@@ -14,6 +14,11 @@ if(CMAKE_CXX_STANDARD LESS 17)
    set(CMAKE_CXX_STANDARD 17)
 endif()
 
+include(GitSubmoduleCheck)
+git_submodule_check(lib/artist)
+git_submodule_check(lib/external/asio)
+git_submodule_check(lib/infra)
+
 include(ElementsConfigCommon)
 
 option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)

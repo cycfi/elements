@@ -125,6 +125,7 @@ namespace cycfi { namespace elements
    class scrollable
    {
    public:
+
       virtual ~scrollable() = default;
 
       struct scrollable_context

@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/composite.hpp>
+#include <elements/element/port.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
@@ -64,7 +65,7 @@ namespace cycfi { namespace elements
             if (info.element)
             {
                if (wants_focus() && _focus != info.index)
-                  new_focus(ctx, info.index);
+                  new_focus(ctx, info.index, restore_previous);
 
                context ectx{ ctx, info.element.get(), info.bounds };
                if (info.element->click(ectx, btn))
@@ -99,7 +100,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::new_focus(context const& ctx, int index)
+   void composite_base::new_focus(context const& ctx, int index, focus_request req)
    {
       // end the previous focus
       if (_focus != -1)
@@ -112,7 +113,8 @@ namespace cycfi { namespace elements
       _focus = index;
       if (_focus != -1)
       {
-         at(_focus).begin_focus();
+         at(_focus).begin_focus(req);
+         scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
    }
@@ -127,11 +129,11 @@ namespace cycfi { namespace elements
          return e.key(ectx, k);
       };
 
-      auto&& try_focus = [&](auto ix) -> bool
+      auto&& try_focus = [&](auto ix, focus_request req) -> bool
       {
          if (at(ix).wants_focus())
          {
-            new_focus(ctx, ix);
+            new_focus(ctx, ix, req);
             return true;
          }
          return false;
@@ -148,10 +150,13 @@ namespace cycfi { namespace elements
       {
          auto next_focus = _focus;
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
-         if ((next_focus == -1) || !reverse)
+         if (next_focus == -1 && reverse)
+            next_focus = size();
+
+         if (!reverse)
          {
             while (++next_focus != static_cast<int>(size()))
-               if (try_focus(next_focus))
+               if (try_focus(next_focus, from_top))
                   return true;
             return false;
          }
@@ -159,7 +164,7 @@ namespace cycfi { namespace elements
          {
             while (--next_focus >= 0)
                if (at(next_focus).wants_focus())
-                  if (try_focus(next_focus))
+                  if (try_focus(next_focus, from_bottom))
                      return true;
             return false;
          }
@@ -282,28 +287,41 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void composite_base::begin_focus()
+   void composite_base::begin_focus(focus_request req)
    {
-      if (_focus == -1)
-         _focus = _saved_focus;
+      if (_focus == -1 && req == restore_previous)
+         _focus = _prev_focus;
+
       if (_focus == -1)
       {
-         for (std::size_t ix = 0; ix != size(); ++ix)
-            if (at(ix).wants_focus())
-            {
-               _focus = ix;
-               break;
-            }
+         if (req == from_top)
+         {
+            for (std::size_t ix = 0; ix != size(); ++ix)
+               if (at(ix).wants_focus())
+               {
+                  _focus = ix;
+                  break;
+               }
+         }
+         else if (req == from_bottom)
+         {
+            for (int ix = size()-1; ix >= 0; --ix)
+               if (at(ix).wants_focus())
+               {
+                  _focus = ix;
+                  break;
+               }
+         }
       }
       if (_focus != -1)
-         at(_focus).begin_focus();
+         at(_focus).begin_focus(from_top);
    }
 
    void composite_base::end_focus()
    {
       if (_focus != -1)
          at(_focus).end_focus();
-      _saved_focus = _focus;
+      _prev_focus = _focus;
       _focus = -1;
    }
 
@@ -453,7 +471,7 @@ namespace cycfi { namespace elements
    void composite_base::reset()
    {
       _focus = -1;
-      _saved_focus = -1;
+      _prev_focus = -1;
       _click_tracking = -1;
       _cursor_tracking = -1;
       _cursor_hovering.clear();

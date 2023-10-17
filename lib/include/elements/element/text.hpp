@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       bool                    wants_control() const override;
 
@@ -188,7 +188,7 @@ namespace cycfi { namespace elements
       void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
 
       text_function           on_text;

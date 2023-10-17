@@ -914,7 +914,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_text_box::begin_focus()
+   void basic_text_box::begin_focus(focus_request /*req*/)
    {
      _is_focus = true;
       if (_select_start == -1)
@@ -1107,10 +1107,10 @@ namespace cycfi { namespace elements
       return basic_text_box::click(ctx, btn);
    }
 
-   void basic_input_box::begin_focus()
+   void basic_input_box::begin_focus(focus_request req)
    {
       _first_focus = true;
-      basic_text_box::begin_focus();
+      basic_text_box::begin_focus(req);
    }
 
    void basic_input_box::end_focus()

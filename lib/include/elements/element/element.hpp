@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
       virtual view_limits     limits(basic_context const& ctx) const;
       virtual view_stretch    stretch() const;
       virtual unsigned        span() const;
-      virtual element*        hit_test(context const& ctx, point p);
+      virtual element*        hit_test(context const& ctx, point p, bool leaf = false);
       virtual void            draw(context const& ctx);
       virtual void            layout(context const& ctx);
       virtual void            refresh(context const& ctx, element& element, int outward = 0);
@@ -54,13 +54,17 @@ namespace cycfi { namespace elements
       virtual void            enable(bool state = true);
       virtual bool            is_enabled() const;
 
+      enum focus_request { from_top, from_bottom, restore_previous };
+
       virtual bool            wants_focus() const;
-      virtual void            begin_focus();
+      virtual void            begin_focus(focus_request req = restore_previous);
       virtual void            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
+
+      virtual std::string     class_name() const;
 
    protected:
 

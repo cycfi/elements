@@ -230,9 +230,9 @@ namespace cycfi { namespace elements
       subject().layout(ctx);
    }
 
-   element* scroller_base::hit_test(context const& ctx, point p)
+   element* scroller_base::hit_test(context const& ctx, point p, bool leaf)
    {
-      return element::hit_test(ctx, p);
+      return element::hit_test(ctx, p, leaf);
    }
 
    scroller_base::scrollbar_bounds

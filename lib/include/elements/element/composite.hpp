@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    // Display
 
       view_limits             limits(basic_context const& ctx) const override = 0;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override = 0;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
@@ -71,9 +71,10 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         element_ptr          element;
-         rect                 bounds   = rect{};
-         int                  index    = -1;
+         element*             element_ptr = nullptr;
+         element*             leaf_element_ptr = nullptr;
+         rect                 bounds = rect{};
+         int                  index = -1;
       };
 
       virtual hit_info        hit_element(context const& ctx, point p, bool control) const;
@@ -85,10 +86,10 @@ namespace cycfi { namespace elements
 
    private:
 
-      void                    new_focus(context const& ctx, int index);
+      void                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;
-      int                     _saved_focus = -1;
+      int 					      _saved_focus = -1;
       int                     _click_tracking = -1;
       int                     _cursor_tracking = -1;
       std::set<int>           _cursor_hovering;

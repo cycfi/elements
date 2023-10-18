@@ -27,11 +27,11 @@ namespace cycfi { namespace elements
       return subject().span();
    }
 
-   element* proxy_base::hit_test(context const& ctx, point p)
+   element* proxy_base::hit_test(context const& ctx, point p, bool leaf)
    {
       context sctx { ctx, &subject(), ctx.bounds };
       prepare_subject(sctx, p);
-      auto r = subject().hit_test(sctx, p);
+      auto r = subject().hit_test(sctx, p, leaf);
       restore_subject(sctx);
       return r;
    }
@@ -151,9 +151,9 @@ namespace cycfi { namespace elements
       return subject().wants_focus();
    }
 
-   void proxy_base::begin_focus()
+   void proxy_base::begin_focus(focus_request req)
    {
-      return subject().begin_focus();
+      return subject().begin_focus(req);
    }
 
    void proxy_base::end_focus()

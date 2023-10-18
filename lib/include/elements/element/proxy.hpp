@@ -27,7 +27,7 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
       unsigned                span() const override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
@@ -50,7 +50,7 @@ namespace cycfi { namespace elements
       bool                    is_enabled() const override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;

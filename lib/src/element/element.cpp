@@ -6,6 +6,27 @@
 #include <elements/element/element.hpp>
 #include <elements/support.hpp>
 #include <elements/view.hpp>
+#include <typeinfo>
+
+#if defined(__GNUC__) || defined(__clang__)
+# include <cxxabi.h>
+
+   static std::string demangle(const char* name)
+   {
+      int status = 0;
+      std::unique_ptr<char, void(*)(void*)> res{
+            abi::__cxa_demangle(name, nullptr, nullptr, &status),
+            std::free
+         };
+
+      return status==0? res.get() : name;
+   }
+#else
+   static std::string demangle(const char* name)
+   {
+      return name;
+   }
+#endif
 
 namespace cycfi { namespace elements
 {
@@ -27,7 +48,7 @@ namespace cycfi { namespace elements
       return 1;
    }
 
-   element* element::hit_test(context const& ctx, point p)
+   element* element::hit_test(context const& ctx, point p, bool /*leaf*/)
    {
       return (ctx.bounds.includes(p)) ? this : nullptr;
    }
@@ -89,7 +110,7 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void element::begin_focus()
+   void element::begin_focus(focus_request /*req*/)
    {
    }
 
@@ -120,5 +141,10 @@ namespace cycfi { namespace elements
    void element::on_tracking(view& view_, tracking state)
    {
       view_.manage_on_tracking(*this, state);
+   }
+
+   std::string element::class_name() const
+   {
+      return demangle(typeid(*this).name());
    }
 }}

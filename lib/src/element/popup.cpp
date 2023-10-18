@@ -8,14 +8,14 @@
 
 namespace cycfi { namespace elements
 {
-   element* basic_popup_element::hit_test(context const& /* ctx */, point p)
+   element* basic_popup_element::hit_test(context const& /* ctx */, point p, bool /*leaf*/)
    {
       return bounds().includes(p)? this : nullptr;
    }
 
    bool basic_popup_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      bool hit = proxy_base::hit_test(ctx, p);
+      bool hit = proxy_base::hit_test(ctx, p, false);
       if (status == cursor_tracking::leaving || hit)
          ctx.view.refresh();
       bool r = proxy_base::cursor(ctx, p, status);
@@ -38,12 +38,12 @@ namespace cycfi { namespace elements
       view_.remove(shared_from_this());
    }
 
-   element* basic_popup_menu_element::hit_test(context const& ctx, point p)
+   element* basic_popup_menu_element::hit_test(context const& ctx, point p, bool leaf)
    {
       // We call element::hit_test instead of proxy_base::hit_test because we
       // want to process hits/clicks outside the subject's bounds (e.g. to
       // dismiss the menu when clicked anywhere outside the menu bounds).
-      return element::hit_test(ctx, p);
+      return element::hit_test(ctx, p, leaf);
    }
 
    bool basic_popup_menu_element::click(context const& ctx, mouse_button btn)

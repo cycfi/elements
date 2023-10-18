@@ -151,9 +151,9 @@ namespace cycfi { namespace elements
       return subject().wants_focus();
    }
 
-   void proxy_base::begin_focus()
+   void proxy_base::begin_focus(focus_request req)
    {
-      return subject().begin_focus();
+      return subject().begin_focus(req);
    }
 
    void proxy_base::end_focus()

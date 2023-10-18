@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
 
    private:
 
-      void                    new_focus(context const& ctx, int index);
+      void                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;

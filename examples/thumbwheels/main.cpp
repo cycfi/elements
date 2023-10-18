@@ -26,7 +26,7 @@ auto make_label(std::string text = "")
       .font_color(get_theme().indicator_hilite_color)
       .font_size(24)
    );
-};
+}
 
 auto make_thumbwheel1()
 {

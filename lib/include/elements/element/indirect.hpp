@@ -42,6 +42,8 @@ namespace cycfi { namespace elements
 
       using Base::Base;
       using Base::operator=;
+      using focus_request = typename Base::focus_request;
+      static constexpr auto restore_previous = Base::restore_previous;
 
    // Display
 
@@ -66,7 +68,7 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
@@ -245,9 +247,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline void
-   indirect<Base>::begin_focus()
+   indirect<Base>::begin_focus(focus_request req)
    {
-      return this->get().begin_focus();
+      return this->get().begin_focus(req);
    }
 
    template <typename Base>

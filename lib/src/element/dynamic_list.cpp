@@ -9,6 +9,16 @@
 
 namespace cycfi { namespace elements
 {
+   element* dynamic_list::hit_test(context const& ctx, point p, bool leaf)
+   {
+      if (!_cells.empty())
+      {
+         hit_info info = hit_element(ctx, p, false);
+         return leaf? info.leaf_element_ptr : info.element_ptr;
+      }
+      return nullptr;
+   }
+
    view_limits dynamic_list::limits(basic_context const& ctx) const
    {
       if (_composer)
@@ -146,7 +156,7 @@ namespace cycfi { namespace elements
             if (info.element_ptr)
             {
                if (info.element_ptr->wants_focus() && _focus != info.index)
-                  new_focus(ctx, info.index);
+                  new_focus(ctx, info.index, restore_previous);
 
                context ectx{ ctx, info.element_ptr, info.bounds };
                if (info.leaf_element_ptr->click(ectx, btn))
@@ -184,7 +194,7 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void dynamic_list::new_focus(context const& ctx, int index)
+   void dynamic_list::new_focus(context const& ctx, int index, focus_request req)
    {
       if (_focus != -1 )
       {
@@ -195,9 +205,8 @@ namespace cycfi { namespace elements
       // start a new focus
       _focus = index;
       if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-
       {
-         _cells[_focus].elem_ptr->begin_focus();
+         _cells[_focus].elem_ptr->begin_focus(req);
          scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
@@ -214,11 +223,11 @@ namespace cycfi { namespace elements
          return b;
       };
 
-      auto&& try_focus = [&](int ix) -> bool
+      auto&& try_focus = [&](int ix, focus_request req) -> bool
       {
          if (_composer->compose(ix)->wants_focus())
          {
-            new_focus(ctx, ix);
+            new_focus(ctx, ix, req);
             return true;
          }
          return false;
@@ -231,16 +240,18 @@ namespace cycfi { namespace elements
       }
 
       if ((k.action == key_action::press || k.action == key_action::repeat)
-         && k.key == key_code::tab && _cells.size())
+            && k.key == key_code::tab && _cells.size())
       {
          int next_focus = _focus;
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
+         if (next_focus == -1 && reverse)
+            next_focus = _cells.size();
 
-         if ((next_focus == -1)  || !reverse)
+         if (!reverse)
          {
             while (++next_focus != static_cast<int>(_cells.size()))
             {
-               if (try_focus(next_focus))
+               if (try_focus(next_focus, from_top))
                   return true;
             }
             return false;
@@ -250,7 +261,7 @@ namespace cycfi { namespace elements
             while (--next_focus >= 0)
             {
                if (_composer->compose(next_focus)->wants_focus())
-                  if (try_focus(next_focus))
+                  if (try_focus(next_focus, from_bottom))
                      return true;
             }
             return false;
@@ -286,7 +297,6 @@ namespace cycfi { namespace elements
 
    bool dynamic_list::cursor(const context &ctx, point p, cursor_tracking status)
    {
-
       if (_cursor_tracking >= int(_cells.size())) // just to be sure!
          _cursor_tracking = -1;
 
@@ -387,23 +397,35 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void dynamic_list::begin_focus()
+   void dynamic_list::begin_focus(focus_request req)
    {
-      if (_focus == -1)
+      if (_focus == -1 && req == restore_previous)
          _focus = _saved_focus;
+
       if (_focus == -1)
       {
-         for (std::size_t ix = 0; ix != _cells.size(); ++ix)
-            if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
-            {
+         if (req == from_top || req == restore_previous)
+         {
+            for (std::size_t ix = 0; ix != _cells.size(); ++ix)
+               if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+               {
+                     _focus = ix;
+                     break;
+               }
+         }
+         else if (req == from_bottom)
+         {
+            for (int ix = _cells.size()-1; ix >= 0; --ix)
+               if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+               {
                   _focus = ix;
                   break;
-            }
+               }
+         }
       }
       if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-         _cells[_focus].elem_ptr->begin_focus();
+         _cells[_focus].elem_ptr->begin_focus(req);
    }
-
 
    void dynamic_list::end_focus()
    {
@@ -411,8 +433,7 @@ namespace cycfi { namespace elements
          _cells[_focus].elem_ptr->end_focus();
       _saved_focus = _focus;
       _focus = -1;
-}
-
+   }
 
    element const* dynamic_list::focus() const
    {

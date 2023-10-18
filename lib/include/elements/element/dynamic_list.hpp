@@ -15,7 +15,6 @@
 
 namespace cycfi { namespace elements
 {
-
    ////////////////////////////////////////////////////////////////////////////
    // The cell composer abstract class
    ////////////////////////////////////////////////////////////////////////////
@@ -54,7 +53,9 @@ namespace cycfi { namespace elements
 
                               template <typename... Rest>
                               static_limits_cell_composer(
-                                 float min_secondary_axis_size, float max_secondary_axis_size, float main_axis_size
+                                 float min_secondary_axis_size
+                               , float max_secondary_axis_size
+                               , float main_axis_size
                                , Rest&& ...rest
                               );
 
@@ -79,8 +80,8 @@ namespace cycfi { namespace elements
 
       using base_type = fixed_derived_limits_cell_composer<Base>;
 
-                                template <typename... Rest>
-                                fixed_derived_limits_cell_composer(Rest&& ...rest);
+                                 template <typename... Rest>
+                                 fixed_derived_limits_cell_composer(Rest&& ...rest);
 
       cell_composer::limits      secondary_axis_limits(basic_context const& ctx) const override;
       float                      main_axis_size(std::size_t index, basic_context const& ctx) const override;
@@ -129,7 +130,8 @@ namespace cycfi { namespace elements
                               {}
 
       std::size_t             size() const override { return _size; }
-      void                    resize(size_t s) override {_size = s;}
+      void                    resize(size_t s) override { _size = s; }
+
    private:
 
       std::size_t             _size;
@@ -264,6 +266,7 @@ namespace cycfi { namespace elements
                                  {}
 
       virtual view_limits        limits(basic_context const& ctx) const override;
+      element*                   hit_test(context const& ctx, point p, bool leaf = false) override;
       void                       draw(context const& ctx) override;
       void                       layout(context const& ctx) override;
 
@@ -279,7 +282,7 @@ namespace cycfi { namespace elements
 
       bool                       wants_control() const override;
       bool                       wants_focus() const override;
-      void                       begin_focus() override;
+      void                    	begin_focus(focus_request req = restore_previous) override;
       void                       end_focus() override;
       element const*             focus() const override;
       element*                   focus() override;
@@ -289,10 +292,10 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         element*               element_ptr = nullptr;
-         element*               leaf_element_ptr = nullptr;
-         rect                   bounds = rect{};
-         int                    index = -1;
+         element*                element_ptr = nullptr;
+         element*                leaf_element_ptr = nullptr;
+         rect                    bounds = rect{};
+         int                     index = -1;
       };
 
       virtual rect               bounds_of(context const& ctx, int ix) const;
@@ -301,7 +304,7 @@ namespace cycfi { namespace elements
 
    protected:
 
-      void                       new_focus(context const& ctx, int index);
+      void 			   			   new_focus(context const& ctx, int index, focus_request req);
 
       struct cell_info
       {
@@ -350,13 +353,13 @@ namespace cycfi { namespace elements
    {
    public:
                                  hdynamic_list(composer_ptr ptr) : dynamic_list(ptr) {}
-      rect                    bounds_of(context const& ctx, int ix) const override;
+      rect 						      bounds_of(context const& ctx, int ix) const override;
 
    protected:
-      view_limits              make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
-      void                    make_bounds(context &ctx, float main_axis_start, cell_info &info) override;
-      float                 get_main_axis_start(const rect&r) override;
-      float                 get_main_axis_end(const rect &r) override;
+      view_limits 				   make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
+      void 						      make_bounds(context &ctx, float main_axis_start, cell_info &info) override;
+      float 					      get_main_axis_start(const rect&r) override;
+      float 					      get_main_axis_end(const rect &r) override;
 
    };
 

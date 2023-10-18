@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void element::begin_focus()
+   void element::begin_focus(focus_request /*req*/)
    {
    }
 

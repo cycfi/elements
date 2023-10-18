@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/composite.hpp>
+#include <elements/element/port.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
@@ -113,6 +114,7 @@ namespace cycfi { namespace elements
       if (_focus != -1)
       {
          at(_focus).begin_focus();
+         scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
    }

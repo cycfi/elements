@@ -4,6 +4,7 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/dynamic_list.hpp>
+#include <elements/element/port.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
@@ -184,20 +185,21 @@ namespace cycfi { namespace elements
 
    void dynamic_list::new_focus(context const& ctx, int index)
    {
-       if (_focus != -1 )
-       {
-           _composer->compose(_focus)->end_focus();
-           ctx.view.refresh(ctx);
-       }
+      if (_focus != -1 )
+      {
+         _composer->compose(_focus)->end_focus();
+         ctx.view.refresh(ctx);
+      }
 
-       // start a new focus
-       _focus = index;
-       if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
+      // start a new focus
+      _focus = index;
+      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
 
-       {
-           _cells[_focus].elem_ptr->begin_focus();
-           ctx.view.refresh(ctx);
-       }
+      {
+         _cells[_focus].elem_ptr->begin_focus();
+         scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
+         ctx.view.refresh(ctx);
+      }
    }
 
 

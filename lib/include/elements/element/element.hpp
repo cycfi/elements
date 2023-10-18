@@ -66,6 +66,8 @@ namespace cycfi { namespace elements
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 
+      virtual std::string     class_name() const;
+
    protected:
 
       void                    on_tracking(context const& ctx, tracking state);

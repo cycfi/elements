@@ -28,14 +28,15 @@ namespace cycfi { namespace elements
 
    void dynamic_list::draw(context const& ctx)
    {
-       // Johann Philippe : this seems to be necessary for context where a hdynamic_list is inside vdynamic_list (2D tables)
+      // Johann Philippe : this seems to be necessary for context where a
+      // hdynamic_list is inside vdynamic_list (2D tables)
       if (_update_request)
            update(ctx);
 
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
       auto  clip_extent = cnv.clip_extent();
-      auto main_axis_start = get_main_axis_start(ctx.bounds);
+      auto  main_axis_start = get_main_axis_start(ctx.bounds);
 
       if (!intersects(ctx.bounds, clip_extent))
          return;
@@ -72,9 +73,10 @@ namespace cycfi { namespace elements
             cell.elem_ptr->draw(rctx);
          }
 
-         if(get_main_axis_start(rctx.bounds) > get_main_axis_end(clip_extent))
+         if (get_main_axis_start(rctx.bounds) > get_main_axis_end(clip_extent))
              break;
       }
+
       std::size_t new_end = it - _cells.begin();
 
       // Cleanup old rows
@@ -133,7 +135,6 @@ namespace cycfi { namespace elements
       ++_layout_id;
       _update_request = false;
    }
-
 
    bool dynamic_list::click(const context &ctx, mouse_button btn)
    {
@@ -202,88 +203,85 @@ namespace cycfi { namespace elements
       }
    }
 
-
    bool dynamic_list::key(const context &ctx, key_info k)
    {
-       auto&& try_key = [&](int ix) -> bool
-       {
-           rect bounds = bounds_of(ctx, ix);
-           auto& e = *_composer->compose(ix).get();
-           context ectx{ ctx, &e, bounds };
-           bool b = e.key(ectx, k);
-           return b;
-       };
+      auto&& try_key = [&](int ix) -> bool
+      {
+         rect bounds = bounds_of(ctx, ix);
+         auto& e = *_composer->compose(ix).get();
+         context ectx{ ctx, &e, bounds };
+         bool b = e.key(ectx, k);
+         return b;
+      };
 
+      auto&& try_focus = [&](int ix) -> bool
+      {
+         if (_composer->compose(ix)->wants_focus())
+         {
+            new_focus(ctx, ix);
+            return true;
+         }
+         return false;
+      };
 
-       auto&& try_focus = [&](int ix) -> bool
-       {
-           if (_composer->compose(ix)->wants_focus())
-           {
-               new_focus(ctx, ix);
+      if (_focus != -1)
+      {
+         if (try_key(_focus))
+            return true;
+      }
+
+      if ((k.action == key_action::press || k.action == key_action::repeat)
+         && k.key == key_code::tab && _cells.size())
+      {
+         int next_focus = _focus;
+         bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
+
+         if ((next_focus == -1)  || !reverse)
+         {
+            while (++next_focus != static_cast<int>(_cells.size()))
+            {
+               if (try_focus(next_focus))
+                  return true;
+            }
+            return false;
+         }
+         else
+         {
+            while (--next_focus >= 0)
+            {
+               if (_composer->compose(next_focus)->wants_focus())
+                  if (try_focus(next_focus))
+                     return true;
+            }
+            return false;
+         }
+      }
+
+      // Johann Philippe : The following code comes from composite_base.
+      // I commented that since it caused crashes. Still don't know if that can be useful to adapt.
+
+      // If we reached here, then there's either no focus, or the
+      // focus did not handle the key press.
+
+      /*
+      if (reverse_index())
+      {
+         for (int ix = int(_cells.size())-1; ix >= 0; --ix)
+         {
+            if (try_key(ix))
                return true;
-           }
-           return false;
-       };
-
-       if (_focus != -1)
-       {
-           // when tab is pressed at the end of the scroller, it doesn't automatically scroll
-           if (try_key(_focus))
+         }
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < _cells.size(); ++ix)
+         {
+            if (try_key(ix))
                return true;
-       }
-
-
-       if ((k.action == key_action::press || k.action == key_action::repeat)
-               && k.key == key_code::tab && _cells.size())
-       {
-           int next_focus = _focus;
-           bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
-
-           if( (next_focus == -1)  || !reverse)
-           {
-               while (++next_focus != static_cast<int>(_cells.size()))
-               {
-                   if (try_focus(next_focus))
-                       return true;
-               }
-               return false;
-           }
-           else
-           {
-               while (--next_focus >= 0)
-               {
-                   if (_composer->compose(next_focus)->wants_focus())
-                       if (try_focus(next_focus))
-                           return true;
-               }
-               return false;
-           }
-       }
-       // Johann Philippe : The following code comes from composite_base.
-       // I commented that since it caused crashes. Still don't know if that can be useful to adapt.
-
-       // If we reached here, then there's either no focus, or the
-       // focus did not handle the key press.
-
-       /*
-       if (reverse_index())
-       {
-          for (int ix = int(_cells.size())-1; ix >= 0; --ix)
-          {
-             if (try_key(ix))
-                return true;
-          }
-       }
-       else
-       {
-          for (std::size_t ix = 0; ix < _cells.size(); ++ix)
-          {
-             if (try_key(ix))
-                return true;
-          }
-       }
-       */
-       return false;
+         }
+      }
+      */
+      return false;
    }
 
    bool dynamic_list::cursor(const context &ctx, point p, cursor_tracking status)
@@ -349,13 +347,13 @@ namespace cycfi { namespace elements
 
    void dynamic_list::drag(const context &ctx, mouse_button btn)
    {
-       if (_click_tracking != -1)
-       {
-          rect  bounds = bounds_of(ctx, _click_tracking);
-          auto& e = *_composer->compose(_click_tracking).get();
-          context ectx{ ctx, &e, bounds };
-          e.drag(ectx, btn);
-       }
+      if (_click_tracking != -1)
+      {
+         rect  bounds = bounds_of(ctx, _click_tracking);
+         auto& e = *_composer->compose(_click_tracking).get();
+         context ectx{ ctx, &e, bounds };
+         e.drag(ectx, btn);
+      }
    }
 
 
@@ -373,13 +371,12 @@ namespace cycfi { namespace elements
       return false;
    }
 
-
    bool dynamic_list::wants_focus() const
    {
-       for (std::size_t ix = 0; ix != _cells.size(); ++ix)
-           if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
-               return true;
-       return false;
+      for (std::size_t ix = 0; ix != _cells.size(); ++ix)
+         if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+            return true;
+      return false;
    }
 
    bool dynamic_list::wants_control() const
@@ -392,63 +389,63 @@ namespace cycfi { namespace elements
 
    void dynamic_list::begin_focus()
    {
-       if (_focus == -1)
-           _focus = _saved_focus;
-       if (_focus == -1)
-       {
-           for (std::size_t ix = 0; ix != _cells.size(); ++ix)
-               if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
-               {
-                   _focus = ix;
-                   break;
-               }
-       }
-       if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-           _cells[_focus].elem_ptr->begin_focus();
+      if (_focus == -1)
+         _focus = _saved_focus;
+      if (_focus == -1)
+      {
+         for (std::size_t ix = 0; ix != _cells.size(); ++ix)
+            if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+            {
+                  _focus = ix;
+                  break;
+            }
+      }
+      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
+         _cells[_focus].elem_ptr->begin_focus();
    }
 
 
    void dynamic_list::end_focus()
    {
-       if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-           _cells[_focus].elem_ptr->end_focus();
-       _saved_focus = _focus;
-       _focus = -1;
-   }
+      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
+         _cells[_focus].elem_ptr->end_focus();
+      _saved_focus = _focus;
+      _focus = -1;
+}
 
 
    element const* dynamic_list::focus() const
    {
-       return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
+      return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
    }
 
 
    element* dynamic_list::focus()
    {
-       return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
+      return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
    }
 
 
    void dynamic_list::focus(std::size_t index)
    {
-       if (index < _cells.size())
-           _focus = int(index);
+      if (index < _cells.size())
+         _focus = int(index);
    }
 
 
    void dynamic_list::reset()
    {
-       _focus = -1;
-       _saved_focus = -1;
-       _click_tracking = -1;
-       _cursor_tracking = -1;
-       _cursor_hovering.clear();
+      _focus = -1;
+      _saved_focus = -1;
+      _click_tracking = -1;
+      _cursor_tracking = -1;
+      _cursor_hovering.clear();
    }
 
    void dynamic_list::resize(size_t n)
    {
-       this->_composer->resize(n);
-       this->update();
+      this->_composer->resize(n);
+      this->update();
    }
 
    dynamic_list::hit_info dynamic_list::hit_element(context const& ctx, point p, bool control) const
@@ -501,23 +498,23 @@ namespace cycfi { namespace elements
 
    view_limits dynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
-       return {
-          { secondary_axis_limits.min, float(main_axis_size) }
-        , { secondary_axis_limits.max, float(main_axis_size) } };
+      return {
+         { secondary_axis_limits.min, float(main_axis_size) }
+       , { secondary_axis_limits.max, float(main_axis_size) } };
    }
 
    void dynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)
    {
-       ctx.bounds.top = main_axis_pos + cell.pos;
-       ctx.bounds.height(cell.main_axis_size);
+      ctx.bounds.top = main_axis_pos + cell.pos;
+      ctx.bounds.height(cell.main_axis_size);
    }
 
    rect dynamic_list::bounds_of(context const& ctx, int ix) const
    {
-       rect r = ctx.bounds;
-       r.top = ctx.bounds.top + _cells[ix].pos;
-       r.height(_cells[ix].main_axis_size);
-       return r;
+      rect r = ctx.bounds;
+      r.top = ctx.bounds.top + _cells[ix].pos;
+      r.height(_cells[ix].main_axis_size);
+      return r;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -532,23 +529,23 @@ namespace cycfi { namespace elements
 
    view_limits hdynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
-       return {
-          { main_axis_size, secondary_axis_limits.min }
-        , { main_axis_size, secondary_axis_limits.max } };
+      return {
+         { main_axis_size, secondary_axis_limits.min }
+       , { main_axis_size, secondary_axis_limits.max } };
    }
 
    void hdynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)
    {
-       ctx.bounds.left = main_axis_pos + cell.pos;
-       ctx.bounds.width(cell.main_axis_size);
+      ctx.bounds.left = main_axis_pos + cell.pos;
+      ctx.bounds.width(cell.main_axis_size);
    }
 
    rect hdynamic_list::bounds_of(context const& ctx, int ix) const
    {
-       rect r = ctx.bounds;
-       r.left = ctx.bounds.left + _cells[ix].pos;
-       r.width(_cells[ix].main_axis_size);
-       return r;
+      rect r = ctx.bounds;
+      r.left = ctx.bounds.left + _cells[ix].pos;
+      r.width(_cells[ix].main_axis_size);
+      return r;
    }
 
 }}

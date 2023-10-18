@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
          }
 
          if (get_main_axis_start(rctx.bounds) > get_main_axis_end(clip_extent))
-             break;
+            break;
       }
 
       std::size_t new_end = it - _cells.begin();

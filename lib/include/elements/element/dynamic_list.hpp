@@ -287,16 +287,16 @@ namespace cycfi { namespace elements
       virtual void               reset();
       void                       resize(size_t n);
 
-       struct hit_info
-       {
-          element*               element_ptr;
-          element*               leaf_element_ptr;
-          rect                   bounds   = rect{};
-          int                    index    = -1;
-       };
+      struct hit_info
+      {
+         element*               element_ptr = nullptr;
+         element*               leaf_element_ptr = nullptr;
+         rect                   bounds = rect{};
+         int                    index = -1;
+      };
 
       virtual rect               bounds_of(context const& ctx, int ix) const;
-      virtual bool               reverse_index() const {return false;}
+      virtual bool               reverse_index() const { return false; }
       virtual hit_info           hit_element(context const& ctx, point p, bool control) const;
 
    protected:

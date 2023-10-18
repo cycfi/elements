@@ -74,10 +74,10 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         element*             element_ptr;
-         element*             leaf_element_ptr;
-         rect                 bounds   = rect{};
-         int                  index    = -1;
+         element*             element_ptr = nullptr;
+         element*             leaf_element_ptr = nullptr;
+         rect                 bounds = rect{};
+         int                  index = -1;
       };
 
       virtual hit_info        hit_element(context const& ctx, point p, bool control) const;

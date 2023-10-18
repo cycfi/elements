@@ -282,7 +282,8 @@ namespace cycfi { namespace elements
 
        struct hit_info
        {
-          element_ptr            element;
+          element*               element_ptr;
+          element*               leaf_element_ptr;
           rect                   bounds   = rect{};
           int                    index    = -1;
        };

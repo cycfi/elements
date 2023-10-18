@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
                            thumbwheel_base(point init = { 0.0f, 0.0f });
 
       void                 prepare_subject(context& ctx) override;
-      element*             hit_test(context const& ctx, point p) override;
+      element*             hit_test(context const& ctx, point p, bool leaf = false) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
@@ -59,9 +59,9 @@ namespace cycfi { namespace elements
       return _value;
    }
 
-   inline element* thumbwheel_base::hit_test(context const& ctx, point p)
+   inline element* thumbwheel_base::hit_test(context const& ctx, point p, bool leaf)
    {
-      return element::hit_test(ctx, p);
+      return element::hit_test(ctx, p, leaf);
    }
 }}
 

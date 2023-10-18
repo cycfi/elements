@@ -136,38 +136,38 @@ namespace cycfi { namespace elements
 
    bool dynamic_list::click(const context &ctx, mouse_button btn)
    {
-       if (!_cells.empty())
-       {
-          if (btn.down) // button down
-          {
-             hit_info info = hit_element(ctx, btn.pos, true);
-             if (info.element)
-             {
-                if (wants_focus() && _focus != info.index)
-                   new_focus(ctx, info.index);
+      if (!_cells.empty())
+      {
+         if (btn.down) // button down
+         {
+            hit_info info = hit_element(ctx, btn.pos, true);
+            if (info.element_ptr)
+            {
+               if (info.element_ptr->wants_focus() && _focus != info.index)
+                  new_focus(ctx, info.index);
 
-                context ectx{ ctx, info.element.get(), info.bounds };
-                if (info.element->click(ectx, btn))
-                {
-                   if (btn.down)
-                      _click_tracking = info.index;
-                   return true;
-                }
-             }
-          }
-          else if (_click_tracking != -1) // button up
-          {
-             rect  bounds = bounds_of(ctx, _click_tracking);
-             auto& e = *_composer->compose(_click_tracking);
-             context ectx{ ctx, &e, bounds };
-             if (e.click(ectx, btn))
-             {
-                return true;
-             }
-          }
-       }
-       _click_tracking = -1;
-       return false;
+               context ectx{ ctx, info.element_ptr, info.bounds };
+               if (info.leaf_element_ptr->click(ectx, btn))
+               {
+                  if (btn.down)
+                     _click_tracking = info.index;
+                  return true;
+               }
+            }
+         }
+         else if (_click_tracking != -1) // button up
+         {
+            rect  bounds = bounds_of(ctx, _click_tracking);
+            auto& e = *_composer->compose(_click_tracking);
+            context ectx{ ctx, &e, bounds };
+            if (e.click(ectx, btn))
+            {
+               return true;
+            }
+         }
+      }
+      _click_tracking = -1;
+      return false;
    }
 
    bool dynamic_list::text(context const& ctx, text_info info)
@@ -315,7 +315,7 @@ namespace cycfi { namespace elements
             auto& e = *_composer->compose(*i).get();
             rect  b = bounds_of(ctx, *i);
             context ectx{ ctx, &e, b };
-            if (!b.includes(p) || !e.hit_test(ectx, p))
+            if (!b.includes(p) || !e.hit_test(ectx, p, false))
             {
                e.cursor(ectx, p, cursor_tracking::leaving);
                i = _cursor_hovering.erase(i);
@@ -328,7 +328,7 @@ namespace cycfi { namespace elements
       // Send cursor entering to newly hit element or hovering to current
       // tracking element
       hit_info info = hit_element(ctx, p, true);
-      if (info.element)
+      if (info.element_ptr)
       {
          _cursor_tracking = info.index;
          status = cursor_tracking::hovering;
@@ -362,9 +362,9 @@ namespace cycfi { namespace elements
       if (!_cells.empty())
       {
          hit_info info = hit_element(ctx, p, true);
-         if (auto ptr = info.element; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
+         if (auto ptr = info.element_ptr; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
          {
-            context ectx{ ctx, ptr.get(), info.bounds };
+            context ectx{ ctx, ptr, info.bounds };
             return ptr->scroll(ectx, dir, p);
          }
       }
@@ -462,9 +462,9 @@ namespace cycfi { namespace elements
                if (bounds.includes(p))
                {
                   context ectx{ ctx, &e, bounds };
-                  if (e.hit_test(ectx, p))
+                  if (auto leaf = e.hit_test(ectx, p, true))
                   {
-                     info = hit_info{ e.shared_from_this(), bounds, int(ix) };
+                     info = hit_info{ &e, leaf, bounds, int(ix) };
                      return true;
                   }
                }
@@ -472,7 +472,7 @@ namespace cycfi { namespace elements
             return false;
          };
 
-      hit_info info = hit_info{ {}, rect{}, -1 };
+      hit_info info = hit_info{ {}, {}, rect{}, -1 };
       if (reverse_index())
       {
          for (int ix = int(_cells.size())-1; ix >= 0; --ix)

@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
       unsigned                span() const override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
@@ -161,9 +161,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline element*
-   indirect<Base>::hit_test(context const& ctx, point p)
+   indirect<Base>::hit_test(context const& ctx, point p, bool leaf)
    {
-      return this->get().hit_test(ctx, p);
+      return this->get().hit_test(ctx, p, leaf);
    }
 
    template <typename Base>

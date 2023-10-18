@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    // Display
 
       view_limits             limits(basic_context const& ctx) const override = 0;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override = 0;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
@@ -74,7 +74,8 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         element_ptr          element;
+         element*             element_ptr;
+         element*             leaf_element_ptr;
          rect                 bounds   = rect{};
          int                  index    = -1;
       };

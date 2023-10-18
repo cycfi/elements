@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       return 1;
    }
 
-   element* element::hit_test(context const& ctx, point p)
+   element* element::hit_test(context const& ctx, point p, bool /*leaf*/)
    {
       return (ctx.bounds.includes(p)) ? this : nullptr;
    }

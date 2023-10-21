@@ -37,13 +37,14 @@ namespace cycfi { namespace elements
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
-      bool                    key(context const& ctx, key_info k) override;
 
       menu_position           position() const              { return _position; }
       void                    position(menu_position pos)   { _position = pos; }
 
                               template <typename Menu>
       void                    menu(Menu&& menu_);
+
+      //  bool            wants_focus() const override  { return true; }
 
       on_open_menu_function   on_open_menu;
 

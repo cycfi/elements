@@ -64,7 +64,7 @@ namespace cycfi { namespace elements
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr)
             {
-               if (info.leaf_element_ptr->wants_focus() && _focus != info.index)
+               if (info.element_ptr->wants_focus() && _focus != info.index)
                   new_focus(ctx, info.index, restore_previous);
 
                context ectx{ ctx, info.element_ptr, info.bounds };
@@ -124,9 +124,15 @@ namespace cycfi { namespace elements
       auto&& try_key = [&](auto ix) -> bool
       {
          rect bounds = bounds_of(ctx, ix);
-         auto& e = at(ix);
-         context ectx{ ctx, &e, bounds };
-         return e.key(ectx, k);
+
+         // Only visible elements are given a chance to process key
+         if (intersects(bounds, ctx.view_bounds()))
+         {
+            auto& e = at(ix);
+            context ectx{ ctx, &e, bounds };
+            return e.key(ectx, k);
+         }
+         return false;
       };
 
       auto&& try_focus = [&](auto ix, focus_request req) -> bool

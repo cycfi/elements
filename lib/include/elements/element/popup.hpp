@@ -12,6 +12,8 @@
 
 namespace cycfi { namespace elements
 {
+   class basic_menu;
+
    ////////////////////////////////////////////////////////////////////////////
    // Popup
    ////////////////////////////////////////////////////////////////////////////
@@ -26,12 +28,14 @@ namespace cycfi { namespace elements
                               {}
 
       bool                    wants_control() const override { return true; }
+      bool                    wants_focus() const override { return true; }
+
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
       bool                    is_open(view& view_) const;
-      void                    open(view& view_);
-      void                    close(view& view_);
+      virtual void            open(view& view_);
+      virtual  void           close(view& view_);
 
       cursor_function         on_cursor = [](auto, auto){};
    };
@@ -56,6 +60,16 @@ namespace cycfi { namespace elements
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       click_function          on_click = [](){};
+
+      void                    open(view& view_) override;
+      void                    close(view& view_) override;
+
+      basic_menu*             menu_button()                 { return _menu_button; }
+      void                    menu_button(basic_menu* p)    { _menu_button = p; }
+
+   private:
+
+      basic_menu*             _menu_button = nullptr;
    };
 
    template <typename Subject>

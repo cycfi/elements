@@ -77,12 +77,10 @@ namespace cycfi { namespace elements
                   [this, &view_ = ctx.view]()
                   {
                      _popup->close(view_);
-                     this->value(0);
-                     view_.refresh();
                   };
 
+               _popup->menu_button(this);
                _popup->open(ctx.view);
-               ctx.view.refresh();
             }
          }
       }
@@ -121,73 +119,6 @@ namespace cycfi { namespace elements
             _popup->click(new_ctx, btn);
          }
       }
-   }
-
-   bool basic_menu::key(context const& ctx, key_info k)
-   {
-      if (!_popup)
-         return false;
-
-      // simulate a menu key:
-      rect bounds = _popup->bounds();
-      context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
-
-      basic_menu_item_element* hit = nullptr;
-      basic_menu_item_element* first = nullptr;
-      basic_menu_item_element* last = nullptr;
-
-      new_ctx.listen<basic_menu_item_element>(
-         [&](auto const& /* ctx */, auto& e, auto what)
-         {
-            if (what == "key" || what == "click")
-            {
-               hit = &e;
-            }
-            else if (what == "arrows" && e.is_enabled())
-            {
-               if (!first)
-                  first = &e;
-               last = &e;
-            }
-         }
-      );
-
-      if (_popup->key(new_ctx, k))
-      {
-         if (hit)
-         {
-            _popup->close(ctx.view);
-            state(false);
-            ctx.view.refresh();
-         }
-         return true;
-      }
-
-      if (k.action == key_action::press || k.action == key_action::repeat)
-      {
-         if (k.key == key_code::down)
-         {
-            if (first)
-            {
-               first->select(true);
-               ctx.view.refresh(new_ctx);
-               first->scroll_into_view();
-            }
-         }
-         else if (k.key == key_code::up)
-         {
-            if (last)
-            {
-               last->select(true);
-               ctx.view.refresh(new_ctx);
-               last->scroll_into_view();
-            }
-         }
-         return false;
-      }
-
-      // Call base key
-      return basic_button::key(ctx, k);
    }
 
    void basic_menu_item_element::draw(context const& ctx)
@@ -269,68 +200,92 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
-               if (is_selected() && is_enabled())
-               {
-                  select(false);
-                  if (on_click)
-                     on_click();
-                  ctx.notify(ctx, "key", this);
-                  return true;
-               }
-               break;
-
             case key_code::escape:
+            {
+               select(false);
+               ctx.notify(ctx, "key", this);
+
+               // Close the popup
+               if (auto _popup = find_parent<basic_popup_element*>(ctx))
+                  _popup->close(ctx.view);
+
+               auto [c, cctx] = find_composite(ctx);
+               if (c)
                {
-                  select(false);
-                  ctx.notify(ctx, "key", this);
-                  return true;
+                  for (std::size_t i = 0; i != c->size(); ++i)
+                  {
+                     auto e = find_element<basic_menu_item_element*>(&c->at(i));
+                     if (e && e->is_selected())
+                        if (e->on_click)
+                           e->on_click();
+                  }
                }
-               break;
+               return true;
+            }
+            break;
 
             case key_code::up:
             case key_code::down:
+            {
+               auto [c, cctx] = find_composite(ctx);
+               if (c)
                {
-                  if (!is_selected())
+                  auto find_selected = [](auto const& c)
+                     -> std::pair<basic_menu_item_element*, int>
                   {
-                     ctx.notify(ctx, "arrows", this);
-                     return false;
-                  }
+                     for (std::size_t i = 0; i != c->size(); ++i)
+                     {
+                        auto e = find_element<basic_menu_item_element*>(&c->at(i));
+                        if (e && e->is_selected())
+                           return std::make_pair(e, i);
+                     }
+                     return std::make_pair(nullptr, -1);
+                  };
 
-                  auto [c, cctx] = find_composite(ctx);
-                  if (c)
+                  auto select_next = [k](auto const& c, auto& selected, auto& selected_index)
                   {
                      bool const down = k.key == key_code::down;
                      auto const last = static_cast<int>(c->size()) - 1;
-                     bool found = false;
-                     for (
-                        int i = down? 0 : last;
-                        i != (down? static_cast<int>(c->size()) : -1);
-                        i += down? +1 : -1
-                     )
+
+                     int start = selected?
+                        (down? selected_index+1 : selected_index-1) :
+                        (down? 0 : last)
+                     ;
+                     int until = down? int(c->size()) : -1;
+                     for (int i = start; i != until; i += down? +1 : -1)
                      {
-                        auto e = find_element<basic_menu_item_element*>(&c->at(i));
-                        if (e && e->is_enabled())
+                        auto p = find_element<basic_menu_item_element*>(&c->at(i));
+                        if (p && p->is_enabled())
                         {
-                           if (e == this)
-                           {
-                              if (i != (down? last : 0))
-                                 found = true;
-                           }
-                           else if (found)
-                           {
-                              select(false);
-                              e->select(true);
-                              rect bounds = c->bounds_of(*cctx, i);
-                              cctx->view.refresh(*cctx);
-                              scrollable::find(ctx).scroll_into_view(bounds);
-                              break;
-                           }
+                           selected = p;
+                           break;
                         }
                      }
-                  }
-                  return true;
+                     if (selected)
+                     {
+                        selected->select(true);
+                        selected->scroll_into_view();
+                     }
+                  };
+
+                  auto unselect_rest = [](auto const& c, auto selected)
+                  {
+                     for (std::size_t i = 0; i != c->size(); ++i)
+                     {
+                        auto e = find_element<basic_menu_item_element*>(&c->at(i));
+                        if (e && e != selected && e->is_enabled())
+                           e->select(false);
+                     }
+                  };
+
+                  auto [selected, selected_index] = find_selected(c);
+                  select_next(c, selected, selected_index);
+                  unselect_rest(c, selected);
+                  cctx->view.refresh(*cctx);
                }
-               break;
+               return true;
+            }
+            break;
 
             default:
                if (is_enabled() && equal(k, shortcut))

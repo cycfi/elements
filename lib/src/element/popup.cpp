@@ -31,11 +31,13 @@ namespace cycfi { namespace elements
    void basic_popup_element::open(view& view_)
    {
       view_.add(shared_from_this());
+      view_.refresh();
    }
 
    void basic_popup_element::close(view& view_)
    {
       view_.remove(shared_from_this());
+      view_.refresh();
    }
 
    element* basic_popup_menu_element::hit_test(context const& ctx, point p, bool leaf)
@@ -61,5 +63,17 @@ namespace cycfi { namespace elements
       if (btn.down && (!r || hit))
          on_click();
       return r;
+   }
+
+   void basic_popup_menu_element::open(view& view_)
+   {
+      basic_popup_element::open(view_);
+   }
+
+   void basic_popup_menu_element::close(view& view_)
+   {
+      basic_popup_element::close(view_);
+      if (_menu_button)
+         _menu_button->value(0);
    }
 }}

@@ -11,7 +11,7 @@
 
 namespace cycfi { namespace elements
 {
-   void basic_menu::layout_menu(context const& ctx)
+   void basic_button_menu::layout_menu(context const& ctx)
    {
       auto pu_limits = _popup->limits(ctx);
       rect  bounds;
@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       _popup->layout(new_ctx);
    }
 
-   bool basic_menu::click(context const& ctx, mouse_button btn)
+   bool basic_button_menu::click(context const& ctx, mouse_button btn)
    {
       if (btn.down)
       {
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_menu::drag(context const& ctx, mouse_button btn)
+   void basic_button_menu::drag(context const& ctx, mouse_button btn)
    {
       if (!_popup)
          return;
@@ -216,8 +216,12 @@ namespace cycfi { namespace elements
                   {
                      auto e = find_element<basic_menu_item_element*>(&c->at(i));
                      if (e && e->is_selected())
-                        if (e->on_click)
+                     {
+                        if (k.key == key_code::enter && e->on_click)
                            e->on_click();
+                        e->select(false);
+                        break;
+                     }
                   }
                }
                return true;

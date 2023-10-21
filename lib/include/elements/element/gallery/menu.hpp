@@ -35,7 +35,7 @@ namespace cycfi { namespace elements
          (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
          icons::down_dir : icons::up_dir
          ;
-      auto menu = button<basic_menu>(std::move(text), icon, 1.0, body_color);
+      auto menu = button<basic_button_menu>(std::move(text), icon, 1.0, body_color);
       menu.position(pos);
       return menu;
    }
@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
 
    inline auto make_selection_menu_button(std::shared_ptr<basic_label> label)
    {
-      return momentary_button<basic_menu>(
+      return momentary_button<basic_button_menu>(
          layer(
             margin(
                get_theme().button_margin,

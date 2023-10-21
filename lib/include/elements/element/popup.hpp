@@ -12,7 +12,7 @@
 
 namespace cycfi { namespace elements
 {
-   class basic_menu;
+   class basic_button_menu;
 
    ////////////////////////////////////////////////////////////////////////////
    // Popup
@@ -64,12 +64,12 @@ namespace cycfi { namespace elements
       void                    open(view& view_) override;
       void                    close(view& view_) override;
 
-      basic_menu*             menu_button()                 { return _menu_button; }
-      void                    menu_button(basic_menu* p)    { _menu_button = p; }
+      basic_button_menu*      menu_button()                       { return _menu_button; }
+      void                    menu_button(basic_button_menu* p)   { _menu_button = p; }
 
    private:
 
-      basic_menu*             _menu_button = nullptr;
+      basic_button_menu*             _menu_button = nullptr;
    };
 
    template <typename Subject>

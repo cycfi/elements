@@ -26,14 +26,14 @@ namespace cycfi { namespace elements
       bottom_right
    };
 
-   class basic_menu : public basic_button
+   class basic_button_menu : public basic_button
    {
    public:
 
-      using on_open_menu_function = std::function<void(basic_menu& menu)>;
+      using on_open_menu_function = std::function<void(basic_button_menu& menu)>;
       using basic_button::focus;
 
-                              basic_menu(menu_position pos = menu_position::bottom_right);
+                              basic_button_menu(menu_position pos = menu_position::bottom_right);
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
@@ -58,12 +58,12 @@ namespace cycfi { namespace elements
       menu_position           _position;
    };
 
-   inline basic_menu::basic_menu(menu_position pos)
+   inline basic_button_menu::basic_button_menu(menu_position pos)
     : _position(pos)
    {}
 
    template <typename Menu>
-   inline void basic_menu::menu(Menu&& menu_)
+   inline void basic_button_menu::menu(Menu&& menu_)
    {
       _popup = share(basic_popup_menu(std::forward<Menu>(menu_)));
    }

@@ -30,6 +30,7 @@ namespace cycfi { namespace elements
       color                default_button_color;
       rect                 button_margin;
       float                button_corner_radius;
+      float                button_text_icon_space;
 
       color                controls_color;
       float                controls_frame_stroke_width;

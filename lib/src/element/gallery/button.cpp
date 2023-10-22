@@ -29,14 +29,20 @@ namespace cycfi { namespace elements
    {
       auto const& theme = get_theme();
       auto margin = theme.button_margin;
+      auto space = theme.button_text_icon_space;
       auto font = theme.label_font;
+      auto& cnv = ctx.canvas;
 
       // Measure the text width
-      auto size = measure_text(ctx.canvas, get_text().c_str(), font, font._size * get_size());
+      auto size = measure_text(cnv, get_text(), font.size(font._size * get_size()));
 
       // Add space for the icon if necessary
       if (get_icon_placement() != icon_none)
-         size.x += (get_size() * theme.icon_font._size) + 8;
+      {
+         auto icon_size = measure_icon(cnv, get_icon(), get_size() * theme.icon_font._size);
+         size.x += icon_size.x + space;
+         size.y = std::max(size.y, icon_size.y);
+      }
 
       auto x_space = margin.left + margin.right;
       auto y_space = margin.top + margin.bottom;
@@ -53,6 +59,7 @@ namespace cycfi { namespace elements
       auto const& theme = get_theme();
       auto bounds = ctx.bounds;
       auto margin = theme.button_margin;
+      auto space = theme.button_text_icon_space;
 
       auto state = value();
       auto value = state.value;
@@ -77,12 +84,17 @@ namespace cycfi { namespace elements
       font = font.size(font._size * get_size());
 
       // Measure text and icon
-      auto text_size = measure_text(ctx.canvas, get_text().c_str(), font, font._size);
-      auto icon_space = (get_size() * theme.icon_font._size) + 8;
-      auto size = text_size;
+      auto text_size = measure_text(ctx.canvas, get_text(), font);
 
+      // Add space for the icon if necessary
+      auto icon_width = 0.0f;
+      auto icon_space = 0.0f;
       if (get_icon_placement() != icon_none)
-         size.x += icon_space;
+      {
+         auto icon_size = measure_icon(cnv, get_icon(), get_size() * theme.icon_font._size);
+         icon_width += icon_size.x;
+         icon_space = icon_width + space;
+      }
 
       auto text_c = enabled?
          theme.label_font_color :
@@ -96,36 +108,70 @@ namespace cycfi { namespace elements
       auto mid_y = bounds.top + (bounds.height() / 2);
 
       // Draw label
-      point text_pos;
+      float text_pos;
+      float icon_pos;
+      int align = cnv.middle;
+      auto icon_placement = get_icon_placement();
+      auto label_alignment = get_label_alignment();
 
-      switch (get_label_alignment())
+      switch (label_alignment)
       {
          case align_left:
-            text_pos = point{bounds.left + margin.left + icon_space, mid_y};
-            break;
          case align_center:
             {
-               float pos_x = mid_x - (size.x/2);
-               text_pos = point(pos_x + (get_icon_placement() == icon_left? icon_space : 0), mid_y);
+               if (label_alignment == align_left)
+                  text_pos = bounds.left + margin.left;
+               else // align_center
+                  text_pos = mid_x - ((text_size.x + icon_space) / 2);
+
+               if (icon_placement != icon_none)
+               {
+                  if (icon_placement == icon_left)
+                  {
+                     icon_pos = text_pos;
+                     text_pos += icon_space;
+                  }
+                  else
+                  {
+                     icon_pos = text_pos + text_size.x + space;
+                  }
+               }
+               align += cnv.left;
             }
             break;
+
          case align_right:
-            text_pos = point{bounds.right - (size.x + margin.right), mid_y};
+            {
+               text_pos = bounds.right - margin.right;
+               if (icon_placement != icon_none)
+               {
+                  if (icon_placement == icon_right)
+                  {
+                     text_pos -= icon_space;
+                     icon_pos = text_pos + space;
+                  }
+                  else
+                  {
+                     icon_pos = (text_pos - text_size.x) - icon_space;
+                  }
+               }
+               align += cnv.right;
+            }
             break;
       }
 
       cnv.fill_style(text_c);
       cnv.font(font);
-      cnv.text_align(cnv.left | cnv.middle);
-      cnv.fill_text(get_text().c_str(), text_pos);
+      cnv.text_align(align);
+      cnv.fill_text(get_text(), {text_pos, mid_y});
 
       // Draw icon
-      if (get_icon_placement() != icon_none)
+      if (icon_placement != icon_none)
       {
-         auto icon_pos = text_pos.move((get_icon_placement() == icon_left)? -icon_space : text_size.x + 8, 0);
          auto icon_font = theme.icon_font;
+         cnv.text_align(cnv.middle + cnv.left);
          cnv.font(icon_font.size(get_size() * icon_font._size));
-         cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), icon_pos);
+         cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), {icon_pos, mid_y});
       }
    }
 }}

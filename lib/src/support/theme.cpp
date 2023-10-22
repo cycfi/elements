@@ -19,6 +19,7 @@ namespace cycfi { namespace elements
     , default_button_color       {rgba(0, 0, 0, 0)}
     , button_margin              {10, 5, 10, 5}
     , button_corner_radius       {4.0}
+    , button_text_icon_space     {8.0}
 
     , controls_color             {rgba(18, 49, 85, 200)}
     , controls_frame_stroke_width{1.5}

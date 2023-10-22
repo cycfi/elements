@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
 
    inline auto flow(flowable_container& flowable_)
    {
-      return flow_element{ flowable_ };
+      return flow_element{flowable_};
    }
 }}
 

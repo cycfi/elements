@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    inline auto check_box(std::string text)
    {
-      return toggle_button(check_box_styler{text });
+      return toggle_button(check_box_styler{text});
    }
 }}
 

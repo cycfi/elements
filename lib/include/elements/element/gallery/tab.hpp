@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
 
    inline auto tab(std::string text)
    {
-      return choice(tab_styler{text });
+      return choice(tab_styler{text});
    }
 }}
 

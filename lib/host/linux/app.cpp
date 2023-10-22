@@ -85,7 +85,7 @@ namespace cycfi { namespace elements
    {
       argc = argc_;
       argv = argv_;
-      static init_app init{ id };
+      static init_app init{id};
       _app = the_app;
    }
 

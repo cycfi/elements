@@ -34,13 +34,13 @@ namespace cycfi { namespace elements
 
    rect image::source_rect(context const& ctx) const
    {
-      return { 0, 0, ctx.bounds.width(), ctx.bounds.height() };
+      return {0, 0, ctx.bounds.width(), ctx.bounds.height()};
    }
 
    view_limits image::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { size_.x, size_.y } };
+      return {{size_.x, size_.y}, {size_.x, size_.y}};
    }
 
    void image::draw(context const& ctx)
@@ -195,7 +195,7 @@ namespace cycfi { namespace elements
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
-      return { { width, _height }, { width, _height } };
+      return {{width, _height}, {width, _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
@@ -211,12 +211,12 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return { pixmap().size().x, _height };
+      return {pixmap().size().x, _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
-      return rect{ 0, _height * _index, width, _height * (_index + 1) };
+      return rect{0, _height * _index, width, _height * (_index + 1)};
    }
 }}

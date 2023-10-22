@@ -70,6 +70,6 @@ namespace cycfi { namespace elements
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+      canvas_.fill_text(point{cx, cy}, _text.c_str());
    }
 }}

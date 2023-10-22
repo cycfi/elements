@@ -59,7 +59,7 @@ namespace cycfi { namespace elements
 
    inline auto menu_item_text(std::string text, float text_align = 0.0f /*align left*/)
    {
-      return hmargin({ 20, 20 }, halign(text_align, label(std::move(text))));
+      return hmargin({20, 20}, halign(text_align, label(std::move(text))));
    }
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
 #else
       auto sk_font = get_theme().label_font;
 #endif
-      return hmargin({ 20, 10 },
+      return hmargin({20, 10},
          htile(
             htile(
                align_left(label(std::move(text)))
@@ -205,7 +205,7 @@ namespace cycfi { namespace elements
          Sequence const& _seq;
       };
 
-      return selection_menu(on_select, seq_menu_selector{ seq });
+      return selection_menu(on_select, seq_menu_selector{seq});
    }
 
    template <typename T>
@@ -236,7 +236,7 @@ namespace cycfi { namespace elements
          std::vector<T> _list;
       };
 
-      return selection_menu(on_select, init_list_menu_selector{ list }, text_align);
+      return selection_menu(on_select, init_list_menu_selector{list}, text_align);
    }
 }}
 

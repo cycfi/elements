@@ -44,7 +44,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_popup_element>
    basic_popup(Subject&& subject, rect bounds = {})
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_popup_menu_element>
    basic_popup_menu(Subject&& subject, rect bounds = {})
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 }}
 

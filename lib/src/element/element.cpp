@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
 
    view_stretch element::stretch() const
    {
-      return { 1.0f, 1.0f };
+      return {1.0f, 1.0f};
    }
 
    unsigned element::span() const

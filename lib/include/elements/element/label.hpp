@@ -188,35 +188,35 @@ namespace cycfi { namespace elements
    inline typename label_gen<Base>::gen_font
    label_gen<Base>::font(font_type font_) const
    {
-      return { *this, font_ };
+      return {*this, font_};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::font_size(float size) const
    {
-      return { *this, size };
+      return {*this, size};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::relative_font_size(float size) const
    {
-      return { *this, Base::get_default_font_size() * size };
+      return {*this, Base::get_default_font_size() * size};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_color
    label_gen<Base>::font_color(color color_) const
    {
-      return { *this, color_ };
+      return {*this, color_};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_text_align
    label_gen<Base>::text_align(int align) const
    {
-      return { *this, align };
+      return {*this, align};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -312,7 +312,7 @@ namespace cycfi { namespace elements
    as_label(F&& as_string, Subject&& subject)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(as_string), std::forward<Subject>(subject) };
+      return {std::forward<ftype>(as_string), std::forward<Subject>(subject)};
    }
 }}
 

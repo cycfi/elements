@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
       cnv.font(thm.icon_font, size);
       cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
-      cnv.fill_text(point{ cx, cy }, codepoint_to_utf8(code).c_str());
+      cnv.fill_text(point{cx, cy}, codepoint_to_utf8(code).c_str());
    }
 
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size)
@@ -39,7 +39,7 @@ namespace cycfi { namespace elements
       cnv.font(font_, size);
       auto  info = cnv.measure_text(text);
       auto  height = info.ascent + info.descent + info.leading;
-      return { info.size.x, height };
+      return {info.size.x, height};
    }
 
    namespace detail

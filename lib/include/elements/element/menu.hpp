@@ -134,7 +134,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_menu_item_element>
    basic_menu_item(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    inline bool basic_menu_item_element::is_selected() const

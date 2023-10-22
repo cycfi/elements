@@ -13,7 +13,7 @@ namespace cycfi { namespace elements
    // thumbwheel_base
    ////////////////////////////////////////////////////////////////////////////
    thumbwheel_base::thumbwheel_base(point init)
-    : _value{ init }
+    : _value{init}
    {
       clamp(_value.x, 0.0, 1.0);
       clamp(_value.y, 0.0, 1.0);
@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
 
       float x = _value.x + factor * delta.x;
       float y = _value.y + factor * -delta.y;
-      return { clamp(x, 0.0, 1.0), clamp(y, 0.0, 1.0) };
+      return {clamp(x, 0.0, 1.0), clamp(y, 0.0, 1.0)};
    }
 
    void thumbwheel_base::keep_tracking(context const& ctx, tracker_info& track_info)

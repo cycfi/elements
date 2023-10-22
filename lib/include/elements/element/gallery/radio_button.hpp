@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    inline auto radio_button(std::string text)
    {
-      return choice(radio_button_styler{text });
+      return choice(radio_button_styler{text});
    }
 }}
 

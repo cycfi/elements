@@ -11,7 +11,7 @@ namespace cycfi { namespace elements
    view_limits default_label::limits(basic_context const& ctx) const
    {
       auto  size = measure_text(ctx.canvas, get_text().c_str(), get_font(), get_font_size());
-      return { { size.x, size.y }, { size.x, size.y } };
+      return {{size.x, size.y}, {size.x, size.y}};
    }
 
    void default_label::draw(context const& ctx)
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       }
 
       canvas_.text_align(align);
-      canvas_.fill_text(point{ cx, cy }, get_text().c_str());
+      canvas_.fill_text(point{cx, cy}, get_text().c_str());
    }
 
    void default_label::enable(bool state)

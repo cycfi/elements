@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
       mutable master_glyphs   _layout;
       std::vector<glyphs>     _rows;
       color                   _color;
-      point                   _current_size = { -1, -1 };
+      point                   _current_size = {-1, -1};
    };
 
    ////////////////////////////////////////////////////////////////////////////

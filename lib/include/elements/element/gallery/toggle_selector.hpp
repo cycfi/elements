@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
       size.x += 15 + size.y + 10 + 15;
-      return { { size.x, size.y }, { size.x, size.y } };
+      return {{size.x, size.y}, {size.x, size.y}};
    }
 
    inline bool toggle_selector::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)

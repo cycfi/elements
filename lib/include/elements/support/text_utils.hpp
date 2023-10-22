@@ -193,14 +193,14 @@ namespace cycfi { namespace elements
 
       template<std::size_t... I>
       constexpr char8_t_string_literal(const char8_t(&r)[N], std::index_sequence<I...>)
-         : buffer{ r[I]... } {}
+         : buffer{r[I]...} {}
 
       constexpr char8_t_string_literal(const char8_t(&r)[N])
          : char8_t_string_literal(r, std::make_index_sequence<N>()) {}
    };
 
    template<char8_t_string_literal L, std::size_t... I>
-   constexpr inline const char as_char_buffer[sizeof...(I)] = { static_cast<char>(L.buffer[I])... };
+   constexpr inline const char as_char_buffer[sizeof...(I)] = {static_cast<char>(L.buffer[I])...};
 
    template<char8_t_string_literal L, std::size_t... I>
    constexpr auto& make_as_char_buffer(std::index_sequence<I...>)

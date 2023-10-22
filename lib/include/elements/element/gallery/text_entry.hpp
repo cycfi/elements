@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
    template <typename InputBox>
    inline auto input_box(
       InputBox&& text_input
-    , rect pad = { 5, 5, 5, 5 }
+    , rect pad = {5, 5, 5, 5}
     , typename std::enable_if<
          std::is_base_of<element, remove_cvref_t<InputBox>>::value
       >::type* = nullptr
@@ -43,7 +43,7 @@ namespace cycfi { namespace elements
 
    inline auto input_box(
       std::string placeholder
-    , font font_
+    , font_descr font_
     , float size // ratio relative to get_theme().text_box_font_size
    )
    {
@@ -52,7 +52,7 @@ namespace cycfi { namespace elements
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f
       };
-      auto tbox = share(basic_input_box{ std::move(placeholder), font_, font_size });
+      auto tbox = share(basic_input_box{std::move(placeholder), font_.size(font_size)});
       return std::make_pair(input_box(hold(tbox), pad), tbox);
    }
 

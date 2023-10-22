@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits layer_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{ { 0.0, 0.0 }, { full_extent, full_extent } };
+      view_limits limits{{0.0, 0.0}, {full_extent, full_extent}};
       for (std::size_t ix = 0; ix != size();  ++ix)
       {
          auto el = at(ix).limits(ctx);
@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
       for (std::size_t ix = 0; ix != size(); ++ix)
       {
          auto& e = at(ix);
-         e.layout(context{ ctx, &e, bounds_of(ctx, ix) });
+         e.layout(context{ctx, &e, bounds_of(ctx, ix)});
       }
    }
 
@@ -64,13 +64,13 @@ namespace cycfi { namespace elements
             rect bounds = bounds_of(ctx, ix);
             if (bounds.includes(p))
             {
-               context ectx{ ctx, &e, bounds };
+               context ectx{ctx, &e, bounds};
                if (auto leaf = e.hit_test(ectx, p, true))
-                  return hit_info{ &e, leaf, bounds, int(ix) };
+                  return hit_info{&e, leaf, bounds, int(ix)};
             }
          }
       }
-      return hit_info{ {}, {}, rect{}, -1 };
+      return hit_info{{}, {}, rect{}, -1};
    }
 
    rect layer_element::bounds_of(context const& ctx, std::size_t index) const
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
       clamp_min(height, limits.min.y);
       clamp_max(height, limits.max.y);
 
-      return { left, top, left+width, top+height };
+      return {left, top, left+width, top+height};
    }
 
    void layer_element::begin_focus(focus_request req)
@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
       if (intersects(bounds, ctx.view_bounds()))
       {
          auto& elem = at(_selected_index);
-         context ectx{ ctx, &elem, bounds };
+         context ectx{ctx, &elem, bounds};
          elem.draw(ectx);
       }
    }
@@ -136,7 +136,7 @@ namespace cycfi { namespace elements
       {
          rect bounds = bounds_of(ctx, _selected_index);
          auto& elem = at(_selected_index);
-         context ectx{ ctx, &elem, bounds };
+         context ectx{ctx, &elem, bounds};
          elem.refresh(ectx, element, outward);
       }
    }
@@ -149,12 +149,12 @@ namespace cycfi { namespace elements
          rect bounds = bounds_of(ctx, _selected_index);
          if (bounds.includes(p))
          {
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             if (auto leaf = e.hit_test(ectx, p, true))
-               return hit_info{ &e, leaf, bounds, int(_selected_index) };
+               return hit_info{&e, leaf, bounds, int(_selected_index)};
          }
       }
-      return hit_info{ {}, {}, rect{}, -1 };
+      return hit_info{{}, {}, rect{}, -1};
    }
 
    void deck_element::begin_focus(focus_request req)

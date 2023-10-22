@@ -41,8 +41,8 @@ namespace cycfi { namespace elements
       auto x_space = margin.left + margin.right;
       auto y_space = margin.top + margin.bottom;
       return {
-         { size.x + x_space, size.y + y_space }
-       , { full_extent, size.y + y_space }
+         {size.x + x_space, size.y + y_space}
+       , {full_extent, size.y + y_space}
       };
    }
 

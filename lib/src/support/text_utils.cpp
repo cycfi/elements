@@ -42,6 +42,15 @@ namespace cycfi { namespace elements
       return {info.size.x, height};
    }
 
+   point measure_text(canvas& cnv, std::string_view text, font_descr descr)
+   {
+      auto  state = cnv.new_state();
+      cnv.font(descr);
+      auto  info = cnv.measure_text(std::string(text).c_str());
+      auto  height = info.ascent + info.descent + info.leading;
+      return {info.size.x, height};
+   }
+
    namespace detail
    {
       char const* codepoint_to_utf8(unsigned cp, char str[8])

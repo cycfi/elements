@@ -34,7 +34,7 @@ namespace cycfi { namespace elements
    inline view_limits toggle_selector::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font);
       size.x += 15 + size.y + 10 + 15;
       return {{size.x, size.y}, {size.x, size.y}};
    }

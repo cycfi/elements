@@ -12,7 +12,7 @@ namespace cycfi { namespace elements
    view_limits tab_styler::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font);
       size.x += 35;
       size.y += 10;
       return {{size.x, size.y}, {size.x, size.y}};

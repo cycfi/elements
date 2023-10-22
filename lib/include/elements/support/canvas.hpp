@@ -168,11 +168,11 @@ namespace cycfi { namespace elements
 
                         [[deprecated("Use fill_text(utf8, p) instead following artist API.")]]
       void              fill_text(point p, char const* utf8);
-      void              fill_text(char const* utf8, point p);
+      void              fill_text(std::string_view utf8, point p);
 
                         [[deprecated("Use fill_text(utf8, p) instead following artist API.")]]
       void              stroke_text(point p, char const* utf8);
-      void              stroke_text(char const* utf8, point p);
+      void              stroke_text(std::string_view utf8, point p);
 
       text_metrics      measure_text(char const* utf8);
       void              text_align(int align);

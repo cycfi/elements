@@ -83,7 +83,7 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _positions;
-      std::size_t             _num_spans;
+      mutable std::size_t     _num_spans;
    };
 
    using vgrid_composite = vector_composite<
@@ -132,7 +132,7 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _positions;
-      std::size_t             _num_spans;
+      mutable std::size_t     _num_spans;
    };
 
    using hgrid_composite = vector_composite<

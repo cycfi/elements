@@ -74,7 +74,7 @@ namespace
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
          // the user fonts ourself.
-         for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)
+         for (fs::directory_iterator it{resource_path}; it != fs::directory_iterator{}; ++it)
             if (it->path().extension() == ".ttf")
                activate_font(it->path());
       }
@@ -100,7 +100,7 @@ namespace cycfi { namespace elements
 namespace
 {
    // Defines a constant for empty ranges in NSTextInputClient
-   NSRange const kEmptyRange = { NSNotFound, 0 };
+   NSRange const kEmptyRange = {NSNotFound, 0};
 
    float transformY(float y)
    {
@@ -119,7 +119,7 @@ namespace
          int(click_count),
          what,
          mods,
-         { float(pos.x), float(pos.y) }
+         {float(pos.x), float(pos.y)}
       };
    }
 
@@ -393,7 +393,7 @@ namespace
    [[self window] makeFirstResponder : self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::entering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::entering);
    [self displayIfNeeded];
 }
 
@@ -402,7 +402,7 @@ namespace
    [[self window] setAcceptsMouseMovedEvents : NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::leaving);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -410,7 +410,7 @@ namespace
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::hovering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
@@ -423,7 +423,7 @@ namespace
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
-      _view->scroll({ delta_x, delta_y }, { float(pos.x), float(pos.y) });
+      _view->scroll({delta_x, delta_y}, {float(pos.x), float(pos.y)});
    [self displayIfNeeded];
 }
 
@@ -431,7 +431,7 @@ namespace
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::press, mods});
    _text_inserted = false;
    [self interpretKeyEvents : [NSArray arrayWithObject : event]];
    if (!handled && !_text_inserted)
@@ -459,7 +459,7 @@ namespace
      action = ph::key_action::release;
    }
 
-   handle_key(_keys, *_view, { key, action, mods });
+   handle_key(_keys, *_view, {key, action, mods});
 }
 
 - (void) keyUp : (NSEvent*) event
@@ -467,7 +467,7 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::release, mods});
    if (!handled)
       [[self nextResponder] keyUp : event];
 }
@@ -543,7 +543,7 @@ namespace
       const unichar codepoint = [characters characterAtIndex:i];
       if ((codepoint & 0xff00) == 0xf700)
          continue;
-      _text_inserted = handle_text(*_view, { codepoint, mods });
+      _text_inserted = handle_text(*_view, {codepoint, mods});
    }
 }
 
@@ -573,7 +573,7 @@ namespace
    const NSUInteger count = [urls count];
    if (count)
    {
-      info->where = ph::point{ float(pos.x), float(pos.y) };
+      info->where = ph::point{float(pos.x), float(pos.y)};
       for (NSUInteger i = 0; i < count; ++i)
          info->paths.push_back([urls[i] fileSystemRepresentation]);
    }
@@ -692,18 +692,18 @@ namespace cycfi { namespace elements
       auto  ns_view = get_mac_view(host());
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
       pos = [ns_view convertPoint : pos fromView : nil];
-      return { float(pos.x), float(pos.y) };
+      return {float(pos.x), float(pos.y)};
    }
 
    extent base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
-      return { float(frame.size.width), float(frame.size.height) };
+      return {float(frame.size.width), float(frame.size.height)};
    }
 
    void base_view::size(elements::extent size_)
    {
-      [get_mac_view(host()) setFrameSize : NSSize{ size_.x, size_.y }];
+      [get_mac_view(host()) setFrameSize : NSSize{size_.x, size_.y}];
    }
 
    void base_view::refresh()
@@ -768,7 +768,7 @@ namespace cycfi { namespace elements
    point scroll_direction()
    {
       float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
-      return { dir, dir };
+      return {dir, dir};
    }
 }}
 

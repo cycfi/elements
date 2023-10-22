@@ -968,7 +968,7 @@ namespace cycfi { namespace elements
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
-      return {{32, line_height }, { full_extent, line_height}};
+      return {{32, line_height}, {full_extent, line_height}};
    }
 
    void basic_input_box::draw(context const& ctx)

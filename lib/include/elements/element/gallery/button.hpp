@@ -34,8 +34,8 @@ namespace cycfi { namespace elements
 
       using base_type = default_button_styler;
 
-      enum icon_placement { icon_none, icon_left, icon_right };
-      enum label_alignment { align_left, align_center, align_right };
+      enum icon_placement {icon_none, icon_left, icon_right};
+      enum label_alignment {align_left, align_center, align_right};
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;

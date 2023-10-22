@@ -219,7 +219,7 @@ namespace cycfi { namespace elements
          std::function<void()>   fill_style;
          int                     align          = 0;
 
-         enum pattern_state { none_set, stroke_set, fill_set };
+         enum pattern_state {none_set, stroke_set, fill_set};
          pattern_state           pattern_set = none_set;
       };
 

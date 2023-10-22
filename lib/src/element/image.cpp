@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
    view_limits gizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return {{size_.x, size_.y }, { full_extent, full_extent}};
+      return {{size_.x, size_.y}, {full_extent, full_extent}};
    }
 
    void gizmo::draw(context const& ctx)
@@ -141,7 +141,7 @@ namespace cycfi { namespace elements
    view_limits hgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return {{size_.x, size_.y }, { size_.y, full_extent}};
+      return {{size_.x, size_.y}, {size_.y, full_extent}};
    }
 
    void hgizmo::draw(context const& ctx)
@@ -169,7 +169,7 @@ namespace cycfi { namespace elements
    view_limits vgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return {{size_.x, size_.y }, { size_.x, full_extent}};
+      return {{size_.x, size_.y}, {size_.x, full_extent}};
    }
 
    void vgizmo::draw(context const& ctx)

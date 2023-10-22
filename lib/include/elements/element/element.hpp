@@ -66,7 +66,7 @@ namespace cycfi { namespace elements
       virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
       virtual bool            drop(context const& ctx, drop_info const& info);
 
-      enum tracking { none, begin_tracking, while_tracking, end_tracking };
+      enum tracking {none, begin_tracking, while_tracking, end_tracking};
 
       virtual std::string     class_name() const;
 

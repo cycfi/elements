@@ -76,7 +76,7 @@ namespace cycfi { namespace elements
 
    inline void canvas::draw(pixmap const& pm, point pos)
    {
-      draw(pm, {0, 0, pm.size() }, { pos, pm.size()});
+      draw(pm, {0, 0, pm.size()}, {pos, pm.size()});
    }
 
    inline canvas::state::state(canvas& cnv_)

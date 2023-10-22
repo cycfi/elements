@@ -16,7 +16,7 @@ namespace cycfi { namespace elements
 
    struct receiver_base
    {
-      enum editing { none, begin_editing, while_editing, end_editing };
+      enum editing {none, begin_editing, while_editing, end_editing};
 
       virtual              ~receiver_base() = default;
       void                 begin_edit(view& view_);

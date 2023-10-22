@@ -80,7 +80,7 @@ namespace cycfi { namespace elements
       auto  y = ctx.bounds.top + metrics.ascent;
       auto  clip_extent = cnv.clip_extent();
 
-      cnv.rect(ctx.bounds);
+      cnv.add_rect(ctx.bounds);
       cnv.clip();
       cnv.fill_style(_color);
       for (auto& row : _rows)

@@ -44,7 +44,7 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(line_width);
       canvas_.begin_path();
-      canvas_.round_rect(box.inset(1, 1), 3);
+      canvas_.add_round_rect(box.inset(1, 1), 3);
       canvas_.stroke_style(outline_color);
       canvas_.stroke();
 
@@ -54,7 +54,7 @@ namespace cycfi { namespace elements
          auto glow_width = hilite? line_width*2 : line_width;
          auto inset = glow_width/3;
          auto glow_box = box.inset(inset, inset);
-         canvas_.round_rect(glow_box, 4);
+         canvas_.add_round_rect(glow_box, 4);
          canvas_.line_width(glow_width);
          canvas_.stroke_style(outline_color.opacity(0.1));
          canvas_.stroke();

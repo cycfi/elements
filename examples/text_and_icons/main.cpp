@@ -17,7 +17,7 @@ auto box = draw(
       auto& c = ctx.canvas;
 
       c.begin_path();
-      c.round_rect(ctx.bounds, 4);
+      c.add_round_rect(ctx.bounds, 4);
       c.fill_style(colors::gold.opacity(0.8));
       c.fill();
    }

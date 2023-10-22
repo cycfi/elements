@@ -211,14 +211,19 @@ namespace cycfi { namespace elements
       cairo_rectangle(&_context, r.left, r.top, r.width(), r.height());
    }
 
-   void canvas::round_rect(struct rect bounds, float radius)
+   void canvas::add_rect(struct rect r)
    {
-      auto x = bounds.left;
-      auto y = bounds.top;
-      auto r = bounds.right;
-      auto b = bounds.bottom;
+      cairo_rectangle(&_context, r.left, r.top, r.width(), r.height());
+   }
+
+   void canvas::add_round_rect(struct rect r_, float radius)
+   {
+      auto x = r_.left;
+      auto y = r_.top;
+      auto r = r_.right;
+      auto b = r_.bottom;
       auto const a = M_PI/180.0;
-      radius = std::min(radius, std::min(bounds.width(), bounds.height()) / 2);
+      radius = std::min(radius, std::min(r_.width(), r_.height()) / 2);
 
       cairo_new_sub_path(&_context);
       cairo_arc(&_context, r-radius, y+radius, radius, -90*a, 0*a);
@@ -226,6 +231,11 @@ namespace cycfi { namespace elements
       cairo_arc(&_context, x+radius, b-radius, radius, 90*a, 180*a);
       cairo_arc(&_context, x+radius, y+radius, radius, 180*a, 270*a);
       cairo_close_path(&_context);
+   }
+
+   void canvas::round_rect(struct rect r, float radius)
+   {
+      add_round_rect(r, radius);
    }
 
    void canvas::fill_style(color c)
@@ -400,7 +410,7 @@ namespace cycfi { namespace elements
       auto scale_ = point{w/src.width(), h/src.height()};
       scale(scale_);
       cairo_set_source_surface(&_context, pm._surface, -src.left, -src.top);
-      rect({0, 0, w/scale_.x, h/scale_.y});
+      add_rect({0, 0, w/scale_.x, h/scale_.y});
       cairo_fill(&_context);
    }
 

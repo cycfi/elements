@@ -71,9 +71,18 @@ namespace cycfi { namespace elements
                            float start_angle, float end_angle,
                            bool ccw = false
                         );
+
+                        [[deprecated("Use add_rect(r) instead following artist API.")]]
       void              rect(elements::rect r);
+      void              add_rect(elements::rect r);
+
+                        [[deprecated("Use round_rect(r, radius) instead following artist API.")]]
       void              round_rect(elements::rect r, float radius);
+      void              add_round_rect(elements::rect r, float radius);
+
+                        [[deprecated("Use circle(c) instead following artist API.")]]
       void              circle(elements::circle c);
+      void              add_circle(elements::circle c);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Styles

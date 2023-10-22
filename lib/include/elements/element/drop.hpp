@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
          auto& bounds = ctx.bounds;
          cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
          cnv.line_width(2.0);
-         cnv.rect(bounds);
+         cnv.add_rect(bounds);
          cnv.stroke();
       }
    }

@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       canvas_.text_align(canvas_.center | canvas_.middle);
       float cx = box.left + (box.width() / 2);
       float cy = box.top + (box.height() / 2);
-      canvas_.fill_text(point{cx, cy}, _text.c_str());
+      canvas_.fill_text(_text.c_str(), point{cx, cy});
    }
 
    bool tab_styler::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)

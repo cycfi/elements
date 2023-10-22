@@ -358,6 +358,23 @@ namespace cycfi { namespace elements
       stroke();
    }
 
+   void canvas::fill_text(char const* utf8, point p)
+   {
+      apply_fill_style();
+      p = get_text_start(_context, p, _state.align, utf8);
+      cairo_move_to(&_context, p.x, p.y);
+      cairo_show_text(&_context, utf8);
+   }
+
+   void canvas::stroke_text(char const* utf8, point p)
+   {
+      apply_stroke_style();
+      p = get_text_start(_context, p, _state.align, utf8);
+      cairo_move_to(&_context, p.x, p.y);
+      cairo_text_path(&_context, utf8);
+      stroke();
+   }
+
    canvas::text_metrics canvas::measure_text(char const* utf8)
    {
       cairo_text_extents_t extents;

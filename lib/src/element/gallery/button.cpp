@@ -117,7 +117,7 @@ namespace cycfi { namespace elements
       cnv.fill_style(text_c);
       cnv.font(font);
       cnv.text_align(cnv.left | cnv.middle);
-      cnv.fill_text(text_pos, get_text().c_str());
+      cnv.fill_text(get_text().c_str(), text_pos);
 
       // Draw icon
       if (get_icon_placement() != icon_none)
@@ -125,7 +125,7 @@ namespace cycfi { namespace elements
          auto icon_pos = text_pos.move((get_icon_placement() == icon_left)? -icon_space : text_size.x + 8, 0);
          auto icon_font = theme.icon_font;
          cnv.font(icon_font.size(get_size() * icon_font._size));
-         cnv.fill_text(icon_pos, codepoint_to_utf8(get_icon()).c_str());
+         cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), icon_pos);
       }
    }
 }}

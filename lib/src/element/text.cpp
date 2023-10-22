@@ -987,8 +987,8 @@ namespace cycfi { namespace elements
             canvas.font(theme.text_box_font, theme.text_box_font._size);
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
-               {ctx.bounds.left, ctx.bounds.top + size.ascent}
-              , _placeholder.c_str()
+               _placeholder.c_str()
+             , {ctx.bounds.left, ctx.bounds.top + size.ascent}
             );
          }
          draw_caret(ctx);

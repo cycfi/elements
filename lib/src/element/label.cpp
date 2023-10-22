@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       }
 
       canvas_.text_align(align);
-      canvas_.fill_text(point{cx, cy}, get_text().c_str());
+      canvas_.fill_text(get_text().c_str(), point{cx, cy});
    }
 
    void default_label::enable(bool state)

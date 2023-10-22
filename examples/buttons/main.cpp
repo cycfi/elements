@@ -71,7 +71,7 @@ void my_custom_button::draw(context const& ctx)
    cnv.font(font_descr{"Roboto", 14.0}.italic());
    cnv.fill_style(hilite? pgold.level(1.2) : pgold);
    cnv.text_align(cnv.center | cnv.middle);
-   cnv.fill_text(center_point(bounds), "My Custom Button");
+   cnv.fill_text("My Custom Button", center_point(bounds));
 }
 
 auto make_custom_button()

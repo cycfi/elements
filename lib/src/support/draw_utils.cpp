@@ -375,7 +375,7 @@ namespace cycfi { namespace elements
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
 
-         cnv.fill_text({cp.radius * cos_, cp.radius * sin_}, labels[i].c_str());
+         cnv.fill_text(labels[i].c_str(), {cp.radius * cos_, cp.radius * sin_});
       }
    }
 }}

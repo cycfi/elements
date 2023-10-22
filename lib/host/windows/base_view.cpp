@@ -394,7 +394,7 @@ namespace cycfi { namespace elements
          ScreenToClient(hwnd, &pos);
 
          float scale = get_scale_for_window(hwnd);
-         info->_vptr->scroll(dir, {pos.x / scale, pos.y / scal});
+         info->_vptr->scroll(dir, {pos.x / scale, pos.y / scale});
       }
 
       bool on_text(base_view& view, UINT message, WPARAM wparam)

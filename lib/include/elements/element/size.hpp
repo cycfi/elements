@@ -101,6 +101,12 @@ namespace cycfi { namespace elements
       return {width, std::forward<Subject>(subject)};
    }
 
+   inline hsize_element<element>
+   hspace(float width)
+   {
+      return { width, {} };
+   }
+
    template <typename Subject>
    inline view_limits hsize_element<Subject>::limits(basic_context const& ctx) const
    {
@@ -148,6 +154,12 @@ namespace cycfi { namespace elements
    vsize(float height, Subject&& subject)
    {
       return {height, std::forward<Subject>(subject)};
+   }
+
+   inline vsize_element<element>
+   vspace(float height)
+   {
+      return { height, {} };
    }
 
    template <typename Subject>

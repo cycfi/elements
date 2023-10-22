@@ -18,6 +18,11 @@ namespace cycfi { namespace elements
    class context;
    class view;
 
+   // Hoist artist colors namespace and  type for backward compatibility with
+   // original cairo API.
+   using artist::rgba;
+   namespace colors = artist::colors;
+
    ////////////////////////////////////////////////////////////////////////////
    // Elements
    //

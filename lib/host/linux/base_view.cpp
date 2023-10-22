@@ -202,17 +202,17 @@ namespace cycfi { namespace elements
          double left, top, right, bottom;
          cairo_clip_extents(host_view_h->_cr, &left, &top, &right, &bottom);
 
-         auto cnv = canvas{ gpu_canvas };
+         auto cnv = canvas{gpu_canvas};
          cnv.pre_scale(scale);
 
 #if defined ELEMENTS_PRINT_FPS
          auto start = std::chrono::steady_clock::now();
 #endif
-         view.draw(cnv, { float(left), float(top), float(right), float(bottom) });
+         view.draw(cnv, {float(left), float(top), float(right), float(bottom)});
 
 #if defined ELEMENTS_PRINT_FPS
          auto stop = std::chrono::steady_clock::now();
-         auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+         auto elapsed = std::chrono::duration<double>{stop - start}.count();
          std::cout << (1.0/elapsed) << " fps" << std::endl;
 #endif
          gpu_canvas->restore();
@@ -234,7 +234,7 @@ namespace cycfi { namespace elements
             btn.modifiers |= mod_action;
 
          btn.num_clicks = view->_click_count;
-         btn.pos = { float(event->x), float(event->y) };
+         btn.pos = {float(event->x), float(event->y)};
          return true;
       }
 
@@ -370,8 +370,8 @@ namespace cycfi { namespace elements
          }
 
          base_view.scroll(
-            { dx, dy },
-            { float(event->x), float(event->y) }
+            {dx, dy},
+            {float(event->x), float(event->y)}
          );
          return true;
       }
@@ -390,7 +390,7 @@ namespace cycfi { namespace elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      host_view_h->_cursor_position = point{ float(event->x), float(event->y) };
+      host_view_h->_cursor_position = point{float(event->x), float(event->y)};
       if (event->type == GDK_ENTER_NOTIFY)
       {
          base_view.cursor(host_view_h->_cursor_position, cursor_tracking::entering);
@@ -417,7 +417,7 @@ namespace cycfi { namespace elements
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       auto cp = codepoint(str);
-      base_view.text({ cp, host_view_h->_modifiers });
+      base_view.text({cp, host_view_h->_modifiers});
    }
 
    int get_mods(int state)
@@ -482,7 +482,7 @@ namespace cycfi { namespace elements
       if (key == key_code::unknown)
          return false;
 
-      handle_key(base_view, host_view_h->_keys, { key, action, modifiers });
+      handle_key(base_view, host_view_h->_keys, {key, action, modifiers});
       return true;
    }
 
@@ -637,7 +637,7 @@ namespace cycfi { namespace elements
    {
       auto x = gtk_widget_get_allocated_width(_view->_widget);
       auto y = gtk_widget_get_allocated_height(_view->_widget);
-      return { float(x), float(y) };
+      return {float(x), float(y)};
    }
 
    void base_view::size(elements::extent p)
@@ -719,7 +719,7 @@ namespace cycfi { namespace elements
 
    point scroll_direction()
    {
-      return { +1.0f, +1.0f };
+      return {+1.0f, +1.0f};
    }
 }}
 

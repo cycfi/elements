@@ -70,7 +70,7 @@ void my_custom_button::draw(context const& ctx)
       );
    cnv.stroke_round_rect(bounds, 8);
 
-   cnv.font(font_descr{ "Roboto", 14.0 }.italic());
+   cnv.font(font_descr{"Roboto", 14.0}.italic());
    cnv.fill_style(hilite? pgold.level(1.2) : pgold);
    cnv.text_align(cnv.center | cnv.middle);
    cnv.fill_text("My Custom Button", center_point(bounds));
@@ -161,7 +161,7 @@ auto make_buttons(view& view_)
       };
 
    return
-      margin({ 20, 0, 20, 20 },
+      margin({20, 0, 20, 20},
          vtile(
             top_margin(20, mbutton),
             top_margin(20, tbutton),
@@ -193,7 +193,7 @@ auto make_controls(view& view_)
 
    auto  check_boxes =
          group("Check boxes",
-            margin({ 10, 10, 20, 20 },
+            margin({10, 10, 20, 20},
                top_margin(25,
                   vtile(
                      top_margin(10, align_left(check_box1)),
@@ -215,7 +215,7 @@ auto make_controls(view& view_)
 
    auto  radio_buttons =
          group("Radio Buttons",
-            margin({ 10, 10, 20, 20 },
+            margin({10, 10, 20, 20},
                top_margin(25,
                   vtile(
                      top_margin(10, align_left(radio_button1)),
@@ -234,7 +234,7 @@ auto make_controls(view& view_)
 
    auto  icon_buttons =
          group("Icon Buttons",
-            margin({ 10, 10, 20, 10 },
+            margin({10, 10, 20, 10},
                vtile(
                   top_margin(35,
                      htile(
@@ -250,14 +250,14 @@ auto make_controls(view& view_)
          );
 
    float const button_scale = 1.0/4;
-   sprite power_button = sprite{ "power_180x632.png", 158*button_scale, button_scale };
-   sprite phase_button = sprite{ "phase_180x632.png", 158*button_scale, button_scale };
-   sprite mail_button = sprite{ "mail_180x632.png", 158*button_scale, button_scale };
-   sprite transpo_button = sprite{ "transpo_180x632.png", 158*button_scale, button_scale };
+   sprite power_button = sprite{"power_180x632.png", 158*button_scale, button_scale};
+   sprite phase_button = sprite{"phase_180x632.png", 158*button_scale, button_scale};
+   sprite mail_button = sprite{"mail_180x632.png", 158*button_scale, button_scale};
+   sprite transpo_button = sprite{"transpo_180x632.png", 158*button_scale, button_scale};
 
    auto  sprite_buttons =
          group("Sprite Buttons",
-            margin({ 10, 10, 20, 10 },
+            margin({10, 10, 20, 10},
                vtile(
                   top_margin(35,
                      htile(
@@ -276,13 +276,13 @@ auto make_controls(view& view_)
          htile(
             make_buttons(view_),
             vtile(
-               margin({ 20, 20, 20, 20 }, check_boxes),
-               margin({ 20, 20, 20, 20 }, radio_buttons)
+               margin({20, 20, 20, 20}, check_boxes),
+               margin({20, 20, 20, 20}, radio_buttons)
             )
          ),
          htile(
-            hmin_size(250, margin({ 20, 20, 20, 20 }, icon_buttons)),
-            hmin_size(250, margin({ 20, 20, 20, 20 }, sprite_buttons))
+            hmin_size(250, margin({20, 20, 20, 20}, icon_buttons)),
+            hmin_size(250, margin({20, 20, 20, 20}, sprite_buttons))
          )
       );
 }

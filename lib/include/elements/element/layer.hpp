@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), layer_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), deck_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 }}

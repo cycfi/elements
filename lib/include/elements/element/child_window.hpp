@@ -30,7 +30,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, child_window_element>
    child_window(rect bounds, Subject&& subject)
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, movable_base>
    movable(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ namespace cycfi { namespace elements
    inline closable_element<remove_cvref_t<Subject>>
    closable(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    void close_floating_element(context& ctx, floating_element* cw);

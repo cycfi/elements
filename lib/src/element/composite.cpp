@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
          if (intersects(bounds, ctx.view_bounds()))
          {
             auto& e = at(ix);
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             e.draw(ectx);
          }
       }
@@ -49,7 +49,7 @@ namespace cycfi { namespace elements
          {
             rect bounds = bounds_of(ctx, ix);
             auto& e = at(ix);
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             e.refresh(ectx, element, outward);
          }
       }
@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
                if (info.element_ptr->wants_focus() && _focus != info.index)
                   new_focus(ctx, info.index, restore_previous);
 
-               context ectx{ ctx, info.element_ptr, info.bounds };
+               context ectx{ctx, info.element_ptr, info.bounds};
                if (info.element_ptr->click(ectx, btn))
                {
                   if (btn.down)
@@ -80,7 +80,7 @@ namespace cycfi { namespace elements
          {
             rect  bounds = bounds_of(ctx, _click_tracking);
             auto& e = at(_click_tracking);
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             if (e.click(ectx, btn))
                return true;
          }
@@ -95,7 +95,7 @@ namespace cycfi { namespace elements
       {
          rect  bounds = bounds_of(ctx, _click_tracking);
          auto& e = at(_click_tracking);
-         context ectx{ ctx, &e, bounds };
+         context ectx{ctx, &e, bounds};
          e.drag(ectx, btn);
       }
    }
@@ -129,7 +129,7 @@ namespace cycfi { namespace elements
          if (intersects(bounds, ctx.view_bounds()))
          {
             auto& e = at(ix);
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             return e.key(ectx, k);
          }
          return false;
@@ -204,7 +204,7 @@ namespace cycfi { namespace elements
       {
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = at(_focus);
-         context ectx{ ctx, &focus_, bounds };
+         context ectx{ctx, &focus_, bounds};
          return focus_.text(ectx, info);
       };
 
@@ -225,7 +225,7 @@ namespace cycfi { namespace elements
             if (ix < int(size()))
             {
                auto& e = at(ix);
-               context ectx{ ctx, &e, bounds_of(ctx, ix) };
+               context ectx{ctx, &e, bounds_of(ctx, ix)};
                e.cursor(ectx, p, cursor_tracking::leaving);
             }
          }
@@ -240,7 +240,7 @@ namespace cycfi { namespace elements
          {
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
-            context ectx{ ctx, &e, b };
+            context ectx{ctx, &e, b};
             if (!b.includes(p) || !e.hit_test(ectx, p, false))
             {
                e.cursor(ectx, p, cursor_tracking::leaving);
@@ -264,7 +264,7 @@ namespace cycfi { namespace elements
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = at(_cursor_tracking);
-         context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
+         context ectx{ctx, &e, bounds_of(ctx, _cursor_tracking)};
          return e.cursor(ectx, p, status);
       }
 
@@ -278,7 +278,7 @@ namespace cycfi { namespace elements
          hit_info info = hit_element(ctx, p, true);
          if (auto ptr = info.element_ptr; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
          {
-            context ectx{ ctx, ptr, info.bounds };
+            context ectx{ctx, ptr, info.bounds};
             return ptr->scroll(ectx, dir, p);
          }
       }
@@ -358,10 +358,10 @@ namespace cycfi { namespace elements
                rect bounds = bounds_of(ctx, ix);
                if (bounds.includes(p))
                {
-                  context ectx{ ctx, &e, bounds };
+                  context ectx{ctx, &e, bounds};
                   if (auto leaf = e.hit_test(ectx, p, true))
                   {
-                     info = hit_info{ &e, leaf, bounds, int(ix) };
+                     info = hit_info{&e, leaf, bounds, int(ix)};
                      return true;
                   }
                }
@@ -369,7 +369,7 @@ namespace cycfi { namespace elements
             return false;
          };
 
-      hit_info info = hit_info{ {}, {}, rect{}, -1 };
+      hit_info info = hit_info{{}, {}, rect{}, -1};
       if (reverse_index())
       {
          for (int ix = int(size())-1; ix >= 0; --ix)

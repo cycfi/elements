@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits vtile_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
+      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
@@ -149,8 +149,8 @@ namespace cycfi { namespace elements
          curr += info[i].alloc;
 
          auto& elem = at(i);
-         rect ebounds = { left, prev+top, right, curr+top };
-         elem.layout(context{ ctx, &elem, ebounds });
+         rect ebounds = {left, prev+top, right, curr+top};
+         elem.layout(context{ctx, &elem, ebounds});
       }
    }
 
@@ -168,7 +168,7 @@ namespace cycfi { namespace elements
       auto const left = ctx.bounds.left;
       auto const right = ctx.bounds.right;
       auto const top = ctx.bounds.top;
-      return rect{ left, (index? _tiles[index-1] : 0)+top, right, _tiles[index]+top };
+      return rect{left, (index? _tiles[index-1] : 0)+top, right, _tiles[index]+top};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -176,7 +176,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits htile_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
+      view_limits limits{{0.0, 0.0}, {0.0, full_extent}};
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
@@ -228,8 +228,8 @@ namespace cycfi { namespace elements
          curr += info[i].alloc;
 
          auto& elem = at(i);
-         rect ebounds = { prev+left, top, curr+left, bottom };
-         elem.layout(context{ ctx, &elem, ebounds });
+         rect ebounds = {prev+left, top, curr+left, bottom};
+         elem.layout(context{ctx, &elem, ebounds});
       }
    }
 
@@ -247,6 +247,6 @@ namespace cycfi { namespace elements
       auto const top = ctx.bounds.top;
       auto const bottom = ctx.bounds.bottom;
       auto const left = ctx.bounds.left;
-      return rect{ (index? _tiles[index-1] : 0)+left, top, _tiles[index]+left, bottom };
+      return rect{(index? _tiles[index-1] : 0)+left, top, _tiles[index]+left, bottom};
    }
 }}

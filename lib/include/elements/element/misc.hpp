@@ -53,7 +53,7 @@ namespace cycfi { namespace elements
 
    inline auto box(color color_)
    {
-      return box_element{ color_ };
+      return box_element{color_};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
 
    inline auto rbox(color color_, float radius = 4)
    {
-      return rbox_element{ color_, radius };
+      return rbox_element{color_, radius};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -112,14 +112,14 @@ namespace cycfi { namespace elements
    [[deprecated("Use draw(F&& _draw) instead.")]]
    inline draw_element<F> basic(F&& _draw)
    {
-      return { std::forward<remove_cvref_t<F>>(_draw) };
+      return {std::forward<remove_cvref_t<F>>(_draw)};
    }
 
    template <typename F>
    inline draw_element<F> draw(F&& _draw)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(_draw) };
+      return {std::forward<ftype>(_draw)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ namespace cycfi { namespace elements
    inline draw_value_element<T, remove_cvref_t<F>> draw_value(F&& f)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(f) };
+      return {std::forward<ftype>(f)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -274,7 +274,7 @@ namespace cycfi { namespace elements
    inline key_intercept_element<remove_cvref_t<Subject>>
    key_intercept(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -310,7 +310,7 @@ namespace cycfi { namespace elements
    inline click_intercept_element<remove_cvref_t<Subject>>
    click_intercept(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -353,7 +353,7 @@ namespace cycfi { namespace elements
    inline hidable_element<remove_cvref_t<Subject>>
    hidable(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 }}
 

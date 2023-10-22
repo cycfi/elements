@@ -179,7 +179,7 @@ namespace cycfi { namespace elements
          nullptr
       );
 
-      auto* info = new window_info{ this };
+      auto* info = new window_info{this};
       SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (!(style_ & closable))
@@ -254,7 +254,7 @@ namespace cycfi { namespace elements
       auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
-      return { float(frame.left / scale), float(frame.top / scale) };
+      return {float(frame.left / scale), float(frame.top / scale)};
    }
 
    void window::position(point const& p)

@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
          align_center_middle(
             layer(
                std::forward<Content>(content),
-               panel{ /* opacity */0.98 }
+               panel{/* opacity */0.98}
          )));
 
       return popup;
@@ -45,10 +45,10 @@ namespace cycfi { namespace elements
          return share(
             key_intercept(align_center_middle(
                layer(
-                  margin({ 32, 32, 32, 32 },
+                  margin({32, 32, 32, 32},
                      std::forward<Content>(content)
                   ),
-                  panel{ /* opacity */0.98 }
+                  panel{/* opacity */0.98}
             ))));
       }
 

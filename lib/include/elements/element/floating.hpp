@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, floating_element>
    floating(rect bounds, Subject&& subject)
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 }}
 

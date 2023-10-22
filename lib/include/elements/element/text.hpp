@@ -103,7 +103,7 @@ namespace cycfi::elements
       class font              _font;
       artist::text_layout     _layout;
       color                   _color;
-      point                   _current_size = { -1, -1 };
+      point                   _current_size = {-1, -1};
    };
 
    ////////////////////////////////////////////////////////////////////////////

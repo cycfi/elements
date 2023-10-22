@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
       point             start;
       point             current = start;
       point             previous = start;
-      point             offset = point{ 0, 0 };
+      point             offset = point{0, 0};
       int               modifiers = 0;
    };
 
@@ -79,12 +79,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline point tracker_info::distance() const
    {
-      return { current.x-start.x, current.y-start.y };
+      return {current.x-start.x, current.y-start.y};
    }
 
    inline point tracker_info::movement() const
    {
-      return { current.x-previous.x, current.y-previous.y };
+      return {current.x-previous.x, current.y-previous.y};
    }
 
    template <typename Base, typename TrackerInfo>

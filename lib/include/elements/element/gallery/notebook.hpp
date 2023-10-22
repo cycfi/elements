@@ -74,8 +74,8 @@ namespace cycfi { namespace elements
       auto const num_pages = pages->size();
       auto const num_tabs = sizeof...(RestTabs) + 1;
       if (num_pages != num_tabs)
-         throw std::runtime_error{ "Error: The number of pages (" + std::to_string(num_pages) + ") "
-            "and tabs (" + std::to_string(num_tabs) + ") do not match." };
+         throw std::runtime_error{"Error: The number of pages (" + std::to_string(num_pages) + ") "
+            "and tabs (" + std::to_string(num_tabs) + ") do not match."};
 
       // Select the first tab
       tab->select(true);

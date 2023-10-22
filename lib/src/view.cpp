@@ -46,12 +46,12 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      image img{ 1, 1 };
-      offscreen_image offscr{ img };
-      canvas cnv{ offscr.context() };
+      image img{1, 1};
+      offscreen_image offscr{img};
+      canvas cnv{offscr.context()};
 
       // Update the limits and constrain the window size to the limits
-      basic_context bctx{ *this, cnv };
+      basic_context bctx{*this, cnv};
       auto limits_ = _main_element.limits(bctx);
       if (limits_.min != _current_limits.min || limits_.max != _current_limits.max)
       {
@@ -72,8 +72,8 @@ namespace cycfi { namespace elements
       set_limits();
 
       auto size_ = size();
-      rect subj_bounds = { 0, 0, size_.x, size_.y };
-      context ctx{ *this, cnv, &_main_element, subj_bounds };
+      rect subj_bounds = {0, 0, size_.x, size_.y};
+      context ctx{*this, cnv, &_main_element, subj_bounds};
 
       // layout the subject only if the window bounds changes
       if (subj_bounds != _current_bounds)
@@ -91,10 +91,10 @@ namespace cycfi { namespace elements
       template <typename F, typename This>
       void call(F f, This& self, rect _current_bounds)
       {
-         image img{ 1, 1 };
-         offscreen_image offscr{ img };
-         canvas cnv{ offscr.context() };
-         context ctx { self, cnv, &self.main_element(), _current_bounds };
+         image img{1, 1};
+         offscreen_image offscr{img};
+         canvas cnv{offscr.context()};
+         context ctx {self, cnv, &self.main_element(), _current_bounds};
          cnv.pre_scale(self.hdpi_scale());
 
          f(ctx, self.main_element());
@@ -191,7 +191,7 @@ namespace cycfi { namespace elements
       {
          auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
          auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
-         refresh({ tl.x, tl.y, br.x, br.y });
+         refresh({tl.x, tl.y, br.x, br.y});
       }
    }
 

@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
       [](std::size_t index)
       {
          auto text = "This is item number " + std::to_string(index+1);
-         return share(margin({ 20, 2, 20, 2 }, align_left(label(text))));
+         return share(margin({20, 2, 20, 2}, align_left(label(text))));
       };
 
    auto my_composer =
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
          draw_cell               // Composer function
       );
 
-   auto content = share(dynamic_list{ my_composer });
+   auto content = share(dynamic_list{my_composer});
 
    view_.content(
       vscroller(hold(content)),

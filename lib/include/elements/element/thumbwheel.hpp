@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
 
       using thumbwheel_function = std::function<void(point)>;
 
-                           thumbwheel_base(point init = { 0.0f, 0.0f });
+                           thumbwheel_base(point init = {0.0f, 0.0f});
 
       void                 prepare_subject(context& ctx) override;
       element*             hit_test(context const& ctx, point p, bool leaf = false) override;
@@ -49,9 +49,9 @@ namespace cycfi { namespace elements
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, thumbwheel_base>
-   thumbwheel(Subject&& subject, point init = { 0.0f, 0.0f })
+   thumbwheel(Subject&& subject, point init = {0.0f, 0.0f})
    {
-      return { std::forward<Subject>(subject), init };
+      return {std::forward<Subject>(subject), init};
    }
 
    inline point thumbwheel_base::value() const

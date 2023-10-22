@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
             return make_limits(float(_main_axis_full_size),  secondary_limits);
          }
       }
-      return {{ 0, 0 }, { 0, 0 }};
+      return {{0, 0}, {0, 0}};
    }
 
    void dynamic_list::draw(context const& ctx)
@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
       for (; it != _cells.end(); ++it)
       {
          auto& cell = *it;
-         context rctx { ctx, cell.elem_ptr.get(), ctx.bounds };
+         context rctx {ctx, cell.elem_ptr.get(), ctx.bounds};
          make_bounds(rctx, main_axis_start, cell);
          if (intersects(clip_extent, rctx.bounds))
          {
@@ -136,7 +136,7 @@ namespace cycfi { namespace elements
             for (std::size_t i = 0; i != size; ++i)
             {
                auto main_axis_size = _composer->main_axis_size(i, ctx);
-               _cells.push_back({ y, main_axis_size, nullptr });
+               _cells.push_back({y, main_axis_size, nullptr});
                y += main_axis_size;
             }
             _main_axis_full_size = y;
@@ -158,7 +158,7 @@ namespace cycfi { namespace elements
                if (info.element_ptr->wants_focus() && _focus != info.index)
                   new_focus(ctx, info.index, restore_previous);
 
-               context ectx{ ctx, info.element_ptr, info.bounds };
+               context ectx{ctx, info.element_ptr, info.bounds};
                if (info.leaf_element_ptr->click(ectx, btn))
                {
                   if (btn.down)
@@ -171,7 +171,7 @@ namespace cycfi { namespace elements
          {
             rect  bounds = bounds_of(ctx, _click_tracking);
             auto& e = *_composer->compose(_click_tracking);
-            context ectx{ ctx, &e, bounds };
+            context ectx{ctx, &e, bounds};
             if (e.click(ectx, btn))
             {
                return true;
@@ -188,7 +188,7 @@ namespace cycfi { namespace elements
       {
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = *_cells[_focus].elem_ptr;
-         context ectx{ ctx, &focus_, bounds };
+         context ectx{ctx, &focus_, bounds};
          return focus_.text(ectx, info);
       };
       return false;
@@ -218,7 +218,7 @@ namespace cycfi { namespace elements
       {
          rect bounds = bounds_of(ctx, ix);
          auto& e = *_composer->compose(ix).get();
-         context ectx{ ctx, &e, bounds };
+         context ectx{ctx, &e, bounds};
          bool b = e.key(ectx, k);
          return b;
       };
@@ -309,7 +309,7 @@ namespace cycfi { namespace elements
             if (ix < int(_cells.size()))
             {
                auto& e = *_composer->compose(ix).get();
-               context ectx{ ctx, &e, bounds_of(ctx, ix) };
+               context ectx{ctx, &e, bounds_of(ctx, ix)};
                e.cursor(ectx, p, cursor_tracking::leaving);
             }
          }
@@ -324,7 +324,7 @@ namespace cycfi { namespace elements
          {
             auto& e = *_composer->compose(*i).get();
             rect  b = bounds_of(ctx, *i);
-            context ectx{ ctx, &e, b };
+            context ectx{ctx, &e, b};
             if (!b.includes(p) || !e.hit_test(ectx, p, false))
             {
                e.cursor(ectx, p, cursor_tracking::leaving);
@@ -348,7 +348,7 @@ namespace cycfi { namespace elements
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = *_composer->compose(_cursor_tracking).get();
-         context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
+         context ectx{ctx, &e, bounds_of(ctx, _cursor_tracking)};
          return e.cursor(ectx, p, status);
       }
 
@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
       {
          rect  bounds = bounds_of(ctx, _click_tracking);
          auto& e = *_composer->compose(_click_tracking).get();
-         context ectx{ ctx, &e, bounds };
+         context ectx{ctx, &e, bounds};
          e.drag(ectx, btn);
       }
    }
@@ -374,7 +374,7 @@ namespace cycfi { namespace elements
          hit_info info = hit_element(ctx, p, true);
          if (auto ptr = info.element_ptr; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
          {
-            context ectx{ ctx, ptr, info.bounds };
+            context ectx{ctx, ptr, info.bounds};
             return ptr->scroll(ectx, dir, p);
          }
       }
@@ -481,10 +481,10 @@ namespace cycfi { namespace elements
                rect bounds = bounds_of(ctx, ix);
                if (bounds.includes(p))
                {
-                  context ectx{ ctx, &e, bounds };
+                  context ectx{ctx, &e, bounds};
                   if (auto leaf = e.hit_test(ectx, p, true))
                   {
-                     info = hit_info{ &e, leaf, bounds, int(ix) };
+                     info = hit_info{&e, leaf, bounds, int(ix)};
                      return true;
                   }
                }
@@ -492,7 +492,7 @@ namespace cycfi { namespace elements
             return false;
          };
 
-      hit_info info = hit_info{ {}, {}, rect{}, -1 };
+      hit_info info = hit_info{{}, {}, rect{}, -1};
       if (reverse_index())
       {
          for (int ix = int(_cells.size())-1; ix >= 0; --ix)
@@ -520,8 +520,8 @@ namespace cycfi { namespace elements
    view_limits dynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
       return {
-         { secondary_axis_limits.min, float(main_axis_size) }
-       , { secondary_axis_limits.max, float(main_axis_size) } };
+         {secondary_axis_limits.min, float(main_axis_size)}
+       , {secondary_axis_limits.max, float(main_axis_size)}};
    }
 
    void dynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)
@@ -551,8 +551,8 @@ namespace cycfi { namespace elements
    view_limits hdynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
       return {
-         { main_axis_size, secondary_axis_limits.min }
-       , { main_axis_size, secondary_axis_limits.max } };
+         {main_axis_size, secondary_axis_limits.min}
+       , {main_axis_size, secondary_axis_limits.max}};
    }
 
    void hdynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)

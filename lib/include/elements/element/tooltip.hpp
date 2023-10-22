@@ -50,9 +50,9 @@ namespace cycfi { namespace elements
 
    template <typename Subject, typename Tip>
    inline proxy<remove_cvref_t<Subject>, tooltip_element>
-   tooltip(Subject&& subject, Tip&& tip, duration delay = milliseconds{ 500 })
+   tooltip(Subject&& subject, Tip&& tip, duration delay = milliseconds{500})
    {
-      return { std::forward<Subject>(subject), std::forward<Tip>(tip), delay };
+      return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay};
    }
 }}
 

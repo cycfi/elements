@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
    inline size_element<remove_cvref_t<Subject>>
    fixed_size(point size, Subject&& subject)
    {
-      return { size, std::forward<Subject>(subject) };
+      return {size, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -57,7 +57,7 @@ namespace cycfi { namespace elements
       float size_y = _size.y;
       clamp(size_x, e_limits.min.x, e_limits.max.x);
       clamp(size_y, e_limits.min.y, e_limits.max.y);
-      return { { size_x, size_y }, { size_x, size_y } };
+      return {{size_x, size_y}, {size_x, size_y}};
    }
 
    template <typename Subject>
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
    inline hsize_element<remove_cvref_t<Subject>>
    hsize(float width, Subject&& subject)
    {
-      return { width, std::forward<Subject>(subject) };
+      return {width, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -107,7 +107,7 @@ namespace cycfi { namespace elements
       auto  e_limits = this->subject().limits(ctx);
       float width = _width;
       clamp(width, e_limits.min.x, e_limits.max.x);
-      return { { width, e_limits.min.y }, { width, e_limits.max.y } };
+      return {{width, e_limits.min.y}, {width, e_limits.max.y}};
    }
 
    template <typename Subject>
@@ -147,7 +147,7 @@ namespace cycfi { namespace elements
    inline vsize_element<remove_cvref_t<Subject>>
    vsize(float height, Subject&& subject)
    {
-      return { height, std::forward<Subject>(subject) };
+      return {height, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -156,7 +156,7 @@ namespace cycfi { namespace elements
       auto  e_limits = this->subject().limits(ctx);
       float height = _height;
       clamp(height, e_limits.min.y, e_limits.max.y);
-      return { { e_limits.min.x, height }, { e_limits.max.x, height } };
+      return {{e_limits.min.x, height}, {e_limits.max.x, height}};
    }
 
    template <typename Subject>
@@ -198,7 +198,7 @@ namespace cycfi { namespace elements
    inline min_size_element<remove_cvref_t<Subject>>
    min_size(point size, Subject&& subject)
    {
-      return { size, std::forward<Subject>(subject) };
+      return {size, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -209,7 +209,7 @@ namespace cycfi { namespace elements
       float size_y = _size.y;
       clamp(size_x, e_limits.min.x, e_limits.max.x);
       clamp(size_y, e_limits.min.y, e_limits.max.y);
-      return { { size_x, size_y }, { e_limits.max.x, e_limits.max.y } };
+      return {{size_x, size_y}, {e_limits.max.x, e_limits.max.y}};
    }
 
    template <typename Subject>
@@ -252,7 +252,7 @@ namespace cycfi { namespace elements
    inline hmin_size_element<remove_cvref_t<Subject>>
    hmin_size(float width, Subject&& subject)
    {
-      return { width, std::forward<Subject>(subject) };
+      return {width, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -261,7 +261,7 @@ namespace cycfi { namespace elements
       auto  e_limits = this->subject().limits(ctx);
       float width = _width;
       clamp(width, e_limits.min.x, e_limits.max.x);
-      return { { width, e_limits.min.y }, e_limits.max };
+      return {{width, e_limits.min.y}, e_limits.max};
    }
 
    template <typename Subject>
@@ -302,7 +302,7 @@ namespace cycfi { namespace elements
    inline vmin_size_element<remove_cvref_t<Subject>>
    vmin_size(float height, Subject&& subject)
    {
-      return { height, std::forward<Subject>(subject) };
+      return {height, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -311,7 +311,7 @@ namespace cycfi { namespace elements
       auto  e_limits = this->subject().limits(ctx);
       float height = _height;
       clamp(height, e_limits.min.y, e_limits.max.y);
-      return { { e_limits.min.x, height }, e_limits.max };
+      return {{e_limits.min.x, height}, e_limits.max};
    }
 
    template <typename Subject>
@@ -354,7 +354,7 @@ namespace cycfi { namespace elements
    inline max_size_element<remove_cvref_t<Subject>>
    max_size(point size, Subject&& subject)
    {
-      return { size, std::forward<Subject>(subject) };
+      return {size, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -365,7 +365,7 @@ namespace cycfi { namespace elements
       float size_y = _size.y;
       clamp(size_x, e_limits.min.x, e_limits.max.x);
       clamp(size_y, e_limits.min.y, e_limits.max.y);
-      return { { e_limits.min.x, e_limits.min.y }, { size_x, size_y } };
+      return {{e_limits.min.x, e_limits.min.y}, {size_x, size_y}};
    }
 
    template <typename Subject>
@@ -408,7 +408,7 @@ namespace cycfi { namespace elements
    inline hmax_size_element<remove_cvref_t<Subject>>
    hmax_size(float size, Subject&& subject)
    {
-      return { size, std::forward<Subject>(subject) };
+      return {size, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -417,7 +417,7 @@ namespace cycfi { namespace elements
       auto  e_limits = this->subject().limits(ctx);
       float size_x = _size;
       clamp(size_x, e_limits.min.x, e_limits.max.x);
-      return { { e_limits.min.x, e_limits.min.y }, { size_x, e_limits.max.y } };
+      return {{e_limits.min.x, e_limits.min.y}, {size_x, e_limits.max.y}};
    }
 
    template <typename Subject>
@@ -458,14 +458,14 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline view_stretch hstretch_element<Subject>::stretch() const
    {
-      return { _stretch, this->subject().stretch().y };
+      return {_stretch, this->subject().stretch().y};
    }
 
    template <typename Subject>
    inline hstretch_element<remove_cvref_t<Subject>>
    hstretch(float stretch, Subject&& subject)
    {
-      return { stretch, std::forward<Subject>(subject) };
+      return {stretch, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -504,14 +504,14 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline view_stretch vstretch_element<Subject>::stretch() const
    {
-      return { this->subject().stretch().x, _stretch };
+      return {this->subject().stretch().x, _stretch};
    }
 
    template <typename Subject>
    inline vstretch_element<remove_cvref_t<Subject>>
    vstretch(float stretch, Subject&& subject)
    {
-      return { stretch, std::forward<Subject>(subject) };
+      return {stretch, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -551,7 +551,7 @@ namespace cycfi { namespace elements
    inline span_element<remove_cvref_t<Subject>>
    span(unsigned span, Subject&& subject)
    {
-      return { span, std::forward<Subject>(subject) };
+      return {span, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -583,7 +583,7 @@ namespace cycfi { namespace elements
    inline limit_element<remove_cvref_t<Subject>>
    limit(view_limits limits_, Subject&& subject)
    {
-      return { limits_, std::forward<Subject>(subject) };
+      return {limits_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -631,7 +631,7 @@ namespace cycfi { namespace elements
    inline scale_element<remove_cvref_t<Subject>>
    scale(float scale_, Subject&& subject)
    {
-      return { scale_, std::forward<Subject>(subject) };
+      return {scale_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -653,7 +653,7 @@ namespace cycfi { namespace elements
    scale_element<Subject>::stretch() const
    {
       auto s = this->subject().stretch();
-      return { s.x * _scale, s.y * _scale };
+      return {s.x * _scale, s.y * _scale};
    }
 
    template <typename Subject>
@@ -661,7 +661,7 @@ namespace cycfi { namespace elements
    {
       auto& canvas_ = ctx.canvas;
       canvas_.save();
-      canvas_.scale({ _scale, _scale });
+      canvas_.scale({_scale, _scale});
       ctx.bounds = device_to_user(ctx.bounds, ctx.canvas);
    }
 
@@ -712,7 +712,7 @@ namespace cycfi { namespace elements
    inline hcollapsible_element<remove_cvref_t<Subject>>
    hcollapsible(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -747,7 +747,7 @@ namespace cycfi { namespace elements
    inline vcollapsible_element<remove_cvref_t<Subject>>
    vcollapsible(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 }}
 

@@ -56,9 +56,9 @@ auto make_popup_menu(char const* title, menu_position pos)
    quantum_feedback_loop.on_click   = [](){ enable = true; };
    psionic_wave_oscillator.on_click = [](){ enable = false; };
 
-   auto sk1 = shortcut_key{ key_code::g, mod_action };
-   auto sk2 = shortcut_key{ key_code::c, mod_action+mod_shift };
-   auto sk3 = shortcut_key{ key_code::b, mod_action+mod_alt };
+   auto sk1 = shortcut_key{key_code::g, mod_action};
+   auto sk2 = shortcut_key{key_code::c, mod_action+mod_shift};
+   auto sk3 = shortcut_key{key_code::b, mod_action+mod_alt};
 
    auto menu =
       layer(
@@ -142,12 +142,12 @@ auto make_dynamic_menu(char const* title, menu_position pos)
 auto make_menus(view& view_)
 {
    return
-      margin({ 20, 0, 20, 20 },
+      margin({20, 0, 20, 20},
          vtile(
             hmin_size(300, make_selection_menu()),
             top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
             top_margin(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
-            top_margin(20, scroller(image{ "deep_space.jpg" })),
+            top_margin(20, scroller(image{"deep_space.jpg"})),
             top_margin(20, make_popup_menu("Dropup Menu", menu_position::top_right))
          )
       );
@@ -155,7 +155,7 @@ auto make_menus(view& view_)
 
 auto make_controls(view& view_)
 {
-   return margin({ 20, 20, 20, 20 }, make_menus(view_));
+   return margin({20, 20, 20, 20}, make_menus(view_));
 }
 
 int main(int argc, char* argv[])

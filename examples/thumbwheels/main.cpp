@@ -16,7 +16,7 @@ auto background = box(bkd_color);
 template <typename E>
 auto decorate(E&& e)
 {
-   return hsize(170, align_center(margin({ 25, 5, 25, 5 },
+   return hsize(170, align_center(margin({25, 5, 25, 5},
       std::forward<E>(e)
    )));
 }
@@ -85,8 +85,8 @@ auto make_xy_thumbwheel()
          cnv.fill();
       };
 
-   auto tw = share(thumbwheel(fixed_size({ 170, 36 }, draw_value<point>(draw))));
-   tw->value({ 0.25f, 0.25f });
+   auto tw = share(thumbwheel(fixed_size({170, 36}, draw_value<point>(draw))));
+   tw->value({0.25f, 0.25f});
 
    return top_margin(20, hold(tw));
 }
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 
    view_.content(
 
-      margin({ 20, 0, 20, 20 },
+      margin({20, 0, 20, 20},
          vtile(
             align_center_middle(make_thumbwheel1()),
             align_center_middle(make_thumbwheel2(" Hz", 20, 100, 2)),

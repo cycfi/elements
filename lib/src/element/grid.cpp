@@ -13,7 +13,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits vgrid_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{ { 0.0, 0.0 }, { full_extent, 0.0 } };
+      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
@@ -50,8 +50,8 @@ namespace cycfi { namespace elements
          gi += elem.span()-1;
          auto y = grid_coord(gi++) * total_height;
          auto height = y - prev;
-         rect ebounds = { left, prev+top, right, prev+top+height };
-         elem.layout(context{ ctx, &elem, ebounds });
+         rect ebounds = {left, prev+top, right, prev+top+height};
+         elem.layout(context{ctx, &elem, ebounds});
          _positions[i] = prev+top;
          prev = y;
       }
@@ -64,7 +64,7 @@ namespace cycfi { namespace elements
          return {};
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
-      return { left, _positions[index], right, _positions[index+1] };
+      return {left, _positions[index], right, _positions[index+1]};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits hgrid_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{ { 0.0, 0.0 }, { 0.0, full_extent } };
+      view_limits limits{{0.0, 0.0}, {0.0, full_extent}};
       for (std::size_t i = 0; i != size();  ++i)
       {
          auto el = at(i).limits(ctx);
@@ -109,8 +109,8 @@ namespace cycfi { namespace elements
          gi += elem.span()-1;
          auto x = grid_coord(gi++) * total_width;
          auto width = x - prev;
-         rect ebounds = { prev+left, top, prev+left+width, bottom };
-         elem.layout(context{ ctx, &elem, ebounds });
+         rect ebounds = {prev+left, top, prev+left+width, bottom};
+         elem.layout(context{ctx, &elem, ebounds});
          _positions[i] = prev+left;
          prev = x;
       }
@@ -123,6 +123,6 @@ namespace cycfi { namespace elements
          return {};
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
-      return { _positions[index], top, _positions[index+1], bottom };
+      return {_positions[index], top, _positions[index+1], bottom};
    }
 }}

@@ -193,7 +193,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, Base>
    momentary_button(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -203,7 +203,7 @@ namespace cycfi { namespace elements
    inline basic_toggle_button<proxy<remove_cvref_t<Subject>, Base>>
    toggle_button(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ namespace cycfi { namespace elements
    inline basic_latching_button<proxy<remove_cvref_t<Subject>, Base>>
    latching_button(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -522,55 +522,55 @@ namespace cycfi { namespace elements
    inline typename button_styler_gen<Base>::gen_size
    button_styler_gen<Base>::size(float size) const
    {
-      return { *this, size };
+      return {*this, size};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_body_color
    button_styler_gen<Base>::body_color(color color_) const
    {
-      return { *this, color_ };
+      return {*this, color_};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_icon
    button_styler_gen<Base>::icon(std::uint32_t code) const
    {
-      return { *this, code }; }
+      return {*this, code}; }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_icon_placement
    button_styler_gen<Base>::icon_left() const
    {
-      return { *this, icon_placement_t::icon_left };
+      return {*this, icon_placement_t::icon_left};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_icon_placement
    button_styler_gen<Base>::icon_right() const
    {
-      return { *this, icon_placement_t::icon_right };
+      return {*this, icon_placement_t::icon_right};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_label_alignment
    button_styler_gen<Base>::align_left() const
    {
-      return { *this, label_alignment_t::align_left };
+      return {*this, label_alignment_t::align_left};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_label_alignment
    button_styler_gen<Base>::align_center() const
    {
-      return { *this, label_alignment_t::align_center };
+      return {*this, label_alignment_t::align_center};
    }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_label_alignment
    button_styler_gen<Base>::align_right() const
    {
-      return { *this, label_alignment_t::align_right };
+      return {*this, label_alignment_t::align_right};
    }
 }}
 

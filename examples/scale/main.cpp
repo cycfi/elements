@@ -26,7 +26,7 @@ auto make_column()
 
    auto  group0 =
          group("Text Boxes",
-            margin({ 10, 10, 20, 20 },
+            margin({10, 10, 20, 20},
                top_margin(35,
                   vtile(
                      left_caption(input_box("Show me the money").first, "Gimme Some"),
@@ -38,7 +38,7 @@ auto make_column()
 
    auto  group1 =
          group("Check boxes",
-            margin({ 10, 10, 20, 20 },
+            margin({10, 10, 20, 20},
                top_margin(25,
                   vtile(
                      top_margin(10, align_left(check_box1)),
@@ -52,14 +52,14 @@ auto make_column()
    auto indicator_color = get_theme().indicator_color;
 
    float const button_scale = 1.0/4;
-   sprite power_button = sprite{ "power_180x632.png", 158*button_scale, button_scale };
-   sprite phase_button = sprite{ "phase_180x632.png", 158*button_scale, button_scale };
-   sprite mail_button = sprite{ "mail_180x632.png", 158*button_scale, button_scale };
-   sprite transpo_button = sprite{ "transpo_180x632.png", 158*button_scale, button_scale };
+   sprite power_button = sprite{"power_180x632.png", 158*button_scale, button_scale};
+   sprite phase_button = sprite{"phase_180x632.png", 158*button_scale, button_scale};
+   sprite mail_button = sprite{"mail_180x632.png", 158*button_scale, button_scale};
+   sprite transpo_button = sprite{"transpo_180x632.png", 158*button_scale, button_scale};
 
    auto  group2 =
          group("Buttons",
-            margin({ 10, 10, 20, 10 },
+            margin({10, 10, 20, 10},
                top_margin(35,
                   vtile(
                      htile(
@@ -80,21 +80,21 @@ auto make_column()
          );
 
    return vtile(
-      margin({ 20, 20, 20, 20 }, group0),
-      margin({ 20, 20, 20, 20 }, group1),
-      margin({ 20, 20, 20, 20 }, group2)
+      margin({20, 20, 20, 20}, group0),
+      margin({20, 20, 20, 20}, group1),
+      margin({20, 20, 20, 20}, group2)
    );
 }
 
 auto make_controls(view& view_)
 {
    return
-      margin({ 20, 10, 20, 10 },
+      margin({20, 10, 20, 10},
          htile(
-            align_top(margin({ 20, 20, 20, 20 },
+            align_top(margin({20, 20, 20, 20},
                pane("Scale = 1.0", make_column())
             )),
-            align_top(margin({ 20, 20, 20, 20 },
+            align_top(margin({20, 20, 20, 20},
                scale(0.8, pane("Scale = 0.8", make_column()))
             ))
          )

@@ -20,7 +20,7 @@ public:
     {
         point size = measure_text(ctx.canvas, "9" ,get_font());
         size.x *= Size;
-        return { { size.x, size.y }, { size.x, size.y } };
+        return {{size.x, size.y}, {size.x, size.y}};
     }
 };
 

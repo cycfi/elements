@@ -46,8 +46,8 @@ namespace cycfi { namespace elements
       canvas_.line_width(theme_.major_grid_width);
       while (pos <= bounds.bottom+1)
       {
-         canvas_.move_to({ bounds.left, pos });
-         canvas_.line_to({ bounds.right, pos });
+         canvas_.move_to({bounds.left, pos});
+         canvas_.line_to({bounds.right, pos});
          canvas_.stroke();
          pos += incr;
       }
@@ -59,8 +59,8 @@ namespace cycfi { namespace elements
       canvas_.line_width(theme_.minor_grid_width);
       while (pos <= bounds.bottom+1)
       {
-         canvas_.move_to({ bounds.left, pos });
-         canvas_.line_to({ bounds.right, pos });
+         canvas_.move_to({bounds.left, pos});
+         canvas_.line_to({bounds.right, pos});
          canvas_.stroke();
          pos += incr;
       }
@@ -79,8 +79,8 @@ namespace cycfi { namespace elements
       canvas_.line_width(theme_.major_grid_width);
       while (pos <= bounds.right + 1)
       {
-         canvas_.move_to({ pos, bounds.top });
-         canvas_.line_to({ pos, bounds.bottom });
+         canvas_.move_to({pos, bounds.top});
+         canvas_.line_to({pos, bounds.bottom});
          canvas_.stroke();
          pos += incr;
       }
@@ -92,8 +92,8 @@ namespace cycfi { namespace elements
       canvas_.line_width(theme_.minor_grid_width);
       while (pos <= bounds.right + 1)
       {
-         canvas_.move_to({ pos, bounds.top });
-         canvas_.line_to({ pos, bounds.bottom });
+         canvas_.move_to({pos, bounds.top});
+         canvas_.line_to({pos, bounds.bottom});
          canvas_.stroke();
          pos += incr;
       }
@@ -109,7 +109,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       float font_size = thm.icon_font._size * _size;
       point s = measure_icon(ctx.canvas, _code, font_size);
-      return { { s.x, s.y }, { s.x, s.y } };
+      return {{s.x, s.y}, {s.x, s.y}};
    }
 
    void icon::draw(context const& ctx)

@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
       auto win = GTK_WINDOW(_window->host);
       gint width, height;
       gtk_window_get_size(win, &width, &height);
-      return { float(width), float(height) };
+      return {float(width), float(height)};
    }
 
    void window::size(point const& p)

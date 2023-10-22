@@ -40,12 +40,12 @@ namespace cycfi { namespace elements
                            window(
                               std::string const& name
                             , int style_ = standard
-                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                            , rect const& bounds = rect{20, 20, 660, 500}
                            );
 
                            window(
                               int style_ = standard
-                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                            , rect const& bounds = rect{20, 20, 660, 500}
                            )
                             : window("", style_, bounds)
                            {}

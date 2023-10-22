@@ -91,11 +91,11 @@ namespace cycfi { namespace elements
 
    void layer_element::begin_focus(focus_request req)
    {
-      focus_top();
+      focus_top(req);
       return composite_base::begin_focus(req);
    }
 
-   void layer_element::focus_top()
+   void layer_element::focus_top(focus_request req)
    {
       for (int ix = int(size())-1; ix >= 0; --ix)
       {
@@ -105,7 +105,7 @@ namespace cycfi { namespace elements
 
          if (e.wants_focus())
          {
-            e.begin_focus();
+            e.begin_focus(req);
             composite_base::focus(ix);
             break;
          }

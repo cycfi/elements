@@ -88,7 +88,7 @@ namespace
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
          // the user fonts ourself.
-         for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)
+         for (fs::directory_iterator it{resource_path}; it != fs::directory_iterator{}; ++it)
             if (it->path().extension() == ".ttf")
                activate_font(it->path());
       }
@@ -126,7 +126,7 @@ namespace cycfi { namespace elements
 namespace
 {
    // Defines a constant for empty ranges in NSTextInputClient
-   NSRange const kEmptyRange = { NSNotFound, 0 };
+   NSRange const kEmptyRange = {NSNotFound, 0};
 
    float transformY(float y)
    {
@@ -145,7 +145,7 @@ namespace
          int(click_count),
          what,
          mods,
-         { float(pos.x), float(pos.y) }
+         {float(pos.x), float(pos.y)}
       };
    }
 
@@ -235,7 +235,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    _marked_text = [[NSMutableAttributedString alloc] init];
 
-   NSRect user = { { 0, 0 }, { 100, 100 }};
+   NSRect user = {{ 0, 0}, {100, 100}};
    NSRect backing_bounds = [self convertRectToBacking : user];
    _scale = backing_bounds.size.height / user.size.height;
 
@@ -345,7 +345,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto start = std::chrono::high_resolution_clock::now();
 #endif
    auto context = NSGraphicsContext.currentContext.CGContext;
-   auto cnv = canvas{ (cycfi::artist::canvas_impl*) context };
+   auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
    _view->draw(cnv,
       {
          float(dirty.origin.x),
@@ -357,7 +357,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
 #if defined ELEMENTS_PRINT_FPS
    auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+   auto elapsed = std::chrono::duration<double>{stop - start}.count();
    NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
 #endif
 
@@ -379,7 +379,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       auto draw =
          [&](auto& cnv_)
          {
-            auto cnv = canvas{ cnv_ };
+            auto cnv = canvas{cnv_};
             cnv.pre_scale(_scale);
 
             _view->draw(cnv,
@@ -402,7 +402,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
 #if defined ELEMENTS_PRINT_FPS
    auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+   auto elapsed = std::chrono::duration<double>{stop - start}.count();
    NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
 #endif
 #endif
@@ -500,7 +500,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [[self window] makeFirstResponder : self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::entering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::entering);
    [self displayIfNeeded];
 }
 
@@ -509,7 +509,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [[self window] setAcceptsMouseMovedEvents : NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::leaving);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -517,7 +517,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::hovering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
@@ -530,7 +530,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
-      _view->scroll({ delta_x, delta_y }, { float(pos.x), float(pos.y) });
+      _view->scroll({delta_x, delta_y}, {float(pos.x), float(pos.y)});
    [self displayIfNeeded];
 }
 
@@ -538,7 +538,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::press, mods});
    _text_inserted = false;
    [self interpretKeyEvents : [NSArray arrayWithObject : event]];
    if (!handled && !_text_inserted)
@@ -566,7 +566,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
      action = ph::key_action::release;
    }
 
-   handle_key(_keys, *_view, { key, action, mods });
+   handle_key(_keys, *_view, {key, action, mods});
 }
 
 - (void) keyUp : (NSEvent*) event
@@ -574,7 +574,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::release, mods});
    if (!handled)
       [[self nextResponder] keyUp : event];
 }
@@ -650,7 +650,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       const unichar codepoint = [characters characterAtIndex:i];
       if ((codepoint & 0xff00) == 0xf700)
          continue;
-      _text_inserted = handle_text(*_view, { codepoint, mods });
+      _text_inserted = handle_text(*_view, {codepoint, mods});
    }
 }
 
@@ -739,18 +739,18 @@ namespace cycfi { namespace elements
       auto  ns_view = get_mac_view(host());
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
       pos = [ns_view convertPoint : pos fromView : nil];
-      return { float(pos.x), float(pos.y) };
+      return {float(pos.x), float(pos.y)};
    }
 
    extent base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
-      return { float(frame.size.width), float(frame.size.height) };
+      return {float(frame.size.width), float(frame.size.height)};
    }
 
    void base_view::size(elements::extent size_)
    {
-      [get_mac_view(host()) setFrameSize : NSSize{ size_.x, size_.y }];
+      [get_mac_view(host()) setFrameSize : NSSize{size_.x, size_.y}];
    }
 
    void base_view::refresh()
@@ -820,7 +820,7 @@ namespace cycfi { namespace elements
    point scroll_direction()
    {
       float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
-      return { dir, dir };
+      return {dir, dir};
    }
 }}
 

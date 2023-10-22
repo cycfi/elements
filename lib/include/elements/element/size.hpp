@@ -104,7 +104,7 @@ namespace cycfi { namespace elements
    inline hsize_element<element>
    hspace(float width)
    {
-      return { width, {} };
+      return {width, {}};
    }
 
    template <typename Subject>
@@ -159,7 +159,7 @@ namespace cycfi { namespace elements
    inline vsize_element<element>
    vspace(float height)
    {
-      return { height, {} };
+      return {height, {}};
    }
 
    template <typename Subject>

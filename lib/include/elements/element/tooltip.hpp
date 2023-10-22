@@ -37,7 +37,7 @@ namespace cycfi { namespace elements
    private:
 
       using popup_ptr = std::shared_ptr<basic_popup_element>;
-      enum status { tip_hidden, tip_delayed, tip_visible };
+      enum status {tip_hidden, tip_delayed, tip_visible};
 
       rect                    tip_bounds(context const& ctx) const;
       void                    close_tip(view& view_);

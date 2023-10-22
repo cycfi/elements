@@ -29,17 +29,18 @@ namespace cycfi { namespace elements
    {
       auto const& theme = get_theme();
       auto margin = theme.button_margin;
-      auto space = theme.button_text_icon_space;
+      auto rel_size = get_size();
+      auto space = theme.button_text_icon_space * rel_size;
       auto font = theme.label_font;
       auto& cnv = ctx.canvas;
 
       // Measure the text width
-      auto size = measure_text(cnv, get_text(), font.size(font._size * get_size()));
+      auto size = measure_text(cnv, get_text(), font.size(font._size * rel_size));
 
       // Add space for the icon if necessary
       if (get_icon_placement() != icon_none)
       {
-         auto icon_size = measure_icon(cnv, get_icon(), get_size() * theme.icon_font._size);
+         auto icon_size = measure_icon(cnv, get_icon(), rel_size * theme.icon_font._size);
          size.x += icon_size.x + space;
          size.y = std::max(size.y, icon_size.y);
       }
@@ -59,7 +60,8 @@ namespace cycfi { namespace elements
       auto const& theme = get_theme();
       auto bounds = ctx.bounds;
       auto margin = theme.button_margin;
-      auto space = theme.button_text_icon_space;
+      auto rel_size = get_size();
+      auto space = theme.button_text_icon_space * rel_size;
 
       auto state = value();
       auto value = state.value;
@@ -77,11 +79,11 @@ namespace cycfi { namespace elements
       {
          body_color = body_color.level(0.9);
       }
-      draw_button_base(ctx, bounds, body_color, enabled, theme.button_corner_radius);
+      draw_button_base(ctx, bounds, body_color, enabled, theme.button_corner_radius * rel_size);
 
       // Adjust the font size
       auto font = theme.label_font;
-      font = font.size(font._size * get_size());
+      font = font.size(font._size * rel_size);
 
       // Measure text and icon
       auto text_size = measure_text(ctx.canvas, get_text(), font);
@@ -91,7 +93,7 @@ namespace cycfi { namespace elements
       auto icon_space = 0.0f;
       if (get_icon_placement() != icon_none)
       {
-         auto icon_size = measure_icon(cnv, get_icon(), get_size() * theme.icon_font._size);
+         auto icon_size = measure_icon(cnv, get_icon(), rel_size * theme.icon_font._size);
          icon_width += icon_size.x;
          icon_space = icon_width + space;
       }
@@ -170,7 +172,7 @@ namespace cycfi { namespace elements
       {
          auto icon_font = theme.icon_font;
          cnv.text_align(cnv.middle + cnv.left);
-         cnv.font(icon_font.size(get_size() * icon_font._size));
+         cnv.font(icon_font.size(rel_size * icon_font._size));
          cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), {icon_pos, mid_y});
       }
    }

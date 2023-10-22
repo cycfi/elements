@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, dial_base>
    dial(Subject&& subject, double init_value = 0.0)
    {
-      return { std::forward<Subject>(subject), init_value };
+      return {std::forward<Subject>(subject), init_value};
    }
 
    inline double dial_base::value() const
@@ -98,8 +98,8 @@ namespace cycfi { namespace elements
    template <std::size_t size>
    inline view_limits basic_knob_element<size>::limits(basic_context const& /* ctx */) const
    {
-	  auto pt = point{ float(size), float(size) };
-      return view_limits{ pt, pt };
+	  auto pt = point{float(size), float(size)};
+      return view_limits{pt, pt};
    }
 
    template <std::size_t size>
@@ -108,7 +108,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
       auto  indicator_color = thm.indicator_color.level(1.5);
-      auto  cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      auto  cp = circle{center_point(ctx.bounds), ctx.bounds.width()/2};
 
       draw_knob(cnv, cp, _color);
       draw_radial_indicator(cnv, cp, _value, indicator_color);
@@ -196,7 +196,7 @@ namespace cycfi { namespace elements
       base_type::draw(ctx);
 
       // Draw radial lines
-      auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      auto cp = circle{center_point(ctx.bounds), ctx.bounds.width()/2};
       draw_radial_marks(ctx.canvas, cp, size-2, colors::light_gray);
    }
 
@@ -238,7 +238,7 @@ namespace cycfi { namespace elements
       base_type::draw(ctx);
 
       // Draw the labels
-      auto cp = circle{ center_point(ctx.bounds), ctx.bounds.width()/2 };
+      auto cp = circle{center_point(ctx.bounds), ctx.bounds.width()/2};
       draw_radial_labels(
          ctx.canvas, cp, _font_size, _labels.data(), num_labels);
    }
@@ -248,8 +248,8 @@ namespace cycfi { namespace elements
    radial_labels(Subject&& subject, float font_size, S&&... s)
    {
       auto r = radial_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
-         { std::move(subject), font_size };
-      r._labels = {{ std::move(s)... }};
+         {std::move(subject), font_size};
+      r._labels = {{std::move(s)...}};
       return r;
    }
 }}

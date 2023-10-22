@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
 
    constexpr extent rect::size() const
    {
-      return { width(), height() };
+      return {width(), height()};
    }
 
    constexpr void rect::size(extent size_)
@@ -160,22 +160,22 @@ namespace cycfi { namespace elements
 
    constexpr point rect::top_left() const
    {
-      return { left, top };
+      return {left, top};
    }
 
    constexpr point rect::bottom_right() const
    {
-      return { right, bottom };
+      return {right, bottom};
    }
 
    constexpr point rect::top_right() const
    {
-      return { right, top };
+      return {right, top};
    }
 
    constexpr point rect::bottom_left() const
    {
-      return { left, bottom };
+      return {left, bottom};
    }
 
    constexpr rect rect::move(float dx, float dy) const
@@ -219,7 +219,7 @@ namespace cycfi { namespace elements
 
    constexpr point center_point(rect r)
    {
-      return { r.left + (r.width() / 2.0f), r.top + (r.height() / 2.0f) };
+      return {r.left + (r.width() / 2.0f), r.top + (r.height() / 2.0f)};
    }
 
    constexpr float area(rect r)

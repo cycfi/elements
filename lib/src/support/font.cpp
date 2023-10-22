@@ -317,7 +317,7 @@ namespace cycfi { namespace elements
          };
 
          static cleanup cleanup_;
-         return { cairo_font_map_, cairo_font_map_mutex_ };
+         return {cairo_font_map_, cairo_font_map_mutex_};
       }
 
       int map_fc_weight(int w)
@@ -447,7 +447,7 @@ namespace cycfi { namespace elements
          if (font_map().empty())
             init_font_map();
 
-         std::istringstream str(std::string{ descr._families });
+         std::istringstream str(std::string{descr._families});
          std::string family;
          while (getline(str, family, ','))
          {

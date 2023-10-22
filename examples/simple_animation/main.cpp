@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   auto port = share(vport(image{ "moving.png" }));
+   auto port = share(vport(image{"moving.png"}));
    view_.content(port);
 
    view_.post(fps, [&]() { animate(view_, *port); });

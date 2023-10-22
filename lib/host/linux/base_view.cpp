@@ -104,7 +104,7 @@ namespace cycfi { namespace elements
          cairo_clip_extents(cr, &left, &top, &right, &bottom);
          view.draw(
             cr,
-            rect{ float(left), float(top), float(right), float(bottom) }
+            rect{float(left), float(top), float(right), float(bottom)}
          );
 
          return false;
@@ -124,7 +124,7 @@ namespace cycfi { namespace elements
             btn.modifiers |= mod_action;
 
          btn.num_clicks = view->click_count;
-         btn.pos = { float(event->x), float(event->y) };
+         btn.pos = {float(event->x), float(event->y)};
          return true;
       }
 
@@ -247,8 +247,8 @@ namespace cycfi { namespace elements
          }
 
          base_view.scroll(
-            { dx, dy },
-            { float(event->x), float(event->y) }
+            {dx, dy},
+            {float(event->x), float(event->y)}
          );
          return true;
       }
@@ -267,7 +267,7 @@ namespace cycfi { namespace elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      host_view_h->cursor_position = point{ float(event->x), float(event->y) };
+      host_view_h->cursor_position = point{float(event->x), float(event->y)};
       if (event->type == GDK_ENTER_NOTIFY)
       {
          base_view.cursor(host_view_h->cursor_position, cursor_tracking::entering);
@@ -294,7 +294,7 @@ namespace cycfi { namespace elements
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
       auto cp = codepoint(str);
-      base_view.text({ cp, host_view_h->modifiers });
+      base_view.text({cp, host_view_h->modifiers});
    }
 
    int get_mods(int state)
@@ -359,7 +359,7 @@ namespace cycfi { namespace elements
       if (key == key_code::unknown)
          return false;
 
-      handle_key(base_view, host_view_h->keys, { key, action, modifiers });
+      handle_key(base_view, host_view_h->keys, {key, action, modifiers});
       return true;
    }
 
@@ -501,7 +501,7 @@ namespace cycfi { namespace elements
    {
       auto x = gtk_widget_get_allocated_width(_view->widget);
       auto y = gtk_widget_get_allocated_height(_view->widget);
-      return { float(x), float(y) };
+      return {float(x), float(y)};
    }
 
    void base_view::size(elements::extent p)
@@ -519,7 +519,7 @@ namespace cycfi { namespace elements
    {
       auto x = gtk_widget_get_allocated_width(_view->widget);
       auto y = gtk_widget_get_allocated_height(_view->widget);
-      refresh({ 0, 0, float(x), float(y) });
+      refresh({0, 0, float(x), float(y)});
    }
 
    void base_view::refresh(rect area)
@@ -579,7 +579,7 @@ namespace cycfi { namespace elements
 
    point scroll_direction()
    {
-      return { +1.0f, +1.0f };
+      return {+1.0f, +1.0f};
    }
 }}
 

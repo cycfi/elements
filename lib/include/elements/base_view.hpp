@@ -56,13 +56,13 @@ namespace cycfi { namespace elements
 
    struct view_limits
    {
-      point    min = { 0.0, 0.0 };
-      point    max = { full_extent, full_extent };
+      point    min = {0.0, 0.0};
+      point    max = {full_extent, full_extent};
    };
 
    constexpr view_limits full_limits = {
-      { 0.0, 0.0 }
-    , { full_extent, full_extent }
+      {0.0, 0.0}
+    , {full_extent, full_extent}
    };
 
    ////////////////////////////////////////////////////////////////////////////

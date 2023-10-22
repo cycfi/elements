@@ -17,14 +17,14 @@ namespace cycfi { namespace elements
     : _pixmap(std::make_shared<elements::pixmap>(path, scale))
    {
       if (!_pixmap)
-         throw std::runtime_error{ "Error: Invalid image." };
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    image::image(pixmap_ptr pixmap_)
     : _pixmap(pixmap_)
    {
       if (!_pixmap)
-         throw std::runtime_error{ "Error: Invalid image." };
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    point image::size() const
@@ -34,13 +34,13 @@ namespace cycfi { namespace elements
 
    rect image::source_rect(context const& ctx) const
    {
-      return { 0, 0, ctx.bounds.width(), ctx.bounds.height() };
+      return {0, 0, ctx.bounds.width(), ctx.bounds.height()};
    }
 
    view_limits image::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { size_.x, size_.y } };
+      return {{size_.x, size_.y}, {size_.x, size_.y}};
    }
 
    void image::draw(context const& ctx)
@@ -63,7 +63,7 @@ namespace cycfi { namespace elements
          float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
          float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
 
-         auto corner = rect{ 0, 0, div_h+1, div_v+1 };
+         auto corner = rect{0, 0, div_h+1, div_v+1};
 
          parts[0] = corner.move(dest.left, dest.top);
          parts[1] = corner.move(dest.left, dest.bottom - (div_v+1));
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
          // Variation of gizmo_parts allowing horizontal resizing only.
 
          float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
-         auto corner = rect{ 0, 0, div_h+1, src.height() };
+         auto corner = rect{0, 0, div_h+1, src.height()};
 
          parts[0] = corner.move(dest.left, dest.top);
          parts[1] = corner.move(dest.right - (div_h+1), dest.top);
@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
          // Variation of gizmo_parts allowing vertical resizing only.
 
          float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
-         auto corner = rect{ 0, 0, src.width(), div_v+1 };
+         auto corner = rect{0, 0, src.width(), div_v+1};
 
          parts[0] = corner.move(dest.left, dest.top);
          parts[1] = corner.move(dest.left, dest.bottom - (div_v+1));
@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
    view_limits gizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { full_extent, full_extent } };
+      return {{size_.x, size_.y }, { full_extent, full_extent}};
    }
 
    void gizmo::draw(context const& ctx)
@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
       rect  src[9];
       rect  dest[9];
       auto  size_ = size();
-      rect  src_bounds{ 0, 0, size_.x, size_.y };
+      rect  src_bounds{0, 0, size_.x, size_.y};
 
       gizmo_parts(src_bounds, src_bounds, src);
       gizmo_parts(src_bounds, ctx.bounds, dest);
@@ -141,7 +141,7 @@ namespace cycfi { namespace elements
    view_limits hgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { size_.y, full_extent } };
+      return {{size_.x, size_.y }, { size_.y, full_extent}};
    }
 
    void hgizmo::draw(context const& ctx)
@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
       rect  src[3];
       rect  dest[3];
       auto  size_ = size();
-      rect  src_bounds{ 0, 0, size_.x, size_.y };
+      rect  src_bounds{0, 0, size_.x, size_.y};
 
       hgizmo_parts(src_bounds, src_bounds, src);
       hgizmo_parts(src_bounds, ctx.bounds, dest);
@@ -169,7 +169,7 @@ namespace cycfi { namespace elements
    view_limits vgizmo::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { size_.x, full_extent } };
+      return {{size_.x, size_.y }, { size_.x, full_extent}};
    }
 
    void vgizmo::draw(context const& ctx)
@@ -177,7 +177,7 @@ namespace cycfi { namespace elements
       rect  src[3];
       rect  dest[3];
       auto  size_ = size();
-      rect  src_bounds{ 0, 0, size_.x, size_.y };
+      rect  src_bounds{0, 0, size_.x, size_.y};
 
       vgizmo_parts(src_bounds, src_bounds, src);
       vgizmo_parts(src_bounds, ctx.bounds, dest);
@@ -195,7 +195,7 @@ namespace cycfi { namespace elements
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
-      return { { width, _height }, { width, _height } };
+      return {{width, _height}, {width, _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
@@ -211,12 +211,12 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return { pixmap().size().x, _height };
+      return {pixmap().size().x, _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
-      return rect{ 0, _height * _index, width, _height * (_index + 1) };
+      return rect{0, _height * _index, width, _height * (_index + 1)};
    }
 }}

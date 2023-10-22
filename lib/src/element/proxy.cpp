@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
 
    element* proxy_base::hit_test(context const& ctx, point p, bool leaf)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, p);
       auto r = subject().hit_test(sctx, p, leaf);
       restore_subject(sctx);
@@ -38,7 +38,7 @@ namespace cycfi { namespace elements
 
    void proxy_base::draw(context const& ctx)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx);
       subject().draw(sctx);
       restore_subject(sctx);
@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
 
    void proxy_base::layout(context const& ctx)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx);
       subject().layout(sctx);
       restore_subject(sctx);
@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         context sctx { ctx, &subject(), ctx.bounds };
+         context sctx {ctx, &subject(), ctx.bounds};
          prepare_subject(sctx);
          subject().refresh(sctx, element, outward);
          restore_subject(sctx);
@@ -85,7 +85,7 @@ namespace cycfi { namespace elements
       if (!subject().is_enabled())
          return false;
 
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, btn.pos);
       auto r = subject().click(sctx, btn);
       restore_subject(sctx);
@@ -94,7 +94,7 @@ namespace cycfi { namespace elements
 
    void proxy_base::drag(context const& ctx, mouse_button btn)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, btn.pos);
       subject().drag(sctx, btn);
       restore_subject(sctx);
@@ -102,7 +102,7 @@ namespace cycfi { namespace elements
 
    bool proxy_base::key(context const& ctx, key_info k)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx);
       auto r = subject().key(sctx, k);
       restore_subject(sctx);
@@ -111,7 +111,7 @@ namespace cycfi { namespace elements
 
    bool proxy_base::text(context const& ctx, text_info info)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx);
       auto r = subject().text(sctx, info);
       restore_subject(sctx);
@@ -120,7 +120,7 @@ namespace cycfi { namespace elements
 
    bool proxy_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, p);
       auto r = subject().cursor(sctx, p, status);
       restore_subject(sctx);
@@ -129,7 +129,7 @@ namespace cycfi { namespace elements
 
    bool proxy_base::scroll(context const& ctx, point dir, point p)
    {
-      context sctx { ctx, &subject(), ctx.bounds };
+      context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, p);
       auto r = subject().scroll(sctx, dir, p);
       restore_subject(sctx);

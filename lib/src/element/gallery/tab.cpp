@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
       auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font._size);
       size.x += 35;
       size.y += 10;
-      return { { size.x, size.y }, { size.x, size.y } };
+      return {{size.x, size.y}, {size.x, size.y}};
    }
 
    void tab_styler::draw(context const& ctx)
@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       canvas_.text_align(canvas_.center | canvas_.middle);
       float cx = box.left + (box.width() / 2);
       float cy = box.top + (box.height() / 2);
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+      canvas_.fill_text(point{cx, cy}, _text.c_str());
    }
 
    bool tab_styler::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)

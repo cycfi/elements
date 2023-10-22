@@ -22,7 +22,7 @@ namespace cycfi { namespace elements
 
    inline void canvas::circle(struct circle c)
    {
-      arc(point{ c.cx, c.cy }, c.radius, 0.0, 2 * M_PI);
+      arc(point{c.cx, c.cy}, c.radius, 0.0, 2 * M_PI);
    }
 
    inline void canvas::linear_gradient::add_color_stop(color_stop cs)
@@ -66,12 +66,12 @@ namespace cycfi { namespace elements
 
    inline void canvas::draw(pixmap const& pm, elements::rect dest)
    {
-      draw(pm, { 0, 0, pm.size() }, dest);
+      draw(pm, {0, 0, pm.size()}, dest);
    }
 
    inline void canvas::draw(pixmap const& pm, point pos)
    {
-      draw(pm, { 0, 0, pm.size() }, { pos, pm.size() });
+      draw(pm, {0, 0, pm.size() }, { pos, pm.size()});
    }
 
    inline canvas::state::state(canvas& cnv_)

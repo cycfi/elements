@@ -42,8 +42,8 @@ namespace cycfi { namespace elements
          ;
 
       return {
-         { 200, line_height },
-         { full_extent, full_extent }
+         {200, line_height},
+         {full_extent, full_extent}
       };
    }
 
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
       for (auto& row : _rows)
       {
          if (y + metrics.descent > clip_extent.top)
-            row.draw({ x, y }, cnv);
+            row.draw({x, y}, cnv);
          y += line_height;
          if (y > ctx.bounds.bottom + metrics.ascent)
             break;
@@ -244,10 +244,10 @@ namespace cycfi { namespace elements
       {
          if (typing_state)
          {
-            ctx.view.add_undo({ typing_state, undo_f });
+            ctx.view.add_undo({typing_state, undo_f});
             typing_state = {}; // reset
          }
-         ctx.view.add_undo({ undo_f, redo_f });
+         ctx.view.add_undo({undo_f, redo_f});
       }
    }
 
@@ -331,7 +331,7 @@ namespace cycfi { namespace elements
          if (info.str)
          {
             auto y = up ? -info.line_height : +info.line_height;
-            auto pos = point{ ctx.bounds.left + _current_x, info.pos.y + y };
+            auto pos = point{ctx.bounds.left + _current_x, info.pos.y + y};
             char const* cp = caret_position(ctx, pos);
             if (cp)
                _select_end = int(cp - &_text[0]);
@@ -498,7 +498,7 @@ namespace cycfi { namespace elements
                {
                   if (_typing_state)
                   {
-                     ctx.view.add_undo({ _typing_state, undo_f });
+                     ctx.view.add_undo({_typing_state, undo_f});
                      _typing_state = {}; // reset
                   }
 
@@ -569,13 +569,13 @@ namespace cycfi { namespace elements
          {
             canvas.line_width(width);
             canvas.stroke_style(theme.text_box_caret_color);
-            canvas.move_to({ left + (width/2), top });
-            canvas.line_to({ left + (width/2), top + line_height });
+            canvas.move_to({left + (width/2), top});
+            canvas.line_to({left + (width/2), top + line_height});
             canvas.stroke();
          }
 
          has_caret = true;
-         caret_bounds = rect{ left, top, left+width, top + line_height };
+         caret_bounds = rect{left, top, left+width, top + line_height};
       }
       // Draw the caret
       else if (_select_start == _select_end)
@@ -588,8 +588,8 @@ namespace cycfi { namespace elements
          {
             canvas.line_width(width);
             canvas.stroke_style(theme.text_box_caret_color);
-            canvas.move_to({ caret.left + (width/2), caret.top });
-            canvas.line_to({ caret.left + (width/2), caret.bottom });
+            canvas.move_to({caret.left + (width/2), caret.top});
+            canvas.line_to({caret.left + (width/2), caret.bottom});
             canvas.stroke();
          }
 
@@ -601,7 +601,7 @@ namespace cycfi { namespace elements
       {
          auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
          auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
-         caret_bounds = { tl.x, tl.y, br.x, br.y };
+         caret_bounds = {tl.x, tl.y, br.x, br.y};
 
          _caret_started = true;
          this_weak_handle wp = _this_handle;
@@ -644,18 +644,18 @@ namespace cycfi { namespace elements
          canvas.fill_style(color);
          if (r1.top == r2.top)
          {
-            canvas.fill_rect({ r1.left, r1.top, r2.right, r1.bottom });
+            canvas.fill_rect({r1.left, r1.top, r2.right, r1.bottom});
          }
          else
          {
             canvas.begin_path();
             canvas.move_to(r1.top_left());
             canvas.line_to(r1.top_right());
-            canvas.line_to({ r1.right, r2.top });
+            canvas.line_to({r1.right, r2.top});
             canvas.line_to(r2.top_right());
             canvas.line_to(r2.bottom_right());
             canvas.line_to(r2.bottom_left());
-            canvas.line_to({ r2.left, r1.bottom });
+            canvas.line_to({r2.left, r1.bottom});
             canvas.line_to(r1.bottom_left());
             canvas.close_path();
             canvas.fill();
@@ -726,8 +726,8 @@ namespace cycfi { namespace elements
          auto        rightmost = x + last_row.width();
          auto        bottom_y = y + (line_height * (_rows.size() - 1));
 
-         info.pos = { rightmost, bottom_y };
-         info.bounds = { rightmost, bottom_y - ascent, rightmost + 10, bottom_y + descent };
+         info.pos = {rightmost, bottom_y};
+         info.bounds = {rightmost, bottom_y - ascent, rightmost + 10, bottom_y + descent};
          info.str = s;
          return info;
       }
@@ -744,8 +744,8 @@ namespace cycfi { namespace elements
                {
                   if (utf8 >= s)
                   {
-                     info.pos = { x + left, y };
-                     info.bounds = { x + left, y - ascent, x + right, y + descent };
+                     info.pos = {x + left, y};
+                     info.bounds = {x + left, y - ascent, x + right, y + descent};
                      info.str = utf8;
                      return false;
                   }
@@ -760,8 +760,8 @@ namespace cycfi { namespace elements
          {
             auto  rightmost = x + prev_row->width();
             auto  prev_y = y - line_height;
-            info.pos = { rightmost, prev_y };
-            info.bounds = { rightmost, prev_y - ascent, rightmost + 10, prev_y + descent };
+            info.pos = {rightmost, prev_y};
+            info.bounds = {rightmost, prev_y - ascent, rightmost + 10, prev_y + descent};
             info.str = s;
             break;
          }
@@ -968,7 +968,7 @@ namespace cycfi { namespace elements
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
-      return { { 32, line_height }, { full_extent, line_height } };
+      return {{32, line_height }, { full_extent, line_height}};
    }
 
    void basic_input_box::draw(context const& ctx)
@@ -987,7 +987,7 @@ namespace cycfi { namespace elements
             canvas.font(theme.text_box_font, theme.text_box_font._size);
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
-               { ctx.bounds.left, ctx.bounds.top + size.ascent }
+               {ctx.bounds.left, ctx.bounds.top + size.ascent}
               , _placeholder.c_str()
             );
          }

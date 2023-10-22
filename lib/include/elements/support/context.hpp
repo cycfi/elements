@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
 
       context sub_context() const
       {
-         auto ctx = context{ *this };
+         auto ctx = context{*this};
          ctx.parent = this;
          return ctx;
       }

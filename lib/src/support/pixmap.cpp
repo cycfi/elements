@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
     : _surface(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size.x, size.y))
    {
       if (!_surface)
-         throw failed_to_load_pixmap{ "Failed to create pixmap." };
+         throw failed_to_load_pixmap{"Failed to create pixmap."};
 
       // Set scale and flag the surface as dirty
       cairo_surface_set_device_scale(_surface, 1/scale, 1/scale);
@@ -30,11 +30,11 @@ namespace cycfi { namespace elements
    {
       auto ext = path.extension();
       if (ext.empty())
-         throw failed_to_load_pixmap{ "Unknown file type." };
+         throw failed_to_load_pixmap{"Unknown file type."};
 
       fs::path full_path = find_file(path);
       if (full_path.empty())
-         throw failed_to_load_pixmap{ "File does not exist." };
+         throw failed_to_load_pixmap{"File does not exist."};
 
       if (ext == ".png" || ext == ".PNG")
       {
@@ -78,7 +78,7 @@ namespace cycfi { namespace elements
       }
 
       if (!_surface)
-         throw failed_to_load_pixmap{ "Failed to load pixmap." };
+         throw failed_to_load_pixmap{"Failed to load pixmap."};
 
       // Set scale and flag the surface as dirty
       cairo_surface_set_device_scale(_surface, 1/scale, 1/scale);

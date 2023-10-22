@@ -37,7 +37,7 @@ auto make_hslider(int index)
       make_markers<false>(),
       (index + 1) * 0.25
    ));
-   return align_middle(hmargin({ 20, 20 }, hold(hsliders[index])));
+   return align_middle(hmargin({20, 20}, hold(hsliders[index])));
 }
 
 auto make_hsliders()
@@ -58,7 +58,7 @@ auto make_vslider(int index)
       make_markers<true>(),
       (index + 1) * 0.25
    ));
-   return align_center(vmargin({ 20, 20 }, hold(vsliders[index])));
+   return align_center(vmargin({20, 20}, hold(vsliders[index])));
 }
 
 auto make_vsliders()
@@ -105,12 +105,12 @@ auto make_dials()
 auto make_controls()
 {
    return
-      margin({ 20, 10, 20, 10 },
+      margin({20, 10, 20, 10},
          vmin_size(400,
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Vertical Sliders", make_vsliders(), 0.8f)),
-               margin({ 20, 20, 20, 20 }, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
-               hstretch(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
+               margin({20, 20, 20, 20}, pane("Vertical Sliders", make_vsliders(), 0.8f)),
+               margin({20, 20, 20, 20}, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
+               hstretch(0.5, margin({20, 20, 20, 20}, pane("Knobs", make_dials(), 0.8f)))
             )
          )
       );

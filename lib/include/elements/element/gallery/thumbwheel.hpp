@@ -75,14 +75,14 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
    basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {
-      return { std::forward<Subject>(subject), quantize_ };
+      return {std::forward<Subject>(subject), quantize_};
    }
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
    basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {
-      return { std::forward<Subject>(subject), quantize_ };
+      return {std::forward<Subject>(subject), quantize_};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -96,10 +96,10 @@ namespace cycfi { namespace elements
    {
       using ftype = remove_cvref_t<F>;
       auto body = basic_vthumbwheel(
-         dynamic_list{ basic_cell_composer(num_items, std::forward<ftype>(compose)) }
+         dynamic_list{basic_cell_composer(num_items, std::forward<ftype>(compose))}
        , 1.0 / (num_items-1)
       );
-      return thumbwheel(std::move(body), { 0.0f, 0.0f });
+      return thumbwheel(std::move(body), {0.0f, 0.0f});
    }
 }}
 

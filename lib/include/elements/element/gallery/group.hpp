@@ -25,7 +25,7 @@ namespace cycfi { namespace elements
       auto align_ = center_heading? 0.5 : 0;
       return
         layer(
-            align_top(halign(align_, margin({ 10, 4, 10, 4 }, heading))),
+            align_top(halign(align_, margin({10, 4, 10, 4}, heading))),
             std::forward<Content>(content),
             frame{}
         );
@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    )
    {
       return make_group(
-         left_top_margin({ 10, 10 }, heading(std::move(title)).relative_font_size(label_size)),
+         left_top_margin({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
          std::forward<Content>(content), center_heading
       );
    }
@@ -55,7 +55,7 @@ namespace cycfi { namespace elements
       auto align_ = center_heading? 0.5 : 0;
       return
         layer(
-            align_top(halign(align_, margin({ 10, 4, 10, 4 }, heading))),
+            align_top(halign(align_, margin({10, 4, 10, 4}, heading))),
             std::forward<Content>(content)
         );
    }
@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
    )
    {
       return make_unframed_group(
-         left_top_margin({ 10, 10 }, heading(std::move(title)).relative_font_size(label_size)),
+         left_top_margin({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
          std::forward<Content>(content), center_heading
       );
    }

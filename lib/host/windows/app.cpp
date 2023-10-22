@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
    )
    {
       _app_name = name;
-      static init_app init{ id, argv[0] };
+      static init_app init{id, argv[0]};
 
 #if !defined(ELEMENTS_HOST_ONLY_WIN7)
       SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
@@ -95,7 +95,7 @@ namespace cycfi { namespace elements
    {
       LPWSTR path = nullptr;
       SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_CREATE, nullptr, &path);
-      return fs::path{ path };
+      return fs::path{path};
    }
 }}
 

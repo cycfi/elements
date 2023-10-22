@@ -55,7 +55,7 @@ namespace cycfi { namespace elements
             break;
       }
 
-      context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+      context new_ctx{ctx.view, ctx.canvas, _popup.get(), bounds};
       _popup->bounds(bounds);
       _popup->layout(new_ctx);
    }
@@ -91,7 +91,7 @@ namespace cycfi { namespace elements
             // simulate a menu click:
             btn.down = true;
             rect  bounds = _popup->bounds();
-            context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+            context new_ctx{ctx.view, ctx.canvas, _popup.get(), bounds};
             _popup->click(new_ctx, btn);
          }
       }
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
       rect  bounds = _popup->bounds();
       if (bounds.includes(btn.pos))
       {
-         context new_ctx{ ctx.view, ctx.canvas, _popup.get(), bounds };
+         context new_ctx{ctx.view, ctx.canvas, _popup.get(), bounds};
          if (btn.down)
          {
             // simulate a menu hover (cursor):

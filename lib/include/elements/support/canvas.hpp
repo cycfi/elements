@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
          canvas* cnv;
       };
 
-      state             new_state()   { return state{ *this }; }
+      state             new_state()   {return state{ *this}; }
       void              save();
       void              restore();
 

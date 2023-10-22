@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    view_.content(
-      scroller(image{ "space.jpg" })
+      scroller(image{"space.jpg"})
    );
 
    _app.run();

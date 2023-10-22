@@ -83,7 +83,7 @@ namespace cycfi { namespace elements
       auto scale = get_scale(_window->host);
       gint width, height;
       gtk_window_get_size(win, &width, &height);
-      return { float(width) / scale, float(height) / scale };
+      return {float(width) / scale, float(height) / scale};
    }
 
    void window::size(point const& p)

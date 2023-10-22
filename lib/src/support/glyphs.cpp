@@ -142,7 +142,7 @@ namespace cycfi { namespace elements
    )
     : glyphs(first, last)
    {
-      canvas cnv{ *scratch_context_.context() };
+      canvas cnv{*scratch_context_.context()};
       cnv.font(font_, size);
       auto cr = scratch_context_.context();
       _scaled_font = cairo_scaled_font_reference(cairo_get_scaled_font(cr));
@@ -157,7 +157,7 @@ namespace cycfi { namespace elements
    )
     : glyphs(first, last)
    {
-      canvas cnv{ *scratch_context_.context() };
+      canvas cnv{*scratch_context_.context()};
       _scaled_font = cairo_scaled_font_reference(source._scaled_font);
       build(start);
    }

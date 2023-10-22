@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
                   circle(circle const&) = default;
       circle&     operator=(circle const&) = default;
 
-      rect        bounds() const { return { cx-radius, cy-radius, cx+radius, cy+radius }; }
+      rect        bounds() const {return { cx-radius, cy-radius, cx+radius, cy+radius}; }
       bool        operator==(circle const& other) const;
       bool        operator!=(circle const& other) const;
 
@@ -68,22 +68,22 @@ namespace cycfi { namespace elements
 
    inline point circle::center() const
    {
-      return { cx, cy };
+      return {cx, cy};
    }
 
    inline circle circle::inset(float x) const
    {
-      return { cx, cy, radius-x };
+      return {cx, cy, radius-x};
    }
 
    inline circle circle::move(float dx, float dy) const
    {
-      return { cx+dx, cy+dy, radius };
+      return {cx+dx, cy+dy, radius};
    }
 
    inline circle circle::move_to(float x, float y) const
    {
-      return { x, y, radius };
+      return {x, y, radius};
    }
 }}
 

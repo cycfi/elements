@@ -218,10 +218,10 @@ auto my_app::make_control()
    return
       layer(
          align_center_middle(
-            fixed_size({ 400, 400 },
+            fixed_size({400, 400},
                link(_my_control)             // Link our control
             )),
-         image{ "wall.jpg" }
+         image{"wall.jpg"}
       );
 }
 
@@ -238,7 +238,7 @@ auto my_app::make_button()
       };
 
    return
-      margin({ 50, 10, 50, 10 },
+      margin({50, 10, 50, 10},
          hold(btn)                           // Hold our shared button
       );
 }
@@ -292,7 +292,7 @@ void my_app::set_value(float val)
 auto my_app::make_control_panel()
 {
    return margin(
-      { 50, 20, 50, 20 },
+      {50, 20, 50, 20},
       layer(
          vgrid(
             span(5, make_dial()),
@@ -306,9 +306,9 @@ auto my_app::make_control_panel()
 }
 
 my_app::my_app(int argc, char* argv[])
- : app{ argc, argv, "Custom Control", "com.cycfi.custom-control" }
- , _win{ name() }
- , _view{ _win }
+ : app{argc, argv, "Custom Control", "com.cycfi.custom-control"}
+ , _win{name()}
+ , _view{_win}
 {
    _win.on_close = [this]() { stop(); };
 

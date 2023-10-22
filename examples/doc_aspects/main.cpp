@@ -19,7 +19,7 @@ auto background = box(bkd_color);
 auto blue_rbox =
    align_center_middle(
       fixed_size(
-         { 100, 50 },
+         {100, 50},
          rbox(colors::medium_blue, 10)
       )
    );
@@ -33,7 +33,7 @@ auto blue_rbox =
    align_center_middle(
       layer(
          margin(
-            { 25, 20, 25, 18 },
+            {25, 20, 25, 18},
             label("“Dogs are my favorite people”")
          ),
          rbox(colors::medium_blue, 10)
@@ -50,7 +50,7 @@ auto btn_rbox(color c)
    return
       layer(
          margin(
-            { 25, 20, 25, 18 },
+            {25, 20, 25, 18},
             label("“Dogs are my favorite people”")
          ),
          rbox(c, 10)
@@ -74,11 +74,11 @@ auto track = hsize(10, box(colors::black));
 auto thumb =
    layer(
       margin(
-         { 25, 20, 25, 18 },
+         {25, 20, 25, 18},
          label("“Dogs are my favorite people”")
       ),
       margin(
-         { 5, 5, 5, 5 },
+         {5, 5, 5, 5},
          rbox(colors::medium_blue, 10)
       )
    );

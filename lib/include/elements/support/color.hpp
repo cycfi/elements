@@ -88,7 +88,7 @@ namespace cycfi { namespace elements
 
    constexpr color color::opacity(float alpha_) const
    {
-      return { red, green, blue, alpha_ };
+      return {red, green, blue, alpha_};
    }
 
    constexpr color color::level(float amount) const

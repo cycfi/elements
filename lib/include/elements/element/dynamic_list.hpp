@@ -173,7 +173,7 @@ namespace cycfi { namespace elements
                function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ size, std::forward<ftype>(compose) });
+      return share(return_type{size, std::forward<ftype>(compose)});
    }
 
    template<typename F>
@@ -192,7 +192,7 @@ namespace cycfi { namespace elements
                function_cell_composer<ftype>
             >
          >;
-      return share(return_type{ size, std::forward<ftype>(compose) });
+      return share(return_type{size, std::forward<ftype>(compose)});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -374,8 +374,8 @@ namespace cycfi { namespace elements
     , Rest&& ...rest
    )
     : Base(std::forward<Rest>(rest)...)
-    , _main_axis_size{ main_axis_size }
-    , _secondary_axis_limits{ min_secondary_axis_size, full_extent }
+    , _main_axis_size{main_axis_size}
+    , _secondary_axis_limits{min_secondary_axis_size, full_extent}
    {}
 
    template <typename Base>
@@ -388,7 +388,7 @@ namespace cycfi { namespace elements
    )
     : Base(std::forward<Rest>(rest)...)
     , _main_axis_size(main_axis_size)
-    , _secondary_axis_limits{ min_secondary_axis_size, max_secondary_axis_size }
+    , _secondary_axis_limits{min_secondary_axis_size, max_secondary_axis_size}
    {}
 
    template <typename Base>
@@ -411,8 +411,8 @@ namespace cycfi { namespace elements
       Rest&& ...rest
    )
     : Base(std::forward<Rest>(rest)...)
-    , _main_axis_size{ -1 }
-    , _secondary_axis_limits{ -1, full_extent }
+    , _main_axis_size{-1}
+    , _secondary_axis_limits{-1, full_extent}
    {}
 
    template <typename Base>

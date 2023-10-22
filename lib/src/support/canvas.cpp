@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
 
    void canvas::pre_scale(float sc)
    {
-      scale({ sc, sc });
+      scale({sc, sc});
       _pre_scale = sc;
    }
 
@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
       double x = p.x * _pre_scale;
       double y = p.y * _pre_scale;
       cairo_device_to_user_distance(&_context, &x, &y);
-      return { float(x), float(y) };
+      return {float(x), float(y)};
    }
 
    point canvas::user_to_device(point p)
@@ -118,7 +118,7 @@ namespace cycfi { namespace elements
       double x = p.x;
       double y = p.y;
       cairo_user_to_device_distance(&_context, &x, &y);
-      return { float(x / _pre_scale), float(y / _pre_scale) };
+      return {float(x / _pre_scale), float(y / _pre_scale)};
    }
 
    void canvas::begin_path()
@@ -164,7 +164,7 @@ namespace cycfi { namespace elements
    {
       double x1, y1, x2, y2;
       cairo_clip_extents(&_context, &x1, &y1, &x2, &y2);
-      return { float(x1), float(y1), float(x2), float(y2) };
+      return {float(x1), float(y1), float(x2), float(y2)};
    }
 
    bool canvas::hit_test(point p) const
@@ -370,7 +370,7 @@ namespace cycfi { namespace elements
          /*ascent=*/    float(font_extents.ascent),
          /*descent=*/   float(font_extents.descent),
          /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent)),
-         /*size=*/      { float(extents.x_advance + extents.x_bearing), float(extents.height) }
+         /*size=*/      {float(extents.x_advance + extents.x_bearing), float(extents.height)}
       };
    }
 
@@ -380,10 +380,10 @@ namespace cycfi { namespace elements
       auto  w = dest.width();
       auto  h = dest.height();
       translate(dest.top_left());
-      auto scale_ = point{ w/src.width(), h/src.height() };
+      auto scale_ = point{w/src.width(), h/src.height()};
       scale(scale_);
       cairo_set_source_surface(&_context, pm._surface, -src.left, -src.top);
-      rect({ 0, 0, w/scale_.x, h/scale_.y });
+      rect({0, 0, w/scale_.x, h/scale_.y});
       cairo_fill(&_context);
    }
 

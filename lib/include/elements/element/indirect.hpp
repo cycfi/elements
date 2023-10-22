@@ -311,7 +311,7 @@ namespace cycfi { namespace elements
    inline indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element &rhs)
    {
-      return indirect<reference<typename std::remove_reference<Element>::type>>{ rhs };
+      return indirect<reference<typename std::remove_reference<Element>::type>>{rhs};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -348,13 +348,13 @@ namespace cycfi { namespace elements
    inline indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs)
    {
-      return indirect<shared_element<Element>>{ rhs };
+      return indirect<shared_element<Element>>{rhs};
    }
 
    inline indirect<shared_element<element>>
    hold_any(std::shared_ptr<element> rhs)
    {
-      return indirect<shared_element<element>>{ rhs };
+      return indirect<shared_element<element>>{rhs};
    }
 }}
 

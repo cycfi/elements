@@ -53,7 +53,6 @@ int main(int argc, char* argv[])
 
    auto cp = basic_vertical_cell_composer(list_size, make_row);
    auto content = vdynamic_list(cp);
-   auto linked = link(content);
 
    auto b1 = icon_button(icons::minus, 1);
    auto b2 = icon_button(icons::plus, 1);
@@ -81,7 +80,7 @@ int main(int argc, char* argv[])
    view_.content(
       margin({10, 10, 10, 10},
          vtile(
-            vscroller(hold(share(linked))),
+            vscroller(link(content)),
             htile(b1, b2)
             )
          ),

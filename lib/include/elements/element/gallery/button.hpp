@@ -42,9 +42,13 @@ namespace cycfi { namespace elements
 
       virtual float           get_size() const;
       virtual color           get_body_color() const;
+      virtual color           get_text_color() const;
       virtual std::uint32_t   get_icon() const;
       virtual icon_placement  get_icon_placement() const;
+      virtual color           get_icon_color() const;
       virtual label_alignment get_label_alignment() const;
+      virtual rect            get_margin() const;
+      virtual float           get_corner_radius() const;
    };
 
    template <typename Base>
@@ -100,6 +104,23 @@ namespace cycfi { namespace elements
    };
 
    template <typename Base>
+   struct button_styler_with_text_color : Base
+   {
+      using base_type = button_styler_with_text_color<typename Base::base_type>;
+
+                              button_styler_with_text_color(Base base, color color_)
+                               : Base(std::move(base)), _color(color_)
+                              {}
+
+      color                   get_text_color() const override;
+      void                    set_text_color(color color_);
+
+   private:
+
+      color                   _color;
+   };
+
+   template <typename Base>
    struct button_styler_with_icon : Base
    {
       using icon_placement = default_button_styler::icon_placement;
@@ -140,6 +161,23 @@ namespace cycfi { namespace elements
    };
 
    template <typename Base>
+   struct button_styler_with_icon_color : Base
+   {
+      using base_type = button_styler_with_icon_color<typename Base::base_type>;
+
+                              button_styler_with_icon_color(Base base, color color_)
+                               : Base(std::move(base)), _color(color_)
+                              {}
+
+      color                   get_icon_color() const override;
+      void                    set_icon_color(color color_);
+
+   private:
+
+      color                   _color;
+   };
+
+   template <typename Base>
    struct button_styler_with_label_alignment : Base
    {
       using label_alignment = default_button_styler::label_alignment;
@@ -160,6 +198,40 @@ namespace cycfi { namespace elements
    };
 
    template <typename Base>
+   struct button_styler_with_margin : Base
+   {
+      using base_type = button_styler_with_margin<typename Base::base_type>;
+
+                              button_styler_with_margin(Base base, rect const& margin)
+                               : Base(std::move(base)), _margin(margin)
+                              {}
+
+      rect                    get_margin() const override;
+      void                    set_margin(rect const& margin);
+
+   private:
+
+      rect                    _margin;
+   };
+
+   template <typename Base>
+   struct button_styler_with_corner_radius : Base
+   {
+      using base_type = button_styler_with_corner_radius<typename Base::base_type>;
+
+                              button_styler_with_corner_radius(Base base, float r)
+                               : Base(std::move(base)), _radius(r)
+                              {}
+
+      float                   get_corner_radius() const override;
+      void                    set_corner_radius(float r);
+
+   private:
+
+      float                   _radius;
+   };
+
+   template <typename Base>
    struct button_styler_gen : Base
    {
       using Base::Base;
@@ -169,18 +241,26 @@ namespace cycfi { namespace elements
 
       using gen_size             = button_styler_gen<button_styler_with_size<base_type>>;
       using gen_body_color       = button_styler_gen<button_styler_with_body_color<base_type>>;
+      using gen_text_color       = button_styler_gen<button_styler_with_text_color<base_type>>;
       using gen_icon             = button_styler_gen<button_styler_with_icon<base_type>>;
       using gen_icon_placement   = button_styler_gen<button_styler_with_icon_placement<base_type>>;
+      using gen_icon_color       = button_styler_gen<button_styler_with_icon_color<base_type>>;
       using gen_label_alignment  = button_styler_gen<button_styler_with_label_alignment<base_type>>;
+      using gen_margin           = button_styler_gen<button_styler_with_margin<base_type>>;
+      using gen_corner_radius    = button_styler_gen<button_styler_with_corner_radius<base_type>>;
 
       gen_size                size(float size) const;
       gen_body_color          body_color(color color_) const;
+      gen_text_color          text_color(color color_) const;
       gen_icon                icon(std::uint32_t code) const;
       gen_icon_placement      icon_left() const;
       gen_icon_placement      icon_right() const;
+      gen_icon_color          icon_color(color color_) const;
       gen_label_alignment     align_left() const;
       gen_label_alignment     align_center() const;
       gen_label_alignment     align_right() const;
+      gen_margin              margin(rect margin) const;
+      gen_corner_radius       corner_radius(float r) const;
    };
 
    using basic_button_styler = basic_button_styler_base<default_button_styler>;
@@ -398,6 +478,11 @@ namespace cycfi { namespace elements
       return get_theme().default_button_color;
    }
 
+   inline color default_button_styler::get_text_color() const
+   {
+      return get_theme().label_font_color;
+   }
+
    inline std::uint32_t default_button_styler::get_icon() const
    {
       return 0;
@@ -408,9 +493,24 @@ namespace cycfi { namespace elements
       return icon_none;
    }
 
+   inline color default_button_styler::get_icon_color() const
+   {
+      return get_theme().label_font_color;
+   }
+
    inline default_button_styler::label_alignment default_button_styler::get_label_alignment() const
    {
       return align_center;
+   }
+
+   inline rect default_button_styler::get_margin() const
+   {
+      return get_theme().button_margin;
+   }
+
+   inline float default_button_styler::get_corner_radius() const
+   {
+      return get_theme().button_corner_radius;
    }
 
    template <typename Base>
@@ -450,6 +550,18 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
+   inline color button_styler_with_text_color<Base>::get_text_color() const
+   {
+      return _color;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_text_color<Base>::set_text_color(color color_)
+   {
+      _color = color_;
+   }
+
+   template <typename Base>
    inline std::uint32_t button_styler_with_icon<Base>::get_icon() const
    {
       return _code;
@@ -473,6 +585,18 @@ namespace cycfi { namespace elements
    button_styler_with_icon_placement<Base>::get_icon_placement() const
    {
       return _icon_placement;
+   }
+
+   template <typename Base>
+   inline color button_styler_with_icon_color<Base>::get_icon_color() const
+   {
+      return _color;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_icon_color<Base>::set_icon_color(color color_)
+   {
+      _color = color_;
    }
 
    template <typename Base>
@@ -516,6 +640,30 @@ namespace cycfi { namespace elements
    inline void button_styler_with_label_alignment<Base>::align_left()
    {
       _label_alignment = label_alignment::align_left;
+   }
+
+   template <typename Base>
+   inline rect button_styler_with_margin<Base>::get_margin() const
+   {
+      return _margin;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_margin<Base>::set_margin(rect const& margin)
+   {
+      _margin = margin;
+   }
+
+   template <typename Base>
+   inline float button_styler_with_corner_radius<Base>::get_corner_radius() const
+   {
+      return _radius;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_corner_radius<Base>::set_corner_radius(float r)
+   {
+      _radius = r;
    }
 
    template <typename Base>
@@ -572,6 +720,20 @@ namespace cycfi { namespace elements
    button_styler_gen<Base>::align_right() const
    {
       return {*this, label_alignment_t::align_right};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_margin
+   button_styler_gen<Base>::margin(rect margin) const
+   {
+      return {*this, margin};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_corner_radius
+   button_styler_gen<Base>::corner_radius(float r) const
+   {
+      return {*this, r};
    }
 }}
 

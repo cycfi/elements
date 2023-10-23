@@ -159,7 +159,7 @@ namespace cycfi { namespace elements
                   new_focus(ctx, info.index, restore_previous);
 
                context ectx{ctx, info.element_ptr, info.bounds};
-               if (info.leaf_element_ptr->click(ectx, btn))
+               if (info.element_ptr->click(ectx, btn))
                {
                   if (btn.down)
                      _click_tracking = info.index;

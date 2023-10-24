@@ -22,3 +22,5 @@ add_subdirectory(child_window)
 add_subdirectory(sync_scrollbars)
 add_subdirectory(icons_list)
 add_subdirectory(drop_file)
+add_subdirectory(table_list)
+

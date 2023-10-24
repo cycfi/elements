@@ -1029,4 +1029,38 @@ namespace cycfi { namespace elements
       _first_focus = false;
       basic_text_box::end_focus();
    }
+
+   bool read_only_text_box::key(context const& ctx, key_info k)
+   {
+      bool do_handle = false;
+      if (k.action == key_action::press || k.action == key_action::repeat)
+      {
+         switch (k.key)
+         {
+            case key_code::left:
+            case key_code::right:
+            case key_code::up:
+            case key_code::down:
+               do_handle = true;
+               break;
+
+            case key_code::a:
+            case key_code::c:
+               if (k.modifiers & mod_action)
+                  do_handle = true;
+               break;
+
+            default:
+               break;
+         }
+      }
+      if (do_handle)
+         return basic_text_box::key(ctx, k);
+      return false;
+   }
+
+   bool read_only_text_box::text(context const& /*ctx*/, text_info /*info*/)
+   {
+      return false;
+   }
 }}

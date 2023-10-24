@@ -229,6 +229,16 @@ namespace cycfi::elements
       std::string             _placeholder;
       bool                    _first_focus;
    };
+
+   class read_only_text_box : public basic_text_box
+   {
+   public:
+
+      using basic_text_box::basic_text_box;
+
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+   };
 }
 
 #endif

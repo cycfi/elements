@@ -347,6 +347,87 @@ namespace cycfi { namespace elements
          _focus = int(index);
    }
 
+   void composite_base::track_drop(context const& ctx, drop_info const& d_info, cursor_tracking status)
+   {
+      if (_cursor_tracking >= int(size())) // just to be sure!
+         _cursor_tracking = -1;
+
+      // Send track_drop leaving to all currently hovering elements if cursor is
+      // leaving the composite.
+      if (status == cursor_tracking::leaving)
+      {
+         for (auto ix : _cursor_hovering)
+         {
+            if (ix < int(size()))
+            {
+               auto& e = at(ix);
+               context ectx{ ctx, &e, bounds_of(ctx, ix) };
+               e.track_drop(ectx, d_info, cursor_tracking::leaving);
+            }
+         }
+         return;
+      }
+
+      // Cursor location
+      auto p = d_info.where;
+
+      // Send track_drop leaving to all currently hovering elements if p is
+      // outside the elements's bounds or if the element is no longer hit.
+      for (auto i = _cursor_hovering.begin(); i != _cursor_hovering.end();)
+      {
+         if (*i < int(size()))
+         {
+            auto& e = at(*i);
+            rect  b = bounds_of(ctx, *i);
+            context ectx{ ctx, &e, b };
+            if (!b.includes(p) || !e.hit_test(ectx, p))
+            {
+               e.track_drop(ectx, d_info, cursor_tracking::leaving);
+               i = _cursor_hovering.erase(i);
+               continue;
+            }
+         }
+         ++i;
+      }
+
+      // Send track_drop entering to newly hit element or hovering to current
+      // tracking element
+      hit_info info = hit_element(ctx, d_info.where, true);
+      if (info.element_ptr)
+      {
+         _cursor_tracking = info.index;
+         status = cursor_tracking::hovering;
+         if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
+         {
+             status = cursor_tracking::entering;
+            _cursor_hovering.insert(_cursor_tracking);
+         }
+         auto& e = at(_cursor_tracking);
+         context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
+         return e.track_drop(ectx, d_info, status);
+      }
+      else
+      {
+         _cursor_tracking = -1;
+      }
+   }
+
+   bool composite_base::drop(context const& ctx, drop_info const& d_info)
+   {
+      if (_cursor_tracking != -1)
+      {
+         rect  bounds = bounds_of(ctx, _cursor_tracking);
+         auto& e = at(_cursor_tracking);
+         context ectx{ ctx, &e, bounds };
+         if (e.drop(ectx, d_info))
+            return true;
+
+         _cursor_tracking = -1;
+         return true;
+      }
+      return false;
+   }
+
    composite_base::hit_info composite_base::hit_element(context const& ctx, point p, bool control) const
    {
       auto&& test_element =

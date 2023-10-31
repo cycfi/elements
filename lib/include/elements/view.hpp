@@ -43,6 +43,8 @@ namespace cycfi { namespace elements
       bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
+      void                    track_drop(drop_info const& info, cursor_tracking status) override;
+      bool                    drop(drop_info const& info) override;
       void                    poll() override;
 
       void                    layout();

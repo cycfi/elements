@@ -55,6 +55,9 @@ namespace cycfi { namespace elements
       element const*          focus() const override;
       element*                focus() override;
 
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
+
    // Proxy
 
       virtual element const&  subject() const = 0;

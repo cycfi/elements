@@ -133,6 +133,15 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   void element::track_drop(context const& /*ctx*/, drop_info const& /*info*/, cursor_tracking /*status*/)
+   {
+   }
+
+   bool element::drop(context const& /*ctx*/, drop_info const& /*info*/)
+   {
+      return false;
+   }
+
    void element::on_tracking(context const& ctx, tracking state)
    {
       ctx.view.manage_on_tracking(*this, state);

@@ -210,6 +210,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    bool                             _text_inserted;
 }
+
 @end
 
 @compatibility_alias ElementsView ELEMENTS_VIEW_CLASS;
@@ -251,6 +252,8 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
    [self setPostsBoundsChangedNotifications : YES];
    _text_inserted = false;
+
+   [self registerForDraggedTypes:@[NSPasteboardTypeURL]];
 }
 
 - (void) dealloc
@@ -666,6 +669,59 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 -(void) windowDidResignKey : (NSNotification*) notification
 {
    _view->end_focus();
+}
+
+-(void) makeDropInfo : (id <NSDraggingInfo>) sender : (ph::drop_info*) info
+{
+   auto pos = [sender draggingLocation];
+   pos = [self convertPoint : pos fromView : nil];
+
+   NSPasteboard* pasteboard = [sender draggingPasteboard];
+   NSDictionary* options = @{NSPasteboardURLReadingFileURLsOnlyKey:@YES};
+   NSArray* urls = [pasteboard   readObjectsForClasses:@[[NSURL class]]
+                                 options:options];
+   const NSUInteger count = [urls count];
+   if (count)
+   {
+      info->where = ph::point{ float(pos.x), float(pos.y) };
+      for (NSUInteger i = 0; i < count; ++i)
+         info->paths.push_back([urls[i] fileSystemRepresentation]);
+   }
+}
+
+- (BOOL)performDragOperation : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.paths.size())
+   {
+      if (_view->drop(info))
+         return YES;
+   }
+   return NO;
+}
+
+- (BOOL)wantsPeriodicDraggingUpdates
+{
+   return YES;
+}
+
+- (NSDragOperation)draggingEntered : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.paths.size())
+      _view->track_drop(info);
+   return NSDragOperationGeneric;
+}
+
+- (NSDragOperation)draggingUpdated : (id<NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.paths.size())
+      _view->track_drop(info);
+   return NSDragOperationGeneric;
 }
 
 @end // @implementation ElementsView

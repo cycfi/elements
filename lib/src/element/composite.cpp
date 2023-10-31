@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
             if (ix < int(size()))
             {
                auto& e = at(ix);
-               context ectx{ ctx, &e, bounds_of(ctx, ix) };
+               context ectx{ctx, &e, bounds_of(ctx, ix)};
                e.track_drop(ectx, d_info, cursor_tracking::leaving);
             }
          }
@@ -379,7 +379,7 @@ namespace cycfi { namespace elements
          {
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
-            context ectx{ ctx, &e, b };
+            context ectx{ctx, &e, b};
             if (!b.includes(p) || !e.hit_test(ectx, p))
             {
                e.track_drop(ectx, d_info, cursor_tracking::leaving);
@@ -403,7 +403,7 @@ namespace cycfi { namespace elements
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = at(_cursor_tracking);
-         context ectx{ ctx, &e, bounds_of(ctx, _cursor_tracking) };
+         context ectx{ctx, &e, bounds_of(ctx, _cursor_tracking)};
          return e.track_drop(ectx, d_info, status);
       }
       else
@@ -418,7 +418,7 @@ namespace cycfi { namespace elements
       {
          rect  bounds = bounds_of(ctx, _cursor_tracking);
          auto& e = at(_cursor_tracking);
-         context ectx{ ctx, &e, bounds };
+         context ectx{ctx, &e, bounds};
          if (e.drop(ectx, d_info))
             return true;
 

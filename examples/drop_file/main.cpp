@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    auto image_    = share(image{ "space.jpg" });
-   auto drop_box_ = share(drop_box(scroller(hold(image_))));
+   auto drop_box_ = share(drop_box(scroller(hold(image_)), {"text/uri-list"}));
 
    drop_box_->on_drop = [image_ = get(image_), &view_](drop_info const& info)
    {

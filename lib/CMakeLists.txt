@@ -51,6 +51,7 @@ set(ELEMENTS_SOURCES
    src/support/resource_paths.cpp
    src/support/text_utils.cpp
    src/support/theme.cpp
+   src/support/payload.cpp
    src/view.cpp
 )
 
@@ -173,11 +174,8 @@ target_sources(elements
 
 target_include_directories(elements PUBLIC include)
 target_link_libraries(elements PUBLIC cycfi::infra)
-if(CMAKE_CXX_STANDARD EQUAL 20)
-   target_compile_features(elements PUBLIC cxx_std_20)
-else()
-   target_compile_features(elements PUBLIC cxx_std_17)
-endif()
+target_compile_features(elements PUBLIC cxx_std_20)
+message(STATUS "Building Elements using C++20.")
 
 if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)

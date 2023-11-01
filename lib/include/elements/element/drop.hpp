@@ -8,6 +8,7 @@
 
 #include <elements/element/proxy.hpp>
 #include <functional>
+#include <set>
 
 namespace cycfi { namespace elements
 {
@@ -19,7 +20,7 @@ namespace cycfi { namespace elements
       using base_type = proxy<Subject>;
       using on_drop_function = std::function<bool(drop_info const& info)>;
 
-                              drop_box(Subject subject);
+                              drop_box(Subject subject, std::initializer_list<std::string> mime_types_);
       void                    draw(context const& ctx) override;
       bool                    wants_control() const override;
 
@@ -30,12 +31,16 @@ namespace cycfi { namespace elements
 
    private:
 
+      using mime_types = std::set<std::string>;
+
       bool                    _is_tracking = false;
+      mime_types              _mime_types;
    };
 
    template <typename Subject>
-   drop_box<Subject>::drop_box(Subject subject)
+   drop_box<Subject>::drop_box(Subject subject, std::initializer_list<std::string> mime_types_)
     : proxy<Subject>{std::move(subject)}
+    , _mime_types{mime_types_}
    {}
 
    template <typename Subject>
@@ -60,8 +65,16 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
-   inline void drop_box<Subject>::track_drop(context const& ctx, drop_info const& /*info*/, cursor_tracking status)
+   inline void drop_box<Subject>::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
+      // Return early if none of registered mime types is in the `drop_info`
+      if (!std::any_of(_mime_types.begin(), _mime_types.end(),
+         [&](auto const& item)
+         {
+            return info.data.contains(item);
+         }))
+         return;
+
       auto new_is_tracking = status != cursor_tracking::leaving;
       if (new_is_tracking != _is_tracking)
       {

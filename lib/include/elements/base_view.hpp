@@ -18,6 +18,7 @@
 #include <infra/filesystem.hpp>
 #include <elements/support/point.hpp>
 #include <elements/support/rect.hpp>
+#include <elements/support/payload.hpp>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 # include <windows.h>
@@ -278,8 +279,8 @@ namespace cycfi { namespace elements
 
    struct drop_info
    {
-      std::vector<fs::path>   paths;
-      point                   where;
+      payload           data;
+      point             where;
    };
 
    ////////////////////////////////////////////////////////////////////////////

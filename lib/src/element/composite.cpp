@@ -25,14 +25,55 @@ namespace cycfi { namespace elements
 
    void composite_base::draw(context const& ctx)
    {
-      for (std::size_t ix = 0; ix < size(); ++ix)
-      {
-         rect bounds = bounds_of(ctx, ix);
-         if (intersects(bounds, ctx.view_bounds()))
+      for_each_visible(ctx,
+         [&ctx](element& e, std::size_t /*ix*/, rect const& bounds)
          {
-            auto& e = at(ix);
             context ectx{ctx, &e, bounds};
             e.draw(ectx);
+            return false;
+         }
+      );
+   }
+
+   void composite_base::for_each_visible(
+      context const& ctx
+    , for_each_callback f
+    , bool reverse
+   )
+   {
+      // The default `for_each_visible` implementation follows a linear
+      // iteration over each item and verifies the visibility of its bounds.
+      // While suitable for a small number of elements within the composite,
+      // it becomes inefficient for a large composites with millions of
+      // elements.
+
+      auto& cnv = ctx.canvas;
+      auto  clip_extent = cnv.clip_extent();
+      if (!intersects(ctx.bounds, clip_extent))
+         return;
+
+      if (reverse)
+      {
+         for (int ix = int(size())-1; ix >= 0; --ix)
+         {
+            rect bounds = bounds_of(ctx, ix);
+            if (intersects(bounds, ctx.view_bounds()))
+            {
+               if (f(at(ix), ix, bounds))
+                  break;
+            }
+         }
+      }
+      else
+      {
+         for (std::size_t ix = 0; ix < size(); ++ix)
+         {
+            rect bounds = bounds_of(ctx, ix);
+            if (intersects(bounds, ctx.view_bounds()))
+            {
+               if (f(at(ix), ix, bounds))
+                  break;
+            }
          }
       }
    }

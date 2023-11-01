@@ -278,6 +278,12 @@ namespace cycfi { namespace elements
       std::size_t                size() const override;
       element&                   at(std::size_t ix) const override;
 
+      void                       for_each_visible(
+                                    context const& ctx
+                                  , for_each_callback f
+                                  , bool reverse = false
+                                 ) override;
+
    protected:
 
       struct cell_info
@@ -292,7 +298,8 @@ namespace cycfi { namespace elements
       virtual view_limits        make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits ) const;
       virtual float              get_main_axis_start(const rect &r);
       virtual float              get_main_axis_end(const rect &r);
-      virtual void               make_bounds(context& ctx, float main_axis_start, cell_info &info);
+      virtual void               set_bounds(rect& r, float main_axis_start, cell_info &info);
+      void                       set_bounds(context& ctx, float main_axis_start, cell_info &info);
 
       using cells_vector = std::vector<cell_info>;
       mutable cells_vector       _cells;
@@ -326,10 +333,9 @@ namespace cycfi { namespace elements
    protected:
 
       view_limits 				   make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
-      void 						      make_bounds(context &ctx, float main_axis_start, cell_info &info) override;
-      float 					      get_main_axis_start(const rect&r) override;
-      float 					      get_main_axis_end(const rect &r) override;
-
+      void                       set_bounds(rect& r, float main_axis_start, cell_info &info) override;
+      float                      get_main_axis_start(const rect&r) override;
+      float                      get_main_axis_end(const rect &r) override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -425,6 +431,11 @@ namespace cycfi { namespace elements
       this->_secondary_axis_limits.min = lim.min.y;
       this->_secondary_axis_limits.max = lim.max.y;
       this->_main_axis_size = lim.min.x;
+   }
+
+   inline void dynamic_list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell)
+   {
+      set_bounds(ctx.bounds, main_axis_pos, cell);
    }
 }}
 

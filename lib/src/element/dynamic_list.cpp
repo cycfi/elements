@@ -18,17 +18,7 @@ namespace cycfi { namespace elements
    {
       if (_cells[ix].elem_ptr)
          return *_cells[ix].elem_ptr.get();
-      return *_composer->compose(ix).get();
-   }
-
-   element* dynamic_list::hit_test(context const& ctx, point p, bool leaf)
-   {
-      if (!empty())
-      {
-         hit_info info = hit_element(ctx, p, false);
-         return leaf? info.leaf_element_ptr : info.element_ptr;
-      }
-      return nullptr;
+      return *(_cells[ix].elem_ptr =_composer->compose(ix)).get();
    }
 
    view_limits dynamic_list::limits(basic_context const& ctx) const
@@ -53,7 +43,7 @@ namespace cycfi { namespace elements
       // Johann Philippe : this seems to be necessary for context where a
       // hdynamic_list is inside vdynamic_list (2D tables)
       if (_update_request)
-           update(ctx);
+         update(ctx);
 
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
@@ -159,363 +149,10 @@ namespace cycfi { namespace elements
       _update_request = false;
    }
 
-   bool dynamic_list::click(const context &ctx, mouse_button btn)
-   {
-      if (!empty())
-      {
-         if (btn.down) // button down
-         {
-            hit_info info = hit_element(ctx, btn.pos, true);
-            if (info.element_ptr)
-            {
-               if (info.element_ptr->wants_focus() && _focus != info.index)
-                  new_focus(ctx, info.index, restore_previous);
-
-               context ectx{ctx, info.element_ptr, info.bounds};
-               if (info.element_ptr->click(ectx, btn))
-               {
-                  if (btn.down)
-                     _click_tracking = info.index;
-                  return true;
-               }
-            }
-         }
-         else if (_click_tracking != -1) // button up
-         {
-            rect  bounds = bounds_of(ctx, _click_tracking);
-            auto& e = at(_click_tracking);
-            context ectx{ctx, &e, bounds};
-            if (e.click(ectx, btn))
-               return true;
-         }
-      }
-      _click_tracking = -1;
-      return false;
-   }
-
-   bool dynamic_list::text(context const& ctx, text_info info)
-   {
-      if (_focus != -1)
-      {
-         rect  bounds = bounds_of(ctx, _focus);
-         auto& focus_ = at(_focus);
-         context ectx{ctx, &focus_, bounds};
-         return focus_.text(ectx, info);
-      };
-      return false;
-   }
-
-   void dynamic_list::new_focus(context const& ctx, int index, focus_request req)
-   {
-      if (_focus != -1 )
-      {
-         at(_focus).end_focus();
-         ctx.view.refresh(ctx);
-      }
-
-      // start a new focus
-      _focus = index;
-      if (_focus != -1)
-      {
-         at(_focus).begin_focus(req);
-         scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
-         ctx.view.refresh(ctx);
-      }
-   }
-
-   bool dynamic_list::key(const context &ctx, key_info k)
-   {
-      auto&& try_key = [&](int ix) -> bool
-      {
-         rect bounds = bounds_of(ctx, ix);
-         auto& e = at(ix);
-         context ectx{ctx, &e, bounds};
-         bool b = e.key(ectx, k);
-         return b;
-      };
-
-      auto&& try_focus = [&](int ix, focus_request req) -> bool
-      {
-         if (at(ix).wants_focus())
-         {
-            new_focus(ctx, ix, req);
-            return true;
-         }
-         return false;
-      };
-
-      if (_focus != -1)
-      {
-         if (try_key(_focus))
-            return true;
-      }
-
-      if ((k.action == key_action::press || k.action == key_action::repeat)
-            && k.key == key_code::tab && _cells.size())
-      {
-         int next_focus = _focus;
-         bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
-         if (next_focus == -1 && reverse)
-            next_focus = _cells.size();
-
-         if (!reverse)
-         {
-            while (++next_focus != static_cast<int>(_cells.size()))
-            {
-               if (try_focus(next_focus, from_top))
-                  return true;
-            }
-            return false;
-         }
-         else
-         {
-            while (--next_focus >= 0)
-            {
-               if (at(next_focus).wants_focus())
-                  if (try_focus(next_focus, from_bottom))
-                     return true;
-            }
-            return false;
-         }
-      }
-
-      // Johann Philippe : The following code comes from composite_base.
-      // I commented that since it caused crashes. Still don't know if that can be useful to adapt.
-
-      // If we reached here, then there's either no focus, or the
-      // focus did not handle the key press.
-
-      /*
-      if (reverse_index())
-      {
-         for (int ix = int(_cells.size())-1; ix >= 0; --ix)
-         {
-            if (try_key(ix))
-               return true;
-         }
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < _cells.size(); ++ix)
-         {
-            if (try_key(ix))
-               return true;
-         }
-      }
-      */
-      return false;
-   }
-
-   bool dynamic_list::cursor(const context &ctx, point p, cursor_tracking status)
-   {
-      if (_cursor_tracking >= int(_cells.size())) // just to be sure!
-         _cursor_tracking = -1;
-
-      // Send cursor leaving to all currently hovering elements if cursor is
-      // leaving the composite.
-      if (status == cursor_tracking::leaving)
-      {
-         for (auto ix : _cursor_hovering)
-         {
-            if (ix < int(_cells.size()))
-            {
-               auto& e = at(ix);
-               context ectx{ctx, &e, bounds_of(ctx, ix)};
-               e.cursor(ectx, p, cursor_tracking::leaving);
-            }
-         }
-         return false;
-      }
-
-      // Send cursor leaving to all currently hovering elements if p is
-      // outside the elements's bounds or if the element is no longer hit.
-      for (auto i = _cursor_hovering.begin(); i != _cursor_hovering.end();)
-      {
-         if (*i < int(_cells.size()))
-         {
-            auto& e = at(*i);
-            rect  b = bounds_of(ctx, *i);
-            context ectx{ctx, &e, b};
-            if (!b.includes(p) || !e.hit_test(ectx, p, false))
-            {
-               e.cursor(ectx, p, cursor_tracking::leaving);
-               i = _cursor_hovering.erase(i);
-               continue;
-            }
-         }
-         ++i;
-      }
-
-      // Send cursor entering to newly hit element or hovering to current
-      // tracking element
-      hit_info info = hit_element(ctx, p, true);
-      if (info.element_ptr)
-      {
-         _cursor_tracking = info.index;
-         status = cursor_tracking::hovering;
-         if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
-         {
-             status = cursor_tracking::entering;
-            _cursor_hovering.insert(_cursor_tracking);
-         }
-         auto& e = at(_cursor_tracking);
-         context ectx{ctx, &e, bounds_of(ctx, _cursor_tracking)};
-         return e.cursor(ectx, p, status);
-      }
-
-      return false;
-   }
-
-   void dynamic_list::drag(const context &ctx, mouse_button btn)
-   {
-      if (_click_tracking != -1)
-      {
-         rect  bounds = bounds_of(ctx, _click_tracking);
-         auto& e = at(_click_tracking);
-         context ectx{ctx, &e, bounds};
-         e.drag(ectx, btn);
-      }
-   }
-
-
-   bool dynamic_list::scroll(context const& ctx, point dir, point p)
-   {
-      if (!empty())
-      {
-         hit_info info = hit_element(ctx, p, true);
-         if (auto ptr = info.element_ptr; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
-         {
-            context ectx{ctx, ptr, info.bounds};
-            return ptr->scroll(ectx, dir, p);
-         }
-      }
-      return false;
-   }
-
-   bool dynamic_list::wants_focus() const
-   {
-      for (std::size_t ix = 0; ix != size(); ++ix)
-         if (at(ix).wants_focus())
-            return true;
-      return false;
-   }
-
-   bool dynamic_list::wants_control() const
-   {
-      for (std::size_t ix = 0; ix < size(); ++ix)
-         if (at(ix).wants_control())
-            return true;
-      return false;
-   }
-
-   void dynamic_list::begin_focus(focus_request req)
-   {
-      if (_focus == -1 && req == restore_previous)
-         _focus = _saved_focus;
-
-      if (_focus == -1)
-      {
-         if (req == from_top || req == restore_previous)
-         {
-            for (std::size_t ix = 0; ix != size(); ++ix)
-               if (at(ix).wants_focus())
-               {
-                  _focus = ix;
-                  break;
-               }
-         }
-         else if (req == from_bottom)
-         {
-            for (int ix = size()-1; ix >= 0; --ix)
-               if (at(ix).wants_focus())
-               {
-                  _focus = ix;
-                  break;
-               }
-         }
-      }
-      if (_focus != -1)
-         at(_focus).begin_focus(req);
-   }
-
-   void dynamic_list::end_focus()
-   {
-      if (_focus != -1)
-         at(_focus).end_focus();
-      _saved_focus = _focus;
-      _focus = -1;
-   }
-
-   element const* dynamic_list::focus() const
-   {
-      return (empty() || (_focus == -1))? 0 : &at(_focus);
-   }
-
-
-   element* dynamic_list::focus()
-   {
-      return (empty() || (_focus == -1))? 0 : &at(_focus);
-   }
-
-
-   void dynamic_list::focus(std::size_t index)
-   {
-      if (index < _cells.size())
-         _focus = int(index);
-   }
-
-
-   void dynamic_list::reset()
-   {
-      _focus = -1;
-      _saved_focus = -1;
-      _click_tracking = -1;
-      _cursor_tracking = -1;
-      _cursor_hovering.clear();
-   }
-
    void dynamic_list::resize(size_t n)
    {
       this->_composer->resize(n);
       this->update();
-   }
-
-   dynamic_list::hit_info dynamic_list::hit_element(context const& ctx, point p, bool control) const
-   {
-      auto&& test_element =
-         [&](int ix, hit_info& info) -> bool
-         {
-            auto& e = at(ix);
-            if (!control || e.wants_control())
-            {
-               rect bounds = bounds_of(ctx, ix);
-               if (bounds.includes(p))
-               {
-                  context ectx{ctx, &e, bounds};
-                  if (auto leaf = e.hit_test(ectx, p, true))
-                  {
-                     info = hit_info{&e, leaf, bounds, int(ix)};
-                     return true;
-                  }
-               }
-            }
-            return false;
-         };
-
-      hit_info info = hit_info{{}, {}, rect{}, -1};
-      if (reverse_index())
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-            if (test_element(ix, info))
-               break;
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-            if (test_element(ix, info))
-               break;
-      }
-      return info;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -540,7 +177,7 @@ namespace cycfi { namespace elements
       ctx.bounds.height(cell.main_axis_size);
    }
 
-   rect dynamic_list::bounds_of(context const& ctx, int ix) const
+   rect dynamic_list::bounds_of(context const& ctx, std::size_t ix) const
    {
       rect r = ctx.bounds;
       r.top = ctx.bounds.top + _cells[ix].pos;
@@ -571,7 +208,7 @@ namespace cycfi { namespace elements
       ctx.bounds.width(cell.main_axis_size);
    }
 
-   rect hdynamic_list::bounds_of(context const& ctx, int ix) const
+   rect hdynamic_list::bounds_of(context const& ctx, std::size_t ix) const
    {
       rect r = ctx.bounds;
       r.left = ctx.bounds.left + _cells[ix].pos;

@@ -421,9 +421,6 @@ namespace cycfi { namespace elements
          context ectx{ctx, &e, bounds};
          if (e.drop(ectx, d_info))
             return true;
-
-         _cursor_tracking = -1;
-         return true;
       }
       return false;
    }

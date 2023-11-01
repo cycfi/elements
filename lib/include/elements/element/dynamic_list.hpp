@@ -302,6 +302,10 @@ namespace cycfi { namespace elements
       virtual bool               reverse_index() const { return false; }
       virtual hit_info           hit_element(context const& ctx, point p, bool control) const;
 
+      virtual std::size_t        size() const /*override*/;
+      virtual element&           at(std::size_t ix) const /*override*/;
+      bool                       empty() const { return size() == 0; } // $$$ temp $$$
+
    protected:
 
       void 			   			   new_focus(context const& ctx, int index, focus_request req);

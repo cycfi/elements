@@ -9,8 +9,10 @@ cmake_minimum_required(VERSION 3.9.6...3.15.0)
 project(elements LANGUAGES C CXX)
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(CMAKE_CXX_STANDARD LESS 17)
+   set(CMAKE_CXX_STANDARD 17)
+endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
    include(GitSubmoduleCheck)

@@ -258,7 +258,7 @@ namespace cycfi { namespace elements
       {
          _cursor_tracking = info.index;
          status = cursor_tracking::hovering;
-         if (!_cursor_hovering.contains(info.index))
+         if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
             status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
@@ -397,7 +397,7 @@ namespace cycfi { namespace elements
       {
          _cursor_tracking = info.index;
          status = cursor_tracking::hovering;
-         if (!_cursor_hovering.contains(info.index))
+         if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
              status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
@@ -421,9 +421,6 @@ namespace cycfi { namespace elements
          context ectx{ctx, &e, bounds};
          if (e.drop(ectx, d_info))
             return true;
-
-         _cursor_tracking = -1;
-         return true;
       }
       return false;
    }

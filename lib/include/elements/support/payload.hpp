@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <string_view>
+#include <variant>
 #include <cstddef>
 #include <infra/filesystem.hpp>
 

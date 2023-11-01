@@ -403,7 +403,7 @@
    void view::manage_on_tracking(element& e, tracking state)
    {
       // Simulate a begin_tracking if needed
-      if (!_tracking.contains(&e) && state == tracking::while_tracking)
+      if (_tracking.find(&e) == _tracking.end() && state == tracking::while_tracking)
          on_tracking(e, tracking::begin_tracking);
 
       _tracking[&e] = std::chrono::steady_clock::now();

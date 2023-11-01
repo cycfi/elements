@@ -14,6 +14,7 @@ set(ELEMENTS_SOURCES
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
+   src/element/drag_and_drop.cpp
    src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
@@ -64,6 +65,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
+   include/elements/element/drag_and_drop.hpp
    include/elements/element/dynamic_list.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
@@ -174,8 +176,11 @@ target_sources(elements
 
 target_include_directories(elements PUBLIC include)
 target_link_libraries(elements PUBLIC cycfi::infra)
-target_compile_features(elements PUBLIC cxx_std_20)
-message(STATUS "Building Elements using C++20.")
+if(CMAKE_CXX_STANDARD EQUAL 20)
+   target_compile_features(elements PUBLIC cxx_std_20)
+else()
+   target_compile_features(elements PUBLIC cxx_std_17)
+endif()
 
 if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)

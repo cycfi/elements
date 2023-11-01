@@ -683,9 +683,15 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    const NSUInteger count = [urls count];
    if (count)
    {
+      std::string paths;
       info->where = ph::point{ float(pos.x), float(pos.y) };
       for (NSUInteger i = 0; i < count; ++i)
-         info->paths.push_back([urls[i] fileSystemRepresentation]);
+      {
+         if (i != 0)
+            paths += "\n";
+         paths += std::string("file://") + [urls[i] fileSystemRepresentation];
+      }
+      info->data["text/uri-list"] = paths;
    }
 }
 
@@ -693,7 +699,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
-   if (info.paths.size())
+   if (info.data.size())
    {
       if (_view->drop(info))
          return YES;
@@ -710,7 +716,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
-   if (info.paths.size())
+   if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::entering);
    return NSDragOperationGeneric;
 }
@@ -719,7 +725,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
-   if (info.paths.size())
+   if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::hovering);
    return NSDragOperationGeneric;
 }
@@ -728,7 +734,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    ph::drop_info info;
    [self makeDropInfo : sender : &info];
-   if (info.paths.size())
+   if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::leaving);
 }
 

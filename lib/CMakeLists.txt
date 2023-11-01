@@ -58,6 +58,7 @@ set(ELEMENTS_SOURCES
    src/support/text_utils.cpp
    src/support/receiver.cpp
    src/support/theme.cpp
+   src/support/payload.cpp
    src/view.cpp
 )
 

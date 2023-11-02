@@ -102,9 +102,9 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // find_parent utility finds the innermost parent with the given pointer
-   // type or nullptr if not found, given a context. If successful, returns a
-   // pointer to the parent.
+   // find_parent utility finds the innermost parent element with the given
+   // pointer type or nullptr if not found, given a context. If successful,
+   // returns a pointer to the parent element.
    ////////////////////////////////////////////////////////////////////////////
    template <typename Ptr>
    inline Ptr find_parent(context const& ctx)
@@ -114,6 +114,24 @@ namespace cycfi { namespace elements
       {
          if (auto* e = detail::find_element_impl<Ptr>(p->element))
             return e;
+         p = p->parent;
+      }
+      return nullptr;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // find_parent_context utility finds the innermost parent context with an
+   // element of a given pointer type or nullptr if not found, given a
+   // context. If successful, returns a pointer to the parent context.
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Ptr>
+   inline context const* find_parent_context(context const& ctx)
+   {
+      auto p = ctx.parent;
+      while (p)
+      {
+         if (auto* e = detail::find_element_impl<Ptr>(p->element))
+            return p;
          p = p->parent;
       }
       return nullptr;

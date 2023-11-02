@@ -47,9 +47,8 @@ namespace cycfi { namespace elements
       // it becomes inefficient for a large composites with millions of
       // elements.
 
-      auto& cnv = ctx.canvas;
-      auto  clip_extent = cnv.clip_extent();
-      if (!intersects(ctx.bounds, clip_extent))
+      auto  port_bounds = port_rect(ctx);
+      if (!intersects(ctx.bounds, port_bounds))
          return;
 
       if (reverse)
@@ -78,21 +77,26 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::refresh(context const& ctx, element& element, int outward)
+   void composite_base::refresh(context const& ctx, element& element_, int outward)
    {
-      if (&element == this)
+      if (&element_ == this)
       {
          ctx.view.refresh(ctx, outward);
       }
       else
       {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-         {
-            rect bounds = bounds_of(ctx, ix);
-            auto& e = at(ix);
-            context ectx{ctx, &e, bounds};
-            e.refresh(ectx, element, outward);
-         }
+         for_each_visible(ctx,
+            [&](element& e, std::size_t /*ix*/, rect const& bounds)
+            {
+               if (&element_ == &e)
+               {
+                  context ectx{ctx, &e, bounds};
+                  e.refresh(ectx, element_, outward);
+                  return false; // break the for loop
+               }
+               return true;
+            }
+         );
       }
    }
 
@@ -219,6 +223,19 @@ namespace cycfi { namespace elements
 
       // If we reached here, then there's either no focus, or the
       // focus did not handle the key press.
+      bool handled = false;
+      for_each_visible(ctx,
+         [&](element& e, std::size_t /*ix*/, rect const& bounds)
+         {
+            context ectx{ctx, &e, bounds};
+            handled = e.key(ectx, k);
+            return handled; // break if key is handled by e
+         },
+         reverse_index()
+      );
+      return handled;
+
+
       if (reverse_index())
       {
          for (int ix = int(size())-1; ix >= 0; --ix)

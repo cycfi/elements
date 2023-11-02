@@ -91,8 +91,7 @@ namespace cycfi { namespace elements
                                  context const& ctx
                                , for_each_callback f
                                , bool reverse = false
-                              );
-
+                              ) const;
    private:
 
       void                    new_focus(context const& ctx, int index, focus_request req);

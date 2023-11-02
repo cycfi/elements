@@ -39,7 +39,7 @@ namespace cycfi { namespace elements
       context const& ctx
     , for_each_callback f
     , bool reverse
-   )
+   ) const
    {
       // The default `for_each_visible` implementation follows a linear
       // iteration over each item and verifies the visibility of its bounds.
@@ -465,13 +465,12 @@ namespace cycfi { namespace elements
 
    composite_base::hit_info composite_base::hit_element(context const& ctx, point p, bool control) const
    {
-      auto&& test_element =
-         [&](int ix, hit_info& info) -> bool
+      hit_info info = hit_info{{}, {}, rect{}, -1};
+      for_each_visible(ctx,
+         [&](element& e, std::size_t ix, rect const& bounds)
          {
-            auto& e = at(ix);
             if (!control || e.wants_control())
             {
-               rect bounds = bounds_of(ctx, ix);
                if (bounds.includes(p))
                {
                   context ectx{ctx, &e, bounds};
@@ -483,21 +482,9 @@ namespace cycfi { namespace elements
                }
             }
             return false;
-         };
-
-      hit_info info = hit_info{{}, {}, rect{}, -1};
-      if (reverse_index())
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-            if (test_element(ix, info))
-               break;
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-            if (test_element(ix, info))
-               break;
-      }
+         },
+         reverse_index()
+      );
       return info;
    }
 

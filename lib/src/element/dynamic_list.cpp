@@ -115,7 +115,7 @@ namespace cycfi { namespace elements
       context const& ctx
     , for_each_callback f
     , bool reverse
-   )
+   ) const
    {
       auto& cnv = ctx.canvas;
       auto  clip_extent = cnv.clip_extent();
@@ -226,11 +226,15 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Vertical dynamic_list methods
    ////////////////////////////////////////////////////////////////////////////
-   float dynamic_list::get_main_axis_start(const rect &r)
-   {return r.top;}
+   float dynamic_list::get_main_axis_start(const rect &r) const
+   {
+      return r.top;
+   }
 
-   float dynamic_list::get_main_axis_end(const rect &r)
-   {return r.bottom;}
+   float dynamic_list::get_main_axis_end(const rect &r) const
+   {
+      return r.bottom;
+   }
 
    view_limits dynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
@@ -239,7 +243,7 @@ namespace cycfi { namespace elements
        , {secondary_axis_limits.max, float(main_axis_size)}};
    }
 
-   void dynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell)
+   void dynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
    {
       r.top = main_axis_pos + cell.pos;
       r.height(cell.main_axis_size);
@@ -257,11 +261,15 @@ namespace cycfi { namespace elements
    // Horizontal dynamic_list methods
    ////////////////////////////////////////////////////////////////////////////
 
-   float hdynamic_list::get_main_axis_start(const rect &r)
-   {return r.left;}
+   float hdynamic_list::get_main_axis_start(const rect &r) const
+   {
+      return r.left;
+   }
 
-   float hdynamic_list::get_main_axis_end(const rect &r)
-   {return r.right;}
+   float hdynamic_list::get_main_axis_end(const rect &r) const
+   {
+      return r.right;
+   }
 
    view_limits hdynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
@@ -270,7 +278,7 @@ namespace cycfi { namespace elements
        , {main_axis_size, secondary_axis_limits.max}};
    }
 
-   void hdynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell)
+   void hdynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
    {
       r.left = main_axis_pos + cell.pos;
       r.width(cell.main_axis_size);

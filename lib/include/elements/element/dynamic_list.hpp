@@ -282,7 +282,7 @@ namespace cycfi { namespace elements
                                     context const& ctx
                                   , for_each_callback f
                                   , bool reverse = false
-                                 ) override;
+                                 ) const override;
 
    protected:
 
@@ -296,10 +296,10 @@ namespace cycfi { namespace elements
 
       // virtual member functions to specialize in hdynamic or vdynamic
       virtual view_limits        make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits ) const;
-      virtual float              get_main_axis_start(const rect &r);
-      virtual float              get_main_axis_end(const rect &r);
-      virtual void               set_bounds(rect& r, float main_axis_start, cell_info &info);
-      void                       set_bounds(context& ctx, float main_axis_start, cell_info &info);
+      virtual float              get_main_axis_start(const rect &r) const;
+      virtual float              get_main_axis_end(const rect &r) const;
+      virtual void               set_bounds(rect& r, float main_axis_start, cell_info &info) const;
+      void                       set_bounds(context& ctx, float main_axis_start, cell_info &info) const;
 
       using cells_vector = std::vector<cell_info>;
       mutable cells_vector       _cells;
@@ -332,10 +332,10 @@ namespace cycfi { namespace elements
 
    protected:
 
-      view_limits 				   make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
-      void                       set_bounds(rect& r, float main_axis_start, cell_info &info) override;
-      float                      get_main_axis_start(const rect&r) override;
-      float                      get_main_axis_end(const rect &r) override;
+      view_limits                make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
+      void                       set_bounds(rect& r, float main_axis_start, cell_info &info) const override;
+      float                      get_main_axis_start(const rect&r) const override;
+      float                      get_main_axis_end(const rect &r) const override;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -433,7 +433,7 @@ namespace cycfi { namespace elements
       this->_main_axis_size = lim.min.x;
    }
 
-   inline void dynamic_list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell)
+   inline void dynamic_list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell) const
    {
       set_bounds(ctx.bounds, main_axis_pos, cell);
    }

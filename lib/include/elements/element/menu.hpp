@@ -44,8 +44,6 @@ namespace cycfi { namespace elements
                               template <typename Menu>
       void                    menu(Menu&& menu_);
 
-      //  bool            wants_focus() const override  { return true; }
-
       on_open_menu_function   on_open_menu;
 
    private:
@@ -120,13 +118,11 @@ namespace cycfi { namespace elements
       menu_item_function      on_click;
       shortcut_key            shortcut;
 
-      void                    scroll_into_view()   { _scroll_into_view = true; }
       bool                    is_selected() const override;
       void                    select(bool state) override;
 
    private:
 
-      bool                    _scroll_into_view = false;
       bool                    _selected = false;
    };
 

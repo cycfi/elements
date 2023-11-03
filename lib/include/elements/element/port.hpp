@@ -27,6 +27,10 @@ namespace cycfi { namespace elements
       virtual void            valign(double val) = 0;
    };
 
+   // Utility to find the bounds established by the innermost port given a
+   // child context. If there is none, returns ctx.view_bounds()
+   rect get_port_bounds(context const& ctx);
+
    class port_element : public port_base
    {
    public:

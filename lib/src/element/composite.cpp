@@ -25,33 +25,74 @@ namespace cycfi { namespace elements
 
    void composite_base::draw(context const& ctx)
    {
-      for (std::size_t ix = 0; ix < size(); ++ix)
-      {
-         rect bounds = bounds_of(ctx, ix);
-         if (intersects(bounds, ctx.view_bounds()))
+      for_each_visible(ctx,
+         [&ctx](element& e, std::size_t /*ix*/, rect const& bounds)
          {
-            auto& e = at(ix);
             context ectx{ctx, &e, bounds};
             e.draw(ectx);
+            return false;
          }
-      }
+      );
    }
 
-   void composite_base::refresh(context const& ctx, element& element, int outward)
+   void composite_base::for_each_visible(
+      context const& ctx
+    , for_each_callback f
+    , bool reverse
+   ) const
    {
-      if (&element == this)
+      // The default `for_each_visible` implementation follows a linear
+      // iteration over each item and verifies the visibility of its bounds.
+      // While suitable for a small number of elements within the composite,
+      // it becomes inefficient for a large composites with millions of
+      // elements.
+
+      auto  port_bounds = get_port_bounds(ctx);
+      if (!intersects(ctx.bounds, port_bounds))
+         return;
+
+      if (reverse)
       {
-         ctx.view.refresh(ctx, outward);
+         for (int ix = int(size())-1; ix >= 0; --ix)
+         {
+            rect bounds = bounds_of(ctx, ix);
+            if (intersects(bounds, port_bounds))
+            {
+               if (f(at(ix), ix, bounds))
+                  break;
+            }
+         }
       }
       else
       {
          for (std::size_t ix = 0; ix < size(); ++ix)
          {
             rect bounds = bounds_of(ctx, ix);
-            auto& e = at(ix);
-            context ectx{ctx, &e, bounds};
-            e.refresh(ectx, element, outward);
+            if (intersects(bounds, port_bounds))
+            {
+               if (f(at(ix), ix, bounds))
+                  break;
+            }
          }
+      }
+   }
+
+   void composite_base::refresh(context const& ctx, element& element_, int outward)
+   {
+      if (&element_ == this)
+      {
+         ctx.view.refresh(ctx, outward);
+      }
+      else
+      {
+         for_each_visible(ctx,
+            [&](element& e, std::size_t /*ix*/, rect const& bounds)
+            {
+               context ectx{ctx, &e, bounds};
+               e.refresh(ectx, element_, outward);
+               return false; // Continue
+            }
+         );
       }
    }
 
@@ -178,24 +219,17 @@ namespace cycfi { namespace elements
 
       // If we reached here, then there's either no focus, or the
       // focus did not handle the key press.
-      if (reverse_index())
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
+      bool handled = false;
+      for_each_visible(ctx,
+         [&](element& e, std::size_t /*ix*/, rect const& bounds)
          {
-            if (try_key(ix))
-               return true;
-         }
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-         {
-            if (try_key(ix))
-               return true;
-         }
-      }
-
-      return false;
+            context ectx{ctx, &e, bounds};
+            handled = e.key(ectx, k);
+            return handled; // break if key is handled by e
+         },
+         reverse_index()
+      );
+      return handled;
    }
 
    bool composite_base::text(context const& ctx, text_info info)
@@ -427,13 +461,12 @@ namespace cycfi { namespace elements
 
    composite_base::hit_info composite_base::hit_element(context const& ctx, point p, bool control) const
    {
-      auto&& test_element =
-         [&](int ix, hit_info& info) -> bool
+      hit_info info = hit_info{{}, {}, rect{}, -1};
+      for_each_visible(ctx,
+         [&](element& e, std::size_t ix, rect const& bounds)
          {
-            auto& e = at(ix);
             if (!control || e.wants_control())
             {
-               rect bounds = bounds_of(ctx, ix);
                if (bounds.includes(p))
                {
                   context ectx{ctx, &e, bounds};
@@ -445,21 +478,9 @@ namespace cycfi { namespace elements
                }
             }
             return false;
-         };
-
-      hit_info info = hit_info{{}, {}, rect{}, -1};
-      if (reverse_index())
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-            if (test_element(ix, info))
-               break;
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-            if (test_element(ix, info))
-               break;
-      }
+         },
+         reverse_index()
+      );
       return info;
    }
 

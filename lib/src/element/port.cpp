@@ -24,6 +24,13 @@ namespace cycfi { namespace elements
       proxy_base::draw(ctx);
    }
 
+   rect get_port_bounds(context const& ctx)
+   {
+      if (auto pctx = find_parent_context<port_base*>(ctx))
+         return pctx->bounds;
+      return ctx.view_bounds();
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // port_element class implementation
    ////////////////////////////////////////////////////////////////////////////
@@ -60,9 +67,9 @@ namespace cycfi { namespace elements
 
    void vport_element::prepare_subject(context& ctx)
    {
-      view_limits    e_limits          = subject().limits(ctx);
-      double         elem_height       = e_limits.min.y;
-      double         available_height  = ctx.parent->bounds.height();
+      view_limits e_limits = subject().limits(ctx);
+      double elem_height = e_limits.min.y;
+      double available_height = ctx.parent->bounds.height();
 
       ctx.bounds.top -= (elem_height - available_height) * _valign;
       ctx.bounds.height(elem_height);
@@ -81,9 +88,9 @@ namespace cycfi { namespace elements
 
    void hport_element::prepare_subject(context& ctx)
    {
-      view_limits    e_limits          = subject().limits(ctx);
-      double         elem_width        = e_limits.min.x;
-      double         available_width   = ctx.parent->bounds.width();
+      view_limits e_limits = subject().limits(ctx);
+      double elem_width = e_limits.min.x;
+      double available_width = ctx.parent->bounds.width();
 
       ctx.bounds.left -= (elem_width - available_width) * _halign;
       ctx.bounds.width(elem_width);
@@ -206,12 +213,12 @@ namespace cycfi { namespace elements
 
    void scroller_base::prepare_subject(context& ctx)
    {
-      view_limits    e_limits          = subject().limits(ctx);
+      view_limits e_limits = subject().limits(ctx);
 
       if (allow_vscroll())
       {
-         double      elem_height       = e_limits.min.y;
-         double      available_height  = ctx.parent->bounds.height();
+         double elem_height = e_limits.min.y;
+         double available_height = ctx.parent->bounds.height();
 
          ctx.bounds.top -= (elem_height - available_height) * valign();
          ctx.bounds.height(elem_height);
@@ -219,8 +226,8 @@ namespace cycfi { namespace elements
 
       if (allow_hscroll())
       {
-         double      elem_width        = e_limits.min.x;
-         double      available_width   = ctx.parent->bounds.width();
+         double elem_width = e_limits.min.x;
+         double available_width = ctx.parent->bounds.width();
 
          ctx.bounds.left -= (elem_width - available_width) * halign();
          ctx.bounds.width(elem_width);
@@ -237,7 +244,7 @@ namespace cycfi { namespace elements
    scroller_base::get_scrollbar_bounds(context const& ctx)
    {
       scrollbar_bounds r;
-      view_limits      e_limits = subject().limits(ctx);
+      view_limits e_limits = subject().limits(ctx);
 
       r.has_h = e_limits.min.x > ctx.bounds.width() && allow_hscroll();
       r.has_v = e_limits.min.y > ctx.bounds.height() && allow_vscroll();
@@ -245,7 +252,7 @@ namespace cycfi { namespace elements
       if (r.has_v)
       {
          r.vscroll_bounds = rect{
-                 ctx.bounds.left + ctx.bounds.width() - scrollbar_width,
+            ctx.bounds.left + ctx.bounds.width() - scrollbar_width,
             ctx.bounds.top,
             ctx.bounds.right,
             ctx.bounds.bottom - (r.has_h ? scroller_base::scrollbar_width : 0)
@@ -278,9 +285,9 @@ namespace cycfi { namespace elements
 
       if (has_scrollbars())
       {
-         scrollbar_bounds  sb = get_scrollbar_bounds(ctx);
-         view_limits       e_limits = subject().limits(ctx);
-         point             mp = ctx.cursor_pos();
+         scrollbar_bounds sb = get_scrollbar_bounds(ctx);
+         view_limits e_limits = subject().limits(ctx);
+         point mp = ctx.cursor_pos();
 
          if (sb.has_v)
             draw_scroll_bar(ctx, {valign(), e_limits.min.y, sb.vscroll_bounds}, mp);
@@ -326,12 +333,12 @@ namespace cycfi { namespace elements
       return redraw;
    }
 
-   void scroller_base::set_position( point p)
+   void scroller_base::set_position(point p)
    {
-       if(allow_hscroll())
-           halign(p.x);
-       if(allow_vscroll())
-           valign(p.y);
+      if (allow_hscroll())
+         halign(p.x);
+      if (allow_vscroll())
+         valign(p.y);
    }
 
    bool scroller_base::click(context const& ctx, mouse_button btn)
@@ -563,7 +570,7 @@ namespace cycfi { namespace elements
             }
 
             default:
-                break;
+               break;
          }
       }
       return handled;

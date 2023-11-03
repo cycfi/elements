@@ -84,9 +84,14 @@ namespace cycfi { namespace elements
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
       virtual bool            reverse_index() const { return false; }
 
-                              template <typename F>
-      void                    for_each(F&& f, bool reverse = false) const;
+      using for_each_callback =
+         std::function<bool(element& e, std::size_t ix, rect const& r)>;
 
+      virtual void            for_each_visible(
+                                 context const& ctx
+                               , for_each_callback f
+                               , bool reverse = false
+                              ) const;
    private:
 
       void                    new_focus(context const& ctx, int index, focus_request req);
@@ -171,51 +176,6 @@ namespace cycfi { namespace elements
    inline element& range_composite<Base>::at(std::size_t ix) const
    {
       return _container.at(_first + ix);
-   }
-
-   template <typename F>
-   inline void composite_base::for_each(F&& f, bool reverse) const
-   {
-      if (reverse_index() ^ reverse)
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-            if (!f(ix, at(ix)))
-               break;
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-            if (!f(ix, at(ix)))
-               break;
-      }
-   }
-
-   template <typename C>
-   void move_to_front(C& composite, element_ptr e)
-   {
-      if (e && composite.back() != e)
-      {
-         auto i = std::find(composite.begin(), composite.end(), e);
-         if (i != composite.end())
-         {
-            std::rotate(i, i+1, composite.end());
-            composite.reset();
-         }
-      }
-   }
-
-   template <typename C>
-   void move_to_back(C& composite, element_ptr e)
-   {
-      if (e && composite.front() != e)
-      {
-         auto i = std::find(composite.begin(), composite.end(), e);
-         if (i != composite.end())
-         {
-            std::rotate(composite.begin(), i, i+1);
-            composite.reset();
-         }
-      }
    }
 }}
 

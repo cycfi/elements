@@ -125,13 +125,6 @@ namespace cycfi { namespace elements
    {
       if (is_selected() && is_enabled())
       {
-         if (_scroll_into_view)
-         {
-            scrollable::find(ctx).scroll_into_view(ctx.bounds);
-            ctx.view.refresh(ctx.bounds);
-            _scroll_into_view = false;
-         }
-
          auto& canvas_ = ctx.canvas;
 
          canvas_.begin_path();
@@ -246,7 +239,7 @@ namespace cycfi { namespace elements
                      return std::make_pair(nullptr, -1);
                   };
 
-                  auto select_next = [k](auto const& c, auto& selected, auto& selected_index)
+                  auto select_next = [&](auto const& c, auto& selected, auto& selected_index)
                   {
                      bool const down = k.key == key_code::down;
                      auto const last = static_cast<int>(c->size()) - 1;
@@ -262,14 +255,12 @@ namespace cycfi { namespace elements
                         if (p && p->is_enabled())
                         {
                            selected = p;
+                           selected_index = i;
                            break;
                         }
                      }
                      if (selected)
-                     {
                         selected->select(true);
-                        selected->scroll_into_view();
-                     }
                   };
 
                   auto unselect_rest = [](auto const& c, auto selected)
@@ -285,6 +276,8 @@ namespace cycfi { namespace elements
                   auto [selected, selected_index] = find_selected(c);
                   select_next(c, selected, selected_index);
                   unselect_rest(c, selected);
+
+                  scrollable::find(ctx).scroll_into_view(c->bounds_of(*cctx, selected_index));
                   cctx->view.refresh(*cctx);
                }
                return true;

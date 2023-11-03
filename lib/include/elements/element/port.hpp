@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
 
    // Utility to find the bounds established by the innermost port given a
    // child context. If there is none, returns ctx.view_bounds()
-   rect port_rect(context const& ctx);
+   rect get_port_bounds(context const& ctx);
 
    class port_element : public port_base
    {

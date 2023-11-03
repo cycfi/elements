@@ -69,9 +69,9 @@ namespace cycfi { namespace elements
 
    void vport_element::prepare_subject(context& ctx)
    {
-      view_limits    e_limits          = subject().limits(ctx);
-      double         elem_height       = e_limits.min.y;
-      double         available_height  = ctx.parent->bounds.height();
+      view_limits e_limits = subject().limits(ctx);
+      double elem_height = e_limits.min.y;
+      double available_height = ctx.parent->bounds.height();
 
       ctx.bounds.top -= (elem_height - available_height) * _valign;
       ctx.bounds.height(elem_height);
@@ -90,9 +90,9 @@ namespace cycfi { namespace elements
 
    void hport_element::prepare_subject(context& ctx)
    {
-      view_limits    e_limits          = subject().limits(ctx);
-      double         elem_width        = e_limits.min.x;
-      double         available_width   = ctx.parent->bounds.width();
+      view_limits e_limits = subject().limits(ctx);
+      double elem_width = e_limits.min.x;
+      double available_width = ctx.parent->bounds.width();
 
       ctx.bounds.left -= (elem_width - available_width) * _halign;
       ctx.bounds.width(elem_width);

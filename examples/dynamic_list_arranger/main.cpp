@@ -79,31 +79,31 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    size_t list_size = paths.size();
-   std::vector<element_ptr> ptr_list;
-   ptr_list.resize(list_size, nullptr);
    auto && make_row = [&](size_t index)
    {
-      if (ptr_list[index].get() == nullptr)
-         ptr_list[index] = share(
-            align_left(draggable(label(paths[index])))
-         );
-      return ptr_list[index];
+      return share(align_left(draggable(label(paths[index]))));
    };
 
    auto cp = basic_vertical_cell_composer(list_size, make_row);
-   auto list = vdynamic_list(cp);
+   auto list = vdynamic_list(cp, false);
    auto drop_inserter_ = share(
                            drop_inserter(
-                              margin({5, 5, 5, 20},
-                                 link(list)
-                              ),
+                              margin({5, 5, 5, 20}, link(list)),
                               {"text/uri-list"}
                            )
                         );
 
-   drop_inserter_->on_drop = [](drop_info const& info, std::size_t ix)
+   drop_inserter_->on_drop = [&](drop_info const& info, std::size_t ix)
    {
-      return true;
+      if (contains_filepaths(info.data))
+      {
+         auto new_paths = get_filepaths(info.data);
+         paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
+         list.resize(paths.size());
+         view_.refresh();
+         return true;
+      }
+      return false;
    };
 
    view_.content(

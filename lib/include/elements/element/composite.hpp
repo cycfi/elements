@@ -44,6 +44,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override = 0;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      void                    in_context_do(context const& ctx, element& e, context_function f) override;
 
       using element::refresh;
 

@@ -261,8 +261,9 @@ namespace cycfi { namespace elements
 
       using composer_ptr = std::shared_ptr<cell_composer>;
 
-                                 dynamic_list(composer_ptr composer)
+                                 dynamic_list(composer_ptr composer, bool auto_cleanup = true)
                                   : _composer(composer)
+                                  , _auto_cleanup(auto_cleanup)
                                  {}
 
       view_limits                limits(basic_context const& ctx) const override;
@@ -307,6 +308,7 @@ namespace cycfi { namespace elements
    private:
 
       composer_ptr               _composer;
+      bool                       _auto_cleanup;
       point                      _previous_size;
       std::size_t                _previous_window_start = 0;
       std::size_t                _previous_window_end = 0;
@@ -327,7 +329,9 @@ namespace cycfi { namespace elements
    class hdynamic_list : public dynamic_list
    {
    public:
-                                 hdynamic_list(composer_ptr ptr) : dynamic_list(ptr) {}
+                                 hdynamic_list(composer_ptr ptr, bool auto_cleanup = true)
+                                  : dynamic_list(ptr, auto_cleanup)
+                                 {}
       rect 						      bounds_of(context const& ctx, std::size_t ix) const override;
 
    protected:

@@ -90,23 +90,25 @@ namespace cycfi { namespace elements
             break;
       }
 
-      std::size_t new_end = it - _cells.begin();
-
       // Cleanup old rows
-      if (new_start != _previous_window_start || new_end != _previous_window_end)
+      if (_auto_cleanup)
       {
-         for (auto i = _previous_window_start; i != _previous_window_end; ++i)
+         std::size_t new_end = it - _cells.begin();
+         if (new_start != _previous_window_start || new_end != _previous_window_end)
          {
-            if ((i < new_start || i >= new_end) && i < _cells.size())
+            for (auto i = _previous_window_start; i != _previous_window_end; ++i)
             {
-               _cells[i].layout_id = -1;
-               _cells[i].elem_ptr.reset();
+               if ((i < new_start || i >= new_end) && i < _cells.size())
+               {
+                  _cells[i].layout_id = -1;
+                  _cells[i].elem_ptr.reset();
+               }
             }
          }
+         _previous_window_start = new_start;
+         _previous_window_end = new_end;
       }
 
-      _previous_window_start = new_start;
-      _previous_window_end = new_end;
       _previous_size.x = ctx.bounds.width();
       _previous_size.y = ctx.bounds.height();
    }

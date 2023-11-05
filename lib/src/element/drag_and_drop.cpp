@@ -163,12 +163,123 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
+   constexpr auto multiple_item_offset = 50;
+   constexpr auto multiple_item_shadow = 4;
+
+   namespace
+   {
+      class drag_image : public proxy_base
+      {
+      public:
+
+         drag_image(std::size_t num_selected)
+          : _num_selected{num_selected}
+         {}
+
+         view_limits limits(basic_context const& ctx) const override
+         {
+            auto r = this->subject().limits(ctx);
+            if (_num_selected > 1)
+            {
+               r.min.x += multiple_item_offset;
+               r.max.x += multiple_item_offset;
+               r.min.y += multiple_item_offset;
+               r.max.y += multiple_item_offset;
+               clamp_max(r.max.x, full_extent);
+               clamp_max(r.max.y, full_extent);
+            }
+            return r;
+         }
+
+         void prepare_subject(context& ctx) override
+         {
+            if (_num_selected > 1)
+            {
+               ctx.bounds.bottom -= multiple_item_offset;
+               ctx.bounds.right -= multiple_item_offset;
+            }
+         }
+
+         void draw(context const& ctx) override
+         {
+            if (_num_selected > 1)
+            {
+               auto& canvas_ = ctx.canvas;
+
+               auto bounds = ctx.bounds;
+               bounds.right -= multiple_item_offset;
+               bounds.bottom -= multiple_item_offset;
+               float opacity = 0.6;
+               for (int i = 0; i != std::min<int>(multiple_item_shadow, _num_selected-1); ++i)
+               {
+                  bounds = bounds.move(+10, +10);
+                  canvas_.begin_path();
+                  canvas_.add_round_rect(bounds, 2);
+                  canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
+                  canvas_.fill();
+                  opacity *= 0.5;
+               }
+            }
+            proxy_base::draw(ctx);
+         }
+
+      private:
+
+         std::size_t _num_selected = 0;
+      };
+
+      std::size_t count_selected(composite_base const& c)
+      {
+         std::size_t n = 0;
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  ++n;
+            }
+         }
+         return n;
+      }
+   }
+
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
+      auto [c, cctx] = find_composite(ctx);
+      if (c)
+      {
+         track_info.offset.x = track_info.current.x - ctx.bounds.left;
+         track_info.offset.y = track_info.current.y - ctx.bounds.top;
+         auto bounds = ctx.bounds;
+         if (is_selected())
+         {
+            std::size_t num_selected = count_selected(*c);
+            if (num_selected > 1)
+            {
+               bounds.right += multiple_item_offset;
+               bounds.bottom += multiple_item_offset;
+            }
+
+            _drag_image = share(
+               floating(bounds,
+                  proxy<decltype(link(*this)), drag_image>(link(*this), num_selected)
+               )
+            );
+            ctx.view.add(_drag_image);
+            ctx.view.refresh();
+         }
+      }
    }
 
    void draggable_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
+      if (_drag_image)
+      {
+         _drag_image->bounds(
+            _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
+         );
+      }
+      ctx.view.refresh();
    }
 
    namespace
@@ -227,11 +338,16 @@ namespace cycfi { namespace elements
 
    void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)
    {
-      // Did we do a drag?
-      if (std::abs(track_info.current.x - track_info.start.x) > 2 ||
-         std::abs(track_info.current.y - track_info.start.y) > 2
-         )
-         return;
+      if (_drag_image)
+      {
+         ctx.view.remove(_drag_image);
+         _drag_image.reset();
+         ctx.view.refresh();
+
+         // Did we do a drag?
+         if (std::abs(track_info.distance().x) > 10 || std::abs(track_info.distance().y) > 10)
+            return;
+      }
 
       if ((track_info.modifiers & (mod_shift | mod_action)) == 0)
       {

@@ -8,11 +8,14 @@
 
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
+#include <elements/element/floating.hpp>
 #include <functional>
 #include <set>
 
 namespace cycfi { namespace elements
 {
+   class composite_base;   // forward declaration
+
    class drop_base : public proxy_base
    {
    public:
@@ -81,7 +84,6 @@ namespace cycfi { namespace elements
       return {std::forward<Subject>(subject), mime_types};
    }
 
-   class composite_base; // forward declaration
    class draggable_element : public tracker<proxy_base>
    {
    public:
@@ -98,7 +100,10 @@ namespace cycfi { namespace elements
       void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
 
+      using drag_image_ptr = std::shared_ptr<floating_element>;
+
       bool                    _selected = false;
+      drag_image_ptr          _drag_image;
    };
 
    template <typename Subject>

@@ -321,9 +321,9 @@ namespace cycfi { namespace elements
 
       void shift_select(composite_base const& c)
       {
-         if (int first = find_first_selected(c); first > 0)
+         if (int first = find_first_selected(c); first >= 0)
          {
-            if (int last = find_last_selected(c); last > 0)
+            if (int last = find_last_selected(c); last >= 0)
             {
                // Select all from first to last
                for (int i = first; i != last+1; ++i)

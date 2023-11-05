@@ -97,13 +97,37 @@ int main(int argc, char* argv[])
    {
       if (contains_filepaths(info.data))
       {
-         auto new_paths = get_filepaths(info.data);
-         paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
-         list.resize(paths.size());
-         view_.refresh();
+         view_.post([&view_, &list, info, ix]()
+            {
+               auto new_paths = get_filepaths(info.data);
+               paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
+               list.resize(paths.size());
+               view_.refresh();
+            }
+         );
          return true;
       }
       return false;
+   };
+
+   drop_inserter_->on_rearrange = [&](std::size_t pos, std::vector<std::size_t> const& indices)
+   {
+      view_.post([&view_, &list, pos, indices]()
+         {
+            std::vector<std::filesystem::path> to_move;
+            for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+            {
+               to_move.push_back(paths[*i]);
+               paths.erase(paths.begin()+*i);
+            }
+            auto pos_i = pos >= paths.size()? paths.end() : paths.begin()+pos;
+            for (auto const& path : to_move)
+               paths.insert(pos_i, path);
+            list.resize(paths.size());
+            view_.refresh();
+         }
+      );
+      return true;
    };
 
    view_.content(

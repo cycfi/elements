@@ -22,6 +22,22 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   namespace
+   {
+      std::string address_to_string(void* p)
+      {
+         return std::string(reinterpret_cast<char const*>(&p), sizeof(void*));
+      }
+   }
+
+   void drop_base::prepare_subject(context& ctx)
+   {
+      proxy_base::prepare_subject(ctx);
+      std::string id = address_to_string(this);
+      if (_mime_types.find(id) == _mime_types.end())
+         _mime_types.insert(id);
+   }
+
    void drop_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
       // Return early if none of registered mime types is in the `drop_info`
@@ -169,7 +185,6 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-
    namespace
    {
       constexpr auto item_offset = 10;
@@ -225,6 +240,13 @@ namespace cycfi { namespace elements
          std::size_t _num_boxes = 0;
       };
 
+      template <typename Subject>
+      inline proxy<remove_cvref_t<Subject>, drag_image_element>
+      drag_image(Subject&& subject, std::size_t num_boxes)
+      {
+         return {std::forward<Subject>(subject), num_boxes};
+      }
+
       std::size_t count_selected(composite_base const& c)
       {
          std::size_t n = 0;
@@ -238,13 +260,6 @@ namespace cycfi { namespace elements
          }
          return n;
       }
-
-      template <typename Subject>
-      inline proxy<remove_cvref_t<Subject>, drag_image_element>
-      drag_image(Subject&& subject, std::size_t num_boxes)
-      {
-         return {std::forward<Subject>(subject), num_boxes};
-      }
    }
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
@@ -253,7 +268,6 @@ namespace cycfi { namespace elements
       if (c)
       {
          track_info.offset.x = track_info.current.x - ctx.bounds.left;
-         track_info.offset.y = track_info.current.y - ctx.bounds.top;
          auto bounds = ctx.bounds;
          auto limits = this->subject().limits(ctx);
          bounds.width(limits.min.x);
@@ -270,6 +284,13 @@ namespace cycfi { namespace elements
             );
             ctx.view.add(_drag_image);
             ctx.view.refresh();
+
+            if (auto* di = find_parent<drop_inserter_base*>(ctx))
+            {
+               payload pl;
+               pl[address_to_string(di)] = {};
+               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+            }
          }
       }
    }
@@ -281,6 +302,13 @@ namespace cycfi { namespace elements
          _drag_image->bounds(
             _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
          );
+
+         if (auto* di = find_parent<drop_inserter_base*>(ctx))
+         {
+            payload pl;
+            pl[address_to_string(di)] = {};
+            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
+         }
       }
       ctx.view.refresh();
    }
@@ -337,6 +365,20 @@ namespace cycfi { namespace elements
             }
          }
       }
+
+      std::vector<std::size_t> collect_selected(composite_base const& c)
+      {
+         std::vector<std::size_t> indices;
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  indices.push_back(i);
+            }
+         }
+         return indices;
+      }
    }
 
    void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)
@@ -347,9 +389,29 @@ namespace cycfi { namespace elements
          _drag_image.reset();
          ctx.view.refresh();
 
-         // Did we do a drag?
+         auto* di = find_parent<drop_inserter_base*>(ctx);
+         if (di)
+         {
+            payload pl;
+            pl[address_to_string(di)] = {};
+            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::leaving);
+         }
+
+         // Did we actually do a drag?
          if (std::abs(track_info.distance().x) > 10 || std::abs(track_info.distance().y) > 10)
+         {
+            if (di)
+            {
+               auto [c, cctx] = find_composite(ctx);
+               if (c)
+               {
+                  auto indices = collect_selected(*c);
+                  if (indices.size())
+                     di->on_rearrange(di->insertion_pos(), std::move(indices));
+               }
+            }
             return;
+         }
       }
 
       if ((track_info.modifiers & (mod_shift | mod_action)) == 0)

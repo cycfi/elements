@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
    size_t list_size = paths.size();
    auto && make_row = [&](size_t index)
    {
-      return share(align_left(draggable(label(paths[index]))));
+      return share(draggable(align_left(label(paths[index]))));
    };
 
    auto cp = basic_vertical_cell_composer(list_size, make_row);

@@ -88,6 +88,7 @@ namespace cycfi { namespace elements
    {
    public:
 
+      view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
 

@@ -131,6 +131,12 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   view_limits draggable_element::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      return {{e_limits.min.x, e_limits.min.y}, {full_extent, e_limits.max.y}};
+   }
+
    void draggable_element::draw(context const& ctx)
    {
       if (is_selected() && is_enabled())
@@ -163,69 +169,60 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-   constexpr auto multiple_item_offset = 50;
-   constexpr auto multiple_item_shadow = 4;
 
    namespace
    {
-      class drag_image : public proxy_base
+      constexpr auto item_offset = 10;
+
+      class drag_image_element : public proxy_base
       {
       public:
 
-         drag_image(std::size_t num_selected)
-          : _num_selected{num_selected}
+         drag_image_element(std::size_t num_boxes)
+          : _num_boxes{num_boxes}
          {}
 
          view_limits limits(basic_context const& ctx) const override
          {
             auto r = this->subject().limits(ctx);
-            if (_num_selected > 1)
-            {
-               r.min.x += multiple_item_offset;
-               r.max.x += multiple_item_offset;
-               r.min.y += multiple_item_offset;
-               r.max.y += multiple_item_offset;
-               clamp_max(r.max.x, full_extent);
-               clamp_max(r.max.y, full_extent);
-            }
+            r.min.x += item_offset * _num_boxes;
+            r.max.x += item_offset * _num_boxes;
+            r.min.y += item_offset * _num_boxes;
+            r.max.y += item_offset * _num_boxes;
+            clamp_max(r.max.x, full_extent);
+            clamp_max(r.max.y, full_extent);
             return r;
          }
 
          void prepare_subject(context& ctx) override
          {
-            if (_num_selected > 1)
-            {
-               ctx.bounds.bottom -= multiple_item_offset;
-               ctx.bounds.right -= multiple_item_offset;
-            }
+            ctx.bounds.bottom -= item_offset * _num_boxes;
+            ctx.bounds.right -= item_offset * _num_boxes;
          }
 
          void draw(context const& ctx) override
          {
-            if (_num_selected > 1)
-            {
-               auto& canvas_ = ctx.canvas;
+            auto& canvas_ = ctx.canvas;
 
-               auto bounds = ctx.bounds;
-               bounds.right -= multiple_item_offset;
-               bounds.bottom -= multiple_item_offset;
-               float opacity = 0.6;
-               for (int i = 0; i != std::min<int>(multiple_item_shadow, _num_selected-1); ++i)
-               {
-                  bounds = bounds.move(+10, +10);
-                  canvas_.begin_path();
-                  canvas_.add_round_rect(bounds, 2);
-                  canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
-                  canvas_.fill();
-                  opacity *= 0.5;
-               }
+            auto bounds = ctx.bounds;
+            bounds.right -= item_offset * _num_boxes;
+            bounds.bottom -= item_offset * _num_boxes;
+            float opacity = 0.6;
+            for (std::size_t i = 0; i != _num_boxes; ++i)
+            {
+               canvas_.begin_path();
+               canvas_.add_round_rect(bounds, 2);
+               canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
+               canvas_.fill();
+               opacity *= 0.6;
+               bounds = bounds.move(+10, +10);
             }
             proxy_base::draw(ctx);
          }
 
       private:
 
-         std::size_t _num_selected = 0;
+         std::size_t _num_boxes = 0;
       };
 
       std::size_t count_selected(composite_base const& c)
@@ -241,6 +238,13 @@ namespace cycfi { namespace elements
          }
          return n;
       }
+
+      template <typename Subject>
+      inline proxy<remove_cvref_t<Subject>, drag_image_element>
+      drag_image(Subject&& subject, std::size_t num_boxes)
+      {
+         return {std::forward<Subject>(subject), num_boxes};
+      }
    }
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
@@ -251,18 +255,17 @@ namespace cycfi { namespace elements
          track_info.offset.x = track_info.current.x - ctx.bounds.left;
          track_info.offset.y = track_info.current.y - ctx.bounds.top;
          auto bounds = ctx.bounds;
+         auto limits = this->subject().limits(ctx);
+         bounds.width(limits.min.x);
          if (is_selected())
          {
-            std::size_t num_selected = count_selected(*c);
-            if (num_selected > 1)
-            {
-               bounds.right += multiple_item_offset;
-               bounds.bottom += multiple_item_offset;
-            }
+            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), 10);
+            bounds.right += item_offset * num_boxes;
+            bounds.bottom += item_offset * num_boxes;
 
             _drag_image = share(
                floating(bounds,
-                  proxy<decltype(link(*this)), drag_image>(link(*this), num_selected)
+                  drag_image(link(this->subject()), num_boxes)
                )
             );
             ctx.view.add(_drag_image);

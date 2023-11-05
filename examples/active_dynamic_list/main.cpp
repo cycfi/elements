@@ -25,7 +25,7 @@ struct basic_row : htile_composite
          {
             std::cout << "on text " << std::endl;
          };
-         push_back(share(input.first));
+         push_back(share(hsize(100, input.first)));
       }
    }
 

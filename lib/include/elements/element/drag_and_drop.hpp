@@ -7,6 +7,7 @@
 #define ELEMENTS_DRAG_AND_DROP_OCTOBER_11_2023
 
 #include <elements/element/proxy.hpp>
+#include <elements/element/tracker.hpp>
 #include <functional>
 #include <set>
 
@@ -80,21 +81,22 @@ namespace cycfi { namespace elements
       return {std::forward<Subject>(subject), mime_types};
    }
 
-   class draggable_element : public proxy_base
+   class composite_base; // forward declaration
+   class draggable_element : public tracker<proxy_base>
    {
    public:
 
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
-      bool                    click(context const& ctx, mouse_button btn) override;
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    wants_control() const override;
 
       bool                    is_selected() const;
       void                    select(bool state);
 
    private:
+
+      void                    begin_tracking(context const& ctx, tracker_info& track_info) override;
+      void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
+      void                    end_tracking(context const& ctx, tracker_info& track_info) override;
 
       bool                    _selected = false;
    };

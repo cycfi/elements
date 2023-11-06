@@ -242,15 +242,14 @@ namespace cycfi { namespace elements
          void draw(context const& ctx) override
          {
             auto& canvas_ = ctx.canvas;
-
-            auto bounds = ctx.bounds;
+            auto bounds = ctx.bounds.inset(-8, -2);
             bounds.right -= item_offset * _num_boxes;
             bounds.bottom -= item_offset * _num_boxes;
             float opacity = 0.6;
             for (std::size_t i = 0; i != _num_boxes; ++i)
             {
                canvas_.begin_path();
-               canvas_.add_round_rect(bounds, 2);
+               canvas_.add_round_rect(bounds, 4);
                canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
                canvas_.fill();
                opacity *= 0.6;

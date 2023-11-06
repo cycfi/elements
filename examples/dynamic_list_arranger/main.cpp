@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
    auto list = vdynamic_list(cp, false);
    auto drop_inserter_ = share(
                            drop_inserter(
-                              margin({10, 10, 10, 10}, link(list)),
+                              margin({10, 10, 15, 10}, link(list)),
                               {"text/uri-list"}
                            )
                         );

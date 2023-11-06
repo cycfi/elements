@@ -93,42 +93,35 @@ int main(int argc, char* argv[])
                            )
                         );
 
-   drop_inserter_->on_drop = [&](drop_info const& info, std::size_t ix)
-   {
-      if (contains_filepaths(info.data))
+   drop_inserter_->on_drop =
+      [&](drop_info const& info, std::size_t ix)
       {
-         view_.post([&view_, &list, info, ix]()
-            {
-               auto new_paths = get_filepaths(info.data);
-               paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
-               list.resize(paths.size());
-               view_.refresh();
-            }
-         );
-         return true;
-      }
-      return false;
-   };
-
-   drop_inserter_->on_rearrange = [&](std::size_t pos, std::vector<std::size_t> const& indices)
-   {
-      view_.post([&view_, &list, pos, indices]()
+         if (contains_filepaths(info.data))
          {
-            std::vector<std::filesystem::path> to_move;
-            for (auto i = indices.crbegin(); i != indices.crend(); ++i)
-            {
-               to_move.push_back(paths[*i]);
-               paths.erase(paths.begin()+*i);
-            }
-            auto pos_i = pos >= paths.size()? paths.end() : paths.begin()+pos;
-            for (auto const& path : to_move)
-               paths.insert(pos_i, path);
-            list.resize(paths.size());
+            auto new_paths = get_filepaths(info.data);
+            paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
+            list.insert(ix, new_paths.size());
             view_.refresh();
+            return true;
          }
-      );
-      return true;
-   };
+         return false;
+      };
+
+   drop_inserter_->on_move =
+      [&](std::size_t pos, std::vector<std::size_t> const& indices)
+      {
+         std::vector<std::filesystem::path> to_move;
+         for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+         {
+            to_move.push_back(paths[*i]);
+            paths.erase(paths.begin()+*i);
+         }
+         auto pos_i = pos >= paths.size()? paths.end() : paths.begin()+pos;
+         for (auto const& path : to_move)
+            paths.insert(pos_i, path);
+         view_.refresh();
+         return true;
+      };
 
    view_.content(
       margin({10, 10, 10, 10},

@@ -27,10 +27,7 @@ namespace cycfi { namespace elements
       {
          sync(ctx);
          auto secondary_limits = _composer->secondary_axis_limits(ctx);
-         if (_composer->size())
-         {
-            return make_limits(float(_main_axis_full_size),  secondary_limits);
-         }
+         return make_limits(float(_main_axis_full_size),  secondary_limits);
       }
       return {{0, 0}, {0, 0}};
    }
@@ -243,7 +240,6 @@ namespace cycfi { namespace elements
          _cells[i].pos = y;
          _cells[i].main_axis_size = main_axis_size;
          y += main_axis_size;
-         _main_axis_full_size = y;
       }
       ++_layout_id;
       _move_request = false;
@@ -263,12 +259,14 @@ namespace cycfi { namespace elements
 
       double y = 0;
       auto size = _composer->size();
+      _main_axis_full_size = 0;
       for (std::size_t i = 0; i != size; ++i)
       {
          auto main_axis_size = _composer->main_axis_size(i, ctx);
          _cells[i].pos = y;
          _cells[i].main_axis_size = main_axis_size;
          y += main_axis_size;
+         _main_axis_full_size = y;
       }
 
       ++_layout_id;
@@ -282,6 +280,34 @@ namespace cycfi { namespace elements
       _insert_num_items = num_items;
    }
 
+   void dynamic_list::delete_(indices_type const& indices)
+   {
+      _delete_request = true;
+      _delete_indices = indices;
+   }
+
+   void dynamic_list::delete_(basic_context const& ctx) const
+   {
+      this->_composer->resize(this->_composer->size() - _delete_indices.size());
+      for (auto i = _delete_indices.crbegin(); i != _delete_indices.crend(); ++i)
+         _cells.erase(_cells.begin()+*i);
+
+      double y = 0;
+      auto size = _composer->size();
+      _main_axis_full_size = 0;
+      for (std::size_t i = 0; i != size; ++i)
+      {
+         auto main_axis_size = _composer->main_axis_size(i, ctx);
+         _cells[i].pos = y;
+         _cells[i].main_axis_size = main_axis_size;
+         y += main_axis_size;
+         _main_axis_full_size = y;
+      }
+
+      ++_layout_id;
+      _delete_request = false;
+   }
+
    void dynamic_list::sync(basic_context const& ctx) const
    {
       if (_update_request)
@@ -290,6 +316,8 @@ namespace cycfi { namespace elements
          move(ctx);
       if (_insert_request)
          insert(ctx);
+      if (_delete_request)
+         delete_(ctx);
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -102,19 +102,32 @@ namespace cycfi { namespace elements
             in_context_do(ctx, *c, [&](context const& cctx)
             {
                point cursor_pos = ctx.cursor_pos();
-               auto hit_info = c->hit_element(cctx, cursor_pos, false);
-               if (hit_info.element_ptr)
+               if (c->size())
                {
-                  rect const& bounds = hit_info.bounds;
-                  bool before = cursor_pos.y < (bounds.top + (bounds.height()/2));
-                  float pos = before? bounds.top : bounds.bottom;
-                  _insertion_pos = before? hit_info.index : hit_info.index+1;
+                  auto hit_info = c->hit_element(cctx, cursor_pos, false);
+                  if (hit_info.element_ptr)
+                  {
+                     rect const& bounds = hit_info.bounds;
+                     bool before = cursor_pos.y < (bounds.top + (bounds.height()/2));
+                     float pos = before? bounds.top : bounds.bottom;
+                     _insertion_pos = before? hit_info.index : hit_info.index+1;
 
+                     auto &cnv = cctx.canvas;
+                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
+                     cnv.line_width(2.0);
+                     cnv.move_to({bounds.left, pos});
+                     cnv.line_to({bounds.right, pos});
+                     cnv.stroke();
+                  }
+               }
+               else
+               {
+                  _insertion_pos = 0;
                   auto &cnv = cctx.canvas;
                   cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
                   cnv.line_width(2.0);
-                  cnv.move_to({bounds.left, pos});
-                  cnv.line_to({bounds.right, pos});
+                  cnv.move_to({ctx.bounds.left, ctx.bounds.top});
+                  cnv.line_to({ctx.bounds.right, ctx.bounds.top});
                   cnv.stroke();
                }
             });
@@ -157,6 +170,13 @@ namespace cycfi { namespace elements
       }
    }
 
+   void drop_inserter_base::delete_(indices_type const& indices)
+   {
+      if (auto* c = find_subject<dynamic_list*>(&subject()))
+         c->delete_(indices);
+      on_delete(indices);
+   }
+
    view_limits draggable_element::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
@@ -186,13 +206,6 @@ namespace cycfi { namespace elements
          );
          proxy_base::draw(ctx);
       }
-   }
-
-   element* draggable_element::hit_test(context const& ctx, point p, bool /*leaf*/)
-   {
-      if (is_enabled() && ctx.bounds.includes(p))
-         return this;
-      return nullptr;
    }
 
    namespace
@@ -271,61 +284,7 @@ namespace cycfi { namespace elements
          }
          return n;
       }
-   }
 
-   void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
-   {
-      auto [c, cctx] = find_composite(ctx);
-      if (c)
-      {
-         track_info.offset.x = track_info.current.x - ctx.bounds.left;
-         auto bounds = ctx.bounds;
-         auto limits = this->subject().limits(ctx);
-         bounds.width(limits.min.x);
-         if (is_selected())
-         {
-            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
-            bounds.right += item_offset * num_boxes;
-            bounds.bottom += item_offset * num_boxes;
-
-            _drag_image = share(
-               floating(bounds,
-                  drag_image(link(this->subject()), num_boxes)
-               )
-            );
-            ctx.view.add(_drag_image);
-            ctx.view.refresh();
-
-            if (auto* di = find_parent<drop_inserter_base*>(ctx))
-            {
-               payload pl;
-               pl[address_to_string(di)] = {};
-               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
-            }
-         }
-      }
-   }
-
-   void draggable_element::keep_tracking(context const& ctx, tracker_info& track_info)
-   {
-      if (_drag_image)
-      {
-         _drag_image->bounds(
-            _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
-         );
-
-         if (auto* di = find_parent<drop_inserter_base*>(ctx))
-         {
-            payload pl;
-            pl[address_to_string(di)] = {};
-            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
-         }
-      }
-      ctx.view.refresh();
-   }
-
-   namespace
-   {
       void unselect_all(composite_base const& c)
       {
          for (std::size_t i = 0; i != c.size(); ++i)
@@ -390,6 +349,118 @@ namespace cycfi { namespace elements
          }
          return indices;
       }
+
+      void select_all(composite_base const& c)
+      {
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+               e->select(true);
+         }
+      }
+   }
+
+   bool draggable_element::key(context const& ctx, key_info k)
+   {
+      if (k.action == key_action::press || k.action == key_action::repeat)
+      {
+         switch (k.key)
+         {
+            case key_code::backspace:
+            case key_code::_delete:
+               {
+                  if (auto* di = find_parent<drop_inserter_base*>(ctx))
+                  {
+                     auto [c, cctx] = find_composite(ctx);
+                     if (c)
+                     {
+                        auto indices = collect_selected(*c);
+                        if (indices.size())
+                        {
+                           di->delete_(std::move(indices));
+                           return true;
+                        }
+                     }
+                  }
+               }
+               break;
+
+            case key_code::a:
+               if (k.modifiers & mod_action)
+               {
+                  auto [c, cctx] = find_composite(ctx);
+                  if (c)
+                  {
+                     select_all(*c);
+                     ctx.view.refresh();
+                     return true;
+                  }
+               }
+               break;
+
+            default:
+               break;
+         }
+      }
+      return false;
+   }
+
+   element* draggable_element::hit_test(context const& ctx, point p, bool /*leaf*/)
+   {
+      if (is_enabled() && ctx.bounds.includes(p))
+         return this;
+      return nullptr;
+   }
+
+   void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
+   {
+      auto [c, cctx] = find_composite(ctx);
+      if (c)
+      {
+         track_info.offset.x = track_info.current.x - ctx.bounds.left;
+         auto bounds = ctx.bounds;
+         auto limits = this->subject().limits(ctx);
+         bounds.width(limits.min.x);
+         if (is_selected())
+         {
+            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
+            bounds.right += item_offset * num_boxes;
+            bounds.bottom += item_offset * num_boxes;
+
+            _drag_image = share(
+               floating(bounds,
+                  drag_image(link(this->subject()), num_boxes)
+               )
+            );
+            ctx.view.add(_drag_image);
+            ctx.view.refresh();
+
+            if (auto* di = find_parent<drop_inserter_base*>(ctx))
+            {
+               payload pl;
+               pl[address_to_string(di)] = {};
+               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+            }
+         }
+      }
+   }
+
+   void draggable_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (_drag_image)
+      {
+         _drag_image->bounds(
+            _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
+         );
+
+         if (auto* di = find_parent<drop_inserter_base*>(ctx))
+         {
+            payload pl;
+            pl[address_to_string(di)] = {};
+            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
+         }
+      }
+      ctx.view.refresh();
    }
 
    void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)

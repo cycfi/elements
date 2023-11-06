@@ -12,6 +12,7 @@ auto make_bkd()
 {
    return port(image{"dark-bkd.jpg"});
 }
+
 std::string const text1 =
    "一千条路…\n"
    "仁、义、礼、智、信…\n"

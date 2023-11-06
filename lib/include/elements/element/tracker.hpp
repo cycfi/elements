@@ -59,6 +59,8 @@ namespace cycfi { namespace elements
       tracker_info*           get_state() { return state.get(); }
       tracker_info const*     get_state() const { return state.get(); }
 
+      void                    escape_tracking(context const& ctx);
+
    protected:
 
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
@@ -147,6 +149,18 @@ namespace cycfi { namespace elements
    tracker<Base, TrackerInfo>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
+   }
+
+   template <typename Base, typename TrackerInfo>
+   inline void
+   tracker<Base, TrackerInfo>::escape_tracking(context const& ctx)
+   {
+      if (state)
+      {
+         this->on_tracking(ctx, element::end_tracking);
+         end_tracking(ctx, *state);
+         state.reset();
+      }
    }
 }}
 

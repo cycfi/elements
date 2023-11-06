@@ -159,7 +159,10 @@ namespace cycfi { namespace elements
             auto& e = at(_click_tracking);
             context ectx{ctx, &e, bounds};
             if (e.click(ectx, btn))
+            {
+               _click_tracking = -1;
                return true;
+            }
          }
       }
       _click_tracking = -1;

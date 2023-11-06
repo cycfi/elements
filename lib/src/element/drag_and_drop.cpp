@@ -126,8 +126,8 @@ namespace cycfi { namespace elements
                   auto &cnv = cctx.canvas;
                   cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
                   cnv.line_width(2.0);
-                  cnv.move_to({ctx.bounds.left, ctx.bounds.top});
-                  cnv.line_to({ctx.bounds.right, ctx.bounds.top});
+                  cnv.move_to({cctx.bounds.left, cctx.bounds.top});
+                  cnv.line_to({cctx.bounds.right, cctx.bounds.top});
                   cnv.stroke();
                }
             });
@@ -142,6 +142,8 @@ namespace cycfi { namespace elements
       {
          static constexpr auto offset = 20;
          rect r = {info.where.x-offset, info.where.y-offset, info.where.x+offset, info.where.y+offset};
+         r.left = std::max(r.left, 0.0f);
+         r.top = std::max(r.top, 0.0f);
          scrollable::find(ctx).scroll_into_view(r);
          ctx.view.refresh(ctx.bounds);
       }

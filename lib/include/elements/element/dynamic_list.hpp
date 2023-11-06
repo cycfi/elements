@@ -260,9 +260,15 @@ namespace cycfi { namespace elements
    public:
 
       using composer_ptr = std::shared_ptr<cell_composer>;
+      using indices_type = std::vector<std::size_t>;
 
-                                 dynamic_list(composer_ptr composer)
+                                 dynamic_list(composer_ptr composer, bool manage_externally = true)
                                   : _composer(composer)
+                                  , _manage_externally(manage_externally)
+                                  , _update_request{true}
+                                  , _move_request{false}
+                                  , _insert_request{false}
+                                  , _delete_request{false}
                                  {}
 
       view_limits                limits(basic_context const& ctx) const override;
@@ -270,8 +276,11 @@ namespace cycfi { namespace elements
       void                       layout(context const& ctx) override;
 
       void                       update();
-      void                       update(basic_context const& ctx) const;
       void                       resize(size_t n);
+      bool                       manage_externally() const { return _manage_externally; }
+      void                       move(std::size_t pos, indices_type const& indices);
+      void                       insert(std::size_t pos, std::size_t num_items);
+      void                       delete_(indices_type const& indices);
 
       rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 
@@ -306,14 +315,37 @@ namespace cycfi { namespace elements
 
    private:
 
+      void                       sync(basic_context const& ctx) const;
+      void                       update(basic_context const& ctx) const;
+      void                       move(basic_context const& ctx) const;
+      void                       insert(basic_context const& ctx) const;
+      void                       delete_(basic_context const& ctx) const;
+
       composer_ptr               _composer;
+      bool                       _manage_externally;
       point                      _previous_size;
       std::size_t                _previous_window_start = 0;
       std::size_t                _previous_window_end = 0;
 
       mutable double             _main_axis_full_size = 0;
       mutable int                _layout_id = 0;
-      mutable bool               _update_request = true;
+
+      mutable bool               _update_request:1;
+      mutable bool               _move_request:1;
+      mutable bool               _insert_request:1;
+      mutable bool               _delete_request:1;
+
+      struct request_info
+      {
+         std::size_t                _move_pos;
+         std::vector<std::size_t>   _move_indices;
+         std::size_t                _insert_pos;
+         std::size_t                _insert_num_items;
+         std::vector<std::size_t>   _delete_indices;
+      };
+
+      using request_info_ptr = std::unique_ptr<request_info>;
+      mutable request_info_ptr      _request_info;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -327,7 +359,9 @@ namespace cycfi { namespace elements
    class hdynamic_list : public dynamic_list
    {
    public:
-                                 hdynamic_list(composer_ptr ptr) : dynamic_list(ptr) {}
+                                 hdynamic_list(composer_ptr ptr, bool auto_cleanup = true)
+                                  : dynamic_list(ptr, auto_cleanup)
+                                 {}
       rect 						      bounds_of(context const& ctx, std::size_t ix) const override;
 
    protected:

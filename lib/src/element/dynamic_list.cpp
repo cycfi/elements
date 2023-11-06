@@ -25,25 +25,16 @@ namespace cycfi { namespace elements
    {
       if (_composer)
       {
-         if (_update_request)
-         {
-            update(ctx);
-         }
+         sync(ctx);
          auto secondary_limits = _composer->secondary_axis_limits(ctx);
-         if (_composer->size())
-         {
-            return make_limits(float(_main_axis_full_size),  secondary_limits);
-         }
+         return make_limits(float(_main_axis_full_size),  secondary_limits);
       }
       return {{0, 0}, {0, 0}};
    }
 
    void dynamic_list::draw(context const& ctx)
    {
-      // Johann Philippe : this seems to be necessary for context where a
-      // hdynamic_list is inside vdynamic_list (2D tables)
-      if (_update_request)
-         update(ctx);
+      sync(ctx);
 
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
@@ -90,23 +81,25 @@ namespace cycfi { namespace elements
             break;
       }
 
-      std::size_t new_end = it - _cells.begin();
-
       // Cleanup old rows
-      if (new_start != _previous_window_start || new_end != _previous_window_end)
+      if (_manage_externally)
       {
-         for (auto i = _previous_window_start; i != _previous_window_end; ++i)
+         std::size_t new_end = it - _cells.begin();
+         if (new_start != _previous_window_start || new_end != _previous_window_end)
          {
-            if ((i < new_start || i >= new_end) && i < _cells.size())
+            for (auto i = _previous_window_start; i != _previous_window_end; ++i)
             {
-               _cells[i].layout_id = -1;
-               _cells[i].elem_ptr.reset();
+               if ((i < new_start || i >= new_end) && i < _cells.size())
+               {
+                  _cells[i].layout_id = -1;
+                  _cells[i].elem_ptr.reset();
+               }
             }
          }
+         _previous_window_start = new_start;
+         _previous_window_end = new_end;
       }
 
-      _previous_window_start = new_start;
-      _previous_window_end = new_end;
       _previous_size.x = ctx.bounds.width();
       _previous_size.y = ctx.bounds.height();
    }
@@ -225,6 +218,130 @@ namespace cycfi { namespace elements
    {
       this->_composer->resize(n);
       this->update();
+   }
+
+   void dynamic_list::move(std::size_t pos, indices_type const& indices)
+   {
+      _move_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_move_pos = pos;
+         _request_info->_move_indices = indices;
+      }
+   }
+
+   void dynamic_list::insert(std::size_t pos, std::size_t num_items)
+   {
+      _insert_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_insert_pos = pos;
+         _request_info->_insert_num_items = num_items;
+      }
+   }
+
+   void dynamic_list::delete_(indices_type const& indices)
+   {
+      _delete_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_delete_indices = indices;
+      }
+   }
+
+   void dynamic_list::move(basic_context const& ctx) const
+   {
+      auto const& _move_indices = _request_info->_move_indices;
+      auto _move_pos = _request_info->_move_pos;
+
+      cells_vector to_move;
+      for (auto i = _move_indices.crbegin(); i != _move_indices.crend(); ++i)
+      {
+         to_move.push_back(_cells[*i]);
+         _cells.erase(_cells.begin()+*i);
+      }
+      auto pos_i = _move_pos >= _cells.size()? _cells.end() : _cells.begin()+_move_pos;
+      for (auto const& cell : to_move)
+         _cells.insert(pos_i, cell);
+
+      double y = 0;
+      auto size = _composer->size();
+      for (std::size_t i = 0; i != size; ++i)
+      {
+         auto main_axis_size = _composer->main_axis_size(i, ctx);
+         _cells[i].pos = y;
+         _cells[i].main_axis_size = main_axis_size;
+         y += main_axis_size;
+      }
+      ++_layout_id;
+      _move_request = false;
+   }
+
+   void dynamic_list::insert(basic_context const& ctx) const
+   {
+      auto _insert_pos = _request_info->_insert_pos;
+      auto _insert_num_items = _request_info->_insert_num_items;
+
+      this->_composer->resize(this->_composer->size() + _insert_num_items);
+      _cells.insert(_cells.begin()+_insert_pos, _insert_num_items, cell_info{});
+
+      double y = 0;
+      auto size = _composer->size();
+      _main_axis_full_size = 0;
+      for (std::size_t i = 0; i != size; ++i)
+      {
+         auto main_axis_size = _composer->main_axis_size(i, ctx);
+         _cells[i].pos = y;
+         _cells[i].main_axis_size = main_axis_size;
+         y += main_axis_size;
+         _main_axis_full_size = y;
+      }
+
+      ++_layout_id;
+      _insert_request = false;
+   }
+
+   void dynamic_list::delete_(basic_context const& ctx) const
+   {
+      auto const& _delete_indices = _request_info->_delete_indices;
+
+      this->_composer->resize(this->_composer->size() - _delete_indices.size());
+      for (auto i = _delete_indices.crbegin(); i != _delete_indices.crend(); ++i)
+         _cells.erase(_cells.begin()+*i);
+
+      double y = 0;
+      auto size = _composer->size();
+      _main_axis_full_size = 0;
+      for (std::size_t i = 0; i != size; ++i)
+      {
+         auto main_axis_size = _composer->main_axis_size(i, ctx);
+         _cells[i].pos = y;
+         _cells[i].main_axis_size = main_axis_size;
+         y += main_axis_size;
+         _main_axis_full_size = y;
+      }
+
+      ++_layout_id;
+      _delete_request = false;
+   }
+
+   void dynamic_list::sync(basic_context const& ctx) const
+   {
+      if (_update_request)
+         update(ctx);
+      if (_request_info)
+      {
+         if (_move_request)
+            move(ctx);
+         if (_insert_request)
+            insert(ctx);
+         if (_delete_request)
+            delete_(ctx);
+      }
+      _request_info.reset();
    }
 
    ////////////////////////////////////////////////////////////////////////////

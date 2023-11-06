@@ -126,9 +126,9 @@ namespace cycfi { namespace elements
       }
    }
 
-   void deck_element::refresh(context const& ctx, element& element, int outward)
+   void deck_element::refresh(context const& ctx, element& e, int outward)
    {
-      if (&element == this)
+      if (&e == this)
       {
          ctx.view.refresh(ctx, outward);
       }
@@ -137,7 +137,22 @@ namespace cycfi { namespace elements
          rect bounds = bounds_of(ctx, _selected_index);
          auto& elem = at(_selected_index);
          context ectx{ctx, &elem, bounds};
-         elem.refresh(ectx, element, outward);
+         elem.refresh(ectx, e, outward);
+      }
+   }
+
+   void deck_element::in_context_do(context const& ctx, element& e, context_function f)
+   {
+      if (&e == this)
+      {
+         f(ctx);
+      }
+      else
+      {
+         rect bounds = bounds_of(ctx, _selected_index);
+         auto& elem = at(_selected_index);
+         context ectx{ctx, &elem, bounds};
+         elem.in_context_do(ectx, e, f);
       }
    }
 

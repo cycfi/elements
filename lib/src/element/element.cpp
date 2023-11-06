@@ -61,10 +61,16 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::refresh(context const& ctx, element& element, int outward)
+   void element::refresh(context const& ctx, element& e, int outward)
    {
-      if (&element == this)
+      if (&e == this)
          ctx.view.refresh(ctx, outward);
+   }
+
+   void element::in_context_do(context const& ctx, element& e, context_function f)
+   {
+      if (&e == this)
+         f(ctx);
    }
 
    bool element::click(context const& /* ctx */, mouse_button /* btn */)

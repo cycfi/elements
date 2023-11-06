@@ -164,9 +164,6 @@ namespace cycfi { namespace elements
    class scroller_base : public port_element, public scrollable
    {
    public:
-
-      static float            scrollbar_width;
-
                               scroller_base(int traits = 0)
                                : _tracking(none)
                                , _traits(traits)

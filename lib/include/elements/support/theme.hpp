@@ -24,6 +24,7 @@ namespace cycfi { namespace elements
       float                frame_corner_radius;
       float                frame_stroke_width;
       color                scrollbar_color;
+      float                scrollbar_width;
       color                default_button_color;
       rect                 button_margin;
       float                button_corner_radius;

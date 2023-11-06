@@ -77,20 +77,56 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::refresh(context const& ctx, element& element_, int outward)
+   void composite_base::refresh(context const& ctx, element& e, int outward)
    {
-      if (&element_ == this)
+      if (&e == this)
       {
          ctx.view.refresh(ctx, outward);
       }
       else
       {
          for_each_visible(ctx,
-            [&](element& e, std::size_t /*ix*/, rect const& bounds)
+            [&](element& ce, std::size_t /*ix*/, rect const& bounds)
             {
-               context ectx{ctx, &e, bounds};
-               e.refresh(ectx, element_, outward);
-               return false; // Continue
+               if (&e == &ce)
+               {
+                  ctx.view.refresh(bounds);
+                  return false; // break the for loop
+               }
+               else
+               {
+                  context ectx{ctx, &ce, bounds};
+                  ce.refresh(ectx, e, outward);
+               }
+               return true;
+            }
+         );
+      }
+   }
+
+
+   void composite_base::in_context_do(context const& ctx, element& e, context_function f)
+   {
+      if (&e == this)
+      {
+         f(ctx);
+      }
+      else
+      {
+         for_each_visible(ctx,
+            [&](element& ce, std::size_t /*ix*/, rect const& bounds)
+            {
+               context ectx{ctx, &ce, bounds};
+               if (&e == &ce)
+               {
+                  f(ctx);
+                  return false; // break the for loop
+               }
+               else
+               {
+                  ce.in_context_do(ectx, e, f);
+               }
+               return true;
             }
          );
       }

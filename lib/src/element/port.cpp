@@ -118,8 +118,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // scroller_base class implementation
    ////////////////////////////////////////////////////////////////////////////
-   float scroller_base::scrollbar_width = 10;
-
    namespace
    {
       void draw_scrollbar_fill(canvas& _canvas, rect r, color fill_color)
@@ -175,7 +173,7 @@ namespace cycfi { namespace elements
          y += info.pos * (info.bounds.height()-h);
       }
 
-      draw_scrollbar(ctx.canvas, rect{x, y, x+w, y+h}, scroller_base::scrollbar_width / 3,
+      draw_scrollbar(ctx.canvas, rect{x, y, x+w, y+h}, thm.scrollbar_width / 3,
          thm.frame_color.opacity(0.5), thm.scrollbar_color.opacity(0.4), mp,
          _tracking == ((w > h)? tracking_h : tracking_v));
    }
@@ -245,6 +243,7 @@ namespace cycfi { namespace elements
    {
       scrollbar_bounds r;
       view_limits e_limits = subject().limits(ctx);
+      theme const& thm = get_theme();
 
       r.has_h = e_limits.min.x > ctx.bounds.width() && allow_hscroll();
       r.has_v = e_limits.min.y > ctx.bounds.height() && allow_vscroll();
@@ -252,10 +251,10 @@ namespace cycfi { namespace elements
       if (r.has_v)
       {
          r.vscroll_bounds = rect{
-            ctx.bounds.left + ctx.bounds.width() - scrollbar_width,
+            ctx.bounds.left + ctx.bounds.width() - thm.scrollbar_width,
             ctx.bounds.top,
             ctx.bounds.right,
-            ctx.bounds.bottom - (r.has_h ? scroller_base::scrollbar_width : 0)
+            ctx.bounds.bottom - (r.has_h ? thm.scrollbar_width : 0)
          };
       }
       else
@@ -267,8 +266,8 @@ namespace cycfi { namespace elements
       {
          r.hscroll_bounds = rect{
             ctx.bounds.left,
-            ctx.bounds.top + ctx.bounds.height() - scroller_base::scrollbar_width,
-            ctx.bounds.right - (r.has_v ? scroller_base::scrollbar_width : 0),
+            ctx.bounds.top + ctx.bounds.height() - thm.scrollbar_width,
+            ctx.bounds.right - (r.has_v ? thm.scrollbar_width : 0),
             ctx.bounds.bottom
          };
       }
@@ -495,15 +494,16 @@ namespace cycfi { namespace elements
    bool scroller_base::scroll_into_view(context const& ctx, rect r)
    {
       rect bounds = ctx.bounds;
+      theme const& thm = get_theme();
 
       if (has_scrollbars())
       {
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
 
          if (sb.has_h)
-            bounds.right -= scroller_base::scrollbar_width;
+            bounds.right -= thm.scrollbar_width;
          if (sb.has_v)
-            bounds.bottom -= scroller_base::scrollbar_width;
+            bounds.bottom -= thm.scrollbar_width;
       }
 
       if (!bounds.includes(r))

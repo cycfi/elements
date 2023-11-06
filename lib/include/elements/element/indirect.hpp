@@ -43,6 +43,7 @@ namespace cycfi { namespace elements
       using Base::Base;
       using Base::operator=;
       using focus_request = typename Base::focus_request;
+      using context_function = typename Base::context_function;
       static constexpr auto restore_previous = Base::restore_previous;
 
    // Display
@@ -54,6 +55,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      void                    in_context_do(context const& ctx, element& e, context_function f) override;
 
       using element::refresh;
 
@@ -191,9 +193,16 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline void
-   indirect<Base>::refresh(context const& ctx, element& element, int outward)
+   indirect<Base>::refresh(context const& ctx, element& e, int outward)
    {
-      this->get().refresh(ctx, element, outward);
+      this->get().refresh(ctx, e, outward);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::in_context_do(context const& ctx, element& e, indirect<Base>::context_function f)
+   {
+      this->get().in_context_do(ctx, e, f);
    }
 
    template <typename Base>

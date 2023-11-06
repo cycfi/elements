@@ -96,6 +96,12 @@ namespace cycfi { namespace elements
                return result;
             proxy = dynamic_cast<proxy_base*>(subject);
          }
+         if (auto* indirect = dynamic_cast<indirect_base*>(e))
+         {
+            auto* subject = &indirect->get();
+            if (find(*p, subject))
+               return result;
+         }
          p = p->parent;
       }
       return result;

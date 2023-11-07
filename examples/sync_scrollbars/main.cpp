@@ -31,11 +31,11 @@ int main(int argc, char* argv[])
 
    // First dynamic list
    auto comp = basic_cell_composer(10'000, make_cell);
-   auto l = share(dynamic_list(comp));
+   auto l = share(list(comp));
 
    // Second dynamic list
    auto comp2 = basic_cell_composer(10'000, make_cell);
-   auto l2 = share(dynamic_list(comp2));
+   auto l2 = share(list(comp2));
 
    // Scrollers
    auto scr = vscroller(margin({20, 20, 20, 20}, hold(l)));

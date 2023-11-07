@@ -7,7 +7,7 @@
 #define ELEMENTS_GALLERY_THUMBWHEEL_SEPTEMBER_23_2020
 
 #include <elements/element/thumbwheel.hpp>
-#include <elements/element/dynamic_list.hpp>
+#include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 
 namespace cycfi { namespace elements
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // This function utilizes a dynamic_list and the basic_vthumbwheel to
+   // This function utilizes a list and the basic_vthumbwheel to
    // present items in a vertically oriented thumbwheel, allowing it to
    // scroll into the items in the list that is dynamically created given the
    // (user supplied) compose function.
@@ -96,7 +96,7 @@ namespace cycfi { namespace elements
    {
       using ftype = remove_cvref_t<F>;
       auto body = basic_vthumbwheel(
-         dynamic_list{basic_cell_composer(num_items, std::forward<ftype>(compose))}
+         list{basic_cell_composer(num_items, std::forward<ftype>(compose))}
        , 1.0 / (num_items-1)
       );
       return thumbwheel(std::move(body), {0.0f, 0.0f});

@@ -3,25 +3,108 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/dynamic_list.hpp>
+#include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 #include <elements/view.hpp>
 
 namespace cycfi { namespace elements
 {
-   std::size_t dynamic_list::size() const
+   list::list(composer_ptr composer, bool manage_externally)
+    : _composer(composer)
+    , _manage_externally(manage_externally)
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+   {}
+
+   list::list(list const& rhs)
+    : _cells{rhs._cells}
+    , _composer{rhs._composer}
+    , _manage_externally{rhs._manage_externally}
+    , _previous_size{rhs._previous_size}
+    , _previous_window_start{rhs._previous_window_start}
+    , _previous_window_end{rhs._previous_window_end}
+    , _main_axis_full_size{rhs._main_axis_full_size}
+    , _layout_id{rhs._layout_id}
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+    , _request_info{nullptr}
+   {}
+
+   list::list(list&& rhs)
+    : _cells{std::move(rhs._cells)}
+    , _composer{rhs._composer}
+    , _manage_externally{rhs._manage_externally}
+    , _previous_size{rhs._previous_size}
+    , _previous_window_start{rhs._previous_window_start}
+    , _previous_window_end{rhs._previous_window_end}
+    , _main_axis_full_size{rhs._main_axis_full_size}
+    , _layout_id{rhs._layout_id}
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+    , _request_info{nullptr}
+   {}
+
+   list& list::operator=(list const& rhs)
+   {
+      if (this != &rhs)
+      {
+         _cells = rhs._cells;
+         _composer = rhs._composer;
+         _manage_externally = rhs._manage_externally;
+         _previous_size = rhs._previous_size;
+         _previous_window_start = rhs._previous_window_start;
+         _previous_window_end = rhs._previous_window_end;
+         _main_axis_full_size = rhs._main_axis_full_size;
+         _layout_id = rhs._layout_id;
+         _update_request = true;
+         _move_request = false;
+         _insert_request = false;
+         _delete_request = false;
+         _request_info.reset();
+      }
+      return *this;
+   }
+
+   list& list::operator=(list&& rhs)
+   {
+      if (this != &rhs)
+      {
+         _cells = std::move(rhs._cells);
+         _composer = rhs._composer;
+         _manage_externally = rhs._manage_externally;
+         _previous_size = rhs._previous_size;
+         _previous_window_start = rhs._previous_window_start;
+         _previous_window_end = rhs._previous_window_end;
+         _main_axis_full_size = rhs._main_axis_full_size;
+         _layout_id = rhs._layout_id;
+         _update_request = true;
+         _move_request = false;
+         _insert_request = false;
+         _delete_request = false;
+         _request_info.reset();
+      }
+      return *this;
+   }
+
+   std::size_t list::size() const
    {
       return _cells.size();
    }
 
-   element& dynamic_list::at(std::size_t ix) const
+   element& list::at(std::size_t ix) const
    {
       if (_cells[ix].elem_ptr)
          return *_cells[ix].elem_ptr.get();
       return *(_cells[ix].elem_ptr =_composer->compose(ix)).get();
    }
 
-   view_limits dynamic_list::limits(basic_context const& ctx) const
+   view_limits list::limits(basic_context const& ctx) const
    {
       if (_composer)
       {
@@ -32,7 +115,7 @@ namespace cycfi { namespace elements
       return {{0, 0}, {0, 0}};
    }
 
-   void dynamic_list::draw(context const& ctx)
+   void list::draw(context const& ctx)
    {
       sync(ctx);
 
@@ -104,7 +187,7 @@ namespace cycfi { namespace elements
       _previous_size.y = ctx.bounds.height();
    }
 
-   void dynamic_list::for_each_visible(
+   void list::for_each_visible(
       context const& ctx
     , for_each_callback f
     , bool reverse
@@ -175,7 +258,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic_list::layout(context const& ctx)
+   void list::layout(context const& ctx)
    {
       if (_previous_size.x != ctx.bounds.width() ||
          _previous_size.y != ctx.bounds.height())
@@ -186,14 +269,14 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic_list::update()
+   void list::update()
    {
       _update_request = true;
       _cells.clear();
       _main_axis_full_size = 0;
    }
 
-   void dynamic_list::update(basic_context const& ctx) const
+   void list::update(basic_context const& ctx) const
    {
       if (_composer)
       {
@@ -214,13 +297,13 @@ namespace cycfi { namespace elements
       _update_request = false;
    }
 
-   void dynamic_list::resize(size_t n)
+   void list::resize(size_t n)
    {
       this->_composer->resize(n);
       this->update();
    }
 
-   void dynamic_list::move(std::size_t pos, indices_type const& indices)
+   void list::move(std::size_t pos, indices_type const& indices)
    {
       _move_request = true;
       if (!_request_info)
@@ -231,7 +314,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic_list::insert(std::size_t pos, std::size_t num_items)
+   void list::insert(std::size_t pos, std::size_t num_items)
    {
       _insert_request = true;
       if (!_request_info)
@@ -242,7 +325,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic_list::delete_(indices_type const& indices)
+   void list::delete_(indices_type const& indices)
    {
       _delete_request = true;
       if (!_request_info)
@@ -252,7 +335,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void dynamic_list::move(basic_context const& ctx) const
+   void list::move(basic_context const& ctx) const
    {
       auto const& _move_indices = _request_info->_move_indices;
       auto _move_pos = _request_info->_move_pos;
@@ -280,7 +363,7 @@ namespace cycfi { namespace elements
       _move_request = false;
    }
 
-   void dynamic_list::insert(basic_context const& ctx) const
+   void list::insert(basic_context const& ctx) const
    {
       auto _insert_pos = _request_info->_insert_pos;
       auto _insert_num_items = _request_info->_insert_num_items;
@@ -304,7 +387,7 @@ namespace cycfi { namespace elements
       _insert_request = false;
    }
 
-   void dynamic_list::delete_(basic_context const& ctx) const
+   void list::delete_(basic_context const& ctx) const
    {
       auto const& _delete_indices = _request_info->_delete_indices;
 
@@ -328,7 +411,7 @@ namespace cycfi { namespace elements
       _delete_request = false;
    }
 
-   void dynamic_list::sync(basic_context const& ctx) const
+   void list::sync(basic_context const& ctx) const
    {
       if (_update_request)
          update(ctx);
@@ -345,32 +428,32 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Vertical dynamic_list methods
+   // Vertical list methods
    ////////////////////////////////////////////////////////////////////////////
-   float dynamic_list::get_main_axis_start(const rect &r) const
+   float list::get_main_axis_start(const rect &r) const
    {
       return r.top;
    }
 
-   float dynamic_list::get_main_axis_end(const rect &r) const
+   float list::get_main_axis_end(const rect &r) const
    {
       return r.bottom;
    }
 
-   view_limits dynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
+   view_limits list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
       return {
          {secondary_axis_limits.min, float(main_axis_size)}
        , {secondary_axis_limits.max, float(main_axis_size)}};
    }
 
-   void dynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
+   void list::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
    {
       r.top = main_axis_pos + cell.pos;
       r.height(cell.main_axis_size);
    }
 
-   rect dynamic_list::bounds_of(context const& ctx, std::size_t ix) const
+   rect list::bounds_of(context const& ctx, std::size_t ix) const
    {
       rect r = ctx.bounds;
       r.top = ctx.bounds.top + _cells[ix].pos;
@@ -379,33 +462,33 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Horizontal dynamic_list methods
+   // Horizontal list methods
    ////////////////////////////////////////////////////////////////////////////
 
-   float hdynamic_list::get_main_axis_start(const rect &r) const
+   float hlist::get_main_axis_start(const rect &r) const
    {
       return r.left;
    }
 
-   float hdynamic_list::get_main_axis_end(const rect &r) const
+   float hlist::get_main_axis_end(const rect &r) const
    {
       return r.right;
    }
 
-   view_limits hdynamic_list::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
+   view_limits hlist::make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const
    {
       return {
          {main_axis_size, secondary_axis_limits.min}
        , {main_axis_size, secondary_axis_limits.max}};
    }
 
-   void hdynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
+   void hlist::set_bounds(rect& r, float main_axis_pos, cell_info &cell) const
    {
       r.left = main_axis_pos + cell.pos;
       r.width(cell.main_axis_size);
    }
 
-   rect hdynamic_list::bounds_of(context const& ctx, std::size_t ix) const
+   rect hlist::bounds_of(context const& ctx, std::size_t ix) const
    {
       rect r = ctx.bounds;
       r.left = ctx.bounds.left + _cells[ix].pos;

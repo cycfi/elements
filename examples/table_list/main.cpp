@@ -36,7 +36,7 @@ private:
     composer_fn _composer;
 };
 
-class table_list : public vdynamic_list
+class table_list : public vlist
 {
 public:
 
@@ -50,7 +50,7 @@ public:
                 basic_horizontal_cell_composer(_table_composer->columns(),
                 [&, line](size_t col) {return _table_composer->compose(line, col);}
             );
-            h_list[line] = share(hdynamic_list(h_composer));
+            h_list[line] = share(hlist(h_composer));
         }
         return h_list[line];
     };

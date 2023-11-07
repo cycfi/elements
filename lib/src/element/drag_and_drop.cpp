@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/drag_and_drop.hpp>
 #include <elements/element/traversal.hpp>
-#include <elements/element/dynamic_list.hpp>
+#include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 #include <elements/support/context.hpp>
 #include <elements/support/theme.hpp>
@@ -166,7 +166,7 @@ namespace cycfi { namespace elements
    {
       if (_insertion_pos >= 0)
       {
-         if (auto* c = find_subject<dynamic_list*>(&subject()))
+         if (auto* c = find_subject<list*>(&subject()))
             c->move(_insertion_pos, indices);
          on_move(_insertion_pos, indices);
       }
@@ -174,7 +174,7 @@ namespace cycfi { namespace elements
 
    void drop_inserter_base::delete_(indices_type const& indices)
    {
-      if (auto* c = find_subject<dynamic_list*>(&subject()))
+      if (auto* c = find_subject<list*>(&subject()))
          c->delete_(indices);
       on_delete(indices);
    }

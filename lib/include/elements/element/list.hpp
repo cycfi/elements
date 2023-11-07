@@ -253,23 +253,20 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // The main dynamic_list class -> vertical by default
+   // The main list class -> vertical by default
    ////////////////////////////////////////////////////////////////////////////
-   class dynamic_list : public composite_base
+   class list : public composite_base
    {
    public:
 
       using composer_ptr = std::shared_ptr<cell_composer>;
       using indices_type = std::vector<std::size_t>;
 
-                                 dynamic_list(composer_ptr composer, bool manage_externally = true)
-                                  : _composer(composer)
-                                  , _manage_externally(manage_externally)
-                                  , _update_request{true}
-                                  , _move_request{false}
-                                  , _insert_request{false}
-                                  , _delete_request{false}
-                                 {}
+                                 list(composer_ptr composer, bool manage_externally = true);
+                                 list(list const& rhs);
+                                 list(list&& rhs);
+      list&                      operator=(list const& rhs);
+      list&                      operator=(list&& rhs);
 
       view_limits                limits(basic_context const& ctx) const override;
       void                       draw(context const& ctx) override;
@@ -348,21 +345,25 @@ namespace cycfi { namespace elements
       mutable request_info_ptr      _request_info;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // The vertical dynamic_list class - just an alias
-   ////////////////////////////////////////////////////////////////////////////
-   using vdynamic_list = dynamic_list;
+   // The old name is deprecated
+   using dynamic_list [[deprecated("Use list instead.")]] = list;
 
    ////////////////////////////////////////////////////////////////////////////
-   // The horizontal dynamic_list class
+   // The vertical list class - just an alias
    ////////////////////////////////////////////////////////////////////////////
-   class hdynamic_list : public dynamic_list
+   using vdynamic_list [[deprecated("Use vlist instead.")]] = list;
+   using vlist = list;
+
+   ////////////////////////////////////////////////////////////////////////////
+   // The horizontal list class
+   ////////////////////////////////////////////////////////////////////////////
+   class hlist : public list
    {
    public:
-                                 hdynamic_list(composer_ptr ptr, bool auto_cleanup = true)
-                                  : dynamic_list(ptr, auto_cleanup)
+                                 hlist(composer_ptr ptr, bool auto_cleanup = true)
+                                  : list(ptr, auto_cleanup)
                                  {}
-      rect 						      bounds_of(context const& ctx, std::size_t ix) const override;
+      rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 
    protected:
 
@@ -371,6 +372,9 @@ namespace cycfi { namespace elements
       float                      get_main_axis_start(const rect&r) const override;
       float                      get_main_axis_end(const rect &r) const override;
    };
+
+   // The old name is deprecated
+   using hdynamic_list [[deprecated("Use hlist instead.")]] = hlist;
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
@@ -467,7 +471,7 @@ namespace cycfi { namespace elements
       this->_main_axis_size = lim.min.x;
    }
 
-   inline void dynamic_list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell) const
+   inline void list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell) const
    {
       set_bounds(ctx.bounds, main_axis_pos, cell);
    }

@@ -47,7 +47,7 @@ public:
         if (h_list[line].get() == nullptr)
         {
             auto h_composer =
-                basic_horizontal_cell_composer(_table_composer->columns(),
+                basic_hcell_composer(_table_composer->columns(),
                 [&, line](size_t col) {return _table_composer->compose(line, col);}
             );
             h_list[line] = share(hlist(h_composer));
@@ -56,7 +56,7 @@ public:
     };
 
     table_list(table_composer_ptr ptr)
-        : vdynamic_list(basic_vertical_cell_composer(ptr->lines(), [&](size_t line) {return line_maker(line);}))
+        : vdynamic_list(basic_vcell_composer(ptr->lines(), [&](size_t line) {return line_maker(line);}))
         , _table_composer(ptr)
         , h_list(ptr->lines(), nullptr)
     {

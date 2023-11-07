@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
       return ptr_list[index];
    };
 
-   auto cp = basic_vertical_cell_composer(list_size, make_row);
+   auto cp = basic_vcell_composer(list_size, make_row);
    auto content = vlist(cp);
 
    auto b1 = icon_button(icons::minus, 1);

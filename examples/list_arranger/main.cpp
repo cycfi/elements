@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
       return share(draggable(align_left(label(paths[index].u8string()))));
    };
 
-   auto cp = basic_vertical_cell_composer(list_size, make_row);
+   auto cp = basic_vcell_composer(list_size, make_row);
    auto list = vlist(cp, false);
    auto drop_inserter_ = share(
                            drop_inserter(

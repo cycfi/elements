@@ -97,21 +97,31 @@ namespace cycfi { namespace elements
    };
 
    template<typename Base = cell_composer>
-   using vertical_fixed_derived_limits_cell_composer = fixed_derived_limits_cell_composer<Base>;
+   using vertical_fixed_derived_limits_cell_composer
+   [[deprecated("Use vfixed_derived_limits_cell_composer instead.")]]
+      = fixed_derived_limits_cell_composer<Base>;
 
    template<typename Base = cell_composer>
-   class horizontal_fixed_derived_limits_cell_composer: public fixed_derived_limits_cell_composer<Base>
+   using vfixed_derived_limits_cell_composer = fixed_derived_limits_cell_composer<Base>;
+
+   template<typename Base = cell_composer>
+   class hfixed_derived_limits_cell_composer: public fixed_derived_limits_cell_composer<Base>
    {
    public:
 
-      using base_type = horizontal_fixed_derived_limits_cell_composer<Base>;
+      using base_type = hfixed_derived_limits_cell_composer<Base>;
 
                                 template <typename... Rest>
-                                horizontal_fixed_derived_limits_cell_composer(Rest&& ...rest);
+                                hfixed_derived_limits_cell_composer(Rest&& ...rest);
    protected:
 
       virtual void              get_limits(basic_context const& ctx) const;
    };
+
+   template<typename Base = cell_composer>
+   using horizontal_fixed_derived_limits_cell_composer
+   [[deprecated("Use hfixed_derived_limits_cell_composer instead.")]]
+      = hfixed_derived_limits_cell_composer<Base>;
 
    ////////////////////////////////////////////////////////////////////////////
    // This cell composer has fixed-length (number of list elements).
@@ -168,7 +178,7 @@ namespace cycfi { namespace elements
    {
       using ftype = remove_cvref_t<F>;
       using return_type =
-         vertical_fixed_derived_limits_cell_composer<
+         vfixed_derived_limits_cell_composer<
             fixed_length_cell_composer<
                function_cell_composer<ftype>
             >
@@ -177,17 +187,38 @@ namespace cycfi { namespace elements
    }
 
    template<typename F>
+   [[deprecated("Use basic_vcell_composer instead.")]]
    inline auto basic_vertical_cell_composer(std::size_t size, F&& compose)
    {
       return basic_cell_composer(size, compose);
    }
 
    template<typename F>
+   inline auto basic_vcell_composer(std::size_t size, F&& compose)
+   {
+      return basic_cell_composer(size, compose);
+   }
+
+   template<typename F>
+   [[deprecated("Use basic_hcell_composer instead.")]]
    inline auto basic_horizontal_cell_composer(std::size_t size, F&& compose)
    {
       using ftype = remove_cvref_t<F>;
       using return_type =
-         horizontal_fixed_derived_limits_cell_composer<
+         hfixed_derived_limits_cell_composer<
+            fixed_length_cell_composer<
+               function_cell_composer<ftype>
+            >
+         >;
+      return share(return_type{size, std::forward<ftype>(compose)});
+   }
+
+   template<typename F>
+   inline auto basic_hcell_composer(std::size_t size, F&& compose)
+   {
+      using ftype = remove_cvref_t<F>;
+      using return_type =
+         hfixed_derived_limits_cell_composer<
             fixed_length_cell_composer<
                function_cell_composer<ftype>
             >
@@ -456,14 +487,14 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    template <typename... Rest>
-   inline horizontal_fixed_derived_limits_cell_composer<Base>::horizontal_fixed_derived_limits_cell_composer(
+   inline hfixed_derived_limits_cell_composer<Base>::hfixed_derived_limits_cell_composer(
       Rest&& ...rest
    )
     : fixed_derived_limits_cell_composer<Base> (std::forward<Rest>(rest)...)
    {}
 
    template<typename Base>
-   void horizontal_fixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx)  const
+   void hfixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx)  const
    {
       auto lim = const_cast<base_type*>(this)->compose(0)->limits(ctx);
       this->_secondary_axis_limits.min = lim.min.y;

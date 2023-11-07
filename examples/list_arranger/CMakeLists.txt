@@ -16,13 +16,16 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "ActiveDynamicList")
-set(ELEMENTS_APP_TITLE "Active Dynamic List")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2022 Johann Philippe")
-set(ELEMENTS_APP_ID "com.cycfi.active-dynamic-list")
+set(ELEMENTS_APP_PROJECT "ListArranger")
+set(ELEMENTS_APP_TITLE "List Arranger")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2032 Joel de Guzman")
+set(ELEMENTS_APP_ID "com.cycfi.list-arranger")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(ELEMENTS_APP_RESOURCES
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/dark-bkd.jpg
+)
 
 # For your custom application icon on macOS or Windows see cmake/AppIcon.cmake module
 include(AppIcon)

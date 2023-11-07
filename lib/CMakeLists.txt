@@ -29,7 +29,6 @@ set(ELEMENTS_SOURCES
    src/element/composite.cpp
    src/element/dial.cpp
    src/element/drag_and_drop.cpp
-   src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
@@ -44,6 +43,7 @@ set(ELEMENTS_SOURCES
    src/element/image.cpp
    src/element/label.cpp
    src/element/layer.cpp
+   src/element/list.cpp
    src/element/menu.cpp
    src/element/misc.cpp
    src/element/popup.cpp
@@ -73,7 +73,6 @@ set(ELEMENTS_HEADERS
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
    include/elements/element/drag_and_drop.hpp
-   include/elements/element/dynamic_list.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
@@ -97,6 +96,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/indirect.hpp
    include/elements/element/label.hpp
    include/elements/element/layer.hpp
+   include/elements/element/list.hpp
    include/elements/element/margin.hpp
    include/elements/element/menu.hpp
    include/elements/element/misc.hpp

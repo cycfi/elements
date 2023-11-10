@@ -11,10 +11,10 @@ namespace cycfi { namespace elements
 
    void check_box_styler::draw(context const& ctx)
    {
-      auto&       canvas_ = ctx.canvas;
-      auto        canvas_state = canvas_.new_state();
+      auto& canvas_ = ctx.canvas;
+      auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      rect        box = ctx.bounds.move(15, 0);
+      rect box = ctx.bounds.move(15, 0);
 
       box.width(box.height());
       auto state = value();

@@ -23,6 +23,7 @@ set(ELEMENTS_SOURCES
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
+   src/element/gallery/slide_button.cpp
    src/element/gallery/tab.cpp
    src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp

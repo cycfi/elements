@@ -29,6 +29,10 @@ namespace cycfi { namespace elements
       rect                 button_margin;
       float                button_corner_radius;
       float                button_text_icon_space;
+      point                slide_button_size;
+      color                slide_button_on_color;
+      color                slide_button_base_color;
+      color                slide_button_button_color;
 
       color                controls_color;
       float                controls_frame_stroke_width;

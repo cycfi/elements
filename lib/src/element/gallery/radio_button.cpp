@@ -9,13 +9,13 @@ namespace cycfi { namespace elements
 {
    void radio_button_styler::draw(context const& ctx)
    {
-      auto&       canvas_ = ctx.canvas;
-      auto        canvas_state = canvas_.new_state();
+      auto& canvas_ = ctx.canvas;
+      auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      rect        box = ctx.bounds.move(15, 0);
-      float       size = box.height();
-      float       radius = size/2;
-      float       dot_radius = radius/2.5;
+      rect box = ctx.bounds.move(15, 0);
+      float size = box.height();
+      float radius = size/2;
+      float dot_radius = radius/2.5;
 
       box.width(size);
       point center = center_point(box);

@@ -120,6 +120,8 @@ namespace cycfi::elements
       virtual bool            word_break(char const* utf8) const;
       virtual bool            line_break(char const* utf8) const;
 
+      basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
+
    protected:
 
       void                    scroll_into_view(context const& ctx, bool save_x);
@@ -156,6 +158,7 @@ namespace cycfi::elements
       bool                    _is_focus : 1;
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
+      bool                    _read_only : 1;
       this_handle             _this_handle;
    };
 
@@ -200,16 +203,6 @@ namespace cycfi::elements
 
       std::string             _placeholder;
       bool                    _first_focus;
-   };
-
-   class read_only_text_box : public basic_text_box
-   {
-   public:
-
-      using basic_text_box::basic_text_box;
-
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    text(context const& ctx, text_info info) override;
    };
 }
 

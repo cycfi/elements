@@ -115,11 +115,9 @@ namespace cycfi { namespace elements
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
 
       using drag_image_ptr = std::shared_ptr<floating_element>;
-      using payload_ptr = std::unique_ptr<drop_info>;
 
       bool                    _selected = false;
       drag_image_ptr          _drag_image;
-      payload_ptr             _payload;
    };
 
    template <typename Subject>

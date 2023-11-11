@@ -25,8 +25,6 @@ namespace cycfi { namespace elements
 
       auto state = value();
       auto value = state.value;
-      // auto hilite = state.hilite;
-      // auto tracking = state.tracking;
       auto enabled = state.enabled;
 
       auto color = value?
@@ -42,14 +40,30 @@ namespace cycfi { namespace elements
       canvas_.fill_style(color);
       canvas_.fill();
 
-      // Draw slider
-      color = theme_.slide_button_button_color;
+      color = theme_.slide_button_thumb_color;
       if (!enabled)
          color = color.opacity(color.alpha * theme_.disabled_opacity);
 
+      // Animate sliding
+      auto target = value? bounds.right-radius : bounds.left+radius;
+      if (enabled)
+      {
+         auto diff = target - _xpos;
+         constexpr auto alpha = 0.3;
+         _xpos += alpha * diff;
+         if (std::abs(diff) > 1.0f)
+            ctx.view.refresh(ctx);
+         else
+            _xpos = target;
+      }
+      else
+      {
+         _xpos = target;
+      }
+
+      // Draw the thumb
       canvas_.begin_path();
-      auto x_pos = value? bounds.right-radius : bounds.left+radius;
-      canvas_.add_circle({x_pos, bounds.top+radius, radius-1.5f});
+      canvas_.add_circle({_xpos, bounds.top+radius, radius-1.5f});
       canvas_.fill_style(color);
       canvas_.fill();
    }

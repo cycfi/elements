@@ -20,6 +20,10 @@ namespace cycfi { namespace elements
       view_limits       limits(basic_context const& ctx) const override;
       void              draw(context const& ctx) override;
       bool              wants_control() const override;
+
+   private:
+
+      float             _xpos;
    };
 
    inline auto slide_button()

@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
          view_.refresh();
       };
 
-   drop_inserter_->on_delete =
+   drop_inserter_->on_erase =
       [&](std::vector<std::size_t> const& indices)
       {
          erase_indices(paths, indices);

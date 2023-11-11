@@ -172,11 +172,11 @@ namespace cycfi { namespace elements
       }
    }
 
-   void drop_inserter_base::delete_(indices_type const& indices)
+   void drop_inserter_base::erase(indices_type const& indices)
    {
       if (auto* c = find_subject<list*>(&subject()))
-         c->delete_(indices);
-      on_delete(indices);
+         c->erase(indices);
+      on_erase(indices);
    }
 
    view_limits draggable_element::limits(basic_context const& ctx) const
@@ -393,7 +393,7 @@ namespace cycfi { namespace elements
                         auto indices = collect_selected(*c);
                         if (indices.size())
                         {
-                           di->delete_(std::move(indices));
+                           di->erase(std::move(indices));
                            return true;
                         }
                      }

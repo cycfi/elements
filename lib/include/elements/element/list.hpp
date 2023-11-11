@@ -308,7 +308,7 @@ namespace cycfi { namespace elements
       bool                       manage_externally() const { return _manage_externally; }
       void                       move(std::size_t pos, indices_type const& indices);
       void                       insert(std::size_t pos, std::size_t num_items);
-      void                       delete_(indices_type const& indices);
+      void                       erase(indices_type const& indices);
 
       rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 
@@ -347,7 +347,7 @@ namespace cycfi { namespace elements
       void                       update(basic_context const& ctx) const;
       void                       move(basic_context const& ctx) const;
       void                       insert(basic_context const& ctx) const;
-      void                       delete_(basic_context const& ctx) const;
+      void                       erase(basic_context const& ctx) const;
 
       composer_ptr               _composer;
       bool                       _manage_externally;
@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
       mutable bool               _update_request:1;
       mutable bool               _move_request:1;
       mutable bool               _insert_request:1;
-      mutable bool               _delete_request:1;
+      mutable bool               _erase_request :1;
 
       struct request_info
       {

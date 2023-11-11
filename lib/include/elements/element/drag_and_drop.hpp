@@ -78,11 +78,11 @@ namespace cycfi { namespace elements
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
       on_move_function        on_move = [](std::size_t, indices_type const&){};
-      on_delete_function      on_delete = [](indices_type const&){};
+      on_delete_function      on_erase = [](indices_type const&){};
 
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);
-      void                    delete_(indices_type const& indices);
+      void                    erase(indices_type const& indices);
 
    public:
 

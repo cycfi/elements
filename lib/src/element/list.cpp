@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
    {}
 
    list::list(list const& rhs)
@@ -30,7 +30,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
     , _request_info{nullptr}
    {}
 
@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
     , _request_info{nullptr}
    {}
 
@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
          _update_request = true;
          _move_request = false;
          _insert_request = false;
-         _delete_request = false;
+         _erase_request = false;
          _request_info.reset();
       }
       return *this;
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
          _update_request = true;
          _move_request = false;
          _insert_request = false;
-         _delete_request = false;
+         _erase_request = false;
          _request_info.reset();
       }
       return *this;
@@ -325,9 +325,9 @@ namespace cycfi { namespace elements
       }
    }
 
-   void list::delete_(indices_type const& indices)
+   void list::erase(indices_type const& indices)
    {
-      _delete_request = true;
+      _erase_request = true;
       if (!_request_info)
       {
          _request_info = std::make_unique<request_info>();
@@ -378,7 +378,7 @@ namespace cycfi { namespace elements
       _insert_request = false;
    }
 
-   void list::delete_(basic_context const& ctx) const
+   void list::erase(basic_context const& ctx) const
    {
       auto const& _delete_indices = _request_info->_delete_indices;
       this->_composer->resize(this->_composer->size() - _delete_indices.size());
@@ -397,7 +397,7 @@ namespace cycfi { namespace elements
       }
 
       ++_layout_id;
-      _delete_request = false;
+      _erase_request = false;
    }
 
    void list::sync(basic_context const& ctx) const
@@ -410,8 +410,8 @@ namespace cycfi { namespace elements
             move(ctx);
          if (_insert_request)
             insert(ctx);
-         if (_delete_request)
-            delete_(ctx);
+         if (_erase_request)
+            erase(ctx);
       }
       _request_info.reset();
    }

@@ -407,6 +407,31 @@ namespace cycfi { namespace elements
    // The old name is deprecated
    using hdynamic_list [[deprecated("Use hlist instead.")]] = hlist;
 
+   // Utility to move items in a vector `v` from given `indices` to a new position, `pos`.
+   template <typename T>
+   inline void move_indices(std::vector<T>& v, std::size_t pos, std::vector<std::size_t> const& indices)
+   {
+      std::vector<T> to_move;
+      for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+      {
+         to_move.push_back(v[*i]);
+         v.erase(v.begin()+*i);
+         if (pos > *i)
+            --pos;
+      }
+      auto pos_i = pos >= v.size()? v.end() : v.begin()+pos;
+      for (auto const& path : to_move)
+         v.insert(pos_i, path);
+   }
+
+   // Utility to erase items in a vector `v` with given `indices`.
+   template <typename T>
+   inline void erase_indices(std::vector<T>& v, std::vector<std::size_t> const& indices)
+   {
+      for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+         v.erase(v.begin()+*i);
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////

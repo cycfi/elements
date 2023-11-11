@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    private:
 
-      float             _xpos;
+      float             _xpos = full_extent;
    };
 
    inline auto slide_button()

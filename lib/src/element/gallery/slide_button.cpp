@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
 
       // Animate sliding
       auto target = value? bounds.right-radius : bounds.left+radius;
-      if (enabled)
+      if (enabled && _xpos > bounds.left && _xpos < bounds.right)
       {
          auto diff = target - _xpos;
          constexpr auto alpha = 0.3;
@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       canvas_.fill_style(color);
       canvas_.fill();
    }
-
+   
    bool slide_button_styler::wants_control() const
    {
       return true;

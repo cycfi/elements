@@ -182,11 +182,11 @@ auto make_buttons(view& view_)
             top_margin(20,
                htile(
                   label("Enabled"),
-                  hspace(5),
+                  hspace(10),
                   align_left(slide_btn1),
-                  hmargin(5, label("Slide Buttons")),
+                  hmargin(10, label("Slide Buttons")),
                   align_right(slide_btn2),
-                  hspace(5),
+                  hspace(10),
                   label("Disabled")
                )
             ),

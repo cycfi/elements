@@ -35,7 +35,7 @@ namespace cycfi { namespace elements
       point                slide_button_size;
       color                slide_button_on_color;
       color                slide_button_base_color;
-      color                slide_button_button_color;
+      color                slide_button_thumb_color;
 
       color                controls_color;
       float                controls_frame_stroke_width;

@@ -308,7 +308,7 @@ namespace cycfi { namespace elements
       bool                       manage_externally() const { return _manage_externally; }
       void                       move(std::size_t pos, indices_type const& indices);
       void                       insert(std::size_t pos, std::size_t num_items);
-      void                       delete_(indices_type const& indices);
+      void                       erase(indices_type const& indices);
 
       rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 
@@ -347,7 +347,7 @@ namespace cycfi { namespace elements
       void                       update(basic_context const& ctx) const;
       void                       move(basic_context const& ctx) const;
       void                       insert(basic_context const& ctx) const;
-      void                       delete_(basic_context const& ctx) const;
+      void                       erase(basic_context const& ctx) const;
 
       composer_ptr               _composer;
       bool                       _manage_externally;
@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
       mutable bool               _update_request:1;
       mutable bool               _move_request:1;
       mutable bool               _insert_request:1;
-      mutable bool               _delete_request:1;
+      mutable bool               _erase_request :1;
 
       struct request_info
       {
@@ -406,6 +406,31 @@ namespace cycfi { namespace elements
 
    // The old name is deprecated
    using hdynamic_list [[deprecated("Use hlist instead.")]] = hlist;
+
+   // Utility to move items in a vector `v` from given `indices` to a new position, `pos`.
+   template <typename T>
+   inline void move_indices(std::vector<T>& v, std::size_t pos, std::vector<std::size_t> const& indices)
+   {
+      std::vector<T> to_move;
+      for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+      {
+         to_move.push_back(v[*i]);
+         v.erase(v.begin()+*i);
+         if (pos > *i)
+            --pos;
+      }
+      auto pos_i = pos >= v.size()? v.end() : v.begin()+pos;
+      for (auto const& path : to_move)
+         v.insert(pos_i, path);
+   }
+
+   // Utility to erase items in a vector `v` with given `indices`.
+   template <typename T>
+   inline void erase_indices(std::vector<T>& v, std::vector<std::size_t> const& indices)
+   {
+      for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+         v.erase(v.begin()+*i);
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines

@@ -15,7 +15,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
    {}
 
    list::list(list const& rhs)
@@ -30,7 +30,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
     , _request_info{nullptr}
    {}
 
@@ -46,7 +46,7 @@ namespace cycfi { namespace elements
     , _update_request{true}
     , _move_request{false}
     , _insert_request{false}
-    , _delete_request{false}
+    , _erase_request{false}
     , _request_info{nullptr}
    {}
 
@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
          _update_request = true;
          _move_request = false;
          _insert_request = false;
-         _delete_request = false;
+         _erase_request = false;
          _request_info.reset();
       }
       return *this;
@@ -86,7 +86,7 @@ namespace cycfi { namespace elements
          _update_request = true;
          _move_request = false;
          _insert_request = false;
-         _delete_request = false;
+         _erase_request = false;
          _request_info.reset();
       }
       return *this;
@@ -307,48 +307,33 @@ namespace cycfi { namespace elements
    {
       _move_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_move_pos = pos;
-         _request_info->_move_indices = indices;
-      }
-   }
+      _request_info->_move_pos = pos;
+      _request_info->_move_indices = indices;
+}
 
    void list::insert(std::size_t pos, std::size_t num_items)
    {
       _insert_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_insert_pos = pos;
-         _request_info->_insert_num_items = num_items;
-      }
+      _request_info->_insert_pos = pos;
+      _request_info->_insert_num_items = num_items;
    }
 
-   void list::delete_(indices_type const& indices)
+   void list::erase(indices_type const& indices)
    {
-      _delete_request = true;
+      _erase_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_delete_indices = indices;
-      }
+      _request_info->_delete_indices = indices;
    }
 
    void list::move(basic_context const& ctx) const
    {
       auto const& _move_indices = _request_info->_move_indices;
       auto _move_pos = _request_info->_move_pos;
-
-      cells_vector to_move;
-      for (auto i = _move_indices.crbegin(); i != _move_indices.crend(); ++i)
-      {
-         to_move.push_back(_cells[*i]);
-         _cells.erase(_cells.begin()+*i);
-      }
-      auto pos_i = _move_pos >= _cells.size()? _cells.end() : _cells.begin()+_move_pos;
-      for (auto const& cell : to_move)
-         _cells.insert(pos_i, cell);
+      move_indices(_cells, _move_pos, _move_indices);
 
       double y = 0;
       auto size = _composer->size();
@@ -387,13 +372,11 @@ namespace cycfi { namespace elements
       _insert_request = false;
    }
 
-   void list::delete_(basic_context const& ctx) const
+   void list::erase(basic_context const& ctx) const
    {
       auto const& _delete_indices = _request_info->_delete_indices;
-
       this->_composer->resize(this->_composer->size() - _delete_indices.size());
-      for (auto i = _delete_indices.crbegin(); i != _delete_indices.crend(); ++i)
-         _cells.erase(_cells.begin()+*i);
+      erase_indices(_cells, _delete_indices);
 
       double y = 0;
       auto size = _composer->size();
@@ -408,7 +391,7 @@ namespace cycfi { namespace elements
       }
 
       ++_layout_id;
-      _delete_request = false;
+      _erase_request = false;
    }
 
    void list::sync(basic_context const& ctx) const
@@ -421,8 +404,8 @@ namespace cycfi { namespace elements
             move(ctx);
          if (_insert_request)
             insert(ctx);
-         if (_delete_request)
-            delete_(ctx);
+         if (_erase_request)
+            erase(ctx);
       }
       _request_info.reset();
    }

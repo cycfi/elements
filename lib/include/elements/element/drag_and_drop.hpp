@@ -78,11 +78,11 @@ namespace cycfi { namespace elements
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
       on_move_function        on_move = [](std::size_t, indices_type const&){};
-      on_delete_function      on_delete = [](indices_type const&){};
+      on_delete_function      on_erase = [](indices_type const&){};
 
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);
-      void                    delete_(indices_type const& indices);
+      void                    erase(indices_type const& indices);
 
    public:
 
@@ -115,11 +115,9 @@ namespace cycfi { namespace elements
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
 
       using drag_image_ptr = std::shared_ptr<floating_element>;
-      using payload_ptr = std::unique_ptr<drop_info>;
 
       bool                    _selected = false;
       drag_image_ptr          _drag_image;
-      payload_ptr             _payload;
    };
 
    template <typename Subject>

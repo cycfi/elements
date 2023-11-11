@@ -430,31 +430,52 @@ namespace cycfi { namespace elements
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
-      auto [c, cctx] = find_composite(ctx);
-      if (c)
+      if (track_info.modifiers & mod_shift)
       {
-         auto bounds = ctx.bounds;
-         auto limits = this->subject().limits(ctx);
-         bounds.width(limits.min.x);
-         if (is_selected())
+         // Process shift-select
+         select(true);
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
          {
-            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
-            bounds.right += item_offset * num_boxes;
-            bounds.bottom += item_offset * num_boxes;
-
-            _drag_image = share(
-               floating(bounds,
-                  drag_image(link(this->subject()), num_boxes)
-               )
-            );
-            ctx.view.add(_drag_image);
-            ctx.view.refresh();
-
-            if (auto* di = find_parent<drop_inserter_base*>(ctx))
+            shift_select(*c);
+            cctx->view.refresh(*cctx);
+         }
+      }
+      else if (track_info.modifiers & mod_action)
+      {
+         // Process action-select
+         select(!is_selected());
+         ctx.view.refresh(ctx);
+      }
+      else
+      {
+         // Process drag
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
+         {
+            auto bounds = ctx.bounds;
+            auto limits = this->subject().limits(ctx);
+            bounds.width(limits.min.x);
+            if (is_selected())
             {
-               payload pl;
-               pl[address_to_string(di)] = {};
-               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+               std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
+               bounds.right += item_offset * num_boxes;
+               bounds.bottom += item_offset * num_boxes;
+
+               _drag_image = share(
+                  floating(bounds,
+                     drag_image(link(this->subject()), num_boxes)
+                  )
+               );
+               ctx.view.add(_drag_image);
+               ctx.view.refresh();
+
+               if (auto* di = find_parent<drop_inserter_base*>(ctx))
+               {
+                  payload pl;
+                  pl[address_to_string(di)] = {};
+                  ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+               }
             }
          }
       }
@@ -528,18 +549,9 @@ namespace cycfi { namespace elements
             unselect_all(*c);
             cctx->view.refresh(*cctx);
          }
+         select(true);
+         ctx.view.refresh(ctx);
       }
-      select(true);
-      if (track_info.modifiers & mod_shift)
-      {
-         auto [c, cctx] = find_composite(ctx);
-         if (c)
-         {
-            shift_select(*c);
-            cctx->view.refresh(*cctx);
-         }
-      }
-      ctx.view.refresh(ctx);
    }
 }}
 

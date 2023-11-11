@@ -23,10 +23,10 @@ namespace cycfi { namespace elements
     , button_margin              {10, 5, 10, 5}
     , button_corner_radius       {4.0}
     , button_text_icon_space     {8.0}
-    , slide_button_size          {42, 25}
+    , slide_button_size          {30, 16}
     , slide_button_on_color      {rgba(0, 127, 255, 200)}
     , slide_button_base_color    {rgba(127, 127, 127, 100)}
-    , slide_button_button_color  {rgba(240, 240, 240, 200)}
+    , slide_button_thumb_color   {rgba(240, 240, 240, 200)}
 
     , controls_color             {rgba(18, 49, 85, 200)}
     , controls_frame_stroke_width{1.5}

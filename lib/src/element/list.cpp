@@ -339,16 +339,7 @@ namespace cycfi { namespace elements
    {
       auto const& _move_indices = _request_info->_move_indices;
       auto _move_pos = _request_info->_move_pos;
-
-      cells_vector to_move;
-      for (auto i = _move_indices.crbegin(); i != _move_indices.crend(); ++i)
-      {
-         to_move.push_back(_cells[*i]);
-         _cells.erase(_cells.begin()+*i);
-      }
-      auto pos_i = _move_pos >= _cells.size()? _cells.end() : _cells.begin()+_move_pos;
-      for (auto const& cell : to_move)
-         _cells.insert(pos_i, cell);
+      move_indices(_cells, _move_pos, _move_indices);
 
       double y = 0;
       auto size = _composer->size();
@@ -390,10 +381,8 @@ namespace cycfi { namespace elements
    void list::delete_(basic_context const& ctx) const
    {
       auto const& _delete_indices = _request_info->_delete_indices;
-
       this->_composer->resize(this->_composer->size() - _delete_indices.size());
-      for (auto i = _delete_indices.crbegin(); i != _delete_indices.crend(); ++i)
-         _cells.erase(_cells.begin()+*i);
+      erase_indices(_cells, _delete_indices);
 
       double y = 0;
       auto size = _composer->size();

@@ -112,23 +112,14 @@ int main(int argc, char* argv[])
    drop_inserter_->on_move =
       [&](std::size_t pos, std::vector<std::size_t> const& indices)
       {
-         std::vector<std::filesystem::path> to_move;
-         for (auto i = indices.crbegin(); i != indices.crend(); ++i)
-         {
-            to_move.push_back(paths[*i]);
-            paths.erase(paths.begin()+*i);
-         }
-         auto pos_i = pos >= paths.size()? paths.end() : paths.begin()+pos;
-         for (auto const& path : to_move)
-            paths.insert(pos_i, path);
+         move_indices(paths, pos, indices);
          view_.refresh();
       };
 
    drop_inserter_->on_delete =
       [&](std::vector<std::size_t> const& indices)
       {
-         for (auto i = indices.crbegin(); i != indices.crend(); ++i)
-            paths.erase(paths.begin()+*i);
+         erase_indices(paths, indices);
          view_.refresh();
       };
 

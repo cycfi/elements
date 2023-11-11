@@ -307,32 +307,26 @@ namespace cycfi { namespace elements
    {
       _move_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_move_pos = pos;
-         _request_info->_move_indices = indices;
-      }
-   }
+      _request_info->_move_pos = pos;
+      _request_info->_move_indices = indices;
+}
 
    void list::insert(std::size_t pos, std::size_t num_items)
    {
       _insert_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_insert_pos = pos;
-         _request_info->_insert_num_items = num_items;
-      }
+      _request_info->_insert_pos = pos;
+      _request_info->_insert_num_items = num_items;
    }
 
    void list::erase(indices_type const& indices)
    {
       _erase_request = true;
       if (!_request_info)
-      {
          _request_info = std::make_unique<request_info>();
-         _request_info->_delete_indices = indices;
-      }
+      _request_info->_delete_indices = indices;
    }
 
    void list::move(basic_context const& ctx) const

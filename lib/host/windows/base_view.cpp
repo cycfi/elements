@@ -366,7 +366,7 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         constexpr auto acceleration = 1.1;
+         constexpr auto acceleration = 1.04;
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->_scroll_start;
          info->_scroll_start = now;
@@ -419,7 +419,7 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         constexpr auto mouse_wheel_line_delta = 120.0f;
+         constexpr auto mouse_wheel_line_delta = 3.0f;
 
          auto* info = get_view_info(hwnd);
          switch (message)

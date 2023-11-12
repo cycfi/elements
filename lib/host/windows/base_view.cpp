@@ -131,8 +131,6 @@ namespace cycfi { namespace elements
          bool           _mouse_in_window = false;
          time_point     _click_start = {};
          int            _click_count = 0;
-         time_point     _scroll_start = {};
-         double         _velocity = 0;
          point          _scroll_dir;
          key_map        _keys = {};
          skia_context   _skia_context;
@@ -366,27 +364,7 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         constexpr auto acceleration = 1.04;
-         auto now = std::chrono::steady_clock::now();
-         auto elapsed = now - info->_scroll_start;
-         info->_scroll_start = now;
-
-         std::chrono::duration<double, std::milli> fp_ms = elapsed;
-
-         bool reset_accel =
-            elapsed > std::chrono::milliseconds(250) ||
-            (info->_scroll_dir.x > 0 != dir.x > 0) ||
-            (info->_scroll_dir.y > 0 != dir.y > 0)
-            ;
          info->_scroll_dir = dir;
-
-         if (reset_accel)
-            info->_velocity = 1.0;
-         else
-            info->_velocity *= acceleration;
-
-         dir.x *= info->_velocity;
-         dir.y *= info->_velocity;
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);

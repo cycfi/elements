@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -18,7 +18,7 @@ namespace cycfi { namespace elements
       cnv.font(thm.icon_font.size(size));
       cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
-      cnv.fill_text(codepoint_to_utf8(code).c_str(), point{ cx, cy });
+      cnv.fill_text(codepoint_to_utf8(code).c_str(), point{cx, cy});
    }
 
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size)
@@ -40,6 +40,6 @@ namespace cycfi { namespace elements
       cnv.font(font_);
       auto  info = cnv.measure_text(text);
       auto  height = info.ascent + info.descent + info.leading;
-      return { info.size.x, height };
+      return {info.size.x, height};
    }
 }}

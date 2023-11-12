@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -17,27 +17,32 @@ namespace cycfi { namespace elements
     : _pixmap(std::make_shared<artist::image>(path))
     , _scale(scale)
    {
+      if (!_pixmap->impl())
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    image::image(image_ptr pixmap_)
     : _pixmap(pixmap_)
-   {}
+   {
+      if (!_pixmap->impl())
+         throw std::runtime_error{"Error: Invalid image."};
+   }
 
    point image::size() const
    {
       auto s = _pixmap->size();
-      return { s.x * _scale, s.y * _scale };
+      return {s.x * _scale, s.y * _scale};
    }
 
    rect image::source_rect(context const& ctx) const
    {
-      return { 0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale };
+      return {0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale};
    }
 
    view_limits image::limits(basic_context const& /* ctx */) const
    {
       auto size_ = size();
-      return { { size_.x, size_.y }, { size_.x, size_.y } };
+      return {{size_.x, size_.y}, {size_.x, size_.y}};
    }
 
    void image::draw(context const& ctx)
@@ -55,7 +60,7 @@ namespace cycfi { namespace elements
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
       auto width = pixmap().size().x;
-      return { { width * scale(), _height }, { width * scale(), _height } };
+      return {{width * scale(), _height}, {width * scale(), _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
@@ -71,13 +76,13 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return { pixmap().size().x * scale(), _height };
+      return {pixmap().size().x * scale(), _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto sc = scale();
       auto width = pixmap().size().x;
-      return rect{ 0, (_height/sc) * _index, width, (_height/sc) * (_index + 1) };
+      return rect{0, (_height/sc) * _index, width, (_height/sc) * (_index + 1)};
    }
 }}

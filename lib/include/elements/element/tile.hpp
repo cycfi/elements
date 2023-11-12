@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -37,7 +37,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), vtile_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 
@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), htile_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 }}

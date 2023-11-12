@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    inline auto radio_button(std::string text)
    {
-      return choice(radio_button_styler{text });
+      return choice(radio_button_styler{text});
    }
 }}
 

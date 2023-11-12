@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 
@@ -175,7 +175,7 @@ namespace cycfi { namespace elements
                   [&](auto& cnv_)
                   {
                      auto scale = get_scale_for_window(hwnd);
-                     auto cnv = canvas{ cnv_ };
+                     auto cnv = canvas{cnv_};
                      cnv.pre_scale(scale);
 
                      view->draw(cnv,
@@ -198,7 +198,7 @@ namespace cycfi { namespace elements
 
 #if defined ELEMENTS_PRINT_FPS
             auto stop = std::chrono::high_resolution_clock::now();
-            auto elapsed = std::chrono::duration<double>{ stop - start }.count();
+            auto elapsed = std::chrono::duration<double>{stop - start}.count();
             std::cout << (1.0/elapsed) << " fps" << std::endl;
 #endif
             EndPaint(hwnd, &ps);
@@ -300,7 +300,7 @@ namespace cycfi { namespace elements
             info->_click_count,
             which,
             get_mods(),
-            { pos_x, pos_y }
+            {pos_x, pos_y}
          };
       }
 
@@ -337,19 +337,19 @@ namespace cycfi { namespace elements
          {
             // HACK: Release both Shift keys on Shift up event, as when both
             //       are pressed the first release does not emit any event
-            bool r1 = handle_key(*info->_vptr, info->_keys, { key_code::left_shift, action, mods });
-            bool r2 = handle_key(*info->_vptr, info->_keys, { key_code::right_shift, action, mods });
+            bool r1 = handle_key(*info->_vptr, info->_keys, {key_code::left_shift, action, mods});
+            bool r2 = handle_key(*info->_vptr, info->_keys, {key_code::right_shift, action, mods});
             return r1 || r2;
          }
          else if (wparam == VK_SNAPSHOT)
          {
             // HACK: Key down is not reported for the Print Screen key
-            bool r1 = handle_key(*info->_vptr, info->_keys, { key, key_action::press, mods });
-            bool r2 = handle_key(*info->_vptr, info->_keys, { key, key_action::release, mods });
+            bool r1 = handle_key(*info->_vptr, info->_keys, {key, key_action::press, mods});
+            bool r2 = handle_key(*info->_vptr, info->_keys, {key, key_action::release, mods});
             return r1 || r2;
          }
 
-         return handle_key(*info->_vptr, info->_keys, { key, action, mods });
+         return handle_key(*info->_vptr, info->_keys, {key, action, mods});
       }
 
       void on_cursor(HWND hwnd, base_view* view, LPARAM lparam, cursor_tracking state)
@@ -361,7 +361,7 @@ namespace cycfi { namespace elements
          pos_x /= scale;
          pos_y /= scale;
 
-         view->cursor({ pos_x, pos_y }, state);
+         view->cursor({pos_x, pos_y}, state);
       }
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
@@ -394,7 +394,7 @@ namespace cycfi { namespace elements
          ScreenToClient(hwnd, &pos);
 
          float scale = get_scale_for_window(hwnd);
-         info->_vptr->scroll(dir, {pos.x / scale, pos.y / scale });
+         info->_vptr->scroll(dir, {pos.x / scale, pos.y / scale});
       }
 
       bool on_text(base_view& view, UINT message, WPARAM wparam)
@@ -413,7 +413,7 @@ namespace cycfi { namespace elements
             return 0;
 
          if (plain)
-            return view.text({ codepoint, get_mods() });
+            return view.text({codepoint, get_mods()});
          return false;
       }
 
@@ -474,14 +474,14 @@ namespace cycfi { namespace elements
             case WM_MOUSEWHEEL:
                {
                   float delta = GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { 0, delta / mouse_wheel_line_delta });
+                  on_scroll(hwnd, info, lparam, {0, delta / mouse_wheel_line_delta});
                }
                break;
 
             case WM_MOUSEHWHEEL:
                {
                   float delta = -GET_WHEEL_DELTA_WPARAM(wparam);
-                  on_scroll(hwnd, info, lparam, { delta / mouse_wheel_line_delta, 0 });
+                  on_scroll(hwnd, info, lparam, {delta / mouse_wheel_line_delta, 0});
                }
                break;
 
@@ -578,7 +578,7 @@ namespace cycfi { namespace elements
             false
          );
 
-         view_info* info = new view_info{ _this };
+         view_info* info = new view_info{_this};
          SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
          info->_skia_context = sk_app::window_context_factory::MakeGLForWin(hwnd, sk_app::DisplayParams());
@@ -592,7 +592,7 @@ namespace cycfi { namespace elements
 
    base_view::base_view(extent size_)
    {
-	   RECT bounds = { 0, 0, LONG(size_.x), LONG(size_.y) };
+	   RECT bounds = {0, 0, LONG(size_.x), LONG(size_.y)};
 	   _view = make_window(this, nullptr, bounds);
    }
 
@@ -617,7 +617,7 @@ namespace cycfi { namespace elements
       GetCursorPos(&pos);
       ScreenToClient(_view, &pos);
       float scale = get_scale_for_window(_view);
-      return { float(pos.x) / scale, float(pos.y) / scale };
+      return {float(pos.x) / scale, float(pos.y) / scale};
    }
 
    elements::extent base_view::size() const
@@ -625,7 +625,7 @@ namespace cycfi { namespace elements
       float scale = get_scale_for_window(_view);
       RECT r;
       GetWindowRect(_view, &r);
-      return { float(r.right-r.left) / scale, float(r.bottom-r.top) / scale };
+      return {float(r.right-r.left) / scale, float(r.bottom-r.top) / scale};
    }
 
    void base_view::size(elements::extent p)
@@ -678,7 +678,7 @@ namespace cycfi { namespace elements
       if (!buffer)
          return {};
 
-      std::wstring source{ buffer, std::char_traits<WCHAR>::length(buffer) };
+      std::wstring source{buffer, std::char_traits<WCHAR>::length(buffer)};
 
       GlobalUnlock(object);
       CloseClipboard();
@@ -745,7 +745,7 @@ namespace cycfi { namespace elements
 
    point scroll_direction()
    {
-      return { +1.0f, +1.0f };
+      return {+1.0f, +1.0f};
    }
 }}
 

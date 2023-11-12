@@ -18,7 +18,7 @@ endif()
 
 set(ELEMENTS_APP_PROJECT "TextAndIcons")
 set(ELEMENTS_APP_TITLE "Text and Icons")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2023 Joel de Guzman")
 set(ELEMENTS_APP_ID "com.cycfi.text-and-icons")
 set(ELEMENTS_APP_VERSION "1.0")
 

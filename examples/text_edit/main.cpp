@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -10,8 +10,9 @@ using namespace cycfi::elements;
 // Main window background
 auto make_bkd()
 {
-   return port(image{ "dark-bkd.jpg" });
+   return port(image{"dark-bkd.jpg"});
 }
+
 std::string const text1 =
    "一千条路…\n"
    "仁、义、礼、智、信…\n"
@@ -74,9 +75,9 @@ auto make_edit_box()
    return
       scroller(
          margin(
-            { 20, 20, 20, 20 },
+            {20, 20, 20, 20},
             align_left_top(hsize(800,
-               basic_text_box(text, font_descr{ font_family, 14 }
+               basic_text_box(text, font_descr{font_family, 14}
             )))
          )
       );

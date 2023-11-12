@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -26,19 +26,17 @@ namespace cycfi { namespace elements
       bottom_right
    };
 
-   class basic_menu : public basic_button
+   class basic_button_menu : public basic_button
    {
    public:
 
-      using on_open_menu_function = std::function<void(basic_menu& menu)>;
+      using on_open_menu_function = std::function<void(basic_button_menu& menu)>;
       using basic_button::focus;
 
-                              basic_menu(menu_position pos = menu_position::bottom_right);
+                              basic_button_menu(menu_position pos = menu_position::bottom_right);
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    wants_focus() const override;
 
       menu_position           position() const              { return _position; }
       void                    position(menu_position pos)   { _position = pos; }
@@ -58,12 +56,12 @@ namespace cycfi { namespace elements
       menu_position           _position;
    };
 
-   inline basic_menu::basic_menu(menu_position pos)
+   inline basic_button_menu::basic_button_menu(menu_position pos)
     : _position(pos)
    {}
 
    template <typename Menu>
-   inline void basic_menu::menu(Menu&& menu_)
+   inline void basic_button_menu::menu(Menu&& menu_)
    {
       _popup = share(basic_popup_menu(std::forward<Menu>(menu_)));
    }
@@ -110,7 +108,7 @@ namespace cycfi { namespace elements
       using menu_enabled_function = std::function<bool()>;
 
       void                    draw(context const& ctx) override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
@@ -120,13 +118,11 @@ namespace cycfi { namespace elements
       menu_item_function      on_click;
       shortcut_key            shortcut;
 
-      void                    scroll_into_view()   { _scroll_into_view = true; }
       bool                    is_selected() const override;
       void                    select(bool state) override;
 
    private:
 
-      bool                    _scroll_into_view = false;
       bool                    _selected = false;
    };
 
@@ -134,7 +130,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_menu_item_element>
    basic_menu_item(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    inline bool basic_menu_item_element::is_selected() const

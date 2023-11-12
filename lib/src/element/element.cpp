@@ -1,11 +1,32 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/element.hpp>
 #include <elements/support.hpp>
 #include <elements/view.hpp>
+#include <typeinfo>
+
+#if defined(__GNUC__) || defined(__clang__)
+# include <cxxabi.h>
+
+   static std::string demangle(const char* name)
+   {
+      int status = 0;
+      std::unique_ptr<char, void(*)(void*)> res{
+            abi::__cxa_demangle(name, nullptr, nullptr, &status),
+            std::free
+         };
+
+      return status==0? res.get() : name;
+   }
+#else
+   static std::string demangle(const char* name)
+   {
+      return name;
+   }
+#endif
 
 namespace cycfi { namespace elements
 {
@@ -19,7 +40,7 @@ namespace cycfi { namespace elements
 
    view_stretch element::stretch() const
    {
-      return { 1.0f, 1.0f };
+      return {1.0f, 1.0f};
    }
 
    unsigned element::span() const
@@ -27,7 +48,7 @@ namespace cycfi { namespace elements
       return 1;
    }
 
-   element* element::hit_test(context const& ctx, point p)
+   element* element::hit_test(context const& ctx, point p, bool /*leaf*/)
    {
       return (ctx.bounds.includes(p)) ? this : nullptr;
    }
@@ -40,10 +61,16 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::refresh(context const& ctx, element& element, int outward)
+   void element::refresh(context const& ctx, element& e, int outward)
    {
-      if (&element == this)
+      if (&e == this)
          ctx.view.refresh(ctx, outward);
+   }
+
+   void element::in_context_do(context const& ctx, element& e, context_function f)
+   {
+      if (&e == this)
+         f(ctx);
    }
 
    bool element::click(context const& /* ctx */, mouse_button /* btn */)
@@ -89,7 +116,7 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void element::begin_focus()
+   void element::begin_focus(focus_request /*req*/)
    {
    }
 
@@ -112,6 +139,15 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   void element::track_drop(context const& /*ctx*/, drop_info const& /*info*/, cursor_tracking /*status*/)
+   {
+   }
+
+   bool element::drop(context const& /*ctx*/, drop_info const& /*info*/)
+   {
+      return false;
+   }
+
    void element::on_tracking(context const& ctx, tracking state)
    {
       ctx.view.manage_on_tracking(*this, state);
@@ -120,5 +156,10 @@ namespace cycfi { namespace elements
    void element::on_tracking(view& view_, tracking state)
    {
       view_.manage_on_tracking(*this, state);
+   }
+
+   std::string element::class_name() const
+   {
+      return demangle(typeid(*this).name());
    }
 }}

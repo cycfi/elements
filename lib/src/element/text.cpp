@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -24,9 +24,9 @@ namespace cycfi { namespace elements
     , font_descr font_
     , color color_
    )
-    : _font{ font_ }
-    , _layout{ font_, text }
-    , _color{ color_ }
+    : _font{font_}
+    , _layout{font_, text}
+    , _color{color_}
    {}
 
    view_limits static_text_box::limits(basic_context const& /* ctx */) const
@@ -40,8 +40,8 @@ namespace cycfi { namespace elements
          ;
 
       return {
-         { 200, line_height },
-         { full_extent, full_extent }
+         {200, line_height},
+         {full_extent, full_extent}
       };
    }
 
@@ -57,7 +57,7 @@ namespace cycfi { namespace elements
       if (_current_size.x != new_x || _current_size.y != new_y)
       {
          if (_current_size.x != -1 && _current_size.y != -1)
-            ctx.view.refresh(union_(ctx.bounds, rect(ctx.bounds.top_left(), extent{ _current_size })));
+            ctx.view.refresh(union_(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
          else
             ctx.view.refresh(ctx.bounds);
       }
@@ -71,7 +71,7 @@ namespace cycfi { namespace elements
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
       auto  m = _font.metrics();
-      auto  p = point{ ctx.bounds.left, ctx.bounds.top + m.ascent };
+      auto  p = point{ctx.bounds.left, ctx.bounds.top + m.ascent};
 
       cnv.add_rect(ctx.bounds);
       cnv.clip();
@@ -96,7 +96,7 @@ namespace cycfi { namespace elements
 
    std::size_t static_text_box::insert(std::size_t pos, std::string_view text)
    {
-      std::u32string s{ get_text().data(), get_text().size() };
+      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
       s.insert(pos, std::move(utf32));
@@ -106,7 +106,7 @@ namespace cycfi { namespace elements
 
    std::size_t static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
    {
-      std::u32string s{ get_text().data(), get_text().size() };
+      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
       s.replace(pos, len, std::move(utf32));
@@ -116,7 +116,7 @@ namespace cycfi { namespace elements
 
    void static_text_box::erase(std::size_t pos, std::size_t len)
    {
-      std::u32string s{ get_text().data(), get_text().size() };
+      std::u32string s{get_text().data(), get_text().size()};
       s.erase(pos, len);
       set_text(s);
    }
@@ -125,13 +125,14 @@ namespace cycfi { namespace elements
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
    basic_text_box::basic_text_box(std::string_view text, font_descr font_)
-    : static_text_box(text, font_)
-    , _select_start(-1)
-    , _select_end(-1)
-    , _current_x(0)
-    , _is_focus(false)
-    , _show_caret(true)
-    , _caret_started(false)
+    : static_text_box{text, font_}
+    , _select_start{-1}
+    , _select_end{-1}
+    , _current_x{0}
+    , _is_focus{false}
+    , _show_caret{true}
+    , _caret_started{false}
+    , _read_only{false}
    {}
 
    struct basic_text_box::state_saver : std::enable_shared_from_this<basic_text_box::state_saver>
@@ -278,15 +279,18 @@ namespace cycfi { namespace elements
       {
          if (typing_state)
          {
-            ctx.view.add_undo({ typing_state, undo_f });
+            ctx.view.add_undo({typing_state, undo_f});
             typing_state = {}; // reset
          }
-         ctx.view.add_undo({ undo_f, redo_f });
+         ctx.view.add_undo({undo_f, redo_f});
       }
    }
 
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
+      if (_read_only)
+         return false;
+
       _show_caret = true;
 
       if (_select_start == -1)
@@ -336,7 +340,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
-      _show_caret = true;
+      _show_caret = !_read_only;
 
       if (_select_start == -1
          || k.action == key_action::release
@@ -361,7 +365,7 @@ namespace cycfi { namespace elements
          if (info.str)
          {
             auto y = up ? -info.line_height : +info.line_height;
-            auto pos = point{ ctx.bounds.left + _current_x, info.pos.y + y };
+            auto pos = point{ctx.bounds.left + _current_x, info.pos.y + y};
             char32_t const* cp = caret_position(ctx, pos);
             if (cp)
                _select_end = int(cp - &_text[0]);
@@ -417,6 +421,7 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
+               if (!_read_only)
                {
                   replace(start, end-start, "\n");
                   _select_start += 1;
@@ -429,6 +434,7 @@ namespace cycfi { namespace elements
 
             case key_code::backspace:
             case key_code::_delete:
+               if (!_read_only)
                {
                   delete_(k.key == key_code::_delete);
                   save_x = true;
@@ -484,7 +490,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::x:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   cut(ctx.view, start, end);
                   save_x = true;
@@ -502,7 +508,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::v:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   paste(ctx.view, start, end);
                   save_x = true;
@@ -512,11 +518,11 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::z:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   if (_typing_state)
                   {
-                     ctx.view.add_undo({ _typing_state, undo_f });
+                     ctx.view.add_undo({_typing_state, undo_f});
                      _typing_state = {}; // reset
                   }
 
@@ -562,7 +568,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw_caret(context const& ctx)
    {
-      if (_select_start == -1)
+      if (_read_only || _select_start == -1)
          return;
 
       auto& canvas = ctx.canvas;
@@ -584,13 +590,13 @@ namespace cycfi { namespace elements
          {
             canvas.line_width(width);
             canvas.stroke_style(theme.text_box_caret_color);
-            canvas.move_to({ left + (width/2), top });
-            canvas.line_to({ left + (width/2), top + line_height });
+            canvas.move_to({left + (width/2), top});
+            canvas.line_to({left + (width/2), top + line_height});
             canvas.stroke();
          }
 
          has_caret = true;
-         caret_bounds = rect{ left, top, left+width, top + line_height };
+         caret_bounds = rect{left, top, left+width, top + line_height};
       }
       // Draw the caret
       else if (_is_focus && (_select_start != -1) && (_select_start == _select_end))
@@ -603,20 +609,20 @@ namespace cycfi { namespace elements
          {
             canvas.line_width(width);
             canvas.stroke_style(theme.text_box_caret_color);
-            canvas.move_to({ caret.left + (width/2), caret.top });
-            canvas.line_to({ caret.left + (width/2), caret.bottom });
+            canvas.move_to({caret.left + (width/2), caret.top});
+            canvas.line_to({caret.left + (width/2), caret.bottom});
             canvas.stroke();
          }
 
          has_caret = true;
-         caret_bounds = rect{ caret.left, caret.top, caret.left+width, caret.bottom };
+         caret_bounds = rect{caret.left, caret.top, caret.left+width, caret.bottom};
       }
 
       if (_is_focus && has_caret && !_caret_started)
       {
          auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
          auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
-         caret_bounds = { tl.x, tl.y, br.x, br.y };
+         caret_bounds = {tl.x, tl.y, br.x, br.y};
 
          _caret_started = true;
          ctx.view.post(500ms,
@@ -656,18 +662,18 @@ namespace cycfi { namespace elements
          canvas.fill_style(color);
          if (r1.top == r2.top)
          {
-            canvas.fill_rect({ r1.left, r1.top, r2.right, r1.bottom });
+            canvas.fill_rect({r1.left, r1.top, r2.right, r1.bottom});
          }
          else
          {
             canvas.begin_path();
             canvas.move_to(r1.top_left());
             canvas.line_to(r1.top_right());
-            canvas.line_to({ r1.right, r2.top });
+            canvas.line_to({r1.right, r2.top});
             canvas.line_to(r2.top_right());
             canvas.line_to(r2.bottom_right());
             canvas.line_to(r2.bottom_left());
-            canvas.line_to({ r2.left, r1.bottom });
+            canvas.line_to({r2.left, r1.bottom});
             canvas.line_to(r1.bottom_left());
             canvas.close_path();
             canvas.fill();
@@ -699,7 +705,7 @@ namespace cycfi { namespace elements
       caret_metrics info;
       info.str = s;
       info.pos = pos;
-      info.caret = { pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent };
+      info.caret = {pos.x, pos.y - (m.leading + m.ascent), pos.x + 1, pos.y + m.descent};
       info.line_height = m.leading + m.ascent + m.descent;
       return info;
    }
@@ -828,7 +834,7 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   void basic_text_box::begin_focus()
+   void basic_text_box::begin_focus(focus_request /*req*/)
    {
      _is_focus = true;
       if (_select_start == -1)
@@ -880,7 +886,7 @@ namespace cycfi { namespace elements
    {
       auto  m = get_font().metrics();
       auto  line_height = m.ascent + m.descent + m.leading;
-      return { { 32, line_height }, { full_extent, line_height } };
+      return {{32, line_height}, {full_extent, line_height}};
    }
 
    void basic_input_box::draw(context const& ctx)
@@ -900,7 +906,7 @@ namespace cycfi { namespace elements
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
                _placeholder.c_str()
-             , { ctx.bounds.left, ctx.bounds.top + m.ascent }
+             , {ctx.bounds.left, ctx.bounds.top + m.ascent}
             );
          }
          draw_caret(ctx);
@@ -1018,10 +1024,10 @@ namespace cycfi { namespace elements
       return basic_text_box::click(ctx, btn);
    }
 
-   void basic_input_box::begin_focus()
+   void basic_input_box::begin_focus(focus_request req)
    {
       _first_focus = true;
-      basic_text_box::begin_focus();
+      basic_text_box::begin_focus(req);
    }
 
    void basic_input_box::end_focus()

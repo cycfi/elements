@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -13,7 +13,7 @@ namespace cycfi { namespace elements
       auto limits_ = _tip->limits(ctx);
       auto w = limits_.min.x;
       auto h = limits_.min.y;
-      return rect{ 0, 0, w, h }.move_to(ctx.bounds.left, ctx.bounds.top-h);
+      return rect{0, 0, w, h}.move_to(ctx.bounds.left, ctx.bounds.top-h);
    }
 
    bool tooltip_element::cursor(context const& ctx, point p, cursor_tracking status)

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -40,10 +40,11 @@ namespace cycfi { namespace elements
    // Display
 
       view_limits             limits(basic_context const& ctx) const override = 0;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override = 0;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      void                    in_context_do(context const& ctx, element& e, context_function f) override;
 
       using element::refresh;
 
@@ -58,12 +59,15 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
       void                    focus(std::size_t index);
       virtual void            reset();
+
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
 
    // Composite
 
@@ -71,21 +75,27 @@ namespace cycfi { namespace elements
 
       struct hit_info
       {
-         element_ptr          element;
-         rect                 bounds   = rect{};
-         int                  index    = -1;
+         element*             element_ptr = nullptr;
+         element*             leaf_element_ptr = nullptr;
+         rect                 bounds = rect{};
+         int                  index = -1;
       };
 
       virtual hit_info        hit_element(context const& ctx, point p, bool control) const;
       virtual rect            bounds_of(context const& ctx, std::size_t index) const = 0;
       virtual bool            reverse_index() const { return false; }
 
-                              template <typename F>
-      void                    for_each(F&& f, bool reverse = false) const;
+      using for_each_callback =
+         std::function<bool(element& e, std::size_t ix, rect const& r)>;
 
+      virtual void            for_each_visible(
+                                 context const& ctx
+                               , for_each_callback f
+                               , bool reverse = false
+                              ) const;
    private:
 
-      void                    new_focus(context const& ctx, int index);
+      void                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;
@@ -167,51 +177,6 @@ namespace cycfi { namespace elements
    inline element& range_composite<Base>::at(std::size_t ix) const
    {
       return _container.at(_first + ix);
-   }
-
-   template <typename F>
-   inline void composite_base::for_each(F&& f, bool reverse) const
-   {
-      if (reverse_index() ^ reverse)
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-            if (!f(ix, at(ix)))
-               break;
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-            if (!f(ix, at(ix)))
-               break;
-      }
-   }
-
-   template <typename C>
-   void move_to_front(C& composite, element_ptr e)
-   {
-      if (e && composite.back() != e)
-      {
-         auto i = std::find(composite.begin(), composite.end(), e);
-         if (i != composite.end())
-         {
-            std::rotate(i, i+1, composite.end());
-            composite.reset();
-         }
-      }
-   }
-
-   template <typename C>
-   void move_to_back(C& composite, element_ptr e)
-   {
-      if (e && composite.front() != e)
-      {
-         auto i = std::find(composite.begin(), composite.end(), e);
-         if (i != composite.end())
-         {
-            std::rotate(composite.begin(), i, i+1);
-            composite.reset();
-         }
-      }
    }
 }}
 

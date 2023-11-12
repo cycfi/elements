@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -80,7 +80,7 @@ namespace cycfi { namespace elements
    inline margin_element<rect, remove_cvref_t<Subject>>
    margin(rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ namespace cycfi { namespace elements
    inline margin_element<left_margin_rect, remove_cvref_t<Subject>>
    left_margin(left_margin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
    inline margin_element<right_margin_rect, remove_cvref_t<Subject>>
    right_margin(right_margin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ namespace cycfi { namespace elements
    inline margin_element<top_margin_rect, remove_cvref_t<Subject>>
    top_margin(top_margin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ namespace cycfi { namespace elements
    inline margin_element<bottom_margin_rect, remove_cvref_t<Subject>>
    bottom_margin(bottom_margin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ namespace cycfi { namespace elements
    inline margin_element<left_top_margin_rect, remove_cvref_t<Subject>>
    left_top_margin(left_top_margin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -173,14 +173,14 @@ namespace cycfi { namespace elements
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    hmargin(hmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    left_right_margin(hmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -188,7 +188,7 @@ namespace cycfi { namespace elements
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    xside_margin(hmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -205,14 +205,14 @@ namespace cycfi { namespace elements
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    vmargin(vmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    top_bottom_margin(vmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -220,7 +220,7 @@ namespace cycfi { namespace elements
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    yside_margin(vmargin_rect margin_, Subject&& subject)
    {
-      return { margin_, std::forward<Subject>(subject) };
+      return {margin_, std::forward<Subject>(subject)};
    }
 }}
 

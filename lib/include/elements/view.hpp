@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -43,6 +43,8 @@ namespace cycfi { namespace elements
       bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
+      void                    track_drop(drop_info const& info, cursor_tracking status) override;
+      bool                    drop(drop_info const& info) override;
       void                    poll() override;
 
       void                    layout();
@@ -124,7 +126,7 @@ namespace cycfi { namespace elements
 
       rect                    _dirty;
       rect                    _current_bounds;
-      view_limits             _current_limits = { { 0, 0 }, { full_extent, full_extent} };
+      view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;
       bool                    _is_focus = false;
 
@@ -152,7 +154,7 @@ namespace cycfi { namespace elements
    inline rect view_bounds(view const& v) // declared in context.hpp
    {
       auto size = v.size();
-      return rect{ 0, 0, size.x, size.y };
+      return rect{0, 0, size.x, size.y};
    }
 
    inline rect view::dirty() const
@@ -205,7 +207,7 @@ namespace cycfi { namespace elements
    template <typename... E>
    inline void view::content(E&&... elements)
    {
-      _content = { detail::add_element(std::forward<E>(elements))... };
+      _content = {detail::add_element(std::forward<E>(elements))...};
       std::reverse(_content.begin(), _content.end());
       set_limits();
    }

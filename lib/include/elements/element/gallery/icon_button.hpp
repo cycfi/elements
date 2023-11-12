@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return toggle_button(icon_button_styler{code, size, body_color });
+      return toggle_button(icon_button_styler{code, size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return toggle_button(icon_button_styler2{ code1, code2, size, body_color });
+      return toggle_button(icon_button_styler2{code1, code2, size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ namespace cycfi { namespace elements
     , color body_color = get_theme().default_button_color
    )
    {
-      return momentary_button(icon_button_styler{code, size, body_color });
+      return momentary_button(icon_button_styler{code, size, body_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline auto plain_icon_button(uint32_t code, float size = 1.0f)
    {
-      return momentary_button(plain_icon_button_element{ code, size });
+      return momentary_button(plain_icon_button_element{code, size});
    }
 }}
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -11,7 +11,7 @@ namespace cycfi { namespace elements
    view_limits menu_item_spacer_element::limits(basic_context const& /* ctx */) const
    {
       auto height = get_theme().label_font._size;
-      return { { 0, height }, { full_extent, height } };
+      return {{0, height}, {full_extent, height}};
    }
 
    void menu_item_spacer_element::draw(context const& ctx)
@@ -20,8 +20,8 @@ namespace cycfi { namespace elements
       float y = ctx.bounds.top + ctx.bounds.height() / 2;
 
       canvas_.begin_path();
-      canvas_.move_to({ ctx.bounds.left, y });
-      canvas_.line_to({ ctx.bounds.right, y });
+      canvas_.move_to({ctx.bounds.left, y});
+      canvas_.line_to({ctx.bounds.right, y});
       canvas_.stroke_style(get_theme().frame_color.opacity(0.25));
       canvas_.line_width(1);
       canvas_.stroke();
@@ -185,6 +185,6 @@ namespace cycfi { namespace elements
          }
       }
 
-      return { mod_, key_ };
+      return {mod_, key_};
    }
 }}

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -12,6 +12,8 @@
 
 namespace cycfi { namespace elements
 {
+   class basic_button_menu;
+
    ////////////////////////////////////////////////////////////////////////////
    // Popup
    ////////////////////////////////////////////////////////////////////////////
@@ -26,12 +28,14 @@ namespace cycfi { namespace elements
                               {}
 
       bool                    wants_control() const override { return true; }
-      element*                hit_test(context const& ctx, point p) override;
+      bool                    wants_focus() const override { return true; }
+
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
       bool                    is_open(view& view_) const;
-      void                    open(view& view_);
-      void                    close(view& view_);
+      virtual void            open(view& view_);
+      virtual  void           close(view& view_);
 
       cursor_function         on_cursor = [](auto, auto){};
    };
@@ -40,7 +44,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_popup_element>
    basic_popup(Subject&& subject, rect bounds = {})
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -53,16 +57,26 @@ namespace cycfi { namespace elements
       using basic_popup_element::basic_popup_element;
       using click_function = std::function<void()>;
 
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       click_function          on_click = [](){};
+
+      void                    open(view& view_) override;
+      void                    close(view& view_) override;
+
+      basic_button_menu*      menu_button()                       { return _menu_button; }
+      void                    menu_button(basic_button_menu* p)   { _menu_button = p; }
+
+   private:
+
+      basic_button_menu*             _menu_button = nullptr;
    };
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, basic_popup_menu_element>
    basic_popup_menu(Subject&& subject, rect bounds = {})
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 }}
 

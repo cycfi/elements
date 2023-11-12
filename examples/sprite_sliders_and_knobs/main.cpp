@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -32,14 +32,14 @@ auto make_markers()
 
 auto make_vslider(int index)
 {
-   image slider_knob = image{ "slider-white.png", 1.0/4 };
+   image slider_knob = image{"slider-white.png", 1.0/4};
 
    vsliders[index] = share(slider(
       align_center(slider_knob),
       make_markers<true>(),
       (index + 1) * 0.25
    ));
-   return align_center(vmargin({ 20, 20 }, hold(vsliders[index])));
+   return align_center(vmargin({20, 20}, hold(vsliders[index])));
 }
 
 auto make_vsliders()
@@ -92,11 +92,11 @@ auto make_dials()
 auto make_controls()
 {
    return
-      margin({ 20, 10, 20, 10 },
+      margin({20, 10, 20, 10},
          vmin_size(350,
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Sliders", make_vsliders(), 0.8f)),
-               hstretch(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
+               margin({20, 20, 20, 20}, pane("Sliders", make_vsliders(), 0.8f)),
+               hstretch(0.5, margin({20, 20, 20, 20}, pane("Knobs", make_dials(), 0.8f)))
             )
          )
       );

@@ -25,7 +25,7 @@ struct basic_row : htile_composite
          {
             std::cout << "on text " << std::endl;
          };
-         push_back(share(input.first));
+         push_back(share(hsize(100, input.first)));
       }
    }
 
@@ -34,7 +34,7 @@ struct basic_row : htile_composite
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Active Dynamic List", "com.cycfi.active-dynamic-list");
+   app _app(argc, argv, "Active Dynamic List", "com.cycfi.active-list");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
@@ -51,37 +51,38 @@ int main(int argc, char* argv[])
       return ptr_list[index];
    };
 
-   auto cp = basic_vertical_cell_composer(list_size, make_row);
-   auto content = vdynamic_list(cp);
-   auto linked = link(content);
+   auto cp = basic_vcell_composer(list_size, make_row);
+   auto content = vlist(cp);
 
    auto b1 = icon_button(icons::minus, 1);
    auto b2 = icon_button(icons::plus, 1);
 
-   b1.on_click = [&](bool)
-   {
-      std::cout << "dn " << std::endl;
-      if (list_size <= 50)
-         return;
-      list_size -= 50;
-      ptr_list.resize(list_size);
-      content.resize(list_size);
-      view_.refresh();
-   };
+   b1.on_click =
+      [&](bool)
+      {
+         std::cout << "dn " << std::endl;
+         if (list_size <= 50)
+            return;
+         list_size -= 50;
+         ptr_list.resize(list_size);
+         content.resize(list_size);
+         view_.refresh();
+      };
 
-   b2.on_click = [&](bool)
-   {
-      std::cout << "up " << std::endl;
-      list_size +=50;
-      ptr_list.resize(list_size);
-      content.resize(list_size);
-      view_.refresh();
-   };
+   b2.on_click =
+      [&](bool)
+      {
+         std::cout << "up " << std::endl;
+         list_size +=50;
+         ptr_list.resize(list_size);
+         content.resize(list_size);
+         view_.refresh();
+      };
 
    view_.content(
       margin({10, 10, 10, 10},
          vtile(
-            vscroller(hold(share(linked))),
+            vscroller(link(content)),
             htile(b1, b2)
             )
          ),

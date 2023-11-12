@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -92,7 +92,7 @@ namespace cycfi::elements
 
       context sub_context() const
       {
-         auto ctx = context{ *this };
+         auto ctx = context{*this};
          ctx.parent = this;
          return ctx;
       }

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -103,7 +103,7 @@ namespace cycfi::elements
       class font              _font;
       artist::text_layout     _layout;
       color                   _color;
-      point                   _current_size = { -1, -1 };
+      point                   _current_size = {-1, -1};
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ namespace cycfi::elements
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       bool                    wants_control() const override;
 
@@ -149,6 +149,8 @@ namespace cycfi::elements
       virtual void            draw_caret(context const& ctx);
       virtual bool            word_break(int index) const;
       virtual bool            line_break(int index) const;
+
+      basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
 
    protected:
 
@@ -185,6 +187,7 @@ namespace cycfi::elements
       bool                    _is_focus : 1;
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
+      bool                    _read_only : 1;
       state_saver_set         _state_savers;
    };
 
@@ -216,7 +219,7 @@ namespace cycfi::elements
       void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
 
       text_function           on_text;

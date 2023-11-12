@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -50,9 +50,9 @@ auto make_basic_text()
    auto fr = [](auto&& el, float top = 10)
    {
       return margin(
-         { 10, top, 10, 10 },
+         {10, top, 10, 10},
          layer(
-            margin({ 10, 5, 10, 5 }, std::move(el)),
+            margin({10, 5, 10, 5}, std::move(el)),
             frame{}
          )
       );
@@ -60,7 +60,7 @@ auto make_basic_text()
 
    auto eh = [=](char const* txt)
    {
-      return fr(halign(0.5, heading{ txt }), 0);
+      return fr(halign(0.5, heading{txt}), 0);
    };
 
    auto el = [=](auto const& label_)
@@ -69,22 +69,22 @@ auto make_basic_text()
    };
 
    auto icons =
-      margin({ 10, 0, 10, 10 },
+      margin({10, 0, 10, 10},
          htile(
-            align_center(icon{ icons::docs }),
-            align_center(icon{ icons::right }),
-            align_center(icon{ icons::trash }),
-            align_center(icon{ icons::block }),
-            align_center(icon{ icons::cw }),
-            align_center(icon{ icons::attention }),
-            align_center(icon{ icons::menu }),
-            align_center(icon{ icons::lightbulb }),
-            align_center(icon{ icons::sliders }),
-            align_center(icon{ icons::exchange })
+            align_center(icon{icons::docs}),
+            align_center(icon{icons::right}),
+            align_center(icon{icons::trash}),
+            align_center(icon{icons::block}),
+            align_center(icon{icons::cw}),
+            align_center(icon{icons::attention}),
+            align_center(icon{icons::menu}),
+            align_center(icon{icons::lightbulb}),
+            align_center(icon{icons::sliders}),
+            align_center(icon{icons::exchange})
          )
       );
 
-   static float const grid[] = { 0.32, 1.0 };
+   static float const grid[] = {0.32, 1.0};
 
    auto my_label = [=](auto text)
    {
@@ -110,7 +110,7 @@ auto make_basic_text()
 
    auto text_input =
       pane("Text Input",
-         margin({ 10, 5, 10, 5 },
+         margin({10, 5, 10, 5},
             vtile(
                my_input("Gimme Some", in.first),
                my_input("Gimme Some More", input_box("Show me more").first),
@@ -129,7 +129,7 @@ auto make_basic_text()
       top_margin(20, pane("Labels",
          vtile(
             el(label("Hello, Universe. This is Elements.")
-               .font(font_descr{ "Open Sans" }.semi_bold())
+               .font(font_descr{"Open Sans"}.semi_bold())
                .font_color(colors::antique_white)
                .font_size(18)
             ),
@@ -150,7 +150,7 @@ auto make_basic_text()
 
    return
       margin(
-         { 10, 0, 10, 10 },
+         {10, 0, 10, 10},
          vtile(
             text_input,
             labels,
@@ -162,9 +162,9 @@ auto make_basic_text()
 
 auto make_basic_text2()
 {
-   auto textbox = share(vport(static_text_box{ text }));
+   auto textbox = share(vport(static_text_box{text}));
    return hmin_size(350, margin(
-         { 10, 0, 10, 10 },
+         {10, 0, 10, 10},
          hold(textbox)
       ));
 }
@@ -172,11 +172,11 @@ auto make_basic_text2()
 auto make_elements()
 {
    return
-      max_size({ 1280, 640 },
-         margin({ 20, 10, 20, 10 },
+      max_size({1280, 640},
+         margin({20, 10, 20, 10},
             htile(
-               margin({ 20, 20, 20, 20 }, make_basic_text()),
-               margin({ 20, 20, 20, 20 },
+               margin({20, 20, 20, 20}, make_basic_text()),
+               margin({20, 20, 20, 20},
                   pane("Text Box", make_basic_text2())
                )
             )

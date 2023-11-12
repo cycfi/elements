@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits flow_element::limits(basic_context const& ctx) const
    {
-      view_limits limits_ = { { 0, 0 }, { full_extent, full_extent } };
+      view_limits limits_ = {{0, 0}, {full_extent, full_extent}};
       if (!_flowable.needs_reflow())
       {
          limits_.min.y = base_type::limits(ctx).min.y;

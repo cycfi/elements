@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -11,13 +11,13 @@ namespace cycfi { namespace elements
 
    void radio_button_styler::draw(context const& ctx)
    {
-      auto&       canvas_ = ctx.canvas;
-      auto        canvas_state = canvas_.new_state();
+      auto& canvas_ = ctx.canvas;
+      auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      rect        box = ctx.bounds.move(15, 0);
-      float       size = box.height();
-      float       radius = size/2;
-      float       dot_radius = radius/2.5;
+      rect box = ctx.bounds.move(15, 0);
+      float size = box.height();
+      float radius = size/2;
+      float dot_radius = radius/2.5;
 
       box.width(size);
       point center = center_point(box);
@@ -72,6 +72,6 @@ namespace cycfi { namespace elements
       canvas_.text_align(canvas_.left | canvas_.middle);
       float cx = box.right + 10;
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
-      canvas_.fill_text(_text.c_str(), point{ cx, cy });
+      canvas_.fill_text(_text.c_str(), point{cx, cy});
    }
 }}

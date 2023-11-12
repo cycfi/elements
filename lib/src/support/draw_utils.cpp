@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -20,8 +20,8 @@ namespace cycfi { namespace elements
          bounds.bottom_left()
       };
 
-      gradient.add_color_stop({ 0.0f, rgba(255, 255, 255, 16) });
-      gradient.add_color_stop({ 0.8f, rgba(0, 0, 0, 16) });
+      gradient.add_color_stop({0.0f, rgba(255, 255, 255, 16)});
+      gradient.add_color_stop({0.8f, rgba(0, 0, 0, 16)});
       cnv.fill_style(gradient);
 
       cnv.begin_path();
@@ -29,8 +29,8 @@ namespace cycfi { namespace elements
       cnv.fill();
 
       cnv.begin_path();
-      cnv.move_to(point{ bounds.left+0.5f, bounds.bottom-0.5f });
-      cnv.line_to(point{ bounds.right-0.5f, bounds.bottom-0.5f });
+      cnv.move_to(point{bounds.left+0.5f, bounds.bottom-0.5f});
+      cnv.line_to(point{bounds.right-0.5f, bounds.bottom-0.5f});
       cnv.stroke_style(rgba(0, 0, 0, 32));
       cnv.line_width(1);
       cnv.stroke();
@@ -44,7 +44,7 @@ namespace cycfi { namespace elements
       cnv.add_round_rect(bounds, corner_radius);
       cnv.fill_style(c);
       if (shadow > 0)
-         cnv.shadow_style({ shadow, shadow }, shadow*2, colors::black);
+         cnv.shadow_style({shadow, shadow}, shadow*2, colors::black);
       cnv.fill();
    }
 
@@ -61,8 +61,8 @@ namespace cycfi { namespace elements
       if (!enabled)
          box_opacity *= theme_.disabled_opacity;
 
-      gradient.add_color_stop({ 0.0, rgb(255, 255, 255).opacity(box_opacity) });
-      gradient.add_color_stop({ 1.0, rgb(0, 0, 0).opacity(box_opacity) });
+      gradient.add_color_stop({0.0, rgb(255, 255, 255).opacity(box_opacity)});
+      gradient.add_color_stop({1.0, rgb(0, 0, 0).opacity(box_opacity)});
       cnv.fill_style(gradient);
 
       cnv.begin_path();
@@ -89,13 +89,13 @@ namespace cycfi { namespace elements
       // Draw beveled knob
       {
          auto gradient = canvas::radial_gradient{
-            { cp.cx, cp.cy }, radius*0.75f,
-            { cp.cx, cp.cy }, radius
+            {cp.cx, cp.cy}, radius*0.75f,
+            {cp.cx, cp.cy}, radius
          };
 
-         gradient.add_color_stop({ 0.0, c });
-         gradient.add_color_stop({ 0.5, c.opacity(0.5) });
-         gradient.add_color_stop({ 1.0, c.level(0.5).opacity(0.5) });
+         gradient.add_color_stop({0.0, c});
+         gradient.add_color_stop({0.5, c.opacity(0.5)});
+         gradient.add_color_stop({1.0, c.level(0.5).opacity(0.5)});
 
          cnv.fill_style(gradient);
          cnv.begin_path();
@@ -112,8 +112,8 @@ namespace cycfi { namespace elements
          };
 
 		 using cs = canvas::color_stop;
-         gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
-         gradient.add_color_stop(cs{ 1.0f, { 0.6f, 0.6f, 0.6f, 0.0f } });
+         gradient.add_color_stop(cs{0.0f, {1.0f, 1.0f, 1.0f, 0.4f}});
+         gradient.add_color_stop(cs{1.0f, {0.6f, 0.6f, 0.6f, 0.0f}});
 
          cnv.fill_style(gradient);
          cnv.begin_path();
@@ -143,8 +143,8 @@ namespace cycfi { namespace elements
             bounds.bottom_left()
          };
 
-         gradient.add_color_stop({ 0.0, rgba(0, 0, 0, 32) });
-         gradient.add_color_stop({ 1.0, rgba(255, 255, 255, 64) });
+         gradient.add_color_stop({0.0, rgba(0, 0, 0, 32)});
+         gradient.add_color_stop({1.0, rgba(255, 255, 255, 64)});
          cnv.fill_style(gradient);
 
          cnv.begin_path();
@@ -184,8 +184,8 @@ namespace cycfi { namespace elements
          };
 
          using cs = canvas::color_stop;
-         gradient.add_color_stop(cs{ 0.0f, { 1.0f, 1.0f, 1.0f, 0.4f } });
-         gradient.add_color_stop(cs{ 1.0f, { 0.6f, 0.6f, 0.6f, 0.0f } });
+         gradient.add_color_stop(cs{0.0f, {1.0f, 1.0f, 1.0f, 0.4f}});
+         gradient.add_color_stop(cs{1.0f, {0.6f, 0.6f, 0.6f, 0.0f}});
 
          cnv.fill_style(gradient);
          cnv.begin_path();
@@ -204,12 +204,12 @@ namespace cycfi { namespace elements
       // Add some outer bevel
       {
          auto gradient = canvas::linear_gradient{
-            { cp.cx, cp.cy - cp.radius },
-            { cp.cx, cp.cy + cp.radius }
+            {cp.cx, cp.cy - cp.radius},
+            {cp.cx, cp.cy + cp.radius}
          };
 
-         gradient.add_color_stop({ 0.0, colors::white.opacity(0.3) });
-         gradient.add_color_stop({ 0.5, colors::black.opacity(0.5) });
+         gradient.add_color_stop({0.0, colors::white.opacity(0.3)});
+         gradient.add_color_stop({0.5, colors::black.opacity(0.5)});
          cnv.fill_rule(artist::path::fill_odd_even);
          cnv.fill_style(gradient);
 
@@ -262,13 +262,13 @@ namespace cycfi { namespace elements
 
       auto state = cnv.new_state();
       auto center = cp.center();
-      cnv.translate({ center.x, center.y });
+      cnv.translate({center.x, center.y});
       cnv.rotate(offset + (val * range));
 
       float r = cp.radius * 0.85;
       float ind_w = r * w_factor;
       float ind_h = r * h_factor;
-      rect  ind_r = { -ind_w, -ind_h, ind_w, ind_h };
+      rect  ind_r = {-ind_w, -ind_h, ind_w, ind_h};
       ind_r = ind_r.move(0, r*0.6);
 
       draw_indicator(cnv, ind_r, c);
@@ -283,7 +283,7 @@ namespace cycfi { namespace elements
       float div = range / num_divs;
       auto const& theme = get_theme();
 
-      cnv.translate({ center.x, center.y });
+      cnv.translate({center.x, center.y});
       cnv.stroke_style(theme.ticks_color);
       for (int i = 0; i != num_divs+1; ++i)
       {
@@ -307,8 +307,8 @@ namespace cycfi { namespace elements
          float cos_ = std::cos(angle);
          float to = cp.radius - (size / 2);
 
-         cnv.move_to({ from * cos_, from * sin_ });
-         cnv.line_to({ to * cos_, to * sin_ });
+         cnv.move_to({from * cos_, from * sin_});
+         cnv.line_to({to * cos_, to * sin_});
          cnv.stroke();
       }
    }
@@ -330,7 +330,7 @@ namespace cycfi { namespace elements
       float div = range / (num_labels-1);
       auto const& theme = get_theme();
 
-      cnv.translate({ center.x, center.y });
+      cnv.translate({center.x, center.y});
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_style(theme.label_font_color);
 
@@ -344,7 +344,7 @@ namespace cycfi { namespace elements
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
 
-         cnv.fill_text(labels[i], { cp.radius * cos_, cp.radius * sin_ });
+         cnv.fill_text(labels[i], {cp.radius * cos_, cp.radius * sin_});
       }
    }
 }}

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -27,10 +27,12 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
       unsigned                span() const override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      void                    in_context_do(context const& ctx, element& e, context_function f) override;
+
       virtual void            prepare_subject(context& ctx);
       virtual void            prepare_subject(context& ctx, point& p);
       virtual void            restore_subject(context& ctx);
@@ -50,10 +52,13 @@ namespace cycfi { namespace elements
       bool                    is_enabled() const override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
+
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
 
    // Proxy
 

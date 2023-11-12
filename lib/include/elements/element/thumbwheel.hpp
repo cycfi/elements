@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -26,10 +26,10 @@ namespace cycfi { namespace elements
 
       using thumbwheel_function = std::function<void(point)>;
 
-                           thumbwheel_base(point init = { 0.0f, 0.0f });
+                           thumbwheel_base(point init = {0.0f, 0.0f});
 
       void                 prepare_subject(context& ctx) override;
-      element*             hit_test(context const& ctx, point p) override;
+      element*             hit_test(context const& ctx, point p, bool leaf = false) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
@@ -49,9 +49,9 @@ namespace cycfi { namespace elements
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, thumbwheel_base>
-   thumbwheel(Subject&& subject, point init = { 0.0f, 0.0f })
+   thumbwheel(Subject&& subject, point init = {0.0f, 0.0f})
    {
-      return { std::forward<Subject>(subject), init };
+      return {std::forward<Subject>(subject), init};
    }
 
    inline point thumbwheel_base::value() const
@@ -59,9 +59,9 @@ namespace cycfi { namespace elements
       return _value;
    }
 
-   inline element* thumbwheel_base::hit_test(context const& ctx, point p)
+   inline element* thumbwheel_base::hit_test(context const& ctx, point p, bool leaf)
    {
-      return element::hit_test(ctx, p);
+      return element::hit_test(ctx, p, leaf);
    }
 }}
 

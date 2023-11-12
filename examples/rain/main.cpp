@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -34,7 +34,7 @@ struct rain_element : element
    {
       auto w = size.x / total;
       cnv.fill_style(repaint_color.opacity(opacity));
-      cnv.fill_rect({ 0, 0, size });
+      cnv.fill_rect({0, 0, size});
 
       for (auto i = 0; i < total; ++i)
       {
@@ -75,8 +75,8 @@ struct rain_element : element
          init(size);
 
       {
-         auto ctx = offscreen_image{ *offscreen };
-         auto offscreen_cnv = canvas{ ctx.context() };
+         auto ctx = offscreen_image{*offscreen};
+         auto offscreen_cnv = canvas{ctx.context()};
          make_rain(offscreen_cnv, size);
       }
       cnv.draw(*offscreen);

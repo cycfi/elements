@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2016-2023 Joel de Guzman
 #  Copyright (c) 2020 Michał Urbański
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
@@ -28,7 +28,7 @@ set(ELEMENTS_SOURCES
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
-   src/element/dynamic_list.cpp
+   src/element/drag_and_drop.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
@@ -37,12 +37,14 @@ set(ELEMENTS_SOURCES
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
+   src/element/gallery/slide_button.cpp
    src/element/gallery/tab.cpp
    src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
    src/element/layer.cpp
+   src/element/list.cpp
    src/element/menu.cpp
    src/element/misc.cpp
    src/element/popup.cpp
@@ -58,6 +60,7 @@ set(ELEMENTS_SOURCES
    src/support/text_utils.cpp
    src/support/receiver.cpp
    src/support/theme.cpp
+   src/support/payload.cpp
    src/view.cpp
 )
 
@@ -70,7 +73,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
-   include/elements/element/dynamic_list.hpp
+   include/elements/element/drag_and_drop.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
@@ -94,6 +97,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/indirect.hpp
    include/elements/element/label.hpp
    include/elements/element/layer.hpp
+   include/elements/element/list.hpp
    include/elements/element/margin.hpp
    include/elements/element/menu.hpp
    include/elements/element/misc.hpp

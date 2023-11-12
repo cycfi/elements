@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -83,7 +83,7 @@ namespace cycfi { namespace elements
    {
       LPWSTR path = nullptr;
       SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_CREATE, nullptr, &path);
-      return fs::path{ path };
+      return fs::path{path};
    }
 }}
 

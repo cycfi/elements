@@ -397,7 +397,13 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         constexpr auto mouse_wheel_line_delta = 3.0f;
+         static auto mouse_wheel_line_delta =
+            []{
+               UINT wheel_scroll_lines;
+               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
+               constexpr auto line_pixels = 12.0f; // size 12 font per line
+               return WHEEL_DELTA / (wheel_scroll_lines * line_pixels);
+            }();
 
          auto* info = get_view_info(hwnd);
          switch (message)

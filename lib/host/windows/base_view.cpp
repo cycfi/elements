@@ -110,7 +110,7 @@ namespace cycfi { namespace elements
       if (str.empty())
          return {};
       int size = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), nullptr, 0);
-      std::wstring result( size, 0 );
+      std::wstring result(size, 0);
       MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &result[0], size);
       return result;
    }
@@ -572,7 +572,7 @@ namespace cycfi { namespace elements
          SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
          // Create and register the drop target
-         if (IDropTarget* pDropTarget = DropTarget::CreateInstance(hwnd))
+         if (IDropTarget* pDropTarget = DropTarget::CreateInstance(_this, hwnd))
          {
             RegisterDragDrop(hwnd, pDropTarget);
             pDropTarget->Release();

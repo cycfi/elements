@@ -391,8 +391,8 @@ namespace cycfi { namespace elements
    class hlist : public list
    {
    public:
-                                 hlist(composer_ptr ptr, bool auto_cleanup = true)
-                                  : list(ptr, auto_cleanup)
+                                 hlist(composer_ptr ptr, bool manage_externally = true)
+                                  : list(ptr, manage_externally)
                                  {}
       rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 

@@ -34,6 +34,7 @@
 #include <Windowsx.h>
 #include <chrono>
 #include <map>
+#include "drag_and_drop.hpp"
 #include "utils.hpp"
 
 namespace cycfi { namespace elements
@@ -57,7 +58,7 @@ namespace cycfi { namespace elements
       if (str.empty())
          return {};
       int size = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), nullptr, 0);
-      std::wstring result( size, 0 );
+      std::wstring result(size, 0);
       MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &result[0], size);
       return result;
    }
@@ -83,7 +84,6 @@ namespace cycfi { namespace elements
          time_point     click_start = {};
          int            click_count = 0;
          time_point     scroll_start = {};
-         double         velocity = 1.0;
          point          scroll_dir;
          key_map        keys = {};
       };
@@ -320,27 +320,7 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         constexpr auto acceleration = 1.1;
-         auto now = std::chrono::steady_clock::now();
-         auto elapsed = now - info->scroll_start;
-         info->scroll_start = now;
-
-         std::chrono::duration<double, std::milli> fp_ms = elapsed;
-
-         bool reset_accel =
-            elapsed > std::chrono::milliseconds(250) ||
-            (info->scroll_dir.x > 0 != dir.x > 0) ||
-            (info->scroll_dir.y > 0 != dir.y > 0)
-            ;
          info->scroll_dir = dir;
-
-         if (reset_accel)
-            info->velocity = 1.0;
-         else
-            info->velocity *= acceleration;
-
-         dir.x *= info->velocity;
-         dir.y *= info->velocity;
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);
@@ -373,7 +353,13 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         constexpr auto mouse_wheel_line_delta = 120.0f;
+         static auto mouse_wheel_line_delta =
+            []{
+               UINT wheel_scroll_lines;
+               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
+               constexpr auto line_pixels = 12.0f; // size 12 font per line
+               return WHEEL_DELTA / (wheel_scroll_lines * line_pixels);
+            }();
 
          auto* info = get_view_info(hwnd);
          switch (message)
@@ -511,7 +497,7 @@ namespace cycfi { namespace elements
       {
          static init_view_class init;
 
-         HWND _view = CreateWindowW(
+         HWND hwnd = CreateWindowW(
             L"ElementsView",
             nullptr,
             WS_CHILD | WS_VISIBLE,
@@ -521,18 +507,25 @@ namespace cycfi { namespace elements
          );
 
          MoveWindow(
-            _view, bounds.left, bounds.top,
+            hwnd, bounds.left, bounds.top,
             bounds.right-bounds.left, bounds.bottom-bounds.top,
             true // repaint
          );
 
          view_info* info = new view_info{_this};
-         SetWindowLongPtrW(_view, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
+         SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
          // Create 1ms timer
-         SetTimer(_view, IDT_TIMER1, 1, (TIMERPROC) nullptr);
+         SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
-         return _view;
+         // Create and register the drop target
+         if (IDropTarget* pDropTarget = DropTarget::CreateInstance(_this, hwnd))
+         {
+            RegisterDragDrop(hwnd, pDropTarget);
+            pDropTarget->Release();
+         }
+
+         return hwnd;
       }
    }
 
@@ -560,6 +553,7 @@ namespace cycfi { namespace elements
          DeleteDC(info->offscreen_hdc);
 
       KillTimer(_view, IDT_TIMER1);
+      RevokeDragDrop(_view);
       delete info;
       DeleteObject(_view);
    }

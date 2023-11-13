@@ -29,6 +29,7 @@
 #include <elements/base_view.hpp>
 #include <artist/canvas.hpp>
 #include <artist/resources.hpp>
+#include "drag_and_drop.hpp"
 
 #ifndef UNICODE
 # define UNICODE
@@ -395,6 +396,27 @@ namespace cycfi { namespace elements
          return false;
       }
 
+      void on_drag_and_drop(base_view& view, UINT message, WPARAM wparam)
+      {
+         HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+
+         // Get the number of files dropped
+         UINT fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+
+         // Process each dropped file
+         for (UINT i = 0; i < fileCount; ++i)
+         {
+            TCHAR filePath[MAX_PATH];
+            DragQueryFile(hDrop, i, filePath, MAX_PATH);
+
+            // Process the file (you can replace this with your custom logic)
+            // MessageBox(hwnd, filePath, "Dropped File", MB_OK);
+         }
+
+         // Release the HDROP handle
+         DragFinish(hDrop);
+      }
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          static auto mouse_wheel_line_delta =
@@ -508,6 +530,10 @@ namespace cycfi { namespace elements
                info->_vptr->end_focus();
                break;
 
+            case WM_DROPFILES:
+               on_drag_and_drop(*info->_vptr, message, wparam);
+               break;
+
             default:
                return DefWindowProcW(hwnd, message, wparam, lparam);
          }
@@ -570,6 +596,13 @@ namespace cycfi { namespace elements
          // Create 1ms timer
          SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);
 
+         // Create and register the drop target
+         if (IDropTarget* pDropTarget = DropTarget::CreateInstance(hwnd))
+         {
+            RegisterDragDrop(hwnd, pDropTarget);
+            pDropTarget->Release();
+         }
+
          return hwnd;
       }
    }
@@ -591,6 +624,7 @@ namespace cycfi { namespace elements
    {
       auto info = get_view_info(_view);
       KillTimer(_view, IDT_TIMER1);
+      RevokeDragDrop(_view);
       delete info;
       DeleteObject(_view);
    }

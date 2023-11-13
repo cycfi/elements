@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <shlobj.h>
 #include <cstring>
+#include <ole2.h>
 
 #ifndef ELEMENTS_HOST_ONLY_WIN7
 #include <shellscalingapi.h>
@@ -58,6 +59,8 @@ namespace cycfi { namespace elements
 #if !defined(ELEMENTS_HOST_ONLY_WIN7)
       SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 #endif
+
+      OleInitialize(nullptr);
    }
 
    app::~app()
@@ -77,6 +80,7 @@ namespace cycfi { namespace elements
    void app::stop()
    {
       _running = false;
+      OleUninitialize();
    }
 
    fs::path app_data_path()

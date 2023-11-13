@@ -144,6 +144,7 @@ elseif (WIN32)
       host/windows/base_view.cpp
       host/windows/key.cpp
       host/windows/window.cpp
+      host/windows/drag_and_drop.cpp
    )
 endif()
 

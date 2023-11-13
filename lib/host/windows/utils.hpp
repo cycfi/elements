@@ -8,8 +8,8 @@
 
 #include <Windows.h>
 
-namespace cycfi::elements {
-
+namespace cycfi::elements
+{
    inline float get_scale_for_window(HWND hwnd)
    {
       #ifdef ELEMENTS_HOST_ONLY_WIN7

@@ -411,23 +411,35 @@ namespace cycfi { namespace elements
    template <typename T>
    inline void move_indices(std::vector<T>& v, std::size_t pos, std::vector<std::size_t> const& indices)
    {
+      // Precondition: The indices should be validly pointing to items in vector `v`.
+
+      // Reserve space for moved elements
       std::vector<T> to_move;
+      to_move.reserve(indices.size());
+
+      // Create a copy of the elements to be moved and erase the elements
+      // from their original positions. Iterating in reverse, after this
+      // operation, `to_move` will contain the items in reverse order.
       for (auto i = indices.crbegin(); i != indices.crend(); ++i)
       {
-         to_move.push_back(v[*i]);
+         to_move.push_back(std::move(v[*i]));
          v.erase(v.begin()+*i);
          if (pos > *i)
             --pos;
       }
-      auto pos_i = pos >= v.size()? v.end() : v.begin()+pos;
-      for (auto const& path : to_move)
-         v.insert(pos_i, path);
+
+      // Determine the insert position
+      auto pos_i = v.begin() + std::min(pos, v.size());
+
+      // Insert the elements at the new position in reverse order
+      v.insert(pos_i, to_move.crbegin(), to_move.crend());
    }
 
    // Utility to erase items in a vector `v` with given `indices`.
    template <typename T>
    inline void erase_indices(std::vector<T>& v, std::vector<std::size_t> const& indices)
    {
+      // Precondition: The indices should be validly pointing to items in vector `v`.
       for (auto i = indices.crbegin(); i != indices.crend(); ++i)
          v.erase(v.begin()+*i);
    }

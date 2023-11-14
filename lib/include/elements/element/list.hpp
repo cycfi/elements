@@ -417,19 +417,22 @@ namespace cycfi { namespace elements
       std::vector<T> to_move;
       to_move.reserve(indices.size());
 
-      // Create a copy of the elements to be moved
-      for (std::size_t index : indices)
-         to_move.push_back(std::move(v[index]));
-
-      // Erase the elements from their original positions
-      for (auto it = indices.rbegin(); it != indices.rend(); ++it)
-         v.erase(v.begin() + *it);
+      // Create a copy of the elements to be moved and erase the elements
+      // from their original positions. Iterating in reverse, after this
+      // operation, `to_move` will contain the items in reverse order.
+      for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+      {
+         to_move.push_back(std::move(v[*i]));
+         v.erase(v.begin()+*i);
+         if (pos > *i)
+            --pos;
+      }
 
       // Determine the insert position
       auto pos_i = v.begin() + std::min(pos, v.size());
 
-      // Insert the elements at the new position
-      v.insert(pos_i, to_move.begin(), to_move.end());
+      // Insert the elements at the new position in reverse order
+      v.insert(pos_i, to_move.crbegin(), to_move.crend());
    }
 
    // Utility to erase items in a vector `v` with given `indices`.

@@ -84,7 +84,7 @@ namespace cycfi { namespace elements
 
       draw_icon_button(
          ctx, value? _code2 : _code1, _size * get_theme().icon_font._size
-         , _body_color, true, hilite, enabled
+         , _body_color, false, hilite, enabled
       );
    }
 

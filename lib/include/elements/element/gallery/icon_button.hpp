@@ -74,9 +74,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon button without body
    ////////////////////////////////////////////////////////////////////////////
-   struct plain_icon_button_element : icon_button_styler_base
+   struct
+   [[deprecated("If you want a plain icon button, just make a standard icon_button with a fully transparent color (e.g. rgba(0, 0, 0, 0)")]]
+   plain_icon_button_styler : icon_button_styler_base
    {
-                              plain_icon_button_element(
+                              plain_icon_button_styler(
                                  uint32_t code
                                , float size
                               )
@@ -131,7 +133,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline auto plain_icon_button(uint32_t code, float size = 1.0f)
    {
-      return momentary_button(plain_icon_button_element{code, size});
+      return momentary_button(icon_button_styler{code, size, rgba(0, 0, 0, 0)});
    }
 }}
 

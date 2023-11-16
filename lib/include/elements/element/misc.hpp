@@ -22,11 +22,13 @@ namespace cycfi { namespace elements
    // spacers: empty horizontal or vertical element with specified width or
    // height.
    ////////////////////////////////////////////////////////////////////////////
+   [[deprecated("Use vspace(size) instead.")]]
    inline auto vspacer(float size)
    {
       return vsize(size, element{});
    }
 
+   [[deprecated("Use hspace(size) instead.")]]
    inline auto hspacer(float size)
    {
       return hsize(size, element{});

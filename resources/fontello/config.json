@@ -497,6 +497,18 @@
       "css": "menu",
       "code": 61641,
       "src": "fontawesome"
+    },
+    {
+      "uid": "0ddd3e8201ccc7d41f7b7c9d27eca6c1",
+      "css": "link",
+      "code": 59470,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "1dcd2b2148b7f086a4eb47f6a746bdee",
+      "css": "unlink",
+      "code": 61735,
+      "src": "fontawesome"
     }
   ]
 }

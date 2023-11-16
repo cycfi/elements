@@ -51,11 +51,11 @@ int main(int argc, char* argv[])
    };
 
    view_.content(
-    	htile(
+      htile(
          scr,
-         hspacer(100),
+         hspace(100),
          link(scr2)
-		),
+      ),
       background
    );
 

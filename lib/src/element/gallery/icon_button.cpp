@@ -45,9 +45,12 @@ namespace cycfi { namespace elements
    )
    {
       // Draw Button Body
-      float corner_radius = 6;
-      color body_color = state? body_color_ : body_color_.opacity(0.5).level(0.8);
-      draw_button_base(ctx, ctx.bounds, body_color, enabled, corner_radius);
+      if (body_color_.alpha != 0.0f) // don't draw base if alpha is 0 (fully transparent)
+      {
+         float corner_radius = 6;
+         color body_color = state ? body_color_ : body_color_.opacity(0.5).level(0.8);
+         draw_button_base(ctx, ctx.bounds, body_color, enabled, corner_radius);
+      }
 
       // Draw Icon
       draw_plain_icon_button(ctx, code, size, state, hilite, enabled);
@@ -85,7 +88,7 @@ namespace cycfi { namespace elements
       );
    }
 
-   void plain_icon_button_element::draw(context const& ctx)
+   void plain_icon_button_styler::draw(context const& ctx)
    {
       auto  state = value();
       auto  value = state.value;

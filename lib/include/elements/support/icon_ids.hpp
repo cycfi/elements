@@ -91,7 +91,9 @@ namespace cycfi { namespace elements { namespace icons
       mixer                         = 0xf1de,
       hand                          = 0xf256,
       question                      = 0xe84c,
-      menu                          = 0xf0c9
+      menu                          = 0xf0c9,
+      link                          = 0xe84e,
+      unlink                        = 0xf127
    };
 }}}
 

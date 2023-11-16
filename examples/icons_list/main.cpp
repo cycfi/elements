@@ -12,15 +12,14 @@ auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
 template<size_t Size>
-class fixed_size_base : public default_label
+struct fixed_size_base : default_label
 {
-public:
-    view_limits limits(const basic_context &ctx) const override
-    {
-        point size = measure_text(ctx.canvas, "9", get_font().size(get_font_size()));
-        size.x *= Size;
-        return {{size.x, size.y}, {size.x, size.y}};
-    }
+   view_limits limits(const basic_context &ctx) const override
+   {
+      point size = measure_text(ctx.canvas, "9", get_font().size(get_font_size()));
+      size.x *= Size;
+      return {{size.x, size.y}, {size.x, size.y}};
+   }
 };
 
 template<size_t Size>
@@ -31,8 +30,7 @@ using fixed_size_label = label_gen<basic_fixed_size<Size>>;
 
 inline auto  make_icon_label(std::string name, int i)
 {
-
-    auto h = htile(fixed_size_label<10>(name), hspacer(50), icon_button(i,1));
+    auto h = htile(fixed_size_label<10>(name), hspace(50), icon_button(i,1));
     return share(h);
 }
 
@@ -127,6 +125,8 @@ int main(int argc, char* argv[])
    comp.push_back(make_icon_label("hand", icons::hand));
    comp.push_back(make_icon_label("question", icons::question));
    comp.push_back(make_icon_label("menu", icons::menu));
+   comp.push_back(make_icon_label("link", icons::link));
+   comp.push_back(make_icon_label("unlink", icons::unlink));
    view_.content(
                margin({10, 10, 10, 10},
                vscroller(margin({40, 20, 40, 20}, comp))),

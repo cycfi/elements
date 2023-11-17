@@ -63,8 +63,9 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void size_element<Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds.right = ctx.bounds.left + _size.x;
-      ctx.bounds.bottom = ctx.bounds.top + _size.y;
+      auto e_limits = this->subject().limits(ctx);
+      ctx.bounds.right = ctx.bounds.left + e_limits.min.x;
+      ctx.bounds.bottom = ctx.bounds.top + e_limits.min.y;
    }
 
    ////////////////////////////////////////////////////////////////////////////

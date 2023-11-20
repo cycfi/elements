@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, drop_box_base>
+   inline proxy<remove_cvref_t<Subject>, drop_box_base>
    drop_box(Subject&& subject, std::initializer_list<std::string> mime_types)
    {
       return {std::forward<Subject>(subject), mime_types};
@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
    };
 
    template <typename Subject>
-   inline proxy<Subject, drop_inserter_base>
+   inline proxy<remove_cvref_t<Subject>, drop_inserter_base>
    drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
    {
       return {std::forward<Subject>(subject), mime_types};

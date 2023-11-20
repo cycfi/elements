@@ -9,9 +9,21 @@
 
 namespace cycfi { namespace elements
 {
+   std::size_t dynamic_list::size() const
+   {
+      return _cells.size();
+   }
+
+   element& dynamic_list::at(std::size_t ix) const
+   {
+      if (_cells[ix].elem_ptr)
+         return *_cells[ix].elem_ptr.get();
+      return *_composer->compose(ix).get();
+   }
+
    element* dynamic_list::hit_test(context const& ctx, point p, bool leaf)
    {
-      if (!_cells.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, p, false);
          return leaf? info.leaf_element_ptr : info.element_ptr;
@@ -71,7 +83,7 @@ namespace cycfi { namespace elements
          {
             if (!cell.elem_ptr)
             {
-               cell.elem_ptr = _composer->compose(it-_cells.begin());
+               cell.elem_ptr = at(it-_cells.begin()).shared_from_this();
                cell.elem_ptr->layout(rctx);
                cell.layout_id = _layout_id;
             }
@@ -97,6 +109,7 @@ namespace cycfi { namespace elements
             if ((i < new_start || i >= new_end) && i < _cells.size())
             {
                _cells[i].layout_id = -1;
+               _cells[i].elem_ptr.reset();
             }
          }
       }
@@ -148,7 +161,7 @@ namespace cycfi { namespace elements
 
    bool dynamic_list::click(const context &ctx, mouse_button btn)
    {
-      if (!_cells.empty())
+      if (!empty())
       {
          if (btn.down) // button down
          {
@@ -170,12 +183,10 @@ namespace cycfi { namespace elements
          else if (_click_tracking != -1) // button up
          {
             rect  bounds = bounds_of(ctx, _click_tracking);
-            auto& e = *_composer->compose(_click_tracking);
+            auto& e = at(_click_tracking);
             context ectx{ctx, &e, bounds};
             if (e.click(ectx, btn))
-            {
                return true;
-            }
          }
       }
       _click_tracking = -1;
@@ -187,7 +198,7 @@ namespace cycfi { namespace elements
       if (_focus != -1)
       {
          rect  bounds = bounds_of(ctx, _focus);
-         auto& focus_ = *_cells[_focus].elem_ptr;
+         auto& focus_ = at(_focus);
          context ectx{ctx, &focus_, bounds};
          return focus_.text(ectx, info);
       };
@@ -198,15 +209,15 @@ namespace cycfi { namespace elements
    {
       if (_focus != -1 )
       {
-         _composer->compose(_focus)->end_focus();
+         at(_focus).end_focus();
          ctx.view.refresh(ctx);
       }
 
       // start a new focus
       _focus = index;
-      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
+      if (_focus != -1)
       {
-         _cells[_focus].elem_ptr->begin_focus(req);
+         at(_focus).begin_focus(req);
          scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
@@ -217,7 +228,7 @@ namespace cycfi { namespace elements
       auto&& try_key = [&](int ix) -> bool
       {
          rect bounds = bounds_of(ctx, ix);
-         auto& e = *_composer->compose(ix).get();
+         auto& e = at(ix);
          context ectx{ctx, &e, bounds};
          bool b = e.key(ectx, k);
          return b;
@@ -225,7 +236,7 @@ namespace cycfi { namespace elements
 
       auto&& try_focus = [&](int ix, focus_request req) -> bool
       {
-         if (_composer->compose(ix)->wants_focus())
+         if (at(ix).wants_focus())
          {
             new_focus(ctx, ix, req);
             return true;
@@ -260,7 +271,7 @@ namespace cycfi { namespace elements
          {
             while (--next_focus >= 0)
             {
-               if (_composer->compose(next_focus)->wants_focus())
+               if (at(next_focus).wants_focus())
                   if (try_focus(next_focus, from_bottom))
                      return true;
             }
@@ -308,7 +319,7 @@ namespace cycfi { namespace elements
          {
             if (ix < int(_cells.size()))
             {
-               auto& e = *_composer->compose(ix).get();
+               auto& e = at(ix);
                context ectx{ctx, &e, bounds_of(ctx, ix)};
                e.cursor(ectx, p, cursor_tracking::leaving);
             }
@@ -322,7 +333,7 @@ namespace cycfi { namespace elements
       {
          if (*i < int(_cells.size()))
          {
-            auto& e = *_composer->compose(*i).get();
+            auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
             context ectx{ctx, &e, b};
             if (!b.includes(p) || !e.hit_test(ectx, p, false))
@@ -347,7 +358,7 @@ namespace cycfi { namespace elements
              status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
          }
-         auto& e = *_composer->compose(_cursor_tracking).get();
+         auto& e = at(_cursor_tracking);
          context ectx{ctx, &e, bounds_of(ctx, _cursor_tracking)};
          return e.cursor(ectx, p, status);
       }
@@ -360,7 +371,7 @@ namespace cycfi { namespace elements
       if (_click_tracking != -1)
       {
          rect  bounds = bounds_of(ctx, _click_tracking);
-         auto& e = *_composer->compose(_click_tracking).get();
+         auto& e = at(_click_tracking);
          context ectx{ctx, &e, bounds};
          e.drag(ectx, btn);
       }
@@ -369,7 +380,7 @@ namespace cycfi { namespace elements
 
    bool dynamic_list::scroll(context const& ctx, point dir, point p)
    {
-      if (!_cells.empty())
+      if (!empty())
       {
          hit_info info = hit_element(ctx, p, true);
          if (auto ptr = info.element_ptr; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
@@ -383,16 +394,16 @@ namespace cycfi { namespace elements
 
    bool dynamic_list::wants_focus() const
    {
-      for (std::size_t ix = 0; ix != _cells.size(); ++ix)
-         if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+      for (std::size_t ix = 0; ix != size(); ++ix)
+         if (at(ix).wants_focus())
             return true;
       return false;
    }
 
    bool dynamic_list::wants_control() const
    {
-      for (std::size_t ix = 0; ix < _cells.size(); ++ix)
-         if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_control())
+      for (std::size_t ix = 0; ix < size(); ++ix)
+         if (at(ix).wants_control())
             return true;
       return false;
    }
@@ -406,44 +417,44 @@ namespace cycfi { namespace elements
       {
          if (req == from_top || req == restore_previous)
          {
-            for (std::size_t ix = 0; ix != _cells.size(); ++ix)
-               if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+            for (std::size_t ix = 0; ix != size(); ++ix)
+               if (at(ix).wants_focus())
                {
-                     _focus = ix;
-                     break;
+                  _focus = ix;
+                  break;
                }
          }
          else if (req == from_bottom)
          {
-            for (int ix = _cells.size()-1; ix >= 0; --ix)
-               if (_cells[ix].elem_ptr != nullptr && _cells[ix].elem_ptr->wants_focus())
+            for (int ix = size()-1; ix >= 0; --ix)
+               if (at(ix).wants_focus())
                {
                   _focus = ix;
                   break;
                }
          }
       }
-      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-         _cells[_focus].elem_ptr->begin_focus(req);
+      if (_focus != -1)
+         at(_focus).begin_focus(req);
    }
 
    void dynamic_list::end_focus()
    {
-      if (_focus != -1 && _cells[_focus].elem_ptr != nullptr)
-         _cells[_focus].elem_ptr->end_focus();
+      if (_focus != -1)
+         at(_focus).end_focus();
       _saved_focus = _focus;
       _focus = -1;
    }
 
    element const* dynamic_list::focus() const
    {
-      return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
+      return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
 
    element* dynamic_list::focus()
    {
-      return (_cells.empty() || (_focus == -1))? 0 : _cells[_focus].elem_ptr.get();
+      return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
 
@@ -474,8 +485,7 @@ namespace cycfi { namespace elements
       auto&& test_element =
          [&](int ix, hit_info& info) -> bool
          {
-            if(_cells[ix].elem_ptr == nullptr) {return false;}
-            auto& e = *_cells[ix].elem_ptr;
+            auto& e = at(ix);
             if (!control || e.wants_control())
             {
                rect bounds = bounds_of(ctx, ix);
@@ -495,13 +505,13 @@ namespace cycfi { namespace elements
       hit_info info = hit_info{{}, {}, rect{}, -1};
       if (reverse_index())
       {
-         for (int ix = int(_cells.size())-1; ix >= 0; --ix)
+         for (int ix = int(size())-1; ix >= 0; --ix)
             if (test_element(ix, info))
                break;
       }
       else
       {
-         for (std::size_t ix = 0; ix < _cells.size(); ++ix)
+         for (std::size_t ix = 0; ix < size(); ++ix)
             if (test_element(ix, info))
                break;
       }

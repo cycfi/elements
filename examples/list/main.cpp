@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
          draw_cell               // Composer function
       );
 
-   auto content = share(dynamic_list{my_composer});
+   auto content = share(list{my_composer});
 
    view_.content(
       vscroller(hold(content)),

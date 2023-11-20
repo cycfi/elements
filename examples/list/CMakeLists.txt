@@ -16,10 +16,10 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "DynamicLists")
-set(ELEMENTS_APP_TITLE "Dynamic Lists")
+set(ELEMENTS_APP_PROJECT "List")
+set(ELEMENTS_APP_TITLE "List")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2023 Joel de Guzman")
-set(ELEMENTS_APP_ID "com.cycfi.dynamic_lists")
+set(ELEMENTS_APP_ID "com.cycfi.list")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

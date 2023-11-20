@@ -31,12 +31,8 @@ namespace cycfi::elements
       using base_type::operator=;
    };
 
-   inline bool contains_filepaths(payload const& data)
-   {
-      return data.find("text/uri-list") != data.end();
-   }
-
-   std::vector<fs::path> get_filepaths(payload const& data);
+   bool                    contains_filepaths(payload const& data);
+   std::vector<fs::path>   get_filepaths(payload const& data);
 }
 
 #endif

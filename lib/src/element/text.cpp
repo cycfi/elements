@@ -125,13 +125,14 @@ namespace cycfi { namespace elements
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
    basic_text_box::basic_text_box(std::string_view text, font_descr font_)
-    : static_text_box(text, font_)
-    , _select_start(-1)
-    , _select_end(-1)
-    , _current_x(0)
-    , _is_focus(false)
-    , _show_caret(true)
-    , _caret_started(false)
+    : static_text_box{text, font_}
+    , _select_start{-1}
+    , _select_end{-1}
+    , _current_x{0}
+    , _is_focus{false}
+    , _show_caret{true}
+    , _caret_started{false}
+    , _read_only{false}
    {}
 
    struct basic_text_box::state_saver : std::enable_shared_from_this<basic_text_box::state_saver>
@@ -287,6 +288,9 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
+      if (_read_only)
+         return false;
+
       _show_caret = true;
 
       if (_select_start == -1)
@@ -336,7 +340,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
-      _show_caret = true;
+      _show_caret = !_read_only;
 
       if (_select_start == -1
          || k.action == key_action::release
@@ -417,6 +421,7 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
+               if (!_read_only)
                {
                   replace(start, end-start, "\n");
                   _select_start += 1;
@@ -429,6 +434,7 @@ namespace cycfi { namespace elements
 
             case key_code::backspace:
             case key_code::_delete:
+               if (!_read_only)
                {
                   delete_(k.key == key_code::_delete);
                   save_x = true;
@@ -484,7 +490,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::x:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   cut(ctx.view, start, end);
                   save_x = true;
@@ -502,7 +508,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::v:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   paste(ctx.view, start, end);
                   save_x = true;
@@ -512,7 +518,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::z:
-               if (k.modifiers & mod_action)
+               if (!_read_only && (k.modifiers & mod_action))
                {
                   if (_typing_state)
                   {
@@ -562,7 +568,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw_caret(context const& ctx)
    {
-      if (_select_start == -1)
+      if (_read_only || _select_start == -1)
          return;
 
       auto& canvas = ctx.canvas;
@@ -1028,39 +1034,5 @@ namespace cycfi { namespace elements
    {
       _first_focus = false;
       basic_text_box::end_focus();
-   }
-
-   bool read_only_text_box::key(context const& ctx, key_info k)
-   {
-      bool do_handle = false;
-      if (k.action == key_action::press || k.action == key_action::repeat)
-      {
-         switch (k.key)
-         {
-            case key_code::left:
-            case key_code::right:
-            case key_code::up:
-            case key_code::down:
-               do_handle = true;
-               break;
-
-            case key_code::a:
-            case key_code::c:
-               if (k.modifiers & mod_action)
-                  do_handle = true;
-               break;
-
-            default:
-               break;
-         }
-      }
-      if (do_handle)
-         return basic_text_box::key(ctx, k);
-      return false;
-   }
-
-   bool read_only_text_box::text(context const& /*ctx*/, text_info /*info*/)
-   {
-      return false;
    }
 }}

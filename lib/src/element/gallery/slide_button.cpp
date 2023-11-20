@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       canvas_.fill_style(color);
       canvas_.fill();
    }
-   
+
    bool slide_button_styler::wants_control() const
    {
       return true;

@@ -6,11 +6,11 @@
 #if !defined(ELEMENTS_DYNAMIC_MARCH_2_2020)
 #define ELEMENTS_DYNAMIC_MARCH_2_2020
 
-#include <elements/element/element.hpp>
+#include <elements/element/composite.hpp>
 #include <memory>
 #include <vector>
 #include <functional>
-#include<set>
+#include <set>
 #include<iostream>
 
 namespace cycfi { namespace elements
@@ -255,7 +255,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // The main dynamic_list class -> vertical by default
    ////////////////////////////////////////////////////////////////////////////
-   class dynamic_list : public element
+   class dynamic_list : public composite_base
    {
    public:
 
@@ -265,50 +265,20 @@ namespace cycfi { namespace elements
                                   : _composer(composer)
                                  {}
 
-      virtual view_limits        limits(basic_context const& ctx) const override;
-      element*                   hit_test(context const& ctx, point p, bool leaf = false) override;
+      view_limits                limits(basic_context const& ctx) const override;
       void                       draw(context const& ctx) override;
       void                       layout(context const& ctx) override;
 
       void                       update();
       void                       update(basic_context const& ctx) const;
-
-      virtual bool               click(const context &ctx, mouse_button btn) override;
-      virtual bool               text(context const& ctx, text_info info) override;
-      virtual bool               key(const context &ctx, key_info k) override;
-      virtual bool               cursor(context const& ctx, point p, cursor_tracking status) override;
-      virtual bool               scroll(context const& ctx, point dir, point p) override;
-      virtual void               drag(context const& ctx, mouse_button btn) override;
-
-      bool                       wants_control() const override;
-      bool                       wants_focus() const override;
-      void                    	begin_focus(focus_request req = restore_previous) override;
-      void                       end_focus() override;
-      element const*             focus() const override;
-      element*                   focus() override;
-      void                       focus(std::size_t index);
-      virtual void               reset();
       void                       resize(size_t n);
 
-      struct hit_info
-      {
-         element*                element_ptr = nullptr;
-         element*                leaf_element_ptr = nullptr;
-         rect                    bounds = rect{};
-         int                     index = -1;
-      };
+      rect                       bounds_of(context const& ctx, std::size_t ix) const override;
 
-      virtual rect               bounds_of(context const& ctx, int ix) const;
-      virtual bool               reverse_index() const { return false; }
-      virtual hit_info           hit_element(context const& ctx, point p, bool control) const;
-
-      virtual std::size_t        size() const /*override*/;
-      virtual element&           at(std::size_t ix) const /*override*/;
-      bool                       empty() const { return size() == 0; } // $$$ temp $$$
+      std::size_t                size() const override;
+      element&                   at(std::size_t ix) const override;
 
    protected:
-
-      void 			   			   new_focus(context const& ctx, int index, focus_request req);
 
       struct cell_info
       {
@@ -318,7 +288,7 @@ namespace cycfi { namespace elements
          int                     layout_id = -1;
       };
 
-      // virtual methods to specialize in hdynamic or vdynamic
+      // virtual member functions to specialize in hdynamic or vdynamic
       virtual view_limits        make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits ) const;
       virtual float              get_main_axis_start(const rect &r);
       virtual float              get_main_axis_end(const rect &r);
@@ -337,12 +307,6 @@ namespace cycfi { namespace elements
       mutable double             _main_axis_full_size = 0;
       mutable int                _layout_id = 0;
       mutable bool               _update_request = true;
-
-      int                        _focus = -1;
-      int                        _saved_focus = -1;
-      int                        _click_tracking = -1;
-      int                        _cursor_tracking = -1;
-      std::set<int>              _cursor_hovering;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -357,9 +321,10 @@ namespace cycfi { namespace elements
    {
    public:
                                  hdynamic_list(composer_ptr ptr) : dynamic_list(ptr) {}
-      rect 						      bounds_of(context const& ctx, int ix) const override;
+      rect 						      bounds_of(context const& ctx, std::size_t ix) const override;
 
    protected:
+
       view_limits 				   make_limits(float main_axis_size, cell_composer::limits secondary_axis_limits) const override;
       void 						      make_bounds(context &ctx, float main_axis_start, cell_info &info) override;
       float 					      get_main_axis_start(const rect&r) override;

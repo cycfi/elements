@@ -22,6 +22,22 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   namespace
+   {
+      std::string address_to_string(void* p)
+      {
+         return std::string(reinterpret_cast<char const*>(&p), sizeof(void*));
+      }
+   }
+
+   void drop_base::prepare_subject(context& ctx)
+   {
+      proxy_base::prepare_subject(ctx);
+      std::string id = address_to_string(this);
+      if (_mime_types.find(id) == _mime_types.end())
+         _mime_types.insert(id);
+   }
+
    void drop_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
       // Return early if none of registered mime types is in the `drop_info`
@@ -131,6 +147,12 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   view_limits draggable_element::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      return {{e_limits.min.x, e_limits.min.y}, {full_extent, e_limits.max.y}};
+   }
+
    void draggable_element::draw(context const& ctx)
    {
       if (is_selected() && is_enabled())
@@ -163,209 +185,255 @@ namespace cycfi { namespace elements
       return nullptr;
    }
 
-   bool draggable_element::click(context const& ctx, mouse_button btn)
+   namespace
    {
-      bool result = false;
-      if (is_enabled() && ctx.bounds.includes(btn.pos))
+      constexpr auto item_offset = 10;
+
+      class drag_image_element : public proxy_base
       {
-         if (!btn.down)
+      public:
+
+         drag_image_element(std::size_t num_boxes)
+          : _num_boxes{num_boxes}
+         {}
+
+         view_limits limits(basic_context const& ctx) const override
          {
-            if ((btn.modifiers & (mod_shift | mod_action)) == 0)
+            auto r = this->subject().limits(ctx);
+            r.min.x += item_offset * _num_boxes;
+            r.max.x += item_offset * _num_boxes;
+            r.min.y += item_offset * _num_boxes;
+            r.max.y += item_offset * _num_boxes;
+            clamp_max(r.max.x, full_extent);
+            clamp_max(r.max.y, full_extent);
+            return r;
+         }
+
+         void prepare_subject(context& ctx) override
+         {
+            ctx.bounds.bottom -= item_offset * _num_boxes;
+            ctx.bounds.right -= item_offset * _num_boxes;
+         }
+
+         void draw(context const& ctx) override
+         {
+            auto& canvas_ = ctx.canvas;
+
+            auto bounds = ctx.bounds;
+            bounds.right -= item_offset * _num_boxes;
+            bounds.bottom -= item_offset * _num_boxes;
+            float opacity = 0.6;
+            for (std::size_t i = 0; i != _num_boxes; ++i)
+            {
+               canvas_.begin_path();
+               canvas_.add_round_rect(bounds, 2);
+               canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
+               canvas_.fill();
+               opacity *= 0.6;
+               bounds = bounds.move(+10, +10);
+            }
+            proxy_base::draw(ctx);
+         }
+
+      private:
+
+         std::size_t _num_boxes = 0;
+      };
+
+      template <typename Subject>
+      inline proxy<remove_cvref_t<Subject>, drag_image_element>
+      drag_image(Subject&& subject, std::size_t num_boxes)
+      {
+         return {std::forward<Subject>(subject), num_boxes};
+      }
+
+      std::size_t count_selected(composite_base const& c)
+      {
+         std::size_t n = 0;
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  ++n;
+            }
+         }
+         return n;
+      }
+   }
+
+   void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
+   {
+      auto [c, cctx] = find_composite(ctx);
+      if (c)
+      {
+         track_info.offset.x = track_info.current.x - ctx.bounds.left;
+         auto bounds = ctx.bounds;
+         auto limits = this->subject().limits(ctx);
+         bounds.width(limits.min.x);
+         if (is_selected())
+         {
+            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), 10);
+            bounds.right += item_offset * num_boxes;
+            bounds.bottom += item_offset * num_boxes;
+
+            _drag_image = share(
+               floating(bounds,
+                  drag_image(link(this->subject()), num_boxes)
+               )
+            );
+            ctx.view.add(_drag_image);
+            ctx.view.refresh();
+
+            if (auto* di = find_parent<drop_inserter_base*>(ctx))
+            {
+               payload pl;
+               pl[address_to_string(di)] = {};
+               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+            }
+         }
+      }
+   }
+
+   void draggable_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (_drag_image)
+      {
+         _drag_image->bounds(
+            _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
+         );
+
+         if (auto* di = find_parent<drop_inserter_base*>(ctx))
+         {
+            payload pl;
+            pl[address_to_string(di)] = {};
+            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
+         }
+      }
+      ctx.view.refresh();
+   }
+
+   namespace
+   {
+      void unselect_all(composite_base const& c)
+      {
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+               e->select(false);
+         }
+      }
+
+      int find_first_selected(composite_base const& c)
+      {
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  return i;
+            }
+         }
+         return -1;
+      }
+
+      int find_last_selected(composite_base const& c)
+      {
+         for (int i = c.size()-1; i >= 0; --i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  return i;
+            }
+         }
+         return -1;
+      }
+
+      void shift_select(composite_base const& c)
+      {
+         if (int first = find_first_selected(c); first >= 0)
+         {
+            if (int last = find_last_selected(c); last >= 0)
+            {
+               // Select all from first to last
+               for (int i = first; i != last+1; ++i)
+               {
+                  if (auto e = find_element<draggable_element*>(&c.at(i)))
+                     e->select(true);
+               }
+            }
+         }
+      }
+
+      std::vector<std::size_t> collect_selected(composite_base const& c)
+      {
+         std::vector<std::size_t> indices;
+         for (std::size_t i = 0; i != c.size(); ++i)
+         {
+            if (auto e = find_element<draggable_element*>(&c.at(i)))
+            {
+               if (e->is_selected())
+                  indices.push_back(i);
+            }
+         }
+         return indices;
+      }
+   }
+
+   void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (_drag_image)
+      {
+         ctx.view.remove(_drag_image);
+         _drag_image.reset();
+         ctx.view.refresh();
+
+         auto* di = find_parent<drop_inserter_base*>(ctx);
+         if (di)
+         {
+            payload pl;
+            pl[address_to_string(di)] = {};
+            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::leaving);
+         }
+
+         // Did we actually do a drag?
+         if (std::abs(track_info.distance().x) > 10 || std::abs(track_info.distance().y) > 10)
+         {
+            if (di)
             {
                auto [c, cctx] = find_composite(ctx);
                if (c)
                {
-                  for (std::size_t i = 0; i != c->size(); ++i)
-                  {
-                     if (auto e = find_element<draggable_element*>(&c->at(i)))
-                        e->select(false);
-                  }
-                  cctx->view.refresh(*cctx);
+                  auto indices = collect_selected(*c);
+                  if (indices.size())
+                     di->on_rearrange(di->insertion_pos(), std::move(indices));
                }
             }
-            select(true);
-            if (btn.modifiers & mod_shift)
-            {
-               auto [c, cctx] = find_composite(ctx);
-               if (c)
-               {
-                  // Find first selected
-                  int first = -1;
-                  for (std::size_t i = 0; i != c->size(); ++i)
-                  {
-                     if (auto e = find_element<draggable_element*>(&c->at(i)))
-                     {
-                        if (e->is_selected())
-                        {
-                           first = i;
-                           break;
-                        }
-                     }
-                  }
-                  // Find last selected
-                  if (first > 0)
-                  {
-                     int last = -1;
-                     for (int i = c->size()-1; i >= 0; --i)
-                     {
-                        if (auto e = find_element<draggable_element*>(&c->at(i)))
-                        {
-                           if (e->is_selected())
-                           {
-                              last = i;
-                              break;
-                           }
-                        }
-                     }
-                     if (last > 0)
-                     {
-                        // Select all from first to last
-                        for (int i = first; i != last+1; ++i)
-                        {
-                           if (auto e = find_element<draggable_element*>(&c->at(i)))
-                              e->select(true);
-                        }
-                     }
-                  }
-                  cctx->view.refresh(*cctx);
-               }
-            }
-            ctx.view.refresh(ctx);
-         }
-         result = true;
-      }
-      auto proxy_result = proxy_base::click(ctx, btn);
-      return result || proxy_result;
-   }
-
-   bool draggable_element::key(context const& ctx, key_info k)
-   {
-      if (k.action == key_action::press || k.action == key_action::repeat)
-      {
-         // auto&& equal =
-         //    [](auto k, auto shortcut)
-         //    {
-         //       int mask = 0xF;
-         //       switch (shortcut.key)
-         //       {
-         //          case key_code::minus:
-         //          case key_code::equal:
-         //             mask &= ~mod_shift;
-         //             break;
-         //          default:
-         //             break;
-         //       }
-         //       return (k.key == shortcut.key) &&
-         //          ((k.modifiers & mask) == (shortcut.modifiers & mask))
-         //          ;
-         //    };
-
-         switch (k.key)
-         {
-            case key_code::up:
-            case key_code::down:
-            {
-               // auto [c, cctx] = find_composite(ctx);
-               // if (c)
-               // {
-               //    auto find_selected = [](auto const& c)
-               //       -> std::pair<draggable_element*, int>
-               //    {
-               //       for (std::size_t i = 0; i != c->size(); ++i)
-               //       {
-               //          auto e = find_element<draggable_element*>(&c->at(i));
-               //          if (e && e->is_selected())
-               //             return std::make_pair(e, i);
-               //       }
-               //       return std::make_pair(nullptr, -1);
-               //    };
-
-               //    auto select_next = [&](auto const& c, auto& selected, auto& selected_index)
-               //    {
-               //       bool const down = k.key == key_code::down;
-               //       auto const last = static_cast<int>(c->size()) - 1;
-
-               //       int start = selected?
-               //          (down? selected_index+1 : selected_index-1) :
-               //          (down? 0 : last)
-               //       ;
-               //       int until = down? int(c->size()) : -1;
-               //       for (int i = start; i != until; i += down? +1 : -1)
-               //       {
-               //          auto p = find_element<draggable_element*>(&c->at(i));
-               //          if (p && p->is_enabled())
-               //          {
-               //             selected = p;
-               //             selected_index = i;
-               //             break;
-               //          }
-               //       }
-               //       if (selected)
-               //          selected->select(true);
-               //    };
-
-               //    auto unselect_rest = [](auto const& c, auto selected)
-               //    {
-               //       for (std::size_t i = 0; i != c->size(); ++i)
-               //       {
-               //          auto e = find_element<draggable_element*>(&c->at(i));
-               //          if (e && e != selected && e->is_enabled())
-               //             e->select(false);
-               //       }
-               //    };
-
-               //    auto [selected, selected_index] = find_selected(c);
-               //    select_next(c, selected, selected_index);
-               //    unselect_rest(c, selected);
-
-               //    scrollable::find(ctx).scroll_into_view(c->bounds_of(*cctx, selected_index));
-               //    cctx->view.refresh(*cctx);
-               // }
-               return true;
-            }
-            break;
-
-            default:
-               break;
-               // if (is_enabled() && equal(k, shortcut))
-               // {
-               //    if (on_click)
-               //       on_click();
-               //    ctx.notify(ctx, "key", this);
-               //    return true;
-               // }
+            return;
          }
       }
-      return false;
-   }
 
-   bool draggable_element::cursor(context const& ctx, point p, cursor_tracking status)
-   {
-      if (!is_enabled())
-         return false;
-
-      bool hit = ctx.bounds.includes(p);
-      if (status == cursor_tracking::leaving || (hit && !is_selected()))
+      if ((track_info.modifiers & (mod_shift | mod_action)) == 0)
       {
          auto [c, cctx] = find_composite(ctx);
          if (c)
          {
-            // for (std::size_t i = 0; i != c->size(); ++i)
-            // {
-            //    if (auto e = find_element<selectable*>(&c->at(i)))
-            //       e->select(false);
-            // }
-            // cctx->view.refresh(*cctx);
+            unselect_all(*c);
+            cctx->view.refresh(*cctx);
          }
-         // select(hit);
       }
-      proxy_base::cursor(ctx, p, status);
-      return hit;
-   }
-
-   bool draggable_element::wants_control() const
-   {
-      return true;
+      select(true);
+      if (track_info.modifiers & mod_shift)
+      {
+         auto [c, cctx] = find_composite(ctx);
+         if (c)
+         {
+            shift_select(*c);
+            cctx->view.refresh(*cctx);
+         }
+      }
+      ctx.view.refresh(ctx);
    }
 }}
 

@@ -7,11 +7,16 @@
 #define ELEMENTS_DRAG_AND_DROP_OCTOBER_11_2023
 
 #include <elements/element/proxy.hpp>
+#include <elements/element/tracker.hpp>
+#include <elements/element/floating.hpp>
 #include <functional>
 #include <set>
 
 namespace cycfi { namespace elements
 {
+   // forward declarations
+   class composite_base;
+
    class drop_base : public proxy_base
    {
    public:
@@ -21,11 +26,13 @@ namespace cycfi { namespace elements
 
                               drop_base(std::initializer_list<std::string> mime_types_);
       bool                    wants_control() const override;
+      void                    prepare_subject(context& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
 
       bool                    is_tracking() const     { return _is_tracking; }
       mime_types const&       get_mime_types() const  { return _mime_types; }
+      mime_types&             get_mime_types()        { return _mime_types; }
 
    private:
 
@@ -59,14 +66,19 @@ namespace cycfi { namespace elements
    public:
 
       using base_type = drop_base;
+      using indices_type = std::vector<std::size_t>;
       using on_drop_function = std::function<bool(drop_info const& info, std::size_t ix)>;
+      using on_rearrange_function = std::function<bool(std::size_t pos, indices_type const& indices)>;
 
                               drop_inserter_base(std::initializer_list<std::string> mime_types_);
       void                    draw(context const& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
 
-      on_drop_function        on_drop = [](drop_info const& /*info*/, std::size_t /*ix*/){ return false; };
+      on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
+      on_rearrange_function   on_rearrange = [](std::size_t, indices_type const&){ return false; };
+
+      int                     insertion_pos() const { return _insertion_pos; }
 
    public:
 
@@ -80,23 +92,29 @@ namespace cycfi { namespace elements
       return {std::forward<Subject>(subject), mime_types};
    }
 
-   class draggable_element : public proxy_base
+   class draggable_element : public tracker<proxy_base>
    {
    public:
 
+      view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
-      bool                    click(context const& ctx, mouse_button btn) override;
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    wants_control() const override;
 
       bool                    is_selected() const;
       void                    select(bool state);
 
    private:
 
+      void                    begin_tracking(context const& ctx, tracker_info& track_info) override;
+      void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
+      void                    end_tracking(context const& ctx, tracker_info& track_info) override;
+
+      using drag_image_ptr = std::shared_ptr<floating_element>;
+      using payload_ptr = std::unique_ptr<drop_info>;
+
       bool                    _selected = false;
+      drag_image_ptr          _drag_image;
+      payload_ptr             _payload;
    };
 
    template <typename Subject>

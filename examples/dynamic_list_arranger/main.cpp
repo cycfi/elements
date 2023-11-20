@@ -79,30 +79,54 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    size_t list_size = paths.size();
-   std::vector<element_ptr> ptr_list;
-   ptr_list.resize(list_size, nullptr);
    auto && make_row = [&](size_t index)
    {
-      if (ptr_list[index].get() == nullptr)
-         ptr_list[index] = share(
-            align_left(draggable(label(paths[index])))
-         );
-      return ptr_list[index];
+      return share(draggable(align_left(label(paths[index]))));
    };
 
    auto cp = basic_vertical_cell_composer(list_size, make_row);
-   auto list = vdynamic_list(cp);
+   auto list = vdynamic_list(cp, false);
    auto drop_inserter_ = share(
                            drop_inserter(
-                              margin({5, 5, 5, 20},
-                                 link(list)
-                              ),
+                              margin({5, 5, 5, 20}, link(list)),
                               {"text/uri-list"}
                            )
                         );
 
-   drop_inserter_->on_drop = [](drop_info const& info, std::size_t ix)
+   drop_inserter_->on_drop = [&](drop_info const& info, std::size_t ix)
    {
+      if (contains_filepaths(info.data))
+      {
+         view_.post([&view_, &list, info, ix]()
+            {
+               auto new_paths = get_filepaths(info.data);
+               paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
+               list.resize(paths.size());
+               view_.refresh();
+            }
+         );
+         return true;
+      }
+      return false;
+   };
+
+   drop_inserter_->on_rearrange = [&](std::size_t pos, std::vector<std::size_t> const& indices)
+   {
+      view_.post([&view_, &list, pos, indices]()
+         {
+            std::vector<std::filesystem::path> to_move;
+            for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+            {
+               to_move.push_back(paths[*i]);
+               paths.erase(paths.begin()+*i);
+            }
+            auto pos_i = pos >= paths.size()? paths.end() : paths.begin()+pos;
+            for (auto const& path : to_move)
+               paths.insert(pos_i, path);
+            list.resize(paths.size());
+            view_.refresh();
+         }
+      );
       return true;
    };
 

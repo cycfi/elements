@@ -79,6 +79,42 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject), mime_types};
    }
+
+   class draggable_element : public proxy_base
+   {
+   public:
+
+      void                    draw(context const& ctx) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    wants_control() const override;
+
+      bool                    is_selected() const;
+      void                    select(bool state);
+
+   private:
+
+      bool                    _selected = false;
+   };
+
+   template <typename Subject>
+   inline proxy<remove_cvref_t<Subject>, draggable_element>
+   draggable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   inline bool draggable_element::is_selected() const
+   {
+      return _selected;
+   }
+
+   inline void draggable_element::select(bool state)
+   {
+      _selected = state;
+   }
 }}
 
 #endif

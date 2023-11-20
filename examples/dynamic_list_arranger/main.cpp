@@ -85,9 +85,7 @@ int main(int argc, char* argv[])
    {
       if (ptr_list[index].get() == nullptr)
          ptr_list[index] = share(
-            hsize(2048,
-               align_left(label(paths[index]))
-            )
+            align_left(draggable(label(paths[index])))
          );
       return ptr_list[index];
    };
@@ -96,7 +94,9 @@ int main(int argc, char* argv[])
    auto list = vdynamic_list(cp);
    auto drop_inserter_ = share(
                            drop_inserter(
-                              margin({5, 5, 5, 20}, link(list)),
+                              margin({5, 5, 5, 20},
+                                 link(list)
+                              ),
                               {"text/uri-list"}
                            )
                         );
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 
    view_.content(
       margin({10, 10, 10, 10},
-         scroller(hold(drop_inserter_))
+         vscroller(hold(drop_inserter_))
       ),
       background
    );

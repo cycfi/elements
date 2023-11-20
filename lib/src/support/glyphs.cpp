@@ -181,6 +181,13 @@ namespace cycfi { namespace elements
    {
       if (&rhs != this)
       {
+         if (_glyphs)
+            cairo_glyph_free(_glyphs);
+         if (_clusters)
+            cairo_text_cluster_free(_clusters);
+         if (_scaled_font)
+            cairo_scaled_font_destroy(_scaled_font);
+      
          _first = rhs._first;
          _last = rhs._last;
          _scaled_font = rhs._scaled_font;

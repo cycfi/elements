@@ -115,6 +115,12 @@ auto make_buttons(view& view_)
                                  .body_color(bgreen)
                            );
 
+   auto slide_btn1      = slide_button();
+   auto slide_btn2      = slide_button();
+
+   slide_btn1.value(true);
+   slide_btn2.enable(false); // Disable
+
    // Now we have custom buttons
    auto custom          = make_custom_button();
 
@@ -173,6 +179,17 @@ auto make_buttons(view& view_)
                vsize(27, hold(prog_bar))
             )),
             top_margin(20, disabled_button),
+            top_margin(20,
+               htile(
+                  label("Enabled"),
+                  hspace(5),
+                  align_left(slide_btn1),
+                  hmargin(5, label("Slide Buttons")),
+                  align_right(slide_btn2),
+                  hspace(5),
+                  label("Disabled")
+               )
+            ),
             top_margin(20, htile(left, center, right)),
             top_margin(20, custom)
          )

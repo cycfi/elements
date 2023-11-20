@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
          for (int ix = int(size())-1; ix >= 0; --ix)
          {
             rect bounds = bounds_of(ctx, ix);
-            if (intersects(bounds, ctx.view_bounds()))
+            if (intersects(bounds, port_bounds))
             {
                if (f(at(ix), ix, bounds))
                   break;
@@ -68,7 +68,7 @@ namespace cycfi { namespace elements
          for (std::size_t ix = 0; ix < size(); ++ix)
          {
             rect bounds = bounds_of(ctx, ix);
-            if (intersects(bounds, ctx.view_bounds()))
+            if (intersects(bounds, port_bounds))
             {
                if (f(at(ix), ix, bounds))
                   break;
@@ -234,26 +234,6 @@ namespace cycfi { namespace elements
          reverse_index()
       );
       return handled;
-
-
-      if (reverse_index())
-      {
-         for (int ix = int(size())-1; ix >= 0; --ix)
-         {
-            if (try_key(ix))
-               return true;
-         }
-      }
-      else
-      {
-         for (std::size_t ix = 0; ix < size(); ++ix)
-         {
-            if (try_key(ix))
-               return true;
-         }
-      }
-
-      return false;
    }
 
    bool composite_base::text(context const& ctx, text_info info)

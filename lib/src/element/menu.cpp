@@ -313,9 +313,9 @@ namespace cycfi { namespace elements
                if (auto e = find_element<selectable*>(&c->at(i)))
                   e->select(false);
             }
+            cctx->view.refresh(*cctx);
          }
          select(hit);
-         cctx->view.refresh(*cctx);
       }
       proxy_base::cursor(ctx, p, status);
       return hit;

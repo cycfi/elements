@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/drag_and_drop.hpp>
 #include <elements/element/traversal.hpp>
-#include <elements/element/composite.hpp>
+#include <elements/element/dynamic_list.hpp>
 #include <elements/element/port.hpp>
 #include <elements/support/context.hpp>
 #include <elements/support/theme.hpp>
@@ -147,6 +147,16 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   void drop_inserter_base::move(indices_type const& indices)
+   {
+      if (_insertion_pos >= 0)
+      {
+         if (auto* c = find_subject<dynamic_list*>(&subject()))
+            c->move(_insertion_pos, indices);
+         on_move(_insertion_pos, indices);
+      }
+   }
+
    view_limits draggable_element::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
@@ -188,6 +198,7 @@ namespace cycfi { namespace elements
    namespace
    {
       constexpr auto item_offset = 10;
+      constexpr auto max_boxes = 20;
 
       class drag_image_element : public proxy_base
       {
@@ -273,7 +284,7 @@ namespace cycfi { namespace elements
          bounds.width(limits.min.x);
          if (is_selected())
          {
-            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), 10);
+            std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
             bounds.right += item_offset * num_boxes;
             bounds.bottom += item_offset * num_boxes;
 
@@ -407,7 +418,7 @@ namespace cycfi { namespace elements
                {
                   auto indices = collect_selected(*c);
                   if (indices.size())
-                     di->on_rearrange(di->insertion_pos(), std::move(indices));
+                     di->move(std::move(indices));
                }
             }
             return;

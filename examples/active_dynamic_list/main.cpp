@@ -57,25 +57,27 @@ int main(int argc, char* argv[])
    auto b1 = icon_button(icons::minus, 1);
    auto b2 = icon_button(icons::plus, 1);
 
-   b1.on_click = [&](bool)
-   {
-      std::cout << "dn " << std::endl;
-      if (list_size <= 50)
-         return;
-      list_size -= 50;
-      ptr_list.resize(list_size);
-      content.resize(list_size);
-      view_.refresh();
-   };
+   b1.on_click =
+      [&](bool)
+      {
+         std::cout << "dn " << std::endl;
+         if (list_size <= 50)
+            return;
+         list_size -= 50;
+         ptr_list.resize(list_size);
+         content.resize(list_size);
+         view_.refresh();
+      };
 
-   b2.on_click = [&](bool)
-   {
-      std::cout << "up " << std::endl;
-      list_size +=50;
-      ptr_list.resize(list_size);
-      content.resize(list_size);
-      view_.refresh();
-   };
+   b2.on_click =
+      [&](bool)
+      {
+         std::cout << "up " << std::endl;
+         list_size +=50;
+         ptr_list.resize(list_size);
+         content.resize(list_size);
+         view_.refresh();
+      };
 
    view_.content(
       margin({10, 10, 10, 10},

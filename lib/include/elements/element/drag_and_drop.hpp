@@ -76,9 +76,10 @@ namespace cycfi { namespace elements
       bool                    drop(context const& ctx, drop_info const& info) override;
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
-      on_rearrange_function   on_rearrange = [](std::size_t, indices_type const&){ return false; };
+      on_rearrange_function   on_move = [](std::size_t, indices_type const&){ return false; };
 
       int                     insertion_pos() const { return _insertion_pos; }
+      void                    move(indices_type const& indices);
 
    public:
 

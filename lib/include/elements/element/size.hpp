@@ -63,8 +63,10 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void size_element<Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds.right = ctx.bounds.left + _size.x;
-      ctx.bounds.bottom = ctx.bounds.top + _size.y;
+      // use the fixed width/height as computed by limits
+      auto e_limits = this->limits(ctx);
+      ctx.bounds.right = ctx.bounds.left + e_limits.min.x;
+      ctx.bounds.bottom = ctx.bounds.top + e_limits.min.y;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -119,7 +121,9 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void hsize_element<Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds.right = ctx.bounds.left + _width;
+      // use the fixed width as computed by limits
+      auto e_limits = this->limits(ctx);
+      ctx.bounds.right = ctx.bounds.left + e_limits.min.x;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -174,7 +178,9 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void vsize_element<Subject>::prepare_subject(context& ctx)
    {
-      ctx.bounds.bottom = ctx.bounds.top + _height;
+      // use the fixed height as computed by limits
+      auto e_limits = this->limits(ctx);
+      ctx.bounds.bottom = ctx.bounds.top + e_limits.min.y;
    }
 
    ////////////////////////////////////////////////////////////////////////////

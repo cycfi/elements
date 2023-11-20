@@ -117,20 +117,18 @@ namespace cycfi { namespace elements
     , bool reverse
    ) const
    {
-      auto& cnv = ctx.canvas;
-      auto  clip_extent = cnv.clip_extent();
-
-      if (!intersects(ctx.bounds, clip_extent))
+      auto port_bounds = port_rect(ctx);
+      if (!intersects(ctx.bounds, port_bounds))
          return;
 
-      auto  main_axis_start = get_main_axis_start(ctx.bounds);
-      auto  main_axis_clip_start = get_main_axis_start(clip_extent);
-      auto  main_axis_clip_end = get_main_axis_end(clip_extent);
+      auto main_axis_start = get_main_axis_start(ctx.bounds);
+      auto main_axis_port_start = get_main_axis_start(port_bounds);
+      auto main_axis_port_end = get_main_axis_end(port_bounds);
 
       if (reverse)
       {
          auto it = std::upper_bound(_cells.begin(), _cells.end(),
-            main_axis_clip_end - main_axis_start,
+                                    main_axis_port_end - main_axis_start,
             [](double pivot, auto const& cell)
             {
                return pivot < (cell.pos + cell.main_axis_size);
@@ -142,20 +140,22 @@ namespace cycfi { namespace elements
             auto& cell = *it;
             rect bounds = ctx.bounds;
             set_bounds(bounds, main_axis_start, cell);
-            if (intersects(clip_extent, bounds))
+            if (intersects(port_bounds, bounds))
             {
                if (cell.elem_ptr && f(*cell.elem_ptr, it-_cells.begin(), bounds))
                   break;
             }
-            if (main_axis_clip_start > get_main_axis_end(bounds))
+            if (main_axis_port_start > get_main_axis_end(bounds))
                break;
+
+            ++it;
          }
          while (it != _cells.begin());
       }
       else
       {
          auto it = std::lower_bound(_cells.begin(), _cells.end(),
-            main_axis_clip_start - main_axis_start,
+                                    main_axis_port_start - main_axis_start,
             [](auto const& cell, double pivot)
             {
                return (cell.pos + cell.main_axis_size) < pivot;
@@ -167,13 +167,15 @@ namespace cycfi { namespace elements
             auto& cell = *it;
             rect bounds = ctx.bounds;
             set_bounds(bounds, main_axis_start, cell);
-            if (intersects(clip_extent, bounds))
+            if (intersects(port_bounds, bounds))
             {
                if (cell.elem_ptr && f(*cell.elem_ptr, it-_cells.begin(), bounds))
                   break;
             }
-            if (get_main_axis_start(bounds) > main_axis_clip_end)
+            if (get_main_axis_start(bounds) > main_axis_port_end)
                break;
+
+            ++it;
          }
       }
    }

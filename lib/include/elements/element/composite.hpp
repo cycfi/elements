@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       void                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;
-      int 					      _saved_focus = -1;
+      int                     _saved_focus = -1;
       int                     _click_tracking = -1;
       int                     _cursor_tracking = -1;
       std::set<int>           _cursor_hovering;

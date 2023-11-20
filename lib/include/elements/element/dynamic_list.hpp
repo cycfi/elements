@@ -262,14 +262,11 @@ namespace cycfi { namespace elements
       using composer_ptr = std::shared_ptr<cell_composer>;
       using indices_type = std::vector<std::size_t>;
 
-                                 dynamic_list(composer_ptr composer, bool manage_externally = true)
-                                  : _composer(composer)
-                                  , _manage_externally(manage_externally)
-                                  , _update_request{true}
-                                  , _move_request{false}
-                                  , _insert_request{false}
-                                  , _delete_request{false}
-                                 {}
+                                 dynamic_list(composer_ptr composer, bool manage_externally = true);
+                                 dynamic_list(dynamic_list const& rhs);
+                                 dynamic_list(dynamic_list&& rhs);
+      dynamic_list&              operator=(dynamic_list const& rhs);
+      dynamic_list&              operator=(dynamic_list&& rhs);
 
       view_limits                limits(basic_context const& ctx) const override;
       void                       draw(context const& ctx) override;

@@ -9,6 +9,89 @@
 
 namespace cycfi { namespace elements
 {
+   dynamic_list::dynamic_list(composer_ptr composer, bool manage_externally)
+    : _composer(composer)
+    , _manage_externally(manage_externally)
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+   {}
+
+   dynamic_list::dynamic_list(dynamic_list const& rhs)
+    : _cells{rhs._cells}
+    , _composer{rhs._composer}
+    , _manage_externally{rhs._manage_externally}
+    , _previous_size{rhs._previous_size}
+    , _previous_window_start{rhs._previous_window_start}
+    , _previous_window_end{rhs._previous_window_end}
+    , _main_axis_full_size{rhs._main_axis_full_size}
+    , _layout_id{rhs._layout_id}
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+    , _request_info{nullptr}
+   {}
+
+   dynamic_list::dynamic_list(dynamic_list&& rhs)
+    : _cells{std::move(rhs._cells)}
+    , _composer{rhs._composer}
+    , _manage_externally{rhs._manage_externally}
+    , _previous_size{rhs._previous_size}
+    , _previous_window_start{rhs._previous_window_start}
+    , _previous_window_end{rhs._previous_window_end}
+    , _main_axis_full_size{rhs._main_axis_full_size}
+    , _layout_id{rhs._layout_id}
+    , _update_request{true}
+    , _move_request{false}
+    , _insert_request{false}
+    , _delete_request{false}
+    , _request_info{nullptr}
+   {}
+
+   dynamic_list& dynamic_list::operator=(dynamic_list const& rhs)
+   {
+      if (this != &rhs)
+      {
+         _cells = rhs._cells;
+         _composer = rhs._composer;
+         _manage_externally = rhs._manage_externally;
+         _previous_size = rhs._previous_size;
+         _previous_window_start = rhs._previous_window_start;
+         _previous_window_end = rhs._previous_window_end;
+         _main_axis_full_size = rhs._main_axis_full_size;
+         _layout_id = rhs._layout_id;
+         _update_request = true;
+         _move_request = false;
+         _insert_request = false;
+         _delete_request = false;
+         _request_info.reset();
+      }
+      return *this;
+   }
+
+   dynamic_list& dynamic_list::operator=(dynamic_list&& rhs)
+   {
+      if (this != &rhs)
+      {
+         _cells = std::move(rhs._cells);
+         _composer = rhs._composer;
+         _manage_externally = rhs._manage_externally;
+         _previous_size = rhs._previous_size;
+         _previous_window_start = rhs._previous_window_start;
+         _previous_window_end = rhs._previous_window_end;
+         _main_axis_full_size = rhs._main_axis_full_size;
+         _layout_id = rhs._layout_id;
+         _update_request = true;
+         _move_request = false;
+         _insert_request = false;
+         _delete_request = false;
+         _request_info.reset();
+      }
+      return *this;
+   }
+
    std::size_t dynamic_list::size() const
    {
       return _cells.size();

@@ -47,7 +47,7 @@ namespace cycfi { namespace elements
       // it becomes inefficient for a large composites with millions of
       // elements.
 
-      auto  port_bounds = port_rect(ctx);
+      auto  port_bounds = get_port_bounds(ctx);
       if (!intersects(ctx.bounds, port_bounds))
          return;
 

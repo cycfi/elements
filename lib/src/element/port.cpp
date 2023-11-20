@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
       proxy_base::draw(ctx);
    }
 
-   rect port_rect(context const& ctx)
+   rect get_port_bounds(context const& ctx)
    {
       if (auto pctx = find_parent_context<port_base*>(ctx))
          return pctx->bounds;

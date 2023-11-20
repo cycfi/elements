@@ -117,7 +117,7 @@ namespace cycfi { namespace elements
     , bool reverse
    ) const
    {
-      auto port_bounds = port_rect(ctx);
+      auto port_bounds = get_port_bounds(ctx);
       if (!intersects(ctx.bounds, port_bounds))
          return;
 
@@ -127,8 +127,9 @@ namespace cycfi { namespace elements
 
       if (reverse)
       {
-         auto it = std::upper_bound(_cells.begin(), _cells.end(),
-                                    main_axis_port_end - main_axis_start,
+         auto it = std::upper_bound(
+            _cells.begin(), _cells.end(),
+            main_axis_port_end - main_axis_start,
             [](double pivot, auto const& cell)
             {
                return pivot < (cell.pos + cell.main_axis_size);
@@ -154,8 +155,9 @@ namespace cycfi { namespace elements
       }
       else
       {
-         auto it = std::lower_bound(_cells.begin(), _cells.end(),
-                                    main_axis_port_start - main_axis_start,
+         auto it = std::lower_bound(
+            _cells.begin(), _cells.end(),
+            main_axis_port_start - main_axis_start,
             [](auto const& cell, double pivot)
             {
                return (cell.pos + cell.main_axis_size) < pivot;

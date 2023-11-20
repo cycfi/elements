@@ -39,7 +39,7 @@ namespace cycfi { namespace elements
       if (!std::any_of(_mime_types.begin(), _mime_types.end(),
          [&](auto const& item)
          {
-            return info.data.contains(item);
+            return info.data.find(item) != info.data.end();
          }))
          return;
 

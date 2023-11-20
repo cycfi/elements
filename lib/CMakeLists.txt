@@ -28,6 +28,7 @@ set(ELEMENTS_SOURCES
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
+   src/element/drag_and_drop.cpp
    src/element/dynamic_list.cpp
    src/element/element.cpp
    src/element/floating.cpp
@@ -71,6 +72,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
+   include/elements/element/drag_and_drop.hpp
    include/elements/element/dynamic_list.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp

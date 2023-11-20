@@ -68,7 +68,8 @@ namespace cycfi { namespace elements
       using base_type = drop_base;
       using indices_type = std::vector<std::size_t>;
       using on_drop_function = std::function<bool(drop_info const& info, std::size_t ix)>;
-      using on_rearrange_function = std::function<bool(std::size_t pos, indices_type const& indices)>;
+      using on_move_function = std::function<void(std::size_t pos, indices_type const& indices)>;
+      using on_delete_function = std::function<void(indices_type const& indices)>;
 
                               drop_inserter_base(std::initializer_list<std::string> mime_types_);
       void                    draw(context const& ctx) override;
@@ -76,10 +77,12 @@ namespace cycfi { namespace elements
       bool                    drop(context const& ctx, drop_info const& info) override;
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
-      on_rearrange_function   on_move = [](std::size_t, indices_type const&){ return false; };
+      on_move_function        on_move = [](std::size_t, indices_type const&){};
+      on_delete_function      on_delete = [](indices_type const&){};
 
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);
+      void                    delete_(indices_type const& indices);
 
    public:
 
@@ -100,6 +103,7 @@ namespace cycfi { namespace elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      bool                    key(context const& ctx, key_info k) override;
 
       bool                    is_selected() const;
       void                    select(bool state);

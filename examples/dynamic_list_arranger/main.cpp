@@ -8,9 +8,11 @@
 using namespace cycfi::elements;
 using cycfi::artist::rgba;
 
-// Main window background color
-auto constexpr bkd_color = rgba(35, 35, 37, 255);
-auto background = box(bkd_color);
+// Main window background
+auto make_bkd()
+{
+   return port(image{"dark-bkd.jpg"});
+}
 
 // Probably shouldn't be global, but hey, it's a demo. You know what to do :-)
 std::vector<std::filesystem::path> paths = {
@@ -81,7 +83,7 @@ int main(int argc, char* argv[])
    size_t list_size = paths.size();
    auto && make_row = [&](size_t index)
    {
-      return share(draggable(align_left(label(paths[index]))));
+      return share(draggable(align_left(label(paths[index].u8string()))));
    };
 
    auto cp = basic_vertical_cell_composer(list_size, make_row);
@@ -120,14 +122,21 @@ int main(int argc, char* argv[])
          for (auto const& path : to_move)
             paths.insert(pos_i, path);
          view_.refresh();
-         return true;
+      };
+
+   drop_inserter_->on_delete =
+      [&](std::vector<std::size_t> const& indices)
+      {
+         for (auto i = indices.crbegin(); i != indices.crend(); ++i)
+            paths.erase(paths.begin()+*i);
+         view_.refresh();
       };
 
    view_.content(
       margin({10, 10, 10, 10},
-         vscroller(hold(drop_inserter_))
+         vscroller(align_left_top(hold(drop_inserter_)))
       ),
-      background
+      make_bkd()
    );
 
    _app.run();

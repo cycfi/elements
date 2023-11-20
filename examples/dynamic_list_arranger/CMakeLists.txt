@@ -23,6 +23,9 @@ set(ELEMENTS_APP_ID "com.cycfi.dynamic-list-arranger")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(ELEMENTS_APP_RESOURCES
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/dark-bkd.jpg
+)
 
 # For your custom application icon on macOS or Windows see cmake/AppIcon.cmake module
 include(AppIcon)

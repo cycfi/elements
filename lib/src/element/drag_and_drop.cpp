@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
    bool drop_inserter_base::drop(context const& ctx, drop_info const& info)
    {
       base_type::drop(ctx, info);
-      if (_insertion_pos > 0)
+      if (_insertion_pos >= 0)
       {
          bool r = on_drop(info, _insertion_pos);
          ctx.view.refresh(ctx.bounds);

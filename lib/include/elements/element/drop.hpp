@@ -67,12 +67,13 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void drop_box<Subject>::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
-      for (auto item : _mime_types)
-      {
-         if (info.data.find(item) != info.data.end())
-            break;
-         return; // Return early if the mime types registered are not in the `drop_info`
-      }
+      // Return early if none of registered mime types is in the `drop_info`
+      if (!std::any_of(_mime_types.begin(), _mime_types.end(),
+         [&](auto const& item)
+         {
+            return info.data.contains(item);
+         }))
+         return;
 
       auto new_is_tracking = status != cursor_tracking::leaving;
       if (new_is_tracking != _is_tracking)

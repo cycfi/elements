@@ -26,23 +26,27 @@ int main(int argc, char* argv[])
 
    drop_box_->on_drop = [image_ = get(image_), &view_](drop_info const& info)
    {
-      if (info.paths.size() == 1)  // We accept only one file
+      if (contains_filepaths(info.data))
       {
-         auto image_path = info.paths[0];
-         if (auto p = image_.lock())
+         auto paths = get_filepaths(info.data);
+         if (paths.size() == 1)  // We accept only one file
          {
-            try
+            auto const& image_path = paths[0];
+            if (auto p = image_.lock())
             {
-               auto img = image{image_path};
-               *p = img;
-               view_.refresh(*p);
+               try
+               {
+                  auto img = image{image_path};
+                  *p = img;
+                  view_.refresh(*p);
+               }
+               catch (std::runtime_error const&)
+               {
+                  // Invalid image
+                  return false;
+               }
+               return true;
             }
-            catch (std::runtime_error const&)
-            {
-               // Invalid image
-               return false;
-            }
-            return true;
          }
       }
       return false;

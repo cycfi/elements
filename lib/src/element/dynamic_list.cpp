@@ -220,8 +220,43 @@ namespace cycfi { namespace elements
       this->update();
    }
 
+   void dynamic_list::move(std::size_t pos, indices_type const& indices)
+   {
+      _move_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_move_pos = pos;
+         _request_info->_move_indices = indices;
+      }
+   }
+
+   void dynamic_list::insert(std::size_t pos, std::size_t num_items)
+   {
+      _insert_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_insert_pos = pos;
+         _request_info->_insert_num_items = num_items;
+      }
+   }
+
+   void dynamic_list::delete_(indices_type const& indices)
+   {
+      _delete_request = true;
+      if (!_request_info)
+      {
+         _request_info = std::make_unique<request_info>();
+         _request_info->_delete_indices = indices;
+      }
+   }
+
    void dynamic_list::move(basic_context const& ctx) const
    {
+      auto const& _move_indices = _request_info->_move_indices;
+      auto _move_pos = _request_info->_move_pos;
+
       cells_vector to_move;
       for (auto i = _move_indices.crbegin(); i != _move_indices.crend(); ++i)
       {
@@ -245,15 +280,11 @@ namespace cycfi { namespace elements
       _move_request = false;
    }
 
-   void dynamic_list::move(std::size_t pos, indices_type const& indices)
-   {
-      _move_request = true;
-      _move_pos = pos;
-      _move_indices = indices;
-   }
-
    void dynamic_list::insert(basic_context const& ctx) const
    {
+      auto _insert_pos = _request_info->_insert_pos;
+      auto _insert_num_items = _request_info->_insert_num_items;
+
       this->_composer->resize(this->_composer->size() + _insert_num_items);
       _cells.insert(_cells.begin()+_insert_pos, _insert_num_items, cell_info{});
 
@@ -273,21 +304,10 @@ namespace cycfi { namespace elements
       _insert_request = false;
    }
 
-   void dynamic_list::insert(std::size_t pos, std::size_t num_items)
-   {
-      _insert_request = true;
-      _insert_pos = pos;
-      _insert_num_items = num_items;
-   }
-
-   void dynamic_list::delete_(indices_type const& indices)
-   {
-      _delete_request = true;
-      _delete_indices = indices;
-   }
-
    void dynamic_list::delete_(basic_context const& ctx) const
    {
+      auto const& _delete_indices = _request_info->_delete_indices;
+
       this->_composer->resize(this->_composer->size() - _delete_indices.size());
       for (auto i = _delete_indices.crbegin(); i != _delete_indices.crend(); ++i)
          _cells.erase(_cells.begin()+*i);
@@ -312,12 +332,16 @@ namespace cycfi { namespace elements
    {
       if (_update_request)
          update(ctx);
-      if (_move_request)
-         move(ctx);
-      if (_insert_request)
-         insert(ctx);
-      if (_delete_request)
-         delete_(ctx);
+      if (_request_info)
+      {
+         if (_move_request)
+            move(ctx);
+         if (_insert_request)
+            insert(ctx);
+         if (_delete_request)
+            delete_(ctx);
+      }
+      _request_info.reset();
    }
 
    ////////////////////////////////////////////////////////////////////////////

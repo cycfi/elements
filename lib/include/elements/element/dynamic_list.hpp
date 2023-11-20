@@ -265,6 +265,10 @@ namespace cycfi { namespace elements
                                  dynamic_list(composer_ptr composer, bool manage_externally = true)
                                   : _composer(composer)
                                   , _manage_externally(manage_externally)
+                                  , _update_request{true}
+                                  , _move_request{false}
+                                  , _insert_request{false}
+                                  , _delete_request{false}
                                  {}
 
       view_limits                limits(basic_context const& ctx) const override;
@@ -325,18 +329,23 @@ namespace cycfi { namespace elements
 
       mutable double             _main_axis_full_size = 0;
       mutable int                _layout_id = 0;
-      mutable bool               _update_request = true;
 
-      mutable bool               _move_request = false;
-      std::size_t                _move_pos;
-      std::vector<std::size_t>   _move_indices;
+      mutable bool               _update_request:1;
+      mutable bool               _move_request:1;
+      mutable bool               _insert_request:1;
+      mutable bool               _delete_request:1;
 
-      mutable bool               _insert_request = false;
-      std::size_t                _insert_pos;
-      std::size_t                _insert_num_items;
+      struct request_info
+      {
+         std::size_t                _move_pos;
+         std::vector<std::size_t>   _move_indices;
+         std::size_t                _insert_pos;
+         std::size_t                _insert_num_items;
+         std::vector<std::size_t>   _delete_indices;
+      };
 
-      mutable bool               _delete_request = false;
-      std::vector<std::size_t>   _delete_indices;
+      using request_info_ptr = std::unique_ptr<request_info>;
+      mutable request_info_ptr      _request_info;
    };
 
    ////////////////////////////////////////////////////////////////////////////

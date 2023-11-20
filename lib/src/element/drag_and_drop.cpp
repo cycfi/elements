@@ -242,15 +242,14 @@ namespace cycfi { namespace elements
          void draw(context const& ctx) override
          {
             auto& canvas_ = ctx.canvas;
-
-            auto bounds = ctx.bounds;
+            auto bounds = ctx.bounds.inset(-8, -2);
             bounds.right -= item_offset * _num_boxes;
             bounds.bottom -= item_offset * _num_boxes;
             float opacity = 0.6;
             for (std::size_t i = 0; i != _num_boxes; ++i)
             {
                canvas_.begin_path();
-               canvas_.add_round_rect(bounds, 2);
+               canvas_.add_round_rect(bounds, 4);
                canvas_.fill_style(get_theme().indicator_color.opacity(opacity));
                canvas_.fill();
                opacity *= 0.6;
@@ -366,6 +365,21 @@ namespace cycfi { namespace elements
       {
          switch (k.key)
          {
+            case key_code::escape:
+               {
+                  ctx.view.remove(_drag_image);
+                  _drag_image.reset();
+                  escape_tracking(ctx);
+                  auto* di = find_parent<drop_inserter_base*>(ctx);
+                  if (di)
+                  {
+                     payload pl;
+                     pl[address_to_string(di)] = {};
+                     ctx.view.track_drop({pl, ctx.cursor_pos()}, cursor_tracking::leaving);
+                  }
+               }
+               break;
+
             case key_code::backspace:
             case key_code::_delete:
                {
@@ -417,7 +431,6 @@ namespace cycfi { namespace elements
       auto [c, cctx] = find_composite(ctx);
       if (c)
       {
-         track_info.offset.x = track_info.current.x - ctx.bounds.left;
          auto bounds = ctx.bounds;
          auto limits = this->subject().limits(ctx);
          bounds.width(limits.min.x);
@@ -465,6 +478,11 @@ namespace cycfi { namespace elements
 
    void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)
    {
+      bool maybe_dragged =
+         std::abs(track_info.distance().x) > 10 ||
+         std::abs(track_info.distance().y) > 10
+         ;
+
       if (_drag_image)
       {
          ctx.view.remove(_drag_image);
@@ -480,7 +498,7 @@ namespace cycfi { namespace elements
          }
 
          // Did we actually do a drag?
-         if (std::abs(track_info.distance().x) > 10 || std::abs(track_info.distance().y) > 10)
+         if (maybe_dragged)
          {
             if (di)
             {
@@ -495,6 +513,10 @@ namespace cycfi { namespace elements
             return;
          }
       }
+
+      // If this happens, the user hit escape while dragging
+      if (is_selected() && maybe_dragged)
+         return;
 
       if ((track_info.modifiers & (mod_shift | mod_action)) == 0)
       {

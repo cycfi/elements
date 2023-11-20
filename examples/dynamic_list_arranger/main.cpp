@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
    auto list = vdynamic_list(cp, false);
    auto drop_inserter_ = share(
                            drop_inserter(
-                              margin({5, 5, 5, 20}, link(list)),
+                              margin({10, 10, 15, 10}, link(list)),
                               {"text/uri-list"}
                            )
                         );
@@ -133,9 +133,7 @@ int main(int argc, char* argv[])
       };
 
    view_.content(
-      margin({10, 10, 10, 10},
-         vscroller(align_left_top(hold(drop_inserter_)))
-      ),
+      vscroller(align_left_top(hold(drop_inserter_))),
       make_bkd()
    );
 

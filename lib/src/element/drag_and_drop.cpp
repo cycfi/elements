@@ -142,8 +142,6 @@ namespace cycfi { namespace elements
       {
          static constexpr auto offset = 20;
          rect r = {info.where.x-offset, info.where.y-offset, info.where.x+offset, info.where.y+offset};
-         r.left = std::max(r.left, 0.0f);
-         r.top = std::max(r.top, 0.0f);
          scrollable::find(ctx).scroll_into_view(r);
          ctx.view.refresh(ctx.bounds);
       }

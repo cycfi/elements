@@ -52,9 +52,9 @@ namespace cycfi { namespace elements
       restore_subject(sctx);
    }
 
-   void proxy_base::refresh(context const& ctx, element& element, int outward)
+   void proxy_base::refresh(context const& ctx, element& e, int outward)
    {
-      if (&element == this)
+      if (&e == this)
       {
          ctx.view.refresh(ctx, outward);
       }
@@ -62,7 +62,22 @@ namespace cycfi { namespace elements
       {
          context sctx {ctx, &subject(), ctx.bounds};
          prepare_subject(sctx);
-         subject().refresh(sctx, element, outward);
+         subject().refresh(sctx, e, outward);
+         restore_subject(sctx);
+      }
+   }
+
+   void proxy_base::in_context_do(context const& ctx, element& e, context_function f)
+   {
+      if (&e == this)
+      {
+         f(ctx);
+      }
+      else
+      {
+         context sctx {ctx, &subject(), ctx.bounds};
+         prepare_subject(sctx);
+         subject().in_context_do(sctx, e, f);
          restore_subject(sctx);
       }
    }

@@ -49,6 +49,7 @@ namespace cycfi { namespace elements
       auto  state = cnv.new_state();
       auto  clip_extent = cnv.clip_extent();
       auto  main_axis_start = get_main_axis_start(ctx.bounds);
+      auto  main_axis_clip_end = get_main_axis_end(clip_extent);
 
       if (!intersects(ctx.bounds, clip_extent))
          return;
@@ -68,7 +69,7 @@ namespace cycfi { namespace elements
       {
          auto& cell = *it;
          context rctx {ctx, cell.elem_ptr.get(), ctx.bounds};
-         make_bounds(rctx, main_axis_start, cell);
+         set_bounds(rctx, main_axis_start, cell);
          if (intersects(clip_extent, rctx.bounds))
          {
             if (!cell.elem_ptr)
@@ -85,7 +86,7 @@ namespace cycfi { namespace elements
             cell.elem_ptr->draw(rctx);
          }
 
-         if (get_main_axis_start(rctx.bounds) > get_main_axis_end(clip_extent))
+         if (get_main_axis_start(rctx.bounds) > main_axis_clip_end)
             break;
       }
 
@@ -108,6 +109,73 @@ namespace cycfi { namespace elements
       _previous_window_end = new_end;
       _previous_size.x = ctx.bounds.width();
       _previous_size.y = ctx.bounds.height();
+   }
+
+   void dynamic_list::for_each_visible(
+      context const& ctx
+    , for_each_callback f
+    , bool reverse
+   )
+   {
+      auto& cnv = ctx.canvas;
+      auto  clip_extent = cnv.clip_extent();
+
+      if (!intersects(ctx.bounds, clip_extent))
+         return;
+
+      auto  main_axis_start = get_main_axis_start(ctx.bounds);
+      auto  main_axis_clip_start = get_main_axis_start(clip_extent);
+      auto  main_axis_clip_end = get_main_axis_end(clip_extent);
+
+      if (reverse)
+      {
+         auto it = std::upper_bound(_cells.begin(), _cells.end(),
+            main_axis_clip_end - main_axis_start,
+            [](double pivot, auto const& cell)
+            {
+               return pivot < (cell.pos + cell.main_axis_size);
+            }
+         );
+
+         do
+         {
+            auto& cell = *it;
+            rect bounds = ctx.bounds;
+            set_bounds(bounds, main_axis_start, cell);
+            if (intersects(clip_extent, bounds))
+            {
+               if (cell.elem_ptr && f(*cell.elem_ptr, it-_cells.begin(), bounds))
+                  break;
+            }
+            if (main_axis_clip_start > get_main_axis_end(bounds))
+               break;
+         }
+         while (it != _cells.begin());
+      }
+      else
+      {
+         auto it = std::lower_bound(_cells.begin(), _cells.end(),
+            main_axis_clip_start - main_axis_start,
+            [](auto const& cell, double pivot)
+            {
+               return (cell.pos + cell.main_axis_size) < pivot;
+            }
+         );
+
+         while (it != _cells.end())
+         {
+            auto& cell = *it;
+            rect bounds = ctx.bounds;
+            set_bounds(bounds, main_axis_start, cell);
+            if (intersects(clip_extent, bounds))
+            {
+               if (cell.elem_ptr && f(*cell.elem_ptr, it-_cells.begin(), bounds))
+                  break;
+            }
+            if (get_main_axis_start(bounds) > main_axis_clip_end)
+               break;
+         }
+      }
    }
 
    void dynamic_list::layout(context const& ctx)
@@ -171,10 +239,10 @@ namespace cycfi { namespace elements
        , {secondary_axis_limits.max, float(main_axis_size)}};
    }
 
-   void dynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)
+   void dynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell)
    {
-      ctx.bounds.top = main_axis_pos + cell.pos;
-      ctx.bounds.height(cell.main_axis_size);
+      r.top = main_axis_pos + cell.pos;
+      r.height(cell.main_axis_size);
    }
 
    rect dynamic_list::bounds_of(context const& ctx, std::size_t ix) const
@@ -202,10 +270,10 @@ namespace cycfi { namespace elements
        , {main_axis_size, secondary_axis_limits.max}};
    }
 
-   void hdynamic_list::make_bounds(context &ctx, float main_axis_pos, cell_info &cell)
+   void hdynamic_list::set_bounds(rect& r, float main_axis_pos, cell_info &cell)
    {
-      ctx.bounds.left = main_axis_pos + cell.pos;
-      ctx.bounds.width(cell.main_axis_size);
+      r.left = main_axis_pos + cell.pos;
+      r.width(cell.main_axis_size);
    }
 
    rect hdynamic_list::bounds_of(context const& ctx, std::size_t ix) const

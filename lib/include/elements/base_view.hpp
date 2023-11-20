@@ -16,6 +16,7 @@
 #include <artist/point.hpp>
 #include <artist/rect.hpp>
 #include <artist/canvas.hpp>
+#include <infra/filesystem.hpp>
 #include <elements/support/payload.hpp>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)

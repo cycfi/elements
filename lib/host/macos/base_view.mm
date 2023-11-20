@@ -684,7 +684,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    if (count)
    {
       std::string paths;
-      info->where = ph::point{ float(pos.x), float(pos.y) };
+      info->where = ph::point{float(pos.x), float(pos.y)};
       for (NSUInteger i = 0; i < count; ++i)
       {
          if (i != 0)

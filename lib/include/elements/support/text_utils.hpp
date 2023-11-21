@@ -24,6 +24,10 @@ namespace cycfi::elements
    point          measure_icon(canvas& cnv, uint32_t cp, float size);
    point          measure_text(canvas& cnv, std::string_view text, font_descr font_);
 
+                  [[deprecated("Use measure_text(cnv, text, font_.size(size)) instead")]]
+   inline point   measure_text(canvas& cnv, std::string_view text, font_descr font_, float size)
+                  { return measure_text(cnv, text, font_.size(size)); }
+
 ////////////////////////////////////////////////////////////////////////////
    // Helper for converting char8_t[] string literals to char[]
    ////////////////////////////////////////////////////////////////////////////

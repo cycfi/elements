@@ -540,6 +540,7 @@ namespace cycfi { namespace elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
+      bool success = false;
 
       if (host_view_h->_drop_info)
       {
@@ -558,12 +559,13 @@ namespace cycfi { namespace elements
             }
 
             host_view_h->_drop_info->data["text/uri-list"] = paths;
-            base_view.drop(*host_view_h->_drop_info);
+            success = base_view.drop(*host_view_h->_drop_info);
             g_strfreev(uris);
          }
 
          host_view_h->_drop_info.reset();
       }
+      gtk_drag_finish(context, success, false, time);
    }
 
    // $$$ TODO: Investigate $$$

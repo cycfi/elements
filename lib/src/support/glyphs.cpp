@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -187,7 +187,7 @@ namespace cycfi { namespace elements
             cairo_text_cluster_free(_clusters);
          if (_scaled_font)
             cairo_scaled_font_destroy(_scaled_font);
-      
+
          _first = rhs._first;
          _last = rhs._last;
          _scaled_font = rhs._scaled_font;

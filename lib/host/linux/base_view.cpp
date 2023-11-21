@@ -398,7 +398,7 @@ namespace cycfi { namespace elements
          base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::hovering);
          host_view_h->_drop_info->where = point{float(x), float(y)};
       }
-      host_view_h->_cursor_position = point{float(x), float(y)};
+      host_view_h->cursor_position = point{float(x), float(y)};
 
       // You can set the drag context to indicate whether the drop is accepted or not
       gdk_drag_status(context, GDK_ACTION_COPY, time);

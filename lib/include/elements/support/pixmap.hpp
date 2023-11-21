@@ -97,8 +97,7 @@ namespace cycfi { namespace elements
    {
       if (this != &rhs)
       {
-         _surface = rhs._surface;
-         rhs._surface = nullptr;
+        std::swap(_surface, rhs._surface);
       }
       return *this;
    }

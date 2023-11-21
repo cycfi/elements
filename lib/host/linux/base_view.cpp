@@ -42,6 +42,8 @@ namespace cycfi { namespace elements
       GtkIMContext* im_context;
 
       GdkCursorType active_cursor_type = GDK_ARROW;
+      point                      _size;               // The current view size
+      std::unique_ptr<drop_info> _drop_info;          // For drag and drop
    };
 
    struct platform_access
@@ -379,6 +381,75 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   gboolean on_drag_motion(GtkWidget* /* widget */, GdkDragContext* context, gint x, gint y, guint time, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(base_view);
+
+      if (!host_view_h->_drop_info)
+      {
+         host_view_h->_drop_info = std::make_unique<drop_info>();
+         host_view_h->_drop_info->data["text/uri-list"] = ""; // We do not have the data yet
+         host_view_h->_drop_info->where = point{float(x), float(y)};
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::entering);
+      }
+      else
+      {
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::hovering);
+         host_view_h->_drop_info->where = point{float(x), float(y)};
+      }
+      host_view_h->_cursor_position = point{float(x), float(y)};
+
+      // You can set the drag context to indicate whether the drop is accepted or not
+      gdk_drag_status(context, GDK_ACTION_COPY, time);
+      return true;
+   }
+
+   void on_drag_leave(GtkWidget* /* widget */, GdkDragContext* /* context */, guint /* time */, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(base_view);
+      if (host_view_h->_drop_info)
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::leaving);
+   }
+
+   void on_drag_data_received(GtkWidget* /* widget */, GdkDragContext* context, gint /* x */, gint /* y */, GtkSelectionData* data, guint info, guint time, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(base_view);
+      bool success = false;
+
+      if (host_view_h->_drop_info)
+      {
+         auto& base_view = get(user_data);
+         auto* host_view_h = platform_access::get_host_view(base_view);
+
+         if (info == 0)
+         {
+            std::string paths;
+            gchar** uris = gtk_selection_data_get_uris(data);
+            for (gchar** i = uris; i && *i; ++i)
+            {
+               if (!paths.empty())
+                  paths += "\n";
+               paths += *i;
+            }
+
+            host_view_h->_drop_info->data["text/uri-list"] = paths;
+            success = base_view.drop(*host_view_h->_drop_info);
+            g_strfreev(uris);
+         }
+
+         host_view_h->_drop_info.reset();
+      }
+      gtk_drag_finish(context, success, false, time);
+   }
+
+   // $$$ TODO: Investigate $$$
+   // Somehow, this prevents us from having linker errors
+   // Without this, we get undefined reference to `glXGetCurrentContext'
+   auto proc = &glXGetProcAddress;
+
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
       auto* content_view = gtk_drawing_area_new();
@@ -402,6 +473,22 @@ namespace cycfi { namespace elements
          G_CALLBACK(on_event_crossing), &view);
       g_signal_connect(content_view, "leave-notify-event",
          G_CALLBACK(on_event_crossing), &view);
+
+      g_signal_connect(content_view, "drag-motion",
+         G_CALLBACK(on_drag_motion), &view);
+      g_signal_connect(content_view, "drag-leave",
+         G_CALLBACK(on_drag_leave), &view);
+      g_signal_connect(content_view, "drag-data-received",
+         G_CALLBACK(on_drag_data_received), &view);
+
+      // Enable drag-and-drop for uri-list(s)
+      static GtkTargetEntry target_entries[] =
+      {
+         {const_cast<char*>("text/uri-list"), 0, 0}
+      };
+
+      gtk_drag_dest_set(content_view, GTK_DEST_DEFAULT_ALL,
+         target_entries, G_N_ELEMENTS(target_entries), GDK_ACTION_COPY);
 
       gtk_widget_set_events(content_view,
          gtk_widget_get_events(content_view)

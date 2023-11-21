@@ -445,11 +445,6 @@ namespace cycfi { namespace elements
       gtk_drag_finish(context, success, false, time);
    }
 
-   // $$$ TODO: Investigate $$$
-   // Somehow, this prevents us from having linker errors
-   // Without this, we get undefined reference to `glXGetCurrentContext'
-   auto proc = &glXGetProcAddress;
-
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
       auto* content_view = gtk_drawing_area_new();

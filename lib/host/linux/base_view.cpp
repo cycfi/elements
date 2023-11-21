@@ -506,17 +506,22 @@ namespace cycfi { namespace elements
 
    gboolean on_drag_motion(GtkWidget* widget, GdkDragContext* context, gint x, gint y, guint time, gpointer user_data)
    {
-      g_print ("on_drag_motion\n");
-
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
 
       if (!host_view_h->_drop_info)
       {
          host_view_h->_drop_info = std::make_unique<drop_info>();
-         host_view_h->_drop_info->data["text/uri-list"] = ""; // We do not have the date yet
+         host_view_h->_drop_info->data["text/uri-list"] = ""; // We do not have the data yet
+         host_view_h->_drop_info->where = point{float(x), float(y)};
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::entering);
+      }
+      else
+      {
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::hovering);
          host_view_h->_drop_info->where = point{float(x), float(y)};
       }
+      host_view_h->_cursor_position = point{float(x), float(y)};
 
       // You can set the drag context to indicate whether the drop is accepted or not
       gdk_drag_status(context, GDK_ACTION_COPY, time);
@@ -525,16 +530,14 @@ namespace cycfi { namespace elements
 
    void on_drag_leave(GtkWidget* /* widget */, GdkDragContext* context, guint time, gpointer user_data)
    {
-      g_print ("on_drag_leave\n");
-
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
+      if (host_view_h->_drop_info)
+         base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::leaving);
    }
 
    void on_drag_data_received(GtkWidget* /* widget */, GdkDragContext* context, gint x, gint y, GtkSelectionData* data, guint info, guint time, gpointer user_data)
    {
-      g_print ("on_drag_data_received\n");
-
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
 
@@ -555,11 +558,7 @@ namespace cycfi { namespace elements
             }
 
             host_view_h->_drop_info->data["text/uri-list"] = paths;
-
-            // guchar* uris = data->get_data();
-            // host_view_h->_drop_info->data["text/uri-list"] = std::string(reinterpret_cast<char const*>(uris));
-            // g_free(uris);
-
+            base_view.drop(*host_view_h->_drop_info);
             g_strfreev(uris);
          }
 

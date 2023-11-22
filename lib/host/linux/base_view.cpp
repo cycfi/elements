@@ -536,7 +536,9 @@ namespace cycfi { namespace elements
          base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::leaving);
    }
 
-   void on_drag_data_received(GtkWidget* /* widget */, GdkDragContext* context, gint /* x */, gint /* y */, GtkSelectionData* data, guint info, guint time, gpointer user_data)
+   void on_drag_data_received(
+      GtkWidget* /* widget */, GdkDragContext* context, gint /* x */, gint /* y */
+    , GtkSelectionData* data, guint info, guint time, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);

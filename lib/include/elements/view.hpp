@@ -102,13 +102,11 @@ namespace cycfi { namespace elements
       using io_context = asio::io_context;
       io_context&             io();
 
-      struct timer
-      {
-         std::function<void()> cancel;
-      };
+
+      using steady_timer_ptr = std::shared_ptr<asio::steady_timer>;
 
                               template <typename T, typename F>
-      timer                   post(T duration, F f);
+      steady_timer_ptr        post(T duration, F f);
 
                               template <typename F>
       void                    post(F f);
@@ -334,7 +332,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename T, typename F>
-   inline view::timer view::post(T duration, F f)
+   inline view::steady_timer_ptr view::post(T duration, F f)
    {
       auto timer = std::make_shared<asio::steady_timer>(_io);
       timer->expires_after(duration);
@@ -346,7 +344,7 @@ namespace cycfi { namespace elements
          }
       );
 
-      return { [timer] { timer->cancel(); } };
+      return timer;
    }
 
    template <typename F>

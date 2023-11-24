@@ -162,7 +162,7 @@ auto make_basic_text()
 
 auto make_basic_text2()
 {
-   auto textbox = share(vport(static_text_box{text}));
+   auto textbox = share(vport(basic_text_box{text}.read_only()));
    return hmin_size(350, margin(
          {10, 0, 10, 10},
          hold(textbox)

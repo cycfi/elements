@@ -133,6 +133,7 @@ namespace cycfi { namespace elements
     , _show_caret{true}
     , _caret_started{false}
     , _read_only{false}
+    , _enabled{true}
    {}
 
    struct basic_text_box::state_saver : std::enable_shared_from_this<basic_text_box::state_saver>
@@ -169,7 +170,17 @@ namespace cycfi { namespace elements
    void basic_text_box::draw(context const& ctx)
    {
       draw_selection(ctx);
-      static_text_box::draw(ctx);
+      if (_enabled)
+      {
+         static_text_box::draw(ctx);
+      }
+      else
+      {
+         auto c = get_color();
+         set_color(c.opacity(get_theme().disabled_opacity));
+         static_text_box::draw(ctx);
+         set_color(c);
+      }
       draw_caret(ctx);
    }
 
@@ -288,7 +299,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::text(context const& ctx, text_info info_)
    {
-      if (_read_only)
+      if (!editable())
          return false;
 
       _show_caret = true;
@@ -340,7 +351,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
-      _show_caret = !_read_only;
+      _show_caret = editable();
 
       if (_select_start == -1
          || k.action == key_action::release
@@ -421,7 +432,7 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
-               if (!_read_only)
+               if (editable())
                {
                   replace(start, end-start, "\n");
                   _select_start += 1;
@@ -434,7 +445,7 @@ namespace cycfi { namespace elements
 
             case key_code::backspace:
             case key_code::_delete:
-               if (!_read_only)
+               if (editable())
                {
                   delete_(k.key == key_code::_delete);
                   save_x = true;
@@ -490,7 +501,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::x:
-               if (!_read_only && (k.modifiers & mod_action))
+               if (editable() && (k.modifiers & mod_action))
                {
                   cut(ctx.view, start, end);
                   save_x = true;
@@ -508,7 +519,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::v:
-               if (!_read_only && (k.modifiers & mod_action))
+               if (editable() && (k.modifiers & mod_action))
                {
                   paste(ctx.view, start, end);
                   save_x = true;
@@ -518,7 +529,7 @@ namespace cycfi { namespace elements
                break;
 
             case key_code::z:
-               if (!_read_only && (k.modifiers & mod_action))
+               if (editable() && (k.modifiers & mod_action))
                {
                   if (_typing_state)
                   {
@@ -568,7 +579,7 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw_caret(context const& ctx)
    {
-      if (_read_only || _select_start == -1)
+      if (!editable() || _select_start == -1)
          return;
 
       auto& canvas = ctx.canvas;

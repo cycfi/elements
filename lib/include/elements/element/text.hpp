@@ -84,7 +84,6 @@ namespace cycfi::elements
       std::u32string_view     get_text() const override           { return _layout.text(); }
       void                    set_text(std::u32string_view text) override;
       void                    set_text(std::string_view text);
-      font const&             get_font() const { return _font; }
 
       std::u32string_view     value() const override              { return _layout.text(); }
       void                    value(std::u32string_view val) override;
@@ -92,9 +91,13 @@ namespace cycfi::elements
       std::size_t             insert(std::size_t pos, std::string_view text);
       std::size_t             replace(std::size_t pos, std::size_t len, std::string_view text);
       void                    erase(std::size_t pos, std::size_t len);
-      text_layout_const&      get_layout() const { return _layout; }
 
-      point                   current_size() const { return _current_size; };
+      text_layout_const&      get_layout() const         { return _layout; }
+      point                   current_size() const       { return _current_size; };
+      void                    set_color(color c)         { _color = c; }
+      color                   get_color() const          { return _color; }
+      void                    set_font(font_descr f)     { _font = f; }
+      font const&             get_font() const           { return _font; }
 
    private:
 
@@ -151,6 +154,13 @@ namespace cycfi::elements
       virtual bool            line_break(int index) const;
 
       basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
+      void                    read_only(bool read_only_)    { _read_only = read_only_; }
+      bool                    editable() const              { return !_read_only && _enabled; }
+
+      basic_text_box&&        disable()   { _enabled = false; return std::move(*this); }
+      basic_text_box&&        enable()    { _enabled = true; return std::move(*this); }
+      bool                    is_enabled() const override   { return _enabled; };
+      void                    enable(bool e) override       { _enabled = e; };
 
    protected:
 
@@ -188,6 +198,7 @@ namespace cycfi::elements
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
       bool                    _read_only : 1;
+      bool                    _enabled : 1;
       state_saver_set         _state_savers;
    };
 

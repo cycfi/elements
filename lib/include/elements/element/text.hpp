@@ -65,6 +65,9 @@ namespace cycfi::elements
       std::string const&      value() const override           { return _text; }
       void                    value(string_view val) override;
 
+      void                    set_color(color c)         { _color = c; }
+      color                   get_color() const          { return _color; }
+
    private:
 
       void                    sync() const;
@@ -121,6 +124,13 @@ namespace cycfi::elements
       virtual bool            line_break(char const* utf8) const;
 
       basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
+      void                    read_only(bool read_only_)    { _read_only = read_only_; }
+      bool                    editable() const              { return !_read_only && _enabled; }
+
+      basic_text_box&&        disable()   { _enabled = false; return std::move(*this); }
+      basic_text_box&&        enable()    { _enabled = true; return std::move(*this); }
+      bool                    is_enabled() const override   { return _enabled; };
+      void                    enable(bool e) override       { _enabled = e; };
 
    protected:
 
@@ -159,6 +169,7 @@ namespace cycfi::elements
       bool                    _show_caret : 1;
       bool                    _caret_started : 1;
       bool                    _read_only : 1;
+      bool                    _enabled : 1;
       this_handle             _this_handle;
    };
 

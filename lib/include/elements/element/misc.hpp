@@ -332,11 +332,10 @@ namespace cycfi { namespace elements
    public:
 
       using base_type = proxy<Subject>;
-      using is_hidden_function = std::function<bool()>;
 
                               hidable_element(Subject subject);
       void                    draw(context const& ctx) override;
-      is_hidden_function      is_hidden = []{ return false; };
+      bool                    is_hidden = false;
    };
 
    template <typename Subject>
@@ -347,13 +346,58 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void hidable_element<Subject>::draw(context const& ctx)
    {
-      if (!is_hidden())
+      if (!is_hidden)
          this->subject().draw(ctx);
    }
 
    template <typename Subject>
    inline hidable_element<remove_cvref_t<Subject>>
    hidable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Vertical collapsable
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class vcollapsable_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              vcollapsable_element(Subject subject);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      bool                    is_collapsed = false;
+   };
+
+   template <typename Subject>
+   inline vcollapsable_element<Subject>::vcollapsable_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <typename Subject>
+   inline view_limits
+   vcollapsable_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      return is_collapsed?
+         view_limits{{e_limits.min.x, 0.0f}, {e_limits.max.x, 0.0f}} :
+         e_limits;
+   }
+
+   template <typename Subject>
+   inline void vcollapsable_element<Subject>::draw(context const& ctx)
+   {
+      if (!is_collapsed)
+         this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline vcollapsable_element<remove_cvref_t<Subject>>
+   vcollapsable(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }

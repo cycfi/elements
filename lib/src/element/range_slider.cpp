@@ -12,22 +12,22 @@ namespace cycfi { namespace elements
 {
    view_limits range_slider_base::limits(basic_context const& ctx) const
    {
-      //! use min/max of both thumbs? 
       auto  limits_ = track().limits(ctx);
-      auto  tmb_limits = thumb().first.limits(ctx);
+      auto  tmb_limit1 = thumb().first.get().limits(ctx);
+      auto  tmb_limit2 = thumb().second.get().limits(ctx);
 
       // We multiply thumb min limits by 2 so that there is always some space to move it.
       if (_is_horiz = limits_.max.x > limits_.max.y; _is_horiz)
       {
-         limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y);
-         limits_.max.y = std::max<float>(limits_.max.y, tmb_limits.max.y);
-         limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x * 2);
+         limits_.min.y = std::max<float>({limits_.min.y, tmb_limit1.min.y, tmb_limit2.min.y});
+         limits_.max.y = std::max<float>({limits_.max.y, tmb_limit1.max.y, tmb_limit2.max.y});
+         limits_.min.x = std::max<float>({limits_.min.x, tmb_limit1.min.x * 2, tmb_limit2.min.x * 2});
       }
       else
       {
-         limits_.min.x = std::max<float>(limits_.min.x, tmb_limits.min.x);
-         limits_.max.x = std::max<float>(limits_.max.x, tmb_limits.max.x);
-         limits_.min.y = std::max<float>(limits_.min.y, tmb_limits.min.y * 2);
+         limits_.min.x = std::max<float>({limits_.min.x, tmb_limit1.min.x, tmb_limit2.min.x});
+         limits_.max.x = std::max<float>({limits_.max.x, tmb_limit1.max.x, tmb_limit2.max.x});
+         limits_.min.y = std::max<float>({limits_.min.y, tmb_limit1.min.y * 2, tmb_limit2.min.y * 2});
       }
 
       return limits_;
@@ -40,11 +40,17 @@ namespace cycfi { namespace elements
          sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }
+      auto bounds = thumb_bounds(ctx);
+      auto thumbs = thumb();
       {
-         context sctx { ctx, &thumb(), ctx.bounds };
-         sctx.bounds = thumb_bounds(sctx);
-         thumb().first.layout(sctx);
-         thumb().second.layout(sctx);
+         context sctx { ctx, &thumbs.first.get(), ctx.bounds };
+         sctx.bounds = bounds.first;
+         thumbs.first.get().layout(sctx);
+      }
+      {
+         context sctx { ctx, &thumbs.second.get(), ctx.bounds };
+         sctx.bounds = bounds.second;
+         thumbs.second.get().layout(sctx);
       }
    }
 
@@ -57,32 +63,26 @@ namespace cycfi { namespace elements
             sctx.bounds = track_bounds(sctx);
             track().draw(sctx);
          }
+         auto bounds = thumb_bounds(ctx);
+         auto thumbs = thumb();
          {
-            context sctx { ctx, &thumb(), ctx.bounds };
-            sctx.bounds = thumb_bounds(sctx);
-            thumb().first.draw(sctx);
-            thumb().second.draw(sctx);
+            context sctx { ctx, &thumbs.first.get(), ctx.bounds };
+            sctx.bounds = bounds.first;
+            thumbs.first.get().draw(sctx);
+         }
+         {
+            context sctx { ctx, &thumbs.second.get(), ctx.bounds };
+            sctx.bounds = bounds.second;
+            thumbs.second.get().draw(sctx);
          }
       }
-   }
-
-   //! only supports one thumb
-   bool range_slider_base::scroll(context const& ctx, point dir, point p)
-   {
-      auto sdir = scroll_direction();
-      double new_value = value().first + (_is_horiz ? dir.x * sdir.x : dir.y * -sdir.y) * 0.005;
-      clamp(new_value, 0.0, 1.0);
-      track_scroll(ctx, dir, p);
-      edit_value(new_value);
-      ctx.view.refresh(ctx);
-      return true;
    }
 
    rect range_slider_base::track_bounds(context const& ctx) const
    {
       auto  limits_ = track().limits(ctx);
       auto  bounds = ctx.bounds;
-      auto  th_bounds = thumb_bounds(ctx);
+      auto  th_bounds = thumb_bounds(ctx).first; //!
 
       if (_is_horiz)
       {
@@ -105,7 +105,7 @@ namespace cycfi { namespace elements
 
    std::pair<rect, rect> range_slider_base::thumb_bounds(context const& ctx) const
    {
-      auto get_single_bound = [] (context const& ctx, auto const& thumb) {
+      auto get_single_bound = [this] (context const& ctx, auto const& thumb, double value) {
          auto  bounds = ctx.bounds;
          auto  w = bounds.width();
          auto  h = bounds.height();
@@ -116,26 +116,26 @@ namespace cycfi { namespace elements
          if (_is_horiz)
          {
             bounds.width(tmb_w);
-            return bounds.move((w - tmb_w) * value(), 0);
+            return bounds.move((w - tmb_w) * value, 0);
          }
          else
          {
             bounds.height(tmb_h);
-            return bounds.move(0, (h - tmb_h) * (1.0 - value()));
+            return bounds.move(0, (h - tmb_h) * (1.0 - value));
             // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-value()
          }
       };
-      return std::make_pair(get_single_bound(ctx, thumb().first), get_single_bound(ctx, thumb().second));
+      auto vals = value();
+      return std::make_pair(get_single_bound(ctx, thumb().first.get(), vals.first), get_single_bound(ctx, thumb().second.get(), vals.second));
    }
 
-   //! only supports one thumb
    double range_slider_base::value_from_point(context const& ctx, point p)
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
 
-      auto  limits_ = thumb().limits(ctx);
+      auto  limits_ = thumb().first.get().limits(ctx); //! 
       auto  tmb_w = limits_.max.x;
       auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
@@ -150,49 +150,92 @@ namespace cycfi { namespace elements
 
    void range_slider_base::begin_tracking(context const& ctx, tracker_info& track_info)
    {
-      auto tmb_bounds = thumb_bounds(ctx);
-      if (tmb_bounds.includes(track_info.current))
+      auto tmb_bounds = thumb_bounds(ctx); 
+      if (tmb_bounds.first.includes(track_info.current))
       {
-         auto cp = center_point(tmb_bounds);
+         auto cp = center_point(tmb_bounds.first);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
+         this->_active_thumb = 0;
+      }
+      else if (tmb_bounds.second.includes(track_info.current))
+      {
+         auto cp = center_point(tmb_bounds.second);
+         track_info.offset.x = track_info.current.x - cp.x;
+         track_info.offset.y = track_info.current.y - cp.y;
+         this->_active_thumb = 1;
       }
    }
 
-   //! only supports one thumb
    void range_slider_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
          double new_value = value_from_point(ctx, track_info.current);
-         if (_value != new_value)
+         switch (this->_active_thumb)
          {
-            edit_value(new_value);
-            ctx.view.refresh(ctx);
+         case 0:
+            if (this->_value.first != new_value)
+            {
+               edit_value({new_value, this->_value.second});
+               ctx.view.refresh(ctx);
+            }
+            break;
+         case 1:
+            if (_value.second != new_value)
+            {
+               edit_value({this->_value.first, new_value});
+               ctx.view.refresh(ctx);
+            }
+            break;
          }
       }
    }
 
-   //! only supports one thumb
    void range_slider_base::end_tracking(context const& ctx, tracker_info& track_info)
    {
       double new_value = value_from_point(ctx, track_info.current);
-      if (_value != new_value)
+      switch (this->_active_thumb)
       {
-         edit_value(new_value);
-         ctx.view.refresh(ctx);
+      case 0:
+         if (_value.first != new_value)
+         {
+            edit_value({new_value, this->_value.second});
+            ctx.view.refresh(ctx);
+         }
+         break;
+      case 1:
+         if (this->_value.second != new_value)
+         {
+            edit_value({this->_value.first, new_value});
+            ctx.view.refresh(ctx);
+         }
+         break;
       }
+      this->_active_thumb = -1;
    }
 
-   //! only supports one thumb
    void range_slider_base::value(std::pair<double, double> val)
    {
-      _value = std::make_pair(clamp(val.first, 0.0, 1.0), clamp(val.second, 0.0, 1.0));
+      _value = {clamp(val.first, 0.0, 1.0), clamp(val.second, 0.0, 1.0)};
    }
 
-   //! only supports one thumb
    std::pair<double, double> range_slider_base::value() const
    {
       return _value;
+   }
+
+   void basic_range_slider_base::edit_value_first(double val)
+   {
+      range_slider_base::edit_value_first(val);
+      if (on_change.first)
+         on_change.first(val);
+   }
+
+   void basic_range_slider_base::edit_value_second(double val)
+   {
+      range_slider_base::edit_value_second(val);
+      if (on_change.second)
+         on_change.second(val);
    }
 }}

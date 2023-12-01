@@ -51,6 +51,7 @@ set(ELEMENTS_SOURCES
    src/element/port.cpp
    src/element/progress_bar.cpp
    src/element/proxy.cpp
+   src/element/range_slider.cpp
    src/element/slider.cpp
    src/element/text.cpp
    src/element/thumbwheel.cpp
@@ -105,6 +106,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/port.hpp
    include/elements/element/progress_bar.hpp
    include/elements/element/proxy.hpp
+   include/elements/element/range_slider.hpp
    include/elements/element/selectable.hpp
    include/elements/element/size.hpp
    include/elements/element/slider.hpp

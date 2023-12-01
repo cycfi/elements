@@ -82,22 +82,22 @@ namespace cycfi { namespace elements
    {
       auto  limits_ = track().limits(ctx);
       auto  bounds = ctx.bounds;
-      auto  th_bounds = thumb_bounds(ctx).first; //!
+      auto  th_bounds = thumb_bounds(ctx);
 
       if (_is_horiz)
       {
          bounds.height(std::min<float>(limits_.max.y, bounds.height()));
-         auto w2 = th_bounds.width() / 2;
-         bounds.left += w2;
-         bounds.right -= w2;
+         auto w = std::max(th_bounds.first.width(), th_bounds.second.width())*0.5;
+         bounds.left += w;
+         bounds.right -= w;
          bounds = center_v(bounds, ctx.bounds);
       }
       else
       {
          bounds.width(std::min<float>(limits_.max.x, bounds.width()));
-         auto h2 = th_bounds.height() / 2;
-         bounds.top += h2;
-         bounds.bottom -= h2;
+         auto h = std::max(th_bounds.first.height(), th_bounds.second.height())*0.5;
+         bounds.top += h;
+         bounds.bottom -= h;
          bounds = center_h(bounds, ctx.bounds);
       }
       return bounds;
@@ -129,13 +129,13 @@ namespace cycfi { namespace elements
       return std::make_pair(get_single_bound(ctx, thumb().first.get(), vals.first), get_single_bound(ctx, thumb().second.get(), vals.second));
    }
 
-   double range_slider_base::value_from_point(context const& ctx, point p)
+   inline auto value_from_point = [] (context const& ctx, point p, auto const& thumb, bool _is_horiz)
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
 
-      auto  limits_ = thumb().first.get().limits(ctx); //! 
+      auto  limits_ = thumb.limits(ctx); 
       auto  tmb_w = limits_.max.x;
       auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
@@ -146,7 +146,7 @@ namespace cycfi { namespace elements
       else
          new_value = 1.0 - ((p.y - (bounds.top + (tmb_h / 2))) / (h - tmb_h));
       return clamp(new_value, 0.0, 1.0);
-   }
+   };
 
    void range_slider_base::begin_tracking(context const& ctx, tracker_info& track_info)
    {
@@ -169,50 +169,66 @@ namespace cycfi { namespace elements
 
    void range_slider_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
       if (track_info.current != track_info.previous)
       {
-         double new_value = value_from_point(ctx, track_info.current);
-         switch (this->_active_thumb)
+         switch (_active_thumb)
          {
-         case 0:
-            if (this->_value.first != new_value)
-            {
-               edit_value({new_value, this->_value.second});
-               ctx.view.refresh(ctx);
+            case 0: {
+               auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
+               new_value = std::min(new_value, _value.second - th_w);
+               if (_value.first != new_value)
+               {
+                  edit_value({new_value, _value.second});
+                  ctx.view.refresh(ctx);
+               }
+               break;
             }
-            break;
-         case 1:
-            if (_value.second != new_value)
-            {
-               edit_value({this->_value.first, new_value});
-               ctx.view.refresh(ctx);
+            case 1: {
+               auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
+               new_value = std::max(new_value, _value.first + th_w);
+               if (_value.second != new_value)
+               {
+                  edit_value({_value.first, new_value});
+                  ctx.view.refresh(ctx);
+               }
+               break;
             }
-            break;
          }
       }
    }
 
    void range_slider_base::end_tracking(context const& ctx, tracker_info& track_info)
    {
-      double new_value = value_from_point(ctx, track_info.current);
-      switch (this->_active_thumb)
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
+      switch (_active_thumb)
       {
-      case 0:
-         if (_value.first != new_value)
-         {
-            edit_value({new_value, this->_value.second});
-            ctx.view.refresh(ctx);
+         case 0: {
+            auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
+            new_value = std::min(new_value, _value.second - th_w);
+            if (_value.first != new_value)
+            {
+               edit_value({new_value, _value.second});
+               ctx.view.refresh(ctx);
+            }
+            break;
          }
-         break;
-      case 1:
-         if (this->_value.second != new_value)
-         {
-            edit_value({this->_value.first, new_value});
-            ctx.view.refresh(ctx);
+         case 1: {
+            auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
+            new_value = std::max(new_value, _value.first + th_w);
+            if (_value.second != new_value)
+            {
+               edit_value({_value.first, new_value});
+               ctx.view.refresh(ctx);
+            }
+            break;
          }
-         break;
       }
-      this->_active_thumb = -1;
+      _active_thumb = -1;
    }
 
    void range_slider_base::value(std::pair<double, double> val)

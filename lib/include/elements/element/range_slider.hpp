@@ -30,7 +30,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
 
-      bool                    scroll(context const& ctx, point dir, point p) override { return false; } //! true or false?
+      bool                    scroll(context const&, point, point) override { return false; } //! true or false?
       void                    begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
@@ -48,7 +48,6 @@ namespace cycfi { namespace elements
 
       rect                    track_bounds(context const& ctx) const;
       std::pair<rect, rect>   thumb_bounds(context const& ctx) const;
-      virtual double          value_from_point(context const& ctx, point p);
 
       virtual std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>> thumb() const = 0;
       virtual std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>             thumb() = 0;

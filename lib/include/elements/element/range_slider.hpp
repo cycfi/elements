@@ -19,7 +19,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    class range_slider_base : public tracker<>, public receiver<std::pair<double, double>>
    {
-   using val_type = std::pair<double, double>;
+   protected:
+      using val_type = std::pair<double, double>;
+      using element_cref_pair_type = std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>>;
+      using element_ref_pair_type = std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>;
    public:
 
                               range_slider_base(std::pair<double, double> init_value)
@@ -49,10 +52,10 @@ namespace cycfi { namespace elements
       rect                    track_bounds(context const& ctx) const;
       std::pair<rect, rect>   thumb_bounds(context const& ctx) const;
 
-      virtual std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>> thumb() const = 0;
-      virtual std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>             thumb() = 0;
-      virtual element const&  track() const = 0;
-      virtual element&        track() = 0;
+      virtual element_cref_pair_type thumb() const = 0;
+      virtual element_ref_pair_type  thumb() = 0;
+      virtual element const&         track() const = 0;
+      virtual element&               track() = 0;
 
    private:
       int                       _active_thumb = -1;
@@ -82,6 +85,8 @@ namespace cycfi { namespace elements
    template <typename Thumb1, typename Thumb2, typename Track, typename Base = basic_range_slider_base>
    class basic_range_slider : public Base
    {
+   using typename Base::element_cref_pair_type;
+   using typename Base::element_ref_pair_type;
    public:
 
       using thumb1_type = typename std::decay<Thumb1>::type;
@@ -95,15 +100,15 @@ namespace cycfi { namespace elements
                                , _body(std::forward<Track>(track))
                               {}
 
-      std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>> thumb() const override { return {std::cref(_thumb1), std::cref(_thumb2)}; }
-      std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>             thumb()       override { return {std::ref(_thumb1), std::ref(_thumb2)}; }
+      element_cref_pair_type  thumb() const override { return {std::cref(_thumb1), std::cref(_thumb2)}; }
+      element_ref_pair_type   thumb()       override { return {std::ref(_thumb1), std::ref(_thumb2)}; }
       element const&          track() const override { return _body; }
       element&                track()       override { return _body; }
 
    private:
 
-      thumb1_type              _thumb1;
-      thumb2_type              _thumb2;
+      thumb1_type             _thumb1;
+      thumb2_type             _thumb2;
       track_type              _body;
    };
 

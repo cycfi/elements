@@ -33,7 +33,7 @@ auto make_range_slider(view& _view) {
 		{1, 2, 1, 2},
 		box(colors::white_smoke)
 	);
-	static auto _range_slider = share(range_slider(
+	static auto _range_slider = range_slider(
 		fixed_size(
 			{5, 30},
 			box(colors::light_gray)
@@ -46,19 +46,19 @@ auto make_range_slider(view& _view) {
 			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
 		),
 		{0.1, 0.8}
-	));
+	);
 
 	static auto _min_textbox = input_box("min level");
 	static auto _max_textbox = input_box("max level");
 	static auto _min_bg = box(bg_color);
 	static auto _max_bg = box(bg_color);
 
-	_range_slider->on_change.first = [&_view] (float value) {
+	_range_slider.on_change.first = [&_view] (float value) {
 		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_min_textbox.first);
 	};
 
-	_range_slider->on_change.second = [&_view] (float value) {
+	_range_slider.on_change.second = [&_view] (float value) {
 		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_max_textbox.first);
 	};
@@ -73,9 +73,9 @@ auto make_range_slider(view& _view) {
 
 	_min_textbox.second->on_enter = [&_view] (std::string_view text) {
 		try {
-			_range_slider->value_first(axis_transform_inv(std::stof(std::string(text))));
+			_range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
 			_min_bg = bg_color;
-			_view.refresh(*_range_slider);
+			_view.refresh(_range_slider);
 		} catch (std::exception&) {
 			_min_bg = bred;
 		}
@@ -91,9 +91,9 @@ auto make_range_slider(view& _view) {
 
 	_max_textbox.second->on_enter = [&_view] (std::string_view text) {
 		try {
-			_range_slider->value_second(axis_transform_inv(std::stof(std::string(text))));
+			_range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
 			_max_bg = bg_color;
-			_view.refresh(*_range_slider);
+			_view.refresh(_range_slider);
 		} catch (std::exception&) {
 			_max_bg = bred;
 		}
@@ -102,7 +102,7 @@ auto make_range_slider(view& _view) {
 	return vtile(
 		margin(
 			{50, 10, 50, 10},
-			link(*_range_slider)
+			link(_range_slider)
 		),
 		layer(
 			align_left(
@@ -111,7 +111,7 @@ auto make_range_slider(view& _view) {
 					hsize(
 						100,
 						layer(
-							hgrid({0}, link(_min_textbox.first)),
+							link(_min_textbox.first),
 							link(_min_bg)
 						)
 					)
@@ -123,7 +123,7 @@ auto make_range_slider(view& _view) {
 					hsize(
 						100,
 						layer(
-							hgrid({0}, link(_max_textbox.first)),
+							link(_max_textbox.first),
 							link(_max_bg)
 						)
 					)

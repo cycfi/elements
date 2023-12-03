@@ -38,7 +38,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
       add_sanitizer("undefined")
    endif()
 else()
-   if (ASAN OR TSAN OR UBSAN)
+   if (ASAN OR LSAN OR TSAN OR UBSAN)
       message(FATAL_ERROR "Compiler is not supported.")
    endif()
 endif()

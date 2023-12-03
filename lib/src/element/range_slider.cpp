@@ -1,5 +1,6 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman & Kristian Lytje
+   Copyright (c) 2016-2023 Joel de Guzman 
+   Copyright (c) 2023 Kristian Lytje
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/

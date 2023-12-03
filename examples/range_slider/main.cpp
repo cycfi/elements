@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) Kristian Lytje
+   Copyright (c) 2023 Kristian Lytje
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/

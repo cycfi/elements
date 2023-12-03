@@ -10,6 +10,7 @@ project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 # Sanitizers
 
 option(ASAN "Build with address sanitizer" OFF)
+option(LSAN "Build with leak sanitizer" OFF)
 option(TSAN "Build with thread sanitizer" OFF)
 option(UBSAN "Build with undefined Behavior sanitizer" OFF)
 
@@ -23,6 +24,10 @@ endmacro()
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
    if (ASAN)
       add_sanitizer("address")
+   endif()
+
+   if (LSAN)
+      add_sanitizer("leak")
    endif()
 
    if (TSAN)
@@ -154,6 +159,10 @@ endif()
 target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
 )
+
+if (APPLE)
+   target_compile_options(${ELEMENTS_APP_PROJECT} PUBLIC "-fobjc-arc")
+endif()
 
 ###############################################################################
 # Libraries and linking

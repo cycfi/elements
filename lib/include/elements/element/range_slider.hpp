@@ -23,6 +23,7 @@ namespace cycfi { namespace elements
       using val_type = std::pair<double, double>;
       using element_cref_pair_type = std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>>;
       using element_ref_pair_type = std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>;
+      enum class state { idle, moving_thumb1, moving_thumb2, scrolling_thumb1, scrolling_thumb2 };
    public:
 
                               range_slider_base(std::pair<double, double> init_value)
@@ -33,7 +34,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
 
-      bool                    scroll(context const&, point, point) override { return false; } //! true or false?
+      bool                    scroll(context const&, point, point) override;
       void                    begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                    keep_tracking(context const& ctx, tracker_info& track_info) override;
       void                    end_tracking(context const& ctx, tracker_info& track_info) override;
@@ -45,8 +46,8 @@ namespace cycfi { namespace elements
       void                    value_first(double val) { value({val, _value.second});}
       void                    value_second(double val) { value({_value.first, val});}
       void                    edit(view& view_, val_type val) override;
-      virtual void            edit_value_first(double val) { value({val, _value.second});}
-      virtual void            edit_value_second(double val) { value({_value.first, val});}
+      virtual void            edit_value_first(double val) { value_first(val);}
+      virtual void            edit_value_second(double val) { value_second(val);}
       void                    edit_value(val_type val) {edit_value_first(val.first); edit_value_second(val.second);}
 
       rect                    track_bounds(context const& ctx) const;
@@ -58,9 +59,9 @@ namespace cycfi { namespace elements
       virtual element&               track() = 0;
 
    private:
-      int                       _active_thumb = -1;
-      std::pair<double, double> _value;
-      mutable bool              _is_horiz = false;
+      state                          _state = state::idle;
+      std::pair<double, double>      _value;
+      mutable bool                   _is_horiz = false;
    };
 
    inline void range_slider_base::edit(view& view_, std::pair<double, double> val)

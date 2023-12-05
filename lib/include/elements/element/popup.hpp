@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
 
    private:
 
-      basic_button_menu*             _menu_button = nullptr;
+      basic_button_menu*      _menu_button = nullptr;
    };
 
    template <typename Subject>

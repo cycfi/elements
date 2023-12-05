@@ -128,6 +128,8 @@ int main(int argc, char* argv[])
    comp.push_back(make_icon_label("menu", icons::menu));
    comp.push_back(make_icon_label("link", icons::link));
    comp.push_back(make_icon_label("unlink", icons::unlink));
+   comp.push_back(make_icon_label("folder_open", icons::folder_empty));
+   comp.push_back(make_icon_label("folder_open_empty", icons::folder_open_empty));
    view_.content(
                margin({10, 10, 10, 10},
                vscroller(margin({40, 20, 40, 20}, comp))),

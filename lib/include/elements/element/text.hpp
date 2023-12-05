@@ -235,6 +235,7 @@ namespace cycfi::elements
 
       text_function           on_text;
       text_function           on_enter;
+      text_function           on_end_focus;
 
    private:
 

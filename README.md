@@ -40,8 +40,23 @@ and I very much welcome suggestions and contributions. Hey, this is an open
 source project! If you like the design, concepts and ideas behind Elements, I
 very much welcome collaboration.
 
+**December 5, 2023:**
+The master branch now contains the code base using the Artist library for 2D canvas 
+drawing (https://github.com/cycfi/artist).
+
+For those who have not been following recently, the Artist 2D Canvas Library is an abstraction layer with an API 
+inspired by the HTML5 canvas API. The library presents a lean API modeled after the HTML Canvas 2D Context 
+specification. The API is a not-so-thin layer above various 2D platform-specific and cross-platform 2D 
+"backend" graphics libraries, such as Skia and Quartz-2D. 
+
+The artist library replaces the original cairo based  canvas implementation used by elements. The classic 
+cairo implementation is now in the `cairo_2023` branch. At this point, as long as you are using the examples 
+as a starting point and usage guide, code cairo_2023 is fully compatible with the artist based code, which 
+is now in the `master` branch. 
+
 ## News
 
+- 5 December 2023: See status above regarding the Artist 2D Canvas Library.
 - 19 January 2021: Added Child Windows to develop (will merge to master in due time). [See Example](https://bit.ly/3iLMJt2).
 - 25 September 2020: Added [thumbwheels](https://github.com/cycfi/elements/issues/231).
 - 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -146,7 +146,7 @@ namespace cycfi { namespace elements
          init_window_class()
          {
             WNDCLASSW windowClass = {};
-            windowClass.hbrBackground = nullptr;
+            windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
             windowClass.hInstance = GetModuleHandleW(nullptr);
             windowClass.lpfnWndProc = handle_event;
@@ -179,7 +179,7 @@ namespace cycfi { namespace elements
          nullptr
       );
 
-      auto* info = new window_info{ this };
+      auto* info = new window_info{this};
       SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (!(style_ & closable))
@@ -254,7 +254,7 @@ namespace cycfi { namespace elements
       auto scale = get_scale_for_window(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
-      return { float(frame.left / scale), float(frame.top / scale) };
+      return {float(frame.left / scale), float(frame.top / scale)};
    }
 
    void window::position(point const& p)

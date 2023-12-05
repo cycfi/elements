@@ -30,12 +30,12 @@ namespace cycfi::elements
    void progress_bar_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &background(), ctx.bounds };
+         context sctx {ctx, &background(), ctx.bounds};
          sctx.bounds = background_bounds(sctx);
          background().layout(sctx);
       }
       {
-         context sctx { ctx, &foreground(), ctx.bounds };
+         context sctx {ctx, &foreground(), ctx.bounds};
          sctx.bounds = foreground_bounds(sctx);
          foreground().layout(sctx);
       }
@@ -46,12 +46,12 @@ namespace cycfi::elements
       if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
-            context sctx { ctx, &background(), ctx.bounds };
+            context sctx {ctx, &background(), ctx.bounds};
             sctx.bounds = background_bounds(sctx);
             background().draw(sctx);
          }
          {
-            context sctx { ctx, &foreground(), ctx.bounds };
+            context sctx {ctx, &foreground(), ctx.bounds};
             sctx.bounds = foreground_bounds(sctx);
             foreground().draw(sctx);
          }

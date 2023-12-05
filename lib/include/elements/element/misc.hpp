@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -22,11 +22,13 @@ namespace cycfi { namespace elements
    // spacers: empty horizontal or vertical element with specified width or
    // height.
    ////////////////////////////////////////////////////////////////////////////
+   [[deprecated("Use vspace(size) instead.")]]
    inline auto vspacer(float size)
    {
       return vsize(size, element{});
    }
 
+   [[deprecated("Use hspace(size) instead.")]]
    inline auto hspacer(float size)
    {
       return hsize(size, element{});
@@ -53,7 +55,7 @@ namespace cycfi { namespace elements
 
    inline auto box(color color_)
    {
-      return box_element{ color_ };
+      return box_element{color_};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ namespace cycfi { namespace elements
       {
          auto& cnv = ctx.canvas;
          cnv.begin_path();
-         cnv.round_rect(ctx.bounds, _radius);
+         cnv.add_round_rect(ctx.bounds, _radius);
          cnv.fill_style(_color);
          cnv.fill();
       }
@@ -81,7 +83,7 @@ namespace cycfi { namespace elements
 
    inline auto rbox(color color_, float radius = 4)
    {
-      return rbox_element{ color_, radius };
+      return rbox_element{color_, radius};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -112,14 +114,14 @@ namespace cycfi { namespace elements
    [[deprecated("Use draw(F&& _draw) instead.")]]
    inline draw_element<F> basic(F&& _draw)
    {
-      return { std::forward<remove_cvref_t<F>>(_draw) };
+      return {std::forward<remove_cvref_t<F>>(_draw)};
    }
 
    template <typename F>
    inline draw_element<F> draw(F&& _draw)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(_draw) };
+      return {std::forward<ftype>(_draw)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -152,7 +154,7 @@ namespace cycfi { namespace elements
    inline draw_value_element<T, remove_cvref_t<F>> draw_value(F&& f)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(f) };
+      return {std::forward<ftype>(f)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -187,7 +189,7 @@ namespace cycfi { namespace elements
    {
    public:
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
    };
 
    inline void title_bar::draw(context const& ctx)
@@ -202,17 +204,17 @@ namespace cycfi { namespace elements
    {
    public:
 
-                              vgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
+                     vgrid_lines(float major_divisions, float minor_divisions)
+                      : _major_divisions(major_divisions)
+                      , _minor_divisions(minor_divisions)
+                     {}
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
 
    private:
 
-      float                   _major_divisions;
-      float                   _minor_divisions;
+      float          _major_divisions;
+      float          _minor_divisions;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -222,17 +224,17 @@ namespace cycfi { namespace elements
    {
    public:
 
-                              hgrid_lines(float major_divisions, float minor_divisions)
-                               : _major_divisions(major_divisions)
-                               , _minor_divisions(minor_divisions)
-                              {}
+                     hgrid_lines(float major_divisions, float minor_divisions)
+                      : _major_divisions(major_divisions)
+                      , _minor_divisions(minor_divisions)
+                     {}
 
-      void                    draw(context const& ctx) override;
+      void           draw(context const& ctx) override;
 
    private:
 
-      float                   _major_divisions;
-      float                   _minor_divisions;
+      float          _major_divisions;
+      float          _minor_divisions;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -240,13 +242,13 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct icon : element
    {
-                              icon(std::uint32_t code_, float size_ = 1.0);
+                     icon(std::uint32_t code_, float size_ = 1.0);
 
-      view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
+      view_limits    limits(basic_context const& ctx) const override;
+      void           draw(context const& ctx) override;
 
-      std::uint32_t           _code;
-      float                   _size;
+      std::uint32_t  _code;
+      float          _size;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -257,24 +259,24 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              key_intercept_element(Subject subject)
-                               : base_type(std::move(subject))
-                              {}
+                     key_intercept_element(Subject subject)
+                      : base_type(std::move(subject))
+                     {}
 
-      bool                    key(context const& ctx, key_info k) override;
-      bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
+      bool           key(context const& ctx, key_info k) override;
+      bool           wants_control() const override { return true; }
+      bool           wants_focus() const override { return true; }
 
       using key_function = std::function<bool(key_info k)>;
 
-      key_function            on_key = [](auto){ return false; };
+      key_function   on_key = [](auto){ return false; };
    };
 
    template <typename Subject>
    inline key_intercept_element<remove_cvref_t<Subject>>
    key_intercept(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -293,24 +295,24 @@ namespace cycfi { namespace elements
    {
       using base_type = proxy<Subject>;
 
-                              click_intercept_element(Subject subject)
-                               : base_type(std::move(subject))
-                              {}
+                     click_intercept_element(Subject subject)
+                      : base_type(std::move(subject))
+                     {}
 
-      bool                    click(context const& ctx, mouse_button btn) override;
-      bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
+      bool           click(context const& ctx, mouse_button btn) override;
+      bool           wants_control() const override { return true; }
+      bool           wants_focus() const override { return true; }
 
       using click_function = std::function<bool(mouse_button btn)>;
 
-      click_function          on_click = [](auto){ return false; };
+      click_function on_click = [](auto){ return false; };
    };
 
    template <typename Subject>
    inline click_intercept_element<remove_cvref_t<Subject>>
    click_intercept(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -330,11 +332,10 @@ namespace cycfi { namespace elements
    public:
 
       using base_type = proxy<Subject>;
-      using is_hidden_function = std::function<bool()>;
 
                               hidable_element(Subject subject);
       void                    draw(context const& ctx) override;
-      is_hidden_function      is_hidden = []{ return false; };
+      bool                    is_hidden = false;
    };
 
    template <typename Subject>
@@ -345,7 +346,7 @@ namespace cycfi { namespace elements
    template <typename Subject>
    inline void hidable_element<Subject>::draw(context const& ctx)
    {
-      if (!is_hidden())
+      if (!is_hidden)
          this->subject().draw(ctx);
    }
 
@@ -353,7 +354,52 @@ namespace cycfi { namespace elements
    inline hidable_element<remove_cvref_t<Subject>>
    hidable(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Vertical collapsable
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class vcollapsable_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              vcollapsable_element(Subject subject);
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      bool                    is_collapsed = false;
+   };
+
+   template <typename Subject>
+   inline vcollapsable_element<Subject>::vcollapsable_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <typename Subject>
+   inline view_limits
+   vcollapsable_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto e_limits = this->subject().limits(ctx);
+      return is_collapsed?
+         view_limits{{e_limits.min.x, 0.0f}, {e_limits.max.x, 0.0f}} :
+         e_limits;
+   }
+
+   template <typename Subject>
+   inline void vcollapsable_element<Subject>::draw(context const& ctx)
+   {
+      if (!is_collapsed)
+         this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline vcollapsable_element<remove_cvref_t<Subject>>
+   vcollapsable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
    }
 }}
 

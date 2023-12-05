@@ -77,7 +77,9 @@
 .icon-error-alt:before { content: '\e84b'; } /* '' */
 .icon-help-circled:before { content: '\e84c'; } /* '' */
 .icon-exchange-1:before { content: '\e84d'; } /* '' */
+.icon-link:before { content: '\e84e'; } /* '' */
 .icon-menu:before { content: '\f0c9'; } /* '' */
 .icon-lightbulb:before { content: '\f0eb'; } /* '' */
+.icon-unlink:before { content: '\f127'; } /* '' */
 .icon-sliders:before { content: '\f1de'; } /* '' */
 .icon-hand-paper-o:before { content: '\f256'; } /* '' */

@@ -1,15 +1,15 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/app.hpp>
-#include <elements/support/font.hpp>
-#include <elements/support/resource_paths.hpp>
+#include <artist/resources.hpp>
 #include <infra/filesystem.hpp>
 #include <windows.h>
 #include <shlobj.h>
 #include <cstring>
+#include <ole2.h>
 
 #ifndef ELEMENTS_HOST_ONLY_WIN7
 #include <shellscalingapi.h>
@@ -47,16 +47,6 @@ namespace cycfi { namespace elements
       return fs::current_path() / "resources";
    }
 
-   struct init_app
-   {
-      init_app(std::string id, const char *program_path)
-      {
-         const fs::path resources_path = find_resources(program_path);
-         font_paths().push_back(resources_path);
-         add_search_path(resources_path);
-      }
-   };
-
    app::app(
       int         // argc
     , char**      argv
@@ -65,11 +55,12 @@ namespace cycfi { namespace elements
    )
    {
       _app_name = name;
-      static init_app init{ id, argv[0] };
 
 #if !defined(ELEMENTS_HOST_ONLY_WIN7)
       SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 #endif
+
+      OleInitialize(nullptr);
    }
 
    app::~app()
@@ -89,13 +80,14 @@ namespace cycfi { namespace elements
    void app::stop()
    {
       _running = false;
+      OleUninitialize();
    }
 
    fs::path app_data_path()
    {
       LPWSTR path = nullptr;
       SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_CREATE, nullptr, &path);
-      return fs::path{ path };
+      return fs::path{path};
    }
 }}
 

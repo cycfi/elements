@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -48,28 +48,28 @@ namespace cycfi { namespace elements
    inline halign_element<remove_cvref_t<Subject>>
    halign(float align, Subject&& subject)
    {
-      return { align, std::forward<Subject>(subject) };
+      return {align, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline halign_element<remove_cvref_t<Subject>>
    align_left(Subject&& subject)
    {
-      return { 0.0, std::forward<Subject>(subject) };
+      return {0.0, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline halign_element<remove_cvref_t<Subject>>
    align_center(Subject&& subject)
    {
-      return { 0.5, std::forward<Subject>(subject) };
+      return {0.5, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline halign_element<remove_cvref_t<Subject>>
    align_right(Subject&& subject)
    {
-      return { 1.0, std::forward<Subject>(subject) };
+      return {1.0, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -81,7 +81,7 @@ namespace cycfi { namespace elements
    inline view_limits halign_element<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
-      return { { e_limits.min.x, e_limits.min.y }, { full_extent, e_limits.max.y } };
+      return {{e_limits.min.x, e_limits.min.y}, {full_extent, e_limits.max.y}};
    }
 
    template <typename Subject>
@@ -116,28 +116,28 @@ namespace cycfi { namespace elements
    inline valign_element<remove_cvref_t<Subject>>
    valign(float align, Subject&& subject)
    {
-      return { align, std::forward<Subject>(subject) };
+      return {align, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline valign_element<remove_cvref_t<Subject>>
    align_top(Subject&& subject)
    {
-      return { 0.0, std::forward<Subject>(subject) };
+      return {0.0, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline valign_element<remove_cvref_t<Subject>>
    align_middle(Subject&& subject)
    {
-      return { 0.5, std::forward<Subject>(subject) };
+      return {0.5, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
    inline valign_element<remove_cvref_t<Subject>>
    align_bottom(Subject&& subject)
    {
-      return { 1.0, std::forward<Subject>(subject) };
+      return {1.0, std::forward<Subject>(subject)};
    }
 
    template <typename Subject>
@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
    inline view_limits valign_element<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
-      return { { e_limits.min.x, e_limits.min.y }, { e_limits.max.x, full_extent } };
+      return {{e_limits.min.x, e_limits.min.y}, {e_limits.max.x, full_extent}};
    }
 
    template <typename Subject>

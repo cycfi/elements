@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -37,7 +37,7 @@ namespace cycfi { namespace elements
    private:
 
       using popup_ptr = std::shared_ptr<basic_popup_element>;
-      enum status { tip_hidden, tip_delayed, tip_visible };
+      enum status {tip_hidden, tip_delayed, tip_visible};
 
       rect                    tip_bounds(context const& ctx) const;
       void                    close_tip(view& view_);
@@ -50,9 +50,9 @@ namespace cycfi { namespace elements
 
    template <typename Subject, typename Tip>
    inline proxy<remove_cvref_t<Subject>, tooltip_element>
-   tooltip(Subject&& subject, Tip&& tip, duration delay = milliseconds{ 500 })
+   tooltip(Subject&& subject, Tip&& tip, duration delay = milliseconds{500})
    {
-      return { std::forward<Subject>(subject), std::forward<Tip>(tip), delay };
+      return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay};
    }
 }}
 

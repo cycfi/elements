@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -11,38 +11,48 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/support/font.hpp>
 #include <elements/support/receiver.hpp>
+#include <artist/font.hpp>
 #include <infra/string_view.hpp>
 #include <string>
 
 namespace cycfi { namespace elements
 {
+   using artist::font_descr;
+
    ////////////////////////////////////////////////////////////////////////////
    // Basic label
    ////////////////////////////////////////////////////////////////////////////
-   struct default_label : element, text_reader
+   struct default_label : element, text_reader_u8
    {
-      public:
+   public:
 
-      using font_type = elements::font const&;
-      using remove_gen = default_label;
+      using font_type = font_descr;
+      using base_type = default_label;
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
+
+      // These member functions return the defaults
 
       virtual font_type       get_font() const;
       virtual float           get_font_size() const;
       virtual float           get_default_font_size() const;
       virtual color           get_font_color() const;
       virtual int             get_text_align() const;
+
+   private:
+
+      bool                    _is_enabled = true;
    };
 
    template <typename Base>
    struct basic_label_base : Base, text_writer
    {
-      using text_type = std::string const&;
-      using remove_gen = basic_label_base<typename Base::remove_gen>;
+      using text_type = std::string_view;
+      using base_type = basic_label_base<typename Base::base_type>;
 
                               basic_label_base(std::string text)
                                : _text(std::move(text))
@@ -59,11 +69,11 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_font : Base
    {
-      using font_type = elements::font const&;
-      using remove_gen = label_with_font<typename Base::remove_gen>;
+      using font_type = font_descr;
+      using base_type = label_with_font<typename Base::base_type>;
 
-                              label_with_font(Base base, elements::font font_)
-                               : Base(std::move(base)), _font(std::move(font_))
+                              label_with_font(Base base, font_type font_)
+                               : Base(std::move(base)), _font(font_)
                               {}
 
       font_type               get_font() const override  { return _font; }
@@ -71,13 +81,13 @@ namespace cycfi { namespace elements
 
    private:
 
-      elements::font         _font;
+      font_descr              _font;
    };
 
    template <typename Base>
    struct label_with_font_size : Base
    {
-      using remove_gen = label_with_font_size<typename Base::remove_gen>;
+      using base_type = label_with_font_size<typename Base::base_type>;
 
                               label_with_font_size(Base base, float size)
                                : Base(std::move(base)), _size(size)
@@ -95,7 +105,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_font_color : Base
    {
-      using remove_gen = label_with_font_color<typename Base::remove_gen>;
+      using base_type = label_with_font_color<typename Base::base_type>;
 
                               label_with_font_color(Base base, color color_)
                                : Base(std::move(base)), _color(color_)
@@ -112,7 +122,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct label_with_text_align : Base
    {
-      using remove_gen = label_with_text_align<typename Base::remove_gen>;
+      using base_type = label_with_text_align<typename Base::base_type>;
 
                               label_with_text_align(Base base, int align)
                                : Base(std::move(base)), _align(align)
@@ -130,13 +140,13 @@ namespace cycfi { namespace elements
    struct label_gen : Base
    {
       using Base::Base;
-      using remove_gen = typename Base::remove_gen;
+      using base_type = typename Base::base_type;
 
-      using font_type      = elements::font const&;
-      using gen_font       = label_gen<label_with_font<remove_gen>>;
-      using gen_font_size  = label_gen<label_with_font_size<remove_gen>>;
-      using gen_font_color = label_gen<label_with_font_color<remove_gen>>;
-      using gen_text_align = label_gen<label_with_text_align<remove_gen>>;
+      using font_type      = font_descr;
+      using gen_font       = label_gen<label_with_font<base_type>>;
+      using gen_font_size  = label_gen<label_with_font_size<base_type>>;
+      using gen_font_color = label_gen<label_with_font_color<base_type>>;
+      using gen_text_align = label_gen<label_with_text_align<base_type>>;
 
       gen_font                font(font_type font_) const;
       gen_font_size           font_size(float size) const;
@@ -148,6 +158,9 @@ namespace cycfi { namespace elements
    using basic_label = basic_label_base<default_label>;
    using label = label_gen<basic_label>;
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
    inline default_label::font_type default_label::get_font() const
    {
       return get_theme().label_font;
@@ -155,12 +168,12 @@ namespace cycfi { namespace elements
 
    inline float default_label::get_font_size() const
    {
-      return get_theme().label_font_size;
+      return get_theme().label_font._size;
    }
 
    inline float default_label::get_default_font_size() const
    {
-      return get_theme().label_font_size;
+      return get_theme().label_font._size;
    }
 
    inline color default_label::get_font_color() const
@@ -177,35 +190,35 @@ namespace cycfi { namespace elements
    inline typename label_gen<Base>::gen_font
    label_gen<Base>::font(font_type font_) const
    {
-      return { *this, font_ };
+      return {*this, font_};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::font_size(float size) const
    {
-      return { *this, size };
+      return {*this, size};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_size
    label_gen<Base>::relative_font_size(float size) const
    {
-      return { *this, Base::get_default_font_size() * size };
+      return {*this, Base::get_default_font_size() * size};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_font_color
    label_gen<Base>::font_color(color color_) const
    {
-      return { *this, color_ };
+      return {*this, color_};
    }
 
    template <typename Base>
    inline typename label_gen<Base>::gen_text_align
    label_gen<Base>::text_align(int align) const
    {
-      return { *this, align };
+      return {*this, align};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -213,8 +226,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    struct default_heading : default_label
    {
-      using font_type = elements::font const&;
-      using remove_gen = default_heading;
+      using font_type = font_descr;
+      using base_type = default_heading;
 
       font_type               get_font() const override;
       float                   get_font_size() const override;
@@ -233,12 +246,12 @@ namespace cycfi { namespace elements
 
    inline float default_heading::get_font_size() const
    {
-      return get_theme().heading_font_size;
+      return get_theme().heading_font._size;
    }
 
    inline float default_heading::get_default_font_size() const
    {
-      return get_theme().heading_font_size;
+      return get_theme().heading_font._size;
    }
 
    inline color default_heading::get_font_color() const
@@ -301,7 +314,7 @@ namespace cycfi { namespace elements
    as_label(F&& as_string, Subject&& subject)
    {
       using ftype = remove_cvref_t<F>;
-      return { std::forward<ftype>(as_string), std::forward<Subject>(subject) };
+      return {std::forward<ftype>(as_string), std::forward<Subject>(subject)};
    }
 }}
 

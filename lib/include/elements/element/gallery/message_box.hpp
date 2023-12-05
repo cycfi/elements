@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -22,10 +22,10 @@ namespace cycfi { namespace elements
     , extent text_box_size = get_theme().message_textbox_size
    )
    {
-      auto textbox = fixed_size(text_box_size, static_text_box{ std::move(message) });
+      auto textbox = fixed_size(text_box_size, static_text_box{std::move(message)});
       return dialog0(
-         margin({ 20, 20, 20, 20 }, htile(
-            align_top(icon{ icon_id, 2.5 }),
+         margin({20, 20, 20, 20}, htile(
+            align_top(icon{icon_id, 2.5}),
             left_margin(20, std::move(textbox))
          ))
       );
@@ -45,11 +45,11 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto textbox = fixed_size(text_box_size, static_text_box{ std::move(message) });
+      auto textbox = fixed_size(text_box_size, static_text_box{std::move(message)});
       return dialog1(
          view_,
          htile(
-            align_top(icon{ icon_id, 2.5 }),
+            align_top(icon{icon_id, 2.5}),
             left_margin(20, std::move(textbox))
          ),
          std::forward<F>(on_ok),
@@ -74,11 +74,11 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto textbox = fixed_size(text_box_size, static_text_box{ std::move(message) });
+      auto textbox = fixed_size(text_box_size, static_text_box{std::move(message)});
       return dialog2(
          view_,
          htile(
-            align_top(icon{ icon_id, 2.5 }),
+            align_top(icon{icon_id, 2.5}),
             left_margin(20, std::move(textbox))
          ),
          std::forward<F1>(on_ok),
@@ -106,11 +106,11 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto textbox = fixed_size(text_box_size, static_text_box{ std::move(message) });
+      auto textbox = fixed_size(text_box_size, static_text_box{std::move(message)});
       return dialog2r(
          view_,
          htile(
-            align_top(icon{ icon_id, 2.5 }),
+            align_top(icon{icon_id, 2.5}),
             left_margin(20, std::move(textbox))
          ),
          std::forward<F1>(on_ok),

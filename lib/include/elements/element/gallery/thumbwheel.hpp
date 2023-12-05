@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -7,14 +7,14 @@
 #define ELEMENTS_GALLERY_THUMBWHEEL_SEPTEMBER_23_2020
 
 #include <elements/element/thumbwheel.hpp>
-#include <elements/element/dynamic_list.hpp>
+#include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic (vertical and horizontal) thumbwheels (You can use these as the
-   // subject of thumbwheel)
+   // subject of thumbwheel).
    //
    //    A thumbwheel subject can be constructed using a vport or hport (see
    //    port.hpp) and a receiver<double> which recieves a 0.0 to 1.0 value
@@ -75,18 +75,18 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
    basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {
-      return { std::forward<Subject>(subject), quantize_ };
+      return {std::forward<Subject>(subject), quantize_};
    }
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
    basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {
-      return { std::forward<Subject>(subject), quantize_ };
+      return {std::forward<Subject>(subject), quantize_};
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // This function utilizes a dynamic_list and the basic_vthumbwheel to
+   // This function utilizes a list and the basic_vthumbwheel to
    // present items in a vertically oriented thumbwheel, allowing it to
    // scroll into the items in the list that is dynamically created given the
    // (user supplied) compose function.
@@ -96,10 +96,10 @@ namespace cycfi { namespace elements
    {
       using ftype = remove_cvref_t<F>;
       auto body = basic_vthumbwheel(
-         dynamic_list{ basic_cell_composer(num_items, std::forward<ftype>(compose)) }
+         list{basic_cell_composer(num_items, std::forward<ftype>(compose))}
        , 1.0 / (num_items-1)
       );
-      return thumbwheel(std::move(body), { 0.0f, 0.0f });
+      return thumbwheel(std::move(body), {0.0f, 0.0f});
    }
 }}
 

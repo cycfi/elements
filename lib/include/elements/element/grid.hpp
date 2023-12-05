@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -83,7 +83,7 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _positions;
-      std::size_t             _num_spans;
+      mutable std::size_t     _num_spans;
    };
 
    using vgrid_composite = vector_composite<
@@ -95,8 +95,8 @@ namespace cycfi { namespace elements
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
       using container = typename composite::container_type;
-      composite r{ coords, N };
-      r = container{{ share(std::forward<E>(elements))... }};
+      composite r{coords, N};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 
@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), equal_grid<vgrid_element>>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 
@@ -132,7 +132,7 @@ namespace cycfi { namespace elements
    private:
 
       std::vector<float>      _positions;
-      std::size_t             _num_spans;
+      mutable std::size_t     _num_spans;
    };
 
    using hgrid_composite = vector_composite<
@@ -144,8 +144,8 @@ namespace cycfi { namespace elements
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
       using container = typename composite::container_type;
-      composite r{ coords, N };
-      r = container{{ share(std::forward<E>(elements))... }};
+      composite r{coords, N};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 
@@ -162,7 +162,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), equal_grid<hgrid_element>>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 }}

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -20,5 +20,6 @@
 #include <elements/element/gallery/tab.hpp>
 #include <elements/element/gallery/text_entry.hpp>
 #include <elements/element/gallery/child_window.hpp>
+#include <elements/element/gallery/slide_button.hpp>
 
 #endif

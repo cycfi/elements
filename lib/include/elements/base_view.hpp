@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman. All rights reserved.
+   Copyright (c) 2016-2023 Joel de Guzman. All rights reserved.
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -11,11 +11,13 @@
 #include <string>
 #include <cstdint>
 #include <functional>
-#include <cairo.h>
 
 #include <infra/support.hpp>
-#include <elements/support/point.hpp>
-#include <elements/support/rect.hpp>
+#include <artist/point.hpp>
+#include <artist/rect.hpp>
+#include <artist/canvas.hpp>
+#include <infra/filesystem.hpp>
+#include <elements/support/payload.hpp>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
 # include <windows.h>
@@ -23,6 +25,11 @@
 
 namespace cycfi { namespace elements
 {
+   using artist::canvas;
+   using artist::point;
+   using artist::rect;
+   using artist::extent;
+
    ////////////////////////////////////////////////////////////////////////////
    // Mouse Button
    ////////////////////////////////////////////////////////////////////////////
@@ -54,13 +61,13 @@ namespace cycfi { namespace elements
 
    struct view_limits
    {
-      point    min = { 0.0, 0.0 };
-      point    max = { full_extent, full_extent };
+      point    min = {0.0, 0.0};
+      point    max = {full_extent, full_extent};
    };
 
    constexpr view_limits full_limits = {
-      { 0.0, 0.0 }
-    , { full_extent, full_extent }
+      {0.0, 0.0}
+    , {full_extent, full_extent}
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -274,6 +281,12 @@ namespace cycfi { namespace elements
       int               modifiers;
    };
 
+   struct drop_info
+   {
+      payload           data;
+      point             where;
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    // The base view base class
    ////////////////////////////////////////////////////////////////////////////
@@ -301,7 +314,7 @@ namespace cycfi { namespace elements
                            base_view(host_window_handle h);
       virtual              ~base_view();
 
-      virtual void         draw(cairo_t* ctx, rect area);
+      virtual void         draw(canvas& /* cnv */, rect /* area */);
       virtual void         click(mouse_button btn);
       virtual void         drag(mouse_button btn);
       virtual void         cursor(point p, cursor_tracking status);
@@ -310,6 +323,8 @@ namespace cycfi { namespace elements
       virtual bool         text(text_info const& info);
       virtual void         begin_focus();
       virtual void         end_focus();
+      virtual void         track_drop(drop_info const& info, cursor_tracking status);
+      virtual bool         drop(drop_info const& info);
       virtual void         poll();
 
       virtual void         refresh();
@@ -327,7 +342,7 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   inline void base_view::draw(cairo_t* /* ctx */, rect /* area */) {}
+   inline void base_view::draw(canvas& /* ctx */, rect /* area */) {}
    inline void base_view::click(mouse_button /* btn */) {}
    inline void base_view::drag(mouse_button /* btn */) {}
    inline void base_view::cursor(point /* p */, cursor_tracking /* status */) {}
@@ -336,12 +351,17 @@ namespace cycfi { namespace elements
    inline bool base_view::text(text_info const& /* info */) { return false; }
    inline void base_view::begin_focus() {}
    inline void base_view::end_focus() {}
+   inline void base_view::track_drop(drop_info const& /*info*/, cursor_tracking /* status */) {}
+   inline bool base_view::drop(drop_info const& /*info*/)
+   {
+      return false;
+   }
    inline void base_view::poll() {}
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard
    std::string clipboard();
-   void clipboard(std::string const& text);
+   void clipboard(std::string_view text);
 
    ////////////////////////////////////////////////////////////////////////////
    // The Cursor

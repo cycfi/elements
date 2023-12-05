@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -14,7 +14,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Radio Button
    ////////////////////////////////////////////////////////////////////////////
-   struct radio_button_element : toggle_selector, basic_receiver<button_state>
+   struct radio_button_styler : toggle_selector, basic_receiver<button_state>
    {
       using toggle_selector::toggle_selector;
 
@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
 
    inline auto radio_button(std::string text)
    {
-      return choice(radio_button_element{ text });
+      return choice(radio_button_styler{text});
    }
 }}
 

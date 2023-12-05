@@ -1,11 +1,12 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements.hpp>
 
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -37,7 +38,7 @@ auto make_hslider(int index)
       make_markers<false>(),
       (index + 1) * 0.25
    ));
-   return align_middle(hmargin({ 20, 20 }, hold(hsliders[index])));
+   return align_middle(hmargin({20, 20}, hold(hsliders[index])));
 }
 
 auto make_hsliders()
@@ -58,7 +59,7 @@ auto make_vslider(int index)
       make_markers<true>(),
       (index + 1) * 0.25
    ));
-   return align_center(vmargin({ 20, 20 }, hold(vsliders[index])));
+   return align_center(vmargin({20, 20}, hold(vsliders[index])));
 }
 
 auto make_vsliders()
@@ -83,8 +84,8 @@ auto make_dial(int index)
 
    auto markers = radial_labels<15>(
       hold(dials[index]),
-      0.7,                                   // Label font size (relative size)
-      "0", "1", "2", "3", "4",               // Labels
+      0.7,                                // Label font size (relative size)
+      "0", "1", "2", "3", "4",            // Labels
       "5", "6", "7", "8", "9", "10"
    );
 
@@ -105,12 +106,12 @@ auto make_dials()
 auto make_controls()
 {
    return
-      margin({ 20, 10, 20, 10 },
+      margin({20, 10, 20, 10},
          vmin_size(400,
             htile(
-               margin({ 20, 20, 20, 20 }, pane("Vertical Sliders", make_vsliders(), 0.8f)),
-               margin({ 20, 20, 20, 20 }, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
-               hstretch(0.5, margin({ 20, 20, 20, 20 }, pane("Knobs", make_dials(), 0.8f)))
+               margin({20, 20, 20, 20}, pane("Vertical Sliders", make_vsliders(), 0.8f)),
+               margin({20, 20, 20, 20}, pane("Horizontal Sliders", make_hsliders(), 0.8f)),
+               hstretch(0.5, margin({20, 20, 20, 20}, pane("Knobs", make_dials(), 0.8f)))
             )
          )
       );

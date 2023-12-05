@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, modular GUI library. 
+Elements is a lightweight, fine-grained, resolution independent, modular GUI library.
 Elements is designed with these requirements in mind:
 
 1. It should be open source with a liberal, non-viral license.
@@ -21,7 +21,7 @@ Elements is designed with these requirements in mind:
    tells you *what* rather than *how* (imperative). The GUI should be
    declared in C++ code.
 7. Keep it simple. Make it easy to use right out of the box, with a lot of examples.
-8. Porting to a new host target should be as easy as possible, requiring 
+8. Porting to a new host target should be as easy as possible, requiring
    porting of only a few files.
 
 Elements, is extremely lightweight… and modular. You compose very
@@ -98,5 +98,5 @@ peer-reviewed, Open Source, collaborative development effort.
 
 -------------------------------------------------------------------------------
 
-*Copyright (c) 2014-2022 Joel de Guzman. All rights reserved.*
+*Copyright (c) 2014-2023 Joel de Guzman. All rights reserved.*
 *Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

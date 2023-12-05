@@ -5,19 +5,22 @@
 =============================================================================*/
 #include <elements/element/gallery/tab.hpp>
 #include <elements/support/draw_utils.hpp>
+#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
-   view_limits tab_element::limits(basic_context const& ctx) const
+   namespace colors = artist::colors;
+
+   view_limits tab_styler::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();
-      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font, thm.label_font_size);
+      auto  size = measure_text(ctx.canvas, _text.c_str(), thm.label_font);
       size.x += 35;
       size.y += 10;
-      return { { size.x, size.y }, { size.x, size.y } };
+      return {{size.x, size.y}, {size.x, size.y}};
    }
 
-   void tab_element::draw(context const& ctx)
+   void tab_styler::draw(context const& ctx)
    {
       auto&       canvas_ = ctx.canvas;
       auto const& theme_ = get_theme();
@@ -37,23 +40,20 @@ namespace cycfi { namespace elements
 
       draw_button(canvas_, box, c1, corner_radius);
       canvas_.fill_style(c2);
-      canvas_.font(
-         theme_.label_font,
-         theme_.label_font_size
-      );
+      canvas_.font(theme_.label_font);
       canvas_.text_align(canvas_.center | canvas_.middle);
       float cx = box.left + (box.width() / 2);
       float cy = box.top + (box.height() / 2);
-      canvas_.fill_text(point{ cx, cy }, _text.c_str());
+      canvas_.fill_text(_text.c_str(), point{cx, cy});
    }
 
-   bool tab_element::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
+   bool tab_styler::cursor(context const& ctx, point /* p */, cursor_tracking /* status */)
    {
       ctx.view.refresh(ctx);
       return true;
    }
 
-   bool tab_element::wants_control() const
+   bool tab_styler::wants_control() const
    {
       return true;
    }

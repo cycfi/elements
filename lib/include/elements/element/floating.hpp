@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -36,7 +36,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, floating_element>
    floating(rect bounds, Subject&& subject)
    {
-      return { std::forward<Subject>(subject), bounds };
+      return {std::forward<Subject>(subject), bounds};
    }
 }}
 

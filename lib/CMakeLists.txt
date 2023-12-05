@@ -1,10 +1,24 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2016-2023 Joel de Guzman
 #  Copyright (c) 2020 Michał Urbański
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
+
+###############################################################################
+# Artist library
+
+set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
+set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
+
+if (ELEMENTS_QUARTZ_2D)
+   set(ARTIST_QUARTZ_2D ON CACHE BOOL "Artist graphics backend option")
+elseif (ELEMENTS_SKIA)
+   set(ARTIST_SKIA ON CACHE BOOL "Artist graphics backend option")
+endif()
+
+add_subdirectory(artist)
 
 ###############################################################################
 # Sources (and Resources)
@@ -14,7 +28,7 @@ set(ELEMENTS_SOURCES
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
-   src/element/dynamic_list.cpp
+   src/element/drag_and_drop.cpp
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
@@ -23,12 +37,14 @@ set(ELEMENTS_SOURCES
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
+   src/element/gallery/slide_button.cpp
    src/element/gallery/tab.cpp
    src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
    src/element/layer.cpp
+   src/element/list.cpp
    src/element/menu.cpp
    src/element/misc.cpp
    src/element/popup.cpp
@@ -40,17 +56,11 @@ set(ELEMENTS_SOURCES
    src/element/thumbwheel.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
-   src/support/canvas.cpp
    src/support/draw_utils.cpp
-   src/support/font.cpp
-   src/support/glyphs.cpp
-   src/support/pixmap.cpp
+   src/support/text_utils.cpp
    src/support/receiver.cpp
-   src/support/rect.cpp
-   src/support/text_utils.cpp
-   src/support/resource_paths.cpp
-   src/support/text_utils.cpp
    src/support/theme.cpp
+   src/support/payload.cpp
    src/view.cpp
 )
 
@@ -63,7 +73,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
-   include/elements/element/dynamic_list.hpp
+   include/elements/element/drag_and_drop.hpp
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
@@ -87,6 +97,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/indirect.hpp
    include/elements/element/label.hpp
    include/elements/element/layer.hpp
+   include/elements/element/list.hpp
    include/elements/element/margin.hpp
    include/elements/element/menu.hpp
    include/elements/element/misc.hpp
@@ -102,22 +113,10 @@ set(ELEMENTS_HEADERS
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp
-   include/elements/support/canvas.hpp
-   include/elements/support/circle.hpp
-   include/elements/support/color.hpp
    include/elements/support/context.hpp
-   include/elements/support/detail/canvas_impl.hpp
-   include/elements/support/detail/scratch_context.hpp
-   include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
-   include/elements/support/font.hpp
-   include/elements/support/glyphs.hpp
    include/elements/support/icon_ids.hpp
-   include/elements/support/pixmap.hpp
-   include/elements/support/point.hpp
    include/elements/support/receiver.hpp
-   include/elements/support/rect.hpp
-   include/elements/support/resource_paths.hpp
    include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
    include/elements/view.hpp
@@ -133,10 +132,10 @@ if (APPLE)
    )
 elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    set(ELEMENTS_HOST
-      host/linux/app.cpp
-      host/linux/base_view.cpp
-      host/linux/key.cpp
-      host/linux/window.cpp
+      host/gtk3/app.cpp
+      host/gtk3/base_view.cpp
+      host/gtk3/key.cpp
+      host/gtk3/window.cpp
    )
 elseif (WIN32)
    set(ELEMENTS_HOST
@@ -145,6 +144,7 @@ elseif (WIN32)
       host/windows/base_view.cpp
       host/windows/key.cpp
       host/windows/window.cpp
+      host/windows/drag_and_drop.cpp
    )
 endif()
 
@@ -208,23 +208,6 @@ if (APPLE)
 endif()
 
 ###############################################################################
-# Cairo
-
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
-   endif()
-else()
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-	target_link_libraries(elements PUBLIC PkgConfig::cairo)
-endif()
-
-###############################################################################
 # Fontconfig
 
 if (MSVC)
@@ -235,7 +218,7 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
    endif()
-else()
+elseif (APPLE OR UNIX OR WIN32)
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 endif()
@@ -251,13 +234,13 @@ if (MSVC)
    else()
 	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
    endif()
-else()
+elseif (APPLE OR UNIX OR WIN32)
    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
    target_link_libraries(elements PUBLIC PkgConfig::freetype2)
 endif()
 
 ###############################################################################
-# GTK (linux only)
+# GTK3
 
 if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
@@ -283,6 +266,9 @@ elseif (WIN32)
       _UNICODE
       BOOST_DATE_TIME_NO_LIB
       BOOST_REGEX_NO_LIB
+   )
+   set_property(TARGET elements PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded"
    )
 endif()
 
@@ -315,17 +301,17 @@ endif()
 
 if (UNIX OR (WIN32 AND NOT MSVC))
    find_package(Threads)
-   target_link_libraries(elements PUBLIC Threads::Threads)
+   target_link_libraries(elements PUBLIC Threads::Threads artist)
 endif()
 
 # ASIO requires this
 if (WIN32 AND NOT MSVC)
-   target_link_libraries(elements PUBLIC ws2_32)
+   target_link_libraries(elements PUBLIC ws2_32 artist)
 endif()
 
 # Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
 if (WIN32)
-   target_link_libraries(elements PUBLIC Shcore)
+   target_link_libraries(elements PUBLIC Shcore artist)
 endif()
 
 add_library(cycfi::elements ALIAS elements)

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -7,6 +7,7 @@
 
 using namespace cycfi::elements;
 using namespace std::chrono_literals;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -24,7 +25,7 @@ auto dialog_content()
 
    return
       hsize(300, simple_heading(
-         margin({ 10, 10, 10, 10 },
+         margin({10, 10, 10, 10},
             vtile(
                top_margin(10, align_left(check_box1)),
                top_margin(10, align_left(check_box2)),

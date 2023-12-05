@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -26,6 +26,10 @@ namespace cycfi { namespace elements
       virtual double          valign() const = 0;
       virtual void            valign(double val) = 0;
    };
+
+   // Utility to find the bounds established by the innermost port given a
+   // child context. If there is none, returns ctx.view_bounds()
+   rect get_port_bounds(context const& ctx);
 
    class port_element : public port_base
    {
@@ -55,7 +59,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, port_element>
    port(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    class vport_element : public port_base
@@ -84,7 +88,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    class hport_element : public port_base
@@ -113,7 +117,7 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, hport_element>
    hport(Subject&& subject)
    {
-      return { std::forward<Subject>(subject) };
+      return {std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -125,6 +129,7 @@ namespace cycfi { namespace elements
    class scrollable
    {
    public:
+
       virtual ~scrollable() = default;
 
       struct scrollable_context
@@ -159,9 +164,6 @@ namespace cycfi { namespace elements
    class scroller_base : public port_element, public scrollable
    {
    public:
-
-      static float            scrollbar_width;
-
                               scroller_base(int traits = 0)
                                : _tracking(none)
                                , _traits(traits)
@@ -171,7 +173,7 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
 
       bool                    wants_control() const override;
@@ -229,21 +231,21 @@ namespace cycfi { namespace elements
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    scroller(Subject&& subject, int traits = 0)
    {
-      return { std::forward<Subject>(subject), traits };
+      return {std::forward<Subject>(subject), traits};
    }
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    vscroller(Subject&& subject, int traits = 0)
    {
-      return { std::forward<Subject>(subject), traits | no_hscroll };
+      return {std::forward<Subject>(subject), traits | no_hscroll};
    }
 
    template <typename Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    hscroller(Subject&& subject, int traits = 0)
    {
-      return { std::forward<Subject>(subject), traits | no_vscroll };
+      return {std::forward<Subject>(subject), traits | no_vscroll};
    }
 }}
 

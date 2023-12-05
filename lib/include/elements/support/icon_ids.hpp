@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -91,7 +91,9 @@ namespace cycfi { namespace elements { namespace icons
       mixer                         = 0xf1de,
       hand                          = 0xf256,
       question                      = 0xe84c,
-      menu                          = 0xf0c9
+      menu                          = 0xf0c9,
+      link                          = 0xe84e,
+      unlink                        = 0xf127
    };
 }}}
 

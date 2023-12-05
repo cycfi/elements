@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -7,9 +7,8 @@
 #define ELEMENTS_VIEW_AUGUST_15_2016
 
 #include <elements/base_view.hpp>
-#include <elements/support/rect.hpp>
-#include <elements/support/canvas.hpp>
-#include <elements/support/theme.hpp>
+#include <artist/rect.hpp>
+#include <artist/canvas.hpp>
 #include <elements/element/element.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
@@ -18,6 +17,7 @@
 #include <memory>
 #include <unordered_map>
 #include <chrono>
+#include <stack>
 #include <map>
 
 namespace cycfi { namespace elements
@@ -34,7 +34,7 @@ namespace cycfi { namespace elements
                               view(window& win);
                               ~view();
 
-      void                    draw(cairo_t* ctx, rect area) override;
+      void                    draw(canvas& cnv, rect area) override;
       void                    click(mouse_button btn) override;
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;
@@ -43,6 +43,8 @@ namespace cycfi { namespace elements
       bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
+      void                    track_drop(drop_info const& info, cursor_tracking status) override;
+      bool                    drop(drop_info const& info) override;
       void                    poll() override;
 
       void                    layout();
@@ -100,8 +102,11 @@ namespace cycfi { namespace elements
       using io_context = asio::io_context;
       io_context&             io();
 
+
+      using steady_timer_ptr = std::shared_ptr<asio::steady_timer>;
+
                               template <typename T, typename F>
-      void                    post(T duration, F f);
+      steady_timer_ptr        post(T duration, F f);
 
                               template <typename F>
       void                    post(F f);
@@ -124,7 +129,7 @@ namespace cycfi { namespace elements
 
       rect                    _dirty;
       rect                    _current_bounds;
-      view_limits             _current_limits = { { 0, 0 }, { full_extent, full_extent} };
+      view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;
       bool                    _is_focus = false;
 
@@ -152,7 +157,7 @@ namespace cycfi { namespace elements
    inline rect view_bounds(view const& v) // declared in context.hpp
    {
       auto size = v.size();
-      return rect{ 0, 0, size.x, size.y };
+      return rect{0, 0, size.x, size.y};
    }
 
    inline rect view::dirty() const
@@ -205,7 +210,7 @@ namespace cycfi { namespace elements
    template <typename... E>
    inline void view::content(E&&... elements)
    {
-      _content = { detail::add_element(std::forward<E>(elements))... };
+      _content = {detail::add_element(std::forward<E>(elements))...};
       std::reverse(_content.begin(), _content.end());
       set_limits();
    }
@@ -327,10 +332,10 @@ namespace cycfi { namespace elements
    }
 
    template <typename T, typename F>
-   inline void view::post(T duration, F f)
+   inline view::steady_timer_ptr view::post(T duration, F f)
    {
       auto timer = std::make_shared<asio::steady_timer>(_io);
-      timer->expires_from_now(duration);
+      timer->expires_after(duration);
       timer->async_wait(
          [timer, f](auto const& err)
          {
@@ -338,6 +343,8 @@ namespace cycfi { namespace elements
                f();
          }
       );
+
+      return timer;
    }
 
    template <typename F>

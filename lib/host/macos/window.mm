@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -99,8 +99,8 @@ namespace cycfi { namespace elements
       {
          if (![window_ setFrameUsingName : title])
          {
-            size({ bounds.width(), bounds.height() });
-            position({ bounds.left, bounds.top });
+            size({bounds.width(), bounds.height()});
+            position({bounds.left, bounds.top});
          }
          else
          {
@@ -124,7 +124,7 @@ namespace cycfi { namespace elements
    {
       id const& window_ = (__bridge id) _window;
       auto const& frame = [window_ frame];
-      return { float(frame.size.width), float(frame.size.height) };
+      return {float(frame.size.width), float(frame.size.height)};
    }
 
    void window::size(point const& p)
@@ -141,8 +141,8 @@ namespace cycfi { namespace elements
       auto minx = std::max<float>(150, limits_.min.x);
       auto miny = std::max<float>(100, limits_.min.y);
       id const window_ = (__bridge id) _window;
-      [window_ setContentMinSize : NSSize{ minx, miny }];
-      [window_ setContentMaxSize : NSSize{ limits_.max.x, limits_.max.y }];
+      [window_ setContentMinSize : NSSize{minx, miny}];
+      [window_ setContentMaxSize : NSSize{limits_.max.x, limits_.max.y}];
 
       clamp_min(limits_.max.x, minx);
       clamp_min(limits_.max.y, miny);

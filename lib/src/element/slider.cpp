@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -35,12 +35,12 @@ namespace cycfi { namespace elements
    void slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &track(), ctx.bounds };
+         context sctx {ctx, &track(), ctx.bounds};
          sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }
       {
-         context sctx { ctx, &thumb(), ctx.bounds };
+         context sctx {ctx, &thumb(), ctx.bounds};
          sctx.bounds = thumb_bounds(sctx);
          thumb().layout(sctx);
       }
@@ -51,12 +51,12 @@ namespace cycfi { namespace elements
       if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
-            context sctx { ctx, &track(), ctx.bounds };
+            context sctx {ctx, &track(), ctx.bounds};
             sctx.bounds = track_bounds(sctx);
             track().draw(sctx);
          }
          {
-            context sctx { ctx, &thumb(), ctx.bounds };
+            context sctx {ctx, &thumb(), ctx.bounds};
             sctx.bounds = thumb_bounds(sctx);
             thumb().draw(sctx);
          }
@@ -229,13 +229,13 @@ namespace cycfi { namespace elements
 
          if (vertical)
          {
-            cnv.move_to({ bounds.left + inset, pos });
-            cnv.line_to({ bounds.right - inset, pos });
+            cnv.move_to({bounds.left + inset, pos});
+            cnv.line_to({bounds.right - inset, pos});
          }
          else
          {
-            cnv.move_to({ pos, bounds.top + inset });
-            cnv.line_to({ pos, bounds.bottom - inset });
+            cnv.move_to({pos, bounds.top + inset});
+            cnv.line_to({pos, bounds.bottom - inset});
          }
          cnv.stroke();
          pos += incr;
@@ -246,7 +246,7 @@ namespace cycfi { namespace elements
       canvas& cnv
     , rect bounds
     , float size
-    , float /* font_size */
+    , float font_size
     , std::string const labels[]
     , std::size_t num_labels
    )
@@ -260,17 +260,21 @@ namespace cycfi { namespace elements
       auto state = cnv.new_state();
       auto const& theme = get_theme();
 
+      cnv.font(
+         theme.label_font.size(theme.label_font._size * font_size)
+      );
+
       cnv.text_align(cnv.middle | cnv.center);
       cnv.fill_style(theme.label_font_color);
 
       for (std::size_t i = 0; i != num_labels; ++i)
       {
          point where = vertical?
-            point{ reverse? bounds.left : bounds.right, pos } :
-            point{ pos, reverse? bounds.top : bounds.bottom }
+            point{reverse? bounds.left : bounds.right, pos} :
+            point{pos, reverse? bounds.top : bounds.bottom}
             ;
 
-         cnv.fill_text(where, labels[vertical? (num_labels-i)-1 : i].c_str());
+         cnv.fill_text(labels[vertical? (num_labels-i)-1 : i].c_str(), where);
          pos += incr;
       }
    }

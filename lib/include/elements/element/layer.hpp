@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -23,14 +23,14 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       hit_info                hit_element(context const& ctx, point p, bool control) const override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       bool                    reverse_index() const override { return true; }
 
       using composite_base::focus;
 
    private:
 
-      void                    focus_top();
+      void                    focus_top(focus_request req);
       point                   _previous_size;
    };
 
@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), layer_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       std::reverse(r.begin(), r.end());
       return r;
    }
@@ -59,8 +59,9 @@ namespace cycfi { namespace elements
 
       void                 draw(context const& ctx) override;
       void                 refresh(context const& ctx, element& element, int outward = 0) override;
+      void                 in_context_do(context const& ctx, element& e, context_function f) override;
       hit_info             hit_element(context const& ctx, point p, bool control) const override;
-      void                 begin_focus() override;
+      void                 begin_focus(focus_request req = restore_previous) override;
 
       using element::refresh;
       using composite_base::focus;
@@ -81,7 +82,7 @@ namespace cycfi { namespace elements
       using composite = array_composite<sizeof...(elements), deck_element>;
       using container = typename composite::container_type;
       composite r{};
-      r = container{{ share(std::forward<E>(elements))... }};
+      r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
 }}

@@ -4,8 +4,10 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements.hpp>
-#include<string>
+#include <string>
+
 using namespace cycfi::elements;
+using cycfi::artist::rgba;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -31,11 +33,11 @@ int main(int argc, char* argv[])
 
    // First dynamic list
    auto comp = basic_cell_composer(10'000, make_cell);
-   auto l = share(dynamic_list(comp));
+   auto l = share(list(comp));
 
    // Second dynamic list
    auto comp2 = basic_cell_composer(10'000, make_cell);
-   auto l2 = share(dynamic_list(comp2));
+   auto l2 = share(list(comp2));
 
    // Scrollers
    auto scr = vscroller(margin({20, 20, 20, 20}, hold(l)));
@@ -49,11 +51,11 @@ int main(int argc, char* argv[])
    };
 
    view_.content(
-    	htile(
+      htile(
          scr,
-         hspacer(100),
+         hspace(100),
          link(scr2)
-		),
+      ),
       background
    );
 

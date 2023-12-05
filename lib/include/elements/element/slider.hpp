@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -18,6 +18,8 @@
 
 namespace cycfi { namespace elements
 {
+   namespace colors = cycfi::artist::colors;
+
    ////////////////////////////////////////////////////////////////////////////
    // Sliders
    ////////////////////////////////////////////////////////////////////////////
@@ -194,8 +196,8 @@ namespace cycfi { namespace elements
    inline view_limits basic_thumb_element<size>
       ::limits(basic_context const& /* ctx */) const
    {
-	  auto pt = point{ float(size), float(size) };
-	  return view_limits{ pt, pt };
+	  auto pt = point{float(size), float(size)};
+	  return view_limits{pt, pt};
    }
 
    template <unsigned size>
@@ -204,7 +206,7 @@ namespace cycfi { namespace elements
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
       auto  indicator_color = thm.indicator_color.level(1.5);
-      auto  cp = circle{ center_point(ctx.bounds), size/2.0f };
+      auto  cp = circle{center_point(ctx.bounds), size/2.0f};
 
       draw_thumb(cnv, cp, _color, indicator_color);
    }
@@ -245,9 +247,9 @@ namespace cycfi { namespace elements
    {
 	  auto sz = float(size);
 	  auto min_length_ = float(min_length);
-	  auto p1 = vertical ? point{ sz, min_length_ } : point{ min_length_, sz };
-	  auto p2 = vertical ? point{ sz, full_extent } : point{ full_extent, sz };
-	  return view_limits{ p1, p2 };
+	  auto p1 = vertical ? point{sz, min_length} : point{ min_length_, sz};
+	  auto p2 = vertical ? point{sz, full_extent} : point{ full_extent, sz};
+	  return view_limits{p1, p2};
    }
 
    template <unsigned size, bool vertical>
@@ -418,7 +420,7 @@ namespace cycfi { namespace elements
    {
       auto r = slider_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
          {std::forward<Subject>(subject), font_size};
-      r._labels = {{ std::move(s)... }};
+      r._labels = {{std::move(s)...}};
       return r;
    }
 }}

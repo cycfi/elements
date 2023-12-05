@@ -1,18 +1,31 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/base_view.hpp>
-#include <elements/support/resource_paths.hpp>
-#include <elements/support/font.hpp>
+#include <artist/resources.hpp>
+#include <artist/font.hpp>
 #include <infra/assert.hpp>
 #import <Cocoa/Cocoa.h>
 #include <dlfcn.h>
 #include <memory>
 #include <map>
-#include <cairo-quartz.h>
 #include <infra/filesystem.hpp>
+
+#if defined(ARTIST_SKIA)
+# include <gl/GrGLInterface.h>
+# include <SkImage.h>
+# include <SkSurface.h>
+# include <SkCanvas.h>
+# include <tools/sk_app/DisplayParams.h>
+# include <tools/sk_app/WindowContext.h>
+# include <tools/sk_app/mac/WindowContextFactory_mac.h>
+# include <OpenGL/gl.h>
+#elif defined(ARTIST_QUARTZ_2D)
+#else
+# error Unknown Graphics Backend
+#endif
 
 #if ! __has_feature(objc_arc)
 # error "ARC is off"
@@ -21,6 +34,7 @@
 namespace ph = cycfi::elements;
 namespace fs = cycfi::fs;
 using key_map = std::map<ph::key_code, ph::key_action>;
+using cycfi::artist::canvas;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper utils
@@ -69,24 +83,28 @@ namespace
          // our resources
          char resource_path[PATH_MAX];
          get_resource_path(resource_path);
-         cycfi::elements::add_search_path(resource_path);
+         cycfi::artist::add_search_path(resource_path);
 
          // Load the user fonts from the Resource folder. Normally this is automatically
          // done on application startup, but for plugins, we need to explicitly load
          // the user fonts ourself.
-         for (fs::directory_iterator it{ resource_path }; it != fs::directory_iterator{}; ++it)
+         for (fs::directory_iterator it{resource_path}; it != fs::directory_iterator{}; ++it)
             if (it->path().extension() == ".ttf")
                activate_font(it->path());
       }
    };
 }
 
-namespace cycfi { namespace elements
+namespace cycfi::artist
 {
-   // These functions are defined in key.mm:
-   key_code    translate_key(unsigned int key);
-   int         translate_flags(NSUInteger flags);
-   NSUInteger  translate_key_to_modifier_flag(key_code key);
+   void init_paths()
+   {
+      // Before anything else, set the working directory so we can access
+      // our resources
+      char resource_path[PATH_MAX];
+      get_resource_path(resource_path);
+      add_search_path(resource_path);
+   }
 
    // This is declared in font.hpp
    fs::path get_user_fonts_directory()
@@ -95,12 +113,20 @@ namespace cycfi { namespace elements
       get_resource_path(resource_path);
       return fs::path(resource_path);
    }
+}
+
+namespace cycfi { namespace elements
+{
+   // These functions are defined in key.mm:
+   key_code    translate_key(unsigned int key);
+   int         translate_flags(NSUInteger flags);
+   NSUInteger  translate_key_to_modifier_flag(key_code key);
 }}
 
 namespace
 {
    // Defines a constant for empty ranges in NSTextInputClient
-   NSRange const kEmptyRange = { NSNotFound, 0 };
+   NSRange const kEmptyRange = {NSNotFound, 0};
 
    float transformY(float y)
    {
@@ -119,7 +145,7 @@ namespace
          int(click_count),
          what,
          mods,
-         { float(pos.x), float(pos.y) }
+         {float(pos.x), float(pos.y)}
       };
    }
 
@@ -164,6 +190,10 @@ namespace
 
 #define ELEMENTS_VIEW_CLASS ELEMENTS_CLASS_PREFIX##ElementsView
 
+#if defined(ARTIST_SKIA)
+using skia_context = std::unique_ptr<sk_app::WindowContext>;
+#endif
+
 @interface ELEMENTS_VIEW_CLASS : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
@@ -172,8 +202,15 @@ namespace
    key_map                          _keys;
    bool                             _start;
    ph::base_view*                   _view;
+   float                            _scale;
+
+#if defined(ARTIST_SKIA)
+   skia_context   _skia_context;
+#endif
+
    bool                             _text_inserted;
 }
+
 @end
 
 @compatibility_alias ElementsView ELEMENTS_VIEW_CLASS;
@@ -198,13 +235,36 @@ namespace
    [self updateTrackingAreas];
 
    _marked_text = [[NSMutableAttributedString alloc] init];
+
+   NSRect user = {{ 0, 0}, {100, 100}};
+   NSRect backing_bounds = [self convertRectToBacking : user];
+   _scale = backing_bounds.size.height / user.size.height;
+
+#if defined(ARTIST_SKIA)
+   sk_app::window_context_factory::MacWindowInfo info;
+   info.fMainView = self;
+   _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
+
+   auto surface = _skia_context->getBackbufferSurface();
+   if (surface)
+      surface->getCanvas()->clear(SkColorSetARGB(255, 255, 255, 255)); // $$$ fixme $$$
+#endif
+
+   [self setPostsBoundsChangedNotifications : YES];
    _text_inserted = false;
+
+   [self registerForDraggedTypes:@[NSPasteboardTypeURL]];
 }
 
 - (void) dealloc
 {
    _task = nil;
    _view = nullptr;
+}
+
+- (float) hdpi_scale
+{
+   return _scale;
 }
 
 - (void) on_tick : (id) sender
@@ -214,14 +274,16 @@ namespace
 
 - (void) attach_notifications
 {
-   [[NSNotificationCenter defaultCenter]
+   auto* center = [NSNotificationCenter defaultCenter];
+
+   [center
       addObserver : self
          selector : @selector(windowDidBecomeKey:)
              name : NSWindowDidBecomeKeyNotification
            object : [self window]
    ];
 
-   [[NSNotificationCenter defaultCenter]
+   [center
       addObserver : self
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification
@@ -231,13 +293,15 @@ namespace
 
 - (void) detach_notifications
 {
-   [[NSNotificationCenter defaultCenter]
+   auto* center = [NSNotificationCenter defaultCenter];
+
+   [center
       removeObserver : self
                 name : NSWindowDidBecomeKeyNotification
               object : [self window]
    ];
 
-   [[NSNotificationCenter defaultCenter]
+   [center
       removeObserver : self
                 name : NSWindowDidResignMainNotification
               object : [self window]
@@ -266,26 +330,26 @@ namespace
 
 - (BOOL) canBecomeKeyWindow
 {
-    return YES;
+   return YES;
 }
 
 - (BOOL) canBecomeMainWindow
 {
-    return YES;
+   return YES;
 }
 
 - (void) drawRect : (NSRect)dirty
 {
    [super drawRect : dirty];
 
-   auto w = [self bounds].size.width;
-   auto h = [self bounds].size.height;
+#if defined(ARTIST_QUARTZ_2D)
 
-   auto context_ref = NSGraphicsContext.currentContext.CGContext;
-   cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
-   cairo_t* context = cairo_create(surface);
-
-   _view->draw(context,
+#if defined ELEMENTS_PRINT_FPS
+   auto start = std::chrono::high_resolution_clock::now();
+#endif
+   auto context = NSGraphicsContext.currentContext.CGContext;
+   auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
+   _view->draw(cnv,
       {
          float(dirty.origin.x),
          float(dirty.origin.y),
@@ -294,8 +358,57 @@ namespace
       }
    );
 
-   cairo_surface_destroy(surface);
-   cairo_destroy(context);
+#if defined ELEMENTS_PRINT_FPS
+   auto stop = std::chrono::high_resolution_clock::now();
+   auto elapsed = std::chrono::duration<double>{stop - start}.count();
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+#endif
+
+#elif defined(ARTIST_SKIA)
+
+#if defined ELEMENTS_PRINT_FPS
+   auto start = std::chrono::high_resolution_clock::now();
+#endif
+
+   auto [w, h] = [self frame].size;
+   w = std::ceil(w * _scale);
+   h = std::ceil(h * _scale);
+   if (_skia_context->width() != int(w) || _skia_context->height() != int(h))
+      _skia_context->resize(w, h);
+
+   auto surface = _skia_context->getBackbufferSurface();
+   if (surface)
+   {
+      auto draw =
+         [&](auto& cnv_)
+         {
+            auto cnv = canvas{cnv_};
+            cnv.pre_scale(_scale);
+
+            _view->draw(cnv,
+               {
+                  float(dirty.origin.x),
+                  float(dirty.origin.y),
+                  float(dirty.origin.x + dirty.size.width),
+                  float(dirty.origin.y + dirty.size.height)
+               }
+            );
+         };
+
+      SkCanvas* gpu_canvas = surface->getCanvas();
+      gpu_canvas->save();
+      draw(gpu_canvas);
+      gpu_canvas->restore();
+      surface->flush();
+      _skia_context->swapBuffers();
+   }
+
+#if defined ELEMENTS_PRINT_FPS
+   auto stop = std::chrono::high_resolution_clock::now();
+   auto elapsed = std::chrono::duration<double>{stop - start}.count();
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+#endif
+#endif
 }
 
 - (void) mouseDown : (NSEvent*) event
@@ -390,7 +503,7 @@ namespace
    [[self window] makeFirstResponder : self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::entering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::entering);
    [self displayIfNeeded];
 }
 
@@ -399,7 +512,7 @@ namespace
    [[self window] setAcceptsMouseMovedEvents : NO];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::leaving);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::leaving);
    [self displayIfNeeded];
 }
 
@@ -407,7 +520,7 @@ namespace
 {
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
-   _view->cursor({ float(pos.x), float(pos.y) }, ph::cursor_tracking::hovering);
+   _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::hovering);
    [self displayIfNeeded];
    [super mouseMoved: event];
 }
@@ -420,7 +533,7 @@ namespace
    auto pos = [event locationInWindow];
    pos = [self convertPoint:pos fromView:nil];
    if (fabs(delta_x) > 0.0 || fabs(delta_y) > 0.0)
-      _view->scroll({ delta_x, delta_y }, { float(pos.x), float(pos.y) });
+      _view->scroll({delta_x, delta_y}, {float(pos.x), float(pos.y)});
    [self displayIfNeeded];
 }
 
@@ -428,7 +541,7 @@ namespace
 {
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::press, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::press, mods});
    _text_inserted = false;
    [self interpretKeyEvents : [NSArray arrayWithObject : event]];
    if (!handled && !_text_inserted)
@@ -456,7 +569,7 @@ namespace
      action = ph::key_action::release;
    }
 
-   handle_key(_keys, *_view, { key, action, mods });
+   handle_key(_keys, *_view, {key, action, mods});
 }
 
 - (void) keyUp : (NSEvent*) event
@@ -464,7 +577,7 @@ namespace
    auto const key = ph::translate_key([event keyCode]);
    auto const mods = ph::translate_flags([event modifierFlags]);
 
-   bool handled = handle_key(_keys, *_view, { key, ph::key_action::release, mods });
+   bool handled = handle_key(_keys, *_view, {key, ph::key_action::release, mods});
    if (!handled)
       [[self nextResponder] keyUp : event];
 }
@@ -540,7 +653,7 @@ namespace
       const unichar codepoint = [characters characterAtIndex:i];
       if ((codepoint & 0xff00) == 0xf700)
          continue;
-      _text_inserted = handle_text(*_view, { codepoint, mods });
+      _text_inserted = handle_text(*_view, {codepoint, mods});
    }
 }
 
@@ -556,6 +669,73 @@ namespace
 -(void) windowDidResignKey : (NSNotification*) notification
 {
    _view->end_focus();
+}
+
+-(void) makeDropInfo : (id <NSDraggingInfo>) sender : (ph::drop_info*) info
+{
+   auto pos = [sender draggingLocation];
+   pos = [self convertPoint : pos fromView : nil];
+
+   NSPasteboard* pasteboard = [sender draggingPasteboard];
+   NSDictionary* options = @{NSPasteboardURLReadingFileURLsOnlyKey:@YES};
+   NSArray* urls = [pasteboard   readObjectsForClasses:@[[NSURL class]]
+                                 options:options];
+   const NSUInteger count = [urls count];
+   if (count)
+   {
+      std::string paths;
+      info->where = ph::point{float(pos.x), float(pos.y)};
+      for (NSUInteger i = 0; i < count; ++i)
+      {
+         if (i != 0)
+            paths += "\n";
+         paths += std::string("file://") + [urls[i] fileSystemRepresentation];
+      }
+      info->data["text/uri-list"] = paths;
+   }
+}
+
+- (BOOL) performDragOperation : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.data.size())
+   {
+      if (_view->drop(info))
+         return YES;
+   }
+   return NO;
+}
+
+- (BOOL) wantsPeriodicDraggingUpdates
+{
+   return YES;
+}
+
+- (NSDragOperation) draggingEntered : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.data.size())
+      _view->track_drop(info, ph::cursor_tracking::entering);
+   return NSDragOperationGeneric;
+}
+
+- (NSDragOperation) draggingUpdated : (id<NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.data.size())
+      _view->track_drop(info, ph::cursor_tracking::hovering);
+   return NSDragOperationGeneric;
+}
+
+- (void) draggingExited : (id <NSDraggingInfo>) sender
+{
+   ph::drop_info info;
+   [self makeDropInfo : sender : &info];
+   if (info.data.size())
+      _view->track_drop(info, ph::cursor_tracking::leaving);
 }
 
 @end // @implementation ElementsView
@@ -620,7 +800,8 @@ namespace cycfi { namespace elements
 
    float base_view::hdpi_scale() const
    {
-      return 1.0f; // This is already done properly by the cocoa->cairo context
+      auto ns_view = get_mac_view(host());
+      return [ns_view hdpi_scale];
    }
 
    point base_view::cursor_pos() const
@@ -628,18 +809,18 @@ namespace cycfi { namespace elements
       auto  ns_view = get_mac_view(host());
       auto  pos = [[ns_view window] mouseLocationOutsideOfEventStream];
       pos = [ns_view convertPoint : pos fromView : nil];
-      return { float(pos.x), float(pos.y) };
+      return {float(pos.x), float(pos.y)};
    }
 
    extent base_view::size() const
    {
       auto frame = [get_mac_view(host()) frame];
-      return { float(frame.size.width), float(frame.size.height) };
+      return {float(frame.size.width), float(frame.size.height)};
    }
 
    void base_view::size(elements::extent size_)
    {
-      [get_mac_view(host()) setFrameSize : NSSize{ size_.x, size_.y }];
+      [get_mac_view(host()) setFrameSize : NSSize{size_.x, size_.y}];
    }
 
    void base_view::refresh()
@@ -666,14 +847,19 @@ namespace cycfi { namespace elements
       return [object UTF8String];
    }
 
-   void clipboard(std::string const& text)
+   void clipboard(std::string_view text)
    {
+      auto cf_string = CFStringCreateWithBytesNoCopy(
+         nullptr, (UInt8 const*)text.begin(), text.size(), kCFStringEncodingUTF8
+       , false, kCFAllocatorNull
+      );
+
       NSArray* types = [NSArray arrayWithObjects:NSPasteboardTypeString, nil];
 
       NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
       [pasteboard declareTypes:types owner:nil];
-      [pasteboard setString:[NSString stringWithUTF8String:text.c_str()]
-                    forType:NSPasteboardTypeString];
+      [pasteboard setString : (__bridge NSString*) cf_string
+                    forType : NSPasteboardTypeString];
    }
 
    void set_cursor(cursor_type type)
@@ -704,7 +890,7 @@ namespace cycfi { namespace elements
    point scroll_direction()
    {
       float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
-      return { dir, dir };
+      return {dir, dir};
    }
 }}
 

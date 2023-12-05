@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2016-2020 Joel de Guzman
+#  Copyright (c) 2016-2023 Joel de Guzman
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
@@ -10,6 +10,7 @@ project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 # Sanitizers
 
 option(ASAN "Build with address sanitizer" OFF)
+option(LSAN "Build with leak sanitizer" OFF)
 option(TSAN "Build with thread sanitizer" OFF)
 option(UBSAN "Build with undefined Behavior sanitizer" OFF)
 
@@ -25,6 +26,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
       add_sanitizer("address")
    endif()
 
+   if (LSAN)
+      add_sanitizer("leak")
+   endif()
+
    if (TSAN)
       add_sanitizer("thread")
    endif()
@@ -33,9 +38,17 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
       add_sanitizer("undefined")
    endif()
 else()
-   if (ASAN OR TSAN OR UBSAN)
+   if (ASAN OR LSAN OR TSAN OR UBSAN)
       message(FATAL_ERROR "Compiler is not supported.")
    endif()
+endif()
+
+###############################################################################
+# Linux Open GL
+
+if (UNIX AND NOT APPLE)
+   find_package(PkgConfig REQUIRED)
+   find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 endif()
 
 ###############################################################################
@@ -107,25 +120,29 @@ elseif (WIN32)
    )
 
    if (MSVC)
+
+      set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
+         MSVC_RUNTIME_LIBRARY "MultiThreaded"
+      )
+
       target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
       )
 
+      add_dependencies(${PROJECT_NAME} windows_dlls)
+
       if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bits?
-         set(CAIRO_DLL ${ELEMENTS_ROOT}/lib/external/cairo/lib/x64/cairo.dll)
          set(FREETYPE_DLL ${ELEMENTS_ROOT}/lib/external/freetype/win64/freetype.dll)
          set(FONTCONFIG_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/fontconfig.dll)
          set(ICONV_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/libiconv.dll)
          set(XML2 ${ELEMENTS_ROOT}/lib/external/fontconfig/x64/libxml2.dll)
       else()
-         set(CAIRO_DLL ${ELEMENTS_ROOT}/lib/external/cairo/lib/x86/cairo.dll)
          set(FREETYPE_DLL ${ELEMENTS_ROOT}/lib/external/freetype/win32/freetype.dll)
          set(FONTCONFIG_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/fontconfig.dll)
          set(ICONV_DLL ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/libiconv.dll)
          set(XML2 ${ELEMENTS_ROOT}/lib/external/fontconfig/x86/libxml2.dll)
       endif()
 
-      file(COPY ${CAIRO_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${FREETYPE_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${FONTCONFIG_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
       file(COPY ${ICONV_DLL} DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -143,12 +160,17 @@ target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
 )
 
+if (APPLE)
+   target_compile_options(${ELEMENTS_APP_PROJECT} PUBLIC "-fobjc-arc")
+endif()
+
 ###############################################################################
 # Libraries and linking
 
 target_link_libraries(${ELEMENTS_APP_PROJECT} PRIVATE
    ${ELEMENTS_APP_DEPENDENCIES}
    elements
+   ${OPENGL_LIBRARIES}
 )
 
 if (NOT DEFINED ELEMENTS_APP_INCLUDE_DIRECTORIES)

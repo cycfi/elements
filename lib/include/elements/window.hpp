@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -14,7 +14,7 @@
 #endif
 
 #include <infra/support.hpp>
-#include <elements/support/rect.hpp>
+#include <artist/rect.hpp>
 #include <elements/base_view.hpp>
 
 namespace cycfi { namespace elements
@@ -40,12 +40,12 @@ namespace cycfi { namespace elements
                            window(
                               std::string const& name
                             , int style_ = standard
-                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                            , rect const& bounds = rect{20, 20, 660, 500}
                            );
 
                            window(
                               int style_ = standard
-                            , rect const& bounds = rect{ 20, 20, 660, 500 }
+                            , rect const& bounds = rect{20, 20, 660, 500}
                            )
                             : window("", style_, bounds)
                            {}

@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -7,6 +7,7 @@
 #define ELEMENTS_REFERENCE_APRIL_10_2016
 
 #include <elements/element/element.hpp>
+#include <elements/support/receiver.hpp>
 #include <functional>
 
 namespace cycfi { namespace elements
@@ -42,16 +43,20 @@ namespace cycfi { namespace elements
 
       using Base::Base;
       using Base::operator=;
+      using focus_request = typename Base::focus_request;
+      using context_function = typename Base::context_function;
+      static constexpr auto restore_previous = Base::restore_previous;
 
    // Display
 
       view_limits             limits(basic_context const& ctx) const override;
       view_stretch            stretch() const override;
       unsigned                span() const override;
-      element*                hit_test(context const& ctx, point p) override;
+      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
+      void                    in_context_do(context const& ctx, element& e, context_function f) override;
 
       using element::refresh;
 
@@ -66,10 +71,14 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus() override;
+      void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
+
+      void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
+      bool                    drop(context const& ctx, drop_info const& info) override;
+
    };
 
    struct indirect_base : element
@@ -157,9 +166,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline element*
-   indirect<Base>::hit_test(context const& ctx, point p)
+   indirect<Base>::hit_test(context const& ctx, point p, bool leaf)
    {
-      return this->get().hit_test(ctx, p);
+      return this->get().hit_test(ctx, p, leaf);
    }
 
    template <typename Base>
@@ -185,9 +194,16 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline void
-   indirect<Base>::refresh(context const& ctx, element& element, int outward)
+   indirect<Base>::refresh(context const& ctx, element& e, int outward)
    {
-      this->get().refresh(ctx, element, outward);
+      this->get().refresh(ctx, e, outward);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::in_context_do(context const& ctx, element& e, indirect<Base>::context_function f)
+   {
+      this->get().in_context_do(ctx, e, f);
    }
 
    template <typename Base>
@@ -241,9 +257,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline void
-   indirect<Base>::begin_focus()
+   indirect<Base>::begin_focus(focus_request req)
    {
-      return this->get().begin_focus();
+      return this->get().begin_focus(req);
    }
 
    template <typename Base>
@@ -265,6 +281,18 @@ namespace cycfi { namespace elements
    indirect<Base>::focus()
    {
       return this->get().focus();
+   }
+
+   template <typename Base>
+   inline void indirect<Base>::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   {
+      this->get().track_drop(ctx, info, status);
+   }
+
+   template <typename Base>
+   inline bool indirect<Base>::drop(context const& ctx, drop_info const& info)
+   {
+      return this->get().drop(ctx, info);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -293,7 +321,7 @@ namespace cycfi { namespace elements
    inline indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element &rhs)
    {
-      return indirect<reference<typename std::remove_reference<Element>::type>>{ rhs };
+      return indirect<reference<typename std::remove_reference<Element>::type>>{rhs};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -330,13 +358,13 @@ namespace cycfi { namespace elements
    inline indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs)
    {
-      return indirect<shared_element<Element>>{ rhs };
+      return indirect<shared_element<Element>>{rhs};
    }
 
    inline indirect<shared_element<element>>
    hold_any(std::shared_ptr<element> rhs)
    {
-      return indirect<shared_element<element>>{ rhs };
+      return indirect<shared_element<element>>{rhs};
    }
 }}
 

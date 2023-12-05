@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
@@ -8,33 +8,37 @@
 
 #include <elements/element/indirect.hpp>
 #include <elements/element/menu.hpp>
+#include <elements/element/label.hpp>
+#include <elements/element/align.hpp>
 #include <elements/element/size.hpp>
+#include <elements/element/margin.hpp>
+#include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/gallery/button.hpp>
 #include <infra/string_view.hpp>
 #include <string>
+#include <vector>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Popup Button
    ////////////////////////////////////////////////////////////////////////////
-   basic_menu button_menu(
+   inline auto
+   button_menu(
       std::string text
     , menu_position pos = menu_position::bottom_right
     , color body_color = get_theme().default_button_color
-   );
-
-   basic_menu button_menu(
-      menu_position pos = menu_position::bottom_right
-    , color body_color = get_theme().default_button_color
-   );
-
-   basic_menu icon_menu(
-      uint32_t code
-    , float size
-    , menu_position pos = menu_position::bottom_right
-   );
+   )
+   {
+      auto icon =
+         (pos == menu_position::bottom_right || pos == menu_position::bottom_left)?
+         icons::down_dir : icons::up_dir
+         ;
+      auto menu = button<basic_button_menu>(std::move(text), icon, 1.0, body_color);
+      menu.position(pos);
+      return menu;
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Menu Background
@@ -55,7 +59,7 @@ namespace cycfi { namespace elements
 
    inline auto menu_item_text(std::string text, float text_align = 0.0f /*align left*/)
    {
-      return hmargin({ 20, 20 }, halign(text_align, label(std::move(text))));
+      return hmargin({20, 20}, halign(text_align, label(std::move(text))));
    }
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
@@ -66,7 +70,7 @@ namespace cycfi { namespace elements
 #else
       auto sk_font = get_theme().label_font;
 #endif
-      return hmargin({ 20, 10 },
+      return hmargin({20, 10},
          htile(
             htile(
                align_left(label(std::move(text)))
@@ -115,19 +119,66 @@ namespace cycfi { namespace elements
       virtual string_view        operator[](std::size_t index) const = 0;
    };
 
-   std::pair<basic_menu, std::shared_ptr<basic_label>>
-   selection_menu(std::string init);
+   inline auto make_selection_menu_button(std::shared_ptr<basic_label> label)
+   {
+      return momentary_button<basic_button_menu>(
+         layer(
+            margin(
+               get_theme().button_margin,
+               htile(
+                  align_left(hold(label)),
+                  align_right(left_margin(12, icon(icons::down_dir, 1.0)))
+               )
+            ),
+            frame{}
+         )
+      );
+   }
 
-   std::pair<basic_menu, std::shared_ptr<basic_label>>
-   selection_menu(
+   inline auto selection_menu(std::string init)
+   {
+      auto btn_text = share(label(std::move(init)).relative_font_size(1.0));
+      auto menu_btn = make_selection_menu_button(btn_text);
+      menu_btn.position(menu_position::bottom_right);
+      return std::make_pair(menu_btn, btn_text);
+   }
+
+   inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , menu_selector const& items
-    , float text_align = 0.0f // align left
-   );
+    , float text_align
+   )
+   {
+      auto r = selection_menu(items.size()? std::string(items[0]) : "");
+
+      if (items.size())
+      {
+         vtile_composite list;
+         for (std::size_t i = 0; i != items.size(); ++i)
+         {
+            auto e = share(menu_item(std::string(items[i]), text_align));
+            auto label = find_subject<text_reader_u8*>(e.get());
+            if (label)
+            {
+               e->on_click = [btn_text = r.second, on_select, label]()
+               {
+                  auto text = label->get_text();
+                  btn_text->set_text(text);
+                  on_select(text);
+               };
+            }
+            list.push_back(e);
+         }
+
+         auto menu = layer(list, panel{});
+         r.first.menu(menu);
+      }
+
+      return r;
+   }
 
    template <typename Sequence>
-   inline std::pair<basic_menu, std::shared_ptr<basic_label>>
-   selection_menu(
+   inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , Sequence const& seq
     , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
@@ -154,12 +205,11 @@ namespace cycfi { namespace elements
          Sequence const& _seq;
       };
 
-      return selection_menu(on_select, seq_menu_selector{ seq });
+      return selection_menu(on_select, seq_menu_selector{seq});
    }
 
    template <typename T>
-   std::pair<basic_menu, std::shared_ptr<basic_label>>
-   selection_menu(
+   inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , std::initializer_list<T> list
     , float text_align = 0.0f // align left
@@ -183,10 +233,10 @@ namespace cycfi { namespace elements
             return *(_list.begin()+index);
          }
 
-         std::initializer_list<T> _list;
+         std::vector<T> _list;
       };
 
-      return selection_menu(on_select, init_list_menu_selector{ list }, text_align);
+      return selection_menu(on_select, init_list_menu_selector{list}, text_align);
    }
 }}
 

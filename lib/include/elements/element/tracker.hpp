@@ -1,12 +1,12 @@
 /*=============================================================================
-   Copyright (c) 2016-2020 Joel de Guzman
+   Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #if !defined(ELEMENTS_TRACKER_AUGUST_29_2016)
 #define ELEMENTS_TRACKER_AUGUST_29_2016
 
-#include <elements/support/point.hpp>
+#include <artist/point.hpp>
 #include <elements/element/element.hpp>
 #include <memory>
 #include <type_traits>
@@ -28,7 +28,7 @@ namespace cycfi { namespace elements
       point             start;
       point             current = start;
       point             previous = start;
-      point             offset = point{ 0, 0 };
+      point             offset = point{0, 0};
       int               modifiers = 0;
    };
 
@@ -59,6 +59,8 @@ namespace cycfi { namespace elements
       tracker_info*           get_state() { return state.get(); }
       tracker_info const*     get_state() const { return state.get(); }
 
+      void                    escape_tracking(context const& ctx);
+
    protected:
 
       using tracker_info_ptr = std::unique_ptr<tracker_info>;
@@ -79,12 +81,12 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    inline point tracker_info::distance() const
    {
-      return { current.x-start.x, current.y-start.y };
+      return {current.x-start.x, current.y-start.y};
    }
 
    inline point tracker_info::movement() const
    {
-      return { current.x-previous.x, current.y-previous.y };
+      return {current.x-previous.x, current.y-previous.y};
    }
 
    template <typename Base, typename TrackerInfo>
@@ -147,6 +149,18 @@ namespace cycfi { namespace elements
    tracker<Base, TrackerInfo>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
+   }
+
+   template <typename Base, typename TrackerInfo>
+   inline void
+   tracker<Base, TrackerInfo>::escape_tracking(context const& ctx)
+   {
+      if (state)
+      {
+         this->on_tracking(ctx, element::end_tracking);
+         end_tracking(ctx, *state);
+         state.reset();
+      }
    }
 }}
 

@@ -7,6 +7,7 @@
 #define ELEMENTS_PROGRESS_BAR_JANUARY_20_2020
 
 #include <elements/element/element.hpp>
+#include <elements/support/receiver.hpp>
 #include <type_traits>
 
 namespace cycfi::elements

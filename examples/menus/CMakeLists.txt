@@ -18,7 +18,7 @@ endif()
 
 set(ELEMENTS_APP_PROJECT "Menus")
 set(ELEMENTS_APP_TITLE "Menus")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2020 Joel de Guzman")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2023 Joel de Guzman")
 set(ELEMENTS_APP_ID "com.cycfi.menus")
 set(ELEMENTS_APP_VERSION "1.0")
 

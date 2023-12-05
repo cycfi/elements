@@ -132,10 +132,10 @@ if (APPLE)
    )
 elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    set(ELEMENTS_HOST
-      host/linux/app.cpp
-      host/linux/base_view.cpp
-      host/linux/key.cpp
-      host/linux/window.cpp
+      host/gtk3/app.cpp
+      host/gtk3/base_view.cpp
+      host/gtk3/key.cpp
+      host/gtk3/window.cpp
    )
 elseif (WIN32)
    set(ELEMENTS_HOST
@@ -240,7 +240,7 @@ elseif (APPLE OR UNIX OR WIN32)
 endif()
 
 ###############################################################################
-# GTK (linux only)
+# GTK3
 
 if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)

@@ -62,6 +62,9 @@ namespace cycfi { namespace elements
 
    bool basic_button_menu::click(context const& ctx, mouse_button btn)
    {
+      if (!is_enabled())
+         return false;
+
       if (btn.down)
       {
          if (state(true))

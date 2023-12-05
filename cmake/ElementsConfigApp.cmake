@@ -10,6 +10,7 @@ project(${ELEMENTS_APP_PROJECT} LANGUAGES CXX)
 # Sanitizers
 
 option(ASAN "Build with address sanitizer" OFF)
+option(LSAN "Build with leak sanitizer" OFF)
 option(TSAN "Build with thread sanitizer" OFF)
 option(UBSAN "Build with undefined Behavior sanitizer" OFF)
 
@@ -25,6 +26,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
       add_sanitizer("address")
    endif()
 
+   if (LSAN)
+      add_sanitizer("leak")
+   endif()
+
    if (TSAN)
       add_sanitizer("thread")
    endif()
@@ -33,7 +38,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
       add_sanitizer("undefined")
    endif()
 else()
-   if (ASAN OR TSAN OR UBSAN)
+   if (ASAN OR LSAN OR TSAN OR UBSAN)
       message(FATAL_ERROR "Compiler is not supported.")
    endif()
 endif()
@@ -142,6 +147,10 @@ endif()
 target_compile_options(${ELEMENTS_APP_PROJECT} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
 )
+
+if (APPLE)
+   target_compile_options(${ELEMENTS_APP_PROJECT} PUBLIC "-fobjc-arc")
+endif()
 
 ###############################################################################
 # Libraries and linking

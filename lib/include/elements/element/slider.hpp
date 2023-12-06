@@ -394,8 +394,8 @@ namespace cycfi { namespace elements
    {
       // Draw logarithmic lines
       draw_slider_marks_log(
-         ctx.canvas, ctx.bounds, _size, _num_divs
-         , _major_divs, colors::light_gray);
+         ctx.canvas, ctx.bounds, _size, _major_divs
+         , _minor_divs, colors::light_gray);
 
       // Draw the subject
       base_type::draw(ctx);

@@ -764,7 +764,7 @@ namespace cycfi { namespace elements
 
    point scroll_direction()
    {
-      return {-1.0f, -1.0f};
+      return {1.0f, 1.0f};
    }
 }}
 

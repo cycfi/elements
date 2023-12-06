@@ -13,20 +13,6 @@ auto constexpr bg_color = rgba(35, 35, 37, 255);
 auto constexpr bred     = colors::red.level(0.7).opacity(0.4);
 auto background = box(bg_color);
 
-inline auto pretty_printer = [] (float value) {
-    std::stringstream ss;
-    ss << std::setprecision(3) << value;
-    return ss.str();
-};
-
-inline auto axis_transform = [] (float value) {
-    return value*10;
-};
-
-inline auto axis_transform_inv = [] (float value) {
-    return value/10;
-};
-
 auto make_range_slider(view& _view) {
 	static auto track = basic_track<5, false>(colors::black);
 	static auto thumb = margin(
@@ -53,12 +39,26 @@ auto make_range_slider(view& _view) {
 	static auto _min_bg = box(bg_color);
 	static auto _max_bg = box(bg_color);
 
-	_range_slider.on_change.first = [&_view] (float value) {
+	auto pretty_printer = [] (float value) {
+		std::stringstream ss;
+		ss << std::setprecision(3) << value;
+		return ss.str();
+	};
+
+	auto axis_transform = [] (float value) {
+		return value*10;
+	};
+
+	auto axis_transform_inv = [] (float value) {
+		return value/10;
+	};
+
+	_range_slider.on_change.first = [&_view, pretty_printer, axis_transform] (float value) {
 		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_min_textbox.first);
 	};
 
-	_range_slider.on_change.second = [&_view] (float value) {
+	_range_slider.on_change.second = [&_view, pretty_printer, axis_transform] (float value) {
 		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_max_textbox.first);
 	};
@@ -71,7 +71,7 @@ auto make_range_slider(view& _view) {
 		}
 	};
 
-	_min_textbox.second->on_enter = [&_view] (std::string_view text) {
+	_min_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
 		try {
 			_range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
 			_min_bg = bg_color;
@@ -89,7 +89,120 @@ auto make_range_slider(view& _view) {
 		}
 	};
 
-	_max_textbox.second->on_enter = [&_view] (std::string_view text) {
+	_max_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+		try {
+			_range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
+			_max_bg = bg_color;
+			_view.refresh(_range_slider);
+		} catch (std::exception&) {
+			_max_bg = bred;
+		}
+	};
+
+	return vtile(
+		margin(
+			{50, 10, 50, 10},
+			link(_range_slider)
+		),
+		layer(
+			align_left(
+				margin(
+					{50, 10, 50, 10},
+					hsize(
+						100,
+						layer(
+							link(_min_textbox.first),
+							link(_min_bg)
+						)
+					)
+				)
+			),
+			align_right(
+				margin(
+					{50, 10, 50, 10},
+					hsize(
+						100,
+						layer(
+							link(_max_textbox.first),
+							link(_max_bg)
+						)
+					)
+				)
+			)
+		)
+	);
+}
+
+auto make_log_range_slider(view& _view) {
+	double min_val = 1e-4;
+	double max_val = 1e0;
+	static auto track = basic_track<5, false>(colors::black);
+	static auto _range_slider = range_slider(
+		basic_thumb<5>(),
+		basic_thumb<5>(),
+		slider_labels<10>(
+			slider_marks_log<20, 4, 10>(track), 0.8, "1e-4", "1e-3", "1e-2", "1e-1", "1e0"
+		),
+		{0.1, 0.8}
+	);
+
+	static auto _min_textbox = input_box("min level");
+	static auto _max_textbox = input_box("max level");
+	static auto _min_bg = box(bg_color);
+	static auto _max_bg = box(bg_color);
+
+	auto pretty_printer = [] (float value) {
+		std::stringstream ss;
+		ss << std::setprecision(2) << std::scientific << value;
+		return ss.str();
+	};
+
+	auto axis_transform_inv = [min_val, max_val] (float value) {
+		return (std::log10(value)-std::log10(min_val))/(std::log10(max_val)-std::log10(min_val))*(1-0)+0;
+	};
+
+	auto axis_transform = [min_val, max_val] (float x) {
+		double logy = (x-0)/(1-0)*(std::log10(max_val)-std::log10(min_val)) + std::log10(min_val);
+		return std::pow(10, logy);
+	};
+
+	_range_slider.on_change.first = [&_view, pretty_printer, axis_transform] (float value) {
+		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
+        _view.refresh(_min_textbox.first);
+	};
+
+	_range_slider.on_change.second = [&_view, pretty_printer, axis_transform] (float value) {
+		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
+        _view.refresh(_max_textbox.first);
+	};
+
+	_min_textbox.second->on_text = [] (std::string_view text) {
+		if (text.empty()) {
+			_min_bg = bg_color;
+		} else {
+			_min_bg = bg_color_accent;
+		}
+	};
+
+	_min_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+		try {
+			_range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
+			_min_bg = bg_color;
+			_view.refresh(_range_slider);
+		} catch (std::exception&) {
+			_min_bg = bred;
+		}
+	};
+
+    _max_textbox.second->on_text = [] (std::string_view text) {
+		if (text.empty()) {
+			_max_bg = bg_color;
+		} else {
+			_max_bg = bg_color_accent;
+		}
+	};
+
+	_max_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
 		try {
 			_range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
 			_max_bg = bg_color;
@@ -142,7 +255,10 @@ int main(int argc, char* argv[])
    view _view(_win);
 
    _view.content(
-      make_range_slider(_view),
+	  vtile(
+		make_range_slider(_view),
+		make_log_range_slider(_view)
+	  ),
       background
    );
 

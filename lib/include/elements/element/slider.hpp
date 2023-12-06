@@ -365,6 +365,51 @@ namespace cycfi { namespace elements
       return {std::forward<Subject>(subject)};
    }
 
+   template <
+      std::size_t _size, std::size_t _num_divs
+    , std::size_t _major_divs, typename Subject>
+   class slider_marks_log_element : public slider_element_base<_size, Subject>
+   {
+
+   public:
+
+      static_assert(_major_divs > 0, "Major divisions must be greater than zero");
+
+      using base_type = slider_element_base<_size, Subject>;
+      using base_type::base_type;
+
+      void                    draw(context const& ctx) override;
+   };
+
+   void draw_slider_marks_log(
+      canvas& cnv, rect bounds, float size, std::size_t major_divs
+    , std::size_t minor_divs, color c);
+
+   template <
+      std::size_t _size, std::size_t _num_divs
+      , std::size_t _major_divs, typename Subject>
+   inline void
+   slider_marks_log_element<_size, _num_divs, _major_divs, Subject>
+      ::draw(context const& ctx)
+   {
+      // Draw logarithmic lines
+      draw_slider_marks_log(
+         ctx.canvas, ctx.bounds, _size, _num_divs
+         , _major_divs, colors::light_gray);
+
+      // Draw the subject
+      base_type::draw(ctx);
+   }
+
+   template <
+      std::size_t _size, std::size_t _num_divs = 50
+      , std::size_t _major_divs = 10, typename Subject>
+   inline slider_marks_log_element<_size, _num_divs, _major_divs, remove_cvref_t<Subject>>
+   slider_marks_log(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Slider Labels (You can use this to place slider labels with sliders)
    ////////////////////////////////////////////////////////////////////////////

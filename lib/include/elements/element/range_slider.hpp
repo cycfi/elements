@@ -52,6 +52,8 @@ namespace cycfi { namespace elements
 
       rect                    track_bounds(context const& ctx) const;
       std::pair<rect, rect>   thumb_bounds(context const& ctx) const;
+      virtual float           handle_possible_collision_first(context const& ctx, float val) const;
+      virtual float           handle_possible_collision_second(context const& ctx, float val) const;
 
       virtual element_cref_pair_type thumb() const = 0;
       virtual element_ref_pair_type  thumb() = 0;
@@ -82,6 +84,21 @@ namespace cycfi { namespace elements
       void                                        edit_value_second(double val) override;
    };
 
+   class basic_range_slider_offset_base : public basic_range_slider_base
+   {
+   public:
+      inline basic_range_slider_offset_base(std::pair<double, double> init_value, float offset_from_center)
+       : basic_range_slider_base(init_value)
+       , offset_from_center(offset_from_center)
+      {}
+
+      float handle_possible_collision_first(context const& ctx, float val) const override;
+      float handle_possible_collision_second(context const& ctx, float val) const override;
+
+   private:
+      float offset_from_center = 0;
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    template <typename Thumb1, typename Thumb2, typename Track, typename Base = basic_range_slider_base>
    class basic_range_slider : public Base
@@ -96,6 +113,13 @@ namespace cycfi { namespace elements
 
                               inline basic_range_slider(Thumb1&& thumb_min, Thumb2&& thumb_max, Track&& track, std::pair<double, double> init_value)
                                : Base(init_value)
+                               , _thumb1(std::forward<Thumb1>(thumb_min))
+                               , _thumb2(std::forward<Thumb2>(thumb_max))
+                               , _body(std::forward<Track>(track))
+                              {}
+
+                              inline basic_range_slider(Thumb1&& thumb_min, Thumb2&& thumb_max, Track&& track, std::pair<double, double> init_value, float offset_from_center)
+                               : Base(init_value, offset_from_center)
                                , _thumb1(std::forward<Thumb1>(thumb_min))
                                , _thumb2(std::forward<Thumb2>(thumb_max))
                                , _body(std::forward<Track>(track))
@@ -122,6 +146,19 @@ namespace cycfi { namespace elements
          std::forward<Thumb2>(thumb_max),
          std::forward<Track>(track),
          init_value
+      };
+   }
+
+   template <typename Thumb1, typename Thumb2, typename Track>
+   inline basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_offset_base>
+   range_slider(Thumb1&& thumb_min, Thumb2&& thumb_max, Track&& track, std::pair<double, double> init_value, float offset_from_center)
+   {
+      return {
+         std::forward<Thumb1>(thumb_min),
+         std::forward<Thumb2>(thumb_max),
+         std::forward<Track>(track),
+         init_value,
+         offset_from_center
       };
    }
 }}

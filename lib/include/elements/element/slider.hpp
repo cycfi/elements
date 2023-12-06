@@ -386,10 +386,10 @@ namespace cycfi { namespace elements
     , std::size_t minor_divs, color c);
 
    template <
-      std::size_t _size, std::size_t _num_divs
-      , std::size_t _major_divs, typename Subject>
+      std::size_t _size, std::size_t _major_divs
+      , std::size_t _minor_divs, typename Subject>
    inline void
-   slider_marks_log_element<_size, _num_divs, _major_divs, Subject>
+   slider_marks_log_element<_size, _major_divs, _minor_divs, Subject>
       ::draw(context const& ctx)
    {
       // Draw logarithmic lines

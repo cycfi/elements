@@ -397,8 +397,9 @@ namespace cycfi { namespace elements
          else
             info->_velocity *= acceleration;
 
-         dir.x *= info->_velocity;
-         dir.y *= info->_velocity;
+         static constexpr auto max_velocity = 100.0;
+         dir.x *= std::min(info->_velocity, max_velocity);
+         dir.y *= std::min(info->_velocity, max_velocity);
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);

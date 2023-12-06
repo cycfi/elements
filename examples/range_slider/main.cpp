@@ -138,10 +138,10 @@ auto make_log_range_slider(view& _view) {
 	double max_val = 1e0;
 	static auto track = basic_track<5, false>(colors::black);
 	static auto _range_slider = range_slider(
-		basic_thumb<5>(),
-		basic_thumb<5>(),
+		basic_thumb<10>(),
+		basic_thumb<10>(),
 		slider_labels<10>(
-			slider_marks_log<20, 4, 10>(track), 0.8, "1e-4", "1e-3", "1e-2", "1e-1", "1e0"
+			slider_marks_log<20, 4>(track), 0.8, "1e-4", "1e-3", "1e-2", "1e-1", "1e0"
 		),
 		{0.1, 0.8}
 	);

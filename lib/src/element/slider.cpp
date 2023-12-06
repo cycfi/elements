@@ -258,18 +258,10 @@ namespace cycfi { namespace elements
       float xmax = vertical? bounds.bottom : bounds.right;
       float major_step = (xmax-xmin)/major_divs;
 
-      double x1 = 0;
-      double x2 = 1;
-      double y1 = 1;
-      double y2 = 10;
-      auto f = [x1, x2, y1, y2] (float y) {
-         return (std::log(y) - std::log(y1)) / (std::log(y2) - std::log(y1)) * (x2 - x1) + x1;
-      };
-
       std::vector<float> minor_offsets(minor_divs);
       for (std::size_t i = 1; i != minor_divs; ++i)
       {
-         minor_offsets[i-1] = f(i)*major_step;
+         minor_offsets[i-1] = std::log10(i)*major_step;
       }
 
       for (std::size_t i = 0; i != major_divs+1; ++i) 

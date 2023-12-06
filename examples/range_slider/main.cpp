@@ -57,11 +57,13 @@ auto make_range_slider(view& _view) {
 		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_min_textbox.first);
 	};
+	_range_slider.edit_value_first(_range_slider.value_first());
 
 	_range_slider.on_change.second = [&_view, pretty_printer, axis_transform] (float value) {
 		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_max_textbox.first);
 	};
+	_range_slider.edit_value_second(_range_slider.value_second());
 
 	_min_textbox.second->on_text = [] (std::string_view text) {
 		if (text.empty()) {
@@ -99,36 +101,47 @@ auto make_range_slider(view& _view) {
 		}
 	};
 
-	return vtile(
-		margin(
-			{50, 10, 50, 10},
-			link(_range_slider)
-		),
+	return margin(
+		{10, 10, 10, 10},
 		layer(
-			align_left(
+			vtile(
+				vspace(10),
+				align_center(
+					label("Linear range slider").font_size(18)
+				),
+				vspace(10),
 				margin(
 					{50, 10, 50, 10},
-					hsize(
-						100,
-						layer(
-							link(_min_textbox.first),
-							link(_min_bg)
+					link(_range_slider)
+				),
+				layer(
+					align_left(
+						margin(
+							{50, 10, 50, 10},
+							hsize(
+								100,
+								layer(
+									link(_min_textbox.first),
+									link(_min_bg)
+								)
+							)
+						)
+					),
+					align_right(
+						margin(
+							{50, 10, 50, 10},
+							hsize(
+								100,
+								layer(
+									link(_max_textbox.first),
+									link(_max_bg)
+								)
+							)
 						)
 					)
 				)
 			),
-			align_right(
-				margin(
-					{50, 10, 50, 10},
-					hsize(
-						100,
-						layer(
-							link(_max_textbox.first),
-							link(_max_bg)
-						)
-					)
-				)
-			)
+			frame{}
 		)
 	);
 }
@@ -170,11 +183,13 @@ auto make_log_range_slider(view& _view) {
 		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_min_textbox.first);
 	};
+	_range_slider.edit_value_first(_range_slider.value_first());
 
 	_range_slider.on_change.second = [&_view, pretty_printer, axis_transform] (float value) {
 		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_max_textbox.first);
 	};
+	_range_slider.edit_value_second(_range_slider.value_second());
 
 	_min_textbox.second->on_text = [] (std::string_view text) {
 		if (text.empty()) {
@@ -212,36 +227,47 @@ auto make_log_range_slider(view& _view) {
 		}
 	};
 
-	return vtile(
-		margin(
-			{50, 10, 50, 10},
-			link(_range_slider)
-		),
+	return margin(
+		{10, 10, 10, 10},
 		layer(
-			align_left(
+			vtile(
+				vspace(10),
+				align_center(
+					label("Logarithmic range slider").font_size(18)
+				),
+				vspace(10),
 				margin(
 					{50, 10, 50, 10},
-					hsize(
-						100,
-						layer(
-							link(_min_textbox.first),
-							link(_min_bg)
+					link(_range_slider)
+				),
+				layer(
+					align_left(
+						margin(
+							{50, 10, 50, 10},
+							hsize(
+								100,
+								layer(
+									link(_min_textbox.first),
+									link(_min_bg)
+								)
+							)
+						)
+					),
+					align_right(
+						margin(
+							{50, 10, 50, 10},
+							hsize(
+								100,
+								layer(
+									link(_max_textbox.first),
+									link(_max_bg)
+								)
+							)
 						)
 					)
 				)
 			),
-			align_right(
-				margin(
-					{50, 10, 50, 10},
-					hsize(
-						100,
-						layer(
-							link(_max_textbox.first),
-							link(_max_bg)
-						)
-					)
-				)
-			)
+			frame{}
 		)
 	);
 }

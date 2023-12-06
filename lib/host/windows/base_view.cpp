@@ -377,7 +377,8 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         auto acceleration = 1 + (mouse_wheel_line_delta / 400.0);
+         static constexpr auto accel_weight = 0.1;
+         auto acceleration = 1 + (std::max(std::abs(dir.x), std::abs(dir.y)) * accel_weight);
          auto now = std::chrono::steady_clock::now();
          auto elapsed = now - info->_scroll_start;
          info->_scroll_start = now;

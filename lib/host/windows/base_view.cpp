@@ -762,9 +762,41 @@ namespace cycfi { namespace elements
       }
    }
 
+   namespace
+   {
+      int get_scroll_direction()
+      {
+         const wchar_t* path = L"Software\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad";
+         const wchar_t* name = L"ScrollDirection";
+
+         HKEY hkey;
+
+         // Open the registry key
+         LONG result = RegOpenKeyExW(HKEY_CURRENT_USER, path, 0, KEY_READ, &hkey);
+
+         if (result == ERROR_SUCCESS)
+         {
+            // Read the specified value from the registry
+            DWORD value;
+            DWORD dataSize = sizeof(value);
+
+            result = RegQueryValueExW(hkey, name, nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &dataSize);
+
+            // Close the registry key
+            RegCloseKey(hkey);
+
+            if (result == ERROR_SUCCESS)
+               return value == 0? 1 : -1;
+         }
+         // Return default 1 if there was an error or the value was not found
+         return 1;
+      }
+   }
+
    point scroll_direction()
    {
-      return {1.0f, 1.0f};
+      static int scroll_dir = get_scroll_direction();
+      return {1.0f, 1.0f * scroll_dir};
    }
 }}
 

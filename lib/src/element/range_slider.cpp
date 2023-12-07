@@ -79,6 +79,20 @@ namespace cycfi { namespace elements
       }
    }
 
+   float range_slider_base::handle_possible_collision_first(context const& ctx, float val) const {
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
+      return std::min<float>(val, _value.second - th_w);
+   }
+
+   float range_slider_base::handle_possible_collision_second(context const& ctx, float val) const {
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
+      return std::max<float>(val, _value.first + th_w);
+   }
+
    // since we only have a single scroll function to work with, we do it as follows:
    // 1. if no thumbs are active, determine which is closest to the mouse
    //    i. store the initial mouse position
@@ -95,6 +109,7 @@ namespace cycfi { namespace elements
       auto scroll_thumb1 = [this, &ctx, &dir, &p] () {
          auto sdir = scroll_direction();
          auto new_value = value_first() + (_is_horiz ? dir.x*sdir.x + !dir.x*dir.y*-sdir.y : dir.y*-sdir.y) * 0.005;
+         new_value = handle_possible_collision_first(ctx, new_value);
          clamp(new_value, 0.0, 1.0);
          track_scroll(ctx, dir, p);
          edit_value_first(new_value);
@@ -103,6 +118,7 @@ namespace cycfi { namespace elements
       auto scroll_thumb2 = [this, &ctx, &dir, &p] () {
          auto sdir = scroll_direction();
          auto new_value = value_second() + (_is_horiz ? dir.x*sdir.x  + !dir.x*dir.y*-sdir.y : dir.y*-sdir.y) * 0.005;
+         new_value = handle_possible_collision_second(ctx, new_value);
          clamp(new_value, 0.0, 1.0);
          track_scroll(ctx, dir, p);
          edit_value_second(new_value);
@@ -246,29 +262,26 @@ namespace cycfi { namespace elements
 
    void range_slider_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
-      auto th_bounds = thumb_bounds(ctx);
-      auto tr_bounds = track_bounds(ctx);
-      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
       if (track_info.current != track_info.previous)
       {
          switch (_state)
          {
             case state::moving_thumb1: {
                auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
-               new_value = std::min(new_value, _value.second - th_w);
+               new_value = handle_possible_collision_first(ctx, new_value);
                if (_value.first != new_value)
                {
-                  edit_value({new_value, _value.second});
+                  edit_value_first(new_value);
                   ctx.view.refresh(ctx);
                }
                break;
             }
             case state::moving_thumb2: {
                auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
-               new_value = std::max(new_value, _value.first + th_w);
+               new_value = handle_possible_collision_second(ctx, new_value);
                if (_value.second != new_value)
                {
-                  edit_value({_value.first, new_value});
+                  edit_value_second(new_value);
                   ctx.view.refresh(ctx);
                }
                break;
@@ -282,27 +295,24 @@ namespace cycfi { namespace elements
 
    void range_slider_base::end_tracking(context const& ctx, tracker_info& track_info)
    {
-      auto th_bounds = thumb_bounds(ctx);
-      auto tr_bounds = track_bounds(ctx);
-      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
       switch (_state)
       {
          case state::moving_thumb1: {
             auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
-            new_value = std::min(new_value, _value.second - th_w);
+            new_value = handle_possible_collision_first(ctx, new_value);
             if (_value.first != new_value)
             {
-               edit_value({new_value, _value.second});
+               edit_value_first(new_value);
                ctx.view.refresh(ctx);
             }
             break;
          }
          case state::moving_thumb2: {
             auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
-            new_value = std::max(new_value, _value.first + th_w);
+            new_value = handle_possible_collision_second(ctx, new_value);
             if (_value.second != new_value)
             {
-               edit_value({_value.first, new_value});
+               edit_value_second(new_value);
                ctx.view.refresh(ctx);
             }
             break;
@@ -336,5 +346,19 @@ namespace cycfi { namespace elements
       range_slider_base::edit_value_second(val);
       if (on_change.second)
          on_change.second(val);
+   }
+
+   float basic_range_slider_offset_base::handle_possible_collision_first(context const& ctx, float val) const {
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*(0.5-offset_from_center)/tr_bounds.width();
+      return std::min<float>(val, value_second() - th_w);
+   }
+
+   float basic_range_slider_offset_base::handle_possible_collision_second(context const& ctx, float val) const {
+      auto th_bounds = thumb_bounds(ctx);
+      auto tr_bounds = track_bounds(ctx);
+      auto th_w = (th_bounds.first.width() + th_bounds.second.width())*(0.5-offset_from_center)/tr_bounds.width();
+      return std::max<float>(val, value_first() + th_w);
    }
 }}

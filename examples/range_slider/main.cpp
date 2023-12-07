@@ -13,27 +13,7 @@ auto constexpr bg_color = rgba(35, 35, 37, 255);
 auto constexpr bred     = colors::red.level(0.7).opacity(0.4);
 auto background = box(bg_color);
 
-auto make_range_slider(view& _view) {
-	static auto track = basic_track<5, false>(colors::black);
-	static auto thumb = margin(
-		{1, 2, 1, 2},
-		box(colors::white_smoke)
-	);
-	static auto _range_slider = range_slider(
-		fixed_size(
-			{5, 30},
-			box(colors::light_gray)
-		),
-        fixed_size(
-			{5, 30},
-			box(colors::light_gray)
-		),
-		slider_labels<11>(
-			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-		),
-		{0.1, 0.8}
-	);
-
+auto make_range_slider = [] (view& _view, auto& _range_slider, std::string _title) {
 	static auto _min_textbox = input_box("min level");
 	static auto _max_textbox = input_box("max level");
 	static auto _min_bg = box(bg_color);
@@ -53,13 +33,14 @@ auto make_range_slider(view& _view) {
 		return value/10;
 	};
 
-	_range_slider.on_change.first = [&_view, pretty_printer, axis_transform] (float value) {
+	// note: ok to take a reference to _range_slider here, since we declared it static
+	_range_slider.on_change.first = [&_view, &_range_slider, pretty_printer, axis_transform] (float value) {
 		_min_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_min_textbox.first);
 	};
 	_range_slider.edit_value_first(_range_slider.value_first());
 
-	_range_slider.on_change.second = [&_view, pretty_printer, axis_transform] (float value) {
+	_range_slider.on_change.second = [&_view, &_range_slider, pretty_printer, axis_transform] (float value) {
 		_max_textbox.second->set_text(pretty_printer(axis_transform(value)));
         _view.refresh(_max_textbox.first);
 	};
@@ -73,7 +54,7 @@ auto make_range_slider(view& _view) {
 		}
 	};
 
-	_min_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+	_min_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text) {
 		try {
 			_range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
 			_min_bg = bg_color;
@@ -91,7 +72,7 @@ auto make_range_slider(view& _view) {
 		}
 	};
 
-	_max_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+	_max_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text) {
 		try {
 			_range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
 			_max_bg = bg_color;
@@ -107,7 +88,7 @@ auto make_range_slider(view& _view) {
 			vtile(
 				vspace(10),
 				align_center(
-					label("Linear range slider").font_size(18)
+					label(_title).font_size(18)
 				),
 				vspace(10),
 				margin(
@@ -144,7 +125,7 @@ auto make_range_slider(view& _view) {
 			frame{}
 		)
 	);
-}
+};
 
 auto make_log_range_slider(view& _view) {
 	double min_val = 1e-4;
@@ -272,6 +253,53 @@ auto make_log_range_slider(view& _view) {
 	);
 }
 
+auto make_default_range_slider(view& _view) {
+	static auto track = basic_track<5, false>(colors::black);
+	static auto thumb = margin(
+		{1, 2, 1, 2},
+		box(colors::white_smoke)
+	);
+	static auto _range_slider = range_slider(
+		fixed_size(
+			{5, 30},
+			box(colors::light_gray)
+		),
+        fixed_size(
+			{5, 30},
+			box(colors::light_gray)
+		),
+		slider_labels<11>(
+			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+		),
+		{0.1, 0.8}
+	);
+	return make_range_slider(_view, _range_slider, "Default linear range slider");
+}
+
+auto make_overlapping_range_slider(view& _view) {
+	static auto track = basic_track<5, false>(colors::black);
+	static auto thumb = margin(
+		{1, 2, 1, 2},
+		box(colors::white_smoke)
+	);
+	static auto _range_slider = range_slider(
+		fixed_size(
+			{5, 30},
+			box(colors::light_gray)
+		),
+        fixed_size(
+			{5, 30},
+			box(colors::light_gray)
+		),
+		slider_labels<11>(
+			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+		),
+		{0.1, 0.8},
+		+0.5 // overlap parameter - +0.5 means total overlap, 0 means exactly no overlap, -0.5 means negative overlap (e.g. forcing some minimum separation)
+	);
+	return make_range_slider(_view, _range_slider, "Overlapping linear range slider");
+}
+
 int main(int argc, char* argv[])
 {
    app _app(argc, argv, "RangeSlider", "com.cycfi.range_slider");
@@ -282,7 +310,8 @@ int main(int argc, char* argv[])
 
    _view.content(
 	  vtile(
-		make_range_slider(_view),
+		make_default_range_slider(_view),
+		make_overlapping_range_slider(_view),
 		make_log_range_slider(_view)
 	  ),
       background

@@ -3,17 +3,17 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERYSLIDE_BUTTON_NOVEMBER_10_2023)
-#define ELEMENTS_GALLERYSLIDE_BUTTON_NOVEMBER_10_2023
+#if !defined(ELEMENTS_GALLERY_SLIDE_SWITCH_NOVEMBER_10_2023)
+#define ELEMENTS_GALLERY_SLIDE_SWITCH_NOVEMBER_10_2023
 
 #include <elements/element/gallery/button.hpp>
 
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Slide Button
+   // Slide Switch
    ////////////////////////////////////////////////////////////////////////////
-   class slide_button_styler : public element, public basic_receiver<button_state>
+   class slide_switch_styler : public element, public basic_receiver<button_state>
    {
    public:
 
@@ -26,9 +26,9 @@ namespace cycfi { namespace elements
       float             _xpos = full_extent;
    };
 
-   inline auto slide_button()
+   inline auto slide_switch()
    {
-      return toggle_button(slide_button_styler{});
+      return toggle_button(slide_switch_styler{});
    }
 }}
 

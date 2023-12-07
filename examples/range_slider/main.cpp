@@ -295,7 +295,7 @@ auto make_overlapping_range_slider(view& _view) {
 			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
 		),
 		{0.1, 0.8},
-		-0.5 // overlap parameter - +0.5 means total overlap, 0 means exactly no overlap, -0.5 means negative overlap (e.g. forcing some minimum separation)
+		+0.5 // overlap parameter - +0.5 means total overlap, 0 means exactly no overlap, -0.5 means negative overlap (e.g. forcing some minimum separation)
 	);
 	return make_range_slider(_view, _range_slider, "Overlapping linear range slider");
 }

@@ -1044,6 +1044,8 @@ namespace cycfi { namespace elements
    void basic_input_box::end_focus()
    {
       _first_focus = false;
+         if (on_end_focus)
+            on_end_focus(to_utf8(get_text()));
       basic_text_box::end_focus();
    }
 }}

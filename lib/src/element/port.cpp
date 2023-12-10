@@ -222,6 +222,9 @@ namespace cycfi { namespace elements
 
          ctx.bounds.top -= (elem_height - available_height) * valign();
          ctx.bounds.height(elem_height);
+
+         if (elem_height <= available_height)
+            valign(0.0);
       }
 
       if (allow_hscroll())
@@ -231,6 +234,9 @@ namespace cycfi { namespace elements
 
          ctx.bounds.left -= (elem_width - available_width) * halign();
          ctx.bounds.width(elem_width);
+
+         if (elem_width <= available_width)
+            halign(0.0);
       }
       subject().layout(ctx);
    }

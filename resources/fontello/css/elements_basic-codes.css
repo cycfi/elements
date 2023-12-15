@@ -80,6 +80,8 @@
 .icon-link:before { content: '\e84e'; } /* '' */
 .icon-menu:before { content: '\f0c9'; } /* '' */
 .icon-lightbulb:before { content: '\f0eb'; } /* '' */
+.icon-folder-empty:before { content: '\f114'; } /* '' */
+.icon-folder-open-empty:before { content: '\f115'; } /* '' */
 .icon-unlink:before { content: '\f127'; } /* '' */
 .icon-sliders:before { content: '\f1de'; } /* '' */
 .icon-hand-paper-o:before { content: '\f256'; } /* '' */

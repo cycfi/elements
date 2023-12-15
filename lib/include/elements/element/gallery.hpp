@@ -20,6 +20,6 @@
 #include <elements/element/gallery/tab.hpp>
 #include <elements/element/gallery/text_entry.hpp>
 #include <elements/element/gallery/child_window.hpp>
-#include <elements/element/gallery/slide_button.hpp>
+#include <elements/element/gallery/slide_switch.hpp>
 
 #endif

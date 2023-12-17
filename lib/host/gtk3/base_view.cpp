@@ -16,8 +16,11 @@
 #include <GL/gl.h>
 #include <GL/glx.h>
 
-#include "GrContext.h"
+#include "GrDirectContext.h"
 #include "gl/GrGLInterface.h"
+#include "SkImage.h"
+#include "SkColorSpace.h"
+#include "SkCanvas.h"
 #include "SkSurface.h"
 
 #include <map>
@@ -90,7 +93,7 @@ namespace cycfi { namespace elements
 
       point                      _size;               // The current view size
       sk_sp<const GrGLInterface> _xface;              // Skia Open GL Interface
-      sk_sp<GrContext>           _ctx;                // Skia OPen GL context
+      sk_sp<GrDirectContext>     _ctx;                // Skia Open GL context
       sk_sp<SkSurface>           _surface;            // Skia surface
       cairo_t*                   _cr;                 // The current cairo context
 
@@ -148,7 +151,7 @@ namespace cycfi { namespace elements
          auto* host_view_h = platform_access::get_host_view(view);
 
          host_view_h->_xface = GrGLMakeNativeInterface();
-         host_view_h->_ctx = GrContext::MakeGL(host_view_h->_xface);
+         host_view_h->_ctx = GrDirectContext::MakeGL(host_view_h->_xface);
       }
 
       gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)

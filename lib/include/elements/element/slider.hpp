@@ -407,7 +407,7 @@ namespace cycfi { namespace elements
    }
 
    template <
-      std::size_t _size, std::size_t _major_divs
+      std::size_t _size, std::size_t _major_divs = 10
     , std::size_t _minor_divs = 5, typename Subject>
    inline slider_marks_lin_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
    slider_marks_lin(Subject&& subject)
@@ -452,7 +452,7 @@ namespace cycfi { namespace elements
    }
 
    template <
-      std::size_t _size, std::size_t _major_divs = 10
+      std::size_t _size, std::size_t _major_divs = 5
       , std::size_t _minor_divs = 10, typename Subject>
    inline slider_marks_log_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
    slider_marks_log(Subject&& subject)

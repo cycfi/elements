@@ -285,11 +285,11 @@ auto make_overlapping_range_slider(view& _view) {
 	static auto _range_slider = range_slider(
 		fixed_size(
 			{5, 30},
-			box(colors::light_gray)
+			box(colors::lime_green)
 		),
         fixed_size(
 			{5, 30},
-			box(colors::light_gray)
+			box(colors::orange_red)
 		),
 		slider_labels<11>(
 			slider_marks_lin<20, 5, 10>(track), 0.8, "0", "2", "4", "6", "8", "10"

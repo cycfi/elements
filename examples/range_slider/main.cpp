@@ -297,7 +297,7 @@ auto make_overlapping_range_slider(view& _view) {
 		{0.1, 0.8},
 		+0.5 // overlap parameter - +0.5 means total overlap, 0 means exactly no overlap, -0.5 means negative overlap (e.g. forcing some minimum separation)
 	);
-	return make_range_slider(_view, _range_slider, "Overlapping linear range slider");
+	return make_range_slider(_view, _range_slider, "Overlapping linear range slider. Alt-click to switch active thumb.");
 }
 
 int main(int argc, char* argv[])

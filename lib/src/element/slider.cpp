@@ -320,7 +320,7 @@ namespace cycfi { namespace elements
          minor_offsets[i-1] = std::log10(i)*major_step;
       }
 
-      for (std::size_t i = 0; i != major_divs; ++i) 
+      for (std::size_t i = 0; i != major_divs+1; ++i) 
       {
          float pos = xmin + i*major_step;
 

@@ -269,7 +269,7 @@ auto make_default_range_slider(view& _view) {
 			box(colors::light_gray)
 		),
 		slider_labels<11>(
-			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+			slider_marks_lin<20, 10, 5>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
 		),
 		{0.1, 0.8}
 	);
@@ -285,19 +285,19 @@ auto make_overlapping_range_slider(view& _view) {
 	static auto _range_slider = range_slider(
 		fixed_size(
 			{5, 30},
-			box(colors::light_gray)
+			box(colors::lime_green)
 		),
         fixed_size(
 			{5, 30},
-			box(colors::light_gray)
+			box(colors::orange_red)
 		),
 		slider_labels<11>(
-			slider_marks<20, 10*5, 10>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+			slider_marks_lin<20, 5, 10>(track), 0.8, "0", "2", "4", "6", "8", "10"
 		),
 		{0.1, 0.8},
 		+0.5 // overlap parameter - +0.5 means total overlap, 0 means exactly no overlap, -0.5 means negative overlap (e.g. forcing some minimum separation)
 	);
-	return make_range_slider(_view, _range_slider, "Overlapping linear range slider");
+	return make_range_slider(_view, _range_slider, "Overlapping linear range slider. Alt-click to switch active thumb.");
 }
 
 int main(int argc, char* argv[])

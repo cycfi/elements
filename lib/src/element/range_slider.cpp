@@ -66,15 +66,33 @@ namespace cycfi { namespace elements
          }
          auto bounds = thumb_bounds(ctx);
          auto thumbs = thumb();
-         {
+
+         auto draw_first = [&] () {
             context sctx { ctx, &thumbs.first.get(), ctx.bounds };
             sctx.bounds = bounds.first;
             thumbs.first.get().draw(sctx);
-         }
-         {
+         };
+
+         auto draw_second = [&] () {
             context sctx { ctx, &thumbs.second.get(), ctx.bounds };
             sctx.bounds = bounds.second;
             thumbs.second.get().draw(sctx);
+         };
+
+         switch (_state)
+         {
+            case state::idle_1: 
+            case state::moving_thumb1:
+            case state::scrolling_thumb1: {
+               draw_second();
+               draw_first();
+               break;
+            }
+            default: {
+               draw_first();
+               draw_second();
+               break;
+            }
          }
       }
    }
@@ -126,7 +144,17 @@ namespace cycfi { namespace elements
 
       // check if mouse has moved too far
       if (81 < std::pow(start_p.x - p.x, 2) + std::pow(start_p.y - p.y, 2)) {
-         _state = state::idle;
+         switch (_state)
+         {
+            case state::scrolling_thumb2: {
+               _state = state::idle_2;
+               break;
+            }
+            default: {
+               _state = state::idle_1;
+               break;
+            }
+         }
       }
 
       switch (_state) 
@@ -244,50 +272,145 @@ namespace cycfi { namespace elements
    void range_slider_base::begin_tracking(context const& ctx, tracker_info& track_info)
    {
       auto tmb_bounds = thumb_bounds(ctx); 
-      if (tmb_bounds.first.includes(track_info.current))
-      {
+
+      bool overlaps_thumb1 = tmb_bounds.first.includes(track_info.current);
+      bool overlaps_thumb2 = tmb_bounds.second.includes(track_info.current);
+
+      auto begin_tracking_1 = [&] () {
          auto cp = center_point(tmb_bounds.first);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb1;
-      }
-      else if (tmb_bounds.second.includes(track_info.current))
-      {
+      };
+
+      auto begin_tracking_2 = [&] () {
          auto cp = center_point(tmb_bounds.second);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb2;
+      };
+
+      if (track_info.modifiers == mod_alt) {
+         _state = _state == state::idle_1 ? state::idle_2 : state::idle_1;
+         ctx.view.refresh(ctx); // visually update which thumb is prioritized even if we don't move it
       }
+
+      // the current state determines which thumb is checked first
+      switch (_state)
+      {
+         case state::idle_2: {
+            if (overlaps_thumb2)
+            {
+               begin_tracking_2();
+               return;
+            } 
+            else if (overlaps_thumb1)
+            {
+               begin_tracking_1();
+               return;
+            }
+            return;
+         }
+
+         default: {
+            if (overlaps_thumb1)
+            {
+               begin_tracking_1();
+               return;
+            }
+            else if (overlaps_thumb2)
+            {
+               begin_tracking_2();
+               return;
+            }
+         }
+      }
+   }
+
+   void range_slider_base::move_first(context const& ctx, tracker_info& track_info) 
+   {
+      auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
+      new_value = handle_possible_collision_first(ctx, new_value);
+      if (_value.first != new_value)
+      {
+         edit_value_first(new_value);
+         ctx.view.refresh(ctx);
+      }
+   }
+
+   void range_slider_base::move_second(context const& ctx, tracker_info& track_info) 
+   {
+      auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
+      new_value = handle_possible_collision_second(ctx, new_value);
+      if (_value.second != new_value)
+      {
+         edit_value_second(new_value);
+         ctx.view.refresh(ctx);
+      }
+   }
+
+   void range_slider_base::move_both_from_first(context const& ctx, tracker_info& track_info) 
+   {
+      auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
+      auto deltax = new_value - _value.first;
+      if (1 < _value.second + deltax) {
+         deltax = 1 - _value.second;
+      }
+      edit_value({_value.first + deltax, _value.second + deltax});
+      ctx.view.refresh(ctx);
+   }
+
+   void range_slider_base::move_both_from_second(context const& ctx, tracker_info& track_info) 
+   {
+      auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
+      auto deltax = new_value - _value.second;
+      if (_value.first + deltax < 0) {
+         deltax = -_value.first;
+      }
+      edit_value({_value.first + deltax, _value.second + deltax});
+      ctx.view.refresh(ctx);
    }
 
    void range_slider_base::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
+         // first check if both should be moved
+         if (track_info.modifiers == mod_shift)
+         {
+            switch (_state)
+            {
+               case state::moving_thumb1: {
+                  move_both_from_first(ctx, track_info);
+                  return;
+               }
+
+               case state::moving_thumb2: {
+                  move_both_from_second(ctx, track_info);
+                  return;
+               }
+
+               default: {
+                  return;
+               }
+            }
+         }
+
+         // otherwise just move one
          switch (_state)
          {
             case state::moving_thumb1: {
-               auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
-               new_value = handle_possible_collision_first(ctx, new_value);
-               if (_value.first != new_value)
-               {
-                  edit_value_first(new_value);
-                  ctx.view.refresh(ctx);
-               }
-               break;
+               move_first(ctx, track_info);
+               return;
             }
+            
             case state::moving_thumb2: {
-               auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
-               new_value = handle_possible_collision_second(ctx, new_value);
-               if (_value.second != new_value)
-               {
-                  edit_value_second(new_value);
-                  ctx.view.refresh(ctx);
-               }
-               break;
+               move_second(ctx, track_info);
+               return;
             }
+
             default: {
-               break;
+               return;
             }
          }
       }
@@ -295,33 +418,48 @@ namespace cycfi { namespace elements
 
    void range_slider_base::end_tracking(context const& ctx, tracker_info& track_info)
    {
+      // first check if both should be moved
+      if (track_info.modifiers == mod_shift)
+      {
+         switch (_state)
+         {
+            case state::moving_thumb1: {
+               move_both_from_first(ctx, track_info);
+               _state = state::idle_1;
+               return;
+            }
+
+            case state::moving_thumb2: {
+               move_both_from_second(ctx, track_info);
+               _state = state::idle_2;
+               return;
+            }
+
+            default: {
+               return;
+            }
+         }
+      }
+
+      // otherwise just move one
       switch (_state)
       {
          case state::moving_thumb1: {
-            auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
-            new_value = handle_possible_collision_first(ctx, new_value);
-            if (_value.first != new_value)
-            {
-               edit_value_first(new_value);
-               ctx.view.refresh(ctx);
-            }
-            break;
+            move_first(ctx, track_info);
+            _state = state::idle_1;
+            return;
          }
+
          case state::moving_thumb2: {
-            auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
-            new_value = handle_possible_collision_second(ctx, new_value);
-            if (_value.second != new_value)
-            {
-               edit_value_second(new_value);
-               ctx.view.refresh(ctx);
-            }
-            break;
+            move_second(ctx, track_info);
+            _state = state::idle_2;
+            return;
          }
+
          default: {
-            break;         
+            return;
          }
       }
-      _state = state::idle;
    }
 
    void range_slider_base::value(std::pair<double, double> val)

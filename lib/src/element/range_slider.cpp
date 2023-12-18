@@ -49,7 +49,7 @@ namespace cycfi { namespace elements
    void range_slider_base::layout(context const& ctx)
    {
       {
-         context sctx { ctx, &track(), ctx.bounds };
+         context sctx {ctx, &track(), ctx.bounds};
          sctx.bounds = track_bounds(sctx);
          track().layout(sctx);
       }

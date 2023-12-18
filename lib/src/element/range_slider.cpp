@@ -1,5 +1,5 @@
 /*=============================================================================
-   Copyright (c) 2016-2023 Joel de Guzman 
+   Copyright (c) 2016-2023 Joel de Guzman
    Copyright (c) 2023 Kristian Lytje
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
@@ -20,15 +20,27 @@ namespace cycfi { namespace elements
       // We multiply thumb min limits by 2 so that there is always some space to move it.
       if (_is_horiz = limits_.max.x > limits_.max.y; _is_horiz)
       {
-         limits_.min.y = std::max<float>({limits_.min.y, tmb_limit1.min.y, tmb_limit2.min.y});
-         limits_.max.y = std::max<float>({limits_.max.y, tmb_limit1.max.y, tmb_limit2.max.y});
-         limits_.min.x = std::max<float>({limits_.min.x, tmb_limit1.min.x * 2, tmb_limit2.min.x * 2});
+         limits_.min.y = std::max<float>(
+            {limits_.min.y, tmb_limit1.min.y, tmb_limit2.min.y}
+         );
+         limits_.max.y = std::max<float>(
+            {limits_.max.y, tmb_limit1.max.y, tmb_limit2.max.y}
+         );
+         limits_.min.x = std::max<float>(
+            {limits_.min.x, tmb_limit1.min.x * 2, tmb_limit2.min.x * 2}
+         );
       }
       else
       {
-         limits_.min.x = std::max<float>({limits_.min.x, tmb_limit1.min.x, tmb_limit2.min.x});
-         limits_.max.x = std::max<float>({limits_.max.x, tmb_limit1.max.x, tmb_limit2.max.x});
-         limits_.min.y = std::max<float>({limits_.min.y, tmb_limit1.min.y * 2, tmb_limit2.min.y * 2});
+         limits_.min.x = std::max<float>(
+            {limits_.min.x, tmb_limit1.min.x, tmb_limit2.min.x}
+         );
+         limits_.max.x = std::max<float>(
+            {limits_.max.x, tmb_limit1.max.x, tmb_limit2.max.x}
+         );
+         limits_.min.y = std::max<float>(
+            {limits_.min.y, tmb_limit1.min.y * 2, tmb_limit2.min.y * 2}
+         );
       }
 
       return limits_;
@@ -44,12 +56,12 @@ namespace cycfi { namespace elements
       auto bounds = thumb_bounds(ctx);
       auto thumbs = thumb();
       {
-         context sctx { ctx, &thumbs.first.get(), ctx.bounds };
+         context sctx {ctx, &thumbs.first.get(), ctx.bounds};
          sctx.bounds = bounds.first;
          thumbs.first.get().layout(sctx);
       }
       {
-         context sctx { ctx, &thumbs.second.get(), ctx.bounds };
+         context sctx {ctx, &thumbs.second.get(), ctx.bounds};
          sctx.bounds = bounds.second;
          thumbs.second.get().layout(sctx);
       }
@@ -60,35 +72,39 @@ namespace cycfi { namespace elements
       if (intersects(ctx.bounds, ctx.view_bounds()))
       {
          {
-            context sctx { ctx, &track(), ctx.bounds };
+            context sctx {ctx, &track(), ctx.bounds};
             sctx.bounds = track_bounds(sctx);
             track().draw(sctx);
          }
          auto bounds = thumb_bounds(ctx);
          auto thumbs = thumb();
 
-         auto draw_first = [&] () {
-            context sctx { ctx, &thumbs.first.get(), ctx.bounds };
+         auto draw_first = [&]()
+         {
+            context sctx {ctx, &thumbs.first.get(), ctx.bounds};
             sctx.bounds = bounds.first;
             thumbs.first.get().draw(sctx);
          };
 
-         auto draw_second = [&] () {
-            context sctx { ctx, &thumbs.second.get(), ctx.bounds };
+         auto draw_second = [&]()
+         {
+            context sctx {ctx, &thumbs.second.get(), ctx.bounds};
             sctx.bounds = bounds.second;
             thumbs.second.get().draw(sctx);
          };
 
          switch (_state)
          {
-            case state::idle_1: 
+            case state::idle_1:
             case state::moving_thumb1:
-            case state::scrolling_thumb1: {
+            case state::scrolling_thumb1:
+            {
                draw_second();
                draw_first();
                break;
             }
-            default: {
+            default:
+            {
                draw_first();
                draw_second();
                break;
@@ -97,14 +113,16 @@ namespace cycfi { namespace elements
       }
    }
 
-   float range_slider_base::handle_possible_collision_first(context const& ctx, float val) const {
+   float range_slider_base::handle_possible_collision_first(context const& ctx, float val) const
+   {
       auto th_bounds = thumb_bounds(ctx);
       auto tr_bounds = track_bounds(ctx);
       auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
       return std::min<float>(val, _value.second - th_w);
    }
 
-   float range_slider_base::handle_possible_collision_second(context const& ctx, float val) const {
+   float range_slider_base::handle_possible_collision_second(context const& ctx, float val) const
+   {
       auto th_bounds = thumb_bounds(ctx);
       auto tr_bounds = track_bounds(ctx);
       auto th_w = (th_bounds.first.width() + th_bounds.second.width())*0.5/tr_bounds.width();
@@ -124,7 +142,8 @@ namespace cycfi { namespace elements
       static point start_p = p;
       auto th_bounds = thumb_bounds(ctx);
 
-      auto scroll_thumb1 = [this, &ctx, &dir, &p] () {
+      auto scroll_thumb1 = [this, &ctx, &dir, &p]()
+      {
          auto sdir = scroll_direction();
          auto new_value = value_first() + (_is_horiz ? dir.x*sdir.x + !dir.x*dir.y*-sdir.y : dir.y*-sdir.y) * 0.005;
          new_value = handle_possible_collision_first(ctx, new_value);
@@ -133,7 +152,8 @@ namespace cycfi { namespace elements
          edit_value_first(new_value);
       };
 
-      auto scroll_thumb2 = [this, &ctx, &dir, &p] () {
+      auto scroll_thumb2 = [this, &ctx, &dir, &p]()
+      {
          auto sdir = scroll_direction();
          auto new_value = value_second() + (_is_horiz ? dir.x*sdir.x  + !dir.x*dir.y*-sdir.y : dir.y*-sdir.y) * 0.005;
          new_value = handle_possible_collision_second(ctx, new_value);
@@ -143,7 +163,8 @@ namespace cycfi { namespace elements
       };
 
       // check if mouse has moved too far
-      if (81 < std::pow(start_p.x - p.x, 2) + std::pow(start_p.y - p.y, 2)) {
+      if (81 < std::pow(start_p.x - p.x, 2) + std::pow(start_p.y - p.y, 2))
+      {
          switch (_state)
          {
             case state::scrolling_thumb2: {
@@ -157,19 +178,22 @@ namespace cycfi { namespace elements
          }
       }
 
-      switch (_state) 
+      switch (_state)
       {
-         case state::scrolling_thumb1: {
+         case state::scrolling_thumb1:
+         {
             scroll_thumb1();
             break;
          }
 
-         case state::scrolling_thumb2: {
+         case state::scrolling_thumb2:
+         {
             scroll_thumb2();
             break;
          }
 
-         default: {
+         default:
+         {
             start_p = p;
             auto& th1 = th_bounds.first;
             auto& th2 = th_bounds.second;
@@ -180,7 +204,7 @@ namespace cycfi { namespace elements
 
             auto th1_upscaled_bounds = rect{th1.left-th1_w, th1.top-th1_h, th1.right+th1_w, th1.bottom+th1_h};
             auto th2_upscaled_bounds = rect{th2.left-th2_w, th2.top-th2_h, th2.right+th2_w, th2.bottom+th2_h};
-            if (th1_upscaled_bounds.includes(p)) 
+            if (th1_upscaled_bounds.includes(p))
             {
                _state = state::scrolling_thumb1;
                scroll_thumb1();
@@ -227,7 +251,8 @@ namespace cycfi { namespace elements
 
    std::pair<rect, rect> range_slider_base::thumb_bounds(context const& ctx) const
    {
-      auto get_single_bound = [this] (context const& ctx, auto const& thumb, double value) {
+      auto get_single_bound = [this] (context const& ctx, auto const& thumb, double value)
+      {
          auto  bounds = ctx.bounds;
          auto  w = bounds.width();
          auto  h = bounds.height();
@@ -247,16 +272,19 @@ namespace cycfi { namespace elements
             // Note: for vertical sliders, 0.0 is at the bottom, hence 1.0-value()
          }
       };
-      return std::make_pair(get_single_bound(ctx, thumb().first.get(), value_first()), get_single_bound(ctx, thumb().second.get(), value_second()));
+      return std::make_pair(
+         get_single_bound(ctx, thumb().first.get(), value_first()),
+         get_single_bound(ctx, thumb().second.get(), value_second())
+      );
    }
 
-   inline auto value_from_point = [] (context const& ctx, point p, auto const& thumb, bool _is_horiz)
+   inline auto value_from_point = [](context const& ctx, point p, auto const& thumb, bool _is_horiz)
    {
       auto  bounds = ctx.bounds;
       auto  w = bounds.width();
       auto  h = bounds.height();
 
-      auto  limits_ = thumb.limits(ctx); 
+      auto  limits_ = thumb.limits(ctx);
       auto  tmb_w = limits_.max.x;
       auto  tmb_h = limits_.max.y;
       auto  new_value = 0.0;
@@ -271,26 +299,29 @@ namespace cycfi { namespace elements
 
    void range_slider_base::begin_tracking(context const& ctx, tracker_info& track_info)
    {
-      auto tmb_bounds = thumb_bounds(ctx); 
+      auto tmb_bounds = thumb_bounds(ctx);
 
       bool overlaps_thumb1 = tmb_bounds.first.includes(track_info.current);
       bool overlaps_thumb2 = tmb_bounds.second.includes(track_info.current);
 
-      auto begin_tracking_1 = [&] () {
+      auto begin_tracking_1 = [&]()
+      {
          auto cp = center_point(tmb_bounds.first);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb1;
       };
 
-      auto begin_tracking_2 = [&] () {
+      auto begin_tracking_2 = [&]()
+      {
          auto cp = center_point(tmb_bounds.second);
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb2;
       };
 
-      if (track_info.modifiers == mod_alt) {
+      if (track_info.modifiers == mod_alt)
+      {
          _state = _state == state::idle_1 ? state::idle_2 : state::idle_1;
          ctx.view.refresh(ctx); // visually update which thumb is prioritized even if we don't move it
       }
@@ -298,12 +329,13 @@ namespace cycfi { namespace elements
       // the current state determines which thumb is checked first
       switch (_state)
       {
-         case state::idle_2: {
+         case state::idle_2:
+         {
             if (overlaps_thumb2)
             {
                begin_tracking_2();
                return;
-            } 
+            }
             else if (overlaps_thumb1)
             {
                begin_tracking_1();
@@ -312,7 +344,8 @@ namespace cycfi { namespace elements
             return;
          }
 
-         default: {
+         default:
+         {
             if (overlaps_thumb1)
             {
                begin_tracking_1();
@@ -327,7 +360,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void range_slider_base::move_first(context const& ctx, tracker_info& track_info) 
+   void range_slider_base::move_first(context const& ctx, tracker_info& track_info)
    {
       auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
       new_value = handle_possible_collision_first(ctx, new_value);
@@ -338,7 +371,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void range_slider_base::move_second(context const& ctx, tracker_info& track_info) 
+   void range_slider_base::move_second(context const& ctx, tracker_info& track_info)
    {
       auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
       new_value = handle_possible_collision_second(ctx, new_value);
@@ -349,22 +382,24 @@ namespace cycfi { namespace elements
       }
    }
 
-   void range_slider_base::move_both_from_first(context const& ctx, tracker_info& track_info) 
+   void range_slider_base::move_both_from_first(context const& ctx, tracker_info& track_info)
    {
       auto new_value = value_from_point(ctx, track_info.current, thumb().first.get(), _is_horiz);
       auto deltax = new_value - _value.first;
-      if (1 < _value.second + deltax) {
+      if (1 < _value.second + deltax)
+      {
          deltax = 1 - _value.second;
       }
       edit_value({_value.first + deltax, _value.second + deltax});
       ctx.view.refresh(ctx);
    }
 
-   void range_slider_base::move_both_from_second(context const& ctx, tracker_info& track_info) 
+   void range_slider_base::move_both_from_second(context const& ctx, tracker_info& track_info)
    {
       auto new_value = value_from_point(ctx, track_info.current, thumb().second.get(), _is_horiz);
       auto deltax = new_value - _value.second;
-      if (_value.first + deltax < 0) {
+      if (_value.first + deltax < 0)
+      {
          deltax = -_value.first;
       }
       edit_value({_value.first + deltax, _value.second + deltax});
@@ -380,38 +415,40 @@ namespace cycfi { namespace elements
          {
             switch (_state)
             {
-               case state::moving_thumb1: {
+               case state::moving_thumb1:
+               {
                   move_both_from_first(ctx, track_info);
                   return;
                }
 
-               case state::moving_thumb2: {
+               case state::moving_thumb2:
+               {
                   move_both_from_second(ctx, track_info);
                   return;
                }
 
-               default: {
+               default:
                   return;
-               }
             }
          }
 
          // otherwise just move one
          switch (_state)
          {
-            case state::moving_thumb1: {
+            case state::moving_thumb1:
+            {
                move_first(ctx, track_info);
                return;
             }
-            
-            case state::moving_thumb2: {
+
+            case state::moving_thumb2:
+            {
                move_second(ctx, track_info);
                return;
             }
 
-            default: {
+            default:
                return;
-            }
          }
       }
    }
@@ -423,42 +460,44 @@ namespace cycfi { namespace elements
       {
          switch (_state)
          {
-            case state::moving_thumb1: {
+            case state::moving_thumb1:
+            {
                move_both_from_first(ctx, track_info);
                _state = state::idle_1;
                return;
             }
 
-            case state::moving_thumb2: {
+            case state::moving_thumb2:
+            {
                move_both_from_second(ctx, track_info);
                _state = state::idle_2;
                return;
             }
 
-            default: {
+            default:
                return;
-            }
          }
       }
 
       // otherwise just move one
       switch (_state)
       {
-         case state::moving_thumb1: {
+         case state::moving_thumb1:
+         {
             move_first(ctx, track_info);
             _state = state::idle_1;
             return;
          }
 
-         case state::moving_thumb2: {
+         case state::moving_thumb2:
+         {
             move_second(ctx, track_info);
             _state = state::idle_2;
             return;
          }
 
-         default: {
+         default:
             return;
-         }
       }
    }
 
@@ -486,14 +525,16 @@ namespace cycfi { namespace elements
          on_change.second(val);
    }
 
-   float basic_range_slider_offset_base::handle_possible_collision_first(context const& ctx, float val) const {
+   float basic_range_slider_offset_base::handle_possible_collision_first(context const& ctx, float val) const
+   {
       auto th_bounds = thumb_bounds(ctx);
       auto tr_bounds = track_bounds(ctx);
       auto th_w = (th_bounds.first.width() + th_bounds.second.width())*(0.5-offset_from_center)/tr_bounds.width();
       return std::min<float>(val, value_second() - th_w);
    }
 
-   float basic_range_slider_offset_base::handle_possible_collision_second(context const& ctx, float val) const {
+   float basic_range_slider_offset_base::handle_possible_collision_second(context const& ctx, float val) const
+   {
       auto th_bounds = thumb_bounds(ctx);
       auto tr_bounds = track_bounds(ctx);
       auto th_w = (th_bounds.first.width() + th_bounds.second.width())*(0.5-offset_from_center)/tr_bounds.width();

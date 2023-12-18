@@ -88,12 +88,6 @@ namespace cycfi { namespace elements
       void                       move_both_from_second(context const& ctx, tracker_info& track_info);
    };
 
-   inline void range_slider_base::edit(view& view_, double_range val)
-   {
-      edit_value(val);
-      receiver<double_range>::notify_edit(view_);
-   }
-
    class basic_range_slider_base : public range_slider_base
    {
    public:
@@ -110,7 +104,7 @@ namespace cycfi { namespace elements
    class basic_range_slider_offset_base : public basic_range_slider_base
    {
    public:
-                                 inline basic_range_slider_offset_base(
+                                 basic_range_slider_offset_base(
                                     std::pair<double, double> init_value
                                   , float offset_from_center
                                  )
@@ -140,7 +134,7 @@ namespace cycfi { namespace elements
       using thumb2_type = typename std::decay<Thumb2>::type;
       using track_type = typename std::decay<Track>::type;
 
-                              inline basic_range_slider(
+                              basic_range_slider(
                                  Thumb1&& thumb_min
                                , Thumb2&& thumb_max
                                , Track&& track
@@ -152,7 +146,7 @@ namespace cycfi { namespace elements
                                , _body(std::forward<Track>(track))
                               {}
 
-                              inline basic_range_slider(
+                              basic_range_slider(
                                  Thumb1&& thumb_min
                                , Thumb2&& thumb_max
                                , Track&& track
@@ -201,7 +195,8 @@ namespace cycfi { namespace elements
     , Thumb2&& thumb_max
     , Track&& track
     , double_range init_value
-    , float offset_from_center)
+    , float offset_from_center
+   )
    {
       return {
          std::forward<Thumb1>(thumb_min),
@@ -248,6 +243,12 @@ namespace cycfi { namespace elements
    {
       edit_value_first(val.first);
       edit_value_second(val.second);
+   }
+
+   inline void range_slider_base::edit(view& view_, double_range val)
+   {
+      edit_value(val);
+      receiver<double_range>::notify_edit(view_);
    }
 
    template <typename Thumb1, typename Thumb2, typename Track, typename Base>

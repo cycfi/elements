@@ -23,7 +23,14 @@ namespace cycfi { namespace elements
       using val_type = std::pair<double, double>;
       using element_cref_pair_type = std::pair<std::reference_wrapper<element const>, std::reference_wrapper<element const>>;
       using element_ref_pair_type = std::pair<std::reference_wrapper<element>, std::reference_wrapper<element>>;
-      enum class state { idle, moving_thumb1, moving_thumb2, scrolling_thumb1, scrolling_thumb2 };
+      enum class state { 
+         idle_1, // idle, last moved thumb 1
+         idle_2, // idle, last moved thumb 2
+         moving_thumb1, 
+         moving_thumb2, 
+         scrolling_thumb1, 
+         scrolling_thumb2
+      };
    public:
 
                               range_slider_base(std::pair<double, double> init_value)
@@ -61,9 +68,14 @@ namespace cycfi { namespace elements
       virtual element&               track() = 0;
 
    private:
-      state                          _state = state::idle;
+      state                          _state = state::idle_1;
       std::pair<double, double>      _value;
       mutable bool                   _is_horiz = false;
+
+      void                           move_first(context const& ctx, tracker_info& track_info);
+      void                           move_second(context const& ctx, tracker_info& track_info);
+      void                           move_both_from_first(context const& ctx, tracker_info& track_info);
+      void                           move_both_from_second(context const& ctx, tracker_info& track_info);
    };
 
    inline void range_slider_base::edit(view& view_, std::pair<double, double> val)

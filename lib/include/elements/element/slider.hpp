@@ -321,6 +321,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Slider Marks (You can use this to place tick marks on slider)
    ////////////////////////////////////////////////////////////////////////////
+
+   ////////////////////////////////////////////////////////////////////////////
+   // deprecated 
+   ////////////////////////////////////////////////////////////////////////////
    template <
       std::size_t _size, std::size_t _num_divs
     , std::size_t _major_divs, typename Subject>
@@ -359,15 +363,61 @@ namespace cycfi { namespace elements
    template <
       std::size_t _size, std::size_t _num_divs = 50
     , std::size_t _major_divs = 10, typename Subject>
+   [[deprecated("Use slider_marks_lin instead")]] 
    inline slider_marks_element<_size, _num_divs, _major_divs, remove_cvref_t<Subject>>
    slider_marks(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
+   ////////////////////////////////////////////////////////////////////////////
 
    template <
-      std::size_t _size, std::size_t _num_divs
-    , std::size_t _major_divs, typename Subject>
+      std::size_t _size, std::size_t _major_divs
+    , std::size_t _minor_divs, typename Subject>
+   class slider_marks_lin_element : public slider_element_base<_size, Subject>
+   {
+   public:
+
+      static_assert(_major_divs > 0, "Major divisions must be greater than zero");
+
+      using base_type = slider_element_base<_size, Subject>;
+      using base_type::base_type;
+
+      void                    draw(context const& ctx) override;
+   };
+
+   void draw_slider_marks_lin(
+      canvas& cnv, rect bounds, float size, std::size_t major_divs
+    , std::size_t minor_divs, color c);
+
+   template <
+      std::size_t _size, std::size_t _major_divs
+    , std::size_t _minor_divs, typename Subject>
+   inline void
+   slider_marks_lin_element<_size, _major_divs, _minor_divs, Subject>
+      ::draw(context const& ctx)
+   {
+      // Draw linear lines
+      draw_slider_marks_lin(
+         ctx.canvas, ctx.bounds, _size, _major_divs
+       , _minor_divs, colors::light_gray);
+
+      // Draw the subject
+      base_type::draw(ctx);
+   }
+
+   template <
+      std::size_t _size, std::size_t _major_divs = 10
+    , std::size_t _minor_divs = 5, typename Subject>
+   inline slider_marks_lin_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
+   slider_marks_lin(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <
+      std::size_t _size, std::size_t _major_divs
+    , std::size_t _minor_divs, typename Subject>
    class slider_marks_log_element : public slider_element_base<_size, Subject>
    {
 
@@ -402,7 +452,7 @@ namespace cycfi { namespace elements
    }
 
    template <
-      std::size_t _size, std::size_t _major_divs = 10
+      std::size_t _size, std::size_t _major_divs = 5
       , std::size_t _minor_divs = 10, typename Subject>
    inline slider_marks_log_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
    slider_marks_log(Subject&& subject)

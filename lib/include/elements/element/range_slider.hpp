@@ -271,7 +271,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Thumb1, typename Thumb2, typename Track, typename Base>
-   inline element& basic_range_slider<Thumb1, Thumb2, Track, Base>::track() 
+   inline element& basic_range_slider<Thumb1, Thumb2, Track, Base>::track()
    {
       return _body;
    }

@@ -31,7 +31,6 @@ option(ENABLE_GIT_SUBMODULE_CHECK "Check and clone submodules when not available
 if (ENABLE_GIT_SUBMODULE_CHECK)
    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
       include(GitSubmoduleCheck)
-      git_submodule_check(lib/artist)
       git_submodule_check(lib/external/asio)
       git_submodule_check(lib/infra)
    endif()

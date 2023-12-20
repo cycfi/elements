@@ -83,8 +83,9 @@ namespace cycfi { namespace elements
          bool           mouse_in_window = false;
          time_point     click_start = {};
          int            click_count = 0;
-         time_point     scroll_start = {};
-         point          scroll_dir;
+         time_point     _scroll_start = {};
+         double         _velocity = 0;
+         point          _scroll_dir;
          key_map        keys = {};
       };
 
@@ -330,8 +331,20 @@ namespace cycfi { namespace elements
 
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
-         info->scroll_dir = dir;
+         static constexpr auto accel_weight = 0.1;
+         auto acceleration = 1 + (std::max(std::abs(dir.x), std::abs(dir.y)) * accel_weight);
+         auto now = std::chrono::steady_clock::now();
+         auto elapsed = now - info->_scroll_start;
+         info->_scroll_start = now;
 
+         std::chrono::duration<double, std::milli> fp_ms = elapsed;
+
+         bool reset_accel =
+            elapsed > std::chrono::milliseconds(250) ||
+            (info->_scroll_dir.x > 0 != dir.x > 0) ||
+            (info->_scroll_dir.y > 0 != dir.y > 0)
+            ;
+         info->_scroll_dir = dir;
          if (reset_accel)
             info->_velocity = 1.0;
          else

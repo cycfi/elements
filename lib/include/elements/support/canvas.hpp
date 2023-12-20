@@ -48,7 +48,9 @@ namespace cycfi { namespace elements
       void              scale(point p);
       void              skew(float sx, float sy);
       point             device_to_user(point p);
+      point             device_to_user_distance(point p);
       point             user_to_device(point p);
+      point             user_to_device_distance(point p);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Paths

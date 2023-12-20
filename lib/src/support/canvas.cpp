@@ -109,11 +109,27 @@ namespace cycfi { namespace elements
    {
       double x = p.x * _pre_scale;
       double y = p.y * _pre_scale;
+      cairo_device_to_user(&_context, &x, &y);
+      return { float(x), float(y) };
+   }
+
+   point canvas::device_to_user_distance(point p)
+   {
+      double x = p.x * _pre_scale;
+      double y = p.y * _pre_scale;
       cairo_device_to_user_distance(&_context, &x, &y);
       return {float(x), float(y)};
    }
 
    point canvas::user_to_device(point p)
+   {
+      double x = p.x;
+      double y = p.y;
+      cairo_user_to_device(&_context, &x, &y);
+      return { float(x / _pre_scale), float(y / _pre_scale) };
+   }
+
+   point canvas::user_to_device_distance(point p)
    {
       double x = p.x;
       double y = p.y;

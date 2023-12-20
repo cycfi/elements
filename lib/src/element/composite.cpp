@@ -88,22 +88,13 @@ namespace cycfi { namespace elements
          for_each_visible(ctx,
             [&](element& ce, std::size_t /*ix*/, rect const& bounds)
             {
-               if (&e == &ce)
-               {
-                  ctx.view.refresh(bounds);
-                  return false; // break the for loop
-               }
-               else
-               {
-                  context ectx{ctx, &ce, bounds};
-                  ce.refresh(ectx, e, outward);
-               }
-               return true;
+               context ectx{ctx, &ce, bounds};
+               ce.refresh(ectx, e, outward);
+               return &e == &ce; // Break the loop if we found the element
             }
          );
       }
    }
-
 
    void composite_base::in_context_do(context const& ctx, element& e, context_function f)
    {

@@ -113,8 +113,8 @@ auto make_buttons(view& view_)
                                  .body_color(bgreen)
                            );
 
-   auto slide_btn1      = slide_button();
-   auto slide_btn2      = slide_button();
+   auto slide_btn1      = slide_switch();
+   auto slide_btn2      = slide_switch();
 
    slide_btn1.value(true);
    slide_btn2.enable(false); // Disable

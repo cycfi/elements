@@ -23,7 +23,7 @@ set(ELEMENTS_SOURCES
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
-   src/element/gallery/slide_button.cpp
+   src/element/gallery/slide_switch.cpp
    src/element/gallery/tab.cpp
    src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
@@ -37,6 +37,7 @@ set(ELEMENTS_SOURCES
    src/element/port.cpp
    src/element/progress_bar.cpp
    src/element/proxy.cpp
+   src/element/range_slider.cpp
    src/element/slider.cpp
    src/element/text.cpp
    src/element/thumbwheel.cpp
@@ -98,6 +99,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/port.hpp
    include/elements/element/progress_bar.hpp
    include/elements/element/proxy.hpp
+   include/elements/element/range_slider.hpp
    include/elements/element/selectable.hpp
    include/elements/element/size.hpp
    include/elements/element/slider.hpp

@@ -93,7 +93,9 @@ namespace cycfi { namespace elements { namespace icons
       question                      = 0xe84c,
       menu                          = 0xf0c9,
       link                          = 0xe84e,
-      unlink                        = 0xf127
+      unlink                        = 0xf127,
+      folder_empty                  = 61716,
+      folder_open_empty             = 61717,
    };
 }}}
 

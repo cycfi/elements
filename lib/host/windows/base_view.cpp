@@ -318,9 +318,28 @@ namespace cycfi { namespace elements
          view->cursor({pos_x, pos_y}, state);
       }
 
+      namespace
+      {
+         static auto mouse_wheel_line_delta =
+            []{
+               UINT wheel_scroll_lines;
+               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
+               return float(WHEEL_DELTA) / wheel_scroll_lines;
+            }();
+      }
+
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
          info->scroll_dir = dir;
+
+         if (reset_accel)
+            info->_velocity = 1.0;
+         else
+            info->_velocity *= acceleration;
+
+         static constexpr auto max_velocity = 100.0;
+         dir.x *= std::min(info->_velocity, max_velocity);
+         dir.y *= std::min(info->_velocity, max_velocity);
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);
@@ -353,14 +372,6 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         static auto mouse_wheel_line_delta =
-            []{
-               UINT wheel_scroll_lines;
-               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
-               constexpr auto line_pixels = 12.0f; // size 12 font per line
-               return WHEEL_DELTA / (wheel_scroll_lines * line_pixels);
-            }();
-
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -688,9 +699,41 @@ namespace cycfi { namespace elements
       }
    }
 
+   namespace
+   {
+      int get_scroll_direction()
+      {
+         const wchar_t* path = L"Software\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad";
+         const wchar_t* name = L"ScrollDirection";
+
+         HKEY hkey;
+
+         // Open the registry key
+         LONG result = RegOpenKeyExW(HKEY_CURRENT_USER, path, 0, KEY_READ, &hkey);
+
+         if (result == ERROR_SUCCESS)
+         {
+            // Read the specified value from the registry
+            DWORD value;
+            DWORD dataSize = sizeof(value);
+
+            result = RegQueryValueExW(hkey, name, nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &dataSize);
+
+            // Close the registry key
+            RegCloseKey(hkey);
+
+            if (result == ERROR_SUCCESS)
+               return value == 0? 1 : -1;
+         }
+         // Return default 1 if there was an error or the value was not found
+         return 1;
+      }
+   }
+
    point scroll_direction()
    {
-      return {+1.0f, +1.0f};
+      static int scroll_dir = get_scroll_direction();
+      return {1.0f, 1.0f * scroll_dir};
    }
 }}
 

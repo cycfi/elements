@@ -3,18 +3,18 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/gallery/slide_button.hpp>
+#include <elements/element/gallery/slide_switch.hpp>
 
 namespace cycfi { namespace elements
 {
-   view_limits slide_button_styler::limits(basic_context const& /*ctx*/) const
+   view_limits slide_switch_styler::limits(basic_context const& /*ctx*/) const
    {
       auto& thm = get_theme();
       auto  size = thm.slide_button_size;
       return {{size.x, size.y}, {size.x, size.y}};
    }
 
-   void slide_button_styler::draw(context const& ctx)
+   void slide_switch_styler::draw(context const& ctx)
    {
       auto& canvas_ = ctx.canvas;
       auto canvas_state = canvas_.new_state();
@@ -68,7 +68,7 @@ namespace cycfi { namespace elements
       canvas_.fill();
    }
 
-   bool slide_button_styler::wants_control() const
+   bool slide_switch_styler::wants_control() const
    {
       return true;
    }

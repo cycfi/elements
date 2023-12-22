@@ -6,6 +6,7 @@
 #if !defined(ELEMENTS_GRID_MARCH_2_2020)
 #define ELEMENTS_GRID_MARCH_2_2020
 
+#include <elements/view.hpp>
 #include <elements/element/composite.hpp>
 
 namespace cycfi { namespace elements

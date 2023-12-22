@@ -120,6 +120,8 @@ namespace cycfi { namespace elements
 
    private:
 
+      friend class context;
+
       scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }
 
       layer_composite         _content;
@@ -144,6 +146,10 @@ namespace cycfi { namespace elements
       using tracking_map = std::map<element*, time_point>;
 
       tracking_map            _tracking;
+
+      using bounds_map = std::unordered_map<element*, rect>;
+
+      bounds_map              _bounds_map;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -351,6 +357,14 @@ namespace cycfi { namespace elements
    inline void view::post(F f)
    {
       _io.post(f);
+   }
+
+   // Declared in context.hpp. We define this here because view is forward declared in
+   // the header file and thus does not have access to the actual view class.
+   inline void context::update_bounds()
+   {
+      if (auto i = view._bounds_map.find(element); i != view._bounds_map.end())
+         i->second = bounds;
    }
 }}
 

@@ -75,17 +75,23 @@ namespace cycfi::elements
       context(context const& rhs, artist::rect bounds_)
        : basic_context(rhs.view, rhs.canvas), element(rhs.element)
        , parent(rhs.parent), bounds(bounds_)
-      {}
+      {
+         update_bounds();
+      }
 
       context(context const& parent_, element* element_, artist::rect bounds_)
        : basic_context(parent_.view, parent_.canvas), element(element_)
        , parent(&parent_), bounds(bounds_)
-      {}
+      {
+         update_bounds();
+      }
 
       context(class view& view_, class canvas& canvas_, element* element_, artist::rect bounds_)
        : basic_context(view_, canvas_), element(element_)
        , parent(nullptr), bounds(bounds_)
-      {}
+      {
+         update_bounds();
+      }
 
       context(context const&) = default;
       context& operator=(context const&) = delete;
@@ -121,6 +127,8 @@ namespace cycfi::elements
       elements::rect                bounds;
 
    private:
+
+      void update_bounds();
 
       using listener_function =
          std::function<

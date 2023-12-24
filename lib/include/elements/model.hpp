@@ -14,10 +14,10 @@ namespace cycfi { namespace elements
    //==============================================================================================
    /** @class model
     *
-    * Class `model` abstracts a data type that is linked to one or more user interface elements.
-    * The actual data is provided by the derived class's `get` and `set` member functions. A
-    * user interface element may link to a `model` by supplying an `update_function` via the
-    * `on_update_ui(f)` member function.\n\n
+    * The `model` class serves as an abstraction for a data type that is linked to one or more
+    * user interface elements. The actual data is accessed and modified through the `get` and
+    * `set` member functions of the derived class. A user interface element can be linked to a
+    * `model` by supplying an `update_function` via the `on_update_ui(f)` member function.\n\n
     *
     * The conversion operator may be used to get a model's value via the derived class's `get`
     * member function. Example:
@@ -45,17 +45,17 @@ namespace cycfi { namespace elements
    public:
 
       using value_type = T;
-      using param_type = ParamT;
       using derived_type = Derived;
-      using update_param = cycfi::param_type<value_type>;
-      using update_function = std::function<void(update_param)>;
+      using param_type = ParamT;
+      using update_param_type = cycfi::param_type<value_type>;
+      using update_function = std::function<void(update_param_type)>;
 
       derived_type&           derived();
       derived_type const&     derived() const;
 
       model&                  operator=(model const&) = default;
       model&                  operator=(param_type val);
-      explicit                operator value_type() const;
+                              operator value_type() const;
 
       void                    update_ui();
       void                    update_ui(value_type val);
@@ -156,6 +156,7 @@ namespace cycfi { namespace elements
    {
       derived().set(val);
       update_ui(val);
+      return *this;
    }
 
    /** @brief Gets the value of the model using the `get` member function of the derived class.

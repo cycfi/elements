@@ -22,7 +22,7 @@ namespace cycfi { namespace elements
     * The conversion operator may be used to get a model's value via the derived class's `get`
     * member function. Example:
     * @code
-    *    auto i = int(m); // m is an instance of a model with an `int` data type.
+    *    auto i = m; // m is an instance of a model with an `int` data type.
     * @endcode
     *
     * The assignment operator may be used to set the model's value via the derived class's `set`

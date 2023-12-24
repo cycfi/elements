@@ -1,11 +1,78 @@
-/*=============================================================================
+/*=================================================================================================
    Copyright (c) 2016-2023 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
-=============================================================================*/
-#include <elements.hpp>
+=================================================================================================*/
 #include <elements.hpp>
 
+/*=================================================================================================
+   Elements does not dictate a particular method for organizing a GUI application. You have the
+   flexibility to structure your application according to your preferences. Basically, you build
+   an elements hierarchy and install that as your content into the view. While constructing the
+   hierarchy, you establish a connection between the elements and the application logic through
+   callbacks such as the button's on_click and the input text box's on_enter. These callbacks are
+   invoked when the user clicks the button or presses the enter key in the text box, for example.
+
+   Additionally, you ensure the GUI is updated to accurately represent the application state
+   whenever changes occur. Moreover, the application may need the ability to inspect the state of
+   the GUI elements or set them to a specific state at any given time.
+
+   A naive way to do this is to expose various GUI elements as members of an application or GUI
+   class. For example, here's a code snippet of an old plugin I wrote a few years back:
+
+      input_box_ptr           _program_id;
+      label_ptr               _position_text;
+      button_ptr              _enable;
+      toggle_button_ptr       _sync;
+      menu_ptr                _preset_menu;
+      input_box_ptr           _save_as_name;
+      slider_ptr              _master_volume;
+      label_ptr               _master_volume_text;
+
+   The types `input_box_ptr`, `button_ptr`, and so on, are `std::shared_ptr`s, created using the
+   `share(e)` function and held in the element hieiarchy using the `hold(p)` function.
+
+   This example presents a more elegant way to structure an elements application using Models.
+
+   The Model (elements/model.hpp) serves as an abstraction for a data type that is linked to one
+   or more user interface elements. The actual data is accessed and modified through the `get` and
+   `set` member functions of the derived class. A user interface element can be linked to a
+   `model` by supplying an `update_function` via the `on_update_ui(f)` member function.
+
+   The Model does not care about the GUI element types it is interacting with. It is an abstract
+   data type that models its underlying data type (e.g. float, int, enum, etc.). In the view point
+   of the application, it looks and acts like a concrete type. For example, a `value_model<float>`
+   acts just like a float. You can assign a value to it:
+
+      m = 1.0;
+
+   or extract its value:
+
+      float i = m;
+
+   The `value_model<float>` is a derived class of the template class model. It specifically
+   addresses the typical scenario where the data is internally stored by value within the class.
+   The class includes get and set member functions that adhere to the requirements set by the
+   model template, facilitating the retrieval and modification of data.
+
+      Note: While this example utilizes the `value_model<float>`, you have the flexibility to
+      create your custom subclass of the template class model to implement more tailored methods
+      of accessing your data.
+
+   Adopting the model paradigm, the application logic and the user interface engage with the model
+   independently, unaware of each other's existence. The model serves as a central hub,
+   facilitating and coordinating interactions between them:
+
+      application logic <----> model <----> GUI
+
+   In this example, we present a very simple model, comprising of a floating point value and a
+   preset. As the GUI elements are being built, they attach themselves to the model by utilizing
+   its on_update_ui(f) member function at different nodes within the elements hierarchy.
+
+   A notable advantage of this approach is that the user interface elements do not need to be
+   exposed beyond their creation function. Consequently, all GUI logic is localized and
+   established within the same element creation function.
+=================================================================================================*/
 namespace elements = cycfi::elements;
 namespace icons = elements::icons;
 
@@ -22,14 +89,12 @@ using elements::view;
 using elements::app;
 using elements::window;
 
-using elements::empty; // $$$ for now $$$
-
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = elements::box(bkd_color);
 
-// This is our simple model, comprising of a preset and
-// a value normalized to 0.0 to 1.0.
+// This is our simple model, comprising of a preset (an enum)
+// and a value normalized to 0.0 to 1.0.
 struct my_model
 {
    enum preset
@@ -46,6 +111,7 @@ struct my_model
    value_model<preset>  _preset = preset_100_percent;
 };
 
+// Create a dial and establish its connection with the model.
 auto make_dial(my_model& model, view& view_)
 {
    // Make a dial
@@ -89,8 +155,10 @@ auto make_dial(my_model& model, view& view_)
    return align_center_middle(control);
 }
 
+// Create a preset menu and establish its connection with the model.
 auto make_preset_menu(my_model& model, view& view_)
 {
+   // These are the menu labels
    static char const* preset_labels[] = {
          "100 Percent",
          "75 Percent",
@@ -99,6 +167,7 @@ auto make_preset_menu(my_model& model, view& view_)
          "0 Percent",
       };
 
+   // We use a map to associate the menu labels with the preset enumeration.
    static auto preset_map =
       std::unordered_map<std::string_view, my_model::preset> {
          { preset_labels[0], my_model::preset_100_percent  },
@@ -108,13 +177,20 @@ auto make_preset_menu(my_model& model, view& view_)
          { preset_labels[4], my_model::preset_0_percent  }
       };
 
+   // We make a selection menu.
    auto preset_menu =
       selection_menu(
          [&model](std::string_view select_str)
          {
+            // This is called when the user selects an item in the menu.
+
+            // Convert the selected menu item to the preset enumeration.
             auto select = preset_map[select_str];
+
+            // Set the model's preset
             model._preset = select;
 
+            // Set the value of the model accordingly.
             switch (select)
             {
                case my_model::preset_100_percent:
@@ -145,6 +221,8 @@ auto make_preset_menu(my_model& model, view& view_)
          }
       );
 
+   // When a new preset is assigned to the model, we want to update
+   // the menu text and refresh the view.
    model._preset.on_update_ui(
       [&view_, label = preset_menu.second, &model](my_model::preset val)
       {
@@ -165,10 +243,13 @@ auto make_preset_menu(my_model& model, view& view_)
    return preset_menu.first;
 }
 
+// Create an input text box and establish its connection with the model.
 auto make_input_box(my_model& model, view& view_)
 {
-   auto tbox = input_box("1.000");
+   auto tbox = input_box("value");
 
+   // When a new value is assigned to the model, we want to update
+   // the input text box and refresh the view.
    model._value.on_update_ui(
       [&view_, input = tbox.second](double val)
       {
@@ -178,6 +259,9 @@ auto make_input_box(my_model& model, view& view_)
       }
    );
 
+   // When the user presses the enter key, we'll convert the text to a number and then update the
+   // model with the new value. We will deal with input validation and bring up a message box when
+   // errors are encountered.
    tbox.second->on_enter =
       [&model, &view_](std::string_view text)
       {
@@ -214,20 +298,22 @@ auto make_input_box(my_model& model, view& view_)
          if (error != "")
          {
             auto&& on_ok =
-               []()
+               [&model]()
                {
+                  // When errors are enountered, reset the model's value to its previous state.
+                  model._value.update_ui();
                };
 
+            // Bring up a message box.
             auto popup = message_box1(view_, error, icons::attention, on_ok);
             view_.add(popup);
-
-            model._value.update_ui();
          }
       };
 
    return halign(0.5, hsize(80, tbox.first));
 }
 
+// Finally, we have our main content.
 auto make_content(my_model& model, view& view_)
 {
    static float const grid_coords[] = {0.1, 0.9, 1.0};

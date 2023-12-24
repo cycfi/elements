@@ -100,7 +100,7 @@
       components without disrupting the entire system. This is particularly important as the
       application evolves.
 
-   2. Parallel Development: The GUI and application can be developed separately and independently.
+   2. Parallel Development: The GUI and application can be developed independently.
 
    3. Reusability: Decoupled components are more reusable in other contexts. They can be extracted
       and utilized in different projects without carrying unnecessary dependencies.

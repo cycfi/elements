@@ -127,6 +127,44 @@ namespace cycfi { namespace elements
    };
 
    //==============================================================================================
+   /** @class proxy_model
+    *
+    * Class `proxy_model` is a derived class of `model` that delegates the extraction and updating
+    * of data from another class specified by the `Ref` template parameter. The `get` and `set`
+    * member functions are undefined. It is the client's responsibility to define these member
+    * functions, by providing specific specializations keyed by a supplied ID.\n\n
+    *
+    * The `proxy_model` holds a reference to a class that supplies the actual data. This reference
+    * is provided by the client in its constructor. This is used by the `get` and `set`
+    * implementations to extract and update specific data form the referenced class.
+    *
+    * @tparam T The underlying type of the `proxy_model`.
+    * @tparam ID The ID used as specifier to implement specializations of `get` and `set` member
+    *         functions.
+    * @tparam Ref Class that supplies the actual data.
+    */
+   //==============================================================================================
+   template <typename T, typename ID, typename Ref>
+   class proxy_model : public model<T, proxy_model<T, ID, Ref>>
+   {
+   public:
+
+      using base_type = model<T, proxy_model<T, ID, Ref>>;
+      using value_type = typename base_type::value_type;
+      using param_type = typename base_type::param_type;
+      using base_type::operator=;
+
+                              proxy_model(Ref& ref_);
+
+      value_type              get() const;
+      void                    set(param_type val);
+
+   private:
+
+      Ref&                    _ref;
+   };
+
+   //==============================================================================================
    // Inlines
    //==============================================================================================
 
@@ -267,6 +305,15 @@ namespace cycfi { namespace elements
    {
       _ref = val;
    }
+
+   /**
+    * @brief Construct a `proxy_model` given a reference to the target class `Ref`.
+    * @param ref_ A referece to the to the target class.
+    */
+   template <typename T, typename ID, typename Ref>
+   inline proxy_model<T, ID, Ref>::proxy_model(Ref& ref_)
+    : _ref{ref_}
+   {}
 }}
 
 #endif

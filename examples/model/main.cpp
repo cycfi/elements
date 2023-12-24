@@ -7,30 +7,41 @@
 
 /*=================================================================================================
    Elements does not dictate a particular method for organizing a GUI application. You have the
-   flexibility to structure your application according to your preferences. Basically, you build
-   an elements hierarchy and install that as your content into the view. While constructing the
-   hierarchy, you establish a connection between the elements and the application logic through
-   callbacks such as the button's on_click and the input text box's on_enter. These callbacks are
-   invoked when the user clicks the button or presses the enter key in the text box, for example.
+   flexibility to structure your application according to your preferences. Essentially, the
+   following needs to happen:
 
-   Additionally, you ensure the GUI is updated to accurately represent the application state
-   whenever changes occur. Moreover, the application may need the ability to inspect the state of
-   the GUI elements or set them to a specific state at any given time.
+   1. Build an elements hierarchy and install that as your content into the view.
 
-   A naive way to do this is to expose various GUI elements as members of an application or GUI
-   class. For example, here's a code snippet of an old plugin I wrote a few years back:
+   2. Establish a connection between the GUI elements and the application through callbacks such
+      as the button's `on_click` and the input text box's `on_enter` hooks. These callbacks are
+      invoked when the user clicks the button or presses the enter key in the text box, for
+      example.
 
-      input_box_ptr           _program_id;
-      label_ptr               _position_text;
-      button_ptr              _enable;
-      toggle_button_ptr       _sync;
-      menu_ptr                _preset_menu;
-      input_box_ptr           _save_as_name;
-      slider_ptr              _master_volume;
-      label_ptr               _master_volume_text;
+   3. Ensure the GUI is updated to accurately represent the application state whenever changes
+      occur. The application may need the ability to inspect the state of the GUI elements or set
+      them to a specific state at any given time.
 
-   The types `input_box_ptr`, `button_ptr`, and so on, are `std::shared_ptr`s, created using the
-   `share(e)` function and held in the element hieiarchy using the `hold(p)` function.
+   We all know how to implement 1.
+
+   A common and straight-forward way to implement 2 and 3 is to expose various GUI elements as
+   members of an application or GUI class. For example, here's a code snippet of an old plugin I
+   wrote a few years back:
+
+      private:
+
+         input_box_ptr           _program_id;
+         label_ptr               _position_text;
+         button_ptr              _enable;
+         toggle_button_ptr       _sync;
+         menu_ptr                _preset_menu;
+         input_box_ptr           _save_as_name;
+         slider_ptr              _master_volume;
+         label_ptr               _master_volume_text;
+
+   The `input_box_ptr`, `button_ptr`, and so on, are `std::shared_ptr`s that are created using the
+   `share(e)` function and held in the element hieiarchy using the `hold(p)` function. These are
+   kept as private members in a GUI class which manages the interconnections and presents a
+   higher-level view to the application through a well-defined API.
 
    This example presents a more elegant way to structure an elements application using Models.
 
@@ -50,28 +61,63 @@
 
       float i = m;
 
-   The `value_model<float>` is a derived class of the template class model. It specifically
+   You can also update the GUI elements that are linked to it:
+
+      m.update_ui(0.5);
+
+   These capabilities implement 2 and 3 of the requirements.
+
+   The `value_model<float>` is a derived class of the template class `model`. It specifically
    addresses the typical scenario where the data is internally stored by value within the class.
-   The class includes get and set member functions that adhere to the requirements set by the
-   model template, facilitating the retrieval and modification of data.
+   The class includes `get` and `set` member functions following the `Model` concept required by
+   the model template, facilitating the retrieval and modification of data.
 
       Note: While this example utilizes the `value_model<float>`, you have the flexibility to
       create your custom subclass of the template class model to implement more tailored methods
       of accessing your data.
 
-   Adopting the model paradigm, the application logic and the user interface engage with the model
+   Adopting the model paradigm, the application and the user interface engage with the model
    independently, unaware of each other's existence. The model serves as a central hub,
    facilitating and coordinating interactions between them:
 
-      application logic <----> model <----> GUI
+      application <----> model <----> GUI
+
+   The model decouples the application from the GUI.
+
+   1. The application is aware of the model, manages and interacts with it.
+   2. The GUI is also aware of the model and links to it via callbacks.
+   3. The model is unaware of the GUI.
+   4. The model may be aware of the application, e.g. if it needs to get data from the
+      application, but not necessarily, e.g. if it holds the data itself.
+   5. The GUI and the application are both unaware of each other.
+
+   Number 5 is an important design principle known as "decoupling," emphasizing the separation of
+   concerns and promoting independence between the GUI and the application components.
+
+   The advantages of decoupling in a software design context include:
+
+   1. Scalability: Decoupling facilitates scalability by enabling the addition or removal of
+      components without disrupting the entire system. This is particularly important as the
+      application evolves.
+
+   2. Parallel Development: The GUI and application can be developed separately and independently.
+
+   3. Reusability: Decoupled components are more reusable in other contexts. They can be extracted
+      and utilized in different projects without carrying unnecessary dependencies.
+
+   4. Maintainability: The overall maintainability of the system is improved because changes to
+      one component are less likely to cascade through the entire codebase. Maintenance is more
+      straightforward. Updates or bug fixes to one component can be made without impacting the
+      rest of the system.
+
+   5. Modularity: A notable advantage of this approach is that the user interface elements do not
+      need to be exposed beyond their creation function. Consequently, all GUI logic is localized
+      and established within the same element creation function.
 
    In this example, we present a very simple model, comprising of a floating point value and a
    preset. As the GUI elements are being built, they attach themselves to the model by utilizing
-   its on_update_ui(f) member function at different nodes within the elements hierarchy.
-
-   A notable advantage of this approach is that the user interface elements do not need to be
-   exposed beyond their creation function. Consequently, all GUI logic is localized and
-   established within the same element creation function.
+   its on_update_ui(f) member function at different nodes within the elements hierarchy. This
+   illustrates the approach of designing the user interface based on models.
 =================================================================================================*/
 namespace elements = cycfi::elements;
 namespace icons = elements::icons;

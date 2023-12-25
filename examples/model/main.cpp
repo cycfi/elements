@@ -260,13 +260,7 @@ auto make_preset_menu(my_model& model, view& view_)
                   break;
             };
          },
-         {
-            preset_labels[0],
-            preset_labels[1],
-            preset_labels[2],
-            preset_labels[3],
-            preset_labels[4]
-         }
+         preset_labels
       );
 
    // When a new preset is assigned to the model, we want to update

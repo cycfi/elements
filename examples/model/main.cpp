@@ -131,6 +131,8 @@ using elements::radial_labels;
 using elements::basic_knob;
 using elements::selection_menu;
 using elements::input_box;
+using elements::label;
+using elements::hspace;
 using elements::view;
 using elements::app;
 using elements::window;
@@ -286,7 +288,15 @@ auto make_preset_menu(my_model& model, view& view_)
       }
    );
 
-   return preset_menu.first;
+   return align_center(
+            hsize(180,
+               htile(
+                  label("Preset:"),
+                  hspace(10),
+                  preset_menu.first
+               )
+            )
+         );
 }
 
 // Create an input text box and establish its connection with the model.
@@ -356,7 +366,7 @@ auto make_input_box(my_model& model, view& view_)
          }
       };
 
-   return halign(0.5, hsize(80, tbox.first));
+   return halign(0.5, hsize(70, tbox.first));
 }
 
 // Finally, we have our main content.

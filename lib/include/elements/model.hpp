@@ -35,18 +35,16 @@ namespace cycfi { namespace elements
     * @tparam T The underlying type of the `model`.
     * @tparam Derived The class that derives from `model` that implements the value getter and
     *         setter.
-    * @tparam ParamT The parameter type used for passing parameters for the setter. This defaults
-    *         to `T` if `T` is a fundamental type or to `T const&` if not.
     */
    //==============================================================================================
-   template <typename T, typename Derived, typename ParamT = param_type<T>>
+   template <typename T, typename Derived>
    class model
    {
    public:
 
       using value_type = T;
       using derived_type = Derived;
-      using param_type = ParamT;
+      using param_type = cycfi::param_type<value_type>;
       using update_param_type = cycfi::param_type<value_type>;
       using update_function = std::function<void(update_param_type)>;
 
@@ -171,16 +169,16 @@ namespace cycfi { namespace elements
 
    /** @brief Returns a reference to the derived class.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline Derived& model<T, Derived, ParamT>::derived()
+   template <typename T, typename Derived>
+   inline Derived& model<T, Derived>::derived()
    {
       return *static_cast<derived_type*>(this);
    }
 
    /** @brief Returns a const reference to the derived class.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline Derived const& model<T, Derived, ParamT>::derived() const
+   template <typename T, typename Derived>
+   inline Derived const& model<T, Derived>::derived() const
    {
       return *static_cast<derived_type const*>(this);
    }
@@ -189,9 +187,9 @@ namespace cycfi { namespace elements
     *         `set` member function and propagating the changes to all linked UI elements.
     * @param val The new value assigned to the model.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline model<T, Derived, ParamT>&
-   model<T, Derived, ParamT>::operator=(param_type val)
+   template <typename T, typename Derived>
+   inline model<T, Derived>&
+   model<T, Derived>::operator=(param_type val)
    {
       derived().set(val);
       update_ui(val);
@@ -200,16 +198,16 @@ namespace cycfi { namespace elements
 
    /** @brief Gets the value of the model using the `get` member function of the derived class.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline model<T, Derived, ParamT>::operator value_type() const
+   template <typename T, typename Derived>
+   inline model<T, Derived>::operator value_type() const
    {
       return derived().get();
    }
 
    /** @brief Update all linked UI elements to the model's latest value.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline void model<T, Derived, ParamT>::update_ui()
+   template <typename T, typename Derived>
+   inline void model<T, Derived>::update_ui()
    {
       update_ui(derived().get());
    }
@@ -217,8 +215,8 @@ namespace cycfi { namespace elements
    /** @brief Update all linked UI elements to the given `val`.
     *  @param val The new value used to update linked UI elements.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline void model<T, Derived, ParamT>::update_ui(value_type val)
+   template <typename T, typename Derived>
+   inline void model<T, Derived>::update_ui(value_type val)
    {
       if (_update_ui)
          _update_ui(val);
@@ -230,8 +228,8 @@ namespace cycfi { namespace elements
     *        sequentially at UI update time, in a first-come, first-served order.
     * @param f The update function.
     */
-   template <typename T, typename Derived, typename ParamT>
-   inline void model<T, Derived, ParamT>::on_update_ui(update_function f)
+   template <typename T, typename Derived>
+   inline void model<T, Derived>::on_update_ui(update_function f)
    {
       if (_update_ui)
       {

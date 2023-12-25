@@ -129,10 +129,10 @@ namespace cycfi { namespace elements
    //==============================================================================================
    /** @class proxy_model
     *
-    * Class `proxy_model` is a derived class of `model` that delegates the extraction and updating
-    * of data from another class specified by the `Ref` template parameter. The `get` and `set`
-    * member functions are undefined. It is the client's responsibility to define these member
-    * functions, by providing specific specializations keyed by a supplied ID.\n\n
+    * Class `proxy_model` is a derived class of `model` that delegates the retrieval and
+    * modification of data to another class specified by the `Delegate` template parameter. The
+    * `get` and `set` member functions are undefined. It is the client's responsibility to define
+    * these member functions, by providing specific specializations keyed by a supplied ID.\n\n
     *
     * The `proxy_model` holds a reference to a class that supplies the actual data. This reference
     * is provided by the client in its constructor. This is used by the `get` and `set`
@@ -141,27 +141,28 @@ namespace cycfi { namespace elements
     * @tparam T The underlying type of the `proxy_model`.
     * @tparam ID The ID used as specifier to implement specializations of `get` and `set` member
     *         functions.
-    * @tparam Ref Class that supplies the actual data.
+    * @tparam Delegate Class that supplies the actual data.
     */
    //==============================================================================================
-   template <typename T, typename ID, typename Ref>
-   class proxy_model : public model<T, proxy_model<T, ID, Ref>>
+   template <typename T, typename ID, typename Delegate>
+   class proxy_model : public model<T, proxy_model<T, ID, Delegate>>
    {
    public:
 
-      using base_type = model<T, proxy_model<T, ID, Ref>>;
+      using delegate_type = Delegate;
+      using base_type = model<T, proxy_model<T, ID, delegate_type>>;
       using value_type = typename base_type::value_type;
       using param_type = typename base_type::param_type;
       using base_type::operator=;
 
-                              proxy_model(Ref& ref_);
+                              proxy_model(delegate_type& ref_);
 
       value_type              get() const;
       void                    set(param_type val);
 
    private:
 
-      Ref&                    _ref;
+      delegate_type&          _ref;
    };
 
    //==============================================================================================
@@ -307,11 +308,11 @@ namespace cycfi { namespace elements
    }
 
    /**
-    * @brief Construct a `proxy_model` given a reference to the target class `Ref`.
+    * @brief Construct a `proxy_model` given a reference to the target class `Delegate`.
     * @param ref_ A referece to the to the target class.
     */
-   template <typename T, typename ID, typename Ref>
-   inline proxy_model<T, ID, Ref>::proxy_model(Ref& ref_)
+   template <typename T, typename ID, typename Delegate>
+   inline proxy_model<T, ID, Delegate>::proxy_model(Delegate& ref_)
     : _ref{ref_}
    {}
 }}

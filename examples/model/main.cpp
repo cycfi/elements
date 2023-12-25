@@ -7,8 +7,8 @@
 
 /*=================================================================================================
    Elements does not dictate a particular method for organizing a GUI application. You have the
-   flexibility to structure your application according to your preferences. Essentially, the
-   following needs to happen:
+   flexibility to structure your application according to your preferences. Here's a breakdown of
+   the essential steps:
 
    1. Build an elements hierarchy and install that as your content into the view.
 

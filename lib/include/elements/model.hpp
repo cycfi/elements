@@ -85,7 +85,6 @@ namespace cycfi { namespace elements
       using base_type::operator=;
 
                               value_model(param_type init = param_type{});
-
       value_type const&       get() const;
       void                    set(param_type val);
 
@@ -115,7 +114,6 @@ namespace cycfi { namespace elements
       using base_type::operator=;
 
                               reference_model(T& ref_);
-
       value_type const&       get() const;
       void                    set(param_type val);
 
@@ -128,9 +126,7 @@ namespace cycfi { namespace elements
    /** @class proxy_model
     *
     * Class `proxy_model` is a derived class of `model` that delegates the retrieval and
-    * modification of data to another class specified by the `Delegate` template parameter. The
-    * `get` and `set` member functions are undefined. It is the client's responsibility to define
-    * these member functions, by providing specific specializations keyed by a supplied ID.\n\n
+    * modification of data to another class specified by the `Delegate` template parameter.\n\n
     *
     * The `proxy_model` holds a reference to a class that supplies the actual data. This reference
     * is provided by the client in its constructor. This is used by the `get` and `set`
@@ -154,14 +150,44 @@ namespace cycfi { namespace elements
       using base_type::operator=;
 
                               proxy_model(delegate_type& ref_);
-
       value_type              get() const;
       void                    set(param_type val);
+
+      class keyed : public model<T, keyed>
+      {
+      public:
+
+         using model<T, keyed>::operator=;
+
+                              keyed(delegate_type& ref_, ID id);
+         value_type           get() const;
+         void                 set(param_type val);
+
+      private:
+
+         delegate_type&       _ref;
+         ID                   _id;
+      };
+
+      keyed                   operator[](ID id);
+      keyed const             operator[](ID id) const;
 
    private:
 
       delegate_type&          _ref;
    };
+
+   template <typename T, typename ID, typename Delegate>
+   auto get(proxy_model<T, ID, Delegate> const& model);
+
+   template <typename T, typename ID, typename Delegate>
+   auto get(proxy_model<T, ID, Delegate> const& model, ID id);
+
+   template <typename T, typename ID, typename Delegate, typename Param>
+   void set(proxy_model<T, ID, Delegate>& model, Param const& param);
+
+   template <typename T, typename ID, typename Delegate, typename Param>
+   void set(proxy_model<T, ID, Delegate>& model, Param const& param, ID id);
 
    //==============================================================================================
    // Inlines

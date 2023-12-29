@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
    {
    public:
                               image(fs::path const& path, float scale = 1);
-                              image(image_ptr pixmap_);
+                              image(image_ptr pixmap_, float scale = 1);
 
       virtual point           size() const;
       float                   scale() const { return _scale; }

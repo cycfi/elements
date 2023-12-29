@@ -125,7 +125,9 @@ set(ELEMENTS_HEADERS
    include/elements/window.hpp
 )
 
-if (APPLE)
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "custom")
+   set(ELEMENTS_HOST)
+elseif (APPLE)
    set(ELEMENTS_HOST
       host/macos/app.mm
       host/macos/base_view.mm
@@ -282,6 +284,8 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         # and GetDpiForWindow (Windows 10+) API
         target_compile_definitions(elements PRIVATE _WIN32_WINNT=0x0A00)
     endif()
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "custom")
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_CUSTOM)
 else()
     message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, cocoa or win32.")
 endif()

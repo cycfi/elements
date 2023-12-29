@@ -18,7 +18,7 @@ include(ElementsConfigCommon)
 
 option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)
 option(ELEMENTS_ENABLE_LTO "enable link time optimization for Elements targets" OFF)
-set(ELEMENTS_HOST_UI_LIBRARY "" CACHE STRING "gtk, cocoa or win32")
+set(ELEMENTS_HOST_UI_LIBRARY "" CACHE STRING "gtk, cocoa, win32 or custom")
 option(ELEMENTS_HOST_ONLY_WIN7 "If host UI library is win32, reduce elements features to support Windows 7" OFF)
 option(ENABLE_GIT_SUBMODULE_CHECK "Check and clone submodules when not available." ON)
 

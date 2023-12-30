@@ -113,7 +113,7 @@ namespace cycfi { namespace elements
       using param_type = typename base_type::param_type;
       using base_type::operator=;
 
-                              reference_model(T& ref_);
+                              reference_model(T& ref);
       value_type const&       get() const;
       void                    set(param_type val);
 
@@ -144,12 +144,13 @@ namespace cycfi { namespace elements
    public:
 
       using delegate_type = Delegate;
+      using id_type = ID;
       using base_type = model<T, proxy_model<T, ID, delegate_type>>;
       using value_type = typename base_type::value_type;
       using param_type = typename base_type::param_type;
       using base_type::operator=;
 
-                              proxy_model(delegate_type& ref_);
+                              proxy_model(delegate_type& ref);
       value_type              get() const;
       void                    set(param_type val);
 
@@ -159,35 +160,35 @@ namespace cycfi { namespace elements
 
          using model<T, keyed>::operator=;
 
-                              keyed(delegate_type& ref_, ID id);
+                              keyed(delegate_type& ref, id_type id);
          value_type           get() const;
          void                 set(param_type val);
 
       private:
 
          delegate_type&       _ref;
-         ID                   _id;
+         id_type              _id;
       };
 
-      keyed                   operator[](ID id);
-      keyed const             operator[](ID id) const;
+      keyed                   operator[](id_type id);
+      keyed const             operator[](id_type id) const;
 
    private:
 
       delegate_type&          _ref;
    };
 
-   template <typename T, typename ID, typename Delegate>
-   auto get(proxy_model<T, ID, Delegate> const& model);
+   template <typename ID, typename Delegate>
+   auto extract(Delegate const& ref);
 
-   template <typename T, typename ID, typename Delegate>
-   auto get(proxy_model<T, ID, Delegate> const& model, ID id);
+   template <typename ID, typename Delegate>
+   auto extract(Delegate const& ref, ID id);
 
-   template <typename T, typename ID, typename Delegate, typename Param>
-   void set(proxy_model<T, ID, Delegate>& model, Param const& param);
+   template <typename ID, typename Delegate, typename Param>
+   void assign(Delegate& ref, Param const& param);
 
-   template <typename T, typename ID, typename Delegate, typename Param>
-   void set(proxy_model<T, ID, Delegate>& model, Param const& param, ID id);
+   template <typename ID, typename Delegate, typename Param>
+   void assign(Delegate& ref, Param const& param, ID id);
 
    //==============================================================================================
    // Inlines
@@ -304,11 +305,11 @@ namespace cycfi { namespace elements
 
    /**
     * @brief Construct a `reference_model` given a reference to a value used by the model.
-    * @param ref_ A referece to the value used by the model.
+    * @param ref A referece to the value used by the model.
     */
    template <typename T>
-   inline reference_model<T>::reference_model(T& ref_)
-    : _ref{ref_}
+   inline reference_model<T>::reference_model(T& ref)
+    : _ref{ref}
    {}
 
    /**
@@ -333,12 +334,103 @@ namespace cycfi { namespace elements
 
    /**
     * @brief Construct a `proxy_model` given a reference to the target class `Delegate`.
-    * @param ref_ A referece to the to the target class.
+    * @param ref A referece to the to the target class.
     */
    template <typename T, typename ID, typename Delegate>
-   inline proxy_model<T, ID, Delegate>::proxy_model(Delegate& ref_)
-    : _ref{ref_}
+   inline proxy_model<T, ID, Delegate>::proxy_model(Delegate& ref)
+    : _ref{ref}
    {}
+
+   /**
+    * @brief Get the `keyed`'s value. This call forwards to template function extract<ID>(ref),
+    *        where ID is the specifier used as key to disambiguate specializations, and ref is the
+    *        reference to the Delegate. The user is required to overload this with an extraction
+    *        function specific to the delegate. `keyed` is a nested class in `proxy_model`.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::value_type
+   proxy_model<T, ID, Delegate>::get() const
+   {
+      return extract<ID>(_ref);
+   }
+
+   /**
+    * @brief Set the `keyed` to the specified `val`. This call forwards to template function
+    *        assign<ID>(ref, val), where ID is the specifier used as key to disambiguate
+    *        specializations, ref is the reference to the Delegate and val the new value to assign
+    *        to the model. The user is required to overload this with an extraction function
+    *        specific to the delegate. `keyed` is a nested class in `proxy_model`.
+
+    * @param val The new value to assign to the model.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline void proxy_model<T, ID, Delegate>::set(param_type val)
+   {
+      assign<ID>(_ref, val);
+   }
+
+   /**
+    * @brief Make a `keyed` model given ID `id`. `keyed` is a nested class in `proxy_model`.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::keyed
+   proxy_model<T, ID, Delegate>::operator[](id_type id)
+   {
+      return {_ref, id};
+   }
+
+   /**
+    * @brief Make a `keyed` model given ID `id`. `keyed` is a nested class in `proxy_model`.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::keyed const
+   proxy_model<T, ID, Delegate>::operator[](id_type id) const
+   {
+      return {_ref, id};
+   }
+
+   /**
+    * @brief Construct a `keyed` model given a reference to the target class `Delegate` and ID
+    *        `id`. `keyed` is a nested class in `proxy_model`.
+    * @param ref A referece to the to the target class.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline proxy_model<T, ID, Delegate>::proxy_model::keyed::keyed(delegate_type& ref, id_type id)
+    : _ref{ref}
+    , _id{id}
+   {}
+
+   /**
+    * @brief Get the `keyed`'s value. This call forwards to template function elements::get(ref,
+    *        id), where ref is the reference to the Delegate and id is the runtime specifier used
+    *        as key to disambiguate specializations. The user is required to overload this with an
+    *        extraction function specific to the delegate. `keyed` is a nested class in
+    *        `proxy_model`.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::value_type
+   proxy_model<T, ID, Delegate>::proxy_model::keyed::get() const
+   {
+      return extract(_ref, _id);
+   }
+
+   /**
+    * @brief Set the `keyed` to the specified `val`. This call forwards to template function
+    *        elements::set(ref, val, id), where ref is the reference to the Delegate, val The new
+    *        value to assign to the model, and id is the runtime specifier used as key to disambiguate
+    *        specializations. The user is required to overload this with an extraction function
+    *        specific to the delegate. `keyed` is a nested class in `proxy_model`.
+    *
+    * @param val The new value to assign to the model.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline void proxy_model<T, ID, Delegate>::proxy_model::keyed::set(param_type val)
+   {
+      assign(_ref, val, _id);
+   }
 }}
 
 #endif

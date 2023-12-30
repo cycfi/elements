@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
     * The `model` class serves as an abstraction for a data type that is linked to one or more
     * user interface elements. The actual data is accessed and modified through the `get` and
     * `set` member functions of the derived class. A user interface element can be linked to a
-    * `model` by supplying an `update_function` via the `on_update_ui(f)` member function.\n\n
+    * `model` by supplying an `update_function` via the `on_update(f)` member function.\n\n
     *
     * The conversion operator may be used to get a model's value via the derived class's `get`
     * member function. Example:
@@ -55,13 +55,13 @@ namespace cycfi { namespace elements
       model&                  operator=(param_type val);
                               operator value_type() const;
 
-      void                    update_ui();
-      void                    update_ui(value_type val);
-      void                    on_update_ui(update_function f);
+      void                    update();
+      void                    update(value_type val);
+      void                    on_update(update_function f);
 
    private:
 
-      update_function         _update_ui;
+      update_function         _update;
    };
 
    //==============================================================================================
@@ -219,7 +219,7 @@ namespace cycfi { namespace elements
    model<T, Derived>::operator=(param_type val)
    {
       derived().set(val);
-      update_ui(val);
+      update(val);
       return *this;
    }
 
@@ -234,19 +234,19 @@ namespace cycfi { namespace elements
    /** @brief Update all linked UI elements to the model's latest value.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::update_ui()
+   inline void model<T, Derived>::update()
    {
-      update_ui(derived().get());
+      update(derived().get());
    }
 
    /** @brief Update all linked UI elements to the given `val`.
     *  @param val The new value used to update linked UI elements.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::update_ui(value_type val)
+   inline void model<T, Derived>::update(value_type val)
    {
-      if (_update_ui)
-         _update_ui(val);
+      if (_update)
+         _update(val);
    }
 
    /**
@@ -256,13 +256,13 @@ namespace cycfi { namespace elements
     * @param f The update function.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::on_update_ui(update_function f)
+   inline void model<T, Derived>::on_update(update_function f)
    {
-      if (_update_ui)
+      if (_update)
       {
          // Chain call
-         _update_ui =
-            [prev_f = _update_ui, f](value_type val)
+         _update =
+            [prev_f = _update, f](value_type val)
             {
                prev_f(val);
                f(val);
@@ -270,7 +270,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         _update_ui = f;
+         _update = f;
       }
    }
 
@@ -420,9 +420,10 @@ namespace cycfi { namespace elements
    /**
     * @brief Set the `keyed` to the specified `val`. This call forwards to template function
     *        elements::set(ref, val, id), where ref is the reference to the Delegate, val The new
-    *        value to assign to the model, and id is the runtime specifier used as key to disambiguate
-    *        specializations. The user is required to overload this with an extraction function
-    *        specific to the delegate. `keyed` is a nested class in `proxy_model`.
+    *        value to assign to the model, and id is the runtime specifier used as key to
+    *        disambiguate specializations. The user is required to overload this with an
+    *        extraction function specific to the delegate. `keyed` is a nested class in
+    *        `proxy_model`.
     *
     * @param val The new value to assign to the model.
     */

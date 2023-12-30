@@ -21,39 +21,23 @@
       occur. The application may need the ability to inspect the state of the GUI elements or set
       them to a specific state at any given time.
 
-   We all know how to implement 1.
+   A typical approach for steps 2 and 3 involves holding different GUI elements as private members
+   within an application or GUI class. These elements are managed as shared pointers, created
+   using the `share(e)` function and held in the element hieiarchy using the `hold(p)` function.
+   The GUI class oversees the interconnections and presents a higher-level view to the application
+   through a well-defined API.
 
-   A common and straight-forward way to implement 2 and 3 is to expose various GUI elements as
-   members of an application or GUI class. For example, here's a code snippet of an old plugin I
-   wrote a few years back:
-
-      private:
-
-         input_box_ptr           _program_id;
-         label_ptr               _position_text;
-         button_ptr              _enable;
-         toggle_button_ptr       _sync;
-         menu_ptr                _preset_menu;
-         input_box_ptr           _save_as_name;
-         slider_ptr              _master_volume;
-         label_ptr               _master_volume_text;
-
-   The `input_box_ptr`, `button_ptr`, and so on, are `std::shared_ptr`s that are created using the
-   `share(e)` function and held in the element hieiarchy using the `hold(p)` function. These are
-   kept as private members in a GUI class which manages the interconnections and presents a
-   higher-level view to the application through a well-defined API.
-
-   This example presents a more elegant way to structure an elements application using Models.
-
-   The Model (elements/model.hpp) serves as an abstraction for a data type that is linked to one
-   or more user interface elements. The actual data is accessed and modified through the `get` and
+   This example presents a more elegant way to structure an elements application using Models. The
+   Model (elements/model.hpp) serves as an abstraction for a data type that is linked to one or
+   more user interface elements. The actual data is accessed and modified through the `get` and
    `set` member functions of the derived class. A user interface element can be linked to a
-   `model` by supplying an `update_function` via the `on_update_ui(f)` member function.
+   `model` by supplying an `update_function` via the `on_update(f)` member function.
 
    The Model does not care about the GUI element types it is interacting with. It is an abstract
-   data type that models its underlying data type (e.g. float, int, enum, etc.). In the view point
-   of the application, it looks and acts like a concrete type. For example, a `value_model<float>`
-   acts just like a float. You can assign a value to it:
+   data type that models its underlying data type (e.g. float, int, enum, etc.). It looks and acts
+   like a concrete type.
+
+   For example, a `value_model<float>` acts just like a float. You can assign a value to it:
 
       m = 1.0;
 
@@ -63,7 +47,7 @@
 
    You can also update the GUI elements that are linked to it:
 
-      m.update_ui(0.5);
+      m.update(0.5);
 
    These capabilities implement 2 and 3 of the requirements.
 
@@ -92,31 +76,13 @@
    5. The GUI and the application are both unaware of each other.
 
    Number 5 is an important design principle known as "decoupling," emphasizing the separation of
-   concerns and promoting independence between the GUI and the application components.
-
-   The advantages of decoupling in a software design context include:
-
-   1. Scalability: Decoupling facilitates scalability by enabling the addition or removal of
-      components without disrupting the entire system. This is particularly important as the
-      application evolves.
-
-   2. Parallel Development: The GUI and application can be developed independently.
-
-   3. Reusability: Decoupled components are more reusable in other contexts. They can be extracted
-      and utilized in different projects without carrying unnecessary dependencies.
-
-   4. Maintainability: The overall maintainability of the system is improved because changes to
-      one component are less likely to cascade through the entire codebase. Maintenance is more
-      straightforward. Updates or bug fixes to one component can be made without impacting the
-      rest of the system.
-
-   5. Modularity: A notable advantage of this approach is that the user interface elements do not
-      need to be exposed beyond their creation function. Consequently, all GUI logic is localized
-      and established within the same element creation function.
+   concerns and promoting independence between the GUI and the application components. The
+   advantages of decoupling in a software design context include, modularity, scalability, and
+   reusability, and ease of maintainance.
 
    In this example, we present a very simple model, comprising of a floating point value and a
    preset. As the GUI elements are being built, they attach themselves to the model by utilizing
-   its on_update_ui(f) member function at different nodes within the elements hierarchy. This
+   its on_update(f) member function at different nodes within the elements hierarchy. This
    illustrates the approach of designing the user interface based on models.
 =================================================================================================*/
 namespace elements = cycfi::elements;
@@ -185,7 +151,7 @@ auto make_dial(my_model& model, view& view_)
 
    // When a new value is assigned to the model, we want to update
    // the dial and refresh the view.
-   model._value.on_update_ui(
+   model._value.on_update(
       [&view_, dial_ptr](double val)
       {
          dial_ptr->value(val);
@@ -265,11 +231,12 @@ auto make_preset_menu(my_model& model, view& view_)
 
    // When a new preset is assigned to the model, we want to update
    // the menu text and refresh the view.
-   model._preset.on_update_ui(
+   model._preset.on_update(
       [&view_, label = preset_menu.second, &model](my_model::preset val)
       {
          if (val == my_model::preset_none)
          {
+            // Prepend '*' to the string to indicate that it is being edited.
             auto text = label->get_text();
             if (text[0] != '*')
                label->set_text("*" + std::string{text});
@@ -300,7 +267,7 @@ auto make_input_box(my_model& model, view& view_)
 
    // When a new value is assigned to the model, we want to update
    // the input text box and refresh the view.
-   model._value.on_update_ui(
+   model._value.on_update(
       [&view_, input = tbox.second](double val)
       {
          input->set_text(std::to_string(val));
@@ -351,7 +318,7 @@ auto make_input_box(my_model& model, view& view_)
                [&model]()
                {
                   // When errors are enountered, reset the model's value to its previous state.
-                  model._value.update_ui();
+                  model._value.update();
                };
 
             // Bring up a message box.
@@ -360,7 +327,7 @@ auto make_input_box(my_model& model, view& view_)
          }
       };
 
-   return halign(0.5, hsize(70, tbox.first));
+   return align_center(hsize(70, tbox.first));
 }
 
 // Finally, we have our main content.

@@ -9,10 +9,11 @@
 #include <elements/base_view.hpp>
 #include <artist/rect.hpp>
 #include <artist/canvas.hpp>
-#include <elements/element/element.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
 #include <elements/element/indirect.hpp>
+#include <elements/support/context.hpp>
+
 #include <asio.hpp>
 #include <memory>
 #include <unordered_map>
@@ -120,6 +121,8 @@ namespace cycfi { namespace elements
 
    private:
 
+      friend void cache_element_bounds(view& v, element* e, rect const& bounds);
+
       scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }
 
       layer_composite         _content;
@@ -144,20 +147,43 @@ namespace cycfi { namespace elements
       using tracking_map = std::map<element*, time_point>;
 
       tracking_map            _tracking;
+
+      using bounds_map = std::unordered_map<element*, rect>;
+
+      bounds_map              _bounds_map;
    };
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   inline point cursor_pos(view const& v) // declared in context.hpp
+
+   // The functions below are declared in context.hpp. They are defined here due
+   // to the forward declaration of `view` in the header file, preventing direct
+   // access to the actual `view` class. These functions are explicitly marked
+   // for forced inlining using CYCFI_FORCE_INLINE (defined in infra/support.hpp).
+   //
+   // If you encounter an undefined reference to any of these functions during
+   // the linking phase, it indicates the necessity to include
+   // <elements/view.hpp> in the .hpp or .cpp file of the calling code.
+
+   // declared in context.hpp
+   CYCFI_FORCE_INLINE point cursor_pos(view const& v)
    {
       return v.cursor_pos();
    }
 
-   inline rect view_bounds(view const& v) // declared in context.hpp
+   // declared in context.hpp
+   CYCFI_FORCE_INLINE rect view_bounds(view const& v)
    {
       auto size = v.size();
       return rect{0, 0, size.x, size.y};
+   }
+
+   // declared in context.hpp
+   CYCFI_FORCE_INLINE void cache_element_bounds(view& v, element* e, rect const& bounds)
+   {
+      if (auto i = v._bounds_map.find(e); i != v._bounds_map.end())
+         i->second = bounds;
    }
 
    inline rect view::dirty() const

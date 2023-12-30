@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
    inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , menu_selector const& items
-    , float text_align
+    , float text_align = 0.0f // align left
     , on_menu_item_function on_item = [](auto&, auto) {}
    )
    {
@@ -186,6 +186,8 @@ namespace cycfi { namespace elements
    inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , Sequence const& seq
+    , float text_align = 0.0f // align left
+    , on_menu_item_function on_item = [](auto&, auto) {}
     , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
    )
    {
@@ -210,7 +212,7 @@ namespace cycfi { namespace elements
          Sequence const& _seq;
       };
 
-      return selection_menu(on_select, seq_menu_selector{seq});
+      return selection_menu(on_select, seq_menu_selector{seq}, text_align, on_item);
    }
 
    template <typename T>

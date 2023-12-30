@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
 
    rect vgrid_element::bounds_of(context const& ctx, std::size_t index) const
    {
-      if (index >= size())
+      if (index >= _positions.size() || index >= size())
          return {};
       auto left = ctx.bounds.left;
       auto right = ctx.bounds.right;
@@ -147,7 +147,7 @@ namespace cycfi { namespace elements
 
    rect hgrid_element::bounds_of(context const& ctx, std::size_t index) const
    {
-      if (index >= size())
+      if (index >= _positions.size() || index >= size())
          return {};
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;

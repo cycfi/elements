@@ -21,8 +21,9 @@ namespace cycfi { namespace elements
          throw std::runtime_error{"Error: Invalid image."};
    }
 
-   image::image(image_ptr pixmap_)
+   image::image(image_ptr pixmap_, float scale)
     : _pixmap(pixmap_)
+    , _scale(scale)
    {
       if (!_pixmap->impl())
          throw std::runtime_error{"Error: Invalid image."};

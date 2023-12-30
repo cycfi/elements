@@ -103,6 +103,9 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
    {
+      if (!this->is_enabled())
+         return false;
+
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
          this->tracking(false);

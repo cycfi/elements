@@ -27,6 +27,7 @@
 #include <elements/element/port.hpp>
 #include <elements/element/progress_bar.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/element/range_slider.hpp>
 #include <elements/element/size.hpp>
 #include <elements/element/slider.hpp>
 #include <elements/element/text.hpp>

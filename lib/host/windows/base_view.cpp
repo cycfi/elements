@@ -48,10 +48,10 @@
 # include <iostream>
 #endif
 
-#include <GrContext.h>
 #include <gl/GrGLInterface.h>
 #include <SkImage.h>
 #include <SkSurface.h>
+#include <SkCanvas.h>
 #include <tools/sk_app/DisplayParams.h>
 #include <tools/sk_app/WindowContext.h>
 #include <tools/sk_app/win/WindowContextFactory_win.h>
@@ -132,6 +132,8 @@ namespace cycfi { namespace elements
          bool           _mouse_in_window = false;
          time_point     _click_start = {};
          int            _click_count = 0;
+         time_point     _scroll_start = {};
+         double         _velocity = 0;
          point          _scroll_dir;
          key_map        _keys = {};
          skia_context   _skia_context;
@@ -363,9 +365,41 @@ namespace cycfi { namespace elements
          view->cursor({pos_x, pos_y}, state);
       }
 
+      namespace
+      {
+         static auto mouse_wheel_line_delta =
+            []{
+               UINT wheel_scroll_lines;
+               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
+               return float(WHEEL_DELTA) / wheel_scroll_lines;
+            }();
+      }
+
       void on_scroll(HWND hwnd, view_info* info, LPARAM lparam, point dir)
       {
+         static constexpr auto accel_weight = 0.1;
+         auto acceleration = 1 + (std::max(std::abs(dir.x), std::abs(dir.y)) * accel_weight);
+         auto now = std::chrono::steady_clock::now();
+         auto elapsed = now - info->_scroll_start;
+         info->_scroll_start = now;
+
+         std::chrono::duration<double, std::milli> fp_ms = elapsed;
+
+         bool reset_accel =
+            elapsed > std::chrono::milliseconds(250) ||
+            (info->_scroll_dir.x > 0 != dir.x > 0) ||
+            (info->_scroll_dir.y > 0 != dir.y > 0)
+            ;
          info->_scroll_dir = dir;
+
+         if (reset_accel)
+            info->_velocity = 1.0;
+         else
+            info->_velocity *= acceleration;
+
+         static constexpr auto max_velocity = 100.0;
+         dir.x *= std::min(info->_velocity, max_velocity);
+         dir.y *= std::min(info->_velocity, max_velocity);
 
          POINT pos;
          pos.x = GET_X_LPARAM(lparam);
@@ -398,14 +432,6 @@ namespace cycfi { namespace elements
 
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
-         static auto mouse_wheel_line_delta =
-            []{
-               UINT wheel_scroll_lines;
-               SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &wheel_scroll_lines, 0);
-               constexpr auto line_pixels = 12.0f; // size 12 font per line
-               return WHEEL_DELTA / (wheel_scroll_lines * line_pixels);
-            }();
-
          auto* info = get_view_info(hwnd);
          switch (message)
          {
@@ -736,9 +762,41 @@ namespace cycfi { namespace elements
       }
    }
 
+   namespace
+   {
+      int get_scroll_direction()
+      {
+         const wchar_t* path = L"Software\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad";
+         const wchar_t* name = L"ScrollDirection";
+
+         HKEY hkey;
+
+         // Open the registry key
+         LONG result = RegOpenKeyExW(HKEY_CURRENT_USER, path, 0, KEY_READ, &hkey);
+
+         if (result == ERROR_SUCCESS)
+         {
+            // Read the specified value from the registry
+            DWORD value;
+            DWORD dataSize = sizeof(value);
+
+            result = RegQueryValueExW(hkey, name, nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &dataSize);
+
+            // Close the registry key
+            RegCloseKey(hkey);
+
+            if (result == ERROR_SUCCESS)
+               return value == 0? 1 : -1;
+         }
+         // Return default 1 if there was an error or the value was not found
+         return 1;
+      }
+   }
+
    point scroll_direction()
    {
-      return {+1.0f, +1.0f};
+      static int scroll_dir = get_scroll_direction();
+      return {1.0f, 1.0f * scroll_dir};
    }
 }}
 

@@ -8,6 +8,7 @@
 #include <elements/view.hpp>
 #include <cmath>
 
+#include <iostream>
 namespace cycfi { namespace elements
 {
    view_limits slider_base::limits(basic_context const& ctx) const
@@ -66,7 +67,7 @@ namespace cycfi { namespace elements
    bool slider_base::scroll(context const& ctx, point dir, point p)
    {
       auto sdir = scroll_direction();
-      double new_value = value() + (_is_horiz ? dir.x * sdir.x : dir.y * -sdir.y) * 0.005;
+      double new_value = value() + (_is_horiz ? dir.x*sdir.x + !dir.x*dir.y*-sdir.y : dir.y * -sdir.y) * 0.005;
       clamp(new_value, 0.0, 1.0);
       track_scroll(ctx, dir, p);
       edit_value(new_value);
@@ -239,6 +240,122 @@ namespace cycfi { namespace elements
          }
          cnv.stroke();
          pos += incr;
+      }
+   }
+
+   void draw_slider_marks_lin(
+      canvas& cnv, rect bounds, float size, std::size_t major_divs
+    , std::size_t minor_divs, color c)
+   {
+      auto w = bounds.width();
+      auto h = bounds.height();
+      auto state = cnv.new_state();
+      auto const& theme = get_theme();
+
+      float inset = size / 6;
+      bool vertical = w < h;
+      float xmin = vertical? bounds.top : bounds.left;
+      float xmax = vertical? bounds.bottom : bounds.right;
+      float major_step = (xmax-xmin)/major_divs;
+      float minor_step = major_step/minor_divs;
+
+      for (std::size_t i = 0; i != major_divs+1; ++i) 
+      {
+         float pos = xmin + i*major_step;
+
+         cnv.line_width(theme.major_ticks_width);
+         cnv.stroke_style(c.level(theme.major_ticks_level));
+         if (vertical)
+         {
+            cnv.move_to({bounds.left, pos});
+            cnv.line_to({bounds.right, pos});
+         }
+         else
+         {
+            cnv.move_to({pos, bounds.top});
+            cnv.line_to({pos, bounds.bottom});
+         }
+         cnv.stroke();
+
+         if (i == major_divs) {break;}
+         cnv.line_width(theme.minor_ticks_width);
+         cnv.stroke_style(c.level(theme.minor_ticks_level));
+         for (std::size_t j = 1; j != minor_divs; ++j)
+         {
+            float minor_pos = pos + j*minor_step;
+
+            if (vertical)
+            {
+               cnv.move_to({bounds.left + inset, minor_pos});
+               cnv.line_to({bounds.right - inset, minor_pos});
+            }
+            else
+            {
+               cnv.move_to({minor_pos, bounds.top + inset});
+               cnv.line_to({minor_pos, bounds.bottom - inset});
+            }
+            cnv.stroke();
+         }
+      }
+   }
+
+   void draw_slider_marks_log(
+      canvas& cnv, rect bounds, float size, std::size_t major_divs
+    , std::size_t minor_divs, color c)
+   {
+      auto w = bounds.width();
+      auto h = bounds.height();
+      auto state = cnv.new_state();
+      auto const& theme = get_theme();
+
+      float inset = size / 6;
+      bool vertical = w < h;
+      float xmin = vertical? bounds.top : bounds.left;
+      float xmax = vertical? bounds.bottom : bounds.right;
+      float major_step = (xmax-xmin)/major_divs;
+
+      std::vector<float> minor_offsets(minor_divs);
+      for (std::size_t i = 1; i != minor_divs; ++i)
+      {
+         minor_offsets[i-1] = std::log10(i)*major_step;
+      }
+
+      for (std::size_t i = 0; i != major_divs+1; ++i) 
+      {
+         float pos = xmin + i*major_step;
+
+         cnv.line_width(theme.major_ticks_width);
+         cnv.stroke_style(c.level(theme.major_ticks_level));
+         if (vertical)
+         {
+            cnv.move_to({bounds.left, pos});
+            cnv.line_to({bounds.right, pos});
+         }
+         else
+         {
+            cnv.move_to({pos, bounds.top});
+            cnv.line_to({pos, bounds.bottom});
+         }
+         cnv.stroke();
+
+         if (i == major_divs) {break;}
+         cnv.line_width(theme.minor_ticks_width);
+         cnv.stroke_style(c.level(theme.minor_ticks_level));
+         for (std::size_t j = 1; j != minor_divs; ++j)
+         {
+            float minor_pos = pos + minor_offsets[j-1];
+            if (vertical)
+            {
+               cnv.move_to({bounds.left + inset, minor_pos});
+               cnv.line_to({bounds.right - inset, minor_pos});
+            }
+            else
+            {
+               cnv.move_to({minor_pos, bounds.top + inset});
+               cnv.line_to({minor_pos, bounds.bottom - inset});
+            }
+            cnv.stroke();
+         }
       }
    }
 

@@ -8,7 +8,7 @@
 #include <elements/view.hpp>
 #include <typeinfo>
 
-#if defined(__GNUC__) || defined(__clang__)
+#if !defined(_MSC_VER) && (defined(__GNUC__) || defined(__clang__))
 # include <cxxabi.h>
 
    static std::string demangle(const char* name)

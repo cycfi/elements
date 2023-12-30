@@ -37,7 +37,7 @@ set(ELEMENTS_SOURCES
    src/element/gallery/icon_button.cpp
    src/element/gallery/menu.cpp
    src/element/gallery/radio_button.cpp
-   src/element/gallery/slide_button.cpp
+   src/element/gallery/slide_switch.cpp
    src/element/gallery/tab.cpp
    src/element/gallery/thumbwheel.cpp
    src/element/grid.cpp
@@ -51,6 +51,7 @@ set(ELEMENTS_SOURCES
    src/element/port.cpp
    src/element/progress_bar.cpp
    src/element/proxy.cpp
+   src/element/range_slider.cpp
    src/element/slider.cpp
    src/element/text.cpp
    src/element/thumbwheel.cpp
@@ -105,6 +106,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/port.hpp
    include/elements/element/progress_bar.hpp
    include/elements/element/proxy.hpp
+   include/elements/element/range_slider.hpp
    include/elements/element/selectable.hpp
    include/elements/element/size.hpp
    include/elements/element/slider.hpp
@@ -212,12 +214,6 @@ endif()
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
-   endif()
 elseif (APPLE OR UNIX OR WIN32)
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
@@ -228,12 +224,6 @@ endif()
 
 if (MSVC)
    target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
-   endif()
 elseif (APPLE OR UNIX OR WIN32)
    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
    target_link_libraries(elements PUBLIC PkgConfig::freetype2)

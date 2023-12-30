@@ -143,10 +143,14 @@ namespace cycfi { namespace elements
       return std::make_pair(menu_btn, btn_text);
    }
 
+   using on_menu_item_function =
+      std::function<void(basic_menu_item_element&, string_view item)>;
+
    inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , menu_selector const& items
-    , float text_align
+    , float text_align = 0.0f // align left
+    , on_menu_item_function on_item = [](auto&, auto) {}
    )
    {
       auto r = selection_menu(items.size()? std::string(items[0]) : "");
@@ -168,6 +172,7 @@ namespace cycfi { namespace elements
                };
             }
             list.push_back(e);
+            on_item(*e, items[i]);
          }
 
          auto menu = layer(list, panel{});
@@ -181,6 +186,8 @@ namespace cycfi { namespace elements
    inline auto selection_menu(
       std::function<void(string_view item)> on_select
     , Sequence const& seq
+    , float text_align = 0.0f // align left
+    , on_menu_item_function on_item = [](auto&, auto) {}
     , typename std::enable_if<!std::is_base_of<menu_selector, Sequence>::value>::type* = nullptr
    )
    {
@@ -205,7 +212,7 @@ namespace cycfi { namespace elements
          Sequence const& _seq;
       };
 
-      return selection_menu(on_select, seq_menu_selector{seq});
+      return selection_menu(on_select, seq_menu_selector{seq}, text_align, on_item);
    }
 
    template <typename T>
@@ -213,6 +220,7 @@ namespace cycfi { namespace elements
       std::function<void(string_view item)> on_select
     , std::initializer_list<T> list
     , float text_align = 0.0f // align left
+    , on_menu_item_function on_item = [](auto&, auto) {}
    )
    {
       struct init_list_menu_selector : menu_selector
@@ -236,7 +244,7 @@ namespace cycfi { namespace elements
          std::vector<T> _list;
       };
 
-      return selection_menu(on_select, init_list_menu_selector{list}, text_align);
+      return selection_menu(on_select, init_list_menu_selector{list}, text_align, on_item);
    }
 }}
 

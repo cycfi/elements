@@ -10,5 +10,6 @@
 #include <elements/window.hpp>
 #include <elements/view.hpp>
 #include <elements/element.hpp>
+#include <elements/model.hpp>
 
 #endif

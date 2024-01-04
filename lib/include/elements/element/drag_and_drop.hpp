@@ -104,6 +104,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    key(context const& ctx, key_info k) override;
+      bool                    wants_focus() const override { return true; }
 
       bool                    is_selected() const;
       void                    select(bool state);

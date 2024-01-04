@@ -83,7 +83,11 @@ int main(int argc, char* argv[])
    size_t list_size = paths.size();
    auto && make_row = [&](size_t index)
    {
-      return share(draggable(align_left(label(paths[index].u8string()))));
+      // If we start with an empty paths vector, we still need to give it a prototypical
+      // element in order to establish the size limits.
+      std::string path = paths.empty()? std::string{"Empty"} : paths[index].u8string();
+
+      return share(draggable(align_left(label(path))));
    };
 
    auto cp = basic_vcell_composer(list_size, make_row);

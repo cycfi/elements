@@ -87,7 +87,13 @@ int main(int argc, char* argv[])
       // element in order to establish the size limits.
       std::string path = paths.empty()? std::string{"Empty"} : paths[index].u8string();
 
-      return share(draggable(align_left(label(path))));
+      return share(
+         align_left(
+            draggable(
+               align_left(label(path))
+            )
+         )
+      );
    };
 
    auto cp = basic_vcell_composer(list_size, make_row);

@@ -75,6 +75,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      bool                    wants_focus() const override { return true; }
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
       on_move_function        on_move = [](std::size_t, indices_type const&){};
@@ -104,7 +105,6 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    key(context const& ctx, key_info k) override;
-      bool                    wants_focus() const override { return true; }
 
       bool                    is_selected() const;
       void                    select(bool state);

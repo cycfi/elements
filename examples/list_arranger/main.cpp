@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
       std::string path = paths.empty()? std::string{"Empty"} : paths[index].u8string();
 
       return share(
-         align_left(
+         (
             draggable(
                align_left(label(path))
             )

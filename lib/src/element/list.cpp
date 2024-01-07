@@ -297,6 +297,12 @@ namespace cycfi { namespace elements
       _update_request = false;
    }
 
+   void list::clear()
+   {
+      this->_composer->resize(0);
+      this->update();
+   }
+
    void list::resize(size_t n)
    {
       this->_composer->resize(n);

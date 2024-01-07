@@ -56,7 +56,7 @@ namespace cycfi { namespace elements
                               operator value_type() const;
 
       void                    update();
-      void                    update(value_type val);
+      void                    update(param_type val);
       void                    on_update(update_function f);
 
    private:
@@ -86,6 +86,7 @@ namespace cycfi { namespace elements
 
                               value_model(param_type init = param_type{});
       value_type const&       get() const;
+      value_type&             get();
       void                    set(param_type val);
 
    private:
@@ -115,6 +116,7 @@ namespace cycfi { namespace elements
 
                               reference_model(T& ref);
       value_type const&       get() const;
+      value_type&             get();
       void                    set(param_type val);
 
    private:
@@ -224,6 +226,8 @@ namespace cycfi { namespace elements
    }
 
    /** @brief Gets the value of the model using the `get` member function of the derived class.
+    *         Take note that this always returns by value. If this is not desirable, derived
+    *         classes typically provide `get` that may return a const reference instead.
     */
    template <typename T, typename Derived>
    inline model<T, Derived>::operator value_type() const
@@ -243,7 +247,7 @@ namespace cycfi { namespace elements
     *  @param val The new value used to update linked UI elements.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::update(value_type val)
+   inline void model<T, Derived>::update(param_type val)
    {
       if (_update)
          _update(val);
@@ -284,11 +288,23 @@ namespace cycfi { namespace elements
    {}
 
    /**
-    * @brief Get the `value_model`'s value.
+    * @brief Get the `value_model`'s value by const reference.
     */
    template <typename T>
    inline typename value_model<T>::value_type const&
    value_model<T>::get() const
+   {
+      return _val;
+   }
+
+   /**
+    * @brief Get the `value_model`'s value by reference. Take note that this allows direct editing
+    *        of the value, for efficiency. You are responsible for updating the model after
+    *        editing via the `update()` member function.
+    */
+   template <typename T>
+   inline typename value_model<T>::value_type&
+   value_model<T>::get()
    {
       return _val;
    }
@@ -313,11 +329,23 @@ namespace cycfi { namespace elements
    {}
 
    /**
-    * @brief Get the `reference_model`'s value.
+    * @brief Get the `reference_model`'s value by const reference.
     */
    template <typename T>
    inline typename reference_model<T>::value_type const&
    reference_model<T>::get() const
+   {
+      return _ref;
+   }
+
+   /**
+    * @brief Get the `reference_model`'s value by reference. Take note that this allows direct
+    *        editing of the referenced value, for efficiency. You are responsible for updating the
+    *        model after editing via the `update()` member function.
+    */
+   template <typename T>
+   inline typename reference_model<T>::value_type&
+   reference_model<T>::get()
    {
       return _ref;
    }

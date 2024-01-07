@@ -160,6 +160,39 @@ namespace cycfi { namespace elements
       return false;
    }
 
+   bool drop_inserter_base::click(context const& ctx, mouse_button btn)
+   {
+      bool r = base_type::click(ctx, btn);
+      if (!r || btn.down)
+         return r;
+
+      if (auto c = find_subject<composite_base*>(this))
+      {
+         std::vector<std::size_t> indices;
+         int latest = -1;
+         in_context_do(ctx, *c,
+            [&](context const& cctx)
+            {
+               for (std::size_t i = 0; i != c->size(); ++i)
+               {
+                  if (auto e = find_element<draggable_element*>(&c->at(i)))
+                  {
+                     if (e->is_selected())
+                     {
+                        indices.push_back(i);
+                        if (c->bounds_of(cctx, i).includes(btn.pos))
+                           latest = i;
+                     }
+                  }
+               }
+            }
+         );
+         if (latest >= 0)
+            on_select(indices, latest);
+      }
+      return r;
+   }
+
    void drop_inserter_base::move(indices_type const& indices)
    {
       if (_insertion_pos >= 0)

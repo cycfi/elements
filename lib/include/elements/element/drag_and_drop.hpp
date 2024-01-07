@@ -70,16 +70,19 @@ namespace cycfi { namespace elements
       using on_drop_function = std::function<bool(drop_info const& info, std::size_t ix)>;
       using on_move_function = std::function<void(std::size_t pos, indices_type const& indices)>;
       using on_delete_function = std::function<void(indices_type const& indices)>;
+      using on_select_function = std::function<void(indices_type const& indices, std::size_t latest)>;
 
                               drop_inserter_base(std::initializer_list<std::string> mime_types_);
       void                    draw(context const& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
       bool                    wants_focus() const override { return true; }
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
       on_move_function        on_move = [](std::size_t, indices_type const&){};
       on_delete_function      on_erase = [](indices_type const&){};
+      on_select_function      on_select = [](indices_type const&, std::size_t){};
 
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);

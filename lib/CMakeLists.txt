@@ -167,7 +167,7 @@ source_group("Header Files\\elements"
 )
 
 add_subdirectory(infra)
-add_library(elements)
+add_library(elements STATIC)
 
 target_sources(elements
    PRIVATE ${ELEMENTS_SOURCES} ${ELEMENTS_HOST}

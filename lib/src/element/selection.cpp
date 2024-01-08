@@ -13,7 +13,7 @@ namespace cycfi::elements
 {
    namespace detail
    {
-      std::vector<std::size_t> get_selected(composite_base const& c)
+      std::vector<std::size_t> get_selection(composite_base const& c)
       {
          std::vector<std::size_t> indices;
          for (std::size_t i = 0; i != c.size(); ++i)
@@ -36,13 +36,27 @@ namespace cycfi::elements
          }
       }
 
-      void set_selected(composite_base& c, std::vector<std::size_t> const selection)
+      void set_selection(composite_base& c, std::vector<std::size_t> const selection)
       {
          select_none(c);
          for (std::size_t i : selection)
          {
             if (i > c.size())
                continue; // Ignore out of bounds indices
+            if (auto e = find_element<selectable*>(&c.at(i)))
+               e->select(true);
+         }
+      }
+
+      void set_selection(composite_base& c, std::size_t from_, std::size_t to_)
+      {
+         select_none(c);
+         auto from = std::min(from_, to_);
+         auto to = std::max(from_, to_);
+         for (std::size_t i = from; i != to; ++i)
+         {
+            if (i > c.size())
+               break;
             if (auto e = find_element<selectable*>(&c.at(i)))
                e->select(true);
          }
@@ -232,6 +246,8 @@ namespace cycfi::elements
    bool selection_list_element::click(context const& ctx, mouse_button btn)
    {
       bool r = base_type::click(ctx, btn);
+      if (r)
+         return true;
 
       if (auto c = find_subject<composite_base*>(this))
       {
@@ -357,14 +373,20 @@ namespace cycfi::elements
    selection_list_element::get_selection() const
    {
       if (auto c = find_subject<composite_base const*>(this))
-         return get_selected(*c);
+         return detail::get_selection(*c);
       return {};
    }
 
    void selection_list_element::set_selection(indices_type const& selection)
    {
       if (auto c = find_subject<composite_base*>(this))
-         return set_selected(*c, selection);
+         return detail::set_selection(*c, selection);
+   }
+
+   void selection_list_element::update_selection(int start, int end)
+   {
+      _select_start = start;
+      _select_end = end;
    }
 
    int selection_list_element::get_select_start() const

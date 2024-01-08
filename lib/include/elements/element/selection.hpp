@@ -51,6 +51,7 @@ namespace cycfi::elements
 
       indices_type            get_selection() const;
       void                    set_selection(indices_type const& selection);
+      void                    update_selection(int start, int end);
       int                     get_select_start() const;
       int                     get_select_end() const;
 

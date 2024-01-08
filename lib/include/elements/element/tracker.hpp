@@ -30,6 +30,7 @@ namespace cycfi { namespace elements
       point             previous = start;
       point             offset = point{0, 0};
       int               modifiers = 0;
+      bool              processed = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -108,19 +109,22 @@ namespace cycfi { namespace elements
    tracker<Base, TrackerInfo>::click(context const& ctx, mouse_button btn)
    {
       Base::click(ctx, btn);
+      bool processed = true;
       if (btn.down)
       {
          state = new_state(ctx, btn.pos, btn.modifiers);
          this->on_tracking(ctx, element::begin_tracking);
          begin_tracking(ctx, *state);
+         processed = state->processed;
       }
       else if (state)
       {
          this->on_tracking(ctx, element::end_tracking);
          end_tracking(ctx, *state);
+         processed = state->processed;
          state.reset();
       }
-      return true;
+      return processed;
    }
 
    template <typename Base, typename TrackerInfo>

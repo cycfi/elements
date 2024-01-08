@@ -107,6 +107,7 @@ namespace cycfi { namespace elements
    inline bool
    tracker<Base, TrackerInfo>::click(context const& ctx, mouse_button btn)
    {
+      Base::click(ctx, btn);
       if (btn.down)
       {
          state = new_state(ctx, btn.pos, btn.modifiers);
@@ -126,6 +127,7 @@ namespace cycfi { namespace elements
    inline void
    tracker<Base, TrackerInfo>::drag(context const& ctx, mouse_button btn)
    {
+      Base::drag(ctx, btn);
       if (state)
       {
          state->previous = state->current;

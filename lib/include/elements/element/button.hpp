@@ -8,7 +8,7 @@
 
 #include <elements/element/layer.hpp>
 #include <elements/element/proxy.hpp>
-#include <elements/element/selectable.hpp>
+#include <elements/element/selection.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
 #include <elements/support/sender.hpp>

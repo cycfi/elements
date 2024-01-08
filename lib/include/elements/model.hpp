@@ -9,7 +9,7 @@
 #include <functional>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    //==============================================================================================
    /** @class model
@@ -460,6 +460,6 @@ namespace cycfi { namespace elements
    {
       assign(_ref, val, _id);
    }
-}}
+}
 
 #endif

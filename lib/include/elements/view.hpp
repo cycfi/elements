@@ -121,8 +121,6 @@ namespace cycfi { namespace elements
 
    private:
 
-      friend void cache_element_bounds(view& v, element* e, rect const& bounds);
-
       scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }
 
       layer_composite         _content;
@@ -147,10 +145,6 @@ namespace cycfi { namespace elements
       using tracking_map = std::map<element*, time_point>;
 
       tracking_map            _tracking;
-
-      using bounds_map = std::unordered_map<element*, rect>;
-
-      bounds_map              _bounds_map;
    };
 
    ////////////////////////////////////////////////////////////////////////////

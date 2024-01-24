@@ -173,13 +173,6 @@ namespace cycfi { namespace elements
       return rect{0, 0, size.x, size.y};
    }
 
-   // declared in context.hpp
-   CYCFI_FORCE_INLINE void cache_element_bounds(view& v, element* e, rect const& bounds)
-   {
-      if (auto i = v._bounds_map.find(e); i != v._bounds_map.end())
-         i->second = bounds;
-   }
-
    inline rect view::dirty() const
    {
       return _dirty;

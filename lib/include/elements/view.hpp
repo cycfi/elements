@@ -55,6 +55,7 @@ namespace cycfi { namespace elements
 
       void                    refresh() override;
       void                    refresh(rect area) override;
+      void                    refresh(context const& ctx, rect area);
       void                    refresh(element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0);
       rect                    dirty() const;

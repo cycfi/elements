@@ -41,7 +41,7 @@ namespace cycfi { namespace elements
 
       float                quantize() const { return _quantize; }
       void                 make_aligner(context const& ctx);
-      void                 do_align(view& view_, rect const& bounds, double val);
+      void                 do_align(view& view_, double val);
 
    private:
 

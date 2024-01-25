@@ -304,6 +304,7 @@ namespace cycfi { namespace elements
       void                       layout(context const& ctx) override;
 
       void                       update();
+      void                       clear();
       void                       resize(size_t n);
       bool                       manage_externally() const { return _manage_externally; }
       void                       move(std::size_t pos, indices_type const& indices);

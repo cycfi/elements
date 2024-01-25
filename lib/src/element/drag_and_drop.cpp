@@ -52,7 +52,7 @@ namespace cycfi { namespace elements
       if (new_is_tracking != _is_tracking)
       {
          _is_tracking = new_is_tracking;
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
    }
 
@@ -84,15 +84,15 @@ namespace cycfi { namespace elements
    {
       base_type::drop(ctx, info);
       bool r = on_drop(info);
-      ctx.view.refresh(ctx.bounds);
+      ctx.view.refresh(ctx);
       return r;
    }
 
-   drop_inserter_base::drop_inserter_base(std::initializer_list<std::string> mime_types_)
+   drop_inserter_element::drop_inserter_element(std::initializer_list<std::string> mime_types_)
     : base_type{mime_types_}
    {}
 
-   void drop_inserter_base::draw(context const& ctx)
+   void drop_inserter_element::draw(context const& ctx)
    {
       proxy_base::draw(ctx);
       if (is_tracking())
@@ -135,7 +135,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   void drop_inserter_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   void drop_inserter_element::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
       base_type::track_drop(ctx, info, status);
       if (is_tracking())
@@ -143,38 +143,60 @@ namespace cycfi { namespace elements
          static constexpr auto offset = 20;
          rect r = {info.where.x-offset, info.where.y-offset, info.where.x+offset, info.where.y+offset};
          scrollable::find(ctx).scroll_into_view(r);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
    }
 
-   bool drop_inserter_base::drop(context const& ctx, drop_info const& info)
+   bool drop_inserter_element::drop(context const& ctx, drop_info const& info)
    {
       base_type::drop(ctx, info);
       if (_insertion_pos >= 0)
       {
          bool r = on_drop(info, _insertion_pos);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          _insertion_pos = -1;
          return r;
       }
       return false;
    }
 
-   void drop_inserter_base::move(indices_type const& indices)
+   bool drop_inserter_element::click(context const& ctx, mouse_button btn)
+   {
+      bool r = base_type::click(ctx, btn);
+      if (!r || btn.down)
+         return r;
+
+      if (auto s = find_subject<selection_list_element*>(this))
+      {
+         std::vector<std::size_t> indices = s->get_selection();
+         int latest = s->get_select_end();
+         if (latest >= 0)
+            on_select(indices, latest);
+      }
+      return r;
+   }
+
+   void drop_inserter_element::move(indices_type const& indices)
    {
       if (_insertion_pos >= 0)
       {
          if (auto* c = find_subject<list*>(&subject()))
             c->move(_insertion_pos, indices);
          on_move(_insertion_pos, indices);
+         if (auto s = find_subject<selection_list_element*>(this))
+            s->update_selection(_insertion_pos, _insertion_pos+indices.size()-1);
       }
    }
 
-   void drop_inserter_base::erase(indices_type const& indices)
+   void drop_inserter_element::erase(indices_type const& indices)
    {
       if (auto* c = find_subject<list*>(&subject()))
+      {
          c->erase(indices);
-      on_erase(indices);
+         on_erase(indices);
+         if (auto s = find_subject<selection_list_element*>(this))
+            s->select_none();
+      }
    }
 
    view_limits draggable_element::limits(basic_context const& ctx) const
@@ -269,94 +291,6 @@ namespace cycfi { namespace elements
       {
          return {std::forward<Subject>(subject), num_boxes};
       }
-
-      std::size_t count_selected(composite_base const& c)
-      {
-         std::size_t n = 0;
-         for (std::size_t i = 0; i != c.size(); ++i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-            {
-               if (e->is_selected())
-                  ++n;
-            }
-         }
-         return n;
-      }
-
-      void unselect_all(composite_base const& c)
-      {
-         for (std::size_t i = 0; i != c.size(); ++i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-               e->select(false);
-         }
-      }
-
-      int find_first_selected(composite_base const& c)
-      {
-         for (std::size_t i = 0; i != c.size(); ++i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-            {
-               if (e->is_selected())
-                  return i;
-            }
-         }
-         return -1;
-      }
-
-      int find_last_selected(composite_base const& c)
-      {
-         for (int i = c.size()-1; i >= 0; --i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-            {
-               if (e->is_selected())
-                  return i;
-            }
-         }
-         return -1;
-      }
-
-      void shift_select(composite_base const& c)
-      {
-         if (int first = find_first_selected(c); first >= 0)
-         {
-            if (int last = find_last_selected(c); last >= 0)
-            {
-               // Select all from first to last
-               for (int i = first; i != last+1; ++i)
-               {
-                  if (auto e = find_element<draggable_element*>(&c.at(i)))
-                     e->select(true);
-               }
-            }
-         }
-      }
-
-      std::vector<std::size_t> collect_selected(composite_base const& c)
-      {
-         std::vector<std::size_t> indices;
-         for (std::size_t i = 0; i != c.size(); ++i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-            {
-               if (e->is_selected())
-                  indices.push_back(i);
-            }
-         }
-         return indices;
-      }
-
-      void select_all(composite_base const& c)
-      {
-         for (std::size_t i = 0; i != c.size(); ++i)
-         {
-            if (auto e = find_element<draggable_element*>(&c.at(i)))
-               e->select(true);
-         }
-      }
    }
 
    bool draggable_element::key(context const& ctx, key_info k)
@@ -370,7 +304,7 @@ namespace cycfi { namespace elements
                   ctx.view.remove(_drag_image);
                   _drag_image.reset();
                   escape_tracking(ctx);
-                  auto* di = find_parent<drop_inserter_base*>(ctx);
+                  auto* di = find_parent<drop_inserter_element *>(ctx);
                   if (di)
                   {
                      payload pl;
@@ -383,31 +317,17 @@ namespace cycfi { namespace elements
             case key_code::backspace:
             case key_code::_delete:
                {
-                  if (auto* di = find_parent<drop_inserter_base*>(ctx))
+                  if (auto* di = find_parent<drop_inserter_element*>(ctx))
                   {
-                     auto [c, cctx] = find_composite(ctx);
-                     if (c)
+                     if (auto* s = find_parent<selection_list_element*>(ctx))
                      {
-                        auto indices = collect_selected(*c);
+                        auto indices = s->get_selection();
                         if (indices.size())
                         {
                            di->erase(std::move(indices));
                            return true;
                         }
                      }
-                  }
-               }
-               break;
-
-            case key_code::a:
-               if (k.modifiers & mod_action)
-               {
-                  auto [c, cctx] = find_composite(ctx);
-                  if (c)
-                  {
-                     select_all(*c);
-                     ctx.view.refresh();
-                     return true;
                   }
                }
                break;
@@ -428,77 +348,70 @@ namespace cycfi { namespace elements
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
-      if (track_info.modifiers & mod_shift)
+      track_info.processed = false;
+      if (track_info.modifiers & (mod_shift | mod_action))
+         return;
+
+      // Process drag
+      if (auto *s = find_parent<selection_list_element*>(ctx))
       {
-         // Process shift-select
-         select(true);
-         auto [c, cctx] = find_composite(ctx);
-         if (c)
+         auto bounds = ctx.bounds;
+         auto limits = this->subject().limits(ctx);
+         bounds.width(limits.min.x);
+         if (is_selected())
          {
-            shift_select(*c);
-            cctx->view.refresh(*cctx);
-         }
-      }
-      else if (track_info.modifiers & mod_action)
-      {
-         // Process action-select
-         select(!is_selected());
-         ctx.view.refresh(ctx);
-      }
-      else
-      {
-         // Process drag
-         auto [c, cctx] = find_composite(ctx);
-         if (c)
-         {
-            auto bounds = ctx.bounds;
-            auto limits = this->subject().limits(ctx);
-            bounds.width(limits.min.x);
-            if (is_selected())
+            std::size_t num_boxes = std::min<std::size_t>(s->get_selection().size(), max_boxes);
+            bounds.right += item_offset * num_boxes;
+            bounds.bottom += item_offset * num_boxes;
+
+            _drag_image = share(
+               floating(bounds,
+                  drag_image(link(this->subject()), num_boxes)
+               )
+            );
+            ctx.view.add(_drag_image);
+            ctx.view.refresh();
+
+            if (auto* di = find_parent<drop_inserter_element *>(ctx))
             {
-               std::size_t num_boxes = std::min<std::size_t>(count_selected(*c), max_boxes);
-               bounds.right += item_offset * num_boxes;
-               bounds.bottom += item_offset * num_boxes;
-
-               _drag_image = share(
-                  floating(bounds,
-                     drag_image(link(this->subject()), num_boxes)
-                  )
-               );
-               ctx.view.add(_drag_image);
-               ctx.view.refresh();
-
-               if (auto* di = find_parent<drop_inserter_base*>(ctx))
-               {
-                  payload pl;
-                  pl[address_to_string(di)] = {};
-                  ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
-               }
+               payload pl;
+               pl[address_to_string(di)] = {};
+               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
             }
+            track_info.processed = true;
          }
       }
    }
 
    void draggable_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
+      track_info.processed = false;
+      if (track_info.modifiers & (mod_shift | mod_action))
+         return;
+
       if (_drag_image)
       {
          _drag_image->bounds(
             _drag_image->bounds().move_to(track_info.current.x, track_info.current.y)
          );
 
-         if (auto* di = find_parent<drop_inserter_base*>(ctx))
+         if (auto* di = find_parent<drop_inserter_element *>(ctx))
          {
             payload pl;
             pl[address_to_string(di)] = {};
             ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
+            track_info.processed = true;
          }
+         ctx.view.refresh(); // $$$ Don't be lazy $$$
       }
-      ctx.view.refresh();
    }
 
    void draggable_element::end_tracking(context const& ctx, tracker_info& track_info)
    {
+      track_info.processed = false;
+      if (track_info.modifiers & (mod_shift | mod_action))
+         return;
+
       bool maybe_dragged =
          std::abs(track_info.distance().x) > 10 ||
          std::abs(track_info.distance().y) > 10
@@ -510,7 +423,7 @@ namespace cycfi { namespace elements
          _drag_image.reset();
          ctx.view.refresh();
 
-         auto* di = find_parent<drop_inserter_base*>(ctx);
+         auto* di = find_parent<drop_inserter_element *>(ctx);
          if (di)
          {
             payload pl;
@@ -523,32 +436,18 @@ namespace cycfi { namespace elements
          {
             if (di)
             {
-               auto [c, cctx] = find_composite(ctx);
-               if (c)
+               if (auto *s = find_parent<selection_list_element*>(ctx))
                {
-                  auto indices = collect_selected(*c);
+                  auto indices = s->get_selection();
                   if (indices.size())
+                  {
                      di->move(std::move(indices));
+                     track_info.processed = true;
+                  }
                }
             }
             return;
          }
-      }
-
-      // If this happens, the user hit escape while dragging
-      if (is_selected() && maybe_dragged)
-         return;
-
-      if ((track_info.modifiers & (mod_shift | mod_action)) == 0)
-      {
-         auto [c, cctx] = find_composite(ctx);
-         if (c)
-         {
-            unselect_all(*c);
-            cctx->view.refresh(*cctx);
-         }
-         select(true);
-         ctx.view.refresh(ctx);
       }
    }
 }}

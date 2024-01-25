@@ -312,7 +312,7 @@ namespace cycfi { namespace elements
                            base_view(host_window_handle h);
       virtual              ~base_view();
 
-      virtual void         draw(canvas& /* cnv */, rect /* area */);
+      virtual void         draw(canvas& cnv, rect area);
       virtual void         click(mouse_button btn);
       virtual void         drag(mouse_button btn);
       virtual void         cursor(point p, cursor_tracking status);

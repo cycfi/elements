@@ -9,7 +9,7 @@
 #include <functional>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    //==============================================================================================
    /** @class model
@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
     * The `model` class serves as an abstraction for a data type that is linked to one or more
     * user interface elements. The actual data is accessed and modified through the `get` and
     * `set` member functions of the derived class. A user interface element can be linked to a
-    * `model` by supplying an `update_function` via the `on_update_ui(f)` member function.\n\n
+    * `model` by supplying an `update_function` via the `on_update(f)` member function.\n\n
     *
     * The conversion operator may be used to get a model's value via the derived class's `get`
     * member function. Example:
@@ -55,13 +55,13 @@ namespace cycfi { namespace elements
       model&                  operator=(param_type val);
                               operator value_type() const;
 
-      void                    update_ui();
-      void                    update_ui(value_type val);
-      void                    on_update_ui(update_function f);
+      void                    update();
+      void                    update(param_type val);
+      void                    on_update(update_function f);
 
    private:
 
-      update_function         _update_ui;
+      update_function         _update;
    };
 
    //==============================================================================================
@@ -86,6 +86,7 @@ namespace cycfi { namespace elements
 
                               value_model(param_type init = param_type{});
       value_type const&       get() const;
+      value_type&             get();
       void                    set(param_type val);
 
    private:
@@ -113,8 +114,9 @@ namespace cycfi { namespace elements
       using param_type = typename base_type::param_type;
       using base_type::operator=;
 
-                              reference_model(T& ref_);
+                              reference_model(T& ref);
       value_type const&       get() const;
+      value_type&             get();
       void                    set(param_type val);
 
    private:
@@ -144,12 +146,13 @@ namespace cycfi { namespace elements
    public:
 
       using delegate_type = Delegate;
+      using id_type = ID;
       using base_type = model<T, proxy_model<T, ID, delegate_type>>;
       using value_type = typename base_type::value_type;
       using param_type = typename base_type::param_type;
       using base_type::operator=;
 
-                              proxy_model(delegate_type& ref_);
+                              proxy_model(delegate_type& ref);
       value_type              get() const;
       void                    set(param_type val);
 
@@ -159,35 +162,35 @@ namespace cycfi { namespace elements
 
          using model<T, keyed>::operator=;
 
-                              keyed(delegate_type& ref_, ID id);
+                              keyed(delegate_type& ref, id_type id);
          value_type           get() const;
          void                 set(param_type val);
 
       private:
 
          delegate_type&       _ref;
-         ID                   _id;
+         id_type              _id;
       };
 
-      keyed                   operator[](ID id);
-      keyed const             operator[](ID id) const;
+      keyed                   operator[](id_type id);
+      keyed const             operator[](id_type id) const;
 
    private:
 
       delegate_type&          _ref;
    };
 
-   template <typename T, typename ID, typename Delegate>
-   auto get(proxy_model<T, ID, Delegate> const& model);
+   template <typename ID, typename Delegate>
+   auto extract(Delegate const& ref);
 
-   template <typename T, typename ID, typename Delegate>
-   auto get(proxy_model<T, ID, Delegate> const& model, ID id);
+   template <typename ID, typename Delegate>
+   auto extract(Delegate const& ref, ID id);
 
-   template <typename T, typename ID, typename Delegate, typename Param>
-   void set(proxy_model<T, ID, Delegate>& model, Param const& param);
+   template <typename ID, typename Delegate, typename Param>
+   void assign(Delegate& ref, Param const& param);
 
-   template <typename T, typename ID, typename Delegate, typename Param>
-   void set(proxy_model<T, ID, Delegate>& model, Param const& param, ID id);
+   template <typename ID, typename Delegate, typename Param>
+   void assign(Delegate& ref, Param const& param, ID id);
 
    //==============================================================================================
    // Inlines
@@ -218,11 +221,13 @@ namespace cycfi { namespace elements
    model<T, Derived>::operator=(param_type val)
    {
       derived().set(val);
-      update_ui(val);
+      update(val);
       return *this;
    }
 
    /** @brief Gets the value of the model using the `get` member function of the derived class.
+    *         Take note that this always returns by value. If this is not desirable, derived
+    *         classes typically provide `get` that may return a const reference instead.
     */
    template <typename T, typename Derived>
    inline model<T, Derived>::operator value_type() const
@@ -233,19 +238,19 @@ namespace cycfi { namespace elements
    /** @brief Update all linked UI elements to the model's latest value.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::update_ui()
+   inline void model<T, Derived>::update()
    {
-      update_ui(derived().get());
+      update(derived().get());
    }
 
    /** @brief Update all linked UI elements to the given `val`.
     *  @param val The new value used to update linked UI elements.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::update_ui(value_type val)
+   inline void model<T, Derived>::update(param_type val)
    {
-      if (_update_ui)
-         _update_ui(val);
+      if (_update)
+         _update(val);
    }
 
    /**
@@ -255,13 +260,13 @@ namespace cycfi { namespace elements
     * @param f The update function.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::on_update_ui(update_function f)
+   inline void model<T, Derived>::on_update(update_function f)
    {
-      if (_update_ui)
+      if (_update)
       {
          // Chain call
-         _update_ui =
-            [prev_f = _update_ui, f](value_type val)
+         _update =
+            [prev_f = _update, f](value_type val)
             {
                prev_f(val);
                f(val);
@@ -269,7 +274,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         _update_ui = f;
+         _update = f;
       }
    }
 
@@ -283,11 +288,23 @@ namespace cycfi { namespace elements
    {}
 
    /**
-    * @brief Get the `value_model`'s value.
+    * @brief Get the `value_model`'s value by const reference.
     */
    template <typename T>
    inline typename value_model<T>::value_type const&
    value_model<T>::get() const
+   {
+      return _val;
+   }
+
+   /**
+    * @brief Get the `value_model`'s value by reference. Take note that this allows direct editing
+    *        of the value, for efficiency. You are responsible for updating the model after
+    *        editing via the `update()` member function.
+    */
+   template <typename T>
+   inline typename value_model<T>::value_type&
+   value_model<T>::get()
    {
       return _val;
    }
@@ -304,19 +321,31 @@ namespace cycfi { namespace elements
 
    /**
     * @brief Construct a `reference_model` given a reference to a value used by the model.
-    * @param ref_ A referece to the value used by the model.
+    * @param ref A referece to the value used by the model.
     */
    template <typename T>
-   inline reference_model<T>::reference_model(T& ref_)
-    : _ref{ref_}
+   inline reference_model<T>::reference_model(T& ref)
+    : _ref{ref}
    {}
 
    /**
-    * @brief Get the `reference_model`'s value.
+    * @brief Get the `reference_model`'s value by const reference.
     */
    template <typename T>
    inline typename reference_model<T>::value_type const&
    reference_model<T>::get() const
+   {
+      return _ref;
+   }
+
+   /**
+    * @brief Get the `reference_model`'s value by reference. Take note that this allows direct
+    *        editing of the referenced value, for efficiency. You are responsible for updating the
+    *        model after editing via the `update()` member function.
+    */
+   template <typename T>
+   inline typename reference_model<T>::value_type&
+   reference_model<T>::get()
    {
       return _ref;
    }
@@ -333,12 +362,104 @@ namespace cycfi { namespace elements
 
    /**
     * @brief Construct a `proxy_model` given a reference to the target class `Delegate`.
-    * @param ref_ A referece to the to the target class.
+    * @param ref A referece to the to the target class.
     */
    template <typename T, typename ID, typename Delegate>
-   inline proxy_model<T, ID, Delegate>::proxy_model(Delegate& ref_)
-    : _ref{ref_}
+   inline proxy_model<T, ID, Delegate>::proxy_model(Delegate& ref)
+    : _ref{ref}
    {}
-}}
+
+   /**
+    * @brief Get the `keyed`'s value. This call forwards to template function extract<ID>(ref),
+    *        where ID is the specifier used as key to disambiguate specializations, and ref is the
+    *        reference to the Delegate. The user is required to overload this with an extraction
+    *        function specific to the delegate. `keyed` is a nested class in `proxy_model`.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::value_type
+   proxy_model<T, ID, Delegate>::get() const
+   {
+      return extract<ID>(_ref);
+   }
+
+   /**
+    * @brief Set the `keyed` to the specified `val`. This call forwards to template function
+    *        assign<ID>(ref, val), where ID is the specifier used as key to disambiguate
+    *        specializations, ref is the reference to the Delegate and val the new value to assign
+    *        to the model. The user is required to overload this with an extraction function
+    *        specific to the delegate. `keyed` is a nested class in `proxy_model`.
+
+    * @param val The new value to assign to the model.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline void proxy_model<T, ID, Delegate>::set(param_type val)
+   {
+      assign<ID>(_ref, val);
+   }
+
+   /**
+    * @brief Make a `keyed` model given ID `id`. `keyed` is a nested class in `proxy_model`.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::keyed
+   proxy_model<T, ID, Delegate>::operator[](id_type id)
+   {
+      return {_ref, id};
+   }
+
+   /**
+    * @brief Make a `keyed` model given ID `id`. `keyed` is a nested class in `proxy_model`.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::keyed const
+   proxy_model<T, ID, Delegate>::operator[](id_type id) const
+   {
+      return {_ref, id};
+   }
+
+   /**
+    * @brief Construct a `keyed` model given a reference to the target class `Delegate` and ID
+    *        `id`. `keyed` is a nested class in `proxy_model`.
+    * @param ref A referece to the to the target class.
+    * @param id The ID used as key.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline proxy_model<T, ID, Delegate>::proxy_model::keyed::keyed(delegate_type& ref, id_type id)
+    : _ref{ref}
+    , _id{id}
+   {}
+
+   /**
+    * @brief Get the `keyed`'s value. This call forwards to template function elements::get(ref,
+    *        id), where ref is the reference to the Delegate and id is the runtime specifier used
+    *        as key to disambiguate specializations. The user is required to overload this with an
+    *        extraction function specific to the delegate. `keyed` is a nested class in
+    *        `proxy_model`.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline typename proxy_model<T, ID, Delegate>::value_type
+   proxy_model<T, ID, Delegate>::proxy_model::keyed::get() const
+   {
+      return extract(_ref, _id);
+   }
+
+   /**
+    * @brief Set the `keyed` to the specified `val`. This call forwards to template function
+    *        elements::set(ref, val, id), where ref is the reference to the Delegate, val The new
+    *        value to assign to the model, and id is the runtime specifier used as key to
+    *        disambiguate specializations. The user is required to overload this with an
+    *        extraction function specific to the delegate. `keyed` is a nested class in
+    *        `proxy_model`.
+    *
+    * @param val The new value to assign to the model.
+    */
+   template <typename T, typename ID, typename Delegate>
+   inline void proxy_model<T, ID, Delegate>::proxy_model::keyed::set(param_type val)
+   {
+      assign(_ref, val, _id);
+   }
+}
 
 #endif

@@ -57,9 +57,9 @@ namespace cycfi { namespace elements
       if (_current_size.x != new_x || _current_size.y != new_y)
       {
          if (_current_size.x != -1 && _current_size.y != -1)
-            ctx.view.refresh(union_(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
+            ctx.view.refresh(ctx, union_(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
          else
-            ctx.view.refresh(ctx.bounds);
+            ctx.view.refresh(ctx);
       }
 
       _current_size.x = new_x;
@@ -564,7 +564,7 @@ namespace cycfi { namespace elements
          auto size = current_size();
          bounds.width(size.x);
          bounds.height(size.y);
-         ctx.view.refresh(bounds);
+         ctx.view.refresh(ctx, bounds);
       }
 
       if (handled)
@@ -631,9 +631,11 @@ namespace cycfi { namespace elements
 
       if (_is_focus && has_caret && !_caret_started)
       {
+         // We convert the caret bounds to device coordinates and expand it by 2 pixels
+         // on all sides for good measure.
          auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
          auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
-         caret_bounds = {tl.x, tl.y, br.x, br.y};
+         caret_bounds = {tl.x-2, tl.y-2, br.x+2, br.y+2};
 
          _caret_started = true;
          ctx.view.post(500ms,

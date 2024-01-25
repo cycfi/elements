@@ -26,6 +26,18 @@ namespace cycfi { namespace elements
 
          return nullptr;
       }
+
+      template <typename Ptr>
+      inline Ptr find_element_impl(element const* e_)
+      {
+         if (auto* e = dynamic_cast<Ptr>(e_))
+            return e;
+
+         if (auto* e = dynamic_cast<indirect_base const*>(e_))
+            return find_element_impl<Ptr>(&e->get());
+
+         return nullptr;
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -42,6 +54,20 @@ namespace cycfi { namespace elements
          if (auto* e = detail::find_element_impl<Ptr>(subject))
             return e;
          proxy = dynamic_cast<proxy_base*>(subject);
+      }
+      return nullptr;
+   }
+
+   template <typename Ptr>
+   inline Ptr find_subject(element const* e_)
+   {
+      proxy_base const* proxy = dynamic_cast<proxy_base const*>(e_);
+      while (proxy)
+      {
+         auto* subject = &proxy->subject();
+         if (auto* e = detail::find_element_impl<Ptr>(subject))
+            return e;
+         proxy = dynamic_cast<proxy_base const*>(subject);
       }
       return nullptr;
    }

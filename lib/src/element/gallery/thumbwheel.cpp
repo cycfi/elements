@@ -24,19 +24,19 @@ namespace cycfi { namespace elements
       if (_quantize > 0)
       {
          _aligner =
-            [this, &view = ctx.view, bounds = ctx.bounds](double val)
+            [this, &view = ctx.view](double val)
             {
                view.post(
-                  [this, &view, val, bounds]()
+                  [this, &view, val]()
                   {
-                     do_align(view, bounds, val);
+                     do_align(view, val);
                   }
                );
             };
       }
    }
 
-   void basic_thumbwheel_element::do_align(view& view_, rect const& bounds, double val)
+   void basic_thumbwheel_element::do_align(view& view_, double val)
    {
       auto curr = align();
       auto diff = val - curr;
@@ -44,12 +44,12 @@ namespace cycfi { namespace elements
       {
          align(val);
          if (diff > 0)
-            view_.refresh(bounds);
+            view_.refresh(*dynamic_cast<element*>(this));
       }
       else
       {
          align(curr + diff/10);
-         view_.refresh(bounds);
+         view_.refresh(*dynamic_cast<element*>(this));
       }
    }
 

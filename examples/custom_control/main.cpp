@@ -164,7 +164,7 @@ void my_custom_control::keep_tracking(context const& ctx, tracker_info& track_in
    clamp(_radius, 50, 150);
    if (on_change)
       on_change(_radius);
-   ctx.view.refresh(ctx.bounds);
+   ctx.view.refresh(ctx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ bool my_custom_control::cursor(context const& ctx, point p, cursor_tracking stat
       case cursor_tracking::hovering:
       case cursor_tracking::entering:
          _mouse_over = true;
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          break;
       case cursor_tracking::leaving:
          _mouse_over = false;

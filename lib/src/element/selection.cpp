@@ -279,7 +279,7 @@ namespace cycfi::elements
                }
                if (r && _select_start >= 0)
                {
-                  ctx.view.refresh(ctx.bounds);
+                  ctx.view.refresh(ctx);
                   on_select(_select_start, _select_end);
                }
             }
@@ -301,7 +301,7 @@ namespace cycfi::elements
                   if (auto c = find_subject<composite_base*>(this))
                   {
                      detail::select_all(*c);
-                     ctx.view.refresh(ctx.bounds);
+                     ctx.view.refresh(ctx);
                      return true;
                   }
                }
@@ -326,7 +326,7 @@ namespace cycfi::elements
                         [&](context const& cctx)
                         {
                            scrollable::find(ctx).scroll_into_view(c->bounds_of(cctx, _select_end));
-                           ctx.view.refresh(ctx.bounds);
+                           ctx.view.refresh(ctx);
                         }
                      );
                      r = true;
@@ -354,7 +354,7 @@ namespace cycfi::elements
                         [&](context const& cctx)
                         {
                            scrollable::find(ctx).scroll_into_view(c->bounds_of(cctx, _select_end));
-                           ctx.view.refresh(ctx.bounds);
+                           ctx.view.refresh(ctx);
                         }
                      );
                      r = true;

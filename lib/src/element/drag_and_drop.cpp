@@ -52,7 +52,7 @@ namespace cycfi { namespace elements
       if (new_is_tracking != _is_tracking)
       {
          _is_tracking = new_is_tracking;
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
    }
 
@@ -84,7 +84,7 @@ namespace cycfi { namespace elements
    {
       base_type::drop(ctx, info);
       bool r = on_drop(info);
-      ctx.view.refresh(ctx.bounds);
+      ctx.view.refresh(ctx);
       return r;
    }
 
@@ -143,7 +143,7 @@ namespace cycfi { namespace elements
          static constexpr auto offset = 20;
          rect r = {info.where.x-offset, info.where.y-offset, info.where.x+offset, info.where.y+offset};
          scrollable::find(ctx).scroll_into_view(r);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
       }
    }
 
@@ -153,7 +153,7 @@ namespace cycfi { namespace elements
       if (_insertion_pos >= 0)
       {
          bool r = on_drop(info, _insertion_pos);
-         ctx.view.refresh(ctx.bounds);
+         ctx.view.refresh(ctx);
          _insertion_pos = -1;
          return r;
       }

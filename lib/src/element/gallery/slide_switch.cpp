@@ -48,25 +48,23 @@ namespace cycfi { namespace elements
          color = color.opacity(color.alpha * theme_.disabled_opacity);
 
       // Animate sliding
-      auto target = value? bounds.right-radius : bounds.left+radius;
-      if (enabled && _xpos > bounds.left && _xpos < bounds.right)
+      auto diff = value - _val;
+      if (std::abs(diff) > 0.1)
       {
-         auto diff = target - _xpos;
          constexpr auto alpha = 0.3;
-         _xpos += alpha * diff;
-         if (std::abs(diff) > 1.0f)
-            ctx.view.refresh(ctx);
-         else
-            _xpos = target;
+         _val += alpha * diff;
+         ctx.view.refresh(ctx);
       }
       else
       {
-         _xpos = target;
+         _val = value;
       }
+      auto span = (bounds.right-bounds.left)-height; // height == diameter of thumb
+      auto xpos = bounds.left + radius + (span * _val);
 
       // Draw the thumb
       canvas_.begin_path();
-      canvas_.add_circle(_xpos, bounds.top+radius, radius-1.5);
+      canvas_.add_circle(xpos, bounds.top+radius, radius-1.5);
       canvas_.fill_style(color);
       canvas_.fill();
    }

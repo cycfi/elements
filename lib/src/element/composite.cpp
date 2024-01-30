@@ -130,9 +130,9 @@ namespace cycfi { namespace elements
          if (btn.down) // button down
          {
             hit_info info = hit_element(ctx, btn.pos, true);
-            if (info.element_ptr)
+            if (info.element_ptr && info.leaf_element_ptr)
             {
-               if (info.element_ptr->wants_focus() && _focus != info.index)
+               if (info.leaf_element_ptr->wants_focus() && _focus != info.index)
                   new_focus(ctx, info.index, restore_previous);
 
                context ectx{ctx, info.element_ptr, info.bounds};

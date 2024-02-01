@@ -14,42 +14,83 @@ namespace cycfi { namespace elements
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
    image::image(fs::path const& path, float scale)
-    : _pixmap(std::make_shared<artist::image>(path))
+    : _image(std::make_shared<artist::image>(path))
     , _scale(scale)
    {
-      if (!_pixmap->impl())
+      if (!_image->impl())
          throw std::runtime_error{"Error: Invalid image."};
    }
 
-   image::image(image_ptr pixmap_, float scale)
-    : _pixmap(pixmap_)
+   image::image(image_ptr image_, float scale)
+    : _image(image_)
     , _scale(scale)
    {
-      if (!_pixmap->impl())
+      if (!_image->impl())
          throw std::runtime_error{"Error: Invalid image."};
+   }
+
+   image::image(fs::path const& path, fit_enum)
+    : image{path, -1}
+   {
+   }
+
+   image::image(image_ptr image_, fit_enum)
+    : image{image_, -1}
+   {
    }
 
    point image::size() const
    {
-      auto s = _pixmap->size();
-      return {s.x * _scale, s.y * _scale};
+      auto s = _image->size();
+      if (_scale > 0)
+         return {s.x * _scale, s.y * _scale};
+      else // fit
+         return {-1, -1}; // We do not know the actual size
    }
 
    rect image::source_rect(context const& ctx) const
    {
-      return {0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale};
+      if (_scale > 0)
+      {
+         return {0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale};
+      }
+      else // fit
+      {
+         auto s = _image->size();
+         return {0, 0, s.x, s.y};
+      }
    }
 
    view_limits image::limits(basic_context const& /* ctx */) const
    {
-      auto size_ = size();
-      return {{size_.x, size_.y}, {size_.x, size_.y}};
+      if (_scale > 0)
+      {
+         auto size_ = size();
+         return {{size_.x, size_.y}, {size_.x, size_.y}};
+      }
+      else // fit
+      {
+         return full_limits;
+      }
    }
 
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      ctx.canvas.draw(pixmap(), src, ctx.bounds);
+      if (_scale > 0)
+      {
+         ctx.canvas.draw(get_image(), src, ctx.bounds);
+      }
+      else
+      {
+         float aspect_ratio = src.width() / src.height();
+         auto dest = ctx.bounds;
+         if (auto h = dest.width() / aspect_ratio; h <= ctx.bounds.height())
+            dest.height(dest.width() / aspect_ratio);
+         else
+            dest.width(dest.height() * aspect_ratio);
+         ctx.canvas.draw(get_image(), src, center(dest, ctx.bounds));
+      }
    }
 
    basic_sprite::basic_sprite(fs::path const& path, float height, float scale)
@@ -60,13 +101,13 @@ namespace cycfi { namespace elements
 
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
-      auto width = pixmap().size().x;
+      auto width = get_image().size().x;
       return {{width * scale(), _height}, {width * scale(), _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
    {
-      return (pixmap().size().y * scale()) / _height;
+      return (get_image().size().y * scale()) / _height;
    }
 
    void basic_sprite::index(std::size_t index_)
@@ -77,13 +118,13 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return {pixmap().size().x * scale(), _height};
+      return {get_image().size().x * scale(), _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto sc = scale();
-      auto width = pixmap().size().x;
+      auto width = get_image().size().x;
       return rect{0, (_height/sc) * _index, width, (_height/sc) * (_index + 1)};
    }
 }}

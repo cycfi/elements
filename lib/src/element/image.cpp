@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
       auto src = source_rect(ctx);
       if (_scale > 0)
       {
-         ctx.canvas.draw(get_image(), src, ctx.bounds);
+         ctx.canvas.draw(*get_image().get(), src, ctx.bounds);
       }
       else
       {
@@ -89,8 +89,22 @@ namespace cycfi { namespace elements
             dest.height(dest.width() / aspect_ratio);
          else
             dest.width(dest.height() * aspect_ratio);
-         ctx.canvas.draw(get_image(), src, center(dest, ctx.bounds));
+         ctx.canvas.draw(*get_image().get(), src, center(dest, ctx.bounds));
       }
+   }
+
+   void image::set_image(image_ptr img)
+   {
+      _image = img;
+      if (!_image->impl())
+         throw std::runtime_error{"Error: Invalid image."};
+   }
+
+   void image::set_image(fs::path const& path)
+   {
+      _image = std::make_shared<artist::image>(path);
+      if (!_image->impl())
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    basic_sprite::basic_sprite(fs::path const& path, float height, float scale)
@@ -101,13 +115,13 @@ namespace cycfi { namespace elements
 
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
-      auto width = get_image().size().x;
+      auto width = get_image()->size().x;
       return {{width * scale(), _height}, {width * scale(), _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
    {
-      return (get_image().size().y * scale()) / _height;
+      return (get_image()->size().y * scale()) / _height;
    }
 
    void basic_sprite::index(std::size_t index_)
@@ -118,13 +132,13 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return {get_image().size().x * scale(), _height};
+      return {get_image()->size().x * scale(), _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
       auto sc = scale();
-      auto width = get_image().size().x;
+      auto width = get_image()->size().x;
       return rect{0, (_height/sc) * _index, width, (_height/sc) * (_index + 1)};
    }
 }}

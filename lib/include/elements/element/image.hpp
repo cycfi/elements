@@ -40,9 +40,9 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       virtual rect            source_rect(context const& ctx) const;
 
-   protected:
-
-      artist::image&          get_image() const  { return *_image.get(); }
+      void                    set_image(image_ptr img);
+      void                    set_image(fs::path const& path);
+      image_ptr               get_image() const { return _image; }
 
    private:
 

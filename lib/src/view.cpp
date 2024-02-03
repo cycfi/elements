@@ -188,12 +188,6 @@ namespace cycfi { namespace elements
 
    void view::refresh(context const& ctx, int outward)
    {
-      if (auto i = _bounds_map.find(ctx.element); i != _bounds_map.end())
-      {
-         refresh(i->second);
-         return;
-      }
-
       context const* ctx_ptr = &ctx;
       while (outward > 0 && ctx_ptr)
       {
@@ -205,7 +199,6 @@ namespace cycfi { namespace elements
          auto tl = ctx.canvas.user_to_device(ctx_ptr->bounds.top_left());
          auto br = ctx.canvas.user_to_device(ctx_ptr->bounds.bottom_right());
          refresh({tl.x, tl.y, br.x, br.y});
-         _bounds_map[ctx_ptr->element] = rect{tl, br};
       }
    }
 

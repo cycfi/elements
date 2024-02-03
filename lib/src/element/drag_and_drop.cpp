@@ -176,6 +176,22 @@ namespace cycfi { namespace elements
       return r;
    }
 
+   bool drop_inserter_element::key(context const& ctx, key_info k)
+   {
+      bool r = base_type::key(ctx, k);
+      if (!r)
+         return r;
+
+      if (auto s = find_subject<selection_list_element*>(this))
+      {
+         std::vector<std::size_t> indices = s->get_selection();
+         int latest = s->get_select_end();
+         if (latest >= 0)
+            on_select(indices, latest);
+      }
+      return r;
+   }
+
    void drop_inserter_element::move(indices_type const& indices)
    {
       if (_insertion_pos >= 0)

@@ -79,6 +79,7 @@ namespace cycfi { namespace elements
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
       bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override { return true; }
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };

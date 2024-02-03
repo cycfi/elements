@@ -147,6 +147,10 @@ namespace cycfi::elements
       void                    select_end(int pos);
       void                    select_all();
       void                    select_none();
+      void                    scroll_into_view()      { _scroll_into_view = true; }
+
+      void                    home();
+      void                    end();
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
@@ -199,6 +203,7 @@ namespace cycfi::elements
       bool                    _caret_started : 1;
       bool                    _read_only : 1;
       bool                    _enabled : 1;
+      bool                    _scroll_into_view : 1;
       state_saver_set         _state_savers;
    };
 

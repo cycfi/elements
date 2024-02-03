@@ -134,6 +134,7 @@ namespace cycfi { namespace elements
     , _caret_started{false}
     , _read_only{false}
     , _enabled{true}
+    , _scroll_into_view{false}
    {}
 
    struct basic_text_box::state_saver : std::enable_shared_from_this<basic_text_box::state_saver>
@@ -169,6 +170,12 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw(context const& ctx)
    {
+      if (_scroll_into_view)
+      {
+         scroll_into_view(ctx, false);
+         _scroll_into_view = false;
+      }
+
       draw_selection(ctx);
       if (_enabled)
       {
@@ -880,6 +887,21 @@ namespace cycfi { namespace elements
    void basic_text_box::select_none()
    {
       _select_start = _select_end = -1;
+   }
+
+   void basic_text_box::home()
+   {
+      select_start(0);
+      select_end(0);
+      scroll_into_view();
+   }
+
+   void basic_text_box::end()
+   {
+      auto end = get_text().size();
+      select_start(end);
+      select_end(end);
+      scroll_into_view();
    }
 
    bool basic_text_box::word_break(int index) const

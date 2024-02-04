@@ -154,6 +154,7 @@ namespace cycfi { namespace elements
    void scroller_base::draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp)
    {
       theme const& thm = get_theme();
+      auto state = ctx.canvas.new_state();
 
       float x = info.bounds.left;
       float y = info.bounds.top;

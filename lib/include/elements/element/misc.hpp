@@ -187,6 +187,36 @@ namespace cycfi { namespace elements
       void           draw(context const& ctx) override;
    };
 
+   struct border_left : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_right : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_top : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_bottom : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_top_bottom : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_left_right : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
    ////////////////////////////////////////////////////////////////////////////
    // Title Bars
    ////////////////////////////////////////////////////////////////////////////

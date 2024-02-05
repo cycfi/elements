@@ -222,11 +222,11 @@ namespace cycfi { namespace elements
          double elem_height = e_limits.min.y;
          double available_height = ctx.parent->bounds.height();
 
-         ctx.bounds.top -= (elem_height - available_height) * valign();
-         ctx.bounds.height(elem_height);
-
          if (elem_height <= available_height)
             valign(0.0);
+         else
+            ctx.bounds.top -= (elem_height - available_height) * valign();
+         ctx.bounds.height(elem_height);
       }
 
       if (allow_hscroll())
@@ -234,11 +234,11 @@ namespace cycfi { namespace elements
          double elem_width = e_limits.min.x;
          double available_width = ctx.parent->bounds.width();
 
-         ctx.bounds.left -= (elem_width - available_width) * halign();
-         ctx.bounds.width(elem_width);
-
          if (elem_width <= available_width)
             halign(0.0);
+         else
+            ctx.bounds.left -= (elem_width - available_width) * halign();
+         ctx.bounds.width(elem_width);
       }
       subject().layout(ctx);
    }
@@ -335,7 +335,8 @@ namespace cycfi { namespace elements
          }
       }
 
-      if (redraw) {
+      if (redraw)
+      {
          on_scroll(point(halign(), valign()));
          ctx.view.refresh(ctx);
       }

@@ -262,7 +262,7 @@ namespace cycfi { namespace elements
          view_limits limits(basic_context const& ctx) const override
          {
             auto r = this->subject().limits(ctx);
-            r.min.x += item_offset * _num_boxes;
+            r.min.x = 32;
             r.max.x += item_offset * _num_boxes;
             r.min.y += item_offset * _num_boxes;
             r.max.y += item_offset * _num_boxes;
@@ -372,8 +372,6 @@ namespace cycfi { namespace elements
       if (auto *s = find_parent<selection_list_element*>(ctx))
       {
          auto bounds = ctx.bounds;
-         auto limits = this->subject().limits(ctx);
-         bounds.width(limits.min.x);
          if (is_selected())
          {
             std::size_t num_boxes = std::min<std::size_t>(s->get_selection().size(), max_boxes);

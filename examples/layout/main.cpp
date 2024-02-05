@@ -10,7 +10,7 @@ namespace colors = cycfi::artist::colors;
 using cycfi::artist::rgba;
 
 // Main window background color
-auto bkd_color = rgba(62, 62, 62, 255);
+auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 auto rbox_ = rbox(colors::gold.opacity(0.8));
 

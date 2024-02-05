@@ -246,8 +246,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
 
    auto surface = _skia_context->getBackbufferSurface();
-   if (surface)
-      surface->getCanvas()->clear(SkColorSetARGB(255, 255, 255, 255)); // $$$ fixme $$$
 #endif
 
    [self setPostsBoundsChangedNotifications : YES];

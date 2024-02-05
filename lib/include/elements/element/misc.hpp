@@ -175,9 +175,14 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Frames
+   // Frames and borders
    ////////////////////////////////////////////////////////////////////////////
    struct frame : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border : public element
    {
       void           draw(context const& ctx) override;
    };

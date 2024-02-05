@@ -358,8 +358,6 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
-      _show_caret = editable();
-
       if (_select_start == -1
          || k.action == key_action::release
          || k.action == key_action::unknown
@@ -851,7 +849,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::wants_focus() const
    {
-      return true;
+      return editable();
    }
 
    void basic_text_box::begin_focus(focus_request /*req*/)

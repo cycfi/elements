@@ -432,6 +432,12 @@ namespace cycfi { namespace elements
          }
       };
 
+#if defined(__APPLE__)
+      constexpr auto word_key = mod_option;
+#else
+      constexpr auto word_key = mod_control;
+#endif
+
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
          switch (k.key)
@@ -462,7 +468,7 @@ namespace cycfi { namespace elements
             case key_code::left:
                if (_select_end != -1)
                {
-                  if (k.modifiers & mod_alt)
+                  if (k.modifiers & word_key)
                      prev_word();
                   else
                      prev_char();
@@ -477,7 +483,7 @@ namespace cycfi { namespace elements
             case key_code::right:
                if (_select_end != -1)
                {
-                  if (k.modifiers & mod_alt)
+                  if (k.modifiers & word_key)
                      next_word();
                   else
                      next_char();

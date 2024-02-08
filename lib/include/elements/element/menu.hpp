@@ -113,6 +113,7 @@ namespace cycfi { namespace elements
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
+      bool                    wants_focus() const override { return true; }
 
       menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;

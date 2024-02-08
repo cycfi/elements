@@ -249,20 +249,7 @@ namespace cycfi { namespace elements
             return false;
          }
       }
-
-      // If we reached here, then there's either no focus, or the
-      // focus did not handle the key press.
-      bool handled = false;
-      for_each_visible(ctx,
-         [&](element& e, std::size_t /*ix*/, rect const& bounds)
-         {
-            context ectx{ctx, &e, bounds};
-            handled = e.key(ectx, k);
-            return handled; // break if key is handled by e
-         },
-         reverse_index()
-      );
-      return handled;
+      return false;
    }
 
    bool composite_base::text(context const& ctx, text_info info)

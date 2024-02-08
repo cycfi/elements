@@ -28,8 +28,6 @@ namespace cycfi { namespace elements
                               {}
 
       bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
-
       element*                hit_test(context const& ctx, point p, bool leaf = false) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 

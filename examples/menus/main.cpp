@@ -40,8 +40,11 @@ auto make_popup_menu(char const* title, menu_position pos)
 {
    auto popup  = button_menu(title, pos);
 
-   auto quantum_feedback_loop = menu_item("Quantum Feedback Loop");
-   auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator");
+   auto skf = shortcut_key{key_code::f, mod_action};
+   auto skp = shortcut_key{key_code::p, mod_action};
+
+   auto quantum_feedback_loop = menu_item("Quantum Feedback Loop", skf);
+   auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator", skp);
    auto photonic_mesh = menu_item("Photonic Mesh");
    auto antimatter_soup = menu_item("Antimatter Soup");
 

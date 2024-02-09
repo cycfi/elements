@@ -66,10 +66,12 @@ int main(int argc, char* argv[])
 
    _view.content(
       {
-         make_dialog(_view, _app),
          share(background)
       }
    );
+
+   // Open the dialog box
+   open_popup(make_dialog(_view, _app), _view);
 
    _app.run();
    return 0;

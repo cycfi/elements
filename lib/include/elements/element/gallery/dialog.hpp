@@ -228,6 +228,23 @@ namespace cycfi { namespace elements
       detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
       return popup;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Utility to open the popup delayed by a few milliseconds to give the UI a
+   // chance to settle.
+   ////////////////////////////////////////////////////////////////////////////
+   inline void open_popup(element_ptr popup, view& view_)
+   {
+      using namespace std::chrono_literals;
+      constexpr auto delay = 10ms;
+
+      view_.post(delay,
+         [&view_, popup]()
+         {
+            view_.add(popup);
+         }
+      );
+   }
 }}
 
 #endif

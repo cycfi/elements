@@ -48,6 +48,7 @@ namespace cycfi { namespace elements
       bool              click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
+      element*          hit_test(context const& ctx, point p, bool leaf, bool control) override;
 
       void              enable(bool state = true) override;
       bool              is_enabled() const override;

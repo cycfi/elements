@@ -13,11 +13,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
    ////////////////////////////////////////////////////////////////////////////
-   element* composite_base::hit_test(context const& ctx, point p, bool leaf)
+   element* composite_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, p, false);
+         hit_info info = hit_element(ctx, p, control);
          return leaf? info.leaf_element_ptr : info.element_ptr;
       }
       return nullptr;
@@ -295,7 +295,7 @@ namespace cycfi { namespace elements
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
             context ectx{ctx, &e, b};
-            if (!b.includes(p) || !e.hit_test(ectx, p, false))
+            if (!b.includes(p) || !e.hit_test(ectx, p, false, true))
             {
                e.cursor(ectx, p, cursor_tracking::leaving);
                i = _cursor_hovering.erase(i);
@@ -434,7 +434,7 @@ namespace cycfi { namespace elements
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
             context ectx{ctx, &e, b};
-            if (!b.includes(p) || !e.hit_test(ectx, p))
+            if (!b.includes(p) || !e.hit_test(ectx, p, false, true))
             {
                e.track_drop(ectx, d_info, cursor_tracking::leaving);
                i = _cursor_hovering.erase(i);
@@ -490,7 +490,7 @@ namespace cycfi { namespace elements
                if (bounds.includes(p))
                {
                   context ectx{ctx, &e, bounds};
-                  if (auto leaf = e.hit_test(ectx, p, true))
+                  if (auto leaf = e.hit_test(ectx, p, true, control))
                   {
                      info = hit_info{&e, leaf, bounds, int(ix)};
                      return true;

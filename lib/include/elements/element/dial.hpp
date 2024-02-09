@@ -32,7 +32,7 @@ namespace cycfi { namespace elements
                            dial_base(double init_value = 0.0);
 
       void                 prepare_subject(context& ctx) override;
-      element*             hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
@@ -64,9 +64,10 @@ namespace cycfi { namespace elements
       return _value;
    }
 
-   inline element* dial_base::hit_test(context const& ctx, point p, bool leaf)
+   inline element* dial_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
-      return element::hit_test(ctx, p, leaf);
+      unused(control);
+      return element::hit_test(ctx, p, leaf, false); // allow non-control subjects
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -122,7 +122,7 @@ namespace cycfi { namespace elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    key(context const& ctx, key_info k) override;
 
       bool                    is_selected() const override;

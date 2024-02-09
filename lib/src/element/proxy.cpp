@@ -27,11 +27,11 @@ namespace cycfi { namespace elements
       return subject().span();
    }
 
-   element* proxy_base::hit_test(context const& ctx, point p, bool leaf)
+   element* proxy_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, p);
-      auto r = subject().hit_test(sctx, p, leaf);
+      auto r = subject().hit_test(sctx, p, leaf, control);
       restore_subject(sctx);
       return r;
    }

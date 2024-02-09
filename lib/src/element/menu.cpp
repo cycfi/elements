@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         if (_popup && (!value() || !hit_test(ctx, btn.pos, false)))
+         if (_popup && (!value() || !hit_test(ctx, btn.pos, false, true)))
          {
             // simulate a menu click:
             btn.down = true;
@@ -149,8 +149,9 @@ namespace cycfi { namespace elements
       }
    }
 
-   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool /*leaf*/)
+   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
+      unused(leaf, control);
       if (is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;

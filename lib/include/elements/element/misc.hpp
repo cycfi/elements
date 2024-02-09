@@ -448,7 +448,11 @@ namespace cycfi { namespace elements
       using base_type = proxy<Subject>;
 
                      modal_element(Subject subject);
-      element*       hit_test(context const& ctx, point p, bool leaf, bool control);
+      element*       hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool           key(context const& ctx, key_info k) override;
+      bool           text(context const& ctx, text_info info) override;
+
+      bool           wants_focus() const override;
    };
 
    template <typename Subject>
@@ -465,11 +469,31 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
-   element* modal_element<Subject>::hit_test(context const& ctx, point p, bool leaf, bool control)
+   inline element* modal_element<Subject>::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (auto e = this->subject().hit_test(ctx, p, leaf, control))
          return e;
       return this;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::key(context const& ctx, key_info k)
+   {
+      base_type::key(ctx, k);
+      return true;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::text(context const& ctx, text_info info)
+   {
+      base_type::text(ctx, info);
+      return true;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::wants_focus() const
+   {
+      return true;
    }
 }}
 

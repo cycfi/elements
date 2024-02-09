@@ -436,6 +436,41 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject)};
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Modal element hugs the UI and prevents any event from passing through
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class modal_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     modal_element(Subject subject);
+      element*       hit_test(context const& ctx, point p, bool leaf, bool control);
+   };
+
+   template <typename Subject>
+   inline modal_element<remove_cvref_t<Subject>>
+   modal(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   inline modal_element<Subject>::modal_element(Subject subject)
+    : base_type(std::move(subject))
+   {
+   }
+
+   template <typename Subject>
+   element* modal_element<Subject>::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      if (auto e = this->subject().hit_test(ctx, p, leaf, control))
+         return e;
+      return this;
+   }
 }}
 
 #endif

@@ -148,10 +148,10 @@ auto make_menus(view& view_)
       margin({20, 0, 20, 20},
          vtile(
             hmin_size(300, make_selection_menu()),
-            top_margin(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
-            top_margin(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
-            top_margin(20, scroller(image{"deep_space.jpg"})),
-            top_margin(20, make_popup_menu("Dropup Menu", menu_position::top_right))
+            margin_top(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
+            margin_top(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
+            margin_top(20, scroller(image{"deep_space.jpg"})),
+            margin_top(20, make_popup_menu("Dropup Menu", menu_position::top_right))
          )
       );
 }

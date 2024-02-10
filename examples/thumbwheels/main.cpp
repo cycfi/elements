@@ -40,7 +40,7 @@ auto make_thumbwheel1()
 
    auto tw = share(vthumbwheel(20, compose));
 
-   return top_margin(20,
+   return margin_top(20,
       layer(
          hold(tw),
          frame{}
@@ -63,7 +63,7 @@ auto make_thumbwheel2(char const* unit, float offset, float scale, int precision
 
    auto tw = share(thumbwheel(as_label<double>(as_string, label)));
 
-   return top_margin(20,
+   return margin_top(20,
       layer(
          hold(tw),
          frame{}
@@ -88,7 +88,7 @@ auto make_xy_thumbwheel()
    auto tw = share(thumbwheel(fixed_size({170, 36}, draw_value<point>(draw))));
    tw->value({0.25f, 0.25f});
 
-   return top_margin(20, hold(tw));
+   return margin_top(20, hold(tw));
 }
 
 int main(int argc, char* argv[])

@@ -27,10 +27,10 @@ auto make_column()
    auto  group0 =
          group("Text Boxes",
             margin({10, 10, 20, 20},
-               top_margin(35,
+               margin_top(35,
                   vtile(
                      left_caption(input_box("Show me the money").first, "Gimme Some"),
-                     top_margin(10, left_caption(input_box("Show me more").first, "Gimme Some More"))
+                     margin_top(10, left_caption(input_box("Show me more").first, "Gimme Some More"))
                   )
                )
             )
@@ -39,11 +39,11 @@ auto make_column()
    auto  group1 =
          group("Check boxes",
             margin({10, 10, 20, 20},
-               top_margin(25,
+               margin_top(25,
                   vtile(
-                     top_margin(10, align_left(check_box1)),
-                     top_margin(10, align_left(check_box2)),
-                     top_margin(10, align_left(check_box3))
+                     margin_top(10, align_left(check_box1)),
+                     margin_top(10, align_left(check_box2)),
+                     margin_top(10, align_left(check_box3))
                   )
                )
             )
@@ -60,7 +60,7 @@ auto make_column()
    auto  group2 =
          group("Buttons",
             margin({10, 10, 20, 10},
-               top_margin(35,
+               margin_top(35,
                   vtile(
                      htile(
                         align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),

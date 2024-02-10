@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(hsize(button_size, hold(ok_button)))
             ));
 
@@ -178,11 +178,11 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(
                   htile(
                      hsize(button_size, hold(cancel_button)),
-                     left_margin(20, hsize(button_size, hold(ok_button)))
+                     margin_left(20, hsize(button_size, hold(ok_button)))
                   )
                )
             ));
@@ -214,11 +214,11 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(
                   htile(
                      hsize(button_size, hold(cancel_button)),
-                     left_margin(20, hsize(button_size, hold(ok_button)))
+                     margin_left(20, hsize(button_size, hold(ok_button)))
                   )
                )
             ));

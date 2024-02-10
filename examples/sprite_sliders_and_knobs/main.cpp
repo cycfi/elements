@@ -45,7 +45,7 @@ auto make_vslider(int index)
 auto make_vsliders()
 {
    return hmin_size(250,
-      right_margin(10, htile(
+      margin_right(10, htile(
          make_vslider(0),
          make_vslider(1),
          make_vslider(2)

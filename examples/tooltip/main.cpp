@@ -53,11 +53,11 @@ auto make_buttons(view& view_)
    return
       margin({50, 20, 50, 40},
          vtile(
-            align_center(top_margin(20, hold(status))),
-            top_margin(20, button1),
-            top_margin(20, button2),
-            top_margin(20, button3),
-            top_margin(20, button4)
+            align_center(margin_top(20, hold(status))),
+            margin_top(20, button1),
+            margin_top(20, button2),
+            margin_top(20, button3),
+            margin_top(20, button4)
          )
       );
 }

@@ -26,7 +26,7 @@ namespace cycfi { namespace elements
       return dialog0(
          margin({20, 20, 20, 20}, htile(
             align_top(icon{icon_id, 2.5}),
-            left_margin(20, std::move(textbox))
+            margin_left(20, std::move(textbox))
          ))
       );
    }
@@ -50,7 +50,7 @@ namespace cycfi { namespace elements
          view_,
          htile(
             align_top(icon{icon_id, 2.5}),
-            left_margin(20, std::move(textbox))
+            margin_left(20, std::move(textbox))
          ),
          std::forward<F>(on_ok),
          std::move(ok_text),
@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
          view_,
          htile(
             align_top(icon{icon_id, 2.5}),
-            left_margin(20, std::move(textbox))
+            margin_left(20, std::move(textbox))
          ),
          std::forward<F1>(on_ok),
          std::forward<F2>(on_cancel),
@@ -111,7 +111,7 @@ namespace cycfi { namespace elements
          view_,
          htile(
             align_top(icon{icon_id, 2.5}),
-            left_margin(20, std::move(textbox))
+            margin_left(20, std::move(textbox))
          ),
          std::forward<F1>(on_ok),
          std::forward<F2>(on_cancel),

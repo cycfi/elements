@@ -85,76 +85,116 @@ namespace cycfi { namespace elements
 
    ////////////////////////////////////////////////////////////////////////////
    // Left Margin
-   struct left_margin_rect : static_empty_rect
+   struct margin_left_rect : static_empty_rect
    {
-      left_margin_rect(float left) : left(left) {}
+      margin_left_rect(float left) : left(left) {}
       float left;
    };
 
    template <typename Subject>
-   inline margin_element<left_margin_rect, remove_cvref_t<Subject>>
-   left_margin(left_margin_rect margin_, Subject&& subject)
+   inline margin_element<margin_left_rect, remove_cvref_t<Subject>>
+   margin_left(margin_left_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_left(...) instead.")]]
+   inline margin_element<margin_left_rect, remove_cvref_t<Subject>>
+   left_margin(margin_left_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Right Margin
-   struct right_margin_rect : static_empty_rect
+   struct margin_right_rect : static_empty_rect
    {
-      right_margin_rect(float right) : right(right) {}
+      margin_right_rect(float right) : right(right) {}
       float right;
    };
 
    template <typename Subject>
-   inline margin_element<right_margin_rect, remove_cvref_t<Subject>>
-   right_margin(right_margin_rect margin_, Subject&& subject)
+   inline margin_element<margin_right_rect, remove_cvref_t<Subject>>
+   margin_right(margin_right_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_right(...) instead.")]]
+   inline margin_element<margin_right_rect, remove_cvref_t<Subject>>
+   right_margin(margin_right_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Top Margin
-   struct top_margin_rect : static_empty_rect
+   struct margin_top_rect : static_empty_rect
    {
-      top_margin_rect(float top) : top(top) {}
+      margin_top_rect(float top) : top(top) {}
       float top;
    };
 
    template <typename Subject>
-   inline margin_element<top_margin_rect, remove_cvref_t<Subject>>
-   top_margin(top_margin_rect margin_, Subject&& subject)
+   inline margin_element<margin_top_rect, remove_cvref_t<Subject>>
+   margin_top(margin_top_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_top(...) instead.")]]
+   inline margin_element<margin_top_rect, remove_cvref_t<Subject>>
+   top_margin(margin_top_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Bottom Margin
-   struct bottom_margin_rect : static_empty_rect
+   struct margin_bottom_rect : static_empty_rect
    {
-      bottom_margin_rect(float bottom) : bottom(bottom) {}
+      margin_bottom_rect(float bottom) : bottom(bottom) {}
       float bottom;
    };
 
    template <typename Subject>
-   inline margin_element<bottom_margin_rect, remove_cvref_t<Subject>>
-   bottom_margin(bottom_margin_rect margin_, Subject&& subject)
+   inline margin_element<margin_bottom_rect, remove_cvref_t<Subject>>
+   margin_bottom(margin_bottom_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_bottom(...) instead.")]]
+   inline margin_element<margin_bottom_rect, remove_cvref_t<Subject>>
+   bottom_margin(margin_bottom_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Left Top Margin
-   struct left_top_margin_rect : static_empty_rect
+   struct margin_left_top_rect : static_empty_rect
    {
-      left_top_margin_rect(float left, float top) : left(left), top(top) {}
+      margin_left_top_rect(float left, float top) : left(left), top(top) {}
       float left;
       float top;
    };
 
    template <typename Subject>
-   inline margin_element<left_top_margin_rect, remove_cvref_t<Subject>>
-   left_top_margin(left_top_margin_rect margin_, Subject&& subject)
+   inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
+   margin_left_top(margin_left_top_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_left_top(...) instead.")]]
+   inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
+   left_top_margin(margin_left_top_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
@@ -177,6 +217,14 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   margin_left_right(hmargin_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_left_right(...) instead.")]]
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    left_right_margin(hmargin_rect margin_, Subject&& subject)
    {
@@ -209,6 +257,14 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   margin_top_bottom(vmargin_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   [[deprecated("Use margin_top_bottom(...) instead.")]]
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    top_bottom_margin(vmargin_rect margin_, Subject&& subject)
    {

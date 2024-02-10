@@ -77,7 +77,7 @@ namespace cycfi { namespace elements
              , align_right(label(mod).font(sk_font))
             ),
 #if defined(__APPLE__)
-            left_margin(5, hsize(10, align_left(label(key))))
+            margin_left(5, hsize(10, align_left(label(key))))
 #else
             hsize(10, align_left(label(key)))
 #endif
@@ -127,7 +127,7 @@ namespace cycfi { namespace elements
                get_theme().button_margin,
                htile(
                   align_left(hold(label)),
-                  align_right(left_margin(12, icon(icons::down_dir, 1.0)))
+                  align_right(margin_left(12, icon(icons::down_dir, 1.0)))
                )
             ),
             frame{}

@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/element/composite.hpp>
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
@@ -383,6 +384,14 @@ namespace cycfi { namespace elements
          at(_focus).end_focus();
       _saved_focus = _focus;
       _focus = -1;
+   }
+
+   void composite_base::relinquish_focus(context const& ctx)
+   {
+      end_focus();
+      auto [p, cctx] = find_composite(ctx);
+      if (p)
+         p->relinquish_focus(*cctx);
    }
 
    element const* composite_base::focus() const

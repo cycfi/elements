@@ -61,8 +61,10 @@ namespace cycfi { namespace elements
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
+      virtual void            relinquish_focus(context const& ctx);
       element const*          focus() const override;
       element*                focus() override;
+      int                     focus_index();
       void                    focus(std::size_t index);
       virtual void            reset();
 
@@ -177,6 +179,11 @@ namespace cycfi { namespace elements
    inline element& range_composite<Base>::at(std::size_t ix) const
    {
       return _container.at(_first + ix);
+   }
+
+   inline int composite_base::focus_index()
+   {
+      return _focus;
    }
 }}
 

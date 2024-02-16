@@ -340,6 +340,19 @@ namespace cycfi { namespace elements
                         auto indices = s->get_selection();
                         if (indices.size())
                         {
+                           auto [p, cctx] = find_composite(ctx);
+                           if (p)
+                           {
+                              for (int i : indices)
+                              {
+                                 if (i == p->focus_index())
+                                 {
+                                    // Lose the focus if the element to be deleted is the focus
+                                    p->relinquish_focus(*cctx);
+                                    break;
+                                 }
+                              }
+                           }
                            di->erase(std::move(indices));
                            return true;
                         }

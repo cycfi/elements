@@ -201,6 +201,7 @@ namespace cycfi { namespace elements
 
    inline void view::content(std::initializer_list<element_ptr> list)
    {
+      _content.end_focus();
       _content = list;
       std::reverse(_content.begin(), _content.end());
       set_limits();
@@ -224,6 +225,7 @@ namespace cycfi { namespace elements
    template <typename... E>
    inline void view::content(E&&... elements)
    {
+      _content.end_focus();
       _content = {detail::add_element(std::forward<E>(elements))...};
       std::reverse(_content.begin(), _content.end());
       set_limits();

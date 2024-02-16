@@ -147,6 +147,11 @@ namespace cycfi { namespace elements
                   return true;
                }
             }
+            else
+            {
+               // Clicking elsewhere should relinquish focus
+               relinquish_focus(ctx);
+            }
          }
          else if (_click_tracking != -1) // button up
          {
@@ -389,6 +394,7 @@ namespace cycfi { namespace elements
    void composite_base::relinquish_focus(context const& ctx)
    {
       end_focus();
+      _saved_focus = -1;
       auto [p, cctx] = find_composite(ctx);
       if (p)
          p->relinquish_focus(*cctx);

@@ -200,7 +200,14 @@ namespace cycfi { namespace elements
             c->move(_insertion_pos, indices);
          on_move(_insertion_pos, indices);
          if (auto s = find_subject<selection_list_element*>(this))
+         {
+            for (int i : indices)
+            {
+               if (i <= _insertion_pos)
+                  --_insertion_pos;
+            }
             s->update_selection(_insertion_pos, _insertion_pos+indices.size()-1);
+         }
       }
    }
 

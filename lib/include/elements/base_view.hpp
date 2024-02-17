@@ -284,7 +284,7 @@ namespace cycfi { namespace elements
    struct drop_info
    {
       payload           data;
-      point             where;
+      mutable point     where;
    };
 
    ////////////////////////////////////////////////////////////////////////////

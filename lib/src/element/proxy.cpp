@@ -194,17 +194,21 @@ namespace cycfi { namespace elements
    void proxy_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
       context sctx {ctx, &subject(), ctx.bounds};
-      prepare_subject(sctx);
+      auto save = info.where;
+      prepare_subject(sctx, info.where);
       subject().track_drop(sctx, info, status);
       restore_subject(sctx);
+      info.where = save;
    }
 
    bool proxy_base::drop(context const& ctx, drop_info const& info)
    {
       context sctx {ctx, &subject(), ctx.bounds};
-      prepare_subject(sctx);
+      auto save = info.where;
+      prepare_subject(sctx, info.where);
       auto r = subject().drop(sctx, info);
       restore_subject(sctx);
+      info.where = save;
       return r;
    }
 }}

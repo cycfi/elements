@@ -411,7 +411,8 @@ namespace cycfi { namespace elements
             {
                payload pl;
                pl[address_to_string(di)] = {};
-               ctx.view.track_drop({pl, track_info.current}, cursor_tracking::entering);
+               auto where = ctx.canvas.user_to_device(track_info.current);
+               ctx.view.track_drop({pl, where}, cursor_tracking::entering);
             }
             track_info.processed = true;
          }
@@ -432,9 +433,10 @@ namespace cycfi { namespace elements
 
          if (auto* di = find_parent<drop_inserter_element *>(ctx))
          {
+            auto where = ctx.canvas.user_to_device(track_info.current);
             payload pl;
             pl[address_to_string(di)] = {};
-            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::hovering);
+            ctx.view.track_drop({pl, where}, cursor_tracking::hovering);
             track_info.processed = true;
          }
          ctx.view.refresh(); // $$$ Don't be lazy $$$
@@ -458,12 +460,13 @@ namespace cycfi { namespace elements
          _drag_image.reset();
          ctx.view.refresh();
 
-         auto* di = find_parent<drop_inserter_element *>(ctx);
+         auto* di = find_parent<drop_inserter_element*>(ctx);
          if (di)
          {
             payload pl;
             pl[address_to_string(di)] = {};
-            ctx.view.track_drop({pl, track_info.current}, cursor_tracking::leaving);
+            auto where = ctx.canvas.user_to_device(track_info.current);
+            ctx.view.track_drop({pl, where}, cursor_tracking::leaving);
          }
 
          // Did we actually do a drag?

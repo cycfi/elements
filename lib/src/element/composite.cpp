@@ -130,7 +130,7 @@ namespace cycfi { namespace elements
       {
          if (btn.down) // button down
          {
-            hit_info info = hit_element(ctx, btn.pos, true);
+            hit_info info = hit_element(ctx, btn.pos, false);
             if (info.element_ptr && info.leaf_element_ptr)
             {
                if (_focus != info.index)
@@ -139,18 +139,21 @@ namespace cycfi { namespace elements
                   new_focus(ctx, idx, restore_previous);
                }
 
-               context ectx{ctx, info.element_ptr, info.bounds};
-               if (info.element_ptr->click(ectx, btn))
+               if (info.element_ptr->wants_control())
                {
-                  if (btn.down)
-                     _click_tracking = info.index;
-                  return true;
+                  context ectx{ctx, info.element_ptr, info.bounds};
+                  if (info.element_ptr->click(ectx, btn))
+                  {
+                     if (btn.down)
+                        _click_tracking = info.index;
+                     return true;
+                  }
                }
-            }
-            else
-            {
-               // Clicking elsewhere should relinquish focus
-               relinquish_focus(ctx);
+               else
+               {
+                  // Clicking elsewhere should relinquish focus
+                  relinquish_focus(ctx);
+               }
             }
          }
          else if (_click_tracking != -1) // button up
@@ -393,11 +396,14 @@ namespace cycfi { namespace elements
 
    void composite_base::relinquish_focus(context const& ctx)
    {
-      end_focus();
-      _saved_focus = -1;
-      auto [p, cctx] = find_composite(ctx);
-      if (p)
-         p->relinquish_focus(*cctx);
+      if (_focus != -1)
+      {
+         end_focus();
+         _saved_focus = -1;
+         auto [p, cctx] = find_composite(ctx);
+         if (p)
+            p->relinquish_focus(*cctx);
+      }
    }
 
    element const* composite_base::focus() const

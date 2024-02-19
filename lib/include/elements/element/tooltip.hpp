@@ -18,12 +18,10 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    enum class tooltip_position
    {
-      top_left,
-      top_right,
-      middle_left,
-      middle_right,
-      bottom_left,
-      bottom_right
+      left,
+      top,
+      right,
+      bottom
    };
 
    class tooltip_element : public proxy_base
@@ -66,7 +64,7 @@ namespace cycfi { namespace elements
       Subject&& subject
     , Tip&& tip
     , duration delay = milliseconds{500}
-    , tooltip_position pos = tooltip_position::top_left)
+    , tooltip_position pos = tooltip_position::top)
    {
       return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay, pos};
    }

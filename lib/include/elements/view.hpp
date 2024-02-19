@@ -274,11 +274,15 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  end_focus();
-                  refresh(*e);
+                  if (e->wants_focus())
+                  {
+                     end_focus();
+                     refresh(*e);
+                  }
                   _content.erase(i);
                   _content.reset();
                   layout();
+                  _is_focus = _main_element.focus();
                }
             }
          );

@@ -13,7 +13,37 @@ namespace cycfi { namespace elements
       auto limits_ = _tip->limits(ctx);
       auto w = limits_.min.x;
       auto h = limits_.min.y;
-      return rect{0, 0, w, h}.move_to(ctx.bounds.left, ctx.bounds.top-h);
+      auto mid = ctx.bounds.top + (ctx.bounds.height()/2);
+      rect bounds{0, 0, w, h};
+
+      switch (_position)
+      {
+         case tooltip_position::top_left:
+            bounds = bounds.move_to(ctx.bounds.left, ctx.bounds.top-h);
+            break;
+
+         case tooltip_position::top_right:
+            bounds = bounds.move_to(ctx.bounds.right, ctx.bounds.top-h);
+            break;
+
+         case tooltip_position::middle_left:
+            bounds = bounds.move_to(ctx.bounds.left-w, mid-(h/2));
+            break;
+
+         case tooltip_position::middle_right:
+            bounds = bounds.move_to(ctx.bounds.right, mid-(h/2));
+            break;
+
+         case tooltip_position::bottom_left:
+            bounds = bounds.move_to(ctx.bounds.left, ctx.bounds.bottom);
+            break;
+
+         case tooltip_position::bottom_right:
+            bounds = bounds.move_to(ctx.bounds.right, ctx.bounds.bottom);
+            break;
+      }
+
+      return bounds;
    }
 
    bool tooltip_element::cursor(context const& ctx, point p, cursor_tracking status)

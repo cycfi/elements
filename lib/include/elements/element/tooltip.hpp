@@ -16,6 +16,16 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Tooltip elements
    ////////////////////////////////////////////////////////////////////////////
+   enum class tooltip_position
+   {
+      top_left,
+      top_right,
+      middle_left,
+      middle_right,
+      bottom_left,
+      bottom_right
+   };
+
    class tooltip_element : public proxy_base
    {
    public:
@@ -24,9 +34,10 @@ namespace cycfi { namespace elements
       using on_hover_function = std::function<void(bool visible)>;
 
                               template <typename Tip>
-                              tooltip_element(Tip&& tip, duration delay)
-                               : _tip(share(basic_popup(std::forward<Tip>(tip))))
-                               , _delay(delay)
+                              tooltip_element(Tip&& tip, duration delay, tooltip_position pos)
+                               : _tip{share(basic_popup(std::forward<Tip>(tip)))}
+                               , _delay{delay}
+                               , _position{pos}
                               {}
 
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
@@ -46,13 +57,18 @@ namespace cycfi { namespace elements
       status                  _tip_status = tip_hidden;
       duration                _delay;
       bool                    _cursor_in_tip = false;
+      tooltip_position        _position;
    };
 
    template <typename Subject, typename Tip>
    inline proxy<remove_cvref_t<Subject>, tooltip_element>
-   tooltip(Subject&& subject, Tip&& tip, duration delay = milliseconds{500})
+   tooltip(
+      Subject&& subject
+    , Tip&& tip
+    , duration delay = milliseconds{500}
+    , tooltip_position pos = tooltip_position::top_left)
    {
-      return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay};
+      return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay, pos};
    }
 }}
 

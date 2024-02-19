@@ -244,12 +244,17 @@ namespace cycfi { namespace elements
          io().post(
             [e, this]
             {
-               end_focus();
+               auto wants_focus = e->wants_focus();
+               if (wants_focus)
+                  end_focus();
                _content.push_back(e);
                layout(*e);
-               _is_focus = true;
-               begin_focus();
-               _is_focus = _main_element.focus();
+               if (e->wants_focus())
+               {
+                  _is_focus = true;
+                  begin_focus();
+                  _is_focus = _main_element.focus();
+               }
             }
          );
       }

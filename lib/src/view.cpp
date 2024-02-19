@@ -342,7 +342,7 @@ namespace cycfi { namespace elements
 
    void view::end_focus()
    {
-      if (_content.empty() || !_is_focus)
+      if (_content.empty() || _is_focus)
          return;
 
       _main_element.end_focus();

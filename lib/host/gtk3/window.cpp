@@ -49,7 +49,7 @@ namespace cycfi { namespace elements
       // immediately.
 
       auto make_window =
-         [this, name, style_, bounds]()
+         [this, name, bounds]()
          {
             GtkWidget* win = gtk_application_window_new(get_app());
             g_object_ref(win);
@@ -139,7 +139,10 @@ namespace cycfi { namespace elements
 
    point window::position() const
    {
-      return {}; // $$$ TODO $$$
+      gint x, y;
+      gtk_window_get_position(GTK_WINDOW(_window->host), &x, &y);
+      auto scale = get_scale(_window->host);
+      return {float(x) * scale, float(y) * scale};
    }
 
    void window::position(point const& p)

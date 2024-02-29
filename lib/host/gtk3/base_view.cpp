@@ -612,11 +612,11 @@ namespace cycfi { namespace elements
       // relative to the widget's allocation when the widget in question has no
       // GdkWindow (i.e. GtkGLArea).
       GtkAllocation alloc;
-      gtk_widget_get_allocation(_view->_widget, &alloc);
+      gtk_widget_get_allocation(_view->widget, &alloc);
 
       // Note: GTK uses int coordinates. Make sure area is not empty when converting
       // from float to int.
-      gtk_widget_queue_draw_area(_view->_widget,
+      gtk_widget_queue_draw_area(_view->widget,
          std::floor(area.left + alloc.x),
          std::floor(area.top + alloc.y),
          std::max<float>(area.width(), 1),

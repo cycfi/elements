@@ -82,6 +82,7 @@ namespace cycfi { namespace elements
    void draw_button(canvas& cnv, rect bounds, color c, bool enabled, float corner_radius)
    {
       auto const& theme_ = get_theme();
+      auto state = cnv.new_state();
 
       auto gradient = canvas::linear_gradient{
             bounds.top_left(),

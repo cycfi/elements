@@ -13,7 +13,7 @@ auto background = box(bkd_color);
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Dynamic Lists", "com.cycfi.dynamic_lists");
+   app _app(argc, argv, "Lists", "com.cycfi.list");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

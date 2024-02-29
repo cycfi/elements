@@ -9,7 +9,7 @@
 #include <elements/element/element.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/popup.hpp>
-#include <elements/element/selectable.hpp>
+#include <elements/element/selection.hpp>
 #include <elements/view.hpp>
 #include <infra/support.hpp>
 
@@ -108,11 +108,12 @@ namespace cycfi { namespace elements
       using menu_enabled_function = std::function<bool()>;
 
       void                    draw(context const& ctx) override;
-      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
+      bool                    wants_focus() const override { return true; }
 
       menu_enabled_function   is_enabled = []{ return true; };
       menu_item_function      on_click;

@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/element/composite.hpp>
 #include <elements/element/port.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
@@ -13,11 +14,11 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
    ////////////////////////////////////////////////////////////////////////////
-   element* composite_base::hit_test(context const& ctx, point p, bool leaf)
+   element* composite_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (!empty())
       {
-         hit_info info = hit_element(ctx, p, false);
+         hit_info info = hit_element(ctx, p, control);
          return leaf? info.leaf_element_ptr : info.element_ptr;
       }
       return nullptr;
@@ -129,18 +130,29 @@ namespace cycfi { namespace elements
       {
          if (btn.down) // button down
          {
-            hit_info info = hit_element(ctx, btn.pos, true);
-            if (info.element_ptr)
+            hit_info info = hit_element(ctx, btn.pos, false);
+            if (info.element_ptr && info.leaf_element_ptr)
             {
-               if (info.element_ptr->wants_focus() && _focus != info.index)
-                  new_focus(ctx, info.index, restore_previous);
-
-               context ectx{ctx, info.element_ptr, info.bounds};
-               if (info.element_ptr->click(ectx, btn))
+               if (_focus != info.index)
                {
-                  if (btn.down)
-                     _click_tracking = info.index;
-                  return true;
+                  auto idx = info.leaf_element_ptr->wants_focus() ? info.index : -1;
+                  new_focus(ctx, idx, restore_previous);
+               }
+
+               if (info.element_ptr->wants_control())
+               {
+                  context ectx{ctx, info.element_ptr, info.bounds};
+                  if (info.element_ptr->click(ectx, btn))
+                  {
+                     if (btn.down)
+                        _click_tracking = info.index;
+                     return true;
+                  }
+               }
+               else
+               {
+                  // Clicking elsewhere should relinquish focus
+                  relinquish_focus(ctx);
                }
             }
          }
@@ -246,20 +258,7 @@ namespace cycfi { namespace elements
             return false;
          }
       }
-
-      // If we reached here, then there's either no focus, or the
-      // focus did not handle the key press.
-      bool handled = false;
-      for_each_visible(ctx,
-         [&](element& e, std::size_t /*ix*/, rect const& bounds)
-         {
-            context ectx{ctx, &e, bounds};
-            handled = e.key(ectx, k);
-            return handled; // break if key is handled by e
-         },
-         reverse_index()
-      );
-      return handled;
+      return false;
    }
 
    bool composite_base::text(context const& ctx, text_info info)
@@ -305,7 +304,7 @@ namespace cycfi { namespace elements
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
             context ectx{ctx, &e, b};
-            if (!b.includes(p) || !e.hit_test(ectx, p, false))
+            if (!b.includes(p) || !e.hit_test(ectx, p, false, true))
             {
                e.cursor(ectx, p, cursor_tracking::leaving);
                i = _cursor_hovering.erase(i);
@@ -395,6 +394,18 @@ namespace cycfi { namespace elements
       _focus = -1;
    }
 
+   void composite_base::relinquish_focus(context const& ctx)
+   {
+      if (_focus != -1)
+      {
+         end_focus();
+         _saved_focus = -1;
+         auto [p, cctx] = find_composite(ctx);
+         if (p)
+            p->relinquish_focus(*cctx);
+      }
+   }
+
    element const* composite_base::focus() const
    {
       return (empty() || (_focus == -1))? 0 : &at(_focus);
@@ -444,7 +455,7 @@ namespace cycfi { namespace elements
             auto& e = at(*i);
             rect  b = bounds_of(ctx, *i);
             context ectx{ctx, &e, b};
-            if (!b.includes(p) || !e.hit_test(ectx, p, false))
+            if (!b.includes(p) || !e.hit_test(ectx, p, false, true))
             {
                e.track_drop(ectx, d_info, cursor_tracking::leaving);
                i = _cursor_hovering.erase(i);
@@ -500,7 +511,7 @@ namespace cycfi { namespace elements
                if (bounds.includes(p))
                {
                   context ectx{ctx, &e, bounds};
-                  if (auto leaf = e.hit_test(ectx, p, true))
+                  if (auto leaf = e.hit_test(ectx, p, true, control))
                   {
                      info = hit_info{&e, leaf, bounds, int(ix)};
                      return true;

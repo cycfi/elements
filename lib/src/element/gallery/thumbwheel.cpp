@@ -23,8 +23,9 @@ namespace cycfi { namespace elements
    {
       if (_quantize > 0)
       {
+         auto bounds = device_to_user(ctx.bounds, ctx.canvas);
          _aligner =
-            [this, &view = ctx.view, bounds = ctx.bounds](double val)
+            [this, &view = ctx.view, bounds](double val)
             {
                view.post(
                   [this, &view, val, bounds]()

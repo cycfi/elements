@@ -26,9 +26,9 @@ auto dialog_content()
       hsize(300, simple_heading(
          margin({10, 10, 10, 10},
             vtile(
-               top_margin(10, align_left(check_box1)),
-               top_margin(10, align_left(check_box2)),
-               top_margin(10, align_left(check_box3))
+               margin_top(10, align_left(check_box1)),
+               margin_top(10, align_left(check_box2)),
+               margin_top(10, align_left(check_box3))
             )
          ),
          "The Thraxian Legacy",
@@ -65,10 +65,12 @@ int main(int argc, char* argv[])
 
    _view.content(
       {
-         make_dialog(_view, _app),
          share(background)
       }
    );
+
+   // Open the dialog box
+   open_popup(make_dialog(_view, _app), _view);
 
    _app.run();
    return 0;

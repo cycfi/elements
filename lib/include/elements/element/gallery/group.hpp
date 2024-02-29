@@ -40,7 +40,7 @@ namespace cycfi { namespace elements
    )
    {
       return make_group(
-         left_top_margin({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
+         margin_left_top({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
          std::forward<Content>(content), center_heading
       );
    }
@@ -79,7 +79,7 @@ namespace cycfi { namespace elements
    )
    {
       return make_unframed_group(
-         left_top_margin({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
+         margin_left_top({10, 10}, heading(std::move(title)).relative_font_size(label_size)),
          std::forward<Content>(content), center_heading
       );
    }

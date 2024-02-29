@@ -8,7 +8,7 @@
 
 #include <elements/element/layer.hpp>
 #include <elements/element/proxy.hpp>
-#include <elements/element/selectable.hpp>
+#include <elements/element/selection.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
 #include <elements/support/sender.hpp>
@@ -48,6 +48,7 @@ namespace cycfi { namespace elements
       bool              click(context const& ctx, mouse_button btn) override;
       bool              cursor(context const& ctx, point p, cursor_tracking status) override;
       void              drag(context const& ctx, mouse_button btn) override;
+      element*          hit_test(context const& ctx, point p, bool leaf, bool control) override;
 
       void              enable(bool state = true) override;
       bool              is_enabled() const override;
@@ -103,6 +104,9 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
    {
+      if (!this->is_enabled())
+         return false;
+
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
          this->tracking(false);

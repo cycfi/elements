@@ -87,12 +87,12 @@ auto make_basic_text()
 
    auto my_label = [=](auto text)
    {
-      return right_margin(10, label(text).text_align(canvas::right));
+      return margin_right(10, label(text).text_align(canvas::right));
    };
 
    auto my_input = [=](auto caption, auto input)
    {
-      return bottom_margin(10, hgrid(grid, my_label(caption), input));
+      return margin_bottom(10, hgrid(grid, my_label(caption), input));
    };
 
    // This is an example on how to add an on_text callback:
@@ -116,8 +116,8 @@ auto make_basic_text()
                my_input("Cute Text Boxes",
                   htile(
                      input_box(0.7).first,
-                     left_margin(10, input_box(0.7).first),
-                     left_margin(10, input_box(0.7).first)
+                     margin_left(10, input_box(0.7).first),
+                     margin_left(10, input_box(0.7).first)
                   )
                )
             )
@@ -125,7 +125,7 @@ auto make_basic_text()
       ;
 
    auto labels =
-      top_margin(20, pane("Labels",
+      margin_top(20, pane("Labels",
          vtile(
             el(label("Hello, Universe. This is Elements.")
                .font(font_descr{"Open Sans"}.semi_bold())
@@ -153,7 +153,7 @@ auto make_basic_text()
          vtile(
             text_input,
             labels,
-            top_margin(20, pane("Icons", std::move(icons))),
+            margin_top(20, pane("Icons", std::move(icons))),
             empty()
          )
       );

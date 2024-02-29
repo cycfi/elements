@@ -61,9 +61,9 @@ namespace cycfi { namespace elements
       if (_current_size.x != new_x || _current_size.y != new_y)
       {
          if (_current_size.x != -1 && _current_size.y != -1)
-            ctx.view.refresh(max(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
+            ctx.view.refresh(ctx, max(ctx.bounds, rect(ctx.bounds.top_left(), extent{_current_size})));
          else
-            ctx.view.refresh(ctx.bounds);
+            ctx.view.refresh(ctx);
       }
 
       _current_size.x = new_x;
@@ -127,6 +127,7 @@ namespace cycfi { namespace elements
     , _caret_started{false}
     , _read_only{false}
     , _enabled{true}
+    , _scroll_into_view{false}
    {}
 
    basic_text_box::~basic_text_box()
@@ -136,6 +137,12 @@ namespace cycfi { namespace elements
 
    void basic_text_box::draw(context const& ctx)
    {
+      if (_scroll_into_view)
+      {
+         scroll_into_view(ctx, false);
+         _scroll_into_view = false;
+      }
+
       draw_selection(ctx);
       if (_enabled)
       {
@@ -322,8 +329,6 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::key(context const& ctx, key_info k)
    {
-      _show_caret = editable();
-
       if (_select_start == -1
          || k.action == key_action::release
          || k.action == key_action::unknown
@@ -409,6 +414,12 @@ namespace cycfi { namespace elements
          }
       };
 
+#if defined(__APPLE__)
+      constexpr auto word_key = mod_option;
+#else
+      constexpr auto word_key = mod_control;
+#endif
+
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
          switch (k.key)
@@ -439,7 +450,7 @@ namespace cycfi { namespace elements
             case key_code::left:
                if (_select_end != -1)
                {
-                  if (k.modifiers & mod_alt)
+                  if (k.modifiers & word_key)
                      prev_word();
                   else
                      prev_char();
@@ -454,7 +465,7 @@ namespace cycfi { namespace elements
             case key_code::right:
                if (_select_end != -1)
                {
-                  if (k.modifiers & mod_alt)
+                  if (k.modifiers & word_key)
                      next_word();
                   else
                      next_char();
@@ -543,7 +554,11 @@ namespace cycfi { namespace elements
       {
          _layout.text(_text.data(), _text.data() + _text.size());
          layout(ctx);
-         ctx.view.refresh(ctx);
+         auto bounds = ctx.bounds;
+         auto size = current_size();
+         bounds.width(size.x);
+         bounds.height(size.y);
+         ctx.view.refresh(ctx, bounds);
       }
 
       if (handled)
@@ -616,9 +631,11 @@ namespace cycfi { namespace elements
 
       if (has_caret && !_caret_started)
       {
+         // We convert the caret bounds to device coordinates and expand it by 2 pixels
+         // on all sides for good measure.
          auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
          auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
-         caret_bounds = {tl.x, tl.y, br.x, br.y};
+         caret_bounds = {tl.x-2, tl.y-2, br.x+2, br.y+2};
 
          _caret_started = true;
          this_weak_handle wp = _this_handle;
@@ -928,7 +945,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::wants_focus() const
    {
-      return true;
+      return editable();
    }
 
    void basic_text_box::begin_focus(focus_request /*req*/)
@@ -964,6 +981,21 @@ namespace cycfi { namespace elements
    void basic_text_box::select_none()
    {
       _select_start = _select_end = -1;
+   }
+
+   void basic_text_box::home()
+   {
+      select_start(0);
+      select_end(0);
+      scroll_into_view();
+   }
+
+   void basic_text_box::end()
+   {
+      auto end = get_text().size();
+      select_start(end);
+      select_end(end);
+      scroll_into_view();
    }
 
    bool basic_text_box::word_break(char const* utf8) const
@@ -1044,16 +1076,26 @@ namespace cycfi { namespace elements
 
             case key_code::home:
                {
+                  auto sel_start = select_start();
+                  auto sel_end = select_end();
+                  if ((k.modifiers & mod_shift) && (sel_start != -1) && (sel_end != -1))
+                     select_end(std::max(sel_start, sel_end));
+                  else
+                     select_end(0);
                   select_start(0);
-                  select_end(0);
                   scroll_into_view(ctx, false);
                   return true;
                }
 
             case key_code::end:
                {
-                  int end = int(_text.size());
-                  select_start(end);
+                  auto end = static_cast<int>(get_text().size());
+                  auto sel_start = select_start();
+                  auto sel_end = select_end();
+                  if ((k.modifiers & mod_shift) && (sel_start != -1) && (sel_end != -1))
+                     select_start(std::min(sel_start, sel_end));
+                  else
+                     select_start(end);
                   select_end(end);
                   scroll_into_view(ctx, false);
                   return true;

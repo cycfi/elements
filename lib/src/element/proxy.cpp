@@ -27,11 +27,11 @@ namespace cycfi { namespace elements
       return subject().span();
    }
 
-   element* proxy_base::hit_test(context const& ctx, point p, bool leaf)
+   element* proxy_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       context sctx {ctx, &subject(), ctx.bounds};
       prepare_subject(sctx, p);
-      auto r = subject().hit_test(sctx, p, leaf);
+      auto r = subject().hit_test(sctx, p, leaf, control);
       restore_subject(sctx);
       return r;
    }
@@ -193,11 +193,22 @@ namespace cycfi { namespace elements
 
    void proxy_base::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
-      subject().track_drop(ctx, info, status);
+      context sctx {ctx, &subject(), ctx.bounds};
+      auto save = info.where;
+      prepare_subject(sctx, info.where);
+      subject().track_drop(sctx, info, status);
+      restore_subject(sctx);
+      info.where = save;
    }
 
    bool proxy_base::drop(context const& ctx, drop_info const& info)
    {
-      return subject().drop(ctx, info);
+      context sctx {ctx, &subject(), ctx.bounds};
+      auto save = info.where;
+      prepare_subject(sctx, info.where);
+      auto r = subject().drop(sctx, info);
+      restore_subject(sctx);
+      info.where = save;
+      return r;
    }
 }}

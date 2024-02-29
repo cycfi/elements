@@ -65,7 +65,7 @@ namespace cycfi { namespace elements
             if (bounds.includes(p))
             {
                context ectx{ctx, &e, bounds};
-               if (auto leaf = e.hit_test(ectx, p, true))
+               if (auto leaf = e.hit_test(ectx, p, true, control))
                   return hit_info{&e, leaf, bounds, int(ix)};
             }
          }
@@ -165,7 +165,7 @@ namespace cycfi { namespace elements
          if (bounds.includes(p))
          {
             context ectx{ctx, &e, bounds};
-            if (auto leaf = e.hit_test(ectx, p, true))
+            if (auto leaf = e.hit_test(ectx, p, true, control))
                return hit_info{&e, leaf, bounds, int(_selected_index)};
          }
       }

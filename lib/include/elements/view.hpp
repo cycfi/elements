@@ -14,6 +14,8 @@
 #include <elements/element/layer.hpp>
 #include <elements/element/size.hpp>
 #include <elements/element/indirect.hpp>
+#include <elements/support/context.hpp>
+
 #include <asio.hpp>
 #include <memory>
 #include <unordered_map>
@@ -54,6 +56,7 @@ namespace cycfi { namespace elements
 
       void                    refresh() override;
       void                    refresh(rect area) override;
+      void                    refresh(context const& ctx, rect area);
       void                    refresh(element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0);
       rect                    dirty() const;
@@ -149,12 +152,24 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   inline point cursor_pos(view const& v) // declared in context.hpp
+
+   // The functions below are declared in context.hpp. They are defined here due
+   // to the forward declaration of `view` in the header file, preventing direct
+   // access to the actual `view` class. These functions are explicitly marked
+   // for forced inlining using CYCFI_FORCE_INLINE (defined in infra/support.hpp).
+   //
+   // If you encounter an undefined reference to any of these functions during
+   // the linking phase, it indicates the necessity to include
+   // <elements/view.hpp> in the .hpp or .cpp file of the calling code.
+
+   // declared in context.hpp
+   CYCFI_FORCE_INLINE point cursor_pos(view const& v)
    {
       return v.cursor_pos();
    }
 
-   inline rect view_bounds(view const& v) // declared in context.hpp
+   // declared in context.hpp
+   CYCFI_FORCE_INLINE rect view_bounds(view const& v)
    {
       auto size = v.size();
       return rect{0, 0, size.x, size.y};
@@ -187,6 +202,7 @@ namespace cycfi { namespace elements
 
    inline void view::content(std::initializer_list<element_ptr> list)
    {
+      _content.end_focus();
       _content = list;
       std::reverse(_content.begin(), _content.end());
       set_limits();
@@ -210,6 +226,7 @@ namespace cycfi { namespace elements
    template <typename... E>
    inline void view::content(E&&... elements)
    {
+      _content.end_focus();
       _content = {detail::add_element(std::forward<E>(elements))...};
       std::reverse(_content.begin(), _content.end());
       set_limits();
@@ -228,10 +245,17 @@ namespace cycfi { namespace elements
          io().post(
             [e, this]
             {
-               end_focus();
+               auto wants_focus = e->wants_focus();
+               if (wants_focus)
+                  end_focus();
                _content.push_back(e);
                layout(*e);
-               begin_focus();
+               if (e->wants_focus())
+               {
+                  _is_focus = true;
+                  begin_focus();
+                  _is_focus = _main_element.focus();
+               }
             }
          );
       }
@@ -251,12 +275,15 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  end_focus();
-                  refresh(*e);
+                  if (e->wants_focus())
+                  {
+                     end_focus();
+                     refresh(*e);
+                  }
                   _content.erase(i);
                   _content.reset();
                   layout();
-                  begin_focus();
+                  _is_focus = _main_element.focus();
                }
             }
          );

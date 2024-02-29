@@ -52,6 +52,7 @@ namespace cycfi { namespace elements
 
       using tracker = tracker<proxy_base, movable_tracker_info>;
 
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                 click(context const& ctx, mouse_button btn) override;
       void                 drag(context const& ctx, mouse_button btn) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;

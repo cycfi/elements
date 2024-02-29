@@ -25,11 +25,11 @@ namespace cycfi { namespace elements
    inline auto dialog0(Content&& content)
    {
       auto popup = share(
-         align_center_middle(
+         modal(align_center_middle(
             layer(
                std::forward<Content>(content),
                panel{/* opacity */0.98}
-         )));
+         ))));
 
       return popup;
    }
@@ -43,13 +43,13 @@ namespace cycfi { namespace elements
       auto make_dialog_popup(Content&& content)
       {
          return share(
-            key_intercept(align_center_middle(
+            key_intercept(modal(align_center_middle(
                layer(
                   margin({32, 32, 32, 32},
                      std::forward<Content>(content)
                   ),
                   panel{/* opacity */0.98}
-            ))));
+            )))));
       }
 
       template <typename PopupPtr, typename ButtonPtr>
@@ -149,7 +149,7 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(hsize(button_size, hold(ok_button)))
             ));
 
@@ -178,11 +178,11 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(
                   htile(
                      hsize(button_size, hold(cancel_button)),
-                     left_margin(20, hsize(button_size, hold(ok_button)))
+                     margin_left(20, hsize(button_size, hold(ok_button)))
                   )
                )
             ));
@@ -214,11 +214,11 @@ namespace cycfi { namespace elements
       auto popup =
          detail::make_dialog_popup(
             vtile(
-               bottom_margin(20, std::forward<Content>(content)),
+               margin_bottom(20, std::forward<Content>(content)),
                align_right(
                   htile(
                      hsize(button_size, hold(cancel_button)),
-                     left_margin(20, hsize(button_size, hold(ok_button)))
+                     margin_left(20, hsize(button_size, hold(ok_button)))
                   )
                )
             ));
@@ -227,6 +227,23 @@ namespace cycfi { namespace elements
       detail::link_button(view_, popup, ok_button, std::forward<F1>(on_ok));
       detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
       return popup;
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Utility to open the popup delayed by a few milliseconds to give the UI a
+   // chance to settle.
+   ////////////////////////////////////////////////////////////////////////////
+   inline void open_popup(element_ptr popup, view& view_)
+   {
+      using namespace std::chrono_literals;
+      constexpr auto delay = 10ms;
+
+      view_.post(delay,
+         [&view_, popup]()
+         {
+            view_.add(popup);
+         }
+      );
    }
 }}
 

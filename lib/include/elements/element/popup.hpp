@@ -28,9 +28,7 @@ namespace cycfi { namespace elements
                               {}
 
       bool                    wants_control() const override { return true; }
-      bool                    wants_focus() const override { return true; }
-
-      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
 
       bool                    is_open(view& view_) const;
@@ -57,7 +55,7 @@ namespace cycfi { namespace elements
       using basic_popup_element::basic_popup_element;
       using click_function = std::function<void()>;
 
-      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       click_function          on_click = [](){};
 

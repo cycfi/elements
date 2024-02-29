@@ -45,7 +45,7 @@ void make_choice(view& _view, app& _app)
    auto popup = message_box2(
       _view, choice_text, icons::question, on_ok_or_cancel, on_ok_or_cancel
    );
-   _view.add(popup);
+   open_popup(popup, _view);
 }
 
 // An Alert Popup
@@ -67,7 +67,7 @@ void make_alert(view& _view, app& _app)
       };
 
    auto popup = message_box1(_view, alert_text, icons::attention, on_ok);
-   _view.add(popup);
+   open_popup(popup, _view);
 }
 
 int main(int argc, char* argv[])

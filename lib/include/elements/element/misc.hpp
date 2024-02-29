@@ -175,9 +175,44 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Frames
+   // Frames and borders
    ////////////////////////////////////////////////////////////////////////////
    struct frame : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_left : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_right : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_top : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_bottom : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_top_bottom : public element
+   {
+      void           draw(context const& ctx) override;
+   };
+
+   struct border_left_right : public element
    {
       void           draw(context const& ctx) override;
    };
@@ -400,6 +435,65 @@ namespace cycfi { namespace elements
    vcollapsable(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Modal element hugs the UI and prevents any event from passing through
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   class modal_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     modal_element(Subject subject);
+      element*       hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool           key(context const& ctx, key_info k) override;
+      bool           text(context const& ctx, text_info info) override;
+
+      bool           wants_focus() const override;
+   };
+
+   template <typename Subject>
+   inline modal_element<remove_cvref_t<Subject>>
+   modal(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   inline modal_element<Subject>::modal_element(Subject subject)
+    : base_type(std::move(subject))
+   {
+   }
+
+   template <typename Subject>
+   inline element* modal_element<Subject>::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      if (auto e = this->subject().hit_test(ctx, p, leaf, control))
+         return e;
+      return this;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::key(context const& ctx, key_info k)
+   {
+      base_type::key(ctx, k);
+      return true;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::text(context const& ctx, text_info info)
+   {
+      base_type::text(ctx, info);
+      return true;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::wants_focus() const
+   {
+      return true;
    }
 }}
 

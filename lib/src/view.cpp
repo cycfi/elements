@@ -166,6 +166,13 @@
       );
    }
 
+   void view::refresh(context const& ctx, rect area)
+   {
+      auto tl = ctx.canvas.user_to_device(area.top_left());
+      auto br = ctx.canvas.user_to_device(area.bottom_right());
+      refresh({tl.x, tl.y, br.x, br.y});
+   }
+
    void view::refresh(element& element, int outward)
    {
       if (_current_bounds.is_empty())
@@ -341,7 +348,7 @@
 
    void view::end_focus()
    {
-      if (_content.empty() || !_is_focus)
+      if (_content.empty() || _is_focus)
          return;
 
       _main_element.end_focus();

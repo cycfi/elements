@@ -41,6 +41,12 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   element* basic_button::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      unused(control);
+      return proxy_base::hit_test(ctx, p, leaf, false); // accept non-control subjects
+   }
+
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
       hilite(status != cursor_tracking::leaving);

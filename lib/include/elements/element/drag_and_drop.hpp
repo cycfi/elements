@@ -9,6 +9,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
 #include <elements/element/floating.hpp>
+#include <elements/element/selection.hpp>
 #include <functional>
 #include <set>
 
@@ -61,7 +62,7 @@ namespace cycfi { namespace elements
       return {std::forward<Subject>(subject), mime_types};
    }
 
-   class drop_inserter_base : public drop_base
+   class drop_inserter_element : public drop_base
    {
    public:
 
@@ -70,15 +71,21 @@ namespace cycfi { namespace elements
       using on_drop_function = std::function<bool(drop_info const& info, std::size_t ix)>;
       using on_move_function = std::function<void(std::size_t pos, indices_type const& indices)>;
       using on_delete_function = std::function<void(indices_type const& indices)>;
+      using on_select_function = std::function<void(indices_type const& indices, std::size_t latest)>;
 
-                              drop_inserter_base(std::initializer_list<std::string> mime_types_);
+                              drop_inserter_element(std::initializer_list<std::string> mime_types_);
+
       void                    draw(context const& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    wants_focus() const override { return true; }
 
       on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
       on_move_function        on_move = [](std::size_t, indices_type const&){};
       on_delete_function      on_erase = [](indices_type const&){};
+      on_select_function      on_select = [](indices_type const&, std::size_t){};
 
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);
@@ -89,24 +96,38 @@ namespace cycfi { namespace elements
       int                     _insertion_pos = -1;
    };
 
-   template <typename Subject>
-   inline proxy<remove_cvref_t<Subject>, drop_inserter_base>
-   drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
+   namespace detail
    {
-      return {std::forward<Subject>(subject), mime_types};
+      template <typename Subject>
+      inline proxy<remove_cvref_t<Subject>, drop_inserter_element>
+      make_drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
+      {
+         return {std::forward<Subject>(subject), mime_types};
+      }
    }
 
-   class draggable_element : public tracker<proxy_base>
+   template <typename Subject>
+   auto drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
+   {
+      return
+         detail::make_drop_inserter(
+            selection_list(std::forward<Subject>(subject))
+          , mime_types
+         );
+   }
+
+   class draggable_element : public tracker<proxy_base>, public selectable
    {
    public:
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
-      element*                hit_test(context const& ctx, point p, bool leaf = false) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    key(context const& ctx, key_info k) override;
+      bool                    wants_focus() const override { return true; }
 
-      bool                    is_selected() const;
-      void                    select(bool state);
+      bool                    is_selected() const override;
+      void                    select(bool state) override;
 
    private:
 

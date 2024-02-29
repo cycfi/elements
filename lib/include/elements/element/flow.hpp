@@ -35,7 +35,6 @@ namespace cycfi { namespace elements
    private:
 
       bool                    _reflow = true;
-
    };
 
    using flow_composite = vector_composite<flowable_container>;

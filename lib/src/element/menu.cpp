@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         if (_popup && (!value() || !hit_test(ctx, btn.pos, false)))
+         if (_popup && (!value() || !hit_test(ctx, btn.pos, false, true)))
          {
             // simulate a menu click:
             btn.down = true;
@@ -149,8 +149,9 @@ namespace cycfi { namespace elements
       }
    }
 
-   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool /*leaf*/)
+   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
+      unused(leaf, control);
       if (is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
@@ -288,13 +289,37 @@ namespace cycfi { namespace elements
             break;
 
             default:
-               if (is_enabled() && equal(k, shortcut))
+            {
+               auto [c, cctx] = find_composite(ctx);
+               if (c)
                {
-                  if (on_click)
-                     on_click();
-                  ctx.notify(ctx, "key", this);
-                  return true;
+                  for (std::size_t i = 0; i != c->size(); ++i)
+                  {
+                     auto e = find_element<basic_menu_item_element*>(&c->at(i));
+                     if (e && e->is_enabled() && equal(k, e->shortcut))
+                     {
+                        if (e->on_click)
+                           e->on_click();
+                        ctx.notify(ctx, "key", e);
+
+                        // Close the popup
+                        if (auto _popup = find_parent<basic_popup_element*>(ctx))
+                           _popup->close(ctx.view);
+
+                        for (std::size_t i = 0; i != c->size(); ++i)
+                        {
+                           auto e = find_element<basic_menu_item_element*>(&c->at(i));
+                           if (e && e->is_selected())
+                           {
+                              e->select(false);
+                              break;
+                           }
+                        }
+                        return true;
+                     }
+                  }
                }
+            }
          }
       }
       return false;

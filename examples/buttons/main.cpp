@@ -167,17 +167,17 @@ auto make_buttons(view& view_)
    return
       margin({20, 0, 20, 20},
          vtile(
-            top_margin(20, mbutton),
-            top_margin(20, tbutton),
-            top_margin(20, hold(lbutton)),
-            top_margin(20, hold(reset)),
-            top_margin(20, note),
-            top_margin(20, htile(
-               right_margin(3, valign(0.5, prog_advance)),
+            margin_top(20, mbutton),
+            margin_top(20, tbutton),
+            margin_top(20, hold(lbutton)),
+            margin_top(20, hold(reset)),
+            margin_top(20, note),
+            margin_top(20, htile(
+               margin_right(3, valign(0.5, prog_advance)),
                vsize(27, hold(prog_bar))
             )),
-            top_margin(20, disabled_button),
-            top_margin(20,
+            margin_top(20, disabled_button),
+            margin_top(20,
                htile(
                   label("Enabled"),
                   hspace(10),
@@ -188,8 +188,8 @@ auto make_buttons(view& view_)
                   label("Disabled")
                )
             ),
-            top_margin(20, htile(left, center, right)),
-            top_margin(20, custom)
+            margin_top(20, htile(left, center, right)),
+            margin_top(20, custom)
          )
       );
 }
@@ -209,12 +209,12 @@ auto make_controls(view& view_)
    auto  check_boxes =
          group("Check boxes",
             margin({10, 10, 20, 20},
-               top_margin(25,
+               margin_top(25,
                   vtile(
-                     top_margin(10, align_left(check_box1)),
-                     top_margin(10, align_left(check_box2)),
-                     top_margin(10, align_left(check_box3)),
-                     top_margin(10, align_left(check_box4))
+                     margin_top(10, align_left(check_box1)),
+                     margin_top(10, align_left(check_box2)),
+                     margin_top(10, align_left(check_box3)),
+                     margin_top(10, align_left(check_box4))
                   )
                )
             )
@@ -231,12 +231,12 @@ auto make_controls(view& view_)
    auto  radio_buttons =
          group("Radio Buttons",
             margin({10, 10, 20, 20},
-               top_margin(25,
+               margin_top(25,
                   vtile(
-                     top_margin(10, align_left(radio_button1)),
-                     top_margin(10, align_left(radio_button2)),
-                     top_margin(10, align_left(radio_button3)),
-                     top_margin(10, align_left(radio_button4))
+                     margin_top(10, align_left(radio_button1)),
+                     margin_top(10, align_left(radio_button2)),
+                     margin_top(10, align_left(radio_button3)),
+                     margin_top(10, align_left(radio_button4))
                   )
                )
             )
@@ -251,7 +251,7 @@ auto make_controls(view& view_)
          group("Icon Buttons",
             margin({10, 10, 20, 10},
                vtile(
-                  top_margin(35,
+                  margin_top(35,
                      htile(
                         align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
                         align_center(icon_button(icons::magnifying_glass, 1.2)),
@@ -274,7 +274,7 @@ auto make_controls(view& view_)
          group("Sprite Buttons",
             margin({10, 10, 20, 10},
                vtile(
-                  top_margin(35,
+                  margin_top(35,
                      htile(
                         align_center(toggle_button(power_button)),
                         align_center(toggle_button(phase_button)),

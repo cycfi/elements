@@ -8,13 +8,13 @@
 using namespace cycfi::elements;
 
 // Main window background color
-auto bkd_color = rgba(62, 62, 62, 255);
+auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 auto rbox_ = rbox(colors::gold.opacity(0.8));
 
 auto make_vtile_aligns()
 {
-   auto _box = top_margin(
+   auto _box = margin_top(
       {10},
       hsize(150, rbox_)
    );
@@ -36,7 +36,7 @@ auto make_vtile_aligns()
 
 auto make_vtile_stretch()
 {
-   auto _box = top_margin(
+   auto _box = margin_top(
       {10},
       rbox_
    );
@@ -57,12 +57,12 @@ auto make_vtile_stretch()
 
 auto make_vtile_mixed()
 {
-   auto _box = top_margin(
+   auto _box = margin_top(
       {10},
       rbox_
    );
 
-   auto _box2 = top_margin(
+   auto _box2 = margin_top(
       {10},
       hsize(150, rbox_)
    );
@@ -83,7 +83,7 @@ auto make_vtile_mixed()
 
 auto make_htile_aligns()
 {
-   auto _box = left_margin(
+   auto _box = margin_left(
       {10},
       vsize(150, rbox_)
    );
@@ -103,7 +103,7 @@ auto make_htile_aligns()
 
 auto make_htile_stretch()
 {
-   auto _box = left_margin(
+   auto _box = margin_left(
       {10},
       rbox_
    );
@@ -122,12 +122,12 @@ auto make_htile_stretch()
 
 auto make_htile_mixed()
 {
-   auto _box = left_margin(
+   auto _box = margin_left(
       {10},
       rbox_
    );
 
-   auto _box2 = left_margin(
+   auto _box2 = margin_left(
       {10},
       vsize(150, rbox_)
    );
@@ -239,7 +239,7 @@ auto make_hvgrid()
       };
 
    return
-      top_margin(50, vgrid(
+      margin_top(50, vgrid(
          vgrid_coords,
          make_hgrid1(),
          make_hgrid2(),
@@ -306,7 +306,7 @@ auto make_fixed_hvgrid()
       };
 
    return
-      top_margin(50, vgrid(
+      margin_top(50, vgrid(
          make_hgrid1(),
          make_hgrid2(),
          make_hgrid1(),

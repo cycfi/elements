@@ -152,6 +152,7 @@ namespace cycfi { namespace elements
    void scroller_base::draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp)
    {
       theme const& thm = get_theme();
+      auto state = ctx.canvas.new_state();
 
       float x = info.bounds.left;
       float y = info.bounds.top;
@@ -219,11 +220,11 @@ namespace cycfi { namespace elements
          double elem_height = e_limits.min.y;
          double available_height = ctx.parent->bounds.height();
 
-         ctx.bounds.top -= (elem_height - available_height) * valign();
-         ctx.bounds.height(elem_height);
-
          if (elem_height <= available_height)
             valign(0.0);
+         else
+            ctx.bounds.top -= (elem_height - available_height) * valign();
+         ctx.bounds.height(elem_height);
       }
 
       if (allow_hscroll())
@@ -231,18 +232,18 @@ namespace cycfi { namespace elements
          double elem_width = e_limits.min.x;
          double available_width = ctx.parent->bounds.width();
 
-         ctx.bounds.left -= (elem_width - available_width) * halign();
-         ctx.bounds.width(elem_width);
-
          if (elem_width <= available_width)
             halign(0.0);
+         else
+            ctx.bounds.left -= (elem_width - available_width) * halign();
+         ctx.bounds.width(elem_width);
       }
       subject().layout(ctx);
    }
 
-   element* scroller_base::hit_test(context const& ctx, point p, bool leaf)
+   element* scroller_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
-      return element::hit_test(ctx, p, leaf);
+      return element::hit_test(ctx, p, leaf, control);
    }
 
    scroller_base::scrollbar_bounds
@@ -332,7 +333,8 @@ namespace cycfi { namespace elements
          }
       }
 
-      if (redraw) {
+      if (redraw)
+      {
          on_scroll(point(halign(), valign()));
          ctx.view.refresh(ctx);
       }

@@ -21,7 +21,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, heading(std::move(text)))),
+            align_center(margin_top(5.0, heading(std::move(text)))),
             std::forward<Content>(content)
          );
    }
@@ -31,7 +31,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, heading(std::move(text)).relative_font_size(size))),
+            align_center(margin_top(5.0, heading(std::move(text)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }
@@ -42,7 +42,7 @@ namespace cycfi { namespace elements
       return
          vtile(
             std::forward<Content>(content),
-            align_center(top_margin(5.0, label(std::move(text))))
+            align_center(margin_top(5.0, label(std::move(text))))
          );
    }
 
@@ -53,7 +53,7 @@ namespace cycfi { namespace elements
       return
          vtile(
             std::forward<Content>(content),
-            align_center(top_margin(5.0, label(std::move(text)).relative_font_size(size)))
+            align_center(margin_top(5.0, label(std::move(text)).relative_font_size(size)))
          );
    }
 
@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
    {
       return
          htile(
-            align_middle(right_margin(10.0, label(std::move(text)))),
+            align_middle(margin_right(10.0, label(std::move(text)))),
             std::forward<Content>(content)
          );
    }
@@ -72,7 +72,7 @@ namespace cycfi { namespace elements
    {
       return
          htile(
-            align_middle(right_margin(10.0, label(std::move(text)).relative_font_size(size))),
+            align_middle(margin_right(10.0, label(std::move(text)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }
@@ -82,7 +82,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, label(std::move(text)))),
+            align_center(margin_top(5.0, label(std::move(text)))),
             std::forward<Content>(content)
          );
    }
@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
    {
       return
          vtile(
-            align_center(top_margin(5.0, label(std::move(text)).relative_font_size(size))),
+            align_center(margin_top(5.0, label(std::move(text)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }

@@ -249,7 +249,9 @@ auto make_preset_menu(my_model& model, view& view_)
       }
    );
 
-   return align_center(
+   return
+      align_top(
+         align_center(
             hsize(180,
                htile(
                   label("Preset:"),
@@ -257,7 +259,8 @@ auto make_preset_menu(my_model& model, view& view_)
                   preset_menu.first
                )
             )
-         );
+         )
+      );
 }
 
 // Create an input text box and establish its connection with the model.
@@ -327,7 +330,12 @@ auto make_input_box(my_model& model, view& view_)
          }
       };
 
-   return align_center(hsize(70, tbox.first));
+   return
+      align_bottom(
+         align_center(
+            hsize(70, tbox.first)
+         )
+      );
 }
 
 // Finally, we have our main content.

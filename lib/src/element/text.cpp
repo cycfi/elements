@@ -945,7 +945,7 @@ namespace cycfi { namespace elements
 
    bool basic_text_box::wants_focus() const
    {
-      return editable();
+      return true;
    }
 
    void basic_text_box::begin_focus(focus_request /*req*/)

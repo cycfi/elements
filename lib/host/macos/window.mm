@@ -129,11 +129,16 @@ namespace cycfi { namespace elements
 
    void window::size(point const& p)
    {
-      id window_ = (__bridge id) _window;
+      auto pos = position();
+      id const window_ = (__bridge id) _window;
+      auto min = [window_ contentMinSize];
+      auto max = [window_ contentMaxSize];
+
       auto frame = [window_ frame];
-      frame.size.width = p.x;
-      frame.size.height = p.y;
+      frame.size.width = std::min<float>(std::max<float>(p.x, min.width), max.width);
+      frame.size.height = std::min<float>(std::max<float>(p.y, min.height), max.height);
       [window_ setFrame : frame display : YES animate : false];
+      position(pos);
    }
 
    void window::limits(view_limits limits_)

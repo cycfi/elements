@@ -61,6 +61,8 @@ namespace cycfi::elements
 
       std::string const&      get_text() const override            { return _text; }
       void                    set_text(string_view text) override;
+      std::string const&      get_utf8() const                    { return _text; }
+      void                    set_utf8(string_view text)          { set_text(text); };
 
       std::string const&      value() const override           { return _text; }
       void                    value(string_view val) override;

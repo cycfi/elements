@@ -20,6 +20,14 @@ namespace cycfi { namespace elements
          throw std::runtime_error{"Error: Invalid image."};
    }
 
+   image::image(fs::path const& path, fit_enum)
+    : _pixmap(std::make_shared<elements::pixmap>(path, 1.0f))
+    , _fit{true}
+   {
+      if (!_pixmap)
+         throw std::runtime_error{"Error: Invalid image."};
+   }
+
    image::image(pixmap_ptr pixmap_)
     : _pixmap(pixmap_)
    {
@@ -30,23 +38,64 @@ namespace cycfi { namespace elements
    point image::size() const
    {
       return _pixmap->size();
+
+      auto sz = _pixmap->size();
+      if (!_fit)
+         return sz;
+      else // fit
+         return {-1, -1}; // We do not know the actual size
    }
 
    rect image::source_rect(context const& ctx) const
    {
-      return {0, 0, ctx.bounds.width(), ctx.bounds.height()};
+      unused(ctx);
+      auto s = _pixmap->size();
+      return {0, 0, s.x, s.y};
    }
 
-   view_limits image::limits(basic_context const& /* ctx */) const
+   view_limits image::limits(basic_context const& ctx) const
    {
+      unused(ctx);
       auto size_ = size();
       return {{size_.x, size_.y}, {size_.x, size_.y}};
+
+      if (!_fit)
+      {
+         auto size_ = _pixmap->size();
+         return {{size_.x, size_.y}, {size_.x, size_.y}};
+      }
+      else // fit
+      {
+         return full_limits;
+      }
    }
 
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
       ctx.canvas.draw(pixmap(), src, ctx.bounds);
+
+      if (!_fit)
+      {
+         ctx.canvas.draw(pixmap(), src, ctx.bounds);
+      }
+      else
+      {
+         float aspect_ratio = src.width() / src.height();
+         auto dest = ctx.bounds;
+         if (auto h = dest.width() / aspect_ratio; h <= ctx.bounds.height())
+            dest.height(dest.width() / aspect_ratio);
+         else
+            dest.width(dest.height() * aspect_ratio);
+         ctx.canvas.draw(pixmap(), src, center(dest, ctx.bounds));
+      }
+   }
+
+   void image::set_image(fs::path const& path, float scale)
+   {
+      _pixmap = std::make_shared<elements::pixmap>(path, scale);
+      if (!_pixmap)
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    ////////////////////////////////////////////////////////////////////////////

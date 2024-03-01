@@ -20,13 +20,24 @@ namespace cycfi { namespace elements
    class image : public element
    {
    public:
+
+      struct fit_enum{};
+
+      // Use `fit` as constructor param to allow the image to fit available
+      // space while keeping source image aspect ratio.
+      static constexpr auto fit = fit_enum{};
+
                               image(fs::path const& path, float scale = 1);
+                              image(fs::path const& path, fit_enum);
                               image(pixmap_ptr pixmap_);
 
       virtual point           size() const;
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       virtual rect            source_rect(context const& ctx) const;
+
+      void                    set_image(fs::path const& path, float scale = 1);
+      pixmap_ptr              get_image() const { return _pixmap; }
 
    protected:
 
@@ -35,6 +46,7 @@ namespace cycfi { namespace elements
    private:
 
       pixmap_ptr              _pixmap;
+      bool                    _fit = false;
    };
 
    ////////////////////////////////////////////////////////////////////////////

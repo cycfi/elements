@@ -288,6 +288,14 @@ namespace cycfi { namespace elements
             cairo_scaled_font_glyph_extents(_scaled_font, glyph, 1, &extents);
             if (((glyph->x + extents.x_advance) - start_x) > width)
             {
+               if (space_pos <= first)
+               {
+                  // We must do a hard break
+                  space_glyph_index = glyph_index;
+                  space_cluster_index = int(cluster - _clusters);
+                  space_pos = i;
+               }
+
                // Add the line if we did (exceed the line width)
                add_line();
             }

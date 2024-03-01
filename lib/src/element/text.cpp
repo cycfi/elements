@@ -89,6 +89,11 @@ namespace cycfi { namespace elements
       set_text(to_utf32(text_));
    }
 
+   std::string static_text_box::get_utf8() const
+   {
+      return to_utf8(_layout.text());
+   }
+
    void static_text_box::value(std::u32string_view val)
    {
       set_text(val);

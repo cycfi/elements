@@ -56,9 +56,6 @@ namespace cycfi { namespace elements
    view_limits image::limits(basic_context const& ctx) const
    {
       unused(ctx);
-      auto size_ = size();
-      return {{size_.x, size_.y}, {size_.x, size_.y}};
-
       if (!_fit)
       {
          auto size_ = _pixmap->size();
@@ -73,7 +70,6 @@ namespace cycfi { namespace elements
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      ctx.canvas.draw(pixmap(), src, ctx.bounds);
 
       if (!_fit)
       {

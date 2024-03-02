@@ -265,6 +265,23 @@ else()
 endif()
 
 ###############################################################################
+# Webp
+
+if (MSVC)
+   # $$$ TODO $$$
+   # target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
+
+   # if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+   #    target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
+   # else()
+	#   target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
+   # endif()
+else()
+	pkg_check_modules(libwebp REQUIRED IMPORTED_TARGET libwebp)
+	target_link_libraries(elements PUBLIC PkgConfig::libwebp)
+endif()
+
+###############################################################################
 # GTK3
 
 if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")

@@ -269,6 +269,7 @@ endif()
 
 if (MSVC)
    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/libwebp)
+   target_include_directories(elements PUBLIC ${WEBP_DEP_INCLUDE_DIRS})
 	target_link_libraries(elements PUBLIC libwebp)
 else()
 	pkg_check_modules(libwebp REQUIRED IMPORTED_TARGET libwebp)

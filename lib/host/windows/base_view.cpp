@@ -176,17 +176,9 @@ namespace cycfi { namespace elements
                   [&](auto& cnv_)
                   {
                      auto scale = get_scale_for_window(hwnd);
+                     cnv_->scale(scale, scale);
                      auto cnv = canvas{cnv_};
-                     cnv.pre_scale(scale);
-
-                     view->draw(cnv,
-                        {
-                           float(dirty.left),
-                           float(dirty.top),
-                           float(dirty.right),
-                           float(dirty.bottom)
-                        }
-                     );
+                     view->draw(cnv);
                   };
 
                SkCanvas* gpu_canvas = surface->getCanvas();

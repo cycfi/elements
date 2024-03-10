@@ -204,16 +204,13 @@ namespace cycfi { namespace elements
 
          // Note that cr (cairo_t) is already clipped to only draw the
          // exposed areas of the widget.
-         double left, top, right, bottom;
-         cairo_clip_extents(host_view_h->_cr, &left, &top, &right, &bottom);
-
          auto cnv = canvas{gpu_canvas};
          cnv.pre_scale(scale);
 
 #if defined ELEMENTS_PRINT_FPS
          auto start = std::chrono::steady_clock::now();
 #endif
-         view.draw(cnv, {float(left), float(top), float(right), float(bottom)});
+         view.draw(cnv);
 
 #if defined ELEMENTS_PRINT_FPS
          auto stop = std::chrono::steady_clock::now();

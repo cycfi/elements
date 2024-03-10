@@ -258,9 +258,17 @@ elseif (WIN32)
       BOOST_DATE_TIME_NO_LIB
       BOOST_REGEX_NO_LIB
    )
-   set_property(TARGET elements PROPERTY
-      MSVC_RUNTIME_LIBRARY "MultiThreaded"
-   )
+
+   if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+      set_property(TARGET elements PROPERTY
+         MSVC_RUNTIME_LIBRARY "MultiThreadedDebug"
+      )
+   else()
+      set_property(TARGET elements PROPERTY
+         MSVC_RUNTIME_LIBRARY "MultiThreaded"
+      )
+   endif()
+
 endif()
 
 if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")

@@ -136,6 +136,9 @@ namespace cycfi { namespace elements
             // Create the cairo surface and context.
             cairo_surface_t* surface = cairo_win32_surface_create(info->offscreen_hdc);
             cairo_t* context = cairo_create(surface);
+            auto scale = get_scale_for_window(hwnd);
+            cairo_scale(context, scale, scale);
+
             view->draw(context,
                {
                   float(dirty.left),
@@ -629,11 +632,6 @@ namespace cycfi { namespace elements
       r.top = area.top * scale;
       r.bottom = area.bottom * scale;
       InvalidateRect(_view, &r, false);
-   }
-
-   float base_view::hdpi_scale() const
-   {
-      return get_scale_for_window(_view);
    }
 
    std::string clipboard()

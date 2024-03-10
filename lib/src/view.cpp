@@ -46,7 +46,6 @@
       auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
       auto context_ = cairo_create(surface_);
       canvas cnv{*context_};
-      cnv.pre_scale(hdpi_scale());
 
       // Update the limits and constrain the window size to the limits
       basic_context bctx{*this, cnv};
@@ -73,7 +72,6 @@
       set_limits();
 
       canvas cnv{*context_};
-      cnv.pre_scale(hdpi_scale());
       auto size_ = size();
       rect subj_bounds = {0, 0, size_.x, size_.y};
       context ctx{*this, cnv, &_main_element, subj_bounds};
@@ -97,7 +95,6 @@
          auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
          auto context_ = cairo_create(surface_);
          canvas cnv{*context_};
-         cnv.pre_scale(self.hdpi_scale());
          context ctx {self, cnv, &self.main_element(), _current_bounds};
 
          f(ctx, self.main_element());

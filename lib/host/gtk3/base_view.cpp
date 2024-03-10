@@ -595,11 +595,6 @@ namespace cycfi { namespace elements
       gtk_window_resize(GTK_WINDOW(_view->widget), p.x, p.y);
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return 1.0f; // This is already done properly by the gtk->cairo context
-   }
-
    void base_view::refresh()
    {
       GtkAllocation alloc;

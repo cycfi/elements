@@ -688,11 +688,6 @@ namespace cycfi { namespace elements
       _view = nil;
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return 1.0f; // This is already done properly by the cocoa->cairo context
-   }
-
    point base_view::cursor_pos() const
    {
       auto  ns_view = get_mac_view(host());

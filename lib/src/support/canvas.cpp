@@ -76,17 +76,6 @@ namespace cycfi { namespace elements
    {
    }
 
-   void canvas::pre_scale(float sc)
-   {
-      scale({sc, sc});
-      _pre_scale = sc;
-   }
-
-   float canvas::pre_scale() const
-   {
-      return _pre_scale;
-   }
-
    void canvas::translate(point p)
    {
       cairo_translate(&_context, p.x, p.y);

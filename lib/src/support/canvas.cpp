@@ -62,10 +62,14 @@ namespace cycfi { namespace elements
 
    canvas::canvas(cairo_t& context_)
     : _context(context_)
-   {}
+   {
+      cairo_get_matrix(&context_, &_inv_affine);
+      cairo_matrix_invert(&_inv_affine);
+   }
 
    canvas::canvas(canvas&& rhs)
-    : _context(rhs._context)
+    : _context{rhs._context}
+    , _inv_affine{rhs._inv_affine}
    {}
 
    canvas::~canvas()
@@ -107,26 +111,39 @@ namespace cycfi { namespace elements
 
    point canvas::device_to_user(point p)
    {
-      double x = p.x * _pre_scale;
-      double y = p.y * _pre_scale;
-      cairo_device_to_user(&_context, &x, &y);
+      // Get the current matrix
+      cairo_matrix_t affine;
+      cairo_get_matrix(&_context, &affine);
+
+      // Undo the initial transform
+      cairo_matrix_t xaf;
+      cairo_matrix_multiply(&xaf, &affine, &_inv_affine);
+
+      // Invert the`xaf` transform
+      cairo_matrix_invert(&xaf);
+
+      // Map the point to the `xaf` transform
+      double x = p.x;
+      double y = p.y;
+      cairo_matrix_transform_point(&xaf, &x, &y);
       return { float(x), float(y) };
    }
 
    point canvas::user_to_device(point p)
    {
-      double x = p.x;
-      double y = p.y;
-      cairo_user_to_device(&_context, &x, &y);
-      return { float(x / _pre_scale), float(y / _pre_scale) };
-   }
+      // Get the current matrix
+      cairo_matrix_t affine;
+      cairo_get_matrix(&_context, &affine);
 
-   point canvas::user_to_device_distance(point p)
-   {
+      // Undo the initial transform
+      cairo_matrix_t xaf;
+      cairo_matrix_multiply(&xaf, &affine, &_inv_affine);
+
+      // Map the point to the `xaf` transform
       double x = p.x;
       double y = p.y;
-      cairo_user_to_device_distance(&_context, &x, &y);
-      return {float(x / _pre_scale), float(y / _pre_scale)};
+      cairo_matrix_transform_point(&xaf, &x, &y);
+      return { float(x), float(y) };
    }
 
    void canvas::begin_path()

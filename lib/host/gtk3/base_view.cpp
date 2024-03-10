@@ -93,20 +93,21 @@ namespace cycfi { namespace elements
          return true;
       }
 
-      gboolean on_draw(GtkWidget* /* widget */, cairo_t* cr, gpointer user_data)
+      gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
+         GtkAllocation alloc;
+         gtk_widget_get_allocation(widget, &alloc);
+
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
          cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
          cairo_paint(cr);
 
-         // Note that cr (cairo_t) is already clipped to only draw the
-         // exposed areas of the widget.
-         double left, top, right, bottom;
-         cairo_clip_extents(cr, &left, &top, &right, &bottom);
+         // Note that cr (cairo_t) is already clipped to only draw the exposed
+         // areas of the widget. double left, top, right, bottom;
          view.draw(
             cr,
-            rect{float(left), float(top), float(right), float(bottom)}
+            rect{0, 0, float(alloc.width), float(alloc.height)}
          );
 
          return false;
@@ -601,24 +602,23 @@ namespace cycfi { namespace elements
 
    void base_view::refresh()
    {
-      auto x = gtk_widget_get_allocated_width(_view->widget);
-      auto y = gtk_widget_get_allocated_height(_view->widget);
-      refresh({0, 0, float(x), float(y)});
+      GtkAllocation alloc;
+      gtk_widget_get_allocation(_view->widget, &alloc);
+      refresh({
+         float(alloc.x),
+         float(alloc.y),
+         float(alloc.x + alloc.width),
+         float(alloc.y + alloc.height)
+      });
    }
 
    void base_view::refresh(rect area)
    {
-      // queue_draw_area's arguments are in "widget coordinates", which are
-      // relative to the widget's allocation when the widget in question has no
-      // GdkWindow (i.e. GtkGLArea).
-      GtkAllocation alloc;
-      gtk_widget_get_allocation(_view->widget, &alloc);
-
-      // Note: GTK uses int coordinates. Make sure area is not empty when converting
-      // from float to int.
+      // Note: GTK uses int coordinates. Make sure area is not empty
+      // when converting from float to int.
       gtk_widget_queue_draw_area(_view->widget,
-         std::floor(area.left + alloc.x),
-         std::floor(area.top + alloc.y),
+         std::floor(area.left),
+         std::floor(area.top),
          std::max<float>(area.width(), 1),
          std::max<float>(area.height(), 1)
       );

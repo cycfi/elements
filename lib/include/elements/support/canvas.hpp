@@ -49,7 +49,6 @@ namespace cycfi { namespace elements
       void              skew(float sx, float sy);
       point             device_to_user(point p);
       point             user_to_device(point p);
-      point             user_to_device_distance(point p);
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Paths
@@ -227,6 +226,7 @@ namespace cycfi { namespace elements
       using state_stack = std::stack<canvas_state>;
 
       cairo_t&          _context;
+      cairo_matrix_t    _inv_affine;
       canvas_state      _state;
       state_stack       _state_stack;
       float             _pre_scale = 1.0f;

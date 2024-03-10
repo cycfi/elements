@@ -288,14 +288,7 @@ namespace
    cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
    cairo_t* context = cairo_create(surface);
 
-   _view->draw(context,
-      {
-         float(dirty.origin.x),
-         float(dirty.origin.y),
-         float(dirty.origin.x + dirty.size.width),
-         float(dirty.origin.y + dirty.size.height)
-      }
-   );
+   _view->draw(context);
 
    cairo_surface_destroy(surface);
    cairo_destroy(context);

@@ -95,9 +95,6 @@ namespace cycfi { namespace elements
 
       gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
       {
-         GtkAllocation alloc;
-         gtk_widget_get_allocation(widget, &alloc);
-
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
          cairo_set_source_surface(cr, host_view_h->surface, 0, 0);
@@ -105,10 +102,7 @@ namespace cycfi { namespace elements
 
          // Note that cr (cairo_t) is already clipped to only draw the exposed
          // areas of the widget. double left, top, right, bottom;
-         view.draw(
-            cr,
-            rect{0, 0, float(alloc.width), float(alloc.height)}
-         );
+         view.draw(cr);
 
          return false;
       }

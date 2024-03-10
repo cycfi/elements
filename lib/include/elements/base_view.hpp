@@ -308,7 +308,7 @@ namespace cycfi { namespace elements
                            base_view(host_window_handle h);
       virtual              ~base_view();
 
-      virtual void         draw(cairo_t* ctx, rect area);
+      virtual void         draw(cairo_t* ctx);
       virtual void         click(mouse_button btn);
       virtual void         drag(mouse_button btn);
       virtual void         cursor(point p, cursor_tracking status);
@@ -335,7 +335,7 @@ namespace cycfi { namespace elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   inline void base_view::draw(cairo_t* /* ctx */, rect /* area */) {}
+   inline void base_view::draw(cairo_t* /* ctx */) {}
    inline void base_view::click(mouse_button /* btn */) {}
    inline void base_view::drag(mouse_button /* btn */) {}
    inline void base_view::cursor(point /* p */, cursor_tracking /* status */) {}

@@ -139,14 +139,7 @@ namespace cycfi { namespace elements
             auto scale = get_scale_for_window(hwnd);
             cairo_scale(context, scale, scale);
 
-            view->draw(context,
-               {
-                  float(dirty.left),
-                  float(dirty.top),
-                  float(dirty.right),
-                  float(dirty.bottom)
-               }
-            );
+            view->draw(context);
 
             // Cleanup.
             cairo_destroy(context);

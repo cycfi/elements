@@ -61,12 +61,10 @@
       cairo_destroy(context_);
    }
 
-   void view::draw(cairo_t* context_, rect dirty_)
+   void view::draw(cairo_t* context_)
    {
       if (_content.empty())
          return;
-
-      _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
       set_limits();

@@ -661,11 +661,6 @@ namespace cycfi { namespace elements
       );
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return get_scale_for_window(_view);
-   }
-
    void base_view::refresh()
    {
       RECT bounds;

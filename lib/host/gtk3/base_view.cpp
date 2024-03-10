@@ -733,11 +733,6 @@ namespace cycfi { namespace elements
       gtk_window_resize(GTK_WINDOW(_view->_widget), p.x, p.y);
    }
 
-   float base_view::hdpi_scale() const
-   {
-      return get_scale(_view->_widget);
-   }
-
    void base_view::refresh()
    {
       gtk_widget_queue_draw(_view->_widget);

@@ -61,12 +61,10 @@ namespace cycfi { namespace elements
       }
    }
 
-   void view::draw(canvas& cnv, rect dirty_)
+   void view::draw(canvas& cnv)
    {
       if (_content.empty())
          return;
-
-      _dirty = dirty_;
 
       // Update the limits and constrain the window size to the limits
       set_limits();
@@ -95,7 +93,6 @@ namespace cycfi { namespace elements
          offscreen_image offscr{img};
          canvas cnv{offscr.context()};
          context ctx {self, cnv, &self.main_element(), _current_bounds};
-         cnv.pre_scale(self.hdpi_scale());
 
          f(ctx, self.main_element());
       }

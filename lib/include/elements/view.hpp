@@ -35,7 +35,7 @@ namespace cycfi { namespace elements
                               view(window& win);
                               ~view();
 
-      void                    draw(canvas& cnv, rect area) override;
+      void                    draw(canvas& cnv) override;
       void                    click(mouse_button btn) override;
       void                    drag(mouse_button btn) override;
       void                    cursor(point p, cursor_tracking status) override;
@@ -58,7 +58,6 @@ namespace cycfi { namespace elements
       void                    refresh(context const& ctx, rect area);
       void                    refresh(element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0);
-      rect                    dirty() const;
 
       struct undo_redo_task
       {
@@ -129,7 +128,6 @@ namespace cycfi { namespace elements
 
       void                    set_limits();
 
-      rect                    _dirty;
       rect                    _current_bounds;
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;
@@ -172,11 +170,6 @@ namespace cycfi { namespace elements
    {
       auto size = v.size();
       return rect{0, 0, size.x, size.y};
-   }
-
-   inline rect view::dirty() const
-   {
-      return _dirty;
    }
 
    inline bool view::has_undo()

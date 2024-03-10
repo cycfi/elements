@@ -205,7 +205,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    float                            _scale;
 
 #if defined(ARTIST_SKIA)
-   skia_context   _skia_context;
+   skia_context                     _skia_context;
 #endif
 
    bool                             _text_inserted;
@@ -347,14 +347,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 #endif
    auto context = NSGraphicsContext.currentContext.CGContext;
    auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
-   _view->draw(cnv,
-      {
-         float(dirty.origin.x),
-         float(dirty.origin.y),
-         float(dirty.origin.x + dirty.size.width),
-         float(dirty.origin.y + dirty.size.height)
-      }
-   );
+   _view->draw(cnv);
 
 #if defined ELEMENTS_PRINT_FPS
    auto stop = std::chrono::high_resolution_clock::now();
@@ -380,17 +373,10 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       auto draw =
          [&](auto& cnv_)
          {
+            cnv_->scale(_scale, _scale);
             auto cnv = canvas{cnv_};
-            cnv.pre_scale(_scale);
 
-            _view->draw(cnv,
-               {
-                  float(dirty.origin.x),
-                  float(dirty.origin.y),
-                  float(dirty.origin.x + dirty.size.width),
-                  float(dirty.origin.y + dirty.size.height)
-               }
-            );
+            _view->draw(cnv);
          };
 
       SkCanvas* gpu_canvas = surface->getCanvas();
@@ -794,12 +780,6 @@ namespace cycfi { namespace elements
       [ns_view detach_timer];
       [ns_view removeFromSuperview];
       _view = nil;
-   }
-
-   float base_view::hdpi_scale() const
-   {
-      auto ns_view = get_mac_view(host());
-      return [ns_view hdpi_scale];
    }
 
    point base_view::cursor_pos() const

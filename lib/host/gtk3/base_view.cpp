@@ -204,8 +204,8 @@ namespace cycfi { namespace elements
 
          // Note that cr (cairo_t) is already clipped to only draw the
          // exposed areas of the widget.
+         gpu_canvas->scale(scale, scale);
          auto cnv = canvas{gpu_canvas};
-         cnv.pre_scale(scale);
 
 #if defined ELEMENTS_PRINT_FPS
          auto start = std::chrono::steady_clock::now();
@@ -737,17 +737,11 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
-      // queue_draw_area's arguments are in "widget coordinates", which are
-      // relative to the widget's allocation when the widget in question has no
-      // GdkWindow (i.e. GtkGLArea).
-      GtkAllocation alloc;
-      gtk_widget_get_allocation(_view->_widget, &alloc);
-
-      // Note: GTK uses int coordinates. Make sure area is not empty when converting
-      // from float to int.
+      // Note: GTK uses int coordinates. Make sure area is not empty
+      // when converting from float to int.
       gtk_widget_queue_draw_area(_view->_widget,
-         std::floor(area.left + alloc.x),
-         std::floor(area.top + alloc.y),
+         std::floor(area.left),
+         std::floor(area.top),
          std::max<float>(area.width(), 1),
          std::max<float>(area.height(), 1)
       );

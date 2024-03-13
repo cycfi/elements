@@ -244,6 +244,11 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    sk_app::window_context_factory::MacWindowInfo info;
    info.fMainView = self;
    _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
+   if (_skia_context == nullptr)
+   {
+      // $$$ TODO $$$ Log a warning that a Skia GPU context is not available and we are switching to a raster context.
+      _skia_context = sk_app::window_context_factory::MakeRasterForMac(info, sk_app::DisplayParams());
+   }
 
    auto surface = _skia_context->getBackbufferSurface();
 #endif

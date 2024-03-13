@@ -585,6 +585,11 @@ namespace cycfi { namespace elements
          SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
          info->_skia_context = sk_app::window_context_factory::MakeGLForWin(hwnd, sk_app::DisplayParams());
+         if (_skia_context == nullptr)
+         {
+            // $$$ TODO $$$ Log a warning that a Skia GPU context is not available and we are switching to a raster context.
+            _skia_context = sk_app::window_context_factory::MakeRasterForWin(info, sk_app::DisplayParams());
+         }
 
          // Create 1ms timer
          SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);

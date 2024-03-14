@@ -47,6 +47,7 @@ namespace cycfi { namespace elements
     , _move_request{false}
     , _insert_request{false}
     , _erase_request{false}
+    , _relinquish_focus_request{false}
     , _request_info{nullptr}
    {}
 
@@ -66,6 +67,7 @@ namespace cycfi { namespace elements
          _move_request = false;
          _insert_request = false;
          _erase_request = false;
+         _relinquish_focus_request = false;
          _request_info.reset();
       }
       return *this;
@@ -87,6 +89,7 @@ namespace cycfi { namespace elements
          _move_request = false;
          _insert_request = false;
          _erase_request = false;
+         _relinquish_focus_request = false;
          _request_info.reset();
       }
       return *this;
@@ -118,6 +121,11 @@ namespace cycfi { namespace elements
    void list::draw(context const& ctx)
    {
       sync(ctx);
+      if (_relinquish_focus_request)
+      {
+         relinquish_focus(ctx);
+         _relinquish_focus_request = false;
+      }
 
       auto& cnv = ctx.canvas;
       auto  state = cnv.new_state();
@@ -394,6 +402,8 @@ namespace cycfi { namespace elements
          _cells[i].main_axis_size = main_axis_size;
          y += main_axis_size;
          _main_axis_full_size = y;
+         if (int(i) == focus_index())
+            _relinquish_focus_request = true;
       }
 
       ++_layout_id;

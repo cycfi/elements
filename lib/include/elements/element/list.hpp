@@ -362,7 +362,8 @@ namespace cycfi { namespace elements
       mutable bool               _update_request:1;
       mutable bool               _move_request:1;
       mutable bool               _insert_request:1;
-      mutable bool               _erase_request :1;
+      mutable bool               _erase_request:1;
+      mutable bool               _relinquish_focus_request:1;
 
       struct request_info
       {

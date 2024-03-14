@@ -64,7 +64,7 @@ namespace cycfi { namespace elements
       virtual void            relinquish_focus(context const& ctx);
       element const*          focus() const override;
       element*                focus() override;
-      int                     focus_index();
+      int                     focus_index() const;
       void                    focus(std::size_t index);
       virtual void            reset();
 
@@ -181,7 +181,7 @@ namespace cycfi { namespace elements
       return _container.at(_first + ix);
    }
 
-   inline int composite_base::focus_index()
+   inline int composite_base::focus_index() const
    {
       return _focus;
    }

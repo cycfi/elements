@@ -382,13 +382,13 @@ namespace cycfi { namespace elements
                }
          }
       }
-      if (_focus != -1)
+      if (_focus != -1 && _focus < int(size()))
          at(_focus).begin_focus(req);
    }
 
    void composite_base::end_focus()
    {
-      if (_focus != -1)
+      if (_focus != -1 && _focus < int(size()))
          at(_focus).end_focus();
       _saved_focus = _focus;
       _focus = -1;

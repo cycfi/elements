@@ -18,6 +18,7 @@
 
 #include "GrDirectContext.h"
 #include "gl/GrGLInterface.h"
+#include "gl/GrGLAssembleInterface.h"
 #include "SkImage.h"
 #include "SkColorSpace.h"
 #include "SkCanvas.h"
@@ -143,15 +144,31 @@ namespace cycfi { namespace elements
 
       void realize(GtkGLArea* area, gpointer user_data)
       {
+         auto error = [](char const* msg) { throw std::runtime_error(msg); };
+
          gtk_gl_area_make_current(area);
          if (gtk_gl_area_get_error(area) != nullptr)
-            return;
+            error("Error. gtk_gl_area_get_error failed");
 
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
 
          host_view_h->_xface = GrGLMakeNativeInterface();
-         host_view_h->_ctx = GrDirectContext::MakeGL(host_view_h->_xface);
+         if (host_view_h->_xface = GrGLMakeNativeInterface(); host_view_h->_xface == nullptr)
+         {
+            //backup plan. see https://gist.github.com/ad8e/dd150b775ae6aa4d5cf1a092e4713add?permalink_comment_id=4680136#gistcomment-4680136
+            host_view_h->_xface = GrGLMakeAssembledInterface(
+               nullptr, (GrGLGetProc) *
+                  [](void*, const char* p) -> void*
+                  {
+                     return (void*)glXGetProcAddress((const GLubyte*)p);
+                  }
+               );
+            if (host_view_h->_xface == nullptr)
+               error("Error. GLMakeNativeInterface failed");
+         }
+         if (host_view_h->_ctx = GrDirectContext::MakeGL(host_view_h->_xface); host_view_h->_ctx == nullptr)
+            error("Error. GrDirectContext::MakeGL failed");
       }
 
       gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)

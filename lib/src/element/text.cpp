@@ -1017,6 +1017,21 @@ namespace cycfi { namespace elements
             case key_code::tab:
                return false;
 
+            case key_code::left:
+               if (k.modifiers & mod_action)
+               {
+                  this->home(k.modifiers & mod_shift);
+                  ctx.view.refresh(ctx);
+                  return true;
+               }
+            case key_code::right:
+               if (k.modifiers & mod_action)
+               {
+                  this->end(k.modifiers & mod_shift);
+                  ctx.view.refresh(ctx);
+                  return true;
+               }
+
             default:
                break;
          }

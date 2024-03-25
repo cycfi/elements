@@ -208,8 +208,11 @@ namespace cycfi { namespace elements
       call(
          [btn, this](auto const& ctx, auto& _main_element)
          {
-            _main_element.click(ctx, btn);
-            _is_focus = _main_element.focus();
+            if (_main_element.click(ctx, btn))
+               _is_focus = _main_element.focus();
+            else
+               _main_element.actual_subject().get().relinquish_focus(ctx);
+            refresh(_main_element);
          },
          *this, _current_bounds
       );

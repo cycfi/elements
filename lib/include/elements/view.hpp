@@ -274,6 +274,7 @@ namespace cycfi { namespace elements
                   }
                   _content.erase(i);
                   _content.reset();
+                  _content.begin_focus(); // restore previous focus
                   layout();
                   _is_focus = _main_element.focus();
                }

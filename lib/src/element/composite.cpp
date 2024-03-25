@@ -536,7 +536,6 @@ namespace cycfi { namespace elements
    void composite_base::reset()
    {
       _focus = -1;
-      _saved_focus = -1;
       _click_tracking = -1;
       _cursor_tracking = -1;
       _cursor_hovering.clear();

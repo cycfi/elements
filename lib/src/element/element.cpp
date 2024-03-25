@@ -4,6 +4,8 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/element.hpp>
+#include <elements/element/traversal.hpp>
+#include <elements/element/composite.hpp>
 #include <elements/support.hpp>
 #include <elements/view.hpp>
 #include <typeinfo>
@@ -123,6 +125,13 @@ namespace cycfi { namespace elements
 
    void element::end_focus()
    {
+   }
+
+   void relinquish_focus(context const& ctx)
+   {
+      auto [p, cctx] = find_composite(ctx);
+      if (p)
+         relinquish_focus(*p, *cctx);
    }
 
    element const* element::focus() const

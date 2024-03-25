@@ -1003,8 +1003,8 @@ namespace cycfi { namespace elements
             case key_code::kp_enter:
                if (on_enter)
                   on_enter(to_utf8(get_text()));
+               relinquish_focus(ctx);
                ctx.view.refresh(ctx);
-               ctx.view.end_focus();
                return true;
 
             case key_code::escape:

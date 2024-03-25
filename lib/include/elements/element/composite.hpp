@@ -108,6 +108,9 @@ namespace cycfi { namespace elements
       std::set<int>           _cursor_hovering;
    };
 
+   // Utility function for relinquishing focus
+   void relinquish_focus(composite_base& c, context const& ctx);
+
    ////////////////////////////////////////////////////////////////////////////
    template <typename Container, typename Base>
    class composite : public Base, public Container

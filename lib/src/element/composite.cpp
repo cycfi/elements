@@ -403,6 +403,8 @@ namespace cycfi { namespace elements
          auto [p, cctx] = find_composite(ctx);
          if (p)
             relinquish_focus(*p, *cctx);
+         else
+            ctx.view.relinquish_focus();
       }
    }
 

@@ -112,6 +112,17 @@ elseif (WIN32)
    )
 
    if (MSVC)
+
+      if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+         set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
+            MSVC_RUNTIME_LIBRARY "MultiThreadedDebug"
+         )
+      else()
+         set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
+            MSVC_RUNTIME_LIBRARY "MultiThreaded"
+         )
+      endif()
+
       target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib
       )

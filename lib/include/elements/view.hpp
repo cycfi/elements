@@ -129,7 +129,6 @@ namespace cycfi { namespace elements
 
       void                    set_limits();
 
-      rect                    _dirty;
       rect                    _current_bounds;
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;

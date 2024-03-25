@@ -123,7 +123,7 @@ namespace cycfi { namespace elements
       sync(ctx);
       if (_relinquish_focus_request)
       {
-         relinquish_focus(ctx);
+         relinquish_focus(*this, ctx);
          _relinquish_focus_request = false;
       }
 

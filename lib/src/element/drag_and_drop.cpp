@@ -366,7 +366,7 @@ namespace cycfi { namespace elements
                                  if (i == p->focus_index())
                                  {
                                     // Lose the focus if the element to be deleted is the focus
-                                    p->relinquish_focus(*cctx);
+                                    relinquish_focus(*p, *cctx);
                                     break;
                                  }
                               }

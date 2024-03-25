@@ -152,7 +152,7 @@ namespace cycfi { namespace elements
                else
                {
                   // Clicking elsewhere should relinquish focus
-                  relinquish_focus(ctx);
+                  relinquish_focus(*this, ctx);
                }
             }
          }
@@ -394,15 +394,15 @@ namespace cycfi { namespace elements
       _focus = -1;
    }
 
-   void composite_base::relinquish_focus(context const& ctx)
+   void relinquish_focus(composite_base& c, context const& ctx)
    {
-      if (_focus != -1)
+      if (c.focus_index() != -1)
       {
-         end_focus();
-         _saved_focus = -1;
+         c.end_focus();
+         c._saved_focus = -1;
          auto [p, cctx] = find_composite(ctx);
          if (p)
-            p->relinquish_focus(*cctx);
+            relinquish_focus(*p, *cctx);
       }
    }
 

@@ -211,7 +211,7 @@ namespace cycfi { namespace elements
             if (_main_element.click(ctx, btn))
                _is_focus = _main_element.focus();
             else if (btn.down)
-               _main_element.actual_subject().get().relinquish_focus(ctx);
+               relinquish_focus(_content, ctx);
             refresh(_main_element);
          },
          *this, _current_bounds
@@ -342,7 +342,7 @@ namespace cycfi { namespace elements
 
    void view::end_focus()
    {
-      if (_content.empty() || _is_focus)
+      if (_content.empty())
          return;
 
       _main_element.end_focus();

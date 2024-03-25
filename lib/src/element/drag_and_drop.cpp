@@ -396,6 +396,8 @@ namespace cycfi { namespace elements
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
+      using namespace std::chrono_literals;
+
       track_info.processed = false;
       if (track_info.modifiers & (mod_shift | mod_action))
          return;
@@ -409,22 +411,32 @@ namespace cycfi { namespace elements
             std::size_t num_boxes = std::min<std::size_t>(s->get_selection().size(), max_boxes);
             bounds.right += item_offset * num_boxes;
             bounds.bottom += item_offset * num_boxes;
+            auto* di = find_parent<drop_inserter_element *>(ctx);
+            auto where = ctx.canvas.user_to_device(track_info.current);
 
-            _drag_image = share(
-               floating(bounds,
-                  drag_image(link(this->subject()), num_boxes)
-               )
+            ctx.view.post(250ms,
+               [bounds, num_boxes, &view = ctx.view, this, di, where]()
+               {
+                  if (is_tracking())
+                  {
+                     _drag_image = share(
+                        floating(bounds,
+                           drag_image(link(this->subject()), num_boxes)
+                        )
+                     );
+
+                     view.add(_drag_image);
+                     view.refresh();
+
+                     if (di)
+                     {
+                        payload pl;
+                        pl[address_to_string(di)] = {};
+                        view.track_drop({pl, where}, cursor_tracking::entering);
+                     }
+                  }
+               }
             );
-            ctx.view.add(_drag_image);
-            ctx.view.refresh();
-
-            if (auto* di = find_parent<drop_inserter_element *>(ctx))
-            {
-               payload pl;
-               pl[address_to_string(di)] = {};
-               auto where = ctx.canvas.user_to_device(track_info.current);
-               ctx.view.track_drop({pl, where}, cursor_tracking::entering);
-            }
             track_info.processed = true;
          }
       }

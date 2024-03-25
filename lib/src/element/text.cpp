@@ -509,28 +509,15 @@ namespace cycfi { namespace elements
 
             case key_code::home:
                {
-                  auto sel_start = select_start();
-                  auto sel_end = select_end();
-                  if ((k.modifiers & mod_shift) && (sel_start != -1) && (sel_end != -1))
-                     select_end(std::max(sel_start, sel_end));
-                  else
-                     select_end(0);
-                  select_start(0);
-                  scroll_into_view(ctx, false);
+                  this->home(k.modifiers & mod_shift);
+                  ctx.view.refresh(ctx);
                   return true;
                }
 
             case key_code::end:
                {
-                  auto end = static_cast<int>(get_text().size());
-                  auto sel_start = select_start();
-                  auto sel_end = select_end();
-                  if ((k.modifiers & mod_shift) && (sel_start != -1) && (sel_end != -1))
-                     select_start(std::min(sel_start, sel_end));
-                  else
-                     select_start(end);
-                  select_end(end);
-                  scroll_into_view(ctx, false);
+                  this->end(k.modifiers & mod_shift);
+                  ctx.view.refresh(ctx);
                   return true;
                }
 
@@ -925,17 +912,27 @@ namespace cycfi { namespace elements
       _select_start = _select_end = -1;
    }
 
-   void basic_text_box::home()
+   void basic_text_box::home(bool shift)
    {
+      auto sel_start = select_start();
+      auto sel_end = select_end();
+      if (shift && (sel_start != -1) && (sel_end != -1))
+         select_end(std::max(sel_start, sel_end));
+      else
+         select_end(0);
       select_start(0);
-      select_end(0);
       scroll_into_view();
    }
 
-   void basic_text_box::end()
+   void basic_text_box::end(bool shift)
    {
-      auto end = get_text().size();
-      select_start(end);
+      auto end = static_cast<int>(get_text().size());
+      auto sel_start = select_start();
+      auto sel_end = select_end();
+      if (shift && (sel_start != -1) && (sel_end != -1))
+         select_start(std::min(sel_start, sel_end));
+      else
+         select_start(end);
       select_end(end);
       scroll_into_view();
    }

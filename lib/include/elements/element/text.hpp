@@ -191,6 +191,7 @@ namespace cycfi::elements
       using basic_text_box::get_text;
 
       using text_function = std::function<void(string_view text)>;
+      using escape_function = std::function<void()>;
 
                               basic_input_box(
                                  std::string placeholder = ""
@@ -215,6 +216,7 @@ namespace cycfi::elements
 
       text_function           on_text;
       text_function           on_enter;
+      escape_function         on_escape;
       text_function           on_end_focus;
 
    private:

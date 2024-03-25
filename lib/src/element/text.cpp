@@ -1063,10 +1063,16 @@ namespace cycfi { namespace elements
          switch (k.key)
          {
             case key_code::enter:
+            case key_code::kp_enter:
                if (on_enter)
                   on_enter(get_text());
                ctx.view.refresh(ctx);
                ctx.view.end_focus();
+               return true;
+
+            case key_code::escape:
+               if (on_escape)
+                  on_escape();
                return true;
 
             case key_code::up:

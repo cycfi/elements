@@ -210,7 +210,7 @@ namespace cycfi { namespace elements
          {
             if (_main_element.click(ctx, btn))
                _is_focus = _main_element.focus();
-            else
+            else if (btn.down)
                _main_element.actual_subject().get().relinquish_focus(ctx);
             refresh(_main_element);
          },

@@ -101,34 +101,45 @@ namespace cycfi { namespace elements
          {
             in_context_do(ctx, *c, [&](context const& cctx)
             {
+               auto draw_insertion_line =
+                  [&cctx](float left, float right, float pos)
+                  {
+                     auto &cnv = cctx.canvas;
+                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
+                     cnv.line_width(2.0);
+                     cnv.move_to({left, pos});
+                     cnv.line_to({right, pos});
+                     cnv.stroke();
+                  };
+
                point cursor_pos = ctx.cursor_pos();
                if (c->size())
                {
                   auto hit_info = c->hit_element(cctx, cursor_pos, false);
+                  rect bounds;
+                  float pos;
                   if (hit_info.element_ptr)
                   {
-                     rect const& bounds = hit_info.bounds;
+                     bounds = hit_info.bounds;
                      bool before = cursor_pos.y < (bounds.top + (bounds.height()/2));
-                     float pos = before? bounds.top : bounds.bottom;
+                     pos = before? bounds.top : bounds.bottom;
                      _insertion_pos = before? hit_info.index : hit_info.index+1;
-
-                     auto &cnv = cctx.canvas;
-                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-                     cnv.line_width(2.0);
-                     cnv.move_to({bounds.left, pos});
-                     cnv.line_to({bounds.right, pos});
-                     cnv.stroke();
                   }
+                  else
+                  {
+                     auto top_bounds = c->bounds_of(cctx, 0);
+                     auto bottom_bounds = c->bounds_of(cctx, c->size()-1);
+                     bounds = cctx.bounds;
+                     bool before = cursor_pos.y < top_bounds.top;
+                     pos = before? top_bounds.top : bottom_bounds.bottom;
+                     _insertion_pos = before? 0 : c->size();
+                  }
+                  draw_insertion_line(bounds.left, bounds.right, pos);
                }
                else
                {
                   _insertion_pos = 0;
-                  auto &cnv = cctx.canvas;
-                  cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-                  cnv.line_width(2.0);
-                  cnv.move_to({cctx.bounds.left, cctx.bounds.top});
-                  cnv.line_to({cctx.bounds.right, cctx.bounds.top});
-                  cnv.stroke();
+                  draw_insertion_line(cctx.bounds.left, cctx.bounds.right, cctx.bounds.top);
                }
             });
          }

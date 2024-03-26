@@ -186,7 +186,7 @@ namespace cycfi { namespace elements
    void composite_base::new_focus(context const& ctx, int index, focus_request req)
    {
       // end the previous focus
-      if (_focus != -1)
+      if (_focus != -1 && _focus < size())
       {
          at(_focus).end_focus();
          ctx.view.refresh(ctx);
@@ -263,7 +263,7 @@ namespace cycfi { namespace elements
 
    bool composite_base::text(context const& ctx, text_info info)
    {
-      if (_focus != -1)
+      if (_focus != -1 && _focus < size())
       {
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = at(_focus);
@@ -410,11 +410,15 @@ namespace cycfi { namespace elements
 
    element const* composite_base::focus() const
    {
+      if (_focus >= size())
+         return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
    element* composite_base::focus()
    {
+      if (_focus >= size())
+         return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 

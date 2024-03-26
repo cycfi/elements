@@ -111,7 +111,7 @@ namespace cycfi { namespace elements
       refresh();
    }
 
-   void view::layout(element &element)
+   void view::layout(element& element)
    {
       if (_current_bounds.is_empty())
          return;

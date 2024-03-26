@@ -81,7 +81,8 @@ namespace cycfi { namespace elements
    void static_text_box::set_text(std::u32string_view text)
    {
       _layout.text(text);
-      _layout.flow(_current_size.x);
+      if (_current_size.x != -1)
+         _layout.flow(_current_size.x);
    }
 
    void static_text_box::set_text(std::string_view text_)

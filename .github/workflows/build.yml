@@ -29,19 +29,12 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - name: Install vcpkg (Windows)
+    - name: Install Windows dependencies
       if: runner.os == 'Windows'
       shell: cmd
       run: |
-        cd ..
-        git clone https://github.com/microsoft/vcpkg.git
-        .\vcpkg\bootstrap-vcpkg.bat
-        .\vcpkg\vcpkg integrate install
-        echo "VCPKG_ROOT=$(cd vcpkg && pwd)" >> $GITHUB_ENV
-        echo "CMAKE_TOOLCHAIN_FILE=$(cd vcpkg && pwd)/scripts/buildsystems/vcpkg.cmake" >> $GITHUB_ENV
-        .\vcpkg install pkgconf
-        .\vcpkg install cairo
-        cd ${{ github.workspace }}
+        vcpkg install pkgconf
+        vcpkg install cairo
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}
@@ -97,7 +90,7 @@ jobs:
               -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
               -G Ninja
               -D CMAKE_MAKE_PROGRAM=ninja
-              -D CMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE%
+              -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
             RESULT_VARIABLE result
             ERROR_VARIABLE error_message
           )

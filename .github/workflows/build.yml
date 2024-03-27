@@ -28,6 +28,16 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
+    - name: Cache vcpkg installed libraries
+      uses: actions/cache@v2
+      with:
+        path: |
+          !c:/vcpkg/packages
+          c:/vcpkg/installed
+          c:/vcpkg/vcpkg
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-
     - name: Install Windows dependencies
       if: runner.os == 'Windows'
       shell: cmd
@@ -35,14 +45,6 @@ jobs:
         vcpkg install pkgconf
         vcpkg install cairo
         vcpkg install libwebp
-    - name: Export GitHub Actions cache environment variables
-      uses: actions/github-script@v6
-      with:
-        script: |
-          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
-          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-      env:
-        VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}

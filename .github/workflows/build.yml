@@ -15,7 +15,6 @@ jobs:
           cc: "cl"
           cxx: "cl"
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          # If this env variable is present, we set BOOST_ROOT to its content
         - name: "Ubuntu Latest GCC"
           os: ubuntu-latest
           cc: "gcc-9"
@@ -71,11 +70,6 @@ jobs:
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
         set(ENV{CXX} ${{ matrix.config.cxx }})
-        # If the environment has boost_root defined, set BOOST_ROOT to it
-        if ( NOT "x${{ matrix.config.boost_root }}" STREQUAL "x")
-          set(ENV{BOOST_ROOT} $ENV{${{ matrix.config.boost_root }}})
-        endif()
-
         # If we are on windows, run the environment script, parse it with cmake
         # and set environment variables with it (required for Visual Studio)
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")

@@ -35,6 +35,7 @@ jobs:
       run: |
         vcpkg install pkgconf
         vcpkg install cairo
+        vcpkg install libwebp
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}

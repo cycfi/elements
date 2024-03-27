@@ -2,7 +2,6 @@ name: Build
 on: [push, pull_request]
 env:
   BUILD_TYPE: Release
-  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -43,6 +42,8 @@ jobs:
         script: |
           core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      env:
+        VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}

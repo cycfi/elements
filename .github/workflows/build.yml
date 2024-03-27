@@ -89,16 +89,30 @@ jobs:
           endforeach()
         endif()
 
-        execute_process(
-          COMMAND ${CMAKE_COMMAND}
-            -S .
-            -B build
-            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
-            -G Ninja
-            -D CMAKE_MAKE_PROGRAM=ninja
-          RESULT_VARIABLE result
-          ERROR_VARIABLE error_message
-        )
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND ${CMAKE_COMMAND}
+              -S .
+              -B build
+              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+              -G Ninja
+              -D CMAKE_MAKE_PROGRAM=ninja
+              -D CMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN_FILE%
+            RESULT_VARIABLE result
+            ERROR_VARIABLE error_message
+          )
+        else()
+            execute_process(
+            COMMAND ${CMAKE_COMMAND}
+              -S .
+              -B build
+              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+              -G Ninja
+              -D CMAKE_MAKE_PROGRAM=ninja
+            RESULT_VARIABLE result
+            ERROR_VARIABLE error_message
+          )
+        endif()
 
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")

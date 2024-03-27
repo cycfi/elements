@@ -191,9 +191,10 @@ if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
-if (NOT MSVC)
-   find_package(PkgConfig REQUIRED)
-endif()
+###############################################################################
+# PkgConfig
+
+find_package(PkgConfig REQUIRED)
 
 ###############################################################################
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom
@@ -218,62 +219,26 @@ endif()
 ###############################################################################
 # Cairo
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
-   endif()
-else()
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-	target_link_libraries(elements PUBLIC PkgConfig::cairo)
-endif()
+pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+target_link_libraries(elements PUBLIC PkgConfig::cairo)
 
 ###############################################################################
 # Fontconfig
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
-   endif()
-else()
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
-endif()
+pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 
 ###############################################################################
 # Freetype
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
-   endif()
-else()
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
-endif()
+pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+target_link_libraries(elements PUBLIC PkgConfig::freetype2)
 
 ###############################################################################
 # Webp
 
-if (MSVC)
-   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/libwebp)
-   target_link_libraries(elements PUBLIC webp)
-else()
-   pkg_check_modules(libwebp REQUIRED IMPORTED_TARGET libwebp)
-   target_link_libraries(elements PUBLIC PkgConfig::libwebp)
-endif()
+pkg_check_modules(libwebp REQUIRED IMPORTED_TARGET libwebp)
+target_link_libraries(elements PUBLIC PkgConfig::libwebp)
 
 ###############################################################################
 # GTK3

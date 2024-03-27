@@ -4,6 +4,3 @@
 [submodule "lib/external/asio"]
 	path = lib/external/asio
 	url = https://github.com/chriskohlhoff/asio.git
-[submodule "lib/external/libwebp"]
-	path = lib/external/libwebp
-	url = https://github.com/webmproject/libwebp.git

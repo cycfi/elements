@@ -604,11 +604,11 @@ namespace cycfi { namespace elements
    void base_view::refresh(rect area)
    {
       GtkAllocation alloc;
-      gtk_widget_get_allocation(_view->_widget, &alloc);
+      gtk_widget_get_allocation(_view->widget, &alloc);
 
       // Note: GTK uses int coordinates. Make sure area is not empty
       // when converting from float to int.
-      gtk_widget_queue_draw_area(_view->_widget,
+      gtk_widget_queue_draw_area(_view->widget,
          std::floor(alloc.x + area.left),
          std::floor(alloc.y + area.top),
          std::max<float>(area.width(), 1),

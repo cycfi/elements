@@ -66,6 +66,9 @@ namespace cycfi { namespace elements
       virtual element const*  focus() const;
       virtual element*        focus();
 
+                              // Utility function for relinquishing focus
+      friend void             relinquish_focus(context const& ctx);
+
       virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
       virtual bool            drop(context const& ctx, drop_info const& info);
 
@@ -78,6 +81,9 @@ namespace cycfi { namespace elements
       void                    on_tracking(context const& ctx, tracking state);
       void                    on_tracking(view& view_, tracking state);
    };
+
+   // Utility function for relinquishing focus
+   void  relinquish_focus(context const& ctx);
 
    ////////////////////////////////////////////////////////////////////////////
    using element_ptr = std::shared_ptr<element>;

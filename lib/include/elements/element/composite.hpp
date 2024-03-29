@@ -61,12 +61,14 @@ namespace cycfi { namespace elements
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req = restore_previous) override;
       void                    end_focus() override;
-      virtual void            relinquish_focus(context const& ctx);
       element const*          focus() const override;
       element*                focus() override;
       int                     focus_index() const;
       void                    focus(std::size_t index);
       virtual void            reset();
+
+                              // Utility function for relinquishing focus
+      friend void             relinquish_focus(composite_base& c, context const& ctx);
 
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
@@ -105,6 +107,9 @@ namespace cycfi { namespace elements
       int                     _cursor_tracking = -1;
       std::set<int>           _cursor_hovering;
    };
+
+   // Utility function for relinquishing focus
+   void relinquish_focus(composite_base& c, context const& ctx);
 
    ////////////////////////////////////////////////////////////////////////////
    template <typename Container, typename Base>

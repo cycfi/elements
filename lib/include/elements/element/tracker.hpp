@@ -59,6 +59,7 @@ namespace cycfi { namespace elements
 
       tracker_info*           get_state() { return state.get(); }
       tracker_info const*     get_state() const { return state.get(); }
+      bool                    is_tracking() const { return state.get() != nullptr; }
 
       void                    escape_tracking(context const& ctx);
 

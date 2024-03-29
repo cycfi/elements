@@ -101,34 +101,45 @@ namespace cycfi { namespace elements
          {
             in_context_do(ctx, *c, [&](context const& cctx)
             {
+               auto draw_insertion_line =
+                  [&cctx](float left, float right, float pos)
+                  {
+                     auto &cnv = cctx.canvas;
+                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
+                     cnv.line_width(2.0);
+                     cnv.move_to({left, pos});
+                     cnv.line_to({right, pos});
+                     cnv.stroke();
+                  };
+
                point cursor_pos = ctx.cursor_pos();
                if (c->size())
                {
                   auto hit_info = c->hit_element(cctx, cursor_pos, false);
+                  rect bounds;
+                  float pos;
                   if (hit_info.element_ptr)
                   {
-                     rect const& bounds = hit_info.bounds;
+                     bounds = hit_info.bounds;
                      bool before = cursor_pos.y < (bounds.top + (bounds.height()/2));
-                     float pos = before? bounds.top : bounds.bottom;
+                     pos = before? bounds.top : bounds.bottom;
                      _insertion_pos = before? hit_info.index : hit_info.index+1;
-
-                     auto &cnv = cctx.canvas;
-                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-                     cnv.line_width(2.0);
-                     cnv.move_to({bounds.left, pos});
-                     cnv.line_to({bounds.right, pos});
-                     cnv.stroke();
                   }
+                  else
+                  {
+                     auto top_bounds = c->bounds_of(cctx, 0);
+                     auto bottom_bounds = c->bounds_of(cctx, c->size()-1);
+                     bounds = cctx.bounds;
+                     bool before = cursor_pos.y < top_bounds.top;
+                     pos = before? top_bounds.top : bottom_bounds.bottom;
+                     _insertion_pos = before? 0 : c->size();
+                  }
+                  draw_insertion_line(bounds.left, bounds.right, pos);
                }
                else
                {
                   _insertion_pos = 0;
-                  auto &cnv = cctx.canvas;
-                  cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-                  cnv.line_width(2.0);
-                  cnv.move_to({cctx.bounds.left, cctx.bounds.top});
-                  cnv.line_to({cctx.bounds.right, cctx.bounds.top});
-                  cnv.stroke();
+                  draw_insertion_line(cctx.bounds.left, cctx.bounds.right, cctx.bounds.top);
                }
             });
          }
@@ -355,7 +366,7 @@ namespace cycfi { namespace elements
                                  if (i == p->focus_index())
                                  {
                                     // Lose the focus if the element to be deleted is the focus
-                                    p->relinquish_focus(*cctx);
+                                    relinquish_focus(*p, *cctx);
                                     break;
                                  }
                               }
@@ -385,6 +396,8 @@ namespace cycfi { namespace elements
 
    void draggable_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
+      using namespace std::chrono_literals;
+
       track_info.processed = false;
       if (track_info.modifiers & (mod_shift | mod_action))
          return;
@@ -398,22 +411,32 @@ namespace cycfi { namespace elements
             std::size_t num_boxes = std::min<std::size_t>(s->get_selection().size(), max_boxes);
             bounds.right += item_offset * num_boxes;
             bounds.bottom += item_offset * num_boxes;
+            auto* di = find_parent<drop_inserter_element *>(ctx);
+            auto where = ctx.canvas.user_to_device(track_info.current);
 
-            _drag_image = share(
-               floating(bounds,
-                  drag_image(link(this->subject()), num_boxes)
-               )
+            ctx.view.post(250ms,
+               [bounds, num_boxes, &view = ctx.view, this, di, where]()
+               {
+                  if (is_tracking())
+                  {
+                     _drag_image = share(
+                        floating(bounds,
+                           drag_image(link(this->subject()), num_boxes)
+                        )
+                     );
+
+                     view.add(_drag_image);
+                     view.refresh();
+
+                     if (di)
+                     {
+                        payload pl;
+                        pl[address_to_string(di)] = {};
+                        view.track_drop({pl, where}, cursor_tracking::entering);
+                     }
+                  }
+               }
             );
-            ctx.view.add(_drag_image);
-            ctx.view.refresh();
-
-            if (auto* di = find_parent<drop_inserter_element *>(ctx))
-            {
-               payload pl;
-               pl[address_to_string(di)] = {};
-               auto where = ctx.canvas.user_to_device(track_info.current);
-               ctx.view.track_drop({pl, where}, cursor_tracking::entering);
-            }
             track_info.processed = true;
          }
       }

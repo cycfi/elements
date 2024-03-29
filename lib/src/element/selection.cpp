@@ -272,7 +272,7 @@ namespace cycfi::elements
                   else
                   {
                      // Process select
-                     if (!btn.down)
+                     if (btn.down)
                         select(*c, hit, _select_start, _select_end);
                      r = true;
                   }

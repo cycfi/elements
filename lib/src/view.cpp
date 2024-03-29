@@ -115,7 +115,7 @@
       refresh();
    }
 
-   void view::layout(element &element)
+   void view::layout(element& element)
    {
       if (_current_bounds.is_empty())
          return;
@@ -214,8 +214,8 @@
          {
             if (_main_element.click(ctx, btn))
                _is_focus = _main_element.focus();
-            else
-               _main_element.actual_subject().get().relinquish_focus(ctx);
+            else if (btn.down)
+               elements::relinquish_focus(_content, ctx);
             refresh(_main_element);
          },
          *this, _current_bounds
@@ -346,11 +346,16 @@
 
    void view::end_focus()
    {
-      if (_content.empty() || _is_focus)
+      if (_content.empty())
          return;
 
       _main_element.end_focus();
       refresh();
+   }
+
+   void view::relinquish_focus()
+   {
+      _is_focus = false;
    }
 
    void view::track_drop(drop_info const& info, cursor_tracking status)

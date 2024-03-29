@@ -152,7 +152,7 @@ namespace cycfi { namespace elements
                else
                {
                   // Clicking elsewhere should relinquish focus
-                  relinquish_focus(ctx);
+                  relinquish_focus(*this, ctx);
                }
             }
          }
@@ -186,7 +186,7 @@ namespace cycfi { namespace elements
    void composite_base::new_focus(context const& ctx, int index, focus_request req)
    {
       // end the previous focus
-      if (_focus != -1)
+      if (_focus != -1 && _focus < size())
       {
          at(_focus).end_focus();
          ctx.view.refresh(ctx);
@@ -263,7 +263,7 @@ namespace cycfi { namespace elements
 
    bool composite_base::text(context const& ctx, text_info info)
    {
-      if (_focus != -1)
+      if (_focus != -1 && _focus < size())
       {
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = at(_focus);
@@ -394,25 +394,31 @@ namespace cycfi { namespace elements
       _focus = -1;
    }
 
-   void composite_base::relinquish_focus(context const& ctx)
+   void relinquish_focus(composite_base& c, context const& ctx)
    {
-      if (_focus != -1)
+      if (c.focus_index() != -1)
       {
-         end_focus();
-         _saved_focus = -1;
+         c.end_focus();
+         c._saved_focus = -1;
          auto [p, cctx] = find_composite(ctx);
          if (p)
-            p->relinquish_focus(*cctx);
+            relinquish_focus(*p, *cctx);
+         else
+            ctx.view.relinquish_focus();
       }
    }
 
    element const* composite_base::focus() const
    {
+      if (_focus >= size())
+         return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
    element* composite_base::focus()
    {
+      if (_focus >= size())
+         return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
@@ -536,7 +542,6 @@ namespace cycfi { namespace elements
    void composite_base::reset()
    {
       _focus = -1;
-      _saved_focus = -1;
       _click_tracking = -1;
       _cursor_tracking = -1;
       _cursor_hovering.clear();

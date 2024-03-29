@@ -422,8 +422,20 @@ namespace
 
 - (void) keyDown : (NSEvent*) event
 {
-   auto const key = ph::translate_key([event keyCode]);
-   auto const mods = ph::translate_flags([event modifierFlags]);
+   auto key = ph::translate_key([event keyCode]);
+   auto mods = ph::translate_flags([event modifierFlags]);
+
+   // MacOS specific translations
+   if (key == ph::key_code::up && (mods & ph::mod_action))
+   {
+      mods &= ~ph::mod_action;
+      key = ph::key_code::home;
+   }
+   else if (key == ph::key_code::down && (mods & ph::mod_action))
+   {
+      mods &= ~ph::mod_action;
+      key = ph::key_code::end;
+   }
    bool handled = handle_key(_keys, *_view, {key, ph::key_action::press, mods});
    _text_inserted = false;
    [self interpretKeyEvents : [NSArray arrayWithObject : event]];

@@ -45,6 +45,7 @@ namespace cycfi { namespace elements
       bool                    text(text_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
+      void                    relinquish_focus();
       void                    track_drop(drop_info const& info, cursor_tracking status) override;
       bool                    drop(drop_info const& info) override;
       void                    poll() override;
@@ -275,6 +276,7 @@ namespace cycfi { namespace elements
                   }
                   _content.erase(i);
                   _content.reset();
+                  _content.begin_focus(); // restore previous focus
                   layout();
                   _is_focus = _main_element.focus();
                }

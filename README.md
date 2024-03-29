@@ -37,7 +37,7 @@ Please take note that Elements is still very much in flux as we are inching clos
 **March 28, 2024:**
 I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.
 
-See [Past News](docs/news.md) for context.
+Follow [this link](docs/news.md) for details.
 
 ## Discord
 

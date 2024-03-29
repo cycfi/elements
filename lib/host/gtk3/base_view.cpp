@@ -198,9 +198,9 @@ namespace cycfi { namespace elements
 
             info.fFormat = GL_RGBA8;
             GrBackendRenderTarget target(
-               w * scale
-               , h * scale
-               , 0, 8, info
+                w * scale,
+                h * scale,
+                0, 8, info
             );
 
             host_view_h->_surface =
@@ -754,11 +754,14 @@ namespace cycfi { namespace elements
 
    void base_view::refresh(rect area)
    {
+      GtkAllocation alloc;
+      gtk_widget_get_allocation(_view->_widget, &alloc);
+
       // Note: GTK uses int coordinates. Make sure area is not empty
       // when converting from float to int.
       gtk_widget_queue_draw_area(_view->_widget,
-         std::floor(area.left),
-         std::floor(area.top),
+         std::floor(alloc.x + area.left),
+         std::floor(alloc.y + area.top),
          std::max<float>(area.width(), 1),
          std::max<float>(area.height(), 1)
       );

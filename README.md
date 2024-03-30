@@ -30,54 +30,14 @@ declarative interface with heavy emphasis on reuse.
 
 ## Status
 
-Please take note that Elements is still very much in flux as we are inching
-closer towards a version 1.0 release. The API and code is still undergoing
-continuous changes, and for that matter, Elements is not yet "production
-ready". But that should not prevent you from using Elements now! It is
-already in a very usable form, and more people using it will ultimately make
-it more robust when bugs are reported and fixed. API and usability matters
-and I very much welcome suggestions and contributions. Hey, this is an open
-source project! If you like the design, concepts and ideas behind Elements, I
-very much welcome collaboration.
-
-**December 5, 2023:**
-The master branch now contains the code base using the Artist library for 2D canvas 
-drawing (https://github.com/cycfi/artist).
-
-For those who have not been following recently, the Artist 2D Canvas Library is an abstraction layer with an API 
-inspired by the HTML5 canvas API. The library presents a lean API modeled after the HTML Canvas 2D Context 
-specification. The API is a not-so-thin layer above various 2D platform-specific and cross-platform 2D 
-"backend" graphics libraries, such as Skia and Quartz-2D. 
-
-The artist library replaces the original cairo based  canvas implementation used by elements. The classic 
-cairo implementation is now in the `cairo_2023` branch. At this point, as long as you are using the examples 
-as a starting point and usage guide, code cairo_2023 is fully compatible with the artist based code, which 
-is now in the `master` branch. 
+Please take note that Elements is still very much in flux as we are inching closer towards a version 1.0 release. The API and code is still undergoing continuous changes, and for that matter, Elements is not yet "production ready". But that should not prevent you from using Elements now! It is already in a very usable form, and more people using it will ultimately make it more robust when bugs are reported and fixed. API and usability matters and I very much welcome suggestions and contributions. Hey, this is an open source project! If you like the design, concepts and ideas behind Elements, I very much welcome collaboration.
 
 ## News
 
-- 5 December 2023: See status above regarding the Artist 2D Canvas Library.
-- 19 January 2021: Added Child Windows to develop (will merge to master in due time). [See Example](https://bit.ly/3iLMJt2).
-- 25 September 2020: Added [thumbwheels](https://github.com/cycfi/elements/issues/231).
-- 12 September 2020: Linux [Artist 2D Canvas Library](https://github.com/cycfi/artist)
-  port feature complete.
-- 10 September 2020: Windows [Artist 2D Canvas Library](https://github.com/cycfi/artist)
-  port feature complete.
-- 7 September 2020: MacOS [Artist 2D Canvas Library](https://github.com/cycfi/artist)
-  port feature complete.
-- 22 June 2020: Removed dependency on Boost. This requires some API changes to
-  the `app` with additional arguments. See examples.
-- 26 May 2020: Introducing the [Artist 2D Canvas
-  Library](https://github.com/cycfi/artist). The Artist library will
-  eventually replace Element's 2d canvas implementation.
-- 23 May 2020: Work in progress `notebook` gallery factory (`notebook` branch).
-- 8 April 2020: Simplified installation (Infra and Json are now header-only submodules)
-- 11 March 2020: Added [Layout documentation](http://cycfi.github.io/elements/layout).
-- 3 March 2020: Added [Design Aspects documentation](http://cycfi.github.io/elements/aspects).
-- 23 February 2020: Setup and Installation guide updated for Windows and Linux.
-- 22 February 2020: Improved font support
-- 01 September 2019: Linux port completed
-- 12 August 2019: Windows port completed
+**March 28, 2024:**
+I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.
+
+Follow [this link](docs/news.md) for details.
 
 ## Discord
 
@@ -88,11 +48,13 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 Documentation is work in progress. Stay tuned...
 
 1. [Gallery](http://cycfi.github.io/elements/gallery)
-2. [Setup and Installation](http://cycfi.github.io/elements/setup)
+2. [Setup and Installation](docs/setup.md)
 3. [Design Aspects](http://cycfi.github.io/elements/aspects)
 4. [Layout](http://cycfi.github.io/elements/layout)
 
 ## <a name="jdeguzman"></a>About the Author
+
+<img align="right" src="https://github.com/cycfi/elements/assets/568094/4af103cd-9bac-4327-80a3-5720fb49b5ee" width="200">
 
 Joel got into electronics and programming in the 80s because almost
 everything in music, his first love, is becoming electronic and digital.
@@ -101,8 +63,7 @@ playing distortion-laden rock guitar, composes and produces his own music in
 his home studio.
 
 Joel de Guzman is the principal architect and engineer at [Cycfi
-Research](https://www.cycfi.com/) and a consultant at [Ciere
-Consulting](https://ciere.com/). He is a software engineer specializing in
+Research](https://www.cycfi.com/). He is a software engineer specializing in
 advanced C++ and an advocate of Open Source. He has authored a number of
 highly successful Open Source projects such as
 [Boost.Spirit](http://tinyurl.com/ydhotlaf),
@@ -113,5 +74,5 @@ peer-reviewed, Open Source, collaborative development effort.
 
 -------------------------------------------------------------------------------
 
-*Copyright (c) 2014-2023 Joel de Guzman. All rights reserved.*
+*Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.*
 *Distributed under the [MIT License](https://opensource.org/licenses/MIT)*

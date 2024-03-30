@@ -73,7 +73,14 @@ namespace cycfi { namespace elements
 
    void app::run()
    {
-      g_application_run(G_APPLICATION(_app), argc, argv);
+      // g_application_run is intended to be run from main() and its return value is intended to
+      // be returned by main(). It is possible to pass nullptr if argv since commandline handling
+      // is not required. Also, on Windows, argc and argv are ignored.
+      //
+      // Given this, we will not pass argc and argv anymore. If you need to process these, you can
+      // do so somewhere in main.
+
+      g_application_run(G_APPLICATION(_app), 0, nullptr);
    }
 
    void app::stop()

@@ -6,13 +6,11 @@
 #include <elements/element/port.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
-#include <elements/support/theme.hpp>
 #include <algorithm>
 #include <cmath>
 
 namespace cycfi { namespace elements
 {
-   using artist::color;
    constexpr auto min_port_size = 32;
 
    ////////////////////////////////////////////////////////////////////////////
@@ -140,7 +138,7 @@ namespace cycfi { namespace elements
          _canvas.add_round_rect(b, radius);
          _canvas.fill_style(fill_color);
 
-         if (is_tracking || _canvas.point_in_path(mp))
+         if (is_tracking || _canvas.hit_test(mp))
             _canvas.fill_style(fill_color.opacity(0.8));
 
          _canvas.fill_preserve();

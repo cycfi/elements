@@ -4,12 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/misc.hpp>
-#include <elements/support/text_utils.hpp>
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
    void panel::draw(context const& ctx)
    {
       draw_panel(
@@ -52,8 +49,8 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.left, bounds.top);
-      canvas_.line_to(bounds.left, bounds.bottom);
+      canvas_.move_to({bounds.left, bounds.top});
+      canvas_.line_to({bounds.left, bounds.bottom});
       canvas_.stroke();
    }
 
@@ -65,8 +62,8 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.left, bounds.top);
-      canvas_.line_to(bounds.right, bounds.top);
+      canvas_.move_to({bounds.left, bounds.top});
+      canvas_.line_to({bounds.right, bounds.top});
       canvas_.stroke();
    }
 
@@ -78,8 +75,8 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.right, bounds.top);
-      canvas_.line_to(bounds.right, bounds.bottom);
+      canvas_.move_to({bounds.right, bounds.top});
+      canvas_.line_to({bounds.right, bounds.bottom});
       canvas_.stroke();
    }
 
@@ -91,8 +88,8 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.left, bounds.bottom);
-      canvas_.line_to(bounds.right, bounds.bottom);
+      canvas_.move_to({bounds.left, bounds.bottom});
+      canvas_.line_to({bounds.right, bounds.bottom});
       canvas_.stroke();
    }
 
@@ -104,11 +101,11 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.left, bounds.top);
-      canvas_.line_to(bounds.right, bounds.top);
+      canvas_.move_to({bounds.left, bounds.top});
+      canvas_.line_to({bounds.right, bounds.top});
       canvas_.stroke();
-      canvas_.move_to(bounds.left, bounds.bottom);
-      canvas_.line_to(bounds.right, bounds.bottom);
+      canvas_.move_to({bounds.left, bounds.bottom});
+      canvas_.line_to({bounds.right, bounds.bottom});
       canvas_.stroke();
    }
 
@@ -120,11 +117,11 @@ namespace cycfi { namespace elements
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(theme_.frame_color);
-      canvas_.move_to(bounds.left, bounds.top);
-      canvas_.line_to(bounds.left, bounds.bottom);
+      canvas_.move_to({bounds.left, bounds.top});
+      canvas_.line_to({bounds.left, bounds.bottom});
       canvas_.stroke();
-      canvas_.move_to(bounds.right, bounds.top);
-      canvas_.line_to(bounds.right, bounds.bottom);
+      canvas_.move_to({bounds.right, bounds.top});
+      canvas_.line_to({bounds.right, bounds.bottom});
       canvas_.stroke();
    }
 

@@ -9,8 +9,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
    view_limits tab_styler::limits(basic_context const& ctx) const
    {
       auto& thm = get_theme();

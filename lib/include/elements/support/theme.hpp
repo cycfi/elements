@@ -11,9 +11,6 @@
 namespace cycfi { namespace elements
 {
    enum class dial_mode_enum : int;
-   using artist::color;
-   using artist::font_descr;
-   using artist::extent;
 
    class theme
    {

@@ -46,7 +46,7 @@ std::string const text2 =
 ;
 
 std::string const text3 =
-   "We are in the midst of an intergalactic condensing of beauty that will "
+   "We are in the midst of an intergalatic condensing of beauty that will "
    "clear a path toward the planet itself. The quantum leap of rebirth is "
    "now happening worldwide. It is time to take healing to the next level. "
    "Soon there will be a deepening of chi the likes of which the infinite "
@@ -62,8 +62,6 @@ std::string const text3 =
    "without wellbeing on our side. Where there is delusion, faith cannot thrive. "
    "You may be ruled by desire without realizing it. Do not let it eliminate "
    "the growth of your journey.\n\n"
-
-   "⁠—Sawat Dalow Dalow"
 ;
 
 auto make_edit_box()

@@ -7,8 +7,6 @@
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
    void radio_button_styler::draw(context const& ctx)
    {
       auto& canvas_ = ctx.canvas;

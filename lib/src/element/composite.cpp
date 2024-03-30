@@ -339,7 +339,7 @@ namespace cycfi { namespace elements
       if (!empty())
       {
          hit_info info = hit_element(ctx, p, true);
-         if (auto ptr = info.element_ptr; ptr && artist::intersects(info.bounds, ctx.view_bounds()))
+         if (auto ptr = info.element_ptr; ptr && elements::intersects(info.bounds, ctx.view_bounds()))
          {
             context ectx{ctx, ptr, info.bounds};
             return ptr->scroll(ectx, dir, p);

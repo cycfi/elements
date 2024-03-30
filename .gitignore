@@ -31,3 +31,4 @@ xcuserdata/
 /cmake-build-release/
 /.vs/
 /CMakeSettings.json
+/lib/artist/

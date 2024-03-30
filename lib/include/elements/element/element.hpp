@@ -7,6 +7,8 @@
 #define ELEMENTS_ELEMENT_APRIL_10_2016
 
 #include <elements/base_view.hpp>
+#include <elements/support/receiver.hpp>
+#include <elements/support/rect.hpp>
 
 #include <infra/string_view.hpp>
 #include <memory>
@@ -16,12 +18,6 @@ namespace cycfi { namespace elements
 {
    struct basic_context;
    class context;
-   class view;
-
-   // Hoist artist colors namespace and  type for backward compatibility with
-   // original cairo API.
-   using artist::rgba;
-   namespace colors = artist::colors;
 
    ////////////////////////////////////////////////////////////////////////////
    // Elements
@@ -76,7 +72,7 @@ namespace cycfi { namespace elements
       virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
       virtual bool            drop(context const& ctx, drop_info const& info);
 
-      enum tracking { none, begin_tracking, while_tracking, end_tracking };
+      enum tracking {none, begin_tracking, while_tracking, end_tracking};
 
       virtual std::string     class_name() const;
 

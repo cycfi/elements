@@ -7,7 +7,6 @@
 #include <infra/support.hpp>
 
 using namespace cycfi::elements;
-using namespace cycfi::artist;
 using namespace cycfi;
 
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -216,7 +215,6 @@ private:
 
 auto my_app::make_control()
 {
-   using cycfi::elements::image;
    return
       layer(
          align_center_middle(

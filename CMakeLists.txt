@@ -10,8 +10,14 @@ project(elements LANGUAGES C CXX)
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-if(CMAKE_CXX_STANDARD LESS 17)
+if (CMAKE_CXX_STANDARD LESS 17)
    set(CMAKE_CXX_STANDARD 17)
+endif()
+
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
+   include(GitSubmoduleCheck)
+   git_submodule_check(lib/external/asio)
+   git_submodule_check(lib/infra)
 endif()
 
 include(ElementsConfigCommon)
@@ -25,7 +31,6 @@ option(ENABLE_GIT_SUBMODULE_CHECK "Check and clone submodules when not available
 if (ENABLE_GIT_SUBMODULE_CHECK)
    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
       include(GitSubmoduleCheck)
-      git_submodule_check(lib/artist)
       git_submodule_check(lib/external/asio)
       git_submodule_check(lib/infra)
    endif()

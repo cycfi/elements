@@ -10,7 +10,7 @@ namespace cycfi { namespace elements
 {
    view_limits default_label::limits(basic_context const& ctx) const
    {
-      auto  size = measure_text(ctx.canvas, get_text(), get_font().size(get_font_size()));
+      auto  size = measure_text(ctx.canvas, get_text().c_str(), get_font().size(get_font_size()));
       return {{size.x, size.y}, {size.x, size.y}};
    }
 
@@ -29,7 +29,7 @@ namespace cycfi { namespace elements
          text_c = text_c.opacity(text_c.alpha * get_theme().disabled_opacity);
 
       canvas_.fill_style(text_c);
-      canvas_.font(get_font().size(get_font_size()));
+      canvas_.font(get_font(), get_font_size());
 
       float cx = ctx.bounds.left + (ctx.bounds.width() / 2);
       switch (align & 0x3)
@@ -58,7 +58,7 @@ namespace cycfi { namespace elements
       }
 
       canvas_.text_align(align);
-      canvas_.fill_text(get_text(), point{cx, cy});
+      canvas_.fill_text(get_text().c_str(), point{cx, cy});
    }
 
    void default_label::enable(bool state)

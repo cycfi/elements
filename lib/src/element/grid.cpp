@@ -17,7 +17,7 @@ namespace cycfi { namespace elements
       for (std::size_t i = 0; i != size(); ++i)
          _num_spans += at(i).span();
 
-      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
+      view_limits limits{{ 0.0, 0.0}, {full_extent, 0.0}};
       std::size_t gi = 0;
       float prev = 0;
       float desired_total_min = 0;
@@ -90,7 +90,7 @@ namespace cycfi { namespace elements
       for (std::size_t i = 0; i != size(); ++i)
          _num_spans += at(i).span();
 
-      view_limits limits{{ 0.0, 0.0}, {0.0, full_extent}};
+      view_limits limits{{0.0, 0.0}, {0.0, full_extent}};
       std::size_t gi = 0;
       float prev = 0;
       float desired_total_min = 0;

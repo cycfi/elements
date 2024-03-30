@@ -6,54 +6,34 @@
 #if !defined(ELEMENTS_TEXT_APRIL_17_2016)
 #define ELEMENTS_TEXT_APRIL_17_2016
 
-#include <elements/element/element.hpp>
+#include <elements/support/glyphs.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/support/receiver.hpp>
-#include <artist/text_layout.hpp>
+#include <elements/element/element.hpp>
 
 #include <infra/string_view.hpp>
 #include <string>
 #include <vector>
-#include <set>
 
 namespace cycfi::elements
 {
-   using artist::font_descr;
-   using artist::font;
-
    ////////////////////////////////////////////////////////////////////////////
    // text_reader and text_writer mixins
    ////////////////////////////////////////////////////////////////////////////
-   class text_reader_u8
+   class text_reader
    {
    public:
 
-      virtual                       ~text_reader_u8() = default;
-      virtual std::string_view      get_text() const = 0;
+      virtual                    ~text_reader() = default;
+      virtual std::string const& get_text() const = 0;
+      char const*                c_str() const { return get_text().c_str(); }
    };
 
    class text_writer
    {
    public:
 
-      virtual                       ~text_writer() = default;
-      virtual void                  set_text(string_view text) = 0;
-   };
-
-   class text_reader_u32
-   {
-   public:
-
-      virtual                       ~text_reader_u32() = default;
-      virtual std::u32string_view   get_text() const = 0;
-   };
-
-   class text_writer_u32
-   {
-   public:
-
-      virtual                       ~text_writer_u32() = default;
-      virtual void                  set_text(std::u32string_view text) = 0;
+      virtual                    ~text_writer() = default;
+      virtual void               set_text(string_view text) = 0;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -61,17 +41,15 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    class static_text_box
     : public element
-    , public text_reader_u32
-    , public text_writer_u32
-    , public receiver<std::u32string_view>
+    , public text_reader
+    , public text_writer
+    , public receiver<std::string>
    {
    public:
-
-      using text_layout_const = artist::text_layout const;
-
                               static_text_box(
-                                 std::string_view text
-                               , font_descr font_  = get_theme().text_box_font
+                                 std::string text
+                               , font font_        = get_theme().text_box_font
+                               , float size        = get_theme().text_box_font._size
                                , color color_      = get_theme().text_box_font_color
                               );
 
@@ -81,33 +59,27 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::u32string_view     get_text() const override           { return _layout.text(); }
-      void                    set_text(std::u32string_view text) override;
-      void                    set_text(std::string_view text);
+      std::string const&      get_text() const override            { return _text; }
+      void                    set_text(string_view text) override;
+      std::string const&      get_utf8() const                    { return _text; }
+      void                    set_utf8(string_view text)          { set_text(text); };
 
-      std::string             get_utf8() const;
-      void                    set_utf8(std::string_view text)     { set_text(text); }
+      std::string const&      value() const override           { return _text; }
+      void                    value(string_view val) override;
 
-      std::u32string_view     value() const override              { return _layout.text(); }
-      void                    value(std::u32string_view val) override;
-
-      std::size_t             insert(std::size_t pos, std::string_view text);
-      std::size_t             replace(std::size_t pos, std::size_t len, std::string_view text);
-      void                    erase(std::size_t pos, std::size_t len);
-
-      text_layout_const&      get_layout() const         { return _layout; }
-      point                   current_size() const       { return _current_size; };
       void                    set_color(color c)         { _color = c; }
       color                   get_color() const          { return _color; }
-      void                    set_font(font_descr f)     { _font = f; }
-      font const&             get_font() const           { return _font; }
+      point                   current_size() const       { return _current_size; };
 
    private:
 
       void                    sync() const;
 
-      class font              _font;
-      artist::text_layout     _layout;
+   protected:
+
+      std::string             _text;
+      mutable master_glyphs   _layout;
+      std::vector<glyphs>     _rows;
       color                   _color;
       point                   _current_size = {-1, -1};
    };
@@ -118,12 +90,10 @@ namespace cycfi::elements
    class basic_text_box : public static_text_box
    {
    public:
-
-      using static_text_box::set_text;
-
                               basic_text_box(
-                                 std::string_view text
-                               , font_descr font_ = get_theme().text_box_font
+                                 std::string text
+                               , font font_        = get_theme().text_box_font
+                               , float size        = get_theme().text_box_font._size
                               );
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
@@ -139,7 +109,7 @@ namespace cycfi::elements
       bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
-      void                    set_text(std::u32string_view text) override;
+      void                    set_text(string_view text) override;
 
       using element::focus;
       using static_text_box::get_text;
@@ -157,8 +127,8 @@ namespace cycfi::elements
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
-      virtual bool            word_break(int index) const;
-      virtual bool            line_break(int index) const;
+      virtual bool            word_break(char const* utf8) const;
+      virtual bool            line_break(char const* utf8) const;
 
       basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
       void                    read_only(bool read_only_)    { _read_only = read_only_; }
@@ -179,23 +149,24 @@ namespace cycfi::elements
 
    private:
 
-      struct caret_metrics
+      struct glyph_metrics
       {
-         char32_t const*      str;           // The start of the string
-         point                pos;           // Position where glyph is drawn
-         rect                 caret;         // Caret bounds
-         float                line_height;   // Line height
+         char const* str;           // The start of the utf8 string
+         point       pos;           // Position where glyph is drawn
+         rect        bounds;        // Glyph bounds
+         float       line_height;   // Line height
       };
 
-      char32_t const*         caret_position(context const& ctx, point p);
-      caret_metrics           caret_info(context const& ctx, char32_t const* s);
+      char const*             caret_position(context const& ctx, point p);
+      glyph_metrics           glyph_info(context const& ctx, char const* s);
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
-      using state_saver_ptr = std::shared_ptr<state_saver>;
-      using state_saver_set = std::set<state_saver_ptr>;
 
       state_saver_f           capture_state();
+
+      using this_handle = std::shared_ptr<basic_text_box*>;
+      using this_weak_handle = std::weak_ptr<basic_text_box*>;
 
       int                     _select_start;
       int                     _select_end;
@@ -207,7 +178,7 @@ namespace cycfi::elements
       bool                    _read_only : 1;
       bool                    _enabled : 1;
       bool                    _scroll_into_view : 1;
-      state_saver_set         _state_savers;
+      this_handle             _this_handle;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -224,9 +195,10 @@ namespace cycfi::elements
 
                               basic_input_box(
                                  std::string placeholder = ""
-                               , font_descr font_ = get_theme().text_box_font
+                               , font font_        = get_theme().text_box_font
+                               , float size        = get_theme().text_box_font._size
                               )
-                               : basic_text_box("", font_)
+                               : basic_text_box("", font_, size)
                                , _placeholder(std::move(placeholder))
                               {}
 

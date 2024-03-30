@@ -14,58 +14,51 @@ namespace cycfi { namespace elements
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
    image::image(fs::path const& path, float scale)
-    : _image(std::make_shared<artist::image>(path))
-    , _scale(scale)
+    : _pixmap(std::make_shared<elements::pixmap>(path, scale))
    {
-      if (!_image->impl())
-         throw std::runtime_error{"Error: Invalid image."};
-   }
-
-   image::image(image_ptr image_, float scale)
-    : _image(image_)
-    , _scale(scale)
-   {
-      if (!_image->impl())
+      if (!_pixmap)
          throw std::runtime_error{"Error: Invalid image."};
    }
 
    image::image(fs::path const& path, fit_enum)
-    : image{path, -1}
+    : _pixmap(std::make_shared<elements::pixmap>(path, 1.0f))
+    , _fit{true}
    {
+      if (!_pixmap)
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
-   image::image(image_ptr image_, fit_enum)
-    : image{image_, -1}
+   image::image(pixmap_ptr pixmap_)
+    : _pixmap(pixmap_)
    {
+      if (!_pixmap)
+         throw std::runtime_error{"Error: Invalid image."};
    }
 
    point image::size() const
    {
-      auto s = _image->size();
-      if (_scale > 0)
-         return {s.x * _scale, s.y * _scale};
+      return _pixmap->size();
+
+      auto sz = _pixmap->size();
+      if (!_fit)
+         return sz;
       else // fit
          return {-1, -1}; // We do not know the actual size
    }
 
    rect image::source_rect(context const& ctx) const
    {
-      if (_scale > 0)
-      {
-         return {0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale};
-      }
-      else // fit
-      {
-         auto s = _image->size();
-         return {0, 0, s.x, s.y};
-      }
+      unused(ctx);
+      auto s = _pixmap->size();
+      return {0, 0, s.x, s.y};
    }
 
-   view_limits image::limits(basic_context const& /* ctx */) const
+   view_limits image::limits(basic_context const& ctx) const
    {
-      if (_scale > 0)
+      unused(ctx);
+      if (!_fit)
       {
-         auto size_ = size();
+         auto size_ = _pixmap->size();
          return {{size_.x, size_.y}, {size_.x, size_.y}};
       }
       else // fit
@@ -77,9 +70,10 @@ namespace cycfi { namespace elements
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      if (_scale > 0)
+
+      if (!_fit)
       {
-         ctx.canvas.draw(*get_image().get(), src, ctx.bounds);
+         ctx.canvas.draw(pixmap(), src, ctx.bounds);
       }
       else
       {
@@ -89,39 +83,169 @@ namespace cycfi { namespace elements
             dest.height(dest.width() / aspect_ratio);
          else
             dest.width(dest.height() * aspect_ratio);
-         ctx.canvas.draw(*get_image().get(), src, center(dest, ctx.bounds));
+         ctx.canvas.draw(pixmap(), src, center(dest, ctx.bounds));
       }
    }
 
-   void image::set_image(image_ptr img)
+   void image::set_image(fs::path const& path, float scale)
    {
-      _image = img;
-      if (!_image->impl())
+      _pixmap = std::make_shared<elements::pixmap>(path, scale);
+      if (!_pixmap)
          throw std::runtime_error{"Error: Invalid image."};
    }
 
-   void image::set_image(fs::path const& path)
+   ////////////////////////////////////////////////////////////////////////////
+   // gizmo implementation
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
    {
-      _image = std::make_shared<artist::image>(path);
-      if (!_image->impl())
-         throw std::runtime_error{"Error: Invalid image."};
+      void gizmo_parts(rect src, rect dest, rect parts[9])
+      {
+         // Subdivide a rect into 9 parts. src is the original size and dest
+         // is the resized rect. The 9 patches have a 1-pixel overlap to
+         // maintain seemless rendering.
+
+         float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
+         float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
+
+         auto corner = rect{0, 0, div_h+1, div_v+1};
+
+         parts[0] = corner.move(dest.left, dest.top);
+         parts[1] = corner.move(dest.left, dest.bottom - (div_v+1));
+         parts[2] = corner.move(dest.right - (div_h+1), dest.top);
+         parts[3] = corner.move(dest.right - (div_h+1), dest.bottom - (div_v+1));
+
+         parts[4] = max(parts[0], parts[1]).inset(0, div_v);
+         parts[5] = max(parts[0], parts[2]).inset(div_h, 0);
+         parts[6] = max(parts[2], parts[3]).inset(0, div_v);
+         parts[7] = max(parts[1], parts[3]).inset(div_h, 0);
+         parts[8] = dest.inset(div_h-1, div_v-1);
+      }
+
+      void hgizmo_parts(rect src, rect dest, rect parts[3])
+      {
+         // Variation of gizmo_parts allowing horizontal resizing only.
+
+         float div_h = std::min<float>(src.width() / 2.4, dest.width() / 2);
+         auto corner = rect{0, 0, div_h+1, src.height()};
+
+         parts[0] = corner.move(dest.left, dest.top);
+         parts[1] = corner.move(dest.right - (div_h+1), dest.top);
+         parts[2] = max(parts[0], parts[1]).inset(div_h, 0);
+      }
+
+      void vgizmo_parts(rect src, rect dest, rect parts[9])
+      {
+         // Variation of gizmo_parts allowing vertical resizing only.
+
+         float div_v = std::min<float>(src.height() / 2.4, dest.height() / 2);
+         auto corner = rect{0, 0, src.width(), div_v+1};
+
+         parts[0] = corner.move(dest.left, dest.top);
+         parts[1] = corner.move(dest.left, dest.bottom - (div_v+1));
+         parts[2] = max(parts[0], parts[1]).inset(0, div_v);
+      }
    }
 
-   basic_sprite::basic_sprite(fs::path const& path, float height, float scale)
-    : image(path, scale)
+   gizmo::gizmo(char const* filename, float scale)
+    : image(filename, scale)
+   {}
+
+   gizmo::gizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
+   {}
+
+   view_limits gizmo::limits(basic_context const& /* ctx */) const
+   {
+      auto size_ = size();
+      return {{size_.x, size_.y}, {full_extent, full_extent}};
+   }
+
+   void gizmo::draw(context const& ctx)
+   {
+      rect  src[9];
+      rect  dest[9];
+      auto  size_ = size();
+      rect  src_bounds{0, 0, size_.x, size_.y};
+
+      gizmo_parts(src_bounds, src_bounds, src);
+      gizmo_parts(src_bounds, ctx.bounds, dest);
+
+      for (int i = 0; i < 9; i++)
+         ctx.canvas.draw(pixmap(), src[i], dest[i]);
+   }
+
+   hgizmo::hgizmo(char const* filename, float scale)
+    : image(filename, scale)
+   {}
+
+   hgizmo::hgizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
+   {}
+
+   view_limits hgizmo::limits(basic_context const& /* ctx */) const
+   {
+      auto size_ = size();
+      return {{size_.x, size_.y}, {size_.y, full_extent}};
+   }
+
+   void hgizmo::draw(context const& ctx)
+   {
+      rect  src[3];
+      rect  dest[3];
+      auto  size_ = size();
+      rect  src_bounds{0, 0, size_.x, size_.y};
+
+      hgizmo_parts(src_bounds, src_bounds, src);
+      hgizmo_parts(src_bounds, ctx.bounds, dest);
+      ctx.canvas.draw(pixmap(), src[0], dest[0]);
+      ctx.canvas.draw(pixmap(), src[1], dest[1]);
+      ctx.canvas.draw(pixmap(), src[2], dest[2]);
+   }
+
+   vgizmo::vgizmo(char const* filename, float scale)
+    : image(filename, scale)
+   {}
+
+   vgizmo::vgizmo(pixmap_ptr pixmap_)
+    : image(pixmap_)
+   {}
+
+   view_limits vgizmo::limits(basic_context const& /* ctx */) const
+   {
+      auto size_ = size();
+      return {{size_.x, size_.y}, {size_.x, full_extent}};
+   }
+
+   void vgizmo::draw(context const& ctx)
+   {
+      rect  src[3];
+      rect  dest[3];
+      auto  size_ = size();
+      rect  src_bounds{0, 0, size_.x, size_.y};
+
+      vgizmo_parts(src_bounds, src_bounds, src);
+      vgizmo_parts(src_bounds, ctx.bounds, dest);
+      ctx.canvas.draw(pixmap(), src[0], dest[0]);
+      ctx.canvas.draw(pixmap(), src[1], dest[1]);
+      ctx.canvas.draw(pixmap(), src[2], dest[2]);
+   }
+
+   basic_sprite::basic_sprite(char const* filename, float height, float scale)
+    : image(filename, scale)
     , _index(0)
     , _height(height)
    {}
 
    view_limits basic_sprite::limits(basic_context const& /* ctx */) const
    {
-      auto width = get_image()->size().x;
-      return {{width * scale(), _height}, {width * scale(), _height}};
+      auto width = pixmap().size().x;
+      return {{width, _height}, {width, _height}};
    }
 
    std::size_t basic_sprite::num_frames() const
    {
-      return (get_image()->size().y * scale()) / _height;
+      return pixmap().size().y / _height;
    }
 
    void basic_sprite::index(std::size_t index_)
@@ -132,13 +256,12 @@ namespace cycfi { namespace elements
 
    point basic_sprite::size() const
    {
-      return {get_image()->size().x * scale(), _height};
+      return {pixmap().size().x, _height};
    }
 
    rect basic_sprite::source_rect(context const& /* ctx */) const
    {
-      auto sc = scale();
-      auto width = get_image()->size().x;
-      return rect{0, (_height/sc) * _index, width, (_height/sc) * (_index + 1)};
+      auto width = pixmap().size().x;
+      return rect{0, _height * _index, width, _height * (_index + 1)};
    }
 }}

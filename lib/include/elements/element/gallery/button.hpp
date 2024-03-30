@@ -28,14 +28,14 @@ namespace cycfi { namespace elements
       bool                    wants_control() const override;
    };
 
-   struct default_button_styler : button_styler_base, text_reader_u8
+   struct default_button_styler : button_styler_base, text_reader
    {
    public:
 
       using base_type = default_button_styler;
 
-      enum icon_placement { icon_none, icon_left, icon_right };
-      enum label_alignment { align_left, align_center, align_right };
+      enum icon_placement {icon_none, icon_left, icon_right};
+      enum label_alignment {align_left, align_center, align_right};
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -54,7 +54,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct basic_button_styler_base : Base, text_writer
    {
-      using text_type = std::string_view;
+      using text_type = std::string const&;
       using base_type = basic_button_styler_base<typename Base::base_type>;
 
                               basic_button_styler_base(std::string text)
@@ -514,7 +514,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline std::string_view basic_button_styler_base<Base>::get_text() const
+   inline std::string const& basic_button_styler_base<Base>::get_text() const
    {
       return _text;
    }
@@ -684,7 +684,8 @@ namespace cycfi { namespace elements
    inline typename button_styler_gen<Base>::gen_icon
    button_styler_gen<Base>::icon(std::uint32_t code) const
    {
-      return {*this, code}; }
+      return {*this, code};
+   }
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_icon_placement

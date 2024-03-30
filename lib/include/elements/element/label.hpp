@@ -12,18 +12,16 @@
 #include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
-#include <artist/font.hpp>
+#include <elements/support/font.hpp>
 #include <infra/string_view.hpp>
 #include <string>
 
 namespace cycfi { namespace elements
 {
-   using artist::font_descr;
-
    ////////////////////////////////////////////////////////////////////////////
    // Basic label
    ////////////////////////////////////////////////////////////////////////////
-   struct default_label : element, text_reader_u8
+   struct default_label : element, text_reader
    {
    public:
 
@@ -51,7 +49,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    struct basic_label_base : Base, text_writer
    {
-      using text_type = std::string_view;
+      using text_type = std::string const&;
       using base_type = basic_label_base<typename Base::base_type>;
 
                               basic_label_base(std::string text)

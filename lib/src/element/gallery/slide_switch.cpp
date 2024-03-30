@@ -7,10 +7,7 @@
 
 namespace cycfi { namespace elements
 {
-   namespace colors = artist::colors;
-
-   view_limits
-   slide_switch_styler::limits(basic_context const& /*ctx*/) const
+   view_limits slide_switch_styler::limits(basic_context const& /*ctx*/) const
    {
       auto& thm = get_theme();
       auto  size = thm.slide_button_size;
@@ -64,7 +61,7 @@ namespace cycfi { namespace elements
 
       // Draw the thumb
       canvas_.begin_path();
-      canvas_.add_circle(xpos, bounds.top+radius, radius-1.5);
+      canvas_.add_circle({xpos, bounds.top+radius, radius-1.5f});
       canvas_.fill_style(color);
       canvas_.fill();
    }

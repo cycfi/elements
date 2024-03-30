@@ -7,20 +7,6 @@
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
 ###############################################################################
-# Artist library
-
-set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
-set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
-
-if (ELEMENTS_QUARTZ_2D)
-   set(ARTIST_QUARTZ_2D ON CACHE BOOL "Artist graphics backend option")
-elseif (ELEMENTS_SKIA)
-   set(ARTIST_SKIA ON CACHE BOOL "Artist graphics backend option")
-endif()
-
-add_subdirectory(artist)
-
-###############################################################################
 # Sources (and Resources)
 
 set(ELEMENTS_SOURCES
@@ -58,9 +44,16 @@ set(ELEMENTS_SOURCES
    src/element/thumbwheel.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
+   src/support/canvas.cpp
    src/support/draw_utils.cpp
-   src/support/text_utils.cpp
+   src/support/font.cpp
+   src/support/glyphs.cpp
+   src/support/pixmap.cpp
    src/support/receiver.cpp
+   src/support/rect.cpp
+   src/support/text_utils.cpp
+   src/support/resource_paths.cpp
+   src/support/text_utils.cpp
    src/support/theme.cpp
    src/support/payload.cpp
    src/view.cpp
@@ -116,10 +109,22 @@ set(ELEMENTS_HEADERS
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp
+   include/elements/support/canvas.hpp
+   include/elements/support/circle.hpp
+   include/elements/support/color.hpp
    include/elements/support/context.hpp
+   include/elements/support/detail/canvas_impl.hpp
+   include/elements/support/detail/scratch_context.hpp
+   include/elements/support/detail/stb_image.h
    include/elements/support/draw_utils.hpp
+   include/elements/support/font.hpp
+   include/elements/support/glyphs.hpp
    include/elements/support/icon_ids.hpp
+   include/elements/support/pixmap.hpp
+   include/elements/support/point.hpp
    include/elements/support/receiver.hpp
+   include/elements/support/rect.hpp
+   include/elements/support/resource_paths.hpp
    include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
    include/elements/view.hpp
@@ -186,9 +191,10 @@ if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
-if (NOT MSVC)
-   find_package(PkgConfig REQUIRED)
-endif()
+###############################################################################
+# PkgConfig
+
+find_package(PkgConfig REQUIRED)
 
 ###############################################################################
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom
@@ -211,24 +217,28 @@ if (APPLE)
 endif()
 
 ###############################################################################
+# Cairo
+
+pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+target_link_libraries(elements PUBLIC PkgConfig::cairo)
+
+###############################################################################
 # Fontconfig
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
-elseif (APPLE OR UNIX OR WIN32)
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
-endif()
+pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 
 ###############################################################################
 # Freetype
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-elseif (APPLE OR UNIX OR WIN32)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
-endif()
+pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+target_link_libraries(elements PUBLIC PkgConfig::freetype2)
+
+###############################################################################
+# Webp
+
+pkg_check_modules(libwebp REQUIRED IMPORTED_TARGET libwebp)
+target_link_libraries(elements PUBLIC PkgConfig::libwebp)
 
 ###############################################################################
 # GTK3
@@ -300,17 +310,17 @@ endif()
 
 if (UNIX OR (WIN32 AND NOT MSVC))
    find_package(Threads)
-   target_link_libraries(elements PUBLIC Threads::Threads artist)
+   target_link_libraries(elements PUBLIC Threads::Threads)
 endif()
 
 # ASIO requires this
 if (WIN32 AND NOT MSVC)
-   target_link_libraries(elements PUBLIC ws2_32 artist)
+   target_link_libraries(elements PUBLIC ws2_32)
 endif()
 
 # Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
 if (WIN32)
-   target_link_libraries(elements PUBLIC Shcore artist)
+   target_link_libraries(elements PUBLIC Shcore)
 endif()
 
 add_library(cycfi::elements ALIAS elements)

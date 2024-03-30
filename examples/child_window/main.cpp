@@ -6,7 +6,6 @@
 #include <elements.hpp>
 
 using namespace cycfi::elements;
-using namespace cycfi::artist;
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -14,7 +13,6 @@ auto background = box(bkd_color);
 
 auto make_child_window(rect bounds, char const* title)
 {
-   using cycfi::elements::image;
    return closable_child_window(
       title,
       bounds,

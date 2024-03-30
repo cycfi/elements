@@ -7,7 +7,7 @@
 #include <elements/element/composite.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/element/port.hpp>
-#include <elements/support/theme.hpp>
+#include <elements/element/traversal.hpp>
 
 namespace cycfi { namespace elements
 {
@@ -331,7 +331,7 @@ namespace cycfi { namespace elements
          return false;
 
       bool hit = ctx.bounds.includes(p);
-      if (status == cursor_tracking::leaving || (hit && !is_selected()))
+      if (status == cursor_tracking::leaving || hit)
       {
          auto [c, cctx] = find_composite(ctx);
          if (c)

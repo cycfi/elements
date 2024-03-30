@@ -14,7 +14,7 @@
 #endif
 
 #include <infra/support.hpp>
-#include <artist/rect.hpp>
+#include <elements/support/rect.hpp>
 #include <elements/base_view.hpp>
 
 namespace cycfi { namespace elements

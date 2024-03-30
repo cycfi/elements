@@ -161,7 +161,7 @@ namespace cycfi { namespace elements
          for (std::size_t i = 0; i != items.size(); ++i)
          {
             auto e = share(menu_item(std::string(items[i]), text_align));
-            auto label = find_subject<text_reader_u8*>(e.get());
+            auto label = find_subject<text_reader*>(e.get());
             if (label)
             {
                e->on_click = [btn_text = r.second, on_select, label]()

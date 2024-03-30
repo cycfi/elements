@@ -63,8 +63,7 @@ playing distortion-laden rock guitar, composes and produces his own music in
 his home studio.
 
 Joel de Guzman is the principal architect and engineer at [Cycfi
-Research](https://www.cycfi.com/) and a consultant at [Ciere
-Consulting](https://ciere.com/). He is a software engineer specializing in
+Research](https://www.cycfi.com/). He is a software engineer specializing in
 advanced C++ and an advocate of Open Source. He has authored a number of
 highly successful Open Source projects such as
 [Boost.Spirit](http://tinyurl.com/ydhotlaf),

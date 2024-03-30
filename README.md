@@ -54,7 +54,7 @@ Documentation is work in progress. Stay tuned...
 
 ## <a name="jdeguzman"></a>About the Author
 
-<img align="right" src="https://github.com/cycfi/elements/assets/568094/4af103cd-9bac-4327-80a3-5720fb49b5ee" width="200">
+<img align="right" src="https://github.com/cycfi/elements/blob/assets/images/joel.jpg" width="200">
 
 Joel got into electronics and programming in the 80s because almost
 everything in music, his first love, is becoming electronic and digital.

@@ -49,12 +49,12 @@ Documentation is work in progress. Stay tuned...
 
 1. [Gallery](http://cycfi.github.io/elements/gallery)
 2. [Setup and Installation](docs/setup.md)
-3. [Design Aspects](http://cycfi.github.io/elements/aspects)
+3. [Design Aspects](docs/aspects.md)
 4. [Layout](http://cycfi.github.io/elements/layout)
 
 ## <a name="jdeguzman"></a>About the Author
 
-<img align="right" src="https://github.com/cycfi/elements/blob/assets/images/joel.jpg" width="200">
+<img align="right" src="https://github.com/cycfi/elements/blob/assets/images/joel.jpg?raw=true" width="200">
 
 Joel got into electronics and programming in the 80s because almost
 everything in music, his first love, is becoming electronic and digital.

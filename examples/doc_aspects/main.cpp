@@ -7,7 +7,7 @@
 
 using namespace cycfi::elements;
 
-#define VARIANT 4
+#define VARIANT 3
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
@@ -45,31 +45,6 @@ auto blue_rbox =
 ///////////////////////////////////////////////////////////////////////////////
 #if (VARIANT == 3)
 
-auto btn_rbox(color c)
-{
-   return
-      layer(
-         margin(
-            {25, 20, 25, 18},
-            label("“Dogs are my favorite people”")
-         ),
-         rbox(c, 10)
-      );
-}
-
-auto make_button()
-{
-   return layered_button(
-      btn_rbox(colors::medium_blue),            // Normal state
-      btn_rbox(colors::medium_blue.level(0.8))  // Pushed state
-   );
-}
-
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
-#if (VARIANT == 4)
-
 auto track = hsize(10, box(colors::black));
 auto thumb =
    layer(
@@ -100,8 +75,6 @@ int main(int argc, char* argv[])
 #if (VARIANT == 1 || VARIANT == 2)
       blue_rbox,
 #elif (VARIANT == 3)
-      align_center_middle(make_button()),
-#elif (VARIANT == 4)
       align_center(funny_slider),
 #endif
       background

@@ -7,8 +7,7 @@
 - [Background](#background)
 - [Aligns and Sizes](#aligns-and-sizes)
 - [Labels, Margins and Layers](#labels-margins-and-layers)
-- [Let's Make a Button](#lets-make-a-button)
-- [Sliders too!](#sliders-too)
+- [Let's Make a Slider](#lets-make-a-slider)
 
 -------------------------------------------------------------------------------
 This document explains the three key design aspects behind Elements through
@@ -256,91 +255,24 @@ So now we have:
   <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_c.png?raw=true" width="80%">
 </center>
 
-## Let's Make a Button
+## Let's Make a Slider
 
 To demonstrate the fine-grained and modular nature of Elements, it is perhaps
-illustrative to say that even the button element is not atomic and is
-actually composed of smaller parts. In this section, we will see how one
-creates a button from the basic parts that we have dealt with in the previous
+illustrative to say that many components in element, including the slider element,
+are not atomic and is actually composed of smaller parts. In this section, we will
+see how one creates a slider from the basic parts that we have dealt with in the previous
 sections.
 
 > Take note that this example is only for illustrative purposes. The library
-> provides easier ways to make buttons.
+> provides easier ways to make sliders. Elements has a gallery a collection
+> of reusable element compositions, just like what we do here, but more
+> refined. That gallery is constantly growing. The possibilities are endless.
+> Composing elements is fun!
 
-A button is composed of two elements that represent its 1) normal and 2)
-pushed states. The basic concept here is that things like buttons do not know
-how to render themselves, but instead delegate that task to its subjects. The
-button takes care of the basic logic behind the the control, including user
-interaction and interface with the application via `on_click` callbacks, but
-delegates rendering to two external elements. We'll see shortly how that
-works.
-
-So we need two elements. Let's reuse the `blue_rbox` we wrote before. We need
-two, so this time, we will make a function that takes in a color and returns
-a button. Hence, we differentiate the two button states (normal and pushed)
-by the color.
-
-```c++
-auto btn_rbox(color c)
-{
-   return
-      layer(
-         margin(
-            { 25, 20, 25, 18 },
-            label("“Dogs are my favorite people”")
-         ),
-         rbox(c, 10)
-      );
-}
-```
-
-Same as before, but with color options. Now, we have another function that
-creates the button for us:
-
-```c++
-auto make_button()
-{
-   return layered_button(
-      btn_rbox(colors::medium_blue),            // Normal state
-      btn_rbox(colors::medium_blue.level(0.8))  // Pushed state
-   );
-}
-```
-
-We have the normal state in medium_blue, and the pushed state, still
-medium_blue but with the level down by 0.8 (darker).
-
-And... that's it! Now we have a function that makes our button. We can now
-place this button in our view. Of course, like before, we keep in mind that
-we want to center the button:
-
-```c++
-   view_.content(
-      align_center_middle(make_button()),
-      background
-   );
-```
-
-And here it is in action:
-
-<div align="center">
-  <video src="https://github.com/cycfi/elements/assets/568094/e9e4bd11-5485-4655-8e1b-f6f163a277cc" />
-</div>
-
-Oh, hey, Elements has a gallery —a collection of reusable element
-compositions, just like what we did above, but more refined. That gallery is
-constantly growing. The possibilities are endless. Composing elements is fun!
-
-## Sliders too!
-
-Guess what, we can make funny sliders too, using the same components we made
-in the previous sections!
-
-<div align="center">
-  <video src="https://github.com/cycfi/elements/assets/568094/a71bf1f0-a681-42a1-b7c8-fe6326bf2d1b" />
-</div>
-
-Here's the code:
+The `slider` has two parts: the `track` and the `thumb`. Here, we made a
+simple track using the same old box. We made it black. Then, we reused the
+same “Dogs are my favorite people” button for the thumb. The result looks
+silly, I should say :blush:, but hey, we are trying to make a point!
 
 ```c++
 auto track = hsize(10, box(colors::black));
@@ -356,15 +288,11 @@ auto thumb =
 auto funny_slider = slider(thumb, track);
 ```
 
-Notice the pattern? It's the same consistent way of composing and assembling
-parts. Start with smaller parts. Use them to build ever more complex parts.
-The `slider` has two parts: the `track` and the `thumb`. Here, we made a
-simple track using the same old box. We made it black. Then, we reused the
-same “Dogs are my favorite people” button for the thumb. The result looks
-silly, I should say :blush:, but hey, we are trying to make a point!
+And here it is in action:
 
-> Again, take note that this example is only for illustrative purposes. The
-> library provides easier, (but less funny :grin:) ways to make sliders.
+<div align="center">
+  <video src="https://github.com/cycfi/elements/assets/568094/a71bf1f0-a681-42a1-b7c8-fe6326bf2d1b" />
+</div>
 
 Now, like before, we add our funny slider to our view:
 

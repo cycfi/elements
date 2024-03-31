@@ -49,7 +49,7 @@ Documentation is work in progress. Stay tuned...
 
 1. [Gallery](http://cycfi.github.io/elements/gallery)
 2. [Setup and Installation](docs/setup.md)
-3. [Design Aspects](http://cycfi.github.io/elements/aspects)
+3. [Design Aspects](docs/aspects.md)
 4. [Layout](http://cycfi.github.io/elements/layout)
 
 ## <a name="jdeguzman"></a>About the Author

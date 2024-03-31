@@ -107,7 +107,7 @@ view_.content(
 Running this example, you get:
 
 <center>
-  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_a.png?raw=true">
+  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_a.png?raw=true" width="80%">
 </center>
 
 ## Aligns and Sizes
@@ -174,7 +174,7 @@ placed inside the `fixed_size` element which is then placed inside a
 Let's run this example:
 
 <center>
-  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_b.png?raw=true">
+  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_b.png?raw=true" width="80%">
 </center>
 
 ## Labels, Margins and Layers
@@ -253,7 +253,7 @@ actually, this is the same `layer` thing here. The view's main content is a
 So now we have:
 
 <center>
-  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_c.png?raw=true">
+  <img src="https://github.com/cycfi/elements/blob/assets/images/aspects/aspects_c.png?raw=true" width="80%">
 </center>
 
 ## Let's Make a Button
@@ -323,8 +323,9 @@ we want to center the button:
 
 And here it is in action:
 
-https://github.com/cycfi/elements/blob/assets/images/aspects/button.mp4?raw=true
-
+<div align="center">
+  <video src="https://github.com/cycfi/elements/assets/568094/e9e4bd11-5485-4655-8e1b-f6f163a277cc" />
+</div>
 
 Oh, hey, Elements has a gallery —a collection of reusable element
 compositions, just like what we did above, but more refined. That gallery is
@@ -335,7 +336,9 @@ constantly growing. The possibilities are endless. Composing elements is fun!
 Guess what, we can make funny sliders too, using the same components we made
 in the previous sections!
 
-https://github.com/cycfi/elements/blob/assets/images/aspects/funny_slider.mp4?raw=true
+<div align="center">
+  <video src="https://github.com/cycfi/elements/assets/568094/a71bf1f0-a681-42a1-b7c8-fe6326bf2d1b" />
+</div>
 
 Here's the code:
 

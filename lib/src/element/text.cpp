@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
    {
       auto f = _text.data();
       auto l = _text.data() + _text.size();
-      if (_current_size.x != -1 && f != _layout.begin() || l != _layout.end())
+      if (_current_size.x != -1 && (f != _layout.begin() || l != _layout.end()))
          _layout.text(f, l);
    }
 

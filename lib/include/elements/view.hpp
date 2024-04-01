@@ -6,6 +6,7 @@
 #if !defined(ELEMENTS_VIEW_AUGUST_15_2016)
 #define ELEMENTS_VIEW_AUGUST_15_2016
 
+#include <infra/support.hpp>
 #include <elements/base_view.hpp>
 #include <artist/rect.hpp>
 #include <artist/canvas.hpp>

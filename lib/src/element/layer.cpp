@@ -91,25 +91,10 @@ namespace cycfi { namespace elements
 
    void layer_element::begin_focus(focus_request req)
    {
-      focus_top(req);
+      // We always choose the top-most focus
+      if (req == focus_request::from_bottom)
+         req = focus_request::from_top;
       return composite_base::begin_focus(req);
-   }
-
-   void layer_element::focus_top(focus_request req)
-   {
-      for (int ix = int(size())-1; ix >= 0; --ix)
-      {
-         auto& e = at(ix);
-         if (composite_base::focus() == &e)
-            break; // element at at(ix) is already the focus
-
-         if (e.wants_focus())
-         {
-            e.begin_focus(req);
-            composite_base::focus(ix);
-            break;
-         }
-      }
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -30,7 +30,6 @@ namespace cycfi { namespace elements
 
    private:
 
-      void                    focus_top(focus_request req);
       point                   _previous_size;
    };
 

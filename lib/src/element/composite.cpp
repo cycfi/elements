@@ -359,11 +359,15 @@ namespace cycfi { namespace elements
    void composite_base::begin_focus(focus_request req)
    {
       if (_focus == -1 && req == restore_previous)
+      {
+         if (_saved_focus == -1)
+            return;
          _focus = _saved_focus;
+      }
 
       if (_focus == -1)
       {
-         if (req == from_top || req == restore_previous)
+         if (req == from_top)
          {
             for (std::size_t ix = 0; ix != size(); ++ix)
                if (at(ix).wants_focus())

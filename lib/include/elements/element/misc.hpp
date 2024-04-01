@@ -323,6 +323,42 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Text Intercept
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Subject>
+   struct text_intercept_element : public proxy<Subject>
+   {
+      using base_type = proxy<Subject>;
+
+                     text_intercept_element(Subject subject)
+                      : base_type(std::move(subject))
+                     {}
+
+      bool           text(context const& ctx, text_info info) override;
+      bool           wants_control() const override { return true; }
+      bool           wants_focus() const override { return true; }
+
+      using text_function = std::function<bool(text_info info)>;
+
+      text_function   on_text = [](auto){ return false; };
+   };
+
+   template <typename Subject>
+   inline text_intercept_element<remove_cvref_t<Subject>>
+   text_intercept(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <typename Subject>
+   inline bool text_intercept_element<Subject>::text(context const& ctx, text_info info)
+   {
+      if (on_text(info))
+         return true;
+      return this->subject().text(ctx, info);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Click Intercept
    ////////////////////////////////////////////////////////////////////////////
    template <typename Subject>

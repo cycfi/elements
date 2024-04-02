@@ -63,21 +63,6 @@ set(ELEMENTS_RESOURCES
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Bold.ttf
 )
 
-if (UNIX AND NOT APPLE)
-   file(
-      COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
-      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
-   )
-
-endif()
-
-if (WIN32)
-   file(
-      COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
-      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
-   )
-endif()
-
 source_group(Resources
    FILES
    ${ELEMENTS_RESOURCES}
@@ -162,6 +147,28 @@ target_include_directories(${ELEMENTS_APP_PROJECT}
 if (APPLE)
    target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE -framework AppKit)
 endif()
+
+###############################################################################
+# Copy the resources
+
+# Use a generator expression to get the proper destination directory at build time
+set(DEST_DIR "$<TARGET_FILE_DIR:${ELEMENTS_APP_PROJECT}>/resources")
+
+# Ensure the destination directory exists
+add_custom_command(
+   TARGET ${ELEMENTS_APP_PROJECT} PRE_BUILD
+   COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_DIR}
+)
+
+# Loop through each resource file and create a custom command to copy each one
+foreach(FILE ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES})
+   get_filename_component(FILE_NAME ${FILE} NAME)
+   add_custom_command(
+      TARGET ${ELEMENTS_APP_PROJECT} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy ${FILE} ${DEST_DIR}/${FILE_NAME}
+      COMMENT "Copying ${FILE} to ${DEST_DIR}/${FILE_NAME}"
+   )
+endforeach()
 
 ###############################################################################
 # Resource file properties

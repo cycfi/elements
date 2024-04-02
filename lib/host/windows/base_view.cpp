@@ -506,7 +506,6 @@ namespace cycfi { namespace elements
 
             auto pwd = fs::current_path();
             add_search_path(pwd / "resources");
-            add_search_path(pwd.parent_path() / "resources");
          }
       };
    }

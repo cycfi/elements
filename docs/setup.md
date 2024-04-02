@@ -156,7 +156,7 @@ cd build
 You will need to tell cmake the location of the vcpkg toolchain file. That way, `find_package` will know where to find the installed libraries. If you installed vcpkg in `c:\` as suggested, you invoke cmake like this:
 
 ```
-cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg ../
+cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake ../
 ```
 
 If successful, cmake will generate a Visual Studio solution in the build directory. Open the project file `elements.sln` and build all. You should see a couple of example applications.

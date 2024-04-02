@@ -74,7 +74,7 @@ endif()
 if (WIN32)
    file(
       COPY ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES}
-      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources"
+      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources"
    )
 endif()
 

@@ -505,8 +505,8 @@ namespace cycfi { namespace elements
                MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
 
             auto pwd = fs::current_path();
-            auto resource_path = pwd / "resources";
-            add_search_path(resource_path);
+            add_search_path(pwd / "resources");
+            add_search_path(pwd.parent_path() / "resources");
          }
       };
    }

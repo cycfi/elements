@@ -1011,6 +1011,8 @@ namespace cycfi { namespace elements
             case key_code::escape:
                if (on_escape)
                   on_escape();
+               relinquish_focus(ctx);
+               ctx.view.refresh(ctx);
                return true;
 
             case key_code::up:

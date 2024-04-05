@@ -28,25 +28,6 @@ namespace cycfi { namespace elements
 
 namespace cycfi { namespace elements
 {
-   //note to future users, ripped this from linux's implemenation, may not entirely make sense on windows
-   fs::path find_resources(const fs::path app_path)
-   {
-      const fs::path app_dir = app_path.parent_path();
-
-      if (app_dir.filename() == "bin")
-      {
-         fs::path path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
-         if (fs::is_directory(path))
-            return path;
-      }
-
-      const fs::path app_resources_dir = app_dir / "resources";
-      if (fs::is_directory(app_resources_dir))
-         return app_resources_dir;
-
-      return fs::current_path() / "resources";
-   }
-
    app::app(std::string name)
    {
       _app_name = name;

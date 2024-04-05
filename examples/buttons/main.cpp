@@ -306,7 +306,7 @@ auto make_controls(view& view_)
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Buttons", "com.cycfi.buttons");
+   app _app("Buttons");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

@@ -47,12 +47,7 @@ namespace cycfi { namespace elements
       return fs::current_path() / "resources";
    }
 
-   app::app(
-      int         // argc
-    , char**      argv
-    , std::string name
-    , std::string id
-   )
+   app::app(std::string name)
    {
       _app_name = name;
 

@@ -359,7 +359,7 @@ auto make_content(my_model& model, view& view_)
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Model", "com.cycfi.model");
+   app _app("Model");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

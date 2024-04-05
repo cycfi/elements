@@ -64,7 +64,7 @@ auto make_buttons(view& view_)
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Tooltip", "com.cycfi.tooltip");
+   app _app("Tooltip");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

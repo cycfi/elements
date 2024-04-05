@@ -93,7 +93,7 @@ auto make_xy_thumbwheel()
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Thumbwheels", "com.cycfi.thumbwheels");
+   app _app("Thumbwheels");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

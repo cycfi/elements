@@ -55,7 +55,7 @@ struct my_element : element, selectable
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Selection Lists", "com.cycfi.selection_lists");
+   app _app("Selection Lists");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

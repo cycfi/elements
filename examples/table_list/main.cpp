@@ -70,7 +70,7 @@ protected:
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Table List", "com.cycfi.table-list");
+   app _app("Table List");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

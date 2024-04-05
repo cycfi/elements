@@ -15,6 +15,8 @@
 #include <shellscalingapi.h>
 #endif
 
+namespace cycfi { namespace elements
+{
    app::app(std::string name)
    {
       _app_name = name;

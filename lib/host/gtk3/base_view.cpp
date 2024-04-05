@@ -10,6 +10,7 @@
 #include <elements/window.hpp>
 #include <elements/support/canvas.hpp>
 #include <elements/support/resource_paths.hpp>
+#include <elements/support/font.hpp>
 #include <elements/support/text_utils.hpp>
 #include <gtk/gtk.h>
 #include <map>
@@ -533,6 +534,7 @@ namespace cycfi { namespace elements
          auto pwd = fs::current_path();
          auto resource_path = pwd / "resources";
          add_search_path(resource_path);
+         font_paths().push_back(resource_path);
       }
    };
 

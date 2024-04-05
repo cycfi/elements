@@ -4,7 +4,6 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/app.hpp>
-#include <artist/resources.hpp>
 #include <infra/filesystem.hpp>
 #include <windows.h>
 #include <shlobj.h>
@@ -14,17 +13,6 @@
 #ifndef ELEMENTS_HOST_ONLY_WIN7
 #include <shellscalingapi.h>
 #endif
-
-namespace cycfi { namespace elements
-{
-   // UTF8 conversion utils defined in base_view.cpp
-
-   // Convert a wide Unicode string to an UTF8 string
-   std::string utf8_encode(std::wstring const& wstr);
-
-   // Convert an UTF8 string to a wide Unicode String
-   std::wstring utf8_decode(std::string const& str);
-}}
 
 namespace cycfi { namespace elements
 {

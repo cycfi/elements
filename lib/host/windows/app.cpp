@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <elements/app.hpp>
 #include <elements/support/font.hpp>
-#include <elements/support/resource_paths.hpp>
 #include <infra/filesystem.hpp>
 #include <windows.h>
 #include <shlobj.h>

@@ -166,7 +166,6 @@ foreach(FILE ${ELEMENTS_RESOURCES} ${ELEMENTS_APP_RESOURCES})
    add_custom_command(
       TARGET ${ELEMENTS_APP_PROJECT} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy ${FILE} ${DEST_DIR}/${FILE_NAME}
-      COMMENT "Copying ${FILE} to ${DEST_DIR}/${FILE_NAME}"
    )
 endforeach()
 

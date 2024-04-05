@@ -22,7 +22,7 @@ auto make_child_window(rect bounds, char const* title)
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Child Window", "com.cycfi.child-window");
+   app _app("Child Window");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

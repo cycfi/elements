@@ -36,7 +36,7 @@ inline auto  make_icon_label(std::string name, int i)
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "elements_icons_list", "com.johannphilippe.elements_icons_list");
+   app _app("elements_icons_list");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

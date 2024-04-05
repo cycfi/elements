@@ -21,11 +21,12 @@ namespace cycfi { namespace elements
    class app : non_copyable
    {
    public:
-                           app(
-                              int argc
-                            , char* argv[]
-                            , std::string name
-                            , std::string id);
+                           [[deprecated("We no longer use argc, argv and the app id")]]
+                           app(int /*argc*/, char* /*argv*/[], std::string name, std::string /*id*/)
+                            : app{name}
+                           {}
+
+                           app(std::string name);
                            ~app();
 
       std::string const&   name() const { return _app_name; }

@@ -295,7 +295,7 @@ auto make_overlapping_range_slider(view& _view) {
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "RangeSlider", "com.cycfi.range_slider");
+   app _app("RangeSlider");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

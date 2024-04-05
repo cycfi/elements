@@ -15,8 +15,6 @@
 namespace cycfi { namespace elements
 {
    // Some app globals
-   int argc = 0;
-   char** argv = nullptr;
    GtkApplication* the_app = nullptr;
    bool is_activated = false;
 
@@ -61,31 +59,21 @@ namespace cycfi { namespace elements
 
    struct init_app
    {
-      init_app(std::string id)
+      init_app()
       {
          const fs::path resources_path = find_resources();
          font_paths().push_back(resources_path);
          add_search_path(resources_path);
 
-         the_app = gtk_application_new(
-            id.c_str()
-          , G_APPLICATION_FLAGS_NONE
-         );
+         the_app = gtk_application_new(nullptr, G_APPLICATION_FLAGS_NONE);
          g_signal_connect(the_app, "activate", G_CALLBACK(activate), nullptr);
       }
    };
 
-   app::app(
-      int         argc_
-    , char*       argv_[]
-    , std::string name
-    , std::string id
-   )
-   : _app_name(name)
+   app::app(std::string name)
+    : _app_name(name)
    {
-      argc = argc_;
-      argv = argv_;
-      static init_app init{id};
+      static init_app init{};
       _app = the_app;
    }
 

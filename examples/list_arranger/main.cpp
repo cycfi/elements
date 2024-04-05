@@ -74,7 +74,7 @@ std::vector<std::filesystem::path> paths = {
 
 int main(int argc, char* argv[])
 {
-   app _app(argc, argv, "Active Dynamic List", "com.cycfi.list-arranger");
+   app _app("Active Dynamic List");
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

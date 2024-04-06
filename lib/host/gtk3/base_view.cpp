@@ -875,8 +875,8 @@ namespace cycfi { namespace elements
       static auto last_call = steady_clock::now() - seconds(10);
       static point dir = get_scroll_direction(); // Initial call
 
-      // In case the user changed the scroll direction settings, we will
-      // call get_scroll_direction() every 10 seconds.
+      // In case the user changed the scroll direction settings, we will call
+      // get_scroll_direction() if 10 seconds have passed since the last call.
       auto now = steady_clock::now();
       if (duration_cast<seconds>(now - last_call) >= seconds(10))
       {

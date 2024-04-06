@@ -684,12 +684,42 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
+   std::filesystem::path get_app_path()
+   {
+      char result[PATH_MAX];
+      // get the full path to the executable file of the current process.
+      if (auto count = readlink("/proc/self/exe", result, PATH_MAX); count != -1)
+      {
+         result[count] = '\0'; // null terminate the string because readlink doesn't
+         return std::filesystem::path(result);
+      }
+      throw std::runtime_error("Fatal Error: Failed to get application path");
+   }
+
+   fs::path find_resources()
+   {
+      fs::path const app_path = get_app_path();
+      fs::path const app_dir = app_path.parent_path();
+
+      if (app_dir.filename() == "bin")
+      {
+         fs::path path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+         if (fs::is_directory(path))
+            return path;
+      }
+
+      const fs::path app_resources_dir = app_dir / "resources";
+      if (fs::is_directory(app_resources_dir))
+         return app_resources_dir;
+
+      return fs::current_path() / "resources";
+   }
+
    struct init_view_class
    {
       init_view_class()
       {
-         auto pwd = fs::current_path();
-         auto resource_path = pwd / "resources";
+         auto resource_path = find_resources();
          artist::add_search_path(resource_path);
       }
    };

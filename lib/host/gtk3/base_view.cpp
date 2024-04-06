@@ -217,6 +217,7 @@ namespace cycfi { namespace elements
          auto elapsed = std::max<float>(10.0f, event->time - host_view_h->scroll_time);
          static constexpr float _1s = 100;
          host_view_h->scroll_time = event->time;
+         static constexpr float smooth_speed = 10.0f;
 
          float dx = 0;
          float dy = 0;
@@ -237,8 +238,8 @@ namespace cycfi { namespace elements
                dx = -step;
                break;
             case GDK_SCROLL_SMOOTH:
-               dx = event->delta_x;
-               dy = event->delta_y;
+               dx = -event->delta_x * smooth_speed;
+               dy = -event->delta_y * smooth_speed;
                break;
             default:
                break;
@@ -491,7 +492,7 @@ namespace cycfi { namespace elements
          | GDK_SCROLL_MASK
          | GDK_ENTER_NOTIFY_MASK
          | GDK_LEAVE_NOTIFY_MASK
-         // | GDK_SMOOTH_SCROLL_MASK
+         | GDK_SMOOTH_SCROLL_MASK
       );
 
       // Subscribe to parent events

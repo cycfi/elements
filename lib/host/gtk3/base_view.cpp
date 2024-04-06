@@ -691,9 +691,49 @@ namespace cycfi { namespace elements
       }
    }
 
+   namespace
+   {
+      std::string exec(char const* cmd)
+      {
+         std::array<char, 128> buffer;
+         std::string result;
+         std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+         if (!pipe)
+            throw std::runtime_error("popen() failed!");
+         while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+            result += buffer.data();
+         return result;
+      }
+
+      point get_scroll_direction()
+      {
+         std::string output = exec("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
+         output.erase(remove(output.begin(), output.end(), '\n'), output.end());
+
+         if (output == "true")
+            return {+1.0f, +1.0f};  // Assuming positive for natural scrolling
+         else
+            return {-1.0f, -1.0f};  // Assuming negative for traditional scrolling
+      }
+   }
+
    point scroll_direction()
    {
-      return {+1.0f, +1.0f};
+      using namespace std::chrono;
+      static auto last_call = steady_clock::now() - seconds(10);
+      static point dir = get_scroll_direction(); // Initial call
+
+      // In case the user changed the scroll direction settings, we will
+      // call get_scroll_direction() every 10 seconds.
+      auto now = steady_clock::now();
+      if (duration_cast<seconds>(now - last_call) >= seconds(10))
+      {
+         dir = get_scroll_direction(); // Update the direction if 10 seconds have passed
+         last_call = now;              // Update the last call time
+      }
+
+      return dir;
    }
+
 }}
 

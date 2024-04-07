@@ -174,15 +174,15 @@ namespace cycfi { namespace elements
    bool drop_inserter_element::click(context const& ctx, mouse_button btn)
    {
       bool r = base_type::click(ctx, btn);
-      if (!r || btn.down)
-         return r;
-
-      if (auto s = find_subject<selection_list_element*>(this))
+      if (r && btn.down)
       {
-         std::vector<std::size_t> indices = s->get_selection();
-         int latest = s->get_select_end();
-         if (latest >= 0)
-            on_select(indices, latest);
+         if (auto s = find_subject<selection_list_element*>(this))
+         {
+            std::vector<std::size_t> indices = s->get_selection();
+            int latest = s->get_select_end();
+            if (latest >= 0)
+               on_select(indices, latest);
+         }
       }
       return r;
    }

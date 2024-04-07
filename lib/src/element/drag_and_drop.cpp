@@ -72,12 +72,19 @@ namespace cycfi { namespace elements
       if (is_tracking())
       {
          auto& cnv = ctx.canvas;
+
          auto& bounds = ctx.bounds;
          cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-         cnv.line_width(2.0);
-         cnv.add_rect(bounds);
+         auto line_width = 2.0 * ctx.view.scale();
+         cnv.line_width(line_width);
+         cnv.add_rect(bounds.inset(line_width));
          cnv.stroke();
       }
+   }
+
+   element* drop_box_base::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
+   {
+      return proxy_base::hit_test(ctx, p, leaf, false); // accept non-control subjects
    }
 
    bool drop_box_base::drop(context const& ctx, drop_info const& info)
@@ -386,9 +393,8 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   element* draggable_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* draggable_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
       if (is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;

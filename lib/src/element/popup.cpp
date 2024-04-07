@@ -8,9 +8,8 @@
 
 namespace cycfi { namespace elements
 {
-   element* basic_popup_element::hit_test(context const &, point p, bool leaf, bool control)
+   element* basic_popup_element::hit_test(context const &, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
       return bounds().includes(p)? this : nullptr;
    }
 

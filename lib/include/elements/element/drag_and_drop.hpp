@@ -50,6 +50,7 @@ namespace cycfi { namespace elements
 
                               drop_box_base(std::initializer_list<std::string> mime_types_);
       void                    draw(context const& ctx) override;
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
 
       on_drop_function        on_drop = [](drop_info const& /*info*/){ return false; };

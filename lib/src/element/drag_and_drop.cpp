@@ -74,9 +74,10 @@ namespace cycfi { namespace elements
          auto& cnv = ctx.canvas;
 
          auto& bounds = ctx.bounds;
+         auto lw = 3 / ctx.view.scale();
          cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.4));
-         cnv.line_width(2);
-         cnv.add_rect(bounds.inset(2));
+         cnv.line_width(lw);
+         cnv.add_rect(bounds.inset(lw/2));
          cnv.stroke();
       }
    }

@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
 
          auto& bounds = ctx.bounds;
          auto lw = 3 / ctx.view.scale();
-         cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.4));
+         cnv.stroke_style(get_theme().indicator_color);
          cnv.line_width(lw);
          cnv.add_rect(bounds.inset(lw/2));
          cnv.stroke();
@@ -112,7 +112,7 @@ namespace cycfi { namespace elements
                   [&cctx](float left, float right, float pos)
                   {
                      auto &cnv = cctx.canvas;
-                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
+                     cnv.stroke_style(get_theme().indicator_color);
                      cnv.line_width(2.0);
                      cnv.move_to({left, pos});
                      cnv.line_to({right, pos});

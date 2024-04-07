@@ -20,13 +20,13 @@ namespace cycfi { namespace elements
 
    void tab_styler::draw(context const& ctx)
    {
-      auto&       canvas_ = ctx.canvas;
+      auto& canvas_ = ctx.canvas;
       auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
-      rect        box = ctx.bounds;
-      auto        corner_radius = get_theme().frame_corner_radius;
-      bool        state = value() > 1;
-      bool        hilite = value() & 1;
+      rect box = ctx.bounds;
+      auto corner_radius = get_theme().frame_corner_radius;
+      bool state = value() > 1;
+      bool hilite = value() & 1;
 
       color c1 = (state ? colors::gray[60] : colors::black).opacity(0.5);
       color c2 = theme_.label_font_color;

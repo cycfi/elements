@@ -75,7 +75,7 @@ namespace cycfi { namespace elements
 
          auto& bounds = ctx.bounds;
          cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-         auto line_width = 2.0 * ctx.view.scale();
+         auto line_width = 2.0 / ctx.view.scale();
          cnv.line_width(line_width);
          cnv.add_rect(bounds.inset(line_width));
          cnv.stroke();

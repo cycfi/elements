@@ -39,9 +39,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // movable_base
    ////////////////////////////////////////////////////////////////////////////
-   element* movable_base::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* movable_base::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
       if (is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;

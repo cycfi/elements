@@ -69,6 +69,8 @@ set(ELEMENTS_RESOURCES
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Regular.ttf
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Medium.ttf
    ${ELEMENTS_ROOT}/resources/fonts/Roboto-Bold.ttf
+   ${ELEMENTS_ROOT}/resources/fonts/RobotoMono-Italic-VariableFont_wght.ttf
+   ${ELEMENTS_ROOT}/resources/fonts/RobotoMono-VariableFont_wght.ttf
 )
 
 source_group(Resources

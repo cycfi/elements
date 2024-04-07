@@ -68,6 +68,8 @@ namespace cycfi { namespace elements
     , inactive_font_color        {rgba(127, 127, 127, 150)}
     , input_box_text_limit       {1024}
 
+    , mono_spaced_font           {font_descr{"Roboto Mono", 14.0}}
+
     , ticks_color                {rgba(127, 127, 127, 150)}
     , major_ticks_level          {0.5}
     , major_ticks_width          {1.5}

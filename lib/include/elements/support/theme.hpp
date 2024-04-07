@@ -71,6 +71,8 @@ namespace cycfi { namespace elements
       color                inactive_font_color;
       std::size_t          input_box_text_limit;
 
+      font_descr           mono_spaced_font;
+
       color                ticks_color;
       float                major_ticks_level;
       float                major_ticks_width;

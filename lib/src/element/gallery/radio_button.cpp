@@ -21,11 +21,11 @@ namespace cycfi { namespace elements
 
       box.width(size);
       point center = center_point(box);
-      auto  state = value();
-      auto  value = state.value;
-      auto  hilite = state.hilite;
-      auto  tracking = state.tracking;;
-      auto  enabled = state.enabled;
+      auto state = value();
+      auto value = state.value;
+      auto hilite = state.hilite;
+      auto tracking = state.tracking;;
+      auto enabled = state.enabled;
 
       // Draw dot
       if (enabled && (value || tracking))

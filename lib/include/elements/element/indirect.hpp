@@ -70,7 +70,7 @@ namespace cycfi { namespace elements
       bool                    scroll(context const& ctx, point dir, point p) override;
 
       bool                    wants_focus() const override;
-      void                    begin_focus(focus_request req = restore_previous) override;
+      void                    begin_focus(focus_request req) override;
       void                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;

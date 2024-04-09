@@ -531,6 +531,15 @@ namespace cycfi { namespace elements
    {
       return true;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // An element that prevents any event from passing through. Add this as a
+   // topmost layer in a view to lock the UI.
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto ui_block(color color_ = {0.0, 0.0, 0.0, 0.5})
+   {
+      return modal(box_element{color_});
+   }
 }}
 
 #endif

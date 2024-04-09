@@ -336,7 +336,17 @@ namespace cycfi { namespace elements
       if (_content.empty() || !_is_focus)
          return;
 
-      _main_element.begin_focus();
+      _main_element.begin_focus(element::focus_request::restore_previous);
+      refresh();
+   }
+
+   void view::make_focus()
+   {
+      if (_content.empty())
+         return;
+
+      _main_element.begin_focus(element::focus_request::from_top);
+      _is_focus = _main_element.focus();
       refresh();
    }
 

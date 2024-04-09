@@ -23,7 +23,7 @@ namespace cycfi { namespace elements
       void                    draw(context const& ctx) override;
       hit_info                hit_element(context const& ctx, point p, bool control) const override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
-      void                    begin_focus(focus_request req = restore_previous) override;
+      void                    begin_focus(focus_request req) override;
       bool                    reverse_index() const override { return true; }
 
       using composite_base::focus;
@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
       void                 refresh(context const& ctx, element& element, int outward = 0) override;
       void                 in_context_do(context const& ctx, element& e, context_function f) override;
       hit_info             hit_element(context const& ctx, point p, bool control) const override;
-      void                 begin_focus(focus_request req = restore_previous) override;
+      void                 begin_focus(focus_request req) override;
 
       using element::refresh;
       using composite_base::focus;

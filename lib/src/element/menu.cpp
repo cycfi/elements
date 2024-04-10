@@ -75,13 +75,6 @@ namespace cycfi { namespace elements
             if (_popup)
             {
                layout_menu(ctx);
-
-               _popup->on_click =
-                  [this, &view_ = ctx.view]()
-                  {
-                     _popup->close(view_);
-                  };
-
                _popup->menu_button(this);
                _popup->open(ctx.view);
             }
@@ -164,7 +157,10 @@ namespace cycfi { namespace elements
          if (on_click)
             on_click();
          select(false);
-         ctx.notify(ctx, "click", this);
+
+         if (auto _popup = find_parent<basic_popup_element*>(ctx))
+            _popup->close(ctx.view);
+
          result = true;
       }
       auto proxy_result = proxy_base::click(ctx, btn);
@@ -199,7 +195,6 @@ namespace cycfi { namespace elements
             case key_code::escape:
             {
                select(false);
-               ctx.notify(ctx, "key", this);
 
                // Close the popup
                if (auto _popup = find_parent<basic_popup_element*>(ctx))
@@ -299,7 +294,6 @@ namespace cycfi { namespace elements
                      {
                         if (e->on_click)
                            e->on_click();
-                        ctx.notify(ctx, "key", e);
 
                         // Close the popup
                         if (auto _popup = find_parent<basic_popup_element*>(ctx))

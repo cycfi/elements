@@ -98,37 +98,9 @@ namespace cycfi::elements
          return ctx;
       }
 
-      template <typename T, typename F>
-      void listen(F&& f)
-      {
-         _listener =
-            [f](auto const& ctx, auto* e, auto what)
-            {
-               if (auto te = dynamic_cast<T*>(e))
-                  f(ctx, *te, what);
-            };
-      }
-
-      void notify(context const& ctx, string_view what, elements::element* e) const
-      {
-         if (_listener)
-            _listener(ctx, e, what);
-         if (parent)
-            parent->notify(ctx, what, e);
-      }
-
-      elements::element*            element;
-      context const*                parent;
-      elements::rect                bounds;
-
-   private:
-
-      using listener_function =
-         std::function<
-            void(context const& ctx, elements::element*, string_view what)
-         >;
-
-      listener_function             _listener;
+      elements::element*   element;
+      context const*       parent;
+      elements::rect       bounds;
    };
 }
 

@@ -982,7 +982,17 @@ namespace cycfi { namespace elements
       }
       else
       {
-         basic_text_box::draw(ctx);
+         if (!ctx.enabled)
+         {
+            auto c = get_color();
+            set_color(c.opacity(0.5));
+            basic_text_box::draw(ctx);
+            set_color(c);
+         }
+         else
+         {
+            basic_text_box::draw(ctx);
+         }
       }
    }
 

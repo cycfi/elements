@@ -41,7 +41,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    element* movable_base::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      if (is_enabled() && ctx.bounds.includes(p))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }

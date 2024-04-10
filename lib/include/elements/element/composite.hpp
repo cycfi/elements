@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
 
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
-      void                    end_focus() override;
+      bool                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
       int                     focus_index() const;
@@ -101,7 +101,7 @@ namespace cycfi { namespace elements
                               ) const;
    private:
 
-      void                    new_focus(context const& ctx, int index, focus_request req);
+      bool                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;

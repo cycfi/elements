@@ -74,7 +74,7 @@ namespace cycfi { namespace elements
 
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
-      void                    end_focus() override;
+      bool                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
 
@@ -279,7 +279,7 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline void
+   inline bool
    indirect<Base>::end_focus()
    {
       return this->get().end_focus();

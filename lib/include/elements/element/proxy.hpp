@@ -53,7 +53,7 @@ namespace cycfi { namespace elements
 
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
-      void                    end_focus() override;
+      bool                    end_focus() override;
       element const*          focus() const override;
       element*                focus() override;
 

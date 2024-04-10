@@ -171,7 +171,7 @@ namespace cycfi { namespace elements
       return subject().begin_focus(req);
    }
 
-   void proxy_base::end_focus()
+   bool proxy_base::end_focus()
    {
       return subject().end_focus();
    }

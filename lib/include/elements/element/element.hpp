@@ -66,7 +66,7 @@ namespace cycfi { namespace elements
 
       virtual bool            wants_focus() const;
       virtual void            begin_focus(focus_request req);
-      virtual void            end_focus();
+      virtual bool            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
 

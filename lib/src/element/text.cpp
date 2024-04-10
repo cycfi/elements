@@ -885,9 +885,10 @@ namespace cycfi { namespace elements
          _select_start = _select_end = 0;
    }
 
-   void basic_text_box::end_focus()
+   bool basic_text_box::end_focus()
    {
       _is_focus = false;
+      return true;
    }
 
    void basic_text_box::select_start(int pos)
@@ -999,7 +1000,7 @@ namespace cycfi { namespace elements
    bool basic_input_box::text(context const& ctx, text_info info)
    {
       bool r = basic_text_box::text(ctx, info);
-      if (on_text)
+      if (r && on_text)
          on_text(to_utf8(get_text()));
       return r;
    }
@@ -1012,11 +1013,17 @@ namespace cycfi { namespace elements
          {
             case key_code::enter:
             case key_code::kp_enter:
+            {
+               bool r = true;
                if (on_enter)
-                  on_enter(to_utf8(get_text()));
-               relinquish_focus(ctx);
-               ctx.view.refresh(ctx);
+                  r = on_enter(to_utf8(get_text()));
+               if (r)
+               {
+                  relinquish_focus(ctx);
+                  ctx.view.refresh(ctx);
+               }
                return true;
+            }
 
             case key_code::escape:
                if (on_escape)
@@ -1115,11 +1122,16 @@ namespace cycfi { namespace elements
       basic_text_box::begin_focus(req);
    }
 
-   void basic_input_box::end_focus()
+   bool basic_input_box::end_focus()
    {
-      _first_focus = false;
-         if (on_end_focus)
-            on_end_focus(to_utf8(get_text()));
-      basic_text_box::end_focus();
+      bool r = true;
+      if (on_end_focus)
+         r = on_end_focus(to_utf8(get_text()));
+      if (r)
+      {
+         _first_focus = false;
+         return basic_text_box::end_focus();
+      }
+      return false;
    }
 }}

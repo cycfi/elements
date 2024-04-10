@@ -68,6 +68,8 @@ namespace cycfi { namespace elements
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
@@ -189,6 +191,20 @@ namespace cycfi { namespace elements
    indirect<Base>::scroll(context const& ctx, point dir, point p)
    {
       return this->get().scroll(ctx, dir, p);
+   }
+
+   template <typename Base>
+   inline void
+   indirect<Base>::enable(bool state)
+   {
+      return this->get().enable(state);
+   }
+
+   template <typename Base>
+   inline bool
+   indirect<Base>::is_enabled() const
+   {
+      return this->get().is_enabled();
    }
 
    template <typename Base>

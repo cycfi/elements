@@ -86,7 +86,7 @@ namespace cycfi::elements
        , element{element_}
        , parent{&parent_}
        , bounds{bounds_}
-       , enabled{parent_.enabled && is_enabled(*element)}
+       , enabled{parent_.enabled && element && is_enabled(*element)}
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, artist::rect bounds_)
@@ -94,7 +94,7 @@ namespace cycfi::elements
        , element{element_}
        , parent{nullptr}
        , bounds{bounds_}
-       , enabled{true}
+       , enabled{element && is_enabled(*element)}
       {}
 
       context(context const&) = default;

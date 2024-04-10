@@ -25,7 +25,7 @@ namespace cycfi { namespace elements
 
       auto state = value();
       auto value = state.value;
-      auto enabled = state.enabled;
+      auto enabled = ctx.enabled;
 
       auto color = value?
          theme_.slide_button_on_color :

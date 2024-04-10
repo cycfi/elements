@@ -19,7 +19,7 @@ namespace cycfi { namespace elements
       auto value = state.value;
       auto hilite = state.hilite;
       auto tracking = state.tracking;
-      auto enabled = state.enabled;
+      auto enabled = ctx.enabled;
 
       // Draw check mark
       if (enabled)

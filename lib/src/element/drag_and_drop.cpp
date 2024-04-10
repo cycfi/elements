@@ -248,7 +248,7 @@ namespace cycfi { namespace elements
 
    void draggable_element::draw(context const& ctx)
    {
-      if (is_selected() && is_enabled())
+      if (ctx.enabled && is_selected() && is_enabled())
       {
          auto& canvas_ = ctx.canvas;
 
@@ -257,18 +257,7 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      if (is_enabled())
-      {
-         proxy_base::draw(ctx);
-      }
-      else
-      {
-         auto r = override_theme(
-            &theme::label_font_color
-          , get_theme().inactive_font_color
-         );
-         proxy_base::draw(ctx);
-      }
+      proxy_base::draw(ctx);
    }
 
    namespace
@@ -395,7 +384,7 @@ namespace cycfi { namespace elements
 
    element* draggable_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      if (is_enabled() && ctx.bounds.includes(p))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }

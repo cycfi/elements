@@ -97,7 +97,7 @@ namespace cycfi { namespace elements
 
    bool proxy_base::click(context const& ctx, mouse_button btn)
    {
-      if (!subject().is_enabled())
+      if (!ctx.enabled || !subject().is_enabled())
          return false;
 
       context sctx {ctx, &subject(), ctx.bounds};

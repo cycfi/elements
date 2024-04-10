@@ -33,10 +33,10 @@ namespace cycfi { namespace elements
 
    template <typename Content>
    inline auto group(
-      std::string       title,
-      Content&&         content,
-      float             label_size = 1.0,
-      bool              center_heading = true
+      std::string title,
+      Content&&   content,
+      float       label_size = 1.0,
+      bool        center_heading = true
    )
    {
       return make_group(
@@ -72,10 +72,10 @@ namespace cycfi { namespace elements
 
    template <typename Content>
    inline auto unframed_group(
-      std::string    title,
-      Content&&      content,
-      float          label_size = 1.0,
-      bool           center_heading = true
+      std::string title,
+      Content&&   content,
+      float       label_size = 1.0,
+      bool        center_heading = true
    )
    {
       return make_unframed_group(

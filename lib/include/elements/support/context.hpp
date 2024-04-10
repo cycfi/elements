@@ -24,6 +24,7 @@ namespace cycfi { namespace elements
    rect     view_bounds(view const& v);
    point    device_to_user(point p, canvas& cnv);
    rect     device_to_user(rect const& r, canvas& cnv);
+   bool     is_enabled(element const& e);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    // Contexts
@@ -59,18 +60,27 @@ namespace cycfi { namespace elements
    public:
 
       context(context const& rhs, elements::rect bounds_)
-       : basic_context(rhs.view, rhs.canvas), element(rhs.element)
-       , parent(rhs.parent), bounds(bounds_)
+       : basic_context(rhs.view, rhs.canvas)
+       , element{rhs.element}
+       , parent{rhs.parent}
+       , bounds{bounds_}
+       , enabled{rhs.enabled}
       {}
 
       context(context const& parent_, element* element_, elements::rect bounds_)
-       : basic_context(parent_.view, parent_.canvas), element(element_)
-       , parent(&parent_), bounds(bounds_)
+       : basic_context(parent_.view, parent_.canvas)
+       , element{element_}
+       , parent{&parent_}
+       , bounds{bounds_}
+       , enabled{parent_.enabled && is_enabled(*element)}
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
-       : basic_context(view_, canvas_), element(element_)
-       , parent(nullptr), bounds(bounds_)
+       : basic_context(view_, canvas_)
+       , element{element_}
+       , parent{nullptr}
+       , bounds{bounds_}
+       , enabled{true}
       {}
 
       context(context const&) = default;
@@ -86,6 +96,7 @@ namespace cycfi { namespace elements
       elements::element*   element;
       context const*       parent;
       elements::rect       bounds;
+      bool                 enabled;
    };
 }}
 

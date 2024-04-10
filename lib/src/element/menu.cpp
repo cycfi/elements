@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
 
    bool basic_button_menu::click(context const& ctx, mouse_button btn)
    {
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          return false;
 
       if (btn.down)
@@ -119,7 +119,7 @@ namespace cycfi { namespace elements
 
    void basic_menu_item_element::draw(context const& ctx)
    {
-      if (is_selected() && is_enabled())
+      if (ctx.enabled && is_selected() && is_enabled())
       {
          auto& canvas_ = ctx.canvas;
 
@@ -128,23 +128,12 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      if (is_enabled())
-      {
-         proxy_base::draw(ctx);
-      }
-      else
-      {
-         auto r = override_theme(
-            &theme::label_font_color
-          , get_theme().inactive_font_color
-         );
-         proxy_base::draw(ctx);
-      }
+      proxy_base::draw(ctx);
    }
 
    element* basic_menu_item_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      if (is_enabled() && ctx.bounds.includes(p))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }
@@ -152,7 +141,7 @@ namespace cycfi { namespace elements
    bool basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
       bool result = false;
-      if (is_enabled() && ctx.bounds.includes(btn.pos))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
@@ -320,7 +309,7 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          return false;
 
       bool hit = ctx.bounds.includes(p);

@@ -51,9 +51,9 @@ void my_custom_button::draw(context const& ctx)
    // `hilite`.
 
    auto state = value();
-   bool value = state.value;        // button is on or off
-   bool hilite = state.hilite;      // cursor is hovering over the button
-   bool enabled = state.enabled;    // button is enabled or disabled
+   bool value = state.value;     // button is on or off
+   bool hilite = state.hilite;   // cursor is hovering over the button
+   bool enabled = ctx.enabled;   // button is enabled or disabled
 
    bounds = bounds.inset(1, 1);
    if (value)

@@ -57,6 +57,8 @@ namespace cycfi { namespace elements
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
+      void                    enable(bool state = true) override;
+      bool                    is_enabled() const override;
 
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
@@ -106,6 +108,7 @@ namespace cycfi { namespace elements
       int                     _click_tracking = -1;
       int                     _cursor_tracking = -1;
       std::set<int>           _cursor_hovering;
+      bool                    _enabled = true;
    };
 
    // Utility function for relinquishing focus
@@ -189,6 +192,22 @@ namespace cycfi { namespace elements
    inline int composite_base::focus_index() const
    {
       return _focus;
+   }
+
+   inline bool composite_base::is_enabled() const
+   {
+      return _enabled;
+   }
+
+   // Declared in context.hpp to avoid cyclic dependencies
+   inline bool is_enabled(element const& e)
+   {
+      return e.is_enabled();
+   }
+
+   inline void composite_base::enable(bool state)
+   {
+      _enabled = state;
    }
 }}
 

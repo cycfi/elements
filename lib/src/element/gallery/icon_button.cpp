@@ -67,7 +67,7 @@ namespace cycfi { namespace elements
       auto  state = value();
       auto  value = state.value;
       auto  hilite = state.hilite;
-      auto  enabled = state.enabled;
+      auto  enabled = ctx.enabled;
 
       draw_icon_button(
          ctx, _code, _size * get_theme().icon_font._size
@@ -80,7 +80,7 @@ namespace cycfi { namespace elements
       auto  state = value();
       auto  value = state.value;
       auto  hilite = state.hilite;
-      auto  enabled = state.enabled;
+      auto  enabled = ctx.enabled;
 
       draw_icon_button(
          ctx, value? _code2 : _code1, _size * get_theme().icon_font._size
@@ -92,7 +92,7 @@ namespace cycfi { namespace elements
    {
       auto  state = value();
       auto  value = state.value;
-      auto  enabled = state.enabled;
+      auto  enabled = ctx.enabled;
       auto  hilite = state.hilite;
 
       draw_plain_icon_button(

@@ -489,6 +489,7 @@ namespace cycfi { namespace elements
       bool           text(context const& ctx, text_info info) override;
 
       bool           wants_focus() const override;
+      bool           wants_control() const override;
    };
 
    template <typename Subject>
@@ -528,6 +529,12 @@ namespace cycfi { namespace elements
 
    template <typename Subject>
    inline bool modal_element<Subject>::wants_focus() const
+   {
+      return true;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::wants_control() const
    {
       return true;
    }

@@ -60,7 +60,7 @@ namespace cycfi { namespace elements
    public:
 
       context(context const& rhs, elements::rect bounds_)
-       : basic_context(rhs.view, rhs.canvas)
+       : basic_context{rhs.view, rhs.canvas}
        , element{rhs.element}
        , parent{rhs.parent}
        , bounds{bounds_}
@@ -68,7 +68,7 @@ namespace cycfi { namespace elements
       {}
 
       context(context const& parent_, element* element_, elements::rect bounds_)
-       : basic_context(parent_.view, parent_.canvas)
+       : basic_context{parent_.view, parent_.canvas}
        , element{element_}
        , parent{&parent_}
        , bounds{bounds_}
@@ -76,7 +76,7 @@ namespace cycfi { namespace elements
       {}
 
       context(class view& view_, class canvas& canvas_, element* element_, elements::rect bounds_)
-       : basic_context(view_, canvas_)
+       : basic_context{view_, canvas_}
        , element{element_}
        , parent{nullptr}
        , bounds{bounds_}

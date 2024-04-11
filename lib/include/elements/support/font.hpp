@@ -105,6 +105,7 @@ namespace cycfi { namespace elements
       font&                operator=(font const& rhs);
       font&                operator=(font&& rhs) noexcept;
       explicit             operator bool() const;
+      float                size() const { return _size; }
 
    private:
 

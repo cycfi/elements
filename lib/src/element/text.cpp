@@ -25,7 +25,7 @@ namespace cycfi { namespace elements
     , color color_
    )
     : _text(std::move(text))
-    , _layout(_text.data(), _text.data() + _text.size(), font_, size)
+    , _layout(_text.data(), _text.data() + _text.size(), font_, font_.size())
     , _color(color_)
    {}
 

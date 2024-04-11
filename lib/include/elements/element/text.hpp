@@ -154,6 +154,8 @@ namespace cycfi::elements
 
       void                    home(bool shift = false);
       void                    end(bool shift = false);
+      void                    align_home(context const& ctx);
+      void                    align_end(context const& ctx);
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);

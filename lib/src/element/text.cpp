@@ -939,6 +939,29 @@ namespace cycfi { namespace elements
       scroll_into_view();
    }
 
+   void  basic_text_box::align_home(context const& ctx)
+   {
+      auto _text = get_text();
+      caret_metrics m = caret_info(ctx, _text.data());
+      scrollable::find(ctx).scroll_into_view(m.caret);
+      ctx.view.refresh(ctx);
+   }
+
+   void  basic_text_box::align_end(context const& ctx)
+   {
+      auto _text = get_text();
+      if (_text.empty())
+      {
+         align_home(ctx);
+      }
+      else
+      {
+         caret_metrics m = caret_info(ctx, _text.data() + (_text.size()-1));
+         scrollable::find(ctx).scroll_into_view(m.caret);
+         ctx.view.refresh(ctx);
+      }
+   }
+
    bool basic_text_box::word_break(int index) const
    {
       return get_layout().word_break(index) == text_layout::allow_break || line_break(index);

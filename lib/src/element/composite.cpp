@@ -157,7 +157,7 @@ namespace cycfi { namespace elements
                      // Clicking elsewhere should relinquish focus
                      relinquish_focus(*this, ctx);
                   }
-            }
+               }
             }
          }
          else if (_click_tracking != -1) // button up

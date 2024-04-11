@@ -122,6 +122,10 @@ namespace cycfi { namespace elements
 
       void                    manage_on_tracking(element& e, tracking state);
 
+      using context_function = element::context_function;
+      void                    in_context_do(element& e, context_function f);
+
+
    private:
 
       scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }

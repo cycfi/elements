@@ -87,7 +87,7 @@ namespace cycfi { namespace elements
    namespace
    {
       template <typename F, typename This>
-      void call(F f, This& self, rect _current_bounds)
+      void with_context_do(F f, This& self, rect _current_bounds)
       {
          image img{1, 1};
          offscreen_image offscr{img};
@@ -103,7 +103,7 @@ namespace cycfi { namespace elements
       if (_current_bounds.is_empty())
          return;
 
-      call(
+      with_context_do(
          [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
@@ -116,7 +116,7 @@ namespace cycfi { namespace elements
       if (_current_bounds.is_empty())
          return;
 
-      call(
+      with_context_do(
          [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
@@ -172,7 +172,7 @@ namespace cycfi { namespace elements
       _io.post(
          [this, &element, outward]()
          {
-            call(
+            with_context_do(
                [&element, outward](auto const& ctx, auto& _main_element)
                {
                   _main_element.refresh(ctx, element, outward);
@@ -205,7 +205,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [btn, this](auto const& ctx, auto& _main_element)
          {
             if (_main_element.click(ctx, btn))
@@ -224,7 +224,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [btn](auto const& ctx, auto& _main_element)
          {
             _main_element.drag(ctx, btn);
@@ -238,7 +238,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [p, status](auto const& ctx, auto& _main_element)
          {
             if (!_main_element.cursor(ctx, p, status))
@@ -253,7 +253,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [dir, p](auto const& ctx, auto& _main_element)
          {
             _main_element.scroll(ctx, dir, p);
@@ -268,7 +268,7 @@ namespace cycfi { namespace elements
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [k, &handled](auto const& ctx, auto& _main_element)
          {
             handled = _main_element.key(ctx, k);
@@ -284,7 +284,7 @@ namespace cycfi { namespace elements
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [info, &handled](auto const& ctx, auto& _main_element)
          {
             handled = _main_element.text(ctx, info);
@@ -369,7 +369,7 @@ namespace cycfi { namespace elements
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [info, status](auto const& ctx, auto& _main_element)
          {
             _main_element.track_drop(ctx, info, status);
@@ -384,7 +384,7 @@ namespace cycfi { namespace elements
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [info, &handled](auto const& ctx, auto& _main_element)
          {
             handled = _main_element.drop(ctx, info);
@@ -427,5 +427,19 @@ namespace cycfi { namespace elements
 
       if (state == tracking::end_tracking)
          _tracking.erase(&e);
+   }
+
+   void view::in_context_do(element& e, context_function f)
+   {
+      if (_content.empty())
+         return;
+
+      with_context_do(
+         [&e, &f](auto const& ctx, auto& _main_element)
+         {
+            _main_element.in_context_do(ctx, e, f);
+         },
+         *this, _current_bounds
+      );
    }
 }}

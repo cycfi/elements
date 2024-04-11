@@ -123,6 +123,10 @@ namespace cycfi { namespace elements
 
       void                    manage_on_tracking(element& e, tracking state);
 
+      using context_function = element::context_function;
+      void                    in_context_do(element& e, context_function f);
+
+
    private:
 
       scaled_content          make_scaled_content() { return elements::scale(1.0, link(_content)); }
@@ -241,17 +245,8 @@ namespace cycfi { namespace elements
          io().post(
             [e, this]
             {
-               auto wants_focus = e->wants_focus();
-               if (wants_focus)
-                  end_focus();
                _content.push_back(e);
                layout(*e);
-               if (e->wants_focus())
-               {
-                  _is_focus = true;
-                  begin_focus();
-                  _is_focus = _main_element.focus();
-               }
             }
          );
       }
@@ -271,16 +266,9 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  if (e->wants_focus())
-                  {
-                     end_focus();
-                     refresh(*e);
-                  }
                   _content.erase(i);
                   _content.reset();
-                  _content.begin_focus(element::focus_request::restore_previous);
                   layout();
-                  _is_focus = _main_element.focus();
                }
             }
          );

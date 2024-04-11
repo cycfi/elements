@@ -105,7 +105,7 @@ namespace cycfi::elements
       bool                    key(context const& ctx, key_info k) override;
       bool                    wants_focus() const override;
       void                    begin_focus(focus_request req) override;
-      void                    end_focus() override;
+      bool                    end_focus() override;
       bool                    wants_control() const override;
 
       bool                    text(context const& ctx, text_info info) override;
@@ -124,6 +124,8 @@ namespace cycfi::elements
 
       void                    home(bool shift = false);
       void                    end(bool shift = false);
+      void                    align_home(context const& ctx);
+      void                    align_end(context const& ctx);
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
@@ -191,6 +193,7 @@ namespace cycfi::elements
       using basic_text_box::get_text;
 
       using text_function = std::function<void(string_view text)>;
+      using enter_function = std::function<bool(string_view text)>;
       using escape_function = std::function<void()>;
 
                               basic_input_box(
@@ -212,12 +215,12 @@ namespace cycfi::elements
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    begin_focus(focus_request req) override;
-      void                    end_focus() override;
+      bool                    end_focus() override;
 
       text_function           on_text;
-      text_function           on_enter;
+      enter_function          on_enter;
       escape_function         on_escape;
-      text_function           on_end_focus;
+      enter_function          on_end_focus;
 
    private:
 

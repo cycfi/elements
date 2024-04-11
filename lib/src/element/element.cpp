@@ -122,8 +122,9 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::end_focus()
+   bool element::end_focus()
    {
+      return true;
    }
 
    void relinquish_focus(context const& ctx)

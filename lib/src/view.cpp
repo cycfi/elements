@@ -88,7 +88,7 @@
    namespace
    {
       template <typename F, typename This>
-      void call(F f, This& self, rect _current_bounds)
+      void with_context_do(F f, This& self, rect _current_bounds)
       {
          auto surface_ = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, nullptr);
          auto context_ = cairo_create(surface_);
@@ -107,7 +107,7 @@
       if (_current_bounds.is_empty())
          return;
 
-      call(
+      with_context_do(
          [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
@@ -120,7 +120,7 @@
       if (_current_bounds.is_empty())
          return;
 
-      call(
+      with_context_do(
          [](auto const& ctx, auto& _main_element) { _main_element.layout(ctx); },
          *this, _current_bounds
       );
@@ -176,7 +176,7 @@
       _io.post(
          [this, &element, outward]()
          {
-            call(
+            with_context_do(
                [&element, outward](auto const& ctx, auto& _main_element)
                {
                   _main_element.refresh(ctx, element, outward);
@@ -209,7 +209,7 @@
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [btn, this](auto const& ctx, auto& _main_element)
          {
             if (_main_element.click(ctx, btn))
@@ -228,7 +228,7 @@
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [btn](auto const& ctx, auto& _main_element)
          {
             _main_element.drag(ctx, btn);
@@ -242,7 +242,7 @@
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [p, status](auto const& ctx, auto& _main_element)
          {
             if (!_main_element.cursor(ctx, p, status))
@@ -257,7 +257,7 @@
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [dir, p](auto const& ctx, auto& _main_element)
          {
             _main_element.scroll(ctx, dir, p);
@@ -272,7 +272,7 @@
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [k, &handled](auto const& ctx, auto& _main_element)
          {
              handled = _main_element.key(ctx, k);
@@ -288,7 +288,7 @@
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [info, &handled](auto const& ctx, auto& _main_element)
          {
              handled = _main_element.text(ctx, info);
@@ -373,7 +373,7 @@
       if (_content.empty())
          return;
 
-      call(
+      with_context_do(
          [info, status](auto const& ctx, auto& _main_element)
          {
             _main_element.track_drop(ctx, info, status);
@@ -388,7 +388,7 @@
          return false;
 
       bool handled = false;
-      call(
+      with_context_do(
          [info, &handled](auto const& ctx, auto& _main_element)
          {
             handled = _main_element.drop(ctx, info);
@@ -431,5 +431,19 @@
 
       if (state == tracking::end_tracking)
          _tracking.erase(&e);
+   }
+
+   void view::in_context_do(element& e, context_function f)
+   {
+      if (_content.empty())
+         return;
+
+      with_context_do(
+         [&e, &f](auto const& ctx, auto& _main_element)
+         {
+            _main_element.in_context_do(ctx, e, f);
+         },
+         *this, _current_bounds
+      );
    }
 }}

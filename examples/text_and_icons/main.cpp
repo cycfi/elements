@@ -97,15 +97,22 @@ auto make_basic_text()
 
    // This is an example on how to add an on_text callback:
    auto in = input_box("Show me the money");
-   in.second->on_text =
-      [input = in.second.get()](std::string_view text)
+   in.second->on_enter =
+      [input = in.second.get()](std::string_view text)->bool
       {
          if (text == "$1000000")
          {
-            input->set_text("Thank You!!!");
+            return true;
+         }
+         else
+         {
+            input->set_text("No! I want more!");
             input->select_all();
+            return false;
          }
       };
+
+   in.second->on_end_focus = in.second->on_enter;
 
    auto text_input =
       pane("Text Input",

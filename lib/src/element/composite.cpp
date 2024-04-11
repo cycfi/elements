@@ -133,26 +133,30 @@ namespace cycfi { namespace elements
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr && info.leaf_element_ptr)
             {
+               bool switched_focus = true;
                if (_focus != info.index)
                {
                   auto idx = info.leaf_element_ptr->wants_focus() ? info.index : -1;
-                  new_focus(ctx, idx, restore_previous);
+                  switched_focus = new_focus(ctx, idx, restore_previous);
                }
 
-               if (info.element_ptr->wants_control())
+               if (switched_focus)
                {
-                  context ectx{ctx, info.element_ptr, info.bounds};
-                  if (info.element_ptr->click(ectx, btn))
+                  if (info.element_ptr->wants_control())
                   {
-                     if (btn.down)
-                        _click_tracking = info.index;
-                     return true;
+                     context ectx{ctx, info.element_ptr, info.bounds};
+                     if (info.element_ptr->click(ectx, btn))
+                     {
+                        if (btn.down)
+                           _click_tracking = info.index;
+                        return true;
+                     }
                   }
-               }
-               else
-               {
-                  // Clicking elsewhere should relinquish focus
-                  relinquish_focus(*this, ctx);
+                  else
+                  {
+                     // Clicking elsewhere should relinquish focus
+                     relinquish_focus(*this, ctx);
+                  }
                }
             }
          }
@@ -183,13 +187,15 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::new_focus(context const& ctx, int index, focus_request req)
+   bool composite_base::new_focus(context const& ctx, int index, focus_request req)
    {
       // end the previous focus
       if (_focus != -1 && _focus < int(size()))
       {
-         at(_focus).end_focus();
-         ctx.view.refresh(ctx);
+         if (at(_focus).end_focus())
+            ctx.view.refresh(ctx);
+         else
+            return false;
       }
 
       // start a new focus
@@ -200,6 +206,7 @@ namespace cycfi { namespace elements
          scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
+      return true;
    }
 
    bool composite_base::key(context const& ctx, key_info k)
@@ -221,10 +228,7 @@ namespace cycfi { namespace elements
       auto&& try_focus = [&](auto ix, focus_request req) -> bool
       {
          if (at(ix).wants_focus())
-         {
-            new_focus(ctx, ix, req);
-            return true;
-         }
+            return new_focus(ctx, ix, req);
          return false;
       };
 
@@ -390,12 +394,17 @@ namespace cycfi { namespace elements
          at(_focus).begin_focus(req);
    }
 
-   void composite_base::end_focus()
+   bool composite_base::end_focus()
    {
+      bool r = true;
       if (_focus != -1 && _focus < int(size()))
-         at(_focus).end_focus();
-      _saved_focus = _focus;
-      _focus = -1;
+         r = at(_focus).end_focus();
+      if (r)
+      {
+         _saved_focus = _focus;
+         _focus = -1;
+      }
+      return r;
    }
 
    void relinquish_focus(composite_base& c, context const& ctx)

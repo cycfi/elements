@@ -1040,7 +1040,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         glyph_metrics m = glyph_info(ctx, _text.data() + (_text.size()-1));
+         glyph_metrics m = glyph_info(ctx, _text.data() + _text.size());
          scrollable::find(ctx).scroll_into_view(m.bounds);
          ctx.view.refresh(ctx);
       }

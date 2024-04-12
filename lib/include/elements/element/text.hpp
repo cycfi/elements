@@ -227,6 +227,9 @@ namespace cycfi::elements
 
       std::string             _placeholder;
    };
+
+   void align_home(view& view_, basic_input_box& tbox);
+   void align_end(view& view_, basic_input_box& tbox);
 }
 
 #endif

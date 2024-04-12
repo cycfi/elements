@@ -1033,7 +1033,7 @@ namespace cycfi { namespace elements
 
    void  basic_text_box::align_end(context const& ctx)
    {
-      auto _text = get_text();
+      auto& _text = get_text();
       if (_text.empty())
       {
          align_home(ctx);

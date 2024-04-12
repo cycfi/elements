@@ -283,7 +283,7 @@ auto make_input_box(my_model& model, view& view_)
    // model with the new value. We will deal with input validation and bring up a message box when
    // errors are encountered.
    tbox.second->on_enter =
-      [&model, &view_](std::string_view text)
+      [&model, &view_](std::string_view text)->bool
       {
          std::string::size_type pos;
          std::string error{""};
@@ -327,7 +327,9 @@ auto make_input_box(my_model& model, view& view_)
             // Bring up a message box.
             auto popup = message_box1(view_, error, icons::attention, on_ok);
             view_.add(popup);
+            return false;
          }
+         return true;
       };
 
    return

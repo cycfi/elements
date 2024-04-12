@@ -1215,21 +1215,7 @@ namespace cycfi { namespace elements
    {
       if (btn.state != mouse_button::left)
          return false;
-
-      if (_first_focus && select_start() != select_end())
-      {
-         _first_focus = false;
-         return true;
-      }
-      _first_focus = false;
-
       return basic_text_box::click(ctx, btn);
-   }
-
-   void basic_input_box::begin_focus(focus_request req)
-   {
-      _first_focus = true;
-      basic_text_box::begin_focus(req);
    }
 
    bool basic_input_box::end_focus()
@@ -1238,10 +1224,7 @@ namespace cycfi { namespace elements
       if (on_end_focus)
          r = on_end_focus(get_text());
       if (r)
-      {
-         _first_focus = false;
          return basic_text_box::end_focus();
-      }
       return false;
    }
 }}

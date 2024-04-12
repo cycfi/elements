@@ -44,28 +44,25 @@ std::string const text =
    "--New-Age Bullshit Generator"
 ;
 
-auto make_basic_text()
+auto make_basic_text(view& view_)
 {
-   auto fr = [](auto&& el, float top = 10)
-   {
-      return margin(
-         {10, top, 10, 10},
-         layer(
-            margin({10, 5, 10, 5}, std::move(el)),
-            frame{}
-         )
-      );
-   };
+   auto make_framed_label =
+      [](auto&& make_label, float top = 10)
+      {
+         return margin(
+            {10, top, 10, 10},
+            layer(
+               margin({10, 5, 10, 5}, std::move(make_label)),
+               frame{}
+            )
+         );
+      };
 
-   auto eh = [=](char const* txt)
-   {
-      return fr(halign(0.5, heading{txt}), 0);
-   };
-
-   auto el = [=](auto const& label_)
-   {
-      return fr(halign(0.5, label_));
-   };
+   auto make_label =
+      [make_framed_label](auto const& label_)
+      {
+         return make_framed_label(halign(0.5, label_));
+      };
 
    auto icons =
       margin({10, 0, 10, 10},
@@ -85,33 +82,72 @@ auto make_basic_text()
 
    static float const grid[] = {0.32, 1.0};
 
-   auto my_label = [=](auto text)
-   {
-      return margin_right(10, label(text).text_align(canvas::right));
-   };
+   auto my_label =
+      [=](auto text)
+      {
+         return margin_right(10, label(text).text_align(canvas::right));
+      };
 
-   auto my_input = [=](auto caption, auto input)
-   {
-      return margin_bottom(10, hgrid(grid, my_label(caption), input));
-   };
+   auto my_input =
+      [=](auto caption, auto input)
+      {
+         return margin_bottom(10, hgrid(grid, my_label(caption), input));
+      };
 
-   // This is an example on how to add an on_text callback:
+   // This is an example on how to add an on_text callback and showing an
+   // error message if input validation fails:
+
+   auto thank_you = message_box1(
+      view_, "Thank you!",
+      icons::attention, [](){}
+   );
+
+   auto error_want_more = message_box1(
+      view_, "No! Aurelia Starweaver wants the $1000000 you owe her!",
+      icons::attention, [](){}
+   );
+
+   // Shared flag that tells us if we got the money!
+   auto got_the_money = std::make_shared<bool>(false);
+
    auto in = input_box("Show me the money");
    in.second->on_enter =
-      [input = in.second.get()](std::string_view text)->bool
+      [input = in.second.get(), &view_, error_want_more, thank_you, got_the_money](std::string_view text)->bool
       {
-         if (text == "$1000000")
+         if (text == "")
          {
+            // Input is reset
+            return true;
+         }
+         else if (text == "$1000000")
+         {
+            // Yayyy!
+            if (!*got_the_money)
+            {
+               open_popup(thank_you, view_);
+               input->select_all();
+               view_.refresh(*input);
+               *got_the_money = true;
+            }
             return true;
          }
          else
          {
-            input->set_text("No! I want more!");
-            input->select_all();
-            return false;
+            if (!*got_the_money)
+            {
+               open_popup(error_want_more, view_);
+               input->set_text("");
+               input->select_all();
+               view_.refresh(*input);
+               return false;
+            }
+           return true;
          }
       };
 
+   // We also set on_end_focus same as on_enter. That way, the lambda function above
+   // will also be called when the text box ends focus, which happens, for example,
+   // when clicking anywhere in the view, or when the user clicks another window.
    in.second->on_end_focus = in.second->on_enter;
 
    auto text_input =
@@ -134,12 +170,12 @@ auto make_basic_text()
    auto labels =
       margin_top(20, pane("Labels",
          vtile(
-            el(label("Hello, Universe. This is Elements.")
+            make_label(label("Hello, Universe. This is Elements.")
                .font(font_descr{"Open Sans"}.semi_bold())
                .font_color(colors::antique_white)
                .font_size(18)
             ),
-            el(
+            make_label(
                vtile(
                   label("A cross-platform,")
                      .text_align(canvas::center),
@@ -175,13 +211,13 @@ auto make_basic_text2()
       ));
 }
 
-auto make_elements()
+auto make_elements(view& view_)
 {
    return
       max_size({1280, 640},
          margin({20, 10, 20, 10},
             htile(
-               margin({20, 20, 20, 20}, make_basic_text()),
+               margin({20, 20, 20, 20}, make_basic_text(view_)),
                margin({20, 20, 20, 20},
                   pane("Text Box", make_basic_text2())
                )
@@ -199,7 +235,7 @@ int main(int argc, char* argv[])
    view view_(_win);
 
    view_.content(
-      make_elements(),
+      make_elements(view_),
       background
    );
 

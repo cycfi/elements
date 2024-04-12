@@ -294,6 +294,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
            object : [self window]
    ];
 
+#if defined(ARTIST_SKIA)
    [center
       addObserver : self
          selector : @selector(windowDidMove:)
@@ -302,6 +303,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    ];
 
    _last_screen = self.window.screen;
+#endif
 }
 
 - (void) detach_notifications

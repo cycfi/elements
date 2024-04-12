@@ -112,13 +112,13 @@ namespace cycfi { namespace elements
                if (&e == &ce)
                {
                   f(ctx);
-                  return false; // break the for loop
+                  return true; // break the for loop
                }
                else
                {
                   ce.in_context_do(ectx, e, f);
                }
-               return true;
+               return false;
             }
          );
       }

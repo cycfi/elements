@@ -1140,4 +1140,24 @@ namespace cycfi { namespace elements
          return basic_text_box::end_focus();
       return false;
    }
+
+   void align_home(view& view_, basic_input_box& tbox)
+   {
+      view_.in_context_do(tbox,
+         [&tbox](auto& ctx)
+         {
+            tbox.align_home(ctx);
+         }
+      );
+   }
+
+   void align_end(view& view_, basic_input_box& tbox)
+   {
+      view_.in_context_do(tbox,
+         [&tbox](auto& ctx)
+         {
+            tbox.align_end(ctx);
+         }
+      );
+   }
 }}

@@ -956,7 +956,7 @@ namespace cycfi { namespace elements
       }
       else
       {
-         caret_metrics m = caret_info(ctx, _text.data() + (_text.size()-1));
+         caret_metrics m = caret_info(ctx, _text.data() + _text.size());
          scrollable::find(ctx).scroll_into_view(m.caret);
          ctx.view.refresh(ctx);
       }

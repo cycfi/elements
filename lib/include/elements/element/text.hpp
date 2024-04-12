@@ -242,7 +242,6 @@ namespace cycfi::elements
       void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
-      void                    begin_focus(focus_request req) override;
       bool                    end_focus() override;
 
       text_function           on_text;
@@ -255,7 +254,6 @@ namespace cycfi::elements
       void                    paste(view& v, int start, int end) override;
 
       std::string             _placeholder;
-      bool                    _first_focus;
    };
 }
 

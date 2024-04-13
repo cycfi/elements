@@ -31,12 +31,6 @@ namespace cycfi { namespace elements
    void basic_popup_element::open(view& view_)
    {
       view_.add(shared_from_this());
-      view_.post(
-         [&view_]()
-         {
-            view_.make_focus(); // Make this the focus
-         }
-      );
       view_.refresh();
    }
 

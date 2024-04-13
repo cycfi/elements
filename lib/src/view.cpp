@@ -340,16 +340,6 @@ namespace cycfi { namespace elements
       refresh();
    }
 
-   void view::make_focus()
-   {
-      if (_content.empty())
-         return;
-
-      _main_element.begin_focus(element::focus_request::from_top);
-      _is_focus = _main_element.focus();
-      refresh();
-   }
-
    void view::end_focus()
    {
       if (_content.empty())
@@ -361,6 +351,16 @@ namespace cycfi { namespace elements
 
    void view::relinquish_focus()
    {
+      if (_content.focus_index() != -1)
+      {
+         with_context_do(
+            [](auto const& ctx, auto& /*_main_element*/)
+            {
+               elements::relinquish_focus(ctx);
+            },
+            *this, _current_bounds
+         );
+      }
       _is_focus = false;
    }
 

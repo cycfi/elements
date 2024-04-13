@@ -396,15 +396,15 @@ namespace cycfi { namespace elements
 
    bool composite_base::end_focus()
    {
-      bool r = true;
+      bool yield = true;
       if (_focus != -1 && _focus < int(size()))
-         r = at(_focus).end_focus();
-      if (r)
+         yield = at(_focus).end_focus();
+      if (yield)
       {
          _saved_focus = _focus;
          _focus = -1;
       }
-      return r;
+      return yield;
    }
 
    void relinquish_focus(composite_base& c, context const& ctx)

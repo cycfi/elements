@@ -1123,10 +1123,10 @@ namespace cycfi { namespace elements
             case key_code::enter:
             case key_code::kp_enter:
             {
-               bool r = true;
+               bool yield = true;
                if (on_enter)
-                  r = on_enter(get_text());
-               if (r)
+                  yield = on_enter(get_text());
+               if (yield)
                {
                   relinquish_focus(ctx);
                   ctx.view.refresh(ctx);
@@ -1220,10 +1220,10 @@ namespace cycfi { namespace elements
 
    bool basic_input_box::end_focus()
    {
-      bool r = true;
+      bool yield = true;
       if (on_end_focus)
-         r = on_end_focus(get_text());
-      if (r)
+         yield = on_end_focus(get_text());
+      if (yield)
          return basic_text_box::end_focus();
       return false;
    }

@@ -21,7 +21,6 @@ namespace cycfi { namespace elements
    static_text_box::static_text_box(
       std::string text
     , font font_
-    , float size
     , color color_
    )
     : _text(std::move(text))
@@ -117,8 +116,8 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Editable Text Box
    ////////////////////////////////////////////////////////////////////////////
-   basic_text_box::basic_text_box(std::string text, font font_, float size)
-    : static_text_box(std::move(text), font_, size)
+   basic_text_box::basic_text_box(std::string text, font font_)
+    : static_text_box(std::move(text), font_)
     , _select_start{-1}
     , _select_end{-1}
     , _current_x{0}

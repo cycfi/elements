@@ -49,7 +49,6 @@ namespace cycfi::elements
                               static_text_box(
                                  std::string text
                                , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font._size
                                , color color_      = get_theme().text_box_font_color
                               );
 
@@ -92,8 +91,7 @@ namespace cycfi::elements
    public:
                               basic_text_box(
                                  std::string text
-                               , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font._size
+                               , font font_ = get_theme().text_box_font
                               );
                               ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
@@ -198,10 +196,9 @@ namespace cycfi::elements
 
                               basic_input_box(
                                  std::string placeholder = ""
-                               , font font_        = get_theme().text_box_font
-                               , float size        = get_theme().text_box_font._size
+                               , font font_ = get_theme().text_box_font
                               )
-                               : basic_text_box("", font_, size)
+                               : basic_text_box("", font_)
                                , _placeholder(std::move(placeholder))
                               {}
 

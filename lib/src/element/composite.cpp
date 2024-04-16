@@ -133,10 +133,11 @@ namespace cycfi { namespace elements
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr && info.leaf_element_ptr)
             {
+               bool leaf_wants_focus = info.leaf_element_ptr->wants_focus();
                bool switched_focus = true;
                if (_focus != info.index)
                {
-                  auto idx = info.leaf_element_ptr->wants_focus() ? info.index : -1;
+                  auto idx = leaf_wants_focus ? info.index : -1;
                   switched_focus = new_focus(ctx, idx, restore_previous);
                }
 
@@ -149,6 +150,8 @@ namespace cycfi { namespace elements
                      {
                         if (btn.down)
                            _click_tracking = info.index;
+                        if (!leaf_wants_focus)
+                           relinquish_focus(*this, ctx);
                         return true;
                      }
                   }
@@ -412,13 +415,13 @@ namespace cycfi { namespace elements
       if (c.focus_index() != -1)
       {
          c.end_focus();
-         c._saved_focus = -1;
          auto [p, cctx] = find_composite(ctx);
          if (p)
             relinquish_focus(*p, *cctx);
          else
             ctx.view.relinquish_focus();
       }
+      c._saved_focus = -1;
    }
 
    element const* composite_base::focus() const

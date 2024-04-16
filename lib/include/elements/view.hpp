@@ -289,6 +289,11 @@ namespace cycfi { namespace elements
 
                   // Lay it out
                   layout();
+
+                  // Restore previous focus
+                  _is_focus = true;
+                  begin_focus();
+                  _is_focus = _main_element.focus();
                }
             }
          );

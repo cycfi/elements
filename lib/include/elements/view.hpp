@@ -255,8 +255,9 @@ namespace cycfi { namespace elements
                // Make the new element the new focus if it wants to.
                if (wants_focus)
                {
-                  _is_focus = true;
-                  begin_focus();
+                  // Restore previous focus
+                  _main_element.begin_focus(element::focus_request::restore_previous);
+                  refresh();
                   _is_focus = _main_element.focus();
                }
             }
@@ -291,8 +292,8 @@ namespace cycfi { namespace elements
                   layout();
 
                   // Restore previous focus
-                  _is_focus = true;
-                  begin_focus();
+                  _main_element.begin_focus(element::focus_request::restore_previous);
+                  refresh();
                   _is_focus = _main_element.focus();
                }
             }

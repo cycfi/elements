@@ -89,8 +89,10 @@ namespace cycfi { namespace elements
       return {left, top, left+width, top+height};
    }
 
-   void layer_element::begin_focus(focus_request /*req*/)
+   void layer_element::begin_focus(focus_request req)
    {
+      if (req == focus_request::restore_previous)
+         return composite_base::begin_focus(req);
       // We always choose the top-most focus. Take note that for layer
       // elements the element with the highest index is actually the top
       // element.

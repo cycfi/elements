@@ -287,7 +287,6 @@ namespace cycfi { namespace elements
 
                   // Remove the element.
                   _content.erase(i);
-                  _content.reset();
 
                   // Lay it out
                   layout();

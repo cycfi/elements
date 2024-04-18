@@ -14,12 +14,6 @@ if (CMAKE_CXX_STANDARD LESS 17)
    set(CMAKE_CXX_STANDARD 17)
 endif()
 
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
-   include(GitSubmoduleCheck)
-   git_submodule_check(lib/external/asio)
-   git_submodule_check(lib/infra)
-endif()
-
 include(ElementsConfigCommon)
 
 option(ELEMENTS_BUILD_EXAMPLES "build Elements library examples" ON)

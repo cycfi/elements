@@ -1,0 +1,17 @@
+site:
+  title: Elements Docs
+  start_page: elements::index.adoc
+  url: https://www.cycfi.com/
+content:
+  sources:
+  - url: https://github.com/cycfi/elements.git
+    branches: [master, skia_2024]
+    start_path: docs
+ui:
+  supplemental_files: ./supplemental-ui
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+antora:
+  extensions:
+  - '@antora/lunr-extension'

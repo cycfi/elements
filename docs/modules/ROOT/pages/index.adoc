@@ -1,0 +1,34 @@
+= Elements C{pp} GUI library
+
+include::common.adoc[]
+
+== Introduction
+
+image::elements_sampler.jpeg[alt="Elements Sampler"]
+
+image:logo.png[width=180, role=left] Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++17 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C{pp}, and therefore, there is no need for an external visual GUI editor or code generator.
+
+Elements is embeddable, meaning you can embed it in any application, and it will play well with other GUI libraries and frameworks or another UI toolkit such as {gtk}. This also implies that you can utilize it for the creation of plugins. It does not own the event loop and is able to co-exist with components within a plugin host, such as {vst} and {au}. Porting to a new host target is straightforward, requiring the porting of only a few files.
+
+Elements is distributed under the liberal and non-viral {mit_license}.
+
+== Documentation
+
+* xref:gallery.adoc[Gallery]
+* xref:setup.adoc[Setup and Installation]
+* xref:aspects.adoc[Design Aspects]
+* xref:layout.adoc[Layout]
+
+== The Author
+
+image:joel.jpg[alt="Joel de Guzman", width=150, role=left] Joel got into electronics and programming in the 80s because almost
+everything in music, his first love, is becoming electronic and digital. Since then, he builds his own guitars, effect boxes and synths. He enjoys playing distortion-laden rock guitar, composes and produces his own music in his home studio.
+
+Joel de Guzman is the principal architect and engineer at https://www.cycfi.com/[Cycfi Research]. He is a software engineer specializing in advanced C++ and an advocate of Open Source. He has authored a number of highly successful Open Source projects such as http://tinyurl.com/ydhotlaf[Boost.Spirit], http://tinyurl.com/y6vkeo5t[Boost.Phoenix] and http://tinyurl.com/ybn5oq9v[Boost.Fusion].
+These libraries are all part of the http://tinyurl.com/jubgged[Boost Libraries], a well respected, peer-reviewed, Open Source, collaborative development effort.
+
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

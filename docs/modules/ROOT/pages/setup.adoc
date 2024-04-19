@@ -1,0 +1,295 @@
+= Setup and Installation
+:pp: {plus}{plus}
+
+include::common.adoc[]
+
+== Requirements
+
+Here are the basic tools that you need in order to use the library:
+
+. A C{pp}17 compiler
+. Git
+. https://cmake.org/[CMake] 3.15 or higher
+
+=== C{pp}17
+
+Elements currently supports the MacOS, Windows and Linux.
+
+In the Mac, we support the https://developer.apple.com/xcode/[XCode] IDE.
+
+In Windows, we support Windows 10 with https://visualstudio.microsoft.com/vs/[Visual Studio 2022], although it will probably also work with older versions of the Visual Studio IDE.
+
+In Linux, we support both https://clang.llvm.org/[Clang] and https://gcc.gnu.org/[g{pp}]. Get the latest version with a C{pp}17 compiler.
+
+The https://www.jetbrains.com/clion/[CLion] IDE is supported on all platforms, it simply requires the CMakeLists.txt file to open and build the project.
+
+=== Git
+
+Elements C{pp} GUI library, plus the Cycfi Infra library:
+
+----
+git clone --recurse-submodules  https://github.com/cycfi/elements.git
+----
+
+=== CMake
+
+Make sure you have https://cmake.org/[CMake] 3.15 or higher. Follow the https://cmake.org/install/[installation procedure] for your platform, or follow the instructions below for specific environments.
+
+=== Required Libraries
+
+Here are Element's dependencies:
+
+. https://www.freedesktop.org/wiki/Software/pkg-config/[pkg-config]
+. https://cairographics.org/[Cairo]
+. https://www.freedesktop.org/wiki/Software/fontconfig/[fontconfig]
+. https://www.freetype.org/[freetype2]
+. https://www.sourceware.org/bzip2/[bzip2]
+. https://libexpat.github.io/[expat]
+. https://zlib.net/[zlib]
+. http://www.libpng.org/pub/png/libpng.html[libpng]
+. https://github.com/webmproject/libwebp[libwebp]
+
+Specific instructions are provided below for specific environments.
+
+Additionally, the following libraries are dragged as submodules:
+
+. The https://github.com/cycfi/infra/[Cycfi infra library]
+
+Infra provides some basic groundwork common to Cycfi libraries, including Elements.
+
+== MacOS
+
+=== Install required libraries
+
+Using https://brew.sh/[Homebrew]:
+
+----
+brew install pkg-config
+brew install cairo
+brew install fontconfig
+brew install bzip2
+brew install expat
+brew install zlib
+brew install libpng
+brew install webp
+----
+
+=== Install CMake
+
+----
+brew install cmake
+----
+
+=== Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for the MacOS:
+
+=== Using XCode
+
+. CD to the elements library.
+. Make a build directory inside the elements directory.
+. CD to the build directory.
+. invoke cmake.
+
+----
+cd elements
+mkdir build
+cd build
+cmake -GXcode ../
+----
+
+If successful, CMake will generate an https://developer.apple.com/xcode/[XCode] project in the build directory. Open the project file `elements.xcodeproj` and build all. You should see a couple of example applications.
+
+== Windows
+
+=== Install required libraries
+
+The Windows port requires a package manager that supports the dependencies listed above. One popular package manager is https://vcpkg.io/en/[vcpkg]. We will use vcpkg in the setup instructions below.
+
+Clone and bootstrap the vcpkg dependency manager. I suggest placing it in `c:\` or `c:\Program Files`, but it does not really matter where.
+
+----
+git clone https://github.com/microsoft/vcpkg
+.\vcpkg\bootstrap-vcpkg.bat
+----
+
+Install the dependencies:
+
+----
+vcpkg install pkgconf
+vcpkg install cairo
+vcpkg install libwebp
+----
+
+NOTE: Installing Cairo already brings in the other dependencies.
+
+=== Install CMake
+
+Follow the https://cmake.org/install/[installation procedure].
+
+=== Generating the Project using CMake
+
+If you have https://visualstudio.microsoft.com/vs/[Visual Studio 2022]:
+
+* Use the Visual Studio GUI for a graphical development environment.
+* Use NMake for make-style command-line builds.
+
+==== Visual Studio 2022 GUI
+
+. CD to the elements library.
+. Make a build directory inside the elements directory.
+. CD to the build directory.
+. invoke cmake.
+
+----
+cd elements
+mkdir build
+cd build
+----
+
+You will need to tell cmake the location of the vcpkg toolchain file. That way, `find_package` will know where to find the installed libraries. If you installed vcpkg in `c:\` as suggested, you invoke cmake like this:
+
+----
+cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg ../
+----
+
+If successful, cmake will generate a Visual Studio solution in the build directory. Open the project file `elements.sln` and build all. You should see a couple of example applications.
+
+==== NMake
+
+. Open a _Command Prompt for VS 2022_
+({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.
+. CD to the elements library.
+. Make a build directory inside the elements directory.
+. CD to the build directory.
+. invoke cmake.
+
+----
+cd elements
+mkdir build
+cd build
+----
+
+Again, you will need to tell cmake the location of the vcpkg toolchain file. If you installed vcpkg in `c:\` as suggested, you invoke cmake like this:
+
+----
+cmake -G"NMake Makefiles" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg ../
+----
+
+If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake` to build the binary.
+
+== Windows (MinGW + Gtk)
+
+=== Install MSYS2 toolchain and required libraries
+
+____
+MSYS2 is a software distro and building platform for Windows
+____
+
+Download https://www.msys2.org/[MSYS2] from its official website and install it. Its installation guide is on the home page.
+
+Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
+
+----
+pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
+pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
+pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
+pacman -S ${MINGW_PACKAGE_PREFIX}-libwebp
+pacman -S make
+----
+
+=== Install CMake
+
+----
+pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
+----
+
+=== Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for MSYS2:
+
+=== Using UNIX makefiles
+
+. CD to the elements library.
+. Make a build directory inside the elements directory.
+. CD to the build directory.
+. invoke cmake. `-DELEMENTS_HOST_UI_LIBRARY=gtk` tells cmake to build with Gtk.
+
+----
+cd elements
+mkdir build
+cd build
+cmake ../ -G "Unix Makefiles" -DELEMENTS_HOST_UI_LIBRARY=gtk
+----
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+== Linux
+
+=== Install required libraries
+
+In addition to the requirements listed in the <<requirements,requirements>> section, the https://www.gtk.org/[GTK3 library] is also required by the Linux port of Elements.
+
+On Debian and derived distributions using https://linux.die.net/man/8/apt-get[apt-get] (requires `sudo`):
+
+----
+sudo apt-get install libcairo2-dev
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libwebp-dev
+----
+
+=== Install CMake
+
+----
+sudo apt-get -y install cmake
+----
+
+=== Generating the Project using CMake
+
+There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here is an example for Linux:
+
+=== Using UNIX makefiles
+
+. CD to the elements library.
+. Make a build directory inside the elements directory.
+. CD to the build directory.
+. invoke cmake.
+
+----
+cd elements
+mkdir build
+cd build
+cmake -G "Unix Makefiles" ../
+----
+
+If successful, cmake will generate Unix Make files in the build directory.
+
+== Building and Running the examples
+
+If successful, cmake will generate a project file or makefiles in the build directory. Build the library and example programs using the generated makefiles or open the project file using your IDE and build all.
+
+You should see a couple of example applications in there that you can run. These examples are provided as starting points to get you up to speed in learning how to use the library. For simplicity, each example is contained in a single `main.cpp` source file.
+
+Feel free to inspect and mess with the examples. Each example demonstrates different aspects of the Elements library, from layout to control. You'd probably want to start with the "`hello_universe`" example, which is the Element's hello-world counterpart. You can copy the "`empty`" example and use it as a boilerplate for your own project. See next section on how to copy an example and build outside the Elements project directory.
+
+Tips:
+
+. Resize the window and see the elements fluidly resize
+. Use two-finger swipe to move the sliders and knobs
+
+== Building Outside the Project
+
+The Elements project is set up so that you can easily copy and paste any of the examples outside the project, set -DELEMENTS_ROOT="path/to/elements", and the example should immediately build without any hassle.
+
+Here's an example for XCode assuming the elements lib is in the same directory alongside the "hello_universe" example directory you copied to:
+
+. Copy the hello_universe example project directory.
+. Make a build directory inside the hello_universe directory.
+. CD to the build directory.
+. `cmake -GXcode -DELEMENTS_ROOT="../elements" ../`
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

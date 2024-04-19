@@ -1,0 +1,18 @@
+:note-caption: ✏️ {nbsp}NOTE
+
+:tip-caption: 💡 {nbsp}TIP
+
+:important-caption: 📢 {nbsp}IMPORTANT
+
+:warning-caption: ⚠️ {nbsp}WARNING
+
+// :fundamentals: xref:fundamentals.adoc[Fundamentals]
+
+// :Unit:  xref:reference/units.adoc#value[Unit]
+
+
+:vst: https://en.wikipedia.org/wiki/Virtual_Studio_Technology[VST]
+:au: https://en.wikipedia.org/wiki/Audio_Units[AU]
+:gtk: https://www.gtk.org/[GTK]
+:pp: {plus}{plus}
+:mit_license: https://opensource.org/licenses/MIT[MIT License]

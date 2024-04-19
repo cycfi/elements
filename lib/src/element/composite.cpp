@@ -372,9 +372,13 @@ namespace cycfi { namespace elements
          _focus = _saved_focus;
       }
 
-      if (_focus == -1)
+      if (_focus == -1 && req != focus_request::restore_previous)
       {
-         if (req == from_top)
+         bool top_down = (req == from_top);
+         if (reverse_index())
+            top_down = !top_down;
+
+         if (top_down)
          {
             for (std::size_t ix = 0; ix != size(); ++ix)
                if (at(ix).wants_focus())
@@ -383,7 +387,7 @@ namespace cycfi { namespace elements
                   break;
                }
          }
-         else if (req == from_bottom)
+         else
          {
             for (int ix = size()-1; ix >= 0; --ix)
                if (at(ix).wants_focus())

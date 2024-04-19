@@ -32,10 +32,10 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 
 Documentation is work in progress. Stay tuned...
 
-1. [Gallery](http://cycfi.github.io/elements/elements/skia_2024/gallery.html)
-2. [Setup and Installation](http://cycfi.github.io/elements/elements/skia_2024/setup.html)
-3. [Design Aspects](http://cycfi.github.io/elements/elements/skia_2024/aspects.html)
-4. [Layout](http://cycfi.github.io/elements/elements/skia_2024/layout.html)
+1. [Gallery](http://cycfi.github.io/elements/elements/master/gallery.html)
+2. [Setup and Installation](http://cycfi.github.io/elements/elements/master/setup.html)
+3. [Design Aspects](http://cycfi.github.io/elements/elements/master/aspects.html)
+4. [Layout](http://cycfi.github.io/elements/elements/master/layout.html)
 
 ## <a name="jdeguzman"></a>About the Author
 

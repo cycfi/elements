@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 217 127">
+  <defs>
+    <style>
+      .d {
+        fill: none;
+      }
+
+      .d, .e {
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .f {
+        fill: #1c75bc;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .e {
+        fill: #e6e7e8;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="d" x=".5" y=".5" width="216" height="126"/>
+    <rect class="e" x=".5" y=".5" width="72" height="36"/>
+    <rect class="e" x="72.5" y="9.5" width="54" height="27"/>
+    <rect class="e" x="126.5" y=".5" width="27" height="36"/>
+    <rect class="e" x="153.5" y="18.5" width="45" height="18"/>
+    <rect class="e" x=".5" y="36.5" width="45" height="27"/>
+    <rect class="e" x="45.5" y="36.5" width="54" height="27"/>
+    <rect class="e" x="99.5" y="36.5" width="27" height="27"/>
+    <rect class="e" x="126.5" y="45.5" width="45" height="18"/>
+    <rect class="e" x="171.5" y="45.5" width="45" height="18"/>
+    <rect class="e" x=".5" y="63.5" width="27" height="36"/>
+    <rect class="e" x="54.5" y="63.5" width="27" height="36"/>
+    <rect class="e" x="27.5" y="81.5" width="27" height="18"/>
+    <rect class="e" x="81.5" y="81.5" width="72" height="18"/>
+    <rect class="e" x="153.5" y="72.5" width="54" height="27"/>
+    <rect class="e" x="63.5" y="99.5" width="72" height="27"/>
+    <rect class="e" x=".5" y="113" width="27" height="13.5"/>
+    <rect class="e" x="27.5" y="106.25" width="36" height="20.25"/>
+    <rect class="e" x="135.5" y="113" width="45" height="13.5"/>
+    <text class="f" transform="translate(33.61 22.02)"><tspan x="0" y="0">a</tspan></text>
+    <text class="f" transform="translate(96.09 26.52)"><tspan x="0" y="0">b</tspan></text>
+    <text class="f" transform="translate(137.31 22.02)"><tspan x="0" y="0">c</tspan></text>
+    <text class="f" transform="translate(172.62 31.02)"><tspan x="0" y="0">d</tspan></text>
+    <text class="f" transform="translate(19.99 53.52)"><tspan x="0" y="0">e</tspan></text>
+    <text class="f" transform="translate(70.51 53.52)"><tspan x="0" y="0">f</tspan></text>
+    <text class="f" transform="translate(109.65 53.52)"><tspan x="0" y="0">g</tspan></text>
+    <text class="f" transform="translate(145.67 58.02)"><tspan x="0" y="0">h</tspan></text>
+    <text class="f" transform="translate(192.6 58.02)"><tspan x="0" y="0">i</tspan></text>
+    <text class="f" transform="translate(12.82 85.02)"><tspan x="0" y="0">j</tspan></text>
+    <text class="f" transform="translate(38.13 94.02)"><tspan x="0" y="0">k</tspan></text>
+    <text class="f" transform="translate(66.58 85.02)"><tspan x="0" y="0">l</tspan></text>
+    <text class="f" transform="translate(112.5 94.02)"><tspan x="0" y="0">m</tspan></text>
+    <text class="f" transform="translate(177.17 89.52)"><tspan x="0" y="0">n</tspan></text>
+    <text class="f" transform="translate(10.71 123.27)"><tspan x="0" y="0">o</tspan></text>
+    <text class="f" transform="translate(42.09 119.9)"><tspan x="0" y="0">p</tspan></text>
+    <text class="f" transform="translate(96.12 116.52)"><tspan x="0" y="0">q</tspan></text>
+    <text class="f" transform="translate(156.04 123.27)"><tspan x="0" y="0">r</tspan></text>
+  </g>
+</svg>

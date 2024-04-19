@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224.89 93.02">
+  <defs>
+    <style>
+      .d {
+        stroke: #414042;
+      }
+
+      .d, .e, .f, .g {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .e, .f {
+        stroke: #be1e2d;
+      }
+
+      .f {
+        stroke-dasharray: 0 0 6 6;
+      }
+
+      .h {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .h, .i {
+        fill: #be1e2d;
+      }
+
+      .g {
+        stroke: #1c75bc;
+      }
+
+      .j {
+        letter-spacing: -.01em;
+      }
+
+      .i, .k {
+        stroke-width: 0px;
+      }
+
+      .k {
+        fill: #1c75bc;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <g>
+      <rect class="d" x=".5" y=".5" width="144" height="72"/>
+      <text class="h" transform="translate(150.43 30.02)"><tspan x="0" y="0">limit</tspan><tspan class="j" x="22.43" y="0">s</tspan><tspan x="27.05" y="0">.max.x</tspan></text>
+      <g>
+        <line class="e" x1=".5" y1="33.09" x2="3.5" y2="33.09"/>
+        <line class="f" x1="9.5" y1="33.09" x2="138.5" y2="33.09"/>
+        <line class="e" x1="141.5" y1="33.09" x2="144.5" y2="33.09"/>
+      </g>
+      <g>
+        <line class="g" x1="90.5" y1="45.36" x2="90.5" y2="63.64"/>
+        <polygon class="k" points="87.59 47.34 90.5 36.5 93.41 47.34 87.59 47.34"/>
+        <polygon class="k" points="87.59 61.66 90.5 72.5 93.41 61.66 87.59 61.66"/>
+      </g>
+      <g>
+        <line class="e" x1="45.5" y1=".5" x2="45.5" y2="3.5"/>
+        <line class="f" x1="45.5" y1="9.5" x2="45.5" y2="66.5"/>
+        <line class="e" x1="45.5" y1="69.5" x2="45.5" y2="72.5"/>
+      </g>
+      <g>
+        <line class="g" x1="54.36" y1="18.5" x2="135.64" y2="18.5"/>
+        <polygon class="k" points="56.34 21.41 45.5 18.5 56.34 15.59 56.34 21.41"/>
+        <polygon class="k" points="133.66 21.41 144.5 18.5 133.66 15.59 133.66 21.41"/>
+      </g>
+      <text class="h" transform="translate(150.38 86.69)"><tspan x="0" y="0">limit</tspan><tspan class="j" x="22.43" y="0">s</tspan><tspan x="27.05" y="0">.max.y</tspan></text>
+      <g>
+        <path class="e" d="M166.83,74.17c.44,1.14-26.38-15.77-48.03-6.84"/>
+        <polygon class="i" points="119.15 63.95 111.17 71.83 122.03 69 119.15 63.95"/>
+      </g>
+      <g>
+        <path class="e" d="M182.5,18.17c-5.67-7.3-14.72-13.52-29.62-9.84"/>
+        <polygon class="i" points="153.88 5.05 144.5 11.22 155.7 10.57 153.88 5.05"/>
+      </g>
+      <line class="e" x1="144.5" y1=".5" x2="144.5" y2="72.5"/>
+      <line class="e" x1=".5" y1="72.5" x2="144.5" y2="72.5"/>
+      <text class="h" transform="translate(16.98 90.02)"><tspan x="0" y="0">limit</tspan><tspan class="j" x="22.43" y="0">s</tspan><tspan x="27.05" y="0">.min.x</tspan></text>
+      <g>
+        <path class="e" d="M23.83,80.18s-3.01-26.56,12.92-33.19"/>
+        <polygon class="i" points="35.42 50.44 45.5 45.51 34.3 44.73 35.42 50.44"/>
+      </g>
+      <text class="h" transform="translate(151.32 58.35)"><tspan x="0" y="0">limit</tspan><tspan class="j" x="22.43" y="0">s</tspan><tspan x="27.05" y="0">.min.y</tspan></text>
+      <g>
+        <path class="e" d="M149.5,53.5c-13.92-.42-31.39-1.08-42.72-11.47"/>
+        <polygon class="i" points="110.4 41.55 101.17 35.17 105.97 45.31 110.4 41.55"/>
+      </g>
+    </g>
+  </g>
+</svg>

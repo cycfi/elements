@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 221.55 184.18">
+  <defs>
+    <style>
+      .d {
+        fill: #e6e7e8;
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <polygon class="d" points="219.64 91.89 106 183.53 2.1 99.13 115.75 45.38 219.64 91.89"/>
+    <polygon class="d" points="220.48 72.4 106 158.18 1.27 80.47 118.81 29.5 220.48 72.4"/>
+    <polygon class="d" points="220.48 56.24 106.28 134.51 1.27 62.09 116.58 16.69 220.48 56.24"/>
+    <polygon class="d" points="219.92 37.86 105.58 107.84 1.13 42.87 114.35 .53 219.92 37.86"/>
+  </g>
+</svg>

@@ -1,0 +1,4107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Layout :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout.html">
+    <meta name="generator" content="Antora 3.1.7">
+    <link rel="stylesheet" href="../_/css/site.css">
+<meta name="og:title" content="Elements Docs Q DSP Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="layout.html">Layout</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="skia_2024/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="skia_2024/index.html">skia_2024</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="skia_2024/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Elements Library</a></li>
+    <li><a href="layout.html">Layout</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">master</button>
+  <div class="version-menu">
+    <a class="version" href="skia_2024/layout.html">skia_2024</a>
+    <a class="version is-current" href="layout.html">master</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Layout</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Elements Library provides a comprehensive set of elements for laying out
+elements in the view.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_limits"><a class="anchor" href="#_limits"></a>Limits</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each element provides information on how it wants to be sized by means of
+<code>min</code> and <code>max</code> limits: a hint that determine its actual extent and how it
+will be placed in the view depending on available window space. The element&#8217;s
+<code>limits</code> member function determines the minimum and maximum extents of an
+element:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_limits limits(basic_context const&amp; ctx) const;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a name="view_limits"></a>
+See <a href="context">Context</a> for information about <code>basic_context</code>. <code>view_limits</code>
+is a struct that gives us the <code>min</code> and <code>max</code> information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_limits
+{
+   point    min = {0.0, 0.0};
+   point    max = {full_extent, full_extent};
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the purpose of this document, we will use these terms and expressions:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">limits</dt>
+<dd>
+<p>The limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.min</dt>
+<dd>
+<p>The minimum limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.min.x</dt>
+<dd>
+<p>The minimum horizontal limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.min.y</dt>
+<dd>
+<p>The minimum vertical limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.max</dt>
+<dd>
+<p>The maximum limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.max.x</dt>
+<dd>
+<p>The maximum horizontal limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.max.y</dt>
+<dd>
+<p>The maximum vertical limit of an element</p>
+</dd>
+<dt class="hdlist1">horizontal limits</dt>
+<dd>
+<p>(limits.min.x, limits.max.x)</p>
+</dd>
+<dt class="hdlist1">vertical limits</dt>
+<dd>
+<p>(limits.min.y, limits.max.y)</p>
+</dd>
+<dt class="hdlist1">minimum limits</dt>
+<dd>
+<p>(limits.min.x, limits.min.y)</p>
+</dd>
+<dt class="hdlist1">maximum limits</dt>
+<dd>
+<p>(limits.max.x, limits.max.y)</p>
+</dd>
+<dt class="hdlist1">minimum horizontal limit</dt>
+<dd>
+<p>limits.min.x</p>
+</dd>
+<dt class="hdlist1">maximum horizontal limit</dt>
+<dd>
+<p>limits.max.x</p>
+</dd>
+<dt class="hdlist1">minimum vertical limit</dt>
+<dd>
+<p>limits.min.y</p>
+</dd>
+<dt class="hdlist1">maximum vertical limit</dt>
+<dd>
+<p>limits.max.y</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>By default, an element has full limits: it is infinitely resizable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">constexpr view_limits full_limits = {
+   {0.0, 0.0}
+ , {full_extent, full_extent}
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An element with <code>full_limits</code> can be resized from an empty point (zero x and
+y size) up to the full extent of the screen, and beyond (if possible).</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>number near the <em>maximum limits</em> of the coordinate&#8217;s data type (also
+implementation defined).</p>
+</div>
+</blockquote>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An element has a fixed horizontal size if this expression is true:
+<code>limits.min.x == limits.max.x</code>.</p>
+</li>
+<li>
+<p>An element has a fixed vertical size if this expression is true:
+<code>limits.min.y == limits.max.y</code>.</p>
+</li>
+</ul>
+</div>
+<h4 id="_examples" class="discrete">Examples</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 100}}; // Fixed size</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, full_extent}}; // Fixed width, flexible height</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_size_elements"><a class="anchor" href="#_size_elements"></a>Size Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Size elements override the <em>limits</em> of an enclosed element. There is a
+comprehensive list of size related elements in the Elements Library that can
+be used for various purposes. This section catalogues all the available size
+elements.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_limit"><a class="anchor" href="#_limit"></a>limit</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/limit.svg" alt="limit" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>limits</em> of an element.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">limit(limits, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <a href="#view_limits"><code>view_limits</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>limits</em> of <code>subject</code> will be set to the specified <code>limits</code>
+constrained by the natural <em>limits</em> of the <code>subject</code> (the natural <em>limits</em>
+of the element will not be violated).</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fixed_size"><a class="anchor" href="#_fixed_size"></a>fixed_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/fixed_size.svg" alt="fixed_size" width="318px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the size of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">fixed_size({width, height}, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code>, <code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>subject</code> will be laid out with a fixed <code>width</code> and <code>height</code>, constrained
+by the natural <em>limits</em> of the <code>subject</code> (the natural <em>limits</em> of the
+element will not be violated).</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hsize"><a class="anchor" href="#_hsize"></a>hsize</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hsize.svg" alt="hsize" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the horizontal size of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hsize(width, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>subject</code> will be laid out with a fixed <code>width</code>, constrained by the
+natural <em>horizontal limits</em> of the <code>subject</code> (the natural <em>horizontal
+limits</em> of the element will not be violated).</p>
+</li>
+<li>
+<p>The natural <em>vertical limits</em> of <code>subject</code> will not be affected.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vsize"><a class="anchor" href="#_vsize"></a>vsize</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vsize.svg" alt="vsize" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the <em>vertical limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vsize(height, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>subject</code> will be laid out with a fixed <code>height</code>, constrained by the
+natural <em>vertical limits</em> of the <code>subject</code> (the natural <em>vertical limits</em>
+of the element will not be violated).</p>
+</li>
+<li>
+<p>The natural <em>horizontal limits</em> of <code>subject</code> will not be affected.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_min_size"><a class="anchor" href="#_min_size"></a>min_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/min_size.svg" alt="min_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_5"><a class="anchor" href="#_expression_5"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">min_size({width, height}, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_5"><a class="anchor" href="#_notation_5"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code>, <code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_5"><a class="anchor" href="#_semantics_5"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>minimum limits</em> of <code>subject</code> will be set to the specified <code>width</code> and
+<code>height</code>, constrained by the natural <em>minimum limits</em> of the <code>subject</code>.</p>
+</li>
+<li>
+<p>the natural <em>minimum limits</em> of the element will not be violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hmin_size"><a class="anchor" href="#_hmin_size"></a>hmin_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hmin_size.svg" alt="hmin_size" width="233px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum horizontal limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_6"><a class="anchor" href="#_expression_6"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hmin_size(width, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_6"><a class="anchor" href="#_notation_6"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_6"><a class="anchor" href="#_semantics_6"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>minimum horizontal limit</em> of <code>subject</code> will be set to the specified
+<code>width</code> constrained by the natural <em>horizontal minimum limits</em> of the
+<code>subject</code>.</p>
+</li>
+<li>
+<p>The natural <em>horizontal minimum limits</em> of the element will not be
+violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vmin_size"><a class="anchor" href="#_vmin_size"></a>vmin_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vmin_size.svg" alt="vmin_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum vertical limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_7"><a class="anchor" href="#_expression_7"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vmin_size(height, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_7"><a class="anchor" href="#_notation_7"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_7"><a class="anchor" href="#_semantics_7"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>minimum vertical limit</em> of <code>subject</code> will be set to the specified <code>height</code>
+constrained by the natural vertical <em>minimum limits</em> of the <code>subject</code>.</p>
+</li>
+<li>
+<p>The natural vertical <em>minimum limits</em> of the element will not be violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_max_size"><a class="anchor" href="#_max_size"></a>max_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/max_size.svg" alt="max_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_8"><a class="anchor" href="#_expression_8"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">max_size({width, height}, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_8"><a class="anchor" href="#_notation_8"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code>, <code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_8"><a class="anchor" href="#_semantics_8"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>maximum limits</em> of <code>subject</code> will be set to the specified <code>width</code> and
+<code>height</code>, constrained by the natural <em>maximum limits</em> of the <code>subject</code>.</p>
+</li>
+<li>
+<p>The natural <em>maximum limits</em> of the element will not be violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hmax_size"><a class="anchor" href="#_hmax_size"></a>hmax_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hmax_size.svg" alt="hmax_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum horizontal limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_9"><a class="anchor" href="#_expression_9"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hmax_size(width, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_9"><a class="anchor" href="#_notation_9"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>width</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_9"><a class="anchor" href="#_semantics_9"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>maximum horizontal limit</em> of <code>subject</code> will be set to the specified
+<code>width</code> constrained by the natural <em>maximum horizontal limit</em> of the
+<code>subject</code>.</p>
+</li>
+<li>
+<p>The natural <em>maximum horizontal limit</em> of the element will not be
+violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vmax_size"><a class="anchor" href="#_vmax_size"></a>vmax_size</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vmax_size.svg" alt="vmax_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum vertical limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_10"><a class="anchor" href="#_expression_10"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vmax_size(height, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_10"><a class="anchor" href="#_notation_10"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>height</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_10"><a class="anchor" href="#_semantics_10"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>maximum vertical limit</em> of <code>subject</code> will be set to the specified
+<code>height</code> constrained by the natural <em>maximum vertical limit</em> of the
+<code>subject</code></p>
+</li>
+<li>
+<p>The natural <em>maximum vertical limit</em> of the element will not be violated.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stretch_elements"><a class="anchor" href="#_stretch_elements"></a>Stretch Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Resizable elements are elements with <em>minimum limits</em> that are less than the
+<em>maximum limits</em> in either x or y dimensions or both. Resizable elements can
+therefore stretch if there is extra available space allocated to it beyond
+its minimum limit. When two or more resizable elements are placed side by
+side in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, the element&#8217;s "stretchiness"
+determines how much extra space is given to it. The element&#8217;s "stretchiness"
+is determined by the element&#8217;s <code>stretch</code> member function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual view_stretch stretch() const;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>view_stretch</code> is a struct declared as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_stretch
+{
+   float    x = 1.0;
+   float    y = 1.0;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>view_stretch</code> <code>x</code> and <code>y</code> members determine how much an element can
+stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
+2.0 means that the element is able to stretch twice as much compared to its
+siblings in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, assuming they have the
+default 1.0 stretchiness.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_hstretch"><a class="anchor" href="#_hstretch"></a>hstretch</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hstretch.svg" alt="hstretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the horizontal stretchiness of an an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_11"><a class="anchor" href="#_expression_11"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hstretch(stretch, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_11"><a class="anchor" href="#_notation_11"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stretch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A scalar value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_11"><a class="anchor" href="#_semantics_11"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+</li>
+<li>
+<p>The stretch value has no effect to elements with fixed horizontal size.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>1.0</code>, <code>1.0</code> and <code>2.0</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/htile-stretch.svg" alt="htile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>2.0</code> stretch value stretches twice as much compared to
+its siblings.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vstretch"><a class="anchor" href="#_vstretch"></a>vstretch</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vstretch.svg" alt="vstretch" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the vertical stretchiness of an an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_12"><a class="anchor" href="#_expression_12"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vstretch(stretch, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_12"><a class="anchor" href="#_notation_12"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stretch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A scalar value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_12"><a class="anchor" href="#_semantics_12"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+</li>
+<li>
+<p>The stretch value has no effect to elements with fixed <em>vertical limits</em>.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>0.5</code>, <code>1.0</code> and <code>1.5</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vtile-stretch.svg" alt="vtile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>0.5</code> stretch value stretches half less, while the
+element with the <code>1.5</code> stretches half more than the default.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scale_element"><a class="anchor" href="#_scale_element"></a>Scale Element</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Elements Library is resolution independent and elements can be scaled up
+or down to suit. The default scale is 1.0 (no scale).</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_scale"><a class="anchor" href="#_scale"></a>scale</h3>
+<div class="paragraph">
+<p>The <code>scale</code> element changes the scale of its enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_13"><a class="anchor" href="#_expression_13"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">scale(scale_, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_13"><a class="anchor" href="#_notation_13"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale_</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_13"><a class="anchor" href="#_semantics_13"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>subject</code> will scaled given the <code>scale_</code> value. A value &gt; 1.0 scales
+the element up (zoom in), while a value &lt; 1.0 scales down (zoom out).</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_align_elements"><a class="anchor" href="#_align_elements"></a>Align Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
+dimensions, or both. There is a comprehensive list of align elements in The
+Elements Library that can be used for various purposes. This section
+catalogues all the available align elements.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_halign"><a class="anchor" href="#_halign"></a>halign</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/halign.svg" alt="halign" width="345px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) in the x-axis.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_14"><a class="anchor" href="#_expression_14"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">halign(align, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_14"><a class="anchor" href="#_notation_14"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>align</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_14"><a class="anchor" href="#_semantics_14"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Given a total allocated space <code>X</code>, <code>subject</code> will be positioned
+horizontally to <code>X * align</code>.</p>
+</li>
+<li>
+<p>The <code>subject</code> will assume its <em>minimum horizontal limit</em>.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples_2"><a class="anchor" href="#_examples_2"></a>Examples</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>halign(0.0) // align subject to the left</code></p>
+</li>
+<li>
+<p><code>halign(1.0) // align subject to the right</code></p>
+</li>
+<li>
+<p><code>halign(0.5) // align subject to the center</code></p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_left"><a class="anchor" href="#_align_left"></a>align_left</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_left.svg" alt="align_left" width="250px">
+</div>
+</div>
+<div class="paragraph">
+<p>Left-aligns the an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_15"><a class="anchor" href="#_expression_15"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_15"><a class="anchor" href="#_notation_15"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_15"><a class="anchor" href="#_semantics_15"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>halign(0.0, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_center"><a class="anchor" href="#_align_center"></a>align_center</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_center.svg" alt="align_center" width="250px">
+</div>
+</div>
+<div class="paragraph">
+<p>Center-aligns the an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_16"><a class="anchor" href="#_expression_16"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_16"><a class="anchor" href="#_notation_16"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_16"><a class="anchor" href="#_semantics_16"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>halign(0.5, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_right"><a class="anchor" href="#_align_right"></a>align_right</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_right.svg" alt="align_right" width="250px">
+</div>
+</div>
+<div class="paragraph">
+<p>Right-aligns the an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_17"><a class="anchor" href="#_expression_17"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_17"><a class="anchor" href="#_notation_17"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_17"><a class="anchor" href="#_semantics_17"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>halign(1.0, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_valign"><a class="anchor" href="#_valign"></a>valign</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/valign.svg" alt="valign" width="163px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) in the y-axis.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_18"><a class="anchor" href="#_expression_18"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">valign(align, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_18"><a class="anchor" href="#_notation_18"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>align</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_18"><a class="anchor" href="#_semantics_18"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Given a total allocated space <code>Y</code>, <code>subject</code> will be positioned vertically
+to <code>Y * align</code>.</p>
+</li>
+<li>
+<p>The <code>subject</code> will assume its <em>minimum vertical limit</em>.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples_3"><a class="anchor" href="#_examples_3"></a>Examples</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>valign(0.0) // align subject to the top</code></p>
+</li>
+<li>
+<p><code>valign(1.0) // align subject to the right</code></p>
+</li>
+<li>
+<p><code>valign(0.5) // align subject to the middle</code></p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_top"><a class="anchor" href="#_align_top"></a>align_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_top.svg" alt="align_top" width="90px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the top.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_19"><a class="anchor" href="#_expression_19"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_top(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_19"><a class="anchor" href="#_notation_19"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_19"><a class="anchor" href="#_semantics_19"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>valign(0.0, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_middle"><a class="anchor" href="#_align_middle"></a>align_middle</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_middle.svg" alt="align_middle" width="90px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the middle.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_20"><a class="anchor" href="#_expression_20"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_middle(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_20"><a class="anchor" href="#_notation_20"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_20"><a class="anchor" href="#_semantics_20"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>valign(0.5, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_bottom"><a class="anchor" href="#_align_bottom"></a>align_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_bottom.svg" alt="align_bottom" width="90px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the bottom.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_21"><a class="anchor" href="#_expression_21"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_bottom(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_21"><a class="anchor" href="#_notation_21"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_21"><a class="anchor" href="#_semantics_21"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>valign(1.0, subject)</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_left_top"><a class="anchor" href="#_align_left_top"></a>align_left_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_left_top.svg" alt="align_left_top" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the left-top.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_22"><a class="anchor" href="#_expression_22"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_top(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_22"><a class="anchor" href="#_notation_22"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_22"><a class="anchor" href="#_semantics_22"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_left(align_top(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_center_top"><a class="anchor" href="#_align_center_top"></a>align_center_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_center_top.svg" alt="align_center_top" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the center-top.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_23"><a class="anchor" href="#_expression_23"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_top(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_23"><a class="anchor" href="#_notation_23"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_23"><a class="anchor" href="#_semantics_23"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_center(align_top(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_right_top"><a class="anchor" href="#_align_right_top"></a>align_right_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_right_top.svg" alt="align_right_top" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the right-top.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_24"><a class="anchor" href="#_expression_24"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_top(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_24"><a class="anchor" href="#_notation_24"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_24"><a class="anchor" href="#_semantics_24"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_right(align_top(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_left_middle"><a class="anchor" href="#_align_left_middle"></a>align_left_middle</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_left_middle.svg" alt="align_left_middle" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the left-middle.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_25"><a class="anchor" href="#_expression_25"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_middle(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_25"><a class="anchor" href="#_notation_25"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_25"><a class="anchor" href="#_semantics_25"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_left(align_middle(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_center_middle"><a class="anchor" href="#_align_center_middle"></a>align_center_middle</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_center_middle.svg" alt="align_center_middle" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the center-middle.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_26"><a class="anchor" href="#_expression_26"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_middle(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_26"><a class="anchor" href="#_notation_26"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_26"><a class="anchor" href="#_semantics_26"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_center(align_middle(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_right_middle"><a class="anchor" href="#_align_right_middle"></a>align_right_middle</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_right_middle.svg" alt="align_right_middle" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the right-middle.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_27"><a class="anchor" href="#_expression_27"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_middle(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_27"><a class="anchor" href="#_notation_27"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_27"><a class="anchor" href="#_semantics_27"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_right(align_middle(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_left_bottom"><a class="anchor" href="#_align_left_bottom"></a>align_left_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_left_bottom.svg" alt="align_left_bottom" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the left-bottom.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_28"><a class="anchor" href="#_expression_28"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_bottom(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_28"><a class="anchor" href="#_notation_28"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_28"><a class="anchor" href="#_semantics_28"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_left(align_bottom(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_center_bottom"><a class="anchor" href="#_align_center_bottom"></a>align_center_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_center_bottom.svg" alt="align_center_bottom" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the center-bottom.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_29"><a class="anchor" href="#_expression_29"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_bottom(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_29"><a class="anchor" href="#_notation_29"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_29"><a class="anchor" href="#_semantics_29"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_center(align_bottom(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_align_right_bottom"><a class="anchor" href="#_align_right_bottom"></a>align_right_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/align_right_bottom.svg" alt="align_right_bottom" width="240px">
+</div>
+</div>
+<div class="paragraph">
+<p>Aligns the an enclosed element (<code>subject</code>) to the right-bottom.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_30"><a class="anchor" href="#_expression_30"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_bottom(subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_30"><a class="anchor" href="#_notation_30"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_30"><a class="anchor" href="#_semantics_30"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Equivalent to <code>align_right(align_bottom(subject))</code></p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_margin_elements"><a class="anchor" href="#_margin_elements"></a>Margin Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Margins add some space around elements. There is a comprehensive list of
+margin elements in the Elements Library that can be used for various
+purposes. This section catalogues all the available margin elements.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_margin"><a class="anchor" href="#_margin"></a>margin</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin.svg" alt="margin" width="302px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin all around an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_31"><a class="anchor" href="#_expression_31"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin({left, top, right, bottom}, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_31"><a class="anchor" href="#_notation_31"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code>, <code>top</code>, <code>right</code>, <code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_31"><a class="anchor" href="#_semantics_31"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the left, top, right, and bottom of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin</code> does not violate the natural <em>limits</em> of the subject.
+<code>margin</code> will respect the subject&#8217;s min-max constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_left"><a class="anchor" href="#_margin_left"></a>margin_left</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_left.svg" alt="margin_left" width="230px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the left of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_32"><a class="anchor" href="#_expression_32"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_left(left, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_32"><a class="anchor" href="#_notation_32"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_32"><a class="anchor" href="#_semantics_32"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the left of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left</code> does not violate the natural <em>limits</em> of the subject.
+<code>margin_left</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_right"><a class="anchor" href="#_margin_right"></a>margin_right</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_right.svg" alt="margin_right" width="230px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the right of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_33"><a class="anchor" href="#_expression_33"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_right(right, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_33"><a class="anchor" href="#_notation_33"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>right</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_33"><a class="anchor" href="#_semantics_33"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the right of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_right</code> does not violate the natural <em>limits</em> of the subject.
+<code>margin_right</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_top"><a class="anchor" href="#_margin_top"></a>margin_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_top.svg" alt="margin_right" width="218px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the top of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_34"><a class="anchor" href="#_expression_34"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_top(top, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_34"><a class="anchor" href="#_notation_34"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>top</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_34"><a class="anchor" href="#_semantics_34"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the top of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_top</code> does not violate the natural <em>limits</em> of the subject.
+<code>margin_top</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_bottom"><a class="anchor" href="#_margin_bottom"></a>margin_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_bottom.svg" alt="margin_bottom" width="218px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the bottom of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_35"><a class="anchor" href="#_expression_35"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_bottom(bottom, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_35"><a class="anchor" href="#_notation_35"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_35"><a class="anchor" href="#_semantics_35"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the bottom of the subject with the given
+parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_bottom</code> does not violate the natural <em>limits</em> of the subject.
+<code>margin_bottom</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hmargin"><a class="anchor" href="#_hmargin"></a>hmargin</h3>
+<div class="paragraph">
+<p>(same as <code>margin_left_right</code>)</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hmargin.svg" alt="hmargin" width="302px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the left and right sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+hmargin({left, right}, subject)
+
+// variant 2
+hmargin(left, right, subject)
+
+// variant 3
+margin_left_right({left, right}, subject)
+
+// variant 4
+margin_left_right(left, right, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_36"><a class="anchor" href="#_notation_36"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code>, <code>right</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_36"><a class="anchor" href="#_semantics_36"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the left and right sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>hmargin</code> (and variants) does not violate the natural <em>limits</em> of the
+subject. <code>hmargin</code> (and variants) will respect the subject&#8217;s min-max
+constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vmargin"><a class="anchor" href="#_vmargin"></a>vmargin</h3>
+<div class="paragraph">
+<p>(same as <code>margin_top_bottom</code>)</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vmargin.svg" alt="vmargin" width="218px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the top and bottom sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+vmargin({top, bottom}, subject)
+
+// variant 2
+vmargin(top, bottom, subject)
+
+// variant 3
+margin_top_bottom({top, bottom}, subject)
+
+// variant 4
+margin_top_bottom(top, bottom, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_37"><a class="anchor" href="#_notation_37"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>top</code>, <code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_37"><a class="anchor" href="#_semantics_37"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the top and bottom sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>vmargin</code> (and variants) does not violate the natural <em>limits</em> of the
+subject. <code>vmargin</code> (and variants) will respect the subject&#8217;s min-max
+constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_left_top"><a class="anchor" href="#_margin_left_top"></a>margin_left_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_left_top.svg" alt="margin_left_top" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the left and top sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_left_top({left, top}, subject)
+
+// variant 2
+margin_left_top(left, top, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_38"><a class="anchor" href="#_notation_38"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code>, <code>top</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_38"><a class="anchor" href="#_semantics_38"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the left and top sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left_top</code> (and variant) does not violate the natural <em>limits</em>
+of the subject. <code>margin_left_top</code> (and variant) will respect the subject&#8217;s
+min-max constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_left_bottom"><a class="anchor" href="#_margin_left_bottom"></a>margin_left_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_left_bottom.svg" alt="margin_left_bottom" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the left and bottom sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_left_bottom({left, bottom}, subject)
+
+// variant 2
+margin_left_bottom(left, bottom, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_39"><a class="anchor" href="#_notation_39"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code>, <code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_39"><a class="anchor" href="#_semantics_39"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the left and bottom sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left_bottom</code> (and variant) does not violate the natural
+<em>limits</em> of the subject. <code>margin_left_bottom</code> (and variant) will respect
+the subject&#8217;s min-max constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_right_top"><a class="anchor" href="#_margin_right_top"></a>margin_right_top</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_right_top.svg" alt="margin_right_top" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the right and top sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_right_top({right, top}, subject)
+
+// variant 2
+margin_right_top(right, top, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_40"><a class="anchor" href="#_notation_40"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>right</code>, <code>top</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_40"><a class="anchor" href="#_semantics_40"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the right and top sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_right_top</code> (and variant) does not violate the natural <em>limits</em>
+of the subject. <code>margin_right_top</code> (and variant) will respect the
+subject&#8217;s min-max constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_margin_right_bottom"><a class="anchor" href="#_margin_right_bottom"></a>margin_right_bottom</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/margin_right_bottom.svg" alt="margin_right_bottom" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a margin to the right and bottom sides of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect3">
+<h4 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_right_bottom({right, bottom}, subject)
+
+// variant 2
+margin_right_bottom(right, bottom, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_41"><a class="anchor" href="#_notation_41"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>right</code>, <code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_41"><a class="anchor" href="#_semantics_41"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Space is added to the to the right and bottom sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <em>limits</em> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_right_bottom</code> (and variant) does not violate the natural
+limits of the subject. <code>margin_right_bottom</code> (and variant) will respect
+the subject&#8217;s min-max constraints and resizability.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_floating_element"><a class="anchor" href="#_floating_element"></a>Floating Element</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/floating.svg" alt="floating" width="432px">
+</div>
+</div>
+<div class="paragraph">
+<p>A floating element allows arbitrary placement of an enclosed element
+(<code>subject</code>) in the main view.</p>
+</div>
+<h4 id="_expression_36" class="discrete">Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">floating({left, top, right, bottom}, subject)</code></pre>
+</div>
+</div>
+<h4 id="_notation_42" class="discrete">Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>left</code>, <code>top</code>, <code>right</code>, <code>bottom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>Element</code></p></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_semantics_42" class="discrete">Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The element will be placed exactly to the specified position in the main
+view, constrained to the subject&#8217;s natural <em>limits</em>.</p>
+</li>
+<li>
+<p>The floating element does not violate the natural <em>limits</em> of the subject.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tiles_and_grids"><a class="anchor" href="#_tiles_and_grids"></a>Tiles and Grids</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tiles are the most useful layout elements, followed by by Grids. Tiles are
+used everywhere for composing hierarchical elements in rows and columns,
+typical to all GUIs. Grids are similar to tiles. Both tiles and grids allow
+elements to fluidly adjust depending on available space. Tiles compute the
+layout of its elements using the children elements' size <code>limits</code> while grids
+lay out its elements using an externally supplied fractional coordinates that
+specify positions of the elements in the allocated space.</p>
+</div>
+<div class="paragraph">
+<p>Tiles are best used
+for composing UI elements while grids are best for composing tables.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_horizontal_grids"><a class="anchor" href="#_horizontal_grids"></a>Horizontal Grids</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/hgrid.svg" alt="hgrid" width="347px">
+</div>
+</div>
+<div class="paragraph">
+<p>Horizontal Grids are composites that lay out one or more child elements in a
+row following externally supplied horizontal fractional positions. Horizontal
+Grids have computed horizontal and vertical sizes following the natural
+<code>limits</code> of its children.</p>
+</div>
+<div class="sect3">
+<h4 id="_semantics_43"><a class="anchor" href="#_semantics_43"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The elements are laid out in a single row, left to right, immediately next
+to each other with no intervening space.</p>
+</li>
+<li>
+<p>The elements are positioned horizontally using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element&#8217;s horizontal position from left (0.0) to right
+(1.0).</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>minimum vertical limit</em> is computed as the maximum of the
+children elements' <em>minimum vertical limit</em>s.</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>maximum vertical limit</em> is computed as the minimum of the
+children elements' <em>maximum vertical limit</em>s.</p>
+</li>
+<li>
+<p>The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.</p>
+</li>
+<li>
+<p>The supplied (horizontal) positions and computed (vertical) coordinates
+may violate the limits of its children elements.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the allocated size of a child element is lower than the element&#8217;s
+<em>minimum limits</em> in either dimension, the element will be cropped.</p>
+</li>
+<li>
+<p>If a child element&#8217;s <em>maximum limits</em> in either dimension is exceeded,
+the element will be aligned to the top-left.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hgrid"><a class="anchor" href="#_hgrid"></a>hgrid</h3>
+<div class="paragraph">
+<p>Build a horizontal grid with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_37"><a class="anchor" href="#_expression_37"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid(positions, e1,...eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_43"><a class="anchor" href="#_notation_43"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>positions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External container of fractional positions (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The external container, <code>positions</code>, can either be a plain array of type
+<code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in a
+<code>std::array&lt;element_ptr, N&gt;</code> managed by the horizontal grid element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+hgrid(positions, item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>hgrid_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of supplied positions and elements should match, otherwise,
+compiler error (no matching function for call to <code>hgrid</code>).</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the left-most
+position in the row). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics_44"><a class="anchor" href="#_semantics_44"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Horizontal Grids, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hgrid_composite"><a class="anchor" href="#_hgrid_composite"></a>hgrid_composite</h3>
+<div class="paragraph">
+<p>Create a horizontal grid with an indeterminate (dynamic) number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_38"><a class="anchor" href="#_expression_38"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid_composite c{positions};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_44"><a class="anchor" href="#_notation_44"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>positions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External container of fractional positions, <code>std::vector&lt;float&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>hgrid_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>hgrid_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>hgrid_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_2"><a class="anchor" href="#_example_2"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>hgrid_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>hgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requirements_2"><a class="anchor" href="#_requirements_2"></a>Requirements</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of items in the external coordinates vector <code>positions</code> must match
+with the number of elements at any given time.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the left-most
+position in the row). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_horizontal_tiles"><a class="anchor" href="#_horizontal_tiles"></a>Horizontal Tiles</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/htile.svg" alt="htile" width="462px">
+</div>
+</div>
+<div class="paragraph">
+<p>Horizontal Tiles are similar to Horizontal Grids, but allow elements to
+fluidly adjust horizontally depending on available space. Horizontal Tiles
+are best used for composing UI elements while Horizontal Grids are best for
+composing tables.</p>
+</div>
+<div class="sect3">
+<h4 id="_semantics_45"><a class="anchor" href="#_semantics_45"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The elements are laid out in a single row, left to right, immediately next
+to each other with no intervening space.</p>
+</li>
+<li>
+<p>The elements are positioned horizontally using the children&#8217;s natural
+<em>limits</em>.</p>
+</li>
+<li>
+<p>Horizontal space is allocated using this algorithm:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Space is allocated for each child element following the child&#8217;s natural
+<em>minimum horizontal limit</em>.</p>
+</li>
+<li>
+<p>If the allocated space exceeds the sum of all children elements'
+<em>minimum horizontal limit</em>s, the extra space is given to each
+horizontally resizable element (<code>limits.min.x &lt; limits.max.x</code>).</p>
+</li>
+<li>
+<p>The element&#8217;s "stretchiness" determines how much extra space is given
+to it according to the element&#8217;s <code>stretch()</code> member function. A stretch
+value of <code>1.0</code> is default. A stretchiness value of 2.0 means that the
+element is able to stretch twice as much compared to its siblings.
+Horizontally fixed-sized elements will not be stretched (element d in
+the diagram). (Also see <a href="#stretch-elements">Stretch Elements</a>).</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The tile&#8217;s <em>minimum vertical limit</em> is computed as the maximum of the
+children elements' <em>minimum vertical limit</em>s.</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>maximum vertical limit</em> is computed as the minimum of the
+children elements' <em>maximum vertical limit</em>s.</p>
+</li>
+<li>
+<p>The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.</p>
+</li>
+<li>
+<p>The supplied (horizontal) and computed (vertical) coordinates may violate
+the limits of its children elements.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the allocated size of a child element is lower than the element&#8217;s
+<em>minimum limits</em> in either dimension, the element will be cropped.</p>
+</li>
+<li>
+<p>If a child element&#8217;s <em>maximum limits</em> in either dimension is exceeded,
+the element will be aligned to the top-left.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_htile"><a class="anchor" href="#_htile"></a>htile</h3>
+<div class="paragraph">
+<p>Build a horizontal tile with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_39"><a class="anchor" href="#_expression_39"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(e1,...eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_45"><a class="anchor" href="#_notation_45"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
+horizontal tile element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_3"><a class="anchor" href="#_example_3"></a>Example:</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>htile_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics_46"><a class="anchor" href="#_semantics_46"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Horizontal Tiles, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_htile_composite"><a class="anchor" href="#_htile_composite"></a>htile_composite</h3>
+<div class="paragraph">
+<p>Create a horizontal tile with an indeterminate (dynamic) number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_40"><a class="anchor" href="#_expression_40"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile_composite c;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_46"><a class="anchor" href="#_notation_46"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>htile_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>htile_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>htile_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_4"><a class="anchor" href="#_example_4"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>htile_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>htile_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vertical_grids"><a class="anchor" href="#_vertical_grids"></a>Vertical Grids</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vgrid.svg" alt="vgrid" width="347px">
+</div>
+</div>
+<div class="paragraph">
+<p>Vertical Grids are composites that lay out one or more child elements in a
+column following externally supplied vertical fractional positions. Vertical
+Grids have computed horizontal and vertical sizes following the natural
+<code>limits</code> of its children.</p>
+</div>
+<div class="sect3">
+<h4 id="_semantics_47"><a class="anchor" href="#_semantics_47"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The elements are laid out in a single column, top to bottom, immediately
+next to each other with no intervening space.</p>
+</li>
+<li>
+<p>The elements are positioned vertically using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element&#8217;s vertical position from top (0.0) to bottom
+(1.0).</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>minimum horizontal limit</em> is computed as the maximum of the
+children elements' <em>minimum horizontal limit</em>s.</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>maximum horizontal limit</em> is computed as the minumum of the
+children elements' <em>maximum horizontal limit</em>s.</p>
+</li>
+<li>
+<p>The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.</p>
+</li>
+<li>
+<p>The supplied (vertical) positions and computed (horizontal) coordinates
+may violate the limits of its children elements.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the allocated size of a child element is lower than the element&#8217;s
+<em>minimum limits</em> in either dimension, the element will be cropped.</p>
+</li>
+<li>
+<p>If a child element&#8217;s <em>maximum limits</em> in either dimension is exceeded,
+the element will be aligned to the top-left.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vgrid"><a class="anchor" href="#_vgrid"></a>vgrid</h3>
+<div class="paragraph">
+<p>Build a vertical grid with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_41"><a class="anchor" href="#_expression_41"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid(positions, e1,...eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_47"><a class="anchor" href="#_notation_47"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>positions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External container of fractional positions (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The External container, <code>positions</code> is an external can either be a plain array
+of type <code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in
+a <code>std::array&lt;element_ptr, N&gt;</code> managed by the vertical grid element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_5"><a class="anchor" href="#_example_5"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+vgrid(positions, item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>vgrid_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requirements_3"><a class="anchor" href="#_requirements_3"></a>Requirements</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of supplied coordinates and elements should match, otherwise,
+compiler error (no matching function for call to <code>vgrid</code>).</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the top-most
+position in the column). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics_48"><a class="anchor" href="#_semantics_48"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Vertical Grids, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vgrid_composite"><a class="anchor" href="#_vgrid_composite"></a>vgrid_composite</h3>
+<div class="paragraph">
+<p>Create a vertical grid with an indeterminate (dynamic) number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_42"><a class="anchor" href="#_expression_42"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid_composite c{positions};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_48"><a class="anchor" href="#_notation_48"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>positions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External container of fractional positions, <code>std::vector&lt;float&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>vgrid_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>vgrid_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>vgrid_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>vgrid_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>vgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requirements_4"><a class="anchor" href="#_requirements_4"></a>Requirements</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of items in the external coordinates vector <code>positions</code> must match
+with the number of elements at any given time.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the top-most
+position in the column). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vertical_tiles"><a class="anchor" href="#_vertical_tiles"></a>Vertical Tiles</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/vtile.svg" alt="vtile" width="347px">
+</div>
+</div>
+<div class="paragraph">
+<p>Vertical Tiles are similar to Vertical Grids, but allow elements to fluidly
+adjust vertically depending on available space. Vertical Tiles are best used
+for composing UI elements while Vertical Grids are best for composing tables.</p>
+</div>
+<div class="sect3">
+<h4 id="_semantics_49"><a class="anchor" href="#_semantics_49"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The elements are laid out in a single column, left to right, immediately
+next to each other with no intervening space.</p>
+</li>
+<li>
+<p>The elements are positioned vertically using the children&#8217;s natural
+<em>limits</em>.</p>
+</li>
+<li>
+<p>Vertical space is allocated using this algorithm:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Space is allocated for each child element following the child&#8217;s natural
+<em>minimum vertical limit</em>.</p>
+</li>
+<li>
+<p>If the allocated space exceeds the sum of all children elements'
+<em>minimum vertical limit</em>s, the extra space is given to each
+vertically resizable element (<code>limits.min.y &lt; limits.max.y</code>).</p>
+</li>
+<li>
+<p>The element&#8217;s "stretchiness" determines how much extra space is given
+to it according to the element&#8217;s <code>stretch()</code> member function. A stretch
+value of <code>1.0</code> is default. A stretchiness value of 2.0 means that the
+element is able to stretch twice as much compared to its siblings.
+Vertically fixed-sized elements will not be stretched (element b in the
+diagram). (Also see <a href="#stretch-elements">Stretch Elements</a>).</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The tile&#8217;s <em>minimum horizontal limit</em> is computed as the maximum of the
+children elements' <em>minimum horizontal limit</em>s.</p>
+</li>
+<li>
+<p>The grid&#8217;s <em>maximum horizontal limit</em> is computed as the minumum of the
+children elements' <em>maximum horizontal limit</em>s.</p>
+</li>
+<li>
+<p>The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.</p>
+</li>
+<li>
+<p>The supplied (vertical) and computed (horizontal) coordinates may violate
+the limits of its children elements.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the allocated size of a child element is lower than the element&#8217;s
+<em>minimum limits</em> in either dimension, the element will be cropped.</p>
+</li>
+<li>
+<p>If a child element&#8217;s <em>maximum limits</em> in either dimension is exceeded,
+the element will be aligned to the top-left.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vtile"><a class="anchor" href="#_vtile"></a>vtile</h3>
+<div class="paragraph">
+<p>Build a vertical tile with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_43"><a class="anchor" href="#_expression_43"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(e1,...eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_49"><a class="anchor" href="#_notation_49"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
+vertical tile element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_6"><a class="anchor" href="#_example_6"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>vtile_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics_50"><a class="anchor" href="#_semantics_50"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Vertical Tiles, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vtile_composite"><a class="anchor" href="#_vtile_composite"></a>vtile_composite</h3>
+<div class="paragraph">
+<p>Create a vertical tile with an indeterminate (dynamic) number of elements:</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_44"><a class="anchor" href="#_expression_44"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile_composite c;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_50"><a class="anchor" href="#_notation_50"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>vtile_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>vtile_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>vtile_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_7"><a class="anchor" href="#_example_7"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>vtile_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>vtile_composite</code> is itself also an <code>element</code> and while it has
+<code>std::vector</code>'s interface, it can also be <code>share</code>d like any element, which
+allows you to build complex hierarchical structures.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_layers"><a class="anchor" href="#_layers"></a>Layers</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/layer.svg" alt="layer" width="353px">
+</div>
+</div>
+<div class="paragraph">
+<p>The Elements Library is 2D, but the z-axis pertains to top-to-bottom
+layering. Layers allow groups of elements to be placed in the z-axis where
+higher-level elements obscure or hide lower-level elements.</p>
+</div>
+<h4 id="_semantics_51" class="discrete">Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The elements are laid out in the z-axis, top to bottom.</p>
+</li>
+<li>
+<p>Rendering is done bottom-up; the bottom-most elements are drawn first.</p>
+</li>
+<li>
+<p>UI control (such as mouse clicks) proceeds from top to bottom.
+Higher-level elements are given control priority. If a higher-level
+element does not process the event, lower-level elements are given a
+chance.</p>
+</li>
+<li>
+<p>The layer&#8217;s <em>minimum limit</em> is computed as the maximum of the children
+elements' <em>minimum limit</em>s.</p>
+</li>
+<li>
+<p>The layer&#8217;s <em>maximum limit</em> is computed as the minimum of the children
+elements' <em>maximum limit</em>s.</p>
+</li>
+<li>
+<p>The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.</p>
+</li>
+<li>
+<p>The computed (vertical) and (horizontal) coordinates may violate the
+limits of its children elements.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the allocated size of a child element is lower than the element&#8217;s
+<em>minimum limits</em> in either dimension, the element will be cropped.</p>
+</li>
+<li>
+<p>If a child element&#8217;s <em>maximum limits</em> in either dimension is exceeded,
+the element will be aligned to the top-left.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_layer"><a class="anchor" href="#_layer"></a>layer</h3>
+<div class="paragraph">
+<p>Create a layer composite with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_45"><a class="anchor" href="#_expression_45"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">layer(e1,...eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_51"><a class="anchor" href="#_notation_51"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
+layer element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_8"><a class="anchor" href="#_example_8"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">layer(item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>layer_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics_52"><a class="anchor" href="#_semantics_52"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Layers, returns instance of <code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_layer_composite"><a class="anchor" href="#_layer_composite"></a>layer_composite</h3>
+<div class="paragraph">
+<p>Create a layer with an indeterminate (dynamic) number of elements:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">layer_composite c;</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_52"><a class="anchor" href="#_notation_52"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>layer_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>layer_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>layer_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_9"><a class="anchor" href="#_example_9"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>layer_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>layer_composite</code> is itself also an <code>element</code> and while it has
+<code>std::vector</code>'s interface, it can also be <code>share</code>d like any element, which
+allows you to build complex hierarchical structures.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_decks"><a class="anchor" href="#_decks"></a>Decks</h3>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/deck.svg" alt="deck" width="353px">
+</div>
+</div>
+<div class="paragraph">
+<p>The Deck is very similar to layers. Elements are placed in the z-axis. But
+unlike layers, only the selected element is active (top-most by default).</p>
+</div>
+<div class="sect3">
+<h4 id="_semantics_53"><a class="anchor" href="#_semantics_53"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Everything listed in the layer&#8217;s <em>Semantics</em>, except 2 and 3.</p>
+</li>
+<li>
+<p>Only the active selected element element is drawn.</p>
+</li>
+<li>
+<p>Only the active selected element is given the chance to process UI control.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deck"><a class="anchor" href="#_deck"></a>deck</h3>
+<div class="paragraph">
+<p>Create a deck composite with a fixed number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_46"><a class="anchor" href="#_expression_46"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck(e1, e2, e3... eN)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_53"><a class="anchor" href="#_notation_53"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>N</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e1,...eN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One or more child elements, instances of <code>Element</code> (more below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
+deck element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_10"><a class="anchor" href="#_example_10"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck(item1, item2, item3, item4)</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>deck_composite</code> (see below).</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requirements_5"><a class="anchor" href="#_requirements_5"></a>Requirements</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In addition to the semantics of Deck, returns instance of <code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deck_composite"><a class="anchor" href="#_deck_composite"></a>deck_composite</h3>
+<div class="paragraph">
+<p>Create a deck with an indeterminate (dynamic) number of elements:</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_47"><a class="anchor" href="#_expression_47"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck_composite c;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_54"><a class="anchor" href="#_notation_54"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>deck_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>deck_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>deck_composite</code>
+just as you would a <code>std::vector</code>, such as <code>push_back</code> a child element. Just
+keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_11"><a class="anchor" href="#_example_11"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>deck_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>deck_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flow_element"><a class="anchor" href="#_flow_element"></a>Flow Element</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The flow element, is a composite that lays out its children much like the way
+text is laid out: lay out each element from left to right, fitting as much
+elements as possible following each child&#8217;s <em>maximum horizontal limit</em>. Once
+a row is full, move to the next row and do the same until the end of the row
+is filled. Repeat the procedure until all the elements are laid out. The
+height of each row is determined by the <em>maximum vertical limit</em> of all the
+elements to be laid out in that row. The following graphic depicts a
+simplified layout scenario for child elements <code>a</code> to <code>r</code>.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/layout/flow.svg" alt="flow" width="380px">
+</div>
+</div>
+<div class="paragraph">
+<p>The child elements arranged in a <code>flow</code> composite are automatically re-flowed
+(re-lay-out) when the view size changes.</p>
+</div>
+<div class="paragraph">
+<p>To have elements laid out using <code>flow</code>, you need to make a <code>flow_composite</code>.</p>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="_flow_composite"><a class="anchor" href="#_flow_composite"></a>flow_composite</h3>
+<div class="paragraph">
+<p>Create a <code>flow_composite</code> with an indeterminate (dynamic) number of elements.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_48"><a class="anchor" href="#_expression_48"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">flow_composite c;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_55"><a class="anchor" href="#_notation_55"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of type <code>flow_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>flow_composite</code> is basically a <code>std::vector&lt;element_ptr&gt;</code> that the
+client uses to manage the composite&#8217;s elements. The lifetime of the
+container, <code>c</code>, is the client&#8217;s responsibility. You use <code>flow_composite</code> just
+as you would a <code>std::vector</code>, such as <code>push_back</code> a child element, <code>child</code>.
+Just keep in mind that we are dealing with <code>element_ptr</code> items.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_12"><a class="anchor" href="#_example_12"></a>Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>flow_composite</code>.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>flow_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flow"><a class="anchor" href="#_flow"></a>flow</h3>
+<div class="paragraph">
+<p>Once we have a <code>flow_composite</code>, we can place its contents in a <code>flow</code>
+element.</p>
+</div>
+<div class="sect3">
+<h4 id="_expression_49"><a class="anchor" href="#_expression_49"></a>Expression</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">flow(c)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation_56"><a class="anchor" href="#_notation_56"></a>Notation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance of <code>flow_composite</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_semantics_54"><a class="anchor" href="#_semantics_54"></a>Semantics</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Returns instance of <code>Composite</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script src="../_/js/vendor/lunr.js"></script>
+<script src="../_/js/search-ui.js" id="search-ui-script" data-site-root-path=".." data-snippet-length="100" data-stylesheet="../_/css/search.css"></script>
+<script async src="../search-index.js"></script>
+  </body>
+</html>

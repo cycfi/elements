@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Setup and Installation :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/setup.html">
+    <meta name="generator" content="Antora 3.1.7">
+    <link rel="stylesheet" href="../_/css/site.css">
+<meta name="og:title" content="Elements Docs Q DSP Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="layout.html">Layout</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="skia_2024/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="skia_2024/index.html">skia_2024</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="skia_2024/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Elements Library</a></li>
+    <li><a href="setup.html">Setup and Installation</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">master</button>
+  <div class="version-menu">
+    <a class="version" href="skia_2024/setup.html">skia_2024</a>
+    <a class="version is-current" href="setup.html">master</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Setup and Installation</h1>
+<div class="sect1">
+<h2 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are the basic tools that you need in order to use the library:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A C&#43;&#43;17 compiler</p>
+</li>
+<li>
+<p>Git</p>
+</li>
+<li>
+<p><a href="https://cmake.org/">CMake</a> 3.15 or higher</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_c17"><a class="anchor" href="#_c17"></a>C&#43;&#43;17</h3>
+<div class="paragraph">
+<p>Elements currently supports the MacOS, Windows and Linux.</p>
+</div>
+<div class="paragraph">
+<p>In the Mac, we support the <a href="https://developer.apple.com/xcode/">XCode</a> IDE.</p>
+</div>
+<div class="paragraph">
+<p>In Windows, we support Windows 10 with <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>, although it will probably also work with older versions of the Visual Studio IDE.</p>
+</div>
+<div class="paragraph">
+<p>In Linux, we support both <a href="https://clang.llvm.org/">Clang</a> and <a href="https://gcc.gnu.org/">g&#43;&#43;</a>. Get the latest version with a C&#43;&#43;17 compiler.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://www.jetbrains.com/clion/">CLion</a> IDE is supported on all platforms, it simply requires the CMakeLists.txt file to open and build the project.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git"><a class="anchor" href="#_git"></a>Git</h3>
+<div class="paragraph">
+<p>Elements C&#43;&#43; GUI library, plus the Cycfi Infra library:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">git clone --recurse-submodules  https://github.com/cycfi/elements.git</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmake"><a class="anchor" href="#_cmake"></a>CMake</h3>
+<div class="paragraph">
+<p>Make sure you have <a href="https://cmake.org/">CMake</a> 3.15 or higher. Follow the <a href="https://cmake.org/install/">installation procedure</a> for your platform, or follow the instructions below for specific environments.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_required_libraries"><a class="anchor" href="#_required_libraries"></a>Required Libraries</h3>
+<div class="paragraph">
+<p>Here are Element&#8217;s dependencies:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a></p>
+</li>
+<li>
+<p><a href="https://cairographics.org/">Cairo</a></p>
+</li>
+<li>
+<p><a href="https://www.freedesktop.org/wiki/Software/fontconfig/">fontconfig</a></p>
+</li>
+<li>
+<p><a href="https://www.freetype.org/">freetype2</a></p>
+</li>
+<li>
+<p><a href="https://www.sourceware.org/bzip2/">bzip2</a></p>
+</li>
+<li>
+<p><a href="https://libexpat.github.io/">expat</a></p>
+</li>
+<li>
+<p><a href="https://zlib.net/">zlib</a></p>
+</li>
+<li>
+<p><a href="http://www.libpng.org/pub/png/libpng.html">libpng</a></p>
+</li>
+<li>
+<p><a href="https://github.com/webmproject/libwebp">libwebp</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Specific instructions are provided below for specific environments.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, the following libraries are dragged as submodules:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <a href="https://github.com/cycfi/infra/">Cycfi infra library</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Infra provides some basic groundwork common to Cycfi libraries, including Elements.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_macos"><a class="anchor" href="#_macos"></a>MacOS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_required_libraries"><a class="anchor" href="#_install_required_libraries"></a>Install required libraries</h3>
+<div class="paragraph">
+<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install pkg-config
+brew install cairo
+brew install fontconfig
+brew install bzip2
+brew install expat
+brew install zlib
+brew install libpng
+brew install webp</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_cmake"><a class="anchor" href="#_install_cmake"></a>Install CMake</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install cmake</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generating_the_project_using_cmake"><a class="anchor" href="#_generating_the_project_using_cmake"></a>Generating the Project using CMake</h3>
+<div class="paragraph">
+<p>There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for the MacOS:</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_xcode"><a class="anchor" href="#_using_xcode"></a>Using XCode</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>CD to the elements library.</p>
+</li>
+<li>
+<p>Make a build directory inside the elements directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p>invoke cmake.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
+mkdir build
+cd build
+cmake -GXcode ../</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, CMake will generate an <a href="https://developer.apple.com/xcode/">XCode</a> project in the build directory. Open the project file <code>elements.xcodeproj</code> and build all. You should see a couple of example applications.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_windows"><a class="anchor" href="#_windows"></a>Windows</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_required_libraries_2"><a class="anchor" href="#_install_required_libraries_2"></a>Install required libraries</h3>
+<div class="paragraph">
+<p>The Windows port requires a package manager that supports the dependencies listed above. One popular package manager is <a href="https://vcpkg.io/en/">vcpkg</a>. We will use vcpkg in the setup instructions below.</p>
+</div>
+<div class="paragraph">
+<p>Clone and bootstrap the vcpkg dependency manager. I suggest placing it in <code>c:\</code> or <code>c:\Program Files</code>, but it does not really matter where.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">git clone https://github.com/microsoft/vcpkg
+.\vcpkg\bootstrap-vcpkg.bat</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install the dependencies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">vcpkg install pkgconf
+vcpkg install cairo
+vcpkg install libwebp</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+Installing Cairo already brings in the other dependencies.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_cmake_2"><a class="anchor" href="#_install_cmake_2"></a>Install CMake</h3>
+<div class="paragraph">
+<p>Follow the <a href="https://cmake.org/install/">installation procedure</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generating_the_project_using_cmake_2"><a class="anchor" href="#_generating_the_project_using_cmake_2"></a>Generating the Project using CMake</h3>
+<div class="paragraph">
+<p>If you have <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the Visual Studio GUI for a graphical development environment.</p>
+</li>
+<li>
+<p>Use NMake for make-style command-line builds.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_visual_studio_2022_gui"><a class="anchor" href="#_visual_studio_2022_gui"></a>Visual Studio 2022 GUI</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>CD to the elements library.</p>
+</li>
+<li>
+<p>Make a build directory inside the elements directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p>invoke cmake.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
+mkdir build
+cd build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to tell cmake the location of the vcpkg toolchain file. That way, <code>find_package</code> will know where to find the installed libraries. If you installed vcpkg in <code>c:\</code> as suggested, you invoke cmake like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg ../</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, cmake will generate a Visual Studio solution in the build directory. Open the project file <code>elements.sln</code> and build all. You should see a couple of example applications.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nmake"><a class="anchor" href="#_nmake"></a>NMake</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open a <em>Command Prompt for VS 2022</em>
+({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.</p>
+</li>
+<li>
+<p>CD to the elements library.</p>
+</li>
+<li>
+<p>Make a build directory inside the elements directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p>invoke cmake.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
+mkdir build
+cd build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, you will need to tell cmake the location of the vcpkg toolchain file. If you installed vcpkg in <code>c:\</code> as suggested, you invoke cmake like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -G"NMake Makefiles" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg ../</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, cmake will generate NMake Make files in the build directory. Invoke <code>nmake</code> to build the binary.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_windows_mingw_gtk"><a class="anchor" href="#_windows_mingw_gtk"></a>Windows (MinGW + Gtk)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_msys2_toolchain_and_required_libraries"><a class="anchor" href="#_install_msys2_toolchain_and_required_libraries"></a>Install MSYS2 toolchain and required libraries</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>MSYS2 is a software distro and building platform for Windows</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Download <a href="https://www.msys2.org/">MSYS2</a> from its official website and install it. Its installation guide is on the home page.</p>
+</div>
+<div class="paragraph">
+<p>Open <code>MSYS2 MinGW 64-bit</code> or <code>MSYS2 MinGW 32-bit</code> from your start menu. Install tools and libraries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
+pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
+pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
+pacman -S ${MINGW_PACKAGE_PREFIX}-libwebp
+pacman -S make</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_cmake_3"><a class="anchor" href="#_install_cmake_3"></a>Install CMake</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">pacman -S ${MINGW_PACKAGE_PREFIX}-cmake</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generating_the_project_using_cmake_3"><a class="anchor" href="#_generating_the_project_using_cmake_3"></a>Generating the Project using CMake</h3>
+<div class="paragraph">
+<p>There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for MSYS2:</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_unix_makefiles"><a class="anchor" href="#_using_unix_makefiles"></a>Using UNIX makefiles</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>CD to the elements library.</p>
+</li>
+<li>
+<p>Make a build directory inside the elements directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p>invoke cmake. <code>-DELEMENTS_HOST_UI_LIBRARY=gtk</code> tells cmake to build with Gtk.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
+mkdir build
+cd build
+cmake ../ -G "Unix Makefiles" -DELEMENTS_HOST_UI_LIBRARY=gtk</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, cmake will generate Unix Make files in the build directory.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linux"><a class="anchor" href="#_linux"></a>Linux</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_install_required_libraries_3"><a class="anchor" href="#_install_required_libraries_3"></a>Install required libraries</h3>
+<div class="paragraph">
+<p>In addition to the requirements listed in the <a href="#requirements">requirements</a> section, the <a href="https://www.gtk.org/">GTK3 library</a> is also required by the Linux port of Elements.</p>
+</div>
+<div class="paragraph">
+<p>On Debian and derived distributions using <a href="https://linux.die.net/man/8/apt-get">apt-get</a> (requires <code>sudo</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">sudo apt-get install libcairo2-dev
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libwebp-dev</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_cmake_4"><a class="anchor" href="#_install_cmake_4"></a>Install CMake</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">sudo apt-get -y install cmake</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generating_the_project_using_cmake_4"><a class="anchor" href="#_generating_the_project_using_cmake_4"></a>Generating the Project using CMake</h3>
+<div class="paragraph">
+<p>There are multiple ways to generate a project file using CMake depending on
+your platform and desired IDE, but here is an example for Linux:</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_unix_makefiles_2"><a class="anchor" href="#_using_unix_makefiles_2"></a>Using UNIX makefiles</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>CD to the elements library.</p>
+</li>
+<li>
+<p>Make a build directory inside the elements directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p>invoke cmake.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
+mkdir build
+cd build
+cmake -G "Unix Makefiles" ../</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, cmake will generate Unix Make files in the build directory.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_and_running_the_examples"><a class="anchor" href="#_building_and_running_the_examples"></a>Building and Running the examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If successful, cmake will generate a project file or makefiles in the build directory. Build the library and example programs using the generated makefiles or open the project file using your IDE and build all.</p>
+</div>
+<div class="paragraph">
+<p>You should see a couple of example applications in there that you can run. These examples are provided as starting points to get you up to speed in learning how to use the library. For simplicity, each example is contained in a single <code>main.cpp</code> source file.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to inspect and mess with the examples. Each example demonstrates different aspects of the Elements library, from layout to control. You&#8217;d probably want to start with the &#8220;hello_universe&#8221; example, which is the Element&#8217;s hello-world counterpart. You can copy the &#8220;empty&#8221; example and use it as a boilerplate for your own project. See next section on how to copy an example and build outside the Elements project directory.</p>
+</div>
+<div class="paragraph">
+<p>Tips:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Resize the window and see the elements fluidly resize</p>
+</li>
+<li>
+<p>Use two-finger swipe to move the sliders and knobs</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_outside_the_project"><a class="anchor" href="#_building_outside_the_project"></a>Building Outside the Project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Elements project is set up so that you can easily copy and paste any of the examples outside the project, set -DELEMENTS_ROOT="path/to/elements", and the example should immediately build without any hassle.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example for XCode assuming the elements lib is in the same directory alongside the "hello_universe" example directory you copied to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Copy the hello_universe example project directory.</p>
+</li>
+<li>
+<p>Make a build directory inside the hello_universe directory.</p>
+</li>
+<li>
+<p>CD to the build directory.</p>
+</li>
+<li>
+<p><code>cmake -GXcode -DELEMENTS_ROOT="../elements" ../</code></p>
+</li>
+</ol>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script src="../_/js/vendor/lunr.js"></script>
+<script src="../_/js/search-ui.js" id="search-ui-script" data-site-root-path=".." data-snippet-length="100" data-stylesheet="../_/css/search.css"></script>
+<script async src="../search-index.js"></script>
+  </body>
+</html>

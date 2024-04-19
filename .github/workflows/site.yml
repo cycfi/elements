@@ -1,0 +1,23 @@
+name: Publish to GitHub Pages with Lunr Search Extension
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Install Antora and the Antora Lunr Extension
+      run: npm i antora @antora/lunr-extension
+    - name: Generate Site
+      run: npx antora docs/antora/antora-playbook.yml
+    - name: Publish to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: www
+        publish_dir: docs/antora/build/site
+  

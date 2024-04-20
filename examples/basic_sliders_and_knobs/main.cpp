@@ -217,22 +217,22 @@ void link_controls(view& view_)
 
 int main(int argc, char* argv[])
 {
-   app _app("Basic Sliders And Knobs");   // Make an app
-   window _win(_app.name());              // Make a window
-   _win.on_close =                        // Set the app to stop when window is closed
+   app _app("Basic Sliders And Knobs");      // Make an app
+   window _win(_app.name());                 // Make a window
+   _win.on_close =                           // Set the app to stop when window is closed
       [&_app]()
       {
          _app.stop();
       };
 
-   view view_(_win);                      // Make a view
+   view view_(_win);                         // Make a view
 
    view_.content(
-      make_controls(),                    // Make our controls
-      background                          // Add a background
+      make_controls(),                       // Make our controls
+      background                             // Add a background
    );
 
-   link_controls(view_);                  // Link the controls.
-   _app.run();                            // Run the app
+   link_controls(view_);                     // Link the controls.
+   _app.run();                               // Run the app
    return 0;
 }

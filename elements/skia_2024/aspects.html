@@ -191,7 +191,7 @@ int main(int argc, const char* argv[])
 {
    app _app(argc, argv);
    window _win(_app.name());
-   _win.on_close = [&amp;_app]() { _app.stop(); };
+   _win.on_close = [&amp;_app]() {_app.stop();};
 
    view view_(_win);
 
@@ -310,7 +310,7 @@ position is supplied at rendering time).</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">auto blue_rbox =
    fixed_size(
-      { 100, 50 },
+      {100, 50},
       rbox(colors::medium_blue, 10)
    );</code></pre>
 </div>
@@ -324,15 +324,24 @@ using the <code>align_center_middle</code> element:</p>
 <pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">auto blue_rbox =
    align_center_middle(
       fixed_size(
-         { 100, 50 },
+         {100, 50},
          rbox(colors::medium_blue, 10)
       )
    );</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Without the alignment element, the main window would have been constrained to
-a fixed 100x50 size. There’s a multitude of alignment elements available.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="💡 &#160;TIP"></i>
+</td>
+<td class="content">
+Without the alignment element, the main window would have been constrained to
+a fixed 100x50 size. There’s a multitude of alignment elements available. See <a href="layout.html" class="xref page">Layout</a>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>So now, we are seeing how fine-grained elements are composed. The <code>rbox</code> is
@@ -365,7 +374,7 @@ of the box using <code>fixed_size</code>, we place the label alongside the box i
    align_center_middle(
       layer(
          margin(
-            { 25, 20, 25, 18 },
+            {25, 20, 25, 18},
             label("“Dogs are my favorite people”")
          ),
          rbox(colors::medium_blue, 10)
@@ -390,7 +399,7 @@ of the box using <code>fixed_size</code>, we place the label alongside the box i
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">margin(
-   { 25, 20, 25, 18 },
+   {25, 20, 25, 18},
    label("“Dogs are my favorite people”")
 )</code></pre>
 </div>
@@ -415,7 +424,7 @@ element:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">layer(
    margin(
-      { 25, 20, 25, 18 },
+      {25, 20, 25, 18},
       label("“Dogs are my favorite people”")
    ),
    rbox(colors::medium_blue, 10)
@@ -425,9 +434,18 @@ element:</p>
 <div class="paragraph">
 <p>Step 4: Then finally, we place it in the <code>align_center_middle</code> element.</p>
 </div>
-<div class="paragraph">
-<p>Tip: If the element hierarchy gets a bit too deep, use the C&#43;&#43; <code>auto</code> to name
-sub-parts of the element composition to make it easier to understand.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="💡 &#160;TIP"></i>
+</td>
+<td class="content">
+If the element hierarchy gets a bit too deep, use the C&#43;&#43; <code>auto</code> to name
+sub-parts of the element composition to make it easier to understand.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The <code>layer</code> element is a composite element that holds zero or more <code>child'
@@ -464,8 +482,7 @@ have dealt with in the previous sections.</p>
 <p>Take note that this example is only for illustrative purposes. The library
 provides easier ways to make sliders. Elements has a gallery a collection of
 reusable element compositions, just like what we do here, but more refined.
-That gallery is constantly growing. The possibilities are endless. Composing
-elements is fun!</p>
+That gallery is constantly growing. Composing elements is fun!</p>
 </div>
 </blockquote>
 </div>
@@ -481,7 +498,7 @@ silly, I should say :blush:, but hey, we are trying to make a point!</p>
 auto thumb =
    layer(
       margin(
-         { 25, 20, 25, 18 },
+         {25, 20, 25, 18},
          label("“Dogs are my favorite people”")
       ),
       rbox(colors::medium_blue, 10)
@@ -515,6 +532,54 @@ horizontally, so we use <code>align_center</code> instead of <code>align_center_
 </div>
 <div class="paragraph">
 <p>Ok, there you go! Now go and be creative and make your own controls!</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the complete prgram:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;elements.hpp&gt;
+
+using namespace cycfi::elements;
+using cycfi::artist::rgba;
+namespace colors = cycfi::artist::colors;
+
+// Main window background color
+auto constexpr bkd_color = rgba(35, 35, 37, 255);
+auto background = box(bkd_color);
+
+auto track = hsize(10, box(colors::black));
+auto thumb =
+   layer(
+      margin(
+         {25, 20, 25, 18},
+         label("“Dogs are my favorite people”")
+      ),
+      margin(
+         {5, 5, 5, 5},
+         rbox(colors::medium_blue, 10)
+      )
+   );
+
+auto funny_slider = slider(thumb, track);
+
+int main(int argc, char* argv[])
+{
+   app _app("Aspects");
+   window _win(_app.name());
+   _win.on_close = [&amp;_app]() { _app.stop(); };
+
+   view view_(_win);
+
+   view_.content(
+      align_center(funny_slider),
+      background
+   );
+
+   _app.run();
+   return 0;
+}</code></pre>
+</div>
 </div>
 <hr>
 <div class="paragraph">

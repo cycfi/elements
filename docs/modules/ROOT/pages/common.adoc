@@ -6,10 +6,8 @@
 
 :warning-caption: ⚠️ {nbsp}WARNING
 
-// :fundamentals: xref:fundamentals.adoc[Fundamentals]
-
-// :Unit:  xref:reference/units.adoc#value[Unit]
-
+:aspects: * xref:aspects.adoc[Design Aspects]
+:layout: xref:layout.adoc[Layout]
 
 :vst: https://en.wikipedia.org/wiki/Virtual_Studio_Technology[VST]
 :au: https://en.wikipedia.org/wiki/Audio_Units[AU]

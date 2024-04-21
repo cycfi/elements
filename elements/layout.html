@@ -244,13 +244,19 @@ is a struct that gives us the <code>min</code> and <code>max</code> information:
 <p>An element with <code>full_limits</code> can be resized from an empty point (zero x and
 y size) up to the full extent of the screen, and beyond (if possible).</p>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>number near the <em>maximum limits</em> of the coordinate&#8217;s data type (also
-implementation defined).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>full_extent</code> is actually an implementation defined huge
+number near the <em>maximum limits</em> of the coordinate&#8217;s data type (also
+implementation defined).
+</td>
+</tr>
+</table>
 </div>
 <div class="ulist">
 <ul>
@@ -2867,12 +2873,18 @@ the element will be aligned to the top-left.</p>
 hgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>hgrid_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>hgrid_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -2955,12 +2967,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>hgrid_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>hgrid_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>hgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
@@ -3117,12 +3135,18 @@ horizontal tile element.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>htile_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>htile_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -3180,12 +3204,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>htile_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>htile_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>htile_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
@@ -3306,12 +3336,18 @@ a <code>std::array&lt;element_ptr, N&gt;</code> managed by the vertical grid ele
 vgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>vgrid_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>vgrid_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -3391,12 +3427,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items. Example:</
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>vgrid_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>vgrid_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>vgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
@@ -3552,12 +3594,18 @@ vertical tile element.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>vtile_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>vtile_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -3615,12 +3663,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>vtile_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>vtile_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>vtile_composite</code> is itself also an <code>element</code> and while it has
@@ -3735,12 +3789,18 @@ layer element.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">layer(item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>layer_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>layer_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -3794,12 +3854,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>layer_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>layer_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>layer_composite</code> is itself also an <code>element</code> and while it has
@@ -3881,12 +3947,18 @@ deck element.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck(item1, item2, item3, item4)</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p><code>deck_composite</code> (see below).</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+If the number of elements is not fixed, you can use an
+<code>deck_composite</code> (see below).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -3943,12 +4015,18 @@ keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>deck_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>deck_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>deck_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
@@ -4028,12 +4106,18 @@ Just keep in mind that we are dealing with <code>element_ptr</code> items.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
 </div>
 </div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>the <code>std::vector&lt;element_ptr&gt;</code> in <code>flow_composite</code>.</p>
-</div>
-</blockquote>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>share</code> turns an element object into an <code>element_ptr</code> held by
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>flow_composite</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>flow_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s

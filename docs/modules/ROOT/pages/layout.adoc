@@ -78,11 +78,9 @@ constexpr view_limits full_limits = {
 An element with `full_limits` can be resized from an empty point (zero x and
 y size) up to the full extent of the screen, and beyond (if possible).
 
-____
-:point_right: `full_extent` is actually an implementation defined huge
+NOTE: `full_extent` is actually an implementation defined huge
 number near the _maximum limits_ of the coordinate's data type (also
 implementation defined).
-____
 
 * An element has a fixed horizontal size if this expression is true:
 `limits.min.x == limits.max.x`.
@@ -1674,10 +1672,8 @@ static float positions[] = {0.25, 0.5, 0.75, 1.0};
 hgrid(positions, item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `hgrid_composite` (see below).
-____
 
 ==== Requirements
 
@@ -1732,10 +1728,8 @@ keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `hgrid_composite`.
-____
 
 `hgrid_composite` is itself also an `element` and while it has ``std::vector``'s
 interface, it can also be ``share``d like any element, which allows you to
@@ -1829,10 +1823,8 @@ horizontal tile element.
 htile(item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `htile_composite` (see below).
-____
 
 ==== Semantics
 
@@ -1873,10 +1865,8 @@ keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `htile_composite`.
-____
 
 `htile_composite` is itself also an `element` and while it has ``std::vector``'s
 interface, it can also be ``share``d like any element, which allows you to
@@ -1955,10 +1945,8 @@ static float positions[] = {0.25, 0.5, 0.75, 1.0};
 vgrid(positions, item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `vgrid_composite` (see below).
-____
 
 ==== Requirements
 
@@ -2011,10 +1999,8 @@ keep in mind that we are dealing with `element_ptr` items. Example:
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `vgrid_composite`.
-____
 
 `vgrid_composite` is itself also an `element` and while it has ``std::vector``'s
 interface, it can also be ``share``d like any element, which allows you to
@@ -2107,10 +2093,8 @@ vertical tile element.
 vtile(item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `vtile_composite` (see below).
-____
 
 ==== Semantics
 
@@ -2151,10 +2135,8 @@ keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `vtile_composite`.
-____
 
 `vtile_composite` is itself also an `element` and while it has
 ``std::vector``'s interface, it can also be ``share``d like any element, which
@@ -2227,10 +2209,8 @@ layer element.
 layer(item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `layer_composite` (see below).
-____
 
 ==== Semantics
 
@@ -2268,10 +2248,8 @@ keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `layer_composite`.
-____
 
 `layer_composite` is itself also an `element` and while it has
 ``std::vector``'s interface, it can also be ``share``d like any element, which
@@ -2326,10 +2304,8 @@ deck element.
 deck(item1, item2, item3, item4)
 ----
 
-____
-:point_right: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use an
 `deck_composite` (see below).
-____
 
 ==== Requirements
 
@@ -2369,10 +2345,8 @@ keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `deck_composite`.
-____
 
 `deck_composite` is itself also an `element` and while it has ``std::vector``'s
 interface, it can also be ``share``d like any element, which allows you to
@@ -2432,10 +2406,8 @@ Just keep in mind that we are dealing with `element_ptr` items.
 c.push_back(share(child));
 ----
 
-____
-:point_right: `share` turns an element object into an `element_ptr` held by
+NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `flow_composite`.
-____
 
 `flow_composite` is itself also an `element` and while it has ``std::vector``'s
 interface, it can also be ``share``d like any element, which allows you to

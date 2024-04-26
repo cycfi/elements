@@ -406,6 +406,8 @@ namespace cycfi { namespace elements
 
                               hidable_element(Subject subject);
       void                    draw(context const& ctx) override;
+      bool                    wants_control() const override;
+      bool                    wants_focus() const override;
       bool                    is_hidden = false;
    };
 
@@ -419,6 +421,22 @@ namespace cycfi { namespace elements
    {
       if (!is_hidden)
          this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline bool hidable_element<Subject>::wants_control() const
+   {
+      if (is_hidden)
+         return false;
+      return this->subject().wants_control();
+   }
+
+   template <typename Subject>
+   inline bool hidable_element<Subject>::wants_focus() const
+   {
+      if (is_hidden)
+         return false;
+      return this->subject().wants_focus();
    }
 
    template <typename Subject>

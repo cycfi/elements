@@ -134,14 +134,17 @@ namespace cycfi { namespace elements
             if (info.element_ptr && info.leaf_element_ptr)
             {
                bool leaf_wants_focus = info.leaf_element_ptr->wants_focus();
-               bool switched_focus = true;
+               bool process_click = true;
                if (_focus != info.index)
                {
                   auto idx = leaf_wants_focus ? info.index : -1;
-                  switched_focus = new_focus(ctx, idx, restore_previous);
+
+                  // new_focus returns false if the current focus does not want
+                  // to yield. If so, we should not not process the click.
+                  process_click = new_focus(ctx, idx, restore_previous);
                }
 
-               if (switched_focus)
+               if (process_click)
                {
                   if (info.element_ptr->wants_control())
                   {
@@ -198,7 +201,7 @@ namespace cycfi { namespace elements
          if (at(_focus).end_focus())
             ctx.view.refresh(ctx);
          else
-            return false;
+            return false; // return false if the current focus deoes not want to yield
       }
 
       // start a new focus
@@ -228,10 +231,14 @@ namespace cycfi { namespace elements
          return false;
       };
 
-      auto&& try_focus = [&](auto ix, focus_request req) -> bool
+      auto&& try_focus = [&](auto ix, focus_request req, bool& focus_yields) -> bool
       {
          if (at(ix).wants_focus())
-            return new_focus(ctx, ix, req);
+         {
+            if (new_focus(ctx, ix, req))
+               return true;
+            focus_yields = false;
+         }
          return false;
       };
 
@@ -244,6 +251,7 @@ namespace cycfi { namespace elements
       if ((k.action == key_action::press || k.action == key_action::repeat)
          && k.key == key_code::tab && size())
       {
+         bool focus_yields = true;
          auto next_focus = _focus;
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
          if (next_focus == -1 && reverse)
@@ -252,16 +260,23 @@ namespace cycfi { namespace elements
          if (!reverse)
          {
             while (++next_focus != static_cast<int>(size()))
-               if (try_focus(next_focus, from_top))
+            {
+               if (try_focus(next_focus, from_top, focus_yields))
                   return true;
+               if (!focus_yields) // Return as if key was handled if focus
+                  return true;    // does not want to yield
+            }
             return false;
          }
          else
          {
             while (--next_focus >= 0)
-               if (at(next_focus).wants_focus())
-                  if (try_focus(next_focus, from_bottom))
-                     return true;
+            {
+               if (try_focus(next_focus, from_bottom, focus_yields))
+                  return true;
+               if (!focus_yields) // Return as if key was handled if focus
+                  return true;    // does not want to yield
+            }
             return false;
          }
       }
@@ -419,6 +434,7 @@ namespace cycfi { namespace elements
       if (c.focus_index() != -1)
       {
          c.end_focus();
+         c._focus = -1; // Force end focus
          auto [p, cctx] = find_composite(ctx);
          if (p)
             relinquish_focus(*p, *cctx);

@@ -459,6 +459,8 @@ namespace cycfi { namespace elements
                               vcollapsable_element(Subject subject);
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      bool                    wants_control() const override;
+      bool                    wants_focus() const override;
       bool                    is_collapsed = false;
    };
 
@@ -482,6 +484,22 @@ namespace cycfi { namespace elements
    {
       if (!is_collapsed)
          this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline bool vcollapsable_element<Subject>::wants_control() const
+   {
+      if (is_collapsed)
+         return false;
+      return this->subject().wants_control();
+   }
+
+   template <typename Subject>
+   inline bool vcollapsable_element<Subject>::wants_focus() const
+   {
+      if (is_collapsed)
+         return false;
+      return this->subject().wants_focus();
    }
 
    template <typename Subject>

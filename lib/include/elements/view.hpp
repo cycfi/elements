@@ -255,8 +255,13 @@ namespace cycfi { namespace elements
                // Make the new element the new focus if it wants to.
                if (wants_focus)
                {
+                  auto req = focus?
+                     element::focus_request::from_top :
+                     element::focus_request::restore_previous
+                     ;
+
                   // Restore previous focus
-                  _main_element.begin_focus(element::focus_request::restore_previous);
+                  _main_element.begin_focus(req);
                   refresh();
                   _is_focus = _main_element.focus();
                }

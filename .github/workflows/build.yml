@@ -65,6 +65,7 @@ jobs:
           execute_process(COMMAND brew install expat)
           execute_process(COMMAND brew install zlib)
           execute_process(COMMAND brew install libpng)
+          execute_process(COMMAND brew install webp)
           execute_process(COMMAND brew install ninja)
         endif()
     - name: Configure

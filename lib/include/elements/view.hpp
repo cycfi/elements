@@ -230,7 +230,7 @@ namespace cycfi { namespace elements
       set_limits();
    }
 
-   inline void view::add(element_ptr e, bool focus)
+   inline void view::add(element_ptr e, bool focus_top)
    {
       // We'll defer this call just to be safe, to give the trigger that
       // initiated this call (e.g. button on_click) a chance to return.
@@ -241,9 +241,9 @@ namespace cycfi { namespace elements
             return;
 
          io().post(
-            [e, this, focus]
+            [e, this, focus_top]
             {
-               auto wants_focus = focus && e->wants_focus();
+               auto wants_focus = focus_top && e->wants_focus();
                // End the current focus if the new element wants to be the focus.
                if (wants_focus)
                   end_focus();
@@ -255,12 +255,12 @@ namespace cycfi { namespace elements
                // Make the new element the new focus if it wants to.
                if (wants_focus)
                {
-                  auto req = focus?
+                  // Restore previous focus or make the top most layer the focus
+                  auto req = focus_top?
                      element::focus_request::from_top :
                      element::focus_request::restore_previous
                      ;
 
-                  // Restore previous focus
                   _main_element.begin_focus(req);
                   refresh();
                   _is_focus = _main_element.focus();

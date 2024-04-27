@@ -1219,6 +1219,9 @@ namespace cycfi { namespace elements
 
    bool basic_input_box::end_focus()
    {
+      if (!is_enabled())
+         return basic_text_box::end_focus();
+
       bool yield = true;
       if (on_end_focus)
          yield = on_end_focus(get_text());

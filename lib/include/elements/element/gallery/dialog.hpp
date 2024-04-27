@@ -241,7 +241,7 @@ namespace cycfi { namespace elements
       view_.post(delay,
          [&view_, popup]()
          {
-            view_.add(popup);
+            view_.add(popup, true);
          }
       );
    }

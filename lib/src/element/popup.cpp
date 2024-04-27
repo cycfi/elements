@@ -30,7 +30,7 @@ namespace cycfi { namespace elements
 
    void basic_popup_element::open(view& view_)
    {
-      view_.add(shared_from_this());
+      view_.add(shared_from_this(), true);
       view_.refresh();
    }
 

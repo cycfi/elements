@@ -183,8 +183,6 @@ namespace cycfi { namespace elements
             case key_code::enter:
             case key_code::escape:
             {
-               select(false);
-
                // Close the popup
                if (auto _popup = find_parent<basic_popup_element*>(ctx))
                   _popup->close(ctx.view);

@@ -130,6 +130,7 @@ namespace cycfi { namespace elements
       {
          if (btn.down) // button down
          {
+            _click_tracking = -1; // Assume we're not tracking
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr && info.leaf_element_ptr)
             {
@@ -166,7 +167,7 @@ namespace cycfi { namespace elements
                }
             }
          }
-         else if (_click_tracking != -1) // button up
+         else if (_click_tracking != -1 && _click_tracking < int(size())) // button up
          {
             rect  bounds = bounds_of(ctx, _click_tracking);
             auto& e = at(_click_tracking);
@@ -184,7 +185,7 @@ namespace cycfi { namespace elements
 
    void composite_base::drag(context const& ctx, mouse_button btn)
    {
-      if (_click_tracking != -1)
+      if (_click_tracking != -1 && _click_tracking < int(size()))
       {
          rect  bounds = bounds_of(ctx, _click_tracking);
          auto& e = at(_click_tracking);

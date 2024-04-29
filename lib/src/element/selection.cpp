@@ -93,6 +93,8 @@ namespace cycfi::elements
       {
          if (auto e = find_element<selectable*>(hit.element_ptr))
          {
+            if (e->is_selected())
+               return false;
             select(c, e, hit.index, _select_start, _select_end);
             return true;
          }
@@ -245,10 +247,7 @@ namespace cycfi::elements
 
    bool selection_list_element::click(context const& ctx, mouse_button btn)
    {
-      bool r = base_type::click(ctx, btn);
-      if (r)
-         return true;
-
+      bool r = false;
       if (auto c = find_subject<composite_base*>(this))
       {
          in_context_do(ctx, *c,
@@ -273,8 +272,7 @@ namespace cycfi::elements
                   {
                      // Process select
                      if (btn.down)
-                        select(*c, hit, _select_start, _select_end);
-                     r = true;
+                        r = select(*c, hit, _select_start, _select_end);
                   }
                }
                if (r && _select_start >= 0)
@@ -285,7 +283,7 @@ namespace cycfi::elements
             }
          );
       }
-      return r;
+      return base_type::click(ctx, btn) || r;
    }
 
    bool selection_list_element::key(context const& ctx, key_info k)

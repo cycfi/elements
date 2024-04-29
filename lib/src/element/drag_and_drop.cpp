@@ -72,12 +72,19 @@ namespace cycfi { namespace elements
       if (is_tracking())
       {
          auto& cnv = ctx.canvas;
+
          auto& bounds = ctx.bounds;
-         cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
-         cnv.line_width(2.0);
-         cnv.add_rect(bounds);
+         auto lw = 3 / ctx.view.scale();
+         cnv.stroke_style(get_theme().indicator_color);
+         cnv.line_width(lw);
+         cnv.add_rect(bounds.inset(lw/2));
          cnv.stroke();
       }
+   }
+
+   element* drop_box_base::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
+   {
+      return proxy_base::hit_test(ctx, p, leaf, false); // accept non-control subjects
    }
 
    bool drop_box_base::drop(context const& ctx, drop_info const& info)
@@ -105,7 +112,7 @@ namespace cycfi { namespace elements
                   [&cctx](float left, float right, float pos)
                   {
                      auto &cnv = cctx.canvas;
-                     cnv.stroke_style(get_theme().indicator_hilite_color.opacity(0.5));
+                     cnv.stroke_style(get_theme().indicator_color);
                      cnv.line_width(2.0);
                      cnv.move_to({left, pos});
                      cnv.line_to({right, pos});
@@ -174,15 +181,15 @@ namespace cycfi { namespace elements
    bool drop_inserter_element::click(context const& ctx, mouse_button btn)
    {
       bool r = base_type::click(ctx, btn);
-      if (!r || btn.down)
-         return r;
-
-      if (auto s = find_subject<selection_list_element*>(this))
+      if (r && btn.down)
       {
-         std::vector<std::size_t> indices = s->get_selection();
-         int latest = s->get_select_end();
-         if (latest >= 0)
-            on_select(indices, latest);
+         if (auto s = find_subject<selection_list_element*>(this))
+         {
+            std::vector<std::size_t> indices = s->get_selection();
+            int latest = s->get_select_end();
+            if (latest >= 0)
+               on_select(indices, latest);
+         }
       }
       return r;
    }
@@ -241,7 +248,7 @@ namespace cycfi { namespace elements
 
    void draggable_element::draw(context const& ctx)
    {
-      if (is_selected() && is_enabled())
+      if (ctx.enabled && is_selected() && is_enabled())
       {
          auto& canvas_ = ctx.canvas;
 
@@ -250,18 +257,7 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      if (is_enabled())
-      {
-         proxy_base::draw(ctx);
-      }
-      else
-      {
-         auto r = override_theme(
-            &theme::label_font_color
-          , get_theme().inactive_font_color
-         );
-         proxy_base::draw(ctx);
-      }
+      proxy_base::draw(ctx);
    }
 
    namespace
@@ -386,10 +382,9 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   element* draggable_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* draggable_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
-      if (is_enabled() && ctx.bounds.includes(p))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }

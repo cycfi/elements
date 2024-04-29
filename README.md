@@ -2,31 +2,16 @@
 
 [![CMake Build Matrix](https://github.com/cycfi/elements/workflows/Build/badge.svg)](https://github.com/cycfi/elements/actions?query=workflow%3ABuild)
 
-![alt Photon Sampler](https://cycfi.github.io/assets/img/elements/photon_sampler.jpg)
 
 ## Introduction
 
-Elements is a lightweight, fine-grained, resolution independent, modular GUI library.
-Elements is designed with these requirements in mind:
+![alt Elements Sampler](https://cycfi.github.io/assets/img/elements/photon_sampler.jpg)
 
-1. It should be open source with a liberal, non-viral license.
-2. It should be usable in any application and should play well with other GUI
-   libraries and frameworks.
-3. Corollary to the second requirement is that it can also be used to develop
-   plugins. It should not own the event loop and should be able to co-exist
-   with components within a plugin host such as VST and AU.
-4. It should be resolution independent and allow for HDPI displays.
-5. Should not rely on a “visual” GUI editor or code generator.
-6. It should have a declarative API using modern C++. Declarative C++ code
-   tells you *what* rather than *how* (imperative). The GUI should be
-   declared in C++ code.
-7. Keep it simple. Make it easy to use right out of the box, with a lot of examples.
-8. Porting to a new host target should be as easy as possible, requiring
-   porting of only a few files.
+Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++17 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C++, and therefore, there is no need for an external visual GUI editor or code generator.
 
-Elements, is extremely lightweight… and modular. You compose very
-fine-grained, flyweight “elements” to form deep element hierarchies using a
-declarative interface with heavy emphasis on reuse.
+Elements is embeddable, meaning you can embed it in any application, and it will play well with other GUI libraries and frameworks. This also implies that you can utilize it for the creation of plugins. It does not own the event loop and is able to co-exist with components within a plugin host, such as [VST](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) and [AU](https://en.wikipedia.org/wiki/Audio_Units). Porting to a new host target is straightforward, requiring the porting of only a few files.
+
+Elements is distributed under the liberal and non-viral MIT License.
 
 ## Status
 
@@ -37,7 +22,7 @@ Please take note that Elements is still very much in flux as we are inching clos
 **March 28, 2024:**
 I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.
 
-Follow [this link](docs/news.md) for details.
+Follow [this link](news.md) for details.
 
 ## Discord
 
@@ -47,10 +32,10 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 
 Documentation is work in progress. Stay tuned...
 
-1. [Gallery](http://cycfi.github.io/elements/gallery)
-2. [Setup and Installation](docs/setup.md)
-3. [Design Aspects](docs/aspects.md)
-4. [Layout](http://cycfi.github.io/elements/layout)
+1. [Gallery](http://cycfi.github.io/elements/elements/skia_2024/gallery.html)
+2. [Setup and Installation](http://cycfi.github.io/elements/elements/skia_2024/setup.html)
+3. [Design Aspects](http://cycfi.github.io/elements/elements/skia_2024/aspects.html)
+4. [Layout](http://cycfi.github.io/elements/elements/skia_2024/layout.html)
 
 ## <a name="jdeguzman"></a>About the Author
 

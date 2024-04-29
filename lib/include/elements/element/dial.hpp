@@ -64,10 +64,9 @@ namespace cycfi { namespace elements
       return _value;
    }
 
-   inline element* dial_base::hit_test(context const& ctx, point p, bool leaf, bool control)
+   inline element* dial_base::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
    {
-      unused(control);
-      return element::hit_test(ctx, p, leaf, false); // allow non-control subjects
+      return element::hit_test(ctx, p, leaf, false); // accept non-control subjects
    }
 
    ////////////////////////////////////////////////////////////////////////////

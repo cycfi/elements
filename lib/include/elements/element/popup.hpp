@@ -53,13 +53,9 @@ namespace cycfi { namespace elements
    public:
 
       using basic_popup_element::basic_popup_element;
-      using click_function = std::function<void()>;
 
       element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    click(context const& ctx, mouse_button btn) override;
-      click_function          on_click = [](){};
-
-      void                    open(view& view_) override;
       void                    close(view& view_) override;
 
       basic_button_menu*      menu_button()                       { return _menu_button; }

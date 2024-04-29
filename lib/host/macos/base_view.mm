@@ -206,6 +206,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
 #if defined(ARTIST_SKIA)
    skia_context                     _skia_context;
+   NSScreen*                        _last_screen;
 #endif
 
    bool                             _text_inserted;
@@ -292,6 +293,17 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
              name : NSWindowDidResignMainNotification
            object : [self window]
    ];
+
+#if defined(ARTIST_SKIA)
+   [center
+      addObserver : self
+         selector : @selector(windowDidMove:)
+             name : NSWindowDidMoveNotification
+           object : [self window]
+   ];
+
+   _last_screen = self.window.screen;
+#endif
 }
 
 - (void) detach_notifications
@@ -307,6 +319,12 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    [center
       removeObserver : self
                 name : NSWindowDidResignMainNotification
+              object : [self window]
+   ];
+
+   [center
+      removeObserver : self
+                name : NSWindowDidMoveNotification
               object : [self window]
    ];
 }
@@ -671,6 +689,25 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    _view->end_focus();
 }
+
+#if defined(ARTIST_SKIA)
+// Workaround SKIA flickering when the window is moved to a different screen in MacOS
+
+-(void) windowDidMove : (NSNotification*) notification
+{
+   // Check if the current screen is different from the last known screen
+   if (![self.window.screen isEqual : _last_screen])
+   {
+      _last_screen = self.window.screen;
+
+      NSRect newFrame = self.frame;
+      newFrame.size.width += 1;
+      newFrame.size.height += 1;
+      [self setFrame:newFrame];
+   }
+}
+
+#endif
 
 -(void) makeDropInfo : (id <NSDraggingInfo>) sender : (ph::drop_info*) info
 {

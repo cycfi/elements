@@ -89,7 +89,7 @@ namespace cycfi { namespace elements
 
       using layers_vector = std::vector<element_ptr>;
 
-      void                    add(element_ptr e);
+      void                    add(element_ptr e, bool focus = true);
       void                    remove(element_ptr e);
       void                    move_to_front(element_ptr e);
       void                    move_to_back(element_ptr e);
@@ -120,6 +120,10 @@ namespace cycfi { namespace elements
       track_function on_tracking = [](element& /* e */, tracking /* state */) {};
 
       void                    manage_on_tracking(element& e, tracking state);
+
+      using context_function = element::context_function;
+      void                    in_context_do(element& e, context_function f);
+
 
    private:
 
@@ -226,28 +230,39 @@ namespace cycfi { namespace elements
       set_limits();
    }
 
-   inline void view::add(element_ptr e)
+   inline void view::add(element_ptr e, bool focus_top)
    {
       // We'll defer this call just to be safe, to give the trigger that
       // initiated this call (e.g. button on_click) a chance to return.
       if (e)
       {
-         if (_content.empty()
-            || std::find(_content.begin(), _content.end(), e) != _content.end())
+         // Return early if the element is already in the view's content list.
+         if (std::find(_content.begin(), _content.end(), e) != _content.end())
             return;
 
          io().post(
-            [e, this]
+            [e, this, focus_top]
             {
-               auto wants_focus = e->wants_focus();
+               auto wants_focus = focus_top && e->wants_focus();
+               // End the current focus if the new element wants to be the focus.
                if (wants_focus)
                   end_focus();
+
+               // Add the new element to the top and lay it out
                _content.push_back(e);
                layout(*e);
-               if (e->wants_focus())
+
+               // Make the new element the new focus if it wants to.
+               if (wants_focus)
                {
-                  _is_focus = true;
-                  begin_focus();
+                  // Restore previous focus or make the top most layer the focus
+                  auto req = focus_top?
+                     element::focus_request::from_top :
+                     element::focus_request::restore_previous
+                     ;
+
+                  _main_element.begin_focus(req);
+                  refresh();
                   _is_focus = _main_element.focus();
                }
             }
@@ -269,15 +284,20 @@ namespace cycfi { namespace elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  if (e->wants_focus())
-                  {
-                     end_focus();
-                     refresh(*e);
-                  }
+                  // Relinquish the focus if the element to be removed is the current focus
+                  auto ix = i - _content.begin();
+                  if (_content.focus_index() == ix)
+                     relinquish_focus();
+
+                  // Remove the element.
                   _content.erase(i);
-                  _content.reset();
-                  _content.begin_focus(); // restore previous focus
+
+                  // Lay it out
                   layout();
+
+                  // Restore previous focus
+                  _main_element.begin_focus(element::focus_request::restore_previous);
+                  refresh();
                   _is_focus = _main_element.focus();
                }
             }

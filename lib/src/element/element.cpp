@@ -50,9 +50,8 @@ namespace cycfi { namespace elements
       return 1;
    }
 
-   element * element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element * element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
       return (ctx.bounds.includes(p)) ? this : nullptr;
    }
 
@@ -123,8 +122,9 @@ namespace cycfi { namespace elements
    {
    }
 
-   void element::end_focus()
+   bool element::end_focus()
    {
+      return true;
    }
 
    void relinquish_focus(context const& ctx)

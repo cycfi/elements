@@ -65,8 +65,8 @@ namespace cycfi { namespace elements
       enum focus_request { from_top, from_bottom, restore_previous };
 
       virtual bool            wants_focus() const;
-      virtual void            begin_focus(focus_request req = restore_previous);
-      virtual void            end_focus();
+      virtual void            begin_focus(focus_request req);
+      virtual bool            end_focus();
       virtual element const*  focus() const;
       virtual element*        focus();
 

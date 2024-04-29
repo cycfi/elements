@@ -54,7 +54,7 @@ auto make_range_slider = [] (view& _view, auto& _range_slider, std::string _titl
         }
     };
 
-    _min_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text) {
+    _min_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text)->bool {
         try {
             _range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
             _min_bg = bg_color;
@@ -62,6 +62,7 @@ auto make_range_slider = [] (view& _view, auto& _range_slider, std::string _titl
         } catch (std::exception&) {
             _min_bg = bred;
         }
+        return true;
     };
 
     _max_textbox.second->on_text = [] (std::string_view text) {
@@ -72,7 +73,7 @@ auto make_range_slider = [] (view& _view, auto& _range_slider, std::string _titl
         }
     };
 
-    _max_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text) {
+    _max_textbox.second->on_enter = [&_view, &_range_slider, axis_transform_inv] (std::string_view text)->bool {
         try {
             _range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
             _max_bg = bg_color;
@@ -80,6 +81,7 @@ auto make_range_slider = [] (view& _view, auto& _range_slider, std::string _titl
         } catch (std::exception&) {
             _max_bg = bred;
         }
+        return true;
     };
 
     return margin(
@@ -181,7 +183,8 @@ auto make_log_range_slider(view& _view) {
         }
     };
 
-    _min_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+    _min_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text)->bool
+    {
         try {
             _range_slider.value_first(axis_transform_inv(std::stof(std::string(text))));
             _min_bg = bg_color;
@@ -189,6 +192,7 @@ auto make_log_range_slider(view& _view) {
         } catch (std::exception&) {
             _min_bg = bred;
         }
+        return true;
     };
 
     _max_textbox.second->on_text = [] (std::string_view text) {
@@ -199,7 +203,7 @@ auto make_log_range_slider(view& _view) {
         }
     };
 
-    _max_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text) {
+    _max_textbox.second->on_enter = [&_view, axis_transform_inv] (std::string_view text)->bool {
         try {
             _range_slider.value_second(axis_transform_inv(std::stof(std::string(text))));
             _max_bg = bg_color;
@@ -207,6 +211,7 @@ auto make_log_range_slider(view& _view) {
         } catch (std::exception&) {
             _max_bg = bred;
         }
+        return true;
     };
 
     return margin(

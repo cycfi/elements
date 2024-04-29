@@ -62,7 +62,7 @@ namespace cycfi { namespace elements
 
    bool basic_button_menu::click(context const& ctx, mouse_button btn)
    {
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          return false;
 
       if (btn.down)
@@ -75,13 +75,6 @@ namespace cycfi { namespace elements
             if (_popup)
             {
                layout_menu(ctx);
-
-               _popup->on_click =
-                  [this, &view_ = ctx.view]()
-                  {
-                     _popup->close(view_);
-                  };
-
                _popup->menu_button(this);
                _popup->open(ctx.view);
             }
@@ -126,7 +119,7 @@ namespace cycfi { namespace elements
 
    void basic_menu_item_element::draw(context const& ctx)
    {
-      if (is_selected() && is_enabled())
+      if (ctx.enabled && is_selected() && is_enabled())
       {
          auto& canvas_ = ctx.canvas;
 
@@ -135,24 +128,12 @@ namespace cycfi { namespace elements
          canvas_.fill_style(get_theme().indicator_color.opacity(0.6));
          canvas_.fill();
       }
-      if (is_enabled())
-      {
-         proxy_base::draw(ctx);
-      }
-      else
-      {
-         auto r = override_theme(
-            &theme::label_font_color
-          , get_theme().inactive_font_color
-         );
-         proxy_base::draw(ctx);
-      }
+      proxy_base::draw(ctx);
    }
 
-   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* basic_menu_item_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
-      if (is_enabled() && ctx.bounds.includes(p))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }
@@ -160,12 +141,15 @@ namespace cycfi { namespace elements
    bool basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
       bool result = false;
-      if (is_enabled() && ctx.bounds.includes(btn.pos))
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos))
       {
          if (on_click)
             on_click();
          select(false);
-         ctx.notify(ctx, "click", this);
+
+         if (auto _popup = find_parent<basic_popup_element*>(ctx))
+            _popup->close(ctx.view);
+
          result = true;
       }
       auto proxy_result = proxy_base::click(ctx, btn);
@@ -199,9 +183,6 @@ namespace cycfi { namespace elements
             case key_code::enter:
             case key_code::escape:
             {
-               select(false);
-               ctx.notify(ctx, "key", this);
-
                // Close the popup
                if (auto _popup = find_parent<basic_popup_element*>(ctx))
                   _popup->close(ctx.view);
@@ -300,7 +281,6 @@ namespace cycfi { namespace elements
                      {
                         if (e->on_click)
                            e->on_click();
-                        ctx.notify(ctx, "key", e);
 
                         // Close the popup
                         if (auto _popup = find_parent<basic_popup_element*>(ctx))
@@ -327,7 +307,7 @@ namespace cycfi { namespace elements
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          return false;
 
       bool hit = ctx.bounds.includes(p);

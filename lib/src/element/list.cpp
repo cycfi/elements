@@ -157,6 +157,7 @@ namespace cycfi { namespace elements
             if (!cell.elem_ptr)
             {
                cell.elem_ptr = at(it-_cells.begin()).shared_from_this();
+               rctx.enabled = rctx.parent->enabled && cell.elem_ptr->is_enabled();
                cell.elem_ptr->layout(rctx);
                cell.layout_id = _layout_id;
             }

@@ -25,7 +25,7 @@ namespace cycfi { namespace elements
          align |= get_theme().label_text_align & 0x1C;
 
       auto text_c = get_font_color();
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          text_c = text_c.opacity(text_c.alpha * get_theme().disabled_opacity);
 
       canvas_.fill_style(text_c);

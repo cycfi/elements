@@ -361,6 +361,7 @@ namespace cycfi { namespace elements
          auto elapsed = std::max<float>(10.0f, event->time - host_view_h->_scroll_time);
          static constexpr float _1s = 100;
          host_view_h->_scroll_time = event->time;
+         static constexpr float smooth_speed = 10.0f;
 
          float dx = 0;
          float dy = 0;
@@ -381,8 +382,8 @@ namespace cycfi { namespace elements
                dx = -step;
                break;
             case GDK_SCROLL_SMOOTH:
-               dx = event->delta_x;
-               dy = event->delta_y;
+               dx = -event->delta_x * smooth_speed;
+               dy = -event->delta_y * smooth_speed;
                break;
             default:
                break;
@@ -646,7 +647,7 @@ namespace cycfi { namespace elements
          | GDK_SCROLL_MASK
          | GDK_ENTER_NOTIFY_MASK
          | GDK_LEAVE_NOTIFY_MASK
-         // | GDK_SMOOTH_SCROLL_MASK
+         | GDK_SMOOTH_SCROLL_MASK
       );
 
       // Subscribe to parent events
@@ -684,12 +685,42 @@ namespace cycfi { namespace elements
    // Defined in app.cpp
    bool app_is_activated();
 
+   std::filesystem::path get_app_path()
+   {
+      char result[PATH_MAX];
+      // get the full path to the executable file of the current process.
+      if (auto count = readlink("/proc/self/exe", result, PATH_MAX); count != -1)
+      {
+         result[count] = '\0'; // null terminate the string because readlink doesn't
+         return std::filesystem::path(result);
+      }
+      throw std::runtime_error("Fatal Error: Failed to get application path");
+   }
+
+   fs::path find_resources()
+   {
+      fs::path const app_path = get_app_path();
+      fs::path const app_dir = app_path.parent_path();
+
+      if (app_dir.filename() == "bin")
+      {
+         fs::path path = app_dir.parent_path() / "share" / app_path.filename() / "resources";
+         if (fs::is_directory(path))
+            return path;
+      }
+
+      const fs::path app_resources_dir = app_dir / "resources";
+      if (fs::is_directory(app_resources_dir))
+         return app_resources_dir;
+
+      return fs::current_path() / "resources";
+   }
+
    struct init_view_class
    {
       init_view_class()
       {
-         auto pwd = fs::current_path();
-         auto resource_path = pwd / "resources";
+         auto resource_path = find_resources();
          artist::add_search_path(resource_path);
       }
    };
@@ -812,9 +843,49 @@ namespace cycfi { namespace elements
       }
    }
 
+   namespace
+   {
+      std::string exec(char const* cmd)
+      {
+         std::array<char, 128> buffer;
+         std::string result;
+         std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+         if (!pipe)
+            throw std::runtime_error("popen() failed!");
+         while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+            result += buffer.data();
+         return result;
+      }
+
+      point get_scroll_direction()
+      {
+         std::string output = exec("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
+         output.erase(remove(output.begin(), output.end(), '\n'), output.end());
+
+         if (output == "true")
+            return {+1.0f, +1.0f};  // Assuming positive for natural scrolling
+         else
+            return {-1.0f, -1.0f};  // Assuming negative for traditional scrolling
+      }
+   }
+
    point scroll_direction()
    {
-      return {+1.0f, +1.0f};
+      using namespace std::chrono;
+      static auto last_call = steady_clock::now() - seconds(10);
+      static point dir = get_scroll_direction(); // Initial call
+
+      // In case the user changed the scroll direction settings, we will call
+      // get_scroll_direction() if 10 seconds have passed since the last call.
+      auto now = steady_clock::now();
+      if (duration_cast<seconds>(now - last_call) >= seconds(10))
+      {
+         dir = get_scroll_direction(); // Update the direction if 10 seconds have passed
+         last_call = now;              // Update the last call time
+      }
+
+      return dir;
    }
+
 }}
 

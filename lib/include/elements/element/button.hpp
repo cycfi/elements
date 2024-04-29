@@ -23,10 +23,10 @@ namespace cycfi { namespace elements
    struct button_state
    {
                         button_state()
-                         : value(false)
-                         , hilite(false)
-                         , tracking(false)
-                         , enabled(true)
+                         : value{false}
+                         , hilite{false}
+                         , tracking{false}
+                         , enabled{true}
                         {}
 
       bool              value : 1;
@@ -104,7 +104,7 @@ namespace cycfi { namespace elements
    template <typename Base>
    inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
    {
-      if (!this->is_enabled())
+      if (!ctx.enabled || !this->is_enabled())
          return false;
 
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))

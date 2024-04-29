@@ -8,9 +8,8 @@
 
 namespace cycfi { namespace elements
 {
-   element* basic_popup_element::hit_test(context const &, point p, bool leaf, bool control)
+   element* basic_popup_element::hit_test(context const &, point p, bool /*leaf*/, bool /*control*/)
    {
-      unused(leaf, control);
       return bounds().includes(p)? this : nullptr;
    }
 
@@ -31,7 +30,7 @@ namespace cycfi { namespace elements
 
    void basic_popup_element::open(view& view_)
    {
-      view_.add(shared_from_this());
+      view_.add(shared_from_this(), true);
       view_.refresh();
    }
 
@@ -52,23 +51,10 @@ namespace cycfi { namespace elements
    bool basic_popup_menu_element::click(context const& ctx, mouse_button btn)
    {
       auto new_ctx = ctx.sub_context();
-      bool hit = false;
-      new_ctx.listen<basic_menu_item_element>(
-         [&hit](auto const& /* ctx */, auto& /* e */, auto /* what */)
-         {
-            hit = true;
-         }
-      );
-
       auto r = floating_element::click(new_ctx, btn);
-      if (btn.down && (!r || hit))
-         on_click();
+      if (btn.down && !r)
+         close(ctx.view);
       return r;
-   }
-
-   void basic_popup_menu_element::open(view& view_)
-   {
-      basic_popup_element::open(view_);
    }
 
    void basic_popup_menu_element::close(view& view_)

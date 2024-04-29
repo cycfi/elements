@@ -89,14 +89,6 @@ namespace cycfi { namespace elements
       return {left, top, left+width, top+height};
    }
 
-   void layer_element::begin_focus(focus_request req)
-   {
-      // We always choose the top-most focus
-      if (req == focus_request::from_bottom)
-         req = focus_request::from_top;
-      return composite_base::begin_focus(req);
-   }
-
    ////////////////////////////////////////////////////////////////////////////
    // Deck
    ////////////////////////////////////////////////////////////////////////////

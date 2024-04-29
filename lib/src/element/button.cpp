@@ -12,7 +12,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    bool basic_button::click(context const& ctx, mouse_button btn)
    {
-      if (!is_enabled())
+      if (!ctx.enabled || !is_enabled())
          return false;
 
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
@@ -41,9 +41,8 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   element* basic_button::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* basic_button::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
    {
-      unused(control);
       return proxy_base::hit_test(ctx, p, leaf, false); // accept non-control subjects
    }
 

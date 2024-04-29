@@ -66,7 +66,7 @@ namespace cycfi { namespace elements
       auto state = value();
       auto value = state.value;
       auto hilite = state.hilite;
-      auto enabled = state.enabled;
+      auto enabled = ctx.enabled;
       auto body_color = get_body_color();
 
       // Draw the body

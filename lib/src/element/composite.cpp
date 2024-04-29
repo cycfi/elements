@@ -112,13 +112,13 @@ namespace cycfi { namespace elements
                if (&e == &ce)
                {
                   f(ctx);
-                  return false; // break the for loop
+                  return true; // break the for loop
                }
                else
                {
                   ce.in_context_do(ectx, e, f);
                }
-               return true;
+               return false;
             }
          );
       }
@@ -134,26 +134,36 @@ namespace cycfi { namespace elements
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr && info.leaf_element_ptr)
             {
+               bool leaf_wants_focus = info.leaf_element_ptr->wants_focus();
+               bool process_click = true;
                if (_focus != info.index)
                {
-                  auto idx = info.leaf_element_ptr->wants_focus() ? info.index : -1;
-                  new_focus(ctx, idx, restore_previous);
+                  auto idx = leaf_wants_focus ? info.index : -1;
+
+                  // new_focus returns false if the current focus does not want
+                  // to yield. If so, we should not not process the click.
+                  process_click = new_focus(ctx, idx, restore_previous);
                }
 
-               if (info.element_ptr->wants_control())
+               if (process_click)
                {
-                  context ectx{ctx, info.element_ptr, info.bounds};
-                  if (info.element_ptr->click(ectx, btn))
+                  if (info.element_ptr->wants_control())
                   {
-                     if (btn.down)
-                        _click_tracking = info.index;
-                     return true;
+                     context ectx{ctx, info.element_ptr, info.bounds};
+                     if (info.element_ptr->click(ectx, btn))
+                     {
+                        if (btn.down)
+                           _click_tracking = info.index;
+                        if (!leaf_wants_focus)
+                           relinquish_focus(*this, ctx);
+                        return true;
+                     }
                   }
-               }
-               else
-               {
-                  // Clicking elsewhere should relinquish focus
-                  relinquish_focus(*this, ctx);
+                  else
+                  {
+                     // Clicking elsewhere should relinquish focus
+                     relinquish_focus(*this, ctx);
+                  }
                }
             }
          }
@@ -184,13 +194,15 @@ namespace cycfi { namespace elements
       }
    }
 
-   void composite_base::new_focus(context const& ctx, int index, focus_request req)
+   bool composite_base::new_focus(context const& ctx, int index, focus_request req)
    {
       // end the previous focus
-      if (_focus != -1 && _focus < size())
+      if (_focus != -1 && _focus < int(size()))
       {
-         at(_focus).end_focus();
-         ctx.view.refresh(ctx);
+         if (at(_focus).end_focus())
+            ctx.view.refresh(ctx);
+         else
+            return false; // return false if the current focus deoes not want to yield
       }
 
       // start a new focus
@@ -201,6 +213,7 @@ namespace cycfi { namespace elements
          scrollable::find(ctx).scroll_into_view(bounds_of(ctx, _focus));
          ctx.view.refresh(ctx);
       }
+      return true;
    }
 
    bool composite_base::key(context const& ctx, key_info k)
@@ -219,12 +232,13 @@ namespace cycfi { namespace elements
          return false;
       };
 
-      auto&& try_focus = [&](auto ix, focus_request req) -> bool
+      auto&& try_focus = [&](auto ix, focus_request req, bool& focus_yields) -> bool
       {
          if (at(ix).wants_focus())
          {
-            new_focus(ctx, ix, req);
-            return true;
+            if (new_focus(ctx, ix, req))
+               return true;
+            focus_yields = false;
          }
          return false;
       };
@@ -238,6 +252,7 @@ namespace cycfi { namespace elements
       if ((k.action == key_action::press || k.action == key_action::repeat)
          && k.key == key_code::tab && size())
       {
+         bool focus_yields = true;
          auto next_focus = _focus;
          bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
          if (next_focus == -1 && reverse)
@@ -246,16 +261,23 @@ namespace cycfi { namespace elements
          if (!reverse)
          {
             while (++next_focus != static_cast<int>(size()))
-               if (try_focus(next_focus, from_top))
+            {
+               if (try_focus(next_focus, from_top, focus_yields))
                   return true;
+               if (!focus_yields) // Return as if key was handled if focus
+                  return true;    // does not want to yield
+            }
             return false;
          }
          else
          {
             while (--next_focus >= 0)
-               if (at(next_focus).wants_focus())
-                  if (try_focus(next_focus, from_bottom))
-                     return true;
+            {
+               if (try_focus(next_focus, from_bottom, focus_yields))
+                  return true;
+               if (!focus_yields) // Return as if key was handled if focus
+                  return true;    // does not want to yield
+            }
             return false;
          }
       }
@@ -264,7 +286,7 @@ namespace cycfi { namespace elements
 
    bool composite_base::text(context const& ctx, text_info info)
    {
-      if (_focus != -1 && _focus < size())
+      if (_focus != -1 && _focus < int(size()))
       {
          rect  bounds = bounds_of(ctx, _focus);
          auto& focus_ = at(_focus);
@@ -366,9 +388,13 @@ namespace cycfi { namespace elements
          _focus = _saved_focus;
       }
 
-      if (_focus == -1)
+      if (_focus == -1 && req != focus_request::restore_previous)
       {
-         if (req == from_top)
+         bool top_down = (req == from_top);
+         if (reverse_index())
+            top_down = !top_down;
+
+         if (top_down)
          {
             for (std::size_t ix = 0; ix != size(); ++ix)
                if (at(ix).wants_focus())
@@ -377,7 +403,7 @@ namespace cycfi { namespace elements
                   break;
                }
          }
-         else if (req == from_bottom)
+         else
          {
             for (int ix = size()-1; ix >= 0; --ix)
                if (at(ix).wants_focus())
@@ -391,12 +417,17 @@ namespace cycfi { namespace elements
          at(_focus).begin_focus(req);
    }
 
-   void composite_base::end_focus()
+   bool composite_base::end_focus()
    {
+      bool yield = true;
       if (_focus != -1 && _focus < int(size()))
-         at(_focus).end_focus();
-      _saved_focus = _focus;
-      _focus = -1;
+         yield = at(_focus).end_focus();
+      if (yield)
+      {
+         _saved_focus = _focus;
+         _focus = -1;
+      }
+      return yield;
    }
 
    void relinquish_focus(composite_base& c, context const& ctx)
@@ -404,25 +435,26 @@ namespace cycfi { namespace elements
       if (c.focus_index() != -1)
       {
          c.end_focus();
-         c._saved_focus = -1;
+         c._focus = -1; // Force end focus
          auto [p, cctx] = find_composite(ctx);
          if (p)
             relinquish_focus(*p, *cctx);
          else
             ctx.view.relinquish_focus();
       }
+      c._saved_focus = -1;
    }
 
    element const* composite_base::focus() const
    {
-      if (_focus >= size())
+      if (_focus >= int(size()))
          return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
    element* composite_base::focus()
    {
-      if (_focus >= size())
+      if (_focus >= int(size()))
          return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
@@ -485,7 +517,7 @@ namespace cycfi { namespace elements
          status = cursor_tracking::hovering;
          if (_cursor_hovering.find(info.index) == _cursor_hovering.end())
          {
-             status = cursor_tracking::entering;
+            status = cursor_tracking::entering;
             _cursor_hovering.insert(_cursor_tracking);
          }
          auto& e = at(_cursor_tracking);

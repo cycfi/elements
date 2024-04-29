@@ -1,0 +1,34 @@
+= Gallery
+
+include::common.adoc[]
+
+== It’s always a nice to have some pretty pictures:
+
+:g1:    basic-sliders-and-knobs.png
+:g2:    buttons.png
+:g3:    hello-universe.png
+:g4:    layout.png
+:g5:    child-window.png
+:g6:    menus.png
+:g7:    sprite-sliders-and-knobs.png
+:g8:    scale.png
+:g9:    text-and-icons.png
+:g10:   text-edit.png
+:g11:   list-arranger.png
+
+image::gallery/{g1}[, link="{imagesdir}/gallery/{g1}"]
+image::gallery/{g2}[, link="{imagesdir}/gallery/{g2}"]
+image::gallery/{g3}[, link="{imagesdir}/gallery/{g3}"]
+image::gallery/{g4}[, link="{imagesdir}/gallery/{g4}"]
+image::gallery/{g5}[, link="{imagesdir}/gallery/{g5}"]
+image::gallery/{g6}[, link="{imagesdir}/gallery/{g6}"]
+image::gallery/{g7}[, link="{imagesdir}/gallery/{g7}"]
+image::gallery/{g8}[, link="{imagesdir}/gallery/{g8}"]
+image::gallery/{g9}[, link="{imagesdir}/gallery/{g9}"]
+image::gallery/{g10}[, link="{imagesdir}/gallery/{g10}"]
+image::gallery/{g11}[, link="{imagesdir}/gallery/{g11}"]
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

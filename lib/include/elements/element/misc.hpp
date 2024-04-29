@@ -406,6 +406,8 @@ namespace cycfi { namespace elements
 
                               hidable_element(Subject subject);
       void                    draw(context const& ctx) override;
+      bool                    wants_control() const override;
+      bool                    wants_focus() const override;
       bool                    is_hidden = false;
    };
 
@@ -419,6 +421,22 @@ namespace cycfi { namespace elements
    {
       if (!is_hidden)
          this->subject().draw(ctx);
+   }
+
+   template <typename Subject>
+   inline bool hidable_element<Subject>::wants_control() const
+   {
+      if (is_hidden)
+         return false;
+      return this->subject().wants_control();
+   }
+
+   template <typename Subject>
+   inline bool hidable_element<Subject>::wants_focus() const
+   {
+      if (is_hidden)
+         return false;
+      return this->subject().wants_focus();
    }
 
    template <typename Subject>
@@ -441,6 +459,8 @@ namespace cycfi { namespace elements
                               vcollapsable_element(Subject subject);
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      bool                    wants_control() const override;
+      bool                    wants_focus() const override;
       bool                    is_collapsed = false;
    };
 
@@ -467,6 +487,22 @@ namespace cycfi { namespace elements
    }
 
    template <typename Subject>
+   inline bool vcollapsable_element<Subject>::wants_control() const
+   {
+      if (is_collapsed)
+         return false;
+      return this->subject().wants_control();
+   }
+
+   template <typename Subject>
+   inline bool vcollapsable_element<Subject>::wants_focus() const
+   {
+      if (is_collapsed)
+         return false;
+      return this->subject().wants_focus();
+   }
+
+   template <typename Subject>
    inline vcollapsable_element<remove_cvref_t<Subject>>
    vcollapsable(Subject&& subject)
    {
@@ -488,7 +524,8 @@ namespace cycfi { namespace elements
       bool           key(context const& ctx, key_info k) override;
       bool           text(context const& ctx, text_info info) override;
 
-      bool           wants_focus() const override;
+      bool           wants_focus() const override { return true; }
+      bool           wants_control() const override { return true; }
    };
 
    template <typename Subject>
@@ -526,10 +563,13 @@ namespace cycfi { namespace elements
       return true;
    }
 
-   template <typename Subject>
-   inline bool modal_element<Subject>::wants_focus() const
+   ////////////////////////////////////////////////////////////////////////////
+   // An element that prevents any event from passing through. Add this as a
+   // topmost layer in a view to lock the UI.
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto ui_block(color color_ = {0.0, 0.0, 0.0, 0.5})
    {
-      return true;
+      return modal(box_element{color_});
    }
 }}
 

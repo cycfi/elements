@@ -88,22 +88,21 @@ int main(int argc, char* argv[])
       std::string path = paths.empty()? std::string{"Empty"} : paths[index].u8string();
 
       return share(
-         (
-            draggable(
-               align_left(label(path))
-            )
+         draggable(
+            align_left(label(path))
          )
       );
    };
 
    auto cp = basic_vcell_composer(list_size, make_row);
    auto list = vlist(cp, false);
-   auto drop_inserter_ = share(
-                           drop_inserter(
-                              margin({10, 10, 15, 10}, link(list)),
-                              {"text/uri-list"}
-                           )
-                        );
+   auto drop_inserter_ =
+      share(
+         drop_inserter(
+            margin({10, 10, 15, 10}, link(list)),
+            {"text/uri-list"}
+         )
+      );
 
    drop_inserter_->on_drop =
       [&](drop_info const& info, std::size_t ix)

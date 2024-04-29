@@ -885,9 +885,10 @@ namespace cycfi { namespace elements
          _select_start = _select_end = 0;
    }
 
-   void basic_text_box::end_focus()
+   bool basic_text_box::end_focus()
    {
       _is_focus = false;
+      return true;
    }
 
    void basic_text_box::select_start(int pos)
@@ -938,6 +939,29 @@ namespace cycfi { namespace elements
       scroll_into_view();
    }
 
+   void  basic_text_box::align_home(context const& ctx)
+   {
+      auto _text = get_text();
+      caret_metrics m = caret_info(ctx, _text.data());
+      scrollable::find(ctx).scroll_into_view(m.caret);
+      ctx.view.refresh(ctx);
+   }
+
+   void  basic_text_box::align_end(context const& ctx)
+   {
+      auto _text = get_text();
+      if (_text.empty())
+      {
+         align_home(ctx);
+      }
+      else
+      {
+         caret_metrics m = caret_info(ctx, _text.data() + _text.size());
+         scrollable::find(ctx).scroll_into_view(m.caret);
+         ctx.view.refresh(ctx);
+      }
+   }
+
    bool basic_text_box::word_break(int index) const
    {
       return get_layout().word_break(index) == text_layout::allow_break || line_break(index);
@@ -982,14 +1006,24 @@ namespace cycfi { namespace elements
       }
       else
       {
-         basic_text_box::draw(ctx);
+         if (!ctx.enabled)
+         {
+            auto c = get_color();
+            set_color(c.opacity(0.5));
+            basic_text_box::draw(ctx);
+            set_color(c);
+         }
+         else
+         {
+            basic_text_box::draw(ctx);
+         }
       }
    }
 
    bool basic_input_box::text(context const& ctx, text_info info)
    {
       bool r = basic_text_box::text(ctx, info);
-      if (on_text)
+      if (r && on_text)
          on_text(to_utf8(get_text()));
       return r;
    }
@@ -1002,11 +1036,17 @@ namespace cycfi { namespace elements
          {
             case key_code::enter:
             case key_code::kp_enter:
+            {
+               bool yield = true;
                if (on_enter)
-                  on_enter(to_utf8(get_text()));
-               relinquish_focus(ctx);
-               ctx.view.refresh(ctx);
+                  yield = on_enter(to_utf8(get_text()));
+               if (yield)
+               {
+                  relinquish_focus(ctx);
+                  ctx.view.refresh(ctx);
+               }
                return true;
+            }
 
             case key_code::escape:
                if (on_escape)
@@ -1088,28 +1128,39 @@ namespace cycfi { namespace elements
    {
       if (btn.state != mouse_button::left)
          return false;
-
-      if (_first_focus && select_start() != select_end())
-      {
-         _first_focus = false;
-         return true;
-      }
-      _first_focus = false;
-
       return basic_text_box::click(ctx, btn);
    }
 
-   void basic_input_box::begin_focus(focus_request req)
+   bool basic_input_box::end_focus()
    {
-      _first_focus = true;
-      basic_text_box::begin_focus(req);
+      if (!is_enabled())
+         return basic_text_box::end_focus();
+
+      bool yield = true;
+      if (on_end_focus)
+         yield = on_end_focus(to_utf8(get_text()));
+      if (yield)
+         return basic_text_box::end_focus();
+      return false;
    }
 
-   void basic_input_box::end_focus()
+   void align_home(view& view_, basic_input_box& tbox)
    {
-      _first_focus = false;
-         if (on_end_focus)
-            on_end_focus(to_utf8(get_text()));
-      basic_text_box::end_focus();
+      view_.in_context_do(tbox,
+         [&tbox](auto& ctx)
+         {
+            tbox.align_home(ctx);
+         }
+      );
+   }
+
+   void align_end(view& view_, basic_input_box& tbox)
+   {
+      view_.in_context_do(tbox,
+         [&tbox](auto& ctx)
+         {
+            tbox.align_end(ctx);
+         }
+      );
    }
 }}

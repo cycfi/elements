@@ -339,7 +339,7 @@ auto make_input_box(my_model& model, view& view_)
 
             // Bring up a message box.
             auto popup = message_box1(view_, error, icons::attention, on_ok);
-            view_.add(popup);
+            open_popup(popup, view_);
             return false;
          }
          return true;

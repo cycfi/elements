@@ -266,6 +266,12 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    _view = nullptr;
 }
 
+- (void) viewDidMoveToWindow
+{
+   if (self.window)
+      [[self window] makeFirstResponder : self];
+}
+
 - (float) hdpi_scale
 {
    return _scale;
@@ -507,7 +513,6 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 - (void) mouseEntered : (NSEvent*) event
 {
    [[self window] setAcceptsMouseMovedEvents : YES];
-   [[self window] makeFirstResponder : self];
    auto pos = [event locationInWindow];
    pos = [self convertPoint : pos fromView : nil];
    _view->cursor({float(pos.x), float(pos.y)}, ph::cursor_tracking::entering);

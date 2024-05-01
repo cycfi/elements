@@ -329,7 +329,7 @@ auto make_input_box(my_model& model, view& view_)
 
          if (error != "")
          {
-            auto&& on_ok =
+            auto on_ok =
                [&model]()
                {
                   // When errors are enountered, reset the model's value to
@@ -342,6 +342,15 @@ auto make_input_box(my_model& model, view& view_)
             view_.add(popup);
             return false;
          }
+         return true;
+      };
+
+   tbox.second->on_escape =
+      [&model]()->bool
+      {
+         // When the user presses the escape key, reset the model's value to
+         // its previous state.
+         model._value.update();
          return true;
       };
 

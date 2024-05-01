@@ -77,7 +77,7 @@ namespace cycfi { namespace elements
             TRUE);
 
          // Make sure the child window is visible.
-         ShowWindow(child, SW_HIDE);
+         ShowWindow(child, SW_SHOW);
          return true;
       }
 

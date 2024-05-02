@@ -62,6 +62,7 @@ auto make_range_slider = [] (view& _view, auto _range_slider, std::string _title
         } catch (std::exception&) {
             *_min_bg = bred;
         }
+        _view.refresh(*_min_bg);
         return true;
     };
 
@@ -81,6 +82,7 @@ auto make_range_slider = [] (view& _view, auto _range_slider, std::string _title
         } catch (std::exception&) {
             *_max_bg = bred;
         }
+        _view.refresh(*_max_bg);
         return true;
     };
 
@@ -192,6 +194,7 @@ auto make_log_range_slider(view& _view) {
         } catch (std::exception&) {
             *_min_bg = bred;
         }
+        _view.refresh(*_min_bg);
         return true;
     };
 
@@ -211,6 +214,7 @@ auto make_log_range_slider(view& _view) {
         } catch (std::exception&) {
             *_max_bg = bred;
         }
+        _view.refresh(*_max_bg);
         return true;
     };
 
@@ -298,6 +302,15 @@ auto make_overlapping_range_slider(view& _view) {
     return make_range_slider(_view, _range_slider, "Overlapping linear range slider. Alt/Option-click to switch active thumb.");
 }
 
+auto make_tip_box() {
+    return margin(
+        {10, 10, 10, 10},
+        align_center(
+            label("Tip: Take a look at the Model example to see how to add validation logic to the input boxes.").font_size(16)
+        )
+    );
+}
+
 int main(int argc, char* argv[])
 {
     app _app("RangeSlider");
@@ -310,7 +323,8 @@ int main(int argc, char* argv[])
         vtile(
             make_default_range_slider(_view),
             make_overlapping_range_slider(_view),
-            make_log_range_slider(_view)
+            make_log_range_slider(_view),
+            make_tip_box()
         ),
         background
     );

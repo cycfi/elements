@@ -150,12 +150,14 @@ auto make_basic_text(view& view_)
    // when clicking anywhere in the view, or when the user clicks another window.
    in.second->on_end_focus = in.second->on_enter;
 
+   auto clip_left = basic_input_box::clip_left;
+
    auto text_input =
       pane("Text Input",
          margin({10, 5, 10, 5},
             vtile(
                my_input("Gimme Some", in.first),
-               my_input("Gimme Some More", input_box("Show me more").first),
+               my_input("Gimme Some More", input_box("Show me more", clip_left).first),
                my_input("Cute Text Boxes",
                   htile(
                      input_box(0.7).first,

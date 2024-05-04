@@ -291,7 +291,6 @@ auto make_input_box(my_model& model, view& view_)
          stream << std::fixed << std::setprecision(2) << val;
          input->set_text(stream.str());
          input->select_all();
-         align_home(view_, *input);
          view_.refresh(*input);
       }
    );

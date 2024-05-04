@@ -306,7 +306,7 @@ namespace cycfi { namespace elements
       }
    }
 
-   bool scroller_base::scroll(context const& ctx, point dir, point /* p */)
+   bool scroller_base::scroll(context const& ctx, point dir, point p)
    {
       view_limits e_limits = subject().limits(ctx);
       bool redraw = false;
@@ -340,7 +340,7 @@ namespace cycfi { namespace elements
          on_scroll(point(halign(), valign()));
          ctx.view.refresh(ctx);
       }
-      return redraw;
+      return port_element::scroll(ctx, dir, p) || redraw;
    }
 
    void scroller_base::set_position(point p)

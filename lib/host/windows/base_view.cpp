@@ -600,6 +600,7 @@ namespace cycfi { namespace elements
             pDropTarget->Release();
          }
 
+         SetFocus(hwnd);
          return hwnd;
       }
    }

@@ -40,7 +40,6 @@ namespace cycfi::elements
    private:
 
       double                  _value;
-      bool                    _is_horiz = true;
    };
 
    class basic_progress_bar_base : public progress_bar_base

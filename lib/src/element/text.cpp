@@ -1330,8 +1330,6 @@ namespace cycfi { namespace elements
 
       if (auto* pctx = find_parent_context<port_base*>(ctx))
       {
-         // Limit scrolling the port to the text width's right edge.
-
          auto constexpr padding = 5.0f;
          auto last = _text.size();
          auto text_right = glyph_info(ctx, &_text[last]).bounds.left + padding;

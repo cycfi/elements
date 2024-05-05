@@ -9,9 +9,6 @@
 
 namespace cycfi { namespace elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // proxy class implementation
-   ////////////////////////////////////////////////////////////////////////////
    view_limits proxy_base::limits(basic_context const& ctx) const
    {
       return subject().limits(ctx);
@@ -82,15 +79,61 @@ namespace cycfi { namespace elements
       }
    }
 
+   /**
+    * \brief
+    *    Prepares the subject for the proxy.
+    *
+    *    This member function is called to prepare the subject for the proxy.
+    *    It should be overridden in derived classes to provide specific
+    *    functionality.
+    *
+    * \param ctx
+    *    A constant reference to the context associated with this element,
+    *    which includes the current view and canvas settings, and the bounds
+    *    defining the active drawing area.
+    */
    void proxy_base::prepare_subject(context& /* ctx */)
    {
    }
 
+   /**
+    * \brief
+    *    Prepares the subject for the proxy.
+    *
+    *    This member function is an overload of the prepare_subject function
+    *    that also accepts a point where the current mouse position is.
+    *
+    *    This member function is called to prepare the subject for the proxy.
+    *    It should be overridden in derived classes to provide specific
+    *    functionality.
+    *
+    * \param ctx
+    *    A constant reference to the context associated with this element,
+    *    which includes the current view and canvas settings, and the bounds
+    *    defining the active drawing area.
+    *
+    * \param p
+    *    The current mouse position.
+    */
    void proxy_base::prepare_subject(context& ctx, point& /* p */)
    {
       prepare_subject(ctx);
    }
 
+   /**
+    * \brief
+    *    Restores the subject after it has been used by the proxy.
+    *
+    *    This member function is called to restore the subject after it has
+    *    been used by the proxy, preceded by a call to `prepare_subject`. It
+    *    should be overridden in derived classes to provide specific
+    *    functionality.
+    *
+    * \param ctx
+    *    A constant reference to the context associated with this element,
+    *    which includes the current view and canvas settings, and the bounds
+    *    defining the active drawing area.
+    */
    void proxy_base::restore_subject(context& /* ctx */)
    {
    }

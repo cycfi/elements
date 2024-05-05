@@ -69,7 +69,6 @@ namespace cycfi { namespace elements
       void                    focus(std::size_t index);
       virtual void            reset();
 
-                              // Utility function for relinquishing focus
       friend void             relinquish_focus(composite_base& c, context const& ctx);
 
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;

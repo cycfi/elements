@@ -1195,45 +1195,23 @@ namespace cycfi { namespace elements
    {
       if (btn.state != mouse_button::left)
          return false;
-
-      if (btn.down)
-      {
-
-         _is_tracking = true;
-      }
-      else // btn.up
-      {
-         if (_is_tracking)
-         {
-            ctx.view.post(500ms,
-               [this]()
-               {
-                  _is_tracking = false;
-               }
-            );
-         }
-      }
       return basic_text_box::click(ctx, btn);
    }
 
    bool basic_input_box::scroll(context const& ctx, point dir, point p)
    {
-      if (!_is_tracking)
-      {
-         ctx.view.post(2s,
-            [this]()
-            {
-               _is_tracking = false;
-            }
-         );
-      }
-      _is_tracking = true;
       bool r = basic_text_box::scroll(ctx, dir, p);
       if (get_text().empty())
          return r;
 
       limit_scroll_right(ctx);
       return r;
+   }
+
+   bool basic_input_box::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      _is_hovering = status != cursor_tracking::leaving;
+      return basic_text_box::cursor(ctx, p, status);
    }
 
    bool basic_input_box::end_focus()
@@ -1275,11 +1253,10 @@ namespace cycfi { namespace elements
       if (get_text().empty())
          return;
 
-      if (_clip_action == clip_none || _is_tracking ||
+      if (_clip_action == clip_none || _is_hovering ||
          select_start() != select_end() || is_focus())
       {
          limit_scroll_right(ctx);
-         scroll_into_view(ctx, false);
          return;
       }
 

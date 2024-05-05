@@ -231,6 +231,7 @@ namespace cycfi::elements
       void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    end_focus() override;
 
@@ -247,7 +248,7 @@ namespace cycfi::elements
 
       std::string             _placeholder;
       clip_action             _clip_action : 2;
-      bool                    _is_tracking : 1;
+      bool                    _is_hovering : 1;
    };
 
    ////////////////////////////////////////////////////////////////////////////

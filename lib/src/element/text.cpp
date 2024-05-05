@@ -1264,7 +1264,8 @@ namespace cycfi { namespace elements
       {
          auto const& _text = get_text();
          auto constexpr padding = 5.0f;
-         auto text_right = glyph_info(ctx, &*_text.end()).bounds.left + padding;
+         auto last = _text.size();
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + padding;
          auto port_width = pctx->bounds.width();
          auto extent = ctx.bounds.width();
          auto ext_left = ctx.bounds.left;
@@ -1332,7 +1333,8 @@ namespace cycfi { namespace elements
          // Limit scrolling the port to the text width's right edge.
 
          auto constexpr padding = 5.0f;
-         auto text_right = glyph_info(ctx, &*_text.end()).bounds.left + padding;
+         auto last = _text.size();
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + padding;
          auto port_width = pctx->bounds.width();
          auto extent = ctx.bounds.width();
          auto ext_left = ctx.bounds.left;

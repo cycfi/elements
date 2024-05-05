@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
          margin(
             pad,
             scroller(
-               hsize(16384, std::forward<InputBox>(text_input)),
+               std::forward<InputBox>(text_input),
                no_scrollbars | no_vscroll
             )
          ),

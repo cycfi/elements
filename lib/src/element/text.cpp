@@ -958,7 +958,7 @@ namespace cycfi { namespace elements
    {
       auto  m = get_font().metrics();
       auto  line_height = m.ascent + m.descent + m.leading;
-      return {{32, line_height}, {full_extent, line_height}};
+      return {{full_extent, line_height}, {full_extent, line_height}};
    }
 
    void basic_input_box::draw(context const& ctx)

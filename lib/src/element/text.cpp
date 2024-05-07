@@ -371,6 +371,7 @@ namespace cycfi { namespace elements
          )
          return false;
 
+      _show_caret = true;
       bool move_caret = false;
       bool save_x = false;
       bool handled = false;
@@ -882,6 +883,7 @@ namespace cycfi { namespace elements
    void basic_text_box::begin_focus(focus_request /*req*/)
    {
       _is_focus = true;
+      _show_caret = true;
       if (_select_start == -1)
          _select_start = _select_end = 0;
       scroll_into_view();

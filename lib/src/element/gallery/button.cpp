@@ -111,8 +111,8 @@ namespace cycfi { namespace elements
       auto mid_y = bounds.top + (bounds.height() / 2);
 
       // Draw label
-      float text_pos;
-      float icon_pos;
+      float text_pos = 0.0f;
+      float icon_pos = 0.0f;
       int align = cnv.middle;
       auto icon_placement = get_icon_placement();
       auto label_alignment = get_label_alignment();

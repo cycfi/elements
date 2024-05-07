@@ -1263,9 +1263,8 @@ namespace cycfi { namespace elements
       if (auto* pctx = find_parent_context<port_base*>(ctx))
       {
          auto const& _text = get_text();
-         auto constexpr padding = 5.0f;
          auto last = _text.size();
-         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + padding;
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + 1.0f;
          auto port_width = pctx->bounds.width();
          auto extent = ctx.bounds.width();
          auto ext_left = ctx.bounds.left;
@@ -1330,9 +1329,8 @@ namespace cycfi { namespace elements
 
       if (auto* pctx = find_parent_context<port_base*>(ctx))
       {
-         auto constexpr padding = 5.0f;
          auto last = _text.size();
-         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + padding;
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + 1.0f;
          auto port_width = pctx->bounds.width();
          auto extent = ctx.bounds.width();
          auto ext_left = ctx.bounds.left;

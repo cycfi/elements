@@ -239,15 +239,18 @@ namespace cycfi { namespace elements
       using icon_placement_t = default_button_styler::icon_placement;
       using label_alignment_t = default_button_styler::label_alignment;
 
-      using gen_size             = button_styler_gen<button_styler_with_size<base_type>>;
-      using gen_body_color       = button_styler_gen<button_styler_with_body_color<base_type>>;
-      using gen_text_color       = button_styler_gen<button_styler_with_text_color<base_type>>;
-      using gen_icon             = button_styler_gen<button_styler_with_icon<base_type>>;
-      using gen_icon_placement   = button_styler_gen<button_styler_with_icon_placement<base_type>>;
-      using gen_icon_color       = button_styler_gen<button_styler_with_icon_color<base_type>>;
-      using gen_label_alignment  = button_styler_gen<button_styler_with_label_alignment<base_type>>;
-      using gen_margin           = button_styler_gen<button_styler_with_margin<base_type>>;
-      using gen_corner_radius    = button_styler_gen<button_styler_with_corner_radius<base_type>>;
+      template <template<typename> class Gen>
+      using gen = button_styler_gen<Gen<base_type>>;
+
+      using gen_size             = gen<button_styler_with_size>;
+      using gen_body_color       = gen<button_styler_with_body_color>;
+      using gen_text_color       = gen<button_styler_with_text_color>;
+      using gen_icon             = gen<button_styler_with_icon>;
+      using gen_icon_placement   = gen<button_styler_with_icon_placement>;
+      using gen_icon_color       = gen<button_styler_with_icon_color>;
+      using gen_label_alignment  = gen<button_styler_with_label_alignment>;
+      using gen_margin           = gen<button_styler_with_margin>;
+      using gen_corner_radius    = gen<button_styler_with_corner_radius>;
 
       gen_size                size(float size) const;
       gen_body_color          body_color(color color_) const;

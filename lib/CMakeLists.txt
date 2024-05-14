@@ -186,9 +186,10 @@ if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
-if (NOT MSVC)
-   find_package(PkgConfig REQUIRED)
-endif()
+###############################################################################
+# PkgConfig
+
+find_package(PkgConfig REQUIRED)
 
 ###############################################################################
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom
@@ -217,12 +218,11 @@ FetchContent_Declare(
   cycfi_infra
   GIT_REPOSITORY https://github.com/cycfi/infra.git
   GIT_TAG master
-  GIT_SHALLOW TRUE
+  GIT_SUBMODULES_RECURSE ON
 )
 
 FetchContent_MakeAvailable(cycfi_infra)
-
-target_include_directories(elements PUBLIC ${cycfi_infra_SOURCE_DIR}/include)
+target_link_libraries(elements PUBLIC cycfi::infra)
 
 ###############################################################################
 # Fontconfig

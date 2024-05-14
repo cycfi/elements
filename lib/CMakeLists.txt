@@ -223,12 +223,11 @@ FetchContent_Declare(
   cycfi_infra
   GIT_REPOSITORY https://github.com/cycfi/infra.git
   GIT_TAG master
-  GIT_SHALLOW TRUE
+  GIT_SUBMODULES_RECURSE ON
 )
 
 FetchContent_MakeAvailable(cycfi_infra)
-
-target_include_directories(elements PUBLIC ${cycfi_infra_SOURCE_DIR}/include)
+target_link_libraries(elements PUBLIC cycfi::infra)
 
 ###############################################################################
 # Cairo

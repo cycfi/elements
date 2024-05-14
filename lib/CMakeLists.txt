@@ -6,6 +6,8 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
 
+include(FetchContent)
+
 ###############################################################################
 # Artist library
 
@@ -232,7 +234,16 @@ endif()
 
 ###############################################################################
 # Asio headers
-target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/asio/asio/include)
+
+FetchContent_Declare(
+  asio
+  GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+  GIT_TAG asio-1-29-0
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(asio)
+
+target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
 
 ###############################################################################
 # Global options

@@ -168,7 +168,6 @@ source_group("Header Files\\elements"
    ${ELEMENTS_HEADERS}
 )
 
-add_subdirectory(infra)
 add_library(elements STATIC)
 
 target_sources(elements
@@ -177,7 +176,6 @@ target_sources(elements
 )
 
 target_include_directories(elements PUBLIC include)
-target_link_libraries(elements PUBLIC cycfi::infra)
 if(CMAKE_CXX_STANDARD EQUAL 20)
    target_compile_features(elements PUBLIC cxx_std_20)
 else()
@@ -211,6 +209,20 @@ if (APPLE)
    # Not sure why APPLE is not picking the target_compile_options above
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -ftemplate-backtrace-limit=0")
 endif()
+
+###############################################################################
+# Cycfi Infra
+
+FetchContent_Declare(
+  cycfi_infra
+  GIT_REPOSITORY https://github.com/cycfi/infra.git
+  GIT_TAG master
+  GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(cycfi_infra)
+
+target_include_directories(elements PUBLIC ${cycfi_infra_SOURCE_DIR}/include)
 
 ###############################################################################
 # Fontconfig

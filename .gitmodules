@@ -1,6 +1,3 @@
-[submodule "lib/infra"]
-	path = lib/infra
-	url = https://github.com/cycfi/infra.git
 [submodule "lib/artist"]
 	path = lib/artist
 	url = https://github.com/cycfi/artist.git

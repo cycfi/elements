@@ -15,7 +15,6 @@ jobs:
           cc: "cl"
           cxx: "cl"
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          # If this env variable is present, we set BOOST_ROOT to its content
         - name: "Ubuntu Latest GCC"
           os: ubuntu-latest
           cc: "gcc-9"
@@ -29,6 +28,23 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
+    - name: Cache vcpkg installed libraries
+      uses: actions/cache@v2
+      with:
+        path: |
+          !c:/vcpkg/packages
+          c:/vcpkg/installed
+          c:/vcpkg/vcpkg
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-
+    - name: Install Windows dependencies
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        vcpkg install pkgconf
+        vcpkg install cairo
+        vcpkg install libwebp
     - name: Install package dependencies
       id: cmake_and_ninja
       shell: cmake -P {0}
@@ -55,11 +71,6 @@ jobs:
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
         set(ENV{CXX} ${{ matrix.config.cxx }})
-        # If the environment has boost_root defined, set BOOST_ROOT to it
-        if ( NOT "x${{ matrix.config.boost_root }}" STREQUAL "x")
-          set(ENV{BOOST_ROOT} $ENV{${{ matrix.config.boost_root }}})
-        endif()
-
         # If we are on windows, run the environment script, parse it with cmake
         # and set environment variables with it (required for Visual Studio)
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
@@ -75,16 +86,30 @@ jobs:
           endforeach()
         endif()
 
-        execute_process(
-          COMMAND ${CMAKE_COMMAND}
-            -S .
-            -B build
-            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
-            -G Ninja
-            -D CMAKE_MAKE_PROGRAM=ninja
-          RESULT_VARIABLE result
-          ERROR_VARIABLE error_message
-        )
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND ${CMAKE_COMMAND}
+              -S .
+              -B build
+              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+              -G Ninja
+              -D CMAKE_MAKE_PROGRAM=ninja
+              -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+            RESULT_VARIABLE result
+            ERROR_VARIABLE error_message
+          )
+        else()
+            execute_process(
+            COMMAND ${CMAKE_COMMAND}
+              -S .
+              -B build
+              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+              -G Ninja
+              -D CMAKE_MAKE_PROGRAM=ninja
+            RESULT_VARIABLE result
+            ERROR_VARIABLE error_message
+          )
+        endif()
 
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")

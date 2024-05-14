@@ -213,22 +213,14 @@ endif()
 ###############################################################################
 # Fontconfig
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
-elseif (APPLE OR UNIX OR WIN32)
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
-endif()
+pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 
 ###############################################################################
 # Freetype
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-elseif (APPLE OR UNIX OR WIN32)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
-endif()
+pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+target_link_libraries(elements PUBLIC PkgConfig::freetype2)
 
 ###############################################################################
 # GTK3

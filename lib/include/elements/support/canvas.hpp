@@ -13,6 +13,7 @@
 #include <elements/support/font.hpp>
 #include <infra/filesystem.hpp>
 
+#include <array>
 #include <vector>
 #include <functional>
 #include <stack>

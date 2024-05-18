@@ -17,6 +17,8 @@
 #include <infra/string_view.hpp>
 #include <utility>
 
+#include <array>
+
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////

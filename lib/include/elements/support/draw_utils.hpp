@@ -8,6 +8,8 @@
 
 #include <elements/support/canvas.hpp>
 
+#include <array>
+
 namespace cycfi::elements
 {
    namespace radial_consts

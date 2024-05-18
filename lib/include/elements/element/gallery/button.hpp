@@ -284,7 +284,7 @@ namespace cycfi { namespace elements
       using base_type = button_styler_with_individual_corner_radii<typename Base::base_type>;
 
                               button_styler_with_individual_corner_radii(Base base, float top_left, float top_right, float bottom_right, float bottom_left)
-                               : Base(std::move(base))
+                               : Base(std::move(base)), _top_left(top_left), _top_right(top_right), _bottom_right(bottom_right), _bottom_left(bottom_left)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
@@ -313,15 +313,15 @@ namespace cycfi { namespace elements
       template <typename OtherBase>
       using gen = button_styler_gen<OtherBase>;
 
-      using gen_size             = gen<button_styler_with_size<base_type>>;
-      using gen_body_color       = gen<button_styler_with_body_color<base_type>>;
-      using gen_text_color       = gen<button_styler_with_text_color<base_type>>;
-      using gen_icon             = gen<button_styler_with_icon<base_type>>;
-      using gen_icon_placement   = gen<button_styler_with_icon_placement<base_type>>;
-      using gen_icon_color       = gen<button_styler_with_icon_color<base_type>>;
-      using gen_label_alignment  = gen<button_styler_with_label_alignment<base_type>>;
-      using gen_margin           = gen<button_styler_with_margin<base_type>>;
-      using gen_corner_radius    = gen<button_styler_with_corner_radius<base_type>>;
+      using gen_size                = gen<button_styler_with_size<base_type>>;
+      using gen_body_color          = gen<button_styler_with_body_color<base_type>>;
+      using gen_text_color          = gen<button_styler_with_text_color<base_type>>;
+      using gen_icon                = gen<button_styler_with_icon<base_type>>;
+      using gen_icon_placement      = gen<button_styler_with_icon_placement<base_type>>;
+      using gen_icon_color          = gen<button_styler_with_icon_color<base_type>>;
+      using gen_label_alignment     = gen<button_styler_with_label_alignment<base_type>>;
+      using gen_margin              = gen<button_styler_with_margin<base_type>>;
+      using gen_corner_radius       = gen<button_styler_with_corner_radius<base_type>>;
       using gen_individual_corners  = button_styler_gen<button_styler_with_individual_corner_radii<base_type>>;
 
       template<direction_t Dir> 

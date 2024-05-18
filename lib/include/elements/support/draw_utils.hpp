@@ -21,7 +21,7 @@ namespace cycfi::elements
 
    void  draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
    void  draw_panel(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
-   void  draw_button(canvas& cnv, rect bounds, color c, bool enabled, float corner_radius = 4.0);
+   void  draw_button(canvas& cnv, rect bounds, color c, bool enabled, std::array<float, 4> corner_radius = { 4.0, 4.0, 4.0, 4.0 });
    void  draw_knob(canvas& cnv, circle cp, color c);
    void  draw_indicator(canvas& cnv, rect bounds, color c);
    void  draw_thumb(canvas& cnv, circle cp, color c, color ic);

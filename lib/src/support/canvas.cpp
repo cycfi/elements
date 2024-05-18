@@ -247,6 +247,27 @@ namespace cycfi { namespace elements
       cairo_close_path(&_context);
    }
 
+   void canvas::add_round_rect(struct rect r_, std::array<float, 4> radius)
+   {
+      auto x = r_.left;
+      auto y = r_.top;
+      auto r = r_.right;
+      auto b = r_.bottom;
+      auto const a = M_PI/180.0;
+      for (auto& r : radius) {
+         r = std::min(r, std::min(r_.width(), r_.height()) / 2);
+      }
+
+      // radii array follow the unit circle defined counterclockwise with 0 at (x, y) = (1, 0)
+      // we have to map this to the cairo definition
+      cairo_new_sub_path(&_context);
+      cairo_arc(&_context, r-radius[0], y+radius[0], radius[0], -90*a, 0*a);
+      cairo_arc(&_context, r-radius[3], b-radius[3], radius[3], 0*a, 90*a);
+      cairo_arc(&_context, x+radius[2], b-radius[2], radius[2], 90*a, 180*a);
+      cairo_arc(&_context, x+radius[1], y+radius[1], radius[1], 180*a, 270*a);
+      cairo_close_path(&_context);
+   }
+
    void canvas::round_rect(struct rect r, float radius)
    {
       add_round_rect(r, radius);

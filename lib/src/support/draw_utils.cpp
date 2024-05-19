@@ -79,6 +79,25 @@ namespace cycfi { namespace elements
       }
    }
 
+   void draw_round_rect(canvas& cnv, rect bounds, std::array<float, 4> radius)
+   {
+      auto l = bounds.left;
+      auto t = bounds.top;
+      auto r = bounds.right;
+      auto b = bounds.bottom;
+      for (auto& r : radius) {
+         r = std::min(r, std::min(bounds.width(), bounds.height()) / 2);
+      }
+
+      // radii array follow the unit circle defined counterclockwise with 0 at (x, y) = (1, 0)
+      cnv.begin_path();
+      cnv.arc({r-radius[3], b-radius[3]}, radius[3], 0,         M_PI*0.5);
+      cnv.arc({l+radius[2], b-radius[2]}, radius[2], M_PI*0.5,  M_PI    );
+      cnv.arc({l+radius[1], t+radius[1]}, radius[1], M_PI,      M_PI*1.5);
+      cnv.arc({r-radius[0], t+radius[0]}, radius[0], -M_PI*0.5, 0       );
+      cnv.close_path();
+   }
+
    void draw_button(canvas& cnv, rect bounds, color c, bool enabled, std::array<float, 4> corner_radius)
    {
       auto const& theme_ = get_theme();
@@ -98,16 +117,19 @@ namespace cycfi { namespace elements
       cnv.fill_style(gradient);
 
       cnv.begin_path();
-      cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      draw_round_rect(cnv, bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      // cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
       cnv.fill_style(enabled? c : c.opacity(c.alpha * theme_.disabled_opacity));
       cnv.fill();
-      cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      draw_round_rect(cnv, bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      // cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
 
       cnv.fill_style(gradient);
       cnv.fill();
 
       cnv.begin_path();
-      cnv.add_round_rect(bounds.inset(0.5, 0.5), {corner_radius[0]-0.5f, corner_radius[1]-0.5f, corner_radius[2]-0.5f, corner_radius[3]-0.5f});
+      draw_round_rect(cnv, bounds.inset(0.5, 0.5), {corner_radius[0]-0.5f, corner_radius[1]-0.5f, corner_radius[2]-0.5f, corner_radius[3]-0.5f});
+      // cnv.add_round_rect(bounds.inset(0.5, 0.5), {corner_radius[0]-0.5f, corner_radius[1]-0.5f, corner_radius[2]-0.5f, corner_radius[3]-0.5f});
       cnv.stroke_style(rgba(0, 0, 0, 48));
       cnv.stroke();
    }

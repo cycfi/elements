@@ -13,7 +13,6 @@
 #include <elements/support/font.hpp>
 #include <infra/filesystem.hpp>
 
-#include <array>
 #include <vector>
 #include <functional>
 #include <stack>
@@ -77,7 +76,6 @@ namespace cycfi { namespace elements
                         [[deprecated("Use round_rect(r, radius) instead following artist API.")]]
       void              round_rect(elements::rect r, float radius);
       void              add_round_rect(elements::rect r, float radius);
-      void              add_round_rect(elements::rect r, std::array<float, 4> radii);
 
                         [[deprecated("Use circle(c) instead following artist API.")]]
       void              circle(elements::circle c);

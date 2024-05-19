@@ -54,10 +54,10 @@ namespace cycfi { namespace elements
       virtual rect            get_margin() const;
       virtual float           get_corner_radius() const;
 
-      virtual float           get_corner_radius_top_left() const { return get_corner_radius(); }
-      virtual float           get_corner_radius_top_right() const { return get_corner_radius(); }
-      virtual float           get_corner_radius_bottom_left() const { return get_corner_radius(); }
-      virtual float           get_corner_radius_bottom_right() const { return get_corner_radius(); }
+      virtual float           get_corner_radius_top_left() const;
+      virtual float           get_corner_radius_top_right() const;
+      virtual float           get_corner_radius_bottom_left() const;
+      virtual float           get_corner_radius_bottom_right() const;
    };
 
    template <typename Base>
@@ -285,8 +285,18 @@ namespace cycfi { namespace elements
    {
       using base_type = button_styler_with_individual_corner_radii<typename Base::base_type>;
 
-                              button_styler_with_individual_corner_radii(Base base, float top_left, float top_right, float bottom_right, float bottom_left)
-                               : Base(std::move(base)), _top_left(top_left), _top_right(top_right), _bottom_right(bottom_right), _bottom_left(bottom_left)
+                              button_styler_with_individual_corner_radii(
+                                 Base base, 
+                                 float top_left, 
+                                 float top_right, 
+                                 float bottom_right, 
+                                 float bottom_left
+                              )
+                                 :  Base(std::move(base)), 
+                                    _top_left(top_left), 
+                                    _top_right(top_right), 
+                                    _bottom_right(bottom_right), 
+                                    _bottom_left(bottom_left)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
@@ -324,13 +334,13 @@ namespace cycfi { namespace elements
       using gen_label_alignment     = gen<button_styler_with_label_alignment<base_type>>;
       using gen_margin              = gen<button_styler_with_margin<base_type>>;
       using gen_corner_radius       = gen<button_styler_with_corner_radius<base_type>>;
-      using gen_individual_corners  = button_styler_gen<button_styler_with_individual_corner_radii<base_type>>;
+      using gen_individual_corners  = gen<button_styler_with_individual_corner_radii<base_type>>;
 
       template<direction_t Dir> 
-      using gen_rounded_half        = button_styler_gen<button_styler_rounded_half<base_type, Dir>>;
+      using gen_rounded_half     = button_styler_gen<button_styler_rounded_half<base_type, Dir>>;
 
       template<corner_t Corner> 
-      using gen_rounded_corner      = button_styler_gen<button_styler_rounded_corner<base_type, Corner>>;
+      using gen_rounded_corner   = button_styler_gen<button_styler_rounded_corner<base_type, Corner>>;
 
       gen_size                size(float size) const;
       gen_body_color          body_color(color color_) const;
@@ -344,7 +354,12 @@ namespace cycfi { namespace elements
       gen_label_alignment     align_right() const;
       gen_margin              margin(rect margin) const;
       gen_corner_radius       corner_radius(float r) const;
-      gen_individual_corners  corner_radius(float top_left, float top_right, float bottom_right, float bottom_left) const;
+      gen_individual_corners  corner_radius(
+                                 float top_left, 
+                                 float top_right, 
+                                 float bottom_right, 
+                                 float bottom_left
+                              ) const;
 
       gen_rounded_half<direction_t::up>          rounded_top(float r) const;
       gen_rounded_half<direction_t::down>        rounded_bottom(float r) const;
@@ -605,6 +620,26 @@ namespace cycfi { namespace elements
    inline float default_button_styler::get_corner_radius() const
    {
       return get_theme().button_corner_radius;
+   }
+
+   inline float default_button_styler::get_corner_radius_top_left() const 
+   { 
+      return get_corner_radius(); 
+   }
+
+   inline float default_button_styler::get_corner_radius_top_right() const 
+   { 
+      return get_corner_radius(); 
+   }
+   
+   inline float default_button_styler::get_corner_radius_bottom_left() const 
+   { 
+      return get_corner_radius(); 
+   }
+   
+   inline float default_button_styler::get_corner_radius_bottom_right() const 
+   { 
+      return get_corner_radius(); 
    }
 
    template <typename Base>

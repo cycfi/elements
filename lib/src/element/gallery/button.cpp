@@ -4,12 +4,11 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/gallery/button.hpp>
-#include <utility>
 
 namespace cycfi { namespace elements
 {
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, std::array<float, 4> corner_radius)
+      context const& ctx, rect bounds, color color_, bool enabled, detail::corner_radii corner_radius)
    {
       draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
    }
@@ -80,10 +79,10 @@ namespace cycfi { namespace elements
          body_color = body_color.level(0.9);
       }
       draw_button_base(ctx, bounds, body_color, enabled, {
-         get_corner_radius_top_right()*rel_size, 
-         get_corner_radius_top_left()*rel_size, 
-         get_corner_radius_bottom_left()*rel_size, 
-         get_corner_radius_bottom_right()*rel_size
+         get_corner_radius_bottom_right()*rel_size,
+         get_corner_radius_bottom_left()*rel_size,
+         get_corner_radius_top_left()*rel_size,
+         get_corner_radius_top_right()*rel_size
       });
 
       // Adjust the font size

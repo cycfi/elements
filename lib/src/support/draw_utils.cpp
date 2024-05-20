@@ -98,7 +98,7 @@ namespace cycfi { namespace elements
       cnv.close_path();
    }
 
-   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, std::array<float, 4> corner_radius)
+   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, std::array<float, 4> corner_r)
    {
       auto const& theme_ = get_theme();
       auto state = cnv.new_state();
@@ -116,20 +116,19 @@ namespace cycfi { namespace elements
       gradient.add_color_stop({1.0, rgb(0, 0, 0).opacity(box_opacity)});
       cnv.fill_style(gradient);
 
+      auto r = bounds.inset(1, 1);
       cnv.begin_path();
-      draw_round_rect(cnv, bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
-      // cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      draw_round_rect(cnv, r, {corner_r[0]-1, corner_r[1]-1, corner_r[2]-1, corner_r[3]-1});
       cnv.fill_style(enabled? c : c.opacity(c.alpha * theme_.disabled_opacity));
       cnv.fill();
-      draw_round_rect(cnv, bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
-      // cnv.add_round_rect(bounds.inset(1, 1), {corner_radius[0]-1, corner_radius[1]-1, corner_radius[2]-1, corner_radius[3]-1});
+      draw_round_rect(cnv, r, {corner_r[0]-1, corner_r[1]-1, corner_r[2]-1, corner_r[3]-1});
 
       cnv.fill_style(gradient);
       cnv.fill();
 
+      r = bounds.inset(0.5, 0.5);
       cnv.begin_path();
-      draw_round_rect(cnv, bounds.inset(0.5, 0.5), {corner_radius[0]-0.5f, corner_radius[1]-0.5f, corner_radius[2]-0.5f, corner_radius[3]-0.5f});
-      // cnv.add_round_rect(bounds.inset(0.5, 0.5), {corner_radius[0]-0.5f, corner_radius[1]-0.5f, corner_radius[2]-0.5f, corner_radius[3]-0.5f});
+      draw_round_rect(cnv, r, {corner_r[0]-0.5f, corner_r[1]-0.5f, corner_r[2]-0.5f, corner_r[3]-0.5f});
       cnv.stroke_style(rgba(0, 0, 0, 48));
       cnv.stroke();
    }

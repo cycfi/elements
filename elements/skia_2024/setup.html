@@ -297,6 +297,17 @@ cmake -GXcode ../</code></pre>
 <div class="paragraph">
 <p>If successful, CMake will generate an <a href="https://developer.apple.com/xcode/">XCode</a> project in the build directory. Open the project file <code>elements.xcodeproj</code> and build all. You should see a couple of example applications.</p>
 </div>
+<div class="paragraph">
+<p>If you are having problems with code signing, do this:</p>
+</div>
+<div class="paragraph">
+<p>Build Settings&#8594;Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/setup/xcode-signing.png" alt="xcode signing">
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -113,6 +113,31 @@ auto make_buttons(view& view_)
                                  .body_color(bgreen)
                            );
 
+   // The corner radii can be individually controlled with the 
+   // `corner_radius`, `rounded`, and `rounded_corner` methods.
+   auto left_rounded    =  momentary_button(
+                              button_styler{"Rounded Left"}
+                                 .align_left()
+                                 .icon(icons::left_circled)
+                                 .icon_left()
+                                 .body_color(bred)
+                                 .rounded_left(10)
+                           );
+
+   auto center_square   =  momentary_button(
+                              button_styler{"Square Center"}
+                                 .body_color(bblue)
+                                 .corner_radius(0)
+                           );
+
+   auto right_rounded   =  momentary_button(
+                              button_styler{"Rounded Right"}
+                                 .align_right()
+                                 .icon(icons::right_circled)
+                                 .body_color(bgreen)
+                                 .corner_radius(0, 10, 10, 0)
+                           );
+
    auto slide_btn1      = slide_switch();
    auto slide_btn2      = slide_switch();
 
@@ -189,6 +214,7 @@ auto make_buttons(view& view_)
                )
             ),
             margin_top(20, htile(left, center, right)),
+            margin_top(20, htile(left_rounded, center_square, right_rounded)),
             margin_top(20, custom)
          )
       );

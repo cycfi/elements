@@ -48,7 +48,7 @@ namespace cycfi { namespace elements
       {
          float corner_radius = 6;
          color body_color = state ? body_color_ : body_color_.opacity(0.5).level(0.8);
-         draw_button_base(ctx, ctx.bounds, body_color, enabled, corner_radius);
+         draw_button_base(ctx, ctx.bounds, body_color, enabled, {corner_radius, corner_radius, corner_radius, corner_radius});
       }
 
       // Draw Icon

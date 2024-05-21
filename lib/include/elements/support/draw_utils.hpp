@@ -19,9 +19,19 @@ namespace cycfi::elements
       constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
    }
 
+   namespace detail {
+      struct corner_radii
+      {
+         float top_left, top_right, bottom_right, bottom_left;
+         corner_radii operator+(float v) const;
+         corner_radii operator-(float v) const;
+      };
+   }
+
    void  draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
    void  draw_panel(canvas& cnv, rect bounds, color c, float corner_radius = 4.0);
-   void  draw_button(canvas& cnv, rect bounds, color c, bool enabled, float corner_radius = 4.0);
+   void  draw_round_rect(canvas& cnv, rect bounds, detail::corner_radii);
+   void  draw_button(canvas& cnv, rect bounds, color c, bool enabled, detail::corner_radii corner_radius = {4, 4, 4, 4});
    void  draw_knob(canvas& cnv, circle cp, color c);
    void  draw_indicator(canvas& cnv, rect bounds, color c);
    void  draw_thumb(canvas& cnv, circle cp, color c, color ic);

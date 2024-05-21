@@ -36,8 +36,8 @@ namespace cycfi { namespace elements
 
       enum icon_placement {icon_none, icon_left, icon_right};
       enum label_alignment {align_left, align_center, align_right};
-      enum class direction {up, down, left, right};
-      enum class corner {top_left, top_right, bottom_left, bottom_right};
+      enum direction {up, left, down, right};
+      enum corner {top_left, top_right, bottom_right, bottom_left};
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
@@ -966,56 +966,56 @@ namespace cycfi { namespace elements
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::direction::up>
+   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::up>
    button_styler_gen<Base>::rounded_top(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::direction::down>
+   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::down>
    button_styler_gen<Base>::rounded_bottom(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::direction::left>
+   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::left>
    button_styler_gen<Base>::rounded_left(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::direction::right>
+   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::right>
    button_styler_gen<Base>::rounded_right(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::corner::top_left>
+   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::top_left>
    button_styler_gen<Base>::rounded_corner_top_left(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::corner::top_right>
+   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::top_right>
    button_styler_gen<Base>::rounded_corner_top_right(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::corner::bottom_left>
+   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::bottom_left>
    button_styler_gen<Base>::rounded_corner_bottom_left(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::corner::bottom_right>
+   inline typename button_styler_gen<Base>::template gen_rounded_corner<default_button_styler::bottom_right>
    button_styler_gen<Base>::rounded_corner_bottom_right(float r) const
    {
       return {*this, r};

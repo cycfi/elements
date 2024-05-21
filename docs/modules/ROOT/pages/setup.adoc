@@ -102,7 +102,7 @@ If successful, CMake will generate an https://developer.apple.com/xcode/[XCode] 
 
 If you are having problems with code signing, do this:
 
-Build Settings->Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty). Do this for both ALL_BUILD and elements.
+In the ALL_BUILD target, select "Build Settings"->"Code Signing Identity" (under "Signing"). In the elements column, click, then choose "Other", then clear the text (empty).
 
 image::setup/xcode-signing.png[]
 

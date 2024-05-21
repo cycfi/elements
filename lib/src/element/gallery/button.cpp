@@ -79,10 +79,10 @@ namespace cycfi { namespace elements
          body_color = body_color.level(0.9);
       }
       draw_button_base(ctx, bounds, body_color, enabled, {
-         get_corner_radius_bottom_right()*rel_size,
-         get_corner_radius_bottom_left()*rel_size,
          get_corner_radius_top_left()*rel_size,
-         get_corner_radius_top_right()*rel_size
+         get_corner_radius_top_right()*rel_size,
+         get_corner_radius_bottom_right()*rel_size,
+         get_corner_radius_bottom_left()*rel_size
       });
 
       // Adjust the font size

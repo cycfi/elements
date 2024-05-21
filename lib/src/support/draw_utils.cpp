@@ -9,7 +9,7 @@
 namespace cycfi { namespace elements
 {
    detail::corner_radii detail::corner_radii::operator+(float v) const { 
-      return { bottom_right+v, bottom_left+v, top_left+v, top_right+v };
+      return { top_left+v, top_right+v, bottom_right+v, bottom_left+v };
    }
 
    detail::corner_radii detail::corner_radii::operator-(float v) const { return *this + (-v); }

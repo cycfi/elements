@@ -285,16 +285,15 @@ namespace cycfi { namespace elements
 
                               button_styler_with_individual_corner_radii(
                                  Base base, 
-                                 float bottom_right,
-                                 float bottom_left,
                                  float top_left,
-                                 float top_right
-                              )
-                                 :  Base(std::move(base)),
-                                    _bottom_right(bottom_right),
-                                    _bottom_left(bottom_left),
+                                 float top_right,
+                                 float bottom_right,
+                                 float bottom_left
+                              )  :  Base(std::move(base)),
                                     _top_left(top_left),
-                                    _top_right(top_right)
+                                    _top_right(top_right),
+                                    _bottom_right(bottom_right),
+                                    _bottom_left(bottom_left)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
@@ -304,10 +303,10 @@ namespace cycfi { namespace elements
 
    private:
 
-      float                   _bottom_right;
-      float                   _bottom_left;
       float                   _top_left;
       float                   _top_right;
+      float                   _bottom_right;
+      float                   _bottom_left;
    };
 
    template <typename Base>
@@ -353,10 +352,10 @@ namespace cycfi { namespace elements
       gen_margin              margin(rect margin) const;
       gen_corner_radius       corner_radius(float r) const;
       gen_individual_corners  corner_radius(
-                                 float bottom_right, 
-                                 float bottom_left,
                                  float top_left, 
-                                 float top_right
+                                 float top_right,
+                                 float bottom_right, 
+                                 float bottom_left
                               ) const;
 
       gen_rounded_half<direction_t::up>          rounded_top(float r) const;
@@ -1024,9 +1023,9 @@ namespace cycfi { namespace elements
 
    template <typename Base>
    inline typename button_styler_gen<Base>::gen_individual_corners
-   button_styler_gen<Base>::corner_radius(float bottom_right, float bottom_left, float top_left, float top_right) const
+   button_styler_gen<Base>::corner_radius(float top_left, float top_right, float bottom_right, float bottom_left) const
    {
-      return {*this, bottom_right, bottom_left, top_left, top_right};
+      return {*this, top_left, top_right, bottom_right, bottom_left};
    }
 }}
 

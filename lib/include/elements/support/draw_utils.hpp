@@ -22,7 +22,7 @@ namespace cycfi::elements
    namespace detail {
       struct corner_radii
       {
-         float bottom_right, bottom_left, top_left, top_right;
+         float top_left, top_right, bottom_right, bottom_left;
          corner_radii operator+(float v) const;
          corner_radii operator-(float v) const;
       };

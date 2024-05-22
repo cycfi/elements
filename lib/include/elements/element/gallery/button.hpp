@@ -284,7 +284,7 @@ namespace cycfi { namespace elements
       using base_type = button_styler_with_individual_corner_radii<typename Base::base_type>;
 
                               button_styler_with_individual_corner_radii(
-                                 Base base, 
+                                 Base base,
                                  float top_left,
                                  float top_right,
                                  float bottom_right,
@@ -333,10 +333,10 @@ namespace cycfi { namespace elements
       using gen_corner_radius       = gen<button_styler_with_corner_radius<base_type>>;
       using gen_individual_corners  = gen<button_styler_with_individual_corner_radii<base_type>>;
 
-      template<direction_t Dir> 
+      template<direction_t Dir>
       using gen_rounded_half     = button_styler_gen<button_styler_rounded_half<base_type, Dir>>;
 
-      template<corner_t Corner> 
+      template<corner_t Corner>
       using gen_rounded_corner   = button_styler_gen<button_styler_rounded_corner<base_type, Corner>>;
 
       gen_size                size(float size) const;
@@ -352,9 +352,9 @@ namespace cycfi { namespace elements
       gen_margin              margin(rect margin) const;
       gen_corner_radius       corner_radius(float r) const;
       gen_individual_corners  corner_radius(
-                                 float top_left, 
+                                 float top_left,
                                  float top_right,
-                                 float bottom_right, 
+                                 float bottom_right,
                                  float bottom_left
                               ) const;
 
@@ -568,7 +568,7 @@ namespace cycfi { namespace elements
    // Drawing button utility
    ////////////////////////////////////////////////////////////////////////////
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, detail::corner_radii corner_radius
+      context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii
    );
 
    ////////////////////////////////////////////////////////////////////////////
@@ -619,24 +619,24 @@ namespace cycfi { namespace elements
       return get_theme().button_corner_radius;
    }
 
-   inline float default_button_styler::get_corner_radius_top_left() const 
-   { 
-      return get_corner_radius(); 
+   inline float default_button_styler::get_corner_radius_top_left() const
+   {
+      return get_corner_radius();
    }
 
-   inline float default_button_styler::get_corner_radius_top_right() const 
-   { 
-      return get_corner_radius(); 
+   inline float default_button_styler::get_corner_radius_top_right() const
+   {
+      return get_corner_radius();
    }
-   
-   inline float default_button_styler::get_corner_radius_bottom_left() const 
-   { 
-      return get_corner_radius(); 
+
+   inline float default_button_styler::get_corner_radius_bottom_left() const
+   {
+      return get_corner_radius();
    }
-   
-   inline float default_button_styler::get_corner_radius_bottom_right() const 
-   { 
-      return get_corner_radius(); 
+
+   inline float default_button_styler::get_corner_radius_bottom_right() const
+   {
+      return get_corner_radius();
    }
 
    template <typename Base>

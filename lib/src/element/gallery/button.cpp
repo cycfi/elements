@@ -8,9 +8,9 @@
 namespace cycfi { namespace elements
 {
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, detail::corner_radii corner_radius)
+      context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii)
    {
-      draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
+      draw_button(ctx.canvas, bounds, color_, enabled, corner_radii);
    }
 
    bool button_styler_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)

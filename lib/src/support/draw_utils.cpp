@@ -13,12 +13,15 @@ namespace cycfi { namespace elements
    using artist::point;
    namespace colors = cycfi::artist::colors;
 
-   detail::corner_radii detail::corner_radii::operator+(float v) const
+   corner_radii corner_radii::operator+(float v) const
    {
       return { top_left+v, top_right+v, bottom_right+v, bottom_left+v };
    }
 
-   detail::corner_radii detail::corner_radii::operator-(float v) const { return *this + (-v); }
+   corner_radii corner_radii::operator-(float v) const
+   {
+      return *this + (-v);
+   }
 
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius)
    {
@@ -55,26 +58,26 @@ namespace cycfi { namespace elements
       cnv.fill();
    }
 
-   void draw_round_rect(canvas& cnv, rect bounds, detail::corner_radii radius)
+   void draw_round_rect(canvas& cnv, rect bounds, corner_radii radii)
    {
       auto l = bounds.left;
       auto t = bounds.top;
       auto r = bounds.right;
       auto b = bounds.bottom;
-      radius.top_left =     std::min(radius.top_left,     std::min(bounds.width(), bounds.height()) / 2);
-      radius.top_right =    std::min(radius.top_right,    std::min(bounds.width(), bounds.height()) / 2);
-      radius.bottom_right = std::min(radius.bottom_right, std::min(bounds.width(), bounds.height()) / 2);
-      radius.bottom_left =  std::min(radius.bottom_left,  std::min(bounds.width(), bounds.height()) / 2);
+      radii.top_left = std::min(radii.top_left, std::min(bounds.width(), bounds.height()) / 2);
+      radii.top_right = std::min(radii.top_right, std::min(bounds.width(), bounds.height()) / 2);
+      radii.bottom_right = std::min(radii.bottom_right, std::min(bounds.width(), bounds.height()) / 2);
+      radii.bottom_left = std::min(radii.bottom_left,  std::min(bounds.width(), bounds.height()) / 2);
 
       cnv.begin_path();
-      cnv.arc({r-radius.bottom_right, b-radius.bottom_right}, radius.bottom_right, 0,        M_PI*0.5);
-      cnv.arc({l+radius.bottom_left,  b-radius.bottom_left }, radius.bottom_left,  M_PI*0.5, M_PI    );
-      cnv.arc({l+radius.top_left,     t+radius.top_left    }, radius.top_left,     M_PI,     M_PI*1.5);
-      cnv.arc({r-radius.top_right,    t+radius.top_right   }, radius.top_right,    M_PI*1.5, 0       );
+      cnv.arc({r- radii.bottom_right, b- radii.bottom_right}, radii.bottom_right, 0,        M_PI*0.5);
+      cnv.arc({l+ radii.bottom_left,  b- radii.bottom_left }, radii.bottom_left,  M_PI*0.5, M_PI    );
+      cnv.arc({l+ radii.top_left,     t+ radii.top_left    }, radii.top_left,     M_PI,     M_PI*1.5);
+      cnv.arc({r- radii.top_right,    t+ radii.top_right   }, radii.top_right,    M_PI*1.5, 0       );
       cnv.close_path();
    }
 
-   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, detail::corner_radii corner_r)
+   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, corner_radii radii)
    {
       auto const& theme_ = get_theme();
       auto state = cnv.new_state();
@@ -94,17 +97,17 @@ namespace cycfi { namespace elements
 
       auto r = bounds.inset(1, 1);
       cnv.begin_path();
-      draw_round_rect(cnv, r, corner_r-1);
+      draw_round_rect(cnv, r, radii -1);
       cnv.fill_style(enabled? c : c.opacity(c.alpha * theme_.disabled_opacity));
       cnv.fill();
-      draw_round_rect(cnv, r, corner_r-1);
+      draw_round_rect(cnv, r, radii -1);
 
       cnv.fill_style(gradient);
       cnv.fill();
 
       r = bounds.inset(0.5, 0.5);
       cnv.begin_path();
-      draw_round_rect(cnv, r, corner_r-0.5f);
+      draw_round_rect(cnv, r, radii -0.5f);
       cnv.stroke_style(rgba(0, 0, 0, 48));
       cnv.stroke();
    }

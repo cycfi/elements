@@ -568,7 +568,7 @@ namespace cycfi { namespace elements
    // Drawing button utility
    ////////////////////////////////////////////////////////////////////////////
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, detail::corner_radii corner_radius
+      context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii
    );
 
    ////////////////////////////////////////////////////////////////////////////

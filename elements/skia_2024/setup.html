@@ -291,7 +291,15 @@ brew install webp</code></pre>
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
 mkdir build
 cd build
-cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../</code></pre>
+cmake -GXcode ../</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are having issues with code signing, disable it by setting the <code>CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED</code> variable to <code>NO</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -302,11 +310,6 @@ cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../</code></pre>
 </div>
 <div class="paragraph">
 <p>Build Settings&#8594;Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty). Do this for both ALL_BUILD and elements.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/setup/xcode-signing.png" alt="xcode signing">
-</div>
 </div>
 </div>
 </div>

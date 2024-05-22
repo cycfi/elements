@@ -95,10 +95,12 @@ namespace cycfi { namespace elements
       auto t = bounds.top;
       auto r = bounds.right;
       auto b = bounds.bottom;
-      radii.top_left = std::min(radii.top_left, std::min(bounds.width(), bounds.height()) / 2);
-      radii.top_right = std::min(radii.top_right, std::min(bounds.width(), bounds.height()) / 2);
-      radii.bottom_right = std::min(radii.bottom_right, std::min(bounds.width(), bounds.height()) / 2);
-      radii.bottom_left = std::min(radii.bottom_left,  std::min(bounds.width(), bounds.height()) / 2);
+      auto min_r = std::min(bounds.width(), bounds.height()) / 2;
+
+      radii.top_left = std::min(radii.top_left, min_r);
+      radii.top_right = std::min(radii.top_right, min_r);
+      radii.bottom_right = std::min(radii.bottom_right, min_r);
+      radii.bottom_left = std::min(radii.bottom_left, min_r);
 
       cnv.begin_path();
       cnv.arc({r- radii.bottom_right, b- radii.bottom_right}, radii.bottom_right, 0,        M_PI*0.5);

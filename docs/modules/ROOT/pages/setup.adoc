@@ -95,7 +95,7 @@ There are multiple ways to generate a project file using CMake depending on your
 cd elements
 mkdir build
 cd build
-cmake -GXcode ../
+cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../
 ----
 
 If successful, CMake will generate an https://developer.apple.com/xcode/[XCode] project in the build directory. Open the project file `elements.xcodeproj` and build all. You should see a couple of example applications.

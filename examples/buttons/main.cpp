@@ -113,7 +113,7 @@ auto make_buttons(view& view_)
                                  .body_color(bgreen)
                            );
 
-   // The corner radii can be individually controlled with the 
+   // The corner radii can be individually controlled with the
    // `corner_radius`, `rounded`, and `rounded_corner` methods.
    auto left_rounded    =  momentary_button(
                               button_styler{"Rounded Left"}
@@ -189,6 +189,8 @@ auto make_buttons(view& view_)
          view_.refresh(*prog_bar);
       };
 
+   static auto const grid = make_equal_grid<3>();
+
    return
       margin({20, 0, 20, 20},
          vtile(
@@ -213,8 +215,8 @@ auto make_buttons(view& view_)
                   label("Disabled")
                )
             ),
-            margin_top(20, htile(left, center, right)),
-            margin_top(20, htile(left_rounded, center_square, right_rounded)),
+            margin_top(20, hgrid(grid, left, center, right)),
+            margin_top(20, hgrid(grid, left_rounded, center_square, right_rounded)),
             margin_top(20, custom)
          )
       );

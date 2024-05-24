@@ -119,7 +119,7 @@ namespace cycfi { namespace elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Horizontal Tiles
+   // Horizontal Grids
    ////////////////////////////////////////////////////////////////////////////
    class hgrid_element : public grid_base
    {
@@ -165,6 +165,34 @@ namespace cycfi { namespace elements
       composite r{};
       r = container{{share(std::forward<E>(elements))...}};
       return r;
+   }
+
+   /**
+    * \brief
+    *    Creates an equally spaced grid of floats.
+    *
+    *    This function generates a std::array of N floats, where each element
+    *    is equally spaced between 0 and 1. The spacing between the elements
+    *    is 1 / N.
+    *
+    * \tparam N
+    *    The size of the array to be created.
+    *
+    * \return
+    *    A std::array of N floats, where each element is equally spaced
+    *    between 0 and 1.
+    */
+   template <std::size_t N>
+   inline std::array<float, N> make_equal_grid()
+   {
+      std::array<float, N> grid;
+      std::generate(grid.begin(), grid.end(),
+         [n = 1]() mutable
+         {
+            return float(n++) / N;
+         }
+      );
+      return grid;
    }
 }}
 

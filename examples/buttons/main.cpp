@@ -191,7 +191,7 @@ auto make_buttons(view& view_)
          view_.refresh(*prog_bar);
       };
 
-   static std::array<float, 6> const grid = {0.33, 0.66, 1.0};
+   static auto const grid = make_equal_grid<3>();
 
    return
       margin({20, 0, 20, 20},

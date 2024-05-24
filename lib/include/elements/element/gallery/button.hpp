@@ -33,6 +33,7 @@ namespace cycfi { namespace elements
    public:
 
       using base_type = default_button_styler;
+      constexpr static bool has_default_corner_radius = true;
 
       enum icon_placement {icon_none, icon_left, icon_right};
       enum label_alignment {align_left, align_center, align_right};
@@ -225,6 +226,7 @@ namespace cycfi { namespace elements
    struct button_styler_with_corner_radius : Base
    {
       using base_type = button_styler_with_corner_radius<typename Base::base_type>;
+      constexpr static bool has_default_corner_radius = false;
 
                               button_styler_with_corner_radius(Base base, float r)
                                : Base(std::move(base)), _radius(r)
@@ -243,6 +245,7 @@ namespace cycfi { namespace elements
    {
       using base_type = button_styler_rounded_half<typename Base::base_type, Direction>;
       using direction_t = default_button_styler::direction;
+      constexpr static bool has_default_corner_radius = false;
 
                               button_styler_rounded_half(Base base, float r)
                                : Base(std::move(base)), _radius(r)
@@ -263,6 +266,7 @@ namespace cycfi { namespace elements
    {
       using base_type = button_styler_rounded_corner<typename Base::base_type, Corner>;
       using corner_t = default_button_styler::corner;
+      constexpr static bool has_default_corner_radius = false;
 
                               button_styler_rounded_corner(Base base, float r)
                                : Base(std::move(base)), _radius(r)
@@ -282,6 +286,7 @@ namespace cycfi { namespace elements
    struct button_styler_with_individual_corner_radii : Base
    {
       using base_type = button_styler_with_individual_corner_radii<typename Base::base_type>;
+      constexpr static bool has_default_corner_radius = false;
 
                               button_styler_with_individual_corner_radii(
                                  Base base,
@@ -797,8 +802,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::left)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_top_left();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::direction Direction>
@@ -806,8 +813,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::right)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_top_right();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::direction Direction>
@@ -815,8 +824,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::left)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_bottom_left();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::direction Direction>
@@ -824,8 +835,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::right)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_bottom_right();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::corner Corner>
@@ -833,8 +846,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Corner == corner_t::top_left)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_top_left();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::corner Corner>
@@ -842,8 +857,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Corner == corner_t::top_right)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_top_right();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::corner Corner>
@@ -851,8 +868,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Corner == corner_t::bottom_left)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_bottom_left();
+      else
+         return 0.0f;
    }
 
    template <typename Base, default_button_styler::corner Corner>
@@ -860,8 +879,10 @@ namespace cycfi { namespace elements
    {
       if constexpr (Corner == corner_t::bottom_right)
          return _radius;
-      else
+      else if constexpr (!Base::has_default_corner_radius)
          return Base::get_corner_radius_bottom_right();
+      else
+         return 0.0f;
    }
 
    template <typename Base>

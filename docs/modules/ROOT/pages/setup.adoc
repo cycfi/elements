@@ -95,7 +95,7 @@ There are multiple ways to generate a project file using CMake depending on your
 cd elements
 mkdir build
 cd build
-cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../
+cmake -GXcode ../
 ----
 
 If you are having issues with code signing, disable it by setting the `CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED` variable to `NO`:

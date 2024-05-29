@@ -121,7 +121,7 @@ namespace cycfi { namespace elements
             [&view_, eptr = get(popup), f, btn = get(btn)](bool flag)
             {
                f(flag);
-               view_.post(100ms,
+               view_.post(
                   [&view_, btn, eptr]()
                   {
                      if (auto b = btn.lock())

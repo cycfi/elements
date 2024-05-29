@@ -154,9 +154,9 @@ namespace cycfi { namespace elements
       return _selected;
    }
 
-   inline void draggable_element::select(bool state)
+   inline void draggable_element::select(bool state_)
    {
-      _selected = state;
+      _selected = state_;
    }
 }}
 

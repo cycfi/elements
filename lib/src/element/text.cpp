@@ -8,6 +8,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/support/text_utils.hpp>
 #include <elements/support/context.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 #include <utility>
 
@@ -334,6 +335,7 @@ namespace cycfi { namespace elements
          )
          return false;
 
+      _show_caret = true;
       bool move_caret = false;
       bool save_x = false;
       bool handled = false;
@@ -963,9 +965,11 @@ namespace cycfi { namespace elements
 
    void basic_text_box::begin_focus(focus_request /*req*/)
    {
-     _is_focus = true;
+      _is_focus = true;
+      _show_caret = true;
       if (_select_start == -1)
          _select_start = _select_end = 0;
+      scroll_into_view();
    }
 
    bool basic_text_box::end_focus()
@@ -1022,29 +1026,6 @@ namespace cycfi { namespace elements
       scroll_into_view();
    }
 
-   void  basic_text_box::align_home(context const& ctx)
-   {
-      auto _text = get_text();
-      glyph_metrics m = glyph_info(ctx, _text.data());
-      scrollable::find(ctx).scroll_into_view(m.bounds);
-      ctx.view.refresh(ctx);
-   }
-
-   void  basic_text_box::align_end(context const& ctx)
-   {
-      auto& _text = get_text();
-      if (_text.empty())
-      {
-         align_home(ctx);
-      }
-      else
-      {
-         glyph_metrics m = glyph_info(ctx, _text.data() + _text.size());
-         scrollable::find(ctx).scroll_into_view(m.bounds);
-         ctx.view.refresh(ctx);
-      }
-   }
-
    bool basic_text_box::word_break(char const* utf8) const
    {
       auto cp = codepoint(utf8);
@@ -1064,11 +1045,13 @@ namespace cycfi { namespace elements
    {
       auto  size = _layout.metrics();
       auto  line_height = size.ascent + size.descent + size.leading;
-      return {{32, line_height}, {full_extent, line_height}};
+      return {{1000000, line_height}, {full_extent, line_height}};
    }
 
    void basic_input_box::draw(context const& ctx)
    {
+      make_maximally_visible(ctx); // Make the input box maximally visible
+
       if (get_text().empty())
       {
          if (!_placeholder.empty())
@@ -1217,6 +1200,22 @@ namespace cycfi { namespace elements
       return basic_text_box::click(ctx, btn);
    }
 
+   bool basic_input_box::scroll(context const& ctx, point dir, point p)
+   {
+      bool r = basic_text_box::scroll(ctx, dir, p);
+      if (get_text().empty())
+         return r;
+
+      limit_scroll_right(ctx);
+      return r;
+   }
+
+   bool basic_input_box::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      _is_hovering = status != cursor_tracking::leaving;
+      return basic_text_box::cursor(ctx, p, status);
+   }
+
    bool basic_input_box::end_focus()
    {
       if (!is_enabled())
@@ -1230,23 +1229,124 @@ namespace cycfi { namespace elements
       return false;
    }
 
-   void align_home(view& view_, basic_input_box& tbox)
+   /**
+    * \brief
+    *    Adjusts the visibility of the basic_input_box's text within its
+    *    context to maximize its visibility.
+    *
+    *    This member function adjusts the position of the basic_input_box's
+    *    text within its containing port to maximize its visibility. This
+    *    procedire might involve scrolling or repositioning within the port.
+    *
+    *    The positioning strategy is determined by the `_clip_action` member.
+    *    If `_clip_action` is set to `clip_left`, the function will attempt
+    *    to position the text such that the rightmost text is visible. If
+    *    `_clip_action` is set to `clip_right` (the default), the function
+    *    will attempt to position the text such that the leftmost text is
+    *    visible.
+    *
+    * \param ctx
+    *    This provides information about the environment in which the
+    *    basic_input_box is being used, such as the current view, canvas, and
+    *    other settings, as well as the element's bounds.
+    */
+   void basic_input_box::make_maximally_visible(context const& ctx)
    {
-      view_.in_context_do(tbox,
-         [&tbox](auto& ctx)
+      if (get_text().empty())
+         return;
+
+      if (_clip_action == clip_none || _is_hovering ||
+         select_start() != select_end() || is_focus())
+      {
+         limit_scroll_right(ctx);
+         return;
+      }
+
+      if (auto* pctx = find_parent_context<port_base*>(ctx))
+      {
+         auto const& _text = get_text();
+         auto last = _text.size();
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + 1.0f;
+         auto port_width = pctx->bounds.width();
+         auto extent = ctx.bounds.width();
+         auto ext_left = ctx.bounds.left;
+         auto ext_right = ctx.bounds.right;
+
+         // Initial window position based on text block visibility
+         float desired_left, desired_right;
+
+         if (_clip_action == clip_left)
          {
-            tbox.align_home(ctx);
+            auto text_left = text_right - port_width;
+            desired_left = std::max(ext_left, text_left);
+            desired_right = desired_left + port_width;
          }
-      );
+         else // _clip_action == clip_right
+         {
+            desired_right = std::min(ext_left + port_width, text_right);
+            desired_left = desired_right - port_width;
+         }
+
+         // Adjust window if exceeding bounds
+         if (desired_right > ext_right)
+         {
+            desired_right = ext_right;
+            desired_left = ext_right - port_width;
+         }
+         if (desired_left < ext_left)
+         {
+            desired_left = ext_left;
+            desired_right = ext_left + port_width;
+         }
+
+         // Calculate the alignment value
+         auto align = (desired_left - ext_left) / (extent - port_width);
+
+         auto port = dynamic_cast<port_base*>(pctx->element);
+         if (port && port->halign() != align)
+         {
+            port->halign(align);
+            ctx.view.refresh(*pctx);
+         }
+      }
    }
 
-   void align_end(view& view_, basic_input_box& tbox)
+   /**
+    * \brief
+    *    Limits the scrolling of the basic_input_box's text to the right edge
+    *    of the text width.
+    *
+    *    This function clamps the horizontal alignment of the port to ensure
+    *    that it does not scroll beyond the right edge of the text.
+    *
+    * \param ctx
+    *    Provides context about the environment where the basic_input_box is
+    *    used. This includes the current view, canvas, other settings, and
+    *    the element's bounds.
+    */
+   void basic_input_box::limit_scroll_right(context const& ctx)
    {
-      view_.in_context_do(tbox,
-         [&tbox](auto& ctx)
+      if (get_text().empty())
+         return;
+
+      if (auto* pctx = find_parent_context<port_base*>(ctx))
+      {
+         auto last = _text.size();
+         auto text_right = glyph_info(ctx, &_text[last]).bounds.left + 1.0f;
+         auto port_width = pctx->bounds.width();
+         auto extent = ctx.bounds.width();
+         auto ext_left = ctx.bounds.left;
+
+         auto text_left = text_right - port_width;
+         auto adjusted_left = std::max(text_left, ext_left);
+         auto align = (adjusted_left - ext_left) / (extent - port_width);
+
+         auto port = dynamic_cast<port_base*>(pctx->element);
+         if (port && port->halign() > align)
          {
-            tbox.align_end(ctx);
+            port->halign(align);
+            ctx.view.refresh(*pctx);
          }
-      );
+      }
    }
 }}

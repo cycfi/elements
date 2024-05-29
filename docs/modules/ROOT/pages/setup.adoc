@@ -98,7 +98,17 @@ cd build
 cmake -GXcode ../
 ----
 
+If you are having issues with code signing, disable it by setting the `CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED` variable to `NO`:
+
+----
+cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../
+----
+
 If successful, CMake will generate an https://developer.apple.com/xcode/[XCode] project in the build directory. Open the project file `elements.xcodeproj` and build all. You should see a couple of example applications.
+
+If you are having problems with code signing, do this:
+
+Build Settings->Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty). Do this for both ALL_BUILD and elements.
 
 == Windows
 

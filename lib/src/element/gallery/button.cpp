@@ -4,14 +4,13 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/element/gallery/button.hpp>
-#include <utility>
 
 namespace cycfi { namespace elements
 {
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, float corner_radius)
+      context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii)
    {
-      draw_button(ctx.canvas, bounds, color_, enabled, corner_radius);
+      draw_button(ctx.canvas, bounds, color_, enabled, corner_radii);
    }
 
    bool button_styler_base::cursor(context const& ctx, point /*p*/, cursor_tracking /*status*/)
@@ -79,7 +78,12 @@ namespace cycfi { namespace elements
       {
          body_color = body_color.level(0.9);
       }
-      draw_button_base(ctx, bounds, body_color, enabled, get_corner_radius() * rel_size);
+      draw_button_base(ctx, bounds, body_color, enabled, {
+         get_corner_radius_top_left()*rel_size,
+         get_corner_radius_top_right()*rel_size,
+         get_corner_radius_bottom_right()*rel_size,
+         get_corner_radius_bottom_left()*rel_size
+      });
 
       // Adjust the font size
       auto font = theme.label_font;
@@ -111,8 +115,8 @@ namespace cycfi { namespace elements
       auto mid_y = bounds.top + (bounds.height() / 2);
 
       // Draw label
-      float text_pos;
-      float icon_pos;
+      float text_pos = 0.0f;
+      float icon_pos = 0.0f;
       int align = cnv.middle;
       auto icon_placement = get_icon_placement();
       auto label_alignment = get_label_alignment();

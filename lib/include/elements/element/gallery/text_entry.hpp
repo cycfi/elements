@@ -33,7 +33,7 @@ namespace cycfi { namespace elements
          margin(
             pad,
             scroller(
-               hsize(16384, std::forward<InputBox>(text_input)),
+               std::forward<InputBox>(text_input),
                no_scrollbars | no_vscroll
             )
          ),
@@ -41,10 +41,13 @@ namespace cycfi { namespace elements
       );
    }
 
+   using input_clip_action = basic_input_box::clip_action;
+
    inline auto input_box(
       std::string placeholder
     , font_descr font_
     , float size // ratio relative to get_theme().text_box_font_size
+    , input_clip_action clip_action = input_clip_action::clip_right
    )
    {
       auto font_size = get_theme().text_box_font._size * size;
@@ -52,26 +55,54 @@ namespace cycfi { namespace elements
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f
       };
-      auto tbox = share(basic_input_box{std::move(placeholder), font_.size(font_size)});
+      auto tbox = share(
+         basic_input_box{
+            std::move(placeholder)
+          , font_.size(font_size)
+          , clip_action
+         }
+      );
       return std::make_pair(input_box(hold(tbox), pad), tbox);
    }
 
    inline auto input_box(
       std::string placeholder
     , float size // ratio relative to get_theme().text_box_font_size
+    , input_clip_action clip_action = input_clip_action::clip_right
    )
    {
-      return input_box(std::move(placeholder), get_theme().text_box_font, size);
+      return input_box(
+         std::move(placeholder)
+       , get_theme().text_box_font
+       , size
+       , clip_action
+      );
    }
 
-   inline auto input_box(std::string placeholder)
+   inline auto input_box(
+      std::string placeholder
+    , input_clip_action clip_action = input_clip_action::clip_right
+   )
    {
-      return input_box(std::move(placeholder), get_theme().text_box_font, 1.0);
+      return input_box(
+         std::move(placeholder)
+       , get_theme().text_box_font
+       , 1.0
+       , clip_action
+      );
    }
 
-   inline auto input_box(float size = 1.0)   // ratio relative to get_theme().text_box_font_size
+   inline auto input_box(
+      float size = 1.0 // ratio relative to get_theme().text_box_font_size
+    , input_clip_action clip_action = input_clip_action::clip_right
+   )
    {
-      return input_box("", get_theme().text_box_font, size);
+      return input_box(
+         ""
+       , get_theme().text_box_font
+       , size
+       , clip_action
+      );
    }
 }}
 

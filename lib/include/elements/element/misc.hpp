@@ -521,6 +521,7 @@ namespace cycfi { namespace elements
 
                      modal_element(Subject subject);
       element*       hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool           click(context const& ctx, mouse_button btn) override;
       bool           key(context const& ctx, key_info k) override;
       bool           text(context const& ctx, text_info info) override;
 
@@ -547,6 +548,13 @@ namespace cycfi { namespace elements
       if (auto e = this->subject().hit_test(ctx, p, leaf, control))
          return e;
       return this;
+   }
+
+   template <typename Subject>
+   inline bool modal_element<Subject>::click(context const& ctx, mouse_button btn)
+   {
+      this->subject().click(ctx, btn);
+      return true;
    }
 
    template <typename Subject>

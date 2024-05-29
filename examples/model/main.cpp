@@ -4,6 +4,8 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements.hpp>
+#include <sstream>
+#include <iomanip>
 
 /*=============================================================================
    Elements does not dictate a particular method for organizing a GUI
@@ -285,7 +287,9 @@ auto make_input_box(my_model& model, view& view_)
    model._value.on_update(
       [&view_, input = tbox.second](double val)
       {
-         input->set_text(std::to_string(val));
+         std::ostringstream stream;
+         stream << std::fixed << std::setprecision(2) << val;
+         input->set_text(stream.str());
          input->select_all();
          view_.refresh(*input);
       }
@@ -357,7 +361,7 @@ auto make_input_box(my_model& model, view& view_)
    return
       align_bottom(
          align_center(
-            hsize(70, tbox.first)
+            hsize(40, tbox.first)
          )
       );
 }

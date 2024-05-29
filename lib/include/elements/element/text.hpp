@@ -122,14 +122,13 @@ namespace cycfi::elements
 
       void                    home(bool shift = false);
       void                    end(bool shift = false);
-      void                    align_home(context const& ctx);
-      void                    align_end(context const& ctx);
 
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
       virtual bool            word_break(char const* utf8) const;
       virtual bool            line_break(char const* utf8) const;
 
+      bool                    is_focus() const              { return _is_focus; }
       basic_text_box&&        read_only() { _read_only = true; return std::move(*this); }
       void                    read_only(bool read_only_)    { _read_only = read_only_; }
       bool                    editable() const              { return !_read_only && _enabled; }
@@ -139,15 +138,13 @@ namespace cycfi::elements
       bool                    is_enabled() const override   { return _enabled; };
       void                    enable(bool e) override       { _enabled = e; };
 
-   protected:
-
       void                    scroll_into_view(context const& ctx, bool save_x);
       virtual void            delete_(bool forward);
       virtual void            cut(view& v, int start, int end);
       virtual void            copy(view& v, int start, int end);
       virtual void            paste(view& v, int start, int end);
 
-   private:
+   protected:
 
       struct glyph_metrics
       {
@@ -159,6 +156,8 @@ namespace cycfi::elements
 
       char const*             caret_position(context const& ctx, point p);
       glyph_metrics           glyph_info(context const& ctx, char const* s);
+
+   private:
 
       struct state_saver;
       using state_saver_f = std::function<void()>;
@@ -181,9 +180,25 @@ namespace cycfi::elements
       this_handle             _this_handle;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Input Text Box
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief
+    *    Represents a basic input box derived from the basic_text_box class,
+    *    specialized for single-line text entry.
+    *
+    *    The `basic_input_box` class is a specialized version of the
+    *    `basic_text_box` class. It inherits all the functionality of a
+    *    `basic_text_box`, and adds support for placeholder text and text
+    *    clipping actions.\n\n
+    *
+    *    The placeholder text is displayed when the input box is empty,
+    *    providing a hint to the user about what they should enter. The text
+    *    clipping action determines how the text is handled when it exceeds
+    *    the box's width.\n\n
+    *
+    *    This class is specifically designed for single-line text entry,
+    *    making it ideal for forms, search boxes, and other UI elements where
+    *    the user needs to input a small amount of text.
+    */
    class basic_input_box : public basic_text_box
    {
    public:
@@ -194,13 +209,18 @@ namespace cycfi::elements
       using enter_function = std::function<bool(string_view text)>;
       using escape_function = std::function<void()>;
 
+      enum clip_action { clip_none, clip_left, clip_right };
+
                               basic_input_box(
                                  std::string placeholder = ""
                                , font font_ = get_theme().text_box_font
-                              )
-                               : basic_text_box("", font_)
-                               , _placeholder(std::move(placeholder))
-                              {}
+                               , clip_action clip_action_ = clip_right
+                              );
+
+                              basic_input_box(
+                                 std::string placeholder = ""
+                               , clip_action clip_action_ = clip_right
+                              );
 
                               basic_input_box(basic_input_box&& rhs) = default;
 
@@ -211,6 +231,8 @@ namespace cycfi::elements
       void                    delete_(bool forward) override;
 
       bool                    click(context const& ctx, mouse_button btn) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    end_focus() override;
 
       text_function           on_text;
@@ -221,12 +243,71 @@ namespace cycfi::elements
    private:
 
       void                    paste(view& v, int start, int end) override;
+      void                    make_maximally_visible(context const& ctx);
+      void                    limit_scroll_right(context const& ctx);
 
       std::string             _placeholder;
+      clip_action             _clip_action : 2;
+      bool                    _is_hovering : 1;
    };
 
-   void align_home(view& view_, basic_input_box& tbox);
-   void align_end(view& view_, basic_input_box& tbox);
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   namespace inlines {}
+
+   /**
+    * \brief
+    *    Constructs a basic_input_box with a placeholder, font, and clip
+    *    action.
+    *
+    *    This constructor initializes a basic_input_box with a specified
+    *    placeholder text, font, and clip action. The clip action determines
+    *    how the text is clipped when it exceeds the box's width.
+    *
+    * \param placeholder
+    *    The placeholder text to display when the input box is empty.
+    *
+    * \param font_
+    *    The font to use for the text in the input box.
+    *
+    * \param clip_action_
+    *    The action to take when the text exceeds the box's width.
+    */
+   inline basic_input_box::basic_input_box(
+      std::string placeholder
+    , font font_
+    , clip_action clip_action_
+   )
+    : basic_text_box{"", font_}
+    , _placeholder{std::move(placeholder)}
+    , _clip_action{clip_action_}
+   {}
+
+   /**
+    * \brief
+    *    Constructs a basic_input_box with a placeholder and clip action.
+    *
+    *    This constructor initializes a basic_input_box with a specified
+    *    placeholder text and clip action. The font is set to the default
+    *    text box font from the current theme.
+    *
+    * \param placeholder
+    *    The placeholder text to display when the input box is empty.
+    *
+    * \param clip_action_
+    *    The action to take when the text exceeds the box's width.
+    */
+   inline basic_input_box::basic_input_box(
+      std::string placeholder
+    , clip_action clip_action_
+   )
+    : basic_input_box{
+         placeholder
+       , get_theme().text_box_font
+       , clip_action_
+      }
+   {}
 }
 
 #endif

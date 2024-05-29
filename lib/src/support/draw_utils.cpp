@@ -8,6 +8,16 @@
 
 namespace cycfi { namespace elements
 {
+   corner_radii corner_radii::operator+(float v) const
+   {
+      return { top_left+v, top_right+v, bottom_right+v, bottom_left+v };
+   }
+
+   corner_radii corner_radii::operator-(float v) const
+   {
+      return *this + (-v);
+   }
+
    void draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius)
    {
       auto gradient = canvas::linear_gradient{
@@ -79,7 +89,28 @@ namespace cycfi { namespace elements
       }
    }
 
-   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, float corner_radius)
+   void draw_round_rect(canvas& cnv, rect bounds, corner_radii radii)
+   {
+      auto l = bounds.left;
+      auto t = bounds.top;
+      auto r = bounds.right;
+      auto b = bounds.bottom;
+      auto min_r = std::min(bounds.width(), bounds.height()) / 2;
+
+      radii.top_left = std::min(radii.top_left, min_r);
+      radii.top_right = std::min(radii.top_right, min_r);
+      radii.bottom_right = std::min(radii.bottom_right, min_r);
+      radii.bottom_left = std::min(radii.bottom_left, min_r);
+
+      cnv.begin_path();
+      cnv.arc({r- radii.bottom_right, b- radii.bottom_right}, radii.bottom_right, 0,        M_PI*0.5);
+      cnv.arc({l+ radii.bottom_left,  b- radii.bottom_left }, radii.bottom_left,  M_PI*0.5, M_PI    );
+      cnv.arc({l+ radii.top_left,     t+ radii.top_left    }, radii.top_left,     M_PI,     M_PI*1.5);
+      cnv.arc({r- radii.top_right,    t+ radii.top_right   }, radii.top_right,    M_PI*1.5, 0       );
+      cnv.close_path();
+   }
+
+   void draw_button(canvas& cnv, rect bounds, color c, bool enabled, corner_radii radii)
    {
       auto const& theme_ = get_theme();
       auto state = cnv.new_state();
@@ -97,17 +128,19 @@ namespace cycfi { namespace elements
       gradient.add_color_stop({1.0, rgb(0, 0, 0).opacity(box_opacity)});
       cnv.fill_style(gradient);
 
+      auto r = bounds.inset(1, 1);
       cnv.begin_path();
-      cnv.add_round_rect(bounds.inset(1, 1), corner_radius-1);
+      draw_round_rect(cnv, r, radii -1);
       cnv.fill_style(enabled? c : c.opacity(c.alpha * theme_.disabled_opacity));
       cnv.fill();
-      cnv.add_round_rect(bounds.inset(1, 1), corner_radius-1);
+      draw_round_rect(cnv, r, radii -1);
 
       cnv.fill_style(gradient);
       cnv.fill();
 
+      r = bounds.inset(0.5, 0.5);
       cnv.begin_path();
-      cnv.add_round_rect(bounds.inset(0.5, 0.5), corner_radius-0.5);
+      draw_round_rect(cnv, r, radii -0.5f);
       cnv.stroke_style(rgba(0, 0, 0, 48));
       cnv.stroke();
    }

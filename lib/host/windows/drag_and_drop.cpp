@@ -59,7 +59,7 @@ STDMETHODIMP_(ULONG) DropTarget::Release()
 using cycfi::elements::cursor_tracking;
 
 // IDropTarget methods
-STDMETHODIMP DropTarget::DragEnter(IDataObject* data_obj, DWORD key_state, POINTL pt, DWORD* effect)
+STDMETHODIMP DropTarget::DragEnter(IDataObject* data_obj, DWORD /*key_state*/, POINTL pt, DWORD* effect)
 {
    makeDropInfo(data_obj);
    if (_drop_valid)
@@ -71,7 +71,7 @@ STDMETHODIMP DropTarget::DragEnter(IDataObject* data_obj, DWORD key_state, POINT
    return S_OK;
 }
 
-STDMETHODIMP DropTarget::DragOver(DWORD key_state, POINTL pt, DWORD* effect)
+STDMETHODIMP DropTarget::DragOver(DWORD /*key_state*/, POINTL pt, DWORD* effect)
 {
    if (_drop_valid)
    {
@@ -89,7 +89,7 @@ STDMETHODIMP DropTarget::DragLeave()
    return S_OK;
 }
 
-STDMETHODIMP DropTarget::Drop(IDataObject* data_obj, DWORD key_state, POINTL pt, DWORD* effect)
+STDMETHODIMP DropTarget::Drop(IDataObject* /*data_obj*/, DWORD /*key_state*/, POINTL pt, DWORD* /*effect*/)
 {
    if (_drop_valid)
    {

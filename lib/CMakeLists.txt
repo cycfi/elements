@@ -1,10 +1,12 @@
 ###############################################################################
-#  Copyright (c) 2016-2023 Joel de Guzman
+#  Copyright (c) 2016-2024 Joel de Guzman
 #  Copyright (c) 2020 Michał Urbański
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
 cmake_minimum_required(VERSION 3.7.2...3.15.0)
+
+include(FetchContent)
 
 ###############################################################################
 # Sources (and Resources)
@@ -171,7 +173,6 @@ source_group("Header Files\\elements"
    ${ELEMENTS_HEADERS}
 )
 
-add_subdirectory(infra)
 add_library(elements STATIC)
 
 target_sources(elements
@@ -180,7 +181,6 @@ target_sources(elements
 )
 
 target_include_directories(elements PUBLIC include)
-target_link_libraries(elements PUBLIC cycfi::infra)
 if(CMAKE_CXX_STANDARD EQUAL 20)
    target_compile_features(elements PUBLIC cxx_std_20)
 else()
@@ -217,10 +217,24 @@ if (APPLE)
 endif()
 
 ###############################################################################
+# Cycfi Infra
+
+FetchContent_Declare(
+  cycfi_infra
+  GIT_REPOSITORY https://github.com/cycfi/infra.git
+  GIT_TAG master
+  GIT_SUBMODULES_RECURSE ON
+)
+
+FetchContent_MakeAvailable(cycfi_infra)
+target_link_libraries(elements PUBLIC cycfi::infra)
+
+###############################################################################
 # Cairo
 
 pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
 target_link_libraries(elements PUBLIC PkgConfig::cairo)
+
 
 ###############################################################################
 # Fontconfig
@@ -250,7 +264,16 @@ endif()
 
 ###############################################################################
 # Asio headers
-target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/asio/asio/include)
+
+FetchContent_Declare(
+  asio
+  GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+  GIT_TAG asio-1-29-0
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(asio)
+
+target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
 
 ###############################################################################
 # Global options

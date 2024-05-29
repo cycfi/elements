@@ -14,7 +14,7 @@ namespace cycfi::elements
    view_limits progress_bar_base::limits(basic_context const& ctx) const
    {
       auto const fg_limits = foreground().limits(ctx);
-      auto       bg_limits = background().limits(ctx);
+      auto bg_limits = background().limits(ctx);
 
       bg_limits.min.y = std::max(bg_limits.min.y, fg_limits.min.y);
       bg_limits.min.x = std::max(bg_limits.min.x, fg_limits.min.x);
@@ -76,7 +76,7 @@ namespace cycfi::elements
    {
       auto bounds = ctx.bounds;
 
-      if (_is_horiz)
+      if (bounds.width() > bounds.height())
          bounds.width(bounds.width() * value());
       else
          bounds.height(bounds.height() * (1.0 - value()));

@@ -117,8 +117,6 @@ namespace cycfi { namespace elements
       template <typename PopupPtr, typename ButtonPtr, typename F>
       void link_button(view& view_, PopupPtr popup, ButtonPtr btn, F&& f)
       {
-         using namespace std::chrono_literals;
-
          btn->on_click =
             [&view_, eptr = get(popup), f, btn = get(btn)](bool flag)
             {

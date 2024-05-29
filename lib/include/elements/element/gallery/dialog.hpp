@@ -120,9 +120,9 @@ namespace cycfi { namespace elements
          using namespace std::chrono_literals;
 
          btn->on_click =
-            [&view_, eptr = get(popup), f, btn = get(btn)](bool)
+            [&view_, eptr = get(popup), f, btn = get(btn)](bool flag)
             {
-               f();
+               f(flag);
                view_.post(100ms,
                   [&view_, btn, eptr]()
                   {
@@ -132,6 +132,12 @@ namespace cycfi { namespace elements
                   }
                );
             };
+      }
+
+      template <typename PopupPtr, typename ButtonPtr>
+      void link_button(view& view_, PopupPtr popup, ButtonPtr btn)
+      {
+         link_button(view_, popup, btn, btn->on_click);
       }
    }
 
@@ -144,17 +150,31 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog1b(view_, content, ok_button);
+   }
+
+   template <typename Content, typename BtnPtr>
+   inline auto dialog1b(
+       view& view_
+       , Content&& content
+       , BtnPtr ok_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
       auto popup =
-         detail::make_dialog_popup(
-            vtile(
-               margin_bottom(20, std::forward<Content>(content)),
-               align_right(hsize(button_size, hold(ok_button)))
-            ));
+          detail::make_dialog_popup(
+              vtile(
+                  margin_bottom(20, std::forward<Content>(content)),
+                  align_right(hsize(button_size, hold(ok_button)))
+                      ));
 
       detail::link_key(popup, ok_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F>(on_ok));
+      detail::link_button(view_, popup, ok_button);
       return popup;
    }
 
@@ -172,24 +192,46 @@ namespace cycfi { namespace elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto cancel_button = share(button(std::move(cancel_text), 1.0));
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
+
+      cancel_button->on_click = [on_cancel](bool) mutable {
+         on_cancel();
+      };
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog2b(view_, content, ok_button, cancel_button);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Dialog 2 (two buttons, e.g. Cancel and OK)
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Content, typename ButtonPtr>
+   inline auto dialog2b(
+       view& view_
+       , Content&& content
+       , ButtonPtr ok_button
+       , ButtonPtr cancel_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
       auto popup =
-         detail::make_dialog_popup(
-            vtile(
-               margin_bottom(20, std::forward<Content>(content)),
-               align_right(
-                  htile(
-                     hsize(button_size, hold(cancel_button)),
-                     margin_left(20, hsize(button_size, hold(ok_button)))
-                  )
-               )
-            ));
+          detail::make_dialog_popup(
+              vtile(
+                  margin_bottom(20, std::forward<Content>(content)),
+                  align_right(
+                      htile(
+                          hsize(button_size, hold(cancel_button)),
+                          margin_left(20, hsize(button_size, hold(ok_button)))
+                              )
+                          )
+                      ));
 
       detail::link_key(popup, ok_button, cancel_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F1>(on_ok));
-      detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
+      detail::link_button(view_, popup, ok_button);
+      detail::link_button(view_, popup, cancel_button);
       return popup;
    }
 
@@ -208,24 +250,47 @@ namespace cycfi { namespace elements
     , color cancel_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));
       auto ok_button = share(button(std::move(ok_text), 1.0));
+
+      cancel_button->on_click = [on_cancel](bool) mutable {
+         on_cancel();
+      };
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog2rb(view_, content, ok_button, cancel_button);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
+   // being the default that maps to both the enter and esc keys)
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Content, typename ButtonPtr>
+   inline auto dialog2rb(
+       view& view_
+       , Content&& content
+       , ButtonPtr ok_button
+       , ButtonPtr cancel_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
       auto popup =
-         detail::make_dialog_popup(
-            vtile(
-               margin_bottom(20, std::forward<Content>(content)),
-               align_right(
-                  htile(
-                     hsize(button_size, hold(cancel_button)),
-                     margin_left(20, hsize(button_size, hold(ok_button)))
-                  )
-               )
-            ));
+          detail::make_dialog_popup(
+              vtile(
+                  margin_bottom(20, std::forward<Content>(content)),
+                  align_right(
+                      htile(
+                          hsize(button_size, hold(cancel_button)),
+                          margin_left(20, hsize(button_size, hold(ok_button)))
+                              )
+                          )
+                      ));
 
       detail::link_key(popup, cancel_button, cancel_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F1>(on_ok));
-      detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
+      detail::link_button(view_, popup, cancel_button);
+      detail::link_button(view_, popup, cancel_button);
       return popup;
    }
 

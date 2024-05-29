@@ -287,7 +287,7 @@ namespace cycfi { namespace elements
                       ));
 
       detail::link_key(popup, cancel_button, cancel_button);
-      detail::link_button(view_, popup, cancel_button);
+      detail::link_button(view_, popup, ok_button);
       detail::link_button(view_, popup, cancel_button);
       return popup;
    }

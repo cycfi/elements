@@ -14,12 +14,22 @@
 #include <elements/support/sender.hpp>
 #include <elements/view.hpp>
 #include <type_traits>
+#include <concepts>
 
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
    ////////////////////////////////////////////////////////////////////////////
+   namespace concepts
+   {
+      template <typename T>
+      concept ButtonCallback = requires(T f)
+      {
+         { f(true) } -> std::same_as<void>;
+      };
+   }
+
    struct button_state
    {
                         button_state()

@@ -24,6 +24,16 @@ namespace cycfi::elements
    using artist::rgba;
    namespace colors = artist::colors;
 
+   namespace concepts
+   {
+      // $$$ TODO: Move this to a better place $$$
+      template <typename T>
+      concept NullaryFunction = requires(T f)
+      {
+         { f() } -> std::same_as<void>;
+      };
+   }
+
    /**
     * \brief
     *    Base class for all UI elements in the Cycfi Elements library.

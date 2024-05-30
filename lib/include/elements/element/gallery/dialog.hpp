@@ -114,7 +114,11 @@ namespace cycfi::elements
             };
       }
 
-      template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr, typename F>
+      template <
+         concepts::ElementPtr PopupPtr
+       , concepts::ElementPtr ButtonPtr
+       , concepts::ButtonCallback F
+      >
       void link_button(view& view_, PopupPtr popup, ButtonPtr btn, F&& f)
       {
          btn->on_click =
@@ -159,7 +163,7 @@ namespace cycfi::elements
       return popup;
    }
 
-   template <concepts::Element Content, typename F>
+   template <concepts::Element Content, concepts::NullaryFunction F>
    inline auto dialog1(
       view& view_
     , Content&& content
@@ -209,7 +213,11 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 2 (two buttons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
-   template <concepts::Element Content, typename F1, typename F2>
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
    inline auto dialog2(
       view& view_
     , Content&& content
@@ -268,7 +276,11 @@ namespace cycfi::elements
    // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
    // being the default that maps to both the enter and esc keys)
    ////////////////////////////////////////////////////////////////////////////
-   template <concepts::Element Content, typename F1, typename F2>
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
    inline auto dialog2r(
       view& view_
     , Content&& content

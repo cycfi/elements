@@ -18,25 +18,41 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 0 (no button)
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief Creates a dialog using the specified content (with no button).
+    *
+    * This function constructs a popup dialog with the content passed to it.
+    * The content is wrapped in a modal and aligned at the center. The
+    * `dialog0` function accepts content that satisfies the
+    * `concepts::Element` concept. The constructed dialog is then wrapped in
+    * a shared pointer and returned.
+    *
+    * \tparam Content
+    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    *
+    * \param content
+    *    Content to be displayed in the dialog.
+    *
+    * \return
+    *    A shared pointer to the constructed dialog element.
+    */
    template <concepts::Element Content>
    inline auto dialog0(Content&& content)
    {
       auto popup = share(
-         modal(align_center_middle(
-            layer(
-               std::forward<Content>(content),
-               panel{/* opacity */0.98}
-         ))));
+         modal(
+            align_center_middle(
+               layer(
+                  std::forward<Content>(content),
+                  panel{/* opacity */0.98}
+               )
+            )
+         )
+      );
 
       return popup;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 1 (single button, e.g. OK)
-   ////////////////////////////////////////////////////////////////////////////
    namespace detail
    {
       template <concepts::Element Content>
@@ -48,8 +64,10 @@ namespace cycfi::elements
                   margin({32, 32, 32, 32},
                      std::forward<Content>(content)
                   ),
-                  panel{/* opacity */0.98}
-            )))));
+                  panel{/*opacity*/0.98}
+               )
+            )))
+         );
       }
 
       template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr>
@@ -58,8 +76,7 @@ namespace cycfi::elements
          popup->on_key =
             [btn = get(btn)](auto k)
             {
-               if (k.action == key_action::press &&
-                  k.key == key_code::enter)
+               if (k.action == key_action::press && k.key == key_code::enter)
                {
                   if (auto ok = btn.lock())
                   {
@@ -143,26 +160,85 @@ namespace cycfi::elements
       }
    }
 
+   /**
+    * \brief Creates a dialog with specified content and interaction button.
+    *
+    * This function constructs a popup dialog with the content and a button
+    * passed to it. The content and button are vertically aligned, with the
+    * button right-aligned. The button size is set according to the dialog
+    * button size defined in the theme.
+    *
+    * * Clicking the 'OK' button or pressing Return/Enter key will trigger
+    *   the `ok_button` and close the dialog.
+    *
+    * Note: Install an `on_click` callback before calling `dialog1`.
+    *
+    * \tparam Content
+    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    * \tparam BtnPtr
+    *    Button type for the dialog. Must satisfy `concepts::ElementPtr`.
+    *
+    * \param view_
+    *    Reference to the view where the dialog will be displayed.
+    * \param content
+    *    Content to be displayed in the dialog.
+    * \param ok_button
+    *    Dialog button, typically for confirming an action.
+    *
+    * \return
+    *    A shared pointer to the constructed dialog element.
+    */
    template <concepts::Element Content, concepts::ElementPtr BtnPtr>
    inline auto dialog1(
-       view& view_
-     , Content&& content
-     , BtnPtr ok_button
+      view& view_
+    , Content&& content
+    , BtnPtr ok_button
    )
    {
       auto button_size = get_theme().dialog_button_size;
       auto popup =
-          detail::make_dialog_popup(
-              vtile(
-                  margin_bottom(20, std::forward<Content>(content)),
-                  align_right(hsize(button_size, hold(ok_button)))
-                      ));
+         detail::make_dialog_popup(
+            vtile(
+               margin_bottom(20, std::forward<Content>(content)),
+               align_right(hsize(button_size, hold(ok_button)))
+            )
+         );
 
       detail::link_key(popup, ok_button);
       detail::link_button(view_, popup, ok_button);
       return popup;
    }
 
+   /**
+    * \brief Overloaded version of dialog1 function which creates a dialog
+    * with specified content and a preset 'OK' button that triggers a
+    * specified action.
+    *
+    * This function constructs a popup dialog with given content and an 'OK'
+    * button. When the 'OK' button is clicked, it triggers a user-defined
+    * action (specified by the `on_ok` parameter).
+    *
+    * \tparam Content
+    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    * \tparam F
+    *    Callable type for the 'OK' button click action. Must satisfy
+    *    `concepts::NullaryFunction`.
+    *
+    * \param view_
+    *    Reference to the view where the dialog will be displayed.
+    * \param content
+    *    Content to be displayed in the dialog.
+    * \param on_ok
+    *    A callable object that is invoked when the 'OK' button is clicked.
+    * \param ok_text
+    *    Text to be displayed on the 'OK' button. Defaults to "OK".
+    * \param ok_color
+    *    Color of the 'OK' button. Defaults to the color specified in the
+    *    theme's `indicator_color`.
+    *
+    * \return
+    *    A shared pointer to the constructed dialog1.
+    */
    template <concepts::Element Content, concepts::NullaryFunction F>
    inline auto dialog1(
       view& view_
@@ -173,7 +249,8 @@ namespace cycfi::elements
    )
    {
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
-      ok_button->on_click = [on_ok](bool) mutable {
+      ok_button->on_click = [on_ok](bool) mutable
+      {
          on_ok();
       };
 
@@ -183,6 +260,40 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 2 (two buttons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * \brief Creates a dialog with two interactive buttons.
+    *
+    * This function constructs a dialog box with the specified content
+    * and two buttons that are vertically aligned in the dialog. The
+    * function is generally used for scenarios requiring a 'Cancel' and
+    * 'OK' option.
+    *
+    * The popup dialog reacts to certain keyboard and mouse events:
+    * * Clicking the 'OK' button or pressing Return/Enter key will trigger
+    *   the `ok_button` and close the dialog.
+    * * Clicking the 'Cancel' button or pressing the Escape key will trigger
+    *    the `cancel_button` and close the dialog.
+    *
+    * Note: Install `on_click` callbacks before calling `dialog2`.
+    *
+    * \tparam Content
+    *    Content type. Has to satisfy `concepts::Element`.
+    * \tparam ButtonPtr
+    *    Button type. Must satisfy `concepts::ElementPtr`.
+    *
+    * \param view_
+    *    Reference to the view to display the dialog.
+    * \param content
+    *    Content to be displayed in the dialog.
+    * \param ok_button
+    *    Dialog button, typically for confirming an action.
+    * \param cancel_button
+    *    Dialog button, typically for cancelling an action.
+    *
+    * \return
+    *    Shared pointer to the created dialog.
+    */
    template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
    inline auto dialog2(
     view& view_
@@ -200,9 +311,10 @@ namespace cycfi::elements
                   htile(
                      hsize(button_size, hold(cancel_button)),
                      margin_left(20, hsize(button_size, hold(ok_button)))
-                        )
-                     )
-                  ));
+                  )
+               )
+            )
+         );
 
       detail::link_key(popup, ok_button, cancel_button);
       detail::link_button(view_, popup, ok_button);
@@ -210,9 +322,46 @@ namespace cycfi::elements
       return popup;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 2 (two buttons, e.g. Cancel and OK)
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief Overloaded version of dialog2 function which creates a dialog
+    * with specified content and preset 'OK' and 'Cancel' buttons that
+    * trigger user-defined actions.
+    *
+    * This function constructs a dialog box with the user-specified content
+    * and two buttons: 'OK' and 'Cancel'. When the 'OK' button is clicked or
+    * 'Enter' key is pressed, it triggers an action defined by the `on_ok`
+    * parameter. Similarily, a click on the 'Cancel' button or 'Escape' key
+    * press triggers an action defined by the `on_cancel` parameter.
+    *
+    * \tparam Content
+    *    The type of the content. The type must satisfy `concepts::Element`.
+    * \tparam F1
+    *    The type of `on_ok` function. The type must be
+    *    `concepts::NullaryFunction`.
+    * \tparam F2
+    *    The type of `on_cancel` function. The type must be
+    *    `concepts::NullaryFunction`.
+    *
+    * \param view_
+    *    Reference to the view for displaying the dialog.
+    * \param content
+    *    The content to be displayed.
+    * \param on_ok
+    *    Function to be called when the 'OK' button is clicked or 'Enter' key
+    *    is pressed.
+    * \param on_cancel
+    *    Function to be called when the 'Cancel' button is clicked or
+    *    'Escape' key is pressed.
+    * \param ok_text
+    *    The text for the 'OK' button. Default text is "OK".
+    * \param cancel_text
+    *    The text for the 'Cancel' button. Default text is "Cancel".
+    * \param ok_color
+    *    The color for 'OK' button. Default is the theme's indicator_color.
+    *
+    * \return
+    *    A shared pointer to the constructed dialog.
+    */
    template <
       concepts::Element Content
     , concepts::NullaryFunction F1
@@ -231,10 +380,13 @@ namespace cycfi::elements
       auto cancel_button = share(button(std::move(cancel_text), 1.0));
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
 
-      cancel_button->on_click = [on_cancel](bool) mutable {
+      cancel_button->on_click = [on_cancel](bool) mutable
+      {
          on_cancel();
       };
-      ok_button->on_click = [on_ok](bool) mutable {
+
+      ok_button->on_click = [on_ok](bool) mutable
+      {
          on_ok();
       };
 
@@ -245,26 +397,58 @@ namespace cycfi::elements
    // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
    // being the default that maps to both the enter and esc keys)
    ////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * \brief `dialog2r` function creating a dialog with preset 'OK' and
+    * 'Cancel' buttons reversed, with 'Cancel' being the default that maps to
+    * both the 'Enter' and 'Esc' keys.
+    *
+    * This function constructs a dialog box with the specified content and
+    * two buttons: 'OK' and 'Cancel'. In contrast to other dialog functions,
+    * 'Cancel' serves as the default choice. Pressing the 'Enter' or 'Esc'
+    * key, or clicking the 'Cancel' button, triggers the action associated
+    * with the `cancel_button`.
+    *
+    * \tparam Content
+    *   The type of content to be displayed. The type must satisfy
+    *   `concepts::Element`.
+    * \tparam ButtonPtr
+    *   The type of the button. The type must satisfy `concepts::ElementPtr`.
+    *
+    * \param view_
+    *   Reference to the view to display the dialog.
+    * \param content
+    *   Content to be displayed.
+    * \param ok_button
+    *   Button typically used for confirming an action.
+    * \param cancel_button
+    *   Button typically used for cancelling an action and is set as the
+    *   default response.
+    *
+    * \return
+    *   A shared pointer to the created dialog.
+    */
    template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
    inline auto dialog2r(
-       view& view_
-       , Content&& content
-       , ButtonPtr ok_button
-       , ButtonPtr cancel_button
+      view& view_
+    , Content&& content
+    , ButtonPtr ok_button
+    , ButtonPtr cancel_button
    )
    {
       auto button_size = get_theme().dialog_button_size;
       auto popup =
-          detail::make_dialog_popup(
-              vtile(
-                  margin_bottom(20, std::forward<Content>(content)),
-                  align_right(
-                      htile(
-                          hsize(button_size, hold(cancel_button)),
-                          margin_left(20, hsize(button_size, hold(ok_button)))
-                              )
-                          )
-                      ));
+         detail::make_dialog_popup(
+            vtile(
+               margin_bottom(20, std::forward<Content>(content)),
+               align_right(
+                  htile(
+                     hsize(button_size, hold(cancel_button)),
+                     margin_left(20, hsize(button_size, hold(ok_button)))
+                  )
+               )
+            )
+         );
 
       detail::link_key(popup, cancel_button, cancel_button);
       detail::link_button(view_, popup, ok_button);
@@ -272,10 +456,47 @@ namespace cycfi::elements
       return popup;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
-   // being the default that maps to both the enter and esc keys)
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief `dialog2r` Overloaded version of dialog2r function with
+    * specified button actions, creating a dialog with preset 'OK' and
+    * 'Cancel' buttons, and 'Cancel' as the default connected to both the
+    * 'Enter' and 'Esc' keys.
+    *
+    * This function constructs a dialog box with the user-specified content
+    * and two buttons: 'OK' and 'Cancel'. With 'Cancel' as the default
+    * option, pressing the 'Enter' or 'Esc' key, or clicking the 'Cancel'
+    * button, triggers an action defined by the `on_cancel` parameter.
+    * Clicking the 'OK' button triggers an action defined by the `on_ok`
+    * parameter.
+    *
+    * \tparam Content
+    *    The type of the content. The type must satisfy `concepts::Element`.
+    * \tparam F1
+    *    The type of `on_ok` function. The type must be
+    *    `concepts::NullaryFunction`.
+    * \tparam F2
+    *    The type of `on_cancel` function. The type must be
+    *    `concepts::NullaryFunction`.
+    *
+    * \param view_
+    *    Reference to the view to display the dialog.
+    * \param content
+    *    The content to be displayed in the dialog.
+    * \param on_ok
+    *    Action to be executed on 'OK' button click.
+    * \param on_cancel
+    *    Action to be executed on 'Enter', 'Esc', or 'Cancel' button click.
+    * \param ok_text
+    *    Text for the 'OK' button. Default is "OK".
+    * \param cancel_text
+    *    Text for the 'Cancel' button. Default is "Cancel".
+    * \param cancel_color
+    *    Color for the 'Cancel' button. Default is the theme's
+    *    indicator_color.
+    *
+    * \return
+    *    A shared pointer to the constructed dialog.
+    */
    template <
       concepts::Element Content
     , concepts::NullaryFunction F1
@@ -294,20 +515,34 @@ namespace cycfi::elements
       auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));
       auto ok_button = share(button(std::move(ok_text), 1.0));
 
-      cancel_button->on_click = [on_cancel](bool) mutable {
+      cancel_button->on_click = [on_cancel](bool) mutable
+      {
          on_cancel();
       };
-      ok_button->on_click = [on_ok](bool) mutable {
+
+      ok_button->on_click = [on_ok](bool) mutable
+      {
          on_ok();
       };
 
       return dialog2r(view_, content, ok_button, cancel_button);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Utility to open the popup delayed by a few milliseconds to give the UI a
-   // chance to settle.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief Utility to open a popup after a short delay, allowing the UI to
+    * settle.
+    *
+    * `open_popup` opens a provided popup element after a few milliseconds.
+    * This delay offers the UI a chance to stabilize before the popup
+    * appears.
+    *
+    * \param popup
+    *    Shared pointer to the popup element that will be displayed.
+    * \param view_
+    *    Reference to the view where the popup will be displayed.
+    *
+    * Note: The time delay is defined as a constant (10ms).
+    */
    inline void open_popup(element_ptr popup, view& view_)
    {
       using namespace std::chrono_literals;

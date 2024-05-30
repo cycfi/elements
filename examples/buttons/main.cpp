@@ -228,11 +228,14 @@ auto make_controls(view& view_)
    auto  check_box2 = check_box("The Nexus Meridian Unfolding");
    auto  check_box3 = check_box("Serenity Dreamscape Exploration");
    auto  check_box4 = check_box("Forever Disabled");
+   auto  check_box5 = check_box("Forever Checked");
 
    check_box1.value(true);
    check_box2.value(true);
    check_box3.value(true);
    check_box4.enable(false); // Disable this one
+   check_box5.value(true);
+   check_box5.enable(false);
 
    auto  check_boxes =
          group("Check boxes",
@@ -242,7 +245,8 @@ auto make_controls(view& view_)
                      margin_top(10, align_left(check_box1)),
                      margin_top(10, align_left(check_box2)),
                      margin_top(10, align_left(check_box3)),
-                     margin_top(10, align_left(check_box4))
+                     margin_top(10, align_left(check_box4)),
+                     margin_top(10, align_left(check_box5))
                   )
                )
             )

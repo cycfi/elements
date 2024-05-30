@@ -21,7 +21,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 0 (no button)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Content>
+   template <concepts::Element Content>
    inline auto dialog0(Content&& content)
    {
       auto popup = share(
@@ -39,7 +39,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    namespace detail
    {
-      template <typename Content>
+      template <concepts::Element Content>
       auto make_dialog_popup(Content&& content)
       {
          return share(
@@ -52,7 +52,7 @@ namespace cycfi::elements
             )))));
       }
 
-      template <typename PopupPtr, typename ButtonPtr>
+      template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr>
       void link_key(PopupPtr popup, ButtonPtr btn)
       {
          popup->on_key =
@@ -74,7 +74,7 @@ namespace cycfi::elements
             };
       }
 
-      template <typename PopupPtr, typename ButtonPtr>
+      template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr>
       void link_key(PopupPtr popup, ButtonPtr btn1, ButtonPtr btn2)
       {
          popup->on_key =
@@ -114,13 +114,13 @@ namespace cycfi::elements
             };
       }
 
-      template <typename PopupPtr, typename ButtonPtr, typename F>
+      template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr, typename F>
       void link_button(view& view_, PopupPtr popup, ButtonPtr btn, F&& f)
       {
          btn->on_click =
-            [&view_, eptr = get(popup), f, btn = get(btn)](bool)
+            [&view_, eptr = get(popup), f, btn = get(btn)](bool flag)
             {
-               f();
+               f(flag);
                view_.post(
                   [&view_, btn, eptr]()
                   {
@@ -131,9 +131,35 @@ namespace cycfi::elements
                );
             };
       }
+
+      template <concepts::ElementPtr PopupPtr, concepts::ElementPtr ButtonPtr>
+      void link_button(view& view_, PopupPtr popup, ButtonPtr btn)
+      {
+         link_button(view_, popup, btn, btn->on_click);
+      }
    }
 
-   template <typename Content, typename F>
+   template <concepts::Element Content, concepts::ElementPtr BtnPtr>
+   inline auto dialog1(
+       view& view_
+     , Content&& content
+     , BtnPtr ok_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
+      auto popup =
+          detail::make_dialog_popup(
+              vtile(
+                  margin_bottom(20, std::forward<Content>(content)),
+                  align_right(hsize(button_size, hold(ok_button)))
+                      ));
+
+      detail::link_key(popup, ok_button);
+      detail::link_button(view_, popup, ok_button);
+      return popup;
+   }
+
+   template <concepts::Element Content, typename F>
    inline auto dialog1(
       view& view_
     , Content&& content
@@ -142,24 +168,48 @@ namespace cycfi::elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog1(view_, content, ok_button);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Dialog 2 (two buttons, e.g. Cancel and OK)
+   ////////////////////////////////////////////////////////////////////////////
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2(
+    view& view_
+    , Content&& content
+    , ButtonPtr ok_button
+    , ButtonPtr cancel_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
       auto popup =
          detail::make_dialog_popup(
             vtile(
                margin_bottom(20, std::forward<Content>(content)),
-               align_right(hsize(button_size, hold(ok_button)))
-            ));
+               align_right(
+                  htile(
+                     hsize(button_size, hold(cancel_button)),
+                     margin_left(20, hsize(button_size, hold(ok_button)))
+                        )
+                     )
+                  ));
 
-      detail::link_key(popup, ok_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F>(on_ok));
+      detail::link_key(popup, ok_button, cancel_button);
+      detail::link_button(view_, popup, ok_button);
+      detail::link_button(view_, popup, cancel_button);
       return popup;
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 2 (two buttons, e.g. Cancel and OK)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Content, typename F1, typename F2>
+   template <concepts::Element Content, typename F1, typename F2>
    inline auto dialog2(
       view& view_
     , Content&& content
@@ -170,24 +220,47 @@ namespace cycfi::elements
     , color ok_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto cancel_button = share(button(std::move(cancel_text), 1.0));
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
-      auto popup =
-         detail::make_dialog_popup(
-            vtile(
-               margin_bottom(20, std::forward<Content>(content)),
-               align_right(
-                  htile(
-                     hsize(button_size, hold(cancel_button)),
-                     margin_left(20, hsize(button_size, hold(ok_button)))
-                  )
-               )
-            ));
 
-      detail::link_key(popup, ok_button, cancel_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F1>(on_ok));
-      detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
+      cancel_button->on_click = [on_cancel](bool) mutable {
+         on_cancel();
+      };
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog2(view_, content, ok_button, cancel_button);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
+   // being the default that maps to both the enter and esc keys)
+   ////////////////////////////////////////////////////////////////////////////
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2r(
+       view& view_
+       , Content&& content
+       , ButtonPtr ok_button
+       , ButtonPtr cancel_button
+   )
+   {
+      auto button_size = get_theme().dialog_button_size;
+      auto popup =
+          detail::make_dialog_popup(
+              vtile(
+                  margin_bottom(20, std::forward<Content>(content)),
+                  align_right(
+                      htile(
+                          hsize(button_size, hold(cancel_button)),
+                          margin_left(20, hsize(button_size, hold(ok_button)))
+                              )
+                          )
+                      ));
+
+      detail::link_key(popup, cancel_button, cancel_button);
+      detail::link_button(view_, popup, ok_button);
+      detail::link_button(view_, popup, cancel_button);
       return popup;
    }
 
@@ -195,7 +268,7 @@ namespace cycfi::elements
    // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
    // being the default that maps to both the enter and esc keys)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Content, typename F1, typename F2>
+   template <concepts::Element Content, typename F1, typename F2>
    inline auto dialog2r(
       view& view_
     , Content&& content
@@ -206,25 +279,17 @@ namespace cycfi::elements
     , color cancel_color = get_theme().indicator_color
    )
    {
-      auto button_size = get_theme().dialog_button_size;
       auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));
       auto ok_button = share(button(std::move(ok_text), 1.0));
-      auto popup =
-         detail::make_dialog_popup(
-            vtile(
-               margin_bottom(20, std::forward<Content>(content)),
-               align_right(
-                  htile(
-                     hsize(button_size, hold(cancel_button)),
-                     margin_left(20, hsize(button_size, hold(ok_button)))
-                  )
-               )
-            ));
 
-      detail::link_key(popup, cancel_button, cancel_button);
-      detail::link_button(view_, popup, ok_button, std::forward<F1>(on_ok));
-      detail::link_button(view_, popup, cancel_button, std::forward<F2>(on_cancel));
-      return popup;
+      cancel_button->on_click = [on_cancel](bool) mutable {
+         on_cancel();
+      };
+      ok_button->on_click = [on_ok](bool) mutable {
+         on_ok();
+      };
+
+      return dialog2r(view_, content, ok_button, cancel_button);
    }
 
    ////////////////////////////////////////////////////////////////////////////

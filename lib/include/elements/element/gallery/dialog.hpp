@@ -18,6 +18,83 @@
 
 namespace cycfi::elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // Dialog creation functions
+   ////////////////////////////////////////////////////////////////////////////
+   namespace api {}
+
+   template <concepts::Element Content>
+   inline auto dialog0(Content&& content);
+
+   template <concepts::Element Content, concepts::ElementPtr BtnPtr>
+   inline auto dialog1(
+      view& view_
+    , Content&& content
+    , BtnPtr ok_button
+   );
+
+   template <concepts::Element Content, concepts::NullaryFunction F>
+   inline auto dialog1(
+      view& view_
+    , Content&& content
+    , F&& on_ok
+    , std::string ok_text = "OK"
+    , color ok_color = get_theme().indicator_color
+   );
+
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2(
+      view& view_
+    , Content&& content
+    , ButtonPtr ok_button
+    , ButtonPtr cancel_button
+   );
+
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
+   inline auto dialog2(
+      view& view_
+    , Content&& content
+    , F1&& on_ok
+    , F2&& on_cancel
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
+    , color ok_color = get_theme().indicator_color
+   );
+
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2r(
+      view& view_
+    , Content&& content
+    , ButtonPtr ok_button
+    , ButtonPtr cancel_button
+   );
+
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
+   inline auto dialog2r(
+      view& view_
+    , Content&& content
+    , F1&& on_ok
+    , F2&& on_cancel
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
+    , color cancel_color = get_theme().indicator_color
+   );
+
+   inline void open_popup(element_ptr popup, view& view_);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   namespace inlines {}
+
    /**
     * \brief Creates a dialog using the specified content (with no button).
     *
@@ -44,7 +121,7 @@ namespace cycfi::elements
             align_center_middle(
                layer(
                   std::forward<Content>(content),
-                  panel{/* opacity */0.98}
+                  panel{/*opacity*/0.98}
                )
             )
          )
@@ -161,7 +238,7 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Creates a dialog with specified content and interaction button.
+    * \brief Creates a dialog with specified content and single button.
     *
     * This function constructs a popup dialog with the content and a button
     * passed to it. The content and button are vertically aligned, with the
@@ -244,8 +321,8 @@ namespace cycfi::elements
       view& view_
     , Content&& content
     , F&& on_ok
-    , std::string ok_text = "OK"
-    , color ok_color = get_theme().indicator_color
+    , std::string ok_text
+    , color ok_color
    )
    {
       auto ok_button = share(button(std::move(ok_text), 1.0, ok_color));
@@ -258,7 +335,7 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Creates a dialog with two buttons.
+    * \brief Creates a dialog with specified content and two buttons.
     *
     * This function constructs a dialog box with the specified content
     * and two buttons that are vertically aligned in the dialog. The
@@ -368,9 +445,9 @@ namespace cycfi::elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string ok_text = "OK"
-    , std::string cancel_text = "Cancel"
-    , color ok_color = get_theme().indicator_color
+    , std::string ok_text
+    , std::string cancel_text
+    , color ok_color
    )
    {
       auto cancel_button = share(button(std::move(cancel_text), 1.0));
@@ -498,9 +575,9 @@ namespace cycfi::elements
     , Content&& content
     , F1&& on_ok
     , F2&& on_cancel
-    , std::string ok_text = "OK"
-    , std::string cancel_text = "Cancel"
-    , color cancel_color = get_theme().indicator_color
+    , std::string ok_text
+    , std::string cancel_text
+    , color cancel_color
    )
    {
       auto cancel_button = share(button(std::move(cancel_text), 1.0, cancel_color));

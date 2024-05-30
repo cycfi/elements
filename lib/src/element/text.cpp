@@ -1135,6 +1135,7 @@ namespace cycfi::elements
                   ctx.view.refresh(ctx);
                   return true;
                }
+               break;
             case key_code::right:
                if (k.modifiers & mod_action)
                {
@@ -1142,6 +1143,7 @@ namespace cycfi::elements
                   ctx.view.refresh(ctx);
                   return true;
                }
+               break;
 
             default:
                break;

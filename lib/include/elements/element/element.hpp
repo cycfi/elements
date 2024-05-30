@@ -19,6 +19,16 @@ namespace cycfi::elements
    struct basic_context;
    class context;
 
+   namespace concepts
+   {
+      // $$$ TODO: Move this to a better place $$$
+      template <typename T>
+      concept NullaryFunction = requires(T f)
+      {
+         { f() } -> std::same_as<void>;
+      };
+   }
+
    /**
     * \brief
     *    Base class for all UI elements in the Cycfi Elements library.

@@ -176,7 +176,7 @@ namespace cycfi::elements
        , int& _select_end
       )
       {
-         if (auto e = find_element<selectable*>(hit.element_ptr))
+         if (find_element<selectable*>(hit.element_ptr))
          {
             shift_select(c, hit.index, _select_start, _select_end);
             return true;

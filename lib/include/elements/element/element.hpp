@@ -9,10 +9,10 @@
 #include <elements/base_view.hpp>
 #include <elements/support/receiver.hpp>
 #include <elements/support/rect.hpp>
-
-#include <infra/string_view.hpp>
+#include <infra/support.hpp>
 #include <memory>
 #include <type_traits>
+#include <concepts>
 
 namespace cycfi::elements
 {
@@ -111,6 +111,18 @@ namespace cycfi::elements
       void                    on_tracking(view& view_, tracking state);
    };
 
+   namespace concepts
+   {
+      template <typename T>
+      concept Element = std::is_base_of_v<element, std::decay_t<T>>;
+
+      template<typename T>
+      concept ElementPtr = requires(T p)
+      {
+         { *p } -> std::convertible_to<element&>;
+      };
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Additional declarations
    ////////////////////////////////////////////////////////////////////////////
@@ -123,11 +135,8 @@ namespace cycfi::elements
 
    void relinquish_focus(context const& ctx);
 
-   template <typename Element>
-   inline auto share(Element&& e);
-
-   template <typename Element>
-   inline auto get(std::shared_ptr<Element> const& ptr);
+   using cycfi::share;
+   using cycfi::get;
 
    inline element empty();
 
@@ -157,52 +166,6 @@ namespace cycfi::elements
    inline void element::refresh(context const& ctx, int outward)
    {
       refresh(ctx, *this, outward);
-   }
-
-   /**
-    * \brief Creates a shared_ptr from a given element.
-    *
-    * This template function creates a shared pointer for an element by
-    * forwarding its constructor arguments. It's useful for managing the
-    * lifecycle of elements that need shared ownership.
-    *
-    * \tparam Element
-    *    The type of the element to be shared.
-    *
-    * \param e
-    *    An rvalue reference to the element to be shared.
-    *
-    * \return
-    *    A `std::shared_ptr` to the newly created element.
-    */
-   template <typename Element>
-   inline auto share(Element&& e)
-   {
-      using element_type = typename std::decay<Element>::type;
-      return std::make_shared<element_type>(std::forward<Element>(e));
-   }
-
-   /**
-    * \brief Retrieves a weak_ptr from a given shared_ptr.
-    *
-    * This template function generates a `std::weak_ptr` from a
-    * `std::shared_ptr`, allowing temporary access to an object without
-    * extending its lifetime. This is particularly useful for avoiding
-    * circular references that could lead to memory leaks.
-    *
-    * \tparam Element
-    *    The type of the element pointed to by the shared pointer.
-    *
-    * \param ptr
-    *    A constant reference to the shared pointer.
-    *
-    * \return
-    *    A `std::weak_ptr` to the element pointed to by the shared pointer.
-    */
-   template <typename Element>
-   inline auto get(std::shared_ptr<Element> const& ptr)
-   {
-      return std::weak_ptr<Element>(ptr);
    }
 
    /**

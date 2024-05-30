@@ -29,7 +29,7 @@
    A typical approach for steps 2 and 3 involves holding different GUI
    elements as private members within an application or GUI class. These
    elements are managed as shared pointers, created using the `share(e)`
-   function and held in the element hieiarchy using the `hold(p)` function.
+   function and held in the element hierarchy using the `hold(p)` function.
    The GUI class oversees the interconnections and presents a higher-level
    view to the application through a well-defined API.
 
@@ -336,7 +336,7 @@ auto make_input_box(my_model& model, view& view_)
             auto on_ok =
                [&model]()
                {
-                  // When errors are enountered, reset the model's value to
+                  // When errors are encountered, reset the model's value to
                   // its previous state.
                   model._value.update();
                };

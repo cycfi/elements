@@ -257,12 +257,8 @@ namespace cycfi::elements
       return dialog1(view_, content, ok_button);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 2 (two buttons, e.g. Cancel and OK)
-   ////////////////////////////////////////////////////////////////////////////
-
    /**
-    * \brief Creates a dialog with two interactive buttons.
+    * \brief Creates a dialog with two buttons.
     *
     * This function constructs a dialog box with the specified content
     * and two buttons that are vertically aligned in the dialog. The
@@ -392,11 +388,6 @@ namespace cycfi::elements
 
       return dialog2(view_, content, ok_button, cancel_button);
    }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Dialog 2 Reversed (two buttons, e.g. Cancel and OK, but with Cancel
-   // being the default that maps to both the enter and esc keys)
-   ////////////////////////////////////////////////////////////////////////////
 
    /**
     * \brief `dialog2r` function creating a dialog with preset 'OK' and

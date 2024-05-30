@@ -115,13 +115,13 @@ namespace cycfi::artist
    }
 }
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    // These functions are defined in key.mm:
    key_code    translate_key(unsigned int key);
    int         translate_flags(NSUInteger flags);
    NSUInteger  translate_key_to_modifier_flag(key_code key);
-}}
+}
 
 namespace
 {
@@ -783,7 +783,7 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
 @end // @implementation ElementsView
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace
    {
@@ -929,5 +929,5 @@ namespace cycfi { namespace elements
       float dir = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue]? +1.0f : -1.0f;
       return {dir, dir};
    }
-}}
+}
 

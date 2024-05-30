@@ -12,7 +12,7 @@
 #include <functional>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Sliders
@@ -276,6 +276,6 @@ namespace cycfi { namespace elements
    {
       return _body;
    }
-}}
+}
 
 #endif

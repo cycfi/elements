@@ -89,7 +89,7 @@ namespace cycfi::artist
    }
 }
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    key_code translate_key(WPARAM wparam, LPARAM lparam);
 
@@ -790,5 +790,5 @@ namespace cycfi { namespace elements
       static int scroll_dir = get_scroll_direction();
       return {1.0f, 1.0f * scroll_dir};
    }
-}}
+}
 

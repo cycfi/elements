@@ -9,7 +9,7 @@
 #include <elements/view.hpp>
 #include <cmath>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // dial_base
@@ -113,4 +113,4 @@ namespace cycfi { namespace elements
       ctx.view.refresh(ctx);
       return true;
    }
-}}
+}

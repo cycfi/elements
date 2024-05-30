@@ -9,7 +9,7 @@
 #include <elements/element/child_window.hpp>
 #include <elements/element/gallery/pane.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Child Window (movable, non-closable)
@@ -73,6 +73,6 @@ namespace cycfi { namespace elements
          std::forward<Content>(content)
       );
    }
-}}
+}
 
 #endif

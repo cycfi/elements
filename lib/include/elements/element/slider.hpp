@@ -16,7 +16,7 @@
 #include <functional>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace colors = cycfi::artist::colors;
 
@@ -323,7 +323,7 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
 
    ////////////////////////////////////////////////////////////////////////////
-   // deprecated 
+   // deprecated
    ////////////////////////////////////////////////////////////////////////////
    template <
       std::size_t _size, std::size_t _num_divs
@@ -363,7 +363,7 @@ namespace cycfi { namespace elements
    template <
       std::size_t _size, std::size_t _num_divs = 50
     , std::size_t _major_divs = 10, typename Subject>
-   [[deprecated("Use slider_marks_lin instead")]] 
+   [[deprecated("Use slider_marks_lin instead")]]
    inline slider_marks_element<_size, _num_divs, _major_divs, remove_cvref_t<Subject>>
    slider_marks(Subject&& subject)
    {
@@ -518,6 +518,6 @@ namespace cycfi { namespace elements
       r._labels = {{std::move(s)...}};
       return r;
    }
-}}
+}
 
 #endif

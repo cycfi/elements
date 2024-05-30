@@ -6,7 +6,7 @@
 #include <elements/element/floating.hpp>
 #include <elements/support/context.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits floating_element::limits(basic_context const& ctx) const
    {
@@ -34,4 +34,4 @@ namespace cycfi { namespace elements
       ctx.bounds = center(ctx.bounds, this->bounds());
       this->bounds(ctx.bounds);
    }
-}}
+}

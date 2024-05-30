@@ -12,7 +12,7 @@
 #include <vector>
 #include <gtk/gtk.h>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    // Some app globals
    GtkApplication* the_app = nullptr;
@@ -75,5 +75,5 @@ namespace cycfi { namespace elements
    {
       g_application_release(G_APPLICATION(_app));
    }
-}}
+}
 

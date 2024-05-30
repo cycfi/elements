@@ -6,7 +6,7 @@
 #include <elements/element/gallery/icon_button.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void draw_plain_icon_button(
       context const& ctx
@@ -99,4 +99,4 @@ namespace cycfi { namespace elements
          ctx, _code, _size * get_theme().icon_font._size, value, hilite, enabled
       );
    }
-}}
+}

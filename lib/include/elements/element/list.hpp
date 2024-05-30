@@ -13,7 +13,7 @@
 #include <set>
 #include<iostream>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // The cell composer abstract class
@@ -545,6 +545,6 @@ namespace cycfi { namespace elements
    {
       set_bounds(ctx.bounds, main_axis_pos, cell);
    }
-}}
+}
 
 #endif

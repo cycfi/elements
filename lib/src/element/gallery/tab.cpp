@@ -7,7 +7,7 @@
 #include <elements/support/draw_utils.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace colors = artist::colors;
 
@@ -58,4 +58,4 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}

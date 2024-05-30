@@ -17,7 +17,7 @@
 #include <infra/string_view.hpp>
 #include <utility>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Buttons
@@ -1047,6 +1047,6 @@ namespace cycfi { namespace elements
    {
       return {*this, top_left, top_right, bottom_right, bottom_left};
    }
-}}
+}
 
 #endif

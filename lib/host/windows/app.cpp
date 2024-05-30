@@ -14,7 +14,7 @@
 #include <shellscalingapi.h>
 #endif
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    app::app(std::string name)
    {
@@ -53,5 +53,5 @@ namespace cycfi { namespace elements
       SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_CREATE, nullptr, &path);
       return fs::path{path};
    }
-}}
+}
 

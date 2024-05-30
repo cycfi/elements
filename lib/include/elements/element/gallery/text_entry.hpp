@@ -15,7 +15,7 @@
 #include <elements/support/text_utils.hpp>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Text Entry
@@ -104,6 +104,6 @@ namespace cycfi { namespace elements
        , clip_action
       );
    }
-}}
+}
 
 #endif

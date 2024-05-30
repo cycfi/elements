@@ -6,7 +6,7 @@
 #include <elements/element/misc.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace colors = artist::colors;
 
@@ -213,5 +213,5 @@ namespace cycfi { namespace elements
       float font_size = thm.icon_font._size * _size;
       draw_icon(ctx.canvas, ctx.bounds, _code, font_size);
    }
-}}
+}
 

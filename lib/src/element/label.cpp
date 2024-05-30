@@ -6,7 +6,7 @@
 #include <elements/element/label.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits default_label::limits(basic_context const& ctx) const
    {
@@ -70,5 +70,5 @@ namespace cycfi { namespace elements
    {
       return _is_enabled;
    }
-}}
+}
 

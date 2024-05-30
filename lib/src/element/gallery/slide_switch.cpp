@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/gallery/slide_switch.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace colors = artist::colors;
 
@@ -73,4 +73,4 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}

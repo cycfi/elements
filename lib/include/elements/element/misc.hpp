@@ -16,7 +16,7 @@
 #include <functional>
 #include <utility>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // spacers: empty horizontal or vertical element with specified width or
@@ -579,6 +579,6 @@ namespace cycfi { namespace elements
    {
       return modal(box_element{color_});
    }
-}}
+}
 
 #endif

@@ -7,7 +7,7 @@
 #include <elements/window.hpp>
 #include <elements/support/context.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::image;
    using artist::offscreen_image;
@@ -447,4 +447,4 @@ namespace cycfi { namespace elements
          *this, _current_bounds
       );
    }
-}}
+}

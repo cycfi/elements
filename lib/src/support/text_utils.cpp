@@ -7,7 +7,7 @@
 #include <infra/utf8_utils.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {
@@ -42,4 +42,4 @@ namespace cycfi { namespace elements
       auto  height = info.ascent + info.descent + info.leading;
       return {info.size.x, height};
    }
-}}
+}

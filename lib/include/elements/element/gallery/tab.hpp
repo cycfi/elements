@@ -8,7 +8,7 @@
 
 #include <elements/element/gallery/button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Tab
@@ -31,6 +31,6 @@ namespace cycfi { namespace elements
    {
       return choice(tab_styler{text});
    }
-}}
+}
 
 #endif

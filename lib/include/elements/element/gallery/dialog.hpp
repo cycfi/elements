@@ -16,7 +16,7 @@
 #include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Dialog 0 (no button)
@@ -243,6 +243,6 @@ namespace cycfi { namespace elements
          }
       );
    }
-}}
+}
 
 #endif

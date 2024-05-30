@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::color;
    constexpr auto min_port_size = 32;
@@ -586,4 +586,4 @@ namespace cycfi { namespace elements
       }
       return handled;
    }
-}}
+}

@@ -8,7 +8,7 @@
 #include <elements/support/context.hpp>
 #include <algorithm>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
@@ -141,4 +141,4 @@ namespace cycfi { namespace elements
       auto width = get_image()->size().x;
       return rect{0, (_height/sc) * _index, width, (_height/sc) * (_index + 1)};
    }
-}}
+}

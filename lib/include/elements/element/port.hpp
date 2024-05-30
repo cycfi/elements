@@ -10,7 +10,7 @@
 #include <infra/support.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Port elements
@@ -247,6 +247,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject), traits | no_vscroll};
    }
-}}
+}
 
 #endif

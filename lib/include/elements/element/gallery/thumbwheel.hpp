@@ -10,7 +10,7 @@
 #include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic (vertical and horizontal) thumbwheels (You can use these as the
@@ -101,6 +101,6 @@ namespace cycfi { namespace elements
       );
       return thumbwheel(std::move(body), {0.0f, 0.0f});
    }
-}}
+}
 
 #endif

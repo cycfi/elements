@@ -11,7 +11,7 @@
 
 namespace elements = cycfi::elements;
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    struct host_window
    {
@@ -160,5 +160,5 @@ namespace cycfi { namespace elements
       else
          on_activate.push_back(set_position);
    }
-}}
+}
 

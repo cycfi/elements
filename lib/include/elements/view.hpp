@@ -22,7 +22,7 @@
 #include <stack>
 #include <map>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    class context;
    class window;
@@ -394,6 +394,6 @@ namespace cycfi { namespace elements
    {
       _io.post(f);
    }
-}}
+}
 
 #endif

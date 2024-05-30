@@ -10,7 +10,7 @@
 #include <elements/element/gallery/button.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Icon Buttons
@@ -135,6 +135,6 @@ namespace cycfi { namespace elements
    {
       return momentary_button(icon_button_styler{code, size, rgba(0, 0, 0, 0)});
    }
-}}
+}
 
 #endif

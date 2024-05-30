@@ -73,7 +73,7 @@ namespace cycfi::artist
    }
 }
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    struct host_view
    {
@@ -887,5 +887,5 @@ namespace cycfi { namespace elements
       return dir;
    }
 
-}}
+}
 

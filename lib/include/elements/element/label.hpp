@@ -16,7 +16,7 @@
 #include <infra/string_view.hpp>
 #include <string>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::font_descr;
 
@@ -316,6 +316,6 @@ namespace cycfi { namespace elements
       using ftype = remove_cvref_t<F>;
       return {std::forward<ftype>(as_string), std::forward<Subject>(subject)};
    }
-}}
+}
 
 #endif

@@ -9,7 +9,7 @@
 #include <elements/view.hpp>
 #include <cmath>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits range_slider_base::limits(basic_context const& ctx) const
    {
@@ -540,4 +540,4 @@ namespace cycfi { namespace elements
       auto th_w = (th_bounds.first.width() + th_bounds.second.width())*(0.5-offset_from_center)/tr_bounds.width();
       return std::max<float>(val, value_first() + th_w);
    }
-}}
+}

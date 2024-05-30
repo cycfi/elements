@@ -7,7 +7,7 @@
 #include <elements/element/dial.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::rgba;
 
@@ -108,4 +108,4 @@ namespace cycfi { namespace elements
    {
       global_theme::_theme() = thm;
    }
-}}
+}

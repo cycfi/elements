@@ -9,7 +9,7 @@
 #include <elements/element/proxy.hpp>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Floating elements
@@ -38,6 +38,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject), bounds};
    }
-}}
+}
 
 #endif

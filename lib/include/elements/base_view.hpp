@@ -23,7 +23,7 @@
 # include <windows.h>
 #endif
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::canvas;
    using artist::point;
@@ -377,6 +377,6 @@ namespace cycfi { namespace elements
    ////////////////////////////////////////////////////////////////////////////
    // Scroll direction
    point scroll_direction();
-}}
+}
 
 #endif

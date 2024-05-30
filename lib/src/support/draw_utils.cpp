@@ -6,7 +6,7 @@
 #include <elements/support/draw_utils.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::rgba;
    using artist::rgb;
@@ -381,4 +381,4 @@ namespace cycfi { namespace elements
          cnv.fill_text(labels[i], {cp.radius * cos_, cp.radius * sin_});
       }
    }
-}}
+}

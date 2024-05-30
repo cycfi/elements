@@ -11,7 +11,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    drop_base::drop_base(std::initializer_list<std::string> mime_types_)
     : _mime_types{mime_types_}
@@ -506,5 +506,5 @@ namespace cycfi { namespace elements
          }
       }
    }
-}}
+}
 

@@ -8,7 +8,7 @@
 
 #include <elements/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    enum class dial_mode_enum : int;
    using artist::color;
@@ -157,6 +157,6 @@ namespace cycfi { namespace elements
          global_theme::_theme(), pmem, val
       };
    }
-}}
+}
 
 #endif

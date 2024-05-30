@@ -6,7 +6,7 @@
 #include <elements/element/tooltip.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    rect tooltip_element::tip_bounds(context const& ctx) const
    {
@@ -103,4 +103,4 @@ namespace cycfi { namespace elements
          close_tip(ctx.view);
       return r;
    }
-}}
+}

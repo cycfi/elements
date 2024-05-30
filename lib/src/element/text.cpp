@@ -12,7 +12,7 @@
 #include <infra/utf8_utils.hpp>
 #include <utility>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using namespace std::chrono_literals;
    using text_layout = artist::text_layout;
@@ -1262,4 +1262,4 @@ namespace cycfi { namespace elements
          }
       }
    }
-}}
+}

@@ -12,7 +12,7 @@
 #include <memory>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    struct basic_context;
    class context;
@@ -224,6 +224,6 @@ namespace cycfi { namespace elements
    {
       return {};
    }
-}}
+}
 
 #endif

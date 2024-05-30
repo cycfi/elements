@@ -6,7 +6,7 @@
 #include <elements/base_view.hpp>
 #include <gdk/gdkkeysyms.h>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    key_code translate_key(unsigned key)
    {
@@ -151,4 +151,4 @@ namespace cycfi { namespace elements
          case GDK_KEY_KP_Subtract:  return key_code::kp_subtract;
       }
    }
-}}
+}

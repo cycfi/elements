@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/gallery/check_box.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace colors = artist::colors;
 
@@ -74,4 +74,4 @@ namespace cycfi { namespace elements
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
       canvas_.fill_text(_text.c_str(), point{cx, cy});
    }
-}}
+}

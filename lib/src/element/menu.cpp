@@ -9,7 +9,7 @@
 #include <elements/element/port.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void basic_button_menu::layout_menu(context const& ctx)
    {
@@ -333,4 +333,4 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}

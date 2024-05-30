@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
@@ -166,4 +166,4 @@ namespace cycfi { namespace elements
       }
       cctx->view.refresh(*cctx);
    }
-}}
+}

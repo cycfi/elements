@@ -30,7 +30,7 @@
    }
 #endif
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    /**
     * \brief
@@ -750,4 +750,4 @@ namespace cycfi { namespace elements
    {
       return demangle(typeid(*this).name());
    }
-}}
+}

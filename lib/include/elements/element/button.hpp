@@ -15,7 +15,7 @@
 #include <elements/view.hpp>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Button
@@ -247,6 +247,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject)};
    }
-}}
+}
 
 #endif

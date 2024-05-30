@@ -7,7 +7,7 @@
 #include <elements/element/port.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    list::list(composer_ptr composer, bool manage_externally)
     : _composer(composer)
@@ -496,6 +496,6 @@ namespace cycfi { namespace elements
       return r;
    }
 
-}}
+}
 
 

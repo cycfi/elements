@@ -12,7 +12,7 @@
 #include <artist/canvas.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using artist::image_ptr;
 
@@ -131,6 +131,6 @@ namespace cycfi { namespace elements
       auto this_ = static_cast<Derived*>(this);
       this_->index(val * (this_->num_frames()-1));
    }
-}}
+}
 
 #endif

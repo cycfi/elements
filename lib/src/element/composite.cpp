@@ -9,7 +9,7 @@
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // composite_base class implementation
@@ -583,4 +583,4 @@ namespace cycfi { namespace elements
       _cursor_tracking = -1;
       _cursor_hovering.clear();
    }
-}}
+}

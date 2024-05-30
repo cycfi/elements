@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.9.6...3.15.0)
-project(HelloUniverse LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.16.0)
+project(SimpleAnimation LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")

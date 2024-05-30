@@ -6,7 +6,7 @@
 #include <elements/element/gallery/menu.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits menu_item_spacer_element::limits(basic_context const& /* ctx */) const
    {
@@ -187,4 +187,4 @@ namespace cycfi { namespace elements
 
       return {mod_, key_};
    }
-}}
+}

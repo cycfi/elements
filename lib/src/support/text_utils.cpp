@@ -6,7 +6,7 @@
 #include <elements/support/text_utils.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c)
    {
@@ -83,4 +83,4 @@ namespace cycfi { namespace elements
       detail::codepoint_to_utf8(codepoint, &result[0]);
       return {result};
    }
-}}
+}

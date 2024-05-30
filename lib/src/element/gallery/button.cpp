@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/gallery/button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void draw_button_base(
       context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii)
@@ -188,5 +188,5 @@ namespace cycfi { namespace elements
          cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), {icon_pos, mid_y});
       }
    }
-}}
+}
 

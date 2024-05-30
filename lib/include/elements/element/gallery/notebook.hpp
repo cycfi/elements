@@ -17,7 +17,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace detail
    {
@@ -102,6 +102,6 @@ namespace cycfi { namespace elements
        , share(std::forward<Tabs>(tabs))...
       );
    }
-}}
+}
 
 #endif

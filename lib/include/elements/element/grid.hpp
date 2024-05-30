@@ -9,7 +9,7 @@
 #include <elements/view.hpp>
 #include <elements/element/composite.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // grid_base: Base class for vertical and horizontal grids, supplies grid
@@ -194,6 +194,6 @@ namespace cycfi { namespace elements
       );
       return grid;
    }
-}}
+}
 
 #endif

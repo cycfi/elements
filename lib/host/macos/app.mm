@@ -6,7 +6,7 @@
 #include <elements/app.hpp>
 #import <Cocoa/Cocoa.h>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    // Note: Unlike Windows and Linux, MacOS contains the app name and id in the
    //       plist.info file. We ignore the ctor params here and use those instead.
@@ -45,5 +45,5 @@ namespace cycfi { namespace elements
    {
       [NSApp terminate : nil];
    }
-}}
+}
 

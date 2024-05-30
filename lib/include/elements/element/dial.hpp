@@ -12,7 +12,7 @@
 #include <infra/support.hpp>
 #include <functional>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    enum class dial_mode_enum : int
    {
@@ -252,6 +252,6 @@ namespace cycfi { namespace elements
       r._labels = {{std::move(s)...}};
       return r;
    }
-}}
+}
 
 #endif

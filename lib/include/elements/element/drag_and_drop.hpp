@@ -13,7 +13,7 @@
 #include <functional>
 #include <set>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    // forward declarations
    class composite_base;
@@ -158,6 +158,6 @@ namespace cycfi { namespace elements
    {
       _selected = state_;
    }
-}}
+}
 
 #endif

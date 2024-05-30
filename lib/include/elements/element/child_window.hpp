@@ -11,7 +11,7 @@
 #include <elements/element/traversal.hpp>
 #include <elements/element/button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Child window: Are floating elements that may overlap and move to front
@@ -104,6 +104,6 @@ namespace cycfi { namespace elements
             };
       }
    }
-}}
+}
 
 #endif

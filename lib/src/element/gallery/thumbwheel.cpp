@@ -6,7 +6,7 @@
 #include <elements/element/gallery/thumbwheel.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // basic_thumbwheel_element
@@ -110,4 +110,4 @@ namespace cycfi { namespace elements
    {
       return halign();
    }
-}}
+}

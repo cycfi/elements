@@ -11,7 +11,7 @@
 #include <elements/element/gallery/dialog.hpp>
 #include <infra/string_view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Message Box 0 (no button)
@@ -120,6 +120,6 @@ namespace cycfi { namespace elements
          ok_color
       );
    }
-}}
+}
 
 #endif

@@ -9,7 +9,7 @@
 #include <infra/string_view.hpp>
 #include <string>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    class element;
    class view;
@@ -78,6 +78,6 @@ namespace cycfi { namespace elements
       value(val);
       receiver_base::notify_edit(view_);
    }
-}}
+}
 
 #endif

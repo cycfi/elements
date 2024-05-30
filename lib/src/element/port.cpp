@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    constexpr auto min_port_size = 32;
 
@@ -584,4 +584,4 @@ namespace cycfi { namespace elements
       }
       return handled;
    }
-}}
+}

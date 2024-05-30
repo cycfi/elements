@@ -9,7 +9,7 @@
 #include <elements/element/composite.hpp>
 #include <algorithm>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Layer
@@ -83,6 +83,6 @@ namespace cycfi { namespace elements
       r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
-}}
+}
 
 #endif

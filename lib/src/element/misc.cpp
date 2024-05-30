@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/misc.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void panel::draw(context const& ctx)
    {
@@ -210,5 +210,5 @@ namespace cycfi { namespace elements
       float font_size = thm.icon_font._size * _size;
       draw_icon(ctx.canvas, ctx.bounds, _code, font_size);
    }
-}}
+}
 

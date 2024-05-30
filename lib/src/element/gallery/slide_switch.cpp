@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/gallery/slide_switch.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits slide_switch_styler::limits(basic_context const& /*ctx*/) const
    {
@@ -70,4 +70,4 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}

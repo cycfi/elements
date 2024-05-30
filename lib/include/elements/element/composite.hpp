@@ -14,7 +14,7 @@
 #include <array>
 #include <set>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Composites
@@ -208,6 +208,6 @@ namespace cycfi { namespace elements
    {
       _enabled = state;
    }
-}}
+}
 
 #endif

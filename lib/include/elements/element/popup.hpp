@@ -10,7 +10,7 @@
 #include <elements/view.hpp>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    class basic_button_menu;
 
@@ -72,6 +72,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject), bounds};
    }
-}}
+}
 
 #endif

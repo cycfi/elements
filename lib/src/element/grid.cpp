@@ -6,7 +6,7 @@
 #include <elements/element/grid.hpp>
 #include <elements/support/context.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Grids
@@ -153,4 +153,4 @@ namespace cycfi { namespace elements
       auto bottom = ctx.bounds.bottom;
       return {_positions[index]+left, top, _positions[index+1]+left, bottom};
    }
-}}
+}

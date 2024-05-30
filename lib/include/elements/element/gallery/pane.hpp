@@ -11,7 +11,7 @@
 #include <elements/element/margin.hpp>
 #include <elements/element/misc.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Pane
@@ -124,6 +124,6 @@ namespace cycfi { namespace elements
          center_heading
       );
    }
-}}
+}
 
 #endif

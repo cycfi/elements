@@ -10,7 +10,7 @@
 #include <elements/element/composite.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Tiles
@@ -69,6 +69,6 @@ namespace cycfi { namespace elements
       r = container{{share(std::forward<E>(elements))...}};
       return r;
    }
-}}
+}
 
 #endif

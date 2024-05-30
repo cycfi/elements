@@ -10,7 +10,7 @@
 #include <string>
 #include <functional>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    struct sender_base
    {
@@ -38,6 +38,6 @@ namespace cycfi { namespace elements
       virtual void         send(param_type str) = 0;
       virtual void         on_send(callback_function f) = 0;
    };
-}}
+}
 
 #endif

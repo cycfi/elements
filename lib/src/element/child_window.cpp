@@ -7,7 +7,7 @@
 #include <elements/element/floating.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    bool child_window_element::click(context const& ctx, mouse_button btn)
    {
@@ -102,4 +102,4 @@ namespace cycfi { namespace elements
    {
       ctx.view.remove(fl->shared_from_this());
    }
-}}
+}

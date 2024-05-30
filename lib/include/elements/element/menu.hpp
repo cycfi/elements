@@ -13,7 +13,7 @@
 #include <elements/view.hpp>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Basic Dropdown Menu
@@ -143,6 +143,6 @@ namespace cycfi { namespace elements
    {
       _selected = state;
    }
-}}
+}
 
 #endif

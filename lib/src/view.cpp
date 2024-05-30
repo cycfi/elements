@@ -7,7 +7,7 @@
 #include <elements/window.hpp>
 #include <elements/support/context.hpp>
 
- namespace cycfi { namespace elements
+ namespace cycfi::elements
  {
    view::view(extent size_)
     : base_view(size_)
@@ -451,4 +451,4 @@
          *this, _current_bounds
       );
    }
-}}
+}

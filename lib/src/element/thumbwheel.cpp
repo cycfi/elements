@@ -7,7 +7,7 @@
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // thumbwheel_base
@@ -99,4 +99,4 @@ namespace cycfi { namespace elements
       ctx.view.refresh(ctx);
       return true;
    }
-}}
+}

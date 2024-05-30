@@ -12,7 +12,7 @@
 #include <elements/view.hpp>
 #include <utility>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    using namespace std::chrono_literals;
 
@@ -1349,4 +1349,4 @@ namespace cycfi { namespace elements
          }
       }
    }
-}}
+}

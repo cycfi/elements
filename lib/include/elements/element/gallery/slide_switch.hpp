@@ -8,7 +8,7 @@
 
 #include <elements/element/gallery/button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Slide Switch
@@ -30,6 +30,6 @@ namespace cycfi { namespace elements
    {
       return toggle_button(slide_switch_styler{});
    }
-}}
+}
 
 #endif

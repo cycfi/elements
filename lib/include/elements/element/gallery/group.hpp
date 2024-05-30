@@ -10,7 +10,7 @@
 #include <elements/element/margin.hpp>
 #include <elements/element/misc.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Group
@@ -83,6 +83,6 @@ namespace cycfi { namespace elements
          std::forward<Content>(content), center_heading
       );
    }
-}}
+}
 
 #endif

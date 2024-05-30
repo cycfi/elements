@@ -11,7 +11,7 @@
 #include <infra/support.hpp>
 #include <functional>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Tooltip elements
@@ -68,6 +68,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject), std::forward<Tip>(tip), delay, pos};
    }
-}}
+}
 
 #endif

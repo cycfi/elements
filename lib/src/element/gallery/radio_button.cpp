@@ -5,7 +5,7 @@
 =============================================================================*/
 #include <elements/element/gallery/radio_button.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void radio_button_styler::draw(context const& ctx)
    {
@@ -72,4 +72,4 @@ namespace cycfi { namespace elements
       float cy = ctx.bounds.top + (ctx.bounds.height() / 2);
       canvas_.fill_text(_text.c_str(), point{cx, cy});
    }
-}}
+}

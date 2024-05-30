@@ -12,7 +12,7 @@
 #include <string>
 #include <utility>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // toggle_selector (e.g. check_box and radio_button where the small button
@@ -49,6 +49,6 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}
 
 #endif

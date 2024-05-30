@@ -23,11 +23,20 @@ namespace cycfi::elements
       auto tracking = state.tracking;
       auto enabled = ctx.enabled;
 
+      color outline_color = (enabled && hilite)?
+         theme_.frame_hilite_color :
+         theme_.frame_color;
+
+      if (!enabled)
+         outline_color = outline_color.opacity(
+            outline_color.alpha * theme_.disabled_opacity);
+
       // Draw check mark
       if (enabled)
       {
          color icon_c = (value || tracking) ?
-            ((enabled && hilite)? theme_.indicator_hilite_color : theme_.indicator_bright_color) :
+            ((enabled && hilite)?
+               theme_.indicator_hilite_color : theme_.indicator_bright_color) :
             colors::black.opacity(theme_.element_background_opacity)
             ;
 
@@ -37,12 +46,15 @@ namespace cycfi::elements
          if (value || tracking)
             draw_icon(canvas_, box, icons::ok, 14, icon_c);
       }
+      else
+      {
+         if (value)
+            draw_icon(canvas_, box, icons::ok, 14, outline_color);
+      }
 
       // Draw box
       auto line_width = theme_.controls_frame_stroke_width;
-      color outline_color = (enabled && hilite)? theme_.frame_hilite_color : theme_.frame_color;
-      if (!enabled)
-         outline_color = outline_color.opacity(outline_color.alpha * theme_.disabled_opacity);
+
 
       canvas_.line_width(line_width);
       canvas_.begin_path();
@@ -65,8 +77,8 @@ namespace cycfi::elements
       // Draw text
       auto text_c = enabled?
          theme_.label_font_color :
-         theme_.label_font_color.opacity(theme_.label_font_color.alpha * theme_.disabled_opacity)
-         ;
+         theme_.label_font_color.opacity(
+            theme_.label_font_color.alpha * theme_.disabled_opacity);
       canvas_.fill_style(text_c);
       canvas_.font(theme_.label_font);
       canvas_.text_align(canvas_.left | canvas_.middle);

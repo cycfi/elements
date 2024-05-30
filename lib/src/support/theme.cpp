@@ -34,7 +34,7 @@ namespace cycfi::elements
     , indicator_bright_color     {indicator_color.level(1.5)}
     , indicator_hilite_color     {indicator_color.level(2.0)}
     , basic_font_color           {rgba(220, 220, 220, 200)}
-    , disabled_opacity           {0.3}
+    , disabled_opacity           {0.45}
 
 // The symbols_font font is the OS supplied font that includes unicode symbols
 // such as Miscellaneous Technical : Unicode U+2300 – U+23FF (8960–9215)

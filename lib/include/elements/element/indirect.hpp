@@ -9,7 +9,7 @@
 #include <elements/element/element.hpp>
 #include <functional>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    template <typename Indirect, typename Element, typename Enable = void>
    struct indirect_receiver {};
@@ -381,6 +381,6 @@ namespace cycfi { namespace elements
    {
       return indirect<shared_element<element>>{rhs};
    }
-}}
+}
 
 #endif

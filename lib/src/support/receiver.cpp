@@ -6,7 +6,7 @@
 #include <elements/support/receiver.hpp>
 #include <elements/element.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    void receiver_base::begin_edit(view& view_)
    {
@@ -25,5 +25,5 @@ namespace cycfi { namespace elements
       if (auto e = dynamic_cast<element*>(this))
          view_.manage_on_tracking(*e, element::end_tracking);
    }
-}}
+}
 

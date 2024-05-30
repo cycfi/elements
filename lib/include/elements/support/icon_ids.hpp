@@ -6,7 +6,7 @@
 #if !defined(ELEMENTS_ICON_IDS_JUNE_4_2016)
 #define ELEMENTS_ICON_IDS_JUNE_4_2016
 
-namespace cycfi { namespace elements { namespace icons
+namespace cycfi::elements::icons
 {
    enum
    {
@@ -97,6 +97,6 @@ namespace cycfi { namespace elements { namespace icons
       folder_empty                  = 61716,
       folder_open_empty             = 61717,
    };
-}}}
+}
 
 #endif

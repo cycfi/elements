@@ -13,7 +13,7 @@
 #include <functional>
 #include <array>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Thumbwheels
@@ -63,6 +63,6 @@ namespace cycfi { namespace elements
    {
       return element::hit_test(ctx, p, leaf, control);
    }
-}}
+}
 
 #endif

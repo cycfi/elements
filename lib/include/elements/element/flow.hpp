@@ -10,7 +10,7 @@
 #include <elements/element/tile.hpp>
 #include <functional>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
@@ -61,6 +61,6 @@ namespace cycfi { namespace elements
    {
       return flow_element{flowable_};
    }
-}}
+}
 
 #endif

@@ -10,7 +10,7 @@
 
 namespace elements = cycfi::elements;
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    // UTF8 conversion utils defined in base_view.cpp
 
@@ -273,5 +273,5 @@ namespace cycfi { namespace elements
          true // repaint
       );
    }
-}}
+}
 

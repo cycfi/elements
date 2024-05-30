@@ -11,7 +11,7 @@
 #include <infra/support.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Fixed sizing elements
@@ -767,6 +767,6 @@ namespace cycfi { namespace elements
    {
       return {std::forward<Subject>(subject)};
    }
-}}
+}
 
 #endif

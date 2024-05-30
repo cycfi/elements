@@ -7,7 +7,7 @@
 #include <elements/support/draw_utils.hpp>
 #include <elements/support/text_utils.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits tab_styler::limits(basic_context const& ctx) const
    {
@@ -56,4 +56,4 @@ namespace cycfi { namespace elements
    {
       return true;
    }
-}}
+}

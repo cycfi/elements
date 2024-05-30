@@ -11,7 +11,7 @@
 #include <infra/support.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Alignment elements
@@ -220,6 +220,6 @@ namespace cycfi { namespace elements
    {
       return align_right(align_bottom(std::forward<Subject>(subject)));
    }
-}}
+}
 
 #endif

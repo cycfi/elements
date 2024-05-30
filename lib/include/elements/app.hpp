@@ -13,7 +13,7 @@
 using GtkApplication = struct _GtkApplication;
 #endif
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Application class
@@ -45,7 +45,7 @@ namespace cycfi { namespace elements
 
       std::string          _app_name;
    };
-}}
+}
 
 #endif
 

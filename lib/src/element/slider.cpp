@@ -9,7 +9,7 @@
 #include <cmath>
 
 #include <iostream>
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits slider_base::limits(basic_context const& ctx) const
    {
@@ -259,7 +259,7 @@ namespace cycfi { namespace elements
       float major_step = (xmax-xmin)/major_divs;
       float minor_step = major_step/minor_divs;
 
-      for (std::size_t i = 0; i != major_divs+1; ++i) 
+      for (std::size_t i = 0; i != major_divs+1; ++i)
       {
          float pos = xmin + i*major_step;
 
@@ -320,7 +320,7 @@ namespace cycfi { namespace elements
          minor_offsets[i-1] = std::log10(i)*major_step;
       }
 
-      for (std::size_t i = 0; i != major_divs+1; ++i) 
+      for (std::size_t i = 0; i != major_divs+1; ++i)
       {
          float pos = xmin + i*major_step;
 
@@ -391,4 +391,4 @@ namespace cycfi { namespace elements
          pos += incr;
       }
    }
-}}
+}

@@ -6,7 +6,7 @@
 #include <elements/support/draw_utils.hpp>
 #include <elements/support/theme.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    corner_radii corner_radii::operator+(float v) const
    {
@@ -412,4 +412,4 @@ namespace cycfi { namespace elements
          cnv.fill_text(labels[i].c_str(), {cp.radius * cos_, cp.radius * sin_});
       }
    }
-}}
+}

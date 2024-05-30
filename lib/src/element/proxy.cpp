@@ -7,7 +7,7 @@
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    view_limits proxy_base::limits(basic_context const& ctx) const
    {
@@ -254,4 +254,4 @@ namespace cycfi { namespace elements
       info.where = save;
       return r;
    }
-}}
+}

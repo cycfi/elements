@@ -7,7 +7,7 @@
 #include <elements/element/dial.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    theme::theme()
     : panel_color                {rgba(28, 30, 34, 192)}
@@ -106,4 +106,4 @@ namespace cycfi { namespace elements
    {
       global_theme::_theme() = thm;
    }
-}}
+}

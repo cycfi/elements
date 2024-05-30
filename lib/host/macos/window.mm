@@ -60,7 +60,7 @@ namespace elements = cycfi::elements;
 
 @end
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace
    {
@@ -180,5 +180,5 @@ namespace cycfi { namespace elements
 
       [window_ setFrame : frame display : YES animate : false];
    }
-}}
+}
 

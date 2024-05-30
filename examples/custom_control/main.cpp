@@ -306,7 +306,7 @@ auto my_app::make_control_panel()
 }
 
 my_app::my_app(int argc, char* argv[])
- : app{argc, argv, "Custom Control", "com.cycfi.custom-control"}
+ : app{"Custom Control"}
  , _win{name()}
  , _view{_win}
 {

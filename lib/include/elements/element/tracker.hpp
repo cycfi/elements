@@ -11,7 +11,7 @@
 #include <memory>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    struct tracker_info
    {
@@ -169,6 +169,6 @@ namespace cycfi { namespace elements
          state.reset();
       }
    }
-}}
+}
 
 #endif

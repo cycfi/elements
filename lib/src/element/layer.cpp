@@ -7,7 +7,7 @@
 #include <elements/view.hpp>
 #include <elements/support/context.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Layer
@@ -165,4 +165,4 @@ namespace cycfi { namespace elements
       if (index < size())
          _selected_index = index;
    }
-}}
+}

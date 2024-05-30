@@ -9,7 +9,7 @@
 #include <elements/element/gallery/button.hpp>
 #include <elements/element/gallery/toggle_selector.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Check Box
@@ -25,6 +25,6 @@ namespace cycfi { namespace elements
    {
       return toggle_button(check_box_styler{text});
    }
-}}
+}
 
 #endif

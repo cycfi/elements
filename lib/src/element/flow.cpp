@@ -7,7 +7,7 @@
 #include <elements/support/context.hpp>
 #include <elements/view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Flow Element
@@ -80,4 +80,4 @@ namespace cycfi { namespace elements
       using htile = range_composite<htile_element>;
       return std::make_shared<htile>(*this, first, last);
    }
-}}
+}

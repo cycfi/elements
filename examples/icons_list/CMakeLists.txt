@@ -1,9 +1,4 @@
-###############################################################################
-#  Copyright (c) 2022 Johann Philippe
-#
-#  Distributed under the MIT License (https://opensource.org/licenses/MIT)
-###############################################################################
-cmake_minimum_required(VERSION 3.9.6...3.15.0)
+cmake_minimum_required(VERSION 3.16.0)
 project(ElementsIconsList LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)

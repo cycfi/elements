@@ -11,7 +11,7 @@
 #include <elements/element/composite.hpp>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace detail
    {
@@ -168,6 +168,6 @@ namespace cycfi { namespace elements
       }
       return nullptr;
    }
-}}
+}
 
 #endif

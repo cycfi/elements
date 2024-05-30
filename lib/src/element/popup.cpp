@@ -6,7 +6,7 @@
 #include <elements/element/menu.hpp>
 #include <infra/support.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    element* basic_popup_element::hit_test(context const &, point p, bool /*leaf*/, bool /*control*/)
    {
@@ -63,4 +63,4 @@ namespace cycfi { namespace elements
       if (_menu_button)
          _menu_button->value(0);
    }
-}}
+}

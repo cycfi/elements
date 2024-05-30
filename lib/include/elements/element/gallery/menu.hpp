@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Popup Button
@@ -246,6 +246,6 @@ namespace cycfi { namespace elements
 
       return selection_menu(on_select, init_list_menu_selector{list}, text_align, on_item);
    }
-}}
+}
 
 #endif

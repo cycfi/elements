@@ -11,7 +11,7 @@
 #include <elements/element/misc.hpp>
 #include <elements/element/margin.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Captions
@@ -96,6 +96,6 @@ namespace cycfi { namespace elements
             std::forward<Content>(content)
          );
    }
-}}
+}
 
 #endif

@@ -17,7 +17,7 @@
 #include <elements/support/rect.hpp>
 #include <elements/base_view.hpp>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Window class
@@ -69,7 +69,7 @@ namespace cycfi { namespace elements
 
       host_window_handle   _window;
    };
-}}
+}
 
 #endif
 

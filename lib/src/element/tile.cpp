@@ -11,7 +11,7 @@
 #include <numeric>
 #include <limits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    namespace
    {
@@ -249,4 +249,4 @@ namespace cycfi { namespace elements
       auto const left = ctx.bounds.left;
       return rect{(index? _tiles[index-1] : 0)+left, top, _tiles[index]+left, bottom};
    }
-}}
+}

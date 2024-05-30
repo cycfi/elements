@@ -9,7 +9,7 @@
 #include <elements/element/element.hpp>
 #include <type_traits>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    /**
     * \class proxy_base
@@ -313,6 +313,6 @@ namespace cycfi { namespace elements
    {
       return &_subject;
    }
-}}
+}
 
 #endif

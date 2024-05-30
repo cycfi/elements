@@ -11,7 +11,7 @@
 #include <infra/support.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Margins
@@ -278,6 +278,6 @@ namespace cycfi { namespace elements
    {
       return {margin_, std::forward<Subject>(subject)};
    }
-}}
+}
 
 #endif

@@ -12,7 +12,7 @@
 #include <infra/filesystem.hpp>
 #include <memory>
 
-namespace cycfi { namespace elements
+namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // Images
@@ -188,6 +188,6 @@ namespace cycfi { namespace elements
       auto this_ = static_cast<Derived*>(this);
       this_->index(val * (this_->num_frames()-1));
    }
-}}
+}
 
 #endif

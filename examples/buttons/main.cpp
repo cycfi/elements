@@ -190,6 +190,8 @@ auto make_buttons(view& view_)
       };
 
    static auto const grid = make_equal_grid<3>();
+   auto disabled_label = label("Disabled");
+   disabled_label.enable(false);
 
    return
       margin({20, 0, 20, 20},
@@ -212,7 +214,7 @@ auto make_buttons(view& view_)
                   hmargin(10, label("Slide Buttons")),
                   align_right(slide_btn2),
                   hspace(10),
-                  label("Disabled")
+                  disabled_label
                )
             ),
             margin_top(20, hgrid(grid, left, center, right)),

@@ -43,7 +43,9 @@ namespace cycfi::elements
 
          if (value || tracking)
             draw_icon(canvas_, box, icons::ok, 14, icon_c);
-      } else {
+      }
+      else
+      {
          if (value)
             draw_icon(canvas_, box, icons::ok, 14, outline_color);
       }

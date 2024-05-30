@@ -44,7 +44,7 @@ namespace cycfi::elements
 
    template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
    inline auto dialog2(
-    view& view_
+      view& view_
     , Content&& content
     , ButtonPtr ok_button
     , ButtonPtr cancel_button
@@ -121,7 +121,7 @@ namespace cycfi::elements
             align_center_middle(
                layer(
                   std::forward<Content>(content),
-                  panel{/* opacity */0.98}
+                  panel{/*opacity*/0.98}
                )
             )
          )

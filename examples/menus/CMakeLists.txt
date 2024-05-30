@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.6...3.15.0)
+cmake_minimum_required(VERSION 3.16.0)
 project(Menus LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)

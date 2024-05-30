@@ -7,11 +7,11 @@ include::common.adoc[]
 
 Here are the basic tools that you need in order to use the library:
 
-. A C{pp}17 compiler
+. A C{pp}20 compiler
 . Git
-. https://cmake.org/[CMake] 3.15 or higher
+. https://cmake.org/[CMake] 3.16 or higher
 
-=== C{pp}17
+=== C{pp}20
 
 Elements currently supports the MacOS, Windows and Linux.
 
@@ -19,7 +19,7 @@ In the Mac, we support the https://developer.apple.com/xcode/[XCode] IDE.
 
 In Windows, we support Windows 10 with https://visualstudio.microsoft.com/vs/[Visual Studio 2022], although it will probably also work with older versions of the Visual Studio IDE.
 
-In Linux, we support both https://clang.llvm.org/[Clang] and https://gcc.gnu.org/[g{pp}]. Get the latest version with a C{pp}17 compiler.
+In Linux, we support both https://clang.llvm.org/[Clang] and https://gcc.gnu.org/[g{pp}]. Get the latest version with a C{pp}20 compiler.
 
 The https://www.jetbrains.com/clion/[CLion] IDE is supported on all platforms, it simply requires the CMakeLists.txt file to open and build the project.
 

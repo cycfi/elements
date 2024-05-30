@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
    {
       // If we start with an empty paths vector, we still need to give it a prototypical
       // element in order to establish the size limits.
-      std::string path = paths.empty()? std::string{"Empty"} : paths[index].u8string();
+      std::string path = paths.empty()? std::string{"Empty"} : paths[index].string();
 
       return share(
          draggable(

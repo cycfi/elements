@@ -4,7 +4,7 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-cmake_minimum_required(VERSION 3.7.2...3.15.0)
+cmake_minimum_required(VERSION 3.16.0)
 
 include(FetchContent)
 
@@ -181,11 +181,7 @@ target_sources(elements
 )
 
 target_include_directories(elements PUBLIC include)
-if(CMAKE_CXX_STANDARD EQUAL 20)
-   target_compile_features(elements PUBLIC cxx_std_20)
-else()
-   target_compile_features(elements PUBLIC cxx_std_17)
-endif()
+target_compile_features(elements PUBLIC cxx_std_20)
 
 if(ELEMENTS_ENABLE_LTO)
    set_target_properties(elements PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)

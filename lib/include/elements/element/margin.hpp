@@ -16,7 +16,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Margins
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Rect, typename Subject>
+   template <typename Rect, concepts::Element Subject>
    class margin_element : public proxy<Subject>
    {
    public:
@@ -39,7 +39,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Rect, typename Subject>
+   template <typename Rect, concepts::Element Subject>
    inline view_limits margin_element<Rect, Subject>::limits(basic_context const& ctx) const
    {
       auto r = this->subject().limits(ctx);
@@ -54,7 +54,7 @@ namespace cycfi::elements
       return r;
    }
 
-   template <typename Rect, typename Subject>
+   template <typename Rect, concepts::Element Subject>
    inline void margin_element<Rect, Subject>::prepare_subject(context& ctx)
    {
       ctx.bounds.top += _margin.top;
@@ -76,7 +76,7 @@ namespace cycfi::elements
 
    ////////////////////////////////////////////////////////////////////////////
    // Full Margin
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<rect, remove_cvref_t<Subject>>
    margin(rect margin_, Subject&& subject)
    {
@@ -91,14 +91,14 @@ namespace cycfi::elements
       float left;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<margin_left_rect, remove_cvref_t<Subject>>
    margin_left(margin_left_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_left(...) instead.")]]
    inline margin_element<margin_left_rect, remove_cvref_t<Subject>>
    left_margin(margin_left_rect margin_, Subject&& subject)
@@ -114,14 +114,14 @@ namespace cycfi::elements
       float right;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<margin_right_rect, remove_cvref_t<Subject>>
    margin_right(margin_right_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_right(...) instead.")]]
    inline margin_element<margin_right_rect, remove_cvref_t<Subject>>
    right_margin(margin_right_rect margin_, Subject&& subject)
@@ -137,14 +137,14 @@ namespace cycfi::elements
       float top;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<margin_top_rect, remove_cvref_t<Subject>>
    margin_top(margin_top_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_top(...) instead.")]]
    inline margin_element<margin_top_rect, remove_cvref_t<Subject>>
    top_margin(margin_top_rect margin_, Subject&& subject)
@@ -160,14 +160,14 @@ namespace cycfi::elements
       float bottom;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<margin_bottom_rect, remove_cvref_t<Subject>>
    margin_bottom(margin_bottom_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_bottom(...) instead.")]]
    inline margin_element<margin_bottom_rect, remove_cvref_t<Subject>>
    bottom_margin(margin_bottom_rect margin_, Subject&& subject)
@@ -184,14 +184,14 @@ namespace cycfi::elements
       float top;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
    margin_left_top(margin_left_top_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_left_top(...) instead.")]]
    inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
    left_top_margin(margin_left_top_rect margin_, Subject&& subject)
@@ -209,21 +209,21 @@ namespace cycfi::elements
       float right;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    hmargin(hmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    margin_left_right(hmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_left_right(...) instead.")]]
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    left_right_margin(hmargin_rect margin_, Subject&& subject)
@@ -231,7 +231,7 @@ namespace cycfi::elements
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use hmargin(...) instead.")]]
    inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
    xside_margin(hmargin_rect margin_, Subject&& subject)
@@ -249,21 +249,21 @@ namespace cycfi::elements
       float bottom;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    vmargin(vmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    margin_top_bottom(vmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use margin_top_bottom(...) instead.")]]
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    top_bottom_margin(vmargin_rect margin_, Subject&& subject)
@@ -271,7 +271,7 @@ namespace cycfi::elements
       return {margin_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    [[deprecated("Use vmargin(...) instead.")]]
    inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
    yside_margin(vmargin_rect margin_, Subject&& subject)

@@ -58,7 +58,7 @@ namespace cycfi::elements
       tooltip_position        _position;
    };
 
-   template <typename Subject, typename Tip>
+   template <concepts::Element Subject, typename Tip>
    inline proxy<remove_cvref_t<Subject>, tooltip_element>
    tooltip(
       Subject&& subject

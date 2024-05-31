@@ -268,7 +268,7 @@ namespace cycfi::elements
    // As label receives a value of type T and converts it to the label's text
    // using a user-supplied function.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject, typename T, typename F>
+   template <concepts::Element Subject, typename T, typename F>
    class as_label_element : public receiver<T>, public proxy<Subject>
    {
    public:
@@ -288,13 +288,13 @@ namespace cycfi::elements
       T                       _value;
    };
 
-   template <typename Subject, typename T, typename F>
+   template <concepts::Element Subject, typename T, typename F>
    inline as_label_element<Subject, T, F>::as_label_element(F&& as_string, Subject subject)
     : _as_string(as_string)
     , base_type(std::move(subject))
    {}
 
-   template <typename Subject, typename T, typename F>
+   template <concepts::Element Subject, typename T, typename F>
    inline void as_label_element<Subject, T, F>::value(param_type val)
    {
       _value = val;
@@ -302,14 +302,14 @@ namespace cycfi::elements
          tw->set_text(_as_string(val));
    }
 
-   template <typename Subject, typename T, typename F>
+   template <concepts::Element Subject, typename T, typename F>
    inline typename as_label_element<Subject, T, F>::getter_type
    as_label_element<Subject, T, F>::value() const
    {
       return _value;
    }
 
-   template <typename T, typename Subject, typename F>
+   template <typename T, concepts::Element Subject, typename F>
    inline as_label_element<remove_cvref_t<Subject>, T, remove_cvref_t<F>>
    as_label(F&& as_string, Subject&& subject)
    {

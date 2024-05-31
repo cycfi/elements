@@ -32,7 +32,7 @@ namespace cycfi::elements
       rect                    _bounds;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, floating_element>
    floating(rect bounds, Subject&& subject)
    {

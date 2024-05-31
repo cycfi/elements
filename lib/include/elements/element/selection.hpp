@@ -77,7 +77,7 @@ namespace cycfi::elements
      * \param multi_select Determines if we allow multiple selections or not. Defaults to `true`.
      */
    //==============================================================================================
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, selection_list_element>
    selection_list(Subject&& subject, bool multi_select = true)
    {

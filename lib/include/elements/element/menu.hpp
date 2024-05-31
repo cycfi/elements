@@ -127,7 +127,7 @@ namespace cycfi::elements
       bool                    _selected = false;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, basic_menu_item_element>
    basic_menu_item(Subject&& subject)
    {

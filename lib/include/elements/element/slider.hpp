@@ -269,7 +269,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Slider Element Base (common base class for slider elements)
    ////////////////////////////////////////////////////////////////////////////
-   template <int _size, typename Subject>
+   template <int _size, concepts::Element Subject>
    class slider_element_base : public proxy<Subject>
    {
    public:
@@ -282,7 +282,7 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx) override;
    };
 
-   template <int size, typename Subject>
+   template <int size, concepts::Element Subject>
    inline view_limits
    slider_element_base<size, Subject>::limits(basic_context const& ctx) const
    {
@@ -302,7 +302,7 @@ namespace cycfi::elements
       return sl;
    }
 
-   template <int size, typename Subject>
+   template <int size, concepts::Element Subject>
    inline void
    slider_element_base<size, Subject>::prepare_subject(context& ctx)
    {
@@ -327,7 +327,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    template <
       std::size_t _size, std::size_t _num_divs
-    , std::size_t _major_divs, typename Subject>
+    , std::size_t _major_divs, concepts::Element Subject>
    class slider_marks_element : public slider_element_base<_size, Subject>
    {
    public:
@@ -346,7 +346,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _num_divs
-    , std::size_t _major_divs, typename Subject>
+    , std::size_t _major_divs, concepts::Element Subject>
    inline void
    slider_marks_element<_size, _num_divs, _major_divs, Subject>
       ::draw(context const& ctx)
@@ -362,7 +362,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _num_divs = 50
-    , std::size_t _major_divs = 10, typename Subject>
+    , std::size_t _major_divs = 10, concepts::Element Subject>
    [[deprecated("Use slider_marks_lin instead")]]
    inline slider_marks_element<_size, _num_divs, _major_divs, remove_cvref_t<Subject>>
    slider_marks(Subject&& subject)
@@ -373,7 +373,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs
-    , std::size_t _minor_divs, typename Subject>
+    , std::size_t _minor_divs, concepts::Element Subject>
    class slider_marks_lin_element : public slider_element_base<_size, Subject>
    {
    public:
@@ -392,7 +392,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs
-    , std::size_t _minor_divs, typename Subject>
+    , std::size_t _minor_divs, concepts::Element Subject>
    inline void
    slider_marks_lin_element<_size, _major_divs, _minor_divs, Subject>
       ::draw(context const& ctx)
@@ -408,7 +408,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs = 10
-    , std::size_t _minor_divs = 5, typename Subject>
+    , std::size_t _minor_divs = 5, concepts::Element Subject>
    inline slider_marks_lin_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
    slider_marks_lin(Subject&& subject)
    {
@@ -417,7 +417,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs
-    , std::size_t _minor_divs, typename Subject>
+    , std::size_t _minor_divs, concepts::Element Subject>
    class slider_marks_log_element : public slider_element_base<_size, Subject>
    {
 
@@ -437,7 +437,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs
-      , std::size_t _minor_divs, typename Subject>
+      , std::size_t _minor_divs, concepts::Element Subject>
    inline void
    slider_marks_log_element<_size, _major_divs, _minor_divs, Subject>
       ::draw(context const& ctx)
@@ -453,7 +453,7 @@ namespace cycfi::elements
 
    template <
       std::size_t _size, std::size_t _major_divs = 5
-      , std::size_t _minor_divs = 10, typename Subject>
+      , std::size_t _minor_divs = 10, concepts::Element Subject>
    inline slider_marks_log_element<_size, _major_divs, _minor_divs, remove_cvref_t<Subject>>
    slider_marks_log(Subject&& subject)
    {
@@ -463,7 +463,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Slider Labels (You can use this to place slider labels with sliders)
    ////////////////////////////////////////////////////////////////////////////
-   template <int _size, typename Subject, std::size_t num_labels>
+   template <int _size, concepts::Element Subject, std::size_t num_labels>
    class slider_labels_element
     : public slider_element_base<abs(_size), Subject>
    {
@@ -496,7 +496,7 @@ namespace cycfi::elements
     , std::size_t _num_labels
    );
 
-   template <int size, typename Subject, std::size_t num_labels>
+   template <int size, concepts::Element Subject, std::size_t num_labels>
    inline void
    slider_labels_element<size, Subject, num_labels>::draw(context const& ctx)
    {
@@ -509,7 +509,7 @@ namespace cycfi::elements
        , _font_size, _labels.data(), num_labels);
    }
 
-   template <int size, typename Subject, typename... S>
+   template <int size, concepts::Element Subject, typename... S>
    inline slider_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
    slider_labels(Subject&& subject, float font_size, S&&... s)
    {

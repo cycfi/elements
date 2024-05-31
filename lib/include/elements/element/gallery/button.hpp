@@ -380,7 +380,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a generic basic momentary button
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, typename Subject>
+   template <typename Base = basic_button, concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, Base>
    momentary_button(Subject&& subject)
    {
@@ -390,7 +390,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a generic basic toggle button
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, typename Subject>
+   template <typename Base = basic_button, concepts::Element Subject>
    inline basic_toggle_button<proxy<remove_cvref_t<Subject>, Base>>
    toggle_button(Subject&& subject)
    {
@@ -400,7 +400,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a generic basic latching button
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, typename Subject>
+   template <typename Base = basic_button, concepts::Element Subject>
    inline basic_latching_button<proxy<remove_cvref_t<Subject>, Base>>
    latching_button(Subject&& subject)
    {

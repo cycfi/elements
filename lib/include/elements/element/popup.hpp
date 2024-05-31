@@ -38,7 +38,7 @@ namespace cycfi::elements
       cursor_function         on_cursor = [](auto, auto){};
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, basic_popup_element>
    basic_popup(Subject&& subject, rect bounds = {})
    {
@@ -66,7 +66,7 @@ namespace cycfi::elements
       basic_button_menu*      _menu_button = nullptr;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, basic_popup_menu_element>
    basic_popup_menu(Subject&& subject, rect bounds = {})
    {

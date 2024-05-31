@@ -315,7 +315,7 @@ namespace cycfi::elements
          std::size_t _num_boxes = 0;
       };
 
-      template <typename Subject>
+      template <concepts::Element Subject>
       inline proxy<remove_cvref_t<Subject>, drag_image_element>
       drag_image(Subject&& subject, std::size_t num_boxes)
       {

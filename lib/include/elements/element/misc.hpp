@@ -289,7 +289,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Key Intercept
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    struct key_intercept_element : public proxy<Subject>
    {
       using base_type = proxy<Subject>;
@@ -307,14 +307,14 @@ namespace cycfi::elements
       key_function   on_key = [](auto){ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline key_intercept_element<remove_cvref_t<Subject>>
    key_intercept(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool key_intercept_element<Subject>::key(context const& ctx, key_info k)
    {
       if (on_key(k))
@@ -325,7 +325,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Text Intercept
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    struct text_intercept_element : public proxy<Subject>
    {
       using base_type = proxy<Subject>;
@@ -343,14 +343,14 @@ namespace cycfi::elements
       text_function   on_text = [](auto){ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline text_intercept_element<remove_cvref_t<Subject>>
    text_intercept(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool text_intercept_element<Subject>::text(context const& ctx, text_info info)
    {
       if (on_text(info))
@@ -361,7 +361,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Click Intercept
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    struct click_intercept_element : public proxy<Subject>
    {
       using base_type = proxy<Subject>;
@@ -379,14 +379,14 @@ namespace cycfi::elements
       click_function on_click = [](auto){ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline click_intercept_element<remove_cvref_t<Subject>>
    click_intercept(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool click_intercept_element<Subject>::click(context const& ctx, mouse_button btn)
    {
       if (on_click(btn))
@@ -397,7 +397,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Hidable
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hidable_element : public proxy<Subject>
    {
    public:
@@ -411,19 +411,19 @@ namespace cycfi::elements
       bool                    is_hidden = false;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hidable_element<Subject>::hidable_element(Subject subject)
     : base_type(std::move(subject))
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void hidable_element<Subject>::draw(context const& ctx)
    {
       if (!is_hidden)
          this->subject().draw(ctx);
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool hidable_element<Subject>::wants_control() const
    {
       if (is_hidden)
@@ -431,7 +431,7 @@ namespace cycfi::elements
       return this->subject().wants_control();
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool hidable_element<Subject>::wants_focus() const
    {
       if (is_hidden)
@@ -439,7 +439,7 @@ namespace cycfi::elements
       return this->subject().wants_focus();
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hidable_element<remove_cvref_t<Subject>>
    hidable(Subject&& subject)
    {
@@ -449,7 +449,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Vertical collapsable
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class vcollapsable_element : public proxy<Subject>
    {
    public:
@@ -464,12 +464,12 @@ namespace cycfi::elements
       bool                    is_collapsed = false;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vcollapsable_element<Subject>::vcollapsable_element(Subject subject)
     : base_type(std::move(subject))
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits
    vcollapsable_element<Subject>::limits(basic_context const& ctx) const
    {
@@ -479,14 +479,14 @@ namespace cycfi::elements
          e_limits;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void vcollapsable_element<Subject>::draw(context const& ctx)
    {
       if (!is_collapsed)
          this->subject().draw(ctx);
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool vcollapsable_element<Subject>::wants_control() const
    {
       if (is_collapsed)
@@ -494,7 +494,7 @@ namespace cycfi::elements
       return this->subject().wants_control();
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool vcollapsable_element<Subject>::wants_focus() const
    {
       if (is_collapsed)
@@ -502,7 +502,7 @@ namespace cycfi::elements
       return this->subject().wants_focus();
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vcollapsable_element<remove_cvref_t<Subject>>
    vcollapsable(Subject&& subject)
    {
@@ -512,7 +512,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Modal element hugs the UI and prevents any event from passing through
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class modal_element : public proxy<Subject>
    {
    public:
@@ -529,20 +529,20 @@ namespace cycfi::elements
       bool           wants_control() const override { return true; }
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline modal_element<remove_cvref_t<Subject>>
    modal(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline modal_element<Subject>::modal_element(Subject subject)
     : base_type(std::move(subject))
    {
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline element* modal_element<Subject>::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (auto e = this->subject().hit_test(ctx, p, leaf, control))
@@ -550,21 +550,21 @@ namespace cycfi::elements
       return this;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool modal_element<Subject>::click(context const& ctx, mouse_button btn)
    {
       this->subject().click(ctx, btn);
       return true;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool modal_element<Subject>::key(context const& ctx, key_info k)
    {
       base_type::key(ctx, k);
       return true;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline bool modal_element<Subject>::text(context const& ctx, text_info info)
    {
       base_type::text(ctx, info);

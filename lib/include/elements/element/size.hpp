@@ -16,7 +16,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Fixed sizing elements
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class size_element : public proxy<Subject>
    {
    public:
@@ -36,20 +36,20 @@ namespace cycfi::elements
       point          _size;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline size_element<Subject>::size_element(point size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline size_element<remove_cvref_t<Subject>>
    fixed_size(point size, Subject&& subject)
    {
       return {size, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -60,7 +60,7 @@ namespace cycfi::elements
       return {{size_x, size_y}, {size_x, size_y}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void size_element<Subject>::prepare_subject(context& ctx)
    {
       // use the fixed width/height as computed by limits
@@ -70,7 +70,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hsize_element : public proxy<Subject>
    {
    public:
@@ -90,13 +90,13 @@ namespace cycfi::elements
       float                   _width;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hsize_element<Subject>::hsize_element(float width, Subject subject)
     : base_type(std::move(subject))
     , _width(width)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hsize_element<remove_cvref_t<Subject>>
    hsize(float width, Subject&& subject)
    {
@@ -109,7 +109,7 @@ namespace cycfi::elements
       return {width, {}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits hsize_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -118,7 +118,7 @@ namespace cycfi::elements
       return {{width, e_limits.min.y}, {width, e_limits.max.y}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void hsize_element<Subject>::prepare_subject(context& ctx)
    {
       // use the fixed width as computed by limits
@@ -127,7 +127,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class vsize_element : public proxy<Subject>
    {
    public:
@@ -147,13 +147,13 @@ namespace cycfi::elements
       float                   _height;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vsize_element<Subject>::vsize_element(float height, Subject subject)
     : base_type(std::move(subject))
     , _height(height)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vsize_element<remove_cvref_t<Subject>>
    vsize(float height, Subject&& subject)
    {
@@ -166,7 +166,7 @@ namespace cycfi::elements
       return {height, {}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits vsize_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -175,7 +175,7 @@ namespace cycfi::elements
       return {{e_limits.min.x, height}, {e_limits.max.x, height}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void vsize_element<Subject>::prepare_subject(context& ctx)
    {
       // use the fixed height as computed by limits
@@ -186,7 +186,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Minumum sizing elements
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class min_size_element : public proxy<Subject>
    {
    public:
@@ -206,20 +206,20 @@ namespace cycfi::elements
       point                   _size;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline min_size_element<Subject>::min_size_element(point size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline min_size_element<remove_cvref_t<Subject>>
    min_size(point size, Subject&& subject)
    {
       return {size, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits min_size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -230,7 +230,7 @@ namespace cycfi::elements
       return {{size_x, size_y}, {e_limits.max.x, e_limits.max.y}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void min_size_element<Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.width() < _size.x)
@@ -240,7 +240,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hmin_size_element : public proxy<Subject>
    {
    public:
@@ -260,20 +260,20 @@ namespace cycfi::elements
       float                   _width;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hmin_size_element<Subject>::hmin_size_element(float width, Subject subject)
     : base_type(std::move(subject))
     , _width(width)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hmin_size_element<remove_cvref_t<Subject>>
    hmin_size(float width, Subject&& subject)
    {
       return {width, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits hmin_size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -282,7 +282,7 @@ namespace cycfi::elements
       return {{width, e_limits.min.y}, e_limits.max};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void hmin_size_element<Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.width() < _width)
@@ -290,7 +290,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class vmin_size_element : public proxy<Subject>
    {
    public:
@@ -310,20 +310,20 @@ namespace cycfi::elements
       float                   _height;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vmin_size_element<Subject>::vmin_size_element(float height, Subject subject)
     : base_type(std::move(subject))
     , _height(height)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vmin_size_element<remove_cvref_t<Subject>>
    vmin_size(float height, Subject&& subject)
    {
       return {height, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits vmin_size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -332,7 +332,7 @@ namespace cycfi::elements
       return {{e_limits.min.x, height}, e_limits.max};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void vmin_size_element<Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.height() < _height)
@@ -342,7 +342,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Maximum sizing elements
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class max_size_element : public proxy<Subject>
    {
    public:
@@ -362,20 +362,20 @@ namespace cycfi::elements
       point                   _size;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline max_size_element<Subject>::max_size_element(point size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline max_size_element<remove_cvref_t<Subject>>
    max_size(point size, Subject&& subject)
    {
       return {size, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits max_size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -386,7 +386,7 @@ namespace cycfi::elements
       return {{e_limits.min.x, e_limits.min.y}, {size_x, size_y}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void max_size_element<Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.width() > _size.x)
@@ -396,7 +396,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hmax_size_element : public proxy<Subject>
    {
    public:
@@ -416,20 +416,20 @@ namespace cycfi::elements
       float                   _size;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hmax_size_element<Subject>::hmax_size_element(float size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hmax_size_element<remove_cvref_t<Subject>>
    hmax_size(float size, Subject&& subject)
    {
       return {size, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits hmax_size_element<Subject>::limits(basic_context const& ctx) const
    {
       auto  e_limits = this->subject().limits(ctx);
@@ -438,7 +438,7 @@ namespace cycfi::elements
       return {{e_limits.min.x, e_limits.min.y}, {size_x, e_limits.max.y}};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void hmax_size_element<Subject>::prepare_subject(context& ctx)
    {
       if (ctx.bounds.width() > _size)
@@ -448,7 +448,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Stretch elements
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hstretch_element : public proxy<Subject>
    {
    public:
@@ -467,26 +467,26 @@ namespace cycfi::elements
       float                   _stretch;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hstretch_element<Subject>::hstretch_element(float stretch, Subject subject)
     : base_type(std::move(subject))
     , _stretch(stretch)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_stretch hstretch_element<Subject>::stretch() const
    {
       return {_stretch, this->subject().stretch().y};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hstretch_element<remove_cvref_t<Subject>>
    hstretch(float stretch, Subject&& subject)
    {
       return {stretch, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline auto
    no_hstretch(Subject&& subject)
    {
@@ -494,7 +494,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class vstretch_element : public proxy<Subject>
    {
    public:
@@ -513,26 +513,26 @@ namespace cycfi::elements
       float                   _stretch;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vstretch_element<Subject>::vstretch_element(float stretch, Subject subject)
     : base_type(std::move(subject))
     , _stretch(stretch)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_stretch vstretch_element<Subject>::stretch() const
    {
       return {this->subject().stretch().x, _stretch};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vstretch_element<remove_cvref_t<Subject>>
    vstretch(float stretch, Subject&& subject)
    {
       return {stretch, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline auto
    no_vstretch(Subject&& subject)
    {
@@ -542,7 +542,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Span elements
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class span_element : public proxy<Subject>
    {
    public:
@@ -559,13 +559,13 @@ namespace cycfi::elements
       unsigned                _span;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline span_element<Subject>::span_element(unsigned span, Subject subject)
     : base_type(std::move(subject))
     , _span(span)
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline span_element<remove_cvref_t<Subject>>
    span(unsigned span, Subject&& subject)
    {
@@ -575,7 +575,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Size limited
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class limit_element : public proxy<Subject>
    {
    public:
@@ -597,14 +597,14 @@ namespace cycfi::elements
       view_limits             _limits;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline limit_element<remove_cvref_t<Subject>>
    limit(view_limits limits_, Subject&& subject)
    {
       return {limits_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits
    limit_element<Subject>::limits(basic_context const& ctx) const
    {
@@ -619,7 +619,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Scaled
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class scale_element : public proxy<Subject>
    {
    public:
@@ -645,14 +645,14 @@ namespace cycfi::elements
       float                   _scale;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline scale_element<remove_cvref_t<Subject>>
    scale(float scale_, Subject&& subject)
    {
       return {scale_, std::forward<Subject>(subject)};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits
    scale_element<Subject>::limits(basic_context const& ctx) const
    {
@@ -666,7 +666,7 @@ namespace cycfi::elements
       return l;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_stretch
    scale_element<Subject>::stretch() const
    {
@@ -674,7 +674,7 @@ namespace cycfi::elements
       return {s.x * _scale, s.y * _scale};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void scale_element<Subject>::prepare_subject(context& ctx)
    {
       auto& canvas_ = ctx.canvas;
@@ -683,14 +683,14 @@ namespace cycfi::elements
       ctx.bounds = device_to_user(ctx.bounds, ctx.canvas);
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    void scale_element<Subject>::prepare_subject(context& ctx, point& p)
    {
       prepare_subject(ctx);
       p = ctx.canvas.device_to_user(p);
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void scale_element<Subject>::restore_subject(context& ctx)
    {
       ctx.canvas.restore();
@@ -699,7 +699,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Collapsible
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class hcollapsible_element : public proxy<Subject>
    {
    public:
@@ -712,12 +712,12 @@ namespace cycfi::elements
       is_collapsed_function   is_collapsed = []{ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hcollapsible_element<Subject>::hcollapsible_element(Subject subject)
     : base_type(std::move(subject))
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits hcollapsible_element<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
@@ -726,7 +726,7 @@ namespace cycfi::elements
       return e_limits;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline hcollapsible_element<remove_cvref_t<Subject>>
    hcollapsible(Subject&& subject)
    {
@@ -734,7 +734,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class vcollapsible_element : public proxy<Subject>
    {
    public:
@@ -747,12 +747,12 @@ namespace cycfi::elements
       is_collapsed_function   is_collapsed = []{ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vcollapsible_element<Subject>::vcollapsible_element(Subject subject)
     : base_type(std::move(subject))
    {}
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline view_limits vcollapsible_element<Subject>::limits(basic_context const& ctx) const
    {
       auto e_limits = this->subject().limits(ctx);
@@ -761,7 +761,7 @@ namespace cycfi::elements
       return e_limits;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline vcollapsible_element<remove_cvref_t<Subject>>
    vcollapsible(Subject&& subject)
    {

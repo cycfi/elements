@@ -26,7 +26,7 @@ namespace cycfi::elements
       bool                 click(context const& ctx, mouse_button btn) override;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, child_window_element>
    child_window(rect bounds, Subject&& subject)
    {
@@ -58,7 +58,7 @@ namespace cycfi::elements
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, movable_base>
    movable(Subject&& subject)
    {
@@ -70,7 +70,7 @@ namespace cycfi::elements
    // any clickable element) to close the floating_element when it is
    // clicked.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Subject>
+   template <concepts::Element Subject>
    class closable_element : public proxy<Subject>
    {
    public:
@@ -80,7 +80,7 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx) override;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline closable_element<remove_cvref_t<Subject>>
    closable(Subject&& subject)
    {
@@ -89,7 +89,7 @@ namespace cycfi::elements
 
    void close_floating_element(context& ctx, floating_element* cw);
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline void closable_element<Subject>::prepare_subject(context& ctx)
    {
       auto btn = find_subject<basic_button*>(this);

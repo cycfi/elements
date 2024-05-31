@@ -55,7 +55,7 @@ namespace cycfi::elements
       double                  _valign;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, port_element>
    port(Subject&& subject)
    {
@@ -84,7 +84,7 @@ namespace cycfi::elements
       double                  _valign;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject)
    {
@@ -113,7 +113,7 @@ namespace cycfi::elements
       double                  _halign;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, hport_element>
    hport(Subject&& subject)
    {
@@ -227,21 +227,21 @@ namespace cycfi::elements
       int               _traits;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    scroller(Subject&& subject, int traits = 0)
    {
       return {std::forward<Subject>(subject), traits};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    vscroller(Subject&& subject, int traits = 0)
    {
       return {std::forward<Subject>(subject), traits | no_hscroll};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    hscroller(Subject&& subject, int traits = 0)
    {

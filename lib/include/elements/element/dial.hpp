@@ -52,7 +52,7 @@ namespace cycfi::elements
       double               _value;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, dial_base>
    dial(Subject&& subject, double init_value = 0.0)
    {
@@ -129,7 +129,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Radial Element Base (common base class for radial elements)
    ////////////////////////////////////////////////////////////////////////////
-   template <std::size_t _size, typename Subject>
+   template <std::size_t _size, concepts::Element Subject>
    class radial_element_base : public proxy<Subject>
    {
    public:
@@ -146,7 +146,7 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx) override;
    };
 
-   template <std::size_t size, typename Subject>
+   template <std::size_t size, concepts::Element Subject>
    inline view_limits
    radial_element_base<size, Subject>::limits(basic_context const& ctx) const
    {
@@ -162,7 +162,7 @@ namespace cycfi::elements
       return sl;
    }
 
-   template <std::size_t size, typename Subject>
+   template <std::size_t size, concepts::Element Subject>
    inline void
    radial_element_base<size, Subject>::prepare_subject(context& ctx)
    {
@@ -176,7 +176,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Radial Marks (You can use this to place dial tick marks around dials)
    ////////////////////////////////////////////////////////////////////////////
-   template <std::size_t _size, typename Subject>
+   template <std::size_t _size, concepts::Element Subject>
    class radial_marks_element : public radial_element_base<_size, Subject>
    {
    public:
@@ -188,7 +188,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
    };
 
-   template <std::size_t size, typename Subject>
+   template <std::size_t size, concepts::Element Subject>
    inline void
    radial_marks_element<size, Subject>::draw(context const& ctx)
    {
@@ -200,7 +200,7 @@ namespace cycfi::elements
       draw_radial_marks(ctx.canvas, cp, size-2, colors::light_gray);
    }
 
-   template <std::size_t size, typename Subject>
+   template <std::size_t size, concepts::Element Subject>
    inline radial_marks_element<size, remove_cvref_t<Subject>>
    radial_marks(Subject&& subject)
    {
@@ -210,7 +210,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Radial Labels (You can use this to place dial labels around dials)
    ////////////////////////////////////////////////////////////////////////////
-   template <std::size_t _size, typename Subject, std::size_t num_labels>
+   template <std::size_t _size, concepts::Element Subject, std::size_t num_labels>
    class radial_labels_element : public radial_element_base<_size, Subject>
    {
    public:
@@ -230,7 +230,7 @@ namespace cycfi::elements
       float                   _font_size;
    };
 
-   template <std::size_t size, typename Subject, std::size_t num_labels>
+   template <std::size_t size, concepts::Element Subject, std::size_t num_labels>
    inline void
    radial_labels_element<size, Subject, num_labels>::draw(context const& ctx)
    {
@@ -243,7 +243,7 @@ namespace cycfi::elements
          ctx.canvas, cp, _font_size, _labels.data(), num_labels);
    }
 
-   template <std::size_t size, typename Subject, typename... S>
+   template <std::size_t size, concepts::Element Subject, typename... S>
    inline radial_labels_element<size, remove_cvref_t<Subject>, sizeof...(S)>
    radial_labels(Subject&& subject, float font_size, S&&... s)
    {

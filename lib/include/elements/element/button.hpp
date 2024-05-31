@@ -250,7 +250,7 @@ namespace cycfi::elements
       return false;
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline basic_choice<proxy<Subject, basic_button>>
    choice(Subject&& subject)
    {

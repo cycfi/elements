@@ -11,10 +11,10 @@
 
 namespace cycfi::elements
 {
-   template <typename Indirect, typename Element, typename Enable = void>
+   template <typename Indirect, concepts::Element Element, typename Enable = void>
    struct indirect_receiver {};
 
-   template <typename Indirect, typename Element>
+   template <typename Indirect, concepts::Element Element>
    struct indirect_receiver<
          Indirect, Element
        , typename std::enable_if<std::is_base_of<receiver_base, Element>::value>::type
@@ -97,7 +97,7 @@ namespace cycfi::elements
    // lifetime of the referenced element and make sure it is valid (alive)
    // when a reference member function is called.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Element>
+   template <concepts::Element Element>
    class reference : public indirect_base
    {
    public:
@@ -113,14 +113,14 @@ namespace cycfi::elements
       element_ref             _ref;
    };
 
-   template <typename Element>
+   template <concepts::Element Element>
    indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element &rhs);
 
    ////////////////////////////////////////////////////////////////////////////
    // Just like reference, but shared_reference retains the shared pointer.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Element>
+   template <concepts::Element Element>
    class shared_element : public indirect_base
    {
    public:
@@ -136,7 +136,7 @@ namespace cycfi::elements
       std::shared_ptr<Element> _ptr;
    };
 
-   template <typename Element>
+   template <concepts::Element Element>
    indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs);
 
@@ -313,26 +313,26 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Element>
+   template <concepts::Element Element>
    inline reference<Element>::reference(Element& e)
     : _ref(e)
    {}
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline Element&
    reference<Element>::get()
    {
       return _ref.get();
    }
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline Element const&
    reference<Element>::get() const
    {
       return _ref.get();
    }
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline indirect<reference<typename std::remove_reference<Element>::type>>
    link(Element &rhs)
    {
@@ -342,26 +342,26 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // shared_reference (inline) implementation
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Element>
+   template <concepts::Element Element>
    inline shared_element<Element>::shared_element(std::shared_ptr<Element> ptr)
     : _ptr(ptr)
    {}
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline Element&
    shared_element<Element>::get()
    {
       return *_ptr;
    }
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline Element const&
    shared_element<Element>::get() const
    {
       return *_ptr;
    }
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline shared_element<Element>&
    shared_element<Element>::operator=(std::shared_ptr<Element> ptr)
    {
@@ -369,7 +369,7 @@ namespace cycfi::elements
       return *this;
    }
 
-   template <typename Element>
+   template <concepts::Element Element>
    inline indirect<shared_element<Element>>
    hold(std::shared_ptr<Element> rhs)
    {

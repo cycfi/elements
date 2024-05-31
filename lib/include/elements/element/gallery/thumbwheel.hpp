@@ -71,14 +71,14 @@ namespace cycfi::elements
       double               align() const override;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
    basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {
       return {std::forward<Subject>(subject), quantize_};
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
    basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0)
    {

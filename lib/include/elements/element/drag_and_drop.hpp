@@ -56,7 +56,7 @@ namespace cycfi::elements
       on_drop_function        on_drop = [](drop_info const& /*info*/){ return false; };
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, drop_box_base>
    drop_box(Subject&& subject, std::initializer_list<std::string> mime_types)
    {
@@ -99,7 +99,7 @@ namespace cycfi::elements
 
    namespace detail
    {
-      template <typename Subject>
+      template <concepts::Element Subject>
       inline proxy<remove_cvref_t<Subject>, drop_inserter_element>
       make_drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
       {
@@ -107,7 +107,7 @@ namespace cycfi::elements
       }
    }
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    auto drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types)
    {
       return
@@ -142,7 +142,7 @@ namespace cycfi::elements
       drag_image_ptr          _drag_image;
    };
 
-   template <typename Subject>
+   template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, draggable_element>
    draggable(Subject&& subject)
    {

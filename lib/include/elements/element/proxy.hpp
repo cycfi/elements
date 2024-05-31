@@ -82,6 +82,12 @@ namespace cycfi::elements
       virtual element&        subject() = 0;
    };
 
+   namespace concepts
+   {
+      template <typename T>
+      concept Proxy = std::is_base_of_v<proxy_base, std::decay_t<T>>;
+   }
+
    /**
     * \class proxy
     *
@@ -101,15 +107,14 @@ namespace cycfi::elements
     *    delegates its functions to its encapsulated subject, but may augment
     *    or totally override its behavior.
     */
-   template <concepts::Element Subject, typename Base = proxy_base>
+   template <concepts::Element Subject, concepts::Proxy Base = proxy_base>
    class proxy : public Base
    {
    public:
 
-      static_assert(std::is_base_of_v<proxy_base, Base>,
-         "proxy Base type needs to be or inherit from proxy_base");
       static_assert(!std::is_reference_v<Subject>,
-         "Subject must not be a reference type - maybe you want to use reference class instead");
+         "Subject must not be a reference type"
+         " - maybe you want to use reference class instead");
       static_assert(!std::is_const_v<Subject>, "Subject must not be const");
 
                               template <typename... T>

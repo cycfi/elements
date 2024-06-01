@@ -184,7 +184,7 @@ namespace cycfi::elements
                      if (auto ok = btn1.lock())
                      {
                         ok->value(true);
-                        if (ok->on_click)
+                        if (ok->on_click && ok->is_enabled())
                         {
                            ok->on_click(true);
                            return true;
@@ -196,7 +196,7 @@ namespace cycfi::elements
                      if (auto cancel = btn2.lock())
                      {
                         cancel->value(true);
-                        if (cancel->on_click)
+                        if (cancel->on_click && cancel->is_enabled())
                         {
                            cancel->on_click(true);
                            return true;

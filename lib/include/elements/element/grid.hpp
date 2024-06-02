@@ -52,7 +52,17 @@ namespace cycfi::elements
       std::size_t             _size;
    };
 
-   template <typename Container, typename Base>
+   namespace concepts
+   {
+      template <typename T>
+      concept GridContainer = requires (T a, std::size_t ix)
+      {
+         { a.size() } -> std::same_as<std::size_t>;
+         { a[ix] } -> std::convertible_to<float>;
+      };
+   }
+
+   template <concepts::GridContainer Container, concepts::Composite Base>
    class container_grid : public Base
    {
    public:

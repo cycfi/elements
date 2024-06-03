@@ -11,9 +11,6 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // composite_base class implementation
-   ////////////////////////////////////////////////////////////////////////////
    element* composite_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (!empty())
@@ -36,6 +33,51 @@ namespace cycfi::elements
       );
    }
 
+   /**
+    * \brief
+    *    The `for_each_visible` function iterates over each visible item in
+    *    the composite object, executing a callback `f` for each item.
+    *
+    *    Iteration can occur in either forward or reverse order, based on the
+    *    `reverse` parameter.
+    *
+    *    The function takes into account only the items that are visible
+    *    within the specified `context ctx`. Visibility is determined by
+    *    whether the bounds of an item intersect with the bounds of the port
+    *    in the context.
+    *
+    *    The `f` callback is a function that takes the item, its index, and
+    *    its bounds. The iteration stops if the callback returns `true`.
+    *
+    * \param ctx
+    *    A reference to a `context` object. This object provides information
+    *    about the hierarchical structure of elements.
+    *
+    * \param f
+    *    A callback function of type `for_each_callback` to be executed on
+    *    each visible element in the composite.
+    *
+    * \param f
+    *    A callback function of type `for_each_callback` to be executed on
+    *    each visible element in the composite. The `for_each_callback`
+    *    function has this signature:
+    *       `bool(element& e, std::size_t ix, rect const& r)`
+    *
+    *    This function should return a boolean value, dictating whether the
+    *    traversal should continue: `true` to continue the traversal, or
+    *    `false` to stop it.
+    *
+    * \param reverse
+    *    A boolean indicating whether the items should be iterated in reverse
+    *    order.
+    *
+    * \note
+    *    The `for_each_visible` method uses a linear iteration, and while it
+    *    is suitable for small composites, it can be less efficient for large
+    *    composites with a large number of elements. Depending on the usage
+    *    scenario, and more information about layout, a more efficient custom
+    *    implementation may be necessary.
+    */
    void composite_base::for_each_visible(
       context const& ctx
     , for_each_callback f
@@ -430,6 +472,23 @@ namespace cycfi::elements
       return yield;
    }
 
+   /**
+    * \brief
+    *    `relinquish_focus` function is designed to navigate through
+    *    composite object hierarchy to end the focus from both the target
+    *    composite object and its hierarchical ancestors.
+    *
+    * \param c
+    *    The composite object from which focus should be dismissed. The
+    *    composite is a hierarchical structure of elements, requiring
+    *    navigation through its hierarchy to ensure focus is correctly
+    *    relinquished.
+    *
+    * \param ctx
+    *    A reference to a `context` object, which maintains the hierarchical
+    *    relationship between view and element. It holds the hierarchical
+    *    structure of elements within the view's context.
+    */
    void relinquish_focus(composite_base& c, context const& ctx)
    {
       if (c.focus_index() != -1)
@@ -451,7 +510,6 @@ namespace cycfi::elements
          return nullptr;
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
-
    element* composite_base::focus()
    {
       if (_focus >= int(size()))
@@ -459,6 +517,15 @@ namespace cycfi::elements
       return (empty() || (_focus == -1))? 0 : &at(_focus);
    }
 
+   /**
+    * \brief
+    *    Sets the focus to the element at the specified index within the
+    *    composite.
+    *
+    * \param index
+    *    The index of the element within the *composite_base* to focus. The
+    *    function does nothing if the index is out of bounds.
+    */
    void composite_base::focus(std::size_t index)
    {
       if (index < size())
@@ -543,6 +610,41 @@ namespace cycfi::elements
       return false;
    }
 
+   /**
+    * \brief
+    *    Tests whether a point 'p' intersects an element in the
+    *    composite_base.
+    *
+    *    `hit_element` checks if a provided point 'p' intersects with any
+    *    element's bounds within the composite, under a specified context
+    *    'ctx'. When intersecting and the element is either 'control' or
+    *    'wants control', the hitting information is encapsulated in a
+    *    `hit_info` and returned.
+    *
+    * \param ctx
+    *    A reference to the basic_context of the element, which provides
+    *    access to the current view and canvas. The context can be used in
+    *    calculating size limits of the element.
+    * \param p
+    *    The point to test for a hit against elements in the composite_base.
+    * \param control
+    *    A boolean flag denoting whether to filter only control elements. If
+    *    `true`, the function checks the hit only on elements that are
+    *    controls (React to user interactions).
+    *
+    * \return hit_info
+    *    The hit information returned is structured as follows:
+    *    - `element_ptr`: The pointer to the element that was hit.
+    *    - `leaf_element_ptr`: Pointer to the nearest clickable leaf,
+    *      essentially the 'actual' hit target.
+    *    - `bounds`: The boundary rectangle (`rect`) defining the space of
+    *      the hit element.
+    *    - `index`: The index of the hit element. Note: casting from
+    *      std::size_t to int may lose precision.
+    *
+    *    If there's no element hit, the method returns a default hit_info
+    *    instance with nullptrs, empty `rect`, and -1 index.
+    */
    composite_base::hit_info composite_base::hit_element(context const& ctx, point p, bool control) const
    {
       hit_info info = hit_info{{}, {}, rect{}, -1};
@@ -568,6 +670,17 @@ namespace cycfi::elements
       return info;
    }
 
+   /**
+    * \brief
+    *    Checks if any element in composite_base desires control.
+    *
+    *    `wants_control` iterates over every element inside the
+    *    composite_base. If any element wants control, the method breaks the
+    *    loop and returns true.
+    *
+    * \return bool
+    *    `true` if there's an element wanting control, `false` otherwise.
+    */
    bool composite_base::wants_control() const
    {
       for (std::size_t ix = 0; ix < size(); ++ix)
@@ -576,6 +689,13 @@ namespace cycfi::elements
       return false;
    }
 
+   /**
+    * \brief
+    *    Resets the internal state of the composite_base.
+    *
+    *    `reset` reinitializes the internal tracking indices and the set of
+    *    cursor-hovered elements in the composite_base.
+    */
    void composite_base::reset()
    {
       _focus = -1;

@@ -134,7 +134,13 @@ namespace cycfi::elements
 
    void basic_button::on_send(callback_function f)
    {
-      on_click = f;
+      on_click =
+         [f, prev_f=on_click](bool val)
+         {
+            if (prev_f)
+               prev_f(val);   // Call previous callback
+            f(val);
+         };
    }
 
    void basic_choice_base::do_click(context const& ctx)

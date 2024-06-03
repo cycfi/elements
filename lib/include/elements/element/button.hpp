@@ -30,6 +30,17 @@ namespace cycfi::elements
       };
    }
 
+   /**
+    *  \struct button_state
+    *
+    *  \brief A structure to maintain and manage the state of a button.
+    *
+    *  This structure captures the various states that a button can have:
+    *  - `value`: The button's value; 0(off) or 1(on).
+    *  - `hilite`: True if the button is highlighted.
+    *  - `tracking`: True if the mouse button being pressed.
+    *  - `enabled`: True if the button is enabled.
+    */
    struct button_state
    {
                         button_state()

@@ -96,13 +96,14 @@ namespace cycfi::elements
    namespace inlines {}
 
    /**
-    * \brief Creates a dialog using the specified content (with no button).
+    * \brief
+    *    Creates a dialog using the specified content (with no button).
     *
-    * This function constructs a popup dialog with the content passed to it.
-    * The content is wrapped in a modal and aligned at the center. The
-    * `dialog0` function accepts content that satisfies the
-    * `concepts::Element` concept. The constructed dialog is then wrapped in
-    * a shared pointer and returned.
+    *    This function constructs a popup dialog with the content passed to
+    *    it. The content is wrapped in a modal and aligned at the center. The
+    *    `dialog0` function accepts content that satisfies the
+    *    `concepts::Element` concept. The constructed dialog is then wrapped
+    *    in a shared pointer and returned.
     *
     * \tparam Content
     *    Content type for the dialog. Must satisfy `concepts::Element`.
@@ -238,15 +239,16 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Creates a dialog with specified content and single button.
+    * \brief
+    *    Creates a dialog with specified content and single button.
     *
-    * This function constructs a popup dialog with the content and a button
-    * passed to it. The content and button are vertically aligned, with the
-    * button right-aligned. The button size is set according to the dialog
-    * button size defined in the theme.
+    *    This function constructs a popup dialog with the content and a
+    *    button passed to it. The content and button are vertically aligned,
+    *    with the button right-aligned. The button size is set according to
+    *    the dialog button size defined in the theme.
     *
-    * * Clicking the 'OK' button or pressing Return/Enter key will trigger
-    *   the `ok_button` and close the dialog.
+    *    * Clicking the 'OK' button or pressing Return/Enter key will trigger
+    *      the `ok_button` and close the dialog.
     *
     * Note: Install an `on_click` callback before calling `dialog1`.
     *
@@ -287,13 +289,14 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Overloaded version of dialog1 function which creates a dialog
-    * with specified content and a preset 'OK' button that triggers a
-    * specified action.
+    * \brief
+    *    Overloaded version of dialog1 function which creates a dialog with
+    *    specified content and a preset 'OK' button that triggers a specified
+    *    action.
     *
-    * This function constructs a popup dialog with given content and an 'OK'
-    * button. When the 'OK' button is clicked, it triggers a user-defined
-    * action (specified by the `on_ok` parameter).
+    *    This function constructs a popup dialog with given content and an
+    *    'OK' button. When the 'OK' button is clicked, it triggers a
+    *    user-defined action (specified by the `on_ok` parameter).
     *
     * \tparam Content
     *    Content type for the dialog. Must satisfy `concepts::Element`.
@@ -335,20 +338,21 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Creates a dialog with specified content and two buttons.
+    * \brief
+    *    Creates a dialog with specified content and two buttons.
     *
-    * This function constructs a dialog box with the specified content
-    * and two buttons that are vertically aligned in the dialog. The
-    * function is generally used for scenarios requiring a 'Cancel' and
-    * 'OK' option.
+    *    This function constructs a dialog box with the specified content and
+    *    two buttons that are vertically aligned in the dialog. The function
+    *    is generally used for scenarios requiring a 'Cancel' and 'OK'
+    *    option.
     *
-    * The popup dialog reacts to certain keyboard and mouse events:
-    * * Clicking the 'OK' button or pressing Return/Enter key will trigger
-    *   the `ok_button` and close the dialog.
-    * * Clicking the 'Cancel' button or pressing the Escape key will trigger
-    *    the `cancel_button` and close the dialog.
+    *    The popup dialog reacts to certain keyboard and mouse events:
+    *    * Clicking the 'OK' button or pressing Return/Enter key will trigger
+    *      the `ok_button` and close the dialog.
+    *    * Clicking the 'Cancel' button or pressing the Escape key will
+    *       trigger the `cancel_button` and close the dialog.
     *
-    * Note: Install `on_click` callbacks before calling `dialog2`.
+    *    Note: Install `on_click` callbacks before calling `dialog2`.
     *
     * \tparam Content
     *    Content type. Has to satisfy `concepts::Element`.
@@ -396,15 +400,17 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Overloaded version of dialog2 function which creates a dialog
-    * with specified content and preset 'OK' and 'Cancel' buttons that
-    * trigger user-defined actions.
+    * \brief
+    *    Overloaded version of dialog2 function which creates a dialog with
+    *    specified content and preset 'OK' and 'Cancel' buttons that trigger
+    *    user-defined actions.
     *
-    * This function constructs a dialog box with the user-specified content
-    * and two buttons: 'OK' and 'Cancel'. When the 'OK' button is clicked or
-    * 'Enter' key is pressed, it triggers an action defined by the `on_ok`
-    * parameter. Similarily, a click on the 'Cancel' button or 'Escape' key
-    * press triggers an action defined by the `on_cancel` parameter.
+    *    This function constructs a dialog box with the user-specified
+    *    content and two buttons: 'OK' and 'Cancel'. When the 'OK' button is
+    *    clicked or 'Enter' key is pressed, it triggers an action defined by
+    *    the `on_ok` parameter. Similarily, a click on the 'Cancel' button or
+    *    'Escape' key press triggers an action defined by the `on_cancel`
+    *    parameter.
     *
     * \tparam Content
     *    The type of the content. The type must satisfy `concepts::Element`.
@@ -467,15 +473,16 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief `dialog2r` function creating a dialog with preset 'OK' and
-    * 'Cancel' buttons reversed, with 'Cancel' being the default that maps to
-    * both the 'Enter' and 'Esc' keys.
+    * \brief
+    *    `dialog2r` function creating a dialog with preset 'OK' and 'Cancel'
+    *    buttons reversed, with 'Cancel' being the default that maps to both
+    *    the 'Enter' and 'Esc' keys.
     *
-    * This function constructs a dialog box with the specified content and
-    * two buttons: 'OK' and 'Cancel'. In contrast to other dialog functions,
-    * 'Cancel' serves as the default choice. Pressing the 'Enter' or 'Esc'
-    * key, or clicking the 'Cancel' button, triggers the action associated
-    * with the `cancel_button`.
+    *    This function constructs a dialog box with the specified content and
+    *    two buttons: 'OK' and 'Cancel'. In contrast to other dialog
+    *    functions, 'Cancel' serves as the default choice. Pressing the
+    *    'Enter' or 'Esc' key, or clicking the 'Cancel' button, triggers the
+    *    action associated with the `cancel_button`.
     *
     * \tparam Content
     *   The type of content to be displayed. The type must satisfy
@@ -525,17 +532,18 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief `dialog2r` Overloaded version of dialog2r function with
-    * specified button actions, creating a dialog with preset 'OK' and
-    * 'Cancel' buttons, and 'Cancel' as the default connected to both the
-    * 'Enter' and 'Esc' keys.
+    * \brief
+    *    `dialog2r` Overloaded version of dialog2r function with specified
+    *    button actions, creating a dialog with preset 'OK' and 'Cancel'
+    *    buttons, and 'Cancel' as the default connected to both the 'Enter'
+    *    and 'Esc' keys.
     *
-    * This function constructs a dialog box with the user-specified content
-    * and two buttons: 'OK' and 'Cancel'. With 'Cancel' as the default
-    * option, pressing the 'Enter' or 'Esc' key, or clicking the 'Cancel'
-    * button, triggers an action defined by the `on_cancel` parameter.
-    * Clicking the 'OK' button triggers an action defined by the `on_ok`
-    * parameter.
+    *    This function constructs a dialog box with the user-specified
+    *    content and two buttons: 'OK' and 'Cancel'. With 'Cancel' as the
+    *    default option, pressing the 'Enter' or 'Esc' key, or clicking the
+    *    'Cancel' button, triggers an action defined by the `on_cancel`
+    *    parameter. Clicking the 'OK' button triggers an action defined by
+    *    the `on_ok` parameter.
     *
     * \tparam Content
     *    The type of the content. The type must satisfy `concepts::Element`.
@@ -597,12 +605,13 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Utility to open a popup after a short delay, allowing the UI to
-    * settle.
+    * \brief
+    *    Utility to open a popup after a short delay, allowing the UI to
+    *    settle.
     *
-    * `open_popup` opens a provided popup element after a few milliseconds.
-    * This delay offers the UI a chance to stabilize before the popup
-    * appears.
+    *    `open_popup` opens a provided popup element after a few
+    *    milliseconds. This delay offers the UI a chance to stabilize before
+    *    the popup appears.
     *
     * \param popup
     *    Shared pointer to the popup element that will be displayed.

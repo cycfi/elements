@@ -82,6 +82,12 @@ namespace cycfi::elements
       virtual element&        subject() = 0;
    };
 
+   namespace concepts
+   {
+      template <typename T>
+      concept Proxy = std::is_base_of_v<proxy_base, std::decay_t<T>>;
+   }
+
    /**
     * \class proxy
     *
@@ -101,15 +107,14 @@ namespace cycfi::elements
     *    delegates its functions to its encapsulated subject, but may augment
     *    or totally override its behavior.
     */
-   template <concepts::Element Subject, typename Base = proxy_base>
+   template <concepts::Element Subject, concepts::Proxy Base = proxy_base>
    class proxy : public Base
    {
    public:
 
-      static_assert(std::is_base_of_v<proxy_base, Base>,
-         "proxy Base type needs to be or inherit from proxy_base");
       static_assert(!std::is_reference_v<Subject>,
-         "Subject must not be a reference type - maybe you want to use reference class instead");
+         "Subject must not be a reference type"
+         " - maybe you want to use reference class instead");
       static_assert(!std::is_const_v<Subject>, "Subject must not be const");
 
                               template <typename... T>
@@ -155,7 +160,7 @@ namespace cycfi::elements
     * This constructor initializes the proxy with the provided subject and
     * forwards any additional arguments to the base class constructor.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    template <typename... T>
    inline proxy<Subject, Base>::proxy(Subject subject_, T&&... args)
     : Base(std::forward<T>(args)...)
@@ -178,7 +183,7 @@ namespace cycfi::elements
     * This function sets the subject of the proxy by moving the provided
     * subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline void proxy<Subject, Base>::subject(Subject&& subject_)
    {
       _subject = std::move(subject_);
@@ -200,7 +205,7 @@ namespace cycfi::elements
     * This function sets the subject of the proxy by copying the provided
     * subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline void proxy<Subject, Base>::subject(Subject const& subject_)
    {
       _subject = subject_;
@@ -213,7 +218,7 @@ namespace cycfi::elements
     * \return
     *    A constant reference to the subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline element const& proxy<Subject, Base>::subject() const
    {
       return _subject;
@@ -226,7 +231,7 @@ namespace cycfi::elements
     * \return
     *    A reference to the subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline element& proxy<Subject, Base>::subject()
    {
       return _subject;
@@ -239,7 +244,7 @@ namespace cycfi::elements
     * \return
     *    A constant reference to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject const& proxy<Subject, Base>::actual_subject() const
    {
       return _subject;
@@ -252,7 +257,7 @@ namespace cycfi::elements
     * \return
     *    A reference to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject& proxy<Subject, Base>::actual_subject()
    {
       return _subject;
@@ -266,7 +271,7 @@ namespace cycfi::elements
     * \return
     *    A const pointer to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject const* proxy<Subject, Base>::operator->() const
    {
       return &_subject;
@@ -280,7 +285,7 @@ namespace cycfi::elements
     * \return
     *    A pointer to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject* proxy<Subject, Base>::operator->()
    {
       return &_subject;
@@ -294,7 +299,7 @@ namespace cycfi::elements
     * \return
     *    A const pointer to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject const* proxy<Subject, Base>::operator*() const
    {
       return &_subject;
@@ -308,7 +313,7 @@ namespace cycfi::elements
     * \return
     *    A pointer to the actual subject.
     */
-   template <concepts::Element Subject, typename Base>
+   template <concepts::Element Subject, concepts::Proxy Base>
    inline Subject* proxy<Subject, Base>::operator*()
    {
       return &_subject;

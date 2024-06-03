@@ -49,22 +49,29 @@ namespace cycfi::elements
                               {}
    };
 
-   template <typename Background, typename Foreground, typename Base = basic_progress_bar_base>
+   namespace concepts
+   {
+      template <typename T>
+      concept ProgressBar = std::is_base_of_v<progress_bar_base, std::decay_t<T>>;
+   }
+
+   template <
+      concepts::Element Background
+    , concepts::Element Foreground
+    , concepts::ProgressBar Base = basic_progress_bar_base
+   >
    class basic_progress_bar : public Base
    {
    public:
 
-      static_assert(std::is_base_of_v<element, Background>,
-         "basic_progress_bar_base Background type needs to be or inherit from element");
-      static_assert(std::is_base_of_v<element, Foreground>,
-         "basic_progress_bar_base Foreground type needs to be or inherit from element");
-      static_assert(std::is_base_of_v<basic_progress_bar_base, Base>,
-         "basic_progress_bar_base Base type needs to be or inherit from basic_progress_bar_base");
-
       using background_type = std::decay_t<Background>;
       using foreground_type = std::decay_t<Foreground>;
 
-                              basic_progress_bar(Background&& bg, Foreground&& fg, double init_value)
+                              basic_progress_bar(
+                                 Background&& bg
+                               , Foreground&& fg
+                               , double init_value
+                              )
                                : Base(init_value)
                                , _background(std::forward<Foreground>(bg))
                                , _foreground(std::forward<Background>(fg))
@@ -87,7 +94,7 @@ namespace cycfi::elements
       foreground_type         _foreground;
    };
 
-   template <typename Background, typename Foreground>
+   template <concepts::Element Background, concepts::Element Foreground>
    basic_progress_bar<Background, Foreground, basic_progress_bar_base>
    progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0)
    {

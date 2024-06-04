@@ -66,7 +66,10 @@ namespace cycfi::elements
       auto value = state.value;
       auto hilite = state.hilite;
       auto enabled = ctx.enabled;
-      auto body_color = value? get_active_body_color() : get_body_color();
+      auto body_color = value?
+         get_active_body_color().opacity(0.5) :
+         get_body_color().level(0.9)
+         ;
 
       // Draw the body
       if (value)

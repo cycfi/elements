@@ -643,12 +643,12 @@ namespace cycfi::elements
 
    inline color default_button_styler::get_body_color() const
    {
-      return get_theme().default_button_color.level(0.9);
+      return get_theme().default_button_color;
    }
 
    inline color default_button_styler::get_active_body_color() const
    {
-      return get_theme().default_button_color.opacity(0.5);
+      return get_body_color();
    }
 
    inline color default_button_styler::get_text_color() const

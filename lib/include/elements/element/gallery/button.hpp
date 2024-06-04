@@ -544,7 +544,7 @@ namespace cycfi::elements
     , float size
     , color body_color = get_theme().default_button_color)
    {
-      return momentary_button<Base>(
+      return toggle_button<Base>(
          button_styler{std::move(label)}
             .icon(icon_code)
             .icon_left()
@@ -630,7 +630,8 @@ namespace cycfi::elements
    // Drawing button utility
    ////////////////////////////////////////////////////////////////////////////
    void draw_button_base(
-      context const& ctx, rect bounds, color color_, bool enabled, corner_radii corner_radii
+      context const& ctx, rect bounds, color color_
+    , bool enabled, corner_radii corner_radii
    );
 
    ////////////////////////////////////////////////////////////////////////////

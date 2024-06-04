@@ -39,7 +39,7 @@ namespace cycfi::elements
       return 1.0f / gdk_window_get_scale_factor(gdk_win);
    }
 
-   window::window(std::string const& name, int style_, rect const& bounds)
+   window::window(std::string const& name, int /*style_*/, rect const& bounds)
     :  _window(new host_window)
    {
       // Chicken and egg. GTK wants us to create windows only

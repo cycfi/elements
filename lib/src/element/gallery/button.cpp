@@ -66,24 +66,20 @@ namespace cycfi::elements
       auto value = state.value;
       auto hilite = state.hilite;
       auto enabled = ctx.enabled;
-      auto body_color = get_body_color();
+      auto body_color = value? get_active_body_color() : get_body_color();
 
       // Draw the body
       if (value)
-      {
-         body_color = body_color.opacity(0.5);
          bounds = bounds.move(1, 1);
-      }
-      else
-      {
-         body_color = body_color.level(0.9);
-      }
-      draw_button_base(ctx, bounds, body_color, enabled, {
-         get_corner_radius_top_left()*rel_size,
-         get_corner_radius_top_right()*rel_size,
-         get_corner_radius_bottom_right()*rel_size,
-         get_corner_radius_bottom_left()*rel_size
-      });
+
+      draw_button_base(ctx, bounds, body_color, enabled,
+         {
+            get_corner_radius_top_left()*rel_size,
+            get_corner_radius_top_right()*rel_size,
+            get_corner_radius_bottom_right()*rel_size,
+            get_corner_radius_bottom_left()*rel_size
+         }
+      );
 
       // Adjust the font size
       auto font = theme.label_font;

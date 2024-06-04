@@ -126,37 +126,19 @@ namespace cycfi::elements
          state(val);
    }
 
-   void basic_button::send(bool val)
-   {
-      if (on_click)
-         on_click(val);
-   }
-
-   void basic_button::on_send(callback_function f)
-   {
-      on_click =
-         [f, prev_f=on_click](bool val)
-         {
-            if (prev_f)
-               prev_f(val);   // Call previous callback
-            f(val);
-         };
-   }
-
-   void basic_choice_base::do_click(context const& ctx)
+   void basic_choice_click(context const& ctx, selectable& s)
    {
       auto [c, cctx] = find_composite(ctx);
       if (c)
       {
          for (std::size_t i = 0; i != c->size(); ++i)
          {
-            if (auto e = find_element<basic_choice_base*>(&c->at(i)))
+            if (auto e = find_element<selectable*>(&c->at(i)))
             {
-               if (e == this)
+               if (e == &s)
                {
                   // Set the button
                   e->select(true);
-                  // The base class::click should have called on_click already
                }
                else
                {
@@ -164,7 +146,6 @@ namespace cycfi::elements
                   {
                      // Reset the button
                      e->select(false);
-                     e->get_sender().send(false);
                   }
                }
             }

@@ -252,18 +252,18 @@ namespace cycfi::elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
-      void                    hmin_size(float width) { _width = width; }
-      float                   hmin_size() const { return _width; }
+      void                    hmin_size(float width) { _size = width; }
+      float                   hmin_size() const { return _size; }
 
    private:
 
-      float                   _width;
+      float                   _size;
    };
 
    template <concepts::Element Subject>
-   inline hmin_size_element<Subject>::hmin_size_element(float width, Subject subject)
+   inline hmin_size_element<Subject>::hmin_size_element(float size, Subject subject)
     : base_type(std::move(subject))
-    , _width(width)
+    , _size(size)
    {}
 
    template <concepts::Element Subject>
@@ -274,10 +274,17 @@ namespace cycfi::elements
    }
 
    template <concepts::Element Subject>
+   inline hmin_size_element<remove_cvref_t<Subject>>
+   hmin_pad(float pad, Subject&& subject)
+   {
+      return {-pad, std::forward<Subject>(subject)};
+   }
+
+   template <concepts::Element Subject>
    inline view_limits hmin_size_element<Subject>::limits(basic_context const& ctx) const
    {
-      auto  e_limits = this->subject().limits(ctx);
-      float width = _width;
+      auto e_limits = this->subject().limits(ctx);
+      float width = _size > 0? _size : e_limits.min.x + -_size;
       clamp(width, e_limits.min.x, e_limits.max.x);
       return {{width, e_limits.min.y}, e_limits.max};
    }
@@ -285,8 +292,39 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline void hmin_size_element<Subject>::prepare_subject(context& ctx)
    {
-      if (ctx.bounds.width() < _width)
-         ctx.bounds.width(_width);
+      if (ctx.bounds.width() < _size)
+         ctx.bounds.width(_size);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <concepts::Element Subject>
+   class hmin_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              hmin_element(Subject subject);
+      view_limits             limits(basic_context const& ctx) const override;
+   };
+
+   template <concepts::Element Subject>
+   inline hmin_element<Subject>::hmin_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <concepts::Element Subject>
+   inline hmin_element<remove_cvref_t<Subject>>
+   hmin(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <concepts::Element Subject>
+   inline view_limits hmin_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      return {e_limits.min, {e_limits.min.x, e_limits.max.y}};
    }
 
    ////////////////////////////////////////////////////////////////////////////

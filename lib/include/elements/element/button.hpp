@@ -59,7 +59,6 @@ namespace cycfi::elements
    class basic_button
     : public proxy_base
     , public receiver<bool>
-    , public sender<bool>
    {
    public:
 
@@ -79,9 +78,7 @@ namespace cycfi::elements
       bool              tracking() const        { return _state.tracking; }
       bool              hilite() const          { return _state.hilite; }
 
-      void              send(bool val) override;
       void              edit(view& view_, bool val) override;
-      void              on_send(callback_function f) override;
 
       button_function   on_click;
 
@@ -100,7 +97,8 @@ namespace cycfi::elements
 
    inline void basic_button::edit(view& view_, bool val)
    {
-      send(val);
+      if (on_click)
+         on_click(val);
       receiver<bool>::notify_edit(view_);
    }
 
@@ -209,14 +207,8 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Basic Choice
    ////////////////////////////////////////////////////////////////////////////
-   struct basic_choice_base : public selectable
-   {
-      virtual sender<bool>&   get_sender() = 0;
-      void                    do_click(context const& ctx);
-   };
-
    template <typename Base>
-   class basic_choice : public basic_latching_button<Base>, public basic_choice_base
+   class basic_choice : public basic_latching_button<Base>, public selectable
    {
    public:
 
@@ -225,7 +217,10 @@ namespace cycfi::elements
       void              select(bool state) override;
       bool              is_selected() const override;
       bool              click(context const& ctx, mouse_button btn) override;
-      sender<bool>&     get_sender() override { return *this; }
+
+   private:
+
+      friend void       basic_choice_click(context const& ctx, selectable& s);
    };
 
    template <typename Base>
@@ -254,7 +249,7 @@ namespace cycfi::elements
          {
             auto r = basic_latching_button<Base>::click(ctx, btn);
             if (this->value())
-               this->do_click(ctx);
+               basic_choice_click(ctx, *this);
             return r;
          }
       }

@@ -56,9 +56,30 @@ namespace cycfi::elements
       bool              enabled : 1;
    };
 
-   class basic_button
-    : public proxy_base
-    , public receiver<bool>
+   /**
+    *  \class basic_button
+    *
+    *  \brief
+    *    A class that represents a basic GUI button, acting as a proxy which
+    *    delegates the rendering to a "button styler".
+    *
+    *    The `basic_button` class is a foundational class for creating a GUI
+    *    button. This class is a proxy which delegates the rendering of the
+    *    actual button to a button styler subject. This division of
+    *    responsibilities allows for more flexibility in dictating the
+    *    button's appearance and interaction. The `basic_button` class
+    *    handles user interactions, while the button styler manages the
+    *    button's visual presentation. With this pattern, different stylers
+    *    can be implemented for various visual representations, for instance,
+    *    plain buttons, radio buttons, slide switches, checkboxes, and more.
+    *
+    *    The communication with the "button styler" is done via the
+    *    `receiver<button_state>` API. This API provides a means for the
+    *    `basic_button` to update the button styler about changes in button's
+    *    state (such as on/off value, highlight, enabled state etc.) enabling
+    *    the styler to adjust the visual representation accordingly.
+    */
+   class basic_button : public proxy_base, public receiver<bool>
    {
    public:
 
@@ -94,13 +115,6 @@ namespace cycfi::elements
 
       button_state      _state;
    };
-
-   inline void basic_button::edit(view& view_, bool val)
-   {
-      if (on_click)
-         on_click(val);
-      receiver<bool>::notify_edit(view_);
-   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Toggle Button

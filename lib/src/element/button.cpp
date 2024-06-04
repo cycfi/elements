@@ -126,6 +126,13 @@ namespace cycfi::elements
          state(val);
    }
 
+   void basic_button::edit(view& view_, bool val)
+   {
+      if (on_click)
+         on_click(val);
+      receiver<bool>::notify_edit(view_);
+   }
+
    void basic_choice_click(context const& ctx, selectable& s)
    {
       auto [c, cctx] = find_composite(ctx);

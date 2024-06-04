@@ -435,39 +435,9 @@ namespace cycfi::elements
    using button_styler = button_styler_gen<basic_button_styler>;
 
    ////////////////////////////////////////////////////////////////////////////
-   // Make a generic basic momentary button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, concepts::Element Subject>
-   inline proxy<remove_cvref_t<Subject>, Base>
-   momentary_button(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a generic basic toggle button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, concepts::Element Subject>
-   inline basic_toggle_button<proxy<remove_cvref_t<Subject>, Base>>
-   toggle_button(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Make a generic basic latching button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button, concepts::Element Subject>
-   inline basic_latching_button<proxy<remove_cvref_t<Subject>, Base>>
-   latching_button(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with label
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::MomentaryButton Base = basic_button>
    inline auto button(
       std::string label
     , float size = 1.0
@@ -483,7 +453,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with icon (left) and label (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::MomentaryButton Base = basic_button>
    inline auto button(
       std::uint32_t icon_code
     , std::string label
@@ -502,7 +472,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with label (left) and icon (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::MomentaryButton Base = basic_button>
    inline auto button(
       std::string label
     , std::uint32_t icon_code
@@ -521,7 +491,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a toggle button with label
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::ToggleButton Base = basic_toggle_button>
    inline auto toggle_button(
       std::string label
     , float size = 1.0
@@ -537,7 +507,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a toggle button with icon (left) and label (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::ToggleButton Base = basic_toggle_button>
    inline auto toggle_button(
       std::uint32_t icon_code
     , std::string label
@@ -556,7 +526,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a toggle button with label (left) and icon (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::ToggleButton Base = basic_toggle_button>
    inline auto toggle_button(
       std::string label
     , std::uint32_t icon_code
@@ -575,7 +545,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a latching button with label
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::LatchingButton Base = basic_latching_button>
    inline auto latching_button(
       std::string label
     , float size = 1.0
@@ -591,7 +561,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a latching button with icon (left) and label (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::LatchingButton Base = basic_latching_button>
    inline auto latching_button(
       std::uint32_t icon_code
     , std::string label
@@ -610,7 +580,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Make a latching button with label (left) and icon (right)
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = basic_button>
+   template <concepts::LatchingButton Base = basic_latching_button>
    inline auto latching_button(
       std::string label
     , std::uint32_t icon_code

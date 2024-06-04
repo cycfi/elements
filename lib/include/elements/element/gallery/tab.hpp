@@ -7,29 +7,28 @@
 #define ELEMENTS_GALLERY_TAB_MAY_02_2020
 
 #include <elements/element/gallery/button.hpp>
+#include <elements/element/size.hpp>
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Tab
-   ////////////////////////////////////////////////////////////////////////////
-   struct tab_styler : element, basic_receiver<int>
+   template <concepts::Element Button>
+   inline auto tab(Button&& button)
    {
-                              tab_styler(std::string text)
-                               : _text(std::move(text))
-                              {}
+      return choice(std::forward<Button>(button));
+   }
 
-      view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
-      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                    wants_control() const override;
-
-      std::string             _text;
-   };
-
-   inline auto tab(std::string text)
+   inline auto tab(
+      std::string text
+    , color active_color = get_theme().active_tab_color
+   )
    {
-      return choice(tab_styler{text});
+      return tab(
+         hmin(hmin_pad(20,
+            button_styler{std::move(text)}
+               .rounded_top()
+               .active_body_color(active_color.opacity(0.5))
+         ))
+      );
    }
 }
 

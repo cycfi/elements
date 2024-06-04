@@ -45,6 +45,7 @@ namespace cycfi::elements
 
       virtual float           get_size() const;
       virtual color           get_body_color() const;
+      virtual color           get_active_body_color() const;
       virtual color           get_text_color() const;
       virtual std::uint32_t   get_icon() const;
       virtual icon_placement  get_icon_placement() const;
@@ -105,6 +106,23 @@ namespace cycfi::elements
 
       color                   get_body_color() const override;
       void                    set_body_color(color color_);
+
+   private:
+
+      color                   _color;
+   };
+
+   template <typename Base>
+   struct button_styler_with_active_body_color : Base
+   {
+      using base_type = button_styler_with_active_body_color<typename Base::base_type>;
+
+                              button_styler_with_active_body_color(Base base, color color_)
+                               : Base(std::move(base)), _color(color_)
+                              {}
+
+      color                   get_active_body_color() const override;
+      void                    set_active_body_color(color color_);
 
    private:
 
@@ -261,6 +279,23 @@ namespace cycfi::elements
       float                   _radius;
    };
 
+   template<typename Base, default_button_styler::direction Direction>
+   struct button_styler_rounded_half_default : Base
+   {
+      using base_type = button_styler_rounded_half_default<typename Base::base_type, Direction>;
+      using direction_t = default_button_styler::direction;
+      constexpr static bool has_default_corner_radius = false;
+
+                              button_styler_rounded_half_default(Base base)
+                               : Base(std::move(base))
+                              {}
+
+      virtual float           get_corner_radius_top_left() const override;
+      virtual float           get_corner_radius_top_right() const override;
+      virtual float           get_corner_radius_bottom_left() const override;
+      virtual float           get_corner_radius_bottom_right() const override;
+   };
+
    template<typename Base, default_button_styler::corner Corner>
    struct button_styler_rounded_corner : Base
    {
@@ -329,6 +364,7 @@ namespace cycfi::elements
 
       using gen_size                = gen<button_styler_with_size<base_type>>;
       using gen_body_color          = gen<button_styler_with_body_color<base_type>>;
+      using gen_active_body_color   = gen<button_styler_with_active_body_color<base_type>>;
       using gen_text_color          = gen<button_styler_with_text_color<base_type>>;
       using gen_icon                = gen<button_styler_with_icon<base_type>>;
       using gen_icon_placement      = gen<button_styler_with_icon_placement<base_type>>;
@@ -339,39 +375,60 @@ namespace cycfi::elements
       using gen_individual_corners  = gen<button_styler_with_individual_corner_radii<base_type>>;
 
       template<direction_t Dir>
-      using gen_rounded_half     = button_styler_gen<button_styler_rounded_half<base_type, Dir>>;
+      using gen_rounded_half        = button_styler_gen<button_styler_rounded_half<base_type, Dir>>;
+      using gen_rounded_half_up     = gen_rounded_half<direction_t::up>;
+      using gen_rounded_half_down   = gen_rounded_half<direction_t::down>;
+      using gen_rounded_half_left   = gen_rounded_half<direction_t::left>;
+      using gen_rounded_half_right  = gen_rounded_half<direction_t::right>;
+
+      template<direction_t Dir>
+      using gen_rounded_half_default         = button_styler_gen<button_styler_rounded_half_default<base_type, Dir>>;
+      using gen_rounded_half_default_up      = gen_rounded_half_default<direction_t::up>;
+      using gen_rounded_half_default_down    = gen_rounded_half_default<direction_t::down>;
+      using gen_rounded_half_default_left    = gen_rounded_half_default<direction_t::left>;
+      using gen_rounded_half_default_right   = gen_rounded_half_default<direction_t::right>;
 
       template<corner_t Corner>
-      using gen_rounded_corner   = button_styler_gen<button_styler_rounded_corner<base_type, Corner>>;
+      using gen_rounded_corner               = button_styler_gen<button_styler_rounded_corner<base_type, Corner>>;
+      using gen_rounded_corner_top_left      = gen_rounded_corner<corner_t::top_left>;
+      using gen_rounded_corner_top_right     = gen_rounded_corner<corner_t::top_right>;
+      using gen_rounded_corner_bottom_left   = gen_rounded_corner<corner_t::bottom_left>;
+      using gen_rounded_corner_bottom_right  = gen_rounded_corner<corner_t::bottom_right>;
 
-      gen_size                size(float size) const;
-      gen_body_color          body_color(color color_) const;
-      gen_text_color          text_color(color color_) const;
-      gen_icon                icon(std::uint32_t code) const;
-      gen_icon_placement      icon_left() const;
-      gen_icon_placement      icon_right() const;
-      gen_icon_color          icon_color(color color_) const;
-      gen_label_alignment     align_left() const;
-      gen_label_alignment     align_center() const;
-      gen_label_alignment     align_right() const;
-      gen_margin              margin(rect margin) const;
-      gen_corner_radius       corner_radius(float r) const;
-      gen_individual_corners  corner_radius(
-                                 float top_left,
-                                 float top_right,
-                                 float bottom_right,
-                                 float bottom_left
-                              ) const;
+      gen_size                         size(float size) const;
+      gen_body_color                   body_color(color color_) const;
+      gen_active_body_color            active_body_color(color color_) const;
+      gen_text_color                   text_color(color color_) const;
+      gen_icon                         icon(std::uint32_t code) const;
+      gen_icon_placement               icon_left() const;
+      gen_icon_placement               icon_right() const;
+      gen_icon_color                   icon_color(color color_) const;
+      gen_label_alignment              align_left() const;
+      gen_label_alignment              align_center() const;
+      gen_label_alignment              align_right() const;
+      gen_margin                       margin(rect margin) const;
+      gen_corner_radius                corner_radius(float r) const;
+      gen_individual_corners           corner_radius(
+                                          float top_left,
+                                          float top_right,
+                                          float bottom_right,
+                                          float bottom_left
+                                       ) const;
 
-      gen_rounded_half<direction_t::up>          rounded_top(float r) const;
-      gen_rounded_half<direction_t::down>        rounded_bottom(float r) const;
-      gen_rounded_half<direction_t::left>        rounded_left(float r) const;
-      gen_rounded_half<direction_t::right>       rounded_right(float r) const;
+      gen_rounded_half_up              rounded_top(float r) const;
+      gen_rounded_half_down            rounded_bottom(float r) const;
+      gen_rounded_half_left            rounded_left(float r) const;
+      gen_rounded_half_right           rounded_right(float r) const;
 
-      gen_rounded_corner<corner_t::top_left>     rounded_corner_top_left(float r) const;
-      gen_rounded_corner<corner_t::top_right>    rounded_corner_top_right(float r) const;
-      gen_rounded_corner<corner_t::bottom_left>  rounded_corner_bottom_left(float r) const;
-      gen_rounded_corner<corner_t::bottom_right> rounded_corner_bottom_right(float r) const;
+      gen_rounded_half_default_up      rounded_top() const;
+      gen_rounded_half_default_down    rounded_bottom() const;
+      gen_rounded_half_default_left    rounded_left() const;
+      gen_rounded_half_default_right   rounded_right() const;
+
+      gen_rounded_corner_top_left      rounded_corner_top_left(float r) const;
+      gen_rounded_corner_top_right     rounded_corner_top_right(float r) const;
+      gen_rounded_corner_bottom_left   rounded_corner_bottom_left(float r) const;
+      gen_rounded_corner_bottom_right  rounded_corner_bottom_right(float r) const;
    };
 
    using basic_button_styler = basic_button_styler_base<default_button_styler>;
@@ -586,7 +643,12 @@ namespace cycfi::elements
 
    inline color default_button_styler::get_body_color() const
    {
-      return get_theme().default_button_color;
+      return get_theme().default_button_color.level(0.9);
+   }
+
+   inline color default_button_styler::get_active_body_color() const
+   {
+      return get_theme().default_button_color.opacity(0.5);
    }
 
    inline color default_button_styler::get_text_color() const
@@ -676,6 +738,18 @@ namespace cycfi::elements
 
    template <typename Base>
    inline void button_styler_with_body_color<Base>::set_body_color(color color_)
+   {
+      _color = color_;
+   }
+
+   template <typename Base>
+   inline color button_styler_with_active_body_color<Base>::get_active_body_color() const
+   {
+      return _color;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_active_body_color<Base>::set_active_body_color(color color_)
    {
       _color = color_;
    }
@@ -841,6 +915,50 @@ namespace cycfi::elements
          return 0.0f;
    }
 
+   template <typename Base, default_button_styler::direction Direction>
+   inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_top_left() const
+   {
+      if constexpr (Direction == direction_t::up || Direction == direction_t::left)
+         return get_theme().button_corner_radius;
+      else if constexpr (!Base::has_default_corner_radius)
+         return Base::get_corner_radius_top_left();
+      else
+         return 0.0f;
+   }
+
+   template <typename Base, default_button_styler::direction Direction>
+   inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_top_right() const
+   {
+      if constexpr (Direction == direction_t::up || Direction == direction_t::right)
+         return get_theme().button_corner_radius;
+      else if constexpr (!Base::has_default_corner_radius)
+         return Base::get_corner_radius_top_right();
+      else
+         return 0.0f;
+   }
+
+   template <typename Base, default_button_styler::direction Direction>
+   inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_bottom_left() const
+   {
+      if constexpr (Direction == direction_t::down || Direction == direction_t::left)
+         return get_theme().button_corner_radius;
+      else if constexpr (!Base::has_default_corner_radius)
+         return Base::get_corner_radius_bottom_left();
+      else
+         return 0.0f;
+   }
+
+   template <typename Base, default_button_styler::direction Direction>
+   inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_bottom_right() const
+   {
+      if constexpr (Direction == direction_t::down || Direction == direction_t::right)
+         return get_theme().button_corner_radius;
+      else if constexpr (!Base::has_default_corner_radius)
+         return Base::get_corner_radius_bottom_right();
+      else
+         return 0.0f;
+   }
+
    template <typename Base, default_button_styler::corner Corner>
    inline float button_styler_rounded_corner<Base, Corner>::get_corner_radius_top_left() const
    {
@@ -924,6 +1042,13 @@ namespace cycfi::elements
    }
 
    template <typename Base>
+   inline typename button_styler_gen<Base>::gen_active_body_color
+   button_styler_gen<Base>::active_body_color(color color_) const
+   {
+      return {*this, color_};
+   }
+
+   template <typename Base>
    inline typename button_styler_gen<Base>::gen_icon
    button_styler_gen<Base>::icon(std::uint32_t code) const
    {
@@ -986,31 +1111,59 @@ namespace cycfi::elements
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::up>
+   inline typename button_styler_gen<Base>::gen_rounded_half_up
    button_styler_gen<Base>::rounded_top(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::down>
+   inline typename button_styler_gen<Base>::gen_rounded_half_down
    button_styler_gen<Base>::rounded_bottom(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::left>
+   inline typename button_styler_gen<Base>::gen_rounded_half_left
    button_styler_gen<Base>::rounded_left(float r) const
    {
       return {*this, r};
    }
 
    template <typename Base>
-   inline typename button_styler_gen<Base>::template gen_rounded_half<default_button_styler::right>
+   inline typename button_styler_gen<Base>::gen_rounded_half_right
    button_styler_gen<Base>::rounded_right(float r) const
    {
       return {*this, r};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_rounded_half_default_up
+   button_styler_gen<Base>::rounded_top() const
+   {
+      return {*this};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_rounded_half_default_down
+   button_styler_gen<Base>::rounded_bottom() const
+   {
+      return {*this};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_rounded_half_default_left
+   button_styler_gen<Base>::rounded_left() const
+   {
+      return {*this};
+   }
+
+   template <typename Base>
+   inline typename button_styler_gen<Base>::gen_rounded_half_default_right
+   button_styler_gen<Base>::rounded_right() const
+   {
+      return {*this};
    }
 
    template <typename Base>

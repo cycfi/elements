@@ -286,8 +286,8 @@ namespace cycfi::elements
       using direction_t = default_button_styler::direction;
       constexpr static bool has_default_corner_radius = false;
 
-                              button_styler_rounded_half_default(Base base)
-                               : Base(std::move(base))
+                              button_styler_rounded_half_default(Base const& base)
+                               : Base(base)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;

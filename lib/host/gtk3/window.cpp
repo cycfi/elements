@@ -39,8 +39,8 @@ namespace cycfi::elements
       return gdk_window_get_scale_factor(gdk_win);
    }
 
-   window::window(std::string const& name, int style_, rect const& bounds)
-    : _window(new host_window)
+   window::window(std::string const& name, int /*style_*/, rect const& bounds)
+    :  _window(new host_window)
    {
       // Chicken and egg. GTK wants us to create windows only
       // after the app is activated. So we have a scheme to

@@ -7,9 +7,6 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Basic Button
-   ////////////////////////////////////////////////////////////////////////////
    bool basic_button::click(context const& ctx, mouse_button btn)
    {
       if (!ctx.enabled || !is_enabled())
@@ -120,12 +117,35 @@ namespace cycfi::elements
       return false;
    }
 
+   /**
+    * \brief
+    *    Set the value of the button
+    *
+    * \param val
+    *    A boolean value representing the value of the button `true` = ON,
+    *    `false` = OPF.
+    */
    void basic_button::value(bool val)
    {
       if (_state.value != val)
          state(val);
    }
 
+   /**
+    *  \brief
+    *    Initiates editing the state of the button and sends notifications.
+    *
+    *    If `on_click` callback is set, it is called with the new state value
+    *    `val`, and the `notify_edit(view_)` function is called which sends
+    *    notifications about the state change.
+    *
+    *  \param view_
+    *    A reference to the view.
+    *
+    *  \param val
+    *    The new state value for the button: `true` if the button is ON, and
+    *    `false` if OFF.
+    */
    void basic_button::edit(view& view_, bool val)
    {
       if (on_click)
@@ -133,31 +153,116 @@ namespace cycfi::elements
       receiver<bool>::notify_edit(view_);
    }
 
-   void basic_choice_click(context const& ctx, selectable& s)
+   bool basic_toggle_button::click(context const& ctx, mouse_button btn)
    {
-      auto [c, cctx] = find_composite(ctx);
-      if (c)
+      if (!ctx.enabled || !this->is_enabled())
+         return false;
+
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
-         for (std::size_t i = 0; i != c->size(); ++i)
+         this->tracking(false);
+         ctx.view.refresh(ctx);
+         return false;
+      }
+
+      if (btn.down)
+      {
+         this->tracking(true);
+         if (this->state(!this->value()))    // toggle the state
          {
-            if (auto e = find_element<selectable*>(&c->at(i)))
+            ctx.view.refresh(ctx);           // we need to save the current state, the state
+            _current_state = this->value();  // can change in the drag function and so we'll
+         }                                   // need it later when the button is finally released
+      }
+      else
+      {
+         this->tracking(false);
+         this->state(_current_state);
+         if (this->on_click)
+            this->on_click(this->value());
+         ctx.view.refresh(ctx);
+      }
+      return true;
+   }
+
+   void basic_toggle_button::drag(context const& ctx, mouse_button btn)
+   {
+      this->hilite(ctx.bounds.includes(btn.pos));
+      if (this->state(!_current_state ^ ctx.bounds.includes(btn.pos)))
+         ctx.view.refresh(ctx);
+   }
+
+   bool basic_latching_button::click(context const& ctx, mouse_button btn)
+   {
+      if (btn.down && this->value())
+         return false;
+
+      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
+      {
+         this->tracking(false);
+         ctx.view.refresh(ctx);
+         return false;
+      }
+
+      if (btn.down)
+      {
+         this->tracking(true);
+         this->on_tracking(ctx, this->begin_tracking);
+      }
+      else
+      {
+         this->tracking(false);
+         this->on_tracking(ctx, this->end_tracking);
+         if (this->on_click)
+            this->on_click(true);
+         ctx.view.refresh(ctx);
+      }
+      if (btn.down && this->state(ctx.bounds.includes(btn.pos)))
+         ctx.view.refresh(ctx);
+      return true;
+   }
+
+   bool basic_choice::click(context const& ctx, mouse_button btn)
+   {
+      if (btn.state == mouse_button::left)
+      {
+         if (btn.down)
+         {
+            return basic_latching_button::click(ctx, btn);
+         }
+         else
+         {
+            auto r = basic_latching_button::click(ctx, btn);
+            if (this->value())
             {
-               if (e == &s)
+               auto [c, cctx] = find_composite(ctx);
+               if (c)
                {
-                  // Set the button
-                  e->select(true);
-               }
-               else
-               {
-                  if (e->is_selected())
+                  for (std::size_t i = 0; i != c->size(); ++i)
                   {
-                     // Reset the button
-                     e->select(false);
+                     if (auto e = find_element<selectable*>(&c->at(i)))
+                     {
+                        if (e == this)
+                        {
+                           // Set the button
+                           e->select(true);
+                        }
+                        else
+                        {
+                           if (e->is_selected())
+                           {
+                              // Reset the button
+                              e->select(false);
+                           }
+                        }
+                     }
                   }
                }
+               cctx->view.refresh(*cctx);
             }
+            return r;
          }
       }
-      cctx->view.refresh(*cctx);
+      return false;
    }
 }

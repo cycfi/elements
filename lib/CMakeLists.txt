@@ -203,7 +203,7 @@ target_compile_options(elements PRIVATE
 
 if (MSVC)
    # Kinda silly to have to do this: https://bit.ly/2ZXjzzn
-   STRING(REGEX REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+   STRING(REGEX REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
 if (APPLE)

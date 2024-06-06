@@ -97,7 +97,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `halign_element` subject with the specified alignment from 0.0 to 1.0.
+    *    An `halign_element` proxy with the specified alignment.
     */
    template <concepts::Element Subject>
    inline halign_element<remove_cvref_t<Subject>>
@@ -137,7 +137,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `halign_element` with a 0.5 alignment.
+    *    An `halign_element` proxy with a 0.5 alignment.
     */
    template <concepts::Element Subject>
    inline halign_element<remove_cvref_t<Subject>>
@@ -157,7 +157,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `halign_element` with a 1.0 alignment.
+    *    An `halign_element` proxy with a 1.0 alignment.
     */
    template <concepts::Element Subject>
    inline halign_element<remove_cvref_t<Subject>>
@@ -242,7 +242,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    A `valign_element` subject with the specified alignment from 0.0 to 1.0.
+    *    A `valign_element` proxy with the specified alignment.
     */
    template <concepts::Element Subject>
    inline valign_element<remove_cvref_t<Subject>>
@@ -262,7 +262,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `valign_element` with a 0.0 alignment.
+    *    An `valign_element` proxy with a 0.0 alignment.
     */
    template <concepts::Element Subject>
    inline valign_element<remove_cvref_t<Subject>>
@@ -282,7 +282,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `valign_element` with a 0.5 alignment.
+    *    An `valign_element` proxy with a 0.5 alignment.
     */
    template <concepts::Element Subject>
    inline valign_element<remove_cvref_t<Subject>>
@@ -302,7 +302,7 @@ namespace cycfi::elements
     *    The subject to be aligned.
     *
     * \return
-    *    An `valign_element` with a 1.0 alignment.
+    *    An `valign_element` proxy with a 1.0 alignment.
     */
    template <concepts::Element Subject>
    inline valign_element<remove_cvref_t<Subject>>

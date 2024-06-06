@@ -615,7 +615,7 @@ catalogues all the available align elements.
 
 image::/layout/halign.svg[alt="halign", width=345px, role=center]
 
-Aligns the an enclosed element (`subject`) in the x-axis.
+Aligns the enclosed element (`subject`) in the x-axis.
 
 ==== Expression
 
@@ -654,7 +654,7 @@ horizontally to `X * align`.
 
 image::/layout/align_left.svg[alt="align_left", width=250px, role=center]
 
-Left-aligns the an enclosed element (`subject`).
+Left-aligns the enclosed element (`subject`).
 
 ==== Expression
 
@@ -682,7 +682,7 @@ align_left(subject)
 
 image::/layout/align_center.svg[alt="align_center", width=250px, role=center]
 
-Center-aligns the an enclosed element (`subject`).
+Center-aligns the enclosed element (`subject`).
 
 ==== Expression
 
@@ -710,7 +710,7 @@ align_center(subject)
 
 image::/layout/align_right.svg[alt="align_right", width=250px, role=center]
 
-Right-aligns the an enclosed element (`subject`).
+Right-aligns the enclosed element (`subject`).
 
 ==== Expression
 
@@ -738,7 +738,7 @@ align_right(subject)
 
 image::/layout/valign.svg[alt="valign", width=163px, role=center]
 
-Aligns the an enclosed element (`subject`) in the y-axis.
+Aligns the enclosed element (`subject`) in the y-axis.
 
 ==== Expression
 
@@ -777,7 +777,7 @@ to `Y * align`.
 
 image::/layout/align_top.svg[alt="align_top", width=90px, role=center]
 
-Aligns the an enclosed element (`subject`) to the top.
+Aligns the enclosed element (`subject`) to the top.
 
 ==== Expression
 
@@ -805,7 +805,7 @@ align_top(subject)
 
 image::/layout/align_middle.svg[alt="align_middle", width=90px, role=center]
 
-Aligns the an enclosed element (`subject`) to the middle.
+Aligns the enclosed element (`subject`) to the middle.
 
 ==== Expression
 
@@ -833,7 +833,7 @@ align_middle(subject)
 
 image::/layout/align_bottom.svg[alt="align_bottom", width=90px, role=center]
 
-Aligns the an enclosed element (`subject`) to the bottom.
+Aligns the enclosed element (`subject`) to the bottom.
 
 ==== Expression
 
@@ -861,7 +861,7 @@ align_bottom(subject)
 
 image::/layout/align_left_top.svg[alt="align_left_top", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the left-top.
+Aligns the enclosed element (`subject`) to the left-top.
 
 ==== Expression
 
@@ -889,7 +889,7 @@ align_left_top(subject)
 
 image::/layout/align_center_top.svg[alt="align_center_top", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the center-top.
+Aligns the enclosed element (`subject`) to the center-top.
 
 ==== Expression
 
@@ -917,7 +917,7 @@ align_center_top(subject)
 
 image::/layout/align_right_top.svg[alt="align_right_top", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the right-top.
+Aligns the enclosed element (`subject`) to the right-top.
 
 ==== Expression
 
@@ -945,7 +945,7 @@ align_right_top(subject)
 
 image::/layout/align_left_middle.svg[alt="align_left_middle", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the left-middle.
+Aligns the enclosed element (`subject`) to the left-middle.
 
 ==== Expression
 
@@ -973,7 +973,7 @@ align_left_middle(subject)
 
 image::/layout/align_center_middle.svg[alt="align_center_middle", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the center-middle.
+Aligns the enclosed element (`subject`) to the center-middle.
 
 ==== Expression
 
@@ -1001,7 +1001,7 @@ align_center_middle(subject)
 
 image::/layout/align_right_middle.svg[alt="align_right_middle", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the right-middle.
+Aligns the enclosed element (`subject`) to the right-middle.
 
 ==== Expression
 
@@ -1029,7 +1029,7 @@ align_right_middle(subject)
 
 image::/layout/align_left_bottom.svg[alt="align_left_bottom", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the left-bottom.
+Aligns the enclosed element (`subject`) to the left-bottom.
 
 ==== Expression
 
@@ -1057,7 +1057,7 @@ align_left_bottom(subject)
 
 image::/layout/align_center_bottom.svg[alt="align_center_bottom", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the center-bottom.
+Aligns the enclosed element (`subject`) to the center-bottom.
 
 ==== Expression
 
@@ -1085,7 +1085,7 @@ align_center_bottom(subject)
 
 image::/layout/align_right_bottom.svg[alt="align_right_bottom", width=240px, role=center]
 
-Aligns the an enclosed element (`subject`) to the right-bottom.
+Aligns the enclosed element (`subject`) to the right-bottom.
 
 ==== Expression
 

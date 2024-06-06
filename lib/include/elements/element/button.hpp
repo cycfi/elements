@@ -148,9 +148,9 @@ namespace cycfi::elements
     *    a momentary button from a given styler.
     *
     *    The function uses two template parameters: `Base` and `Styler`. The
-    *    `Base` should be a momentary button that adheres to `concepts::
-    *    MomentaryButton` with `basic_button` as the default type. The
-    *    `Styler` should follow the `concepts::Element`.
+    *    `Base` should be a momentary button that adheres to `
+    *    MomentaryButton` concept with `basic_button` as the default type.
+    *    The `Styler` should follow the `Element` concept.
     *
     * \param styler
     *    An rvalue reference to the styler that will be used to render the
@@ -245,9 +245,9 @@ namespace cycfi::elements
     *    toggle button from a given styler.
     *
     *    The function uses two template parameters: `Base` and `Styler`. The
-    *    `Base` should be a toggle button that adheres to `concepts::
-    *    ToggleButton` with `basic_toggle_button` as the default type. The
-    *    `Styler` should follow the `concepts::Element`.
+    *    `Base` should be a toggle button that adheres to ` ToggleButton`
+    *    concept with `basic_toggle_button` as the default type. The `Styler`
+    *    should follow the `Element` concept.
     *
     * \param styler
     *    An rvalue reference to the styler that will be used to render the
@@ -303,9 +303,9 @@ namespace cycfi::elements
     *    latching button from a given styler.
     *
     *    The function uses two template parameters: `Base` and `Styler`. The
-    *    `Base` should be a latching button that adheres to `concepts::
-    *    LatchingButton` with `basic_latching_button` as the default type.
-    *    The `Styler` should follow the `concepts::Element`.
+    *    `Base` should be a latching button that adheres to `LatchingButton`
+    *    concept with `basic_latching_button` as the default type. The
+    *    `Styler` should follow the `Element` concept.
     *
     * \param styler
     *    An rvalue reference to the styler that will be used to render the

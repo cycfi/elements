@@ -40,7 +40,7 @@ namespace cycfi::elements
     *      specified rectangular area.
     *
     *  \tparam Subject
-    *      Subject must meet the `concepts::Element` concept.
+    *      Subject must meet the `Element` concept.
     *
     *  \param bounds
     *      The boundaries of the child window.
@@ -94,8 +94,8 @@ namespace cycfi::elements
     *    moves when the element is dragged around.
     *
     * \tparam Subject
-    *    The type of the subject. The Subject must meet the
-    *    `concepts::Element` concept.
+    *    The type of the subject. The Subject must meet the `Element`
+    *    concept.
     *
     * \param subject
     *    The subject element that will be made movable.
@@ -121,8 +121,7 @@ namespace cycfi::elements
     *    when it is clicked.
     *
     * \tparam Subject
-    *    The type of the subject. Must satisfy the `concepts::Element`
-    *    concept.
+    *    The type of the subject. Must satisfy the `Element` concept.
     */
    template <concepts::Element Subject>
    class closable_element : public proxy<Subject>
@@ -143,8 +142,7 @@ namespace cycfi::elements
     *    click event.
     *
     * \tparam Subject
-    *    The type of the subject. Must satisfy the `concepts::Element`
-    *    concept.
+    *    The type of the subject. Must satisfy the `Element` concept.
     *
     * \param subject
     *    The element that is to be made closable.

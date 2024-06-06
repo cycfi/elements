@@ -101,12 +101,12 @@ namespace cycfi::elements
     *
     *    This function constructs a popup dialog with the content passed to
     *    it. The content is wrapped in a modal and aligned at the center. The
-    *    `dialog0` function accepts content that satisfies the
-    *    `concepts::Element` concept. The constructed dialog is then wrapped
-    *    in a shared pointer and returned.
+    *    `dialog0` function accepts content that satisfies the `Element`
+    *    concept. The constructed dialog is then wrapped in a shared pointer
+    *    and returned.
     *
     * \tparam Content
-    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    *    Content type for the dialog. Must satisfy `Element`.
     *
     * \param content
     *    Content to be displayed in the dialog.
@@ -253,9 +253,9 @@ namespace cycfi::elements
     * Note: Install an `on_click` callback before calling `dialog1`.
     *
     * \tparam Content
-    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    *    Content type for the dialog. Must satisfy `Element`.
     * \tparam BtnPtr
-    *    Button type for the dialog. Must satisfy `concepts::ElementPtr`.
+    *    Button type for the dialog. Must satisfy `ElementPtr`.
     *
     * \param view_
     *    Reference to the view where the dialog will be displayed.
@@ -299,10 +299,10 @@ namespace cycfi::elements
     *    user-defined action (specified by the `on_ok` parameter).
     *
     * \tparam Content
-    *    Content type for the dialog. Must satisfy `concepts::Element`.
+    *    Content type for the dialog. Must satisfy `Element`.
     * \tparam F
     *    Callable type for the 'OK' button click action. Must satisfy
-    *    `concepts::NullaryFunction`.
+    *    `NullaryFunction`.
     *
     * \param view_
     *    Reference to the view where the dialog will be displayed.
@@ -355,9 +355,9 @@ namespace cycfi::elements
     *    Note: Install `on_click` callbacks before calling `dialog2`.
     *
     * \tparam Content
-    *    Content type. Has to satisfy `concepts::Element`.
+    *    Content type. Has to satisfy `Element`.
     * \tparam ButtonPtr
-    *    Button type. Must satisfy `concepts::ElementPtr`.
+    *    Button type. Must satisfy `ElementPtr`.
     *
     * \param view_
     *    Reference to the view to display the dialog.
@@ -413,13 +413,14 @@ namespace cycfi::elements
     *    parameter.
     *
     * \tparam Content
-    *    The type of the content. The type must satisfy `concepts::Element`.
+    *    The type of the content. The type must satisfy the `Element`
+    *    concept.
     * \tparam F1
     *    The type of `on_ok` function. The type must be
-    *    `concepts::NullaryFunction`.
+    *    `NullaryFunction`.
     * \tparam F2
     *    The type of `on_cancel` function. The type must be
-    *    `concepts::NullaryFunction`.
+    *    `NullaryFunction`.
     *
     * \param view_
     *    Reference to the view for displaying the dialog.
@@ -485,10 +486,10 @@ namespace cycfi::elements
     *    action associated with the `cancel_button`.
     *
     * \tparam Content
-    *   The type of content to be displayed. The type must satisfy
-    *   `concepts::Element`.
+    *   The type of content to be displayed. The type must satisfy the
+    *   `Element` concept.
     * \tparam ButtonPtr
-    *   The type of the button. The type must satisfy `concepts::ElementPtr`.
+    *   The type of the button. The type must satisfy the `ElementPtr` concept.
     *
     * \param view_
     *   Reference to the view to display the dialog.
@@ -546,13 +547,14 @@ namespace cycfi::elements
     *    the `on_ok` parameter.
     *
     * \tparam Content
-    *    The type of the content. The type must satisfy `concepts::Element`.
+    *    The type of the content. The type must satisfy the `Element`
+    *    concept.
     * \tparam F1
     *    The type of `on_ok` function. The type must be
-    *    `concepts::NullaryFunction`.
+    *    `NullaryFunction`.
     * \tparam F2
     *    The type of `on_cancel` function. The type must be
-    *    `concepts::NullaryFunction`.
+    *    `NullaryFunction`.
     *
     * \param view_
     *    Reference to the view to display the dialog.

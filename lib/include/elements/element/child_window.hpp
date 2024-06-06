@@ -13,10 +13,15 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Child window: Are floating elements that may overlap and move to front
-   // when clicked.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class child_window_element
+    *
+    * \brief
+    *    Class that represents a child window within a larger display context.
+    *
+    *    Child windows are floating elements that may overlap with other
+    *    elements and can move to the front when clicked.
+    */
    class child_window_element : public floating_element
    {
    public:
@@ -26,18 +31,34 @@ namespace cycfi::elements
       bool                 click(context const& ctx, mouse_button btn) override;
    };
 
+   /**
+    *  \brief
+    *      Factory function to create a child window element.
+    *
+    *      This function creates a child window by wrapping the given subject
+    *      (element) in a child_window_element. The resulting window has a
+    *      specified rectangular area.
+    *
+    *  \tparam Subject
+    *      Subject must meet the `concepts::Element` concept.
+    *
+    *  \param bounds
+    *      The boundaries of the child window.
+    *
+    *  \param subject
+    *      An rvalue reference to the subject, the element to be wrapped in a
+    *      child window.
+    *
+    *  \return
+    *      A proxy object of type `child_window_element` containing the
+    *      subject element, within defined boundaries.
+    */
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, child_window_element>
    child_window(rect bounds, Subject&& subject)
    {
       return {std::forward<Subject>(subject), bounds};
    }
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Movable: Allows an element (e.g. title_bar) to be movable if it is
-   // contained inside a floating_element. The whole floating_element moves
-   // when the element is dragged around.
-   ////////////////////////////////////////////////////////////////////////////
 
    struct movable_tracker_info : tracker_info
    {
@@ -46,6 +67,12 @@ namespace cycfi::elements
       float                _offs_top, _offs_bottom;
    };
 
+   /**
+    * \class movable_base
+    *
+    * \brief
+    *    A base class representing a movable element in the UI.
+    */
    class movable_base : public tracker<proxy_base, movable_tracker_info>
    {
    public:
@@ -58,6 +85,24 @@ namespace cycfi::elements
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
    };
 
+   /**
+    * \brief
+    *    Make an element movable.
+    *
+    *    movable allows an element (e.g. title_bar) to be movable if it is
+    *    contained inside a floating_element. The whole floating_element
+    *    moves when the element is dragged around.
+    *
+    * \tparam Subject
+    *    The type of the subject. The Subject must meet the
+    *    `concepts::Element` concept.
+    *
+    * \param subject
+    *    The subject element that will be made movable.
+    *
+    * \return
+    *    The movable element.
+    */
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, movable_base>
    movable(Subject&& subject)
@@ -65,11 +110,20 @@ namespace cycfi::elements
       return {std::forward<Subject>(subject)};
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Closable: When contained inside a floating_element, allows a button (or
-   // any clickable element) to close the floating_element when it is
-   // clicked.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class closable_element
+    *
+    * \brief
+    *    Class that encapsulates a closable UI element functionality.
+    *
+    *    When contained inside a floating_element, this class allows a button
+    *    (or any clickable element) to close (or hide) the floating_element
+    *    when it is clicked.
+    *
+    * \tparam Subject
+    *    The type of the subject. Must satisfy the `concepts::Element`
+    *    concept.
+    */
    template <concepts::Element Subject>
    class closable_element : public proxy<Subject>
    {
@@ -80,6 +134,24 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx) override;
    };
 
+   /**
+    * \brief
+    *    Create a closable element.
+    *
+    *    If the subject is a part of a floating_element, this function
+    *    enables the subject to close its parent floating_element upon a
+    *    click event.
+    *
+    * \tparam Subject
+    *    The type of the subject. Must satisfy the `concepts::Element`
+    *    concept.
+    *
+    * \param subject
+    *    The element that is to be made closable.
+    *
+    * \return
+    *    The closable element.
+    */
    template <concepts::Element Subject>
    inline closable_element<remove_cvref_t<Subject>>
    closable(Subject&& subject)
@@ -100,7 +172,7 @@ namespace cycfi::elements
             {
                auto fl = find_parent<floating_element*>(ctx);
                if (fl)
-               close_floating_element(ctx, fl);
+                  close_floating_element(ctx, fl);
             };
       }
    }

@@ -23,13 +23,13 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Dials
    ////////////////////////////////////////////////////////////////////////////
-   class dial_base : public tracker<proxy_base>, public receiver<double>
+   class basic_dial : public tracker<proxy_base>, public receiver<double>
    {
    public:
 
       using dial_function = std::function<void(double pos)>;
 
-                           dial_base(double init_value = 0.0);
+                           basic_dial(double init_value = 0.0);
 
       void                 prepare_subject(context& ctx) override;
       element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
@@ -52,19 +52,21 @@ namespace cycfi::elements
       double               _value;
    };
 
+   using dial_base [[deprecated("Use basic_dial instead.")]] = basic_dial;
+
    template <concepts::Element Subject>
-   inline proxy<remove_cvref_t<Subject>, dial_base>
+   inline proxy<remove_cvref_t<Subject>, basic_dial>
    dial(Subject&& subject, double init_value = 0.0)
    {
       return {std::forward<Subject>(subject), init_value};
    }
 
-   inline double dial_base::value() const
+   inline double basic_dial::value() const
    {
       return _value;
    }
 
-   inline element* dial_base::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
+   inline element* basic_dial::hit_test(context const& ctx, point p, bool leaf, bool /*control*/)
    {
       return element::hit_test(ctx, p, leaf, false); // accept non-control subjects
    }

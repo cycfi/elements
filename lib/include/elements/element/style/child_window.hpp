@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_CHILD_WINDOW_JANUARY_19_2021)
-#define ELEMENTS_GALLERY_CHILD_WINDOW_JANUARY_19_2021
+#if !defined(ELEMENTS_STYLE_CHILD_WINDOW_JANUARY_19_2021)
+#define ELEMENTS_STYLE_CHILD_WINDOW_JANUARY_19_2021
 
 #include <elements/element/child_window.hpp>
-#include <elements/element/gallery/pane.hpp>
+#include <elements/element/style/pane.hpp>
 
 namespace cycfi::elements
 {

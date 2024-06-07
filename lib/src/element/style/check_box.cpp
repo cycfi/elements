@@ -3,7 +3,7 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/gallery/check_box.hpp>
+#include <elements/element/style/check_box.hpp>
 
 namespace cycfi::elements
 {

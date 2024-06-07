@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_SLIDE_SWITCH_NOVEMBER_10_2023)
-#define ELEMENTS_GALLERY_SLIDE_SWITCH_NOVEMBER_10_2023
+#if !defined(ELEMENTS_STYLE_SLIDE_SWITCH_NOVEMBER_10_2023)
+#define ELEMENTS_STYLE_SLIDE_SWITCH_NOVEMBER_10_2023
 
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 
 namespace cycfi::elements
 {

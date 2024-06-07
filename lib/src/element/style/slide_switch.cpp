@@ -3,7 +3,7 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/gallery/slide_switch.hpp>
+#include <elements/element/style/slide_switch.hpp>
 
 namespace cycfi::elements
 {

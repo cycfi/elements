@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_NOTEBOOK_MAY_23_2020)
-#define ELEMENTS_GALLERY_NOTEBOOK_MAY_23_2020
+#if !defined(ELEMENTS_STYLE_NOTEBOOK_MAY_23_2020)
+#define ELEMENTS_STYLE_NOTEBOOK_MAY_23_2020
 
-#include <elements/element/gallery/tab.hpp>
+#include <elements/element/style/tab.hpp>
 #include <elements/element/tile.hpp>
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>

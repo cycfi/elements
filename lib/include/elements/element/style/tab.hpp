@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_TAB_MAY_02_2020)
-#define ELEMENTS_GALLERY_TAB_MAY_02_2020
+#if !defined(ELEMENTS_STYLE_TAB_MAY_02_2020)
+#define ELEMENTS_STYLE_TAB_MAY_02_2020
 
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 #include <elements/element/size.hpp>
 
 namespace cycfi::elements

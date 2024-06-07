@@ -33,9 +33,6 @@ namespace cycfi::elements
       return floating_element::click(ctx, btn);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // movable_base
-   ////////////////////////////////////////////////////////////////////////////
    element* movable_base::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))

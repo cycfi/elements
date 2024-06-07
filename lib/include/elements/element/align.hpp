@@ -68,7 +68,7 @@ namespace cycfi::elements
     *    A template class to handle horizontal alignment for elements.
     *
     * \tparam
-    *    Subject Base type, must meet the `concepts::Element` concept,.
+    *    Subject Base type, must meet the `Element` concept.
     */
    template <concepts::Element Subject>
    class halign_element : public proxy<Subject, align_element_base>
@@ -88,7 +88,7 @@ namespace cycfi::elements
     *    Aligns the enclosed element (subject) in the x-axis.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param align
     *    The alignment value from 0.0 (left) to 1.0 (right).
@@ -111,7 +111,7 @@ namespace cycfi::elements
     *    Left-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -131,7 +131,7 @@ namespace cycfi::elements
     *    Center-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -151,7 +151,7 @@ namespace cycfi::elements
     *    Right-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -172,7 +172,7 @@ namespace cycfi::elements
     *    a subject.
     *
     * \tparam Subject
-    *    Subject type, must meet the `concepts::Element` concept.
+    *    Subject type, must meet the `Element` concept.
     *
     * \param align
     *    The initial alignment value.
@@ -213,7 +213,7 @@ namespace cycfi::elements
     *    A template class to handle vertical alignment for elements.
     *
     * \tparam
-    *    Subject Base type, must meet the `concepts::Element` concept,.
+    *    Subject Base type, must meet the `Element` concept.
     */
    template <concepts::Element Subject>
    class valign_element : public proxy<Subject, align_element_base>
@@ -233,7 +233,7 @@ namespace cycfi::elements
     *    Aligns the enclosed element (subject) in the y-axis.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param align
     *    The alignment value from 0.0 (top) to 1.0 (bottom).
@@ -256,7 +256,7 @@ namespace cycfi::elements
     *    Top-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -276,7 +276,7 @@ namespace cycfi::elements
     *    Middle-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -296,7 +296,7 @@ namespace cycfi::elements
     *    Bottom-aligns the enclosed element (subject).
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -317,7 +317,7 @@ namespace cycfi::elements
     *    a subject.
     *
     * \tparam Subject
-    *    Subject type, must meet the `concepts::Element` concept.
+    *    Subject type, must meet the `Element` concept.
     *
     * \param align
     *    The initial alignment value.
@@ -355,7 +355,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to left and top.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -373,7 +373,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to center and top.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -391,7 +391,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to right and top.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -409,7 +409,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to left and middle.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -427,7 +427,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to center and middle.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -445,7 +445,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to right and middle.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -463,7 +463,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to left and bottom.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -481,7 +481,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to center and bottom.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.
@@ -499,7 +499,7 @@ namespace cycfi::elements
     * \brief Create an element that is aligned to right and bottom.
     *
     * \tparam Subject
-    *    The subject type, must meet the `concepts::Element` concept.
+    *    The subject type, must meet the `Element` concept.
     *
     * \param subject
     *    The subject to be aligned.

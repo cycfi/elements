@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_MENU_JUNE_5_2016)
-#define ELEMENTS_GALLERY_MENU_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_MENU_JUNE_5_2016)
+#define ELEMENTS_STYLE_MENU_JUNE_5_2016
 
 #include <elements/element/indirect.hpp>
 #include <elements/element/menu.hpp>
@@ -14,7 +14,7 @@
 #include <elements/element/margin.hpp>
 #include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 #include <infra/string_view.hpp>
 #include <string>
 #include <vector>

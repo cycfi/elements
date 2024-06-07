@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_THUMBWHEEL_SEPTEMBER_23_2020)
-#define ELEMENTS_GALLERY_THUMBWHEEL_SEPTEMBER_23_2020
+#if !defined(ELEMENTS_STYLE_THUMBWHEEL_SEPTEMBER_23_2020)
+#define ELEMENTS_STYLE_THUMBWHEEL_SEPTEMBER_23_2020
 
 #include <elements/element/thumbwheel.hpp>
 #include <elements/element/list.hpp>

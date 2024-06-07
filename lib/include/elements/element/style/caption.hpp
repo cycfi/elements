@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_CAPION_JUNE_5_2016)
-#define ELEMENTS_GALLERY_CAPION_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_CAPION_JUNE_5_2016)
+#define ELEMENTS_STYLE_CAPION_JUNE_5_2016
 
 #include <elements/element/tile.hpp>
 #include <elements/element/align.hpp>

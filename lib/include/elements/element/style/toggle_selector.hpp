@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016)
-#define ELEMENTS_GALLERY_TOGGLE_SELECTOR_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_TOGGLE_SELECTOR_JUNE_5_2016)
+#define ELEMENTS_STYLE_TOGGLE_SELECTOR_JUNE_5_2016
 
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>

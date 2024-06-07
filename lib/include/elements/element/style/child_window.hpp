@@ -8,6 +8,7 @@
 
 #include <elements/element/child_window.hpp>
 #include <elements/element/style/pane.hpp>
+#include <elements/element/style/icon_button.hpp>
 
 namespace cycfi::elements
 {

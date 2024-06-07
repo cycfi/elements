@@ -5,7 +5,6 @@
 =============================================================================*/
 #include <elements/element/style/slider.hpp>
 #include <elements/support/theme.hpp>
-#include <elements/view.hpp>
 #include <cmath>
 
 namespace cycfi::elements

@@ -3,7 +3,7 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 
 namespace cycfi::elements
 {

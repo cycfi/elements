@@ -36,6 +36,6 @@
 #include <elements/element/tooltip.hpp>
 
 // Include this last
-#include <elements/element/gallery.hpp>
+#include <elements/element/style.hpp>
 
 #endif

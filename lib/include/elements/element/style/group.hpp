@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_GROUP_JUNE_5_2016)
-#define ELEMENTS_GALLERY_GROUP_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_GROUP_JUNE_5_2016)
+#define ELEMENTS_STYLE_GROUP_JUNE_5_2016
 
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>

@@ -3,12 +3,12 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_MESSAGE_BOX_JUNE_5_2016)
-#define ELEMENTS_GALLERY_MESSAGE_BOX_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_MESSAGE_BOX_JUNE_5_2016)
+#define ELEMENTS_STYLE_MESSAGE_BOX_JUNE_5_2016
 
 #include <elements/element/text.hpp>
-#include <elements/element/gallery/button.hpp>
-#include <elements/element/gallery/dialog.hpp>
+#include <elements/element/style/button.hpp>
+#include <elements/element/style/dialog.hpp>
 #include <infra/string_view.hpp>
 
 namespace cycfi::elements

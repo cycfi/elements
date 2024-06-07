@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_DIALOG_OCTOBER_14_2019)
-#define ELEMENTS_GALLERY_DIALOG_OCTOBER_14_2019
+#if !defined(ELEMENTS_STYLE_DIALOG_OCTOBER_14_2019)
+#define ELEMENTS_STYLE_DIALOG_OCTOBER_14_2019
 
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
@@ -13,7 +13,7 @@
 #include <elements/element/size.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/indirect.hpp>
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 #include <elements/support/theme.hpp>
 
 namespace cycfi::elements

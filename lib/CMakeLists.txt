@@ -34,13 +34,13 @@ set(ELEMENTS_SOURCES
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
-   src/element/gallery/button.cpp
-   src/element/gallery/check_box.cpp
-   src/element/gallery/icon_button.cpp
-   src/element/gallery/menu.cpp
-   src/element/gallery/radio_button.cpp
-   src/element/gallery/slide_switch.cpp
-   src/element/gallery/thumbwheel.cpp
+   src/element/style/button.cpp
+   src/element/style/check_box.cpp
+   src/element/style/icon_button.cpp
+   src/element/style/menu.cpp
+   src/element/style/radio_button.cpp
+   src/element/style/slide_switch.cpp
+   src/element/style/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
@@ -80,21 +80,21 @@ set(ELEMENTS_HEADERS
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
-   include/elements/element/gallery.hpp
-   include/elements/element/gallery/button.hpp
-   include/elements/element/gallery/caption.hpp
-   include/elements/element/gallery/check_box.hpp
-   include/elements/element/gallery/thumbwheel.hpp
-   include/elements/element/gallery/dialog.hpp
-   include/elements/element/gallery/group.hpp
-   include/elements/element/gallery/icon_button.hpp
-   include/elements/element/gallery/menu.hpp
-   include/elements/element/gallery/message_box.hpp
-   include/elements/element/gallery/notebook.hpp
-   include/elements/element/gallery/pane.hpp
-   include/elements/element/gallery/radio_button.hpp
-   include/elements/element/gallery/tab.hpp
-   include/elements/element/gallery/text_entry.hpp
+   include/elements/element/style.hpp
+   include/elements/element/style/button.hpp
+   include/elements/element/style/caption.hpp
+   include/elements/element/style/check_box.hpp
+   include/elements/element/style/thumbwheel.hpp
+   include/elements/element/style/dialog.hpp
+   include/elements/element/style/group.hpp
+   include/elements/element/style/icon_button.hpp
+   include/elements/element/style/menu.hpp
+   include/elements/element/style/message_box.hpp
+   include/elements/element/style/notebook.hpp
+   include/elements/element/style/pane.hpp
+   include/elements/element/style/radio_button.hpp
+   include/elements/element/style/tab.hpp
+   include/elements/element/style/text_entry.hpp
    include/elements/element/grid.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp

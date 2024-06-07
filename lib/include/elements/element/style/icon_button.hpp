@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_ICON_BUTTON_JUNE_5_2016)
-#define ELEMENTS_GALLERY_ICON_BUTTON_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_ICON_BUTTON_JUNE_5_2016)
+#define ELEMENTS_STYLE_ICON_BUTTON_JUNE_5_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/gallery/button.hpp>
+#include <elements/element/style/button.hpp>
 #include <elements/support/theme.hpp>
 
 namespace cycfi::elements

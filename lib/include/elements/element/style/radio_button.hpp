@@ -3,11 +3,11 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_RADIO_BUTTON_FEBRUARY_29_2020)
-#define ELEMENTS_GALLERY_RADIO_BUTTON_FEBRUARY_29_2020
+#if !defined(ELEMENTS_STYLE_RADIO_BUTTON_FEBRUARY_29_2020)
+#define ELEMENTS_STYLE_RADIO_BUTTON_FEBRUARY_29_2020
 
-#include <elements/element/gallery/button.hpp>
-#include <elements/element/gallery/toggle_selector.hpp>
+#include <elements/element/style/button.hpp>
+#include <elements/element/style/toggle_selector.hpp>
 
 namespace cycfi::elements
 {

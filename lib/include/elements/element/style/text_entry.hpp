@@ -3,8 +3,8 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#if !defined(ELEMENTS_GALLERY_TEXT_ENTRY_JUNE_5_2016)
-#define ELEMENTS_GALLERY_TEXT_ENTRY_JUNE_5_2016
+#if !defined(ELEMENTS_STYLE_TEXT_ENTRY_JUNE_5_2016)
+#define ELEMENTS_STYLE_TEXT_ENTRY_JUNE_5_2016
 
 #include <elements/element/layer.hpp>
 #include <elements/element/port.hpp>

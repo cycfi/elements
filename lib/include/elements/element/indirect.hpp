@@ -16,8 +16,8 @@ namespace cycfi::elements
    struct indirect_receiver {};
 
    template <typename Indirect, concepts::Element Element>
-      requires requires() {
-         typename std::enable_if_t<std::is_base_of_v<receiver_base, Element>>;
+      requires requires(Element e) {
+         { e } -> std::derived_from<receiver_base>;
       }
    struct indirect_receiver<Indirect, Element> : receiver_base
    {

@@ -12,9 +12,18 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Flow Element
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class flowable_container
+    *
+    * \brief
+    *    A container of elements that extends the `storage` class, adding
+    *    behavior to handle elements in a flow layout.
+    *
+    *    `flowable_container` allows elements to flow and be positioned based
+    *    on available space (like text in a paragraph). The class includes
+    *    functions for breaking elements into rows/lines and recomputing the
+    *    layout when needed.
+    */
    class flowable_container : public storage
    {
    public:
@@ -39,6 +48,16 @@ namespace cycfi::elements
 
    using flow_composite = vector_composite<flowable_container>;
 
+   /**
+    * \class flow_element
+    *
+    * \brief
+    *    A GUI element that extends `vector_composite<vtile_element>` class
+    *    and provides behaviour for flowing elements.
+    *
+    *    `flow_element`'s instances are constructed with a reference to a
+    *    `flowable_container` and use its data to manage their own layouts.
+    */
    class flow_element : public vector_composite<vtile_element>
    {
    public:
@@ -57,6 +76,18 @@ namespace cycfi::elements
       flowable_container&     _flowable;
    };
 
+   /**
+    * \brief
+    *    Helper function that creates a `flow_element` instance.
+    *
+    * \param flowable_
+    *    A reference to the `flowable_container` that will be used to manage
+    *    the flow layouts.
+    *
+    * \returns
+    *    A `flow_element` instance configured with the given
+    *    `flowable_container`.
+    */
    inline auto flow(flowable_container& flowable_)
    {
       return flow_element{flowable_};

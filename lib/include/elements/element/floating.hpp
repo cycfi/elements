@@ -28,8 +28,8 @@ namespace cycfi::elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
-      rect                    bounds() const { return _bounds; }
-      void                    bounds(rect bounds_) { _bounds = bounds_; }
+      rect                    bounds() const;
+      void                    bounds(rect bounds_);
 
    private:
 
@@ -44,8 +44,7 @@ namespace cycfi::elements
     *    The element type which must satisfy the `Element` concept.
     *
     * \param bounds
-    *    A `rect` object specifying the initial bounds of the
-    *    `floating_element`.
+    *    A `rect` specifying the initial bounds of the `floating_element`.
     *
     * \param subject
     *    The `Subject` that needs to be treated as floating.
@@ -59,6 +58,35 @@ namespace cycfi::elements
    floating(rect bounds, Subject&& subject)
    {
       return {std::forward<Subject>(subject), bounds};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   namespace inlines{}
+
+   /**
+    * \brief
+    *    Get the bounds of the `floating_element`.
+    *
+    * \returns
+    *    The bounds of the `floating_element`.
+    */
+   inline rect floating_element::bounds() const
+   {
+      return _bounds;
+   }
+
+   /**
+    * \brief
+    *    Set the bounds of the floating element.
+    *
+    * \param bounds_
+    *    A `rect` specifying the new bounds of the `floating_element`.
+    */
+   inline void floating_element::bounds(rect bounds_)
+   {
+      _bounds = bounds_;
    }
 }
 

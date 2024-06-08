@@ -11,10 +11,17 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // grid_base: Base class for vertical and horizontal grids, supplies grid
-   // coordinates in the form of a float const*
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \struct grid_base
+    *
+    * \brief
+    *    Base class for vertical and horizontal grids in a grid layout.
+    *    Provides supplies grid coordinates.
+    *
+    *    `grid_base` provides the core functionality shared by all grid-like
+    *    structures, such as being able to determine their size, map index to
+    *    a coordinate, and get a number of spans.
+    */
    struct grid_base : public composite_base
    {
       virtual std::size_t     grid_size() const = 0;
@@ -22,6 +29,15 @@ namespace cycfi::elements
       virtual std::size_t     num_spans() const = 0;
    };
 
+   /**
+    * \class equal_grid
+    *
+    * \brief
+    *    A specialized grid where grid columns (or rows) have equal size.
+    *
+    * \tparam Base
+    *    The base class on which `equal_grid` is derived from.
+    */
    template <typename Base>
    class equal_grid : public Base
    {
@@ -34,6 +50,17 @@ namespace cycfi::elements
                               { return float(i+1) / this->num_spans(); }
    };
 
+   /**
+    * \class range_grid
+    *
+    * \brief
+    *    A specialized grid that lays out cells based on a supplied array of
+    *    coordinates in the form of a pointer to a float array (`float
+    *    const*`).
+    *
+    * \tparam Base
+    *    The base class on which `range_grid` derived from.
+    */
    template <typename Base>
    class range_grid : public Base
    {
@@ -62,6 +89,26 @@ namespace cycfi::elements
       };
    }
 
+   /**
+    * \class container_grid
+    *
+    * \brief
+    *    A specialized grid that lays out cells based on coordinates provided
+    *    by a container.
+    *
+    *    `container_grid` is a grid where the size and coordinates of cells
+    *    are defined by the elements of a container that is given at
+    *    construction time. `container_grid` does not manage and does not own
+    *    the container.
+    *
+    * \tparam Container
+    *    The type of container which provides data for the grid coordinates.
+    *    The Container should satisfy the `GridContainer` concept.
+    *
+    * \tparam Base
+    *    The base class on which `container_grid` is derived from. The base
+    *    class should satisfy the `Composite` concept.
+    */
    template <concepts::GridContainer Container, concepts::Composite Base>
    class container_grid : public Base
    {
@@ -79,9 +126,13 @@ namespace cycfi::elements
       Container const&        _container;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Vertical Grids
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class vgrid_element
+    *
+    * \brief
+    *    A specialized grid class that provides layout features for a
+    *    vertical grid structure.
+    */
    class vgrid_element : public grid_base
    {
    public:
@@ -101,6 +152,29 @@ namespace cycfi::elements
          container_grid<std::vector<float>, vgrid_element>
       >;
 
+   /**
+    * \brief
+    *    Create vertical grid layout, given row coordinates as a C-style
+    *    array.
+    *
+    * \tparam N
+    *    The number of rows.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    C-style array with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A vertical grid element represented as an instance of
+    *    `array_composite` that is derived from `range_grid<vgrid_element>`.
+    *    The row coordinates are provided by the `coords` parameter.
+    */
    template <std::size_t N, typename... E>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
    {
@@ -111,6 +185,29 @@ namespace cycfi::elements
       return r;
    }
 
+   /**
+    * \brief
+    *    Create a vertical grid layout, given row coordinates as an
+    *    `std::array`.
+    *
+    * \tparam N
+    *    The number of rows.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    `std::array` with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A vertical grid element represented as an instance of
+    *    `array_composite` that is derived from `range_grid<vgrid_element>`.
+    *    The row coordinates are provided by the `coords` parameter.
+    */
    template <std::size_t N, typename... E>
    inline auto vgrid(std::array<float, N> const& coords, E&&... elements)
    {
@@ -118,6 +215,23 @@ namespace cycfi::elements
       return vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 
+   /**
+    * \brief
+    *    Create a vertical grid layout, given the elements to place in
+    *    equally sized rows.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A vertical grid element represented as an instance of
+    *    `array_composite` that is derived from `equal_grid<vgrid_element>.
+    *    The rows are equally spaced.
+    */
    template <typename... E>
    inline auto vgrid(E&&... elements)
    {
@@ -128,9 +242,13 @@ namespace cycfi::elements
       return r;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Horizontal Grids
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class hgrid_element
+    *
+    * \brief
+    *    A specialized grid class that provides layout features for a
+    *    horizontal grid structure.
+    */
    class hgrid_element : public grid_base
    {
    public:
@@ -150,6 +268,29 @@ namespace cycfi::elements
          container_grid<std::vector<float>, hgrid_element>
       >;
 
+   /**
+    * \brief
+    *    Create horizontal grid layout, given column coordinates as a C-style
+    *    array.
+    *
+    * \tparam N
+    *    The number of columns.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    C-style array with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A horizontal grid element represented as an instance of
+    *    `array_composite` that is derived from `range_grid<hgrid_element>`.
+    *    The column coordinates are provided by the `coords` parameter.
+    */
    template <std::size_t N, typename... E>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
    {
@@ -160,6 +301,29 @@ namespace cycfi::elements
       return r;
    }
 
+   /**
+    * \brief
+    *    Create a horizontal grid layout, given column coordinates as an
+    *    `std::array`.
+    *
+    * \tparam N
+    *    The number of columns.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    `std::array` with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A horizontal grid element represented as an instance of
+    *    `array_composite` that is derived from `range_grid<hgrid_element>`.
+    *    The column coordinates are provided by the `coords` parameter.
+    */
    template <std::size_t N, typename... E>
    inline auto hgrid(std::array<float, N> const& coords, E&&... elements)
    {
@@ -167,6 +331,23 @@ namespace cycfi::elements
       return hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 
+   /**
+    * \brief
+    *    Create a horizontal grid layout, given the elements to place in
+    *    equally sized grid cells.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A horizontal grid element represented as an instance of
+    *    `array_composite` that is derived from `equal_grid<hgrid_element>.
+    *    The columns are equally spaced.
+    */
    template <typename... E>
    inline auto hgrid(E&&... elements)
    {

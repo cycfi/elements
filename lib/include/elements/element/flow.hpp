@@ -37,9 +37,9 @@ namespace cycfi::elements
       virtual float           width_of(size_t index, basic_context const& ctx) const;
       virtual element_ptr     make_row(size_t first, size_t last);
 
-      void                    reflow()                { _reflow = true; }
-      bool                    needs_reflow() const    { return _reflow; }
-      void                    reflow_done()           { _reflow = false; }
+      void                    reflow();
+      bool                    needs_reflow() const;
+      void                    reflow_done();
 
    private:
 
@@ -91,6 +91,26 @@ namespace cycfi::elements
    inline auto flow(flowable_container& flowable_)
    {
       return flow_element{flowable_};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   namespace inlines{}
+
+   inline void flowable_container::reflow()
+   {
+      _reflow = true;
+   }
+
+   inline bool flowable_container::needs_reflow() const
+   {
+      return _reflow;
+   }
+
+   inline void flowable_container::reflow_done()
+   {
+      _reflow = false;
    }
 }
 

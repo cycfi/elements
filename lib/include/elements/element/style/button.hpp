@@ -61,7 +61,7 @@ namespace cycfi::elements
    };
 
    template <typename Base>
-   struct basic_button_styler_base : Base, text_writer
+   struct basic_button_styler_base : Base, text_writer_u8
    {
       using text_type = std::string_view;
       using base_type = basic_button_styler_base<typename Base::base_type>;
@@ -71,7 +71,7 @@ namespace cycfi::elements
                               {}
 
       text_type               get_text() const override;
-      void                    set_text(string_view text) override;
+      void                    set_text(std::string_view text) override;
 
    private:
 
@@ -684,7 +684,7 @@ namespace cycfi::elements
    }
 
    template <typename Base>
-   inline void basic_button_styler_base<Base>::set_text(string_view text)
+   inline void basic_button_styler_base<Base>::set_text(std::string_view text)
    {
       _text = std::string(text);
    }

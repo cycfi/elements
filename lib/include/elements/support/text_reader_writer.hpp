@@ -6,7 +6,7 @@
 #if !defined(ELEMENTS_TEXT_READER_WRITER_APRIL_17_2016)
 #define ELEMENTS_TEXT_READER_WRITER_APRIL_17_2016
 
-#include <infra/string_view.hpp>
+#include <string_view>
 
 namespace cycfi::elements
 {
@@ -27,17 +27,18 @@ namespace cycfi::elements
 
    /**
     * @brief
-    *    This class defines an interface for writing text.
+    *    This class defines an interface for writing UTF-8 encoded text.
     *
-    *    It serves as a base class for writing or updating text. Derived
-    *    classes must implement the `set_text(string_view text)` function.
+    *    It serves as a base class for writing or updating UTF-8 text text.
+    *    Derived classes must implement the `set_text(std::u8string_view
+    *    text)` function.
     */
-   class text_writer
+   class text_writer_u8
    {
    public:
 
-      virtual                       ~text_writer() = default;
-      virtual void                  set_text(string_view text) = 0;
+      virtual                       ~text_writer_u8() = default;
+      virtual void                  set_text(std::string_view text) = 0;
    };
 
    /**

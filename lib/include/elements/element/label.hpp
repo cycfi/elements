@@ -49,7 +49,7 @@ namespace cycfi::elements
    };
 
    template <typename Base>
-   struct basic_label_base : Base, text_writer
+   struct basic_label_base : Base, text_writer_u8
    {
       using text_type = std::string_view;
       using base_type = basic_label_base<typename Base::base_type>;
@@ -298,7 +298,7 @@ namespace cycfi::elements
    inline void as_label_element<Subject, T, F>::value(param_type val)
    {
       _value = val;
-      if (auto tw = find_subject<text_writer*>(this))
+      if (auto tw = find_subject<text_writer_u8*>(this))
          tw->set_text(_as_string(val));
    }
 

@@ -12,27 +12,14 @@ using cycfi::artist::rgba;
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
-template<size_t Size>
-struct fixed_size_base : default_label
+inline auto make_icon_label(std::string name, int i)
 {
-   view_limits limits(const basic_context &ctx) const override
-   {
-      point size = measure_text(ctx.canvas, "9" ,get_font());
-      size.x *= Size;
-      return {{size.x, size.y}, {size.x, size.y}};
-   }
-};
-
-template<size_t Size>
-using basic_fixed_size = basic_label_base<fixed_size_base<Size>>;
-
-template<size_t Size>
-using fixed_size_label = label_gen<basic_fixed_size<Size>>;
-
-inline auto  make_icon_label(std::string name, int i)
-{
-    auto h = htile(fixed_size_label<10>(name), hspace(50), icon_button(i,1));
-    return share(h);
+   auto h =
+   htile(
+      label(name),
+      align_right(hsize(64, icon(i)))
+   );
+   return share(h);
 }
 
 int main(int argc, char* argv[])
@@ -130,12 +117,13 @@ int main(int argc, char* argv[])
    comp.push_back(make_icon_label("unlink", icons::unlink));
    comp.push_back(make_icon_label("folder_open", icons::folder_empty));
    comp.push_back(make_icon_label("folder_open_empty", icons::folder_open_empty));
+
    view_.content(
-               margin({10, 10, 10, 10},
-               vscroller(margin({40, 20, 40, 20}, comp))),
-                     // Add more content layers here. The order
-                     // specifies the layering. The lowest layer
-                     // is at the bottom of this list.
+      margin({10, 10, 10, 10},
+      vscroller(margin({10, 10, 30, 10}, comp))),
+            // Add more content layers here. The order
+            // specifies the layering. The lowest layer
+            // is at the bottom of this list.
 
       background     // Replace background with your main element,
                      // or keep it and add another layer on top of it.

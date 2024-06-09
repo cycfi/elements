@@ -14,7 +14,7 @@ auto background = box(bkd_color);
 using slider_ptr = std::shared_ptr<basic_slider_base>;
 slider_ptr vsliders[3];
 
-using dial_ptr = std::shared_ptr<dial_base>;
+using dial_ptr = std::shared_ptr<basic_dial>;
 dial_ptr dials[3];
 
 template <bool is_vertical>
@@ -106,7 +106,7 @@ void link_control(int index, view& view_)
    vsliders[index]->on_change =
       [index, &view_](double val)
       {
-         dials[index]->dial_base::value(val);
+         dials[index]->basic_dial::value(val);
          view_.refresh(*dials[index]);
       };
 

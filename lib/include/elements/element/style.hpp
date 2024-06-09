@@ -9,7 +9,8 @@
 #include <elements/element/style/button.hpp>
 #include <elements/element/style/caption.hpp>
 #include <elements/element/style/check_box.hpp>
-#include <elements/element/style/thumbwheel.hpp>
+#include <elements/element/style/child_window.hpp>
+#include <elements/element/style/dial.hpp>
 #include <elements/element/style/group.hpp>
 #include <elements/element/style/icon_button.hpp>
 #include <elements/element/style/menu.hpp>
@@ -17,9 +18,10 @@
 #include <elements/element/style/notebook.hpp>
 #include <elements/element/style/pane.hpp>
 #include <elements/element/style/radio_button.hpp>
+#include <elements/element/style/slide_switch.hpp>
+#include <elements/element/style/slider.hpp>
 #include <elements/element/style/tab.hpp>
 #include <elements/element/style/text_entry.hpp>
-#include <elements/element/style/child_window.hpp>
-#include <elements/element/style/slide_switch.hpp>
+#include <elements/element/style/thumbwheel.hpp>
 
 #endif

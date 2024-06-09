@@ -26,6 +26,7 @@ set(ELEMENTS_SOURCES
    src/element/style/menu.cpp
    src/element/style/radio_button.cpp
    src/element/style/slide_switch.cpp
+   src/element/style/slider.cpp
    src/element/style/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp

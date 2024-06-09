@@ -32,7 +32,7 @@ slider_ptr hsliders[3];
 slider_ptr vsliders[3];
 
 // We make three dials.
-using dial_ptr = std::shared_ptr<dial_base>;
+using dial_ptr = std::shared_ptr<basic_dial>;
 dial_ptr dials[3];
 
 // We make linear slider markers that are placed below the sliders.

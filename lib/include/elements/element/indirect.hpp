@@ -12,13 +12,16 @@
 
 namespace cycfi::elements
 {
+   ////////////////////////////////////////////////////////////////////////////
+   // TMP code makes `indirect_receiver` derive from `receiver_base` if the
+   // Element derives from `receiver_base`, and implements the `value` getter
+   // and setter member functions.
+   ////////////////////////////////////////////////////////////////////////////
    template <typename Indirect, concepts::Element Element>
    struct indirect_receiver {};
 
    template <typename Indirect, concepts::Element Element>
-      requires requires(Element e) {
-         { e } -> std::derived_from<receiver_base>;
-      }
+      requires std::is_base_of_v<receiver_base, std::decay_t<Element>>
    struct indirect_receiver<Indirect, Element> : receiver_base
    {
       using receiver_type = typename Element::receiver_type;

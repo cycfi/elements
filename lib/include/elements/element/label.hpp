@@ -7,11 +7,11 @@
 #define ELEMENTS_LABELS_APRIL_11_2016
 
 #include <elements/element/element.hpp>
-#include <elements/element/text.hpp>
 #include <elements/element/proxy.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
+#include <elements/support/text_reader_writer.hpp>
 #include <artist/font.hpp>
 #include <infra/string_view.hpp>
 #include <string>

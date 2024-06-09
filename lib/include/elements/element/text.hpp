@@ -9,9 +9,9 @@
 #include <elements/element/element.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
+#include <elements/support/text_reader_writer.hpp>
 #include <artist/text_layout.hpp>
 
-#include <infra/string_view.hpp>
 #include <string>
 #include <vector>
 #include <set>
@@ -20,41 +20,6 @@ namespace cycfi::elements
 {
    using artist::font_descr;
    using artist::font;
-
-   ////////////////////////////////////////////////////////////////////////////
-   // text_reader and text_writer mixins
-   ////////////////////////////////////////////////////////////////////////////
-   class text_reader_u8
-   {
-   public:
-
-      virtual                       ~text_reader_u8() = default;
-      virtual std::string_view      get_text() const = 0;
-   };
-
-   class text_writer
-   {
-   public:
-
-      virtual                       ~text_writer() = default;
-      virtual void                  set_text(string_view text) = 0;
-   };
-
-   class text_reader_u32
-   {
-   public:
-
-      virtual                       ~text_reader_u32() = default;
-      virtual std::u32string_view   get_text() const = 0;
-   };
-
-   class text_writer_u32
-   {
-   public:
-
-      virtual                       ~text_writer_u32() = default;
-      virtual void                  set_text(std::u32string_view text) = 0;
-   };
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box

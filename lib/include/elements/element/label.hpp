@@ -274,22 +274,24 @@ namespace cycfi::elements
     *
     * @tparam Subject
     *    The Subject of the label that must fulfill the `Element` concept.
+    *
     * @tparam T
     *    The type of value that is converted to the label's text.
+    *
     * @tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     */
-   template <concepts::LabelStyler Label, typename T, typename F>
-   class as_label_element : public receiver<T>, public proxy<Label>
+   template <concepts::Element Subject, typename T, typename F>
+   class as_label_element : public receiver<T>, public proxy<Subject>
    {
    public:
 
-      using base_type = proxy<Label>;
+      using base_type = proxy<Subject>;
       using param_type = typename receiver<T>::param_type;
       using getter_type = typename receiver<T>::getter_type;
 
-                              as_label_element(F&& as_string, Label label);
+                              as_label_element(F&& as_string, Subject label);
 
       void                    value(param_type val) override;
       getter_type             value() const override;
@@ -300,9 +302,9 @@ namespace cycfi::elements
       T                       _value;
    };
 
-   template <typename T, concepts::LabelStyler Label, typename F>
-   inline as_label_element<remove_cvref_t<Label>, T, remove_cvref_t<F>>
-   as_label(F&& as_string, Label&& label);
+   template <typename T, concepts::Element Subject, typename F>
+   inline as_label_element<remove_cvref_t<Subject>, T, remove_cvref_t<F>>
+   as_label(F&& as_string, Subject&& subject);
 
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
@@ -532,8 +534,8 @@ namespace cycfi::elements
    /**
     * @brief Construct a new `as_label_element`.
     *
-    * @tparam Label
-    *    A type that fulfills the `LabelStyler` concept.
+    * @tparam Subject
+    *    A type that fulfills the `Element` concept.
     *
     * @tparam T
     *    The type of value that is converted to the label's text.
@@ -545,13 +547,13 @@ namespace cycfi::elements
     * @param as_string
     *    The function to convert the value into the label's text.
     *
-    * @param label
-    *    The label.
+    * @param subject
+    *    The subject.
     */
-   template <concepts::LabelStyler Label, typename T, typename F>
-   inline as_label_element<Label, T, F>::as_label_element(F&& as_string, Label label)
+   template <concepts::Element Subject, typename T, typename F>
+   inline as_label_element<Subject, T, F>::as_label_element(F&& as_string, Subject subject)
     : _as_string(as_string)
-    , base_type(std::move(label))
+    , base_type(std::move(subject))
    {}
 
    /**
@@ -571,8 +573,8 @@ namespace cycfi::elements
     * @param val
     *    The value to be set.
     */
-   template <concepts::LabelStyler Label, typename T, typename F>
-   inline void as_label_element<Label, T, F>::value(param_type val)
+   template <concepts::Element Subject, typename T, typename F>
+   inline void as_label_element<Subject, T, F>::value(param_type val)
    {
       _value = val;
       if (auto tw = find_subject<text_writer_u8*>(this))
@@ -583,12 +585,22 @@ namespace cycfi::elements
     * @brief
     *    Get the value of the label.
     *
+    * @tparam Subject
+    *    A type that fulfills the `Element` concept.
+    *
+    * @tparam T
+    *    The type of value that is converted to the label's text.
+    *
+    * @tparam F
+    *    The type of user-defined function that is used for conversion of the
+    *    value into text.
+    *
     * @return
     *    The value of the label.
     */
-   template <concepts::LabelStyler Label, typename T, typename F>
-   inline typename as_label_element<Label, T, F>::getter_type
-   as_label_element<Label, T, F>::value() const
+   template <concepts::Element Subject, typename T, typename F>
+   inline typename as_label_element<Subject, T, F>::getter_type
+   as_label_element<Subject, T, F>::value() const
    {
       return _value;
    }
@@ -600,8 +612,8 @@ namespace cycfi::elements
     * @tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam Label
-    *    A type that fulfills the `LabelStyler` concept.
+    * @tparam Subject
+    *    A type that fulfills the `Element` concept.
     *
     * @tparam F
     *    The type of user-defined function that is used for conversion of the
@@ -610,18 +622,18 @@ namespace cycfi::elements
     * @param as_string
     *    The function to convert the value into the label's text.
     *
-    * @param label
-    *    The label.
+    * @param subject
+    *    The subject.
     *
     * @return
-    *    A new `as_label_element` with the processed Subject and Function.
+    *    A new `as_label_element` given Subject and as_string Function.
     */
-   template <typename T, concepts::LabelStyler Label, typename F>
-   inline as_label_element<remove_cvref_t<Label>, T, remove_cvref_t<F>>
-   as_label(F&& as_string, Label&& label)
+   template <typename T, concepts::Element Subject, typename F>
+   inline as_label_element<remove_cvref_t<Subject>, T, remove_cvref_t<F>>
+   as_label(F&& as_string, Subject&& subject)
    {
       using ftype = remove_cvref_t<F>;
-      return {std::forward<ftype>(as_string), std::forward<Label>(label)};
+      return {std::forward<ftype>(as_string), std::forward<Subject>(subject)};
    }
 
    /**

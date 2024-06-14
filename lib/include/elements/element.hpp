@@ -8,6 +8,7 @@
 
 #include <elements/element/align.hpp>
 #include <elements/element/button.hpp>
+#include <elements/element/busy_bar.hpp>
 #include <elements/element/child_window.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/dial.hpp>

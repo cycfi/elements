@@ -20,14 +20,13 @@ namespace cycfi::elements
     *
     * \brief
     *    An abstract base for classes that need to handle layout composition
-    *    for elements placed in cells.
+    *    for elements placed in cells inside a list.
     *
-    *    The class is an interface that defines several pure virtual
-    *    functions for managing and rendering elements in a dynamic list
-    *    structure, including calculating the number of elements, resizing
-    *    the list, creating or composing an element at a specific index, and
-    *    determining the size and limits of elements along both the main and
-    *    secondary axes.
+    *    The class declares several pure virtual functions for managing and
+    *    rendering elements in a dynamic list structure, including
+    *    calculating the number of elements, resizing the list, creating or
+    *    composing an element at a specific index, and determining the size
+    *    and limits of elements along both the main and secondary axes.
     */
    class cell_composer : public std::enable_shared_from_this<cell_composer>
    {
@@ -155,7 +154,7 @@ namespace cycfi::elements
     *
     * \brief
     *    Horizontal fixed derived limits cell composer with specifics for
-    *    handling horizontal cells.
+    *    handling columns.
     *
     * \tparam Base
     *    The base cell composer type.

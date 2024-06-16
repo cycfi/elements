@@ -281,7 +281,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Sets the selected state of the draggable element.
+    * \brief
+    *    Sets the selected state of the draggable element.
     *
     * \param state_
     *    The new selected state (`true`==selected and `false` otherwise).

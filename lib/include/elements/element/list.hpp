@@ -16,9 +16,9 @@
 namespace cycfi::elements
 {
    /**
-    * @class cell_composer
+    * \class cell_composer
     *
-    * @brief
+    * \brief
     *    An abstract base for classes that need to handle layout composition
     *    for elements placed in cells.
     *
@@ -47,13 +47,13 @@ namespace cycfi::elements
    };
 
    /**
-    * @class static_limits_cell_composer
+    * \class static_limits_cell_composer
     *
-    * @brief
+    * \brief
     *    A cell composer with fixed-size width limits and line-height. The
     *    composed cells have fixed width limits and line-height.
     *
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     */
    template <typename Base = cell_composer>
@@ -93,9 +93,9 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
 
    /**
-    * @class fixed_derived_limits_cell_composer
+    * \class fixed_derived_limits_cell_composer
     *
-    * @brief
+    * \brief
     *    A cell composer with fixed-size width limits and line-height derived
     *    from the first cell.
     *
@@ -109,7 +109,7 @@ namespace cycfi::elements
     *    check if the list is empty and generate an prototypical cell in such
     *    cases.
     *
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     */
    template <typename Base = cell_composer>
@@ -141,23 +141,23 @@ namespace cycfi::elements
       = fixed_derived_limits_cell_composer<Base>;
 
    /**
-    * @brief
+    * \brief
     *    Vertical fixed derived limits cell composer.
     *
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     */
    template<typename Base = cell_composer>
    using vfixed_derived_limits_cell_composer = fixed_derived_limits_cell_composer<Base>;
 
    /**
-    * @class hfixed_derived_limits_cell_composer
+    * \class hfixed_derived_limits_cell_composer
     *
-    * @brief
+    * \brief
     *    Horizontal fixed derived limits cell composer with specifics for
     *    handling horizontal cells.
     *
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     *
     */
@@ -181,12 +181,12 @@ namespace cycfi::elements
       = hfixed_derived_limits_cell_composer<Base>;
 
    /**
-    * @class fixed_length_cell_composer
+    * \class fixed_length_cell_composer
     *
-    * @brief
+    * \brief
     *    A cell composer that has a fixed length (number of list elements).
 
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     */
    template <typename Base = cell_composer>
@@ -234,16 +234,16 @@ namespace cycfi::elements
    };
 
    /**
-    * @class function_cell_composer
+    * \class function_cell_composer
     *
-    * @brief
+    * \brief
     *    Create a fixed length vertical basic cell composer given the number
     *    of elements and a compose function.
     *
-    * @tparam F
+    * \tparam F
     *    The function type used to compose the cell elements.
     *
-    * @tparam Base
+    * \tparam Base
     *    The base cell composer type.
     *
     * @return
@@ -270,17 +270,17 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Create a fixed length vertical basic cell composer given the number
     *    of elements and a compose function.
     *
-    * @tparam F
+    * \tparam F
     *    The function type used for composing cells.
     *
-    * @param size
+    * \param size
     *    The number of cells.
     *
-    * @param compose
+    * \param compose
     *    Function used to compose the cells.
     *
     * @return
@@ -307,17 +307,17 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Create a fixed length horizontal basic cell composer given the
     *    number of elements and a compose function.
     *
-    * @tparam F
+    * \tparam F
     *    The function type used for composing cells.
     *
-    * @param size
+    * \param size
     *    The number of cells.
     *
-    * @param compose
+    * \param compose
     *    Function used to compose the cells.
     *
     * @return
@@ -337,18 +337,18 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Create a fixed length horizontal basic cell composer, with specified
     *    minimum secondary axis, main axis size, number of elements and a
     *    compose function.
     *
-    * @tparam F
+    * \tparam F
     *    The function type used for composing cells.
     *
-    * @param size
+    * \param size
     *    The number of cells.
     *
-    * @param compose
+    * \param compose
     *    Function used to compose the cells.
     *
     * @return
@@ -380,18 +380,18 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Create a fixed length horizontal basic cell composer, with specified
     *    minimum and maximum secondary axis, main axis size, number of
     *    elements and a compose function.
     *
-    * @tparam F
+    * \tparam F
     *    The function type used for composing cells.
     *
-    * @param size
+    * \param size
     *    The number of cells.
     *
-    * @param compose
+    * \param compose
     *    Function used to compose the cells.
     *
     * @return
@@ -425,9 +425,9 @@ namespace cycfi::elements
    }
 
    /**
-    * @class list
+    * \class list
     *
-    * @brief
+    * \brief
     *    Main class for managing a vertically oriented list of elements.
     *
     *    The `list` class manages a collection of cell elements in a vertical
@@ -547,9 +547,9 @@ namespace cycfi::elements
    // The horizontal list class
    ////////////////////////////////////////////////////////////////////////////
    /**
-    * @class hlist
+    * \class hlist
     *
-    * @brief
+    * \brief
     *    Class for managing a horizontally oriented list of cells.
     *
     *    The class inherits from `list` and overrides functions to enable
@@ -575,7 +575,7 @@ namespace cycfi::elements
    using hdynamic_list [[deprecated("Use hlist instead.")]] = hlist;
 
    /**
-    * @brief
+    * \brief
     *    Utility function to move items in a vector `v` from given `indices`
     *    to a new position `pos`.
     *
@@ -585,16 +585,16 @@ namespace cycfi::elements
     *    vector, the elements will be moved to the end of the vector. The
     *    indices should be valid indices in vector `v`.
     *
-    * @tparam T
+    * \tparam T
     *    The type of elements contained in the vector.
     *
-    * @param v
+    * \param v
     *    Vector in which elements will be moved.
     *
-    * @param pos
+    * \param pos
     *    Target position in the vector to which the elements will be moved.
     *
-    * @param indices
+    * \param indices
     *    Vector of indexed positions of the elements in vector `v` to be
     *    moved.
     */
@@ -628,20 +628,20 @@ namespace cycfi::elements
    // Utility to erase items in a vector `v` with given `indices`.
 
    /**
-    * @brief
+    * \brief
     *    Utility function to erase items from a vector `v` at the given `indices`.
     *
     *    This utility works by iterating over the indices vector in reverse
     *    order and erasing each corresponding element from the vector `v`.
     *    The indices vector should point to valid items in vector `v`.
     *
-    * @tparam T
+    * \tparam T
     *    The type of elements contained in the vector.
     *
-    * @param v
+    * \param v
     *    Vector in which elements will be erased.
     *
-    * @param indices
+    * \param indices
     *    Vector of indexed positions of the elements in vector `v` to be
     *    erased.
     */
@@ -658,6 +658,27 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    namespace inlines {}
 
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param min_secondary_axis_size
+    *    Minimum size along the secondary axis of the cell.
+    *
+    * \param main_axis_size
+    *    Size along the main axis of the cell.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline static_limits_cell_composer<Base>::static_limits_cell_composer(
@@ -670,6 +691,30 @@ namespace cycfi::elements
     , _secondary_axis_limits{min_secondary_axis_size, full_extent}
    {}
 
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param min_secondary_axis_size
+    *    Minimum size along the secondary axis of the cell.
+    *
+    * \param max_secondary_axis_size
+    *    Maximum size along the secondary axis of the cell.
+    *
+    * \param main_axis_size
+    *    Size along the main axis of the cell.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline static_limits_cell_composer<Base>::static_limits_cell_composer(
@@ -706,6 +751,19 @@ namespace cycfi::elements
     , _secondary_axis_limits{-1, full_extent}
    {}
 
+   /**
+    * \brief
+    *    Get the secondary axis limits of a static_limits_cell_composer object.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \param ctx
+    *    The basic_context object.
+    *
+    * @return
+    *    The cell's size limits along the secondary axis.
+    */
    template <typename Base>
    inline cell_composer::limits
    fixed_derived_limits_cell_composer<Base>::secondary_axis_limits(basic_context const& ctx) const
@@ -715,6 +773,24 @@ namespace cycfi::elements
       return _secondary_axis_limits;
    }
 
+   /**
+    * \brief
+    *    Get the main axis size of a static_limits_cell_composer object.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \param index
+    *    The cell index.
+    *
+    * \param ctx
+    *    A reference to the basic_context of the element, which provides
+    *    access to the current view and canvas. The context can be used in
+    *    calculating size limits of the element.
+    *
+    * @return
+    *    The cell's size along the main axis.
+    */
    template <typename Base>
    inline float fixed_derived_limits_cell_composer<Base>::main_axis_size(std::size_t /*index*/, basic_context const& ctx) const
    {
@@ -723,6 +799,7 @@ namespace cycfi::elements
       return _main_axis_size;
    }
 
+   // Private member function
    template <typename Base>
    void fixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx) const
    {
@@ -732,6 +809,21 @@ namespace cycfi::elements
       _main_axis_size = lim.min.y;
    }
 
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline hfixed_derived_limits_cell_composer<Base>::hfixed_derived_limits_cell_composer(
@@ -740,6 +832,7 @@ namespace cycfi::elements
     : fixed_derived_limits_cell_composer<Base> (std::forward<Rest>(rest)...)
    {}
 
+   // Private member function
    template<typename Base>
    void hfixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx)  const
    {
@@ -749,7 +842,22 @@ namespace cycfi::elements
       this->_main_axis_size = lim.min.x;
    }
 
-   inline void list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell) const
+   /**
+    * \brief
+    *    Set the bounds of the list object.
+    *
+    * \param ctx
+    *    A reference to the basic_context of the element, which provides
+    *    access to the current view and canvas. The context can be used in
+    *    calculating size limits of the element.
+    *
+    * \param main_axis_pos
+    *    The position along the main axis.
+    *
+    * \param cell
+    *    The cell_info object to be used for calculations.
+    */
+   inline void list::set_bounds(context& ctx, float main_axis_pos, cell_info& cell) const
    {
       set_bounds(ctx.bounds, main_axis_pos, cell);
    }

@@ -12,9 +12,9 @@
 namespace cycfi::elements
 {
    /**
-    * @class layer_element
+    * \class layer_element
     *
-    * @brief
+    * \brief
     *    A class which represents an element in a layer. The layer_element is
     *    a composite that allows groups of elements to be placed in the
     *    z-axis. Higher-level elements obscure or hide lower-level elements.
@@ -38,22 +38,22 @@ namespace cycfi::elements
    };
 
    /**
-    * @brief
+    * \brief
     *    `layer_composite` is a composite with indeterminate (dynamic)
     *    number of elements
     */
    using layer_composite = vector_composite<layer_element>;
 
    /**
-    * @brief
+    * \brief
     *    Create a layer from provided elements. The layer contains group of
     *    elements placed in z-axis. Higher-level elements obscure or hide
     *    lower-level elements.
     *
-    * @tparam E
+    * \tparam E
     *    Variadic template parameter for the types of the elements.
     *
-    * @param elements
+    * \param elements
     *    The elements to be added to the layer (a parameter pack).
     *
     * @return
@@ -72,9 +72,9 @@ namespace cycfi::elements
    }
 
    /**
-    * @class deck_element
+    * \class deck_element
     *
-    * @brief
+    * \brief
     *    Represents an element in a deck, which inherits from the
     *    `layer_element` class. Elements are placed in the z-axis. Unlike
     *    layers, only the selected element is active (top-most by default).
@@ -104,22 +104,22 @@ namespace cycfi::elements
    };
 
    /**
-    * @brief
+    * \brief
     *    `deck_composite` is a composite with indeterminate (dynamic)
     *    number of elements
     */
    using deck_composite = vector_composite<deck_element>;
 
    /**
-    * @brief
+    * \brief
     *    Create a deck from provided elements. The deck contains a group of
     *    elements placed in z-axis. Unlike layers, only the selected element
     *    is active (top-most by default).
     *
-    * @tparam E
+    * \tparam E
     *    Variadic template parameter for the types of the elements.
     *
-    * @param elements
+    * \param elements
     *    The elements to be added to the deck (a parameter pack).
     *
     * @return

@@ -11,7 +11,7 @@
 namespace cycfi::elements
 {
    /**
-    * @brief
+    * \brief
     *    This class represents a text reader for UTF-8 encoded text.
     *
     *    It defines the interface for classes that are capable of reading
@@ -26,7 +26,7 @@ namespace cycfi::elements
    };
 
    /**
-    * @brief
+    * \brief
     *    This class defines an interface for writing UTF-8 encoded text.
     *
     *    It serves as a base class for writing or updating UTF-8 text text.
@@ -42,7 +42,7 @@ namespace cycfi::elements
    };
 
    /**
-    * @brief
+    * \brief
     *    This class provides an interface for reading UTF-32 encoded text.
     *
     *    It serves as a base class for classes that are capable of reading
@@ -58,7 +58,7 @@ namespace cycfi::elements
    };
 
    /**
-    * @brief
+    * \brief
     *    This class serves as a base class for writing UTF-32 encoded text.
     *
     *    Designed to be used as an interface for classes that need to write

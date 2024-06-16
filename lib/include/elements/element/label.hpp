@@ -21,9 +21,9 @@ namespace cycfi::elements
    using artist::font_descr;
 
    /**
-    * @struct default_label_styler
+    * \struct default_label_styler
     *
-    * @brief
+    * \brief
     *    This struct encapsulates the styles of a default label.
     *
     *    `default_label_styler` provides the default look and feel for a
@@ -63,12 +63,12 @@ namespace cycfi::elements
    }
 
    /**
-    * @struct basic_label_styler_base
+    * \struct basic_label_styler_base
     *
-    * @brief
+    * \brief
     *    Base for creating custom label stylers with supplied text.
     *
-    * @tparam Base
+    * \tparam Base
     *    Base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -90,12 +90,12 @@ namespace cycfi::elements
    };
 
    /**
-    * @struct label_styler_with_font
+    * \struct label_styler_with_font
     *
-    * @brief
+    * \brief
     *    Label styler with custom font.
     *
-    * @tparam Base
+    * \tparam Base
     *    Base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -117,12 +117,12 @@ namespace cycfi::elements
    };
 
    /**
-    * @struct label_styler_with_font_size
+    * \struct label_styler_with_font_size
     *
-    * @brief
+    * \brief
     *    Label styler with custom font size.
     *
-    * @tparam Base
+    * \tparam Base
     *    Base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -144,12 +144,12 @@ namespace cycfi::elements
    };
 
    /**
-    * @struct label_styler_with_font_color
+    * \struct label_styler_with_font_color
     *
-    * @brief
+    * \brief
     *    Label styler with custom font color.
     *
-    * @tparam Base
+    * \tparam Base
     *    Base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -170,12 +170,12 @@ namespace cycfi::elements
    };
 
    /**
-    * @struct label_with_text_align
+    * \struct label_with_text_align
     *
-    * @brief
+    * \brief
     *    Label styler with custom text alignment.
     *
-    * @tparam Base
+    * \tparam Base
     *    Base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -196,9 +196,9 @@ namespace cycfi::elements
    };
 
    /**
-    * @struct label_styler_gen
+    * \struct label_styler_gen
     *
-    * @brief
+    * \brief
     *    Zero-overhead abstraction for generating label stylers with various
     *    properties.
     *
@@ -219,7 +219,7 @@ namespace cycfi::elements
     *
     *    Only the properties specified take up memory space.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class fulfilling the LabelStyler concept.
     */
    template <concepts::LabelStyler Base>
@@ -245,9 +245,9 @@ namespace cycfi::elements
    using label = label_styler_gen<basic_label>;
 
    /**
-    * @struct default_heading
+    * \struct default_heading
     *
-    * @brief
+    * \brief
     *    Default label styler for headings.
     */
    struct default_heading : default_label_styler
@@ -266,19 +266,19 @@ namespace cycfi::elements
    using heading = label_styler_gen<basic_heading>;
 
    /**
-    * @class as_label_element
+    * \class as_label_element
     *
-    * @brief
+    * \brief
     *    As label receives a value of type T and converts it to the label's
     *    text using a user-supplied function.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The Subject of the label that must fulfill the `Element` concept.
     *
-    * @tparam T
+    * \tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam F
+    * \tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     */
@@ -312,7 +312,7 @@ namespace cycfi::elements
    namespace inlines {}
 
    /**
-    * @brief
+    * \brief
     *    Get the font for labels from the theme.
     *
     * @return
@@ -324,7 +324,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the size of the font for labels from the theme.
     *
     * @return
@@ -336,7 +336,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the default size of the font for labels from the theme.
     *
     * @return
@@ -348,7 +348,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the color of the font for labels from the theme.
     *
     * @return
@@ -360,7 +360,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the text alignment for labels from the theme.
     *
     * @return
@@ -372,7 +372,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the font of headings from the theme.
     *
     * @return
@@ -384,7 +384,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the size of the font for headings from the theme.
     *
     * @return
@@ -396,7 +396,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the default size of the font for headings from the theme.
     *
     * @return
@@ -408,7 +408,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the color of the font for headings from the theme.
     *
     * @return
@@ -420,7 +420,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the text alignment for headings from the theme.
     *
     * @return
@@ -432,13 +432,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Generator for setting the font of a label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param font_
+    * \param font_
     *    The font to be set.
     *
     * @return
@@ -452,13 +452,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Generator for setting the font size of a label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param size
+    * \param size
     *    The size of the font to be set.
     *
     * @return
@@ -472,13 +472,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Generator for setting the relative font size of a label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param size
+    * \param size
     *    The relative size of the font to be set.
     *
     * @return
@@ -492,13 +492,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Generator for setting the font color of a label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param color_
+    * \param color_
     *    The color of the font to be set.
     *
     * @return
@@ -512,13 +512,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Generator for setting the text alignment of a label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param align
+    * \param align
     *    The alignment to be set.
     *
     * @return
@@ -532,22 +532,23 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief Construct a new `as_label_element`.
+    * \brief
+    *    Construct a new `as_label_element`.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    A type that fulfills the `Element` concept.
     *
-    * @tparam T
+    * \tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam F
+    * \tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     *
-    * @param as_string
+    * \param as_string
     *    The function to convert the value into the label's text.
     *
-    * @param subject
+    * \param subject
     *    The subject.
     */
    template <concepts::Element Subject, typename T, typename F>
@@ -557,20 +558,20 @@ namespace cycfi::elements
    {}
 
    /**
-    * @brief
+    * \brief
     *    Sets the value for the label.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    A type that fulfills the `Element` concept.
     *
-    * @tparam T
+    * \tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam F
+    * \tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     *
-    * @param val
+    * \param val
     *    The value to be set.
     */
    template <concepts::Element Subject, typename T, typename F>
@@ -582,16 +583,16 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the value of the label.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    A type that fulfills the `Element` concept.
     *
-    * @tparam T
+    * \tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam F
+    * \tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     *
@@ -606,23 +607,23 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Construct a new `as_label_element`.
     *
-    * @tparam T
+    * \tparam T
     *    The type of value that is converted to the label's text.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    A type that fulfills the `Element` concept.
     *
-    * @tparam F
+    * \tparam F
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     *
-    * @param as_string
+    * \param as_string
     *    The function to convert the value into the label's text.
     *
-    * @param subject
+    * \param subject
     *    The subject.
     *
     * @return
@@ -637,10 +638,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the text of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
     * @return
@@ -654,13 +655,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the text of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param text
+    * \param text
     *    The text to be set.
     */
    template <concepts::LabelStyler Base>
@@ -670,10 +671,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the font of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
     * @return The font of the label.
@@ -686,13 +687,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the font of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param font_
+    * \param font_
     *    The font to be set.
     */
    template <concepts::LabelStyler Base>
@@ -702,10 +703,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the font size of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
     * @return
@@ -718,13 +719,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the font size of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param size
+    * \param size
     *    The font size to be set.
     */
    template <concepts::LabelStyler Base>
@@ -734,13 +735,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the relative font size of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param size
+    * \param size
     *    The relative font size to be set.
     */
    template <concepts::LabelStyler Base>
@@ -750,10 +751,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the font color of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
     * @return
@@ -766,13 +767,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the font color of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param color_
+    * \param color_
     *    The font color to be set.
     */
    template <concepts::LabelStyler Base>
@@ -782,10 +783,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the text alignment of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
     * @return
@@ -798,13 +799,13 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the text alignment of the label.
     *
-    * @tparam Base
+    * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @param align
+    * \param align
     *    The text alignment to be set.
     */
    template <concepts::LabelStyler Base>

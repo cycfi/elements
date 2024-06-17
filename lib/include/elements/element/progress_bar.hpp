@@ -30,7 +30,7 @@ namespace cycfi::elements
       void                    value(double val) override;
 
       rect                    background_bounds(context const& ctx) const;
-      rect                    foreground_bounds(context const& ctx) const;
+      virtual rect            foreground_bounds(context const& ctx) const;
 
       virtual element const&  background() const = 0;
       virtual element&        background()       = 0;

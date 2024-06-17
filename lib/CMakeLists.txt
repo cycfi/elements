@@ -27,6 +27,7 @@ add_subdirectory(artist)
 
 set(ELEMENTS_SOURCES
    src/element/button.cpp
+   src/element/busy_bar.cpp
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
@@ -72,6 +73,7 @@ set(ELEMENTS_HEADERS
    include/elements.hpp
    include/elements/app.hpp
    include/elements/base_view.hpp
+   include/elements/element/busy_bar.hpp
    include/elements/element.hpp
    include/elements/element/align.hpp
    include/elements/element/button.hpp

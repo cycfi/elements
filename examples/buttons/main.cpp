@@ -88,8 +88,6 @@ auto make_buttons(view& view_)
    auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
    auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));
    auto note            = button(icons::cog, "Setup", 1.0, brblue);
-   auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
-   auto prog_advance    = icon_button(icons::plus);
    auto disabled_button = button("Disabled Button");
 
    // This is the new way of making buttons that is consistent with the label
@@ -180,17 +178,6 @@ auto make_buttons(view& view_)
          }
       };
 
-   prog_advance.on_click =
-      [prog_bar, &view_](bool) mutable
-      {
-         auto val = prog_bar->value();
-         if (val > 0.9)
-            prog_bar->value(0.0);
-         else
-            prog_bar->value(val + 0.125);
-         view_.refresh(*prog_bar);
-      };
-
    static auto const grid = make_equal_grid<3>();
    auto disabled_label = label("Disabled");
    disabled_label.enable(false);
@@ -203,10 +190,6 @@ auto make_buttons(view& view_)
             margin_top(20, hold(lbutton)),
             margin_top(20, hold(reset)),
             margin_top(20, note),
-            margin_top(20, htile(
-               margin_right(3, valign(0.5, prog_advance)),
-               vsize(27, hold(prog_bar))
-            )),
             margin_top(20, disabled_button),
             margin_top(20,
                htile(

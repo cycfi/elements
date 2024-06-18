@@ -1,0 +1,222 @@
+/*=============================================================================
+   Copyright (c) 2020 Michał Urbański
+   Copyright (c) 2024 Flole
+   Copyright (c) 2024 Joel de Guzman
+
+   Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
+=============================================================================*/
+#if !defined(ELEMENTS_STATUS_BAR_JANUARY_20_2020)
+#define ELEMENTS_STATUS_BAR_JANUARY_20_2020
+
+#include <elements/element/element.hpp>
+#include <elements/support/receiver.hpp>
+#include <type_traits>
+
+namespace cycfi::elements
+{
+   ////////////////////////////////////////////////////////////////////////////
+   // Progress Bar
+   ////////////////////////////////////////////////////////////////////////////
+   class status_bar_base : public element, public receiver<double>
+   {
+   public:
+                              status_bar_base(double init_value)
+                               : _value(init_value)
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
+
+      double                  value() const override { return _value; }
+      void                    value(double val) override;
+
+      virtual rect            background_bounds(context const& ctx) const;
+      virtual rect            foreground_bounds(context const& ctx) const;
+
+      virtual element const&  background() const = 0;
+      virtual element&        background() = 0;
+      virtual element const&  foreground() const = 0;
+      virtual element&        foreground() = 0;
+
+   private:
+
+      double                  _value;
+   };
+
+   class basic_progress_bar_base : public status_bar_base
+   {
+   public:
+                              basic_progress_bar_base(double init_value)
+                               : status_bar_base(init_value)
+                              {}
+   };
+
+   namespace concepts
+   {
+      template <typename T>
+      concept StatusBar = std::is_base_of_v<status_bar_base, std::decay_t<T>>;
+   }
+
+   template <
+      concepts::Element Background
+    , concepts::Element Foreground
+    , concepts::StatusBar Base = basic_progress_bar_base
+   >
+   class basic_progress_bar : public Base
+   {
+   public:
+
+      using background_type = std::decay_t<Background>;
+      using foreground_type = std::decay_t<Foreground>;
+
+                              basic_progress_bar(
+                                 Background&& bg
+                               , Foreground&& fg
+                               , double init_value
+                              )
+                               : Base(init_value)
+                               , _background(std::forward<Foreground>(bg))
+                               , _foreground(std::forward<Background>(fg))
+                              {}
+
+                              basic_progress_bar(
+                                 Background const& bg
+                               , Foreground const& fg
+                               , double init_value
+                              )
+                               : Base(init_value)
+                               , _foreground(fg)
+                               , _background(bg)
+                              {}
+
+      element const&          background() const override { return _background; }
+      element&                background() override { return _background; }
+      element const&          foreground() const override { return _foreground; }
+      element&                foreground() override { return _foreground; }
+
+   private:
+
+      background_type         _background;
+      foreground_type         _foreground;
+   };
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   basic_progress_bar<Background, Foreground, basic_progress_bar_base>
+   progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0)
+   {
+      return {
+         std::forward<Background>(bg),
+         std::forward<Foreground>(fg),
+         init_value
+      };
+   }
+
+   class busy_bar_base : public status_bar_base
+   {
+   public:
+                              busy_bar_base(
+                                 double init_value = 0.0
+                               , double start_value = 0.0
+                              )
+                               : status_bar_base(init_value)
+                               , _start(start_value)
+                               , _status(-0.2)
+                              {}
+
+      void                    start(double val);
+      double                  start() const { return _start; }
+      void                    animate(view& view_, duration time);
+
+      rect                    foreground_bounds(context const& ctx) const override;
+
+   private:
+
+      void                    animate(view& view_);
+
+      double                  _start;  // Start position
+      double                  _status;
+      duration                _time;
+   };
+
+   class basic_busy_bar_base : public busy_bar_base
+   {
+   public:
+                              basic_busy_bar_base(
+                                 double init_value
+                               , double start_value
+                              )
+                               : busy_bar_base(init_value, start_value)
+                              {}
+   };
+
+   namespace concepts
+   {
+      template <typename T>
+      concept BusyBar = std::is_base_of_v<busy_bar_base, std::decay_t<T>>;
+   }
+
+   template <
+      concepts::Element Background
+    , concepts::Element Foreground
+    , concepts::BusyBar Base = basic_busy_bar_base
+    >
+   class basic_busy_bar : public Base
+   {
+   public:
+
+      using background_type = std::decay_t<Background>;
+      using foreground_type = std::decay_t<Foreground>;
+
+                                 basic_busy_bar(
+                                    Background&& bg
+                                  , Foreground&& fg
+                                  , double init_value
+                                  , double start_value
+                                 )
+                                  : Base(init_value, start_value)
+                                  , _background(std::forward<Foreground>(bg))
+                                  , _foreground(std::forward<Background>(fg))
+                                 {}
+
+                                 basic_busy_bar(
+                                    Background const& bg
+                                  , Foreground const& fg
+                                  , double init_value
+                                  , double start_value
+                                 )
+                                  : Base(init_value, start_value)
+                                  , _foreground(fg)
+                                  , _background(bg)
+                                 {}
+
+      element const&          background() const override { return _background; }
+      element&                background() override { return _background; }
+      element const&          foreground() const override { return _foreground; }
+      element&                foreground() override { return _foreground; }
+
+   private:
+
+      background_type         _background;
+      foreground_type         _foreground;
+   };
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   basic_busy_bar<Background, Foreground, basic_busy_bar_base>
+   busy_bar(
+      Background&& bg
+    , Foreground&& fg
+    , double init_value = 0.0
+    , double start_value = 0.0
+   )
+   {
+      return {
+         std::forward<Background>(bg),
+         std::forward<Foreground>(fg),
+         init_value,
+         start_value
+      };
+   }
+}
+
+#endif

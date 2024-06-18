@@ -68,7 +68,6 @@ auto make_bars(view& view_)
       );
 }
 
-
 int main(int argc, char* argv[])
 {
    app _app("Status Bars");

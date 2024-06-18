@@ -27,7 +27,6 @@ add_subdirectory(artist)
 
 set(ELEMENTS_SOURCES
    src/element/button.cpp
-   src/element/busy_bar.cpp
    src/element/child_window.cpp
    src/element/composite.cpp
    src/element/dial.cpp
@@ -35,14 +34,6 @@ set(ELEMENTS_SOURCES
    src/element/element.cpp
    src/element/floating.cpp
    src/element/flow.cpp
-   src/element/style/button.cpp
-   src/element/style/check_box.cpp
-   src/element/style/icon_button.cpp
-   src/element/style/menu.cpp
-   src/element/style/radio_button.cpp
-   src/element/style/slide_switch.cpp
-   src/element/style/slider.cpp
-   src/element/style/thumbwheel.cpp
    src/element/grid.cpp
    src/element/image.cpp
    src/element/label.cpp
@@ -52,20 +43,28 @@ set(ELEMENTS_SOURCES
    src/element/misc.cpp
    src/element/popup.cpp
    src/element/port.cpp
-   src/element/progress_bar.cpp
    src/element/proxy.cpp
    src/element/range_slider.cpp
    src/element/selection.cpp
    src/element/slider.cpp
+   src/element/status_bar.cpp
+   src/element/style/button.cpp
+   src/element/style/check_box.cpp
+   src/element/style/icon_button.cpp
+   src/element/style/menu.cpp
+   src/element/style/radio_button.cpp
+   src/element/style/slide_switch.cpp
+   src/element/style/slider.cpp
+   src/element/style/thumbwheel.cpp
    src/element/text.cpp
    src/element/thumbwheel.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
-   src/support/text_utils.cpp
-   src/support/receiver.cpp
-   src/support/theme.cpp
    src/support/payload.cpp
+   src/support/receiver.cpp
+   src/support/text_utils.cpp
+   src/support/theme.cpp
    src/view.cpp
 )
 
@@ -73,7 +72,6 @@ set(ELEMENTS_HEADERS
    include/elements.hpp
    include/elements/app.hpp
    include/elements/base_view.hpp
-   include/elements/element/busy_bar.hpp
    include/elements/element.hpp
    include/elements/element/align.hpp
    include/elements/element/button.hpp
@@ -83,21 +81,6 @@ set(ELEMENTS_HEADERS
    include/elements/element/element.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
-   include/elements/element/style.hpp
-   include/elements/element/style/button.hpp
-   include/elements/element/style/caption.hpp
-   include/elements/element/style/check_box.hpp
-   include/elements/element/style/thumbwheel.hpp
-   include/elements/element/style/dialog.hpp
-   include/elements/element/style/group.hpp
-   include/elements/element/style/icon_button.hpp
-   include/elements/element/style/menu.hpp
-   include/elements/element/style/message_box.hpp
-   include/elements/element/style/notebook.hpp
-   include/elements/element/style/pane.hpp
-   include/elements/element/style/radio_button.hpp
-   include/elements/element/style/tab.hpp
-   include/elements/element/style/text_entry.hpp
    include/elements/element/grid.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp
@@ -109,12 +92,27 @@ set(ELEMENTS_HEADERS
    include/elements/element/misc.hpp
    include/elements/element/popup.hpp
    include/elements/element/port.hpp
-   include/elements/element/progress_bar.hpp
    include/elements/element/proxy.hpp
    include/elements/element/range_slider.hpp
    include/elements/element/selection.hpp
    include/elements/element/size.hpp
    include/elements/element/slider.hpp
+   include/elements/element/status_bar.hpp
+   include/elements/element/style.hpp
+   include/elements/element/style/button.hpp
+   include/elements/element/style/caption.hpp
+   include/elements/element/style/check_box.hpp
+   include/elements/element/style/dialog.hpp
+   include/elements/element/style/group.hpp
+   include/elements/element/style/icon_button.hpp
+   include/elements/element/style/menu.hpp
+   include/elements/element/style/message_box.hpp
+   include/elements/element/style/notebook.hpp
+   include/elements/element/style/pane.hpp
+   include/elements/element/style/radio_button.hpp
+   include/elements/element/style/tab.hpp
+   include/elements/element/style/text_entry.hpp
+   include/elements/element/style/thumbwheel.hpp
    include/elements/element/text.hpp
    include/elements/element/thumbwheel.hpp
    include/elements/element/tile.hpp

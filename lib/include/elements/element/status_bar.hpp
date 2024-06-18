@@ -44,10 +44,10 @@ namespace cycfi::elements
       double                  _value;
    };
 
-   class basic_progress_bar_base : public status_bar_base
+   class basic_status_bar_base : public status_bar_base
    {
    public:
-                              basic_progress_bar_base(double init_value)
+                              basic_status_bar_base(double init_value)
                                : status_bar_base(init_value)
                               {}
    };
@@ -61,33 +61,23 @@ namespace cycfi::elements
    template <
       concepts::Element Background
     , concepts::Element Foreground
-    , concepts::StatusBar Base = basic_progress_bar_base
-   >
-   class basic_progress_bar : public Base
+    , concepts::StatusBar Base = basic_status_bar_base>
+   class basic_status_bar : public Base
    {
    public:
 
       using background_type = std::decay_t<Background>;
       using foreground_type = std::decay_t<Foreground>;
 
-                              basic_progress_bar(
+                              template <typename... Args>
+                              basic_status_bar(
                                  Background&& bg
                                , Foreground&& fg
-                               , double init_value
+                               , Args&& ...args
                               )
-                               : Base(init_value)
+                               : Base(args...)
                                , _background(std::forward<Foreground>(bg))
                                , _foreground(std::forward<Background>(fg))
-                              {}
-
-                              basic_progress_bar(
-                                 Background const& bg
-                               , Foreground const& fg
-                               , double init_value
-                              )
-                               : Base(init_value)
-                               , _foreground(fg)
-                               , _background(bg)
                               {}
 
       element const&          background() const override { return _background; }
@@ -102,7 +92,7 @@ namespace cycfi::elements
    };
 
    template <concepts::Element Background, concepts::Element Foreground>
-   basic_progress_bar<Background, Foreground, basic_progress_bar_base>
+   basic_status_bar<Background, Foreground, basic_status_bar_base>
    progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0)
    {
       return {
@@ -150,59 +140,8 @@ namespace cycfi::elements
                               {}
    };
 
-   namespace concepts
-   {
-      template <typename T>
-      concept BusyBar = std::is_base_of_v<busy_bar_base, std::decay_t<T>>;
-   }
-
-   template <
-      concepts::Element Background
-    , concepts::Element Foreground
-    , concepts::BusyBar Base = basic_busy_bar_base
-    >
-   class basic_busy_bar : public Base
-   {
-   public:
-
-      using background_type = std::decay_t<Background>;
-      using foreground_type = std::decay_t<Foreground>;
-
-                                 basic_busy_bar(
-                                    Background&& bg
-                                  , Foreground&& fg
-                                  , double init_value
-                                  , double start_value
-                                 )
-                                  : Base(init_value, start_value)
-                                  , _background(std::forward<Foreground>(bg))
-                                  , _foreground(std::forward<Background>(fg))
-                                 {}
-
-                                 basic_busy_bar(
-                                    Background const& bg
-                                  , Foreground const& fg
-                                  , double init_value
-                                  , double start_value
-                                 )
-                                  : Base(init_value, start_value)
-                                  , _foreground(fg)
-                                  , _background(bg)
-                                 {}
-
-      element const&          background() const override { return _background; }
-      element&                background() override { return _background; }
-      element const&          foreground() const override { return _foreground; }
-      element&                foreground() override { return _foreground; }
-
-   private:
-
-      background_type         _background;
-      foreground_type         _foreground;
-   };
-
    template <concepts::Element Background, concepts::Element Foreground>
-   basic_busy_bar<Background, Foreground, basic_busy_bar_base>
+   inline basic_status_bar<Background, Foreground, basic_busy_bar_base>
    busy_bar(
       Background&& bg
     , Foreground&& fg

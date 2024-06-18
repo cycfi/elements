@@ -126,7 +126,7 @@ namespace cycfi::elements
 
    void busy_bar_base::animate(view& view_)
    {
-      if (_time == _time.zero())
+      if (is_stopped())
       {
          _status = -0.2;
          value(0.0);

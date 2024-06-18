@@ -9,6 +9,7 @@
 using namespace cycfi::elements;
 using namespace std::chrono_literals;
 
+constexpr auto bred     = colors::red.opacity(0.4);
 constexpr auto bgreen   = colors::green.level(0.7).opacity(0.8);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
@@ -42,12 +43,12 @@ void prog_animate(concepts::StatusBar auto& prog_bar, view& view_)
 
 auto make_bars(view& view_)
 {
-   auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
-   auto bsy_bar         = share(busy_bar(rbox(colors::black), rbox(bgreen)));
-   auto start_stop      = toggle_icon_button(icons::play, icons::stop, 2.0);
+   auto prog_bar = share(progress_bar(rbox(colors::black), rbox(pgold)));
+   auto bsy_bar = share(busy_bar(rbox(colors::black), rbox(bgreen)));
+   auto start_stop = toggle_icon_button(icons::play, icons::stop, 2.0, bred);
 
    start_stop.on_click =
-      [prog_bar, bsy_bar, &view_](bool state) mutable
+      [prog_bar, bsy_bar, &view_](bool state)
       {
          if (state)
          {
@@ -66,7 +67,7 @@ auto make_bars(view& view_)
    return
       margin({20, 20, 20, 20},
          htile(
-            start_stop,
+            align_middle(start_stop),
             hspace(10),
             vtile(
                vsize(27, hold(prog_bar)),

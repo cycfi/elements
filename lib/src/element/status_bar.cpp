@@ -87,9 +87,9 @@ namespace cycfi::elements
    }
 
    // Implement the start method as per the patch
-   void busy_bar_base::start(double val)
+   void busy_bar_base::start_pos(double val)
    {
-      _start = clamp(val, 0.0, 1.0);
+      _start_pos = clamp(val, 0.0, 1.0);
    }
 
    // Implement foreground_bounds to include the start value
@@ -104,16 +104,23 @@ namespace cycfi::elements
 
       // Adjust bounds based on the start value
       if (bounds.width() > bounds.height())
-         bounds.left = bounds.left + (bounds.width() * start());
+         bounds.left = bounds.left + (bounds.width() * start_pos());
       else
-         bounds.bottom = bounds.bottom + (bounds.height() * start());
+         bounds.bottom = bounds.bottom + (bounds.height() * start_pos());
 
       return bounds;
    }
 
-   void busy_bar_base::animate(view& view_, duration time)
+   void busy_bar_base::start(view& view_, duration time)
    {
       _time = time;
+      animate(view_);
+   }
+
+   void busy_bar_base::stop(view& view_)
+   {
+      using namespace std::chrono_literals;
+      _time = 0ms;
       animate(view_);
    }
 
@@ -123,13 +130,13 @@ namespace cycfi::elements
       {
          _status = -0.2;
          value(0.0);
-         start(0.0);
+         start_pos(0.0);
          view_.refresh();
          return;
       }
 
       _status += 0.01;
-      start(_status);
+      start_pos(_status);
       value(_status + 0.2);
       if (_status >= 1.0)
          _status = -0.2;

@@ -10,60 +10,78 @@ using cycfi::artist::rgba;
 namespace colors = cycfi::artist::colors;
 using namespace std::chrono_literals;
 
-constexpr auto bred     = colors::red.opacity(0.4);
-constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
-constexpr auto brblue   = colors::royal_blue.opacity(0.4);
+constexpr auto bgreen   = colors::green.level(0.7).opacity(0.8);
 constexpr auto pgold    = colors::gold.opacity(0.8);
 
 // Main window background color
 auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
+bool run = false;
+template <typename ProgressBar>
+void prog_incr(ProgressBar& prog_bar, view& view_)
+{
+   auto val = prog_bar.value();
+   if (val > 1.0)
+   {
+      prog_bar.value(1.0);
+      run = false;
+   }
+   else
+   {
+      prog_bar.value(val + 0.005);
+   }
+   view_.refresh(prog_bar);
+}
+
+template <typename ProgressBar>
+void prog_animate(ProgressBar& prog_bar, view& view_)
+{
+   if (run)
+   {
+      prog_incr(prog_bar, view_);
+      view_.post(10ms,
+         [&]()
+         {
+            prog_animate(prog_bar, view_);
+         }
+      );
+   }
+}
+
 auto make_bars(view& view_)
 {
    auto prog_bar        = share(progress_bar(rbox(colors::black), rbox(pgold)));
-   auto bsy_bar         = share(busy_bar(rbox(colors::black), rbox(brblue)));
-   auto prog_advance    = icon_button(icons::plus);
-   auto busy_start      = button("I", 1.0, bgreen);
-   auto busy_stop       = button("O", 1.0, bred);
+   auto bsy_bar         = share(busy_bar(rbox(colors::black), rbox(bgreen)));
+   auto start_stop      = toggle_icon_button(icons::play, icons::stop, 2.0);
 
-   prog_advance.on_click =
-      [prog_bar, &view_](bool) mutable
+   start_stop.on_click =
+      [prog_bar, bsy_bar, &view_](bool state) mutable
       {
-         auto val = prog_bar->value();
-         if (val > 0.9)
+         if (state)
+         {
+            bsy_bar->start(view_, 10ms);
+            run = true;
             prog_bar->value(0.0);
+            prog_animate(*prog_bar, view_);
+         }
          else
-            prog_bar->value(val + 0.125);
-         view_.refresh(*prog_bar);
-      };
-
-   busy_stop.on_click =
-      [bsy_bar, &view_](bool) mutable
-      {
-         bsy_bar->animate(view_, 0ms);
-      };
-
-   busy_start.on_click =
-      [bsy_bar, &view_](bool) mutable
-      {
-         bsy_bar->animate(view_, 50ms);
+         {
+            bsy_bar->stop(view_);
+            run = false;
+         }
       };
 
    return
-      margin({20, 0, 20, 20},
-         vtile(
-            margin_top(20, htile(
-               margin_right(3, valign(0.5, prog_advance)),
-               vsize(27, hold(prog_bar))
-            )),
-            margin_top(20, vtile(
-               margin_right(3, htile(
-                  busy_stop,
-                  busy_start
-               )),
+      margin({20, 20, 20, 20},
+         htile(
+            start_stop,
+            hspace(10),
+            vtile(
+               vsize(27, hold(prog_bar)),
+               vspace(10),
                vsize(27, hold(bsy_bar))
-            ))
+            )
          )
       );
 }

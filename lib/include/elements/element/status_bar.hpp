@@ -14,9 +14,6 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Progress Bar
-   ////////////////////////////////////////////////////////////////////////////
    class status_bar_base : public element, public receiver<double>
    {
    public:
@@ -44,14 +41,6 @@ namespace cycfi::elements
       double                  _value;
    };
 
-   class basic_status_bar_base : public status_bar_base
-   {
-   public:
-                              basic_status_bar_base(double init_value)
-                               : status_bar_base(init_value)
-                              {}
-   };
-
    namespace concepts
    {
       template <typename T>
@@ -61,7 +50,7 @@ namespace cycfi::elements
    template <
       concepts::Element Background
     , concepts::Element Foreground
-    , concepts::StatusBar Base = basic_status_bar_base>
+    , concepts::StatusBar Base = status_bar_base>
    class basic_status_bar : public Base
    {
    public:
@@ -92,7 +81,7 @@ namespace cycfi::elements
    };
 
    template <concepts::Element Background, concepts::Element Foreground>
-   basic_status_bar<Background, Foreground, basic_status_bar_base>
+   inline basic_status_bar<Background, Foreground, status_bar_base>
    progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0)
    {
       return {
@@ -107,16 +96,18 @@ namespace cycfi::elements
    public:
                               busy_bar_base(
                                  double init_value = 0.0
-                               , double start_value = 0.0
+                               , double start_pos = 0.0
                               )
                                : status_bar_base(init_value)
-                               , _start(start_value)
+                               , _start_pos(start_pos)
                                , _status(-0.2)
                               {}
 
-      void                    start(double val);
-      double                  start() const { return _start; }
-      void                    animate(view& view_, duration time);
+      void                    start_pos(double val);
+      double                  start_pos() const { return _start_pos; }
+
+      void                    start(view& view_, duration time);
+      void                    stop(view& view_);
 
       rect                    foreground_bounds(context const& ctx) const override;
 
@@ -124,37 +115,24 @@ namespace cycfi::elements
 
       void                    animate(view& view_);
 
-      double                  _start;  // Start position
+      double                  _start_pos;
       double                  _status;
       duration                _time;
    };
 
-   class basic_busy_bar_base : public busy_bar_base
-   {
-   public:
-                              basic_busy_bar_base(
-                                 double init_value
-                               , double start_value
-                              )
-                               : busy_bar_base(init_value, start_value)
-                              {}
-   };
-
    template <concepts::Element Background, concepts::Element Foreground>
-   inline basic_status_bar<Background, Foreground, basic_busy_bar_base>
+   inline basic_status_bar<Background, Foreground, busy_bar_base>
    busy_bar(
       Background&& bg
     , Foreground&& fg
     , double init_value = 0.0
-    , double start_value = 0.0
+    , double start_pos = 0.0
    )
    {
       return {
          std::forward<Background>(bg),
          std::forward<Foreground>(fg),
-         init_value,
-         start_value
-      };
+         init_value, start_pos};
    }
 }
 

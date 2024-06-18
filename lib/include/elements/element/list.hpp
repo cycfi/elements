@@ -15,9 +15,19 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // The cell composer abstract class
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class cell_composer
+    *
+    * \brief
+    *    An abstract base for classes that need to handle layout composition
+    *    for elements placed in cells inside a list.
+    *
+    *    The class declares several pure virtual functions for managing and
+    *    rendering elements in a dynamic list structure, including
+    *    calculating the number of elements, resizing the list, creating or
+    *    composing an element at a specific index, and determining the size
+    *    and limits of elements along both the main and secondary axes.
+    */
    class cell_composer : public std::enable_shared_from_this<cell_composer>
    {
    public:
@@ -35,9 +45,16 @@ namespace cycfi::elements
       virtual float           main_axis_size(std::size_t index, basic_context const& ctx) const = 0;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // This cell composer has fixed-sized width limits and line-height.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class static_limits_cell_composer
+    *
+    * \brief
+    *    A cell composer with fixed-size width limits and line-height. The
+    *    composed cells have fixed width limits and line-height.
+    *
+    * \tparam Base
+    *    The base cell composer type.
+    */
    template <typename Base = cell_composer>
    class static_limits_cell_composer : public Base
    {
@@ -73,6 +90,27 @@ namespace cycfi::elements
    // first element in the list (index 0). This cell composer has fixed-sized
    // width limits and line-height.
    ////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * \class fixed_derived_limits_cell_composer
+    *
+    * \brief
+    *    A cell composer with fixed-size width limits and line-height derived
+    *    from the first cell.
+    *
+    *    Inherits from a base cell composer and overrides some of its virtual
+    *    functions. The width limits and the line-height are derived from the
+    *    size of the first cell in the list (index 0) and subsequent cells
+    *    also have these fixed dimensions.
+    *
+    *    Deriving information from the first cell implies that there should
+    *    at least be one cell. To overcome this limitation, the composer can
+    *    check if the list is empty and generate an prototypical cell in such
+    *    cases.
+    *
+    * \tparam Base
+    *    The base cell composer type.
+    */
    template <typename Base = cell_composer>
    class fixed_derived_limits_cell_composer : public Base
    {
@@ -101,9 +139,27 @@ namespace cycfi::elements
    [[deprecated("Use vfixed_derived_limits_cell_composer instead.")]]
       = fixed_derived_limits_cell_composer<Base>;
 
+   /**
+    * \brief
+    *    Vertical fixed derived limits cell composer.
+    *
+    * \tparam Base
+    *    The base cell composer type.
+    */
    template<typename Base = cell_composer>
    using vfixed_derived_limits_cell_composer = fixed_derived_limits_cell_composer<Base>;
 
+   /**
+    * \class hfixed_derived_limits_cell_composer
+    *
+    * \brief
+    *    Horizontal fixed derived limits cell composer with specifics for
+    *    handling columns.
+    *
+    * \tparam Base
+    *    The base cell composer type.
+    *
+    */
    template<typename Base = cell_composer>
    class hfixed_derived_limits_cell_composer: public fixed_derived_limits_cell_composer<Base>
    {
@@ -123,9 +179,15 @@ namespace cycfi::elements
    [[deprecated("Use hfixed_derived_limits_cell_composer instead.")]]
       = hfixed_derived_limits_cell_composer<Base>;
 
-   ////////////////////////////////////////////////////////////////////////////
-   // This cell composer has fixed-length (number of list elements).
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class fixed_length_cell_composer
+    *
+    * \brief
+    *    A cell composer that has a fixed length (number of list elements).
+
+    * \tparam Base
+    *    The base cell composer type.
+    */
    template <typename Base = cell_composer>
    class fixed_length_cell_composer : public Base
    {
@@ -170,9 +232,22 @@ namespace cycfi::elements
       F                       _compose;
    };
 
-   ////////////////////////////////////////////////////////////////////////////
-   // basic_cell_composer given the number of elements and a compose function
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class function_cell_composer
+    *
+    * \brief
+    *    Create a fixed length vertical basic cell composer given the number
+    *    of elements and a compose function.
+    *
+    * \tparam F
+    *    The function type used to compose the cell elements.
+    *
+    * \tparam Base
+    *    The base cell composer type.
+    *
+    * @return
+    *    Shared pointer to a cell composer.
+    */
    template <typename F>
    inline auto basic_cell_composer(std::size_t size, F&& compose)
    {
@@ -193,7 +268,24 @@ namespace cycfi::elements
       return basic_cell_composer(size, compose);
    }
 
-   template<typename F>
+   /**
+    * \brief
+    *    Create a fixed length vertical basic cell composer given the number
+    *    of elements and a compose function.
+    *
+    * \tparam F
+    *    The function type used for composing cells.
+    *
+    * \param size
+    *    The number of cells.
+    *
+    * \param compose
+    *    Function used to compose the cells.
+    *
+    * @return
+    *     Shared pointer to a cell composer.
+    */
+   template <typename F>
    inline auto basic_vcell_composer(std::size_t size, F&& compose)
    {
       return basic_cell_composer(size, compose);
@@ -213,6 +305,23 @@ namespace cycfi::elements
       return share(return_type{size, std::forward<ftype>(compose)});
    }
 
+   /**
+    * \brief
+    *    Create a fixed length horizontal basic cell composer given the
+    *    number of elements and a compose function.
+    *
+    * \tparam F
+    *    The function type used for composing cells.
+    *
+    * \param size
+    *    The number of cells.
+    *
+    * \param compose
+    *    Function used to compose the cells.
+    *
+    * @return
+    *     Shared pointer to a cell composer.
+    */
    template<typename F>
    inline auto basic_hcell_composer(std::size_t size, F&& compose)
    {
@@ -226,13 +335,30 @@ namespace cycfi::elements
       return share(return_type{size, std::forward<ftype>(compose)});
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // basic_cell_composer given the min_width, line_height, number of
-   // elements and a compose function.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief
+    *    Create a fixed length horizontal basic cell composer, with specified
+    *    minimum secondary axis, main axis size, number of elements and a
+    *    compose function.
+    *
+    * \tparam F
+    *    The function type used for composing cells.
+    *
+    * \param size
+    *    The number of cells.
+    *
+    * \param compose
+    *    Function used to compose the cells.
+    *
+    * @return
+    *     Shared pointer to a cell composer.
+    */
    template <typename F>
    inline auto basic_cell_composer(
-      float min_secondary_axis_size, float main_axis_size, std::size_t size, F&& compose
+      float min_secondary_axis_size
+    , float main_axis_size
+    , std::size_t size
+    , F&& compose
    )
    {
       using ftype = remove_cvref_t<F>;
@@ -252,10 +378,24 @@ namespace cycfi::elements
       );
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // basic_cell_composer given the min_width, max_width, line_height, number
-   // of elements and a compose function.
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief
+    *    Create a fixed length horizontal basic cell composer, with specified
+    *    minimum and maximum secondary axis, main axis size, number of
+    *    elements and a compose function.
+    *
+    * \tparam F
+    *    The function type used for composing cells.
+    *
+    * \param size
+    *    The number of cells.
+    *
+    * \param compose
+    *    Function used to compose the cells.
+    *
+    * @return
+    *     Shared pointer to a cell composer.
+    */
    template <typename F>
    inline auto basic_cell_composer(
       float min_secondary_axis_size
@@ -283,9 +423,24 @@ namespace cycfi::elements
       );
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // The main list class -> vertical by default
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class list
+    *
+    * \brief
+    *    Main class for managing a vertically oriented list of elements.
+    *
+    *    The `list` class manages a collection of cell elements in a vertical
+    *    list. This class works with a cell composer to manage layout and
+    *    drawing operations. The class provides methods to resize the list,
+    *    update list cells, and perform list operations like insertion,
+    *    deletion, and movement of items.
+    *
+    *    The list class provides options for managing the list either
+    *    externally or internally. When managing the list externally, only
+    *    visible elements are guaranteed to be held in memory. A garbage
+    *    collection scheme is implemented to clean up hidden elements,
+    *    recreating them only as needed.
+    */
    class list : public composite_base
    {
    public:
@@ -390,6 +545,15 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // The horizontal list class
    ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \class hlist
+    *
+    * \brief
+    *    Class for managing a horizontally oriented list of cells.
+    *
+    *    The class inherits from `list` and overrides functions to enable
+    *    horizontal cell composition.
+    */
    class hlist : public list
    {
    public:
@@ -409,7 +573,30 @@ namespace cycfi::elements
    // The old name is deprecated
    using hdynamic_list [[deprecated("Use hlist instead.")]] = hlist;
 
-   // Utility to move items in a vector `v` from given `indices` to a new position, `pos`.
+   /**
+    * \brief
+    *    Utility function to move items in a vector `v` from given `indices`
+    *    to a new position `pos`.
+    *
+    *    This utility takes a vector and moves the elements from the provided
+    *    indices to a specified position. The moved elements retain their
+    *    relative order. If the new position is beyond the range of the
+    *    vector, the elements will be moved to the end of the vector. The
+    *    indices should be valid indices in vector `v`.
+    *
+    * \tparam T
+    *    The type of elements contained in the vector.
+    *
+    * \param v
+    *    Vector in which elements will be moved.
+    *
+    * \param pos
+    *    Target position in the vector to which the elements will be moved.
+    *
+    * \param indices
+    *    Vector of indexed positions of the elements in vector `v` to be
+    *    moved.
+    */
    template <typename T>
    inline void move_indices(std::vector<T>& v, std::size_t pos, std::vector<std::size_t> const& indices)
    {
@@ -438,6 +625,25 @@ namespace cycfi::elements
    }
 
    // Utility to erase items in a vector `v` with given `indices`.
+
+   /**
+    * \brief
+    *    Utility function to erase items from a vector `v` at the given `indices`.
+    *
+    *    This utility works by iterating over the indices vector in reverse
+    *    order and erasing each corresponding element from the vector `v`.
+    *    The indices vector should point to valid items in vector `v`.
+    *
+    * \tparam T
+    *    The type of elements contained in the vector.
+    *
+    * \param v
+    *    Vector in which elements will be erased.
+    *
+    * \param indices
+    *    Vector of indexed positions of the elements in vector `v` to be
+    *    erased.
+    */
    template <typename T>
    inline void erase_indices(std::vector<T>& v, std::vector<std::size_t> const& indices)
    {
@@ -449,6 +655,29 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+   namespace inlines {}
+
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param min_secondary_axis_size
+    *    Minimum size along the secondary axis of the cell.
+    *
+    * \param main_axis_size
+    *    Size along the main axis of the cell.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline static_limits_cell_composer<Base>::static_limits_cell_composer(
@@ -461,6 +690,30 @@ namespace cycfi::elements
     , _secondary_axis_limits{min_secondary_axis_size, full_extent}
    {}
 
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param min_secondary_axis_size
+    *    Minimum size along the secondary axis of the cell.
+    *
+    * \param max_secondary_axis_size
+    *    Maximum size along the secondary axis of the cell.
+    *
+    * \param main_axis_size
+    *    Size along the main axis of the cell.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline static_limits_cell_composer<Base>::static_limits_cell_composer(
@@ -487,7 +740,6 @@ namespace cycfi::elements
       return _main_axis_size;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
    template <typename Base>
    template <typename... Rest>
    inline fixed_derived_limits_cell_composer<Base>::fixed_derived_limits_cell_composer(
@@ -498,6 +750,19 @@ namespace cycfi::elements
     , _secondary_axis_limits{-1, full_extent}
    {}
 
+   /**
+    * \brief
+    *    Get the secondary axis limits of a static_limits_cell_composer object.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \param ctx
+    *    The basic_context object.
+    *
+    * @return
+    *    The cell's size limits along the secondary axis.
+    */
    template <typename Base>
    inline cell_composer::limits
    fixed_derived_limits_cell_composer<Base>::secondary_axis_limits(basic_context const& ctx) const
@@ -507,6 +772,24 @@ namespace cycfi::elements
       return _secondary_axis_limits;
    }
 
+   /**
+    * \brief
+    *    Get the main axis size of a static_limits_cell_composer object.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \param index
+    *    The cell index.
+    *
+    * \param ctx
+    *    A reference to the basic_context of the element, which provides
+    *    access to the current view and canvas. The context can be used in
+    *    calculating size limits of the element.
+    *
+    * @return
+    *    The cell's size along the main axis.
+    */
    template <typename Base>
    inline float fixed_derived_limits_cell_composer<Base>::main_axis_size(std::size_t /*index*/, basic_context const& ctx) const
    {
@@ -515,6 +798,7 @@ namespace cycfi::elements
       return _main_axis_size;
    }
 
+   // Private member function
    template <typename Base>
    void fixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx) const
    {
@@ -524,6 +808,21 @@ namespace cycfi::elements
       _main_axis_size = lim.min.y;
    }
 
+   /**
+    * \brief
+    *    Constructor.
+    *
+    * \tparam Base
+    *    The base class.
+    *
+    * \tparam Rest
+    *    A variadic template parameter for handling an arbitrary number of
+    *    additional arguments.
+    *
+    * \param rest
+    *    Parameter pack containing any additional arguments to be forwarded
+    *    to the Base class's constructor.
+    */
    template <typename Base>
    template <typename... Rest>
    inline hfixed_derived_limits_cell_composer<Base>::hfixed_derived_limits_cell_composer(
@@ -532,6 +831,7 @@ namespace cycfi::elements
     : fixed_derived_limits_cell_composer<Base> (std::forward<Rest>(rest)...)
    {}
 
+   // Private member function
    template<typename Base>
    void hfixed_derived_limits_cell_composer<Base>::get_limits(basic_context const& ctx)  const
    {
@@ -541,7 +841,22 @@ namespace cycfi::elements
       this->_main_axis_size = lim.min.x;
    }
 
-   inline void list::set_bounds(context& ctx, float main_axis_pos, cell_info &cell) const
+   /**
+    * \brief
+    *    Set the bounds of the list object.
+    *
+    * \param ctx
+    *    A reference to the basic_context of the element, which provides
+    *    access to the current view and canvas. The context can be used in
+    *    calculating size limits of the element.
+    *
+    * \param main_axis_pos
+    *    The position along the main axis.
+    *
+    * \param cell
+    *    The cell_info object to be used for calculations.
+    */
+   inline void list::set_bounds(context& ctx, float main_axis_pos, cell_info& cell) const
    {
       set_bounds(ctx.bounds, main_axis_pos, cell);
    }

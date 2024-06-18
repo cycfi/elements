@@ -8,13 +8,13 @@
 
 namespace cycfi::elements
 {
-   view_limits default_label::limits(basic_context const& ctx) const
+   view_limits default_label_styler::limits(basic_context const& ctx) const
    {
       auto  size = measure_text(ctx.canvas, get_text().c_str(), get_font().size(get_font_size()));
       return {{size.x, size.y}, {size.x, size.y}};
    }
 
-   void default_label::draw(context const& ctx)
+   void default_label_styler::draw(context const& ctx)
    {
       auto& canvas_ = ctx.canvas;
       auto  state = canvas_.new_state();
@@ -61,12 +61,12 @@ namespace cycfi::elements
       canvas_.fill_text(get_text().c_str(), point{cx, cy});
    }
 
-   void default_label::enable(bool state)
+   void default_label_styler::enable(bool state)
    {
       _is_enabled = state;
    }
 
-   bool default_label::is_enabled() const
+   bool default_label_styler::is_enabled() const
    {
       return _is_enabled;
    }

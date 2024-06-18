@@ -43,7 +43,9 @@ namespace cycfi::elements
 
    /**
     *  \struct receiver<T>
-    *  \brief An abstract base class to provide value control for a type `T`.
+    *
+    *  \brief
+    *    An abstract base class to provide value control for a type `T`.
     *
     *  \tparam T The type of value that the receiver will handle.
     */
@@ -61,7 +63,9 @@ namespace cycfi::elements
 
    /**
     *  \struct receiver<std::string>
-    *  \brief Specialization of `receiver<T>` for `std::string`.
+    *
+    *  \brief
+    *    Specialization of `receiver<T>` for `std::string`.
     */
    template <>
    struct receiver<std::string> : receiver_base
@@ -77,7 +81,9 @@ namespace cycfi::elements
 
    /**
     *  \struct basic_receiver<T>
-    *  \brief Basic value receiver that saves the value in a member variable.
+    *
+    *  \brief
+    *    Basic value receiver that saves the value in a member variable.
     *
     *  \tparam T The type of value that this receiver will handle.
     */
@@ -102,8 +108,11 @@ namespace cycfi::elements
    namespace inlines {}
 
    /**
-    * \brief Set the receiver's value.
-    * \param val The new value for the receiver.
+    * \brief
+    *    Set the receiver's value.
+    *
+    * \param val
+    *    The new value for the receiver.
     */
    template <typename T>
    inline void basic_receiver<T>::value(param_type val)
@@ -112,8 +121,11 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief get the receiver's value.
-    * \return The value of the receiver.
+    * \brief
+    *    get the receiver's value.
+    *
+    * \return
+    *    The value of the receiver.
     */
    template <typename T>
    inline T basic_receiver<T>::value() const

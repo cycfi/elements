@@ -352,7 +352,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to left and top.
+    * \brief
+    *    Create an element that is aligned to left and top.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -370,7 +371,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to center and top.
+    * \brief
+    *    Create an element that is aligned to center and top.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -388,7 +390,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to right and top.
+    * \brief
+    *    Create an element that is aligned to right and top.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -406,7 +409,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to left and middle.
+    * \brief
+    *    Create an element that is aligned to left and middle.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -424,7 +428,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to center and middle.
+    * \brief
+    *    Create an element that is aligned to center and middle.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -442,7 +447,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to right and middle.
+    * \brief
+    *    Create an element that is aligned to right and middle.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -460,7 +466,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to left and bottom.
+    * \brief
+    *    Create an element that is aligned to left and bottom.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -478,7 +485,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to center and bottom.
+    * \brief
+    *    Create an element that is aligned to center and bottom.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.
@@ -496,7 +504,8 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Create an element that is aligned to right and bottom.
+    * \brief
+    *    Create an element that is aligned to right and bottom.
     *
     * \tparam Subject
     *    The subject type, must meet the `Element` concept.

@@ -179,11 +179,12 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Constructs an empty `element` instance.
+    * \brief
+    *    Constructs an empty `element` instance.
     *
-    * This function is used to create an instance of an `element` that is
-    * effectively empty. This can be useful for creating placeholder or
-    * default elements within a UI.
+    *    This function is used to create an instance of an `element` that is
+    *    effectively empty. This can be useful for creating placeholder or
+    *    default elements within a UI.
     *
     * \return
     *    An instance of an `element` that has no associated properties or

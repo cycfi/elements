@@ -47,7 +47,8 @@ namespace cycfi::elements
    /**
     * \struct sender<std::string>
     *
-    * \brief Specialization of sender for `std::string`.
+    * \brief
+    *    Specialization of sender for `std::string`.
     */
    template <>
    struct sender<std::string> : sender_base

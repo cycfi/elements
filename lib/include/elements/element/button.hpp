@@ -33,13 +33,14 @@ namespace cycfi::elements
    /**
     *  \struct button_state
     *
-    *  \brief A structure to maintain and manage the state of a button.
+    *  \brief
+    *    A structure to maintain and manage the state of a button.
     *
-    *  This structure captures the various states that a button can have:
-    *  - `value`: The button's value; 0(off) or 1(on).
-    *  - `hilite`: True if the button is highlighted.
-    *  - `tracking`: True if the mouse button being pressed.
-    *  - `enabled`: True if the button is enabled.
+    *    This structure captures the various states that a button can have:
+    *    - `value`: The button's value; 0(off) or 1(on).
+    *    - `hilite`: True if the button is highlighted.
+    *    - `tracking`: True if the mouse button being pressed.
+    *    - `enabled`: True if the button is enabled.
     */
    struct button_state
    {
@@ -350,7 +351,8 @@ namespace cycfi::elements
    };
 
    /**
-    *  \brief Get the current selection state of the button.
+    *  \brief
+    *    Get the current selection state of the button.
     *
     *    This function uses the `value()` method to get the current selection
     *    state of the button.
@@ -365,7 +367,8 @@ namespace cycfi::elements
    }
 
    /**
-    *  \brief Set the selection state of the button.
+    *  \brief
+    *    Set the selection state of the button.
     *
     *    This function uses the `value()` member function to set the new
     *    state of the button.

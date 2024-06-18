@@ -108,6 +108,7 @@ namespace cycfi::elements
 
       void                    start(view& view_, duration time);
       void                    stop(view& view_);
+      bool                    is_stopped() const { return _time == _time.zero(); }
 
       rect                    foreground_bounds(context const& ctx) const override;
 
@@ -132,7 +133,8 @@ namespace cycfi::elements
       return {
          std::forward<Background>(bg),
          std::forward<Foreground>(fg),
-         init_value, start_pos};
+         init_value, start_pos
+      };
    }
 }
 

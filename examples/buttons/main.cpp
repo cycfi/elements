@@ -178,33 +178,40 @@ auto make_buttons(view& view_)
          }
       };
 
-   static auto const grid = make_equal_grid<3>();
    auto disabled_label = label("Disabled");
    disabled_label.enable(false);
 
    return
-      margin({20, 0, 20, 20},
+      margin({20, 20, 20, 20},
          vtile(
-            margin_top(20, mbutton),
-            margin_top(20, tbutton),
-            margin_top(20, hold(lbutton)),
-            margin_top(20, hold(reset)),
-            margin_top(20, note),
-            margin_top(20, disabled_button),
-            margin_top(20,
-               htile(
-                  label("Enabled"),
-                  hspace(10),
-                  align_left(slide_btn1),
-                  hmargin(10, label("Slide Buttons")),
-                  align_right(slide_btn2),
-                  hspace(10),
-                  disabled_label
-               )
+            mbutton,
+            vspace(15),
+            tbutton,
+            vspace(15),
+            hold(lbutton),
+            vspace(15),
+            hold(reset),
+            vspace(15),
+            note,
+            vspace(15),
+            disabled_button,
+            vspace(15),
+            htile(
+               label("Enabled"),
+               hspace(10),
+               align_left(slide_btn1),
+               hspace(10),
+               label("Slide Buttons"),
+               align_right(slide_btn2),
+               hspace(10),
+               disabled_label
             ),
-            margin_top(20, hgrid(grid, left, center, right)),
-            margin_top(20, hgrid(grid, left_rounded, center_square, right_rounded)),
-            margin_top(20, custom)
+            vspace(15),
+            hgrid(left, center, right),
+            vspace(15),
+            hgrid(left_rounded, center_square, right_rounded),
+            vspace(15),
+            custom
          )
       );
 }
@@ -226,15 +233,17 @@ auto make_controls(view& view_)
 
    auto  check_boxes =
          group("Check boxes",
-            margin({10, 10, 20, 20},
-               margin_top(25,
-                  vtile(
-                     margin_top(10, align_left(check_box1)),
-                     margin_top(10, align_left(check_box2)),
-                     margin_top(10, align_left(check_box3)),
-                     margin_top(10, align_left(check_box4)),
-                     margin_top(10, align_left(check_box5))
-                  )
+            margin({10, 45, 20, 20},
+               vtile(
+                  align_left(check_box1),
+                  vspace(10),
+                  align_left(check_box2),
+                  vspace(10),
+                  align_left(check_box3),
+                  vspace(10),
+                  align_left(check_box4),
+                  vspace(10),
+                  align_left(check_box5)
                )
             )
          );
@@ -249,14 +258,15 @@ auto make_controls(view& view_)
 
    auto  radio_buttons =
          group("Radio Buttons",
-            margin({10, 10, 20, 20},
-               margin_top(25,
-                  vtile(
-                     margin_top(10, align_left(radio_button1)),
-                     margin_top(10, align_left(radio_button2)),
-                     margin_top(10, align_left(radio_button3)),
-                     margin_top(10, align_left(radio_button4))
-                  )
+            margin({10, 45, 20, 20},
+               vtile(
+                  align_left(radio_button1),
+                  vspace(10),
+                  align_left(radio_button2),
+                  vspace(10),
+                  align_left(radio_button3),
+                  vspace(10),
+                  align_left(radio_button4)
                )
             )
          );
@@ -268,17 +278,13 @@ auto make_controls(view& view_)
 
    auto  icon_buttons =
          group("Icon Buttons",
-            margin({10, 10, 20, 10},
-               vtile(
-                  margin_top(35,
-                     htile(
-                        align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
-                        align_center(icon_button(icons::magnifying_glass, 1.2)),
-                        align_center(icon_button(icons::left_circled, 1.2)),
-                        align_center(toggle_icon_button(icons::left, icons::right, 1.2)),
-                        align_center(disabled_icon_button)
-                     )
-                  )
+            margin({10, 45, 20, 10},
+               htile(
+                  align_center(toggle_icon_button(icons::power, 1.2, indicator_color)),
+                  align_center(icon_button(icons::magnifying_glass, 1.2)),
+                  align_center(icon_button(icons::left_circled, 1.2)),
+                  align_center(toggle_icon_button(icons::left, icons::right, 1.2)),
+                  align_center(disabled_icon_button)
                )
             )
          );
@@ -291,30 +297,26 @@ auto make_controls(view& view_)
 
    auto  sprite_buttons =
          group("Sprite Buttons",
-            margin({10, 10, 20, 10},
-               vtile(
-                  margin_top(35,
-                     htile(
-                        align_center(toggle_button(power_button)),
-                        align_center(toggle_button(phase_button)),
-                        align_center(momentary_button(mail_button)),
-                        align_center(toggle_button(transpo_button))
-                     )
-                  )
+            margin({10, 45, 20, 10},
+               htile(
+                  align_center(toggle_button(power_button)),
+                  align_center(toggle_button(phase_button)),
+                  align_center(momentary_button(mail_button)),
+                  align_center(toggle_button(transpo_button))
                )
             )
          );
 
    return
       vtile(
-         htile(
+         hgrid(
             make_buttons(view_),
             vtile(
                margin({20, 20, 20, 20}, check_boxes),
                margin({20, 20, 20, 20}, radio_buttons)
             )
          ),
-         htile(
+         hgrid(
             hmin_size(250, margin({20, 20, 20, 20}, icon_buttons)),
             hmin_size(250, margin({20, 20, 20, 20}, sprite_buttons))
          )

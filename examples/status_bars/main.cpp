@@ -1,5 +1,6 @@
 /*=============================================================================
    Copyright (c) 2024 Flole
+   Copyright (c) 2024 Joel de Guzman
 
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
@@ -18,28 +19,20 @@ auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
 bool run = false;
-template <typename ProgressBar>
-void prog_incr(ProgressBar& prog_bar, view& view_)
-{
-   auto val = prog_bar.value();
-   if (val > 1.0)
-   {
-      prog_bar.value(1.0);
-      run = false;
-   }
-   else
-   {
-      prog_bar.value(val + 0.005);
-   }
-   view_.refresh(prog_bar);
-}
-
-template <typename ProgressBar>
-void prog_animate(ProgressBar& prog_bar, view& view_)
+void prog_animate(concepts::StatusBar auto& prog_bar, view& view_)
 {
    if (run)
    {
-      prog_incr(prog_bar, view_);
+      if (auto val = prog_bar.value() + 0.005; val > 1.0)
+      {
+         prog_bar.value(1.0);
+         run = false;
+      }
+      else
+      {
+         prog_bar.value(val);
+      }
+      view_.refresh(prog_bar);
       view_.post(10ms,
          [&]()
          {

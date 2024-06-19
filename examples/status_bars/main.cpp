@@ -66,12 +66,10 @@ auto make_bars(view& view_)
 
    return
       margin({20, 20, 20, 20},
-         htile(
+         htile_spaced(20,
             align_middle(start_stop),
-            hspace(10),
-            vtile(
+            vtile_spaced(10,
                vsize(27, hold(prog_bar)),
-               vspace(10),
                vsize(27, hold(bsy_bar))
             )
          )

@@ -183,34 +183,22 @@ auto make_buttons(view& view_)
 
    return
       margin({20, 20, 20, 20},
-         vtile(
+         vtile_spaced(15.0, // space in between
             mbutton,
-            vspace(15),
             tbutton,
-            vspace(15),
             hold(lbutton),
-            vspace(15),
             hold(reset),
-            vspace(15),
             note,
-            vspace(15),
             disabled_button,
-            vspace(15),
-            htile(
+            htile_spaced(10.0, // space in between
                label("Enabled"),
-               hspace(10),
                align_left(slide_btn1),
-               hspace(10),
                label("Slide Buttons"),
                align_right(slide_btn2),
-               hspace(10),
                disabled_label
             ),
-            vspace(15),
             hgrid(left, center, right),
-            vspace(15),
             hgrid(left_rounded, center_square, right_rounded),
-            vspace(15),
             custom
          )
       );
@@ -234,15 +222,11 @@ auto make_controls(view& view_)
    auto  check_boxes =
          group("Check boxes",
             margin({10, 45, 20, 20},
-               vtile(
+               vtile_spaced(10.0, // space in between
                   align_left(check_box1),
-                  vspace(10),
                   align_left(check_box2),
-                  vspace(10),
                   align_left(check_box3),
-                  vspace(10),
                   align_left(check_box4),
-                  vspace(10),
                   align_left(check_box5)
                )
             )
@@ -259,13 +243,10 @@ auto make_controls(view& view_)
    auto  radio_buttons =
          group("Radio Buttons",
             margin({10, 45, 20, 20},
-               vtile(
+               vtile_spaced(10.0, // space in between
                   align_left(radio_button1),
-                  vspace(10),
                   align_left(radio_button2),
-                  vspace(10),
                   align_left(radio_button3),
-                  vspace(10),
                   align_left(radio_button4)
                )
             )

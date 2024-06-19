@@ -89,14 +89,12 @@ auto make_range_slider = [] (view& _view, auto _range_slider, std::string _title
     return margin(
         {10, 10, 10, 10},
         layer(
-            vtile(
-                vspace(10),
+            vtile_spaced(10,
                 align_center(
                     label(_title).font_size(18)
                 ),
-                vspace(10),
                 margin(
-                    {50, 10, 50, 10},
+                    {50, 10, 50, 0},
                     hold(_range_slider)
                 ),
                 layer(
@@ -221,14 +219,12 @@ auto make_log_range_slider(view& _view) {
     return margin(
         {10, 10, 10, 10},
         layer(
-            vtile(
-                vspace(10),
+            vtile_spaced(10,
                 align_center(
                     label("Overlapping Logarithmic range slider").font_size(18)
                 ),
-                vspace(10),
                 margin(
-                    {50, 10, 50, 10},
+                    {50, 10, 50, 0},
                     hold(_range_slider)
                 ),
                 layer(

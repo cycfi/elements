@@ -8,6 +8,7 @@
 
 #include <elements/view.hpp>
 #include <elements/element/composite.hpp>
+#include <elements/element/margin.hpp>
 #include <memory>
 
 namespace cycfi::elements
@@ -32,13 +33,30 @@ namespace cycfi::elements
 
    using vtile_composite = vector_composite<vtile_element>;
 
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto vtile(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), vtile_element>;
       using container = typename composite::container_type;
       composite r{};
       r = container{{share(std::forward<E>(elements))...}};
+      return r;
+   }
+
+   template <concepts::Element FE, concepts::Element... E>
+   inline auto vtile_spaced(float space, FE&& first, E&&... rest)
+   {
+      using composite = array_composite<1+(sizeof...(rest)), vtile_element>;
+      composite r{};
+
+      std::size_t i = 0;
+      r[i] = share(std::forward<FE>(first));
+      auto fill_interleaved = [&, i = 1](auto&& e) mutable
+      {
+         r[i++] = share(margin_top(space, std::forward<decltype(e)>(e)));
+      };
+
+      (fill_interleaved(rest), ...);
       return r;
    }
 
@@ -62,13 +80,30 @@ namespace cycfi::elements
 
    using htile_composite = vector_composite<htile_element>;
 
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto htile(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), htile_element>;
       using container = typename composite::container_type;
       composite r{};
       r = container{{share(std::forward<E>(elements))...}};
+      return r;
+   }
+
+   template <concepts::Element FE, concepts::Element... E>
+   inline auto htile_spaced(float space, FE&& first, E&&... rest)
+   {
+      using composite = array_composite<1+(sizeof...(rest)), htile_element>;
+      composite r{};
+
+      std::size_t i = 0;
+      r[i] = share(std::forward<FE>(first));
+      auto fill_interleaved = [&, i = 1](auto&& e) mutable
+      {
+         r[i++] = share(margin_left(space, std::forward<decltype(e)>(e)));
+      };
+
+      (fill_interleaved(rest), ...);
       return r;
    }
 }

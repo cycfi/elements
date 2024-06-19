@@ -112,7 +112,6 @@ using elements::basic_knob;
 using elements::selection_menu;
 using elements::input_box;
 using elements::label;
-using elements::hspace;
 using elements::view;
 using elements::app;
 using elements::window;
@@ -267,9 +266,8 @@ auto make_preset_menu(my_model& model, view& view_)
       align_top(
          align_center(
             hsize(180,
-               htile(
+               htile_spaced(10.0,
                   label("Preset:"),
-                  hspace(10),
                   preset_menu.first
                )
             )

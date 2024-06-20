@@ -8,6 +8,7 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/element/style/misc.hpp>
 
 namespace cycfi::elements
 {

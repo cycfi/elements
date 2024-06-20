@@ -9,7 +9,7 @@
 #include <elements/element/tile.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/margin.hpp>
-#include <elements/element/misc.hpp>
+#include <elements/element/style/misc.hpp>
 
 namespace cycfi::elements
 {

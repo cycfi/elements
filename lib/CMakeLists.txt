@@ -26,7 +26,6 @@ set(ELEMENTS_SOURCES
    src/element/layer.cpp
    src/element/list.cpp
    src/element/menu.cpp
-   src/element/misc.cpp
    src/element/popup.cpp
    src/element/port.cpp
    src/element/proxy.cpp
@@ -34,10 +33,13 @@ set(ELEMENTS_SOURCES
    src/element/selection.cpp
    src/element/slider.cpp
    src/element/status_bar.cpp
+   src/element/style/border.cpp
    src/element/style/button.cpp
    src/element/style/check_box.cpp
+   src/element/style/grid_lines.cpp
    src/element/style/icon_button.cpp
    src/element/style/menu.cpp
+   src/element/style/misc.cpp
    src/element/style/radio_button.cpp
    src/element/style/slide_switch.cpp
    src/element/style/slider.cpp
@@ -71,21 +73,24 @@ set(ELEMENTS_HEADERS
    include/elements/element.hpp
    include/elements/element/align.hpp
    include/elements/element/button.hpp
+   include/elements/element/collapsable.hpp
    include/elements/element/composite.hpp
    include/elements/element/dial.hpp
    include/elements/element/drag_and_drop.hpp
    include/elements/element/element.hpp
+   include/elements/element/events_intercept.hpp
    include/elements/element/floating.hpp
    include/elements/element/flow.hpp
    include/elements/element/grid.hpp
    include/elements/element/image.hpp
    include/elements/element/indirect.hpp
+   include/elements/element/hidable.hpp
    include/elements/element/label.hpp
    include/elements/element/layer.hpp
    include/elements/element/list.hpp
    include/elements/element/margin.hpp
    include/elements/element/menu.hpp
-   include/elements/element/misc.hpp
+   include/elements/element/modal.hpp
    include/elements/element/popup.hpp
    include/elements/element/port.hpp
    include/elements/element/proxy.hpp
@@ -95,14 +100,17 @@ set(ELEMENTS_HEADERS
    include/elements/element/slider.hpp
    include/elements/element/status_bar.hpp
    include/elements/element/style.hpp
+   include/elements/element/style/border.hpp
    include/elements/element/style/button.hpp
    include/elements/element/style/caption.hpp
    include/elements/element/style/check_box.hpp
    include/elements/element/style/dialog.hpp
+   include/elements/element/style/grid_lines.hpp
    include/elements/element/style/group.hpp
    include/elements/element/style/icon_button.hpp
    include/elements/element/style/menu.hpp
    include/elements/element/style/message_box.hpp
+   include/elements/element/style/misc.hpp
    include/elements/element/style/notebook.hpp
    include/elements/element/style/pane.hpp
    include/elements/element/style/radio_button.hpp

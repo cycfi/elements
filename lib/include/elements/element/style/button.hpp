@@ -7,7 +7,6 @@
 #define ELEMENTS_STYLE_BUTTON_JUNE_5_2016
 
 #include <elements/element/button.hpp>
-#include <elements/element/misc.hpp>
 #include <elements/element/label.hpp>
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>

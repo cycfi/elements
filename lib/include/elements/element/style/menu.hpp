@@ -15,6 +15,7 @@
 #include <elements/element/tile.hpp>
 #include <elements/support/theme.hpp>
 #include <elements/element/style/button.hpp>
+#include <elements/element/style/misc.hpp>
 #include <infra/string_view.hpp>
 #include <string>
 #include <vector>

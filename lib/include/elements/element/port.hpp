@@ -12,9 +12,22 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Port elements
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * @class port_base
+    *
+    * @brief
+    *    Base class for port elements, representing windows over large areas.
+    *
+    *    `port_base` serves as an abstract base class for port elements
+    *    within a UI framework, where a port is conceptualized as a window or
+    *    viewport over a larger area.
+    *
+    *    Alignment determines which part of the underlying area is visible
+    *    through the port, with both horizontal and vertical alignment values
+    *    ranging from 0.0 to 1.0. An alignment of 0.0 positions the port to
+    *    the left or top of the area, respectively, while an alignment of 1.0
+    *    shifts the port to the right or bottom.
+    */
    class port_base : public proxy_base
    {
    public:
@@ -29,6 +42,23 @@ namespace cycfi::elements
 
    // Utility to find the bounds established by the innermost port given a
    // child context. If there is none, returns ctx.view_bounds()
+
+   /**
+    * @brief
+    *    Finds the bounds established by the innermost port.
+    *
+    *    This utility function searches for the bounds of the innermost port.
+    *    If no port is found, the function returns the view's bounds.
+    *
+    * @param ctx
+    *    The context of the child element for which the port bounds are being
+    *    determined. This context carries information about the current state
+    *    of the UI, including any enclosing ports.
+    *
+    * @return
+    *    The rectangular bounds defined by the innermost port affecting the
+    *    given context, or the view bounds if no such port exists.
+    */
    rect get_port_bounds(context const& ctx);
 
    class port_element : public port_base
@@ -44,10 +74,10 @@ namespace cycfi::elements
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
-      double                  halign() const override       { return _halign; }
-      void                    halign(double val) override   { _halign = val; }
-      double                  valign() const override       { return _valign; }
-      void                    valign(double val) override   { _valign = val; }
+      double                  halign() const override;
+      void                    halign(double val) override;
+      double                  valign() const override;
+      void                    valign(double val) override;
 
    private:
 
@@ -60,6 +90,26 @@ namespace cycfi::elements
    port(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
+   }
+
+   inline double port_element::halign() const
+   {
+      return _halign;
+   }
+
+   inline void port_element::halign(double val)
+   {
+      _halign = val;
+   }
+
+   inline double port_element::valign() const
+   {
+      return _valign;
+   }
+
+   inline void port_element::valign(double val)
+   {
+      _valign = val;
    }
 
    class vport_element : public port_base

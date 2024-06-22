@@ -15,6 +15,7 @@ jobs:
     - name: Generate Site
       run: npx antora docs/antora/antora-playbook.yml
     - name: Publish to GitHub Pages
+      if: ${{ github.event_name != 'pull_request' }}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

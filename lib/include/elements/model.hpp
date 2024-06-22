@@ -207,10 +207,9 @@ namespace cycfi::elements
    template <typename ID, typename Delegate, typename Param>
    void assign(Delegate& ref, Param const& param, ID id);
 
-   //==========================================================================
+   //--------------------------------------------------------------------------
    // Inlines
-   //==========================================================================
-   namespace inlines {}
+   //--------------------------------------------------------------------------
 
    /** \brief
     *    Returns a reference to the derived class.

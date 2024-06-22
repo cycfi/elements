@@ -50,12 +50,10 @@ jobs:
           message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
         endif()
     - name: Build
-      shell: |
-        export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
-        cmake -P {0}
+      shell: cmake -P {0}
       run: |
         execute_process(
-          COMMAND cov-build --dir cov-int ${CMAKE_COMMAND} --build build
+          COMMAND cov-analysis-linux64/bin/cov-build --dir cov-int ${CMAKE_COMMAND} --build build
           RESULT_VARIABLE result
           ERROR_VARIABLE error_message
         )

@@ -12,6 +12,10 @@
 
 namespace cycfi::elements
 {
+   //--------------------------------------------------------------------------
+   // Port base
+   //--------------------------------------------------------------------------
+
    /**
     * @class port_base
     *
@@ -42,6 +46,10 @@ namespace cycfi::elements
 
    rect get_port_bounds(context const& ctx);
 
+   //--------------------------------------------------------------------------
+   // Port element
+   //--------------------------------------------------------------------------
+
    /**
     * @class port_element
     *
@@ -71,6 +79,10 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, port_element>
    port(Subject&& subject);
+
+   //--------------------------------------------------------------------------
+   // Vertical port
+   //--------------------------------------------------------------------------
 
    /**
     * @class vport_element
@@ -104,6 +116,10 @@ namespace cycfi::elements
    inline proxy<remove_cvref_t<Subject>, vport_element>
    vport(Subject&& subject);
 
+   //--------------------------------------------------------------------------
+   // Horizontal port
+   //--------------------------------------------------------------------------
+
    /**
     * @class hport_element
     *
@@ -135,6 +151,10 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, hport_element>
    hport(Subject&& subject);
+
+   //--------------------------------------------------------------------------
+   // Scrollers
+   //--------------------------------------------------------------------------
 
    /**
     * @class scrollable
@@ -183,6 +203,10 @@ namespace cycfi::elements
       no_hscroll     = 1 << 1,
       no_vscroll     = 1 << 2
    };
+
+   //--------------------------------------------------------------------------
+   // Scroller base
+   //--------------------------------------------------------------------------
 
    /**
     * @class scroller_base
@@ -260,6 +284,10 @@ namespace cycfi::elements
       int               _traits;
    };
 
+   //--------------------------------------------------------------------------
+   // Scroller Info
+   //--------------------------------------------------------------------------
+
    /**
     * @struct scrollbar_info
     *
@@ -284,6 +312,10 @@ namespace cycfi::elements
       rect     bounds;
    };
 
+   //--------------------------------------------------------------------------
+   // Scroller creation functions
+   //--------------------------------------------------------------------------
+
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    scroller(Subject&& subject, int traits = 0);
@@ -296,10 +328,9 @@ namespace cycfi::elements
    inline proxy<remove_cvref_t<Subject>, scroller_base>
    hscroller(Subject&& subject, int traits = 0);
 
-   ////////////////////////////////////////////////////////////////////////////
+   //--------------------------------------------------------------------------
    // Inlines
-   ////////////////////////////////////////////////////////////////////////////
-   namespace inlines {}
+   //--------------------------------------------------------------------------
 
    /**
     * @brief

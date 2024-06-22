@@ -26,6 +26,23 @@ namespace cycfi::elements
       proxy_base::draw(ctx);
    }
 
+   /**
+    * @brief
+    *    Utility to find the bounds established by the innermost port given a
+    *    child context. If there is none, returns ctx.view_bounds().
+    *
+    *    This utility function searches for the bounds of the innermost port.
+    *    If no port is found, the function returns the view's bounds.
+    *
+    * @param ctx
+    *    The context of the child element for which the port bounds are being
+    *    determined. This context carries information about the current state
+    *    of the UI, including any enclosing ports.
+    *
+    * @return
+    *    The rectangular bounds defined by the innermost port affecting the
+    *    given context, or the view bounds if no such port exists.
+    */
    rect get_port_bounds(context const& ctx)
    {
       if (auto pctx = find_parent_context<port_base*>(ctx))
@@ -33,9 +50,6 @@ namespace cycfi::elements
       return ctx.view_bounds();
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // port_element class implementation
-   ////////////////////////////////////////////////////////////////////////////
    view_limits port_element::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
@@ -58,9 +72,6 @@ namespace cycfi::elements
       subject().layout(ctx);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // vport_element class implementation
-   ////////////////////////////////////////////////////////////////////////////
    view_limits vport_element::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
@@ -79,9 +90,6 @@ namespace cycfi::elements
       subject().layout(ctx);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // hport_element class implementation
-   ////////////////////////////////////////////////////////////////////////////
    view_limits hport_element::limits(basic_context const& ctx) const
    {
       view_limits e_limits = subject().limits(ctx);
@@ -100,9 +108,29 @@ namespace cycfi::elements
       subject().layout(ctx);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // scrollable class implementation
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * @brief
+    *    Finds the nearest scrollable context in the hierarchy.
+    *
+    *    This function traverses the context hierarchy starting from the
+    *    given context (`ctx_`), searching for the nearest parent (or the
+    *    context itself) that contains a scrollable element. It utilizes the
+    *    `find_element` function to locate a `scrollable` instance within the
+    *    current context's element.
+    *
+    *    If a scrollable element is found, a `scrollable_context` struct is
+    *    returned, containing pointers to both the context and the scrollable
+    *    element. If no scrollable element is found in the hierarchy, the
+    *    function returns a `scrollable_context` with null pointers.
+    *
+    * @param ctx_
+    *    The starting context for the search.
+    *
+    * @return
+    *    A `scrollable_context` struct with pointers to the found context and
+    *    scrollable element. If not found, both pointers in the struct will
+    *    be null.
+    */
    scrollable::scrollable_context scrollable::find(context const& ctx_)
    {
       auto const* ctx = &ctx_;
@@ -151,6 +179,21 @@ namespace cycfi::elements
       }
    }
 
+   /**
+    * @brief
+    *    Draws the scrollbar for the scroller_base.
+    *
+    * @param ctx
+    *    The drawing context, containing the canvas and other relevant
+    *    drawing information.
+    *
+    * @param info
+    *    A `scrollbar_info` struct containing details about the scrollbar's
+    *    bounds, position, and extent.
+    *
+    * @param mp
+    *    The current mouse position.
+    */
    void scroller_base::draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp)
    {
       theme const& thm = get_theme();
@@ -181,6 +224,25 @@ namespace cycfi::elements
          _tracking == ((w > h)? tracking_h : tracking_v));
    }
 
+   /**
+    * @brief
+    *    Calculates the position and size of the scrollbar.
+    *
+    *    This function determines the position and size of the scrollbar
+    *    within the scroller_base, based on the current scrolling information
+    *    provided by `info`.
+    *
+    * @param ctx
+    *    The drawing context.
+    *
+    * @param info
+    *    A `scrollbar_info` struct containing details about the current
+    *    scroll state, including the bounds of the scroller_base, the
+    *    position of the scrollbar, and the total extent of the content.
+    *
+    * @return
+    *    A `rect` representing the position and size of the scrollbar.
+    */
    rect scroller_base::scroll_bar_position(context const& /* ctx */, scrollbar_info const& info)
    {
       float x = info.bounds.left;
@@ -343,7 +405,28 @@ namespace cycfi::elements
       return port_element::scroll(ctx, dir, p) || redraw;
    }
 
-   void scroller_base::set_position(point p)
+   /**
+    * @brief
+    *    Sets the scroll alignment of the scroller_base.
+    *
+    *    This function adjusts the scroll alignment of the scroller_base
+    *    object based on the specified point `p`, considering horizontal and
+    *    vertical scrolling capabilities, and adjusts the scroll alignment
+    *    accordingly.
+    *
+    *    If horizontal scrolling is allowed (`allow_hscroll()` returns true),
+    *    it sets the horizontal alignment (scroll alignment) to the
+    *    x-coordinate of the point `p`. Similarly, if vertical scrolling is
+    *    allowed (`allow_vscroll()` returns true), it sets the vertical
+    *    alignment (scroll alignment) to the y-coordinate of the point `p`.
+    *
+    *    Take note that alignment values are clamped to the range [0.0, 1.0].
+    *
+    * @param p
+    *    The point representing the new scroll alignment, where `p.x` is the
+    *    new horizontal alignment and `p.y` is the new vertical alignment.
+    */
+   void scroller_base::set_alignment(point p)
    {
       if (allow_hscroll())
          halign(p.x);

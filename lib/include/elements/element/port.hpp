@@ -40,36 +40,19 @@ namespace cycfi::elements
       virtual void            valign(double val) = 0;
    };
 
-   // Utility to find the bounds established by the innermost port given a
-   // child context. If there is none, returns ctx.view_bounds()
-
-   /**
-    * @brief
-    *    Finds the bounds established by the innermost port.
-    *
-    *    This utility function searches for the bounds of the innermost port.
-    *    If no port is found, the function returns the view's bounds.
-    *
-    * @param ctx
-    *    The context of the child element for which the port bounds are being
-    *    determined. This context carries information about the current state
-    *    of the UI, including any enclosing ports.
-    *
-    * @return
-    *    The rectangular bounds defined by the innermost port affecting the
-    *    given context, or the view bounds if no such port exists.
-    */
    rect get_port_bounds(context const& ctx);
 
+   /**
+    * @class port_element
+    *
+    * @brief
+    *    A port element with alignment capabilities, extending `port_base`.
+    *    This class models supports horizontal and vertical alignment.
+    */
    class port_element : public port_base
    {
    public:
-                              port_element()
-                               : _halign(0.0)
-                               , _valign(0.0)
-                              {}
-
-                              ~port_element() {}
+                              port_element();
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -87,47 +70,30 @@ namespace cycfi::elements
 
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, port_element>
-   port(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
+   port(Subject&& subject);
 
-   inline double port_element::halign() const
-   {
-      return _halign;
-   }
-
-   inline void port_element::halign(double val)
-   {
-      _halign = val;
-   }
-
-   inline double port_element::valign() const
-   {
-      return _valign;
-   }
-
-   inline void port_element::valign(double val)
-   {
-      _valign = val;
-   }
-
+   /**
+    * @class vport_element
+    *
+    * @brief
+    *    A vertical port element that extends `port_base`, specifically
+    *    designed for vertical alignment within a port.
+    *
+    *    This class represents a vertical viewport or window over a larger
+    *    area, allowing content to be aligned vertically.
+    */
    class vport_element : public port_base
    {
    public:
-                              vport_element()
-                               : _valign(0.0)
-                              {}
-
-                              ~vport_element() {}
+                              vport_element();
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
-      double                  halign() const override             { return 0; }
-      void                    halign(double /*val*/) override     {}
-      double                  valign() const override             { return _valign; }
-      void                    valign(double val) override         { _valign = val; }
+      double                  halign() const override          { return 0; }
+      void                    halign(double /*val*/) override  {}
+      double                  valign() const override          { return _valign; }
+      void                    valign(double val) override      { _valign = val; }
 
    private:
 
@@ -136,19 +102,22 @@ namespace cycfi::elements
 
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, vport_element>
-   vport(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
+   vport(Subject&& subject);
 
+   /**
+    * @class hport_element
+    *
+    * @brief
+    *    A horizontal port element that extends `port_base`, specifically
+    *    designed for horizontal alignment within a port.
+    *
+    *    This class represents a horizontal viewport or window over a larger
+    *    area, allowing content to be aligned horizontally.
+    */
    class hport_element : public port_base
    {
    public:
-                              hport_element()
-                               : _halign(0.0)
-                              {}
-
-                              ~hport_element() {}
+                              hport_element();
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -165,44 +134,49 @@ namespace cycfi::elements
 
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, hport_element>
-   hport(Subject&& subject)
-   {
-      return {std::forward<Subject>(subject)};
-   }
+   hport(Subject&& subject);
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Scrollers
-   ////////////////////////////////////////////////////////////////////////////
-
-   // scrollable: Mixin class for a element that is scrollable
-   // scroll the rectangle, r into view
+   /**
+    * @class scrollable
+    *
+    * @brief
+    *    Mixin class for an element that is scrollable.
+    *
+    *    Provides functionality to scroll a given rectangle into view within
+    *    the context of a scrollable area.
+    */
    class scrollable
    {
    public:
 
-      virtual ~scrollable() = default;
+      struct scrollable_context;
 
-      struct scrollable_context
-      {
-         context const* context_ptr;
-         scrollable*    scrollable_ptr;
-
-         // scroll the rectangle, r into view
-         bool scroll_into_view(rect r_)
-         {
-            if (scrollable_ptr && context_ptr)
-            {
-               rect r = r_;
-               return scrollable_ptr->scroll_into_view(*context_ptr, r);
-            }
-            return false;
-         }
-      };
-
+      virtual                    ~scrollable() = default;
       virtual bool               scroll_into_view(context const& ctx, rect r) = 0;
       static scrollable_context  find(context const& ctx);
    };
 
+   /**
+    * @struct scrollable::scrollable_context
+    *
+    * @brief
+    *    The context within which a scrollable element operates.
+    */
+   struct scrollable::scrollable_context
+   {
+      context const* context_ptr;
+      scrollable*    scrollable_ptr;
+
+      bool           scroll_into_view(rect r_);
+   };
+
+   /**
+    * @enum ScrollbarFlags
+    * @brief Flags to control the visibility and behavior of scrollbars.
+    * @var no_scrollbars:  Hides all scrollbars.
+    * @var no_hscroll:     Disables horizontal scrolling.
+    * @var no_vscroll:     Disables vertical scrolling.
+    */
    enum
    {
       no_scrollbars  = 1,
@@ -210,16 +184,25 @@ namespace cycfi::elements
       no_vscroll     = 1 << 2
    };
 
-   // Base proxy class for views that are scrollable
+   /**
+    * @class scroller_base
+    *
+    * @brief
+    *    Base proxy class for elements that are scrollable.
+    *
+    *    Inherits from `port_element` and `scrollable` to provide a
+    *    foundation for elements that require scrollable functionality.
+    *
+    *    The `scroller_base` class also manages the visibility and behavior
+    *    of horizontal and vertical scrollbars based on the traits specified
+    *    upon construction. It supports dynamic adjustment of content
+    *    positioning within the scrollable area.
+    */
    class scroller_base : public port_element, public scrollable
    {
    public:
-                              scroller_base(int traits = 0)
-                               : _tracking(none)
-                               , _traits(traits)
-                              {}
 
-                              ~scroller_base() {}
+      explicit                scroller_base(int traits = 0);
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -234,15 +217,15 @@ namespace cycfi::elements
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
 
-      std::function<void(point p)> on_scroll = [](point){};
-      void set_position(point p);
+      using scroll_callback_f = std::function<void(point p)>;
 
-      struct scrollbar_info
-      {
-         double   pos;
-         float    extent;
-         rect     bounds;
-      };
+      scroll_callback_f       on_scroll = [](point){};
+
+      void                    set_alignment(point p);
+                              [[deprecated("use set_alignment(p) instead")]]
+      void                    set_position(point p) { set_alignment(p); }
+
+      struct scrollbar_info;
 
       virtual void            draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp);
       virtual rect            scroll_bar_position(context const& ctx, scrollbar_info const& info);
@@ -277,23 +260,325 @@ namespace cycfi::elements
       int               _traits;
    };
 
+   /**
+    * @struct scrollbar_info
+    *
+    * @brief
+    *    Information about a scrollbar.
+    *
+    * @var pos
+    *    The current position of the scrollbar represented as an alignment
+    *    fraction from 0.0 to 1.0.
+    *
+    * @var extent
+    *    The size of the content area.
+    *
+    * @var bounds
+    *    The geometric bounds of the scrollbar within the scroller. This
+    *    `rect` defines the position and size of the scrollbar.
+    */
+   struct scroller_base::scrollbar_info
+   {
+      double   pos;
+      float    extent;
+      rect     bounds;
+   };
+
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
-   scroller(Subject&& subject, int traits = 0)
+   scroller(Subject&& subject, int traits = 0);
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
+   vscroller(Subject&& subject, int traits = 0);
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
+   hscroller(Subject&& subject, int traits = 0);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inlines
+   ////////////////////////////////////////////////////////////////////////////
+   namespace inlines {}
+
+   /**
+    * @brief
+    *    Creates a proxy object that wraps a given UI element, allowing it to
+    *    be displayed within a port.
+    *
+    *    This template function wraps a UI element (`subject`) in a
+    *    `port_element`, enabling the element to be displayed as part of a
+    *    port. A port is a window or viewport over a larger area, and
+    *    elements within a port can be aligned and scrolled within this area.
+    *
+    * @tparam Subject
+    *    The type of the UI element to be wrapped. Must meet the requirements
+    *    of the `concepts::Element` concept.
+    *
+    * @param subject
+    *    The UI element to be wrapped in the port.
+    *
+    * @return
+    *    A proxy object that wraps the specified UI element in a
+    *    `port_element`.
+    */
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, port_element>
+   port(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   /**
+    * @brief
+    *    Default constructor for the port_element class.
+    */
+   inline port_element::port_element()
+    : _halign(0.0)
+    , _valign(0.0)
+   {}
+
+   /**
+    * @brief
+    *    Get the current horizontal alignment of the port element.
+    *
+    * @return
+    *    The current horizontal alignment value, ranging from 0.0 to 1.0.
+    */
+   inline double port_element::halign() const
+   {
+      return _halign;
+   }
+
+   /**
+    * @brief
+    *    Set the horizontal alignment of the port element.
+    *
+    * @param val
+    *    The new horizontal alignment value, ranging from 0.0 to 1.0.
+    */
+   inline void port_element::halign(double val)
+   {
+      _halign = val;
+   }
+
+   /**
+    * @brief
+    *    Get the current vertical alignment of the port element.
+    *
+    * @return
+    *    The current vertical alignment value, ranging from 0.0 to 1.0.
+    */
+   inline double port_element::valign() const
+   {
+      return _valign;
+   }
+
+   /**
+    * @brief
+    *    Set the vertical alignment of the port element.
+    *
+    * @param val
+    *    The new vertical alignment value, ranging from 0.0 to 1.0.
+    */
+   inline void port_element::valign(double val)
+   {
+      _valign = val;
+   }
+
+   /**
+    * @brief
+    *    Constructs a `vport_element`.
+    */
+   inline vport_element::vport_element()
+    : _valign(0.0)
+   {
+   }
+
+   /**
+    * @brief
+    *    Creates a vertical port element that wraps a given UI element,
+    *    allowing it to be displayed within a vertical port.
+    *
+    *    This function template creates a `vport_element` that wraps the
+    *    given UI element (`subject`), enabling the element to be displayed
+    *    as part of a vertical port. A vertical port is a viewport that
+    *    allows vertical scrolling and alignment within a larger area.
+    *
+    * @tparam Subject
+    *    The type of the UI element to be wrapped. Must meet the requirements
+    *    of the `concepts::Element` concept.
+    *
+    * @param subject
+    *    The UI element to be wrapped in the vertical port.
+    *
+    * @return
+    *    A proxy's subject that wraps the specified UI element in a
+    *    `vport_element`.
+    */
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, vport_element>
+   vport(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   /**
+    * @brief
+    *    Constructs an `hport_element`.
+    */
+   inline hport_element::hport_element()
+    : _halign(0.0)
+   {}
+
+   /**
+    * @brief
+    *    Creates a horizontal port element that wraps a given UI element,
+    *    allowing it to be displayed within a horizontal port.
+    *
+    *    This function template creates a `hport_element` that wraps the
+    *    given UI element (`subject`), enabling the element to be displayed
+    *    as part of a horizontal port. A horizontal port is a viewport that
+    *    allows horizontal scrolling and alignment within a larger area.
+    *
+    * @tparam Subject
+    *    The type of the UI element to be wrapped. Must meet the requirements
+    *    of the `concepts::Element` concept.
+    *
+    * @param subject
+    *    The UI element to be wrapped in the horizontal port.
+    *
+    * @return
+    *    A proxy's subject that wraps the specified UI element in a
+    *    `hport_element`.
+    */
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, hport_element>
+   hport(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   /**
+    * @brief
+    *    Attempts to scroll the rectangle, r_, into view.
+    *
+    *    If both `scrollable_ptr` and `context_ptr` are valid, it calls the
+    *    `scroll_into_view` member function of the scrollable object to
+    *    attempt to scroll the rectangle into view.
+    *
+    * @param r_
+    *    The rectangle to scroll into view.
+    *
+    * @return
+    *    True if the operation was successful, false otherwise.
+    */
+   inline bool scrollable::scrollable_context::scroll_into_view(rect r_)
+   {
+      if (scrollable_ptr && context_ptr)
+      {
+         rect r = r_;
+         return scrollable_ptr->scroll_into_view(*context_ptr, r);
+      }
+      return false;
+   }
+
+   /**
+    * @brief
+    *    Constructor for scroller_base.
+    *
+    * @param traits
+    *    Configuration traits for the scroller, controlling its behavior and
+    *    appearance.
+    */
+   inline scroller_base::scroller_base(int traits)
+     : _tracking(none)
+     , _traits(traits)
+   {}
+
+   /**
+    * @brief
+    *    Creates a generic scroller.
+    *
+    *    Constructs a proxy object wrapping a given subject with
+    *    scroller_base, allowing the subject to be scrolled both horizontally
+    *    and vertically, depending on the specified traits.
+    *
+    * @tparam Subject
+    *    The type of the subject to be wrapped. Must satisfy the
+    *    concepts::Element concept.
+    *
+    * @param subject
+    *    The subject to be wrapped in a scroller.
+    *
+    * @param traits
+    *    Configuration traits for the scroller.
+    *
+    * @return
+    *    A proxy object wrapping the subject with scroller_base
+    *    functionality.
+    */
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, scroller_base>
+   scroller(Subject&& subject, int traits)
    {
       return {std::forward<Subject>(subject), traits};
    }
 
+   /**
+    * @brief
+    *    Creates a vertical scroller.
+    *
+    *    Constructs a proxy object wrapping a given subject with
+    *    scroller_base, specifically for vertical scrolling.
+    *
+    * @tparam Subject
+    *    The type of the subject to be wrapped. Must satisfy the
+    *    concepts::Element concept.
+    *
+    * @param subject
+    *    The subject to be wrapped in a vertical scroller.
+    *
+    * @param traits
+    *    Configuration traits for the scroller, with horizontal scrolling
+    *    disabled.
+    *
+    * @return
+    *    A proxy object wrapping the subject with vertical scroller_base
+    *    functionality.
+    */
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
-   vscroller(Subject&& subject, int traits = 0)
+   vscroller(Subject&& subject, int traits)
    {
       return {std::forward<Subject>(subject), traits | no_hscroll};
    }
 
+   /**
+    * @brief
+    *    Creates a horizontal scroller.
+    *
+    *    Constructs a proxy object wrapping a given subject with
+    *    scroller_base, specifically for horizontal scrolling.
+    *
+    * @tparam Subject
+    *    The type of the subject to be wrapped. Must satisfy the
+    *    concepts::Element concept.
+    *
+    * @param subject
+    *    The subject to be wrapped in a horizontal scroller.
+    *
+    * @param traits
+    *    Configuration traits for the scroller, with vertical scrolling
+    *    disabled.
+    *
+    * @return
+    *    A proxy object wrapping the subject with horizontal scroller_base
+    *    functionality.
+    */
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, scroller_base>
-   hscroller(Subject&& subject, int traits = 0)
+   hscroller(Subject&& subject, int traits)
    {
       return {std::forward<Subject>(subject), traits | no_vscroll};
    }

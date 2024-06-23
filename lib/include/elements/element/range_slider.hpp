@@ -575,7 +575,7 @@ namespace cycfi::elements
 
    /*!
    * \brief
-   *     Gets a constant reference to the track component.
+   *     Get a constant reference to the track component.
    *
    * \return
    *     A constant reference to the track component.
@@ -588,7 +588,7 @@ namespace cycfi::elements
 
    /*!
    * \brief
-   *     Gets a reference to the track component.
+   *     Get a reference to the track component.
    *
    * \return
    *     A reference to the track component.

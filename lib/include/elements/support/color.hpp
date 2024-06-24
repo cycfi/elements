@@ -100,6 +100,26 @@ namespace cycfi { namespace elements
       return r;
    }
 
+   constexpr color operator+(color const& a, color const& b)
+   {
+      return color(a.red + b.red, a.green + b.green, a.blue + b.blue, a.alpha + b.alpha*(1.0-a.alpha));
+   }
+
+   constexpr color operator-(color const& a, color const& b)
+   {
+      return color(a.red - b.red, a.green - b.green, a.blue - b.blue, a.alpha + b.alpha*(1.0-a.alpha));
+   }
+
+   constexpr color operator*(color const& a, float b)
+   {
+      return color(a.red * b, a.green * b, a.blue * b, a.alpha);
+   }
+
+   constexpr color operator*(float a, color const& b)
+   {
+      return color(a * b.red, a * b.green, a * b.blue, b.alpha);
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Common colors
    ////////////////////////////////////////////////////////////////////////////

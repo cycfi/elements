@@ -168,6 +168,7 @@ namespace cycfi { namespace elements
          float       ascent;
          float       descent;
          float       height;
+         float       leading;
       };
 
                         [[deprecated("Use fill_text(utf8, p) instead following artist API.")]]

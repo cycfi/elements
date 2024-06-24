@@ -163,6 +163,14 @@ namespace cycfi { namespace elements
          point       size;
       };
 
+      struct font_metrics
+      {
+         float       ascent;
+         float       descent;
+         float       height;
+         float       leading;
+      };
+
                         [[deprecated("Use fill_text(utf8, p) instead following artist API.")]]
       void              fill_text(point p, char const* utf8);
       void              fill_text(std::string_view utf8, point p);
@@ -173,6 +181,8 @@ namespace cycfi { namespace elements
 
       text_metrics      measure_text(char const* utf8);
       void              text_align(int align);
+
+      font_metrics      measure_font();
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Pixmaps

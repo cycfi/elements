@@ -417,6 +417,19 @@ namespace cycfi { namespace elements
       };
    }
 
+   canvas::font_metrics canvas::measure_font()
+   {
+     cairo_font_extents_t font_extents;
+     cairo_scaled_font_extents(cairo_get_scaled_font(&_context), &font_extents);
+
+      return {
+         /*ascent=*/    float(font_extents.ascent),
+         /*descent=*/   float(font_extents.descent),
+         /*height=*/   float(font_extents.height),
+         /*leading=*/   float(font_extents.height-(font_extents.ascent+font_extents.descent))
+      };
+   }
+
    void canvas::draw(pixmap const& pm, elements::rect src, elements::rect dest)
    {
       auto  state = new_state();
@@ -443,4 +456,3 @@ namespace cycfi { namespace elements
       cairo_restore(&_context);
    }
 }}
-

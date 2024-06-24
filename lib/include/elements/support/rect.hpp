@@ -65,6 +65,7 @@ namespace cycfi { namespace elements
    constexpr bool       is_valid(rect r);
    constexpr bool       is_same_size(rect a, rect b);
    bool                 intersects(rect a, rect b);
+   rect                 intersection(rect const& a, rect const& b);
 
    constexpr point      center_point(rect r);
    constexpr float      area(rect r);

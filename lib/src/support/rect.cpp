@@ -18,6 +18,16 @@ namespace cycfi { namespace elements
       return true;
    }
 
+   rect intersection(rect const& a, rect const& b)
+   {
+      return {
+         std::max(a.left, b.left),
+         std::max(a.top, b.top),
+         std::min(a.right, b.right),
+         std::min(a.bottom, b.bottom)
+      };
+   }
+
    rect max(rect a, rect b)
    {
       return {

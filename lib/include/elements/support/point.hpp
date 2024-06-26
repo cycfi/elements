@@ -24,6 +24,9 @@ namespace cycfi { namespace elements
       constexpr point   move(float dx, float dy) const;
       constexpr point   move_to(float x, float y) const;
 
+      constexpr float   coord(bool is_x_axis) const;
+      constexpr float&  coord(bool is_x_axis);
+
       float             x;
       float             y;
    };
@@ -78,6 +81,16 @@ namespace cycfi { namespace elements
       r.x = x_;
       r.y = y_;
       return r;
+   }
+
+   inline constexpr float point::coord(bool is_x_axis) const
+   {
+     return is_x_axis ? x : y;
+   }
+
+   constexpr float& point::coord(bool is_x_axis)
+   {
+     return is_x_axis ? x : y;
    }
 }}
 

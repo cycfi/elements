@@ -90,6 +90,71 @@ namespace cycfi::elements
          std::sort(elements.begin(), elements.end(),
             [](layout_info lhs, layout_info rhs){ return lhs.index < rhs.index; });
       }
+
+     template<bool IS_X_AXIS, class TILE_ELEMENT>
+     [[gnu::always_inline]] inline auto compute_limits(basic_context const& ctx, const TILE_ELEMENT &tile) -> view_limits
+     {
+      view_limits limits{{0.0, 0.0},
+                         {IS_X_AXIS ? 0.0 : full_extent,
+                          IS_X_AXIS ? full_extent : 0.0}};
+      for (std::size_t i = 0; i != tile.size();  ++i)
+      {
+         auto el = tile.at(i).limits(ctx);
+
+         limits.min.coord(IS_X_AXIS) += el.min.coord(IS_X_AXIS);
+         limits.max.coord(IS_X_AXIS) += el.max.coord(IS_X_AXIS);
+         clamp_min(limits.min.coord(! IS_X_AXIS), el.min.coord(! IS_X_AXIS));
+         clamp_max(limits.max.coord(! IS_X_AXIS), el.max.coord(! IS_X_AXIS));
+      }
+
+      clamp_min(limits.max.coord(! IS_X_AXIS), limits.min.coord(! IS_X_AXIS));
+      clamp_max(limits.max.coord(IS_X_AXIS), full_extent);
+      return limits;
+     }
+
+     template<bool IS_X_AXIS, class TILE_ELEMENT>
+     [[gnu::always_inline]] inline auto compute_layout(context const& ctx, TILE_ELEMENT &tile, std::vector<float> &tilePos) -> void
+     {
+       auto const sz = tile.size();
+
+       // Collect min, max, and stretch information from each element.
+       // Initially set the allocation sizes of each element to its minimum.
+       std::vector<layout_info> info(sz);
+       for (std::size_t i = 0; i != sz; ++i)
+       {
+         auto& elem = tile.at(i);
+         auto limits = elem.limits(ctx);
+         info[i].stretch = elem.stretch().coord(IS_X_AXIS);
+         info[i].min = limits.min.coord(IS_X_AXIS);
+         info[i].max = limits.max.coord(IS_X_AXIS);
+         info[i].alloc = limits.min.coord(IS_X_AXIS);
+         info[i].index = i;
+       }
+
+       auto const otherMin = ctx.bounds.axisMin(not IS_X_AXIS);
+       auto const otherMax = ctx.bounds.axisMax(not IS_X_AXIS);
+       auto const myMin = ctx.bounds.axisMin(IS_X_AXIS);
+       auto const myDelta = ctx.bounds.axisDelta(IS_X_AXIS);
+       // Compute the best fit for all elements
+       allocate(myDelta, info);
+
+       // Now we have the final layout. We can now layout the individual
+       // elements.
+       tilePos.resize(sz);
+       auto curr = 0.0f;
+       for (std::size_t i = 0; i != sz; ++i)
+       {
+         tilePos[i] = curr + info[i].alloc;
+         auto const prev = curr;
+         curr += info[i].alloc;
+
+         auto& elem = tile.at(i);
+         auto ebounds = IS_X_AXIS
+           ? rect{prev+myMin, otherMin, curr+myMin, otherMax}
+           : rect{otherMin, prev+myMin, otherMax, curr+myMin};
+         elem.layout(context{ctx, &elem, ebounds});
+       }
+     }
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -97,61 +162,12 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits vtile_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
-      for (std::size_t i = 0; i != size();  ++i)
-      {
-         auto el = at(i).limits(ctx);
-
-         limits.min.y += el.min.y;
-         limits.max.y += el.max.y;
-         clamp_min(limits.min.x, el.min.x);
-         clamp_max(limits.max.x, el.max.x);
-      }
-
-      clamp_min(limits.max.x, limits.min.x);
-      clamp_max(limits.max.y, full_extent);
-      return limits;
+     return compute_limits<false>(ctx, *this);
    }
 
    void vtile_element::layout(context const& ctx)
    {
-      auto const sz = size();
-
-      // Collect min, max, and stretch information from each element.
-      // Initially set the allocation sizes of each element to its minimum.
-      std::vector<layout_info> info(sz);
-      for (std::size_t i = 0; i != sz; ++i)
-      {
-         auto& elem = at(i);
-         auto limits = elem.limits(ctx);
-         info[i].stretch = elem.stretch().y;
-         info[i].min = limits.min.y;
-         info[i].max = limits.max.y;
-         info[i].alloc = limits.min.y;
-         info[i].index = i;
-      }
-
-      auto const left = ctx.bounds.left;
-      auto const right = ctx.bounds.right;
-      auto const top = ctx.bounds.top;
-      auto const height = ctx.bounds.height();
-      // Compute the best fit for all elements
-      allocate(height, info);
-
-      // Now we have the final layout. We can now layout the individual
-      // elements.
-      _tiles.resize(sz);
-      auto curr = 0.0f;
-      for (std::size_t i = 0; i != sz; ++i)
-      {
-         _tiles[i] = curr + info[i].alloc;
-         auto const prev = curr;
-         curr += info[i].alloc;
-
-         auto& elem = at(i);
-         rect ebounds = {left, prev+top, right, curr+top};
-         elem.layout(context{ctx, &elem, ebounds});
-      }
+     compute_layout<false>(ctx, *this, _tiles);
    }
 
    void vtile_element::draw(context const& ctx)
@@ -176,61 +192,12 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits htile_element::limits(basic_context const& ctx) const
    {
-      view_limits limits{{0.0, 0.0}, {0.0, full_extent}};
-      for (std::size_t i = 0; i != size();  ++i)
-      {
-         auto el = at(i).limits(ctx);
-
-         limits.min.x += el.min.x;
-         limits.max.x += el.max.x;
-         clamp_min(limits.min.y, el.min.y);
-         clamp_max(limits.max.y, el.max.y);
-      }
-
-      clamp_min(limits.max.y, limits.min.y);
-      clamp_max(limits.max.x, full_extent);
-      return limits;
+     return compute_limits<true>(ctx, *this);
    }
 
    void htile_element::layout(context const& ctx)
    {
-      auto const sz = size();
-
-      // Collect min, max, and stretch information from each element.
-      // Initially set the allocation sizes of each element to its minimum.
-      std::vector<layout_info> info(sz);
-      for (std::size_t i = 0; i != sz; ++i)
-      {
-         auto& elem = at(i);
-         auto limits = elem.limits(ctx);
-         info[i].stretch = elem.stretch().x;
-         info[i].min = limits.min.x;
-         info[i].max = limits.max.x;
-         info[i].alloc = limits.min.x;
-         info[i].index = i;
-      }
-
-      auto const top = ctx.bounds.top;
-      auto const bottom = ctx.bounds.bottom;
-      auto const left = ctx.bounds.left;
-      auto const width = ctx.bounds.width();
-      // Compute the best fit for all elements
-      allocate(width, info);
-
-      // Now we have the final layout. We can now layout the individual
-      // elements.
-      _tiles.resize(sz);
-      auto curr = 0.0f;
-      for (std::size_t i = 0; i != sz; ++i)
-      {
-         _tiles[i] = curr + info[i].alloc;
-         auto const prev = curr;
-         curr += info[i].alloc;
-
-         auto& elem = at(i);
-         rect ebounds = {prev+left, top, curr+left, bottom};
-         elem.layout(context{ctx, &elem, ebounds});
-      }
+     compute_layout<true>(ctx, *this, _tiles);
    }
 
    void htile_element::draw(context const& ctx)

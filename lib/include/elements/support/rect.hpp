@@ -53,6 +53,12 @@ namespace cycfi { namespace elements
       constexpr rect    move_to(float x, float y) const;
       constexpr rect    inset(float x_inset = 1.0, float y_inset = 1.0) const;
 
+      constexpr float   axisDelta(bool is_x_axis) const;
+      constexpr float   axisMin(bool is_x_axis ) const;
+      constexpr float   axisMax(bool is_x_axis ) const;
+      constexpr float&  axisMin(bool is_x_axis );
+      constexpr float&  axisMax(bool is_x_axis );
+
       float             left;
       float             top;
       float             right;
@@ -206,6 +212,32 @@ namespace cycfi { namespace elements
          clear(r);
 
       return r;
+   }
+
+
+   constexpr float rect::axisDelta(bool is_x_axis) const
+   {
+     return is_x_axis ? width() : height();
+   }
+
+   constexpr float rect::axisMin(bool is_x_axis ) const
+   {
+     return is_x_axis ? left : top;
+   }
+
+   constexpr float rect::axisMax(bool is_x_axis ) const
+   {
+     return is_x_axis ? right : bottom;
+   }
+
+   constexpr float& rect::axisMin(bool is_x_axis )
+   {
+     return is_x_axis ? left : top;
+   }
+
+   constexpr float& rect::axisMax(bool is_x_axis )
+   {
+     return is_x_axis ? right : bottom;
    }
 
    constexpr bool is_valid(rect r)

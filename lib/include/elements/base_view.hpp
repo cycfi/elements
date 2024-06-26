@@ -73,6 +73,14 @@ namespace cycfi::elements
    {
       float    x = 1.0;
       float    y = 1.0;
+
+      constexpr float   coord(bool is_x_axis) const {
+        return is_x_axis ? x : y;
+      }
+
+      constexpr float&  coord(bool is_x_axis) {
+        return is_x_axis ? x : y;
+      }
    };
 
    ////////////////////////////////////////////////////////////////////////////

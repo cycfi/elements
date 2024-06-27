@@ -92,7 +92,7 @@ namespace cycfi::elements
       }
 
      template<axis Axis, class TileElement, axis OtherAxis = other(Axis)>
-     [[gnu::always_inline]] inline auto compute_limits(basic_context const& ctx, const TileElement &tile) -> view_limits
+     CYCFI_FORCE_INLINE auto compute_limits(basic_context const& ctx, const TileElement &tile) -> view_limits
      {
        view_limits limits{{0.0, 0.0},
                           {Axis == axis::x ? 0.0 : full_extent,
@@ -113,7 +113,7 @@ namespace cycfi::elements
      }
 
      template<axis Axis, class TileElement, axis OtherAxis = other(Axis)>
-     [[gnu::always_inline]] inline auto compute_layout(context const& ctx, TileElement &tile, std::vector<float> &tile_offsets) -> void
+     CYCFI_FORCE_INLINE auto compute_layout(context const& ctx, TileElement &tile, std::vector<float> &tile_offsets) -> void
      {
        auto const sz = tile.size();
 
@@ -156,7 +156,7 @@ namespace cycfi::elements
      }
 
      template<axis Axis, axis OtherAxis = other(Axis)>
-     [[gnu::always_inline]] inline auto compute_bounds_of(rect const& bounds, std::size_t index, const std::vector<float> &tile_offsets) -> rect
+     CYCFI_FORCE_INLINE auto compute_bounds_of(rect const& bounds, std::size_t index, const std::vector<float> &tile_offsets) -> rect
      {
        if (index >= tile_offsets.size())
          return {};

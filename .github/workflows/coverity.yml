@@ -21,6 +21,7 @@ jobs:
         execute_process(COMMAND sudo apt-get install libcairo2-dev)
         execute_process(COMMAND sudo apt-get install libgtk-3-dev)
         execute_process(COMMAND sudo apt-get install ninja-build)
+        execute_process(COMMAND sudo apt-get install libwebp-dev)
         execute_process(COMMAND sudo apt-get install wget)
     - name: Download Coverity Build Tool
       run: |

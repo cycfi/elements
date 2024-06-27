@@ -27,6 +27,8 @@ namespace cycfi { namespace elements
                          : rect(origin.x, origin.y, origin.x + size.x, origin.y + size.y)
                         {}
 
+      constexpr         rect(bool is_x_axis, float this_min, float other_min, float this_max, float other_max);
+
                         rect(rect const &) = default;
       constexpr rect&   operator=(rect const&) = default;
 
@@ -97,6 +99,11 @@ namespace cycfi { namespace elements
    constexpr rect::rect(float left, float top, float right, float bottom)
     : left(left), top(top), right(right), bottom(bottom)
    {}
+
+   constexpr rect::rect(bool is_x_axis, float this_min, float other_min, float this_max, float other_max)
+     : left(is_x_axis ? this_min : other_min), top(not is_x_axis ? this_min : other_min), right(is_x_axis ? this_max : other_max), bottom(not is_x_axis ? this_max : other_max)
+   {
+   }
 
    constexpr bool rect::operator==(rect const& other) const
    {

@@ -113,7 +113,7 @@ namespace cycfi::elements
      }
 
      template<bool IS_X_AXIS, class TILE_ELEMENT>
-     [[gnu::always_inline]] inline auto compute_layout(context const& ctx, TILE_ELEMENT &tile, std::vector<float> &tilePos) -> void
+     [[gnu::always_inline]] inline auto compute_layout(context const& ctx, TILE_ELEMENT &tile, std::vector<float> &tile_offsets) -> void
      {
        auto const sz = tile.size();
 
@@ -131,29 +131,39 @@ namespace cycfi::elements
          info[i].index = i;
        }
 
-       auto const otherMin = ctx.bounds.axisMin(not IS_X_AXIS);
-       auto const otherMax = ctx.bounds.axisMax(not IS_X_AXIS);
-       auto const myMin = ctx.bounds.axisMin(IS_X_AXIS);
-       auto const myDelta = ctx.bounds.axisDelta(IS_X_AXIS);
+       auto const other_axis_min = ctx.bounds.axisMin(not IS_X_AXIS);
+       auto const other_axis_max = ctx.bounds.axisMax(not IS_X_AXIS);
+       auto const my_axis_min = ctx.bounds.axisMin(IS_X_AXIS);
+       auto const my_axis_delta = ctx.bounds.axisDelta(IS_X_AXIS);
        // Compute the best fit for all elements
-       allocate(myDelta, info);
+       allocate(my_axis_delta, info);
 
        // Now we have the final layout. We can now layout the individual
        // elements.
-       tilePos.resize(sz);
+       tile_offsets.resize(sz);
        auto curr = 0.0f;
        for (std::size_t i = 0; i != sz; ++i)
        {
-         tilePos[i] = curr + info[i].alloc;
+         tile_offsets[i] = curr + info[i].alloc;
          auto const prev = curr;
          curr += info[i].alloc;
 
          auto& elem = tile.at(i);
-         auto ebounds = IS_X_AXIS
-           ? rect{prev+myMin, otherMin, curr+myMin, otherMax}
-           : rect{otherMin, prev+myMin, otherMax, curr+myMin};
+         auto ebounds = rect(IS_X_AXIS, prev+my_axis_min, other_axis_min, curr+my_axis_min, other_axis_max);
+
          elem.layout(context{ctx, &elem, ebounds});
        }
+     }
+
+     template<bool IS_X_AXIS>
+     [[gnu::always_inline]] inline auto compute_bounds_of(rect const& bounds, std::size_t index, const std::vector<float> &tile_offsets) -> rect
+     {
+       if (index >= tile_offsets.size())
+         return {};
+       auto const other_axis_min = bounds.axisMin(not IS_X_AXIS);
+       auto const other_axis_max = bounds.axisMax(not IS_X_AXIS);
+       auto const my_axis_min = bounds.axisMin(IS_X_AXIS);
+       return rect{IS_X_AXIS, (index? tile_offsets[index-1] : 0)+my_axis_min, other_axis_min, tile_offsets[index]+my_axis_min, other_axis_max};
      }
    }
 
@@ -162,12 +172,12 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits vtile_element::limits(basic_context const& ctx) const
    {
-     return compute_limits<false>(ctx, *this);
+      return compute_limits<false>(ctx, *this);
    }
 
    void vtile_element::layout(context const& ctx)
    {
-     compute_layout<false>(ctx, *this, _tiles);
+      compute_layout<false>(ctx, *this, _tiles);
    }
 
    void vtile_element::draw(context const& ctx)
@@ -179,12 +189,7 @@ namespace cycfi::elements
 
    rect vtile_element::bounds_of(context const& ctx, std::size_t index) const
    {
-      if (index >= _tiles.size())
-         return {};
-      auto const left = ctx.bounds.left;
-      auto const right = ctx.bounds.right;
-      auto const top = ctx.bounds.top;
-      return rect{left, (index? _tiles[index-1] : 0)+top, right, _tiles[index]+top};
+      return compute_bounds_of<false>(ctx.bounds, index, _tiles);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -192,12 +197,12 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits htile_element::limits(basic_context const& ctx) const
    {
-     return compute_limits<true>(ctx, *this);
+      return compute_limits<true>(ctx, *this);
    }
 
    void htile_element::layout(context const& ctx)
    {
-     compute_layout<true>(ctx, *this, _tiles);
+      compute_layout<true>(ctx, *this, _tiles);
    }
 
    void htile_element::draw(context const& ctx)
@@ -209,11 +214,6 @@ namespace cycfi::elements
 
    rect htile_element::bounds_of(context const& ctx, std::size_t index) const
    {
-      if (index >= _tiles.size())
-         return {};
-      auto const top = ctx.bounds.top;
-      auto const bottom = ctx.bounds.bottom;
-      auto const left = ctx.bounds.left;
-      return rect{(index? _tiles[index-1] : 0)+left, top, _tiles[index]+left, bottom};
+      return compute_bounds_of<true>(ctx.bounds, index, _tiles);
    }
 }

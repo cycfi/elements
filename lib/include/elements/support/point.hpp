@@ -9,6 +9,16 @@
 namespace cycfi { namespace elements
 {
    ////////////////////////////////////////////////////////////////////////////
+   // Axis
+   ////////////////////////////////////////////////////////////////////////////
+   enum class axis : bool { x = false, y = true};
+
+   inline constexpr axis other(axis a)
+   {
+    return axis(not bool(a));
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Points
    ////////////////////////////////////////////////////////////////////////////
    struct point
@@ -24,8 +34,8 @@ namespace cycfi { namespace elements
       constexpr point   move(float dx, float dy) const;
       constexpr point   move_to(float x, float y) const;
 
-      constexpr float   coord(bool is_x_axis) const;
-      constexpr float&  coord(bool is_x_axis);
+      constexpr float&  operator[](axis a);
+      constexpr float   operator[](axis a) const;
 
       float             x;
       float             y;
@@ -83,14 +93,14 @@ namespace cycfi { namespace elements
       return r;
    }
 
-   inline constexpr float point::coord(bool is_x_axis) const
+   constexpr float&  point::operator[](axis a)
    {
-     return is_x_axis ? x : y;
+      return a==axis::x ? x : y;
    }
 
-   constexpr float& point::coord(bool is_x_axis)
+   constexpr float  point::operator[](axis a) const
    {
-     return is_x_axis ? x : y;
+     return a==axis::x ? x : y;
    }
 }}
 

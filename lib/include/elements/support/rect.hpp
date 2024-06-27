@@ -27,8 +27,6 @@ namespace cycfi { namespace elements
                          : rect(origin.x, origin.y, origin.x + size.x, origin.y + size.y)
                         {}
 
-      constexpr         rect(bool is_x_axis, float this_min, float other_min, float this_max, float other_max);
-
                         rect(rect const &) = default;
       constexpr rect&   operator=(rect const&) = default;
 
@@ -54,12 +52,6 @@ namespace cycfi { namespace elements
       constexpr rect    move(float dx, float dy) const;
       constexpr rect    move_to(float x, float y) const;
       constexpr rect    inset(float x_inset = 1.0, float y_inset = 1.0) const;
-
-      constexpr float   axisDelta(bool is_x_axis) const;
-      constexpr float   axisMin(bool is_x_axis ) const;
-      constexpr float   axisMax(bool is_x_axis ) const;
-      constexpr float&  axisMin(bool is_x_axis );
-      constexpr float&  axisMax(bool is_x_axis );
 
       float             left;
       float             top;
@@ -99,11 +91,6 @@ namespace cycfi { namespace elements
    constexpr rect::rect(float left, float top, float right, float bottom)
     : left(left), top(top), right(right), bottom(bottom)
    {}
-
-   constexpr rect::rect(bool is_x_axis, float this_min, float other_min, float this_max, float other_max)
-     : left(is_x_axis ? this_min : other_min), top(not is_x_axis ? this_min : other_min), right(is_x_axis ? this_max : other_max), bottom(not is_x_axis ? this_max : other_max)
-   {
-   }
 
    constexpr bool rect::operator==(rect const& other) const
    {
@@ -221,32 +208,6 @@ namespace cycfi { namespace elements
       return r;
    }
 
-
-   constexpr float rect::axisDelta(bool is_x_axis) const
-   {
-     return is_x_axis ? width() : height();
-   }
-
-   constexpr float rect::axisMin(bool is_x_axis ) const
-   {
-     return is_x_axis ? left : top;
-   }
-
-   constexpr float rect::axisMax(bool is_x_axis ) const
-   {
-     return is_x_axis ? right : bottom;
-   }
-
-   constexpr float& rect::axisMin(bool is_x_axis )
-   {
-     return is_x_axis ? left : top;
-   }
-
-   constexpr float& rect::axisMax(bool is_x_axis )
-   {
-     return is_x_axis ? right : bottom;
-   }
-
    constexpr bool is_valid(rect r)
    {
       return (r.left <= r.right) && (r.top <= r.bottom);
@@ -273,6 +234,41 @@ namespace cycfi { namespace elements
       r.top  = 0.0;
       r.right = 0.0;
       r.bottom = 0.0;
+   }
+
+   inline constexpr float axis_delta(rect const &r, axis a)
+   {
+     return a == axis::x ? r.width() : r.height();
+   }
+
+   inline constexpr float axis_min(rect const &r, axis a)
+   {
+     return a == axis::x ? r.left : r.top;
+   }
+
+   inline constexpr float axis_max(rect const &r, axis a)
+   {
+     return a == axis::x ? r.right : r.bottom;
+   }
+
+   inline constexpr float& axis_min(rect &r, axis a)
+   {
+     return a == axis::x ? r.left : r.top;
+   }
+
+   inline constexpr float& axis_max(rect &r, axis a)
+   {
+     return a == axis::x ? r.right : r.bottom;
+   }
+
+   inline constexpr auto make_rect(axis a, float this_axis_min, float other_axis_min, float this_axis_max, float other_axis_max) -> rect
+   {
+     if(a == axis::x) {
+       return rect(this_axis_min, other_axis_min, this_axis_max, other_axis_max);
+     }
+     else {
+       return rect(other_axis_min, this_axis_min, other_axis_max, this_axis_max);
+     }
    }
 }}
 

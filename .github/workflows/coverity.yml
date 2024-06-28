@@ -34,7 +34,7 @@ jobs:
       run: |
         set(ENV{CC} gcc-11)
         set(ENV{CXX} g++-11)
-    
+
         execute_process(
           COMMAND ${CMAKE_COMMAND}
             -S .
@@ -50,10 +50,12 @@ jobs:
           message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
         endif()
     - name: Build
-      shell: cmake -P {0}
+      shell: |
+        export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
+        cmake -P {0}
       run: |
         execute_process(
-          COMMAND cov-analysis-linux64/bin/cov-build --dir cov-int ${CMAKE_COMMAND} --build build
+          COMMAND cov-build --dir cov-int ${CMAKE_COMMAND} --build build
           RESULT_VARIABLE result
           ERROR_VARIABLE error_message
         )

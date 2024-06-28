@@ -92,6 +92,11 @@ namespace cycfi::elements
       _start_pos = clamp(val, 0.0, 1.0);
    }
 
+   void busy_bar_base::animation_width(double val)
+   {
+      _animation_width = clamp(val, 0.0, 1.0);
+   }
+
    // Implement foreground_bounds to include the start value
    rect busy_bar_base::foreground_bounds(context const& ctx) const
    {
@@ -113,8 +118,10 @@ namespace cycfi::elements
 
    void busy_bar_base::start(view& view_, duration time)
    {
+      bool should_start = is_stopped();
       _time = time;
-      animate(view_);
+      if(should_start)
+         animate(view_);
    }
 
    void busy_bar_base::stop(view& view_)
@@ -128,7 +135,7 @@ namespace cycfi::elements
    {
       if (is_stopped())
       {
-         _status = -0.2;
+         _status = -1 * _animation_width;
          value(0.0);
          start_pos(0.0);
          view_.refresh();
@@ -137,9 +144,9 @@ namespace cycfi::elements
 
       _status += 0.01;
       start_pos(_status);
-      value(_status + 0.2);
+      value(_status + _animation_width);
       if (_status >= 1.0)
-         _status = -0.2;
+         _status = -1 * _animation_width;
       view_.refresh();
       view_.post(std::chrono::duration_cast<std::chrono::milliseconds>(_time),
          [&view_, this]()

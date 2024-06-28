@@ -100,11 +100,15 @@ namespace cycfi::elements
                               )
                                : status_bar_base(init_value)
                                , _start_pos(start_pos)
-                               , _status(-0.2)
+                               , _animation_width(-0.2)
+                               , _status(_animation_width)
                               {}
 
       void                    start_pos(double val);
       double                  start_pos() const { return _start_pos; }
+
+      void                    animation_width(double val);
+      double                  animation_width() const { return _animation_width; }
 
       void                    start(view& view_, duration time);
       void                    stop(view& view_);
@@ -117,6 +121,7 @@ namespace cycfi::elements
       void                    animate(view& view_);
 
       double                  _start_pos;
+      double                  _animation_width;
       double                  _status;
       duration                _time;
    };

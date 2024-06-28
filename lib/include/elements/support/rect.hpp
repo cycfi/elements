@@ -235,6 +235,41 @@ namespace cycfi { namespace elements
       r.right = 0.0;
       r.bottom = 0.0;
    }
+
+   inline constexpr float axis_extent(rect const &r, axis a)
+   {
+     return a == axis::x ? r.width() : r.height();
+   }
+
+   inline constexpr float axis_min(rect const &r, axis a)
+   {
+     return a == axis::x ? r.left : r.top;
+   }
+
+   inline constexpr float axis_max(rect const &r, axis a)
+   {
+     return a == axis::x ? r.right : r.bottom;
+   }
+
+   inline constexpr float& axis_min(rect &r, axis a)
+   {
+     return a == axis::x ? r.left : r.top;
+   }
+
+   inline constexpr float& axis_max(rect &r, axis a)
+   {
+     return a == axis::x ? r.right : r.bottom;
+   }
+
+   inline constexpr auto make_rect(axis a, float this_axis_min, float other_axis_min, float this_axis_max, float other_axis_max) -> rect
+   {
+     if (a == axis::x) {
+       return rect(this_axis_min, other_axis_min, this_axis_max, other_axis_max);
+     }
+     else {
+       return rect(other_axis_min, this_axis_min, other_axis_max, this_axis_max);
+     }
+   }
 }}
 
 #endif

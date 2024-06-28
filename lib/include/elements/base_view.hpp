@@ -73,6 +73,9 @@ namespace cycfi::elements
    {
       float    x = 1.0;
       float    y = 1.0;
+
+      constexpr float&  operator[](axis a);
+      constexpr float   operator[](axis a) const;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -390,6 +393,17 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Scroll direction
    point scroll_direction();
+
+   ////////////////////////////////////////////////////////////////////////////
+   constexpr float& view_stretch::operator[](axis a)
+   {
+      return a==axis::x ? x : y;
+   }
+
+   constexpr float view_stretch::operator[](axis a) const
+   {
+     return a==axis::x ? x : y;
+   }
 }
 
 #endif

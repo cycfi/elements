@@ -91,80 +91,80 @@ namespace cycfi::elements
             [](layout_info lhs, layout_info rhs){ return lhs.index < rhs.index; });
       }
 
-     template<axis Axis, class TileElement, axis OtherAxis = other(Axis)>
-     CYCFI_FORCE_INLINE auto compute_limits(basic_context const& ctx, const TileElement &tile) -> view_limits
-     {
-       view_limits limits{{0.0, 0.0},
-                          {Axis == axis::x ? 0.0 : full_extent,
-                           Axis == axis::x ? full_extent : 0.0}};
-       for (std::size_t i = 0; i != tile.size();  ++i)
+      template <axis Axis, class TileElement, axis OtherAxis = other(Axis)>
+      CYCFI_FORCE_INLINE auto compute_limits(basic_context const& ctx, const TileElement &tile) -> view_limits
+      {
+         view_limits limits{{0.0, 0.0},
+                            {Axis == axis::x ? 0.0 : full_extent,
+                             Axis == axis::x ? full_extent : 0.0}};
+         for (std::size_t i = 0; i != tile.size();  ++i)
          {
-           auto el = tile.at(i).limits(ctx);
+            auto el = tile.at(i).limits(ctx);
 
-           limits.min[Axis] += el.min[Axis];
-           limits.max[Axis] += el.max[Axis];
-           clamp_min(limits.min[OtherAxis], el.min[OtherAxis]);
-           clamp_max(limits.max[OtherAxis], el.max[OtherAxis]);
+            limits.min[Axis] += el.min[Axis];
+            limits.max[Axis] += el.max[Axis];
+            clamp_min(limits.min[OtherAxis], el.min[OtherAxis]);
+            clamp_max(limits.max[OtherAxis], el.max[OtherAxis]);
          }
 
-       clamp_min(limits.max[OtherAxis], limits.min[OtherAxis]);
-       clamp_max(limits.max[Axis], full_extent);
-       return limits;
-     }
+         clamp_min(limits.max[OtherAxis], limits.min[OtherAxis]);
+         clamp_max(limits.max[Axis], full_extent);
+         return limits;
+      }
 
-     template<axis Axis, class TileElement, axis OtherAxis = other(Axis)>
-     CYCFI_FORCE_INLINE auto compute_layout(context const& ctx, TileElement &tile, std::vector<float> &tile_offsets) -> void
-     {
-       auto const sz = tile.size();
+      template <axis Axis, class TileElement, axis OtherAxis = other(Axis)>
+      CYCFI_FORCE_INLINE auto compute_layout(context const& ctx, TileElement &tile, std::vector<float> &tile_offsets) -> void
+      {
+         auto const sz = tile.size();
 
-       // Collect min, max, and stretch information from each element.
-       // Initially set the allocation sizes of each element to its minimum.
-       std::vector<layout_info> info(sz);
-       for (std::size_t i = 0; i != sz; ++i)
-       {
-         auto& elem = tile.at(i);
-         auto limits = elem.limits(ctx);
-         info[i].stretch = elem.stretch()[Axis];
-         info[i].min = limits.min[Axis];
-         info[i].max = limits.max[Axis];
-         info[i].alloc = limits.min[Axis];
-         info[i].index = i;
-       }
+         // Collect min, max, and stretch information from each element.
+         // Initially set the allocation sizes of each element to its minimum.
+         std::vector<layout_info> info(sz);
+         for (std::size_t i = 0; i != sz; ++i)
+         {
+            auto& elem = tile.at(i);
+            auto limits = elem.limits(ctx);
+            info[i].stretch = elem.stretch()[Axis];
+            info[i].min = limits.min[Axis];
+            info[i].max = limits.max[Axis];
+            info[i].alloc = limits.min[Axis];
+            info[i].index = i;
+         }
 
-       auto const other_axis_min = axis_min(ctx.bounds, OtherAxis);
-       auto const other_axis_max = axis_max(ctx.bounds, OtherAxis);
-       auto const my_axis_min = axis_min(ctx.bounds, Axis);
-       auto const my_axis_delta = axis_delta(ctx.bounds, Axis);
-       // Compute the best fit for all elements
-       allocate(my_axis_delta, info);
+         auto const other_axis_min = axis_min(ctx.bounds, OtherAxis);
+         auto const other_axis_max = axis_max(ctx.bounds, OtherAxis);
+         auto const my_axis_min = axis_min(ctx.bounds, Axis);
+         auto const my_axis_extent = axis_extent(ctx.bounds, Axis);
+         // Compute the best fit for all elements
+         allocate(my_axis_extent, info);
 
-       // Now we have the final layout. We can now layout the individual
-       // elements.
-       tile_offsets.resize(sz);
-       auto curr = 0.0f;
-       for (std::size_t i = 0; i != sz; ++i)
-       {
-         tile_offsets[i] = curr + info[i].alloc;
-         auto const prev = curr;
-         curr += info[i].alloc;
+         // Now we have the final layout. We can now layout the individual
+         // elements.
+         tile_offsets.resize(sz);
+         auto curr = 0.0f;
+         for (std::size_t i = 0; i != sz; ++i)
+         {
+            tile_offsets[i] = curr + info[i].alloc;
+            auto const prev = curr;
+            curr += info[i].alloc;
 
-         auto& elem = tile.at(i);
-         auto ebounds = make_rect(Axis, prev+my_axis_min, other_axis_min, curr+my_axis_min, other_axis_max);
+            auto& elem = tile.at(i);
+            auto ebounds = make_rect(Axis, prev+my_axis_min, other_axis_min, curr+my_axis_min, other_axis_max);
 
-         elem.layout(context{ctx, &elem, ebounds});
-       }
-     }
+            elem.layout(context{ctx, &elem, ebounds});
+          }
+      }
 
-     template<axis Axis, axis OtherAxis = other(Axis)>
-     CYCFI_FORCE_INLINE auto compute_bounds_of(rect const& bounds, std::size_t index, const std::vector<float> &tile_offsets) -> rect
-     {
-       if (index >= tile_offsets.size())
-         return {};
-       auto const other_axis_min = axis_min(bounds, OtherAxis);
-       auto const other_axis_max = axis_max(bounds, OtherAxis);
-       auto const my_axis_min = axis_min(bounds, Axis);
-       return make_rect(Axis, (index? tile_offsets[index-1] : 0)+my_axis_min, other_axis_min, tile_offsets[index]+my_axis_min, other_axis_max);
-     }
+      template <axis Axis, axis OtherAxis = other(Axis)>
+      CYCFI_FORCE_INLINE auto compute_bounds_of(rect const& bounds, std::size_t index, const std::vector<float> &tile_offsets) -> rect
+      {
+         if (index >= tile_offsets.size())
+           return {};
+         auto const other_axis_min = axis_min(bounds, OtherAxis);
+         auto const other_axis_max = axis_max(bounds, OtherAxis);
+         auto const my_axis_min = axis_min(bounds, Axis);
+         return make_rect(Axis, (index? tile_offsets[index-1] : 0)+my_axis_min, other_axis_min, tile_offsets[index]+my_axis_min, other_axis_max);
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////

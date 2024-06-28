@@ -236,7 +236,7 @@ namespace cycfi { namespace elements
       r.bottom = 0.0;
    }
 
-   inline constexpr float axis_delta(rect const &r, axis a)
+   inline constexpr float axis_extent(rect const &r, axis a)
    {
      return a == axis::x ? r.width() : r.height();
    }
@@ -263,7 +263,7 @@ namespace cycfi { namespace elements
 
    inline constexpr auto make_rect(axis a, float this_axis_min, float other_axis_min, float this_axis_max, float other_axis_max) -> rect
    {
-     if(a == axis::x) {
+     if (a == axis::x) {
        return rect(this_axis_min, other_axis_min, this_axis_max, other_axis_max);
      }
      else {

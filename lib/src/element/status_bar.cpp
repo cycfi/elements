@@ -86,6 +86,20 @@ namespace cycfi::elements
       return bounds;
    }
 
+   using namespace std::chrono_literals;
+
+   busy_bar_base::busy_bar_base(
+      double init_value
+    , double start_pos
+   )
+    : status_bar_base{init_value}
+    , _start_pos{start_pos}
+    , _animation_width{-0.2}
+    , _status{_status = -1 * _animation_width}
+    , _time{0ms}
+   {
+   }
+
    // Implement the start method as per the patch
    void busy_bar_base::start_pos(double val)
    {
@@ -120,13 +134,12 @@ namespace cycfi::elements
    {
       bool should_start = is_stopped();
       _time = time;
-      if(should_start)
+      if (should_start)
          animate(view_);
    }
 
    void busy_bar_base::stop(view& view_)
    {
-      using namespace std::chrono_literals;
       _time = 0ms;
       animate(view_);
    }

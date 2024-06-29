@@ -97,12 +97,7 @@ namespace cycfi::elements
                               busy_bar_base(
                                  double init_value = 0.0
                                , double start_pos = 0.0
-                              )
-                               : status_bar_base(init_value)
-                               , _start_pos(start_pos)
-                               , _animation_width(-0.2)
-                               , _status(_animation_width)
-                              {}
+                              );
 
       void                    start_pos(double val);
       double                  start_pos() const { return _start_pos; }

@@ -33,14 +33,14 @@ namespace cycfi::elements
       return floating_element::click(ctx, btn);
    }
 
-   element* movable_base::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
+   element* window_mover_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
    {
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(p))
          return this;
       return nullptr;
    }
 
-   bool movable_base::click(context const& ctx, mouse_button btn)
+   bool window_mover_element::click(context const& ctx, mouse_button btn)
    {
       bool tracking_subject = proxy_base::click(ctx, btn);
       if (!tracking_subject)
@@ -57,7 +57,7 @@ namespace cycfi::elements
       return tracking_subject;
    }
 
-   void movable_base::drag(context const& ctx, mouse_button btn)
+   void window_mover_element::drag(context const& ctx, mouse_button btn)
    {
       auto state = get_state();
       if (!state)
@@ -81,7 +81,7 @@ namespace cycfi::elements
       }
    }
 
-   void movable_base::keep_tracking(context const& ctx, tracker_info& track_info)
+   void window_mover_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -95,7 +95,7 @@ namespace cycfi::elements
       }
    }
 
-   bool resizable_base::cursor(context const& ctx, point p, cursor_tracking status)
+   bool window_resizer_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       bool r = tracker::cursor(ctx, p, status);
       auto outer = ctx.bounds.inset(-5, -5);
@@ -122,7 +122,7 @@ namespace cycfi::elements
       return r;
    }
 
-   element* resizable_base::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* window_resizer_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       auto outer = ctx.bounds.inset(-5, -5);
       auto inner = ctx.bounds.inset(5, 5);
@@ -131,7 +131,7 @@ namespace cycfi::elements
       return proxy_base::hit_test(ctx, p, leaf, control);
    }
 
-   bool resizable_base::click(context const& ctx, mouse_button btn)
+   bool window_resizer_element::click(context const& ctx, mouse_button btn)
    {
       if (proxy_base::click(ctx, btn))
          return true;
@@ -148,14 +148,14 @@ namespace cycfi::elements
             {
                auto const& b = ctx.bounds;
                if (btn.pos.x > b.left - 5 && btn.pos.x < b.left + 5)
-                  state->_handle = resizable_tracker_info::left;
+                  state->_handle = window_resizer_tracker_info::left;
                else if (btn.pos.x > b.right - 5 && btn.pos.x < b.right + 5)
-                  state->_handle = resizable_tracker_info::right;
+                  state->_handle = window_resizer_tracker_info::right;
 
                if (btn.pos.y > b.top - 5 && btn.pos.y < b.top + 5)
-                  state->_handle |= resizable_tracker_info::top;
+                  state->_handle |= window_resizer_tracker_info::top;
                else if (btn.pos.y > b.bottom - 5 && btn.pos.y < b.bottom + 5)
-                  state->_handle |= resizable_tracker_info::bottom;
+                  state->_handle |= window_resizer_tracker_info::bottom;
             }
          }
          return r;
@@ -163,7 +163,7 @@ namespace cycfi::elements
       return false;
    }
 
-   void resizable_base::drag(context const& ctx, mouse_button btn)
+   void window_resizer_element::drag(context const& ctx, mouse_button btn)
    {
       auto state = get_state();
       if (!state)
@@ -176,7 +176,7 @@ namespace cycfi::elements
       }
    }
 
-   void resizable_base::keep_tracking(context const& ctx, tracker_info& track_info)
+   void window_resizer_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -187,14 +187,14 @@ namespace cycfi::elements
             auto b = fl->bounds();
             if (auto state = get_state(); state && state->_handle)
             {
-               if (state->_handle & resizable_tracker_info::left)
+               if (state->_handle & window_resizer_tracker_info::left)
                   b.left = p.x;
-               else if (state->_handle & resizable_tracker_info::right)
+               else if (state->_handle & window_resizer_tracker_info::right)
                   b.right = p.x;
 
-               if (state->_handle & resizable_tracker_info::top)
+               if (state->_handle & window_resizer_tracker_info::top)
                   b.top = p.y;
-               else if (state->_handle & resizable_tracker_info::bottom)
+               else if (state->_handle & window_resizer_tracker_info::bottom)
                   b.bottom = p.y;
 
                auto width = b.width();
@@ -206,18 +206,18 @@ namespace cycfi::elements
                // Constrain width
                if (width < limits.min.x || width > limits.max.x)
                {
-                  if (state->_handle & resizable_tracker_info::left)
+                  if (state->_handle & window_resizer_tracker_info::left)
                      b.left = ob.left;
-                  else if (state->_handle & resizable_tracker_info::right)
+                  else if (state->_handle & window_resizer_tracker_info::right)
                      b.right = ob.right;
                }
 
                // Constrain height
                if (height < limits.min.y || height > limits.max.y)
                {
-                  if (state->_handle & resizable_tracker_info::top)
+                  if (state->_handle & window_resizer_tracker_info::top)
                      b.top = ob.top;
-                  else if (state->_handle & resizable_tracker_info::bottom)
+                  else if (state->_handle & window_resizer_tracker_info::bottom)
                      b.bottom = ob.bottom;
                }
                if (b != ob)

@@ -21,7 +21,7 @@ namespace cycfi::elements
    {
       return child_window(bounds,
          pane_ex(
-            movable(title_bar{}),
+            window_mover(title_bar{}),
             title,
             std::forward<Content>(content),
             get_theme().child_window_title_size,
@@ -49,7 +49,7 @@ namespace cycfi::elements
    {
       return child_window(bounds,
          pane_ex(
-            movable(
+            window_mover(
                layer(
                   window_closer(
                      align_right_middle(
@@ -119,9 +119,9 @@ namespace cycfi::elements
          );
       }
       return child_window(bounds,
-         resizable(
+         window_resizer(
             pane_ex(
-               movable(
+               window_mover(
                   layer(
                      align_right(buttons),
                      title_bar{}

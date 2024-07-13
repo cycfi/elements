@@ -31,6 +31,9 @@ namespace cycfi::elements
       rect                    bounds() const;
       void                    bounds(rect bounds_);
 
+      void                    minimize(context& ctx);
+      void                    maximize(context& ctx);
+
    private:
 
       rect                    _bounds;

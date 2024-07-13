@@ -530,7 +530,7 @@ namespace cycfi::elements
 
    std::filesystem::path get_app_path()
    {
-      char result[PATH_MAX];
+      char result[PATH_MAX + 1];
       // get the full path to the executable file of the current process.
       if (auto count = readlink("/proc/self/exe", result, PATH_MAX); count != -1)
       {

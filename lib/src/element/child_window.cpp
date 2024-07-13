@@ -95,8 +95,152 @@ namespace cycfi::elements
       }
    }
 
+   bool resizable_base::cursor(context const& ctx, point p, cursor_tracking /* status */)
+   {
+      auto outer = ctx.bounds.inset(-5);
+      auto inner = ctx.bounds.inset(5);
+      if (ctx.enabled && is_enabled() && outer.includes(p) && !inner.includes(p))
+      {
+         auto const& b = ctx.bounds;
+         bool h_resize = false;
+         bool v_resize = false;
+         if (p.x > b.left - 5 && p.x < b.left + 5)
+            h_resize = true;
+         else if (p.x > b.right - 5 && p.x < b.right + 5)
+            h_resize = true;
+
+         if (p.y > b.top - 5 && p.y < b.top + 5)
+            v_resize = true;
+         else if (p.y > b.bottom - 5 && p.y < b.bottom + 5)
+            v_resize = true;
+
+         if (h_resize != v_resize)
+            set_cursor(h_resize? cursor_type::h_resize : cursor_type::v_resize);
+         return true;
+      }
+      return false;
+   }
+
+   element* resizable_base::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      auto outer = ctx.bounds.inset(-5);
+      auto inner = ctx.bounds.inset(5);
+      if (ctx.enabled && is_enabled() && outer.includes(p) && !inner.includes(p))
+         return this;
+      return proxy_base::hit_test(ctx, p, leaf, control);
+   }
+
+   bool resizable_base::click(context const& ctx, mouse_button btn)
+   {
+      if (proxy_base::click(ctx, btn))
+         return true;
+
+      if (ctx.enabled && is_enabled())
+      {
+         bool r = tracker::click(ctx, btn);
+         auto state = get_state();
+         if (state)
+         {
+            auto outer = ctx.bounds.inset(-5);
+            auto inner = ctx.bounds.inset(5);
+            if (outer.includes(btn.pos) && !inner.includes(btn.pos))
+            {
+               auto const& b = ctx.bounds;
+               if (btn.pos.x > b.left - 5 && btn.pos.x < b.left + 5)
+                  state->_handle = resizable_tracker_info::left;
+               else if (btn.pos.x > b.right - 5 && btn.pos.x < b.right + 5)
+                  state->_handle = resizable_tracker_info::right;
+
+               if (btn.pos.y > b.top - 5 && btn.pos.y < b.top + 5)
+                  state->_handle |= resizable_tracker_info::top;
+               else if (btn.pos.y > b.bottom - 5 && btn.pos.y < b.bottom + 5)
+                  state->_handle |= resizable_tracker_info::bottom;
+            }
+         }
+         return r;
+      }
+      return false;
+   }
+
+   void resizable_base::drag(context const& ctx, mouse_button btn)
+   {
+      auto state = get_state();
+      if (!state)
+      {
+         proxy_base::drag(ctx, btn);
+      }
+      else
+      {
+         tracker::drag(ctx, btn);
+      }
+   }
+
+   void resizable_base::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (track_info.current != track_info.previous)
+      {
+         auto fl = find_parent<floating_element*>(ctx);
+         if (fl)
+         {
+            auto p = track_info.current;
+            auto b = fl->bounds();
+            if (auto state = get_state(); state && state->_handle)
+            {
+               if (state->_handle & resizable_tracker_info::left)
+                  b.left = p.x;
+               else if (state->_handle & resizable_tracker_info::right)
+                  b.right = p.x;
+
+               if (state->_handle & resizable_tracker_info::top)
+                  b.top = p.y;
+               else if (state->_handle & resizable_tracker_info::bottom)
+                  b.bottom = p.y;
+
+               auto width = b.width();
+               auto height = b.height();
+               auto ob = fl->bounds();
+
+               auto limits = fl->subject().limits(ctx);
+
+               // Constrain width
+               if (width < limits.min.x || width > limits.max.x)
+               {
+                  if (state->_handle & resizable_tracker_info::left)
+                     b.left = ob.left;
+                  else if (state->_handle & resizable_tracker_info::right)
+                     b.right = ob.right;
+               }
+
+               // Constrain height
+               if (height < limits.min.y || height > limits.max.y)
+               {
+                  if (state->_handle & resizable_tracker_info::top)
+                     b.top = ob.top;
+                  else if (state->_handle & resizable_tracker_info::bottom)
+                     b.bottom = ob.bottom;
+               }
+               if (b != ob)
+               {
+                  fl->bounds(b);
+                  ctx.view.refresh();
+               }
+            }
+         }
+      }
+   }
+
    void close_floating_element(context& ctx, floating_element* fl)
    {
       ctx.view.remove(fl->shared_from_this());
+   }
+
+   void minimize_floating_element(context& ctx, floating_element* fl)
+   {
+      fl->minimize(ctx);
+   }
+
+   void maximize_floating_element(context& ctx, floating_element* fl)
+   {
+      fl->maximize(ctx);
    }
 }

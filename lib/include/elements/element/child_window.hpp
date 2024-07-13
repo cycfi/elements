@@ -110,6 +110,41 @@ namespace cycfi::elements
       return {std::forward<Subject>(subject)};
    }
 
+   struct resizable_tracker_info : tracker_info
+   {
+      using tracker_info::tracker_info;
+
+      enum handle : unsigned char
+      {
+         top      = 1,
+         left     = 2,
+         bottom   = 4,
+         right    = 8
+      };
+
+      unsigned char        _handle = 0;
+   };
+
+   class resizable_base : public tracker<proxy_base, resizable_tracker_info>
+   {
+   public:
+
+      using tracker = tracker<proxy_base, resizable_tracker_info>;
+
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, resizable_base>
+   resizable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
    /**
     * \class closable_element
     *
@@ -171,6 +206,76 @@ namespace cycfi::elements
                auto fl = find_parent<floating_element*>(ctx);
                if (fl)
                   close_floating_element(ctx, fl);
+            };
+      }
+   }
+
+   template <concepts::Element Subject>
+   class minimizable_element : public proxy<Subject>
+   {
+   public:
+
+      using proxy<Subject>::proxy;
+
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   inline minimizable_element<remove_cvref_t<Subject>>
+   minimizable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   void minimize_floating_element(context& ctx, floating_element* cw);
+
+   template <concepts::Element Subject>
+   inline void minimizable_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto btn = find_subject<basic_button*>(this);
+      if (btn)
+      {
+         btn->on_click =
+            [&ctx](bool)
+            {
+               auto fl = find_parent<floating_element*>(ctx);
+               if (fl)
+                  minimize_floating_element(ctx, fl);
+            };
+      }
+   }
+
+   template <concepts::Element Subject>
+   class maximizable_element : public proxy<Subject>
+   {
+   public:
+
+      using proxy<Subject>::proxy;
+
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   inline maximizable_element<remove_cvref_t<Subject>>
+   maximizable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   void maximize_floating_element(context& ctx, floating_element* cw);
+
+   template <concepts::Element Subject>
+   inline void maximizable_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto btn = find_subject<basic_button*>(this);
+      if (btn)
+      {
+         btn->on_click =
+            [&ctx](bool)
+            {
+               auto fl = find_parent<floating_element*>(ctx);
+               if (fl)
+                  maximize_floating_element(ctx, fl);
             };
       }
    }

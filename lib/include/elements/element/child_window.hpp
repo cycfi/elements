@@ -146,10 +146,10 @@ namespace cycfi::elements
    }
 
    /**
-    * \class closable_element
+    * \class window_closer_element
     *
     * \brief
-    *    Class that encapsulates a closable UI element functionality.
+    *    Class that encapsulates a window closer UI element functionality.
     *
     *    When contained inside a floating_element, this class allows a button
     *    (or any clickable element) to close (or hide) the floating_element
@@ -159,7 +159,7 @@ namespace cycfi::elements
     *    The type of the subject. Must satisfy the `Element` concept.
     */
    template <concepts::Element Subject>
-   class closable_element : public proxy<Subject>
+   class window_closer_element : public proxy<Subject>
    {
    public:
 
@@ -170,7 +170,7 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create a closable element.
+    *    Create a window_closer element.
     *
     *    If the subject is a part of a floating_element, this function
     *    enables the subject to close its parent floating_element upon a
@@ -180,14 +180,14 @@ namespace cycfi::elements
     *    The type of the subject. Must satisfy the `Element` concept.
     *
     * \param subject
-    *    The element that is to be made closable.
+    *    The element that is to be made window_closer.
     *
     * \return
-    *    The closable element.
+    *    The window_closer element.
     */
    template <concepts::Element Subject>
-   inline closable_element<remove_cvref_t<Subject>>
-   closable(Subject&& subject)
+   inline window_closer_element<remove_cvref_t<Subject>>
+   window_closer(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
@@ -195,7 +195,7 @@ namespace cycfi::elements
    void close_floating_element(context& ctx, floating_element* cw);
 
    template <concepts::Element Subject>
-   inline void closable_element<Subject>::prepare_subject(context& ctx)
+   inline void window_closer_element<Subject>::prepare_subject(context& ctx)
    {
       auto btn = find_subject<basic_button*>(this);
       if (btn)
@@ -211,7 +211,7 @@ namespace cycfi::elements
    }
 
    template <concepts::Element Subject>
-   class minimizable_element : public proxy<Subject>
+   class window_minimizer_element : public proxy<Subject>
    {
    public:
 
@@ -221,16 +221,17 @@ namespace cycfi::elements
    };
 
    template <concepts::Element Subject>
-   inline minimizable_element<remove_cvref_t<Subject>>
-   minimizable(Subject&& subject)
+   inline window_minimizer_element<remove_cvref_t<Subject>>
+   window_minimizer(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   void minimize_floating_element(context& ctx, floating_element* cw);
+   void minimize_window(context& ctx, floating_element* cw);
 
    template <concepts::Element Subject>
-   inline void minimizable_element<Subject>::prepare_subject(context& ctx)
+   inline void
+   window_minimizer_element<Subject>::prepare_subject(context& ctx)
    {
       auto btn = find_subject<basic_button*>(this);
       if (btn)
@@ -240,13 +241,13 @@ namespace cycfi::elements
             {
                auto fl = find_parent<floating_element*>(ctx);
                if (fl)
-                  minimize_floating_element(ctx, fl);
+                  minimize_window(ctx, fl);
             };
       }
    }
 
    template <concepts::Element Subject>
-   class maximizable_element : public proxy<Subject>
+   class window_maximizer_element : public proxy<Subject>
    {
    public:
 
@@ -256,16 +257,17 @@ namespace cycfi::elements
    };
 
    template <concepts::Element Subject>
-   inline maximizable_element<remove_cvref_t<Subject>>
-   maximizable(Subject&& subject)
+   inline window_maximizer_element<remove_cvref_t<Subject>>
+   window_maximizer(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
 
-   void maximize_floating_element(context& ctx, floating_element* cw);
+   void maximize_window(context& ctx, floating_element* cw);
 
    template <concepts::Element Subject>
-   inline void maximizable_element<Subject>::prepare_subject(context& ctx)
+   inline void
+   window_maximizer_element<Subject>::prepare_subject(context& ctx)
    {
       auto btn = find_subject<basic_button*>(this);
       if (btn)
@@ -275,7 +277,7 @@ namespace cycfi::elements
             {
                auto fl = find_parent<floating_element*>(ctx);
                if (fl)
-                  maximize_floating_element(ctx, fl);
+                  maximize_window(ctx, fl);
             };
       }
    }

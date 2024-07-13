@@ -51,7 +51,7 @@ namespace cycfi::elements
          pane_ex(
             movable(
                layer(
-                  closable(
+                  window_closer(
                      align_right_middle(
                         plain_icon_button(icons::cancel, 0.8)
                      )
@@ -88,7 +88,8 @@ namespace cycfi::elements
    template <typename Content>
    auto standard_child_window(
       std::string title,
-      rect bounds, Content&& content,
+      rect bounds,
+      Content&& content,
       unsigned char options = window_closable | window_minimizable | window_maximizable
    )
    {
@@ -96,19 +97,25 @@ namespace cycfi::elements
       if (options & window_minimizable)
       {
          buttons.push_back(
-            share(minimizable(plain_icon_button(icons::angle_down, 0.8)))
+            share(
+               window_minimizer(plain_icon_button(icons::angle_down, 0.8))
+            )
          );
       }
       if (options & window_maximizable)
       {
          buttons.push_back(
-            share(maximizable(plain_icon_button(icons::angle_up, 0.8)))
+            share(
+               window_maximizer(plain_icon_button(icons::angle_up, 0.8))
+            )
          );
       }
       if (options & window_closable)
       {
          buttons.push_back(
-            share(closable(plain_icon_button(icons::cancel, 0.8)))
+            share(
+               window_closer(plain_icon_button(icons::cancel, 0.8))
+            )
          );
       }
       return child_window(bounds,

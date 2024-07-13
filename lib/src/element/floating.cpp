@@ -34,5 +34,23 @@ namespace cycfi::elements
       ctx.bounds = center(ctx.bounds, this->bounds());
       this->bounds(ctx.bounds);
    }
+
+   void floating_element::minimize(context& ctx)
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      auto bounds = this->bounds();
+      bounds.width(e_limits.min.x);
+      bounds.height(e_limits.min.y);
+      this->bounds(bounds);
+   }
+
+   void floating_element::maximize(context& ctx)
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      auto bounds = this->bounds();
+      bounds.width(e_limits.max.x);
+      bounds.height(e_limits.max.y);
+      this->bounds(bounds);
+   }
 }
 

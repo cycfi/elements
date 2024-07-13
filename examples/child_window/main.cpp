@@ -18,7 +18,9 @@ auto make_child_window(rect bounds, char const* title)
    return standard_child_window(
       title,
       bounds,
-      scroller(image{"deep_space.jpg"})
+      hmin_size(250,
+         scroller(image{"deep_space.jpg"})
+      )
    );
 }
 

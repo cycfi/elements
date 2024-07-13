@@ -236,6 +236,11 @@ namespace cycfi::elements
 
    void minimize_floating_element(context& ctx, floating_element* fl)
    {
-      ctx.view.remove(fl->shared_from_this());
+      fl->minimize(ctx);
+   }
+
+   void maximize_floating_element(context& ctx, floating_element* fl)
+   {
+      fl->maximize(ctx);
    }
 }

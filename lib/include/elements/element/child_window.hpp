@@ -209,6 +209,76 @@ namespace cycfi::elements
             };
       }
    }
+
+   template <concepts::Element Subject>
+   class minimizable_element : public proxy<Subject>
+   {
+   public:
+
+      using proxy<Subject>::proxy;
+
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   inline minimizable_element<remove_cvref_t<Subject>>
+   minimizable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   void minimize_floating_element(context& ctx, floating_element* cw);
+
+   template <concepts::Element Subject>
+   inline void minimizable_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto btn = find_subject<basic_button*>(this);
+      if (btn)
+      {
+         btn->on_click =
+            [&ctx](bool)
+            {
+               auto fl = find_parent<floating_element*>(ctx);
+               if (fl)
+                  minimize_floating_element(ctx, fl);
+            };
+      }
+   }
+
+   template <concepts::Element Subject>
+   class maximizable_element : public proxy<Subject>
+   {
+   public:
+
+      using proxy<Subject>::proxy;
+
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   inline maximizable_element<remove_cvref_t<Subject>>
+   maximizable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   void maximize_floating_element(context& ctx, floating_element* cw);
+
+   template <concepts::Element Subject>
+   inline void maximizable_element<Subject>::prepare_subject(context& ctx)
+   {
+      auto btn = find_subject<basic_button*>(this);
+      if (btn)
+      {
+         btn->on_click =
+            [&ctx](bool)
+            {
+               auto fl = find_parent<floating_element*>(ctx);
+               if (fl)
+                  maximize_floating_element(ctx, fl);
+            };
+      }
+   }
 }
 
 #endif

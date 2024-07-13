@@ -95,8 +95,9 @@ namespace cycfi::elements
       }
    }
 
-   bool resizable_base::cursor(context const& ctx, point p, cursor_tracking /* status */)
+   bool resizable_base::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      bool r = tracker::cursor(ctx, p, status);
       auto outer = ctx.bounds.inset(-5);
       auto inner = ctx.bounds.inset(5);
       if (ctx.enabled && is_enabled() && outer.includes(p) && !inner.includes(p))
@@ -118,7 +119,7 @@ namespace cycfi::elements
             set_cursor(h_resize? cursor_type::h_resize : cursor_type::v_resize);
          return true;
       }
-      return false;
+      return r;
    }
 
    element* resizable_base::hit_test(context const& ctx, point p, bool leaf, bool control)

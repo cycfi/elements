@@ -15,7 +15,7 @@ auto background = box(bkd_color);
 auto make_child_window(rect bounds, char const* title)
 {
    using cycfi::elements::image;
-   return closable_child_window(
+   return standard_child_window(
       title,
       bounds,
       scroller(image{"deep_space.jpg"})

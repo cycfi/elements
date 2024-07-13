@@ -317,8 +317,10 @@ namespace cycfi::elements
       view_limits e_limits = subject().limits(ctx);
       theme const& thm = get_theme();
 
-      r.has_h = e_limits.min.x > ctx.bounds.width() && allow_hscroll();
-      r.has_v = e_limits.min.y > ctx.bounds.height() && allow_vscroll();
+      auto delta_x = e_limits.min.x - ctx.bounds.width();
+      auto delta_y = e_limits.min.y - ctx.bounds.height();
+      r.has_h = delta_x > 4.0 && allow_hscroll();
+      r.has_v = delta_y > 4.0 && allow_vscroll();
 
       if (r.has_v)
       {

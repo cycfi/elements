@@ -131,6 +131,8 @@ namespace cycfi::elements
 
       using tracker = tracker<proxy_base, window_resizer_tracker_info>;
 
+      view_limits          limits(basic_context const& ctx) const override;
+      void                 prepare_subject(context& ctx) override;
       bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
       element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                 click(context const& ctx, mouse_button btn) override;

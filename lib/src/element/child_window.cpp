@@ -95,24 +95,51 @@ namespace cycfi::elements
       }
    }
 
+   // The margin around the window that allows resizing
+   constexpr float resize_margin = 5.0f;
+
+   view_limits window_resizer_element::limits(basic_context const& ctx) const
+   {
+      auto r = this->subject().limits(ctx);
+
+      r.min.x += resize_margin * 2;
+      r.max.x += resize_margin * 2;
+      r.min.y += resize_margin * 2;
+      r.max.y += resize_margin * 2;
+
+      clamp_max(r.max.x, full_extent);
+      clamp_max(r.max.y, full_extent);
+      return r;
+   }
+
+   void window_resizer_element::prepare_subject(context& ctx)
+   {
+      ctx.bounds.top += resize_margin;
+      ctx.bounds.left += resize_margin;
+      ctx.bounds.bottom -= resize_margin;
+      ctx.bounds.right -= resize_margin;
+   }
+
    bool window_resizer_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      if (proxy_base::cursor(ctx, p, status))
+         return true;
+
       bool r = tracker::cursor(ctx, p, status);
-      auto outer = ctx.bounds.inset(-5, -5);
-      auto inner = ctx.bounds.inset(5, 5);
-      if (ctx.enabled && is_enabled() && outer.includes(p) && !inner.includes(p))
+      auto inner = ctx.bounds.inset(resize_margin, resize_margin);
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
       {
          auto const& b = ctx.bounds;
          bool h_resize = false;
          bool v_resize = false;
-         if (p.x > b.left - 5 && p.x < b.left + 5)
+         if (p.x > b.left && p.x < b.left + resize_margin)
             h_resize = true;
-         else if (p.x > b.right - 5 && p.x < b.right + 5)
+         else if (p.x > b.right - resize_margin && p.x < b.right)
             h_resize = true;
 
-         if (p.y > b.top - 5 && p.y < b.top + 5)
+         if (p.y > b.top && p.y < b.top + resize_margin)
             v_resize = true;
-         else if (p.y > b.bottom - 5 && p.y < b.bottom + 5)
+         else if (p.y > b.bottom - resize_margin && p.y < b.bottom)
             v_resize = true;
 
          if (h_resize != v_resize)
@@ -124,9 +151,8 @@ namespace cycfi::elements
 
    element* window_resizer_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
-      auto outer = ctx.bounds.inset(-5, -5);
-      auto inner = ctx.bounds.inset(5, 5);
-      if (ctx.enabled && is_enabled() && outer.includes(p) && !inner.includes(p))
+      auto inner = ctx.bounds.inset(resize_margin, resize_margin);
+      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
          return this;
       return proxy_base::hit_test(ctx, p, leaf, control);
    }
@@ -142,19 +168,18 @@ namespace cycfi::elements
          auto state = get_state();
          if (state)
          {
-            auto outer = ctx.bounds.inset(-5, -5);
-            auto inner = ctx.bounds.inset(5, 5);
-            if (outer.includes(btn.pos) && !inner.includes(btn.pos))
+            auto inner = ctx.bounds.inset(resize_margin, resize_margin);
+            if (ctx.bounds.includes(btn.pos) && !inner.includes(btn.pos))
             {
                auto const& b = ctx.bounds;
-               if (btn.pos.x > b.left - 5 && btn.pos.x < b.left + 5)
+               if (btn.pos.x > b.left && btn.pos.x < b.left + resize_margin)
                   state->_handle = window_resizer_tracker_info::left;
-               else if (btn.pos.x > b.right - 5 && btn.pos.x < b.right + 5)
+               else if (btn.pos.x > b.right - resize_margin && btn.pos.x < b.right)
                   state->_handle = window_resizer_tracker_info::right;
 
-               if (btn.pos.y > b.top - 5 && btn.pos.y < b.top + 5)
+               if (btn.pos.y > b.top && btn.pos.y < b.top + resize_margin)
                   state->_handle |= window_resizer_tracker_info::top;
-               else if (btn.pos.y > b.bottom - 5 && btn.pos.y < b.bottom + 5)
+               else if (btn.pos.y > b.bottom - resize_margin && btn.pos.y < b.bottom)
                   state->_handle |= window_resizer_tracker_info::bottom;
             }
          }

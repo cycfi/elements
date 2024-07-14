@@ -386,8 +386,10 @@ namespace cycfi::elements
       hand,
       h_resize,
       v_resize,
-      ne_resize,
-      sw_resize
+      ew_resize = h_resize,
+      ns_resize = v_resize,
+      nwse_resize,
+      nesw_resize
    };
 
    void set_cursor(cursor_type type);

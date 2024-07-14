@@ -782,13 +782,13 @@ namespace cycfi::elements
             [cursor set];
             break;
          }
-         case cursor_type::ne_resize:
+         case cursor_type::nwse_resize:
          {
             NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeNorthWestSouthEastCursor)];
             [cursor set];
             break;
          }
-         case cursor_type::sw_resize:
+         case cursor_type::nesw_resize:
          {
             NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeNorthEastSouthWestCursor)];
             [cursor set];

@@ -126,7 +126,7 @@ namespace cycfi::elements
          return true;
 
       bool r = tracker::cursor(ctx, p, status);
-      auto inner = ctx.bounds.inset(resize_margin);
+      auto inner = ctx.bounds.inset(resize_margin, resize_margin);
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
       {
          auto const& b = ctx.bounds;
@@ -178,7 +178,7 @@ namespace cycfi::elements
 
    element* window_resizer_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
-      auto inner = ctx.bounds.inset(resize_margin);
+      auto inner = ctx.bounds.inset(resize_margin, resize_margin);
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
          return this;
       return proxy_base::hit_test(ctx, p, leaf, control);
@@ -195,7 +195,7 @@ namespace cycfi::elements
          auto state = get_state();
          if (state)
          {
-            auto inner = ctx.bounds.inset(resize_margin);
+            auto inner = ctx.bounds.inset(resize_margin, resize_margin);
             if (ctx.bounds.includes(btn.pos) && !inner.includes(btn.pos))
             {
                auto const& b = ctx.bounds;

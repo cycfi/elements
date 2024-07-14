@@ -134,14 +134,14 @@ namespace cycfi::elements
          bool r_resize = false;
          bool t_resize = false;
          bool b_resize = false;
-         if (p.x > b.left && p.x < b.left + resize_margin)
+         if (p.x >= b.left && p.x < b.left + resize_margin)
             l_resize = true;
-         else if (p.x > b.right - resize_margin && p.x < b.right)
+         else if (p.x > b.right - resize_margin && p.x <= b.right)
             r_resize = true;
 
-         if (p.y > b.top && p.y < b.top + resize_margin)
+         if (p.y >= b.top && p.y < b.top + resize_margin)
             t_resize = true;
-         else if (p.y > b.bottom - resize_margin && p.y < b.bottom)
+         else if (p.y > b.bottom - resize_margin && p.y <= b.bottom)
             b_resize = true;
 
          if (l_resize)
@@ -199,14 +199,14 @@ namespace cycfi::elements
             if (ctx.bounds.includes(btn.pos) && !inner.includes(btn.pos))
             {
                auto const& b = ctx.bounds;
-               if (btn.pos.x > b.left && btn.pos.x < b.left + resize_margin)
+               if (btn.pos.x >= b.left && btn.pos.x < b.left + resize_margin)
                   state->_handle = window_resizer_tracker_info::left;
-               else if (btn.pos.x > b.right - resize_margin && btn.pos.x < b.right)
+               else if (btn.pos.x > b.right - resize_margin && btn.pos.x <= b.right)
                   state->_handle = window_resizer_tracker_info::right;
 
-               if (btn.pos.y > b.top && btn.pos.y < b.top + resize_margin)
+               if (btn.pos.y >= b.top && btn.pos.y < b.top + resize_margin)
                   state->_handle |= window_resizer_tracker_info::top;
-               else if (btn.pos.y > b.bottom - resize_margin && btn.pos.y < b.bottom)
+               else if (btn.pos.y > b.bottom - resize_margin && btn.pos.y <= b.bottom)
                   state->_handle |= window_resizer_tracker_info::bottom;
             }
          }

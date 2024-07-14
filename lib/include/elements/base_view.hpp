@@ -391,7 +391,9 @@ namespace cycfi::elements
       cross_hair,
       hand,
       h_resize,
-      v_resize
+      v_resize,
+      ne_resize,
+      sw_resize
    };
 
    void set_cursor(cursor_type type);

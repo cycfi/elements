@@ -899,6 +899,9 @@ namespace cycfi::elements
                     forType : NSPasteboardTypeString];
    }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+
    void set_cursor(cursor_type type)
    {
       switch (type)
@@ -916,13 +919,32 @@ namespace cycfi::elements
             [[NSCursor openHandCursor] set];
             break;
          case cursor_type::h_resize:
-            [[NSCursor resizeLeftRightCursor] set];
+         {
+            NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeEastWestCursor)];
+            [cursor set];
             break;
+         }
          case cursor_type::v_resize:
-            [[NSCursor resizeUpDownCursor] set];
+         {
+            NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeNorthSouthCursor)];
+            [cursor set];
             break;
+         }
+         case cursor_type::ne_resize:
+         {
+            NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeNorthWestSouthEastCursor)];
+            [cursor set];
+            break;
+         }
+         case cursor_type::sw_resize:
+         {
+            NSCursor* cursor = [NSCursor performSelector:@selector(_windowResizeNorthEastSouthWestCursor)];
+            [cursor set];
+            break;
+         }
       }
    }
+#pragma clang diagnostic pop
 
    point scroll_direction()
    {

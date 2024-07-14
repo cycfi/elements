@@ -130,20 +130,47 @@ namespace cycfi::elements
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
       {
          auto const& b = ctx.bounds;
-         bool h_resize = false;
-         bool v_resize = false;
+         bool l_resize = false;
+         bool r_resize = false;
+         bool t_resize = false;
+         bool b_resize = false;
          if (p.x > b.left && p.x < b.left + resize_margin)
-            h_resize = true;
+            l_resize = true;
          else if (p.x > b.right - resize_margin && p.x < b.right)
-            h_resize = true;
+            r_resize = true;
 
          if (p.y > b.top && p.y < b.top + resize_margin)
-            v_resize = true;
+            t_resize = true;
          else if (p.y > b.bottom - resize_margin && p.y < b.bottom)
-            v_resize = true;
+            b_resize = true;
 
-         if (h_resize != v_resize)
-            set_cursor(h_resize? cursor_type::h_resize : cursor_type::v_resize);
+         if (l_resize)
+         {
+            if (t_resize)
+               set_cursor(cursor_type::ne_resize);
+            else if (b_resize)
+               set_cursor(cursor_type::sw_resize);
+            else
+               set_cursor(cursor_type::h_resize);
+         }
+         else if (r_resize)
+         {
+            if (t_resize)
+               set_cursor(cursor_type::sw_resize);
+            else if (b_resize)
+               set_cursor(cursor_type::ne_resize);
+            else
+               set_cursor(cursor_type::h_resize);
+         }
+         else if (t_resize || b_resize)
+         {
+            set_cursor(cursor_type::v_resize);
+         }
+         else
+         {
+            set_cursor(cursor_type::arrow);
+         }
+
          return true;
       }
       return r;

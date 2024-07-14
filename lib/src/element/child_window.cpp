@@ -126,14 +126,14 @@ namespace cycfi::elements
          return true;
 
       bool r = tracker::cursor(ctx, p, status);
-      auto inner = ctx.bounds.inset(resize_margin, resize_margin);
-      if (ctx.enabled && is_enabled() && ctx.bounds.includes(p) && !inner.includes(p))
+      if (ctx.enabled && is_enabled())
       {
          auto const& b = ctx.bounds;
          bool l_resize = false;
          bool r_resize = false;
          bool t_resize = false;
          bool b_resize = false;
+
          if (p.x >= b.left && p.x < b.left + resize_margin)
             l_resize = true;
          else if (p.x > b.right - resize_margin && p.x <= b.right)
@@ -195,20 +195,16 @@ namespace cycfi::elements
          auto state = get_state();
          if (state)
          {
-            auto inner = ctx.bounds.inset(resize_margin, resize_margin);
-            if (ctx.bounds.includes(btn.pos) && !inner.includes(btn.pos))
-            {
-               auto const& b = ctx.bounds;
-               if (btn.pos.x >= b.left && btn.pos.x < b.left + resize_margin)
-                  state->_handle = window_resizer_tracker_info::left;
-               else if (btn.pos.x > b.right - resize_margin && btn.pos.x <= b.right)
-                  state->_handle = window_resizer_tracker_info::right;
+            auto const& b = ctx.bounds;
+            if (btn.pos.x >= b.left && btn.pos.x < b.left + resize_margin)
+               state->_handle = window_resizer_tracker_info::left;
+            else if (btn.pos.x > b.right - resize_margin && btn.pos.x <= b.right)
+               state->_handle = window_resizer_tracker_info::right;
 
-               if (btn.pos.y >= b.top && btn.pos.y < b.top + resize_margin)
-                  state->_handle |= window_resizer_tracker_info::top;
-               else if (btn.pos.y > b.bottom - resize_margin && btn.pos.y <= b.bottom)
-                  state->_handle |= window_resizer_tracker_info::bottom;
-            }
+            if (btn.pos.y >= b.top && btn.pos.y < b.top + resize_margin)
+               state->_handle |= window_resizer_tracker_info::top;
+            else if (btn.pos.y > b.bottom - resize_margin && btn.pos.y <= b.bottom)
+               state->_handle |= window_resizer_tracker_info::bottom;
          }
          return r;
       }

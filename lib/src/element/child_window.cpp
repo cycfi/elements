@@ -151,9 +151,9 @@ namespace cycfi::elements
          else if (r_resize)
             set_cursor(t_resize? nesw_resize : b_resize? nwse_resize : ew_resize);
          else if (t_resize || b_resize)
-            set_cursor(cursor_type::ns_resize);
+            set_cursor(ns_resize);
          else
-            set_cursor(cursor_type::arrow);
+            set_cursor(arrow);
 
          return true;
       }

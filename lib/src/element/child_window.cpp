@@ -146,21 +146,19 @@ namespace cycfi::elements
 
          if (l_resize)
          {
-            if (t_resize)
-               set_cursor(cursor_type::nwse_resize);
-            else if (b_resize)
-               set_cursor(cursor_type::nesw_resize);
-            else
-               set_cursor(cursor_type::ew_resize);
+            set_cursor(t_resize?
+               cursor_type::nwse_resize :
+               b_resize? cursor_type::nesw_resize :
+               cursor_type::ew_resize
+            );
          }
          else if (r_resize)
          {
-            if (t_resize)
-               set_cursor(cursor_type::nesw_resize);
-            else if (b_resize)
-               set_cursor(cursor_type::nwse_resize);
-            else
-               set_cursor(cursor_type::ew_resize);
+            set_cursor(t_resize?
+               cursor_type::nesw_resize :
+               b_resize? cursor_type::nwse_resize :
+               cursor_type::ew_resize
+            );
          }
          else if (t_resize || b_resize)
          {

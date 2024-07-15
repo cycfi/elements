@@ -144,32 +144,16 @@ namespace cycfi::elements
          else if (within(p.y, b.bottom-resize_margin-1, b.bottom))
             b_resize = true;
 
+         using enum cursor_type;
+
          if (l_resize)
-         {
-            if (t_resize)
-               set_cursor(cursor_type::nwse_resize);
-            else if (b_resize)
-               set_cursor(cursor_type::nesw_resize);
-            else
-               set_cursor(cursor_type::ew_resize);
-         }
+            set_cursor(t_resize? nwse_resize : b_resize? nesw_resize : ew_resize);
          else if (r_resize)
-         {
-            if (t_resize)
-               set_cursor(cursor_type::nesw_resize);
-            else if (b_resize)
-               set_cursor(cursor_type::nwse_resize);
-            else
-               set_cursor(cursor_type::ew_resize);
-         }
+            set_cursor(t_resize? nesw_resize : b_resize? nwse_resize : ew_resize);
          else if (t_resize || b_resize)
-         {
             set_cursor(cursor_type::ns_resize);
-         }
          else
-         {
             set_cursor(cursor_type::arrow);
-         }
 
          return true;
       }

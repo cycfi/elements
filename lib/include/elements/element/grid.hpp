@@ -303,7 +303,7 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create a horizontal grid layout, given column coordinates as an
+    *    Create a horizontal grid layout, given column coordinates as a
     *    `std::array`.
     *
     * \tparam N

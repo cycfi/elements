@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.0)
-project(ChildWindow LANGUAGES C CXX)
+project(GridSizer LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -16,15 +16,21 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "ChildWindow")
-set(ELEMENTS_APP_TITLE "Child Window")
-set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2023 Joel de Guzman")
-set(ELEMENTS_APP_ID "com.cycfi.child-window")
+set(ELEMENTS_APP_PROJECT "GridSizer")
+set(ELEMENTS_APP_TITLE "Grid Sizer")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2024 Joel de Guzman")
+set(ELEMENTS_APP_ID "com.cycfi.grid-sizer")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
-set(ELEMENTS_APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/deep_space.jpg)
+set(ELEMENTS_APP_RESOURCES
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/space1.jpg
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/space2.jpg
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/space3.jpg
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/space4.jpg
+)
 
 # For your custom application icon on macOS or Windows see cmake/AppIcon.cmake module
 include(AppIcon)
 include(ElementsConfigApp)
+

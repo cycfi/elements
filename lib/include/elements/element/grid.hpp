@@ -161,21 +161,22 @@ namespace cycfi::elements
     *    The number of rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    C-style array with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<vgrid_element>`.
     *    The row coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
@@ -194,21 +195,22 @@ namespace cycfi::elements
     *    The number of rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    `std::array` with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<vgrid_element>`.
     *    The row coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(std::array<float, N> const& coords, E&&... elements)
    {
       using plain_array = float const (&)[N];
@@ -221,18 +223,19 @@ namespace cycfi::elements
     *    equally sized rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `equal_grid<vgrid_element>.
     *    The rows are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto vgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<vgrid_element>>;
@@ -277,21 +280,22 @@ namespace cycfi::elements
     *    The number of columns.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    C-style array with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<hgrid_element>`.
     *    The column coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
@@ -310,21 +314,22 @@ namespace cycfi::elements
     *    The number of columns.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    `std::array` with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<hgrid_element>`.
     *    The column coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(std::array<float, N> const& coords, E&&... elements)
    {
       using plain_array = float const (&)[N];
@@ -337,18 +342,19 @@ namespace cycfi::elements
     *    equally sized grid cells.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `equal_grid<hgrid_element>.
     *    The columns are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto hgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<hgrid_element>>;

@@ -398,7 +398,7 @@ namespace cycfi::elements
          return;
 
       // Process drag
-      if (auto *s = find_parent<selection_list_element*>(ctx))
+      if (auto* s = find_parent<selection_list_element*>(ctx))
       {
          auto bounds = ctx.bounds;
          if (is_selected())

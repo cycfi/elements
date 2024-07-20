@@ -27,27 +27,29 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   std::array<float, 2> hcoords = {0.5, 1.0};
-   std::array<float, 2> vcoords = {0.5, 1.0};
+   std::array<float, 2> init_hcoords = {0.5, 1.0};
+   std::array<float, 2> init_vcoords = {0.5, 1.0};
 
    // Create a grid with 2 rows and 2 columns
-   auto grid = hgrid(hcoords,
+   auto grid = adjustable_hgrid(init_hcoords,
       vgrid(
-         vcoords,
+         init_vcoords,
          make_cell("space1.jpg"),
          make_cell("space2.jpg")
       ),
       vgrid(
-         vcoords,
+         init_vcoords,
          make_cell("space3.jpg"),
          make_cell("space4.jpg")
       )
    );
 
    view_.content(
-      grid
+      grid,
+      background
    );
 
    _app.run();
    return 0;
 }
+

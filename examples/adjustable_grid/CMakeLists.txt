@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.0)
-project(GridSizer LANGUAGES C CXX)
+project(AdjustableGrid LANGUAGES C CXX)
 
 if (NOT ELEMENTS_ROOT)
    message(FATAL_ERROR "ELEMENTS_ROOT is not set")
@@ -16,10 +16,10 @@ if (NOT ELEMENTS_BUILD_EXAMPLES)
    add_subdirectory(${ELEMENTS_ROOT} elements)
 endif()
 
-set(ELEMENTS_APP_PROJECT "GridSizer")
-set(ELEMENTS_APP_TITLE "Grid Sizer")
+set(ELEMENTS_APP_PROJECT "AdjustableGrid")
+set(ELEMENTS_APP_TITLE "Adjustable Grid")
 set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2024 Joel de Guzman")
-set(ELEMENTS_APP_ID "com.cycfi.grid-sizer")
+set(ELEMENTS_APP_ID "com.cycfi.adjustable-grid")
 set(ELEMENTS_APP_VERSION "1.0")
 
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

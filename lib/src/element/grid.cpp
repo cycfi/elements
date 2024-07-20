@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/element/grid.hpp>
 #include <elements/support/context.hpp>
+#include <elements/element/traversal.hpp>
 
 namespace cycfi::elements
 {
@@ -26,7 +27,7 @@ namespace cycfi::elements
       {
          auto& elem = at(i);
          gi += elem.span()-1;
-         auto y = grid_coord(gi++);
+         auto y = get_grid_coord(gi++);
          auto height = y - prev;
          auto factor = 1.0/height;
          prev = y;
@@ -61,7 +62,7 @@ namespace cycfi::elements
       {
          auto& elem = at(i);
          gi += elem.span()-1;
-         auto y = grid_coord(gi++) * total_height;
+         auto y = get_grid_coord(gi++) * total_height;
          auto height = y - prev;
          rect ebounds = {left, prev, right, prev+height};
          elem.layout(context{ctx, &elem, ebounds});
@@ -99,7 +100,7 @@ namespace cycfi::elements
       {
          auto& elem = at(i);
          gi += elem.span()-1;
-         auto x = grid_coord(gi++);
+         auto x = get_grid_coord(gi++);
          auto width = x - prev;
          auto factor = 1.0/width;
          prev = x;
@@ -134,7 +135,7 @@ namespace cycfi::elements
       {
          auto& elem = at(i);
          gi += elem.span()-1;
-         auto x = grid_coord(gi++) * total_width;
+         auto x = get_grid_coord(gi++) * total_width;
          auto width = x - prev;
          rect ebounds = {prev, top, prev+width, bottom};
          elem.layout(context{ctx, &elem, ebounds});
@@ -152,5 +153,42 @@ namespace cycfi::elements
       auto left = ctx.bounds.left;
       auto bottom = ctx.bounds.bottom;
       return {_positions[index]+left, top, _positions[index+1]+left, bottom};
+   }
+
+   // The margin around the window that allows resizing
+   constexpr float resize_margin = 5.0f;
+
+   element*hgrid_adjuster_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      auto const& b = ctx.bounds;
+      if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
+         return this;
+      return tracker::hit_test(ctx, p, leaf, control);
+   }
+
+   bool hgrid_adjuster_element::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      auto const& b = ctx.bounds;
+      if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
+      {
+         set_cursor(cursor_type::h_resize);
+         return true;
+      }
+      return tracker::cursor(ctx, p, status);
+   }
+
+   bool hgrid_adjuster_element::click(context const& ctx, mouse_button btn)
+   {
+      return tracker::click(ctx, btn);
+   }
+
+   void hgrid_adjuster_element::drag(context const& ctx, mouse_button btn)
+   {
+      tracker::drag(ctx, btn);
+   }
+
+   void hgrid_adjuster_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      tracker::keep_tracking(ctx, track_info);
    }
 }

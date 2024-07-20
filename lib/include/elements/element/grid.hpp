@@ -8,6 +8,7 @@
 
 #include <elements/view.hpp>
 #include <elements/element/composite.hpp>
+#include <elements/element/tracker.hpp>
 
 namespace cycfi::elements
 {
@@ -25,7 +26,8 @@ namespace cycfi::elements
    struct grid_base : public composite_base
    {
       virtual std::size_t     grid_size() const = 0;
-      virtual float           grid_coord(std::size_t i) const = 0;
+      virtual float           get_grid_coord(std::size_t i) const = 0;
+      virtual void            set_grid_coord(std::size_t i, float coord) const = 0;
       virtual std::size_t     num_spans() const = 0;
    };
 
@@ -46,8 +48,11 @@ namespace cycfi::elements
       std::size_t             grid_size() const override
                               { return std::numeric_limits<std::size_t>::max(); }
 
-      float                   grid_coord(std::size_t i) const override
+      float                   get_grid_coord(std::size_t i) const override
                               { return float(i+1) / this->num_spans(); }
+
+      void                    set_grid_coord(std::size_t /*i*/, float /*coord*/) const override
+                              {}
    };
 
    /**
@@ -60,22 +65,35 @@ namespace cycfi::elements
     *
     * \tparam Base
     *    The base class on which `range_grid` derived from.
+    *
+    * \tparam fixed
+    *    A boolean template parameter that determines whether the grid
+    *    coordinates are fixed (true) or modifiable (false). By default, it
+    *    is set to true, indicating fixed coordinates.
     */
-   template <typename Base>
+   template <typename Base, bool fixed = true>
    class range_grid : public Base
    {
    public:
-                              range_grid(float const* coords, std::size_t size)
+
+      using coords_type = std::conditional_t<fixed, float const*, float*>;
+
+                              range_grid(coords_type coords, std::size_t size)
                                : _coords(coords), _size(size)
                               {}
 
-      std::size_t             grid_size() const override    { return _size; }
-      float                   grid_coord(std::size_t i) const override
+      std::size_t             grid_size() const override
+                              { return _size; }
+
+      float                   get_grid_coord(std::size_t i) const override
                               { return (i < _size)? _coords[i] : 1.0f; }
+
+      void                    set_grid_coord(std::size_t i, float coord) const override
+                              { if constexpr(!fixed) { if (i < _size) _coords[i] = coord; } }
 
    private:
 
-      float const*            _coords;
+      coords_type             _coords;
       std::size_t             _size;
    };
 
@@ -108,22 +126,35 @@ namespace cycfi::elements
     * \tparam Base
     *    The base class on which `container_grid` is derived from. The base
     *    class should satisfy the `Composite` concept.
+    *
+    * \tparam fixed
+    *    A boolean template parameter that determines whether the grid
+    *    coordinates are fixed (true) or modifiable (false). By default, it
+    *    is set to true, indicating fixed coordinates.
     */
-   template <concepts::GridContainer Container, concepts::Composite Base>
+   template <concepts::GridContainer Container, concepts::Composite Base, bool fixed = true>
    class container_grid : public Base
    {
    public:
-                              container_grid(Container const& container)
-                               : _container(container)
+
+      using coords_type = std::conditional_t<fixed, Container const&, Container&>;
+
+                              container_grid(coords_type coords)
+                               : _coords(coords)
                               {}
 
-      std::size_t             grid_size() const override    { return _container.size(); }
-      float                   grid_coord(std::size_t i) const override
-                              { return (i < _container.size())? _container[i] : 1.0f; }
+      std::size_t             grid_size() const override
+                              { return _coords.size(); }
+
+      float                   get_grid_coord(std::size_t i) const override
+                              { return (i < _coords.size())? _coords[i] : 1.0f; }
+
+      void                    set_grid_coord(std::size_t i, float coord) const override
+                              { if constexpr(!fixed) { if (i < _coords.size()) _coords[i] = coord; } }
 
    private:
 
-      Container const&        _container;
+      coords_type             _coords;
    };
 
    /**
@@ -390,6 +421,51 @@ namespace cycfi::elements
          }
       );
       return grid;
+   }
+
+   class hgrid_adjuster_element : public tracker<proxy_base>
+   {
+   public:
+
+      using tracker = tracker<proxy_base>;
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, hgrid_adjuster_element>
+   hgrid_adjuster(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_hgrid(float(&coords)[N], E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), range_grid<hgrid_element, false>>;
+      composite r{coords, N};
+
+      auto fill = [&, i = 0](auto&& e) mutable
+      {
+         if (i != 0)
+            r[i++] = share(hgrid_adjuster(std::forward<decltype(e)>(e)));
+         else
+            r[i++] = share(std::forward<decltype(e)>(e));
+      };
+
+      (fill(elements), ...);
+      return r;
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_hgrid(std::array<float, N>& coords, E&&... elements)
+   {
+      using plain_array = float (&)[N];
+      return adjustable_hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 }
 

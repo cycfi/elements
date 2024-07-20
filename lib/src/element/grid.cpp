@@ -6,6 +6,7 @@
 #include <elements/element/grid.hpp>
 #include <elements/support/context.hpp>
 #include <elements/element/traversal.hpp>
+#include <infra/assert.hpp>
 
 namespace cycfi::elements
 {
@@ -168,27 +169,95 @@ namespace cycfi::elements
 
    bool hgrid_adjuster_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
-      auto const& b = ctx.bounds;
-      if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
+      if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
       {
-         set_cursor(cursor_type::h_resize);
-         return true;
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
+         {
+            set_cursor(cursor_type::h_resize);
+            return true;
+         }
       }
       return tracker::cursor(ctx, p, status);
    }
 
-   bool hgrid_adjuster_element::click(context const& ctx, mouse_button btn)
-   {
-      return tracker::click(ctx, btn);
-   }
+   // bool hgrid_adjuster_element::click(context const& ctx, mouse_button btn)
+   // {
+   //    return tracker::click(ctx, btn);
+   // }
 
-   void hgrid_adjuster_element::drag(context const& ctx, mouse_button btn)
+   // void hgrid_adjuster_element::drag(context const& ctx, mouse_button btn)
+   // {
+   //    tracker::drag(ctx, btn);
+   // }
+
+   void hgrid_adjuster_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
-      tracker::drag(ctx, btn);
+      if (auto* gctx = find_parent_context<grid_base*>(ctx);
+         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
+      {
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(track_info.current))
+         {
+            auto g = static_cast<grid_base*>(gctx->element);
+            if (auto info = g->hit_element(*gctx, track_info.current, true); info.element_ptr)
+            {
+               CYCFI_ASSERT(info.index > 0, "info.index cannot be zero!");
+               if (auto state = get_state())
+                  state->_index = info.index-1;
+            }
+            track_info.offset.x = track_info.current.x - b.left;
+         }
+      }
    }
 
    void hgrid_adjuster_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
-      tracker::keep_tracking(ctx, track_info);
+      if (track_info.current == track_info.previous)
+         return;
+
+      if (auto* gctx = find_parent_context<grid_base*>(ctx);
+         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
+      {
+         if (track_info.current != track_info.previous)
+         {
+            auto g = static_cast<grid_base*>(gctx->element);
+            if (auto state = get_state())
+            {
+               float coord = g->get_grid_coord(state->_index);
+               auto full_width = gctx->bounds.width();
+               auto pos = track_info.current.x;
+               g->set_grid_coord(state->_index, (pos-gctx->bounds.left) / full_width);
+
+               ctx.view.post(
+                  [&view_ = ctx.view, g]()
+                  {
+                     view_.layout(*g);
+                     view_.refresh(*g);
+                  }
+               );
+            }
+
+            // double new_value = value_from_point(ctx, track_info.current);
+            // if (_value != new_value)
+            // {
+            //    ctx.view.refresh(ctx);
+            // }
+         }
+      }
+   }
+
+   void hgrid_adjuster_element::end_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (auto* gctx = find_parent_context<grid_base*>(ctx);
+         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
+      {
+      }
+
+      // double new_value = value_from_point(ctx, track_info.current);
+      // if (_value != new_value)
+      // {
+         // ctx.view.refresh(ctx);
+      // }
    }
 }

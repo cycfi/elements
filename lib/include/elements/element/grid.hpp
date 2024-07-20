@@ -29,6 +29,7 @@ namespace cycfi::elements
       virtual float           get_grid_coord(std::size_t i) const = 0;
       virtual void            set_grid_coord(std::size_t i, float coord) const = 0;
       virtual std::size_t     num_spans() const = 0;
+      virtual bool            is_fixed() const = 0;
    };
 
    /**
@@ -53,6 +54,9 @@ namespace cycfi::elements
 
       void                    set_grid_coord(std::size_t /*i*/, float /*coord*/) const override
                               {}
+
+      bool                    is_fixed() const override
+                              { return true; };
    };
 
    /**
@@ -90,6 +94,9 @@ namespace cycfi::elements
 
       void                    set_grid_coord(std::size_t i, float coord) const override
                               { if constexpr(!fixed) { if (i < _size) _coords[i] = coord; } }
+
+      bool                    is_fixed() const override
+                              { return fixed; };
 
    private:
 
@@ -151,6 +158,9 @@ namespace cycfi::elements
 
       void                    set_grid_coord(std::size_t i, float coord) const override
                               { if constexpr(!fixed) { if (i < _coords.size()) _coords[i] = coord; } }
+
+      bool                    is_fixed() const override
+                              { return fixed; };
 
    private:
 
@@ -423,17 +433,27 @@ namespace cycfi::elements
       return grid;
    }
 
-   class hgrid_adjuster_element : public tracker<proxy_base>
+   struct hgrid_adjuster_tracker_info : tracker_info
+   {
+      using tracker_info::tracker_info;
+
+      std::size_t          _index;
+   };
+
+   class hgrid_adjuster_element : public tracker<proxy_base, hgrid_adjuster_tracker_info>
    {
    public:
 
-      using tracker = tracker<proxy_base>;
+      using tracker = tracker<proxy_base, hgrid_adjuster_tracker_info>;
 
       element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
-      bool                 click(context const& ctx, mouse_button btn) override;
-      void                 drag(context const& ctx, mouse_button btn) override;
+      // bool                 click(context const& ctx, mouse_button btn) override;
+      // void                 drag(context const& ctx, mouse_button btn) override;
+
+      void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+      void                 end_tracking(context const& ctx, tracker_info& track_info) override;
    };
 
    template <concepts::Element Subject>

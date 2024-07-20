@@ -438,6 +438,7 @@ namespace cycfi::elements
       using tracker_info::tracker_info;
 
       std::size_t          _index;
+      view_limits          _limits1;
    };
 
    class hgrid_adjuster_element : public tracker<proxy_base, hgrid_adjuster_tracker_info>

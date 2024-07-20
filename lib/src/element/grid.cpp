@@ -204,7 +204,10 @@ namespace cycfi::elements
             {
                CYCFI_ASSERT(info.index > 0, "info.index cannot be zero!");
                if (auto state = get_state())
+               {
                   state->_index = info.index-1;
+                  state->_limits1 = g->at(state->_index).limits(*gctx);
+               }
             }
             track_info.offset.x = track_info.current.x - b.left;
          }
@@ -225,9 +228,16 @@ namespace cycfi::elements
             if (auto state = get_state())
             {
                float coord = g->get_grid_coord(state->_index);
-               auto full_width = gctx->bounds.width();
                auto pos = track_info.current.x;
-               g->set_grid_coord(state->_index, (pos-gctx->bounds.left) / full_width);
+               auto width = pos-gctx->bounds.left;
+
+               // Constrain the new width
+               clamp_min(width, state->_limits1.min.x);
+               clamp_max(width, state->_limits1.max.x);
+
+               // Set the new coords
+               auto full_width = gctx->bounds.width();
+               g->set_grid_coord(state->_index, width / full_width);
 
                ctx.view.post(
                   [&view_ = ctx.view, g]()

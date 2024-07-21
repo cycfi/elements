@@ -267,6 +267,12 @@ namespace cycfi::elements
                auto full_width = gctx->bounds.width();
                g->set_grid_coord(state->_index, left_width / full_width);
 
+               // Does the grid have a parent grid? If yes, make it the
+               // target for layout and refresh. This will align all
+               // horizontal or vertical grids under the parent grid.
+               if (auto parent = find_parent<grid_base*>(*gctx))
+                  g = parent;
+
                ctx.view.post(
                   [&view_ = ctx.view, g]()
                   {
@@ -367,11 +373,17 @@ namespace cycfi::elements
                auto full_height = gctx->bounds.height();
                g->set_grid_coord(state->_index, top_height / full_height);
 
+               // Does the grid have a parent grid? If yes, make it the
+               // target for layout and refresh. This will align all
+               // horizontal or vertical grids under the parent grid.
+               if (auto parent = find_parent<grid_base*>(*gctx))
+                  g = parent;
+
                ctx.view.post(
                   [&view_ = ctx.view, g]()
                   {
-                     view_.layout();
-                     view_.refresh();
+                     view_.layout(*g);
+                     view_.refresh(*g);
                   }
                );
             }

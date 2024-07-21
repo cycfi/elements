@@ -438,26 +438,27 @@ namespace cycfi::elements
       using tracker_info::tracker_info;
 
       std::size_t          _index;
-      view_limits          _left_limits;
-      view_limits          _right_limits;
-      float                _right_pos;
+      view_limits          _limits0;
+      view_limits          _limits1;
+      float                _end_pos;
    };
 
-   class divider_element : public tracker<proxy_base, divider_tracker_info>
+   class hdivider_element : public tracker<proxy_base, divider_tracker_info>
    {
    public:
 
       using tracker = tracker<proxy_base, divider_tracker_info>;
 
       element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
       bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
       void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
    };
 
    template <concepts::Element Subject>
-   inline proxy<remove_cvref_t<Subject>, divider_element>
-   divider(Subject&& subject)
+   inline proxy<remove_cvref_t<Subject>, hdivider_element>
+   hdivider(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
@@ -471,7 +472,7 @@ namespace cycfi::elements
       auto fill = [&, i = 0](auto&& e) mutable
       {
          if (i != 0)
-            r[i++] = share(divider(std::forward<decltype(e)>(e)));
+            r[i++] = share(hdivider(std::forward<decltype(e)>(e)));
          else
             r[i++] = share(std::forward<decltype(e)>(e));
       };
@@ -485,6 +486,51 @@ namespace cycfi::elements
    {
       using plain_array = float (&)[N];
       return adjustable_hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+   }
+
+   class vdivider_element : public tracker<proxy_base, divider_tracker_info>
+   {
+   public:
+
+      using tracker = tracker<proxy_base, divider_tracker_info>;
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, vdivider_element>
+   vdivider(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_vgrid(float(&coords)[N], E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), range_grid<vgrid_element, false>>;
+      composite r{coords, N};
+
+      auto fill = [&, i = 0](auto&& e) mutable
+      {
+         if (i != 0)
+            r[i++] = share(vdivider(std::forward<decltype(e)>(e)));
+         else
+            r[i++] = share(std::forward<decltype(e)>(e));
+      };
+
+      (fill(elements), ...);
+      return r;
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_vgrid(std::array<float, N>& coords, E&&... elements)
+   {
+      using plain_array = float (&)[N];
+      return adjustable_vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 }
 

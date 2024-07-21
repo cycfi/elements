@@ -16,12 +16,22 @@ namespace cycfi::elements
    view_limits vgrid_element::limits(basic_context const& ctx) const
    {
       _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
-
-      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
       std::size_t gi = 0;
       float prev = 0;
+      float max_y = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+      {
+         auto& elem = at(i);
+         _num_spans += elem.span();
+         auto y = get_grid_coord(gi++);
+         auto height = y - prev;
+         max_y = std::max(max_y, height);
+         prev = y;
+      }
+
+      view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
+      gi = 0;
+      prev = 0;
       float desired_total_min = 0;
 
       for (std::size_t i = 0; i != size();  ++i)
@@ -38,7 +48,7 @@ namespace cycfi::elements
          if (desired_total_min < elem_desired_total_min)
             desired_total_min = elem_desired_total_min;
 
-         limits.max.y += el.max.y;
+         limits.max.y += el.max.y * (height / max_y);
          clamp_min(limits.min.x, el.min.x);
          clamp_max(limits.max.x, el.max.x);
       }
@@ -169,7 +179,7 @@ namespace cycfi::elements
    // The margin around the window that allows resizing
    constexpr float resize_margin = 5.0f;
 
-   element*divider_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element* hdivider_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       auto const& b = ctx.bounds;
       if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
@@ -177,7 +187,7 @@ namespace cycfi::elements
       return tracker::hit_test(ctx, p, leaf, control);
    }
 
-   bool divider_element::cursor(context const& ctx, point p, cursor_tracking status)
+   bool hdivider_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
       {
@@ -191,7 +201,18 @@ namespace cycfi::elements
       return tracker::cursor(ctx, p, status);
    }
 
-   void divider_element::begin_tracking(context const& ctx, tracker_info& track_info)
+   bool hdivider_element::click(context const& ctx, mouse_button btn)
+   {
+      if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
+      {
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(btn.pos))
+            return tracker::click(ctx, btn);
+      }
+      return proxy_base::click(ctx, btn);
+   }
+
+   void hdivider_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
       if (auto* gctx = find_parent_context<grid_base*>(ctx);
          gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
@@ -206,9 +227,9 @@ namespace cycfi::elements
                if (auto state = get_state())
                {
                   state->_index = info.index-1;
-                  state->_left_limits = g->at(state->_index).limits(*gctx);
-                  state->_right_limits = g->at(state->_index+1).limits(*gctx);
-                  state->_right_pos = g->bounds_of(*gctx, state->_index+1).right;
+                  state->_limits0 = g->at(state->_index).limits(*gctx);
+                  state->_limits1 = g->at(state->_index+1).limits(*gctx);
+                  state->_end_pos = g->bounds_of(*gctx, state->_index+1).right;
                }
             }
             track_info.offset.x = track_info.current.x - b.left;
@@ -216,7 +237,7 @@ namespace cycfi::elements
       }
    }
 
-   void divider_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   void hdivider_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current == track_info.previous)
          return;
@@ -230,17 +251,17 @@ namespace cycfi::elements
             if (auto state = get_state())
             {
                // Constrain the right element's width to its limits
-               auto right_width = state->_right_pos - track_info.current.x;
-               clamp_min(right_width, state->_right_limits.min.x);
-               clamp_max(right_width, state->_right_limits.max.x);
+               auto right_width = state->_end_pos - track_info.current.x;
+               clamp_min(right_width, state->_limits1.min.x);
+               clamp_max(right_width, state->_limits1.max.x);
 
                // Set the position, constrained to right element's width
-               auto pos = state->_right_pos - right_width;
+               auto pos = state->_end_pos - right_width;
 
                // Constrain the left element's width to its limits
                auto left_width = pos - gctx->bounds.left;
-               clamp_min(left_width, state->_left_limits.min.x);
-               clamp_max(left_width, state->_left_limits.max.x);
+               clamp_min(left_width, state->_limits0.min.x);
+               clamp_max(left_width, state->_limits0.max.x);
 
                // Set the new coords
                auto full_width = gctx->bounds.width();
@@ -251,6 +272,106 @@ namespace cycfi::elements
                   {
                      view_.layout(*g);
                      view_.refresh(*g);
+                  }
+               );
+            }
+         }
+      }
+   }
+
+   element* vdivider_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   {
+      auto const& b = ctx.bounds;
+      if (rect{b.left, b.top, b.right, b.top+resize_margin}.includes(p))
+         return this;
+      return tracker::hit_test(ctx, p, leaf, control);
+   }
+
+   bool vdivider_element::click(context const& ctx, mouse_button btn)
+   {
+      if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
+      {
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.right, b.top+resize_margin}.includes(btn.pos))
+            return tracker::click(ctx, btn);
+      }
+      return proxy_base::click(ctx, btn);
+   }
+
+   bool vdivider_element::cursor(context const& ctx, point p, cursor_tracking status)
+   {
+      if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
+      {
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.right, b.top+resize_margin}.includes(p))
+         {
+            set_cursor(cursor_type::v_resize);
+            return true;
+         }
+      }
+      return tracker::cursor(ctx, p, status);
+   }
+
+   void vdivider_element::begin_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (auto* gctx = find_parent_context<grid_base*>(ctx);
+         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
+      {
+         auto const& b = ctx.bounds;
+         if (rect{b.left, b.top, b.right, b.top+resize_margin}.includes(track_info.current))
+         {
+            auto g = static_cast<grid_base*>(gctx->element);
+            if (auto info = g->hit_element(*gctx, track_info.current, true); info.element_ptr)
+            {
+               CYCFI_ASSERT(info.index > 0, "info.index cannot be zero!");
+               if (auto state = get_state())
+               {
+                  state->_index = info.index-1;
+                  state->_limits0 = g->at(state->_index).limits(*gctx);
+                  state->_limits1 = g->at(state->_index+1).limits(*gctx);
+                  state->_end_pos = g->bounds_of(*gctx, state->_index+1).bottom;
+               }
+            }
+            track_info.offset.y = track_info.current.y - b.top;
+         }
+      }
+   }
+
+   void vdivider_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   {
+      if (track_info.current == track_info.previous)
+         return;
+
+      if (auto* gctx = find_parent_context<grid_base*>(ctx);
+         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
+      {
+         if (track_info.current != track_info.previous)
+         {
+            auto g = static_cast<grid_base*>(gctx->element);
+            if (auto state = get_state())
+            {
+               // Constrain the right element's width to its limits
+               auto bottom_height = state->_end_pos - track_info.current.y;
+               clamp_min(bottom_height, state->_limits1.min.y);
+               clamp_max(bottom_height, state->_limits1.max.y);
+
+               // Set the position, constrained to bottom element's height
+               auto pos = state->_end_pos - bottom_height;
+
+               // Constrain the left element's width to its limits
+               auto top_height = pos - gctx->bounds.top;
+               clamp_min(top_height, state->_limits0.min.y);
+               clamp_max(top_height, state->_limits0.max.y);
+
+               // Set the new coords
+               auto full_height = gctx->bounds.height();
+               g->set_grid_coord(state->_index, top_height / full_height);
+
+               ctx.view.post(
+                  [&view_ = ctx.view, g]()
+                  {
+                     view_.layout();
+                     view_.refresh();
                   }
                );
             }

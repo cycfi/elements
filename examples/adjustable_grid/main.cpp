@@ -32,12 +32,12 @@ int main(int argc, char* argv[])
 
    // Create a grid with 2 rows and 2 columns
    auto grid = adjustable_hgrid(init_hcoords,
-      vgrid(
+      adjustable_vgrid(
          init_vcoords,
          make_cell("space1.jpg"),
          make_cell("space2.jpg")
       ),
-      vgrid(
+      adjustable_vgrid(
          init_vcoords,
          make_cell("space3.jpg"),
          make_cell("space4.jpg")

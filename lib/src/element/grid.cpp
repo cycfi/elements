@@ -159,7 +159,7 @@ namespace cycfi::elements
    // The margin around the window that allows resizing
    constexpr float resize_margin = 5.0f;
 
-   element*hgrid_adjuster_element::hit_test(context const& ctx, point p, bool leaf, bool control)
+   element*divider_element::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       auto const& b = ctx.bounds;
       if (rect{b.left, b.top, b.left+resize_margin, b.bottom}.includes(p))
@@ -167,7 +167,7 @@ namespace cycfi::elements
       return tracker::hit_test(ctx, p, leaf, control);
    }
 
-   bool hgrid_adjuster_element::cursor(context const& ctx, point p, cursor_tracking status)
+   bool divider_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
       if (auto* g = find_parent<grid_base*>(ctx); g && !g->is_fixed())
       {
@@ -181,17 +181,7 @@ namespace cycfi::elements
       return tracker::cursor(ctx, p, status);
    }
 
-   // bool hgrid_adjuster_element::click(context const& ctx, mouse_button btn)
-   // {
-   //    return tracker::click(ctx, btn);
-   // }
-
-   // void hgrid_adjuster_element::drag(context const& ctx, mouse_button btn)
-   // {
-   //    tracker::drag(ctx, btn);
-   // }
-
-   void hgrid_adjuster_element::begin_tracking(context const& ctx, tracker_info& track_info)
+   void divider_element::begin_tracking(context const& ctx, tracker_info& track_info)
    {
       if (auto* gctx = find_parent_context<grid_base*>(ctx);
          gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
@@ -206,7 +196,9 @@ namespace cycfi::elements
                if (auto state = get_state())
                {
                   state->_index = info.index-1;
-                  state->_limits1 = g->at(state->_index).limits(*gctx);
+                  state->_left_limits = g->at(state->_index).limits(*gctx);
+                  state->_right_limits = g->at(state->_index+1).limits(*gctx);
+                  state->_right_pos = g->bounds_of(*gctx, state->_index+1).right;
                }
             }
             track_info.offset.x = track_info.current.x - b.left;
@@ -214,7 +206,7 @@ namespace cycfi::elements
       }
    }
 
-   void hgrid_adjuster_element::keep_tracking(context const& ctx, tracker_info& track_info)
+   void divider_element::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current == track_info.previous)
          return;
@@ -227,17 +219,22 @@ namespace cycfi::elements
             auto g = static_cast<grid_base*>(gctx->element);
             if (auto state = get_state())
             {
-               float coord = g->get_grid_coord(state->_index);
-               auto pos = track_info.current.x;
-               auto width = pos-gctx->bounds.left;
+               // Constrain the right element's width to its limits
+               auto right_width = state->_right_pos - track_info.current.x;
+               clamp_min(right_width, state->_right_limits.min.x);
+               clamp_max(right_width, state->_right_limits.max.x);
 
-               // Constrain the new width
-               clamp_min(width, state->_limits1.min.x);
-               clamp_max(width, state->_limits1.max.x);
+               // Set the position, constrained to right element's width
+               auto pos = state->_right_pos - right_width;
+
+               // Constrain the left element's width to its limits
+               auto left_width = pos - gctx->bounds.left;
+               clamp_min(left_width, state->_left_limits.min.x);
+               clamp_max(left_width, state->_left_limits.max.x);
 
                // Set the new coords
                auto full_width = gctx->bounds.width();
-               g->set_grid_coord(state->_index, width / full_width);
+               g->set_grid_coord(state->_index, left_width / full_width);
 
                ctx.view.post(
                   [&view_ = ctx.view, g]()
@@ -247,27 +244,7 @@ namespace cycfi::elements
                   }
                );
             }
-
-            // double new_value = value_from_point(ctx, track_info.current);
-            // if (_value != new_value)
-            // {
-            //    ctx.view.refresh(ctx);
-            // }
          }
       }
-   }
-
-   void hgrid_adjuster_element::end_tracking(context const& ctx, tracker_info& track_info)
-   {
-      if (auto* gctx = find_parent_context<grid_base*>(ctx);
-         gctx && gctx->element && !static_cast<grid_base*>(gctx->element)->is_fixed())
-      {
-      }
-
-      // double new_value = value_from_point(ctx, track_info.current);
-      // if (_value != new_value)
-      // {
-         // ctx.view.refresh(ctx);
-      // }
    }
 }

@@ -433,33 +433,31 @@ namespace cycfi::elements
       return grid;
    }
 
-   struct hgrid_adjuster_tracker_info : tracker_info
+   struct divider_tracker_info : tracker_info
    {
       using tracker_info::tracker_info;
 
       std::size_t          _index;
-      view_limits          _limits1;
+      view_limits          _left_limits;
+      view_limits          _right_limits;
+      float                _right_pos;
    };
 
-   class hgrid_adjuster_element : public tracker<proxy_base, hgrid_adjuster_tracker_info>
+   class divider_element : public tracker<proxy_base, divider_tracker_info>
    {
    public:
 
-      using tracker = tracker<proxy_base, hgrid_adjuster_tracker_info>;
+      using tracker = tracker<proxy_base, divider_tracker_info>;
 
       element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
-      // bool                 click(context const& ctx, mouse_button btn) override;
-      // void                 drag(context const& ctx, mouse_button btn) override;
-
       void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
-      void                 end_tracking(context const& ctx, tracker_info& track_info) override;
    };
 
    template <concepts::Element Subject>
-   inline proxy<remove_cvref_t<Subject>, hgrid_adjuster_element>
-   hgrid_adjuster(Subject&& subject)
+   inline proxy<remove_cvref_t<Subject>, divider_element>
+   divider(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }
@@ -473,7 +471,7 @@ namespace cycfi::elements
       auto fill = [&, i = 0](auto&& e) mutable
       {
          if (i != 0)
-            r[i++] = share(hgrid_adjuster(std::forward<decltype(e)>(e)));
+            r[i++] = share(divider(std::forward<decltype(e)>(e)));
          else
             r[i++] = share(std::forward<decltype(e)>(e));
       };

@@ -89,12 +89,22 @@ namespace cycfi::elements
    view_limits hgrid_element::limits(basic_context const& ctx) const
    {
       _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
-
-      view_limits limits{{ 0.0, 0.0}, {0.0, full_extent}};
       std::size_t gi = 0;
       float prev = 0;
+      float max_x = 0;
+      for (std::size_t i = 0; i != size(); ++i)
+      {
+         auto& elem = at(i);
+         _num_spans += elem.span();
+         auto x = get_grid_coord(gi++);
+         auto width = x - prev;
+         max_x = std::max(max_x, width);
+         prev = x;
+      }
+
+      view_limits limits{{0.0, 0.0}, {0.0, full_extent}};
+      gi = 0;
+      prev = 0;
       float desired_total_min = 0;
 
       for (std::size_t i = 0; i != size();  ++i)
@@ -111,7 +121,7 @@ namespace cycfi::elements
          if (desired_total_min < elem_desired_total_min)
             desired_total_min = elem_desired_total_min;
 
-         limits.max.x += el.max.x;
+         limits.max.x += el.max.x * (width / max_x);
          clamp_min(limits.min.y, el.min.y);
          clamp_max(limits.max.y, el.max.y);
       }

@@ -308,6 +308,10 @@ namespace cycfi::elements
       return element::hit_test(ctx, p, leaf, control);
    }
 
+   // Hide the scroll bar if the content size, multiplied by this threshold,
+   // is larger than the available size.
+   constexpr auto scroll_bar_visibility_threshold = 0.99;
+
    scroller_base::scrollbar_bounds
    scroller_base::get_scrollbar_bounds(context const& ctx)
    {
@@ -315,10 +319,10 @@ namespace cycfi::elements
       view_limits e_limits = subject().limits(ctx);
       theme const& thm = get_theme();
 
-      auto delta_x = e_limits.min.x - ctx.bounds.width();
-      auto delta_y = e_limits.min.y - ctx.bounds.height();
-      r.has_h = delta_x > 4.0 && allow_hscroll();
-      r.has_v = delta_y > 4.0 && allow_vscroll();
+      r.has_h = allow_hscroll() &&
+         e_limits.min.x * scroll_bar_visibility_threshold >= ctx.bounds.width();
+      r.has_v = allow_vscroll() &&
+         e_limits.min.y * scroll_bar_visibility_threshold >= ctx.bounds.height();
 
       if (r.has_v)
       {

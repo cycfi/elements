@@ -8,6 +8,7 @@
 
 #include <elements/view.hpp>
 #include <elements/element/composite.hpp>
+#include <elements/element/tracker.hpp>
 
 namespace cycfi::elements
 {
@@ -25,8 +26,10 @@ namespace cycfi::elements
    struct grid_base : public composite_base
    {
       virtual std::size_t     grid_size() const = 0;
-      virtual float           grid_coord(std::size_t i) const = 0;
+      virtual float           get_grid_coord(std::size_t i) const = 0;
+      virtual void            set_grid_coord(std::size_t i, float coord) const = 0;
       virtual std::size_t     num_spans() const = 0;
+      virtual bool            is_fixed() const = 0;
    };
 
    /**
@@ -46,8 +49,14 @@ namespace cycfi::elements
       std::size_t             grid_size() const override
                               { return std::numeric_limits<std::size_t>::max(); }
 
-      float                   grid_coord(std::size_t i) const override
+      float                   get_grid_coord(std::size_t i) const override
                               { return float(i+1) / this->num_spans(); }
+
+      void                    set_grid_coord(std::size_t /*i*/, float /*coord*/) const override
+                              {}
+
+      bool                    is_fixed() const override
+                              { return true; };
    };
 
    /**
@@ -60,22 +69,38 @@ namespace cycfi::elements
     *
     * \tparam Base
     *    The base class on which `range_grid` derived from.
+    *
+    * \tparam fixed
+    *    A boolean template parameter that determines whether the grid
+    *    coordinates are fixed (true) or modifiable (false). By default, it
+    *    is set to true, indicating fixed coordinates.
     */
-   template <typename Base>
+   template <typename Base, bool fixed = true>
    class range_grid : public Base
    {
    public:
-                              range_grid(float const* coords, std::size_t size)
+
+      using coords_type = std::conditional_t<fixed, float const*, float*>;
+
+                              range_grid(coords_type coords, std::size_t size)
                                : _coords(coords), _size(size)
                               {}
 
-      std::size_t             grid_size() const override    { return _size; }
-      float                   grid_coord(std::size_t i) const override
+      std::size_t             grid_size() const override
+                              { return _size; }
+
+      float                   get_grid_coord(std::size_t i) const override
                               { return (i < _size)? _coords[i] : 1.0f; }
+
+      void                    set_grid_coord(std::size_t i, float coord) const override
+                              { if constexpr(!fixed) { if (i < _size) _coords[i] = coord; } }
+
+      bool                    is_fixed() const override
+                              { return fixed; };
 
    private:
 
-      float const*            _coords;
+      coords_type             _coords;
       std::size_t             _size;
    };
 
@@ -108,22 +133,38 @@ namespace cycfi::elements
     * \tparam Base
     *    The base class on which `container_grid` is derived from. The base
     *    class should satisfy the `Composite` concept.
+    *
+    * \tparam fixed
+    *    A boolean template parameter that determines whether the grid
+    *    coordinates are fixed (true) or modifiable (false). By default, it
+    *    is set to true, indicating fixed coordinates.
     */
-   template <concepts::GridContainer Container, concepts::Composite Base>
+   template <concepts::GridContainer Container, concepts::Composite Base, bool fixed = true>
    class container_grid : public Base
    {
    public:
-                              container_grid(Container const& container)
-                               : _container(container)
+
+      using coords_type = std::conditional_t<fixed, Container const&, Container&>;
+
+                              container_grid(coords_type coords)
+                               : _coords(coords)
                               {}
 
-      std::size_t             grid_size() const override    { return _container.size(); }
-      float                   grid_coord(std::size_t i) const override
-                              { return (i < _container.size())? _container[i] : 1.0f; }
+      std::size_t             grid_size() const override
+                              { return _coords.size(); }
+
+      float                   get_grid_coord(std::size_t i) const override
+                              { return (i < _coords.size())? _coords[i] : 1.0f; }
+
+      void                    set_grid_coord(std::size_t i, float coord) const override
+                              { if constexpr(!fixed) { if (i < _coords.size()) _coords[i] = coord; } }
+
+      bool                    is_fixed() const override
+                              { return fixed; };
 
    private:
 
-      Container const&        _container;
+      coords_type             _coords;
    };
 
    /**
@@ -161,21 +202,22 @@ namespace cycfi::elements
     *    The number of rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    C-style array with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<vgrid_element>`.
     *    The row coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
@@ -194,21 +236,22 @@ namespace cycfi::elements
     *    The number of rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    `std::array` with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<vgrid_element>`.
     *    The row coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(std::array<float, N> const& coords, E&&... elements)
    {
       using plain_array = float const (&)[N];
@@ -221,18 +264,19 @@ namespace cycfi::elements
     *    equally sized rows.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A vertical grid element represented as an instance of
     *    `array_composite` that is derived from `equal_grid<vgrid_element>.
     *    The rows are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto vgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<vgrid_element>>;
@@ -277,21 +321,22 @@ namespace cycfi::elements
     *    The number of columns.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    C-style array with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<hgrid_element>`.
     *    The column coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
@@ -310,21 +355,22 @@ namespace cycfi::elements
     *    The number of columns.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param coords
     *    `std::array` with coordinates for grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `range_grid<hgrid_element>`.
     *    The column coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(std::array<float, N> const& coords, E&&... elements)
    {
       using plain_array = float const (&)[N];
@@ -337,18 +383,19 @@ namespace cycfi::elements
     *    equally sized grid cells.
     *
     * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
+    *    A parameter pack of elements, constrained by the `Element` concept,
+    *    to be placed in the grid cells.
     *
     * \param elements
-    *    Elements intended to place in grid cells.
+    *    Elements intended to place in grid cells. The elements must satisfy
+    *    the `Element` concept.
     *
     * \returns
     *    A horizontal grid element represented as an instance of
     *    `array_composite` that is derived from `equal_grid<hgrid_element>.
     *    The columns are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto hgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<hgrid_element>>;
@@ -384,6 +431,106 @@ namespace cycfi::elements
          }
       );
       return grid;
+   }
+
+   struct divider_tracker_info : tracker_info
+   {
+      using tracker_info::tracker_info;
+
+      std::size_t          _index;
+      view_limits          _limits0;
+      view_limits          _limits1;
+      float                _end_pos;
+   };
+
+   class hdivider_element : public tracker<proxy_base, divider_tracker_info>
+   {
+   public:
+
+      using tracker = tracker<proxy_base, divider_tracker_info>;
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, hdivider_element>
+   hdivider(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_hgrid(float(&coords)[N], E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), range_grid<hgrid_element, false>>;
+      composite r{coords, N};
+
+      auto fill = [&, i = 0](auto&& e) mutable
+      {
+         if (i != 0)
+            r[i++] = share(hdivider(std::forward<decltype(e)>(e)));
+         else
+            r[i++] = share(std::forward<decltype(e)>(e));
+      };
+
+      (fill(elements), ...);
+      return r;
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_hgrid(std::array<float, N>& coords, E&&... elements)
+   {
+      using plain_array = float (&)[N];
+      return adjustable_hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+   }
+
+   class vdivider_element : public tracker<proxy_base, divider_tracker_info>
+   {
+   public:
+
+      using tracker = tracker<proxy_base, divider_tracker_info>;
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      void                 begin_tracking(context const& ctx, tracker_info& track_info) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, vdivider_element>
+   vdivider(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_vgrid(float(&coords)[N], E&&... elements)
+   {
+      using composite = array_composite<sizeof...(elements), range_grid<vgrid_element, false>>;
+      composite r{coords, N};
+
+      auto fill = [&, i = 0](auto&& e) mutable
+      {
+         if (i != 0)
+            r[i++] = share(vdivider(std::forward<decltype(e)>(e)));
+         else
+            r[i++] = share(std::forward<decltype(e)>(e));
+      };
+
+      (fill(elements), ...);
+      return r;
+   }
+
+   template <std::size_t N, concepts::Element... E>
+   inline auto adjustable_vgrid(std::array<float, N>& coords, E&&... elements)
+   {
+      using plain_array = float (&)[N];
+      return adjustable_vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
    }
 }
 

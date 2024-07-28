@@ -183,20 +183,23 @@ namespace cycfi::elements
     *    user-specified thumb and track elements.
     *
     * \tparam Thumb1
-    *    The type of the first thumb component.
+    *    The type of the first thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Thumb2
-    *    The type of the second thumb component.
+    *    The type of the second thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Track
-    *    The type of the track component.
+    *    The type of the track component. It must conform to the Element
+    *    concept.
     *
     * \tparam Base
     *    The base class from which `basic_range_slider` inherits, defaulting
     *    to `basic_range_slider_base`.
     */
    template <
-      typename Thumb1, typename Thumb2, typename Track
+      concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track
     , typename Base = basic_range_slider_base>
    class basic_range_slider : public Base
    {
@@ -236,7 +239,7 @@ namespace cycfi::elements
       track_type              _body;
    };
 
-   template <typename Thumb1, typename Thumb2, typename Track>
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
    inline basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_base>
    range_slider(
       Thumb1&& thumb_min
@@ -245,7 +248,7 @@ namespace cycfi::elements
     , double_range init_value = {0.0, 1.0}
    );
 
-   template <typename Thumb1, typename Thumb2, typename Track>
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
    inline basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_offset_base>
    range_slider(
       Thumb1&& thumb_min
@@ -265,13 +268,16 @@ namespace cycfi::elements
     *    components.
     *
     * \tparam Thumb1
-    *    The type of the first thumb component.
+    *    The type of the first thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Thumb2
-    *    The type of the second thumb component.
+    *    The type of the second thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Track
-    *    The type of the track component.
+    *    The type of the track component. It must conform to the Element
+    *    concept.
     *
     * \param thumb_min
     *    The first thumb component, representing the minimum value selector.
@@ -290,7 +296,7 @@ namespace cycfi::elements
     *    thumb and track components, and initialized with the specified value
     *    range.
     */
-   template <typename Thumb1, typename Thumb2, typename Track>
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
    inline basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_base>
    range_slider(
       Thumb1&& thumb_min
@@ -313,13 +319,16 @@ namespace cycfi::elements
     *    components, along with an offset for handling thumb positioning.
     *
     * \tparam Thumb1
-    *    The type of the first thumb component.
+    *    The type of the first thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Thumb2
-    *    The type of the second thumb component.
+    *    The type of the second thumb component. It must conform to the
+    *    Element concept.
     *
     * \tparam Track
-    *    The type of the track component.
+    *    The type of the track component. It must conform to the Element
+    *    concept.
     *
     * \param thumb_min
     *    The first thumb component, representing the minimum value selector.
@@ -342,7 +351,7 @@ namespace cycfi::elements
     *    thumb and track components, initialized with the specified value
     *    range, and adjusted for the specified offset from the center.
     */
-   template <typename Thumb1, typename Thumb2, typename Track>
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
    inline basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_offset_base>
    range_slider(
       Thumb1&& thumb_min
@@ -362,48 +371,48 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief
-   *     Get the value of the first thumb.
-   *
-   * \return
-   *     The value of the first thumb as a double.
-   */
+    * \brief
+    *    Get the value of the first thumb.
+    *
+    * \return
+    *    The value of the first thumb as a double.
+    */
    inline double range_slider_base::value_first() const
    {
       return _value.first;
    }
 
    /*!
-   * \brief
-   *     Get the value of the second thumb.
-   *
-   * \return
-   *     The value of the second thumb as a double.
-   */
+    * \brief
+    *    Get the value of the second thumb.
+    *
+    * \return
+    *    The value of the second thumb as a double.
+    */
    inline double range_slider_base::value_second() const
    {
       return _value.second;
    }
 
    /*!
-   * \brief
-   *     Set the value of the first thumb.
-   *
-   * \param val
-   *     The new value to set for the first thumb.
-   */
+    * \brief
+    *    Set the value of the first thumb.
+    *
+    * \param val
+    *    The new value to set for the first thumb.
+    */
    inline void range_slider_base::value_first(double val)
    {
       value({val, _value.second});
    }
 
    /*!
-   * \brief
-   *     Set the value of the second thumb.
-   *
-   * \param val
-   *     The new value to set for the second thumb.
-   */
+    * \brief
+    *    Set the value of the second thumb.
+    *
+    * \param val
+    *    The new value to set for the second thumb.
+    */
    inline void range_slider_base::value_second(double val)
    {
       value({_value.first, val});
@@ -414,24 +423,24 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief
-   *     Edits the value of the first thumb.
-   *
-   * \param val
-   *     The new value to set for the first thumb.
-   */
+    * \brief
+    *    Edits the value of the first thumb.
+    *
+    * \param val
+    *    The new value to set for the first thumb.
+    */
    inline void range_slider_base::edit_value_second(double val)
    {
       value_second(val);
    }
 
    /*!
-   * \brief
-   *     Edits the value of the second thumb.
-   *
-   * \param val
-   *     The new value to set for the second thumb.
-   */
+    * \brief
+    *    Edits the value of the second thumb.
+    *
+    * \param val
+    *    The new value to set for the second thumb.
+    */
    inline void range_slider_base::edit_value(val_type val)
    {
       edit_value_first(val.first);
@@ -439,13 +448,13 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief
-   *     Edits the values of both thumbs.
-   *
-   * \param val
-   *     A pair of double values where `val.first` is the new value for the
-   *     first thumb, and `val.second` is the new value for the second thumb.
-   */
+    * \brief
+    *    Edits the values of both thumbs.
+    *
+    * \param val
+    *    A pair of double values where `val.first` is the new value for the
+    *    first thumb, and `val.second` is the new value for the second thumb.
+    */
    inline void range_slider_base::edit(view& view_, double_range val)
    {
       edit_value(val);
@@ -453,38 +462,41 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief
-   *     Constructor for `basic_range_slider` without offset handling.
-   *
-   *     Initializes a `basic_range_slider` instance using provided thumb
-   *     components, a track component, and an initial value range. This
-   *     constructor does not handle offset adjustments for the thumb components.
-   *
-   * \tparam Thumb1
-   *     The type of the first thumb component.
-   *
-   * \tparam Thumb2
-   *     The type of the second thumb component.
-   *
-   * \tparam Track
-   *     The type of the track component.
-   *
-   * \tparam Base
-   *     The base class from which `basic_range_slider` inherits.
-   *
-   * \param thumb_min
-   *     The first thumb component, representing the minimum value selector.
-   *
-   * \param thumb_max
-   *     The second thumb component, representing the maximum value selector.
-   *
-   * \param track
-   *     The track component on which the thumbs slide.
-   *
-   * \param init_value
-   *     The initial value range of the slider.
-   */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+    * \brief
+    *    Constructor for `basic_range_slider` without offset handling.
+    *
+    *    Initializes a `basic_range_slider` instance using provided thumb
+    *    components, a track component, and an initial value range. This
+    *    constructor does not handle offset adjustments for the thumb components.
+    *
+    * \tparam Thumb1
+    *    The type of the first thumb component. It must conform to the
+    *    Element concept.
+    *
+    * \tparam Thumb2
+    *    The type of the second thumb component. It must conform to the
+    *    Element concept.
+    *
+    * \tparam Track
+    *    The type of the track component. It must conform to the Element
+    *    concept.
+    *
+    * \tparam Base
+    *    The base class from which `basic_range_slider` inherits.
+    *
+    * \param thumb_min
+    *    The first thumb component, representing the minimum value selector.
+    *
+    * \param thumb_max
+    *    The second thumb component, representing the maximum value selector.
+    *
+    * \param track
+    *    The track component on which the thumbs slide.
+    *
+    * \param init_value
+    *    The initial value range of the slider.
+    */
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline basic_range_slider<Thumb1, Thumb2, Track, Base>::basic_range_slider(
       Thumb1&& thumb_min
     , Thumb2&& thumb_max
@@ -498,42 +510,45 @@ namespace cycfi::elements
    {}
 
    /*!
-   * \brief
+    * \brief
          Constructor for `basic_range_slider` with offset handling.
-   *
-   *     Initializes a `basic_range_slider` instance using provided thumb
-   *     components, a track component, an initial value range, and an offset
-   *     from the center for the thumb components.
-   *
-   * \tparam Thumb1
-   *     The type of the first thumb component.
-   *
-   * \tparam Thumb2
-   *     The type of the second thumb component.
-   *
-   * \tparam
-   *     Track The type of the track component.
-   *
-   * \tparam Base
-   *     The base class from which `basic_range_slider` inherits.
-   *
-   * \param thumb_min
-   *     The first thumb component, representing the minimum value selector.
-   *
-   * \param thumb_max
-   *     The second thumb component, representing the maximum value selector.
-   *
-   * \param track
-   *     The track component on which the thumbs slide.
-   *
-   * \param init_value
-   *     The initial value range of the slider.
-   *
-   * \param offset_from_center
-   *     The offset from the center for the thumb components, used for custom
-   *     positioning or collision avoidance.
-   */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+    *
+    *    Initializes a `basic_range_slider` instance using provided thumb
+    *    components, a track component, an initial value range, and an offset
+    *    from the center for the thumb components.
+    *
+    * \tparam Thumb1
+    *    The type of the first thumb component. It must conform to the
+    *    Element concept.
+    *
+    * \tparam Thumb2
+    *    The type of the second thumb component. It must conform to the
+    *    Element concept.
+    *
+    * \tparam Track
+    *    The type of the track component. It must conform to the Element
+    *    concept.
+    *
+    * \tparam Base
+    *    The base class from which `basic_range_slider` inherits.
+    *
+    * \param thumb_min
+    *    The first thumb component, representing the minimum value selector.
+    *
+    * \param thumb_max
+    *    The second thumb component, representing the maximum value selector.
+    *
+    * \param track
+    *    The track component on which the thumbs slide.
+    *
+    * \param init_value
+    *    The initial value range of the slider.
+    *
+    * \param offset_from_center
+    *    The offset from the center for the thumb components, used for custom
+    *    positioning or collision avoidance.
+    */
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline basic_range_slider<Thumb1, Thumb2, Track, Base>::basic_range_slider(
       Thumb1&& thumb_min
     , Thumb2&& thumb_max
@@ -548,12 +563,12 @@ namespace cycfi::elements
    {}
 
    /*!
-   * \brief Get constant references to the thumb elements.
-   *
-   * \return
-   *     A pair of `std::reference_wrapper` to the constant thumb elements.
-   */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+    * \brief Get constant references to the thumb elements.
+    *
+    * \return
+    *    A pair of `std::reference_wrapper` to the constant thumb elements.
+    */
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline typename basic_range_slider<Thumb1, Thumb2, Track, Base>::element_cref_pair
    basic_range_slider<Thumb1, Thumb2, Track, Base>::thumb() const
    {
@@ -561,12 +576,12 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief Get references to the thumb elements.
-   *
-   * \return
-   *     A pair of `std::reference_wrapper` to the thumb elements.
-   */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+    * \brief Get references to the thumb elements.
+    *
+    * \return
+    *    A pair of `std::reference_wrapper` to the thumb elements.
+    */
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline typename basic_range_slider<Thumb1, Thumb2, Track, Base>::element_ref_pair
    basic_range_slider<Thumb1, Thumb2, Track, Base>::thumb()
    {
@@ -574,26 +589,26 @@ namespace cycfi::elements
    }
 
    /*!
-   * \brief
-   *     Get a constant reference to the track component.
+    * \brief
+    *    Get a constant reference to the track component.
    *
-   * \return
-   *     A constant reference to the track component.
+    * \return
+    *    A constant reference to the track component.
    */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline element const& basic_range_slider<Thumb1, Thumb2, Track, Base>::track() const
    {
       return _body;
    }
 
    /*!
-   * \brief
-   *     Get a reference to the track component.
+    * \brief
+    *    Get a reference to the track component.
    *
-   * \return
-   *     A reference to the track component.
-   */
-   template <typename Thumb1, typename Thumb2, typename Track, typename Base>
+    * \return
+    *    A reference to the track component.
+    */
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track, typename Base>
    inline element& basic_range_slider<Thumb1, Thumb2, Track, Base>::track()
    {
       return _body;

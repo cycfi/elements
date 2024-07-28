@@ -36,7 +36,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // tracker tracks the mouse movement.
    ////////////////////////////////////////////////////////////////////////////
-   template <typename Base = element, typename TrackerInfo = tracker_info>
+   template <concepts::Element Base = element, typename TrackerInfo = tracker_info>
    class tracker : public Base
    {
    public:
@@ -91,12 +91,12 @@ namespace cycfi::elements
       return {current.x-previous.x, current.y-previous.y};
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    tracker<Base, TrackerInfo>::tracker(tracker const& rhs)
     : Base(rhs)
    {}
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    tracker<Base, TrackerInfo>&
    tracker<Base, TrackerInfo>::operator=(tracker const& rhs)
    {
@@ -105,7 +105,7 @@ namespace cycfi::elements
       return *this;
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    inline bool
    tracker<Base, TrackerInfo>::click(context const& ctx, mouse_button btn)
    {
@@ -128,7 +128,7 @@ namespace cycfi::elements
       return processed;
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    inline void
    tracker<Base, TrackerInfo>::drag(context const& ctx, mouse_button btn)
    {
@@ -144,21 +144,21 @@ namespace cycfi::elements
       }
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    inline typename tracker<Base, TrackerInfo>::tracker_info_ptr
    tracker<Base, TrackerInfo>::new_state(context const& /* ctx */, point start, int modifiers)
    {
       return std::make_unique<tracker_info>(start, modifiers);
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    inline void
    tracker<Base, TrackerInfo>::track_scroll(context const& ctx, point /* dir */, point /* p */)
    {
       this->on_tracking(ctx, element::while_tracking);
    }
 
-   template <typename Base, typename TrackerInfo>
+   template <concepts::Element Base, typename TrackerInfo>
    inline void
    tracker<Base, TrackerInfo>::escape_tracking(context const& ctx)
    {

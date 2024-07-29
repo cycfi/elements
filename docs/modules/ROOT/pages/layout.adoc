@@ -5,7 +5,28 @@ include::common.adoc[]
 == Overview
 
 The Elements Library provides a comprehensive set of elements for laying out
-elements in the view.
+elements in the view, including tiles, grids, flow layouts, floating
+elements, layers, alignment elements, scale elements, and span elements.
+
+* Tiles arrange elements in rows or columns, positioning them one after the
+other based on the child element's sizing limits.
+* Grids offer a structured layout with rows and columns, using normalized
+coordinate placements.
+* The flow element arranges its children left to right, fitting as many as
+possible within each row, and moves to the next row once full.
+* Floating elements allow for arbitrary positioning within containers.
+* Layers enable elements to be stacked on top of each other.
+
+The document also details the use of margins and sizing elements to provide
+proper spacing and ensure elements fit within the layout.
+
+* Alignment elements ensure correct positioning.
+* Scale elements adjust size proportionally.
+* Span elements extend across multiple grid cells.
+
+By combining these various layout elements, developers can create versatile,
+responsive, and visually consistent user interfaces that adapt seamlessly
+across different devices and screen sizes.
 
 == Limits
 
@@ -564,6 +585,48 @@ The element with the `0.5` stretch value stretches half less, while the
 element with the `1.5` stretches half more than the default.
 
 '''
+
+== Span Element
+
+The span of an element is the number of columns or rows it occupies in a grid
+(see <<_horizontal_grids, Horizontal Grids>> and <<_vertical_grids, Vertical
+Grids>>). The span of an element is determined by the element's `span` member
+function:
+
+[,c++]
+----
+virtual unsigned span() const;
+----
+
+By default, an element spans one column or one row. The span can be set to
+any positive integer value using the `span` function.
+
+=== span
+
+Overrides the span of an an enclosed element (`subject`).
+
+==== Expression
+
+[,c++]
+----
+span(nspans, subject)
+----
+
+==== Notation
+
+[cols=2*]
+|===
+| `nspans`
+| An unsigned integer
+
+| `subject`
+| Instance of `Element`
+|===
+
+==== Semantics
+
+. The `subject` will assume a span with the given `nspans` value.
+. Returns instance of `Proxy`.
 
 == Scale Element
 
@@ -1677,8 +1740,9 @@ NOTE: If the number of elements is not fixed, you can use an
 
 ==== Requirements
 
-. The number of supplied positions and elements should match, otherwise,
-compiler error (no matching function for call to `hgrid`).
+. The number of supplied positions and elements, multiplied by each element's
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of `1`. See <<_span_element,Span Element>> for more information.
 . The positions assume the first element is at `x=0` (it is at the left-most
 position in the row). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.
@@ -1950,8 +2014,9 @@ NOTE: If the number of elements is not fixed, you can use an
 
 ==== Requirements
 
-. The number of supplied coordinates and elements should match, otherwise,
-compiler error (no matching function for call to `vgrid`).
+. The number of supplied positions and elements, multiplied by each element's
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of `1`. See <<_span_element,Span Element>> for more information.
 . The positions assume the first element is at `x=0` (it is at the top-most
 position in the column). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.

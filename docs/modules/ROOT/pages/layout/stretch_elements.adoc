@@ -1,0 +1,106 @@
+= Stretch Elements
+
+include::../common.adoc[]
+
+== Overview
+
+Resizable elements are elements with _minimum limits_ that are less than the
+_maximum limits_ in either x or y dimensions or both. Resizable elements can
+therefore stretch if there is extra available space allocated to it beyond
+its minimum limit. When two or more resizable elements are placed side by
+side in an <<htile,htile>> or <<vtile,vtile>>, the element's "stretchiness"
+determines how much extra space is given to it. The element's "stretchiness"
+is determined by the element's `stretch` member function:
+
+[,c++]
+----
+virtual view_stretch stretch() const;
+----
+
+where `view_stretch` is a struct declared as:
+
+[,c++]
+----
+struct view_stretch
+{
+   float    x = 1.0;
+   float    y = 1.0;
+};
+----
+
+The `view_stretch` `x` and `y` members determine how much an element can
+stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
+2.0 means that the element is able to stretch twice as much compared to its
+siblings in an <<htile,htile>> or <<vtile,vtile>>, assuming they have the
+default 1.0 stretchiness.
+
+== hstretch
+
+image::/layout/hstretch.svg[alt="hstretch", width=232px, role=center]
+
+Overrides the horizontal stretchiness of an an enclosed element (`subject`).
+
+=== Notation
+
+`stretch`:: A scalar value
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+hstretch(stretch, subject)
+----
+
+=== Semantics
+
+. The `subject` will assume the given `stretch` value.
+. The stretch value has no effect to elements with fixed horizontal size.
+. Returns instance of `Proxy`.
+
+For example, the image below shows how three elements are laid out in an
+`htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
+
+image::/layout/htile-stretch.svg[alt="htile-stretch", width=232px, role=center]
+
+The element with the `2.0` stretch value stretches twice as much compared to
+its siblings.
+
+'''
+
+== vstretch
+
+image::/layout/vstretch.svg[alt="vstretch", width=316px, role=center]
+
+Overrides the vertical stretchiness of an an enclosed element (`subject`).
+
+=== Notation
+
+`stretch`:: A scalar value
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+vstretch(stretch, subject)
+----
+
+=== Semantics
+
+. The `subject` will assume the given `stretch` value.
+. The stretch value has no effect to elements with fixed _vertical limits_.
+. Returns instance of `Proxy`.
+
+For example, the image below shows how three elements are laid out in an
+`htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
+
+image::/layout/vtile-stretch.svg[alt="vtile-stretch", width=232px, role=center]
+
+The element with the `0.5` stretch value stretches half less, while the
+element with the `1.5` stretches half more than the default.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -7,10 +7,18 @@
 :warning-caption: ⚠️ {nbsp}WARNING
 
 :aspects: * xref:aspects.adoc[Design Aspects]
-:layout: xref:layout.adoc[Layout]
 
 :vst: https://en.wikipedia.org/wiki/Virtual_Studio_Technology[VST]
 :au: https://en.wikipedia.org/wiki/Audio_Units[AU]
 :gtk: https://www.gtk.org/[GTK]
 :pp: {plus}{plus}
 :mit_license: https://opensource.org/licenses/MIT[MIT License]
+
+:layout: xref:layout.adoc[Layout]
+:limits: xref:layout/limits.adoc[limits]
+:view_limits: xref:layout/limits.adoc#_view_limits[view_limits]
+
+:Stretch-Elements: xref:layout/stretch_elements.adoc[Stretch Elements]
+:Layers: xref:layout/layers.adoc[Layers]
+:Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
+:decks: xref:layout/decks.adoc[Decks]

@@ -1,0 +1,109 @@
+= Layout
+
+include::../common.adoc[]
+
+== Overview
+
+The Elements Library is 2D, but the z-axis pertains to top-to-bottom
+layering. Layers allow groups of elements to be placed in the z-axis where
+higher-level elements obscure or hide lower-level elements.
+
+image::/layout/layer.svg[alt="layer", width=353px, role=center]
+
+=== Semantics
+
+. The elements are laid out in the z-axis, top to bottom.
+. Rendering is done bottom-up; the bottom-most elements are drawn first.
+. UI control (such as mouse clicks) proceeds from top to bottom.
+Higher-level elements are given control priority. If a higher-level
+element does not process the event, lower-level elements are given a
+chance.
+. The layer's _minimum limit_ is computed as the maximum of the children
+elements' __minimum limit__s.
+. The layer's _maximum limit_ is computed as the minimum of the children
+elements' __maximum limit__s.
+. The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.
+. The computed (vertical) and (horizontal) coordinates may violate the
+limits of its children elements.
+ .. If the allocated size of a child element is lower than the element's
+_minimum limits_ in either dimension, the element will be cropped.
+ .. If a child element's _maximum limits_ in either dimension is exceeded,
+the element will be aligned to the top-left.
+
+== layer
+
+Create a layer composite with a fixed number of elements.
+
+=== Notation
+
+`N`:: The number of items
+
+`+e1,...eN+`:: One or more child elements, instances of `Element` (more below)
+
+Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by
+the layer element.
+
+=== Expression
+
+[,c++]
+----
+layer(e1,...eN)
+----
+
+=== Example
+
+[,c++]
+----
+layer(item1, item2, item3, item4)
+----
+
+NOTE: If the number of elements is not fixed, you can use an
+`layer_composite` (see below).
+
+=== Semantics
+
+. In addition to the semantics of Layers, returns instance of `Composite`.
+
+'''
+
+== layer_composite
+
+Create a layer with an indeterminate (dynamic) number of elements:
+
+=== Notation
+
+`c`:: Instance of type `layer_composite`
+
+The `layer_composite` is essentially a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The client is responsible for
+the lifetime of the container, `c`. You can use `layer_composite` in the same
+way as a `std::vector`, such as using `push_back` to add a child element.
+Remember that the items are `element_ptr` instances.
+
+=== Expression
+
+[,c++]
+----
+layer_composite c;
+----
+
+==== Example
+
+[,c++]
+----
+c.push_back(share(child));
+----
+
+NOTE: `share` turns an element object into an `element_ptr` held by
+the `std::vector<element_ptr>` in `layer_composite`.
+
+`layer_composite` is itself also an `element` and while it has
+``std::vector``'s interface, it can also be ``share``d like any element, which
+allows you to build complex hierarchical structures.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

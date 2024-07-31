@@ -1,0 +1,376 @@
+= Margin Elements
+
+include::../common.adoc[]
+
+== Overview
+
+Margins add some space around elements. There is a comprehensive list of
+margin elements in the Elements Library that can be used for various
+purposes. This section catalogues all the available margin elements.
+
+== margin
+
+image::/layout/margin.svg[alt="margin", width=302px, role=center]
+
+Adds a margin all around an enclosed element (`subject`).
+
+=== Notation
+
+`left`, `top`, `right`, `bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+margin({left, top, right, bottom}, subject)
+----
+
+=== Semantics
+
+. Space is added to the left, top, right, and bottom of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin` does not violate the natural {limits} of the subject.
+`margin` will respect the subject's min-max constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_left
+
+image::/layout/margin_left.svg[alt="margin_left", width=230px, role=center]
+
+Adds a margin to the left of an enclosed element (`subject`).
+
+=== Notation
+
+`left`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+margin_left(left, subject)
+----
+
+=== Semantics
+
+. Space is added to the left of the subject with the given parameter.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_left` does not violate the natural {limits} of the subject.
+`margin_left` will respect the subject's min-max constraints and
+resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_right
+
+image::/layout/margin_right.svg[alt="margin_right", width=230px, role=center]
+
+Adds a margin to the right of an enclosed element (`subject`).
+
+=== Notation
+
+`right`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+margin_right(right, subject)
+----
+
+=== Semantics
+
+. Space is added to the right of the subject with the given parameter.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_right` does not violate the natural {limits} of the subject.
+`margin_right` will respect the subject's min-max constraints and
+resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_top
+
+image::/layout/margin_top.svg[alt="margin_right", width=218px, role=center]
+
+Adds a margin to the top of an enclosed element (`subject`).
+
+=== Notation
+
+`top`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+margin_top(top, subject)
+----
+
+=== Semantics
+
+. Space is added to the top of the subject with the given parameter.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_top` does not violate the natural {limits} of the subject.
+`margin_top` will respect the subject's min-max constraints and
+resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_bottom
+
+image::/layout/margin_bottom.svg[alt="margin_bottom", width=218px, role=center]
+
+Adds a margin to the bottom of an enclosed element (`subject`).
+
+=== Notation
+
+`bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+margin_bottom(bottom, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the bottom of the subject with the given
+parameter.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_bottom` does not violate the natural {limits} of the subject.
+`margin_bottom` will respect the subject's min-max constraints and
+resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== hmargin
+
+(same as `margin_left_right`)
+
+image::/layout/hmargin.svg[alt="hmargin", width=302px, role=center]
+
+Adds a margin to the left and right sides of an enclosed element (`subject`).
+
+`left`, `right`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+hmargin({left, right}, subject)
+
+// variant 2
+hmargin(left, right, subject)
+
+// variant 3
+margin_left_right({left, right}, subject)
+
+// variant 4
+margin_left_right(left, right, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the left and right sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `hmargin` (and variants) does not violate the natural {limits} of the
+subject. `hmargin` (and variants) will respect the subject's min-max
+constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== vmargin
+
+(same as `margin_top_bottom`)
+
+image::/layout/vmargin.svg[alt="vmargin", width=218px, role=center]
+
+Adds a margin to the top and bottom sides of an enclosed element (`subject`).
+
+=== Notation
+
+`top`, `bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+vmargin({top, bottom}, subject)
+
+// variant 2
+vmargin(top, bottom, subject)
+
+// variant 3
+margin_top_bottom({top, bottom}, subject)
+
+// variant 4
+margin_top_bottom(top, bottom, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the top and bottom sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `vmargin` (and variants) does not violate the natural {limits} of the
+subject. `vmargin` (and variants) will respect the subject's min-max
+constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_left_top
+
+image::/layout/margin_left_top.svg[alt="margin_left_top", width=232px, role=center]
+
+Adds a margin to the left and top sides of an enclosed element (`subject`).
+
+=== Notation
+
+`left`, `top`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+margin_left_top({left, top}, subject)
+
+// variant 2
+margin_left_top(left, top, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the left and top sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_left_top` (and variant) does not violate the natural {limits}
+of the subject. `margin_left_top` (and variant) will respect the subject's
+min-max constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_left_bottom
+
+image::/layout/margin_left_bottom.svg[alt="margin_left_bottom", width=232px, role=center]
+
+Adds a margin to the left and bottom sides of an enclosed element (`subject`).
+
+=== Notation
+
+`left`, `bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+margin_left_bottom({left, bottom}, subject)
+
+// variant 2
+margin_left_bottom(left, bottom, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the left and bottom sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_left_bottom` (and variant) does not violate the natural
+{limits} of the subject. `margin_left_bottom` (and variant) will respect
+the subject's min-max constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_right_top
+
+image::/layout/margin_right_top.svg[alt="margin_right_top", width=232px, role=center]
+
+Adds a margin to the right and top sides of an enclosed element (`subject`).
+
+=== Notation
+
+`right`, `top`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+margin_right_top({right, top}, subject)
+
+// variant 2
+margin_right_top(right, top, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the right and top sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_right_top` (and variant) does not violate the natural {limits}
+of the subject. `margin_right_top` (and variant) will respect the
+subject's min-max constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+== margin_right_bottom
+
+image::/layout/margin_right_bottom.svg[alt="margin_right_bottom", width=232px, role=center]
+
+Adds a margin to the right and bottom sides of an enclosed element (`subject`).
+
+=== Notation
+
+`right`, `bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expressions
+
+[,c++]
+----
+// variant 1
+margin_right_bottom({right, bottom}, subject)
+
+// variant 2
+margin_right_bottom(right, bottom, subject)
+----
+
+=== Semantics
+
+. Space is added to the to the right and bottom sides of the subject with the
+given parameters.
+. The element's {limits} is overridden to account for the additional space.
+. The `margin_right_bottom` (and variant) does not violate the natural
+limits of the subject. `margin_right_bottom` (and variant) will respect
+the subject's min-max constraints and resizability.
+. Returns instance of `Proxy`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -26,12 +26,13 @@ namespace cycfi::elements
    };
 
    //==============================================================================================
-   /** \class selection_list
+   /** \class selection_list_element
      *
-     * The selection_list is a proxy base class that manages a container subject with selectable
-     * items. The selection_list manages singe or multiple selections, click select, shift-click
-     * select, shift-control (command on MacOS), up and down navigation also and with shift and
-     * control (command on MacOS) selection extension.
+     * The selection_list_element is a proxy base class that manages a
+     * container subject with selectable items. The selection_list manages
+     * singe or multiple selections, click select, shift-click select,
+     * shift-control (command on MacOS), up and down navigation also and with
+     * shift and control (command on MacOS) selection extension.
      */
    //==============================================================================================
    class selection_list_element : public proxy_base

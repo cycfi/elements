@@ -1,0 +1,279 @@
+= Grids
+
+include::../common.adoc[]
+
+== Overview
+
+Grids are similar to tiles. Both tiles and grids allow elements to fluidly
+adjust depending on available space. Grids lay out its elements using
+externally supplied normalized fractional coordinates that specify positions
+of the elements in the allocated space.
+
+Grids are best for composing tables.
+
+'''
+
+== Horizontal Grids
+
+image::/layout/hgrid.svg[alt="hgrid", width=347px, role=center]
+
+Horizontal Grids are composites that lay out one or more child elements in a
+row following externally supplied horizontal fractional positions. Horizontal
+Grids have computed horizontal and vertical sizes following the natural
+`limits` of its children.
+
+=== Semantics
+
+. The elements are laid out in a single row, left to right, immediately next
+to each other with no intervening space.
+. The elements are positioned horizontally using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element's horizontal position from left (0.0) to right
+(1.0).
+. The grid's _minimum vertical limit_ is computed as the maximum of the
+children elements' __minimum vertical limit__s.
+. The grid's _maximum vertical limit_ is computed as the minimum of the
+children elements' __maximum vertical limit__s.
+. The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.
+. The supplied (horizontal) positions and computed (vertical) coordinates
+may violate the limits of its children elements.
+ .. If the allocated size of a child element is lower than the element's
+_minimum limits_ in either dimension, the element will be cropped.
+ .. If a child element's _maximum limits_ in either dimension is exceeded,
+the element will be aligned to the top-left.
+
+'''
+
+== hgrid
+
+Build a horizontal grid with a fixed number of elements.
+
+=== Notation
+
+`N`:: The number of items
+`+e1,...eN+`:: One or more child elements, instances of `Element` (more below)
+
+`positions`:: External container of fractional positions (more below)
+
+The external container, `positions`, can either be a plain array of type
+`float[N]` or `std::array<float, N>`. Elements `+e1,...eN+` are held in a
+`std::array<element_ptr, N>` managed by the horizontal grid element.
+
+=== Expression
+
+[,c++]
+----
+hgrid(positions, e1,...eN)
+----
+
+=== Example
+
+[,c++]
+----
+static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+hgrid(positions, item1, item2, item3, item4)
+----
+
+NOTE: If the number of elements is not fixed, you can use an
+`hgrid_composite` (see below).
+
+=== Requirements
+
+. The number of supplied positions and elements, multiplied by each element's
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of `1`. See <<_span_element,Span Element>> for more information.
+. The positions assume the first element is at `x=0` (it is at the left-most
+position in the row). The fractional position of the second element is at
+index `0`, the third at index `1`, and so on.
+. The externally supplied positions should be sorted with increasing values
+such that positions[n] \<= positions[n+1]. The behavior is undefined if
+this is violated.
+
+=== Semantics
+
+. In addition to the semantics of Horizontal Grids, returns instance of
+`Composite`.
+
+== hgrid_composite
+
+Create a horizontal grid with an indeterminate (dynamic) number of elements.
+
+=== Notation
+
+`positions`:: External container of fractional positions, `std::vector<float>`
+
+`c`:: Instance of type `hgrid_composite`
+
+The `hgrid_composite` is essentially a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The client is responsible for
+the lifetime of the container, `c`. You can use `hgrid_composite` in the same
+way as a `std::vector`, such as using `push_back` to add a child element.
+Remember that the items are `element_ptr` instances.
+
+=== Expression
+
+[,c++]
+----
+hgrid_composite c{positions};
+----
+
+=== Example
+
+[,c++]
+----
+c.push_back(share(child));
+----
+
+NOTE: `share` turns an element object into an `element_ptr` held by
+the `std::vector<element_ptr>` in `hgrid_composite`.
+
+`hgrid_composite` is itself also an `element` and while it has ``std::vector``'s
+interface, it can also be ``share``d like any element, which allows you to
+build complex hierarchical structures.
+
+=== Requirements
+
+. The number of items in the external coordinates vector `positions` must match
+with the number of elements at any given time.
+. The positions assume the first element is at `x=0` (it is at the left-most
+position in the row). The fractional position of the second element is at
+index `0`, the third at index `1`, and so on.
+. The externally supplied positions should be sorted with increasing values
+such that positions[n] \<= positions[n+1]. The behavior is undefined if
+this is violated.
+
+== Vertical Grids
+
+image::/layout/vgrid.svg[alt="vgrid", width=347px, role=center]
+
+Vertical Grids are composites that lay out one or more child elements in a
+column following externally supplied vertical fractional positions. Vertical
+Grids have computed horizontal and vertical sizes following the natural
+`limits` of its children.
+
+=== Semantics
+
+. The elements are laid out in a single column, top to bottom, immediately
+next to each other with no intervening space.
+. The elements are positioned vertically using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element's vertical position from top (0.0) to bottom
+(1.0).
+. The grid's _minimum horizontal limit_ is computed as the maximum of the
+children elements' __minimum horizontal limit__s.
+. The grid's _maximum horizontal limit_ is computed as the minumum of the
+children elements' __maximum horizontal limit__s.
+. The final computed minimum limit is clamped to ensure it is not greater
+than the computed maximum limit. Likewise the computed maximum limit is
+clamped to ensure it is not less than the computed minimum limit.
+. The supplied (vertical) positions and computed (horizontal) coordinates
+may violate the limits of its children elements.
+ .. If the allocated size of a child element is lower than the element's
+_minimum limits_ in either dimension, the element will be cropped.
+ .. If a child element's _maximum limits_ in either dimension is exceeded,
+the element will be aligned to the top-left.
+
+== vgrid
+
+Build a vertical grid with a fixed number of elements.
+
+=== Notation
+
+`N`:: The number of items
+
+`+e1,...eN+`:: One or more child elements, instances of `Element` (more below)
+
+`positions`:: External container of fractional positions (more below)
+
+The external container, `positions`, can either be a plain array of type `float[N]` or `std::array<float, N>`. Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the vertical grid element.
+
+=== Expression
+
+[,c++]
+----
+vgrid(positions, e1,...eN)
+----
+
+=== Example
+
+[,c++]
+----
+static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+vgrid(positions, item1, item2, item3, item4)
+----
+
+NOTE: If the number of elements is not fixed, you can use an
+`vgrid_composite` (see below).
+
+=== Requirements
+
+. The number of supplied positions and elements, multiplied by each element's
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of `1`. See <<_span_element,Span Element>> for more information.
+. The positions assume the first element is at `x=0` (it is at the top-most
+position in the column). The fractional position of the second element is at
+index `0`, the third at index `1`, and so on.
+. The externally supplied positions should be sorted with increasing values
+such that positions[n] \<= positions[n+1]. The behavior is undefined if
+this is violated.
+
+=== Semantics
+
+. In addition to the semantics of Vertical Grids, returns instance of
+`Composite`.
+
+== vgrid_composite
+
+Create a vertical grid with an indeterminate (dynamic) number of elements.
+
+=== Notation
+
+`positions`:: External container of fractional positions, `std::vector<float>`
+`c`:: Instance of type `vgrid_composite`
+
+The `vgrid_composite` is essentially a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The client is responsible for
+the lifetime of the container, `c`. You can use `vgrid_composite` in the same
+way as a `std::vector`, such as using `push_back` to add a child element.
+Remember that the items are `element_ptr` instances.
+
+=== Expression
+
+[,c++]
+----
+vgrid_composite c{positions};
+----
+
+=== Example:
+
+[,c++]
+----
+c.push_back(share(child));
+----
+
+NOTE: `share` turns an element object into an `element_ptr` held by
+the `std::vector<element_ptr>` in `vgrid_composite`.
+
+`vgrid_composite` is itself also an `element` and while it has ``std::vector``'s
+interface, it can also be ``share``d like any element, which allows you to
+build complex hierarchical structures.
+
+=== Requirements
+
+. The number of items in the external coordinates vector `positions` must match
+with the number of elements at any given time.
+. The positions assume the first element is at `x=0` (it is at the top-most
+position in the column). The fractional position of the second element is at
+index `0`, the third at index `1`, and so on.
+. The externally supplied positions should be sorted with increasing values
+such that positions[n] \<= positions[n+1]. The behavior is undefined if
+this is violated.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

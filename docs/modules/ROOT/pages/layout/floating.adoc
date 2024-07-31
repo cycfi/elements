@@ -1,0 +1,39 @@
+= Floating
+
+include::../common.adoc[]
+
+== Overview
+
+A floating element allows arbitrary placement of an enclosed element
+(`subject`) in the main view.
+
+image::/layout/floating.svg[alt="floating", width=432px, role=center]
+
+== floating
+
+Positions the enclosed element (`subject`) at specified coordinates, allowing
+it to float within the layout.
+
+=== Notation
+
+`left`, `top`, `right`, `bottom`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+floating({left, top, right, bottom}, subject)
+----
+
+=== Semantics
+
+. The element will be placed exactly to the specified position in the main
+view, constrained to the subject's natural _limits_.
+. The floating element does not violate the natural _limits_ of the subject.
+. Returns instance of `Proxy`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -1,0 +1,107 @@
+= Limits
+
+include::../common.adoc[]
+
+== Overview
+
+Each element provides information on how it wants to be sized by means of
+`min` and `max` limits: a hint that determine its actual extent and how it
+will be placed in the view depending on available window space. The element's
+`limits` member function determines the minimum and maximum extents of an
+element:
+
+[,c++]
+----
+view_limits limits(basic_context const& ctx) const;
+----
+
++++<a name="view_limits">++++++</a>+++
+See link:context[Context] for information about `basic_context`. `view_limits`
+is a struct that gives us the `min` and `max` information:
+
+[,c++]
+----
+struct view_limits
+{
+   point    min = {0.0, 0.0};
+   point    max = {full_extent, full_extent};
+};
+----
+
+For the purpose of this document, we will use these terms and expressions:
+
+limits:: The limits of an element
+
+limits.min:: The minimum limits of an element
+
+limits.min.x:: The minimum horizontal limit of an element
+
+limits.min.y:: The minimum vertical limit of an element
+
+limits.max:: The maximum limits of an element
+
+limits.max.x:: The maximum horizontal limit of an element
+
+limits.max.y:: The maximum vertical limit of an element
+
+horizontal limits:: (limits.min.x, limits.max.x)
+
+vertical limits:: (limits.min.y, limits.max.y)
+
+minimum limits:: (limits.min.x, limits.min.y)
+
+maximum limits:: (limits.max.x, limits.max.y)
+
+minimum horizontal limit:: limits.min.x
+
+maximum horizontal limit:: limits.max.x
+
+minimum vertical limit:: limits.min.y
+
+maximum vertical limit:: limits.max.y
+
+By default, an element has full limits: it is infinitely resizable:
+
+[,c++]
+----
+constexpr view_limits full_limits = {
+   {0.0, 0.0}
+ , {full_extent, full_extent}
+};
+----
+
+An element with `full_limits` can be resized from an empty point (zero x and
+y size) up to the full extent of the screen, and beyond (if possible).
+
+NOTE: `full_extent` is actually an implementation defined huge
+number near the _maximum limits_ of the coordinate's data type (also
+implementation defined).
+
+* An element has a fixed horizontal size if this expression is true:
+`limits.min.x == limits.max.x`.
+* An element has a fixed vertical size if this expression is true:
+`limits.min.y == limits.max.y`.
+
+[discrete]
+==== Examples
+
+[,c++]
+----
+{{100, 100}, {100, 100}}; // Fixed size
+----
+
+[,c++]
+----
+{{100, 100}, {100, full_extent}}; // Fixed width, flexible height
+----
+
+[,c++]
+----
+{{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)
+----
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_
+

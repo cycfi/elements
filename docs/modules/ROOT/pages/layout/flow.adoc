@@ -1,0 +1,77 @@
+= Flow
+
+include::../common.adoc[]
+
+== Overview
+
+The flow element, is a composite that lays out its children much like the way
+text is laid out: lay out each element from left to right, fitting as much
+elements as possible following each child's _maximum horizontal limit_. Once
+a row is full, move to the next row and do the same until the end of the row
+is filled. Repeat the procedure until all the elements are laid out. The
+height of each row is determined by the _maximum vertical limit_ of all the
+elements to be laid out in that row. The following graphic depicts a
+simplified layout scenario for child elements `a` to `r`.
+
+image::/layout/flow.svg[alt="flow", width=380px, role=center]
+
+The child elements arranged in a `flow` composite are automatically re-flowed
+(re-lay-out) when the view size changes.
+
+To have elements laid out using `flow`, you need to make a `flow_composite`.
+
+== flow_composite
+
+Create a `flow_composite` with an indeterminate (dynamic) number of elements.
+
+=== Notation
+
+`c`:: Instance of type `flow_composite`
+
+The `flow_composite` is essentially a `std::vector<element_ptr>` that the
+client uses to manage the composite's elements. The client is responsible for
+the lifetime of the container, `c`. You use `flow_composite` just as you
+would a `std::vector`, such as using `push_back` to add a child element.
+Remember that the items are `element_ptr` instances.
+
+=== Expression
+
+[,c++]
+----
+flow_composite c;
+----
+
+=== Example
+
+[,c++]
+----
+c.push_back(share(child));
+----
+
+NOTE: `share` turns an element object into an `element_ptr` held by
+the `std::vector<element_ptr>` in `flow_composite`.
+
+== flow
+
+Once we have a `flow_composite`, we can place its contents in a `flow`
+element.
+
+=== Notation
+
+`c`:: Instance of `flow_composite`
+
+=== Expression
+
+[,c++]
+----
+flow(c)
+----
+
+=== Semantics
+
+. Returns instance of `Composite`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

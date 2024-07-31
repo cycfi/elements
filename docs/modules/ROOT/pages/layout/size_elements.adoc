@@ -1,0 +1,289 @@
+
+= Size Elements
+
+include::../common.adoc[]
+
+== Overview
+
+Size elements override the _limits_ of an enclosed element. There is a
+comprehensive list of size related elements in the Elements Library that can
+be used for various purposes. This section catalogues all the available size
+elements.
+
+== limit
+
+image::/layout/limit.svg[alt="limit", width=360px, role=center]
+
+Overrides the _limits_ of an element.
+
+=== Notation
+
+`limits`    :: Instance of <<view_limits,`view_limits`>>
+`subject`   :: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+limit(limits, subject)
+----
+
+=== Semantics
+
+. The _limits_ of `subject` will be set to the specified `limits`
+constrained by the natural _limits_ of the `subject` (the natural _limits_
+of the element will not be violated).
+. Returns instance of `Proxy`.
+
+== fixed_size
+
+image::/layout/fixed_size.svg[alt="fixed_size", width=318px, role=center]
+
+Fixes the size of an enclosed element (`subject`).
+
+=== Notation
+
+`width`, `height` :: `float`
+`subject`         :: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+fixed_size({width, height}, subject)
+----
+
+=== Semantics
+
+. `subject` will be laid out with a fixed `width` and `height`, constrained
+by the natural _limits_ of the `subject` (the natural _limits_ of the
+element will not be violated).
+. Returns instance of `Proxy`.
+
+'''
+
+== hsize
+
+image::/layout/hsize.svg[alt="hsize", width=232px, role=center]
+
+Fixes the horizontal size of an enclosed element (`subject`).
+
+=== Notation
+
+`width`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+hsize(width, subject)
+----
+
+=== Semantics
+
+. `subject` will be laid out with a fixed `width`, constrained by the
+natural _horizontal limits_ of the `subject` (the natural _horizontal
+limits_ of the element will not be violated).
+. The natural _vertical limits_ of `subject` will not be affected.
+. Returns instance of `Proxy`.
+
+'''
+
+== vsize
+
+image::/layout/vsize.svg[alt="vsize", width=316px, role=center]
+
+Fixes the _vertical limits_ of an enclosed element (`subject`).
+
+=== Notation
+
+`height`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+vsize(height, subject)
+----
+
+=== Semantics
+
+. `subject` will be laid out with a fixed `height`, constrained by the
+natural _vertical limits_ of the `subject` (the natural _vertical limits_
+of the element will not be violated).
+. The natural _horizontal limits_ of `subject` will not be affected.
+. Returns instance of `Proxy`.
+
+'''
+
+== min_size
+
+image::/layout/min_size.svg[alt="min_size", width=360px, role=center]
+
+Overrides the _minimum limits_ of an enclosed element (`subject`).
+
+=== Notation
+
+`width`, `height`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+min_size({width, height}, subject)
+----
+
+=== Semantics
+
+. The _minimum limits_ of `subject` will be set to the specified `width` and
+`height`, constrained by the natural _minimum limits_ of the `subject`.
+. the natural _minimum limits_ of the element will not be violated.
+. Returns instance of `Proxy`.
+
+'''
+
+== hmin_size
+
+image::/layout/hmin_size.svg[alt="hmin_size", width=233px, role=center]
+
+Overrides the _minimum horizontal limit_ of an enclosed element (`subject`).
+
+=== Notation
+
+`width`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+hmin_size(width, subject)
+----
+
+=== Semantics
+
+. The _minimum horizontal limit_ of `subject` will be set to the specified
+`width` constrained by the natural _horizontal minimum limits_ of the
+`subject`.
+. The natural _horizontal minimum limits_ of the element will not be
+violated.
+. Returns instance of `Proxy`.
+
+'''
+
+== vmin_size
+
+image::/layout/vmin_size.svg[alt="vmin_size", width=360px, role=center]
+
+Overrides the _minimum vertical limit_ of an enclosed element (`subject`).
+
+=== Notation
+
+`height`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+vmin_size(height, subject)
+----
+
+=== Semantics
+
+. The _minimum vertical limit_ of `subject` will be set to the specified `height`
+constrained by the natural vertical _minimum limits_ of the `subject`.
+. The natural vertical _minimum limits_ of the element will not be violated.
+. Returns instance of `Proxy`.
+
+'''
+
+== max_size
+
+image::/layout/max_size.svg[alt="max_size", width=360px, role=center]
+
+Overrides the _maximum limits_ of an enclosed element (`subject`).
+
+=== Notation
+
+`width`, `height`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+max_size({width, height}, subject)
+----
+
+=== Semantics
+
+. The _maximum limits_ of `subject` will be set to the specified `width` and
+`height`, constrained by the natural _maximum limits_ of the `subject`.
+. The natural _maximum limits_ of the element will not be violated.
+. Returns instance of `Proxy`.
+
+'''
+
+== hmax_size
+
+image::/layout/hmax_size.svg[alt="hmax_size", width=360px, role=center]
+
+Overrides the _maximum horizontal limit_ of an enclosed element (`subject`).
+
+=== Notation
+
+`width`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+hmax_size(width, subject)
+----
+
+=== Semantics
+
+. The _maximum horizontal limit_ of `subject` will be set to the specified
+`width` constrained by the natural _maximum horizontal limit_ of the
+`subject`.
+. The natural _maximum horizontal limit_ of the element will not be
+violated.
+. Returns instance of `Proxy`.
+
+'''
+
+== vmax_size
+
+image::/layout/vmax_size.svg[alt="vmax_size", width=360px, role=center]
+
+Overrides the _maximum vertical limit_ of an enclosed element (`subject`).
+
+=== Notation
+
+`height`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+vmax_size(height, subject)
+----
+
+=== Semantics
+
+. The _maximum vertical limit_ of `subject` will be set to the specified
+`height` constrained by the natural _maximum vertical limit_ of the
+`subject`
+. The natural _maximum vertical limit_ of the element will not be violated.
+. Returns instance of `Proxy`.
+
+---
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

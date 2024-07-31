@@ -1,0 +1,35 @@
+= Scale
+
+include::../common.adoc[]
+
+== Overview
+
+The Elements Library is resolution independent and elements can be scaled up
+or down to suit. The default scale is 1.0 (no scale).
+
+== scale
+
+The `scale` element changes the scale of its enclosed element (`subject`).
+
+=== Notation
+
+`scale_`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+scale(scale_, subject)
+----
+
+=== Semantics
+
+. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
+the element up (zoom in), while a value < 1.0 scales down (zoom out).
+. Returns instance of `Proxy`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

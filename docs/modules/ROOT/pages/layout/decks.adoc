@@ -4,14 +4,14 @@ include::../common.adoc[]
 
 == Overview
 
-The Deck is very similar to {layers}. Elements are placed in the z-axis. But
+The Deck is very similar to {Layers}. Elements are placed in the z-axis. But
 unlike layers, only the selected element is active (top-most by default).
 
 image::/layout/deck.svg[alt="deck", width=353px, role=center]
 
 === Semantics
 
-. Everything listed in the {layers_semantics}, except 2 and 3.
+. Everything listed in the {Layers_Semantics}, except 2 and 3.
 . Only the active selected element element is drawn.
 . Only the active selected element is given the chance to process UI control.
 

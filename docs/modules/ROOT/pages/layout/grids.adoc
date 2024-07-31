@@ -20,7 +20,7 @@ image::/layout/hgrid.svg[alt="hgrid", width=347px, role=center]
 Horizontal Grids are composites that lay out one or more child elements in a
 row following externally supplied horizontal fractional positions. Horizontal
 Grids have computed horizontal and vertical sizes following the natural
-`limits` of its children.
+{limits} of its children.
 
 === Semantics
 
@@ -152,7 +152,7 @@ image::/layout/vgrid.svg[alt="vgrid", width=347px, role=center]
 Vertical Grids are composites that lay out one or more child elements in a
 column following externally supplied vertical fractional positions. Vertical
 Grids have computed horizontal and vertical sizes following the natural
-`limits` of its children.
+{limits} of its children.
 
 === Semantics
 

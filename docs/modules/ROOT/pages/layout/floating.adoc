@@ -29,8 +29,8 @@ floating({left, top, right, bottom}, subject)
 === Semantics
 
 . The element will be placed exactly to the specified position in the main
-view, constrained to the subject's natural _limits_.
-. The floating element does not violate the natural _limits_ of the subject.
+view, constrained to the subject's natural {limits}.
+. The floating element does not violate the natural {limits} of the subject.
 . Returns instance of `Proxy`.
 
 '''

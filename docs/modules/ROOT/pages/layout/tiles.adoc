@@ -8,7 +8,7 @@ Tiles are the most useful layout elements. Tiles are used everywhere for
 composing hierarchical elements in rows and columns, typical to all GUIs.
 Tiles allow elements to fluidly adjust depending on available space. Tiles
 compute the layout of its elements using the children elements' size
-`limits`.
+{limits}.
 
 == Horizontal Tiles
 
@@ -22,7 +22,7 @@ available space.
 . The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.
 . The elements are positioned horizontally using the children's natural
-_limits_.
+{limits}.
 . Horizontal space is allocated using this algorithm:
  .. Space is allocated for each child element following the child's natural
 _minimum horizontal limit_.
@@ -34,7 +34,7 @@ to it according to the element's `stretch()` member function. A stretch
 value of `1.0` is default. A stretchiness value of 2.0 means that the
 element is able to stretch twice as much compared to its siblings.
 Horizontally fixed-sized elements will not be stretched (element d in
-the diagram). (Also see {stretch-elements}).
+the diagram). (Also see {Stretch-Elements}).
 . The tile's _minimum vertical limit_ is computed as the maximum of the
 children elements' __minimum vertical limit__s.
 . The grid's _maximum vertical limit_ is computed as the minimum of the
@@ -130,7 +130,7 @@ available space.
 . The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.
 . The elements are positioned vertically using the children's natural
-_limits_.
+{limits}.
 . Vertical space is allocated using this algorithm:
  .. Space is allocated for each child element following the child's natural
 _minimum vertical limit_.
@@ -142,7 +142,7 @@ to it according to the element's `stretch()` member function. A stretch
 value of `1.0` is default. A stretchiness value of 2.0 means that the
 element is able to stretch twice as much compared to its siblings.
 Vertically fixed-sized elements will not be stretched (element b in the
-diagram). (Also see {stretch-elements}).
+diagram). (Also see {Stretch-Elements}).
 . The tile's _minimum horizontal limit_ is computed as the maximum of the
 children elements' __minimum horizontal limit__s.
 . The grid's _maximum horizontal limit_ is computed as the minumum of the

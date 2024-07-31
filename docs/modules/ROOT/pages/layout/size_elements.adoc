@@ -5,7 +5,7 @@ include::../common.adoc[]
 
 == Overview
 
-Size elements override the _limits_ of an enclosed element. There is a
+Size elements override the {limits} of an enclosed element. There is a
 comprehensive list of size related elements in the Elements Library that can
 be used for various purposes. This section catalogues all the available size
 elements.
@@ -14,11 +14,11 @@ elements.
 
 image::/layout/limit.svg[alt="limit", width=360px, role=center]
 
-Overrides the _limits_ of an element.
+Overrides the {limits} of an element.
 
 === Notation
 
-`limits`    :: Instance of <<view_limits,`view_limits`>>
+`limits`    :: Instance of {view_limits}
 `subject`   :: Instance of `Element`
 
 === Expression
@@ -30,8 +30,8 @@ limit(limits, subject)
 
 === Semantics
 
-. The _limits_ of `subject` will be set to the specified `limits`
-constrained by the natural _limits_ of the `subject` (the natural _limits_
+. The {limits} of `subject` will be set to the specified {limits}
+constrained by the natural {limits} of the `subject` (the natural {limits}
 of the element will not be violated).
 . Returns instance of `Proxy`.
 
@@ -56,7 +56,7 @@ fixed_size({width, height}, subject)
 === Semantics
 
 . `subject` will be laid out with a fixed `width` and `height`, constrained
-by the natural _limits_ of the `subject` (the natural _limits_ of the
+by the natural {limits} of the `subject` (the natural {limits} of the
 element will not be violated).
 . Returns instance of `Proxy`.
 

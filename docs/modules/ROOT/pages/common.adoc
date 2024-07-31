@@ -15,7 +15,10 @@
 :mit_license: https://opensource.org/licenses/MIT[MIT License]
 
 :layout: xref:layout.adoc[Layout]
-:stretch-elements: xref:layout/stretch_elements.adoc[Stretch Elements]
-:layers: xref:layout/layers.adoc[Layers]
-:layers_semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
+:limits: xref:layout/limits.adoc[limits]
+:view_limits: xref:layout/limits.adoc#_view_limits[view_limits]
+
+:Stretch-Elements: xref:layout/stretch_elements.adoc[Stretch Elements]
+:Layers: xref:layout/layers.adoc[Layers]
+:Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
 :decks: xref:layout/decks.adoc[Decks]

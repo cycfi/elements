@@ -173,20 +173,18 @@
 <div class="paragraph">
 <p>Each element provides information on how it wants to be sized by means of
 <code>min</code> and <code>max</code> limits: a hint that determine its actual extent and how it
-will be placed in the view depending on available window space. The element&#8217;s
-<code>limits</code> member function determines the minimum and maximum extents of an
-element:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_limits limits(basic_context const&amp; ctx) const;</code></pre>
+will be placed in the view depending on available window space.</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_view_limits"><a class="anchor" href="#_view_limits"></a>view_limits</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><a name="view_limits"></a>
-See <a href="context">Context</a> for information about <code>basic_context</code>. <code>view_limits</code>
-is a struct that gives us the <code>min</code> and <code>max</code> information:</p>
+<p><code>view_limits</code> is a struct that gives us the <code>min</code> and <code>max</code> information:</p>
 </div>
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_limits
@@ -196,6 +194,74 @@ is a struct that gives us the <code>min</code> and <code>max</code> information:
 };</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>full_extent</code></dt>
+<dd>
+<p>An implementation-defined huge number that signifies an unbounded extent.</p>
+</dd>
+<dt class="hdlist1"><code>point</code></dt>
+<dd>
+<p>A data structure representing a coordinate in a 2D space used to
+specify positions or dimensions within the graphical context.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_full_limits"><a class="anchor" href="#_full_limits"></a>full_limits</h3>
+<div class="paragraph">
+<p>By default, an element has full limits, meaning there is no constraints on
+its size. It is infinitely resizable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">constexpr view_limits full_limits = {
+   {0.0, 0.0}
+ , {full_extent, full_extent}
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An element with <code>full_limits</code> can be resized from an empty point (zero x and
+y size) up to the full extent of the screen, and beyond (if possible).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An element has a fixed horizontal size if this expression is true:
+<code>limits.min.x == limits.max.x</code>.</p>
+</li>
+<li>
+<p>An element has a fixed vertical size if this expression is true:
+<code>limits.min.y == limits.max.y</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 100}}; // Fixed size</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, full_extent}}; // Fixed width, flexible height</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_terms_and_expressions"><a class="anchor" href="#_terms_and_expressions"></a>Terms and Expressions</h3>
 <div class="paragraph">
 <p>For the purpose of this document, we will use these terms and expressions:</p>
 </div>
@@ -263,67 +329,11 @@ is a struct that gives us the <code>min</code> and <code>max</code> information:
 </dd>
 </dl>
 </div>
-<div class="paragraph">
-<p>By default, an element has full limits: it is infinitely resizable:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">constexpr view_limits full_limits = {
-   {0.0, 0.0}
- , {full_extent, full_extent}
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>An element with <code>full_limits</code> can be resized from an empty point (zero x and
-y size) up to the full extent of the screen, and beyond (if possible).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
-</td>
-<td class="content">
-<code>full_extent</code> is actually an implementation defined huge
-number near the <em>maximum limits</em> of the coordinate&#8217;s data type (also
-implementation defined).
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>An element has a fixed horizontal size if this expression is true:
-<code>limits.min.x == limits.max.x</code>.</p>
-</li>
-<li>
-<p>An element has a fixed vertical size if this expression is true:
-<code>limits.min.y == limits.max.y</code>.</p>
-</li>
-</ul>
-</div>
-<h4 id="_examples" class="discrete">Examples</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 100}}; // Fixed size</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, full_extent}}; // Fixed width, flexible height</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)</code></pre>
-</div>
-</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
 <em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
 </div>
 </div>
 </div>

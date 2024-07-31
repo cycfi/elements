@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Elements C&#43;&#43; GUI library :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/index.html">
+    <title>Stretch Elements :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/stretch_elements.html">
     <meta name="generator" content="Antora 3.1.9">
-    <link rel="stylesheet" href="../../_/css/site.css">
+    <link rel="stylesheet" href="../../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
 <link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
@@ -51,67 +51,67 @@
     <div class="panels">
       <div class="navbar-item search hide-for-print">
         <div id="search-field" class="field">
-          <input id="search-input" type="text" placeholder="Search the docs" autofocus>
+          <input id="search-input" type="text" placeholder="Search the docs">
         </div>
       </div>
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
     <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
-    <h3 class="title"><a href="index.html">Elements Library</a></h3>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="gallery.html">Gallery</a>
+    <a class="nav-link" href="../gallery.html">Gallery</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="setup.html">Setup and Installation</a>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="aspects.html">Design Aspects</a>
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="layout.html">Layout</a>
+    <a class="nav-link" href="../layout.html">Layout</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/limits.html">Limits</a>
+    <a class="nav-link" href="limits.html">Limits</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/size_elements.html">Size Elements</a>
+    <a class="nav-link" href="size_elements.html">Size Elements</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="stretch_elements.html">Stretch Elements</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/stretch_elements.html">Stretch Elements</a>
+    <a class="nav-link" href="span.html">Span</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/span.html">Span</a>
+    <a class="nav-link" href="scale.html">Scale</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/scale.html">Scale</a>
+    <a class="nav-link" href="align_elements.html">Align Elements</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/align_elements.html">Align Elements</a>
+    <a class="nav-link" href="margin_elements.html">Margin Elements</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/margin_elements.html">Margin Elements</a>
+    <a class="nav-link" href="floating.html">Floating</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/floating.html">Floating</a>
+    <a class="nav-link" href="tiles.html">Tiles</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/tiles.html">Tiles</a>
+    <a class="nav-link" href="grids.html">Grids</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/grids.html">Grids</a>
+    <a class="nav-link" href="layers.html">Layers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/layers.html">Layers</a>
+    <a class="nav-link" href="decks.html">Decks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/decks.html">Decks</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layout/flow.html">Flow</a>
+    <a class="nav-link" href="flow.html">Flow</a>
   </li>
 </ul>
   </li>
@@ -127,13 +127,13 @@
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="index.html">Elements Library</a></div>
+      <div class="title"><a href="../index.html">Elements Library</a></div>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="index.html">skia_2024</a>
+          <a href="../index.html">skia_2024</a>
         </li>
         <li class="version">
-          <a href="../index.html">master</a>
+          <a href="../../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -145,18 +145,19 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">Elements Library</a></li>
-    <li><a href="index.html">Elements C&#43;&#43; GUI library</a></li>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../layout.html">Layout</a></li>
+    <li><a href="stretch_elements.html">Stretch Elements</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
   <div class="version-menu">
-    <a class="version is-current" href="index.html">skia_2024</a>
-    <a class="version" href="../index.html">master</a>
+    <a class="version is-current" href="stretch_elements.html">skia_2024</a>
+    <a class="version is-missing" href="../../index.html">master</a>
   </div>
 </div>
 </div>
@@ -165,62 +166,178 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Elements C&#43;&#43; GUI library</h1>
+<h1 class="page">Stretch Elements</h1>
 <div class="sect1">
-<h2 id="_introduction"><a class="anchor" href="#_introduction"></a>Introduction</h2>
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
-<div class="imageblock">
+<div class="paragraph">
+<p>Resizable elements are elements with <em>minimum limits</em> that are less than the
+<em>maximum limits</em> in either x or y dimensions or both. Resizable elements can
+therefore stretch if there is extra available space allocated to it beyond
+its minimum limit. When two or more resizable elements are placed side by
+side in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, the element&#8217;s "stretchiness"
+determines how much extra space is given to it. The element&#8217;s "stretchiness"
+is determined by the element&#8217;s <code>stretch</code> member function:</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<img src="_images/elements_sampler.jpeg" alt="Elements Sampler">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual view_stretch stretch() const;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><span class="image left"><img src="_images/logo.png" alt="logo" width="180"></span> Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++17 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C&#43;&#43;, and therefore, there is no need for an external visual GUI editor or code generator.</p>
+<p>where <code>view_stretch</code> is a struct declared as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_stretch
+{
+   float    x = 1.0;
+   float    y = 1.0;
+};</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Elements is embeddable, meaning you can embed it in any application, and it will play well with other GUI libraries and frameworks. This also implies that you can utilize it for the creation of plugins. It does not own the event loop and is able to co-exist with components within a plugin host, such as <a href="https://en.wikipedia.org/wiki/Virtual_Studio_Technology">VST</a> and <a href="https://en.wikipedia.org/wiki/Audio_Units">AU</a>. Porting to a new host target is straightforward, requiring the porting of only a few files.</p>
-</div>
-<div class="paragraph">
-<p>Elements is distributed under the liberal and non-viral <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+<p>The <code>view_stretch</code> <code>x</code> and <code>y</code> members determine how much an element can
+stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
+2.0 means that the element is able to stretch twice as much compared to its
+siblings in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, assuming they have the
+default 1.0 stretchiness.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_documentation"><a class="anchor" href="#_documentation"></a>Documentation</h2>
+<h2 id="_hstretch"><a class="anchor" href="#_hstretch"></a>hstretch</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hstretch.svg" alt="hstretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the horizontal stretchiness of an an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>stretch</code></dt>
+<dd>
+<p>A scalar value</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hstretch(stretch, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><a href="gallery.html" class="xref page">Gallery</a></p>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
 </li>
 <li>
-<p><a href="setup.html" class="xref page">Setup and Installation</a></p>
+<p>The stretch value has no effect to elements with fixed horizontal size.</p>
 </li>
 <li>
-<p><a href="aspects.html" class="xref page">Design Aspects</a></p>
+<p>Returns instance of <code>Proxy</code>.</p>
 </li>
-<li>
-<p><a href="layout.html" class="xref page">Layout</a></p>
-</li>
-</ul>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>1.0</code>, <code>1.0</code> and <code>2.0</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/htile-stretch.svg" alt="htile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>2.0</code> stretch value stretches twice as much compared to
+its siblings.</p>
+</div>
+<hr>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_author"><a class="anchor" href="#_the_author"></a>The Author</h2>
+<h2 id="_vstretch"><a class="anchor" href="#_vstretch"></a>vstretch</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p><span class="image left"><img src="_images/joel.jpg" alt="Joel de Guzman" width="150"></span> Joel got into electronics and programming in the 80s because almost
-everything in music, his first love, is becoming electronic and digital. Since then, he builds his own guitars, effect boxes and synths. He enjoys playing distortion-laden rock guitar, composes and produces his own music in his home studio.</p>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vstretch.svg" alt="vstretch" width="316px">
+</div>
 </div>
 <div class="paragraph">
-<p>Joel de Guzman is the principal architect and engineer at <a href="https://www.cycfi.com/">Cycfi Research</a>. He is a software engineer specializing in advanced C++ and an advocate of Open Source. He has authored a number of highly successful Open Source projects such as <a href="http://tinyurl.com/ydhotlaf">Boost.Spirit</a>, <a href="http://tinyurl.com/y6vkeo5t">Boost.Phoenix</a> and <a href="http://tinyurl.com/ybn5oq9v">Boost.Fusion</a>.
-These libraries are all part of the <a href="http://tinyurl.com/jubgged">Boost Libraries</a>, a well respected, peer-reviewed, Open Source, collaborative development effort.</p>
+<p>Overrides the vertical stretchiness of an an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>stretch</code></dt>
+<dd>
+<p>A scalar value</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vstretch(stretch, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+</li>
+<li>
+<p>The stretch value has no effect to elements with fixed <em>vertical limits</em>.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>0.5</code>, <code>1.0</code> and <code>1.5</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vtile-stretch.svg" alt="vtile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>0.5</code> stretch value stretches half less, while the
+element with the <code>1.5</code> stretches half more than the default.</p>
 </div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
 <em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
 </div>
 </div>
 </div>
@@ -232,10 +349,10 @@ These libraries are all part of the <a href="http://tinyurl.com/jubgged">Boost L
   <p>This page was built using the Antora default UI.</p>
   <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
 </footer>
-<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
-<script async src="../../_/js/vendor/highlight.js"></script>
-<script src="../../_/js/vendor/lunr.js"></script>
-<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
-<script async src="../../search-index.js"></script>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
   </body>
 </html>

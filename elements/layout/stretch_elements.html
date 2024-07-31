@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Span :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/span.html">
+    <title>Stretch Elements :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/stretch_elements.html">
     <meta name="generator" content="Antora 3.1.9">
-    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
 <link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="elements" data-version="skia_2024">
+<div class="nav-container" data-component="elements" data-version="master">
   <aside class="nav">
     <div class="panels">
       <div class="navbar-item search hide-for-print">
@@ -80,10 +80,10 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="size_elements.html">Size Elements</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="stretch_elements.html">Stretch Elements</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="span.html">Span</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -123,17 +123,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Elements Library</span>
-    <span class="version">skia_2024</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <div class="title"><a href="../skia_2024/index.html">Elements Library</a></div>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../index.html">skia_2024</a>
+        <li class="version is-latest">
+          <a href="../skia_2024/index.html">skia_2024</a>
         </li>
-        <li class="version">
-          <a href="../../index.html">master</a>
+        <li class="version is-current">
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -145,19 +145,19 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+  <a href="../skia_2024/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
     <li><a href="../layout.html">Layout</a></li>
-    <li><a href="span.html">Span</a></li>
+    <li><a href="stretch_elements.html">Stretch Elements</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
+  <button class="version-menu-toggle" title="Show other versions of page">master</button>
   <div class="version-menu">
-    <a class="version is-current" href="span.html">skia_2024</a>
-    <a class="version" href="../../layout/span.html">master</a>
+    <a class="version" href="../skia_2024/layout/stretch_elements.html">skia_2024</a>
+    <a class="version is-current" href="stretch_elements.html">master</a>
   </div>
 </div>
 </div>
@@ -166,40 +166,63 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Span</h1>
+<h1 class="page">Stretch Elements</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The span of an element is the number of columns or rows it occupies in a grid
-(see <a href="#_horizontal_grids">Horizontal Grids</a> and <a href="#_vertical_grids">Vertical
-Grids</a>). The span of an element is determined by the element&#8217;s <code>span</code> member
-function:</p>
+<p>Resizable elements are elements with <em>minimum limits</em> that are less than the
+<em>maximum limits</em> in either x or y dimensions or both. Resizable elements can
+therefore stretch if there is extra available space allocated to it beyond
+its minimum limit. When two or more resizable elements are placed side by
+side in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, the element&#8217;s "stretchiness"
+determines how much extra space is given to it. The element&#8217;s "stretchiness"
+is determined by the element&#8217;s <code>stretch</code> member function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual unsigned span() const;</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual view_stretch stretch() const;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>By default, an element spans one column or one row. The span can be set to
-any positive integer value using the <code>span</code> function.</p>
+<p>where <code>view_stretch</code> is a struct declared as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_stretch
+{
+   float    x = 1.0;
+   float    y = 1.0;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>view_stretch</code> <code>x</code> and <code>y</code> members determine how much an element can
+stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
+2.0 means that the element is able to stretch twice as much compared to its
+siblings in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, assuming they have the
+default 1.0 stretchiness.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_span"><a class="anchor" href="#_span"></a>span</h2>
+<h2 id="_hstretch"><a class="anchor" href="#_hstretch"></a>hstretch</h2>
 <div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hstretch.svg" alt="hstretch" width="232px">
+</div>
+</div>
 <div class="paragraph">
-<p>Overrides the span of an an enclosed element (<code>subject</code>).</p>
+<p>Overrides the horizontal stretchiness of an an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>nspans</code></dt>
+<dt class="hdlist1"><code>stretch</code></dt>
 <dd>
-<p>An unsigned integer</p>
+<p>A scalar value</p>
 </dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
@@ -212,7 +235,7 @@ any positive integer value using the <code>span</code> function.</p>
 <h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">span(nspans, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hstretch(stretch, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -221,12 +244,94 @@ any positive integer value using the <code>span</code> function.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The <code>subject</code> will assume a span with the given <code>nspans</code> value.</p>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+</li>
+<li>
+<p>The stretch value has no effect to elements with fixed horizontal size.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>1.0</code>, <code>1.0</code> and <code>2.0</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/htile-stretch.svg" alt="htile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>2.0</code> stretch value stretches twice as much compared to
+its siblings.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vstretch"><a class="anchor" href="#_vstretch"></a>vstretch</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vstretch.svg" alt="vstretch" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the vertical stretchiness of an an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>stretch</code></dt>
+<dd>
+<p>A scalar value</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vstretch(stretch, subject)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+</li>
+<li>
+<p>The stretch value has no effect to elements with fixed <em>vertical limits</em>.</p>
+</li>
+<li>
+<p>Returns instance of <code>Proxy</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, the image below shows how three elements are laid out in an
+<code>htile</code>, with stretch values of <code>0.5</code>, <code>1.0</code> and <code>1.5</code>, respectively:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vtile-stretch.svg" alt="vtile-stretch" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>The element with the <code>0.5</code> stretch value stretches half less, while the
+element with the <code>1.5</code> stretches half more than the default.</p>
 </div>
 <hr>
 <div class="paragraph">
@@ -244,10 +349,10 @@ any positive integer value using the <code>span</code> function.</p>
   <p>This page was built using the Antora default UI.</p>
   <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
 </footer>
-<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-<script src="../../../_/js/vendor/lunr.js"></script>
-<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
-<script async src="../../../search-index.js"></script>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
   </body>
 </html>

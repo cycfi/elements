@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Tiles :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/tiles.html">
+    <title>Grids :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/grids.html">
     <meta name="generator" content="Antora 3.1.9">
-    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
 <link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="elements" data-version="skia_2024">
+<div class="nav-container" data-component="elements" data-version="master">
   <aside class="nav">
     <div class="panels">
       <div class="navbar-item search hide-for-print">
@@ -98,10 +98,10 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="floating.html">Floating</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="tiles.html">Tiles</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="grids.html">Grids</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -123,17 +123,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Elements Library</span>
-    <span class="version">skia_2024</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <div class="title"><a href="../skia_2024/index.html">Elements Library</a></div>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../index.html">skia_2024</a>
+        <li class="version is-latest">
+          <a href="../skia_2024/index.html">skia_2024</a>
         </li>
-        <li class="version">
-          <a href="../../index.html">master</a>
+        <li class="version is-current">
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -145,19 +145,19 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+  <a href="../skia_2024/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
     <li><a href="../layout.html">Layout</a></li>
-    <li><a href="tiles.html">Tiles</a></li>
+    <li><a href="grids.html">Grids</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
+  <button class="version-menu-toggle" title="Show other versions of page">master</button>
   <div class="version-menu">
-    <a class="version is-current" href="tiles.html">skia_2024</a>
-    <a class="version" href="../../layout/tiles.html">master</a>
+    <a class="version" href="../skia_2024/layout/grids.html">skia_2024</a>
+    <a class="version is-current" href="grids.html">master</a>
   </div>
 </div>
 </div>
@@ -166,30 +166,35 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Tiles</h1>
+<h1 class="page">Grids</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Tiles are the most useful layout elements. Tiles are used everywhere for
-composing hierarchical elements in rows and columns, typical to all GUIs.
-Tiles allow elements to fluidly adjust depending on available space. Tiles
-compute the layout of its elements using the children elements' size
-<a href="limits.html" class="xref page">limits</a>.</p>
+<p>Grids are similar to tiles. Both tiles and grids allow elements to fluidly
+adjust depending on available space. Grids lay out its elements using
+externally supplied normalized fractional coordinates that specify positions
+of the elements in the allocated space.</p>
 </div>
+<div class="paragraph">
+<p>Grids are best for composing tables.</p>
+</div>
+<hr>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_horizontal_tiles"><a class="anchor" href="#_horizontal_tiles"></a>Horizontal Tiles</h2>
+<h2 id="_horizontal_grids"><a class="anchor" href="#_horizontal_grids"></a>Horizontal Grids</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/htile.svg" alt="htile" width="462px">
+<img src="../_images/layout/hgrid.svg" alt="hgrid" width="347px">
 </div>
 </div>
 <div class="paragraph">
-<p>Horizontal Tiles allow elements to fluidly adjust horizontally depending on
-available space.</p>
+<p>Horizontal Grids are composites that lay out one or more child elements in a
+row following externally supplied horizontal fractional positions. Horizontal
+Grids have computed horizontal and vertical sizes following the natural
+<a href="limits.html" class="xref page">limits</a> of its children.</p>
 </div>
 <div class="sect2">
 <h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
@@ -200,35 +205,13 @@ available space.</p>
 to each other with no intervening space.</p>
 </li>
 <li>
-<p>The elements are positioned horizontally using the children&#8217;s natural
-<a href="limits.html" class="xref page">limits</a>.</p>
+<p>The elements are positioned horizontally using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element&#8217;s horizontal position from left (0.0) to right
+(1.0).</p>
 </li>
 <li>
-<p>Horizontal space is allocated using this algorithm:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Space is allocated for each child element following the child&#8217;s natural
-<em>minimum horizontal limit</em>.</p>
-</li>
-<li>
-<p>If the allocated space exceeds the sum of all children elements'
-<em>minimum horizontal limit</em>s, the extra space is given to each
-horizontally resizable element (<code>limits.min.x &lt; limits.max.x</code>).</p>
-</li>
-<li>
-<p>The element&#8217;s "stretchiness" determines how much extra space is given
-to it according to the element&#8217;s <code>stretch()</code> member function. A stretch
-value of <code>1.0</code> is default. A stretchiness value of 2.0 means that the
-element is able to stretch twice as much compared to its siblings.
-Horizontally fixed-sized elements will not be stretched (element d in
-the diagram). (Also see <a href="stretch_elements.html" class="xref page">Stretch Elements</a>).</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>The tile&#8217;s <em>minimum vertical limit</em> is computed as the maximum of the
+<p>The grid&#8217;s <em>minimum vertical limit</em> is computed as the maximum of the
 children elements' <em>minimum vertical limit</em>s.</p>
 </li>
 <li>
@@ -241,8 +224,8 @@ than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.</p>
 </li>
 <li>
-<p>The supplied (horizontal) and computed (vertical) coordinates may violate
-the limits of its children elements.</p>
+<p>The supplied (horizontal) positions and computed (vertical) coordinates
+may violate the limits of its children elements.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -258,14 +241,15 @@ the element will be aligned to the top-left.</p>
 </li>
 </ol>
 </div>
+<hr>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_htile"><a class="anchor" href="#_htile"></a>htile</h2>
+<h2 id="_hgrid"><a class="anchor" href="#_hgrid"></a>hgrid</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Build a horizontal tile with a fixed number of elements.</p>
+<p>Build a horizontal grid with a fixed number of elements.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
@@ -279,26 +263,33 @@ the element will be aligned to the top-left.</p>
 <dd>
 <p>One or more child elements, instances of <code>Element</code> (more below)</p>
 </dd>
+<dt class="hdlist1"><code>positions</code></dt>
+<dd>
+<p>External container of fractional positions (more below)</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
-horizontal tile element.</p>
+<p>The external container, <code>positions</code>, can either be a plain array of type
+<code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in a
+<code>std::array&lt;element_ptr, N&gt;</code> managed by the horizontal grid element.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(e1,...eN)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid(positions, e1,...eN)</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_example"><a class="anchor" href="#_example"></a>Example:</h3>
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(item1, item2, item3, item4)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+hgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -309,10 +300,32 @@ horizontal tile element.</p>
 </td>
 <td class="content">
 If the number of elements is not fixed, you can use an
-<code>htile_composite</code> (see below).
+<code>hgrid_composite</code> (see below).
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of supplied positions and elements, multiplied by each element&#8217;s
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of <code>1</code>. See <a href="#_span_element">Span Element</a> for more information.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the left-most
+position in the row). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
 </div>
 </div>
 <div class="sect2">
@@ -320,7 +333,7 @@ If the number of elements is not fixed, you can use an
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>In addition to the semantics of Horizontal Tiles, returns instance of
+<p>In addition to the semantics of Horizontal Grids, returns instance of
 <code>Composite</code>.</p>
 </li>
 </ol>
@@ -329,34 +342,38 @@ If the number of elements is not fixed, you can use an
 </div>
 </div>
 <div class="sect1">
-<h2 id="_htile_composite"><a class="anchor" href="#_htile_composite"></a>htile_composite</h2>
+<h2 id="_hgrid_composite"><a class="anchor" href="#_hgrid_composite"></a>hgrid_composite</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Create a horizontal tile with an indeterminate (dynamic) number of elements.</p>
+<p>Create a horizontal grid with an indeterminate (dynamic) number of elements.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>positions</code></dt>
+<dd>
+<p>External container of fractional positions, <code>std::vector&lt;float&gt;</code></p>
+</dd>
 <dt class="hdlist1"><code>c</code></dt>
 <dd>
-<p>Instance of type <code>htile_composite</code></p>
+<p>Instance of type <code>hgrid_composite</code></p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>The <code>htile_composite</code> is essentially a <code>std::vector&lt;element_ptr&gt;</code> that the
+<p>The <code>hgrid_composite</code> is essentially a <code>std::vector&lt;element_ptr&gt;</code> that the
 client uses to manage the composite&#8217;s elements. The client is responsible for
-the lifetime of the container, <code>c</code>. You use <code>htile_composite</code> just as you
-would a <code>std::vector</code>, such as using <code>push_back</code> to add a child element. Just
-remember that the items are <code>element_ptr</code> instances.</p>
+the lifetime of the container, <code>c</code>. You can use <code>hgrid_composite</code> in the same
+way as a <code>std::vector</code>, such as using <code>push_back</code> to add a child element.
+Remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile_composite c;</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid_composite c{positions};</code></pre>
 </div>
 </div>
 </div>
@@ -375,30 +392,53 @@ remember that the items are <code>element_ptr</code> instances.</p>
 </td>
 <td class="content">
 <code>share</code> turns an element object into an <code>element_ptr</code> held by
-the <code>std::vector&lt;element_ptr&gt;</code> in <code>htile_composite</code>.
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>hgrid_composite</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p><code>htile_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+<p><code>hgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
 interface, it can also be <code>share</code>d like any element, which allows you to
 build complex hierarchical structures.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements_2"><a class="anchor" href="#_requirements_2"></a>Requirements</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of items in the external coordinates vector <code>positions</code> must match
+with the number of elements at any given time.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the left-most
+position in the row). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vertical_tiles"><a class="anchor" href="#_vertical_tiles"></a>Vertical Tiles</h2>
+<h2 id="_vertical_grids"><a class="anchor" href="#_vertical_grids"></a>Vertical Grids</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/vtile.svg" alt="vtile" width="347px">
+<img src="../_images/layout/vgrid.svg" alt="vgrid" width="347px">
 </div>
 </div>
 <div class="paragraph">
-<p>Vertical Tiles allow elements to fluidly adjust vertically depending on
-available space.</p>
+<p>Vertical Grids are composites that lay out one or more child elements in a
+column following externally supplied vertical fractional positions. Vertical
+Grids have computed horizontal and vertical sizes following the natural
+<a href="limits.html" class="xref page">limits</a> of its children.</p>
 </div>
 <div class="sect2">
 <h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
@@ -409,35 +449,13 @@ available space.</p>
 next to each other with no intervening space.</p>
 </li>
 <li>
-<p>The elements are positioned vertically using the children&#8217;s natural
-<a href="limits.html" class="xref page">limits</a>.</p>
+<p>The elements are positioned vertically using the supplied fractional
+positions. The fractional positions values range from 0.0 to 1.0, which
+specify the child element&#8217;s vertical position from top (0.0) to bottom
+(1.0).</p>
 </li>
 <li>
-<p>Vertical space is allocated using this algorithm:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Space is allocated for each child element following the child&#8217;s natural
-<em>minimum vertical limit</em>.</p>
-</li>
-<li>
-<p>If the allocated space exceeds the sum of all children elements'
-<em>minimum vertical limit</em>s, the extra space is given to each
-vertically resizable element (<code>limits.min.y &lt; limits.max.y</code>).</p>
-</li>
-<li>
-<p>The element&#8217;s "stretchiness" determines how much extra space is given
-to it according to the element&#8217;s <code>stretch()</code> member function. A stretch
-value of <code>1.0</code> is default. A stretchiness value of 2.0 means that the
-element is able to stretch twice as much compared to its siblings.
-Vertically fixed-sized elements will not be stretched (element b in the
-diagram). (Also see <a href="stretch_elements.html" class="xref page">Stretch Elements</a>).</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>The tile&#8217;s <em>minimum horizontal limit</em> is computed as the maximum of the
+<p>The grid&#8217;s <em>minimum horizontal limit</em> is computed as the maximum of the
 children elements' <em>minimum horizontal limit</em>s.</p>
 </li>
 <li>
@@ -450,8 +468,8 @@ than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.</p>
 </li>
 <li>
-<p>The supplied (vertical) and computed (horizontal) coordinates may violate
-the limits of its children elements.</p>
+<p>The supplied (vertical) positions and computed (horizontal) coordinates
+may violate the limits of its children elements.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -471,10 +489,10 @@ the element will be aligned to the top-left.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vtile"><a class="anchor" href="#_vtile"></a>vtile</h2>
+<h2 id="_vgrid"><a class="anchor" href="#_vgrid"></a>vgrid</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Build a vertical tile with a fixed number of elements.</p>
+<p>Build a vertical grid with a fixed number of elements.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h3>
@@ -486,20 +504,23 @@ the element will be aligned to the top-left.</p>
 </dd>
 <dt class="hdlist1"><code>e1,...eN</code></dt>
 <dd>
-<p>One or more child elements, instances of <code>Element</code></p>
+<p>One or more child elements, instances of <code>Element</code> (more below)</p>
+</dd>
+<dt class="hdlist1"><code>positions</code></dt>
+<dd>
+<p>External container of fractional positions (more below)</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the
-vertical tile element.</p>
+<p>The external container, <code>positions</code>, can either be a plain array of type <code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the vertical grid element.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(e1,...eN)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid(positions, e1,...eN)</code></pre>
 </div>
 </div>
 </div>
@@ -507,7 +528,9 @@ vertical tile element.</p>
 <h3 id="_example_3"><a class="anchor" href="#_example_3"></a>Example</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(item1, item2, item3, item4)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">static float positions[] = {0.25, 0.5, 0.75, 1.0};
+//...
+vgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -518,10 +541,32 @@ vertical tile element.</p>
 </td>
 <td class="content">
 If the number of elements is not fixed, you can use an
-<code>vtile_composite</code> (see below).
+<code>vgrid_composite</code> (see below).
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements_3"><a class="anchor" href="#_requirements_3"></a>Requirements</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of supplied positions and elements, multiplied by each element&#8217;s
+span, should match, otherwise, undefined behavior.  By default elements have
+a span of <code>1</code>. See <a href="#_span_element">Span Element</a> for more information.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the top-most
+position in the column). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
 </div>
 </div>
 <div class="sect2">
@@ -529,49 +574,52 @@ If the number of elements is not fixed, you can use an
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>In addition to the semantics of Vertical Tiles, returns instance of
+<p>In addition to the semantics of Vertical Grids, returns instance of
 <code>Composite</code>.</p>
 </li>
 </ol>
 </div>
-<hr>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vtile_composite"><a class="anchor" href="#_vtile_composite"></a>vtile_composite</h2>
+<h2 id="_vgrid_composite"><a class="anchor" href="#_vgrid_composite"></a>vgrid_composite</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Create a vertical tile with an indeterminate (dynamic) number of elements.</p>
+<p>Create a vertical grid with an indeterminate (dynamic) number of elements.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>positions</code></dt>
+<dd>
+<p>External container of fractional positions, <code>std::vector&lt;float&gt;</code></p>
+</dd>
 <dt class="hdlist1"><code>c</code></dt>
 <dd>
-<p>Instance of type <code>vtile_composite</code></p>
+<p>Instance of type <code>vgrid_composite</code></p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>The <code>vtile_composite</code> is essentially a <code>std::vector&lt;element_ptr&gt;</code> that the
+<p>The <code>vgrid_composite</code> is essentially a <code>std::vector&lt;element_ptr&gt;</code> that the
 client uses to manage the composite&#8217;s elements. The client is responsible for
-the lifetime of the container, <code>c</code>. You can use <code>vtile_composite</code> in the same
+the lifetime of the container, <code>c</code>. You can use <code>vgrid_composite</code> in the same
 way as a <code>std::vector</code>, such as using <code>push_back</code> to add a child element.
-Just remember that the items are <code>element_ptr</code> instances.</p>
+Remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile_composite c;</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid_composite c{positions};</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_example_4"><a class="anchor" href="#_example_4"></a>Example</h3>
+<h3 id="_example_4"><a class="anchor" href="#_example_4"></a>Example:</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">c.push_back(share(child));</code></pre>
@@ -585,15 +633,36 @@ Just remember that the items are <code>element_ptr</code> instances.</p>
 </td>
 <td class="content">
 <code>share</code> turns an element object into an <code>element_ptr</code> held by
-the <code>std::vector&lt;element_ptr&gt;</code> in <code>vtile_composite</code>.
+the <code>std::vector&lt;element_ptr&gt;</code> in <code>vgrid_composite</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p><code>vtile_composite</code> is itself also an <code>element</code> and while it has
-<code>std::vector</code>'s interface, it can also be <code>share</code>d like any element, which
-allows you to build complex hierarchical structures.</p>
+<p><code>vgrid_composite</code> is itself also an <code>element</code> and while it has <code>std::vector</code>'s
+interface, it can also be <code>share</code>d like any element, which allows you to
+build complex hierarchical structures.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements_4"><a class="anchor" href="#_requirements_4"></a>Requirements</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The number of items in the external coordinates vector <code>positions</code> must match
+with the number of elements at any given time.</p>
+</li>
+<li>
+<p>The positions assume the first element is at <code>x=0</code> (it is at the top-most
+position in the column). The fractional position of the second element is at
+index <code>0</code>, the third at index <code>1</code>, and so on.</p>
+</li>
+<li>
+<p>The externally supplied positions should be sorted with increasing values
+such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
+this is violated.</p>
+</li>
+</ol>
 </div>
 <hr>
 <div class="paragraph">
@@ -611,10 +680,10 @@ allows you to build complex hierarchical structures.</p>
   <p>This page was built using the Antora default UI.</p>
   <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
 </footer>
-<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-<script src="../../../_/js/vendor/lunr.js"></script>
-<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
-<script async src="../../../search-index.js"></script>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
   </body>
 </html>

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Span :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/span.html">
+    <title>Limits :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/limits.html">
     <meta name="generator" content="Antora 3.1.9">
-    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
 <link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="elements" data-version="skia_2024">
+<div class="nav-container" data-component="elements" data-version="master">
   <aside class="nav">
     <div class="panels">
       <div class="navbar-item search hide-for-print">
@@ -74,7 +74,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../layout.html">Layout</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="limits.html">Limits</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -83,7 +83,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="stretch_elements.html">Stretch Elements</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="span.html">Span</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -123,17 +123,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Elements Library</span>
-    <span class="version">skia_2024</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <div class="title"><a href="../skia_2024/index.html">Elements Library</a></div>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../index.html">skia_2024</a>
+        <li class="version is-latest">
+          <a href="../skia_2024/index.html">skia_2024</a>
         </li>
-        <li class="version">
-          <a href="../../index.html">master</a>
+        <li class="version is-current">
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -145,19 +145,19 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+  <a href="../skia_2024/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
     <li><a href="../layout.html">Layout</a></li>
-    <li><a href="span.html">Span</a></li>
+    <li><a href="limits.html">Limits</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
+  <button class="version-menu-toggle" title="Show other versions of page">master</button>
   <div class="version-menu">
-    <a class="version is-current" href="span.html">skia_2024</a>
-    <a class="version" href="../../layout/span.html">master</a>
+    <a class="version" href="../skia_2024/layout/limits.html">skia_2024</a>
+    <a class="version is-current" href="limits.html">master</a>
   </div>
 </div>
 </div>
@@ -166,67 +166,168 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Span</h1>
+<h1 class="page">Limits</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The span of an element is the number of columns or rows it occupies in a grid
-(see <a href="#_horizontal_grids">Horizontal Grids</a> and <a href="#_vertical_grids">Vertical
-Grids</a>). The span of an element is determined by the element&#8217;s <code>span</code> member
-function:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual unsigned span() const;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>By default, an element spans one column or one row. The span can be set to
-any positive integer value using the <code>span</code> function.</p>
+<p>Each element provides information on how it wants to be sized by means of
+<code>min</code> and <code>max</code> limits: a hint that determine its actual extent and how it
+will be placed in the view depending on available window space.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_span"><a class="anchor" href="#_span"></a>span</h2>
+<h2 id="_view_limits"><a class="anchor" href="#_view_limits"></a>view_limits</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Overrides the span of an an enclosed element (<code>subject</code>).</p>
+<p><code>view_limits</code> is a struct that gives us the <code>min</code> and <code>max</code> information:</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_limits
+{
+   point    min = {0.0, 0.0};
+   point    max = {full_extent, full_extent};
+};</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>nspans</code></dt>
+<dt class="hdlist1"><code>full_extent</code></dt>
 <dd>
-<p>An unsigned integer</p>
+<p>An implementation-defined huge number that signifies an unbounded extent.</p>
 </dd>
-<dt class="hdlist1"><code>subject</code></dt>
+<dt class="hdlist1"><code>point</code></dt>
 <dd>
-<p>Instance of <code>Element</code></p>
+<p>A data structure representing a coordinate in a 2D space used to
+specify positions or dimensions within the graphical context.</p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
+<h3 id="_full_limits"><a class="anchor" href="#_full_limits"></a>full_limits</h3>
+<div class="paragraph">
+<p>By default, an element has full limits, meaning there is no constraints on
+its size. It is infinitely resizable:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">span(nspans, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">constexpr view_limits full_limits = {
+   {0.0, 0.0}
+ , {full_extent, full_extent}
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An element with <code>full_limits</code> can be resized from an empty point (zero x and
+y size) up to the full extent of the screen, and beyond (if possible).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An element has a fixed horizontal size if this expression is true:
+<code>limits.min.x == limits.max.x</code>.</p>
+</li>
+<li>
+<p>An element has a fixed vertical size if this expression is true:
+<code>limits.min.y == limits.max.y</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 100}}; // Fixed size</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, full_extent}}; // Fixed width, flexible height</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">{{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The <code>subject</code> will assume a span with the given <code>nspans</code> value.</p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
+<h3 id="_terms_and_expressions"><a class="anchor" href="#_terms_and_expressions"></a>Terms and Expressions</h3>
+<div class="paragraph">
+<p>For the purpose of this document, we will use these terms and expressions:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">limits</dt>
+<dd>
+<p>The limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.min</dt>
+<dd>
+<p>The minimum limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.min.x</dt>
+<dd>
+<p>The minimum horizontal limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.min.y</dt>
+<dd>
+<p>The minimum vertical limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.max</dt>
+<dd>
+<p>The maximum limits of an element</p>
+</dd>
+<dt class="hdlist1">limits.max.x</dt>
+<dd>
+<p>The maximum horizontal limit of an element</p>
+</dd>
+<dt class="hdlist1">limits.max.y</dt>
+<dd>
+<p>The maximum vertical limit of an element</p>
+</dd>
+<dt class="hdlist1">horizontal limits</dt>
+<dd>
+<p>(limits.min.x, limits.max.x)</p>
+</dd>
+<dt class="hdlist1">vertical limits</dt>
+<dd>
+<p>(limits.min.y, limits.max.y)</p>
+</dd>
+<dt class="hdlist1">minimum limits</dt>
+<dd>
+<p>(limits.min.x, limits.min.y)</p>
+</dd>
+<dt class="hdlist1">maximum limits</dt>
+<dd>
+<p>(limits.max.x, limits.max.y)</p>
+</dd>
+<dt class="hdlist1">minimum horizontal limit</dt>
+<dd>
+<p>limits.min.x</p>
+</dd>
+<dt class="hdlist1">maximum horizontal limit</dt>
+<dd>
+<p>limits.max.x</p>
+</dd>
+<dt class="hdlist1">minimum vertical limit</dt>
+<dd>
+<p>limits.min.y</p>
+</dd>
+<dt class="hdlist1">maximum vertical limit</dt>
+<dd>
+<p>limits.max.y</p>
+</dd>
+</dl>
 </div>
 <hr>
 <div class="paragraph">
@@ -244,10 +345,10 @@ any positive integer value using the <code>span</code> function.</p>
   <p>This page was built using the Antora default UI.</p>
   <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
 </footer>
-<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-<script src="../../../_/js/vendor/lunr.js"></script>
-<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
-<script async src="../../../search-index.js"></script>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
   </body>
 </html>

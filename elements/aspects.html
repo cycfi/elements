@@ -71,7 +71,49 @@
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/size_elements.html">Size Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/stretch_elements.html">Stretch Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/align_elements.html">Align Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/margin_elements.html">Margin Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/flow.html">Flow</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -448,9 +490,9 @@ sub-parts of the element composition to make it easier to understand.
 </table>
 </div>
 <div class="paragraph">
-<p>The <code>layer</code> element is a composite element that holds zero or more <code>child'
+<p>The <code>layer</code> element is a composite element that holds zero or more <code>child</code>
 elements. Some of you might have noticed that we already mentioned the
-`layer</code> element before when we were discussing the view’s content in the
+<code>layer</code> element before when we were discussing the view’s content in the
 <a href="#app-and-window">App and Window</a> section: <code>`The content of the `view</code>
 typically contains multiple layers, much like typical graphics
 applications''. Well, actually, this is the same <code>layer</code> thing here. The
@@ -480,17 +522,17 @@ have dealt with in the previous sections.</p>
 <blockquote>
 <div class="paragraph">
 <p>Take note that this example is only for illustrative purposes. The library
-provides easier ways to make sliders. Elements has a gallery a collection of
+provides easier ways to make sliders. Elements has a collection of pre-made,
 reusable element compositions, just like what we do here, but more refined.
-That gallery is constantly growing. Composing elements is fun!</p>
+That collection is constantly growing. Composing elements is fun!</p>
 </div>
 </blockquote>
 </div>
 <div class="paragraph">
 <p>The <code>slider</code> has two parts: the <code>track</code> and the <code>thumb</code>. Here, we make a
 simple track using the same old box. We made it black. Then, we reused the
-same ``Dogs are my favorite people'' label for the thumb. The result looks
-silly, I should say :blush:, but hey, we are trying to make a point!</p>
+same "Dogs are my favorite people" label for the thumb. The result looks
+silly, I should say, but hey, we are trying to make a point!</p>
 </div>
 <div class="listingblock">
 <div class="content">

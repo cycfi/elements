@@ -10,19 +10,20 @@ elements as possible following each child's _maximum horizontal limit_. Once
 a row is full, move to the next row and do the same until the end of the row
 is filled. Repeat the procedure until all the elements are laid out. The
 height of each row is determined by the _maximum vertical limit_ of all the
-elements to be laid out in that row. The following graphic depicts a
-simplified layout scenario for child elements `a` to `r`.
+elements to be laid out in that row.
+
+The following graphic depicts a simplified layout scenario for child elements
+`a` to `r`.
 
 image::/layout/flow.svg[alt="flow", width=380px, role=center]
 
 The child elements arranged in a `flow` composite are automatically re-flowed
 (re-lay-out) when the view size changes.
 
-To have elements laid out using `flow`, you need to make a `flow_composite`.
-
 == flow_composite
 
-Create a `flow_composite` with an indeterminate (dynamic) number of elements.
+Create a `flow_composite` with an indeterminate (dynamic) number of elements
+to have elements laid out using `flow`.
 
 === Notation
 

@@ -31,8 +31,8 @@ limit(limits, subject)
 === Semantics
 
 . The {limits} of `subject` will be set to the specified {limits}
-constrained by the natural {limits} of the `subject` (the natural {limits}
-of the element will not be violated).
+constrained by The natural _limits_ of the `subject`.
+. The natural _limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
 
 == fixed_size
@@ -56,8 +56,8 @@ fixed_size({width, height}, subject)
 === Semantics
 
 . `subject` will be laid out with a fixed `width` and `height`, constrained
-by the natural {limits} of the `subject` (the natural {limits} of the
-element will not be violated).
+by The natural _limits_ of the `subject`.
+. The natural _limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
 
 '''
@@ -83,8 +83,8 @@ hsize(width, subject)
 === Semantics
 
 . `subject` will be laid out with a fixed `width`, constrained by the
-natural _horizontal limits_ of the `subject` (the natural _horizontal
-limits_ of the element will not be violated).
+natural _horizontal limits_ of the `subject`.
+. The natural _horizontal limits_ of the element will not be violated.
 . The natural _vertical limits_ of `subject` will not be affected.
 . Returns instance of `Proxy`.
 
@@ -111,8 +111,8 @@ vsize(height, subject)
 === Semantics
 
 . `subject` will be laid out with a fixed `height`, constrained by the
-natural _vertical limits_ of the `subject` (the natural _vertical limits_
-of the element will not be violated).
+natural _vertical limits_ of the `subject`.
+. The natural _vertical limits_ of the element will not be violated.
 . The natural _horizontal limits_ of `subject` will not be affected.
 . Returns instance of `Proxy`.
 
@@ -196,7 +196,7 @@ vmin_size(height, subject)
 
 . The _minimum vertical limit_ of `subject` will be set to the specified `height`
 constrained by the natural vertical _minimum limits_ of the `subject`.
-. The natural vertical _minimum limits_ of the element will not be violated.
+. The natural _vertical minimum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
 
 '''

@@ -1,4 +1,4 @@
-== Decks
+= Decks
 
 include::../common.adoc[]
 

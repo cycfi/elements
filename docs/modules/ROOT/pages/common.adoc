@@ -18,7 +18,7 @@
 :limits: xref:layout/limits.adoc[limits]
 :view_limits: xref:layout/limits.adoc#_view_limits[view_limits]
 
-:Stretch-Elements: xref:layout/stretch_elements.adoc[Stretch Elements]
+:Stretch-Elements: xref:layout/stretch.adoc[Stretch]
 :Layers: xref:layout/layers.adoc[Layers]
 :Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
 :decks: xref:layout/decks.adoc[Decks]

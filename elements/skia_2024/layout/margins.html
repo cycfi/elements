@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Align Elements :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/align_elements.html">
+    <title>Margins :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/margins.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -78,10 +78,10 @@
     <a class="nav-link" href="limits.html">Limits</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="size_elements.html">Size Elements</a>
+    <a class="nav-link" href="sizing.html">Sizing</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="stretch_elements.html">Stretch Elements</a>
+    <a class="nav-link" href="stretch.html">Stretch</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="span.html">Span</a>
@@ -89,11 +89,11 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="scale.html">Scale</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="align_elements.html">Align Elements</a>
-  </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="margin_elements.html">Margin Elements</a>
+    <a class="nav-link" href="alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="margins.html">Margins</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="floating.html">Floating</a>
@@ -150,14 +150,14 @@
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
     <li><a href="../layout.html">Layout</a></li>
-    <li><a href="align_elements.html">Align Elements</a></li>
+    <li><a href="margins.html">Margins</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
   <div class="version-menu">
-    <a class="version is-current" href="align_elements.html">skia_2024</a>
-    <a class="version" href="../../layout/align_elements.html">master</a>
+    <a class="version is-current" href="margins.html">skia_2024</a>
+    <a class="version is-missing" href="../../index.html">master</a>
   </div>
 </div>
 </div>
@@ -166,34 +166,33 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Align Elements</h1>
+<h1 class="page">Margins</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
-dimensions, or both. There is a comprehensive list of align elements in The
-Elements Library that can be used for various purposes. This section
-catalogues all the available align elements.</p>
+<p>Margins add some space around elements. There is a comprehensive list of
+margin elements in the Elements Library that can be used for various
+purposes. This section catalogues all the available margin elements.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_halign"><a class="anchor" href="#_halign"></a>halign</h2>
+<h2 id="_margin"><a class="anchor" href="#_margin"></a>margin</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/halign.svg" alt="halign" width="345px">
+<img src="../_images/layout/margin.svg" alt="margin" width="302px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) in the x-axis.</p>
+<p>Adds a margin all around an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>align</code></dt>
+<dt class="hdlist1"><code>left</code>, <code>top</code>, <code>right</code>, <code>bottom</code></dt>
 <dd>
 <p><code>float</code></p>
 </dd>
@@ -208,7 +207,7 @@ catalogues all the available align elements.</p>
 <h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">halign(align, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin({left, top, right, bottom}, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -217,30 +216,18 @@ catalogues all the available align elements.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Given a total allocated space <code>X</code>, <code>subject</code> will be positioned
-horizontally to <code>X * align</code>.</p>
+<p>Space is added to the left, top, right, and bottom of the subject with the
+given parameters.</p>
 </li>
 <li>
-<p>The <code>subject</code> will assume its <em>minimum horizontal limit</em>.</p>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
+<code>margin</code> will respect the subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>halign(0.0) // align subject to the left</code></p>
-</li>
-<li>
-<p><code>halign(1.0) // align subject to the right</code></p>
-</li>
-<li>
-<p><code>halign(0.5) // align subject to the center</code></p>
 </li>
 </ol>
 </div>
@@ -249,20 +236,24 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_left"><a class="anchor" href="#_align_left"></a>align_left</h2>
+<h2 id="_margin_left"><a class="anchor" href="#_margin_left"></a>margin_left</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_left.svg" alt="align_left" width="250px">
+<img src="../_images/layout/margin_left.svg" alt="margin_left" width="230px">
 </div>
 </div>
 <div class="paragraph">
-<p>Left-aligns the enclosed element (<code>subject</code>).</p>
+<p>Adds a margin to the left of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>left</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -274,7 +265,7 @@ horizontally to <code>X * align</code>.</p>
 <h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_left(left, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -283,7 +274,15 @@ horizontally to <code>X * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>halign(0.0, subject)</code></p>
+<p>Space is added to the left of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
+<code>margin_left</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -295,20 +294,24 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_center"><a class="anchor" href="#_align_center"></a>align_center</h2>
+<h2 id="_margin_right"><a class="anchor" href="#_margin_right"></a>margin_right</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_center.svg" alt="align_center" width="250px">
+<img src="../_images/layout/margin_right.svg" alt="margin_right" width="230px">
 </div>
 </div>
 <div class="paragraph">
-<p>Center-aligns the enclosed element (<code>subject</code>).</p>
+<p>Adds a margin to the right of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>right</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -320,7 +323,7 @@ horizontally to <code>X * align</code>.</p>
 <h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_right(right, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -329,7 +332,15 @@ horizontally to <code>X * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>halign(0.5, subject)</code></p>
+<p>Space is added to the right of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_right</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
+<code>margin_right</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -341,20 +352,24 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_right"><a class="anchor" href="#_align_right"></a>align_right</h2>
+<h2 id="_margin_top"><a class="anchor" href="#_margin_top"></a>margin_top</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_right.svg" alt="align_right" width="250px">
+<img src="../_images/layout/margin_top.svg" alt="margin_right" width="218px">
 </div>
 </div>
 <div class="paragraph">
-<p>Right-aligns the enclosed element (<code>subject</code>).</p>
+<p>Adds a margin to the top of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>top</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -366,7 +381,7 @@ horizontally to <code>X * align</code>.</p>
 <h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_top(top, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -375,7 +390,15 @@ horizontally to <code>X * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>halign(1.0, subject)</code></p>
+<p>Space is added to the top of the subject with the given parameter.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_top</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
+<code>margin_top</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -387,21 +410,21 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_valign"><a class="anchor" href="#_valign"></a>valign</h2>
+<h2 id="_margin_bottom"><a class="anchor" href="#_margin_bottom"></a>margin_bottom</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/valign.svg" alt="valign" width="163px">
+<img src="../_images/layout/margin_bottom.svg" alt="margin_bottom" width="218px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) in the y-axis.</p>
+<p>Adds a margin to the bottom of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_5"><a class="anchor" href="#_notation_5"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>align</code></dt>
+<dt class="hdlist1"><code>bottom</code></dt>
 <dd>
 <p><code>float</code></p>
 </dd>
@@ -416,7 +439,7 @@ horizontally to <code>X * align</code>.</p>
 <h3 id="_expression_5"><a class="anchor" href="#_expression_5"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">valign(align, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_bottom(bottom, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -425,30 +448,19 @@ horizontally to <code>X * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Given a total allocated space <code>Y</code>, <code>subject</code> will be positioned vertically
-to <code>Y * align</code>.</p>
+<p>Space is added to the to the bottom of the subject with the given
+parameter.</p>
 </li>
 <li>
-<p>The <code>subject</code> will assume its <em>minimum vertical limit</em>.</p>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_bottom</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
+<code>margin_bottom</code> will respect the subject&#8217;s min-max constraints and
+resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_examples_2"><a class="anchor" href="#_examples_2"></a>Examples</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>valign(0.0) // align subject to the top</code></p>
-</li>
-<li>
-<p><code>valign(1.0) // align subject to the right</code></p>
-</li>
-<li>
-<p><code>valign(0.5) // align subject to the middle</code></p>
 </li>
 </ol>
 </div>
@@ -457,32 +469,46 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_top"><a class="anchor" href="#_align_top"></a>align_top</h2>
+<h2 id="_hmargin"><a class="anchor" href="#_hmargin"></a>hmargin</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>(same as <code>margin_left_right</code>)</p>
+</div>
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_top.svg" alt="align_top" width="90px">
+<img src="../_images/layout/hmargin.svg" alt="hmargin" width="302px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the top.</p>
+<p>Adds a margin to the left and right sides of an enclosed element (<code>subject</code>).</p>
 </div>
-<div class="sect2">
-<h3 id="_notation_6"><a class="anchor" href="#_notation_6"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>left</code>, <code>right</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
 </dd>
 </dl>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_expression_6"><a class="anchor" href="#_expression_6"></a>Expression</h3>
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_top(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+hmargin({left, right}, subject)
+
+// variant 2
+hmargin(left, right, subject)
+
+// variant 3
+margin_left_right({left, right}, subject)
+
+// variant 4
+margin_left_right(left, right, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -491,7 +517,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>valign(0.0, subject)</code></p>
+<p>Space is added to the to the left and right sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>hmargin</code> (and variants) does not violate the natural <a href="limits.html" class="xref page">limits</a> of the
+subject. <code>hmargin</code> (and variants) will respect the subject&#8217;s min-max
+constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -503,20 +538,27 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_middle"><a class="anchor" href="#_align_middle"></a>align_middle</h2>
+<h2 id="_vmargin"><a class="anchor" href="#_vmargin"></a>vmargin</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>(same as <code>margin_top_bottom</code>)</p>
+</div>
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_middle.svg" alt="align_middle" width="90px">
+<img src="../_images/layout/vmargin.svg" alt="vmargin" width="218px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the middle.</p>
+<p>Adds a margin to the top and bottom sides of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
-<h3 id="_notation_7"><a class="anchor" href="#_notation_7"></a>Notation</h3>
+<h3 id="_notation_6"><a class="anchor" href="#_notation_6"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>top</code>, <code>bottom</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -525,10 +567,20 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_7"><a class="anchor" href="#_expression_7"></a>Expression</h3>
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_middle(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+vmargin({top, bottom}, subject)
+
+// variant 2
+vmargin(top, bottom, subject)
+
+// variant 3
+margin_top_bottom({top, bottom}, subject)
+
+// variant 4
+margin_top_bottom(top, bottom, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -537,7 +589,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>valign(0.5, subject)</code></p>
+<p>Space is added to the to the top and bottom sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>vmargin</code> (and variants) does not violate the natural <a href="limits.html" class="xref page">limits</a> of the
+subject. <code>vmargin</code> (and variants) will respect the subject&#8217;s min-max
+constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -549,20 +610,24 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_bottom"><a class="anchor" href="#_align_bottom"></a>align_bottom</h2>
+<h2 id="_margin_left_top"><a class="anchor" href="#_margin_left_top"></a>margin_left_top</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_bottom.svg" alt="align_bottom" width="90px">
+<img src="../_images/layout/margin_left_top.svg" alt="margin_left_top" width="232px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the bottom.</p>
+<p>Adds a margin to the left and top sides of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
-<h3 id="_notation_8"><a class="anchor" href="#_notation_8"></a>Notation</h3>
+<h3 id="_notation_7"><a class="anchor" href="#_notation_7"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>left</code>, <code>top</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -571,10 +636,14 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_8"><a class="anchor" href="#_expression_8"></a>Expression</h3>
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_bottom(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_left_top({left, top}, subject)
+
+// variant 2
+margin_left_top(left, top, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -583,7 +652,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>valign(1.0, subject)</code></p>
+<p>Space is added to the to the left and top sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left_top</code> (and variant) does not violate the natural <a href="limits.html" class="xref page">limits</a>
+of the subject. <code>margin_left_top</code> (and variant) will respect the subject&#8217;s
+min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -595,20 +673,24 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_left_top"><a class="anchor" href="#_align_left_top"></a>align_left_top</h2>
+<h2 id="_margin_left_bottom"><a class="anchor" href="#_margin_left_bottom"></a>margin_left_bottom</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_left_top.svg" alt="align_left_top" width="240px">
+<img src="../_images/layout/margin_left_bottom.svg" alt="margin_left_bottom" width="232px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the left-top.</p>
+<p>Adds a margin to the left and bottom sides of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
-<h3 id="_notation_9"><a class="anchor" href="#_notation_9"></a>Notation</h3>
+<h3 id="_notation_8"><a class="anchor" href="#_notation_8"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>left</code>, <code>bottom</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -617,10 +699,14 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_9"><a class="anchor" href="#_expression_9"></a>Expression</h3>
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_top(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_left_bottom({left, bottom}, subject)
+
+// variant 2
+margin_left_bottom(left, bottom, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -629,7 +715,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>align_left(align_top(subject))</code></p>
+<p>Space is added to the to the left and bottom sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_left_bottom</code> (and variant) does not violate the natural
+<a href="limits.html" class="xref page">limits</a> of the subject. <code>margin_left_bottom</code> (and variant) will respect
+the subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -641,20 +736,24 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_center_top"><a class="anchor" href="#_align_center_top"></a>align_center_top</h2>
+<h2 id="_margin_right_top"><a class="anchor" href="#_margin_right_top"></a>margin_right_top</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_center_top.svg" alt="align_center_top" width="240px">
+<img src="../_images/layout/margin_right_top.svg" alt="margin_right_top" width="232px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the center-top.</p>
+<p>Adds a margin to the right and top sides of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
-<h3 id="_notation_10"><a class="anchor" href="#_notation_10"></a>Notation</h3>
+<h3 id="_notation_9"><a class="anchor" href="#_notation_9"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>right</code>, <code>top</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -663,10 +762,14 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_10"><a class="anchor" href="#_expression_10"></a>Expression</h3>
+<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_top(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_right_top({right, top}, subject)
+
+// variant 2
+margin_right_top(right, top, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -675,7 +778,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>align_center(align_top(subject))</code></p>
+<p>Space is added to the to the right and top sides of the subject with the
+given parameters.</p>
+</li>
+<li>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
+</li>
+<li>
+<p>The <code>margin_right_top</code> (and variant) does not violate the natural <a href="limits.html" class="xref page">limits</a>
+of the subject. <code>margin_right_top</code> (and variant) will respect the
+subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
@@ -687,20 +799,24 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_align_right_top"><a class="anchor" href="#_align_right_top"></a>align_right_top</h2>
+<h2 id="_margin_right_bottom"><a class="anchor" href="#_margin_right_bottom"></a>margin_right_bottom</h2>
 <div class="sectionbody">
 <div class="imageblock center">
 <div class="content">
-<img src="../_images/layout/align_right_top.svg" alt="align_right_top" width="240px">
+<img src="../_images/layout/margin_right_bottom.svg" alt="margin_right_bottom" width="232px">
 </div>
 </div>
 <div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the right-top.</p>
+<p>Adds a margin to the right and bottom sides of an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
-<h3 id="_notation_11"><a class="anchor" href="#_notation_11"></a>Notation</h3>
+<h3 id="_notation_10"><a class="anchor" href="#_notation_10"></a>Notation</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>right</code>, <code>bottom</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
 <dt class="hdlist1"><code>subject</code></dt>
 <dd>
 <p>Instance of <code>Element</code></p>
@@ -709,10 +825,14 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_11"><a class="anchor" href="#_expression_11"></a>Expression</h3>
+<h3 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_top(subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
+margin_right_bottom({right, bottom}, subject)
+
+// variant 2
+margin_right_bottom(right, bottom, subject)</code></pre>
 </div>
 </div>
 </div>
@@ -721,283 +841,16 @@ to <code>Y * align</code>.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Equivalent to <code>align_right(align_top(subject))</code></p>
+<p>Space is added to the to the right and bottom sides of the subject with the
+given parameters.</p>
 </li>
 <li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_left_middle"><a class="anchor" href="#_align_left_middle"></a>align_left_middle</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_left_middle.svg" alt="align_left_middle" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the left-middle.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_12"><a class="anchor" href="#_notation_12"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_12"><a class="anchor" href="#_expression_12"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_middle(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_12"><a class="anchor" href="#_semantics_12"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_left(align_middle(subject))</code></p>
+<p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
 </li>
 <li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_center_middle"><a class="anchor" href="#_align_center_middle"></a>align_center_middle</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_center_middle.svg" alt="align_center_middle" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the center-middle.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_13"><a class="anchor" href="#_notation_13"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_13"><a class="anchor" href="#_expression_13"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_middle(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_13"><a class="anchor" href="#_semantics_13"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_center(align_middle(subject))</code></p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_right_middle"><a class="anchor" href="#_align_right_middle"></a>align_right_middle</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_right_middle.svg" alt="align_right_middle" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the right-middle.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_14"><a class="anchor" href="#_notation_14"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_14"><a class="anchor" href="#_expression_14"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_middle(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_14"><a class="anchor" href="#_semantics_14"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_right(align_middle(subject))</code></p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_left_bottom"><a class="anchor" href="#_align_left_bottom"></a>align_left_bottom</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_left_bottom.svg" alt="align_left_bottom" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the left-bottom.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_15"><a class="anchor" href="#_notation_15"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_15"><a class="anchor" href="#_expression_15"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_bottom(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_15"><a class="anchor" href="#_semantics_15"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_left(align_bottom(subject))</code></p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_center_bottom"><a class="anchor" href="#_align_center_bottom"></a>align_center_bottom</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_center_bottom.svg" alt="align_center_bottom" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the center-bottom.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_16"><a class="anchor" href="#_notation_16"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_16"><a class="anchor" href="#_expression_16"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_bottom(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_16"><a class="anchor" href="#_semantics_16"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_center(align_bottom(subject))</code></p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_align_right_bottom"><a class="anchor" href="#_align_right_bottom"></a>align_right_bottom</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/align_right_bottom.svg" alt="align_right_bottom" width="240px">
-</div>
-</div>
-<div class="paragraph">
-<p>Aligns the enclosed element (<code>subject</code>) to the right-bottom.</p>
-</div>
-<div class="sect2">
-<h3 id="_notation_17"><a class="anchor" href="#_notation_17"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expression_17"><a class="anchor" href="#_expression_17"></a>Expression</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_bottom(subject)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_17"><a class="anchor" href="#_semantics_17"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Equivalent to <code>align_right(align_bottom(subject))</code></p>
+<p>The <code>margin_right_bottom</code> (and variant) does not violate the natural
+limits of the subject. <code>margin_right_bottom</code> (and variant) will respect
+the subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>

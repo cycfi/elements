@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Layout :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout.html">
+    <title>Elements :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/elements.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -70,7 +70,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="elements.html">Elements</a>
 <ul class="nav-list">
@@ -79,7 +79,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="layout.html">Layout</a>
 <ul class="nav-list">
@@ -158,14 +158,14 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Elements Library</a></li>
-    <li><a href="layout.html">Layout</a></li>
+    <li><a href="elements.html">Elements</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
   <div class="version-menu">
-    <a class="version is-current" href="layout.html">skia_2024</a>
-    <a class="version" href="../layout.html">master</a>
+    <a class="version is-current" href="elements.html">skia_2024</a>
+    <a class="version is-missing" href="../index.html">master</a>
   </div>
 </div>
 </div>
@@ -174,63 +174,118 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Layout</h1>
+<h1 class="page">Elements</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Elements Library provides a comprehensive set of elements for laying out
-elements in the view, including tiles, grids, flow layouts, floating
-elements, layers, alignment elements, scale elements, and span elements.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Tiles arrange elements in rows or columns, positioning them one after the
-other based on the child element&#8217;s sizing limits.</p>
-</li>
-<li>
-<p>Grids offer a structured layout with rows and columns, using normalized
-coordinate placements.</p>
-</li>
-<li>
-<p>The flow element arranges its children left to right, fitting as many as
-possible within each row, and moves to the next row once full.</p>
-</li>
-<li>
-<p>Floating elements allow for arbitrary positioning within containers.</p>
-</li>
-<li>
-<p>Layers enable elements to be stacked on top of each other.</p>
-</li>
-</ul>
+<p>The Element is the basic building block of the Elements Library. This
+document provides an overview of the various elements available. This section
+will focus on how elements are used, instead of how they are implemented. We
+will deal with the latter in the Customization section.</p>
 </div>
 <div class="paragraph">
-<p>The document also details the use of margins and sizing elements to provide
-proper spacing and ensure elements fit within the layout.</p>
+<p>It suffices to say that elements are implemented as a hierarchy of classes,
+with the <code>element</code> class at the root. The <code>element</code> class provides the
+interface for all elements. The <code>element</code> class is a polymorphic class with
+virtual functions for rendering, layout, and event handling.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Alignment elements ensure correct positioning.</p>
-</li>
-<li>
-<p>Scale elements adjust size proportionally.</p>
-</li>
-<li>
-<p>Span elements extend across multiple grid cells.</p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h3>
+<div class="paragraph">
+<p>The Elements Library uses a couple of simple concepts to constrain the types
+of elements that can be used with templates and template functions. The
+<code>Element</code> concept constrains the type of a class that derives from the
+<code>element</code> class, while the <code>ElementPtr</code> concept constrains the type of a
+pointer to an element.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace concepts
+{
+    template &lt;typename T&gt;
+    concept Element = std::is_base_of_v&lt;element, std::decay_t&lt;T&gt;&gt;;
+
+    template&lt;typename T&gt;
+    concept ElementPtr = requires(T p)
+    {
+        { *p } -&gt; std::convertible_to&lt;element&amp;&gt;;
+    };
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_pointers"><a class="anchor" href="#_shared_pointers"></a>Shared Pointers</h3>
+<div class="paragraph">
+<p>Most elements are held by value, but they can also be held by shared
+pointers. Elements held by shared pointers are necessary when elements are
+placed inside homogeneously typed containers such as <code>std::vector</code>. The
+library provides a <code>share</code> function for converting an element to a shared
+pointer. A similar facility is provided for converting a shared pointer to a
+weak pointer.</p>
 </div>
 <div class="paragraph">
-<p>By combining these various layout elements, developers can create versatile,
-responsive, and visually consistent user interfaces that adapt seamlessly
-across different devices and screen sizes.</p>
+<p>There are a couple of type aliases that are useful when dealing
+with shared pointers:</p>
+</div>
+<div class="sect3">
+<h4 id="_type_aliases"><a class="anchor" href="#_type_aliases"></a>Type aliases</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">using element_ptr = std::shared_ptr&lt;element&gt;;
+using element_const_ptr = std::shared_ptr&lt;element const&gt;;
+using weak_element_ptr = std::weak_ptr&lt;element&gt;;
+using weak_element_const_ptr = std::weak_ptr&lt;element const&gt;;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>Instance of type <code>element</code></p>
+</dd>
+<dt class="hdlist1"><code>ep</code></dt>
+<dd>
+<p>Instance of type <code>std::shared_ptr&lt;E&gt;</code>, where <code>E</code> is a type that conforms
+to the <code>Element</code> concept.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">share(e)    <i class="conum" data-value="1"></i><b>(1)</b>
+get(ep)     <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h4>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Returns a shared pointer from element <code>e</code>. The element is copied, or
+moved, into the shared pointer.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Returns a weak pointer from the shared pointer to an element, <code>ep</code>.</td>
+</tr>
+</table>
 </div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
 <em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
 </div>
 </div>
 </div>

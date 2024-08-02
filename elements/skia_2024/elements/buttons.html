@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Stretch :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/layout/stretch.html">
+    <title>Buttons :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/elements/buttons.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -74,8 +74,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../elements.html">Elements</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="buttons.html">Buttons</a>
   </li>
 </ul>
   </li>
@@ -84,43 +84,43 @@
     <a class="nav-link" href="../layout.html">Layout</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="limits.html">Limits</a>
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="sizing.html">Sizing</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="stretch.html">Stretch</a>
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="span.html">Span</a>
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="scale.html">Scale</a>
+    <a class="nav-link" href="../layout/span.html">Span</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="alignment.html">Alignment</a>
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="margins.html">Margins</a>
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="floating.html">Floating</a>
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tiles.html">Tiles</a>
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="grids.html">Grids</a>
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="layers.html">Layers</a>
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="decks.html">Decks</a>
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="flow.html">Flow</a>
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
   </li>
 </ul>
   </li>
@@ -158,14 +158,14 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
-    <li><a href="../layout.html">Layout</a></li>
-    <li><a href="stretch.html">Stretch</a></li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="buttons.html">Buttons</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
   <div class="version-menu">
-    <a class="version is-current" href="stretch.html">skia_2024</a>
+    <a class="version is-current" href="buttons.html">skia_2024</a>
     <a class="version is-missing" href="../../index.html">master</a>
   </div>
 </div>
@@ -175,76 +175,107 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Stretch</h1>
+<h1 class="page">Buttons</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Resizable elements are elements with <em>minimum limits</em> that are less than the
-<em>maximum limits</em> in either x or y dimensions or both. Resizable elements can
-therefore stretch if there is extra available space allocated to it beyond
-its minimum limit. When two or more resizable elements are placed side by
-side in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, the element&#8217;s "stretchiness"
-determines how much extra space is given to it. The element&#8217;s "stretchiness"
-is determined by the element&#8217;s <code>stretch</code> member function:</p>
+<p>Buttons are used to trigger actions or events. Buttons in the Elements
+Library are stylable with separate elements for behavior and appearance.
+Three types of buttons are available: momentary, toggle, and latching:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">virtual view_stretch stretch() const;</code></pre>
-</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Momentary buttons </dt>
+<dd>
+<p>Buttons that stay on while clicked. They are typically used to trigger an
+action.</p>
+</dd>
+<dt class="hdlist1">Toggle buttons </dt>
+<dd>
+<p>Buttons that alternate their state with each press. They are used to
+switch between two states.</p>
+</dd>
+<dt class="hdlist1">Latching buttons </dt>
+<dd>
+<p>Buttons are buttons that stay on until programmatically reset.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p>where <code>view_stretch</code> is a struct declared as:</p>
+<p>These classes delegate the rendering to a button styler subject. This
+division of responsibilities allows for more flexibility in dictating the
+button&#8217;s appearance and interaction. The button classes handle user
+interactions, while the button styler manages the button&#8217;s visual
+presentation. With this pattern, different stylers can be implemented for
+various visual representations, for instance, plain buttons, radio buttons,
+slide switches, checkboxes, and more.</p>
 </div>
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct view_stretch
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">class basic_button;           // Base class for momentary buttons
+class basic_toggle_button;    // Base class for toggle buttons
+class basic_latching_button;  // Base class for latching buttons</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace concepts
 {
-   float    x = 1.0;
-   float    y = 1.0;
-};</code></pre>
+   template &lt;typename T&gt;
+   concept MomentaryButton = std::is_base_of_v&lt;basic_button, std::decay_t&lt;T&gt;&gt;;
+
+   template &lt;typename T&gt;
+   concept ToggleButton = std::is_base_of_v&lt;basic_toggle_button, std::decay_t&lt;T&gt;&gt;;
+
+   template &lt;typename T&gt;
+   concept LatchingButton = std::is_base_of_v&lt;basic_latching_button, std::decay_t&lt;T&gt;&gt;;
+
+}</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The <code>view_stretch</code> <code>x</code> and <code>y</code> members determine how much an element can
-stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
-2.0 means that the element is able to stretch twice as much compared to its
-siblings in an <a href="#htile">htile</a> or <a href="#vtile">vtile</a>, assuming they have the
-default 1.0 stretchiness.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_hstretch"><a class="anchor" href="#_hstretch"></a>hstretch</h2>
-<div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/hstretch.svg" alt="hstretch" width="232px">
-</div>
-</div>
-<div class="paragraph">
-<p>Overrides the horizontal stretchiness of an an enclosed element (<code>subject</code>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>stretch</code></dt>
+<dt class="hdlist1"><code>styler</code></dt>
 <dd>
-<p>A scalar value</p>
+<p>Styler instance that conforms to the Element concept.</p>
 </dd>
-<dt class="hdlist1"><code>subject</code></dt>
+<dt class="hdlist1"><code>MBase</code></dt>
 <dd>
-<p>Instance of <code>Element</code></p>
+<p>Type that conforms to the MomentaryButton concept.</p>
+</dd>
+<dt class="hdlist1"><code>TBase</code></dt>
+<dd>
+<p>Type that conforms to the ToggleButton concept.</p>
+</dd>
+<dt class="hdlist1"><code>LBase</code></dt>
+<dd>
+<p>Type that conforms to the LatchingButton concept.</p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hstretch(stretch, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Basic default buttons
+momentary_button(styler);
+toggle_button(styler);
+latching_button(styler);
+
+// Custom buttons
+momentary_button&lt;MBase&gt;(styler);
+toggle_button&lt;TBase&gt;(styler);
+latching_button&lt;LBase&gt;(styler);</code></pre>
 </div>
 </div>
 </div>
@@ -253,93 +284,119 @@ default 1.0 stretchiness.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
+<p><code>momentary_button</code>
+is a function that creates a momentary button with the given styler
+element. <code>MBase</code>, if provided, is the base type that must conform to
+the <code>MomentaryButton</code> concept.</p>
 </li>
 <li>
-<p>The stretch value has no effect to elements with fixed horizontal size.</p>
+<p><code>toggle_button</code>
+is a function that creates a toggle button with the given styler
+element. <code>TBase</code>, if provided,  is the the base type that must conform
+to the <code>ToggleButton</code> concept.</p>
 </li>
 <li>
-<p>Returns instance of <code>Proxy</code>.</p>
+<p><code>latching_button</code>
+is a function that creates a latching button with the given styler
+element. <code>LBase</code>, if provided,  is the the base type that must conform
+to the <code>LatchingButton</code> concept.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>For example, the image below shows how three elements are laid out in an
-<code>htile</code>, with stretch values of <code>1.0</code>, <code>1.0</code> and <code>2.0</code>, respectively:</p>
-</div>
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/htile-stretch.svg" alt="htile-stretch" width="232px">
-</div>
-</div>
-<div class="paragraph">
-<p>The element with the <code>2.0</code> stretch value stretches twice as much compared to
-its siblings.</p>
+<p>The provided base types <code>MBase</code>, <code>TBase</code>, and <code>LBase</code> offer the flexibility
+to use custom button behavior, provided they adhere to their respective
+concepts.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vstretch"><a class="anchor" href="#_vstretch"></a>vstretch</h2>
+<h2 id="_button_styler"><a class="anchor" href="#_button_styler"></a>Button Styler</h2>
 <div class="sectionbody">
-<div class="imageblock center">
-<div class="content">
-<img src="../_images/layout/vstretch.svg" alt="vstretch" width="316px">
-</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+This section is an advanced topic only relevant to those who want to
+write custom buttons. This section may be skipped by most users.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Overrides the vertical stretchiness of an an enclosed element (<code>subject</code>).</p>
+<p>The button styler is a separate element that is responsible for rendering the
+button. The communication with the button styler is done via the
+<code>receiver&lt;button_state&gt;</code> or a <code>receiver&lt;int&gt;</code> APIs. These APIs provide a
+means to update the button styler about changes in button&#8217;s state to allow
+the styler to adjust the visual representation accordingly.</p>
 </div>
-<div class="sect2">
-<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>stretch</code></dt>
-<dd>
-<p>A scalar value</p>
-</dd>
-<dt class="hdlist1"><code>subject</code></dt>
-<dd>
-<p>Instance of <code>Element</code></p>
-</dd>
-</dl>
+<div class="paragraph">
+<p>If the button styler follows a <code>receiver&lt;int&gt;</code> API, it will receive in
+integer with these possible values:</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vstretch(stretch, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">   0: value=false, hilite=false
+   1: value=false, hilite=true
+   2: value=true,  hilite=false
+   3: value=true,  hilite=true</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If the button styler follows a <code>receiver&lt;button_state&gt;</code> API, it will receive
+a <code>button_state</code> when the button&#8217;s state changes. This has a richer API
+compared to the former, allowing more nuanced button rendering:</p>
 </div>
 <div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
-</li>
-<li>
-<p>The stretch value has no effect to elements with fixed <em>vertical limits</em>.</p>
-</li>
-<li>
-<p>Returns instance of <code>Proxy</code>.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>For example, the image below shows how three elements are laid out in an
-<code>htile</code>, with stretch values of <code>0.5</code>, <code>1.0</code> and <code>1.5</code>, respectively:</p>
-</div>
-<div class="imageblock center">
+<h3 id="_button_state"><a class="anchor" href="#_button_state"></a>button_state</h3>
+<div class="listingblock">
 <div class="content">
-<img src="../_images/layout/vtile-stretch.svg" alt="vtile-stretch" width="232px">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct button_state
+{
+   bool              value : 1      = false;
+   bool              hilite : 1     = false;
+   bool              tracking : 1   = false;
+   bool              enabled : 1    = true;
+};</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The element with the <code>0.5</code> stretch value stretches half less, while the
-element with the <code>1.5</code> stretches half more than the default.</p>
+<p><code>button_state</code> is struct struct for maintaining and managing the state of a
+button. This structure captures the various states that a button can have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>value</code>: The button&#8217;s value; 0(off) or 1(on).</p>
+</li>
+<li>
+<p><code>hilite</code>: True if the button is highlighted.</p>
+</li>
+<li>
+<p><code>tracking</code>: True if the mouse button being pressed.</p>
+</li>
+<li>
+<p><code>enabled</code>: True if the button is enabled.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+The button styler is just an element and does not have to follow the
+<code>receiver</code> API. If that&#8217;s the case, then the button rendering will be static,
+and not adjust to state changes. This may still be useful in certain cases.
+</td>
+</tr>
+</table>
 </div>
 <hr>
 <div class="paragraph">

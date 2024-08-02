@@ -66,8 +66,6 @@ image::/layout/htile-stretch.svg[alt="htile-stretch", width=232px, role=center]
 The element with the `2.0` stretch value stretches twice as much compared to
 its siblings.
 
-'''
-
 == vstretch
 
 image::/layout/vstretch.svg[alt="vstretch", width=316px, role=center]

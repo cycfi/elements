@@ -1,6 +1,8 @@
 * xref:gallery.adoc[Gallery]
 * xref:setup.adoc[Setup and Installation]
 * xref:aspects.adoc[Design Aspects]
+* xref:elements.adoc[Elements]
+** xref:elements/buttons.adoc[Buttons]
 * xref:layout.adoc[Layout]
 ** xref:layout/limits.adoc[Limits]
 ** xref:layout/sizing.adoc[Sizing]

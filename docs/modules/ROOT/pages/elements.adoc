@@ -1,0 +1,86 @@
+= Elements
+
+include::common.adoc[]
+
+== Overview
+
+The Element is the basic building block of the Elements Library. This
+document provides an overview of the various elements available. This section
+will focus on how elements are used, instead of how they are implemented. We
+will deal with the latter in the Customization section.
+
+It suffices to say that elements are implemented as a hierarchy of classes,
+with the `element` class at the root. The `element` class provides the
+interface for all elements. The `element` class is a polymorphic class with
+virtual functions for rendering, layout, and event handling.
+
+=== Concepts
+
+The Elements Library uses a couple of simple concepts to constrain the types
+of elements that can be used with templates and template functions. The
+`Element` concept constrains the type of a class that derives from the
+`element` class, while the `ElementPtr` concept constrains the type of a
+pointer to an element.
+
+[,c++]
+----
+namespace concepts
+{
+    template <typename T>
+    concept Element = std::is_base_of_v<element, std::decay_t<T>>;
+
+    template<typename T>
+    concept ElementPtr = requires(T p)
+    {
+        { *p } -> std::convertible_to<element&>;
+    };
+}
+----
+
+=== Shared Pointers
+
+Most elements are held by value, but they can also be held by shared
+pointers. Elements held by shared pointers are necessary when elements are
+placed inside homogeneously typed containers such as `std::vector`. The
+library provides a `share` function for converting an element to a shared
+pointer. A similar facility is provided for converting a shared pointer to a
+weak pointer.
+
+There are a couple of type aliases that are useful when dealing
+with shared pointers:
+
+==== Type aliases
+[,c++]
+----
+using element_ptr = std::shared_ptr<element>;
+using element_const_ptr = std::shared_ptr<element const>;
+using weak_element_ptr = std::weak_ptr<element>;
+using weak_element_const_ptr = std::weak_ptr<element const>;
+----
+
+==== Notation
+
+`e`::
+    Instance of type `element`
+`ep`::
+    Instance of type `std::shared_ptr<E>`, where `E` is a type that conforms
+    to the `Element` concept.
+
+==== Expressions
+
+[,c++]
+----
+share(e)    // <1>
+get(ep)     // <2>
+----
+
+==== Semantics
+
+<1> Returns a shared pointer from element `e`. The element is copied, or
+    moved, into the shared pointer.
+<2> Returns a weak pointer from the shared pointer to an element, `ep`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

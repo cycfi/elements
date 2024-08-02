@@ -34,7 +34,7 @@ namespace cycfi::elements
     *  \struct button_state
     *
     *  \brief
-    *    A structure to maintain and manage the state of a button.
+    *    A struct for maintaining and managing the state of a button.
     *
     *    This structure captures the various states that a button can have:
     *    - `value`: The button's value; 0(off) or 1(on).
@@ -44,17 +44,10 @@ namespace cycfi::elements
     */
    struct button_state
    {
-                        button_state()
-                         : value{false}
-                         , hilite{false}
-                         , tracking{false}
-                         , enabled{true}
-                        {}
-
-      bool              value : 1;
-      bool              hilite : 1;
-      bool              tracking : 1;
-      bool              enabled : 1;
+      bool              value : 1      = false;
+      bool              hilite : 1     = false;
+      bool              tracking : 1   = false;
+      bool              enabled : 1    = false;
    };
 
    /**
@@ -75,7 +68,7 @@ namespace cycfi::elements
     *    plain buttons, radio buttons, slide switches, checkboxes, and more.
     *
     *    The communication with the button styler is done via the
-    *    `receiver<button_state>` or a `receiver<int>` API. These APIs
+    *    `receiver<button_state>` or a `receiver<int>` APIs. These APIs
     *    provide a means for the `basic_button` to update the button styler
     *    about changes in button's state to allow the styler to adjust the
     *    visual representation accordingly.

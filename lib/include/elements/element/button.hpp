@@ -47,7 +47,7 @@ namespace cycfi::elements
       bool              value : 1      = false;
       bool              hilite : 1     = false;
       bool              tracking : 1   = false;
-      bool              enabled : 1    = false;
+      bool              enabled : 1    = true;
    };
 
    /**

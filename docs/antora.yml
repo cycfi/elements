@@ -1,6 +1,6 @@
 name: elements
 title: Elements Library
-version: skia_2024
+version: docs_2024
 start_page: index.adoc
 asciidoc:
   attributes:

@@ -153,3 +153,114 @@ with these defaults:
 | corner_radius_bottom_right    | `corner_radius`
 |===
 
+=== Convenience Functions
+
+The following convenience functions are provided to create commonly used
+buttons. These functions simplify button creation, allowing users to quickly
+implement standard button types with minimal effort.
+
+=== Notation
+
+`label`                 :: An object of type std::string.
+`bst`                   :: A button styler instance.
+`size`                  :: The button's relative size of type `float`.
+`color`                 :: An object of type `color`.
+`icon_id`               :: Unicode code point of type `std::uint32_t` from the
+
+`MBase`                 :: Type that conforms to the MomentaryButton concept.
+`TBase`                 :: Type that conforms to the ToggleButton concept.
+`LBase`                 :: Type that conforms to the LatchingButton concept.
+
+=== Expressions
+
+[,c++]
+----
+
+// Momentary buttons
+button(label)
+button(label, size)
+button(label, size, color)
+button<MBase>(label)
+button<MBase>(label, size)
+button<MBase>(label, size, color)
+
+// Momentary buttons with icon to the left
+button(icon_id, label, size)
+button(icon_id, label, size, color)
+button<MBase>(icon_id, label, size)
+button<MBase>(icon_id, label, size, color)
+
+// Momentary buttons with icon to the right
+button(label, icon_id, size)
+button(label, icon_id, size, color)
+button<MBase>(label, icon_id, size)
+button<MBase>(label, icon_id, size, color)
+
+// Toggle buttons
+toggle_button(label)
+toggle_button(label, size)
+toggle_button(label, size, color)
+toggle_button<TBase>(label)
+toggle_button<TBase>(label, size)
+toggle_button<TBase>(label, size, color)
+
+// Toggle buttons with icon to the left
+toggle_button(icon_id, label, size)
+toggle_button(icon_id, label, size, color)
+toggle_button<TBase>(icon_id, label, size)
+toggle_button<TBase>(icon_id, label, size, color)
+
+// Toggle buttons with icon to the right
+toggle_button(label, icon_id, size)
+toggle_button(label, icon_id, size, color)
+toggle_button<TBase>(label, icon_id, size)
+toggle_button<TBase>(label, icon_id, size, color)
+
+// Latching buttons
+latching_button(label)
+latching_button(label, size)
+latching_button(label, size, color)
+latching_button<LBase>(label)
+latching_button<LBase>(label, size)
+latching_button<LBase>(label, size, color)
+
+// Latching buttons with icon to the left
+latching_button(icon_id, label, size)
+latching_button(icon_id, label, size, color)
+latching_button<LBase>(icon_id, label, size)
+latching_button<LBase>(icon_id, label, size, color)
+
+// Latching buttons with icon to the right
+latching_button(label, icon_id, size)
+latching_button(label, icon_id, size, color)
+latching_button<LBase>(label, icon_id, size)
+latching_button<LBase>(label, icon_id, size, color)
+
+----
+
+=== Semantics
+
+These are forwarding shortcuts to the `button_styler` expressions. They
+create a button styler with the specified properties and pass it to the
+corresponding button creation function.
+
+Example:
+
+----
+[,c++]
+////////////////////////////////////////////////////////////////////////////
+// Make a momentary button with label
+////////////////////////////////////////////////////////////////////////////
+template <concepts::MomentaryButton Base = basic_button>
+inline auto button(
+   std::string label
+ , float size = 1.0
+ , color body_color = get_theme().default_button_color)
+{
+   return momentary_button<Base>(
+      button_styler{std::move(label)}
+         .size(size)
+         .body_color(body_color)
+   );
+}
+----

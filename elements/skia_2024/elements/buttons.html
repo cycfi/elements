@@ -77,6 +77,9 @@
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="buttons.html">Buttons</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="button_stylers.html">Button Stylers</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -144,9 +147,6 @@
         <li class="version">
           <a href="../../index.html">master</a>
         </li>
-        <li class="version">
-          <a href="../../docs_2024/index.html">docs_2024</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -170,7 +170,6 @@
   <div class="version-menu">
     <a class="version is-current" href="buttons.html">skia_2024</a>
     <a class="version is-missing" href="../../index.html">master</a>
-    <a class="version" href="../../docs_2024/elements/buttons.html">docs_2024</a>
   </div>
 </div>
 </div>
@@ -208,8 +207,8 @@ switch between two states.</p>
 </div>
 <div class="paragraph">
 <p>These classes delegate the rendering to a button styler subject. This
-division of responsibilities allows for more flexibility in dictating the
-button&#8217;s appearance and interaction. The button classes handle user
+separation of responsibilities provides greater flexibility in defining the
+button&#8217;s appearance and behavior. The button classes handle user
 interactions, while the button styler manages the button&#8217;s visual
 presentation. With this pattern, different stylers can be implemented for
 various visual representations, for instance, plain buttons, radio buttons,
@@ -316,6 +315,195 @@ concepts.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_on_click"><a class="anchor" href="#_on_click"></a>On Click</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Buttons include an <code>on_click</code> callable object, which is called whenever the
+button is clicked.</p>
+</div>
+<div class="sect2">
+<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>btn</code></dt>
+<dd>
+<p>A Button instance.</p>
+</dd>
+<dt class="hdlist1"><code>f</code>  </dt>
+<dd>
+<p>A callback function with the signature <code>void(bool state)</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click = f;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
+<div class="paragraph">
+<p>The type of the <code>on_click</code> callable object is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">std::function&lt;void(bool state))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The client provides a callback function, typically a c++ lambda, that will be
+called when the button is clicked. The <code>state</code> argument indicates whether the
+button is ON (<code>true</code>) or OFF (<code>false</code>).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>on_click</code> callback is called at the trailing edge of the click, just
+before release.</p>
+</li>
+<li>
+<p>Momentary and latching buttons will always have a state of <code>true</code> when
+its <code>on_click</code> callback is called.</p>
+</li>
+<li>
+<p>Toggle buttons will will have a state that alternates between <code>true</code> and
+<code>false</code> with each click.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click = [](bool state)
+{
+   std::cout &lt;&lt; "Button clicked: " &lt;&lt; state &lt;&lt; std::endl;
+};</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enabledisable"><a class="anchor" href="#_enabledisable"></a>Enable/Disable</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Buttons can be enabled or disabled. When disabled, the button will not
+respond to user clicks and, if the button styler handles it, will render
+differently to indicate that it is disabled.</p>
+</div>
+<div class="sect2">
+<h3 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>btn</code> </dt>
+<dd>
+<p>A Button instance.</p>
+</dd>
+<dt class="hdlist1"><code>state</code>  </dt>
+<dd>
+<p>A boolean value indicating whether the button is enabled or disabled.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.enable(state)    <i class="conum" data-value="1"></i><b>(1)</b>
+btn.is_enabled()     <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Pass <code>true</code> to the <code>state</code> argument to enable the button, or
+<code>false</code> to disable it. When disabled, the button will not respond
+to clicks.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Returns <code>true</code> if the button is enabled, and <code>false</code> otherwise.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_value"><a class="anchor" href="#_value"></a>Value</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The value of a button is a boolean that indicates whether the button is ON
+(<code>true</code>) or OFF (<code>false</code>). The value of a button can be set programmatically
+via the <code>receiver&lt;bool&gt;</code> API.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+receiver&lt;T&gt; is mixin class that provides a common interface for
+setting and querying the values of type <code>T</code> via virtual member
+functions, <code>value()</code> and <code>value(val)</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>btn</code>    </dt>
+<dd>
+<p>A Button instance.</p>
+</dd>
+<dt class="hdlist1"><code>val</code>    </dt>
+<dd>
+<p>A boolean value.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value(val)       <i class="conum" data-value="1"></i><b>(1)</b>
+btn.vauel()          <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Sets the value of the button to <code>val</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Returns the current value of the button.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_button_styler"><a class="anchor" href="#_button_styler"></a>Button Styler</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
@@ -334,26 +522,13 @@ write custom buttons. This section may be skipped by most users.
 <div class="paragraph">
 <p>The button styler is a separate element that is responsible for rendering the
 button. The communication with the button styler is done via the
-<code>receiver&lt;button_state&gt;</code> or a <code>receiver&lt;int&gt;</code> APIs. These APIs provide a
-means to update the button styler about changes in button&#8217;s state to allow
-the styler to adjust the visual representation accordingly.</p>
+<code>receiver&lt;button_state&gt;</code> API. This API provides a means to update the button
+styler about changes in button&#8217;s state to allow the styler to adjust the
+visual representation accordingly.</p>
 </div>
 <div class="paragraph">
-<p>If the button styler follows a <code>receiver&lt;int&gt;</code> API, it will receive in
-integer with these possible values:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">   0: value=false, hilite=false
-   1: value=false, hilite=true
-   2: value=true,  hilite=false
-   3: value=true,  hilite=true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If the button styler follows a <code>receiver&lt;button_state&gt;</code> API, it will receive
-a <code>button_state</code> when the button&#8217;s state changes. This has a richer API
-compared to the former, allowing more nuanced button rendering:</p>
+<p>If the button styler is as a subclass of <code>receiver&lt;button_state&gt;</code> API, it
+will receive a <code>button_state</code> when the button&#8217;s state changes:</p>
 </div>
 <div class="sect2">
 <h3 id="_button_state"><a class="anchor" href="#_button_state"></a>button_state</h3>
@@ -361,10 +536,10 @@ compared to the former, allowing more nuanced button rendering:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct button_state
 {
-   bool              value : 1      = false;
-   bool              hilite : 1     = false;
-   bool              tracking : 1   = false;
-   bool              enabled : 1    = true;
+   bool    value : 1      = false;
+   bool    hilite : 1     = false;
+   bool    tracking : 1   = false;
+   bool    enabled : 1    = true;
 };</code></pre>
 </div>
 </div>
@@ -378,7 +553,8 @@ button. This structure captures the various states that a button can have:</p>
 <p><code>value</code>: The button&#8217;s value; 0(off) or 1(on).</p>
 </li>
 <li>
-<p><code>hilite</code>: True if the button is highlighted.</p>
+<p><code>hilite</code>: True if the button is highlighted (when the mouse is
+hovering over the button).</p>
 </li>
 <li>
 <p><code>tracking</code>: True if the mouse button being pressed.</p>

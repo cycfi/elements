@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Stretch :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/docs_2024/elements/button_stylers.html">
+    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/elements/button_stylers.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="elements" data-version="docs_2024">
+<div class="nav-container" data-component="elements" data-version="skia_2024">
   <aside class="nav">
     <div class="panels">
       <div class="navbar-item search hide-for-print">
@@ -135,20 +135,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Elements Library</span>
-    <span class="version">docs_2024</span>
+    <span class="version">skia_2024</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="../../skia_2024/index.html">Elements Library</a></div>
+      <div class="title"><a href="../index.html">Elements Library</a></div>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../skia_2024/index.html">skia_2024</a>
+        <li class="version is-current is-latest">
+          <a href="../index.html">skia_2024</a>
         </li>
         <li class="version">
           <a href="../../index.html">master</a>
-        </li>
-        <li class="version is-current">
-          <a href="../index.html">docs_2024</a>
         </li>
       </ul>
     </li>
@@ -160,7 +157,7 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../skia_2024/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
@@ -169,11 +166,10 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">docs_2024</button>
+  <button class="version-menu-toggle" title="Show other versions of page">skia_2024</button>
   <div class="version-menu">
-    <a class="version is-missing" href="../../skia_2024/index.html">skia_2024</a>
+    <a class="version is-current" href="button_stylers.html">skia_2024</a>
     <a class="version is-missing" href="../../index.html">master</a>
-    <a class="version is-current" href="button_stylers.html">docs_2024</a>
   </div>
 </div>
 </div>
@@ -506,150 +502,6 @@ with these defaults:</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_convenience_functions"><a class="anchor" href="#_convenience_functions"></a>Convenience Functions</h3>
-<div class="paragraph">
-<p>The following convenience functions are provided to create commonly used
-buttons. These functions simplify button creation, allowing users to quickly
-implement standard button types with minimal effort.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>label</code>                 </dt>
-<dd>
-<p>An object of type std::string.</p>
-</dd>
-<dt class="hdlist1"><code>bst</code>                   </dt>
-<dd>
-<p>A button styler instance.</p>
-</dd>
-<dt class="hdlist1"><code>size</code>                  </dt>
-<dd>
-<p>The button&#8217;s relative size of type <code>float</code>.</p>
-</dd>
-<dt class="hdlist1"><code>color</code>                 </dt>
-<dd>
-<p>An object of type <code>color</code>.</p>
-</dd>
-<dt class="hdlist1"><code>icon_id</code>               </dt>
-<dd>
-<p>Unicode code point of type <code>std::uint32_t</code> from the</p>
-</dd>
-<dt class="hdlist1"><code>MBase</code>                 </dt>
-<dd>
-<p>Type that conforms to the MomentaryButton concept.</p>
-</dd>
-<dt class="hdlist1"><code>TBase</code>                 </dt>
-<dd>
-<p>Type that conforms to the ToggleButton concept.</p>
-</dd>
-<dt class="hdlist1"><code>LBase</code>                 </dt>
-<dd>
-<p>Type that conforms to the LatchingButton concept.</p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Momentary buttons
-button(label)
-button(label, size)
-button(label, size, color)
-button&lt;MBase&gt;(label)
-button&lt;MBase&gt;(label, size)
-button&lt;MBase&gt;(label, size, color)
-
-// Momentary buttons with icon to the left
-button(icon_id, label, size)
-button(icon_id, label, size, color)
-button&lt;MBase&gt;(icon_id, label, size)
-button&lt;MBase&gt;(icon_id, label, size, color)
-
-// Momentary buttons with icon to the right
-button(label, icon_id, size)
-button(label, icon_id, size, color)
-button&lt;MBase&gt;(label, icon_id, size)
-button&lt;MBase&gt;(label, icon_id, size, color)
-
-// Toggle buttons
-toggle_button(label)
-toggle_button(label, size)
-toggle_button(label, size, color)
-toggle_button&lt;TBase&gt;(label)
-toggle_button&lt;TBase&gt;(label, size)
-toggle_button&lt;TBase&gt;(label, size, color)
-
-// Toggle buttons with icon to the left
-toggle_button(icon_id, label, size)
-toggle_button(icon_id, label, size, color)
-toggle_button&lt;TBase&gt;(icon_id, label, size)
-toggle_button&lt;TBase&gt;(icon_id, label, size, color)
-
-// Toggle buttons with icon to the right
-toggle_button(label, icon_id, size)
-toggle_button(label, icon_id, size, color)
-toggle_button&lt;TBase&gt;(label, icon_id, size)
-toggle_button&lt;TBase&gt;(label, icon_id, size, color)
-
-// Latching buttons
-latching_button(label)
-latching_button(label, size)
-latching_button(label, size, color)
-latching_button&lt;LBase&gt;(label)
-latching_button&lt;LBase&gt;(label, size)
-latching_button&lt;LBase&gt;(label, size, color)
-
-// Latching buttons with icon to the left
-latching_button(icon_id, label, size)
-latching_button(icon_id, label, size, color)
-latching_button&lt;LBase&gt;(icon_id, label, size)
-latching_button&lt;LBase&gt;(icon_id, label, size, color)
-
-// Latching buttons with icon to the right
-latching_button(label, icon_id, size)
-latching_button(label, icon_id, size, color)
-latching_button&lt;LBase&gt;(label, icon_id, size)
-latching_button&lt;LBase&gt;(label, icon_id, size, color)</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="paragraph">
-<p>These are forwarding shortcuts to the <code>button_styler</code> expressions. They
-create a button styler with the specified properties and pass it to the
-corresponding button creation function.</p>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">[,c++]
-////////////////////////////////////////////////////////////////////////////
-// Make a momentary button with label
-////////////////////////////////////////////////////////////////////////////
-template &lt;concepts::MomentaryButton Base = basic_button&gt;
-inline auto button(
-   std::string label
- , float size = 1.0
- , color body_color = get_theme().default_button_color)
-{
-   return momentary_button&lt;Base&gt;(
-      button_styler{std::move(label)}
-         .size(size)
-         .body_color(body_color)
-   );
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>

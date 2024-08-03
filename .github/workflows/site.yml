@@ -1,9 +1,10 @@
 name: Publish to GitHub Pages with Lunr Search Extension
-on: 
+on:
   push:
     branches:
       - master
       - skia_2024
+      - docs_2024
 jobs:
   build:
     runs-on: ubuntu-latest

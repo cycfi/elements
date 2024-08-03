@@ -21,4 +21,10 @@
 :Stretch-Elements: xref:layout/stretch.adoc[Stretch]
 :Layers: xref:layout/layers.adoc[Layers]
 :Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
-:decks: xref:layout/decks.adoc[Decks]
+:Decks: xref:layout/decks.adoc[Decks]
+:Buttons: xref:elements/buttons.adoc[Buttons]
+
+// Placeholders
+:Customization: Customization
+:Global-theme: Global theme
+:receiver: receiver

@@ -1,0 +1,155 @@
+= Stretch
+
+include::../common.adoc[]
+
+== Overview
+
+This document provides a list of buttion stylers that can be used to style
+buttons in the Elements Library. The button stylers are used to define the
+appearance of buttons, such as colors, borders, icons and labels, and shapes.
+The button stylers are separate from the button classes, which handle user
+interactions. This separation of responsibilities allows for greater
+flexibility in defining the button's appearance and behavior.
+
+=== Notation
+
+`label`                 :: An object of type std::string.
+`bst`                   :: A button styler instance.
+`size`                  :: The button's relative size of type `float`.
+`color`                 :: An object of type `color`.
+`icon_id`               :: Unicode code point of type `std::uint32_t` from the
+                           {Global-theme} `icon_font`.
+`margin`                :: The margin in pixels of type `rect`.
+`r`                     :: The corner radius in pixels of type`float`.
+`tl`, `tr`, `bl`, `br`  :: The corner radius in pixels for top-left, top-right,
+                           bottom-left, and bottom-right corners of type `float`.
+
+=== Expressions
+
+[,c++]
+----
+button_styler{label}                    <1>
+bst.size(size)                          <2>
+bst.color(color)                        <3>
+bst.active_body_color(color)            <4>
+bst.text_color(color)                   <5>
+bst.icon(icon_id)                       <6>
+bst.icon_left()                         <7>
+bst.icon_right()                        <8>
+bst.icon_color(color)                   <9>
+bst.align_left()                        <10>
+bst.align_center()                      <11>
+bst.align_right()                       <12>
+bst.margin(margin)                      <13>
+bst.corner_radius(r)                    <14>
+bts.corner_radius(tl, tr, bl, br)       <15>
+bts.rounded_top()                       <16>
+bts.rounded_bottom()                    <17>
+bts.rounded_left()                      <18>
+bts.rounded_right()                     <19>
+bts.rounded_top(r)                      <20>
+bts.rounded_bottom(r)                   <21>
+bts.rounded_left(r)                     <22>
+bts.rounded_right(r)                    <23>
+bts.rounded_corner_top_left(r)          <24>
+bts.rounded_corner_top_right(r)         <25>
+bts.rounded_corner_bottom_left(r)       <26>
+bts.rounded_corner_bottom_right(r)      <27>
+----
+
+=== Semantics
+
+<1> Creates a button styler with the given label.
+<2> Sets the button relative size of a button styler. A value > 1.0 makes the
+    button larger, while a value < 1.0 makes the button smaller.
+<3> Sets the color of a button styler.
+<4> Sets the active body color of a button styler.
+<5> Sets the text color of a button styler.
+<6> Sets the icon of a button styler.
+<7> Sets the icon to the left of the text.
+<8> Sets the icon to the right of the text.
+<9> Sets the icon color of a button styler.
+<10> Aligns the text and icon to the left.
+<11> Aligns the text and icon to the center.
+<12> Aligns the text and icon to the right.
+<13> Sets the margin of a button styler.
+<14> Sets the corner radius of a button styler.
+<15> Sets the corner radius of a button styler for each corner.
+<16> Sets the top corners of a button styler to be rounded.
+<17> Sets the bottom corners of a button styler to be rounded.
+<18> Sets the left corners of a button styler to be rounded.
+<19> Sets the right corners of a button styler to be rounded.
+<20> Sets the top corners of a button styler to be rounded with a specific radius.
+<21> Sets the bottom corners of a button styler to be rounded with a specific radius.
+<22> Sets the left corners of a button styler to be rounded with a specific radius.
+<23> Sets the right corners of a button styler to be rounded with a specific radius.
+<24> Sets the top-left corner of a button styler to be rounded with a specific radius.
+<25> Sets the top-right corner of a button styler to be rounded with a specific radius.
+<26> Sets the bottom-left corner of a button styler to be rounded with a specific radius.
+<27> Sets the bottom-right corner of a button styler to be rounded with a specific radius.
+
+All of these expressions return a button styler. Therefore, these expressions
+can be chained together to create a button styler with the desired
+appearance. The result is then passed to one of the button creation functions
+(see {Buttons}).
+
+=== Examples
+
+Make a default momentary button with label "My Button":
+
+[,c++]
+----
+auto btn = momentary_button(
+      button_styler{"My Button"}
+   );
+----
+
+Make a blue momentary button with label "Lock":
+
+[,c++]
+----
+auto btn = momentary_button(
+      button_styler{"Lock"}
+         .body_color(colors::blue)
+   );
+----
+
+Make a momentary button with label "Rounded Left" and a `left_circled` icon,
+aligned to the left, with a rounded left corner of 10 pixels:
+
+[,c++]
+----
+auto btn = momentary_button(
+      button_styler{"Rounded Left"}
+         .align_left()
+         .icon(icons::left_circled)
+         .icon_left()
+         .rounded_left(10)
+   );
+----
+
+=== Default Button Styler
+
+The basic button styler is a simple button with a text label with no icon,
+with these defaults:
+
+[cols="1,1", options="header"]
+|===
+| Property                      | Default Value
+
+| size                          | `1.0f`
+| body_color                    | {Global-theme} `default_button_color`
+| active_body_color             | `body_color`
+| text_color                    | {Global-theme} `label_font_color`
+| icon                          | `0`
+| icon_placement                | `icon_none`
+| icon_color                    | {Global-theme} `label_font_color`
+| label_alignment               | `align_center`
+| margin                        | {Global-theme} `button_margin`
+| corner_radius                 | {Global-theme} `button_corner_radius`
+| corner_radius_top_left        | `corner_radius`
+| corner_radius_top_right       | `corner_radius`
+| corner_radius_bottom_left     | `corner_radius`
+| corner_radius_bottom_right    | `corner_radius`
+|===
+

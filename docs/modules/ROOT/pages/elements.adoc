@@ -7,7 +7,7 @@ include::common.adoc[]
 The Element is the basic building block of the Elements Library. This
 document provides an overview of the various elements available. This section
 will focus on how elements are used, instead of how they are implemented. We
-will deal with the latter in the Customization section.
+will deal with the latter in the {Customization} section.
 
 It suffices to say that elements are implemented as a hierarchy of classes,
 with the `element` class at the root. The `element` class provides the

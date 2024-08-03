@@ -38,7 +38,8 @@ namespace cycfi::elements
     *
     *    This structure captures the various states that a button can have:
     *    - `value`: The button's value; 0(off) or 1(on).
-    *    - `hilite`: True if the button is highlighted.
+    *    - `hilite`: True if the button is highlighted (when the mouse is
+    *                hovering over the button).
     *    - `tracking`: True if the mouse button being pressed.
     *    - `enabled`: True if the button is enabled.
     */
@@ -59,13 +60,13 @@ namespace cycfi::elements
     *
     *    The `basic_button` class is a foundational class for creating a GUI
     *    button. This class is a proxy which delegates the rendering of the
-    *    actual button to a button styler subject. This division of
-    *    responsibilities allows for more flexibility in dictating the
-    *    button's appearance and interaction. The `basic_button` class
-    *    handles user interactions, while the button styler manages the
-    *    button's visual presentation. With this pattern, different stylers
-    *    can be implemented for various visual representations, for instance,
-    *    plain buttons, radio buttons, slide switches, checkboxes, and more.
+    *    actual button to a button styler subject. This separation of
+    *    responsibilities provides greater flexibility in defining the
+    *    button's appearance and behavior. The `basic_button` class handles
+    *    user interactions, while the button styler manages the button's
+    *    visual presentation. With this pattern, different stylers can be
+    *    implemented for various visual representations, for instance, plain
+    *    buttons, radio buttons, slide switches, checkboxes, and more.
     *
     *    The communication with the button styler is done via the
     *    `receiver<button_state>` or a `receiver<int>` APIs. These APIs

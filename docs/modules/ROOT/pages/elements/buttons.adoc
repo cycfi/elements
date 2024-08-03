@@ -18,8 +18,8 @@ Latching buttons ::
     Buttons are buttons that stay on until programmatically reset.
 
 These classes delegate the rendering to a button styler subject. This
-division of responsibilities allows for more flexibility in dictating the
-button's appearance and interaction. The button classes handle user
+separation of responsibilities provides greater flexibility in defining the
+button's appearance and behavior. The button classes handle user
 interactions, while the button styler manages the button's visual
 presentation. With this pattern, different stylers can be implemented for
 various visual representations, for instance, plain buttons, radio buttons,
@@ -93,6 +93,109 @@ The provided base types `MBase`, `TBase`, and `LBase` offer the flexibility
 to use custom button behavior, provided they adhere to their respective
 concepts.
 
+== On Click
+
+Buttons include an `on_click` callable object, which is called whenever the
+button is clicked.
+
+=== Notation
+
+`btn`:: A Button instance.
+`f`  :: A callback function with the signature `void(bool state)`.
+
+=== Expression
+
+[,c++]
+----
+btn.on_click = f;
+----
+
+=== Semantics
+
+The type of the `on_click` callable object is:
+
+[,c++]
+----
+std::function<void(bool state))
+----
+
+The client provides a callback function, typically a c++ lambda, that will be
+called when the button is clicked. The `state` argument indicates whether the
+button is ON (`true`) or OFF (`false`).
+
+. The `on_click` callback is called at the trailing edge of the click, just
+before release.
+
+. Momentary and latching buttons will always have a state of `true` when
+its `on_click` callback is called.
+
+. Toggle buttons will will have a state that alternates between `true` and
+`false` with each click.
+
+=== Example
+
+[,c++]
+----
+btn.on_click = [](bool state)
+{
+   std::cout << "Button clicked: " << state << std::endl;
+};
+----
+
+== Enable/Disable
+
+Buttons can be enabled or disabled. When disabled, the button will not
+respond to user clicks and, if the button styler handles it, will render
+differently to indicate that it is disabled.
+
+=== Notation
+
+`btn` :: A Button instance.
+`state`  :: A boolean value indicating whether the button is enabled or disabled.
+
+=== Expression
+
+[,c++]
+----
+btn.enable(state)    <1>
+btn.is_enabled()     <2>
+----
+
+=== Semantics
+
+<1> Pass `true` to the `state` argument to enable the button, or
+   `false` to disable it. When disabled, the button will not respond
+   to clicks.
+<2> Returns `true` if the button is enabled, and `false` otherwise.
+
+== Value
+
+The value of a button is a boolean that indicates whether the button is ON
+(`true`) or OFF (`false`). The value of a button can be set programmatically
+via the `{receiver}<bool>` API.
+
+NOTE: {receiver}<T> is mixin class that provides a common interface for
+setting and querying the values of type `T` via virtual member
+functions, `value()` and `value(val)`.
+
+=== Notation
+
+`btn`    :: A Button instance.
+`val`    :: A boolean value.
+
+=== Expression
+
+[,c++]
+----
+btn.value(val)       <1>
+btn.vauel()          <2>
+----
+
+=== Semantics
+
+<1> Sets the value of the button to `val`.
+<2> Returns the current value of the button.
+
 == Button Styler
 
 NOTE: This section is an advanced topic only relevant to those who want to
@@ -100,23 +203,12 @@ write custom buttons. This section may be skipped by most users.
 
 The button styler is a separate element that is responsible for rendering the
 button. The communication with the button styler is done via the
-`receiver<button_state>` or a `receiver<int>` APIs. These APIs provide a
-means to update the button styler about changes in button's state to allow
-the styler to adjust the visual representation accordingly.
+`{receiver}<button_state>` API. This API provides a means to update the button
+styler about changes in button's state to allow the styler to adjust the
+visual representation accordingly.
 
-If the button styler follows a `receiver<int>` API, it will receive in
-integer with these possible values:
-
-----
-   0: value=false, hilite=false
-   1: value=false, hilite=true
-   2: value=true,  hilite=false
-   3: value=true,  hilite=true
-----
-
-If the button styler follows a `receiver<button_state>` API, it will receive
-a `button_state` when the button's state changes. This has a richer API
-compared to the former, allowing more nuanced button rendering:
+If the button styler is as a subclass of `{receiver}<button_state>` API, it
+will receive a `button_state` when the button's state changes:
 
 === button_state
 
@@ -124,10 +216,10 @@ compared to the former, allowing more nuanced button rendering:
 ----
 struct button_state
 {
-   bool              value : 1      = false;
-   bool              hilite : 1     = false;
-   bool              tracking : 1   = false;
-   bool              enabled : 1    = true;
+   bool    value : 1      = false;
+   bool    hilite : 1     = false;
+   bool    tracking : 1   = false;
+   bool    enabled : 1    = true;
 };
 ----
 
@@ -135,13 +227,14 @@ struct button_state
 button. This structure captures the various states that a button can have:
 
 - `value`: The button's value; 0(off) or 1(on).
-- `hilite`: True if the button is highlighted.
+- `hilite`: True if the button is highlighted (when the mouse is
+   hovering over the button).
 - `tracking`: True if the mouse button being pressed.
 - `enabled`: True if the button is enabled.
 
 
 NOTE: The button styler is just an element and does not have to follow the
-`receiver` API. If that's the case, then the button rendering will be static,
+`{receiver}` API. If that's the case, then the button rendering will be static,
 and not adjust to state changes. This may still be useful in certain cases.
 
 '''

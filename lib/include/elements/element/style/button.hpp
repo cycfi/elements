@@ -214,8 +214,9 @@ namespace cycfi::elements
 
       label_alignment         get_label_alignment() const override;
       void                    set_label_alignment(label_alignment alignment);
-      void                    align_right();
       void                    align_left();
+      void                    align_center();
+      void                    align_right();
 
    private:
 
@@ -272,6 +273,7 @@ namespace cycfi::elements
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(float r);
 
    private:
 
@@ -303,13 +305,15 @@ namespace cycfi::elements
       constexpr static bool has_default_corner_radius = false;
 
                               button_styler_rounded_corner(Base base, float r)
-                               : Base(std::move(base)), _radius(r)
+                               : Base(std::move(base))
+                               , _radius(r)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(float r);
 
    private:
 
@@ -328,17 +332,24 @@ namespace cycfi::elements
                                  float top_right,
                                  float bottom_right,
                                  float bottom_left
-                              )  :  Base(std::move(base)),
-                                    _top_left(top_left),
-                                    _top_right(top_right),
-                                    _bottom_right(bottom_right),
-                                    _bottom_left(bottom_left)
+                              )
+                               : Base(std::move(base)),
+                                 _top_left(top_left),
+                                 _top_right(top_right),
+                                 _bottom_right(bottom_right),
+                                 _bottom_left(bottom_left)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(
+                                 float top_left,
+                                 float top_right,
+                                 float bottom_right,
+                                 float bottom_left
+                              );
 
    private:
 
@@ -806,15 +817,21 @@ namespace cycfi::elements
    }
 
    template <typename Base>
-   inline void button_styler_with_label_alignment<Base>::align_right()
-   {
-      _label_alignment = label_alignment::align_right;
-   }
-
-   template <typename Base>
    inline void button_styler_with_label_alignment<Base>::align_left()
    {
       _label_alignment = label_alignment::align_left;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_label_alignment<Base>::align_center()
+   {
+      _label_alignment = label_alignment::align_center;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_label_alignment<Base>::align_right()
+   {
+      _label_alignment = label_alignment::align_right;
    }
 
    template <typename Base>
@@ -883,6 +900,12 @@ namespace cycfi::elements
          return Base::get_corner_radius_bottom_right();
       else
          return 0.0f;
+   }
+
+   template <typename Base, default_button_styler::direction Direction>
+   inline void button_styler_rounded_half<Base, Direction>::set_corner_radius(float r)
+   {
+      _radius = r;
    }
 
    template <typename Base, default_button_styler::direction Direction>
@@ -973,6 +996,12 @@ namespace cycfi::elements
          return 0.0f;
    }
 
+   template <typename Base, default_button_styler::corner Corner>
+   inline void button_styler_rounded_corner<Base, Corner>::set_corner_radius(float r)
+   {
+      _radius = r;
+   }
+
    template <typename Base>
    inline float button_styler_with_individual_corner_radii<Base>::get_corner_radius_top_left() const
    {
@@ -995,6 +1024,20 @@ namespace cycfi::elements
    inline float button_styler_with_individual_corner_radii<Base>::get_corner_radius_bottom_right() const
    {
       return _bottom_right;
+   }
+
+   template <typename Base>
+   inline void button_styler_with_individual_corner_radii<Base>::set_corner_radius(
+      float top_left,
+      float top_right,
+      float bottom_right,
+      float bottom_left
+   )
+   {
+      _top_left = top_left;
+      _top_right = top_right;
+      _bottom_right = bottom_right;
+      _bottom_left = bottom_left;
    }
 
    template <typename Base>

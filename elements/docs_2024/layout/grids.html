@@ -195,7 +195,6 @@ of the elements in the allocated space.</p>
 <div class="paragraph">
 <p>Grids are best for composing tables.</p>
 </div>
-<hr>
 </div>
 </div>
 <div class="sect1">
@@ -214,8 +213,8 @@ Grids have computed horizontal and vertical sizes following the natural
 </div>
 <div class="sect2">
 <h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.</p>
@@ -255,9 +254,8 @@ the element will be aligned to the top-left.</p>
 </ol>
 </div>
 </li>
-</ol>
+</ul>
 </div>
-<hr>
 </div>
 </div>
 </div>
@@ -292,12 +290,36 @@ the element will be aligned to the top-left.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid(positions, e1,...eN)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>In addition to the semantics of Horizontal Grids, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
@@ -324,8 +346,8 @@ If the number of elements is not fixed, you can use an
 </div>
 <div class="sect2">
 <h3 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The number of supplied positions and elements, multiplied by each element&#8217;s
 span, should match, otherwise, undefined behavior.  By default elements have
@@ -341,18 +363,18 @@ index <code>0</code>, the third at index <code>1</code>, and so on.</p>
 such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
 this is violated.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>In addition to the semantics of Horizontal Grids, returns instance of
 <code>Composite</code>.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -386,7 +408,7 @@ Remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hgrid_composite c{positions};</code></pre>
@@ -421,8 +443,8 @@ build complex hierarchical structures.</p>
 </div>
 <div class="sect2">
 <h3 id="_requirements_2"><a class="anchor" href="#_requirements_2"></a>Requirements</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The number of items in the external coordinates vector <code>positions</code> must match
 with the number of elements at any given time.</p>
@@ -437,7 +459,7 @@ index <code>0</code>, the third at index <code>1</code>, and so on.</p>
 such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
 this is violated.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -458,8 +480,8 @@ Grids have computed horizontal and vertical sizes following the natural
 </div>
 <div class="sect2">
 <h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.</p>
@@ -499,7 +521,7 @@ the element will be aligned to the top-left.</p>
 </ol>
 </div>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -529,16 +551,42 @@ the element will be aligned to the top-left.</p>
 </dl>
 </div>
 <div class="paragraph">
-<p>The external container, <code>positions</code>, can either be a plain array of type <code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in a <code>std::array&lt;element_ptr, N&gt;</code> managed by the vertical grid element.</p>
+<p>The external container, <code>positions</code>, can either be a plain array of type
+<code>float[N]</code> or <code>std::array&lt;float, N&gt;</code>. Elements <code>e1,...eN</code> are held in a
+<code>std::array&lt;element_ptr, N&gt;</code> managed by the vertical grid element.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid(positions, e1,...eN)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>In addition to the semantics of Vertical Grids, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_example_3"><a class="anchor" href="#_example_3"></a>Example</h3>
@@ -565,8 +613,8 @@ If the number of elements is not fixed, you can use an
 </div>
 <div class="sect2">
 <h3 id="_requirements_3"><a class="anchor" href="#_requirements_3"></a>Requirements</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The number of supplied positions and elements, multiplied by each element&#8217;s
 span, should match, otherwise, undefined behavior.  By default elements have
@@ -582,18 +630,18 @@ index <code>0</code>, the third at index <code>1</code>, and so on.</p>
 such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
 this is violated.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>In addition to the semantics of Vertical Grids, returns instance of
 <code>Composite</code>.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -627,7 +675,7 @@ Remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
+<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vgrid_composite c{positions};</code></pre>
@@ -662,8 +710,8 @@ build complex hierarchical structures.</p>
 </div>
 <div class="sect2">
 <h3 id="_requirements_4"><a class="anchor" href="#_requirements_4"></a>Requirements</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The number of items in the external coordinates vector <code>positions</code> must match
 with the number of elements at any given time.</p>
@@ -678,7 +726,7 @@ index <code>0</code>, the third at index <code>1</code>, and so on.</p>
 such that positions[n] &lt;= positions[n+1]. The behavior is undefined if
 this is violated.</p>
 </li>
-</ol>
+</ul>
 </div>
 <hr>
 <div class="paragraph">

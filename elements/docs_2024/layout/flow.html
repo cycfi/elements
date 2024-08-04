@@ -285,22 +285,49 @@ element.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">flow(c)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Returns an instance of <code>Composite</code> where child elements are laid out from
+left to right, fitting as many elements as possible within each child&#8217;s
+maximum horizontal limit.</p>
+</li>
+<li>
+<p>Once a row is full, move to the next row and do the same until the end of
+the row is filled. Repeat the procedure until all the elements are laid
+out.</p>
+</li>
+<li>
+<p>The height of each row is determined by the maximum vertical limit of all
+the elements to be laid out in that row.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Returns instance of <code>Composite</code>.</p>
-</li>
-</ol>
-</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>

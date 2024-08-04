@@ -221,20 +221,29 @@ catalogues all the available align elements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">halign(align, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Given a total allocated space <code>X</code>, <code>subject</code> will be positioned
-horizontally to <code>X * align</code>.</p>
+<p>Given a total allocated space <code>X</code>, <code>subject</code> will be positioned horizontally to <code>X * align</code>.</p>
 </li>
 <li>
 <p>The <code>subject</code> will assume its <em>minimum horizontal limit</em>.</p>
@@ -242,13 +251,16 @@ horizontally to <code>X * align</code>.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p><code>halign(0.0) // align subject to the left</code></p>
 </li>
@@ -258,9 +270,8 @@ horizontally to <code>X * align</code>.</p>
 <li>
 <p><code>halign(0.5) // align subject to the center</code></p>
 </li>
-</ol>
+</ul>
 </div>
-<hr>
 </div>
 </div>
 </div>
@@ -287,26 +298,38 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>halign(0.0, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -333,26 +356,38 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>halign(0.5, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -379,26 +414,38 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>halign(1.0, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -429,20 +476,29 @@ horizontally to <code>X * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_5"><a class="anchor" href="#_expression_5"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">valign(align, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_5"><a class="anchor" href="#_semantics_5"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Given a total allocated space <code>Y</code>, <code>subject</code> will be positioned vertically
-to <code>Y * align</code>.</p>
+<p>Given a total allocated space <code>Y</code>, <code>subject</code> will be positioned vertically to <code>Y * align</code>.</p>
 </li>
 <li>
 <p>The <code>subject</code> will assume its <em>minimum vertical limit</em>.</p>
@@ -450,8 +506,11 @@ to <code>Y * align</code>.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_examples_2"><a class="anchor" href="#_examples_2"></a>Examples</h3>
@@ -468,7 +527,6 @@ to <code>Y * align</code>.</p>
 </li>
 </ol>
 </div>
-<hr>
 </div>
 </div>
 </div>
@@ -495,26 +553,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_6"><a class="anchor" href="#_expression_6"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_top(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_6"><a class="anchor" href="#_semantics_6"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>valign(0.0, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -541,26 +611,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_7"><a class="anchor" href="#_expression_7"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_7"><a class="anchor" href="#_expressions_7"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_middle(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_7"><a class="anchor" href="#_semantics_7"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>valign(0.5, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -587,26 +669,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_8"><a class="anchor" href="#_expression_8"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_8"><a class="anchor" href="#_expressions_8"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_bottom(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_8"><a class="anchor" href="#_semantics_8"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>valign(1.0, subject)</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -633,26 +727,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_9"><a class="anchor" href="#_expression_9"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_9"><a class="anchor" href="#_expressions_9"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_top(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_9"><a class="anchor" href="#_semantics_9"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_left(align_top(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -679,26 +785,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_10"><a class="anchor" href="#_expression_10"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_10"><a class="anchor" href="#_expressions_10"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_top(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_10"><a class="anchor" href="#_semantics_10"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_center(align_top(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -725,26 +843,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_11"><a class="anchor" href="#_expression_11"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_11"><a class="anchor" href="#_expressions_11"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_top(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_11"><a class="anchor" href="#_semantics_11"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_right(align_top(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -771,26 +901,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_12"><a class="anchor" href="#_expression_12"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_12"><a class="anchor" href="#_expressions_12"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_middle(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_12"><a class="anchor" href="#_semantics_12"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_left(align_middle(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -817,26 +959,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_13"><a class="anchor" href="#_expression_13"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_13"><a class="anchor" href="#_expressions_13"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_middle(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_13"><a class="anchor" href="#_semantics_13"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_center(align_middle(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -863,26 +1017,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_14"><a class="anchor" href="#_expression_14"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_14"><a class="anchor" href="#_expressions_14"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_middle(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_14"><a class="anchor" href="#_semantics_14"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_right(align_middle(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -909,26 +1075,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_15"><a class="anchor" href="#_expression_15"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_15"><a class="anchor" href="#_expressions_15"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_left_bottom(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_15"><a class="anchor" href="#_semantics_15"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_left(align_bottom(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -955,26 +1133,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_16"><a class="anchor" href="#_expression_16"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_16"><a class="anchor" href="#_expressions_16"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_center_bottom(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_16"><a class="anchor" href="#_semantics_16"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_center(align_bottom(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1001,25 +1191,38 @@ to <code>Y * align</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_17"><a class="anchor" href="#_expression_17"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_17"><a class="anchor" href="#_expressions_17"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">align_right_bottom(subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_17"><a class="anchor" href="#_semantics_17"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Equivalent to <code>align_right(align_bottom(subject))</code></p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>

@@ -272,44 +272,120 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
-<div class="listingblock">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Basic default buttons
-momentary_button(styler);
-toggle_button(styler);
-latching_button(styler);
-
-// Custom buttons
-momentary_button&lt;MBase&gt;(styler);
-toggle_button&lt;TBase&gt;(styler);
-latching_button&lt;LBase&gt;(styler);</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">momentary_button(styler);</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p><code>momentary_button</code>
-is a function that creates a momentary button with the given styler
-element. <code>MBase</code>, if provided, is the base type that must conform to
-the <code>MomentaryButton</code> concept.</p>
+<p>Creates a momentary button with the given styler element.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button(styler);</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the given styler element.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button(styler)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the given styler element.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">momentary_button&lt;MBase&gt;(
+   styler
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a momentary button with the given styler element.</p>
 </li>
 <li>
-<p><code>toggle_button</code>
-is a function that creates a toggle button with the given styler
-element. <code>TBase</code>, if provided,  is the the base type that must conform
-to the <code>ToggleButton</code> concept.</p>
+<p><code>MBase</code> is the base type that must conform to the <code>MomentaryButton</code>
+concept.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button&lt;TBase&gt;(
+   styler
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the given styler element.</p>
 </li>
 <li>
-<p><code>latching_button</code>
-is a function that creates a latching button with the given styler
-element. <code>LBase</code>, if provided,  is the the base type that must conform
-to the <code>LatchingButton</code> concept.</p>
+<p><code>TBase</code> is the base type that must conform to the <code>ToggleButton</code> concept.</p>
 </li>
-</ol>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button&lt;LBase&gt;(
+   styler
+)</code></pre>
 </div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the given styler element.</p>
+</li>
+<li>
+<p><code>LBase</code> is the base type that must conform to the <code>LatchingButton</code> concept.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>The provided base types <code>MBase</code>, <code>TBase</code>, and <code>LBase</code> offer the flexibility
 to use custom button behavior, provided they adhere to their respective
@@ -341,30 +417,30 @@ button is clicked.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click = f;</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="paragraph">
-<p>The type of the <code>on_click</code> callable object is:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">std::function&lt;void(bool state))</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The client provides a callback function, typically a c++ lambda, that will be
-called when the button is clicked. The <code>state</code> argument indicates whether the
-button is ON (<code>true</code>) or OFF (<code>false</code>).</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Assigns a callable function, <code>f</code>, to the button&#8217;s <code>on_click</code> event.</p>
+</li>
 <li>
 <p>The <code>on_click</code> callback is called at the trailing edge of the click, just
 before release.</p>
@@ -377,17 +453,35 @@ its <code>on_click</code> callback is called.</p>
 <p>Toggle buttons will will have a state that alternates between <code>true</code> and
 <code>false</code> with each click.</p>
 </li>
-</ol>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The client provides a callback function, typically a c++ lambda, that will be
+called when the button is clicked. The type of the <code>on_click</code> callable object
+is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">std::function&lt;void(bool state)&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>state</code> argument indicates whether the button is ON (<code>true</code>) or OFF
+(<code>false</code>).</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click = [](bool state)
-{
-   std::cout &lt;&lt; "Button clicked: " &lt;&lt; state &lt;&lt; std::endl;
-};</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click =
+   [](bool state)
+   {
+      std::cout &lt;&lt; "Button clicked: " &lt;&lt; state &lt;&lt; std::endl;
+   };</code></pre>
 </div>
 </div>
 </div>
@@ -417,30 +511,53 @@ differently to indicate that it is disabled.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.enable(state)    <i class="conum" data-value="1"></i><b>(1)</b>
-btn.is_enabled()     <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.enable(state)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Pass <code>true</code> to the <code>state</code> argument to enable the button, or
-<code>false</code> to disable it. When disabled, the button will not respond
-to clicks.</td>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the button&#8217;s enabled state. Pass <code>true</code> to the <code>state</code> argument to
+enable the button, or <code>false</code> to disable it.</p>
+</li>
+<li>
+<p>When disabled, the button will not respond to clicks.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Returns <code>true</code> if the button is enabled, and <code>false</code> otherwise.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.is_enabled()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Returns <code>true</code> if the button is enabled, <code>false</code> otherwise.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
+</tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -482,28 +599,49 @@ functions, <code>value()</code> and <code>value(val)</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value(val)       <i class="conum" data-value="1"></i><b>(1)</b>
-btn.vauel()          <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value(val)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Sets the value of the button to <code>val</code>.</td>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the value of the button to <code>val</code>.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Returns the current value of the button.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Returns the current value of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
+</tbody>
 </table>
-</div>
 </div>
 </div>
 </div>

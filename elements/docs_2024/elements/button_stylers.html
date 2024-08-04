@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Stretch :: Elements Docs</title>
+    <title>Button Stylers :: Elements Docs</title>
     <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/elements/button_stylers.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
@@ -182,7 +182,7 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Stretch</h1>
+<h1 class="page">Button Stylers</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
@@ -237,156 +237,419 @@ bottom-left, and bottom-right corners of type <code>float</code>.</p>
 </div>
 <div class="sect2">
 <h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
-<div class="listingblock">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button_styler{label}                    <i class="conum" data-value="1"></i><b>(1)</b>
-bst.size(size)                          <i class="conum" data-value="2"></i><b>(2)</b>
-bst.color(color)                        <i class="conum" data-value="3"></i><b>(3)</b>
-bst.active_body_color(color)            <i class="conum" data-value="4"></i><b>(4)</b>
-bst.text_color(color)                   <i class="conum" data-value="5"></i><b>(5)</b>
-bst.icon(icon_id)                       <i class="conum" data-value="6"></i><b>(6)</b>
-bst.icon_left()                         <i class="conum" data-value="7"></i><b>(7)</b>
-bst.icon_right()                        <i class="conum" data-value="8"></i><b>(8)</b>
-bst.icon_color(color)                   <i class="conum" data-value="9"></i><b>(9)</b>
-bst.align_left()                        <i class="conum" data-value="10"></i><b>(10)</b>
-bst.align_center()                      <i class="conum" data-value="11"></i><b>(11)</b>
-bst.align_right()                       <i class="conum" data-value="12"></i><b>(12)</b>
-bst.margin(margin)                      <i class="conum" data-value="13"></i><b>(13)</b>
-bst.corner_radius(r)                    <i class="conum" data-value="14"></i><b>(14)</b>
-bts.corner_radius(tl, tr, bl, br)       <i class="conum" data-value="15"></i><b>(15)</b>
-bts.rounded_top()                       <i class="conum" data-value="16"></i><b>(16)</b>
-bts.rounded_bottom()                    <i class="conum" data-value="17"></i><b>(17)</b>
-bts.rounded_left()                      <i class="conum" data-value="18"></i><b>(18)</b>
-bts.rounded_right()                     <i class="conum" data-value="19"></i><b>(19)</b>
-bts.rounded_top(r)                      <i class="conum" data-value="20"></i><b>(20)</b>
-bts.rounded_bottom(r)                   <i class="conum" data-value="21"></i><b>(21)</b>
-bts.rounded_left(r)                     <i class="conum" data-value="22"></i><b>(22)</b>
-bts.rounded_right(r)                    <i class="conum" data-value="23"></i><b>(23)</b>
-bts.rounded_corner_top_left(r)          <i class="conum" data-value="24"></i><b>(24)</b>
-bts.rounded_corner_top_right(r)         <i class="conum" data-value="25"></i><b>(25)</b>
-bts.rounded_corner_bottom_left(r)       <i class="conum" data-value="26"></i><b>(26)</b>
-bts.rounded_corner_bottom_right(r)      <i class="conum" data-value="27"></i><b>(27)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button_styler{label}</code></pre>
 </div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Create a button with the given label.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.size(size)</code></pre>
 </div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the relative size of the button.</p>
+</li>
+<li>
+<p><code>size</code> is relative to the default size dictated by the
+Global theme&#8217;s <code>label_font</code>.</p>
+</li>
+<li>
+<p>A value greater than 1.0 makes the button larger.</p>
+</li>
+<li>
+<p>A value less than 1.0 makes the button smaller.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.color(color)</code></pre>
 </div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Creates a button styler with the given label.</td>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the color of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Sets the button relative size of a button styler. A value &gt; 1.0 makes the
-button larger, while a value &lt; 1.0 makes the button smaller.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.active_body_color(color)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the active body color of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Sets the color of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.text_color(color)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the text color of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Sets the active body color of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.icon(icon_id)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the icon of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Sets the text color of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.icon_left()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the icon to the left of the text.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Sets the icon of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.icon_right()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the icon to the right of the text.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Sets the icon to the left of the text.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.icon_color(color)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the icon color of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Sets the icon to the right of the text.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.align_left()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Aligns the text and icon to the left.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Sets the icon color of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.align_center()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Aligns the text and icon to the center.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="10"></i><b>10</b></td>
-<td>Aligns the text and icon to the left.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.align_right()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Aligns the text and icon to the right.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="11"></i><b>11</b></td>
-<td>Aligns the text and icon to the center.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.margin(margin)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the margin of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="12"></i><b>12</b></td>
-<td>Aligns the text and icon to the right.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bst.corner_radius(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the corner radius of the button.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="13"></i><b>13</b></td>
-<td>Sets the margin of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.corner_radius(tl, tr, bl, br)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the corner radius of the button for each corner.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="14"></i><b>14</b></td>
-<td>Sets the corner radius of a button styler.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_top()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the top corners of the button to be rounded.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="15"></i><b>15</b></td>
-<td>Sets the corner radius of a button styler for each corner.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_bottom()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the bottom corners of the button to be rounded.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="16"></i><b>16</b></td>
-<td>Sets the top corners of a button styler to be rounded.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_left()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the left corners of the button to be rounded.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="17"></i><b>17</b></td>
-<td>Sets the bottom corners of a button styler to be rounded.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_right()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the right corners of the button to be rounded.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="18"></i><b>18</b></td>
-<td>Sets the left corners of a button styler to be rounded.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_top(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the top corners of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="19"></i><b>19</b></td>
-<td>Sets the right corners of a button styler to be rounded.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_bottom(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the bottom corners of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="20"></i><b>20</b></td>
-<td>Sets the top corners of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_left(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the left corners of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="21"></i><b>21</b></td>
-<td>Sets the bottom corners of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_right(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the right corners of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="22"></i><b>22</b></td>
-<td>Sets the left corners of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_corner_top_left(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the top-left corner of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="23"></i><b>23</b></td>
-<td>Sets the right corners of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_corner_top_right(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the top-right corner of the button to be rounded with a specific
+radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="24"></i><b>24</b></td>
-<td>Sets the top-left corner of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_corner_bottom_left(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the bottom-left corner of the button to be rounded with a
+specific radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="25"></i><b>25</b></td>
-<td>Sets the top-right corner of a button styler to be rounded with a specific radius.</td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">bts.rounded_corner_bottom_right(r)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Sets the bottom-right corner of the button to be rounded with a
+specific radius.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
-<tr>
-<td><i class="conum" data-value="26"></i><b>26</b></td>
-<td>Sets the bottom-left corner of a button styler to be rounded with a specific radius.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="27"></i><b>27</b></td>
-<td>Sets the bottom-right corner of a button styler to be rounded with a specific radius.</td>
-</tr>
+</tbody>
 </table>
-</div>
 <div class="paragraph">
-<p>All of these expressions return a button styler. Therefore, these expressions
-can be chained together to create a button styler with the desired
+<p>All of these expressions return the button styler. Therefore, these expressions
+can be chained together to create the button styler with the desired
 appearance. The result is then passed to one of the button creation functions
 (see <a href="buttons.html" class="xref page">Buttons</a>).</p>
 </div>
@@ -430,16 +693,19 @@ aligned to the left, with a rounded left corner of 10 pixels:</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_default_button_styler"><a class="anchor" href="#_default_button_styler"></a>Default Button Styler</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_default_button_styler"><a class="anchor" href="#_default_button_styler"></a>Default Button Styler</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The basic button styler is a simple button with a text label with no icon,
 with these defaults:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 40%;">
+<col style="width: 60%;">
 </colgroup>
 <thead>
 <tr>
@@ -507,13 +773,14 @@ with these defaults:</p>
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_convenience_functions"><a class="anchor" href="#_convenience_functions"></a>Convenience Functions</h3>
+</div>
+<div class="sect1">
+<h2 id="_convenience_functions"><a class="anchor" href="#_convenience_functions"></a>Convenience Functions</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The following convenience functions are provided to create commonly used
 buttons. These functions simplify button creation, allowing users to quickly
 implement standard button types with minimal effort.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
@@ -551,77 +818,487 @@ implement standard button types with minimal effort.</p>
 <dd>
 <p>Type that conforms to the LatchingButton concept.</p>
 </dd>
+<dt class="hdlist1"><code>[, &#8230;&#8203;]</code>               </dt>
+<dd>
+<p>Optional parameters.</p>
+</dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
-<div class="listingblock">
+<div class="sect3">
+<h4 id="_momentary_buttons"><a class="anchor" href="#_momentary_buttons"></a>Momentary buttons</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Momentary buttons
-button(label)
-button(label, size)
-button(label, size, color)
-button&lt;MBase&gt;(label)
-button&lt;MBase&gt;(label, size)
-button&lt;MBase&gt;(label, size, color)
-
-// Momentary buttons with icon to the left
-button(icon_id, label, size)
-button(icon_id, label, size, color)
-button&lt;MBase&gt;(icon_id, label, size)
-button&lt;MBase&gt;(icon_id, label, size, color)
-
-// Momentary buttons with icon to the right
-button(label, icon_id, size)
-button(label, icon_id, size, color)
-button&lt;MBase&gt;(label, icon_id, size)
-button&lt;MBase&gt;(label, icon_id, size, color)
-
-// Toggle buttons
-toggle_button(label)
-toggle_button(label, size)
-toggle_button(label, size, color)
-toggle_button&lt;TBase&gt;(label)
-toggle_button&lt;TBase&gt;(label, size)
-toggle_button&lt;TBase&gt;(label, size, color)
-
-// Toggle buttons with icon to the left
-toggle_button(icon_id, label, size)
-toggle_button(icon_id, label, size, color)
-toggle_button&lt;TBase&gt;(icon_id, label, size)
-toggle_button&lt;TBase&gt;(icon_id, label, size, color)
-
-// Toggle buttons with icon to the right
-toggle_button(label, icon_id, size)
-toggle_button(label, icon_id, size, color)
-toggle_button&lt;TBase&gt;(label, icon_id, size)
-toggle_button&lt;TBase&gt;(label, icon_id, size, color)
-
-// Latching buttons
-latching_button(label)
-latching_button(label, size)
-latching_button(label, size, color)
-latching_button&lt;LBase&gt;(label)
-latching_button&lt;LBase&gt;(label, size)
-latching_button&lt;LBase&gt;(label, size, color)
-
-// Latching buttons with icon to the left
-latching_button(icon_id, label, size)
-latching_button(icon_id, label, size, color)
-latching_button&lt;LBase&gt;(icon_id, label, size)
-latching_button&lt;LBase&gt;(icon_id, label, size, color)
-
-// Latching buttons with icon to the right
-latching_button(label, icon_id, size)
-latching_button(label, icon_id, size, color)
-latching_button&lt;LBase&gt;(label, icon_id, size)
-latching_button&lt;LBase&gt;(label, icon_id, size, color)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button(label
+   [, size, color]
+)</code></pre>
 </div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a button with the specified label, with optional size, and color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button&lt;MBase&gt;(
+   label
+   [, size, color]
+)</code></pre>
 </div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a button with the specified label,, with optional size, and color,
+using the MBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
+<div class="sect3">
+<h4 id="_momentary_buttons_with_icon_to_the_left"><a class="anchor" href="#_momentary_buttons_with_icon_to_the_left"></a>Momentary Buttons with Icon to the Left</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button(
+   icon_id, label, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a momentary button with the specified icon to the left, label,
+size, and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button&lt;MBase&gt;(
+   icon_id, label, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a momentary button with the specified icon to the left, label,
+size, and optional color, using the MBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_momentary_buttons_with_icon_to_the_right"><a class="anchor" href="#_momentary_buttons_with_icon_to_the_right"></a>Momentary Buttons with Icon to the Right</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a momentary button with the specified label, icon to the right, size, and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">button&lt;MBase&gt;(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a momentary button with the specified label, icon to the right, size, and optional color, using the MBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_toggle_buttons"><a class="anchor" href="#_toggle_buttons"></a>Toggle Buttons</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button(
+   label
+   [, size, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified label, with optional size, and
+color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button&lt;TBase&gt;(
+   label
+   [, size, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified label, with optional size, and
+color, using the TBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_toggle_buttons_with_icon_to_the_left"><a class="anchor" href="#_toggle_buttons_with_icon_to_the_left"></a>Toggle Buttons with Icon to the Left</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button(
+   icon_id, label, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified icon to the left, label, size,
+and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button&lt;TBase&gt;(
+   icon_id, label
+   [, size, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified icon to the left, label, size,
+and optional color, using the TBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_toggle_buttons_with_icon_to_the_right"><a class="anchor" href="#_toggle_buttons_with_icon_to_the_right"></a>Toggle Buttons with Icon to the Right</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified label, icon to the right, size,
+and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button&lt;TBase&gt;(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a toggle button with the specified label, icon to the right, size,
+and optional color, using the TBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_latching_buttons"><a class="anchor" href="#_latching_buttons"></a>Latching Buttons</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button(
+   label
+   [, size, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified label, with optional size, and
+color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button&lt;LBase&gt;(
+   label
+   [, size, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified label, with optional size, and
+color, using the LBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_latching_buttons_with_icon_to_the_left"><a class="anchor" href="#_latching_buttons_with_icon_to_the_left"></a>Latching Buttons with Icon to the Left</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button(
+   icon_id, label, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified icon to the left, label, size,
+and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button&lt;LBase&gt;(
+   icon_id, label, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified icon to the left, label, size,
+and optional color, using the LBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_latching_buttons_with_icon_to_the_right"><a class="anchor" href="#_latching_buttons_with_icon_to_the_right"></a>Latching Buttons with Icon to the Right</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified label, icon to the right,
+size, and optional color.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button&lt;LBase&gt;(
+   label, icon_id, size
+   [, color]
+)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Creates a latching button with the specified label, icon to the right,
+size, and optional color, using the LBase template.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>These are forwarding shortcuts to the <code>button_styler</code> expressions. They
 create a button styler with the specified properties and pass it to the
@@ -648,6 +1325,7 @@ inline auto button(
          .body_color(body_color)
    );
 }</code></pre>
+</div>
 </div>
 </div>
 </div>

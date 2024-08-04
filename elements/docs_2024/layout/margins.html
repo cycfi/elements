@@ -220,34 +220,46 @@ purposes. This section catalogues all the available margin elements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin({left, top, right, bottom}, subject)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin({left, top, right, bottom},
+   subject
+)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the left, top, right, and bottom of the subject with the
-given parameters.</p>
+<p>Space is added to the left, top, right, and bottom of the subject with the given parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
 </li>
 <li>
-<p>The <code>margin</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
-<code>margin</code> will respect the subject&#8217;s min-max constraints and resizability.</p>
+<p>The <code>margin</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject. <code>margin</code> will respect the subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -278,17 +290,27 @@ given parameters.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_left(left, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Space is added to the left of the subject with the given parameter.</p>
 </li>
@@ -298,14 +320,16 @@ given parameters.</p>
 <li>
 <p>The <code>margin_left</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
 <code>margin_left</code> will respect the subject&#8217;s min-max constraints and
-resizability.</p>
+ resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -336,17 +360,27 @@ resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_right(right, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Space is added to the right of the subject with the given parameter.</p>
 </li>
@@ -361,9 +395,11 @@ resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -394,17 +430,27 @@ resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_top(top, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>Space is added to the top of the subject with the given parameter.</p>
 </li>
@@ -415,13 +461,19 @@ resizability.</p>
 <p>The <code>margin_top</code> does not violate the natural <a href="limits.html" class="xref page">limits</a> of the subject.
 <code>margin_top</code> will respect the subject&#8217;s min-max constraints and
 resizability.</p>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
 </ol>
 </div>
-<hr>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -452,20 +504,29 @@ resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_5"><a class="anchor" href="#_expression_5"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_bottom(bottom, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_5"><a class="anchor" href="#_semantics_5"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the bottom of the subject with the given
-parameter.</p>
+<p>Space is added to the bottom of the subject with the given parameter.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
@@ -478,9 +539,11 @@ resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -511,30 +574,36 @@ resizability.</p>
 </dl>
 </div>
 <div class="sect2">
-<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-hmargin({left, right}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hmargin({left, right}, subject)
 
-// variant 2
 hmargin(left, right, subject)
 
-// variant 3
 margin_left_right({left, right}, subject)
 
-// variant 4
 margin_left_right(left, right, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_6"><a class="anchor" href="#_semantics_6"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the left and right sides of the subject with the
-given parameters.</p>
+<p>Space is added to the left and right sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
@@ -547,9 +616,11 @@ constraints and resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -583,30 +654,36 @@ constraints and resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_7"><a class="anchor" href="#_expressions_7"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-vmargin({top, bottom}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vmargin({top, bottom}, subject)
 
-// variant 2
 vmargin(top, bottom, subject)
 
-// variant 3
 margin_top_bottom({top, bottom}, subject)
 
-// variant 4
 margin_top_bottom(top, bottom, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_7"><a class="anchor" href="#_semantics_7"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the top and bottom sides of the subject with the
-given parameters.</p>
+<p>Space is added to the top and bottom sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
@@ -619,9 +696,11 @@ constraints and resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -652,24 +731,32 @@ constraints and resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_8"><a class="anchor" href="#_expressions_8"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-margin_left_top({left, top}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_left_top({left, top}, subject)
 
-// variant 2
 margin_left_top(left, top, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_8"><a class="anchor" href="#_semantics_8"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the left and top sides of the subject with the
-given parameters.</p>
+<p>Space is added to the left and top sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
@@ -682,9 +769,11 @@ min-max constraints and resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -715,24 +804,32 @@ min-max constraints and resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_9"><a class="anchor" href="#_expressions_9"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-margin_left_bottom({left, bottom}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_left_bottom({left, bottom}, subject)
 
-// variant 2
 margin_left_bottom(left, bottom, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_9"><a class="anchor" href="#_semantics_9"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the left and bottom sides of the subject with the
-given parameters.</p>
+<p>Space is added to the left and bottom sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
@@ -745,9 +842,11 @@ the subject&#8217;s min-max constraints and resizability.</p>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -778,39 +877,49 @@ the subject&#8217;s min-max constraints and resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_10"><a class="anchor" href="#_expressions_10"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-margin_right_top({right, top}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_right_top({right, top}, subject)
 
-// variant 2
 margin_right_top(right, top, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_10"><a class="anchor" href="#_semantics_10"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the right and top sides of the subject with the
-given parameters.</p>
+<p>Space is added to the right and top sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
 </li>
 <li>
 <p>The <code>margin_right_top</code> (and variant) does not violate the natural <a href="limits.html" class="xref page">limits</a>
-of the subject. <code>margin_right_top</code> (and variant) will respect the
-subject&#8217;s min-max constraints and resizability.</p>
+of the subject. <code>margin_right_top</code> (and variant) will respect the subject&#8217;s
+min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
-<hr>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -841,38 +950,49 @@ subject&#8217;s min-max constraints and resizability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h3>
-<div class="listingblock">
+<h3 id="_expressions_11"><a class="anchor" href="#_expressions_11"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// variant 1
-margin_right_bottom({right, bottom}, subject)
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">margin_right_bottom({right, bottom}, subject)
 
-// variant 2
 margin_right_bottom(right, bottom, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_11"><a class="anchor" href="#_semantics_11"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>Space is added to the to the right and bottom sides of the subject with the
-given parameters.</p>
+<p>Space is added to the right and bottom sides of the subject with the given
+parameters.</p>
 </li>
 <li>
 <p>The element&#8217;s <a href="limits.html" class="xref page">limits</a> is overridden to account for the additional space.</p>
 </li>
 <li>
 <p>The <code>margin_right_bottom</code> (and variant) does not violate the natural
-limits of the subject. <code>margin_right_bottom</code> (and variant) will respect
+<a href="limits.html" class="xref page">limits</a> of the subject. <code>margin_right_bottom</code> (and variant) will respect
 the subject&#8217;s min-max constraints and resizability.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>

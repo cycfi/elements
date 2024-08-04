@@ -248,28 +248,41 @@ default 1.0 stretchiness.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">hstretch(stretch, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
 </li>
 <li>
-<p>The stretch value has no effect to elements with fixed horizontal size.</p>
+<p>The stretch value has no effect on elements with fixed horizontal size.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>For example, the image below shows how three elements are laid out in an
 <code>htile</code>, with stretch values of <code>1.0</code>, <code>1.0</code> and <code>2.0</code>, respectively:</p>
@@ -313,28 +326,41 @@ its siblings.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vstretch(stretch, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
 <p>The <code>subject</code> will assume the given <code>stretch</code> value.</p>
 </li>
 <li>
-<p>The stretch value has no effect to elements with fixed <em>vertical limits</em>.</p>
+<p>The stretch value has no effect on elements with fixed <em>vertical limits</em>.</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>For example, the image below shows how three elements are laid out in an
 <code>htile</code>, with stretch values of <code>0.5</code>, <code>1.0</code> and <code>1.5</code>, respectively:</p>

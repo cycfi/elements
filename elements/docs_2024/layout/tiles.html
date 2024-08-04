@@ -209,8 +209,8 @@ available space.</p>
 </div>
 <div class="sect2">
 <h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.</p>
@@ -272,7 +272,7 @@ the element will be aligned to the top-left.</p>
 </ol>
 </div>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -303,12 +303,36 @@ horizontal tile element.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile(e1,...eN)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>In addition to the semantics of Horizontal Tiles, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_example"><a class="anchor" href="#_example"></a>Example:</h3>
@@ -329,17 +353,6 @@ If the number of elements is not fixed, you can use an
 </td>
 </tr>
 </table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In addition to the semantics of Horizontal Tiles, returns instance of
-<code>Composite</code>.</p>
-</li>
-</ol>
 </div>
 </div>
 </div>
@@ -369,7 +382,7 @@ remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">htile_composite c;</code></pre>
@@ -417,9 +430,9 @@ build complex hierarchical structures.</p>
 available space.</p>
 </div>
 <div class="sect2">
-<h3 id="_semantics_3"><a class="anchor" href="#_semantics_3"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<h3 id="_semantics_2"><a class="anchor" href="#_semantics_2"></a>Semantics</h3>
+<div class="ulist">
+<ul>
 <li>
 <p>The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.</p>
@@ -481,7 +494,7 @@ the element will be aligned to the top-left.</p>
 </ol>
 </div>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -512,12 +525,36 @@ vertical tile element.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_3"><a class="anchor" href="#_expression_3"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile(e1,...eN)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>In addition to the semantics of Vertical Tiles, returns instance of
+<code>Composite</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_example_3"><a class="anchor" href="#_example_3"></a>Example</h3>
@@ -539,18 +576,6 @@ If the number of elements is not fixed, you can use an
 </tr>
 </table>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_semantics_4"><a class="anchor" href="#_semantics_4"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In addition to the semantics of Vertical Tiles, returns instance of
-<code>Composite</code>.</p>
-</li>
-</ol>
-</div>
-<hr>
 </div>
 </div>
 </div>
@@ -579,7 +604,7 @@ Just remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_4"><a class="anchor" href="#_expression_4"></a>Expression</h3>
+<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">vtile_composite c;</code></pre>

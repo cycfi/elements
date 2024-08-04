@@ -214,26 +214,38 @@ or down to suit. The default scale is 1.0 (no scale).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">scale(scale_, subject)</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>The <code>subject</code> will scaled given the <code>scale_</code> value. A value &gt; 1.0 scales
-the element up (zoom in), while a value &lt; 1.0 scales down (zoom out).</p>
+<p>The <code>subject</code> will be scaled given the <code>scale_</code> value. A value &gt; 1.0 scales the element up (zoom in), while a value &lt; 1.0 scales down (zoom out).</p>
 </li>
 <li>
 <p>Returns instance of <code>Proxy</code>.</p>
 </li>
-</ol>
-</div>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>

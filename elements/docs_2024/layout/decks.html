@@ -197,8 +197,8 @@ unlike layers, only the selected element is active (top-most by default).</p>
 </div>
 <div class="sect2">
 <h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>Everything listed in the <a href="layers.html#_semantics" class="xref page">Layer Semantics</a>, except 2 and 3.</p>
 </li>
@@ -208,9 +208,8 @@ unlike layers, only the selected element is active (top-most by default).</p>
 <li>
 <p>Only the active selected element is given the chance to process UI control.</p>
 </li>
-</ol>
+</ul>
 </div>
-<hr>
 </div>
 </div>
 </div>
@@ -240,12 +239,35 @@ the deck element.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
-<div class="listingblock">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck(e1, e2, e3... eN)</code></pre>
 </div>
-</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>In addition to the semantics of Decks, returns instance of <code>Composite</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
@@ -270,12 +292,12 @@ If the number of elements is not fixed, you can use an
 </div>
 <div class="sect2">
 <h3 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>In addition to the semantics of Deck, returns instance of <code>Composite</code>.</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -305,7 +327,7 @@ Remember that the items are <code>element_ptr</code> instances.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expression_2"><a class="anchor" href="#_expression_2"></a>Expression</h3>
+<h3 id="_expression"><a class="anchor" href="#_expression"></a>Expression</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">deck_composite c;</code></pre>

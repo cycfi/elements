@@ -879,7 +879,6 @@ a|
 * Sets the margin of the button.
 * Compiler error if the styler does not have a margin property.
 
-
 a|
 [source,c++]
 ----

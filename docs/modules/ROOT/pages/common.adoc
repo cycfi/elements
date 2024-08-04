@@ -30,3 +30,4 @@
 :receiver: receiver
 :font_descr: font_descr
 :color: color
+:text-align: text-align

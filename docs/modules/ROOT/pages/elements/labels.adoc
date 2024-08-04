@@ -49,6 +49,7 @@ lst.font(font)
 
 a|
 * Set the font of the label.
+* Adds a font property to the label styler.
 
 a|
 [source,c++]
@@ -58,6 +59,7 @@ lst.font_size(size)
 
 a|
 * Set the font size of the label.
+* Adds a font size property to the label styler.
 
 a|
 [source,c++]
@@ -71,6 +73,7 @@ a|
   {Global-theme}'s `label_font`.
 * A value greater than 1.0 makes the label larger.
 * A value less than 1.0 makes the label smaller.
+* Adds a font size property to the label styler.
 
 a|
 [source,c++]
@@ -80,6 +83,7 @@ lst.font_color(color)
 
 a|
 * Set the font color of the label.
+* Adds a font color property to the label styler.
 
 a|
 [source,c++]
@@ -88,7 +92,8 @@ lst.text_align(align)
 ----
 
 a|
-* Set the text alignment of the label.
+* Set the text alignment of the label. See {text-align} for more info.
+* Adds a text alignment property to the label styler.
 |===
 
 All of these expressions return the label styler. Therefore, these
@@ -103,7 +108,7 @@ auto my_label = label("Hello, World!")
    .font("Helvetica")
    .font_size(18.0)
    .font_color(colors::magenta)
-   .text_align(align::left);
+   .text_align(text_halign::left);
 ----
 
 == Label Styler Defaults
@@ -134,6 +139,123 @@ The default heading styler is created with the following defaults:
 | relative_font_size            | `1.0f`
 | font_color                    | {Global-theme} heading_font_color
 | text_align                    | {Global-theme} heading_text_align
+|===
+
+== Getters and Setters
+
+The following functions are provided to get and set the properties of a
+label styler.
+
+=== Notation
+
+`str`           :: `std::string`
+`lst`           :: A label styler instance.
+`font`          :: A font descriptor `{font_descr}`.
+`size`          :: `float`.
+`color`         :: An object of type `{color}`.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+lst.get_text()
+----
+a|
+* Get the text of the label.
+* Returns `std::string`.
+a|
+[source,c++]
+----
+lst.set_text(str)
+----
+a|
+* Set the text of the label.
+
+a|
+[source,c++]
+----
+lst.get_font()
+----
+a|
+* Get the font of the label.
+* Returns `{font_descr}`.
+* Returns the default if the styler does not have a font property.
+a|
+[source,c++]
+----
+lst.set_font(font)
+----
+a|
+* Set the font of the label.
+* Compiler error if the styler does not have a font property.
+
+a|
+[source,c++]
+----
+lst.get_font_size()
+----
+a|
+* Get the font size of the label.
+* Returns `float`.
+* Returns the default if the styler does not have a font size property.
+a|
+[source,c++]
+----
+lst.set_font_size(size)
+----
+a|
+* Set the font size of the label.
+* Compiler error if the styler does not have a font size property.
+a|
+[source,c++]
+----
+lst_set_relative_font_size(size)
+----
+a|
+* Set the relative font size of the label.
+* Compiler error if the styler does not have a font size property.
+
+a|
+[source,c++]
+----
+lst.get_font_color()
+----
+a|
+* Get the font color of the label.
+* Returns `{color}`.
+* Returns the default if the styler does not have a font color property.
+a|
+[source,c++]
+----
+lst.set_font_color(color)
+----
+a|
+* Set the font color of the label.
+* Compiler error if the styler does not have a font color property.
+
+a|
+[source,c++]
+----
+lst.get_text_align()
+----
+a|
+* Get the text alignment of the label.
+* Returns `int`. See {text-align} for more info.
+* Returns the default if the styler does not have a text alignment property.
+a|
+[source,c++]
+----
+lst.set_text_align(align)
+----
+a|
+* Set the text alignment of the label. See {text-align} for more info.
+* Compiler error if the styler does not have a text alignment property.
+
 |===
 
 '''

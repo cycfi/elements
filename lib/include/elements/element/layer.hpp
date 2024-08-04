@@ -56,7 +56,7 @@ namespace cycfi::elements
     * \param elements
     *    The elements to be added to the layer (a parameter pack).
     *
-    * @return
+    * \return
     *    A reverse layer composite of the provided elements (top-most element
     *    last).
     */
@@ -122,7 +122,7 @@ namespace cycfi::elements
     * \param elements
     *    The elements to be added to the deck (a parameter pack).
     *
-    * @return
+    * \return
     *    A deck composite of the provided elements.
     */
    template <typename... E>

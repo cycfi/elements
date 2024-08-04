@@ -245,7 +245,7 @@ namespace cycfi::elements
     * \tparam Base
     *    The base cell composer type.
     *
-    * @return
+    * \return
     *    Shared pointer to a cell composer.
     */
    template <typename F>
@@ -282,7 +282,7 @@ namespace cycfi::elements
     * \param compose
     *    Function used to compose the cells.
     *
-    * @return
+    * \return
     *     Shared pointer to a cell composer.
     */
    template <typename F>
@@ -319,7 +319,7 @@ namespace cycfi::elements
     * \param compose
     *    Function used to compose the cells.
     *
-    * @return
+    * \return
     *     Shared pointer to a cell composer.
     */
    template<typename F>
@@ -350,7 +350,7 @@ namespace cycfi::elements
     * \param compose
     *    Function used to compose the cells.
     *
-    * @return
+    * \return
     *     Shared pointer to a cell composer.
     */
    template <typename F>
@@ -393,7 +393,7 @@ namespace cycfi::elements
     * \param compose
     *    Function used to compose the cells.
     *
-    * @return
+    * \return
     *     Shared pointer to a cell composer.
     */
    template <typename F>
@@ -759,7 +759,7 @@ namespace cycfi::elements
     * \param ctx
     *    The basic_context object.
     *
-    * @return
+    * \return
     *    The cell's size limits along the secondary axis.
     */
    template <typename Base>
@@ -786,7 +786,7 @@ namespace cycfi::elements
     *    access to the current view and canvas. The context can be used in
     *    calculating size limits of the element.
     *
-    * @return
+    * \return
     *    The cell's size along the main axis.
     */
    template <typename Base>

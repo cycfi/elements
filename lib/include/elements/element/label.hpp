@@ -314,7 +314,7 @@ namespace cycfi::elements
     * \brief
     *    Get the font for labels from the theme.
     *
-    * @return
+    * \return
     *    Default font description for labels.
     */
    inline default_label_styler::font_type default_label_styler::get_font() const
@@ -326,7 +326,7 @@ namespace cycfi::elements
     * \brief
     *    Get the size of the font for labels from the theme.
     *
-    * @return
+    * \return
     *    Default size of the font for labels.
     */
    inline float default_label_styler::get_font_size() const
@@ -338,7 +338,7 @@ namespace cycfi::elements
     * \brief
     *    Get the default size of the font for labels from the theme.
     *
-    * @return
+    * \return
     *    Default size of the font for labels.
     */
    inline float default_label_styler::get_default_font_size() const
@@ -350,7 +350,7 @@ namespace cycfi::elements
     * \brief
     *    Get the color of the font for labels from the theme.
     *
-    * @return
+    * \return
     *    Default color of the font for labels.
     */
    inline color default_label_styler::get_font_color() const
@@ -362,7 +362,7 @@ namespace cycfi::elements
     * \brief
     *    Get the text alignment for labels from the theme.
     *
-    * @return
+    * \return
     *    Default text alignment for labels.
     */
    inline int default_label_styler::get_text_align() const
@@ -374,7 +374,7 @@ namespace cycfi::elements
     * \brief
     *    Get the font of headings from the theme.
     *
-    * @return
+    * \return
     *    Default font description for headings.
     */
    inline default_heading::font_type default_heading::get_font() const
@@ -386,7 +386,7 @@ namespace cycfi::elements
     * \brief
     *    Get the size of the font for headings from the theme.
     *
-    * @return
+    * \return
     *    Default size of the font for headings.
     */
    inline float default_heading::get_font_size() const
@@ -398,7 +398,7 @@ namespace cycfi::elements
     * \brief
     *    Get the default size of the font for headings from the theme.
     *
-    * @return
+    * \return
     *    Default size of the font for headings.
     */
    inline float default_heading::get_default_font_size() const
@@ -410,7 +410,7 @@ namespace cycfi::elements
     * \brief
     *    Get the color of the font for headings from the theme.
     *
-    * @return
+    * \return
     *    Default color of the font for headings.
     */
    inline color default_heading::get_font_color() const
@@ -422,7 +422,7 @@ namespace cycfi::elements
     * \brief
     *    Get the text alignment for headings from the theme.
     *
-    * @return
+    * \return
     *    Default text alignment for headings.
     */
    inline int default_heading::get_text_align() const
@@ -440,7 +440,7 @@ namespace cycfi::elements
     * \param font_
     *    The font to be set.
     *
-    * @return
+    * \return
     *    `label_styler_gen` with the specified font.
     */
    template <concepts::LabelStyler Base>
@@ -460,7 +460,7 @@ namespace cycfi::elements
     * \param size
     *    The size of the font to be set.
     *
-    * @return
+    * \return
     *    `label_styler_gen` with the specified font size.
     */
    template <concepts::LabelStyler Base>
@@ -480,7 +480,7 @@ namespace cycfi::elements
     * \param size
     *    The relative size of the font to be set.
     *
-    * @return
+    * \return
     *    `label_styler_gen` with the specified relative font size.
     */
    template <concepts::LabelStyler Base>
@@ -500,7 +500,7 @@ namespace cycfi::elements
     * \param color_
     *    The color of the font to be set.
     *
-    * @return
+    * \return
     *    `label_styler_gen` with the specified font color.
     */
    template <concepts::LabelStyler Base>
@@ -520,7 +520,7 @@ namespace cycfi::elements
     * \param align
     *    The alignment to be set.
     *
-    * @return
+    * \return
     *    `label_styler_gen` with the specified text alignment.
     */
    template <concepts::LabelStyler Base>
@@ -595,7 +595,7 @@ namespace cycfi::elements
     *    The type of user-defined function that is used for conversion of the
     *    value into text.
     *
-    * @return
+    * \return
     *    The value of the label.
     */
    template <concepts::Element Subject, typename T, typename F>
@@ -625,7 +625,7 @@ namespace cycfi::elements
     * \param subject
     *    The subject.
     *
-    * @return
+    * \return
     *    A new `as_label_element` given Subject and as_string Function.
     */
    template <typename T, concepts::Element Subject, typename F>
@@ -643,7 +643,7 @@ namespace cycfi::elements
     * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @return
+    * \return
     *    The text of the label.
     */
    template <concepts::LabelStyler Base>
@@ -676,7 +676,7 @@ namespace cycfi::elements
     * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @return The font of the label.
+    * \return The font of the label.
     */
    template <concepts::LabelStyler Base>
    inline typename label_styler_with_font<Base>::font_type
@@ -708,7 +708,7 @@ namespace cycfi::elements
     * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @return
+    * \return
     *    The font size of the label.
     */
    template <concepts::LabelStyler Base>
@@ -756,7 +756,7 @@ namespace cycfi::elements
     * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @return
+    * \return
     *    The font color of the label.
     */
    template <concepts::LabelStyler Base>
@@ -788,7 +788,7 @@ namespace cycfi::elements
     * \tparam Base
     *    A base class that fulfills the `LabelStyler` concept.
     *
-    * @return
+    * \return
     *    The text alignment of the label.
     */
    template <concepts::LabelStyler Base>

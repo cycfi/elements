@@ -306,10 +306,10 @@ a|
 * Adds bottom-right corner radius property to the styler.
 |===
 
-All of these expressions return the button styler. Therefore, these expressions
+All of these expressions return a button styler. Therefore, these expressions
 can be chained together to create the button styler with the desired
-appearance. The result is then passed to one of the button creation functions
-(see {Buttons}).
+appearance. The client then pass on the result is to one of the button
+creation functions (see {Buttons}).
 
 === Examples
 

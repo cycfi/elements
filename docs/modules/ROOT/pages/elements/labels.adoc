@@ -119,9 +119,9 @@ a|
 * Adds a text alignment property to the label styler.
 |===
 
-All of these expressions return the label styler. Therefore, these
-expressions can be chained together to create the label styler with the
-desired appearance.
+All of these expressions return a label styler. Therefore, these expressions
+can be chained together to create the label styler with the desired
+appearance.
 
 === Example
 

@@ -27,19 +27,19 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Utility to find the bounds established by the innermost port given a
     *    child context. If there is none, returns ctx.view_bounds().
     *
     *    This utility function searches for the bounds of the innermost port.
     *    If no port is found, the function returns the view's bounds.
     *
-    * @param ctx
+    * \param ctx
     *    The context of the child element for which the port bounds are being
     *    determined. This context carries information about the current state
     *    of the UI, including any enclosing ports.
     *
-    * @return
+    * \return
     *    The rectangular bounds defined by the innermost port affecting the
     *    given context, or the view bounds if no such port exists.
     */
@@ -109,7 +109,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Finds the nearest scrollable context in the hierarchy.
     *
     *    This function traverses the context hierarchy starting from the
@@ -123,10 +123,10 @@ namespace cycfi::elements
     *    element. If no scrollable element is found in the hierarchy, the
     *    function returns a `scrollable_context` with null pointers.
     *
-    * @param ctx_
+    * \param ctx_
     *    The starting context for the search.
     *
-    * @return
+    * \return
     *    A `scrollable_context` struct with pointers to the found context and
     *    scrollable element. If not found, both pointers in the struct will
     *    be null.
@@ -180,18 +180,18 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Draws the scrollbar for the scroller_base.
     *
-    * @param ctx
+    * \param ctx
     *    The drawing context, containing the canvas and other relevant
     *    drawing information.
     *
-    * @param info
+    * \param info
     *    A `scrollbar_info` struct containing details about the scrollbar's
     *    bounds, position, and extent.
     *
-    * @param mp
+    * \param mp
     *    The current mouse position.
     */
    void scroller_base::draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp)
@@ -225,22 +225,22 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Calculates the position and size of the scrollbar.
     *
     *    This function determines the position and size of the scrollbar
     *    within the scroller_base, based on the current scrolling information
     *    provided by `info`.
     *
-    * @param ctx
+    * \param ctx
     *    The drawing context.
     *
-    * @param info
+    * \param info
     *    A `scrollbar_info` struct containing details about the current
     *    scroll state, including the bounds of the scroller_base, the
     *    position of the scrollbar, and the total extent of the content.
     *
-    * @return
+    * \return
     *    A `rect` representing the position and size of the scrollbar.
     */
    rect scroller_base::scroll_bar_position(context const& /* ctx */, scrollbar_info const& info)
@@ -412,7 +412,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Sets the scroll alignment of the scroller_base.
     *
     *    This function adjusts the scroll alignment of the scroller_base
@@ -428,7 +428,7 @@ namespace cycfi::elements
     *
     *    Take note that alignment values are clamped to the range [0.0, 1.0].
     *
-    * @param p
+    * \param p
     *    The point representing the new scroll alignment, where `p.x` is the
     *    new horizontal alignment and `p.y` is the new vertical alignment.
     */

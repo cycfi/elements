@@ -19,7 +19,7 @@ namespace cycfi::elements
    /**
     * @class port_base
     *
-    * @brief
+    * \brief
     *    Base class for port elements, representing windows over large areas.
     *
     *    `port_base` serves as an abstract base class for port elements
@@ -53,7 +53,7 @@ namespace cycfi::elements
    /**
     * @class port_element
     *
-    * @brief
+    * \brief
     *    A port element with alignment capabilities, extending `port_base`.
     *    This class models supports horizontal and vertical alignment.
     */
@@ -87,7 +87,7 @@ namespace cycfi::elements
    /**
     * @class vport_element
     *
-    * @brief
+    * \brief
     *    A vertical port element that extends `port_base`, specifically
     *    designed for vertical alignment within a port.
     *
@@ -123,7 +123,7 @@ namespace cycfi::elements
    /**
     * @class hport_element
     *
-    * @brief
+    * \brief
     *    A horizontal port element that extends `port_base`, specifically
     *    designed for horizontal alignment within a port.
     *
@@ -159,7 +159,7 @@ namespace cycfi::elements
    /**
     * @class scrollable
     *
-    * @brief
+    * \brief
     *    Mixin class for an element that is scrollable.
     *
     *    Provides functionality to scroll a given rectangle into view within
@@ -179,7 +179,7 @@ namespace cycfi::elements
    /**
     * @struct scrollable::scrollable_context
     *
-    * @brief
+    * \brief
     *    The context within which a scrollable element operates.
     */
    struct scrollable::scrollable_context
@@ -192,7 +192,7 @@ namespace cycfi::elements
 
    /**
     * @enum ScrollbarFlags
-    * @brief Flags to control the visibility and behavior of scrollbars.
+    * \brief Flags to control the visibility and behavior of scrollbars.
     * @var no_scrollbars:  Hides all scrollbars.
     * @var no_hscroll:     Disables horizontal scrolling.
     * @var no_vscroll:     Disables vertical scrolling.
@@ -211,7 +211,7 @@ namespace cycfi::elements
    /**
     * @class scroller_base
     *
-    * @brief
+    * \brief
     *    Base proxy class for elements that are scrollable.
     *
     *    Inherits from `port_element` and `scrollable` to provide a
@@ -291,7 +291,7 @@ namespace cycfi::elements
    /**
     * @struct scrollbar_info
     *
-    * @brief
+    * \brief
     *    Information about a scrollbar.
     *
     * @var pos
@@ -333,7 +333,7 @@ namespace cycfi::elements
    //--------------------------------------------------------------------------
 
    /**
-    * @brief
+    * \brief
     *    Creates a proxy object that wraps a given UI element, allowing it to
     *    be displayed within a port.
     *
@@ -342,14 +342,14 @@ namespace cycfi::elements
     *    port. A port is a window or viewport over a larger area, and
     *    elements within a port can be aligned and scrolled within this area.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the UI element to be wrapped. Must meet the requirements
     *    of the `concepts::Element` concept.
     *
-    * @param subject
+    * \param subject
     *    The UI element to be wrapped in the port.
     *
-    * @return
+    * \return
     *    A proxy object that wraps the specified UI element in a
     *    `port_element`.
     */
@@ -361,7 +361,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Default constructor for the port_element class.
     */
    inline port_element::port_element()
@@ -370,10 +370,10 @@ namespace cycfi::elements
    {}
 
    /**
-    * @brief
+    * \brief
     *    Get the current horizontal alignment of the port element.
     *
-    * @return
+    * \return
     *    The current horizontal alignment value, ranging from 0.0 to 1.0.
     */
    inline double port_element::halign() const
@@ -382,10 +382,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the horizontal alignment of the port element.
     *
-    * @param val
+    * \param val
     *    The new horizontal alignment value, ranging from 0.0 to 1.0.
     */
    inline void port_element::halign(double val)
@@ -394,10 +394,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Get the current vertical alignment of the port element.
     *
-    * @return
+    * \return
     *    The current vertical alignment value, ranging from 0.0 to 1.0.
     */
    inline double port_element::valign() const
@@ -406,10 +406,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Set the vertical alignment of the port element.
     *
-    * @param val
+    * \param val
     *    The new vertical alignment value, ranging from 0.0 to 1.0.
     */
    inline void port_element::valign(double val)
@@ -418,7 +418,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Constructs a `vport_element`.
     */
    inline vport_element::vport_element()
@@ -427,7 +427,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Creates a vertical port element that wraps a given UI element,
     *    allowing it to be displayed within a vertical port.
     *
@@ -436,14 +436,14 @@ namespace cycfi::elements
     *    as part of a vertical port. A vertical port is a viewport that
     *    allows vertical scrolling and alignment within a larger area.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the UI element to be wrapped. Must meet the requirements
     *    of the `concepts::Element` concept.
     *
-    * @param subject
+    * \param subject
     *    The UI element to be wrapped in the vertical port.
     *
-    * @return
+    * \return
     *    A proxy's subject that wraps the specified UI element in a
     *    `vport_element`.
     */
@@ -455,7 +455,7 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Constructs an `hport_element`.
     */
    inline hport_element::hport_element()
@@ -463,7 +463,7 @@ namespace cycfi::elements
    {}
 
    /**
-    * @brief
+    * \brief
     *    Creates a horizontal port element that wraps a given UI element,
     *    allowing it to be displayed within a horizontal port.
     *
@@ -472,14 +472,14 @@ namespace cycfi::elements
     *    as part of a horizontal port. A horizontal port is a viewport that
     *    allows horizontal scrolling and alignment within a larger area.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the UI element to be wrapped. Must meet the requirements
     *    of the `concepts::Element` concept.
     *
-    * @param subject
+    * \param subject
     *    The UI element to be wrapped in the horizontal port.
     *
-    * @return
+    * \return
     *    A proxy's subject that wraps the specified UI element in a
     *    `hport_element`.
     */
@@ -491,17 +491,17 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Attempts to scroll the rectangle, r_, into view.
     *
     *    If both `scrollable_ptr` and `context_ptr` are valid, it calls the
     *    `scroll_into_view` member function of the scrollable object to
     *    attempt to scroll the rectangle into view.
     *
-    * @param r_
+    * \param r_
     *    The rectangle to scroll into view.
     *
-    * @return
+    * \return
     *    True if the operation was successful, false otherwise.
     */
    inline bool scrollable::scrollable_context::scroll_into_view(rect r_)
@@ -515,10 +515,10 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Constructor for scroller_base.
     *
-    * @param traits
+    * \param traits
     *    Configuration traits for the scroller, controlling its behavior and
     *    appearance.
     */
@@ -528,24 +528,24 @@ namespace cycfi::elements
    {}
 
    /**
-    * @brief
+    * \brief
     *    Creates a generic scroller.
     *
     *    Constructs a proxy object wrapping a given subject with
     *    scroller_base, allowing the subject to be scrolled both horizontally
     *    and vertically, depending on the specified traits.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the subject to be wrapped. Must satisfy the
     *    concepts::Element concept.
     *
-    * @param subject
+    * \param subject
     *    The subject to be wrapped in a scroller.
     *
-    * @param traits
+    * \param traits
     *    Configuration traits for the scroller.
     *
-    * @return
+    * \return
     *    A proxy object wrapping the subject with scroller_base
     *    functionality.
     */
@@ -557,24 +557,24 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Creates a vertical scroller.
     *
     *    Constructs a proxy object wrapping a given subject with
     *    scroller_base, specifically for vertical scrolling.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the subject to be wrapped. Must satisfy the
     *    concepts::Element concept.
     *
-    * @param subject
+    * \param subject
     *    The subject to be wrapped in a vertical scroller.
     *
-    * @param traits
+    * \param traits
     *    Configuration traits for the scroller, with horizontal scrolling
     *    disabled.
     *
-    * @return
+    * \return
     *    A proxy object wrapping the subject with vertical scroller_base
     *    functionality.
     */
@@ -586,24 +586,24 @@ namespace cycfi::elements
    }
 
    /**
-    * @brief
+    * \brief
     *    Creates a horizontal scroller.
     *
     *    Constructs a proxy object wrapping a given subject with
     *    scroller_base, specifically for horizontal scrolling.
     *
-    * @tparam Subject
+    * \tparam Subject
     *    The type of the subject to be wrapped. Must satisfy the
     *    concepts::Element concept.
     *
-    * @param subject
+    * \param subject
     *    The subject to be wrapped in a horizontal scroller.
     *
-    * @param traits
+    * \param traits
     *    Configuration traits for the scroller, with vertical scrolling
     *    disabled.
     *
-    * @return
+    * \return
     *    A proxy object wrapping the subject with horizontal scroller_base
     *    functionality.
     */

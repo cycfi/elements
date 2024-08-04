@@ -18,9 +18,17 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Buttons
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief Base class for button styling.
+    *
+    * The `button_styler_base` class is responsible for providing the basic
+    * styling and behavior for buttons. It inherits from `element` and
+    * `basic_receiver<button_state>`, allowing it to handle button states
+    * and interact with the user interface.
+    *
+    * This class provides the foundational functionality for button styling,
+    * including cursor handling and control requirements.
+    */
    struct button_styler_base : element, basic_receiver<button_state>
    {
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;

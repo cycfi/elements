@@ -21,19 +21,22 @@ Overrides the {limits} of an element.
 `limits`    :: Instance of {view_limits}
 `subject`   :: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 limit(limits, subject)
 ----
-
-=== Semantics
-
-. The {limits} of `subject` will be set to the specified {limits}
-constrained by The natural _limits_ of the `subject`.
+a|
+. The {limits} of `subject` will be set to the specified {limits} constrained by the natural _limits_ of the `subject`.
 . The natural _limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+. Returns an instance of `Proxy`.
+|===
 
 == fixed_size
 
@@ -46,21 +49,24 @@ Fixes the size of an enclosed element (`subject`).
 `width`, `height` :: `float`
 `subject`         :: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-fixed_size({width, height}, subject)
+fixed_size({width, height},
+   subject
+)
 ----
-
-=== Semantics
-
-. `subject` will be laid out with a fixed `width` and `height`, constrained
-by The natural _limits_ of the `subject`.
+a|
+. `subject` will be laid out with a fixed `width` and `height`, constrained by the natural _limits_ of the `subject`.
 . The natural _limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == hsize
 
@@ -73,22 +79,23 @@ Fixes the horizontal size of an enclosed element (`subject`).
 `width`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 hsize(width, subject)
 ----
-
-=== Semantics
-
-. `subject` will be laid out with a fixed `width`, constrained by the
-natural _horizontal limits_ of the `subject`.
+a|
+. `subject` will be laid out with a fixed `width`, constrained by the natural _horizontal limits_ of the `subject`.
 . The natural _horizontal limits_ of the element will not be violated.
 . The natural _vertical limits_ of `subject` will not be affected.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == vsize
 
@@ -101,22 +108,23 @@ Fixes the _vertical limits_ of an enclosed element (`subject`).
 `height`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vsize(height, subject)
 ----
-
-=== Semantics
-
-. `subject` will be laid out with a fixed `height`, constrained by the
-natural _vertical limits_ of the `subject`.
+a|
+. `subject` will be laid out with a fixed `height`, constrained by the natural _vertical limits_ of the `subject`.
 . The natural _vertical limits_ of the element will not be violated.
 . The natural _horizontal limits_ of `subject` will not be affected.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == min_size
 
@@ -129,21 +137,24 @@ Overrides the _minimum limits_ of an enclosed element (`subject`).
 `width`, `height`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-min_size({width, height}, subject)
+min_size({width, height},
+   subject
+)
 ----
-
-=== Semantics
-
-. The _minimum limits_ of `subject` will be set to the specified `width` and
-`height`, constrained by the natural _minimum limits_ of the `subject`.
-. the natural _minimum limits_ of the element will not be violated.
+a|
+. The _minimum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _minimum limits_ of the `subject`.
+. The natural _minimum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == hmin_size
 
@@ -156,23 +167,22 @@ Overrides the _minimum horizontal limit_ of an enclosed element (`subject`).
 `width`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 hmin_size(width, subject)
 ----
-
-=== Semantics
-
-. The _minimum horizontal limit_ of `subject` will be set to the specified
-`width` constrained by the natural _horizontal minimum limits_ of the
-`subject`.
-. The natural _horizontal minimum limits_ of the element will not be
-violated.
+a|
+. The _minimum horizontal limit_ of `subject` will be set to the specified `width` constrained by the natural _horizontal minimum limits_ of the `subject`.
+. The natural _horizontal minimum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == vmin_size
 
@@ -185,21 +195,22 @@ Overrides the _minimum vertical limit_ of an enclosed element (`subject`).
 `height`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vmin_size(height, subject)
 ----
-
-=== Semantics
-
-. The _minimum vertical limit_ of `subject` will be set to the specified `height`
-constrained by the natural vertical _minimum limits_ of the `subject`.
+a|
+. The _minimum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural vertical _minimum limits_ of the `subject`.
 . The natural _vertical minimum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == max_size
 
@@ -212,21 +223,24 @@ Overrides the _maximum limits_ of an enclosed element (`subject`).
 `width`, `height`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-max_size({width, height}, subject)
+max_size({width, height},
+   subject
+)
 ----
-
-=== Semantics
-
-. The _maximum limits_ of `subject` will be set to the specified `width` and
-`height`, constrained by the natural _maximum limits_ of the `subject`.
+a|
+. The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
 . The natural _maximum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == hmax_size
 
@@ -239,23 +253,24 @@ Overrides the _maximum horizontal limit_ of an enclosed element (`subject`).
 `width`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-hmax_size(width, subject)
+max_size({width, height},
+   subject
+)
 ----
-
-=== Semantics
-
-. The _maximum horizontal limit_ of `subject` will be set to the specified
-`width` constrained by the natural _maximum horizontal limit_ of the
-`subject`.
-. The natural _maximum horizontal limit_ of the element will not be
-violated.
+a|
+. The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
+. The natural _maximum limits_ of the element will not be violated.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == vmax_size
 
@@ -268,20 +283,22 @@ Overrides the _maximum vertical limit_ of an enclosed element (`subject`).
 `height`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vmax_size(height, subject)
 ----
-
-=== Semantics
-
-. The _maximum vertical limit_ of `subject` will be set to the specified
-`height` constrained by the natural _maximum vertical limit_ of the
-`subject`
+a|
+. The _maximum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural _maximum vertical limit_ of the `subject`.
 . The natural _maximum vertical limit_ of the element will not be violated.
 . Returns instance of `Proxy`.
+|===
 
 ---
 

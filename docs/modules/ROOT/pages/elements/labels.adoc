@@ -1,0 +1,142 @@
+= Labels
+
+include::../common.adoc[]
+
+== Overview
+
+Labels are used to display static text. They are typically used for various
+tasks such as annotating other elements, such as input fields or buttons.
+Label stylers allow for the customization of the label's appearance,
+including the font, color, alignment, and size.
+
+=== Notation
+
+`str`           :: `std::string`
+`lst`           :: A label styler instance.
+`font`          :: A font descriptor `{font_descr}`.
+`size`          :: `float`.
+`color`         :: An object of type `{color}`.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+label(str)
+----
+
+a|
+* Create a label styler with the given text.
+
+a|
+[source,c++]
+----
+heading(str)
+----
+
+a|
+* Create a heading with the given text.
+
+a|
+[source,c++]
+----
+lst.font(font)
+----
+
+a|
+* Set the font of the label.
+
+a|
+[source,c++]
+----
+lst.font_size(size)
+----
+
+a|
+* Set the font size of the label.
+
+a|
+[source,c++]
+----
+lst.relative_font_size(size)
+----
+
+a|
+* Set the relative font size of the label.
+* `size` is relative to the default size dictated by the
+  {Global-theme}'s `label_font`.
+* A value greater than 1.0 makes the label larger.
+* A value less than 1.0 makes the label smaller.
+
+a|
+[source,c++]
+----
+lst.font_color(color)
+----
+
+a|
+* Set the font color of the label.
+
+a|
+[source,c++]
+----
+lst.text_align(align)
+----
+
+a|
+* Set the text alignment of the label.
+|===
+
+All of these expressions return the label styler. Therefore, these
+expressions can be chained together to create the label styler with the
+desired appearance.
+
+=== Example
+
+[source,c++]
+----
+auto my_label = label("Hello, World!")
+   .font("Helvetica")
+   .font_size(18.0)
+   .font_color(colors::magenta)
+   .text_align(align::left);
+----
+
+== Label Styler Defaults
+
+The default label styler is created with the following defaults:
+
+[cols="2,3", options="header"]
+|===
+| Property | Default
+
+| font                          | {Global-theme} label_font
+| font_size                     | {Global-theme} label_font.size
+| relative_font_size            | `1.0f`
+| font_color                    | {Global-theme} label_font_color
+| text_align                    | {Global-theme} label_text_align
+|===
+
+== Heading Styler Defaults
+
+The default heading styler is created with the following defaults:
+
+[cols="2,3", options="header"]
+|===
+| Property | Default
+
+| font                          | {Global-theme} heading_font
+| font_size                     | {Global-theme} heading_font.size
+| relative_font_size            | `1.0f`
+| font_color                    | {Global-theme} heading_font_color
+| text_align                    | {Global-theme} heading_text_align
+|===
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -28,3 +28,5 @@
 :Customization: Customization
 :Global-theme: Global theme
 :receiver: receiver
+:font_descr: font_descr
+:color: color

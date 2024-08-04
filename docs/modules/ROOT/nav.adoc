@@ -4,6 +4,7 @@
 * xref:elements.adoc[Elements]
 ** xref:elements/buttons.adoc[Buttons]
 ** xref:elements/button_stylers.adoc[Button Stylers]
+** xref:elements/labels.adoc[Labels]
 * xref:layout.adoc[Layout]
 ** xref:layout/limits.adoc[Limits]
 ** xref:layout/sizing.adoc[Sizing]

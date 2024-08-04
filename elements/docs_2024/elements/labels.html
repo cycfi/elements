@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Buttons :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/skia_2024/elements/buttons.html">
+    <title>Labels :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/docs_2024/elements/labels.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -74,13 +74,13 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../elements.html">Elements</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="buttons.html">Buttons</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="button_stylers.html">Button Stylers</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="labels.html">Labels</a>
   </li>
 </ul>
@@ -168,15 +168,15 @@
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
     <li><a href="../elements.html">Elements</a></li>
-    <li><a href="buttons.html">Buttons</a></li>
+    <li><a href="labels.html">Labels</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">docs_2024</button>
   <div class="version-menu">
-    <a class="version" href="../../skia_2024/elements/buttons.html">skia_2024</a>
+    <a class="version is-missing" href="../../skia_2024/index.html">skia_2024</a>
     <a class="version is-missing" href="../../index.html">master</a>
-    <a class="version is-current" href="buttons.html">docs_2024</a>
+    <a class="version is-current" href="labels.html">docs_2024</a>
   </div>
 </div>
 </div>
@@ -185,49 +185,27 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Buttons</h1>
+<h1 class="page">Labels</h1>
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Buttons are used to trigger actions or events. Buttons in the Elements
-Library are stylable with separate elements for behavior and appearance.
-Three types of buttons are available: momentary, toggle, and latching:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Momentary buttons </dt>
-<dd>
-<p>Buttons that stay on while clicked. They are typically used to trigger an
-action.</p>
-</dd>
-<dt class="hdlist1">Toggle buttons </dt>
-<dd>
-<p>Buttons that alternate their state with each press. They are used to
-switch between two states.</p>
-</dd>
-<dt class="hdlist1">Latching buttons </dt>
-<dd>
-<p>Buttons are buttons that stay on until programmatically reset.</p>
-</dd>
-</dl>
+<p>Labels are used to display static text. They are typically used for various
+tasks such as annotating other elements, such as input fields or buttons.
+Label stylers allow for the customization of the label&#8217;s appearance,
+including the font, font color, font size, and text alignment.</p>
 </div>
 <div class="paragraph">
-<p>These classes delegate the rendering to a button styler subject. This
-separation of responsibilities provides greater flexibility in defining the
-button&#8217;s appearance and behavior. The button classes handle user
-interactions, while the button styler manages the button&#8217;s visual
-presentation. With this pattern, different stylers can be implemented for
-various visual representations, for instance, plain buttons, radio buttons,
-slide switches, checkboxes, and more.</p>
+<p>The <code>default_label_styler</code> class is the base class for label stylers. It
+provides the default appearance for labels. There are a couple of derived
+classes that provide various properties that override the defaults. These
+shall remain private to the library.</p>
 </div>
 <div class="sect2">
 <h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">class basic_button;           // Base class for momentary buttons
-class basic_toggle_button;    // Base class for toggle buttons
-class basic_latching_button;  // Base class for latching buttons</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">class default_label_styler;</code></pre>
 </div>
 </div>
 </div>
@@ -238,14 +216,7 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace concepts
 {
    template &lt;typename T&gt;
-   concept MomentaryButton = std::is_base_of_v&lt;basic_button, std::decay_t&lt;T&gt;&gt;;
-
-   template &lt;typename T&gt;
-   concept ToggleButton = std::is_base_of_v&lt;basic_toggle_button, std::decay_t&lt;T&gt;&gt;;
-
-   template &lt;typename T&gt;
-   concept LatchingButton = std::is_base_of_v&lt;basic_latching_button, std::decay_t&lt;T&gt;&gt;;
-
+   concept ButtonStyler = std::is_base_of_v&lt;default_label_styler, std::decay_t&lt;T&gt;&gt;;
 }</code></pre>
 </div>
 </div>
@@ -254,21 +225,25 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>styler</code></dt>
+<dt class="hdlist1"><code>str</code>           </dt>
 <dd>
-<p>Styler instance that conforms to the Element concept.</p>
+<p><code>std::string</code></p>
 </dd>
-<dt class="hdlist1"><code>MBase</code></dt>
+<dt class="hdlist1"><code>lst</code>           </dt>
 <dd>
-<p>Type that conforms to the MomentaryButton concept.</p>
+<p>A label styler instance.</p>
 </dd>
-<dt class="hdlist1"><code>TBase</code></dt>
+<dt class="hdlist1"><code>font</code>          </dt>
 <dd>
-<p>Type that conforms to the ToggleButton concept.</p>
+<p>A font descriptor <code>font_descr</code>.</p>
 </dd>
-<dt class="hdlist1"><code>LBase</code></dt>
+<dt class="hdlist1"><code>size</code>          </dt>
 <dd>
-<p>Type that conforms to the LatchingButton concept.</p>
+<p><code>float</code>.</p>
+</dd>
+<dt class="hdlist1"><code>color</code>         </dt>
+<dd>
+<p>An object of type <code>color</code>.</p>
 </dd>
 </dl>
 </div>
@@ -290,13 +265,13 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">momentary_button(styler);</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">label(str)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a momentary button with the given styler element.</p>
+<p>Create a label styler with the given text.</p>
 </li>
 </ul>
 </div></div></td>
@@ -304,13 +279,13 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button(styler);</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">heading(str)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a toggle button with the given styler element.</p>
+<p>Create a heading with the given text.</p>
 </li>
 </ul>
 </div></div></td>
@@ -318,13 +293,16 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button(styler)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.font(font)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a latching button with the given styler element.</p>
+<p>Set the font of the label.</p>
+</li>
+<li>
+<p>Adds a font property to the label styler.</p>
 </li>
 </ul>
 </div></div></td>
@@ -332,19 +310,16 @@ class basic_latching_button;  // Base class for latching buttons</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">momentary_button&lt;MBase&gt;(
-   styler
-)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.font_size(size)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a momentary button with the given styler element.</p>
+<p>Set the font size of the label.</p>
 </li>
 <li>
-<p><code>MBase</code> is the base type that must conform to the <code>MomentaryButton</code>
-concept.</p>
+<p>Adds a font size property to the label styler.</p>
 </li>
 </ul>
 </div></div></td>
@@ -352,18 +327,26 @@ concept.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">toggle_button&lt;TBase&gt;(
-   styler
-)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.relative_font_size(size)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a toggle button with the given styler element.</p>
+<p>Set the relative font size of the label.</p>
 </li>
 <li>
-<p><code>TBase</code> is the base type that must conform to the <code>ToggleButton</code> concept.</p>
+<p><code>size</code> is relative to the default size dictated by the
+Global theme&#8217;s <code>label_font</code>.</p>
+</li>
+<li>
+<p>A value greater than 1.0 makes the label larger.</p>
+</li>
+<li>
+<p>A value less than 1.0 makes the label smaller.</p>
+</li>
+<li>
+<p>Adds a font size property to the label styler.</p>
 </li>
 </ul>
 </div></div></td>
@@ -371,18 +354,33 @@ concept.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">latching_button&lt;LBase&gt;(
-   styler
-)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.font_color(color)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Creates a latching button with the given styler element.</p>
+<p>Set the font color of the label.</p>
 </li>
 <li>
-<p><code>LBase</code> is the base type that must conform to the <code>LatchingButton</code> concept.</p>
+<p>Adds a font color property to the label styler.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.text_align(align)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the text alignment of the label. See text-align for more info.</p>
+</li>
+<li>
+<p>Adds a text alignment property to the label styler.</p>
 </li>
 </ul>
 </div></div></td>
@@ -390,31 +388,43 @@ concept.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The provided base types <code>MBase</code>, <code>TBase</code>, and <code>LBase</code> offer the flexibility
-to use custom button behavior, provided they adhere to their respective
-concepts.</p>
+<p>All of these expressions return the label styler. Therefore, these
+expressions can be chained together to create the label styler with the
+desired appearance.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto my_label = label("My Label")
+   .font(font_descr{"Open Sans"}.semi_bold())
+   .font_color(colors::antique_white)
+   .font_size(18)
+   ;</code></pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_on_click"><a class="anchor" href="#_on_click"></a>On Click</h2>
+<h2 id="_enabledisable"><a class="anchor" href="#_enabledisable"></a>Enable/Disable</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Buttons include an <code>on_click</code> callable object, which is called whenever the
-button is clicked.</p>
+<p>Labels can be either enabled or disabled. When a label is disabled, it will
+appear grayed-out, indicating its disabled state.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>btn</code></dt>
+<dt class="hdlist1"><code>lst</code>    </dt>
 <dd>
-<p>A Button instance.</p>
+<p>A label styler instance.</p>
 </dd>
-<dt class="hdlist1"><code>f</code>  </dt>
+<dt class="hdlist1"><code>state</code>  </dt>
 <dd>
-<p>A callback function with the signature <code>void(bool state)</code>.</p>
+<p>A boolean value indicating whether the label is enabled or disabled.</p>
 </dd>
 </dl>
 </div>
@@ -436,79 +446,151 @@ button is clicked.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click = f;</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.enable(state)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Assigns a callable function, <code>f</code>, to the button&#8217;s <code>on_click</code> event.</p>
+<p>Sets the label&#8217;s enabled state. Pass <code>true</code> to the <code>state</code> argument to
+enable the label, or <code>false</code> to disable it.</p>
 </li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.is_enabled()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
 <li>
-<p>The <code>on_click</code> callback is called at the trailing edge of the click, just
-before release.</p>
-</li>
-<li>
-<p>Momentary and latching buttons will always have a state of <code>true</code> when
-its <code>on_click</code> callback is called.</p>
-</li>
-<li>
-<p>Toggle buttons will will have a state that alternates between <code>true</code> and
-<code>false</code> with each click.</p>
+<p>Returns <code>true</code> if the label is enabled, <code>false</code> otherwise.</p>
 </li>
 </ul>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The client provides a callback function, typically a c++ lambda, that will be
-called when the button is clicked. The type of the <code>on_click</code> callable object
-is:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">std::function&lt;void(bool state)&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>state</code> argument indicates whether the button is ON (<code>true</code>) or OFF
-(<code>false</code>).</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.on_click =
-   [](bool state)
-   {
-      std::cout &lt;&lt; "Button clicked: " &lt;&lt; state &lt;&lt; std::endl;
-   };</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_enabledisable"><a class="anchor" href="#_enabledisable"></a>Enable/Disable</h2>
+<h2 id="_label_styler_defaults"><a class="anchor" href="#_label_styler_defaults"></a>Label Styler Defaults</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Buttons can be enabled or disabled. When disabled, the button will not
-respond to user clicks and, if the button styler handles it, will render
-differently to indicate that it is disabled.</p>
+<p>The default label styler is created with the following defaults:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>label_font</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font_size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>label_font.size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">relative_font_size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0f</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font_color</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>label_font_color</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">text_align</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>label_text_align</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_heading_styler_defaults"><a class="anchor" href="#_heading_styler_defaults"></a>Heading Styler Defaults</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default heading styler is created with the following defaults:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>heading_font</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font_size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>heading_font.size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">relative_font_size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0f</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">font_color</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>heading_font_color</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">text_align</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global theme <code>heading_text_align</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getters_and_setters"><a class="anchor" href="#_getters_and_setters"></a>Getters and Setters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following functions are provided to get and set the properties of a
+label styler.</p>
 </div>
 <div class="sect2">
 <h3 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>btn</code> </dt>
+<dt class="hdlist1"><code>str</code>           </dt>
 <dd>
-<p>A Button instance.</p>
+<p><code>std::string</code></p>
 </dd>
-<dt class="hdlist1"><code>state</code>  </dt>
+<dt class="hdlist1"><code>lst</code>           </dt>
 <dd>
-<p>A boolean value indicating whether the button is enabled or disabled.</p>
+<p>A label styler instance.</p>
+</dd>
+<dt class="hdlist1"><code>font</code>          </dt>
+<dd>
+<p>A font descriptor <code>font_descr</code>.</p>
+</dd>
+<dt class="hdlist1"><code>size</code>          </dt>
+<dd>
+<p><code>float</code>.</p>
+</dd>
+<dt class="hdlist1"><code>color</code>         </dt>
+<dd>
+<p>An object of type <code>color</code>.</p>
 </dd>
 </dl>
 </div>
@@ -530,17 +612,16 @@ differently to indicate that it is disabled.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.enable(state)</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_text()</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Sets the button&#8217;s enabled state. Pass <code>true</code> to the <code>state</code> argument to
-enable the button, or <code>false</code> to disable it.</p>
+<p>Get the text of the label.</p>
 </li>
 <li>
-<p>When disabled, the button will not respond to clicks.</p>
+<p>Returns <code>std::string</code>.</p>
 </li>
 </ul>
 </div></div></td>
@@ -548,181 +629,201 @@ enable the button, or <code>false</code> to disable it.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.is_enabled()</code></pre>
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.set_text(str)</code></pre>
 </div>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Returns <code>true</code> if the button is enabled, <code>false</code> otherwise.</p>
+<p>Set the text of the label.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_font()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Get the font of the label.</p>
+</li>
+<li>
+<p>Returns <code>font_descr</code>.</p>
+</li>
+<li>
+<p>Returns the default if the styler does not have a font property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.set_font(font)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the font of the label.</p>
+</li>
+<li>
+<p>Compiler error if the styler does not have a font property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_font_size()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Get the font size of the label.</p>
+</li>
+<li>
+<p>Returns <code>float</code>.</p>
+</li>
+<li>
+<p>Returns the default if the styler does not have a font size property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_default_font_size()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Get the default font size of the label.</p>
+</li>
+<li>
+<p>Returns <code>float</code>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.set_font_size(size)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the font size of the label.</p>
+</li>
+<li>
+<p>Compiler error if the styler does not have a font size property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst_set_relative_font_size(size)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the relative font size of the label.</p>
+</li>
+<li>
+<p>Compiler error if the styler does not have a font size property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_font_color()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Get the font color of the label.</p>
+</li>
+<li>
+<p>Returns <code>color</code>.</p>
+</li>
+<li>
+<p>Returns the default if the styler does not have a font color property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.set_font_color(color)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the font color of the label.</p>
+</li>
+<li>
+<p>Compiler error if the styler does not have a font color property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.get_text_align()</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Get the text alignment of the label.</p>
+</li>
+<li>
+<p>Returns <code>int</code>. See text-align for more info.</p>
+</li>
+<li>
+<p>Returns the default if the styler does not have a text alignment property.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">lst.set_text_align(align)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Set the text alignment of the label. See text-align for more info.</p>
+</li>
+<li>
+<p>Compiler error if the styler does not have a text alignment property.</p>
 </li>
 </ul>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_value"><a class="anchor" href="#_value"></a>Value</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The value of a button is a boolean that indicates whether the button is ON
-(<code>true</code>) or OFF (<code>false</code>). The value of a button can be set programmatically
-via the <code>receiver&lt;bool&gt;</code> API.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
-</td>
-<td class="content">
-receiver&lt;T&gt; is mixin class that provides a common interface for
-setting and querying the values of type <code>T</code> via virtual member
-functions, <code>value()</code> and <code>value(val)</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>btn</code>    </dt>
-<dd>
-<p>A Button instance.</p>
-</dd>
-<dt class="hdlist1"><code>val</code>    </dt>
-<dd>
-<p>A boolean value.</p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 40%;">
-<col style="width: 60%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Expression</th>
-<th class="tableblock halign-left valign-top">Semantics</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value(val)</code></pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Sets the value of the button to <code>val</code>.</p>
-</li>
-</ul>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">btn.value()</code></pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Returns the current value of the button.</p>
-</li>
-</ul>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_button_styler"><a class="anchor" href="#_button_styler"></a>Button Styler</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
-</td>
-<td class="content">
-This section is an advanced topic only relevant to those who want to
-write custom buttons. This section may be skipped by most users.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The button styler is a separate element that is responsible for rendering the
-button. The communication with the button styler is done via the
-<code>receiver&lt;button_state&gt;</code> API. This API provides a means to update the button
-styler about changes in button&#8217;s state to allow the styler to adjust the
-visual representation accordingly.</p>
-</div>
-<div class="paragraph">
-<p>If the button styler is as a subclass of <code>receiver&lt;button_state&gt;</code> API, it
-will receive a <code>button_state</code> when the button&#8217;s state changes:</p>
-</div>
-<div class="sect2">
-<h3 id="_button_state"><a class="anchor" href="#_button_state"></a>button_state</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct button_state
-{
-   bool    value : 1      = false;
-   bool    hilite : 1     = false;
-   bool    tracking : 1   = false;
-   bool    enabled : 1    = true;
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>button_state</code> is struct struct for maintaining and managing the state of a
-button. This structure captures the various states that a button can have:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>value</code>: The button&#8217;s value; 0(off) or 1(on).</p>
-</li>
-<li>
-<p><code>hilite</code>: True if the button is highlighted (when the mouse is
-hovering over the button).</p>
-</li>
-<li>
-<p><code>tracking</code>: True if the mouse button being pressed.</p>
-</li>
-<li>
-<p><code>enabled</code>: True if the button is enabled.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
-</td>
-<td class="content">
-The button styler is just an element and does not have to follow the
-<code>receiver</code> API. If that&#8217;s the case, then the button rendering will be static,
-and not adjust to state changes. This may still be useful in certain cases.
-</td>
-</tr>
-</table>
-</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>

@@ -31,3 +31,5 @@
 :font_descr: font_descr
 :color: color
 :text-align: text-align
+:text_writer_u8: text_writer_u8
+:text_reader_u8: text_reader_u8

@@ -7,7 +7,30 @@ include::../common.adoc[]
 Labels are used to display static text. They are typically used for various
 tasks such as annotating other elements, such as input fields or buttons.
 Label stylers allow for the customization of the label's appearance,
-including the font, color, alignment, and size.
+including the font, font color, font size, and text alignment.
+
+The `default_label_styler` class is the base class for label stylers. It
+provides the default appearance for labels. There are a couple of derived
+classes that provide various properties that override the defaults. These
+shall remain private to the library.
+
+=== Declaration
+
+[source,c++]
+----
+class default_label_styler;
+----
+
+=== Concepts
+
+[source,c++]
+----
+namespace concepts
+{
+   template <typename T>
+   concept ButtonStyler = std::is_base_of_v<default_label_styler, std::decay_t<T>>;
+}
+----
 
 === Notation
 
@@ -104,12 +127,45 @@ desired appearance.
 
 [source,c++]
 ----
-auto my_label = label("Hello, World!")
-   .font("Helvetica")
-   .font_size(18.0)
-   .font_color(colors::magenta)
-   .text_align(text_halign::left);
+auto my_label = label("My Label")
+   .font(font_descr{"Open Sans"}.semi_bold())
+   .font_color(colors::antique_white)
+   .font_size(18)
+   ;
 ----
+
+== Enable/Disable
+
+Labels can be either enabled or disabled. When a label is disabled, it will
+appear grayed-out, indicating its disabled state.
+
+=== Notation
+
+`lst`    :: A label styler instance.
+`state`  :: A boolean value indicating whether the label is enabled or disabled.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+lst.enable(state)
+----
+a|
+* Sets the label's enabled state. Pass `true` to the `state` argument to
+  enable the label, or `false` to disable it.
+a|
+[source,c++]
+----
+lst.is_enabled()
+----
+a|
+* Returns `true` if the label is enabled, `false` otherwise.
+|===
 
 == Label Styler Defaults
 
@@ -119,11 +175,11 @@ The default label styler is created with the following defaults:
 |===
 | Property | Default
 
-| font                          | {Global-theme} label_font
-| font_size                     | {Global-theme} label_font.size
+| font                          | {Global-theme} `label_font`
+| font_size                     | {Global-theme} `label_font.size`
 | relative_font_size            | `1.0f`
-| font_color                    | {Global-theme} label_font_color
-| text_align                    | {Global-theme} label_text_align
+| font_color                    | {Global-theme} `label_font_color`
+| text_align                    | {Global-theme} `label_text_align`
 |===
 
 == Heading Styler Defaults
@@ -134,11 +190,11 @@ The default heading styler is created with the following defaults:
 |===
 | Property | Default
 
-| font                          | {Global-theme} heading_font
-| font_size                     | {Global-theme} heading_font.size
+| font                          | {Global-theme} `heading_font`
+| font_size                     | {Global-theme} `heading_font.size`
 | relative_font_size            | `1.0f`
-| font_color                    | {Global-theme} heading_font_color
-| text_align                    | {Global-theme} heading_text_align
+| font_color                    | {Global-theme} `heading_font_color`
+| text_align                    | {Global-theme} `heading_text_align`
 |===
 
 == Getters and Setters
@@ -203,6 +259,14 @@ a|
 * Get the font size of the label.
 * Returns `float`.
 * Returns the default if the styler does not have a font size property.
+a|
+[source,c++]
+----
+lst.get_default_font_size()
+----
+a|
+* Get the default font size of the label.
+* Returns `float`.
 a|
 [source,c++]
 ----

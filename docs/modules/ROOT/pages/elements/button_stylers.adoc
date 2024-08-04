@@ -11,6 +11,29 @@ The button stylers are separate from the button classes, which handle user
 interactions. This separation of responsibilities allows for greater
 flexibility in defining the button's appearance and behavior.
 
+The `default_button_styler` class is the base class for button stylers. It
+provides the default appearance for buttons. There are a couple of derived
+classes that provide various properties that override the defaults. These
+shall remain private to the library.
+
+=== Declaration
+
+[source,c++]
+----
+class default_button_styler;
+----
+
+=== Concepts
+
+[source,c++]
+----
+namespace concepts
+{
+   template <typename T>
+   concept ButtonStyler = std::is_base_of_v<default_button_styler, std::decay_t<T>>;
+}
+----
+
 === Notation
 
 `label`                 :: An object of type std::string.

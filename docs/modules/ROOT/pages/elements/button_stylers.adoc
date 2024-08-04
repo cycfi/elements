@@ -1,4 +1,4 @@
-= Stretch
+= Button Stylers
 
 include::../common.adoc[]
 
@@ -344,6 +344,8 @@ implement standard button types with minimal effort.
 `TBase`                 :: Type that conforms to the ToggleButton concept.
 `LBase`                 :: Type that conforms to the LatchingButton concept.
 
+`[, ...]`               :: Optional parameters.
+
 === Expressions
 
 ==== Momentary buttons
@@ -355,52 +357,24 @@ implement standard button types with minimal effort.
 a|
 [source,c++]
 ----
-button(label)
+button(label
+   [, size, color]
+)
 ----
 a|
-* Creates a button with the specified label.
-
-a|
-[source,c++]
-----
-button(label, size)
-----
-a|
-* Creates a button with the specified label and size.
-
-a|
-[source,c++]
-----
-button(label, size, color)
-----
-a|
-* Creates a button with the specified label, size, and color.
-
-a|
-[source,c++]
-----
-button<MBase>(label)
-----
-a|
-* Creates a button with the specified label, using the MBase template.
-
-a|
-[source,c++]
-----
-button<MBase>(label, size)
-----
-a|
-* Creates a button with the specified label and size, using the MBase template.
+* Creates a button with the specified label, with optional size, and color.
 
 a|
 [source,c++]
 ----
 button<MBase>(
-   label, size, color
+   label
+   [, size, color]
 )
 ----
 a|
-* Creates a button with the specified label, size, and color, using the MBase template.
+* Creates a button with the specified label,, with optional size, and color,
+  using the MBase template.
 |===
 
 ==== Momentary Buttons with Icon to the Left
@@ -412,40 +386,26 @@ a|
 a|
 [source,c++]
 ----
-button(icon_id, label, size)
-----
-a|
-* Creates a momentary button with the specified icon to the left, label, and size.
-
-a|
-[source,c++]
-----
 button(
-   icon_id, label, size, color
+   icon_id, label, size
+   [, color]
 )
 ----
 a|
-* Creates a momentary button with the specified icon to the left, label, size, and color.
+* Creates a momentary button with the specified icon to the left, label,
+  size, and optional color.
 
 a|
 [source,c++]
 ----
 button<MBase>(
    icon_id, label, size
+   [, color]
 )
 ----
 a|
-* Creates a momentary button with the specified icon to the left, label, and size, using the MBase template.
-
-a|
-[source,c++]
-----
-button<MBase>(
-   icon_id, label, size, color
-)
-----
-a|
-* Creates a momentary button with the specified icon to the left, label, size, and color, using the MBase template.
+* Creates a momentary button with the specified icon to the left, label,
+  size, and optional color, using the MBase template.
 |===
 
 ==== Momentary Buttons with Icon to the Right
@@ -457,40 +417,24 @@ a|
 a|
 [source,c++]
 ----
-button(label, icon_id, size)
-----
-a|
-* Creates a momentary button with the specified label, icon to the right, and size.
-
-a|
-[source,c++]
-----
 button(
-   label, icon_id, size, color
+   label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a momentary button with the specified label, icon to the right, size, and color.
+* Creates a momentary button with the specified label, icon to the right, size, and optional color.
 
 a|
 [source,c++]
 ----
 button<MBase>(
    label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a momentary button with the specified label, icon to the right, and size, using the MBase template.
-
-a|
-[source,c++]
-----
-button<MBase>(
-   label, icon_id, size, color
-)
-----
-a|
-* Creates a momentary button with the specified label, icon to the right, size, and color, using the MBase template.
+* Creates a momentary button with the specified label, icon to the right, size, and optional color, using the MBase template.
 |===
 
 ==== Toggle Buttons
@@ -502,56 +446,26 @@ a|
 a|
 [source,c++]
 ----
-toggle_button(label)
-----
-a|
-* Creates a toggle button with the specified label.
-
-a|
-[source,c++]
-----
-toggle_button(label, size)
-----
-a|
-* Creates a toggle button with the specified label and size.
-
-a|
-[source,c++]
-----
 toggle_button(
-   label, size, color
+   label
+   [, size, color]
 )
 ----
 a|
-* Creates a toggle button with the specified label, size, and color.
-
-a|
-[source,c++]
-----
-toggle_button<TBase>(label)
-----
-a|
-* Creates a toggle button with the specified label, using the TBase template.
+* Creates a toggle button with the specified label, with optional size, and
+  color.
 
 a|
 [source,c++]
 ----
 toggle_button<TBase>(
-   label, size
+   label
+   [, size, color]
 )
 ----
 a|
-* Creates a toggle button with the specified label and size, using the TBase template.
-
-a|
-[source,c++]
-----
-toggle_button<TBase>(
-   label, size, color
-)
-----
-a|
-* Creates a toggle button with the specified label, size, and color, using the TBase template.
+* Creates a toggle button with the specified label, with optional size, and
+  color, using the TBase template.
 |===
 
 ==== Toggle Buttons with Icon to the Left
@@ -565,40 +479,24 @@ a|
 ----
 toggle_button(
    icon_id, label, size
+   [, color]
 )
 ----
 a|
-* Creates a toggle button with the specified icon to the left, label, and size.
-
-a|
-[source,c++]
-----
-toggle_button(
-   icon_id, label, size, color
-)
-----
-a|
-* Creates a toggle button with the specified icon to the left, label, size, and color.
+* Creates a toggle button with the specified icon to the left, label, size,
+  and optional color.
 
 a|
 [source,c++]
 ----
 toggle_button<TBase>(
-   icon_id, label, size
+   icon_id, label
+   [, size, color]
 )
 ----
 a|
-* Creates a toggle button with the specified icon to the left, label, and size, using the TBase template.
-
-a|
-[source,c++]
-----
-toggle_button<TBase>(
-   icon_id, label, size, color
-)
-----
-a|
-* Creates a toggle button with the specified icon to the left, label, size, and color, using the TBase template.
+* Creates a toggle button with the specified icon to the left, label, size,
+  and optional color, using the TBase template.
 |===
 
 ==== Toggle Buttons with Icon to the Right
@@ -612,40 +510,24 @@ a|
 ----
 toggle_button(
    label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a toggle button with the specified label, icon to the right, and size.
-
-a|
-[source,c++]
-----
-toggle_button(
-   label, icon_id, size, color
-)
-----
-a|
-* Creates a toggle button with the specified label, icon to the right, size, and color.
+* Creates a toggle button with the specified label, icon to the right, size,
+  and optional color.
 
 a|
 [source,c++]
 ----
 toggle_button<TBase>(
    label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a toggle button with the specified label, icon to the right, and size, using the TBase template.
-
-a|
-[source,c++]
-----
-toggle_button<TBase>(
-   label, icon_id, size, color
-)
-----
-a|
-* Creates a toggle button with the specified label, icon to the right, size, and color, using the TBase template.
+* Creates a toggle button with the specified label, icon to the right, size,
+  and optional color, using the TBase template.
 |===
 
 ==== Latching Buttons
@@ -657,56 +539,26 @@ a|
 a|
 [source,c++]
 ----
-latching_button(label)
-----
-a|
-* Creates a latching button with the specified label.
-
-a|
-[source,c++]
-----
-latching_button(label, size)
-----
-a|
-* Creates a latching button with the specified label and size.
-
-a|
-[source,c++]
-----
 latching_button(
-   label, size, color
+   label
+   [, size, color]
 )
 ----
 a|
-* Creates a latching button with the specified label, size, and color.
-
-a|
-[source,c++]
-----
-latching_button<LBase>(label)
-----
-a|
-* Creates a latching button with the specified label, using the LBase template.
+* Creates a latching button with the specified label, with optional size, and
+  color.
 
 a|
 [source,c++]
 ----
 latching_button<LBase>(
-   label, size
+   label
+   [, size, color]
 )
 ----
 a|
-* Creates a latching button with the specified label and size, using the LBase template.
-
-a|
-[source,c++]
-----
-latching_button<LBase>(
-   label, size, color
-)
-----
-a|
-* Creates a latching button with the specified label, size, and color, using the LBase template.
+* Creates a latching button with the specified label, with optional size, and
+  color, using the LBase template.
 |===
 
 ==== Latching Buttons with Icon to the Left
@@ -720,40 +572,24 @@ a|
 ----
 latching_button(
    icon_id, label, size
+   [, color]
 )
 ----
 a|
-* Creates a latching button with the specified icon to the left, label, and size.
-
-a|
-[source,c++]
-----
-latching_button(
-   icon_id, label, size, color
-)
-----
-a|
-* Creates a latching button with the specified icon to the left, label, size, and color.
+* Creates a latching button with the specified icon to the left, label, size,
+  and optional color.
 
 a|
 [source,c++]
 ----
 latching_button<LBase>(
    icon_id, label, size
+   [, color]
 )
 ----
 a|
-* Creates a latching button with the specified icon to the left, label, and size, using the LBase template.
-
-a|
-[source,c++]
-----
-latching_button<LBase>(
-   icon_id, label, size, color
-)
-----
-a|
-* Creates a latching button with the specified icon to the left, label, size, and color, using the LBase template.
+* Creates a latching button with the specified icon to the left, label, size,
+  and optional color, using the LBase template.
 |===
 
 ==== Latching Buttons with Icon to the Right
@@ -767,40 +603,24 @@ a|
 ----
 latching_button(
    label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a latching button with the specified label, icon to the right, and size.
-
-a|
-[source,c++]
-----
-latching_button(
-   label, icon_id, size, color
-)
-----
-a|
-* Creates a latching button with the specified label, icon to the right, size, and color.
+* Creates a latching button with the specified label, icon to the right,
+  size, and optional color.
 
 a|
 [source,c++]
 ----
 latching_button<LBase>(
    label, icon_id, size
+   [, color]
 )
 ----
 a|
-* Creates a latching button with the specified label, icon to the right, and size, using the LBase template.
-
-a|
-[source,c++]
-----
-latching_button<LBase>(
-   label, icon_id, size, color
-)
-----
-a|
-* Creates a latching button with the specified label, icon to the right, size, and color, using the LBase template.
+* Creates a latching button with the specified label, icon to the right,
+  size, and optional color, using the LBase template.
 |===
 
 These are forwarding shortcuts to the `button_styler` expressions. They

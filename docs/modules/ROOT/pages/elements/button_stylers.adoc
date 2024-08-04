@@ -4,7 +4,7 @@ include::../common.adoc[]
 
 == Overview
 
-This document provides a list of buttion stylers that can be used to style
+This document provides a list of button stylers that can be used to style
 buttons in the Elements Library. The button stylers are used to define the
 appearance of buttons, such as colors, borders, icons and labels, and shapes.
 The button stylers are separate from the button classes, which handle user
@@ -16,16 +16,13 @@ flexibility in defining the button's appearance and behavior.
 `label`                 :: An object of type std::string.
 `bst`                   :: A button styler instance.
 `size`                  :: The button's relative size of type `float`.
-`color`                 :: An object of type `color`.
+`color`                 :: An object of type `{color}`.
 `icon_id`               :: Unicode code point of type `std::uint32_t` from the
                            {Global-theme} `icon_font`.
 `margin`                :: The margin in pixels of type `rect`.
 `r`                     :: The corner radius in pixels of type`float`.
 `tl`, `tr`, `bl`, `br`  :: The corner radius in pixels for top-left, top-right,
                            bottom-left, and bottom-right corners of type `float`.
-
-
-
 
 === Expressions
 
@@ -39,7 +36,7 @@ a|
 button_styler{label}
 ----
 a|
-* Create a button with the given label.
+* Create a button styler with the given label.
 
 a|
 [source,c++]
@@ -52,6 +49,7 @@ a|
   {Global-theme}'s `label_font`.
 * A value greater than 1.0 makes the button larger.
 * A value less than 1.0 makes the button smaller.
+* Adds a size property to the styler.
 a|
 [source,c++]
 ----
@@ -67,6 +65,7 @@ bst.active_body_color(color)
 ----
 a|
 * Sets the active body color of the button.
+* Adds an active body color property to the styler.
 
 a|
 [source,c++]
@@ -75,6 +74,7 @@ bst.text_color(color)
 ----
 a|
 * Sets the text color of the button.
+* Adds a text color property to the styler.
 
 a|
 [source,c++]
@@ -83,6 +83,7 @@ bst.icon(icon_id)
 ----
 a|
 * Sets the icon of the button.
+* Adds an icon property to the styler.
 
 a|
 [source,c++]
@@ -91,6 +92,7 @@ bst.icon_left()
 ----
 a|
 * Sets the icon to the left of the text.
+* Adds an icon placement property to the styler.
 
 a|
 [source,c++]
@@ -99,6 +101,7 @@ bst.icon_right()
 ----
 a|
 * Sets the icon to the right of the text.
+* Adds an icon placement property to the styler.
 
 a|
 [source,c++]
@@ -107,6 +110,7 @@ bst.icon_color(color)
 ----
 a|
 * Sets the icon color of the button.
+* Adds an icon color property to the styler.
 
 a|
 [source,c++]
@@ -115,6 +119,7 @@ bst.align_left()
 ----
 a|
 * Aligns the text and icon to the left.
+* Adds a label alignment property to the styler.
 
 a|
 [source,c++]
@@ -123,6 +128,7 @@ bst.align_center()
 ----
 a|
 * Aligns the text and icon to the center.
+* Adds a label alignment property to the styler.
 
 a|
 [source,c++]
@@ -131,6 +137,7 @@ bst.align_right()
 ----
 a|
 * Aligns the text and icon to the right.
+* Adds a label alignment property to the styler.
 
 a|
 [source,c++]
@@ -139,6 +146,7 @@ bst.margin(margin)
 ----
 a|
 * Sets the margin of the button.
+* Adds a margin property to the styler.
 
 a|
 [source,c++]
@@ -147,6 +155,7 @@ bst.corner_radius(r)
 ----
 a|
 * Sets the corner radius of the button.
+* Adds a corner radius property to the styler.
 
 a|
 [source,c++]
@@ -155,6 +164,7 @@ bts.corner_radius(tl, tr, bl, br)
 ----
 a|
 * Sets the corner radius of the button for each corner.
+* Adds individual corner radius properties to the styler.
 
 a|
 [source,c++]
@@ -162,7 +172,8 @@ a|
 bts.rounded_top()
 ----
 a|
-* Sets the top corners of the button to be rounded.
+* Sets the top corners of the button to be rounded with the default
+  radius.
 
 a|
 [source,c++]
@@ -170,7 +181,8 @@ a|
 bts.rounded_bottom()
 ----
 a|
-* Sets the bottom corners of the button to be rounded.
+* Sets the bottom corners of the button to be rounded with the default
+  radius.
 
 a|
 [source,c++]
@@ -178,7 +190,8 @@ a|
 bts.rounded_left()
 ----
 a|
-* Sets the left corners of the button to be rounded.
+* Sets the left corners of the button to be rounded with the default
+  radius.
 
 a|
 [source,c++]
@@ -186,7 +199,8 @@ a|
 bts.rounded_right()
 ----
 a|
-* Sets the right corners of the button to be rounded.
+* Sets the right corners of the button to be rounded with the default
+  radius.
 
 a|
 [source,c++]
@@ -196,6 +210,7 @@ bts.rounded_top(r)
 a|
 * Sets the top corners of the button to be rounded with a specific
   radius.
+* Adds top-left and top-right corner radius properties to the styler.
 
 a|
 [source,c++]
@@ -205,6 +220,7 @@ bts.rounded_bottom(r)
 a|
 * Sets the bottom corners of the button to be rounded with a specific
   radius.
+* Adds bottom-left and bottom-right corner radius properties to the styler.
 
 a|
 [source,c++]
@@ -214,6 +230,7 @@ bts.rounded_left(r)
 a|
 * Sets the left corners of the button to be rounded with a specific
   radius.
+* Adds top-left and bottom-left corner radius properties to the styler.
 
 a|
 [source,c++]
@@ -223,6 +240,7 @@ bts.rounded_right(r)
 a|
 * Sets the right corners of the button to be rounded with a specific
   radius.
+* Adds top-right and bottom-right corner radius properties to the styler.
 
 a|
 [source,c++]
@@ -232,6 +250,7 @@ bts.rounded_corner_top_left(r)
 a|
 * Sets the top-left corner of the button to be rounded with a specific
   radius.
+* Adds top-left corner radius property to the styler.
 
 a|
 [source,c++]
@@ -241,6 +260,7 @@ bts.rounded_corner_top_right(r)
 a|
 * Sets the top-right corner of the button to be rounded with a specific
   radius.
+* Adds top-right corner radius property to the styler.
 
 a|
 [source,c++]
@@ -250,6 +270,7 @@ bts.rounded_corner_bottom_left(r)
 a|
 * Sets the bottom-left corner of the button to be rounded with a
   specific radius.
+* Adds bottom-left corner radius property to the styler.
 
 a|
 [source,c++]
@@ -259,6 +280,7 @@ bts.rounded_corner_bottom_right(r)
 a|
 * Sets the bottom-right corner of the button to be rounded with a
   specific radius.
+* Adds bottom-right corner radius property to the styler.
 |===
 
 All of these expressions return the button styler. Therefore, these expressions
@@ -301,7 +323,7 @@ auto btn = momentary_button(
    );
 ----
 
-== Default Button Styler
+== Button Styler Defaults
 
 The basic button styler is a simple button with a text label with no icon,
 with these defaults:
@@ -357,7 +379,8 @@ implement standard button types with minimal effort.
 a|
 [source,c++]
 ----
-button(label
+button(
+   label
    [, size, color]
 )
 ----
@@ -607,3 +630,325 @@ inline auto button(
    );
 }
 ----
+
+== Getters and Setters
+
+The following functions are provided to get and set the properties of a
+button styler.
+
+=== Notation
+
+`label`                 :: An object of type std::string.
+`bst`                   :: A button styler instance.
+`size`                  :: The button's relative size of type `float`.
+`color`                 :: An object of type `{color}`.
+`icon_id`               :: Unicode code point of type `std::uint32_t` from the
+                           {Global-theme} `icon_font`.
+`margin`                :: The margin in pixels of type `rect`.
+`r`                     :: The corner radius in pixels of type`float`.
+`tl`, `tr`, `bl`, `br`  :: The corner radius in pixels for top-left, top-right,
+                           bottom-left, and bottom-right corners of type `float`.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+bst.set_text(label)
+----
+a|
+* Sets the text of the button.
+
+a|
+[source,c++]
+----
+bst.get_text()
+----
+a|
+* Gets the text of the button.
+* Returns `std::string_view`.
+
+a|
+[source,c++]
+----
+bst.get_size()
+----
+a|
+* Gets the size of the button.
+* Size is in pixels
+* Returns the default if the styler does not have a size property.
+* Returns `float`.
+
+a|
+[source,c++]
+----
+bst.set_size(size)
+----
+a|
+* Sets the size of the button.
+* Size is in pixels
+* Compiler error if the styler does not have a size property.
+
+a|
+[source,c++]
+----
+bst.get_body_color()
+----
+a|
+* Gets the body color of the button.
+* Returns the default if the styler does not have a body color property.
+* Returns `{color}`.
+
+a|
+[source,c++]
+----
+bst.set_body_color(color)
+----
+a|
+* Sets the body color of the button.
+* Compiler error if the styler does not have a body color property.
+
+a|
+[source,c++]
+----
+bst.get_active_body_color()
+----
+a|
+* Gets the active body color of the button.
+* Returns the default if the styler does not have an active body color property.
+* Returns `{color}`.
+
+a|
+[source,c++]
+----
+bst.set_active_body_color(color)
+----
+a|
+* Sets the active body color of the button.
+* Compiler error if the styler does not have an active body color property.
+
+a|
+[source,c++]
+----
+bst.get_text_color()
+----
+a|
+* Gets the text color of the button.
+* Returns the default if the styler does not have a text color property.
+* Returns `{color}`.
+a|
+[source,c++]
+----
+bst.set_text_color(color)
+----
+a|
+* Sets the text color of the button.
+* Compiler error if the styler does not have a text color property.
+
+a|
+[source,c++]
+----
+bst.get_icon()
+----
+a|
+* Gets the icon of the button.
+* Returns the default if the styler does not have an icon property.
+* Returns `std::uint32_t`.
+a|
+[source,c++]
+----
+bst.set_icon(icon_id)
+----
+a|
+* Sets the icon of the button.
+* Compiler error if the styler does not have an icon property.
+
+a|
+[source,c++]
+----
+bst.get_icon_placement()
+----
+a|
+* Gets the icon placement of the button.
+* Returns the default if the styler does not have an icon placement property.
+* Returns `icon_placement`.
+a|
+[source,c++]
+----
+bst.set_icon_placement(placement)
+----
+a|
+* Sets the icon placement of the button.
+* Compiler error if the styler does not have an icon placement property.
+a|
+[source,c++]
+----
+bst.icon_left()
+----
+a|
+* Sets the icon to the left of the text.
+* Compiler error if the styler does not have an icon placement property.
+a|
+[source,c++]
+----
+bst.icon_right()
+----
+a|
+* Sets the icon to the right of the text.
+* Compiler error if the styler does not have an icon placement property.
+
+a|
+[source,c++]
+----
+bst.get_icon_color()
+----
+a|
+* Gets the icon color of the button.
+* Returns the default if the styler does not have an icon color property.
+* Returns `{color}`.
+a|
+[source,c++]
+----
+bst.set_icon_color(color)
+----
+a|
+* Sets the icon color of the button.
+* Compiler error if the styler does not have an icon color property.
+
+a|
+[source,c++]
+----
+bst.get_label_alignment()
+----
+a|
+* Gets the label alignment of the button.
+* Returns the default if the styler does not have a label alignment property.
+* Returns `label_alignment`.
+a|
+[source,c++]
+----
+bst.set_label_alignment(align)
+----
+a|
+* Sets the label alignment of the button.
+* Compiler error if the styler does not have a label alignment property.
+a|
+[source,c++]
+----
+bst.align_left()
+----
+a|
+* Aligns the text and icon to the left.
+* Compiler error if the styler does not have a label alignment property.
+a|
+[source,c++]
+----
+bst.align_center()
+----
+a|
+* Aligns the text and icon to the center.
+* Compiler error if the styler does not have a label alignment property.
+a|
+[source,c++]
+----
+bst.align_right()
+----
+a|
+* Aligns the text and icon to the right.
+* Compiler error if the styler does not have a label alignment property.
+
+a|
+[source,c++]
+----
+bst.get_margin()
+----
+a|
+* Gets the margin of the button.
+* Returns the default if the styler does not have a margin property.
+* Returns `rect`.
+a|
+[source,c++]
+----
+bst.set_margin(margin)
+----
+a|
+* Sets the margin of the button.
+* Compiler error if the styler does not have a margin property.
+
+
+a|
+[source,c++]
+----
+bst.get_corner_radius()
+----
+a|
+* Gets the corner radius of the button.
+* Returns the default if the styler does not have a corner radius property.
+* Returns `float`.
+a|
+[source,c++]
+----
+bst.set_corner_radius(r)
+----
+a|
+* Sets the corner radius of the button.
+* Compiler error if the styler does not have a corner radius property.
+a|
+[source,c++]
+----
+bst.set_corner_radius(
+   tl, tr, bl, br
+)
+----
+a|
+* Sets the corner radius of the button for each corner.
+* Compiler error if the styler does not have individual corner radius property.
+
+a|
+[source,c++]
+----
+bst.get_corner_radius_top_left()
+----
+a|
+* Gets the top-left corner radius of the button.
+* Returns the default if the styler does not have a specific top-left corner radius property.
+* Returns `float`.
+a|
+[source,c++]
+----
+bst.get_corner_radius_top_right()
+----
+a|
+* Gets the top-right corner radius of the button.
+* Returns the default if the styler does not have a specific top-right corner radius property.
+* Returns `float`.
+a|
+[source,c++]
+----
+bst.get_corner_radius_bottom_left()
+----
+a|
+* Gets the bottom-left corner radius of the button.
+* Returns the default if the styler does not have a specific bottom-left corner radius property.
+* Returns `float`.
+a|
+[source,c++]
+----
+bst.get_corner_radius_bottom_right()
+----
+a|
+* Gets the bottom-right corner radius of the button.
+* Returns the default if the styler does not have a specific bottom-right corner radius property.
+* Returns `float`.
+
+|===
+
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

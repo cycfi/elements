@@ -37,14 +37,14 @@ Remember that the items are `element_ptr` instances.
 
 === Expression
 
-[,c++]
+[source,c++]
 ----
 flow_composite c;
 ----
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 c.push_back(share(child));
 ----

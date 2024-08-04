@@ -14,7 +14,7 @@ will be placed in the view depending on available window space.
 
 === Declaration
 
-[,c++]
+[source,c++]
 ----
 struct view_limits
 {
@@ -35,7 +35,7 @@ specify positions or dimensions within the graphical context.
 By default, an element has full limits, meaning there is no constraints on
 its size. It is infinitely resizable:
 
-[,c++]
+[source,c++]
 ----
 constexpr view_limits full_limits = {
    {0.0, 0.0}
@@ -53,17 +53,17 @@ y size) up to the full extent of the screen, and beyond (if possible).
 
 === Examples
 
-[,c++]
+[source,c++]
 ----
 {{100, 100}, {100, 100}}; // Fixed size
 ----
 
-[,c++]
+[source,c++]
 ----
 {{100, 100}, {100, full_extent}}; // Fixed width, flexible height
 ----
 
-[,c++]
+[source,c++]
 ----
 {{100, 100}, {100, 200}}; // Fixed width, semi-flexible height (100 to 200)
 ----

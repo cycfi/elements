@@ -27,7 +27,7 @@ slide switches, checkboxes, and more.
 
 === Declaration
 
-[,c++]
+[source,c++]
 ----
 class basic_button;           // Base class for momentary buttons
 class basic_toggle_button;    // Base class for toggle buttons
@@ -36,7 +36,7 @@ class basic_latching_button;  // Base class for latching buttons
 
 === Concepts
 
-[,c++]
+[source,c++]
 ----
 namespace concepts
 {
@@ -174,7 +174,7 @@ The `state` argument indicates whether the button is ON (`true`) or OFF
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 btn.on_click =
    [](bool state)
@@ -272,7 +272,7 @@ will receive a `button_state` when the button's state changes:
 
 === button_state
 
-[,c++]
+[source,c++]
 ----
 struct button_state
 {

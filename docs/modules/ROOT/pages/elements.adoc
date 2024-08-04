@@ -22,7 +22,7 @@ of elements that can be used with templates and template functions. The
 `element` class, while the `ElementPtr` concept constrains the type of a
 pointer to an element.
 
-[,c++]
+[source,c++]
 ----
 namespace concepts
 {
@@ -50,7 +50,7 @@ There are a couple of type aliases that are useful when dealing
 with shared pointers:
 
 ==== Type aliases
-[,c++]
+[source,c++]
 ----
 using element_ptr = std::shared_ptr<element>;
 using element_const_ptr = std::shared_ptr<element const>;
@@ -68,7 +68,7 @@ using weak_element_const_ptr = std::weak_ptr<element const>;
 
 ==== Expressions
 
-[,c++]
+[source,c++]
 ----
 share(e)    // <1>
 get(ep)     // <2>

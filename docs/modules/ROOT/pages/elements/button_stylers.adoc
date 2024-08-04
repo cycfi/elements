@@ -270,7 +270,7 @@ appearance. The result is then passed to one of the button creation functions
 
 Make a default momentary button with label "My Button":
 
-[,c++]
+[source,c++]
 ----
 auto btn = momentary_button(
       button_styler{"My Button"}
@@ -279,7 +279,7 @@ auto btn = momentary_button(
 
 Make a blue momentary button with label "Lock":
 
-[,c++]
+[source,c++]
 ----
 auto btn = momentary_button(
       button_styler{"Lock"}
@@ -290,7 +290,7 @@ auto btn = momentary_button(
 Make a momentary button with label "Rounded Left" and a `left_circled` icon,
 aligned to the left, with a rounded left corner of 10 pixels:
 
-[,c++]
+[source,c++]
 ----
 auto btn = momentary_button(
       button_styler{"Rounded Left"}

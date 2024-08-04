@@ -75,7 +75,7 @@ a|
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 static float positions[] = {0.25, 0.5, 0.75, 1.0};
 //...
@@ -120,14 +120,14 @@ Remember that the items are `element_ptr` instances.
 
 === Expression
 
-[,c++]
+[source,c++]
 ----
 hgrid_composite c{positions};
 ----
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 c.push_back(share(child));
 ----
@@ -215,7 +215,7 @@ a|
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 static float positions[] = {0.25, 0.5, 0.75, 1.0};
 //...
@@ -259,14 +259,14 @@ Remember that the items are `element_ptr` instances.
 
 === Expression
 
-[,c++]
+[source,c++]
 ----
 vgrid_composite c{positions};
 ----
 
 === Example:
 
-[,c++]
+[source,c++]
 ----
 c.push_back(share(child));
 ----

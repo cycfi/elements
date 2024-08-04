@@ -62,7 +62,7 @@ a|
 
 === Example
 
-[,c++]
+[source,c++]
 ----
 layer(item1, item2, item3, item4)
 ----
@@ -86,14 +86,14 @@ Remember that the items are `element_ptr` instances.
 
 === Expression
 
-[,c++]
+[source,c++]
 ----
 layer_composite c;
 ----
 
 ==== Example
 
-[,c++]
+[source,c++]
 ----
 c.push_back(share(child));
 ----

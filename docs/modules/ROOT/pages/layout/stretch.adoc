@@ -12,14 +12,14 @@ side in an <<htile,htile>> or <<vtile,vtile>>, the element's "stretchiness"
 determines how much extra space is given to it. The element's "stretchiness"
 is determined by the element's `stretch` member function:
 
-[,c++]
+[source,c++]
 ----
 virtual view_stretch stretch() const;
 ----
 
 where `view_stretch` is a struct declared as:
 
-[,c++]
+[source,c++]
 ----
 struct view_stretch
 {

@@ -9,7 +9,7 @@ The span of an element is the number of columns or rows it occupies in a grid
 Grids>>). The span of an element is determined by the element's `span` member
 function:
 
-[,c++]
+[source,c++]
 ----
 virtual unsigned span() const;
 ----

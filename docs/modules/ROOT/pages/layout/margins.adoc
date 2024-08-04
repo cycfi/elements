@@ -19,23 +19,25 @@ Adds a margin all around an enclosed element (`subject`).
 `left`, `top`, `right`, `bottom`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-margin({left, top, right, bottom}, subject)
+margin({left, top, right, bottom},
+   subject
+)
 ----
-
-=== Semantics
-
-. Space is added to the left, top, right, and bottom of the subject with the
-given parameters.
+a|
+. Space is added to the left, top, right, and bottom of the subject with the given parameters.
 . The element's {limits} is overridden to account for the additional space.
-. The `margin` does not violate the natural {limits} of the subject.
-`margin` will respect the subject's min-max constraints and resizability.
+. The `margin` does not violate the natural {limits} of the subject. `margin` will respect the subject's min-max constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_left
 
@@ -48,23 +50,25 @@ Adds a margin to the left of an enclosed element (`subject`).
 `left`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 margin_left(left, subject)
 ----
-
-=== Semantics
-
+a|
 . Space is added to the left of the subject with the given parameter.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_left` does not violate the natural {limits} of the subject.
-`margin_left` will respect the subject's min-max constraints and
-resizability.
+  `margin_left` will respect the subject's min-max constraints and
+   resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_right
 
@@ -77,23 +81,25 @@ Adds a margin to the right of an enclosed element (`subject`).
 `right`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 margin_right(right, subject)
 ----
-
-=== Semantics
-
+a|
 . Space is added to the right of the subject with the given parameter.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_right` does not violate the natural {limits} of the subject.
-`margin_right` will respect the subject's min-max constraints and
-resizability.
+  `margin_right` will respect the subject's min-max constraints and
+  resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_top
 
@@ -106,23 +112,25 @@ Adds a margin to the top of an enclosed element (`subject`).
 `top`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 margin_top(top, subject)
 ----
-
-=== Semantics
-
+a|
 . Space is added to the top of the subject with the given parameter.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_top` does not violate the natural {limits} of the subject.
-`margin_top` will respect the subject's min-max constraints and
-resizability.
-. Returns instance of `Proxy`.
-
-'''
+  `margin_top` will respect the subject's min-max constraints and
+  resizability.
+  . Returns instance of `Proxy`.
+|===
 
 == margin_bottom
 
@@ -135,24 +143,25 @@ Adds a margin to the bottom of an enclosed element (`subject`).
 `bottom`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 margin_bottom(bottom, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the bottom of the subject with the given
-parameter.
+a|
+. Space is added to the bottom of the subject with the given parameter.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_bottom` does not violate the natural {limits} of the subject.
-`margin_bottom` will respect the subject's min-max constraints and
-resizability.
+  `margin_bottom` will respect the subject's min-max constraints and
+  resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == hmargin
 
@@ -167,7 +176,12 @@ Adds a margin to the left and right sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 hmargin({left, right}, subject)
@@ -181,18 +195,15 @@ margin_left_right({left, right}, subject)
 // variant 4
 margin_left_right(left, right, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the left and right sides of the subject with the
-given parameters.
+a|
+. Space is added to the left and right sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `hmargin` (and variants) does not violate the natural {limits} of the
-subject. `hmargin` (and variants) will respect the subject's min-max
-constraints and resizability.
+  subject. `hmargin` (and variants) will respect the subject's min-max
+  constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == vmargin
 
@@ -209,7 +220,12 @@ Adds a margin to the top and bottom sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 vmargin({top, bottom}, subject)
@@ -223,18 +239,15 @@ margin_top_bottom({top, bottom}, subject)
 // variant 4
 margin_top_bottom(top, bottom, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the top and bottom sides of the subject with the
-given parameters.
+a|
+. Space is added to the top and bottom sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `vmargin` (and variants) does not violate the natural {limits} of the
-subject. `vmargin` (and variants) will respect the subject's min-max
-constraints and resizability.
+  subject. `vmargin` (and variants) will respect the subject's min-max
+  constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_left_top
 
@@ -249,7 +262,12 @@ Adds a margin to the left and top sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 margin_left_top({left, top}, subject)
@@ -257,18 +275,15 @@ margin_left_top({left, top}, subject)
 // variant 2
 margin_left_top(left, top, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the left and top sides of the subject with the
-given parameters.
+a|
+. Space is added to the left and top sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_left_top` (and variant) does not violate the natural {limits}
-of the subject. `margin_left_top` (and variant) will respect the subject's
-min-max constraints and resizability.
+  of the subject. `margin_left_top` (and variant) will respect the subject's
+  min-max constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_left_bottom
 
@@ -283,7 +298,12 @@ Adds a margin to the left and bottom sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 margin_left_bottom({left, bottom}, subject)
@@ -291,18 +311,15 @@ margin_left_bottom({left, bottom}, subject)
 // variant 2
 margin_left_bottom(left, bottom, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the left and bottom sides of the subject with the
-given parameters.
+a|
+. Space is added to the left and bottom sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_left_bottom` (and variant) does not violate the natural
-{limits} of the subject. `margin_left_bottom` (and variant) will respect
-the subject's min-max constraints and resizability.
+  {limits} of the subject. `margin_left_bottom` (and variant) will respect
+  the subject's min-max constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_right_top
 
@@ -317,7 +334,12 @@ Adds a margin to the right and top sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 margin_right_top({right, top}, subject)
@@ -325,18 +347,15 @@ margin_right_top({right, top}, subject)
 // variant 2
 margin_right_top(right, top, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the right and top sides of the subject with the
-given parameters.
+a|
+. Space is added to the right and top sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_right_top` (and variant) does not violate the natural {limits}
-of the subject. `margin_right_top` (and variant) will respect the
-subject's min-max constraints and resizability.
+  of the subject. `margin_right_top` (and variant) will respect the subject's
+  min-max constraints and resizability.
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == margin_right_bottom
 
@@ -351,7 +370,12 @@ Adds a margin to the right and bottom sides of an enclosed element (`subject`).
 
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 // variant 1
 margin_right_bottom({right, bottom}, subject)
@@ -359,16 +383,15 @@ margin_right_bottom({right, bottom}, subject)
 // variant 2
 margin_right_bottom(right, bottom, subject)
 ----
-
-=== Semantics
-
-. Space is added to the to the right and bottom sides of the subject with the
-given parameters.
+a|
+. Space is added to the right and bottom sides of the subject with the given
+  parameters.
 . The element's {limits} is overridden to account for the additional space.
 . The `margin_right_bottom` (and variant) does not violate the natural
-limits of the subject. `margin_right_bottom` (and variant) will respect
-the subject's min-max constraints and resizability.
+  {limits} of the subject. `margin_right_bottom` (and variant) will respect
+  the subject's min-max constraints and resizability.
 . Returns instance of `Proxy`.
+|===
 
 '''
 

@@ -26,17 +26,21 @@ Overrides the span of an an enclosed element (`subject`).
 `nspans`:: An unsigned integer
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 span(nspans, subject)
 ----
-
-=== Semantics
-
+a|
 . The `subject` will assume a span with the given `nspans` value.
 . Returns instance of `Proxy`.
+|===
 
 '''
 

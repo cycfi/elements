@@ -15,8 +15,6 @@ image::/layout/deck.svg[alt="deck", width=353px, role=center]
 . Only the active selected element element is drawn.
 . Only the active selected element is given the chance to process UI control.
 
-'''
-
 == deck
 
 Create a deck composite with a fixed number of elements.
@@ -30,12 +28,20 @@ Create a deck composite with a fixed number of elements.
 Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by
 the deck element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 deck(e1, e2, e3... eN)
 ----
+a|
+. In addition to the semantics of Decks, returns instance of `Composite`.
+|===
 
 === Example
 

@@ -20,27 +20,28 @@ Aligns the enclosed element (`subject`) in the x-axis.
 `align`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 halign(align, subject)
 ----
-
-=== Semantics
-
-. Given a total allocated space `X`, `subject` will be positioned
-horizontally to `X * align`.
+a|
+. Given a total allocated space `X`, `subject` will be positioned horizontally to `X * align`.
 . The `subject` will assume its _minimum horizontal limit_.
 . Returns instance of `Proxy`.
+|===
 
 === Examples
 
 . `halign(0.0) // align subject to the left`
 . `halign(1.0) // align subject to the right`
 . `halign(0.5) // align subject to the center`
-
-'''
 
 == align_left
 
@@ -52,19 +53,21 @@ Left-aligns the enclosed element (`subject`).
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_left(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `halign(0.0, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_center
 
@@ -76,19 +79,21 @@ Center-aligns the enclosed element (`subject`).
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_center(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `halign(0.5, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_right
 
@@ -100,19 +105,21 @@ Right-aligns the enclosed element (`subject`).
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_right(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `halign(1.0, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == valign
 
@@ -125,27 +132,28 @@ Aligns the enclosed element (`subject`) in the y-axis.
 `align`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 valign(align, subject)
 ----
-
-=== Semantics
-
-. Given a total allocated space `Y`, `subject` will be positioned vertically
-to `Y * align`.
+a|
+. Given a total allocated space `Y`, `subject` will be positioned vertically to `Y * align`.
 . The `subject` will assume its _minimum vertical limit_.
 . Returns instance of `Proxy`.
+|===
 
 === Examples
 
 . `valign(0.0) // align subject to the top`
 . `valign(1.0) // align subject to the right`
 . `valign(0.5) // align subject to the middle`
-
-'''
 
 == align_top
 
@@ -157,19 +165,21 @@ Aligns the enclosed element (`subject`) to the top.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_top(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `valign(0.0, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_middle
 
@@ -181,19 +191,21 @@ Aligns the enclosed element (`subject`) to the middle.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_middle(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `valign(0.5, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_bottom
 
@@ -205,19 +217,21 @@ Aligns the enclosed element (`subject`) to the bottom.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_bottom(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `valign(1.0, subject)`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_left_top
 
@@ -229,19 +243,21 @@ Aligns the enclosed element (`subject`) to the left-top.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_left_top(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_left(align_top(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_center_top
 
@@ -253,19 +269,21 @@ Aligns the enclosed element (`subject`) to the center-top.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_center_top(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_center(align_top(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_right_top
 
@@ -277,19 +295,21 @@ Aligns the enclosed element (`subject`) to the right-top.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_right_top(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_right(align_top(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_left_middle
 
@@ -301,19 +321,21 @@ Aligns the enclosed element (`subject`) to the left-middle.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_left_middle(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_left(align_middle(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_center_middle
 
@@ -325,19 +347,21 @@ Aligns the enclosed element (`subject`) to the center-middle.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_center_middle(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_center(align_middle(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_right_middle
 
@@ -349,19 +373,21 @@ Aligns the enclosed element (`subject`) to the right-middle.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_right_middle(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_right(align_middle(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_left_bottom
 
@@ -373,19 +399,21 @@ Aligns the enclosed element (`subject`) to the left-bottom.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_left_bottom(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_left(align_bottom(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_center_bottom
 
@@ -397,19 +425,21 @@ Aligns the enclosed element (`subject`) to the center-bottom.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_center_bottom(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_center(align_bottom(subject))`
 . Returns instance of `Proxy`.
-
-'''
+|===
 
 == align_right_bottom
 
@@ -421,17 +451,21 @@ Aligns the enclosed element (`subject`) to the right-bottom.
 
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 align_right_bottom(subject)
 ----
-
-=== Semantics
-
+a|
 . Equivalent to `align_right(align_bottom(subject))`
 . Returns instance of `Proxy`.
+|===
 
 '''
 

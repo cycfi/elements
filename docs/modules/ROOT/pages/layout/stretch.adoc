@@ -45,18 +45,22 @@ Overrides the horizontal stretchiness of an an enclosed element (`subject`).
 `stretch`:: A scalar value
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 hstretch(stretch, subject)
 ----
-
-=== Semantics
-
+a|
 . The `subject` will assume the given `stretch` value.
-. The stretch value has no effect to elements with fixed horizontal size.
+. The stretch value has no effect on elements with fixed horizontal size.
 . Returns instance of `Proxy`.
+|===
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
@@ -77,18 +81,22 @@ Overrides the vertical stretchiness of an an enclosed element (`subject`).
 `stretch`:: A scalar value
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vstretch(stretch, subject)
 ----
-
-=== Semantics
-
+a|
 . The `subject` will assume the given `stretch` value.
-. The stretch value has no effect to elements with fixed _vertical limits_.
+. The stretch value has no effect on elements with fixed _vertical limits_.
 . Returns instance of `Proxy`.
+|===
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:

@@ -45,12 +45,20 @@ Create a layer composite with a fixed number of elements.
 Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by
 the layer element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 layer(e1,...eN)
 ----
+a|
+. In addition to the semantics of Layers, returns instance of `Composite`.
+|===
 
 === Example
 
@@ -61,12 +69,6 @@ layer(item1, item2, item3, item4)
 
 NOTE: If the number of elements is not fixed, you can use an
 `layer_composite` (see below).
-
-=== Semantics
-
-. In addition to the semantics of Layers, returns instance of `Composite`.
-
-'''
 
 == layer_composite
 

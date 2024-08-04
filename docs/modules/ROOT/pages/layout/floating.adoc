@@ -19,19 +19,23 @@ it to float within the layout.
 `left`, `top`, `right`, `bottom`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 floating({left, top, right, bottom}, subject)
 ----
-
-=== Semantics
-
+a|
 . The element will be placed exactly to the specified position in the main
-view, constrained to the subject's natural {limits}.
+  view, constrained to the subject's natural {limits}.
 . The floating element does not violate the natural {limits} of the subject.
 . Returns instance of `Proxy`.
+|===
 
 '''
 

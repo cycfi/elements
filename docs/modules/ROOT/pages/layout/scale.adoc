@@ -16,18 +16,21 @@ The `scale` element changes the scale of its enclosed element (`subject`).
 `scale_`:: `float`
 `subject`:: Instance of `Element`
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 scale(scale_, subject)
 ----
-
-=== Semantics
-
-. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
-the element up (zoom in), while a value < 1.0 scales down (zoom out).
+a|
+. The `subject` will be scaled given the `scale_` value. A value > 1.0 scales the element up (zoom in), while a value < 1.0 scales down (zoom out).
 . Returns instance of `Proxy`.
+|===
 
 '''
 

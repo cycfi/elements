@@ -61,12 +61,21 @@ Build a horizontal tile with a fixed number of elements.
 Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
 horizontal tile element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 htile(e1,...eN)
 ----
+a|
+. In addition to the semantics of Horizontal Tiles, returns instance of
+`Composite`.
+|===
 
 === Example:
 
@@ -77,11 +86,6 @@ htile(item1, item2, item3, item4)
 
 NOTE: If the number of elements is not fixed, you can use an
 `htile_composite` (see below).
-
-=== Semantics
-
-. In addition to the semantics of Horizontal Tiles, returns instance of
-`Composite`.
 
 == htile_composite
 
@@ -169,12 +173,21 @@ Build a vertical tile with a fixed number of elements.
 Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
 vertical tile element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vtile(e1,...eN)
 ----
+a|
+. In addition to the semantics of Vertical Tiles, returns instance of
+`Composite`.
+|===
 
 === Example
 
@@ -185,13 +198,6 @@ vtile(item1, item2, item3, item4)
 
 NOTE: If the number of elements is not fixed, you can use an
 `vtile_composite` (see below).
-
-=== Semantics
-
-. In addition to the semantics of Vertical Tiles, returns instance of
-`Composite`.
-
-'''
 
 == vtile_composite
 

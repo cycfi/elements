@@ -11,8 +11,6 @@ of the elements in the allocated space.
 
 Grids are best for composing tables.
 
-'''
-
 == Horizontal Grids
 
 image::/layout/hgrid.svg[alt="hgrid", width=347px, role=center]
@@ -44,8 +42,6 @@ _minimum limits_ in either dimension, the element will be cropped.
  .. If a child element's _maximum limits_ in either dimension is exceeded,
 the element will be aligned to the top-left.
 
-'''
-
 == hgrid
 
 Build a horizontal grid with a fixed number of elements.
@@ -61,12 +57,21 @@ The external container, `positions`, can either be a plain array of type
 `float[N]` or `std::array<float, N>`. Elements `+e1,...eN+` are held in a
 `std::array<element_ptr, N>` managed by the horizontal grid element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 hgrid(positions, e1,...eN)
 ----
+a|
+. In addition to the semantics of Horizontal Grids, returns instance of
+`Composite`.
+|===
 
 === Example
 
@@ -188,14 +193,25 @@ Build a vertical grid with a fixed number of elements.
 
 `positions`:: External container of fractional positions (more below)
 
-The external container, `positions`, can either be a plain array of type `float[N]` or `std::array<float, N>`. Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the vertical grid element.
+The external container, `positions`, can either be a plain array of type
+`float[N]` or `std::array<float, N>`. Elements `+e1,...eN+` are held in a
+`std::array<element_ptr, N>` managed by the vertical grid element.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 vgrid(positions, e1,...eN)
 ----
+a|
+. In addition to the semantics of Vertical Grids, returns instance of
+`Composite`.
+|===
 
 === Example
 

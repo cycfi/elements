@@ -11,9 +11,9 @@ image::/layout/deck.svg[alt="deck", width=353px, role=center]
 
 === Semantics
 
-. Everything listed in the {Layers_Semantics}, except 2 and 3.
-. Only the active selected element element is drawn.
-. Only the active selected element is given the chance to process UI control.
+* Everything listed in the {Layers_Semantics}, except 2 and 3.
+* Only the active selected element element is drawn.
+* Only the active selected element is given the chance to process UI control.
 
 == deck
 
@@ -40,7 +40,7 @@ a|
 deck(e1, e2, e3... eN)
 ----
 a|
-. In addition to the semantics of Decks, returns instance of `Composite`.
+* In addition to the semantics of Decks, returns instance of `Composite`.
 |===
 
 === Example
@@ -55,7 +55,7 @@ NOTE: If the number of elements is not fixed, you can use an
 
 === Requirements
 
-. In addition to the semantics of Deck, returns instance of `Composite`.
+* In addition to the semantics of Deck, returns instance of `Composite`.
 
 == deck_composite
 

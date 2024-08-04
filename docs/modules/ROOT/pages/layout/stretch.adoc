@@ -57,9 +57,9 @@ a|
 hstretch(stretch, subject)
 ----
 a|
-. The `subject` will assume the given `stretch` value.
-. The stretch value has no effect on elements with fixed horizontal size.
-. Returns instance of `Proxy`.
+* The `subject` will assume the given `stretch` value.
+* The stretch value has no effect on elements with fixed horizontal size.
+* Returns instance of `Proxy`.
 |===
 
 For example, the image below shows how three elements are laid out in an
@@ -93,9 +93,9 @@ a|
 vstretch(stretch, subject)
 ----
 a|
-. The `subject` will assume the given `stretch` value.
-. The stretch value has no effect on elements with fixed _vertical limits_.
-. Returns instance of `Proxy`.
+* The `subject` will assume the given `stretch` value.
+* The stretch value has no effect on elements with fixed _vertical limits_.
+* Returns instance of `Proxy`.
 |===
 
 For example, the image below shows how three elements are laid out in an

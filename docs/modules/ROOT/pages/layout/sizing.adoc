@@ -33,9 +33,9 @@ a|
 limit(limits, subject)
 ----
 a|
-. The {limits} of `subject` will be set to the specified {limits} constrained by the natural _limits_ of the `subject`.
-. The natural _limits_ of the element will not be violated.
-. Returns an instance of `Proxy`.
+* The {limits} of `subject` will be set to the specified {limits} constrained by the natural _limits_ of the `subject`.
+* The natural _limits_ of the element will not be violated.
+* Returns an instance of `Proxy`.
 |===
 
 == fixed_size
@@ -63,9 +63,9 @@ fixed_size({width, height},
 )
 ----
 a|
-. `subject` will be laid out with a fixed `width` and `height`, constrained by the natural _limits_ of the `subject`.
-. The natural _limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* `subject` will be laid out with a fixed `width` and `height`, constrained by the natural _limits_ of the `subject`.
+* The natural _limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == hsize
@@ -91,10 +91,10 @@ a|
 hsize(width, subject)
 ----
 a|
-. `subject` will be laid out with a fixed `width`, constrained by the natural _horizontal limits_ of the `subject`.
-. The natural _horizontal limits_ of the element will not be violated.
-. The natural _vertical limits_ of `subject` will not be affected.
-. Returns instance of `Proxy`.
+* `subject` will be laid out with a fixed `width`, constrained by the natural _horizontal limits_ of the `subject`.
+* The natural _horizontal limits_ of the element will not be violated.
+* The natural _vertical limits_ of `subject` will not be affected.
+* Returns instance of `Proxy`.
 |===
 
 == vsize
@@ -120,10 +120,10 @@ a|
 vsize(height, subject)
 ----
 a|
-. `subject` will be laid out with a fixed `height`, constrained by the natural _vertical limits_ of the `subject`.
-. The natural _vertical limits_ of the element will not be violated.
-. The natural _horizontal limits_ of `subject` will not be affected.
-. Returns instance of `Proxy`.
+* `subject` will be laid out with a fixed `height`, constrained by the natural _vertical limits_ of the `subject`.
+* The natural _vertical limits_ of the element will not be violated.
+* The natural _horizontal limits_ of `subject` will not be affected.
+* Returns instance of `Proxy`.
 |===
 
 == min_size
@@ -151,9 +151,9 @@ min_size({width, height},
 )
 ----
 a|
-. The _minimum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _minimum limits_ of the `subject`.
-. The natural _minimum limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _minimum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _minimum limits_ of the `subject`.
+* The natural _minimum limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == hmin_size
@@ -179,9 +179,9 @@ a|
 hmin_size(width, subject)
 ----
 a|
-. The _minimum horizontal limit_ of `subject` will be set to the specified `width` constrained by the natural _horizontal minimum limits_ of the `subject`.
-. The natural _horizontal minimum limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _minimum horizontal limit_ of `subject` will be set to the specified `width` constrained by the natural _horizontal minimum limits_ of the `subject`.
+* The natural _horizontal minimum limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == vmin_size
@@ -207,9 +207,9 @@ a|
 vmin_size(height, subject)
 ----
 a|
-. The _minimum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural vertical _minimum limits_ of the `subject`.
-. The natural _vertical minimum limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _minimum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural vertical _minimum limits_ of the `subject`.
+* The natural _vertical minimum limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == max_size
@@ -237,9 +237,9 @@ max_size({width, height},
 )
 ----
 a|
-. The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
-. The natural _maximum limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
+* The natural _maximum limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == hmax_size
@@ -267,9 +267,9 @@ max_size({width, height},
 )
 ----
 a|
-. The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
-. The natural _maximum limits_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _maximum limits_ of `subject` will be set to the specified `width` and `height`, constrained by the natural _maximum limits_ of the `subject`.
+* The natural _maximum limits_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 == vmax_size
@@ -295,9 +295,9 @@ a|
 vmax_size(height, subject)
 ----
 a|
-. The _maximum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural _maximum vertical limit_ of the `subject`.
-. The natural _maximum vertical limit_ of the element will not be violated.
-. Returns instance of `Proxy`.
+* The _maximum vertical limit_ of `subject` will be set to the specified `height` constrained by the natural _maximum vertical limit_ of the `subject`.
+* The natural _maximum vertical limit_ of the element will not be violated.
+* Returns instance of `Proxy`.
 |===
 
 ---

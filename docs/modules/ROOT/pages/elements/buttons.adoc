@@ -59,35 +59,71 @@ namespace concepts
 `TBase`:: Type that conforms to the ToggleButton concept.
 `LBase`:: Type that conforms to the LatchingButton concept.
 
+
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-// Basic default buttons
 momentary_button(styler);
-toggle_button(styler);
-latching_button(styler);
-
-// Custom buttons
-momentary_button<MBase>(styler);
-toggle_button<TBase>(styler);
-latching_button<LBase>(styler);
 ----
+a|
+* Creates a momentary button with the given styler element.
 
-=== Semantics
+a|
+[source,c++]
+----
+toggle_button(styler);
+----
+a|
+* Creates a toggle button with the given styler element.
 
-. `momentary_button`
-      is a function that creates a momentary button with the given styler
-      element. `MBase`, if provided, is the base type that must conform to
-      the `MomentaryButton` concept.
-. `toggle_button`
-      is a function that creates a toggle button with the given styler
-      element. `TBase`, if provided,  is the the base type that must conform
-      to the `ToggleButton` concept.
-. `latching_button`
-      is a function that creates a latching button with the given styler
-      element. `LBase`, if provided,  is the the base type that must conform
-      to the `LatchingButton` concept.
+a|
+[source,c++]
+----
+latching_button(styler)
+----
+a|
+* Creates a latching button with the given styler element.
+
+a|
+[source,c++]
+----
+momentary_button<MBase>(
+   styler
+)
+----
+a|
+* Creates a momentary button with the given styler element.
+* `MBase` is the base type that must conform to the `MomentaryButton`
+   concept.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   styler
+)
+----
+a|
+* Creates a toggle button with the given styler element.
+* `TBase` is the base type that must conform to the `ToggleButton` concept.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   styler
+)
+----
+a|
+* Creates a latching button with the given styler element.
+* `LBase` is the base type that must conform to the `LatchingButton` concept.
+|===
 
 The provided base types `MBase`, `TBase`, and `LBase` offer the flexibility
 to use custom button behavior, provided they adhere to their respective
@@ -103,43 +139,48 @@ button is clicked.
 `btn`:: A Button instance.
 `f`  :: A callback function with the signature `void(bool state)`.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
 btn.on_click = f;
 ----
-
-=== Semantics
-
-The type of the `on_click` callable object is:
-
-[,c++]
-----
-std::function<void(bool state))
-----
+a|
+* Assigns a callable function, `f`, to the button's `on_click` event.
+* The `on_click` callback is called at the trailing edge of the click, just
+  before release.
+* Momentary and latching buttons will always have a state of `true` when
+  its `on_click` callback is called.
+* Toggle buttons will will have a state that alternates between `true` and
+  `false` with each click.
+|===
 
 The client provides a callback function, typically a c++ lambda, that will be
-called when the button is clicked. The `state` argument indicates whether the
-button is ON (`true`) or OFF (`false`).
+called when the button is clicked. The type of the `on_click` callable object
+is:
 
-. The `on_click` callback is called at the trailing edge of the click, just
-before release.
+[source,c++]
+----
+std::function<void(bool state)>
+----
 
-. Momentary and latching buttons will always have a state of `true` when
-its `on_click` callback is called.
-
-. Toggle buttons will will have a state that alternates between `true` and
-`false` with each click.
+The `state` argument indicates whether the button is ON (`true`) or OFF
+(`false`).
 
 === Example
 
 [,c++]
 ----
-btn.on_click = [](bool state)
-{
-   std::cout << "Button clicked: " << state << std::endl;
-};
+btn.on_click =
+   [](bool state)
+   {
+      std::cout << "Button clicked: " << state << std::endl;
+   };
 ----
 
 == Enable/Disable
@@ -153,20 +194,29 @@ differently to indicate that it is disabled.
 `btn` :: A Button instance.
 `state`  :: A boolean value indicating whether the button is enabled or disabled.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-btn.enable(state)    <1>
-btn.is_enabled()     <2>
+btn.enable(state)
 ----
-
-=== Semantics
-
-<1> Pass `true` to the `state` argument to enable the button, or
-   `false` to disable it. When disabled, the button will not respond
-   to clicks.
-<2> Returns `true` if the button is enabled, and `false` otherwise.
+a|
+* Sets the button's enabled state. Pass `true` to the `state` argument to
+  enable the button, or `false` to disable it.
+* When disabled, the button will not respond to clicks.
+a|
+[source,c++]
+----
+btn.is_enabled()
+----
+a|
+* Returns `true` if the button is enabled, `false` otherwise.
+|===
 
 == Value
 
@@ -183,18 +233,28 @@ functions, `value()` and `value(val)`.
 `btn`    :: A Button instance.
 `val`    :: A boolean value.
 
-=== Expression
+=== Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-btn.value(val)       <1>
-btn.vauel()          <2>
+btn.value(val)
 ----
+a|
+* Sets the value of the button to `val`.
 
-=== Semantics
-
-<1> Sets the value of the button to `val`.
-<2> Returns the current value of the button.
+a|
+[source,c++]
+----
+btn.value()
+----
+a|
+* Returns the current value of the button.
+|===
 
 == Button Styler
 

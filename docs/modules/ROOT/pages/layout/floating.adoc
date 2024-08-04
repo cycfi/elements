@@ -31,10 +31,10 @@ a|
 floating({left, top, right, bottom}, subject)
 ----
 a|
-. The element will be placed exactly to the specified position in the main
+* The element will be placed exactly to the specified position in the main
   view, constrained to the subject's natural {limits}.
-. The floating element does not violate the natural {limits} of the subject.
-. Returns instance of `Proxy`.
+* The floating element does not violate the natural {limits} of the subject.
+* Returns instance of `Proxy`.
 |===
 
 '''

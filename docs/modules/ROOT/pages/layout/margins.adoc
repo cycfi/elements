@@ -33,10 +33,10 @@ margin({left, top, right, bottom},
 )
 ----
 a|
-. Space is added to the left, top, right, and bottom of the subject with the given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin` does not violate the natural {limits} of the subject. `margin` will respect the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+* Space is added to the left, top, right, and bottom of the subject with the given parameters.
+* The element's {limits} is overridden to account for the additional space.
+* The `margin` does not violate the natural {limits} of the subject. `margin` will respect the subject's min-max constraints and resizability.
+* Returns instance of `Proxy`.
 |===
 
 == margin_left
@@ -62,12 +62,12 @@ a|
 margin_left(left, subject)
 ----
 a|
-. Space is added to the left of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left` does not violate the natural {limits} of the subject.
+* Space is added to the left of the subject with the given parameter.
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_left` does not violate the natural {limits} of the subject.
   `margin_left` will respect the subject's min-max constraints and
    resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_right
@@ -93,12 +93,12 @@ a|
 margin_right(right, subject)
 ----
 a|
-. Space is added to the right of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right` does not violate the natural {limits} of the subject.
+* Space is added to the right of the subject with the given parameter.
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_right` does not violate the natural {limits} of the subject.
   `margin_right` will respect the subject's min-max constraints and
   resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_top
@@ -124,9 +124,9 @@ a|
 margin_top(top, subject)
 ----
 a|
-. Space is added to the top of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_top` does not violate the natural {limits} of the subject.
+* Space is added to the top of the subject with the given parameter.
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_top` does not violate the natural {limits} of the subject.
   `margin_top` will respect the subject's min-max constraints and
   resizability.
   . Returns instance of `Proxy`.
@@ -155,12 +155,12 @@ a|
 margin_bottom(bottom, subject)
 ----
 a|
-. Space is added to the bottom of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_bottom` does not violate the natural {limits} of the subject.
+* Space is added to the bottom of the subject with the given parameter.
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_bottom` does not violate the natural {limits} of the subject.
   `margin_bottom` will respect the subject's min-max constraints and
   resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == hmargin
@@ -196,13 +196,13 @@ margin_left_right({left, right}, subject)
 margin_left_right(left, right, subject)
 ----
 a|
-. Space is added to the left and right sides of the subject with the given
+* Space is added to the left and right sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `hmargin` (and variants) does not violate the natural {limits} of the
+* The element's {limits} is overridden to account for the additional space.
+* The `hmargin` (and variants) does not violate the natural {limits} of the
   subject. `hmargin` (and variants) will respect the subject's min-max
   constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == vmargin
@@ -240,13 +240,13 @@ margin_top_bottom({top, bottom}, subject)
 margin_top_bottom(top, bottom, subject)
 ----
 a|
-. Space is added to the top and bottom sides of the subject with the given
+* Space is added to the top and bottom sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `vmargin` (and variants) does not violate the natural {limits} of the
+* The element's {limits} is overridden to account for the additional space.
+* The `vmargin` (and variants) does not violate the natural {limits} of the
   subject. `vmargin` (and variants) will respect the subject's min-max
   constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_left_top
@@ -276,13 +276,13 @@ margin_left_top({left, top}, subject)
 margin_left_top(left, top, subject)
 ----
 a|
-. Space is added to the left and top sides of the subject with the given
+* Space is added to the left and top sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left_top` (and variant) does not violate the natural {limits}
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_left_top` (and variant) does not violate the natural {limits}
   of the subject. `margin_left_top` (and variant) will respect the subject's
   min-max constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_left_bottom
@@ -312,13 +312,13 @@ margin_left_bottom({left, bottom}, subject)
 margin_left_bottom(left, bottom, subject)
 ----
 a|
-. Space is added to the left and bottom sides of the subject with the given
+* Space is added to the left and bottom sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left_bottom` (and variant) does not violate the natural
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_left_bottom` (and variant) does not violate the natural
   {limits} of the subject. `margin_left_bottom` (and variant) will respect
   the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_right_top
@@ -348,13 +348,13 @@ margin_right_top({right, top}, subject)
 margin_right_top(right, top, subject)
 ----
 a|
-. Space is added to the right and top sides of the subject with the given
+* Space is added to the right and top sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right_top` (and variant) does not violate the natural {limits}
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_right_top` (and variant) does not violate the natural {limits}
   of the subject. `margin_right_top` (and variant) will respect the subject's
   min-max constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 == margin_right_bottom
@@ -384,13 +384,13 @@ margin_right_bottom({right, bottom}, subject)
 margin_right_bottom(right, bottom, subject)
 ----
 a|
-. Space is added to the right and bottom sides of the subject with the given
+* Space is added to the right and bottom sides of the subject with the given
   parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right_bottom` (and variant) does not violate the natural
+* The element's {limits} is overridden to account for the additional space.
+* The `margin_right_bottom` (and variant) does not violate the natural
   {limits} of the subject. `margin_right_bottom` (and variant) will respect
   the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+* Returns instance of `Proxy`.
 |===
 
 '''

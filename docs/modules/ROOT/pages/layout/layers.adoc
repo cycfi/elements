@@ -12,20 +12,20 @@ image::/layout/layer.svg[alt="layer", width=353px, role=center]
 
 === Semantics
 
-. The elements are laid out in the z-axis, top to bottom.
-. Rendering is done bottom-up; the bottom-most elements are drawn first.
-. UI control (such as mouse clicks) proceeds from top to bottom.
+* The elements are laid out in the z-axis, top to bottom.
+* Rendering is done bottom-up; the bottom-most elements are drawn first.
+* UI control (such as mouse clicks) proceeds from top to bottom.
 Higher-level elements are given control priority. If a higher-level
 element does not process the event, lower-level elements are given a
 chance.
-. The layer's _minimum limit_ is computed as the maximum of the children
+* The layer's _minimum limit_ is computed as the maximum of the children
 elements' __minimum limit__s.
-. The layer's _maximum limit_ is computed as the minimum of the children
+* The layer's _maximum limit_ is computed as the minimum of the children
 elements' __maximum limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
+* The final computed minimum limit is clamped to ensure it is not greater
 than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.
-. The computed (vertical) and (horizontal) coordinates may violate the
+* The computed (vertical) and (horizontal) coordinates may violate the
 limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
 _minimum limits_ in either dimension, the element will be cropped.
@@ -57,7 +57,7 @@ a|
 layer(e1,...eN)
 ----
 a|
-. In addition to the semantics of Layers, returns instance of `Composite`.
+* In addition to the semantics of Layers, returns instance of `Composite`.
 |===
 
 === Example

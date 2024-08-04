@@ -38,8 +38,8 @@ a|
 span(nspans, subject)
 ----
 a|
-. The `subject` will assume a span with the given `nspans` value.
-. Returns instance of `Proxy`.
+* The `subject` will assume a span with the given `nspans` value.
+* Returns instance of `Proxy`.
 |===
 
 '''

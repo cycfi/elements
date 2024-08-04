@@ -24,72 +24,245 @@ flexibility in defining the button's appearance and behavior.
 `tl`, `tr`, `bl`, `br`  :: The corner radius in pixels for top-left, top-right,
                            bottom-left, and bottom-right corners of type `float`.
 
+
+
+
 === Expressions
 
-[,c++]
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
 ----
-button_styler{label}                    <1>
-bst.size(size)                          <2>
-bst.color(color)                        <3>
-bst.active_body_color(color)            <4>
-bst.text_color(color)                   <5>
-bst.icon(icon_id)                       <6>
-bst.icon_left()                         <7>
-bst.icon_right()                        <8>
-bst.icon_color(color)                   <9>
-bst.align_left()                        <10>
-bst.align_center()                      <11>
-bst.align_right()                       <12>
-bst.margin(margin)                      <13>
-bst.corner_radius(r)                    <14>
-bts.corner_radius(tl, tr, bl, br)       <15>
-bts.rounded_top()                       <16>
-bts.rounded_bottom()                    <17>
-bts.rounded_left()                      <18>
-bts.rounded_right()                     <19>
-bts.rounded_top(r)                      <20>
-bts.rounded_bottom(r)                   <21>
-bts.rounded_left(r)                     <22>
-bts.rounded_right(r)                    <23>
-bts.rounded_corner_top_left(r)          <24>
-bts.rounded_corner_top_right(r)         <25>
-bts.rounded_corner_bottom_left(r)       <26>
-bts.rounded_corner_bottom_right(r)      <27>
+button_styler{label}
 ----
+a|
+* Create a button with the given label.
 
-=== Semantics
+a|
+[source,c++]
+----
+bst.size(size)
+----
+a|
+* Sets the relative size of the button.
+* `size` is relative to the default size dictated by the
+  {Global-theme}'s `label_font`.
+* A value greater than 1.0 makes the button larger.
+* A value less than 1.0 makes the button smaller.
+a|
+[source,c++]
+----
+bst.color(color)
+----
+a|
+* Sets the color of the button.
 
-<1> Creates a button styler with the given label.
-<2> Sets the button relative size of a button styler. A value > 1.0 makes the
-    button larger, while a value < 1.0 makes the button smaller.
-<3> Sets the color of a button styler.
-<4> Sets the active body color of a button styler.
-<5> Sets the text color of a button styler.
-<6> Sets the icon of a button styler.
-<7> Sets the icon to the left of the text.
-<8> Sets the icon to the right of the text.
-<9> Sets the icon color of a button styler.
-<10> Aligns the text and icon to the left.
-<11> Aligns the text and icon to the center.
-<12> Aligns the text and icon to the right.
-<13> Sets the margin of a button styler.
-<14> Sets the corner radius of a button styler.
-<15> Sets the corner radius of a button styler for each corner.
-<16> Sets the top corners of a button styler to be rounded.
-<17> Sets the bottom corners of a button styler to be rounded.
-<18> Sets the left corners of a button styler to be rounded.
-<19> Sets the right corners of a button styler to be rounded.
-<20> Sets the top corners of a button styler to be rounded with a specific radius.
-<21> Sets the bottom corners of a button styler to be rounded with a specific radius.
-<22> Sets the left corners of a button styler to be rounded with a specific radius.
-<23> Sets the right corners of a button styler to be rounded with a specific radius.
-<24> Sets the top-left corner of a button styler to be rounded with a specific radius.
-<25> Sets the top-right corner of a button styler to be rounded with a specific radius.
-<26> Sets the bottom-left corner of a button styler to be rounded with a specific radius.
-<27> Sets the bottom-right corner of a button styler to be rounded with a specific radius.
+a|
+[source,c++]
+----
+bst.active_body_color(color)
+----
+a|
+* Sets the active body color of the button.
 
-All of these expressions return a button styler. Therefore, these expressions
-can be chained together to create a button styler with the desired
+a|
+[source,c++]
+----
+bst.text_color(color)
+----
+a|
+* Sets the text color of the button.
+
+a|
+[source,c++]
+----
+bst.icon(icon_id)
+----
+a|
+* Sets the icon of the button.
+
+a|
+[source,c++]
+----
+bst.icon_left()
+----
+a|
+* Sets the icon to the left of the text.
+
+a|
+[source,c++]
+----
+bst.icon_right()
+----
+a|
+* Sets the icon to the right of the text.
+
+a|
+[source,c++]
+----
+bst.icon_color(color)
+----
+a|
+* Sets the icon color of the button.
+
+a|
+[source,c++]
+----
+bst.align_left()
+----
+a|
+* Aligns the text and icon to the left.
+
+a|
+[source,c++]
+----
+bst.align_center()
+----
+a|
+* Aligns the text and icon to the center.
+
+a|
+[source,c++]
+----
+bst.align_right()
+----
+a|
+* Aligns the text and icon to the right.
+
+a|
+[source,c++]
+----
+bst.margin(margin)
+----
+a|
+* Sets the margin of the button.
+
+a|
+[source,c++]
+----
+bst.corner_radius(r)
+----
+a|
+* Sets the corner radius of the button.
+
+a|
+[source,c++]
+----
+bts.corner_radius(tl, tr, bl, br)
+----
+a|
+* Sets the corner radius of the button for each corner.
+
+a|
+[source,c++]
+----
+bts.rounded_top()
+----
+a|
+* Sets the top corners of the button to be rounded.
+
+a|
+[source,c++]
+----
+bts.rounded_bottom()
+----
+a|
+* Sets the bottom corners of the button to be rounded.
+
+a|
+[source,c++]
+----
+bts.rounded_left()
+----
+a|
+* Sets the left corners of the button to be rounded.
+
+a|
+[source,c++]
+----
+bts.rounded_right()
+----
+a|
+* Sets the right corners of the button to be rounded.
+
+a|
+[source,c++]
+----
+bts.rounded_top(r)
+----
+a|
+* Sets the top corners of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_bottom(r)
+----
+a|
+* Sets the bottom corners of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_left(r)
+----
+a|
+* Sets the left corners of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_right(r)
+----
+a|
+* Sets the right corners of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_corner_top_left(r)
+----
+a|
+* Sets the top-left corner of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_corner_top_right(r)
+----
+a|
+* Sets the top-right corner of the button to be rounded with a specific
+  radius.
+
+a|
+[source,c++]
+----
+bts.rounded_corner_bottom_left(r)
+----
+a|
+* Sets the bottom-left corner of the button to be rounded with a
+  specific radius.
+
+a|
+[source,c++]
+----
+bts.rounded_corner_bottom_right(r)
+----
+a|
+* Sets the bottom-right corner of the button to be rounded with a
+  specific radius.
+|===
+
+All of these expressions return the button styler. Therefore, these expressions
+can be chained together to create the button styler with the desired
 appearance. The result is then passed to one of the button creation functions
 (see {Buttons}).
 
@@ -128,12 +301,12 @@ auto btn = momentary_button(
    );
 ----
 
-=== Default Button Styler
+== Default Button Styler
 
 The basic button styler is a simple button with a text label with no icon,
 with these defaults:
 
-[cols="1,1", options="header"]
+[cols="2,3", options="header"]
 |===
 | Property                      | Default Value
 
@@ -153,7 +326,7 @@ with these defaults:
 | corner_radius_bottom_right    | `corner_radius`
 |===
 
-=== Convenience Functions
+== Convenience Functions
 
 The following convenience functions are provided to create commonly used
 buttons. These functions simplify button creation, allowing users to quickly
@@ -173,72 +346,462 @@ implement standard button types with minimal effort.
 
 === Expressions
 
-[,c++]
-----
+==== Momentary buttons
 
-// Momentary buttons
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
 button(label)
-button(label, size)
-button(label, size, color)
-button<MBase>(label)
-button<MBase>(label, size)
-button<MBase>(label, size, color)
-
-// Momentary buttons with icon to the left
-button(icon_id, label, size)
-button(icon_id, label, size, color)
-button<MBase>(icon_id, label, size)
-button<MBase>(icon_id, label, size, color)
-
-// Momentary buttons with icon to the right
-button(label, icon_id, size)
-button(label, icon_id, size, color)
-button<MBase>(label, icon_id, size)
-button<MBase>(label, icon_id, size, color)
-
-// Toggle buttons
-toggle_button(label)
-toggle_button(label, size)
-toggle_button(label, size, color)
-toggle_button<TBase>(label)
-toggle_button<TBase>(label, size)
-toggle_button<TBase>(label, size, color)
-
-// Toggle buttons with icon to the left
-toggle_button(icon_id, label, size)
-toggle_button(icon_id, label, size, color)
-toggle_button<TBase>(icon_id, label, size)
-toggle_button<TBase>(icon_id, label, size, color)
-
-// Toggle buttons with icon to the right
-toggle_button(label, icon_id, size)
-toggle_button(label, icon_id, size, color)
-toggle_button<TBase>(label, icon_id, size)
-toggle_button<TBase>(label, icon_id, size, color)
-
-// Latching buttons
-latching_button(label)
-latching_button(label, size)
-latching_button(label, size, color)
-latching_button<LBase>(label)
-latching_button<LBase>(label, size)
-latching_button<LBase>(label, size, color)
-
-// Latching buttons with icon to the left
-latching_button(icon_id, label, size)
-latching_button(icon_id, label, size, color)
-latching_button<LBase>(icon_id, label, size)
-latching_button<LBase>(icon_id, label, size, color)
-
-// Latching buttons with icon to the right
-latching_button(label, icon_id, size)
-latching_button(label, icon_id, size, color)
-latching_button<LBase>(label, icon_id, size)
-latching_button<LBase>(label, icon_id, size, color)
-
 ----
+a|
+* Creates a button with the specified label.
 
-=== Semantics
+a|
+[source,c++]
+----
+button(label, size)
+----
+a|
+* Creates a button with the specified label and size.
+
+a|
+[source,c++]
+----
+button(label, size, color)
+----
+a|
+* Creates a button with the specified label, size, and color.
+
+a|
+[source,c++]
+----
+button<MBase>(label)
+----
+a|
+* Creates a button with the specified label, using the MBase template.
+
+a|
+[source,c++]
+----
+button<MBase>(label, size)
+----
+a|
+* Creates a button with the specified label and size, using the MBase template.
+
+a|
+[source,c++]
+----
+button<MBase>(
+   label, size, color
+)
+----
+a|
+* Creates a button with the specified label, size, and color, using the MBase template.
+|===
+
+==== Momentary Buttons with Icon to the Left
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+button(icon_id, label, size)
+----
+a|
+* Creates a momentary button with the specified icon to the left, label, and size.
+
+a|
+[source,c++]
+----
+button(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a momentary button with the specified icon to the left, label, size, and color.
+
+a|
+[source,c++]
+----
+button<MBase>(
+   icon_id, label, size
+)
+----
+a|
+* Creates a momentary button with the specified icon to the left, label, and size, using the MBase template.
+
+a|
+[source,c++]
+----
+button<MBase>(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a momentary button with the specified icon to the left, label, size, and color, using the MBase template.
+|===
+
+==== Momentary Buttons with Icon to the Right
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+button(label, icon_id, size)
+----
+a|
+* Creates a momentary button with the specified label, icon to the right, and size.
+
+a|
+[source,c++]
+----
+button(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a momentary button with the specified label, icon to the right, size, and color.
+
+a|
+[source,c++]
+----
+button<MBase>(
+   label, icon_id, size
+)
+----
+a|
+* Creates a momentary button with the specified label, icon to the right, and size, using the MBase template.
+
+a|
+[source,c++]
+----
+button<MBase>(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a momentary button with the specified label, icon to the right, size, and color, using the MBase template.
+|===
+
+==== Toggle Buttons
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+toggle_button(label)
+----
+a|
+* Creates a toggle button with the specified label.
+
+a|
+[source,c++]
+----
+toggle_button(label, size)
+----
+a|
+* Creates a toggle button with the specified label and size.
+
+a|
+[source,c++]
+----
+toggle_button(
+   label, size, color
+)
+----
+a|
+* Creates a toggle button with the specified label, size, and color.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(label)
+----
+a|
+* Creates a toggle button with the specified label, using the TBase template.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   label, size
+)
+----
+a|
+* Creates a toggle button with the specified label and size, using the TBase template.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   label, size, color
+)
+----
+a|
+* Creates a toggle button with the specified label, size, and color, using the TBase template.
+|===
+
+==== Toggle Buttons with Icon to the Left
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+toggle_button(
+   icon_id, label, size
+)
+----
+a|
+* Creates a toggle button with the specified icon to the left, label, and size.
+
+a|
+[source,c++]
+----
+toggle_button(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a toggle button with the specified icon to the left, label, size, and color.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   icon_id, label, size
+)
+----
+a|
+* Creates a toggle button with the specified icon to the left, label, and size, using the TBase template.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a toggle button with the specified icon to the left, label, size, and color, using the TBase template.
+|===
+
+==== Toggle Buttons with Icon to the Right
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+toggle_button(
+   label, icon_id, size
+)
+----
+a|
+* Creates a toggle button with the specified label, icon to the right, and size.
+
+a|
+[source,c++]
+----
+toggle_button(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a toggle button with the specified label, icon to the right, size, and color.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   label, icon_id, size
+)
+----
+a|
+* Creates a toggle button with the specified label, icon to the right, and size, using the TBase template.
+
+a|
+[source,c++]
+----
+toggle_button<TBase>(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a toggle button with the specified label, icon to the right, size, and color, using the TBase template.
+|===
+
+==== Latching Buttons
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+latching_button(label)
+----
+a|
+* Creates a latching button with the specified label.
+
+a|
+[source,c++]
+----
+latching_button(label, size)
+----
+a|
+* Creates a latching button with the specified label and size.
+
+a|
+[source,c++]
+----
+latching_button(
+   label, size, color
+)
+----
+a|
+* Creates a latching button with the specified label, size, and color.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(label)
+----
+a|
+* Creates a latching button with the specified label, using the LBase template.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   label, size
+)
+----
+a|
+* Creates a latching button with the specified label and size, using the LBase template.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   label, size, color
+)
+----
+a|
+* Creates a latching button with the specified label, size, and color, using the LBase template.
+|===
+
+==== Latching Buttons with Icon to the Left
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+latching_button(
+   icon_id, label, size
+)
+----
+a|
+* Creates a latching button with the specified icon to the left, label, and size.
+
+a|
+[source,c++]
+----
+latching_button(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a latching button with the specified icon to the left, label, size, and color.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   icon_id, label, size
+)
+----
+a|
+* Creates a latching button with the specified icon to the left, label, and size, using the LBase template.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   icon_id, label, size, color
+)
+----
+a|
+* Creates a latching button with the specified icon to the left, label, size, and color, using the LBase template.
+|===
+
+==== Latching Buttons with Icon to the Right
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+latching_button(
+   label, icon_id, size
+)
+----
+a|
+* Creates a latching button with the specified label, icon to the right, and size.
+
+a|
+[source,c++]
+----
+latching_button(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a latching button with the specified label, icon to the right, size, and color.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   label, icon_id, size
+)
+----
+a|
+* Creates a latching button with the specified label, icon to the right, and size, using the LBase template.
+
+a|
+[source,c++]
+----
+latching_button<LBase>(
+   label, icon_id, size, color
+)
+----
+a|
+* Creates a latching button with the specified label, icon to the right, size, and color, using the LBase template.
+|===
 
 These are forwarding shortcuts to the `button_styler` expressions. They
 create a button styler with the specified properties and pass it to the

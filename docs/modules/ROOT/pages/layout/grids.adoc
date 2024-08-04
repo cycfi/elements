@@ -22,20 +22,20 @@ Grids have computed horizontal and vertical sizes following the natural
 
 === Semantics
 
-. The elements are laid out in a single row, left to right, immediately next
+* The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.
-. The elements are positioned horizontally using the supplied fractional
+* The elements are positioned horizontally using the supplied fractional
 positions. The fractional positions values range from 0.0 to 1.0, which
 specify the child element's horizontal position from left (0.0) to right
 (1.0).
-. The grid's _minimum vertical limit_ is computed as the maximum of the
+* The grid's _minimum vertical limit_ is computed as the maximum of the
 children elements' __minimum vertical limit__s.
-. The grid's _maximum vertical limit_ is computed as the minimum of the
+* The grid's _maximum vertical limit_ is computed as the minimum of the
 children elements' __maximum vertical limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
+* The final computed minimum limit is clamped to ensure it is not greater
 than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.
-. The supplied (horizontal) positions and computed (vertical) coordinates
+* The supplied (horizontal) positions and computed (vertical) coordinates
 may violate the limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
 _minimum limits_ in either dimension, the element will be cropped.
@@ -69,7 +69,7 @@ a|
 hgrid(positions, e1,...eN)
 ----
 a|
-. In addition to the semantics of Horizontal Grids, returns instance of
+* In addition to the semantics of Horizontal Grids, returns instance of
 `Composite`.
 |===
 
@@ -87,19 +87,19 @@ NOTE: If the number of elements is not fixed, you can use an
 
 === Requirements
 
-. The number of supplied positions and elements, multiplied by each element's
+* The number of supplied positions and elements, multiplied by each element's
 span, should match, otherwise, undefined behavior.  By default elements have
 a span of `1`. See <<_span_element,Span Element>> for more information.
-. The positions assume the first element is at `x=0` (it is at the left-most
+* The positions assume the first element is at `x=0` (it is at the left-most
 position in the row). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.
-. The externally supplied positions should be sorted with increasing values
+* The externally supplied positions should be sorted with increasing values
 such that positions[n] \<= positions[n+1]. The behavior is undefined if
 this is violated.
 
 === Semantics
 
-. In addition to the semantics of Horizontal Grids, returns instance of
+* In addition to the semantics of Horizontal Grids, returns instance of
 `Composite`.
 
 == hgrid_composite
@@ -141,12 +141,12 @@ build complex hierarchical structures.
 
 === Requirements
 
-. The number of items in the external coordinates vector `positions` must match
+* The number of items in the external coordinates vector `positions` must match
 with the number of elements at any given time.
-. The positions assume the first element is at `x=0` (it is at the left-most
+* The positions assume the first element is at `x=0` (it is at the left-most
 position in the row). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.
-. The externally supplied positions should be sorted with increasing values
+* The externally supplied positions should be sorted with increasing values
 such that positions[n] \<= positions[n+1]. The behavior is undefined if
 this is violated.
 
@@ -161,20 +161,20 @@ Grids have computed horizontal and vertical sizes following the natural
 
 === Semantics
 
-. The elements are laid out in a single column, top to bottom, immediately
+* The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.
-. The elements are positioned vertically using the supplied fractional
+* The elements are positioned vertically using the supplied fractional
 positions. The fractional positions values range from 0.0 to 1.0, which
 specify the child element's vertical position from top (0.0) to bottom
 (1.0).
-. The grid's _minimum horizontal limit_ is computed as the maximum of the
+* The grid's _minimum horizontal limit_ is computed as the maximum of the
 children elements' __minimum horizontal limit__s.
-. The grid's _maximum horizontal limit_ is computed as the minumum of the
+* The grid's _maximum horizontal limit_ is computed as the minumum of the
 children elements' __maximum horizontal limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
+* The final computed minimum limit is clamped to ensure it is not greater
 than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.
-. The supplied (vertical) positions and computed (horizontal) coordinates
+* The supplied (vertical) positions and computed (horizontal) coordinates
 may violate the limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
 _minimum limits_ in either dimension, the element will be cropped.
@@ -209,7 +209,7 @@ a|
 vgrid(positions, e1,...eN)
 ----
 a|
-. In addition to the semantics of Vertical Grids, returns instance of
+* In addition to the semantics of Vertical Grids, returns instance of
 `Composite`.
 |===
 
@@ -227,19 +227,19 @@ NOTE: If the number of elements is not fixed, you can use an
 
 === Requirements
 
-. The number of supplied positions and elements, multiplied by each element's
+* The number of supplied positions and elements, multiplied by each element's
 span, should match, otherwise, undefined behavior.  By default elements have
 a span of `1`. See <<_span_element,Span Element>> for more information.
-. The positions assume the first element is at `x=0` (it is at the top-most
+* The positions assume the first element is at `x=0` (it is at the top-most
 position in the column). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.
-. The externally supplied positions should be sorted with increasing values
+* The externally supplied positions should be sorted with increasing values
 such that positions[n] \<= positions[n+1]. The behavior is undefined if
 this is violated.
 
 === Semantics
 
-. In addition to the semantics of Vertical Grids, returns instance of
+* In addition to the semantics of Vertical Grids, returns instance of
 `Composite`.
 
 == vgrid_composite
@@ -280,12 +280,12 @@ build complex hierarchical structures.
 
 === Requirements
 
-. The number of items in the external coordinates vector `positions` must match
+* The number of items in the external coordinates vector `positions` must match
 with the number of elements at any given time.
-. The positions assume the first element is at `x=0` (it is at the top-most
+* The positions assume the first element is at `x=0` (it is at the top-most
 position in the column). The fractional position of the second element is at
 index `0`, the third at index `1`, and so on.
-. The externally supplied positions should be sorted with increasing values
+* The externally supplied positions should be sorted with increasing values
 such that positions[n] \<= positions[n+1]. The behavior is undefined if
 this is violated.
 

@@ -32,16 +32,16 @@ a|
 halign(align, subject)
 ----
 a|
-. Given a total allocated space `X`, `subject` will be positioned horizontally to `X * align`.
-. The `subject` will assume its _minimum horizontal limit_.
-. Returns instance of `Proxy`.
+* Given a total allocated space `X`, `subject` will be positioned horizontally to `X * align`.
+* The `subject` will assume its _minimum horizontal limit_.
+* Returns instance of `Proxy`.
 |===
 
 === Examples
 
-. `halign(0.0) // align subject to the left`
-. `halign(1.0) // align subject to the right`
-. `halign(0.5) // align subject to the center`
+* `halign(0.0) // align subject to the left`
+* `halign(1.0) // align subject to the right`
+* `halign(0.5) // align subject to the center`
 
 == align_left
 
@@ -65,8 +65,8 @@ a|
 align_left(subject)
 ----
 a|
-. Equivalent to `halign(0.0, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `halign(0.0, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == align_center
@@ -91,8 +91,8 @@ a|
 align_center(subject)
 ----
 a|
-. Equivalent to `halign(0.5, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `halign(0.5, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == align_right
@@ -117,8 +117,8 @@ a|
 align_right(subject)
 ----
 a|
-. Equivalent to `halign(1.0, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `halign(1.0, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == valign
@@ -144,9 +144,9 @@ a|
 valign(align, subject)
 ----
 a|
-. Given a total allocated space `Y`, `subject` will be positioned vertically to `Y * align`.
-. The `subject` will assume its _minimum vertical limit_.
-. Returns instance of `Proxy`.
+* Given a total allocated space `Y`, `subject` will be positioned vertically to `Y * align`.
+* The `subject` will assume its _minimum vertical limit_.
+* Returns instance of `Proxy`.
 |===
 
 === Examples
@@ -177,8 +177,8 @@ a|
 align_top(subject)
 ----
 a|
-. Equivalent to `valign(0.0, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `valign(0.0, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == align_middle
@@ -203,8 +203,8 @@ a|
 align_middle(subject)
 ----
 a|
-. Equivalent to `valign(0.5, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `valign(0.5, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == align_bottom
@@ -229,8 +229,8 @@ a|
 align_bottom(subject)
 ----
 a|
-. Equivalent to `valign(1.0, subject)`
-. Returns instance of `Proxy`.
+* Equivalent to `valign(1.0, subject)`
+* Returns instance of `Proxy`.
 |===
 
 == align_left_top
@@ -255,8 +255,8 @@ a|
 align_left_top(subject)
 ----
 a|
-. Equivalent to `align_left(align_top(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_left(align_top(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_center_top
@@ -281,8 +281,8 @@ a|
 align_center_top(subject)
 ----
 a|
-. Equivalent to `align_center(align_top(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_center(align_top(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_right_top
@@ -307,8 +307,8 @@ a|
 align_right_top(subject)
 ----
 a|
-. Equivalent to `align_right(align_top(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_right(align_top(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_left_middle
@@ -333,8 +333,8 @@ a|
 align_left_middle(subject)
 ----
 a|
-. Equivalent to `align_left(align_middle(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_left(align_middle(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_center_middle
@@ -359,8 +359,8 @@ a|
 align_center_middle(subject)
 ----
 a|
-. Equivalent to `align_center(align_middle(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_center(align_middle(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_right_middle
@@ -385,8 +385,8 @@ a|
 align_right_middle(subject)
 ----
 a|
-. Equivalent to `align_right(align_middle(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_right(align_middle(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_left_bottom
@@ -411,8 +411,8 @@ a|
 align_left_bottom(subject)
 ----
 a|
-. Equivalent to `align_left(align_bottom(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_left(align_bottom(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_center_bottom
@@ -437,8 +437,8 @@ a|
 align_center_bottom(subject)
 ----
 a|
-. Equivalent to `align_center(align_bottom(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_center(align_bottom(subject))`
+* Returns instance of `Proxy`.
 |===
 
 == align_right_bottom
@@ -463,8 +463,8 @@ a|
 align_right_bottom(subject)
 ----
 a|
-. Equivalent to `align_right(align_bottom(subject))`
-. Returns instance of `Proxy`.
+* Equivalent to `align_right(align_bottom(subject))`
+* Returns instance of `Proxy`.
 |===
 
 '''

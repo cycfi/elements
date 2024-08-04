@@ -73,13 +73,13 @@ a|
 flow(c)
 ----
 a|
-. Returns an instance of `Composite` where child elements are laid out from
+* Returns an instance of `Composite` where child elements are laid out from
   left to right, fitting as many elements as possible within each child's
   maximum horizontal limit.
-. Once a row is full, move to the next row and do the same until the end of
+* Once a row is full, move to the next row and do the same until the end of
   the row is filled. Repeat the procedure until all the elements are laid
   out.
-. The height of each row is determined by the maximum vertical limit of all
+* The height of each row is determined by the maximum vertical limit of all
   the elements to be laid out in that row.
 |===
 

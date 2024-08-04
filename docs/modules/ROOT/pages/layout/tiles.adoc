@@ -19,11 +19,11 @@ available space.
 
 === Semantics
 
-. The elements are laid out in a single row, left to right, immediately next
+* The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.
-. The elements are positioned horizontally using the children's natural
+* The elements are positioned horizontally using the children's natural
 {limits}.
-. Horizontal space is allocated using this algorithm:
+* Horizontal space is allocated using this algorithm:
  .. Space is allocated for each child element following the child's natural
 _minimum horizontal limit_.
  .. If the allocated space exceeds the sum of all children elements'
@@ -35,14 +35,14 @@ value of `1.0` is default. A stretchiness value of 2.0 means that the
 element is able to stretch twice as much compared to its siblings.
 Horizontally fixed-sized elements will not be stretched (element d in
 the diagram). (Also see {Stretch-Elements}).
-. The tile's _minimum vertical limit_ is computed as the maximum of the
+* The tile's _minimum vertical limit_ is computed as the maximum of the
 children elements' __minimum vertical limit__s.
-. The grid's _maximum vertical limit_ is computed as the minimum of the
+* The grid's _maximum vertical limit_ is computed as the minimum of the
 children elements' __maximum vertical limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
+* The final computed minimum limit is clamped to ensure it is not greater
 than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.
-. The supplied (horizontal) and computed (vertical) coordinates may violate
+* The supplied (horizontal) and computed (vertical) coordinates may violate
 the limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
 _minimum limits_ in either dimension, the element will be cropped.
@@ -73,7 +73,7 @@ a|
 htile(e1,...eN)
 ----
 a|
-. In addition to the semantics of Horizontal Tiles, returns instance of
+* In addition to the semantics of Horizontal Tiles, returns instance of
 `Composite`.
 |===
 
@@ -131,11 +131,11 @@ available space.
 
 === Semantics
 
-. The elements are laid out in a single column, top to bottom, immediately
+* The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.
-. The elements are positioned vertically using the children's natural
+* The elements are positioned vertically using the children's natural
 {limits}.
-. Vertical space is allocated using this algorithm:
+* Vertical space is allocated using this algorithm:
  .. Space is allocated for each child element following the child's natural
 _minimum vertical limit_.
  .. If the allocated space exceeds the sum of all children elements'
@@ -147,14 +147,14 @@ value of `1.0` is default. A stretchiness value of 2.0 means that the
 element is able to stretch twice as much compared to its siblings.
 Vertically fixed-sized elements will not be stretched (element b in the
 diagram). (Also see {Stretch-Elements}).
-. The tile's _minimum horizontal limit_ is computed as the maximum of the
+* The tile's _minimum horizontal limit_ is computed as the maximum of the
 children elements' __minimum horizontal limit__s.
-. The grid's _maximum horizontal limit_ is computed as the minumum of the
+* The grid's _maximum horizontal limit_ is computed as the minumum of the
 children elements' __maximum horizontal limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
+* The final computed minimum limit is clamped to ensure it is not greater
 than the computed maximum limit. Likewise the computed maximum limit is
 clamped to ensure it is not less than the computed minimum limit.
-. The supplied (vertical) and computed (horizontal) coordinates may violate
+* The supplied (vertical) and computed (horizontal) coordinates may violate
 the limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
 _minimum limits_ in either dimension, the element will be cropped.
@@ -185,7 +185,7 @@ a|
 vtile(e1,...eN)
 ----
 a|
-. In addition to the semantics of Vertical Tiles, returns instance of
+* In addition to the semantics of Vertical Tiles, returns instance of
 `Composite`.
 |===
 

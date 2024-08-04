@@ -28,8 +28,8 @@ a|
 scale(scale_, subject)
 ----
 a|
-. The `subject` will be scaled given the `scale_` value. A value > 1.0 scales the element up (zoom in), while a value < 1.0 scales down (zoom out).
-. Returns instance of `Proxy`.
+* The `subject` will be scaled given the `scale_` value. A value > 1.0 scales the element up (zoom in), while a value < 1.0 scales down (zoom out).
+* Returns instance of `Proxy`.
 |===
 
 '''

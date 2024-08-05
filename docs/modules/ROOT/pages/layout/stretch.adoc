@@ -1,4 +1,4 @@
-= Stretch Elements
+= Stretch
 
 include::../common.adoc[]
 

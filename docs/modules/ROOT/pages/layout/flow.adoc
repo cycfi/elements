@@ -18,7 +18,7 @@ The following graphic depicts a simplified layout scenario for child elements
 image::/layout/flow.svg[alt="flow", width=380px, role=center]
 
 The child elements arranged in a `flow` composite are automatically re-flowed
-(re-lay-out) when the view size changes.
+when the view size changes.
 
 == flow_composite
 

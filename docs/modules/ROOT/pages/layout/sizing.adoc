@@ -1,5 +1,5 @@
 
-= Size Elements
+= Sizing
 
 include::../common.adoc[]
 

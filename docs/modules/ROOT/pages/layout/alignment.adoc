@@ -1,4 +1,4 @@
-= Align Elements
+= Alignment
 
 include::../common.adoc[]
 

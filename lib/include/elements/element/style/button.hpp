@@ -377,7 +377,7 @@ namespace cycfi::elements
     * \tparam Direction
     *    The direction specifying which half of the button has rounded corners.
     */
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    struct button_styler_rounded_half : Base
    {
       using base_type = button_styler_rounded_half<typename Base::base_type, Direction>;
@@ -399,7 +399,7 @@ namespace cycfi::elements
       float                   _radius;
    };
 
-   template<typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    struct button_styler_rounded_half_default : Base
    {
       using base_type = button_styler_rounded_half_default<typename Base::base_type, Direction>;
@@ -416,7 +416,7 @@ namespace cycfi::elements
       virtual float           get_corner_radius_bottom_right() const override;
    };
 
-   template<typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    struct button_styler_rounded_corner : Base
    {
       using base_type = button_styler_rounded_corner<typename Base::base_type, Corner>;
@@ -977,7 +977,7 @@ namespace cycfi::elements
       _radius = r;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half<Base, Direction>::get_corner_radius_top_left() const
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::left)
@@ -988,7 +988,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half<Base, Direction>::get_corner_radius_top_right() const
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::right)
@@ -999,7 +999,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half<Base, Direction>::get_corner_radius_bottom_left() const
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::left)
@@ -1010,7 +1010,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half<Base, Direction>::get_corner_radius_bottom_right() const
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::right)
@@ -1021,13 +1021,13 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline void button_styler_rounded_half<Base, Direction>::set_corner_radius(float r)
    {
       _radius = r;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_top_left() const
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::left)
@@ -1038,7 +1038,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_top_right() const
    {
       if constexpr (Direction == direction_t::up || Direction == direction_t::right)
@@ -1049,7 +1049,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_bottom_left() const
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::left)
@@ -1060,7 +1060,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::direction Direction>
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    inline float button_styler_rounded_half_default<Base, Direction>::get_corner_radius_bottom_right() const
    {
       if constexpr (Direction == direction_t::down || Direction == direction_t::right)
@@ -1071,7 +1071,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    inline float button_styler_rounded_corner<Base, Corner>::get_corner_radius_top_left() const
    {
       if constexpr (Corner == corner_t::top_left)
@@ -1082,7 +1082,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    inline float button_styler_rounded_corner<Base, Corner>::get_corner_radius_top_right() const
    {
       if constexpr (Corner == corner_t::top_right)
@@ -1093,7 +1093,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    inline float button_styler_rounded_corner<Base, Corner>::get_corner_radius_bottom_left() const
    {
       if constexpr (Corner == corner_t::bottom_left)
@@ -1104,7 +1104,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    inline float button_styler_rounded_corner<Base, Corner>::get_corner_radius_bottom_right() const
    {
       if constexpr (Corner == corner_t::bottom_right)
@@ -1115,7 +1115,7 @@ namespace cycfi::elements
          return 0.0f;
    }
 
-   template <typename Base, default_button_styler::corner Corner>
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
    inline void button_styler_rounded_corner<Base, Corner>::set_corner_radius(float r)
    {
       _radius = r;

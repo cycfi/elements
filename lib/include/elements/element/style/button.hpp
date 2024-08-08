@@ -18,15 +18,37 @@
 
 namespace cycfi::elements
 {
-   ////////////////////////////////////////////////////////////////////////////
-   // Buttons
-   ////////////////////////////////////////////////////////////////////////////
+   /**
+    * \brief Base class for button styling.
+    *
+    * The `button_styler_base` class is responsible for providing the basic
+    * styling and behavior for buttons. It inherits from `element` and
+    * `basic_receiver<button_state>`, allowing it to handle button states
+    * and interact with the user interface.
+    *
+    * This class provides the foundational functionality for button styling,
+    * including cursor handling and control requirements.
+    */
    struct button_styler_base : element, basic_receiver<button_state>
    {
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
    };
 
+   /**
+    * \brief
+    *    Default button styler class.
+    *
+    *    The `default_button_styler` class provides the default styling and
+    *    behavior for buttons. It inherits from `button_styler_base` and
+    *    `text_reader_u8`, allowing it to handle button states and retrieve text
+    *    via the `get_text()` member function.
+    *
+    *    This class includes various customization options for button
+    *    appearance, such as icon placement, label alignment, and corner radius.
+    *    It also provides functions to retrieve colors, scales, and margins for
+    *    the button.
+    */
    struct default_button_styler : button_styler_base, text_reader
    {
    public:
@@ -65,6 +87,7 @@ namespace cycfi::elements
       concept ButtonStyler = std::is_base_of_v<default_button_styler, std::decay_t<T>>;
    }
 
+
    template <concepts::ButtonStyler Base>
    struct basic_button_styler_base : Base, text_writer
    {
@@ -83,6 +106,16 @@ namespace cycfi::elements
       std::string             _text;
    };
 
+   /**
+    * \brief
+    *    Button styler with size.
+    *
+    *    The `button_styler_with_size` class provides the ability to set the
+    *    size of a button. The size is relative to the default size of the
+    *    button. A size of 1.0 represents the default size, values greater
+    *    than 1.0 scale the button up, and values less than 1.0 scale the
+    *    button down.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_size : Base
    {
@@ -100,6 +133,13 @@ namespace cycfi::elements
       float                   _size;
    };
 
+   /**
+    * \brief
+    *    Button styler with body color.
+    *
+    *    The `button_styler_with_body_color` class provides the ability to
+    *    set the body color of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_body_color : Base
    {
@@ -117,6 +157,13 @@ namespace cycfi::elements
       color                   _color;
    };
 
+   /**
+    * \brief
+    *    Button styler with active body color.
+    *
+    *    The `button_styler_with_active_body_color` class provides the
+    *    ability to set the active body color of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_active_body_color : Base
    {
@@ -134,6 +181,13 @@ namespace cycfi::elements
       color                   _color;
    };
 
+   /**
+    * \brief
+    *   Button styler with text color.
+    *
+    *    The `button_styler_with_text_color` class provides the ability to
+    *    set the text color of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_text_color : Base
    {
@@ -151,6 +205,13 @@ namespace cycfi::elements
       color                   _color;
    };
 
+   /**
+    * \brief
+    *    Button styler with icon.
+    *
+    *    The `button_styler_with_icon` class provides the ability to set the
+    *    icon of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_icon : Base
    {
@@ -171,6 +232,13 @@ namespace cycfi::elements
       icon_placement          _icon_placement;
    };
 
+   /**
+    * \brief
+    *    Button styler with icon placement.
+    *
+    *    The `button_styler_with_icon_placement` class provides the ability
+    *    to set the icon placement of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_icon_placement : Base
    {
@@ -191,6 +259,13 @@ namespace cycfi::elements
       icon_placement          _icon_placement;
    };
 
+   /**
+    * \brief
+    *    Button styler with icon color.
+    *
+    *    The `button_styler_with_icon_color` class provides the ability to
+    *    set the icon color of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_icon_color : Base
    {
@@ -208,6 +283,13 @@ namespace cycfi::elements
       color                   _color;
    };
 
+   /**
+    * \brief
+    *    Button styler with label alignment.
+    *
+    *    The `button_styler_with_label_alignment` class provides the ability
+    *    to set the label alignment of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_label_alignment : Base
    {
@@ -220,14 +302,22 @@ namespace cycfi::elements
 
       label_alignment         get_label_alignment() const override;
       void                    set_label_alignment(label_alignment alignment);
-      void                    align_right();
       void                    align_left();
+      void                    align_center();
+      void                    align_right();
 
    private:
 
       label_alignment         _label_alignment;
    };
 
+   /**
+    * \brief
+    *    Button styler with margin.
+    *
+    *    The `button_styler_with_margin` class provides the ability to set
+    *    the margin of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_margin : Base
    {
@@ -245,6 +335,13 @@ namespace cycfi::elements
       rect                    _margin;
    };
 
+   /**
+    * \brief
+    *    Button styler with corner radius.
+    *
+    *    The `button_styler_with_corner_radius` class provides the ability to
+    *    set the corner radius of a button.
+    */
    template <concepts::ButtonStyler Base>
    struct button_styler_with_corner_radius : Base
    {
@@ -263,6 +360,23 @@ namespace cycfi::elements
       float                   _radius;
    };
 
+   /**
+    * \brief
+    *    Button styler with rounded corners on one half.
+    *
+    *    The `button_styler_rounded_half` class provides styling for buttons
+    *    with rounded corners on one half, based on the specified direction.
+    *    This class allows customization of the corner radius for two corners
+    *    on the specified side of the button, as determined by the
+    *    `Direction`.
+    *
+    * \tparam Base
+    *    The base button styler class. Must conform to the `ButtonStyler`
+    *    concept.
+    *
+    * \tparam Direction
+    *    The direction specifying which half of the button has rounded corners.
+    */
    template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
    struct button_styler_rounded_half : Base
    {
@@ -278,6 +392,7 @@ namespace cycfi::elements
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(float r);
 
    private:
 
@@ -309,13 +424,15 @@ namespace cycfi::elements
       constexpr static bool has_default_corner_radius = false;
 
                               button_styler_rounded_corner(Base base, float r)
-                               : Base(std::move(base)), _radius(r)
+                               : Base(std::move(base))
+                               , _radius(r)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(float r);
 
    private:
 
@@ -334,17 +451,24 @@ namespace cycfi::elements
                                  float top_right,
                                  float bottom_right,
                                  float bottom_left
-                              )  :  Base(std::move(base)),
-                                    _top_left(top_left),
-                                    _top_right(top_right),
-                                    _bottom_right(bottom_right),
-                                    _bottom_left(bottom_left)
+                              )
+                               : Base(std::move(base)),
+                                 _top_left(top_left),
+                                 _top_right(top_right),
+                                 _bottom_right(bottom_right),
+                                 _bottom_left(bottom_left)
                               {}
 
       virtual float           get_corner_radius_top_left() const override;
       virtual float           get_corner_radius_top_right() const override;
       virtual float           get_corner_radius_bottom_left() const override;
       virtual float           get_corner_radius_bottom_right() const override;
+      void                    set_corner_radius(
+                                 float top_left,
+                                 float top_right,
+                                 float bottom_right,
+                                 float bottom_left
+                              );
 
    private:
 
@@ -812,15 +936,21 @@ namespace cycfi::elements
    }
 
    template <concepts::ButtonStyler Base>
-   inline void button_styler_with_label_alignment<Base>::align_right()
-   {
-      _label_alignment = label_alignment::align_right;
-   }
-
-   template <concepts::ButtonStyler Base>
    inline void button_styler_with_label_alignment<Base>::align_left()
    {
       _label_alignment = label_alignment::align_left;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline void button_styler_with_label_alignment<Base>::align_center()
+   {
+      _label_alignment = label_alignment::align_center;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline void button_styler_with_label_alignment<Base>::align_right()
+   {
+      _label_alignment = label_alignment::align_right;
    }
 
    template <concepts::ButtonStyler Base>
@@ -889,6 +1019,12 @@ namespace cycfi::elements
          return Base::get_corner_radius_bottom_right();
       else
          return 0.0f;
+   }
+
+   template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
+   inline void button_styler_rounded_half<Base, Direction>::set_corner_radius(float r)
+   {
+      _radius = r;
    }
 
    template <concepts::ButtonStyler Base, default_button_styler::direction Direction>
@@ -979,6 +1115,12 @@ namespace cycfi::elements
          return 0.0f;
    }
 
+   template <concepts::ButtonStyler Base, default_button_styler::corner Corner>
+   inline void button_styler_rounded_corner<Base, Corner>::set_corner_radius(float r)
+   {
+      _radius = r;
+   }
+
    template <concepts::ButtonStyler Base>
    inline float button_styler_with_individual_corner_radii<Base>::get_corner_radius_top_left() const
    {
@@ -1001,6 +1143,20 @@ namespace cycfi::elements
    inline float button_styler_with_individual_corner_radii<Base>::get_corner_radius_bottom_right() const
    {
       return _bottom_right;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline void button_styler_with_individual_corner_radii<Base>::set_corner_radius(
+      float top_left,
+      float top_right,
+      float bottom_right,
+      float bottom_left
+   )
+   {
+      _top_left = top_left;
+      _top_right = top_right;
+      _bottom_right = bottom_right;
+      _bottom_left = bottom_left;
    }
 
    template <concepts::ButtonStyler Base>

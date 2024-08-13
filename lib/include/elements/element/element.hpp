@@ -137,7 +137,7 @@ namespace cycfi::elements
    // Additional declarations
    ////////////////////////////////////////////////////////////////////////////
 
-   // Type alisases
+   // Type aliases
    using element_ptr = std::shared_ptr<element>;
    using element_const_ptr = std::shared_ptr<element const>;
    using weak_element_ptr = std::weak_ptr<element>;

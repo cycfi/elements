@@ -686,8 +686,10 @@ namespace cycfi::elements
             _cursors[cursor_type::ibeam]        = LoadCursor(nullptr, IDC_IBEAM);
             _cursors[cursor_type::cross_hair]   = LoadCursor(nullptr, IDC_CROSS);
             _cursors[cursor_type::hand]         = LoadCursor(nullptr, IDC_HAND);
-            _cursors[cursor_type::h_resize]     = LoadCursor(nullptr, IDC_SIZEWE);
-            _cursors[cursor_type::v_resize]     = LoadCursor(nullptr, IDC_SIZENS);
+            _cursors[cursor_type::ew_resize]    = LoadCursor(nullptr, IDC_SIZEWE);
+            _cursors[cursor_type::ns_resize]    = LoadCursor(nullptr, IDC_SIZENS);
+            _cursors[cursor_type::nwse_resize]  = LoadCursor(nullptr, IDC_SIZENWSE);
+            _cursors[cursor_type::nesw_resize]  = LoadCursor(nullptr, IDC_SIZENESW);
          }
 
          std::map<cursor_type, HCURSOR> _cursors;

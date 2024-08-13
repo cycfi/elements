@@ -1,0 +1,439 @@
+= Alignment
+
+include::../common.adoc[]
+
+== Overview
+
+An element can be aligned arbitrarily from 0.0 to 1.0 in either the x or y
+dimensions, or both. There is a comprehensive list of align elements in The
+Elements Library that can be used for various purposes. This section
+catalogues all the available align elements.
+
+== halign
+
+image::/layout/halign.svg[alt="halign", width=345px, role=center]
+
+Aligns the enclosed element (`subject`) in the x-axis.
+
+=== Notation
+
+`align`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+halign(align, subject)
+----
+
+=== Semantics
+
+. Given a total allocated space `X`, `subject` will be positioned
+horizontally to `X * align`.
+. The `subject` will assume its _minimum horizontal limit_.
+. Returns instance of `Proxy`.
+
+=== Examples
+
+. `halign(0.0) // align subject to the left`
+. `halign(1.0) // align subject to the right`
+. `halign(0.5) // align subject to the center`
+
+'''
+
+== align_left
+
+image::/layout/align_left.svg[alt="align_left", width=250px, role=center]
+
+Left-aligns the enclosed element (`subject`).
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_left(subject)
+----
+
+=== Semantics
+
+. Equivalent to `halign(0.0, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_center
+
+image::/layout/align_center.svg[alt="align_center", width=250px, role=center]
+
+Center-aligns the enclosed element (`subject`).
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_center(subject)
+----
+
+=== Semantics
+
+. Equivalent to `halign(0.5, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_right
+
+image::/layout/align_right.svg[alt="align_right", width=250px, role=center]
+
+Right-aligns the enclosed element (`subject`).
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_right(subject)
+----
+
+=== Semantics
+
+. Equivalent to `halign(1.0, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== valign
+
+image::/layout/valign.svg[alt="valign", width=163px, role=center]
+
+Aligns the enclosed element (`subject`) in the y-axis.
+
+=== Notation
+
+`align`:: `float`
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+valign(align, subject)
+----
+
+=== Semantics
+
+. Given a total allocated space `Y`, `subject` will be positioned vertically
+to `Y * align`.
+. The `subject` will assume its _minimum vertical limit_.
+. Returns instance of `Proxy`.
+
+=== Examples
+
+. `valign(0.0) // align subject to the top`
+. `valign(1.0) // align subject to the right`
+. `valign(0.5) // align subject to the middle`
+
+'''
+
+== align_top
+
+image::/layout/align_top.svg[alt="align_top", width=90px, role=center]
+
+Aligns the enclosed element (`subject`) to the top.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_top(subject)
+----
+
+=== Semantics
+
+. Equivalent to `valign(0.0, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_middle
+
+image::/layout/align_middle.svg[alt="align_middle", width=90px, role=center]
+
+Aligns the enclosed element (`subject`) to the middle.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_middle(subject)
+----
+
+=== Semantics
+
+. Equivalent to `valign(0.5, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_bottom
+
+image::/layout/align_bottom.svg[alt="align_bottom", width=90px, role=center]
+
+Aligns the enclosed element (`subject`) to the bottom.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_bottom(subject)
+----
+
+=== Semantics
+
+. Equivalent to `valign(1.0, subject)`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_left_top
+
+image::/layout/align_left_top.svg[alt="align_left_top", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the left-top.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_left_top(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_left(align_top(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_center_top
+
+image::/layout/align_center_top.svg[alt="align_center_top", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the center-top.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_center_top(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_center(align_top(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_right_top
+
+image::/layout/align_right_top.svg[alt="align_right_top", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the right-top.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_right_top(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_right(align_top(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_left_middle
+
+image::/layout/align_left_middle.svg[alt="align_left_middle", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the left-middle.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_left_middle(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_left(align_middle(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_center_middle
+
+image::/layout/align_center_middle.svg[alt="align_center_middle", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the center-middle.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_center_middle(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_center(align_middle(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_right_middle
+
+image::/layout/align_right_middle.svg[alt="align_right_middle", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the right-middle.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_right_middle(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_right(align_middle(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_left_bottom
+
+image::/layout/align_left_bottom.svg[alt="align_left_bottom", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the left-bottom.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_left_bottom(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_left(align_bottom(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_center_bottom
+
+image::/layout/align_center_bottom.svg[alt="align_center_bottom", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the center-bottom.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_center_bottom(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_center(align_bottom(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+== align_right_bottom
+
+image::/layout/align_right_bottom.svg[alt="align_right_bottom", width=240px, role=center]
+
+Aligns the enclosed element (`subject`) to the right-bottom.
+
+=== Notation
+
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+align_right_bottom(subject)
+----
+
+=== Semantics
+
+. Equivalent to `align_right(align_bottom(subject))`
+. Returns instance of `Proxy`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

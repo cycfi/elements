@@ -42,7 +42,7 @@ namespace cycfi::elements
    };
 
    /**
-    *  \struct receiver<T>
+    *  \struct receiver
     *
     *  \brief
     *    An abstract base class to provide value control for a type `T`.
@@ -80,7 +80,7 @@ namespace cycfi::elements
    };
 
    /**
-    *  \struct basic_receiver<T>
+    *  \struct basic_receiver
     *
     *  \brief
     *    Basic value receiver that saves the value in a member variable.

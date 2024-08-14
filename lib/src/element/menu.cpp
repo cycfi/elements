@@ -67,7 +67,7 @@ namespace cycfi::elements
 
       if (btn.down)
       {
-         if (state(true))
+         if (set_value(true))
          {
             if (on_open_menu)
                on_open_menu(*this);

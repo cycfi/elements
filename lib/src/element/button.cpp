@@ -33,7 +33,7 @@ namespace cycfi::elements
          ctx.view.refresh(ctx);
       }
 
-      if (state(btn.down && ctx.bounds.includes(btn.pos)))
+      if (set_value(btn.down && ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return true;
    }
@@ -45,7 +45,12 @@ namespace cycfi::elements
 
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
-      hilite(status != cursor_tracking::leaving);
+      bool is_leaving = status != cursor_tracking::leaving;
+      if (_state.hilite != is_leaving)
+      {
+         hilite(is_leaving);
+         refresh(ctx);
+      }
       if (update_receiver())
          ctx.view.refresh(ctx);
       return false;
@@ -54,7 +59,7 @@ namespace cycfi::elements
    void basic_button::drag(context const& ctx, mouse_button btn)
    {
       this->hilite(ctx.bounds.includes(btn.pos));
-      if (state(ctx.bounds.includes(btn.pos)))
+      if (set_value(ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
    }
 
@@ -74,7 +79,7 @@ namespace cycfi::elements
       return _state.enabled;
    }
 
-   bool basic_button::state(bool val)
+   bool basic_button::set_value(bool val)
    {
       if (val != _state.value)
       {
@@ -109,11 +114,6 @@ namespace cycfi::elements
          rcvr->value((_state.value? 2 : 0) + _state.hilite);
          return true;
       }
-      else if (auto* rcvr = find_subject<receiver<button_state>*>(this))
-      {
-         rcvr->value(_state);
-         return true;
-      }
       return false;
    }
 
@@ -128,7 +128,7 @@ namespace cycfi::elements
    void basic_button::value(bool val)
    {
       if (_state.value != val)
-         state(val);
+         set_value(val);
    }
 
    /**
@@ -168,16 +168,16 @@ namespace cycfi::elements
       if (btn.down)
       {
          this->tracking(true);
-         if (this->state(!this->value()))    // toggle the state
+         if (this->set_value(!this->value()))   // toggle the state
          {
-            ctx.view.refresh(ctx);           // we need to save the current state, the state
-            _current_state = this->value();  // can change in the drag function and so we'll
-         }                                   // need it later when the button is finally released
+            ctx.view.refresh(ctx);              // we need to save the current state, the state
+            _current_state = this->value();     // can change in the drag function and so we'll
+         }                                      // need it later when the button is finally released
       }
       else
       {
          this->tracking(false);
-         this->state(_current_state);
+         this->set_value(_current_state);
          if (this->on_click)
             this->on_click(this->value());
          ctx.view.refresh(ctx);
@@ -188,7 +188,7 @@ namespace cycfi::elements
    void basic_toggle_button::drag(context const& ctx, mouse_button btn)
    {
       this->hilite(ctx.bounds.includes(btn.pos));
-      if (this->state(!_current_state ^ ctx.bounds.includes(btn.pos)))
+      if (this->set_value(!_current_state ^ ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
    }
 
@@ -217,7 +217,7 @@ namespace cycfi::elements
             this->on_click(true);
          ctx.view.refresh(ctx);
       }
-      if (btn.down && this->state(ctx.bounds.includes(btn.pos)))
+      if (btn.down && this->set_value(ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return true;
    }

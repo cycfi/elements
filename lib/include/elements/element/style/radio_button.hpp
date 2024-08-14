@@ -14,7 +14,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Radio Button
    ////////////////////////////////////////////////////////////////////////////
-   struct radio_button_styler : toggle_selector, basic_receiver<button_state>
+   struct radio_button_styler : toggle_selector
    {
       using toggle_selector::toggle_selector;
 

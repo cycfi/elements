@@ -54,6 +54,10 @@ namespace cycfi::elements
 
    void default_button_styler::draw(context const& ctx)
    {
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
       auto& cnv = ctx.canvas;
       auto canvas_state = cnv.new_state();
       auto const& theme = get_theme();
@@ -62,9 +66,8 @@ namespace cycfi::elements
       auto rel_size = get_size();
       auto space = theme.button_text_icon_space * rel_size;
 
-      auto state = value();
-      auto value = state.value;
-      auto hilite = state.hilite;
+      auto value = btn->value();
+      auto hilite = btn->hilite();
       auto enabled = ctx.enabled;
       auto body_color = value?
          get_active_body_color().opacity(0.5) :

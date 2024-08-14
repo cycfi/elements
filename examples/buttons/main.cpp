@@ -50,9 +50,12 @@ void my_custom_button::draw(context const& ctx)
    // necessary. For this simple example, we wiill deal only with `value` and
    // `hilite`.
 
-   auto state = value();
-   bool value = state.value;     // button is on or off
-   bool hilite = state.hilite;   // cursor is hovering over the button
+   auto btn = find_parent<basic_button*>(ctx);
+   if (!btn)
+      return;
+
+   bool value = btn->value();    // button is on or off
+   bool hilite = btn->hilite();  // cursor is hovering over the button
    bool enabled = ctx.enabled;   // button is enabled or disabled
 
    bounds = bounds.inset(1, 1);

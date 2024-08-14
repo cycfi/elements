@@ -1,0 +1,128 @@
+= Dials
+
+include::../common.adoc[]
+
+== Overview
+
+Dials are used to adjust a value within a range. Dials in the Elements Library are stylable with separate elements for behavior and appearance. The `basic_dial` class is the base class for dials. This class delegates the rendering to a dial styler subject. This separation of responsibilities provides greater flexibility in defining the dial's appearance and behavior. The dial class handles user interactions, while the dial styler manages the dial's visual presentation. With this pattern, different stylers can be implemented for various visual representations.
+
+=== Declaration
+
+[source,c++]
+----
+class basic_dial;               // Base class for dials
+----
+
+=== Notation
+
+`styler`:: Styler instance that conforms to the Element concept.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+dial(styler);
+----
+a|
+* Creates a dial with the given styler element.
+
+|===
+
+== On Change
+
+Dials include and `on_change` callable object that is invoked when the dial's value changes.
+
+=== Notation
+
+`d`:: Dial instance.
+`f`:: Callable object with signature `void(double pos)`.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+d.on_change = f;
+----
+a|
+* Assigns a callable object to the dial's `on_change` member.
+* The callable object is invoked when the dial's value changes.
+* The pos value is normalized to the range [0, 1].
+|===
+
+The client provides a callback function, typically a C++ lambda, that will be called when the dial's value changes. The callback function receives a normalized value in the range [0, 1].
+
+The type of the `on_change` member is:
+
+[source,c++]
+----
+std::function<void(double pos)>
+----
+
+=== Example
+
+[source,c++]
+----
+d.on_change =
+    [](double pos)
+    {
+        std::cout << "Dial position: " << pos << std::endl;
+    };
+----
+
+== Value
+
+The value of a dial is a `double`, normalized to the range [0, 1] and is used to determine the dial's position. The value of the `dial` can be set programmatically via the `{receiver}<double>` API.
+
+NOTE: {receiver}<T> is mixin class that provides a common interface for
+setting and querying the values of type `T` via virtual member
+functions, `value()` and `value(val)`.
+
+=== Notation
+
+`d`:: A Dial instance.
+`val`:: A double value.
+
+=== Expressions
+
+[cols="2,3", options="header"]
+|===
+| Expression | Semantics
+
+a|
+[source,c++]
+----
+d.value(val);
+----
+a|
+* Sets the value of the dial to `val`.
+
+a|
+[source,c++]
+----
+d.value();
+----
+a|
+* Returns the value of the dial.
+|===
+
+
+== Dial Styler
+
+NOTE: This section is an advanced topic only relevant to those who want to customize the appearance of dials. This section may be skipped by most users.
+
+TODO: Add dial styler documentation.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

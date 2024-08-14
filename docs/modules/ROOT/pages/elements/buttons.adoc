@@ -59,7 +59,6 @@ namespace concepts
 `TBase`:: Type that conforms to the ToggleButton concept.
 `LBase`:: Type that conforms to the LatchingButton concept.
 
-
 === Expressions
 
 [cols="2,3", options="header"]

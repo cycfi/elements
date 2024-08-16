@@ -117,25 +117,6 @@ namespace cycfi::elements
    };
 
    /**
-    * \class sprite_as_int
-    *
-    * \brief
-    *    A template structure to handle sprite images used as 'int' receivers.
-    *
-    *    Receives an 'int' value which indicates which frame of sprite image
-    *    should be displayed.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    */
-   template <typename Derived>
-   struct sprite_as_int : receiver<int>
-   {
-      void                    value(int val) override;
-      int                     value() const override;
-   };
-
-   /**
     * \class sprite_as_double
     *
     * \brief
@@ -200,19 +181,8 @@ namespace cycfi::elements
     *    Sprites are images used as controls. Various frames are laid out in
     *    a single (big) image but only one frame is drawn at any single time.
     *    Useful for switches, knobs and basic (sprite) animation.
-    *
-    *    Note on sprite_as_int and sprite_as_double: The tricky thing about
-    *    sprites is that they can act as both receiver<int> or
-    *    receiver<double> depending on usage. For example, buttons use it as
-    *    a receiver<int> where the int value reflects the current frame
-    *    displayed. On the other hand, dials regard it as a receiver<double>,
-    *    where the value 0.0 to 1.0 reflects its state from 0 to
-    *    num_frames()-1. Alas, we cannot directly inherit from both because
-    *    the overridden value() member function will have an ambiguous return
-    *    type (double or int?). The sprite_as_int and sprite_as_double TMP
-    *    trick solves this dilemma.
     */
-   struct sprite : basic_sprite, sprite_as_int<sprite>, sprite_as_double<sprite>
+   struct sprite : basic_sprite, sprite_as_double<sprite>
    {
       using basic_sprite::basic_sprite;
    };
@@ -231,40 +201,6 @@ namespace cycfi::elements
    inline std::size_t basic_sprite::index() const
    {
       return _index;
-   }
-
-   /**
-    * \brief
-    *    Returns the index of the currently displayed frame in sprite_as_int.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    *
-    * \returns
-    *    The index of the currently displayed frame as an integer.
-    */
-   template <typename Derived>
-   int sprite_as_int<Derived>::value() const
-   {
-      auto this_ = static_cast<Derived const*>(this);
-      return this_->index();
-   }
-
-   /**
-    * \brief
-    *    Sets the index of the sprite_as_int to the provided value.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    *
-    * \param val
-    *    The value to set the index to (index of the frame to be displayed).
-    */
-   template <typename Derived>
-   void sprite_as_int<Derived>::value(int val)
-   {
-      auto this_ = static_cast<Derived*>(this);
-      this_->index(val);
    }
 
    /**

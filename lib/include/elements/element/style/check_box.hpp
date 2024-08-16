@@ -14,7 +14,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Check Box
    ////////////////////////////////////////////////////////////////////////////
-   struct check_box_styler : toggle_selector, basic_receiver<button_state>
+   struct check_box_styler : toggle_selector
    {
       using toggle_selector::toggle_selector;
 

@@ -16,6 +16,10 @@ namespace cycfi::elements
 
    void slide_switch_styler::draw(context const& ctx)
    {
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
       auto& canvas_ = ctx.canvas;
       auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
@@ -23,8 +27,7 @@ namespace cycfi::elements
       auto height = bounds.height();
       auto radius = height/2;
 
-      auto state = value();
-      auto value = state.value;
+      auto value = btn->value();
       auto enabled = ctx.enabled;
 
       auto color = value?

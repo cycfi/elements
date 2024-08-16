@@ -279,11 +279,10 @@ auto make_controls(view& view_)
    sprite mail_button = sprite{"mail_180x790.png", 158*button_scale, button_scale};
    sprite transpo_button = sprite{"transpo_180x632.png", 158*button_scale, button_scale};
 
+   // Note: When disabling a sprite button, the sprite must have a fifth
+   //       frame specifically for the disabled state.
    auto phase_disabled = toggle_button(phase_button);
-   phase_disabled.enable(false);    // Note: When disabling a sprite button, the
-                                    //       sprite must have a fifth frame
-                                    //       specifically for the disabled
-                                    //       state.
+   phase_disabled.enable(false);
 
    auto  sprite_buttons =
          group("Sprite Buttons",

@@ -45,6 +45,8 @@ namespace cycfi::elements
 
    bool basic_button::cursor(context const& ctx, point /* p */, cursor_tracking status)
    {
+      if (!is_enabled())
+         return false;
       bool is_leaving = status != cursor_tracking::leaving;
       if (_state.hilite != is_leaving)
          hilite(is_leaving);

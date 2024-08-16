@@ -99,8 +99,6 @@ namespace cycfi::elements
 
    private:
 
-      bool              update_receiver();
-
       button_state      _state;
    };
 

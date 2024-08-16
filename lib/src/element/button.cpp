@@ -47,12 +47,8 @@ namespace cycfi::elements
    {
       bool is_leaving = status != cursor_tracking::leaving;
       if (_state.hilite != is_leaving)
-      {
          hilite(is_leaving);
-         refresh(ctx);
-      }
-      if (update_receiver())
-         ctx.view.refresh(ctx);
+      refresh(ctx);
       return false;
    }
 
@@ -71,7 +67,6 @@ namespace cycfi::elements
    void basic_button::enable(bool state)
    {
       _state.enabled = state;
-      update_receiver();
    }
 
    bool basic_button::is_enabled() const
@@ -84,7 +79,6 @@ namespace cycfi::elements
       if (val != _state.value)
       {
          _state.value = val;
-         update_receiver();
          return true;
       }
       return false;
@@ -93,28 +87,12 @@ namespace cycfi::elements
    void basic_button::tracking(bool val)
    {
       if (val != _state.tracking)
-      {
          _state.tracking = val;
-         update_receiver();
-      }
    }
    void basic_button::hilite(bool val)
    {
       if (val != _state.hilite)
-      {
          _state.hilite = val;
-         update_receiver();
-      }
-   }
-
-   bool basic_button::update_receiver()
-   {
-      if (auto* rcvr = find_subject<receiver<int>*>(this))
-      {
-         rcvr->value((_state.value? 2 : 0) + _state.hilite);
-         return true;
-      }
-      return false;
    }
 
    /**

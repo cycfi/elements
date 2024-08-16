@@ -279,13 +279,16 @@ auto make_controls(view& view_)
    sprite mail_button = sprite{"mail_180x632.png", 158*button_scale, button_scale};
    sprite transpo_button = sprite{"transpo_180x632.png", 158*button_scale, button_scale};
 
+   auto mail = momentary_button(mail_button);
+   mail.enable(false); // Disable the mail button
+
    auto  sprite_buttons =
          group("Sprite Buttons",
             margin({10, 45, 20, 10},
                htile(
                   align_center(toggle_button(power_button)),
                   align_center(toggle_button(phase_button)),
-                  align_center(momentary_button(mail_button)),
+                  align_center(mail),
                   align_center(toggle_button(transpo_button))
                )
             )

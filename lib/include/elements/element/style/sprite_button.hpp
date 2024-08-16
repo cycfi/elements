@@ -76,9 +76,9 @@ namespace cycfi::elements
 
       auto value = btn->value();
       auto hilite = btn->hilite();
-      // if (!ctx.enabled && num_frames() > 4)
-      //    index(4); // disabled
-      // else
+      if (!ctx.enabled && num_frames() > 4)
+         index(4); // disabled
+      else
          index((value? 2 : 0) + hilite); // enabled
       basic_sprite::draw(ctx);
    }

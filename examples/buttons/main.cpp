@@ -275,12 +275,15 @@ auto make_controls(view& view_)
 
    float const button_scale = 1.0/4;
    sprite power_button = sprite{"power_180x632.png", 158*button_scale, button_scale};
-   sprite phase_button = sprite{"phase_180x632.png", 158*button_scale, button_scale};
-   sprite mail_button = sprite{"mail_180x632.png", 158*button_scale, button_scale};
+   sprite phase_button = sprite{"phase_180x790.png", 158*button_scale, button_scale};
+   sprite mail_button = sprite{"mail_180x790.png", 158*button_scale, button_scale};
    sprite transpo_button = sprite{"transpo_180x632.png", 158*button_scale, button_scale};
 
-   auto mail = momentary_button(mail_button);
-   mail.enable(false); // Disable the mail button
+   auto phase_disabled = toggle_button(phase_button);
+   phase_disabled.enable(false);    // Note: When disabling a sprite button, the
+                                    //       sprite must have a fifth frame
+                                    //       specifically for the disabled
+                                    //       state.
 
    auto  sprite_buttons =
          group("Sprite Buttons",
@@ -288,8 +291,9 @@ auto make_controls(view& view_)
                htile(
                   align_center(toggle_button(power_button)),
                   align_center(toggle_button(phase_button)),
-                  align_center(mail),
-                  align_center(toggle_button(transpo_button))
+                  align_center(momentary_button(mail_button)),
+                  align_center(toggle_button(transpo_button)),
+                  align_center(phase_disabled)
                )
             )
          );

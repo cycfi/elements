@@ -7,6 +7,7 @@
 #define ELEMENTS_IMAGE_APRIL_24_2016
 
 #include <elements/element/element.hpp>
+#include <elements/element/proxy.hpp>
 #include <elements/support/receiver.hpp>
 #include <artist/image.hpp>
 #include <artist/canvas.hpp>
@@ -129,6 +130,32 @@ namespace cycfi::elements
    {
       using basic_sprite::basic_sprite;
    };
+
+   namespace detail
+   {
+      template <typename T>
+      constexpr auto is_sprite()
+      {
+         if constexpr (std::is_base_of_v<proxy_base, T>)
+            return is_sprite<typename T::subject_type>();
+         else
+            return std::false_type{};
+      }
+
+      template <>
+      constexpr auto is_sprite<sprite>()
+      {
+         return std::true_type{};
+      }
+   }
+
+   namespace concepts
+   {
+      template <typename T>
+      concept SpriteSubject
+         = concepts::Element<T> &&
+         decltype(detail::is_sprite<std::decay_t<T>>())::value;
+   }
 
    //--------------------------------------------------------------------------
    // Inlines

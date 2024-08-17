@@ -19,46 +19,34 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
    };
 
-   template <concepts::MomentaryButton Base = basic_button>
+   template <
+      concepts::MomentaryButton Base = basic_button
+    , concepts::SpriteSubject Styler
+   >
    inline proxy<sprite_button_styler, Base>
-   momentary_button(sprite const& s)
+   momentary_button(Styler&& s)
    {
-      return {sprite_button_styler{s}};
+      return {sprite_button_styler{std::forward<Styler>(s)}};
    }
 
-   template <concepts::MomentaryButton Base = basic_button>
+   template <
+      concepts::ToggleButton Base = basic_toggle_button
+    , concepts::SpriteSubject Styler
+   >
    inline proxy<sprite_button_styler, Base>
-   momentary_button(sprite& s)
+   toggle_button(Styler&& s)
    {
-      return {sprite_button_styler{s}};
+      return {sprite_button_styler{std::forward<Styler>(s)}};
    }
 
-   template <concepts::ToggleButton Base = basic_toggle_button>
+   template <
+      concepts::LatchingButton Base = basic_latching_button
+    , concepts::SpriteSubject Styler
+   >
    inline proxy<sprite_button_styler, Base>
-   toggle_button(sprite const& s)
+   latching_button(Styler&& s)
    {
-      return {sprite_button_styler{s}};
-   }
-
-   template <concepts::ToggleButton Base = basic_toggle_button>
-   inline proxy<sprite_button_styler, Base>
-   toggle_button(sprite& s)
-   {
-      return {sprite_button_styler{s}};
-   }
-
-   template <concepts::LatchingButton Base = basic_latching_button>
-   inline proxy<sprite_button_styler, Base>
-   latching_button(sprite const& s)
-   {
-      return {sprite_button_styler{s}};
-   }
-
-   template <concepts::LatchingButton Base = basic_latching_button>
-   inline proxy<sprite_button_styler, Base>
-   latching_button(sprite& s)
-   {
-      return {sprite_button_styler{s}};
+      return {sprite_button_styler{std::forward<Styler>(s)}};
    }
 
    //--------------------------------------------------------------------------

@@ -14,7 +14,15 @@ namespace cycfi::elements
 {
    template <concepts::SpriteSubject Styler>
    inline proxy<remove_cvref_t<Styler>, basic_dial>
-   dial(Styler&& styler, double init_value = 0.0)
+   dial(Styler&& styler, double init_value = 0.0);
+
+   //--------------------------------------------------------------------------
+   // Inlines
+   //--------------------------------------------------------------------------
+
+   template <concepts::SpriteSubject Styler>
+   inline proxy<remove_cvref_t<Styler>, basic_dial>
+   dial(Styler&& styler, double init_value)
    {
       return {std::forward<Styler>(styler), init_value};
    }

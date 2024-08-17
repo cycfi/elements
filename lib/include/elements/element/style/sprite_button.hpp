@@ -11,10 +11,14 @@
 
 namespace cycfi::elements
 {
-   class sprite_button_styler : public sprite
+   template <typename Subject>
+   class sprite_button_styler : public proxy<Subject>
    {
    public:
-                              sprite_button_styler(sprite const& s);
+
+      using base_type = proxy<Subject>;
+
+                              sprite_button_styler(Subject subject);
 
       void                    draw(context const& ctx) override;
    };
@@ -23,52 +27,62 @@ namespace cycfi::elements
       concepts::MomentaryButton Base = basic_button
     , concepts::SpriteSubject Styler
    >
-   inline proxy<sprite_button_styler, Base>
+   inline proxy<sprite_button_styler<remove_cvref_t<Styler>>, Base>
    momentary_button(Styler&& s)
    {
-      return {sprite_button_styler{std::forward<Styler>(s)}};
+      using styler_type = sprite_button_styler<remove_cvref_t<Styler>>;
+      return {styler_type{std::forward<Styler>(s)}};
    }
 
    template <
       concepts::ToggleButton Base = basic_toggle_button
     , concepts::SpriteSubject Styler
    >
-   inline proxy<sprite_button_styler, Base>
+   inline proxy<sprite_button_styler<remove_cvref_t<Styler>>, Base>
    toggle_button(Styler&& s)
    {
-      return {sprite_button_styler{std::forward<Styler>(s)}};
+      using styler_type = sprite_button_styler<remove_cvref_t<Styler>>;
+      return {styler_type{std::forward<Styler>(s)}};
    }
 
    template <
       concepts::LatchingButton Base = basic_latching_button
     , concepts::SpriteSubject Styler
    >
-   inline proxy<sprite_button_styler, Base>
+   inline proxy<sprite_button_styler<remove_cvref_t<Styler>>, Base>
    latching_button(Styler&& s)
    {
-      return {sprite_button_styler{std::forward<Styler>(s)}};
+      using styler_type = sprite_button_styler<remove_cvref_t<Styler>>;
+      return {styler_type{std::forward<Styler>(s)}};
    }
 
    //--------------------------------------------------------------------------
    // Inlines
    //--------------------------------------------------------------------------
-   inline sprite_button_styler::sprite_button_styler(sprite const& s)
-    : sprite(s)
+
+   template <typename Subject>
+   inline sprite_button_styler<Subject>::sprite_button_styler(Subject subject)
+    : base_type{std::move(subject)}
    {}
 
-   inline void sprite_button_styler::draw(context const& ctx)
+   template <typename Subject>
+   inline void sprite_button_styler<Subject>::draw(context const& ctx)
    {
       auto btn = find_parent<basic_button*>(ctx);
       if (!btn)
          return;
 
-      auto value = btn->value();
-      auto hilite = btn->hilite();
-      if (!ctx.enabled && num_frames() > 4)
-         index(4); // disabled
-      else
-         index((value? 2 : 0) + hilite); // enabled
-      basic_sprite::draw(ctx);
+      auto sp = find_subject<sprite*>(this);
+      if (sp)
+      {
+         auto value = btn->value();
+         auto hilite = btn->hilite();
+         if (!ctx.enabled && sp->num_frames() > 4)
+            sp->index(4); // disabled
+         else
+            sp->index((value? 2 : 0) + hilite); // enabled
+         sp->draw(ctx);
+      }
    }
 }
 

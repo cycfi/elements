@@ -61,28 +61,6 @@ namespace cycfi::elements
    };
 
    /**
-    * \class sprite_as_double
-    *
-    * \brief
-    *    A template structure to handle sprite images used as 'double'
-    *    receivers.
-    *
-    *    Receives a 'double' value in the range of 0.0 to 1.0, which
-    *    indicates which frame of the sprite image should be displayed. The
-    *    double value essentially represents the frame number, scaled down to
-    *    fit within the 0.0 to 1.0 range.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    */
-   template <typename Derived>
-   struct sprite_as_double : receiver<double>
-   {
-      void                    value(double val) override;
-      double                  value() const override;
-   };
-
-   /**
     * \class basic_sprite
     *
     * \brief
@@ -112,24 +90,7 @@ namespace cycfi::elements
       float                   _height;
    };
 
-   /**
-    * \class sprite
-    *
-    * \brief
-    *    A class representing a sprite image that can be used as controls.
-    *
-    *    `sprite` extends `basic_sprite` to utilize both `sprite_as_int` and
-    *    `sprite_as_double`, making it usable as both an 'int' and a 'double'
-    *    receiver.
-    *
-    *    Sprites are images used as controls. Various frames are laid out in
-    *    a single (big) image but only one frame is drawn at any single time.
-    *    Useful for switches, knobs and basic (sprite) animation.
-    */
-   struct sprite : basic_sprite, sprite_as_double<sprite>
-   {
-      using basic_sprite::basic_sprite;
-   };
+   using sprite = basic_sprite;
 
    namespace detail
    {
@@ -171,43 +132,6 @@ namespace cycfi::elements
    inline std::size_t basic_sprite::index() const
    {
       return _index;
-   }
-
-   /**
-    * \brief
-    *    Returns the index of the currently displayed frame in
-    *    sprite_as_double as a fraction of the total frames.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    *
-    * \returns
-    *    The index of the currently displayed frame as a fraction of the
-    *    total frames (between 0.0 to 1.0).
-    */
-   template <typename Derived>
-   double sprite_as_double<Derived>::value() const
-   {
-      auto this_ = static_cast<Derived const*>(this);
-      return this_->index() / this_->num_frames()-1;
-   }
-
-   /**
-    * \brief
-    *    Sets the index of the sprite_as_double to the provided value.
-    *
-    * \tparam Derived
-    *    The derived class type.
-    *
-    * \param val
-    *    The value to set the index to. It's a value between 0.0 and 1.0
-    *    representing the relative position in the sequence of frames.
-    */
-   template <typename Derived>
-   void sprite_as_double<Derived>::value(double val)
-   {
-      auto this_ = static_cast<Derived*>(this);
-      this_->index(val * (this_->num_frames()-1));
    }
 }
 

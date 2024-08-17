@@ -37,11 +37,11 @@ namespace cycfi::elements
     *    A struct for maintaining and managing the state of a button.
     *
     *    This structure captures the various states that a button can have:
-    *    - `value`: The button's value; 0(off) or 1(on).
-    *    - `hilite`: True if the button is highlighted (when the mouse is
-    *                hovering over the button).
-    *    - `tracking`: True if the mouse button being pressed.
-    *    - `enabled`: True if the button is enabled.
+    *    - `value`:     The button's value; 0(off) or 1(on).
+    *    - `hilite`:    True if the button is highlighted (when the mouse is
+    *                   hovering over the button).
+    *    - `tracking`:  True if the mouse button being pressed.
+    *    - `enabled` :  True if the button is enabled.
     */
    struct button_state
    {
@@ -60,37 +60,13 @@ namespace cycfi::elements
     *
     *    The `basic_button` class is a foundational class for creating a GUI
     *    button. This class is a proxy which delegates the rendering of the
-    *    actual button to a button styler subject. This separation of
-    *    responsibilities provides greater flexibility in defining the
-    *    button's appearance and behavior. The `basic_button` class handles
-    *    user interactions, while the button styler manages the button's
-    *    visual presentation. With this pattern, different stylers can be
-    *    implemented for various visual representations, for instance, plain
-    *    buttons, radio buttons, slide switches, checkboxes, and more.
-    *
-    *    The communication with the button styler is done via the
-    *    `receiver<button_state>` or a `receiver<int>` APIs. These APIs
-    *    provide a means for the `basic_button` to update the button styler
-    *    about changes in button's state to allow the styler to adjust the
-    *    visual representation accordingly.
-    *
-    *    If the button styler follows a `receiver<int>` API, it will receive
-    *    in integer with these possible values:
-    *
-    *       0: value=`false`, hilite=`false`
-    *       1: value=`false`, hilite=`true`
-    *       2: value=`true`,  hilite=`false`
-    *       3: value=`true`,  hilite=`true`
-    *
-    *    If the button styler follows a `receiver<button_state>` API, it will
-    *    receive a `button_state` when the button's state changes. This has a
-    *    richer API compared to the former, allowing more nuanced button
-    *    rendering. See `button_state`.
-    *
-    *    Take note that the button styler is just an element and does not
-    *    have to follow the `receiver` API. If that's the case, then the
-    *    button rendering will be static, and not adjust to state changes.
-    *    This may still be useful in certain cases.
+    *    actual button to a button styler subject. This division of
+    *    responsibilities allows for more flexibility in dictating the
+    *    button's appearance and interaction. The `basic_button` class
+    *    handles user interactions, while the button styler manages the
+    *    button's visual presentation. With this pattern, different stylers
+    *    can be implemented for various visual representations, for instance,
+    *    plain buttons, radio buttons, slide switches, checkboxes, and more.
     */
    class basic_button : public proxy_base, public receiver<bool>
    {
@@ -118,13 +94,11 @@ namespace cycfi::elements
 
    protected:
 
-      bool              state(bool val);
+      bool              set_value(bool val);
       void              tracking(bool val);
       void              hilite(bool val);
 
    private:
-
-      bool              update_receiver();
 
       button_state      _state;
    };

@@ -24,6 +24,7 @@
 #include <elements/element/style/slide_switch.hpp>
 #include <elements/element/style/slider.hpp>
 #include <elements/element/style/sprite_button.hpp>
+#include <elements/element/style/sprite_dial.hpp>
 #include <elements/element/style/tab.hpp>
 #include <elements/element/style/text_entry.hpp>
 #include <elements/element/style/thumbwheel.hpp>

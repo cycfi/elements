@@ -20,18 +20,9 @@ namespace cycfi::elements
       clamp(_value, 0.0, 1.0);
    }
 
-   void basic_dial::prepare_subject(context& ctx)
-   {
-      proxy_base::prepare_subject(ctx);
-      if (auto* rcvr = find_subject<receiver<double>*>(this))
-         rcvr->value(_value);
-   }
-
    void basic_dial::value(double val)
    {
       _value = clamp(val, 0.0, 1.0);
-      if (auto* rcvr = find_subject<receiver<double>*>(this))
-         rcvr->value(_value);
    }
 
    namespace
@@ -44,10 +35,9 @@ namespace cycfi::elements
       }
    }
 
-   void basic_dial::edit(view& view_, param_type val)
+   void basic_dial::edit(view& /*view_*/, param_type val)
    {
       edit_value(this, val);
-      receiver<double>::notify_edit(view_);
    }
 
    double basic_dial::radial_value(context const& ctx, tracker_info& track_info)

@@ -129,6 +129,9 @@ namespace cycfi::elements
    class proxy : public Base
    {
    public:
+
+      using subject_type = Subject;
+
                               template <typename... T>
                               proxy(Subject subject_, T&&... args);
 

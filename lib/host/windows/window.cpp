@@ -43,7 +43,7 @@ namespace cycfi::elements
       void disable_minimize(HWND hwnd)
       {
          SetWindowLongW(hwnd, GWL_STYLE,
-            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
+         GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
          SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
       }
 
@@ -51,14 +51,14 @@ namespace cycfi::elements
       void disable_maximize(HWND hwnd)
       {
          SetWindowLongW(hwnd, GWL_STYLE,
-            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
+         GetWindowLongW(hwnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
          SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
       }
 
       void disable_resize(HWND hwnd)
       {
          SetWindowLongW(hwnd, GWL_STYLE,
-            GetWindowLongW(hwnd, GWL_STYLE) & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
+         GetWindowLongW(hwnd, GWL_STYLE) & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
          SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
       }
 

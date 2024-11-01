@@ -341,7 +341,8 @@ namespace cycfi::elements
          if(get_caret_position(ctx, caret_bounds)) {
             if(HIMC imc = ImmGetContext(ctx.view.host())) {
                const auto& tl = ctx.canvas.user_to_device(caret_bounds.top_left());
-
+               const auto& br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
+         
                COMPOSITIONFORM cf;
                memset(&cf, 0, sizeof(COMPOSITIONFORM));
                cf.dwStyle = CFS_FORCE_POSITION;
@@ -354,7 +355,7 @@ namespace cycfi::elements
                candf.dwIndex = 0;
                candf.dwStyle = CFS_CANDIDATEPOS;
                candf.ptCurrentPos.x = tl.x + 1;
-               candf.ptCurrentPos.y = tl.y;
+               candf.ptCurrentPos.y = br.y;
                ImmSetCandidateWindow(imc, &candf);
 
                return true;

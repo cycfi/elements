@@ -17,8 +17,8 @@ jobs:
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
         - name: "Ubuntu Latest GCC"
           os: ubuntu-latest
-          cc: "gcc-11"
-          cxx: "g++-11"
+          cc: "gcc"
+          cxx: "g++"
         - name: "macOS Latest Clang"
           os: macos-latest
           cc: "clang"

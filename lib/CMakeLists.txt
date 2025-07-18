@@ -57,12 +57,8 @@ set(ELEMENTS_SOURCES
    src/support/rect.cpp
    src/support/text_utils.cpp
    src/support/resource_paths.cpp
-   src/support/text_utils.cpp
    src/support/theme.cpp
    src/support/payload.cpp
-   src/support/receiver.cpp
-   src/support/text_utils.cpp
-   src/support/theme.cpp
    src/view.cpp
 )
 

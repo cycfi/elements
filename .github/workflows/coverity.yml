@@ -33,8 +33,8 @@ jobs:
     - name: Configure
       shell: cmake -P {0}
       run: |
-        set(ENV{CC} gcc-11)
-        set(ENV{CXX} g++-11)
+        set(ENV{CC} gcc)
+        set(ENV{CXX} g++)
 
         execute_process(
           COMMAND ${CMAKE_COMMAND}

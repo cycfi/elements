@@ -291,7 +291,7 @@ namespace cycfi::elements
       using param_type = typename receiver<T>::param_type;
       using getter_type = typename receiver<T>::getter_type;
 
-                              as_label_element(F&& as_string, Subject label);
+                              as_label_element(F as_string, Subject label);
 
       void                    value(param_type val) override;
       getter_type             value() const override;
@@ -551,7 +551,7 @@ namespace cycfi::elements
     *    The subject.
     */
    template <concepts::Element Subject, typename T, typename F>
-   inline as_label_element<Subject, T, F>::as_label_element(F&& as_string, Subject subject)
+   inline as_label_element<Subject, T, F>::as_label_element(F as_string, Subject subject)
     : _as_string(as_string)
     , base_type(std::move(subject))
    {}
@@ -632,8 +632,7 @@ namespace cycfi::elements
    inline as_label_element<remove_cvref_t<Subject>, T, remove_cvref_t<F>>
    as_label(F&& as_string, Subject&& subject)
    {
-      using ftype = remove_cvref_t<F>;
-      return {std::forward<ftype>(as_string), std::forward<Subject>(subject)};
+      return {std::forward<F>(as_string), std::forward<Subject>(subject)};
    }
 
    /**

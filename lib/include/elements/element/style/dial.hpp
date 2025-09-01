@@ -208,8 +208,8 @@ namespace cycfi::elements
    radial_labels(Subject&& subject, float font_size, S&&... s)
    {
       auto r = radial_labels_styler<size, remove_cvref_t<Subject>, sizeof...(S)>
-         {std::move(subject), font_size};
-      r._labels = {{std::move(s)...}};
+         {std::forward<Subject>(subject), font_size};
+      r._labels = {{std::forward<S>(s)...}};
       return r;
    }
 }

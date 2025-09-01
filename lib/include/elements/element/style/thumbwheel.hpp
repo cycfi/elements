@@ -94,9 +94,8 @@ namespace cycfi::elements
    template <typename F>
    inline auto vthumbwheel(std::size_t num_items, F&& compose)
    {
-      using ftype = remove_cvref_t<F>;
       auto body = basic_vthumbwheel(
-         list{basic_cell_composer(num_items, std::forward<ftype>(compose))}
+         list{basic_cell_composer(num_items, std::forward<F>(compose))}
        , 1.0 / (num_items-1)
       );
       return thumbwheel(std::move(body), {0.0f, 0.0f});

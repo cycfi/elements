@@ -296,11 +296,17 @@ namespace cycfi::elements
             case key_code::a:
                if (k.modifiers & mod_action)
                {
-                  if (auto c = find_subject<composite_base*>(this))
+                  if (_multi_select)
                   {
-                     detail::select_all(*c);
-                     ctx.view.refresh(ctx);
-                     return true;
+                     if (auto c = find_subject<composite_base*>(this))
+                     {
+                        detail::select_all(*c);
+                        _select_start = 0;
+                        _select_end = c->size()-1;
+                        on_select(_select_start, _select_end);
+                        ctx.view.refresh(ctx);
+                        return true;
+                     }
                   }
                }
                break;
@@ -324,6 +330,7 @@ namespace cycfi::elements
                         [&](context const& cctx)
                         {
                            scrollable::find(ctx).scroll_into_view(c->bounds_of(cctx, _select_end));
+                           on_select(_select_start, _select_end);
                            ctx.view.refresh(ctx);
                         }
                      );
@@ -352,6 +359,7 @@ namespace cycfi::elements
                         [&](context const& cctx)
                         {
                            scrollable::find(ctx).scroll_into_view(c->bounds_of(cctx, _select_end));
+                           on_select(_select_start, _select_end);
                            ctx.view.refresh(ctx);
                         }
                      );

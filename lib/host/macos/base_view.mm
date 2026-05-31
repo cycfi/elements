@@ -22,6 +22,8 @@
 # include <tools/sk_app/WindowContext.h>
 # include <tools/sk_app/mac/WindowContextFactory_mac.h>
 # include <OpenGL/gl.h>
+#elif defined(ARTIST_CAIRO)
+# include <cairo-quartz.h>
 #elif defined(ARTIST_QUARTZ_2D)
 #else
 # error Unknown Graphics Backend
@@ -415,6 +417,30 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
       surface->flush();
       _skia_context->swapBuffers();
    }
+
+#if defined ELEMENTS_PRINT_FPS
+   auto stop = std::chrono::high_resolution_clock::now();
+   auto elapsed = std::chrono::duration<double>{stop - start}.count();
+   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
+#endif
+#elif defined(ARTIST_CAIRO)
+
+#if defined ELEMENTS_PRINT_FPS
+   auto start = std::chrono::high_resolution_clock::now();
+#endif
+
+   auto w = [self bounds].size.width;
+   auto h = [self bounds].size.height;
+
+   auto context_ref = NSGraphicsContext.currentContext.CGContext;
+   cairo_surface_t* surface = cairo_quartz_surface_create_for_cg_context(context_ref, w, h);
+   cairo_t* context = cairo_create(surface);
+
+   auto cnv = canvas{context};
+   _view->draw(cnv);
+
+   cairo_surface_destroy(surface);
+   cairo_destroy(context);
 
 #if defined ELEMENTS_PRINT_FPS
    auto stop = std::chrono::high_resolution_clock::now();
@@ -930,4 +956,3 @@ namespace cycfi::elements
       return {dir, dir};
    }
 }
-

@@ -760,3 +760,75 @@ open /Users/joel/dev/cycfi/elements/build-ar5-cairo-release/examples/basic_slide
 Launch command returned successfully.
 
 No newer `BasicSlidersAndKnobs` diagnostic crash report appeared after launch.
+
+---
+
+# Artist skia_upgrade sync — all-backend verification
+
+## Branch
+
+`artist_element_sync` (off `artist_2026`)
+
+## Artist dependency
+
+`lib/artist` advanced from `artist_2026_dev` (`5e54e7e`) to
+`artist_2026_skia_upgrade` (`08a51ba`). Public Artist API unchanged; the Skia
+backend moved to vcpkg-built Skia m148 (prebuilt + `tools/sk_app` removed).
+
+## Backend build matrix (macOS arm64)
+
+| Backend | Build dir | All examples build | Runs | Render verified |
+|---------|-----------|--------------------|------|-----------------|
+| Cairo (Release)   | `build-ar5-cairo-release` | ✅ 441/441 | ✅ | (prior stages) |
+| Quartz2D (Debug)  | `build-ar5-quartz2d`      | ✅ 441/441 | ✅ | (prior stages) |
+| Skia (Debug)      | `build-skia`              | ✅          | ✅ | ✅ sliders + text/icons |
+
+All 31 example apps build under each backend.
+
+## Skia build (macOS arm64) — new
+
+The Skia backend now requires the Artist submodule's vcpkg. One-time setup:
+
+```sh
+# Fetch + checkout the pinned vcpkg commit inside the Artist submodule
+cd lib/artist/lib/external/vcpkg
+git fetch --depth 1 origin 00d899c410b31467733472fc3a83a25729046b13
+git checkout 00d899c410b31467733472fc3a83a25729046b13
+./bootstrap-vcpkg.sh -disableMetrics
+cd -
+```
+
+Configure + build (run from the Elements root):
+
+```sh
+cmake -S . -B build-skia -G Ninja \
+  -D CMAKE_BUILD_TYPE=Debug \
+  -D ELEMENTS_SKIA=ON \
+  -D CMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain-macos.cmake \
+  -D VCPKG_MANIFEST_DIR=$(pwd)/lib/artist \
+  -D VCPKG_TARGET_TRIPLET=arm64-osx
+cmake --build build-skia -j6
+```
+
+Notes / gotchas:
+
+- `toolchain-macos.cmake` (Elements root) is a thin wrapper that includes the
+  Artist vcpkg toolchain then re-adds `/opt/homebrew/lib/pkgconfig` to
+  `PKG_CONFIG_PATH`. vcpkg overwrites that variable, hiding the
+  fontconfig/freetype2 (Elements) and harfbuzz + glib-2.0/graphite2 (Artist
+  macOS Skia block) `.pc` files. Pattern mirrors Artist's `toolchain-linux.cmake`
+  (see `lib/artist/ai/build_setup_guide.md`).
+- `VCPKG_MANIFEST_DIR` must point at `lib/artist` — the `vcpkg.json` lives in
+  the Artist tree, not the Elements root.
+- The macOS Skia host (`lib/host/macos/base_view.mm`) was rewritten from the
+  removed `sk_app` OpenGL path to CAMetalLayer + Ganesh Metal, using a
+  render-on-demand sublayer so Elements' `setNeedsDisplay:`→`drawRect:`
+  invalidation model is preserved. `-framework QuartzCore` is linked for
+  `ELEMENTS_SKIA` on Apple.
+
+## Run / render result
+
+- `BasicSlidersAndKnobs`, `HelloUniverse`, `Buttons`, `TextAndIcons` launched
+  under Skia; no crash reports.
+- Window captures confirmed correct rendering: sliders/knobs/tick-labels and
+  multi-weight text + icon glyphs all draw cleanly via the Metal/Ganesh host.

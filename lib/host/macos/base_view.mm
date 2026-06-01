@@ -14,14 +14,19 @@
 #include <infra/filesystem.hpp>
 
 #if defined(ARTIST_SKIA)
-# include <gl/GrGLInterface.h>
+# import <Metal/Metal.h>
+# import <QuartzCore/CAMetalLayer.h>
+# include <SkColorSpace.h>
 # include <SkImage.h>
 # include <SkSurface.h>
 # include <SkCanvas.h>
-# include <tools/sk_app/DisplayParams.h>
-# include <tools/sk_app/WindowContext.h>
-# include <tools/sk_app/mac/WindowContextFactory_mac.h>
-# include <OpenGL/gl.h>
+# include <ganesh/GrDirectContext.h>
+# include <ganesh/GrBackendSurface.h>
+# include <ganesh/SkSurfaceGanesh.h>
+# include <ganesh/mtl/GrMtlBackendContext.h>
+# include <ganesh/mtl/GrMtlBackendSurface.h>
+# include <ganesh/mtl/GrMtlDirectContext.h>
+# include <ganesh/mtl/GrMtlTypes.h>
 #elif defined(ARTIST_CAIRO)
 # include <cairo-quartz.h>
 #elif defined(ARTIST_QUARTZ_2D)
@@ -192,10 +197,6 @@ namespace
 
 #define ELEMENTS_VIEW_CLASS ELEMENTS_CLASS_PREFIX##ElementsView
 
-#if defined(ARTIST_SKIA)
-using skia_context = std::unique_ptr<sk_app::WindowContext>;
-#endif
-
 @interface ELEMENTS_VIEW_CLASS : NSView <NSTextInputClient>
 {
    NSTimer*                         _task;
@@ -207,7 +208,10 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    float                            _scale;
 
 #if defined(ARTIST_SKIA)
-   skia_context                     _skia_context;
+   id<MTLDevice>                    _device;
+   id<MTLCommandQueue>              _queue;
+   CAMetalLayer*                    _metal_layer;
+   sk_sp<GrDirectContext>           _gr_context;
    NSScreen*                        _last_screen;
 #endif
 
@@ -244,16 +248,34 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    _scale = backing_bounds.size.height / user.size.height;
 
 #if defined(ARTIST_SKIA)
-   sk_app::window_context_factory::MacWindowInfo info;
-   info.fMainView = self;
-   _skia_context = sk_app::window_context_factory::MakeGLForMac(info, sk_app::DisplayParams());
-   if (_skia_context == nullptr)
-   {
-      // $$$ TODO $$$ Log a warning that a Skia GPU context is not available and we are switching to a raster context.
-      _skia_context = sk_app::window_context_factory::MakeRasterForMac(info, sk_app::DisplayParams());
-   }
+   // Metal device and command queue.
+   _device = MTLCreateSystemDefaultDevice();
+   if (!_device)
+      throw std::runtime_error{"No Metal device found"};
+   _queue = [_device newCommandQueue];
 
-   auto surface = _skia_context->getBackbufferSurface();
+   // A render-on-demand CAMetalLayer added as a *sublayer*. The view itself
+   // stays layer-backed (not layer-hosting), so it keeps receiving drawRect:
+   // from Elements' setNeedsDisplay:-driven invalidation; rendering happens in
+   // the ARTIST_SKIA branch of drawRect:.
+   _metal_layer = [CAMetalLayer layer];
+   _metal_layer.device           = _device;
+   _metal_layer.pixelFormat      = MTLPixelFormatBGRA8Unorm;
+   _metal_layer.framebufferOnly  = NO;
+   _metal_layer.contentsGravity  = kCAGravityTopLeft;
+   _metal_layer.contentsScale    = _scale;
+   _metal_layer.frame            = self.bounds;
+
+   self.wantsLayer = YES;
+   [self.layer addSublayer : _metal_layer];
+
+   // Skia GrDirectContext over Metal.
+   GrMtlBackendContext backend{};
+   backend.fDevice.retain((__bridge GrMTLHandle)_device);
+   backend.fQueue.retain((__bridge GrMTLHandle)_queue);
+   _gr_context = GrDirectContexts::MakeMetal(backend);
+   if (!_gr_context)
+      throw std::runtime_error{"Failed to create Skia Metal GrDirectContext"};
 #endif
 
    [self setPostsBoundsChangedNotifications : YES];
@@ -266,6 +288,9 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
 {
    _task = nil;
    _view = nullptr;
+#if defined(ARTIST_SKIA)
+   _gr_context.reset();
+#endif
 }
 
 - (void) viewDidMoveToWindow
@@ -310,9 +335,32 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
            object : [self window]
    ];
 
+   // AppKit terminates by calling exit() without deallocating the view, so the
+   // Skia GrDirectContext would otherwise be destroyed during C++ static
+   // teardown with live GPU resources — tripping Skia's debug leak assert.
+   // Release it explicitly while Metal is still valid.
+   [center
+      addObserver : self
+         selector : @selector(applicationWillTerminate:)
+             name : NSApplicationWillTerminateNotification
+           object : nil
+   ];
+
    _last_screen = self.window.screen;
 #endif
 }
+
+#if defined(ARTIST_SKIA)
+- (void) applicationWillTerminate : (NSNotification*) notification
+{
+   if (_gr_context)
+   {
+      _gr_context->releaseResourcesAndAbandonContext();
+      _gr_context.reset();
+   }
+   _metal_layer = nil;
+}
+#endif
 
 - (void) detach_notifications
 {
@@ -335,6 +383,14 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
                 name : NSWindowDidMoveNotification
               object : [self window]
    ];
+
+#if defined(ARTIST_SKIA)
+   [center
+      removeObserver : self
+                name : NSApplicationWillTerminateNotification
+              object : nil
+   ];
+#endif
 }
 
 - (void) detach_timer
@@ -392,30 +448,44 @@ using skia_context = std::unique_ptr<sk_app::WindowContext>;
    auto start = std::chrono::high_resolution_clock::now();
 #endif
 
-   auto [w, h] = [self frame].size;
-   w = std::ceil(w * _scale);
-   h = std::ceil(h * _scale);
-   if (_skia_context->width() != int(w) || _skia_context->height() != int(h))
-      _skia_context->resize(w, h);
+   // Keep the Metal layer sized to the view (handles HiDPI + live resize).
+   auto bounds = [self bounds];
+   _metal_layer.frame = bounds;
+   int w = int(std::ceil(bounds.size.width  * _scale));
+   int h = int(std::ceil(bounds.size.height * _scale));
+   if (w <= 0 || h <= 0)
+      return;
+   if (int(_metal_layer.drawableSize.width) != w ||
+       int(_metal_layer.drawableSize.height) != h)
+      _metal_layer.drawableSize = CGSizeMake(w, h);
 
-   auto surface = _skia_context->getBackbufferSurface();
-   if (surface)
+   id<CAMetalDrawable> drawable = [_metal_layer nextDrawable];
+   if (drawable && _gr_context)
    {
-      auto draw =
-         [&](auto& cnv_)
-         {
-            cnv_->scale(_scale, _scale);
-            auto cnv = canvas{cnv_};
+      GrMtlTextureInfo tex_info;
+      tex_info.fTexture.retain((__bridge GrMTLHandle)drawable.texture);
+      auto backend_rt = GrBackendRenderTargets::MakeMtl(w, h, tex_info);
 
-            _view->draw(cnv);
-         };
+      auto surface = SkSurfaces::WrapBackendRenderTarget(
+         _gr_context.get(), backend_rt,
+         kTopLeft_GrSurfaceOrigin,     // Metal: Y=0 at top, no flip needed
+         kBGRA_8888_SkColorType, nullptr, nullptr);
 
-      SkCanvas* gpu_canvas = surface->getCanvas();
-      gpu_canvas->save();
-      draw(gpu_canvas);
-      gpu_canvas->restore();
-      surface->flush();
-      _skia_context->swapBuffers();
+      if (surface)
+      {
+         SkCanvas* gpu_canvas = surface->getCanvas();
+         gpu_canvas->save();
+         gpu_canvas->scale(_scale, _scale);
+         auto cnv = canvas{gpu_canvas};
+         _view->draw(cnv);
+         gpu_canvas->restore();
+
+         _gr_context->flushAndSubmit(surface.get());
+
+         id<MTLCommandBuffer> cmd = [_queue commandBuffer];
+         [cmd presentDrawable : drawable];
+         [cmd commit];
+      }
    }
 
 #if defined ELEMENTS_PRINT_FPS

@@ -785,3 +785,224 @@ Result:
 - AR6/AR7: capture and fix the first concrete visual or interaction regression,
   if any, from interactive testing.
 - Assess GTK/Windows Cairo host support using the same reference strategy.
+
+---
+
+## Sync Stage 0: Bump lib/artist to artist_2026_skia_upgrade
+
+### What changed
+
+- Created working branch `artist_element_sync` off `artist_2026`.
+- Added `ai/elements_artist_skia_upgrade_sync_plan.md` (staged sync plan).
+- Fetched `artist_2026_skia_upgrade` into the `lib/artist` submodule clone.
+- Repointed `.gitmodules` `branch` from `artist_2026_dev` to
+  `artist_2026_skia_upgrade`.
+- Moved the submodule pointer `5e54e7e` → `08a51ba` (clean fast-forward).
+
+### Why
+
+`artist_2026_skia_upgrade` is `artist_2026_dev` plus 15 commits with no
+divergence, and Artist's public `include/` API is unchanged between the two.
+The sync is a fast-forward submodule bump; the only material change is the
+Skia backend moving to vcpkg-built m148.
+
+### Files touched
+
+- `.gitmodules`
+- `lib/artist` (submodule pointer)
+- `ai/elements_artist_skia_upgrade_sync_plan.md`
+
+### Tests run
+
+None in Stage 0 (pointer move only).
+
+### Result
+
+- Branch + plan committed (`0ee4f18a`).
+- Submodule bump committed (`d3d5c291`); `git submodule status` shows
+  `08a51ba`.
+
+### Remaining issues / next steps
+
+- Stage 1: verify Cairo build (build-ar5-cairo-release).
+- Stage 2: verify Quartz2D build (build-ar5-quartz2d).
+- Stage 3: verify Skia build via vcpkg m148 (new dependency mechanism) —
+  highest risk.
+
+---
+
+## Sync Stage 1: Verify Cairo backend against skia_upgrade
+
+### What changed
+
+- Rebuilt `BasicSlidersAndKnobs` in `build-ar5-cairo-release` (Cairo Release)
+  against `lib/artist` @ `08a51ba`.
+
+### Why
+
+Stage 1 confirms the Cairo backend still compiles and runs after the submodule
+fast-forward.
+
+### Tests run
+
+```sh
+cmake --build build-ar5-cairo-release --target BasicSlidersAndKnobs -j6
+open build-ar5-cairo-release/examples/basic_sliders_and_knobs/BasicSlidersAndKnobs.app
+```
+
+### Result
+
+- Build passed. Only the known pre-existing enum-conversion warnings in
+  `lib/src/support/theme.cpp` (text_valign | text_halign). No errors.
+- App launched and ran; no crash report.
+
+### Remaining issues / next steps
+
+- Stage 2: verify Quartz2D (build-ar5-quartz2d).
+- Stage 3: verify Skia via vcpkg m148.
+
+---
+
+## Sync Stage 2: Verify Quartz2D backend against skia_upgrade
+
+### What changed
+
+- Rebuilt `BasicSlidersAndKnobs` in `build-ar5-quartz2d` against `lib/artist`
+  @ `08a51ba`.
+
+### Tests run
+
+```sh
+cmake --build build-ar5-quartz2d --target BasicSlidersAndKnobs -j6
+open build-ar5-quartz2d/examples/basic_sliders_and_knobs/BasicSlidersAndKnobs.app
+```
+
+### Result
+
+- Build passed. Only pre-existing warnings (theme enum-conversion; Quartz2D
+  `image.mm` CGBitmap anon-enum conversion). No errors.
+- App launched and ran; no crash report.
+
+### Remaining issues / next steps
+
+- Stage 3: verify Skia via vcpkg m148 — new dependency mechanism, highest risk.
+
+---
+
+## Sync Stage 3: Verify Skia backend against skia_upgrade (vcpkg m148)
+
+### What changed
+
+The Skia backend moved from a hand-managed prebuilt to vcpkg-built Skia m148,
+and the `tools/sk_app` host helper was deleted upstream. This required real
+host-integration work in Elements (the other two backends were no-ops):
+
+- **`lib/host/macos/base_view.mm`** — rewrote the macOS Skia host. Removed the
+  `sk_app::WindowContext` / `MakeGLForMac` (OpenGL) path. Now renders through
+  **CAMetalLayer + `GrDirectContexts::MakeMetal`**, per the Artist reference
+  `examples/host/macos/skia_app.mm`:
+  - `elements_init`: create Metal device/queue, attach a CAMetalLayer as a
+    *sublayer* (render-on-demand), create the Ganesh Metal context.
+  - `drawRect:` ARTIST_SKIA branch: size the layer to bounds, acquire
+    `nextDrawable`, wrap via `GrBackendRenderTargets::MakeMtl` +
+    `SkSurfaces::WrapBackendRenderTarget`, draw, `flushAndSubmit`, present.
+  - **Chosen approach: render-on-demand Metal sublayer** — keeps Elements'
+    `setNeedsDisplay:`→`drawRect:` invalidation model intact (a CAMetalLayer-
+    *hosting* view would not get `drawRect:`). The view stays layer-backed and
+    the Metal layer is a sublayer.
+- **`lib/CMakeLists.txt`** — link `-framework QuartzCore` for APPLE+ELEMENTS_SKIA
+  (CAMetalLayer / kCAGravityTopLeft).
+- **`toolchain-macos.cmake`** (new) — wrapper toolchain that re-adds the
+  Homebrew aggregate pkgconfig dir (`/opt/homebrew/lib/pkgconfig`) after
+  including the Artist vcpkg toolchain. vcpkg overwrites `PKG_CONFIG_PATH`,
+  hiding fontconfig/freetype2 (Elements) and harfbuzz + its transitive
+  glib-2.0/graphite2 (Artist macOS Skia block). Mirrors Artist's
+  `toolchain-linux.cmake` pattern documented in
+  `lib/artist/ai/build_setup_guide.md`.
+
+### Build commands
+
+```sh
+# one-time: init + bootstrap the Artist submodule's vcpkg
+git -C lib/artist submodule update --init lib/external/vcpkg   # (commit 00d899c)
+lib/artist/lib/external/vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+cmake -S . -B build-skia -G Ninja \
+  -D CMAKE_BUILD_TYPE=Debug \
+  -D ELEMENTS_SKIA=ON \
+  -D CMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain-macos.cmake \
+  -D VCPKG_MANIFEST_DIR=$(pwd)/lib/artist \
+  -D VCPKG_TARGET_TRIPLET=arm64-osx
+cmake --build build-skia --target BasicSlidersAndKnobs -j6
+```
+
+### Result
+
+- Configure passed (Skia served from vcpkg binary cache — no 15-min rebuild).
+- Build passed; `BasicSlidersAndKnobs` links and launches.
+- App runs with no crash report.
+- **All three backends now build: Cairo ✅, Quartz2D ✅, Skia ✅.**
+
+### Gotchas (for the guide)
+
+1. The Artist vcpkg submodule (`lib/artist/lib/external/vcpkg`) is not checked
+   out by default; its pinned commit must be fetched explicitly, then
+   bootstrapped.
+2. Elements has no vcpkg wiring of its own — pass the Artist submodule's
+   toolchain and `-DVCPKG_MANIFEST_DIR=<abs>/lib/artist` (manifest lives in the
+   Artist tree, not the Elements root).
+3. vcpkg overwrites `PKG_CONFIG_PATH`; use the `toolchain-macos.cmake` wrapper
+   so the unconditional fontconfig/freetype2 deps (and Artist's harfbuzz) still
+   resolve from Homebrew.
+
+### Remaining issues / next steps
+
+- Visual render confirmation by screenshot was blocked by the desktop
+  environment (a fullscreen browser Space; `screencapture` grabs the active
+  display only). Recommend a quick interactive visual check of `build-skia`
+  `BasicSlidersAndKnobs` to confirm rendering + slider interaction.
+- Stage 4: commit + final documentation.
+
+---
+
+## Sync Stage 4: All examples + Skia teardown crash fix + docs
+
+### What changed
+
+- Built **all 31 example apps** under each backend: Cairo (build-ar5-cairo-
+  release), Quartz2D (build-ar5-quartz2d), Skia (build-skia). 441/441 targets
+  each.
+- **Fixed a Skia teardown crash** that affected every example
+  (`lib/host/macos/base_view.mm`). On Quit, AppKit calls `exit()` without
+  deallocating the view, so the `GrDirectContext` was destroyed during C++
+  static finalization with live GPU resources → Skia debug
+  `GrManagedResource::Trace` leak assert (`sk_abort_no_print`, SIGTRAP). Fix:
+  observe `NSApplicationWillTerminateNotification` and call
+  `releaseResourcesAndAbandonContext()` + reset before exit.
+- Added the macOS Skia build steps + gotchas to `ai/build-and-test.md`.
+
+### Tests run
+
+```sh
+# build all examples per backend
+cmake --build build-skia -j6              # 441/441
+cmake --build build-ar5-cairo-release -j6 # 441/441
+cmake --build build-ar5-quartz2d -j6      # 441/441
+
+# launch+quit sweep of all 31 Skia examples
+```
+
+### Result
+
+- All 31 Skia examples launch and quit cleanly — **no crash reports** after the
+  teardown fix (before it, ~24 examples crashed on quit).
+- Window captures confirm correct Skia rendering (sliders/knobs/labels and
+  multi-weight text + icons).
+- **All three backends build, run, and render.**
+
+### Remaining issues / next steps
+
+- Skia build verified in Debug; a Release `build-skia` has not been run (the
+  leak assert is debug-only, but Release is the shipping config — worth a pass).
+- vcpkg submodule pin (`00d899c`) inside the Artist submodule is environment
+  setup, not committed in Elements; documented in build-and-test.md.

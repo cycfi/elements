@@ -342,4 +342,10 @@ if (WIN32)
    target_link_libraries(elements PUBLIC Shcore artist)
 endif()
 
+# The macOS Skia host renders through a CAMetalLayer (see lib/host/macos/
+# base_view.mm), which needs QuartzCore for CAMetalLayer / kCAGravityTopLeft.
+if (APPLE AND ELEMENTS_SKIA)
+   target_link_libraries(elements PUBLIC "-framework QuartzCore")
+endif()
+
 add_library(cycfi::elements ALIAS elements)

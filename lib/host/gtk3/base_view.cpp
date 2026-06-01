@@ -13,16 +13,24 @@
 #include <limits.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <GL/gl.h>
-#include <GL/glx.h>
 
-#include "GrDirectContext.h"
-#include "gl/GrGLInterface.h"
-#include "gl/GrGLAssembleInterface.h"
-#include "SkImage.h"
-#include "SkColorSpace.h"
-#include "SkCanvas.h"
-#include "SkSurface.h"
+#if defined(ARTIST_SKIA)
+# include <GL/gl.h>
+# include <SkImage.h>
+# include <SkColorSpace.h>
+# include <SkCanvas.h>
+# include <SkSurface.h>
+# include <ganesh/GrDirectContext.h>
+# include <ganesh/GrBackendSurface.h>
+# include <ganesh/SkSurfaceGanesh.h>
+# include <ganesh/gl/GrGLInterface.h>
+# include <ganesh/gl/GrGLDirectContext.h>
+# include <ganesh/gl/GrGLBackendSurface.h>
+# include <ganesh/gl/GrGLTypes.h>
+# include <ganesh/gl/egl/GrGLMakeEGLInterface.h>
+#elif defined(ARTIST_CAIRO)
+# include <cairo.h>
+#endif
 
 #include <map>
 #include <string>
@@ -93,9 +101,13 @@ namespace cycfi::elements
       GdkCursorType              _active_cursor_type; // The cursor type
 
       point                      _size;               // The current view size
+#if defined(ARTIST_SKIA)
       sk_sp<const GrGLInterface> _xface;              // Skia Open GL Interface
       sk_sp<GrDirectContext>     _ctx;                // Skia Open GL context
       sk_sp<SkSurface>           _surface;            // Skia surface
+#elif defined(ARTIST_CAIRO)
+      cairo_surface_t*           _cairo_surface = nullptr; // Cairo backing surface
+#endif
       cairo_t*                   _cr;                 // The current cairo context
 
       std::unique_ptr<drop_info> _drop_info;          // For drag and drop
@@ -120,6 +132,13 @@ namespace cycfi::elements
 
    host_view::~host_view()
    {
+#if defined(ARTIST_CAIRO)
+      if (_cairo_surface)
+      {
+         cairo_surface_destroy(_cairo_surface);
+         _cairo_surface = nullptr;
+      }
+#endif
       _widget = nullptr;
    }
 
@@ -139,9 +158,53 @@ namespace cycfi::elements
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
          host_view_h->_cr = cr;
+
+#if defined(ARTIST_CAIRO)
+         // Cairo renders here directly: blit the backing surface, then draw the
+         // view into the widget's cairo context (GTK has already applied the
+         // device/HiDPI scale to cr and clipped it to the exposed region).
+         if (host_view_h->_cairo_surface)
+         {
+            cairo_set_source_surface(cr, host_view_h->_cairo_surface, 0, 0);
+            cairo_paint(cr);
+         }
+
+         auto cnv = canvas{cr};
+
+#if defined ELEMENTS_PRINT_FPS
+         auto start = std::chrono::steady_clock::now();
+#endif
+         view.draw(cnv);
+
+#if defined ELEMENTS_PRINT_FPS
+         auto stop = std::chrono::steady_clock::now();
+         auto elapsed = std::chrono::duration<double>{stop - start}.count();
+         std::cout << (1.0/elapsed) << " fps" << std::endl;
+#endif
+#endif // ARTIST_CAIRO
          return false;
       }
 
+#if defined(ARTIST_CAIRO)
+      gboolean on_configure(GtkWidget* widget, GdkEventConfigure*, gpointer user_data)
+      {
+         auto& view = get(user_data);
+         auto* host_view_h = platform_access::get_host_view(view);
+
+         if (host_view_h->_cairo_surface)
+            cairo_surface_destroy(host_view_h->_cairo_surface);
+
+         host_view_h->_cairo_surface = gdk_window_create_similar_surface(
+            gtk_widget_get_window(widget),
+            CAIRO_CONTENT_COLOR,
+            gtk_widget_get_allocated_width(widget),
+            gtk_widget_get_allocated_height(widget)
+         );
+         return true;
+      }
+#endif // ARTIST_CAIRO
+
+#if defined(ARTIST_SKIA)
       void realize(GtkGLArea* area, gpointer user_data)
       {
          auto error = [](char const* msg) { throw std::runtime_error(msg); };
@@ -153,22 +216,16 @@ namespace cycfi::elements
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
 
-         host_view_h->_xface = GrGLMakeNativeInterface();
+         // m148: prefer the native GL interface, fall back to EGL (Mesa/Wayland
+         // and X11/EGL both work via GtkGLArea).
          if (host_view_h->_xface = GrGLMakeNativeInterface(); host_view_h->_xface == nullptr)
          {
-            //backup plan. see https://gist.github.com/ad8e/dd150b775ae6aa4d5cf1a092e4713add?permalink_comment_id=4680136#gistcomment-4680136
-            host_view_h->_xface = GrGLMakeAssembledInterface(
-               nullptr, (GrGLGetProc) *
-                  [](void*, const char* p) -> void*
-                  {
-                     return (void*)glXGetProcAddress((const GLubyte*)p);
-                  }
-               );
+            host_view_h->_xface = GrGLInterfaces::MakeEGL();
             if (host_view_h->_xface == nullptr)
-               error("Error. GLMakeNativeInterface failed");
+               error("Error. GrGLMakeNativeInterface / MakeEGL failed");
          }
-         if (host_view_h->_ctx = GrDirectContext::MakeGL(host_view_h->_xface); host_view_h->_ctx == nullptr)
-            error("Error. GrDirectContext::MakeGL failed");
+         if (host_view_h->_ctx = GrDirectContexts::MakeGL(host_view_h->_xface); host_view_h->_ctx == nullptr)
+            error("Error. GrDirectContexts::MakeGL failed");
       }
 
       gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)
@@ -197,20 +254,20 @@ namespace cycfi::elements
             SkColorType colorType = kRGBA_8888_SkColorType;
 
             info.fFormat = GL_RGBA8;
-            GrBackendRenderTarget target(
+            auto target = GrBackendRenderTargets::MakeGL(
                 w * scale,
                 h * scale,
                 0, 8, info
             );
 
             host_view_h->_surface =
-               SkSurface::MakeFromBackendRenderTarget(
+               SkSurfaces::WrapBackendRenderTarget(
                   host_view_h->_ctx.get(), target,
                   kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr
                );
 
             if (!host_view_h->_surface)
-               error("Error: SkSurface::MakeRenderTarget returned null");
+               error("Error: SkSurfaces::WrapBackendRenderTarget returned null");
 
             gtk_widget_draw(host_view_h->_widget, host_view_h->_cr);
             return true;
@@ -235,9 +292,10 @@ namespace cycfi::elements
          std::cout << (1.0/elapsed) << " fps" << std::endl;
 #endif
          gpu_canvas->restore();
-         host_view_h->_surface->flush();
+         host_view_h->_ctx->flushAndSubmit(host_view_h->_surface.get());
          return true;
       }
+#endif // ARTIST_SKIA
 
       template <typename Event>
       bool get_mouse(Event* event, mouse_button& btn, host_view* view)
@@ -588,17 +646,10 @@ namespace cycfi::elements
       gtk_drag_finish(context, success, false, time);
    }
 
-   // $$$ TODO: Investigate $$$
-   // Somehow, this prevents us from having linker errors
-   // Without this, we get undefined reference to `glXGetCurrentContext'
-   auto proc = &glXGetProcAddress;
-
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
-      auto error = [](char const* msg) { throw std::runtime_error(msg); };
-      if (!proc)
-         error("Error: glXGetProcAddress is null");
-
+#if defined(ARTIST_SKIA)
+      // Skia renders into a GtkGLArea via Ganesh GL.
       auto* content_view = gtk_gl_area_new();
       gtk_container_add(GTK_CONTAINER(parent), content_view);
 
@@ -606,10 +657,21 @@ namespace cycfi::elements
          G_CALLBACK(render), &view);
       g_signal_connect(content_view, "realize",
          G_CALLBACK(realize), &view);
-
-      // Subscribe to content_view events
       g_signal_connect(content_view, "draw",
          G_CALLBACK(on_draw), &view);
+#elif defined(ARTIST_CAIRO)
+      // Cairo renders directly into the widget's cairo_t on the "draw" signal,
+      // backed by an offscreen surface recreated on "configure-event".
+      auto* content_view = gtk_drawing_area_new();
+      gtk_container_add(GTK_CONTAINER(parent), content_view);
+
+      g_signal_connect(content_view, "configure-event",
+         G_CALLBACK(on_configure), &view);
+      g_signal_connect(content_view, "draw",
+         G_CALLBACK(on_draw), &view);
+#endif
+
+      // Subscribe to content_view events
       g_signal_connect(content_view, "button-press-event",
          G_CALLBACK(on_button), &view);
       g_signal_connect (content_view, "button-release-event",

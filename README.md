@@ -19,8 +19,8 @@ Please take note that Elements is still very much in flux as we are inching clos
 
 ## News
 
-**2026:**
-The `artist_2026` branch integrates the new [Artist 2026](https://github.com/cycfi/artist/tree/artist_2026_dev) Cairo backend — featuring HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Follow [this link](news.md) for details.
+**June 20, 2026:**
+The `develop` branch is now a unified codebase built on the upgraded [Artist](https://github.com/cycfi/artist/tree/develop) backend, supporting **Skia, Quartz2D, and Cairo** — with HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Skia is the default backend on Windows/Linux and Quartz2D on macOS; build with `-DELEMENTS_CAIRO=ON` for the lightweight Cairo backend. Skia no longer needs a slow from-source build — prebuilt binaries are fetched automatically (see the [setup guide](http://cycfi.github.io/elements/elements/skia_2024/setup.html)). Follow [this link](news.md) for details.
 
 **March 28, 2024:**
 I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.

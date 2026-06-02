@@ -1,143 +1,307 @@
 name: Build
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job(s) to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - skia
+          - cairo
+          - quartz2d
 env:
   BUILD_TYPE: Release
 jobs:
-  build:
-    name: ${{ matrix.config.name }}
+
+  ###########################################################################
+  # Skia  (vcpkg-built Skia m148; GL on Linux/Windows, Metal host on macOS)
+  ###########################################################################
+  build-skia:
+    name: "Skia (${{ matrix.config.name }})"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'skia'
     runs-on: ${{ matrix.config.os }}
+    env:
+      # vcpkg binary caching, keyed by package ABI hash (compiler + portfile +
+      # triplet). Survives runner image updates better than caching
+      # vcpkg_installed/ by manifest hash.
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     strategy:
       fail-fast: false
       matrix:
         config:
-        - name: "Windows Latest MSVC"
+        - name: "Windows MSVC"
           os: windows-latest
-          cc: "cl"
-          cxx: "cl"
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        - name: "Ubuntu Latest GCC"
-          os: ubuntu-latest
-          cc: "gcc"
-          cxx: "g++"
-        - name: "macOS Latest Clang"
+        - name: "macOS Clang"
           os: macos-latest
-          cc: "clang"
-          cxx: "clang++"
+        - name: "Ubuntu GCC"
+          os: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
-        submodules: 'recursive'
-    - name: Cache vcpkg installed libraries
-      uses: actions/cache@v3
-      with:
-        path: |
-          !c:/vcpkg/packages
-          c:/vcpkg/installed
-          c:/vcpkg/vcpkg
-        key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
-        restore-keys: |
-          ${{ runner.os }}-vcpkg-
-    - name: Install Windows dependencies
+        submodules: recursive
+
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libgtk-3-dev \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libegl1-mesa-dev \
+          libharfbuzz-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          x11proto-dev \
+          libx11-dev \
+          libxext-dev \
+          shared-mime-info \
+          pkg-config \
+          ninja-build \
+          autoconf \
+          autoconf-archive \
+          automake \
+          libtool
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install fontconfig freetype harfbuzz ninja
+
+    - name: Install dependencies (Windows)
       if: runner.os == 'Windows'
+      run: choco install ninja
       shell: cmd
-      run: |
-        vcpkg install pkgconf
-        vcpkg install cairo
-        vcpkg install libwebp
-    - name: Install package dependencies
-      id: cmake_and_ninja
-      shell: cmake -P {0}
-      run: |
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          execute_process(COMMAND choco install ninja)
-        elseif ("${{ runner.os }}" STREQUAL "Linux")
-          execute_process(COMMAND sudo apt-get update)
-          execute_process(COMMAND sudo apt-get install libcairo2-dev)
-          execute_process(COMMAND sudo apt-get install libgtk-3-dev)
-          execute_process(COMMAND sudo apt-get install ninja-build)
-        elseif ("${{ runner.os }}" STREQUAL "macOS")
-          execute_process(COMMAND brew install pkg-config)
-          execute_process(COMMAND brew install cairo)
-          execute_process(COMMAND brew install fontconfig)
-          execute_process(COMMAND brew install bzip2)
-          execute_process(COMMAND brew install expat)
-          execute_process(COMMAND brew install zlib)
-          execute_process(COMMAND brew install libpng)
-          execute_process(COMMAND brew install ninja)
-        endif()
+
+    - name: Bootstrap vcpkg (Unix)
+      if: runner.os != 'Windows'
+      run: lib/artist/lib/external/vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+    - name: Bootstrap vcpkg (Windows)
+      if: runner.os == 'Windows'
+      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      shell: cmd
+
     - name: Configure
       shell: cmake -P {0}
       run: |
-        set(ENV{CC} ${{ matrix.config.cc }})
-        set(ENV{CXX} ${{ matrix.config.cxx }})
-        # If we are on windows, run the environment script, parse it with cmake
-        # and set environment variables with it (required for Visual Studio)
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          execute_process(
-            COMMAND "${{ matrix.config.environment_script }}" && set
-            OUTPUT_FILE environment_script_output.txt
-          )
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
-        endif()
-
+        # On Windows, import the MSVC environment (cl/link on PATH).
         if ("${{ runner.os }}" STREQUAL "Windows")
           execute_process(
-            COMMAND ${CMAKE_COMMAND}
-              -S .
-              -B build
-              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
-              -G Ninja
-              -D CMAKE_MAKE_PROGRAM=ninja
-              -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
-            RESULT_VARIABLE result
-            ERROR_VARIABLE error_message
-          )
-        else()
-            execute_process(
-            COMMAND ${CMAKE_COMMAND}
-              -S .
-              -B build
-              -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
-              -G Ninja
-              -D CMAKE_MAKE_PROGRAM=ninja
-            RESULT_VARIABLE result
-            ERROR_VARIABLE error_message
-          )
-        endif()
-
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
-        endif()
-    - name: Build
-      shell: cmake -P {0}
-      run: |
-        # If we are on windows, run the environment script, parse it with cmake
-        # and set environment variables with it (required for Visual Studio)
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          execute_process(
             COMMAND "${{ matrix.config.environment_script }}" && set
-            OUTPUT_FILE environment_script_output.txt
-          )
+            OUTPUT_FILE environment_script_output.txt)
           file(STRINGS environment_script_output.txt output_lines)
           foreach(line IN LISTS output_lines)
             if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
               set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
             endif()
           endforeach()
+        endif()
+
+        set(vcpkg_toolchain
+          "${CMAKE_CURRENT_LIST_DIR}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake")
+        set(extra_args
+          -DELEMENTS_SKIA=ON
+          -DCMAKE_TOOLCHAIN_FILE=${vcpkg_toolchain}
+          -DVCPKG_MANIFEST_DIR=${CMAKE_CURRENT_LIST_DIR}/lib/artist)
+
+        if ("${{ runner.os }}" STREQUAL "macOS")
+          # macos-latest is arm64; pin the triplet or vcpkg targets x64-osx.
+          # Expose Homebrew's pkg-config dir (vcpkg sanitizes the environment) so
+          # the host-side fontconfig/freetype2 and Artist's harfbuzz resolve.
+          set(ENV{PKG_CONFIG_PATH} "/opt/homebrew/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+          list(APPEND extra_args
+            -DVCPKG_TARGET_TRIPLET=arm64-osx
+            -DVCPKG_ENV_PASSTHROUGH_UNTRACKED=PKG_CONFIG_PATH)
+        elseif ("${{ runner.os }}" STREQUAL "Linux")
+          # vcpkg sanitizes the environment; pass system pkg-config through so
+          # GTK / OpenGL / fontconfig / system harfbuzz are found.
+          set(ENV{PKG_CONFIG_PATH} "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig")
+          list(APPEND extra_args
+            -DVCPKG_TARGET_TRIPLET=x64-linux
+            -DVCPKG_ENV_PASSTHROUGH_UNTRACKED=PKG_CONFIG_PATH)
         endif()
 
         execute_process(
-          COMMAND ${CMAKE_COMMAND} --build build
+          COMMAND ${CMAKE_COMMAND}
+            -S . -B build
+            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
+            ${extra_args}
           RESULT_VARIABLE result
-          ERROR_VARIABLE error_message
-        )
-
+          ERROR_VARIABLE error_message)
         if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Could not run with ${CMAKE_COMMAND}: Got ${error_message} - ${result}")
+          message(FATAL_ERROR "Configure failed: ${error_message} - ${result}")
         endif()
+
+    - name: Build
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND "${{ matrix.config.environment_script }}" && set
+            OUTPUT_FILE environment_script_output.txt)
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} --build build
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Build failed: ${error_message} - ${result}")
+        endif()
+
+  ###########################################################################
+  # Cairo  (system cairo on Unix; vcpkg cairo on Windows)
+  ###########################################################################
+  build-cairo:
+    name: "Cairo (${{ matrix.config.name }})"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'cairo'
+    runs-on: ${{ matrix.config.os }}
+    env:
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: "Windows MSVC"
+          os: windows-latest
+          environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+        - name: "macOS Clang"
+          os: macos-latest
+        - name: "Ubuntu GCC"
+          os: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libcairo2-dev \
+          libgtk-3-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libharfbuzz-dev \
+          pkg-config \
+          ninja-build
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install cairo fontconfig freetype harfbuzz ninja
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja
+      shell: cmd
+
+    - name: Bootstrap vcpkg (Windows)
+      if: runner.os == 'Windows'
+      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      shell: cmd
+
+    - name: Configure
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND "${{ matrix.config.environment_script }}" && set
+            OUTPUT_FILE environment_script_output.txt)
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+
+        set(extra_args -DELEMENTS_CAIRO=ON)
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          # cairo (and its deps) come from the vcpkg manifest on Windows.
+          list(APPEND extra_args
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake
+            -DVCPKG_MANIFEST_DIR=${CMAKE_CURRENT_LIST_DIR}/lib/artist)
+        endif()
+
+        execute_process(
+          COMMAND ${CMAKE_COMMAND}
+            -S . -B build-cairo
+            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
+            ${extra_args}
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Configure failed: ${error_message} - ${result}")
+        endif()
+
+    - name: Build
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND "${{ matrix.config.environment_script }}" && set
+            OUTPUT_FILE environment_script_output.txt)
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} --build build-cairo
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Build failed: ${error_message} - ${result}")
+        endif()
+
+  ###########################################################################
+  # Quartz2D  (macOS only)
+  ###########################################################################
+  build-quartz2d:
+    name: "Quartz2D (macOS Clang)"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'quartz2d'
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: brew install fontconfig freetype ninja
+
+    - name: Configure
+      run: |
+        cmake -S . -B build-quartz2d \
+          -DELEMENTS_QUARTZ_2D=ON \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -G Ninja
+
+    - name: Build
+      run: cmake --build build-quartz2d

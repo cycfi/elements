@@ -1,0 +1,44 @@
+= Span
+
+include::../common.adoc[]
+
+== Overview
+
+The span of an element is the number of columns or rows it occupies in a grid
+(see <<_horizontal_grids, Horizontal Grids>> and <<_vertical_grids, Vertical
+Grids>>). The span of an element is determined by the element's `span` member
+function:
+
+[,c++]
+----
+virtual unsigned span() const;
+----
+
+By default, an element spans one column or one row. The span can be set to
+any positive integer value using the `span` function.
+
+== span
+
+Overrides the span of an an enclosed element (`subject`).
+
+=== Notation
+
+`nspans`:: An unsigned integer
+`subject`:: Instance of `Element`
+
+=== Expression
+
+[,c++]
+----
+span(nspans, subject)
+----
+
+=== Semantics
+
+. The `subject` will assume a span with the given `nspans` value.
+. Returns instance of `Proxy`.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

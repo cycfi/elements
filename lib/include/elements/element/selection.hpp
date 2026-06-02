@@ -26,12 +26,13 @@ namespace cycfi::elements
    };
 
    //==============================================================================================
-   /** \class selection_list
+   /** \class selection_list_element
      *
-     * The selection_list is a proxy base class that manages a container subject with selectable
-     * items. The selection_list manages singe or multiple selections, click select, shift-click
-     * select, shift-control (command on MacOS), up and down navigation also and with shift and
-     * control (command on MacOS) selection extension.
+     * The selection_list_element is a proxy base class that manages a
+     * container subject with selectable items. The selection_list manages
+     * singe or multiple selections, click select, shift-click select,
+     * shift-control (command on MacOS), up and down navigation also and with
+     * shift and control (command on MacOS) selection extension.
      */
    //==============================================================================================
    class selection_list_element : public proxy_base
@@ -67,16 +68,19 @@ namespace cycfi::elements
       int                     _select_end = -1;
    };
 
-   //==============================================================================================
-   /** \brief Make a selection list given a subject.
+   /** \brief
+    *    Make a selection list given a subject.
      *
-     * \param subject The subject of the selection list proxy. The subject is expected to contain
-     *                a composite. This requirement is not enforced. The selection_list simply
-     *                does nothing if the subject does not contain a composite to work on.
+     * \param subject
+     *   The subject of the selection list proxy. The subject is expected to
+     *   contain a composite. This requirement is not enforced. The
+     *   selection_list simply does nothing if the subject does not contain a
+     *   composite to work on.
      *
-     * \param multi_select Determines if we allow multiple selections or not. Defaults to `true`.
+     * \param multi_select
+     *   Determines if we allow multiple selections or not. Defaults to
+     *   `true`.
      */
-   //==============================================================================================
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, selection_list_element>
    selection_list(Subject&& subject, bool multi_select = true)
@@ -89,8 +93,11 @@ namespace cycfi::elements
    //==============================================================================================
 
    /**
-    * \brief Construct a selection_list_element.
-    * \param multi_select Determines if we allow multiple selections or not. Defaults to `true`.
+    * \brief
+    *    Construct a selection_list_element.
+    *
+    * \param multi_select
+    *    Determines if we allow multiple selections or not. Defaults to `true`.
    */
    inline selection_list_element::selection_list_element(bool multi_select)
     : _multi_select{multi_select}

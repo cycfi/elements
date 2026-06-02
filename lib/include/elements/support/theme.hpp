@@ -36,6 +36,7 @@ namespace cycfi::elements
       color                slide_button_on_color;
       color                slide_button_base_color;
       color                slide_button_thumb_color;
+      color                active_tab_color;
 
       color                controls_color;
       float                controls_frame_stroke_width;

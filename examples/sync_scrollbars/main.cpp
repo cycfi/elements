@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
    // Second scrollers will follow first scroller position
    scr.on_scroll = [&](point p)
    {
-      scr2.set_position(p);
+      scr2.set_alignment(p);
       view_.layout();
       view_.refresh();
    };

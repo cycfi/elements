@@ -12,22 +12,22 @@
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // dial_base
+   // basic_dial
    ////////////////////////////////////////////////////////////////////////////
-   dial_base::dial_base(double init_value)
+   basic_dial::basic_dial(double init_value)
     : _value(init_value)
    {
       clamp(_value, 0.0, 1.0);
    }
 
-   void dial_base::prepare_subject(context& ctx)
+   void basic_dial::prepare_subject(context& ctx)
    {
       proxy_base::prepare_subject(ctx);
       if (auto* rcvr = find_subject<receiver<double>*>(this))
          rcvr->value(_value);
    }
 
-   void dial_base::value(double val)
+   void basic_dial::value(double val)
    {
       _value = clamp(val, 0.0, 1.0);
       if (auto* rcvr = find_subject<receiver<double>*>(this))
@@ -36,7 +36,7 @@ namespace cycfi::elements
 
    namespace
    {
-      inline void edit_value(dial_base* this_, double val)
+      inline void edit_value(basic_dial* this_, double val)
       {
          this_->value(val);
          if (this_->on_change)
@@ -44,13 +44,13 @@ namespace cycfi::elements
       }
    }
 
-   void dial_base::edit(view& view_, param_type val)
+   void basic_dial::edit(view& view_, param_type val)
    {
       edit_value(this, val);
       receiver<double>::notify_edit(view_);
    }
 
-   double dial_base::radial_value(context const& ctx, tracker_info& track_info)
+   double basic_dial::radial_value(context const& ctx, tracker_info& track_info)
    {
       using namespace radial_consts;
 
@@ -66,7 +66,7 @@ namespace cycfi::elements
       return value();
    }
 
-   double dial_base::linear_value(context const& /*ctx*/, tracker_info& track_info)
+   double basic_dial::linear_value(context const& /*ctx*/, tracker_info& track_info)
    {
       point delta{
          track_info.current.x - track_info.previous.x,
@@ -81,7 +81,7 @@ namespace cycfi::elements
       return clamp(val, 0.0, 1.0);
    }
 
-   double dial_base::compute_value(context const& ctx, tracker_info& track_info)
+   double basic_dial::compute_value(context const& ctx, tracker_info& track_info)
    {
       return (get_theme().dial_mode == dial_mode_enum::radial)?
          radial_value(ctx, track_info) :
@@ -89,7 +89,7 @@ namespace cycfi::elements
          ;
    }
 
-   void dial_base::keep_tracking(context const& ctx, tracker_info& track_info)
+   void basic_dial::keep_tracking(context const& ctx, tracker_info& track_info)
    {
       if (track_info.current != track_info.previous)
       {
@@ -102,7 +102,7 @@ namespace cycfi::elements
       }
    }
 
-   bool dial_base::scroll(context const& ctx, point dir, point p)
+   bool basic_dial::scroll(context const& ctx, point dir, point p)
    {
       auto sdir = scroll_direction();
       track_scroll(ctx, dir, p);

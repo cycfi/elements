@@ -229,8 +229,16 @@ jobs:
       inputs.job == 'all' ||
       inputs.job == 'cairo'
     runs-on: ${{ matrix.config.os }}
-    # No binary cache: cairo + deps build fast from source on Windows, so they
-    # are deliberately left out of the R2/vcpkg binary cache (Skia-only).
+    env:
+      # Cairo uses vcpkg only on Windows (Unix uses system cairo); its dep tree
+      # (glib/gettext/pixman/fontconfig/freetype…) is slow to cold-build, so
+      # cache it on the ABI-exact R2 vcpkg cache. No-op on the Unix cairo jobs
+      # (they never invoke vcpkg).
+      VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
+      AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
     strategy:
       fail-fast: false
       matrix:

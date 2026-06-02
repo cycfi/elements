@@ -144,7 +144,7 @@ namespace cycfi::elements
       undo_stack_type         _redo_stack;
 
       io_context              _io;
-      io_context::work        _work;
+      asio::executor_work_guard<io_context::executor_type>        _work;
 
       using time_point = std::chrono::steady_clock::time_point;
       using tracking_map = std::map<element*, time_point>;
@@ -240,7 +240,7 @@ namespace cycfi::elements
          if (std::find(_content.begin(), _content.end(), e) != _content.end())
             return;
 
-         io().post(
+         asio::post(io(),
             [e, this, focus_top]
             {
                auto wants_focus = focus_top && e->wants_focus();
@@ -278,7 +278,7 @@ namespace cycfi::elements
       // post a function that is called at idle time.
       if (e)
       {
-         io().post(
+         asio::post(io(),
             [e, this]
             {
                auto i = std::find(_content.begin(), _content.end(), e);
@@ -315,7 +315,7 @@ namespace cycfi::elements
    {
       if (e && _content.back() != e)
       {
-         io().post(
+         asio::post(io(),
             [e, this]
             {
                auto i = std::find(_content.begin(), _content.end(), e);
@@ -336,7 +336,7 @@ namespace cycfi::elements
    {
       if (e && _content.front() != e)
       {
-         io().post(
+         asio::post(io(),
             [e, this]
             {
                auto i = std::find(_content.begin(), _content.end(), e);
@@ -392,7 +392,7 @@ namespace cycfi::elements
    template <typename F>
    inline void view::post(F f)
    {
-      _io.post(f);
+      asio::post(_io, f);
    }
 }
 

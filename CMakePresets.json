@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "prebuilt",
+      "displayName": "Skia — prebuilt bundle (default, fast)",
+      "description": "Downloads a prebuilt Skia bundle from R2 (no Skia compile). Falls back with a clear message if the bundle is incompatible; use the 'source' preset then.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "ELEMENTS_SKIA": "ON",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "source",
+      "displayName": "Skia — build from source via vcpkg",
+      "description": "Builds Skia (and deps) from source via the vcpkg toolchain. Use when the prebuilt bundle is unavailable/incompatible, or to produce a bundle.",
+      "inherits": "prebuilt",
+      "binaryDir": "${sourceDir}/build-source",
+      "toolchainFile": "${sourceDir}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "VCPKG_MANIFEST_DIR": "${sourceDir}/lib/artist"
+      }
+    }
+  ]
+}

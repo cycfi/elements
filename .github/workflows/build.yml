@@ -104,7 +104,8 @@ jobs:
           autoconf \
           autoconf-archive \
           automake \
-          libtool
+          libtool \
+          zstd
 
     - name: Install dependencies (macOS)
       if: runner.os == 'macOS'
@@ -192,6 +193,29 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Build failed: ${error_message} - ${result}")
         endif()
+
+    # Harvest the vcpkg installed tree (Skia + all deps, debug AND release) as a
+    # compatibility-keyed prebuilt bundle on R2, for broad local-dev reuse
+    # (link-compatible across compiler versions; consumed by cmake/SkiaPrebuilt
+    # without vcpkg). Keyed by triplet (os+arch), not by exact ABI hash.
+    - name: Harvest Skia prebuilt bundle to R2
+      # Skip when the R2 secret is unavailable (e.g. fork PRs).
+      if: env.AWS_ACCESS_KEY_ID != ''
+      shell: bash
+      run: |
+        set -euo pipefail
+        ver=148
+        triplet="${{ matrix.config.triplet }}"
+        installed="build/vcpkg_installed"
+        test -d "$installed/$triplet"
+        out="${triplet}.tar.zst"
+        tar --zstd -C "$installed" -cf "$out" "$triplet"
+        openssl dgst -sha256 "$out" | awk '{print $NF}' > "$out.sha256"
+        echo "bundle $(du -h "$out" | cut -f1)  sha $(cat "$out.sha256")"
+        base="s3://cycfi-media/skia-prebuilt/$ver"
+        aws s3 cp "$out" "$base/$out" --endpoint-url "$AWS_ENDPOINT_URL"
+        aws s3 cp "$out.sha256" "$base/$out.sha256" --endpoint-url "$AWS_ENDPOINT_URL"
+        echo "uploaded skia-prebuilt/$ver/$out"
 
   ###########################################################################
   # Cairo  (system cairo on Unix; vcpkg cairo on Windows)

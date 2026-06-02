@@ -64,10 +64,13 @@ namespace cycfi::elements
 
    void icon_button_styler::draw(context const& ctx)
    {
-      auto  state = value();
-      auto  value = state.value;
-      auto  hilite = state.hilite;
-      auto  enabled = ctx.enabled;
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
+      auto value = btn->value();
+      auto hilite = btn->hilite();
+      auto enabled = ctx.enabled;
 
       draw_icon_button(
          ctx, _code, _size * get_theme().icon_font._size
@@ -77,10 +80,13 @@ namespace cycfi::elements
 
    void  icon_button_styler2::draw(context const& ctx)
    {
-      auto  state = value();
-      auto  value = state.value;
-      auto  hilite = state.hilite;
-      auto  enabled = ctx.enabled;
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
+      auto value = btn->value();
+      auto hilite = btn->hilite();
+      auto enabled = ctx.enabled;
 
       draw_icon_button(
          ctx, value? _code2 : _code1, _size * get_theme().icon_font._size
@@ -90,10 +96,13 @@ namespace cycfi::elements
 
    void plain_icon_button_styler::draw(context const& ctx)
    {
-      auto  state = value();
-      auto  value = state.value;
-      auto  enabled = ctx.enabled;
-      auto  hilite = state.hilite;
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
+      auto value = btn->value();
+      auto hilite = btn->hilite();
+      auto enabled = ctx.enabled;
 
       draw_plain_icon_button(
          ctx, _code, _size * get_theme().icon_font._size, value, hilite, enabled

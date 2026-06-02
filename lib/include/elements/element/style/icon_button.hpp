@@ -15,7 +15,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Icon Buttons
    ////////////////////////////////////////////////////////////////////////////
-   struct icon_button_styler_base : element, basic_receiver<button_state>
+   struct icon_button_styler_base : element
    {
                               icon_button_styler_base(float size)
                                : _size(size)

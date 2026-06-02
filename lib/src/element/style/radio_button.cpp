@@ -11,6 +11,10 @@ namespace cycfi::elements
 
    void radio_button_styler::draw(context const& ctx)
    {
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
       auto& canvas_ = ctx.canvas;
       auto canvas_state = canvas_.new_state();
       auto const& theme_ = get_theme();
@@ -21,10 +25,9 @@ namespace cycfi::elements
 
       box.width(size);
       point center = center_point(box);
-      auto state = value();
-      auto value = state.value;
-      auto hilite = state.hilite;
-      auto tracking = state.tracking;;
+      auto value = btn->value();
+      auto hilite = btn->hilite();
+      auto tracking = btn->tracking();
       auto enabled = ctx.enabled;
 
       // Draw dot

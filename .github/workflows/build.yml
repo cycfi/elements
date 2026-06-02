@@ -108,11 +108,11 @@ jobs:
         endif()
 
         set(vcpkg_toolchain
-          "${CMAKE_CURRENT_LIST_DIR}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake")
+          "$ENV{GITHUB_WORKSPACE}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake")
         set(extra_args
           -DELEMENTS_SKIA=ON
           -DCMAKE_TOOLCHAIN_FILE=${vcpkg_toolchain}
-          -DVCPKG_MANIFEST_DIR=${CMAKE_CURRENT_LIST_DIR}/lib/artist)
+          -DVCPKG_MANIFEST_DIR=$ENV{GITHUB_WORKSPACE}/lib/artist)
 
         if ("${{ runner.os }}" STREQUAL "macOS")
           # macos-latest is arm64; pin the triplet or vcpkg targets x64-osx.
@@ -240,8 +240,8 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows")
           # cairo (and its deps) come from the vcpkg manifest on Windows.
           list(APPEND extra_args
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake
-            -DVCPKG_MANIFEST_DIR=${CMAKE_CURRENT_LIST_DIR}/lib/artist)
+            -DCMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake
+            -DVCPKG_MANIFEST_DIR=$ENV{GITHUB_WORKSPACE}/lib/artist)
         endif()
 
         execute_process(

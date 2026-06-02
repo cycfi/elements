@@ -32,12 +32,21 @@ jobs:
       packages: write
       contents: read
     env:
-      # vcpkg binary caching, keyed by package ABI hash (compiler + portfile +
-      # triplet). Survives runner image updates better than caching
-      # vcpkg_installed/ by manifest hash. The shared GitHub Packages NuGet feed
-      # (cross-repo, persistent, local-usable) is layered over x-gha (per-repo,
-      # fast, LRU-evicted at 10 GB).
-      VCPKG_BINARY_SOURCES: "clear;nuget,GitHubPackages,readwrite;x-gha,readwrite"
+      # vcpkg binary cache, keyed by package ABI hash (compiler + portfile +
+      # triplet). Three layers, in read priority:
+      #   1. http  -> public anonymous read from Cloudflare R2 (media.cycfi.com);
+      #              this is what lets a fresh clone / fork restore with no auth.
+      #   2. x-aws -> CI-only authenticated write of new archives to the same R2
+      #              bucket via the S3 API (AWS CLI redirected by AWS_ENDPOINT_URL).
+      #   3. nuget -> cross-repo member read/write on GitHub Packages.
+      # (x-gha was removed from vcpkg upstream, so it is no longer used.)
+      VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write;nuget,GitHubPackages,readwrite"
+      # R2 (S3-compatible) credentials for the x-aws write layer. Withheld from
+      # fork PR runs by GitHub; x-aws write then no-ops and http read still works.
+      AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
     strategy:
       fail-fast: false
       matrix:
@@ -211,7 +220,11 @@ jobs:
     env:
       # See build-skia for the binary-cache rationale. Cairo only uses vcpkg on
       # Windows, so the NuGet setup step below is Windows-only.
-      VCPKG_BINARY_SOURCES: "clear;nuget,GitHubPackages,readwrite;x-gha,readwrite"
+      VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write;nuget,GitHubPackages,readwrite"
+      AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
     strategy:
       fail-fast: false
       matrix:

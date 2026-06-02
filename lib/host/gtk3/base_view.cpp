@@ -35,10 +35,6 @@
 #include <map>
 #include <string>
 
-#if defined ELEMENTS_PRINT_FPS
-# include <iostream>
-#endif
-
 namespace cycfi::artist
 {
    namespace
@@ -171,16 +167,7 @@ namespace cycfi::elements
 
          auto cnv = canvas{cr};
 
-#if defined ELEMENTS_PRINT_FPS
-         auto start = std::chrono::steady_clock::now();
-#endif
          view.draw(cnv);
-
-#if defined ELEMENTS_PRINT_FPS
-         auto stop = std::chrono::steady_clock::now();
-         auto elapsed = std::chrono::duration<double>{stop - start}.count();
-         std::cout << (1.0/elapsed) << " fps" << std::endl;
-#endif
 #endif // ARTIST_CAIRO
          return false;
       }
@@ -281,16 +268,7 @@ namespace cycfi::elements
          gpu_canvas->scale(scale, scale);
          auto cnv = canvas{gpu_canvas};
 
-#if defined ELEMENTS_PRINT_FPS
-         auto start = std::chrono::steady_clock::now();
-#endif
          view.draw(cnv);
-
-#if defined ELEMENTS_PRINT_FPS
-         auto stop = std::chrono::steady_clock::now();
-         auto elapsed = std::chrono::duration<double>{stop - start}.count();
-         std::cout << (1.0/elapsed) << " fps" << std::endl;
-#endif
          gpu_canvas->restore();
          host_view_h->_ctx->flushAndSubmit(host_view_h->_surface.get());
          return true;

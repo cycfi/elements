@@ -7,6 +7,7 @@
 #define ELEMENTS_DRAW_UTILS_OCTOBER_27_2017
 
 #include <artist/canvas.hpp>
+#include <infra/support.hpp>
 
 namespace cycfi::elements
 {
@@ -18,11 +19,13 @@ namespace cycfi::elements
 
    namespace radial_consts
    {
-      constexpr double _2pi = 2 * M_PI;
+      // Use cycfi::pi (infra/support.hpp); M_PI is non-standard and undefined
+      // on MSVC without _USE_MATH_DEFINES.
+      constexpr double _2pi = 2 * cycfi::pi;
       constexpr double travel = 0.83;
       constexpr double range = _2pi * travel;
       constexpr double start_angle = _2pi * (1 - travel) / 2;
-      constexpr double offset = (2 * M_PI) * (1 - travel) / 2;
+      constexpr double offset = (2 * cycfi::pi) * (1 - travel) / 2;
    }
 
    struct corner_radii

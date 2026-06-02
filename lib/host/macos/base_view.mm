@@ -429,24 +429,12 @@ namespace
 
 #if defined(ARTIST_QUARTZ_2D)
 
-#if defined ELEMENTS_PRINT_FPS
-   auto start = std::chrono::high_resolution_clock::now();
-#endif
    auto context = NSGraphicsContext.currentContext.CGContext;
    auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
    _view->draw(cnv);
 
-#if defined ELEMENTS_PRINT_FPS
-   auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{stop - start}.count();
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
-#endif
-
 #elif defined(ARTIST_SKIA)
 
-#if defined ELEMENTS_PRINT_FPS
-   auto start = std::chrono::high_resolution_clock::now();
-#endif
 
    // Keep the Metal layer sized to the view (handles HiDPI + live resize).
    auto bounds = [self bounds];
@@ -487,17 +475,8 @@ namespace
          [cmd commit];
       }
    }
-
-#if defined ELEMENTS_PRINT_FPS
-   auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{stop - start}.count();
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
-#endif
 #elif defined(ARTIST_CAIRO)
 
-#if defined ELEMENTS_PRINT_FPS
-   auto start = std::chrono::high_resolution_clock::now();
-#endif
 
    auto w = [self bounds].size.width;
    auto h = [self bounds].size.height;
@@ -511,12 +490,6 @@ namespace
 
    cairo_surface_destroy(surface);
    cairo_destroy(context);
-
-#if defined ELEMENTS_PRINT_FPS
-   auto stop = std::chrono::high_resolution_clock::now();
-   auto elapsed = std::chrono::duration<double>{stop - start}.count();
-   NSLog(@"Draw elapsed: %f fps", 1.0/elapsed);
-#endif
 #endif
 }
 

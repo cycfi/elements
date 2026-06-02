@@ -72,10 +72,10 @@ namespace cycfi::elements
       radii.bottom_left = std::min(radii.bottom_left, min_r);
 
       cnv.begin_path();
-      cnv.arc({r- radii.bottom_right, b- radii.bottom_right}, radii.bottom_right, 0,        M_PI*0.5);
-      cnv.arc({l+ radii.bottom_left,  b- radii.bottom_left }, radii.bottom_left,  M_PI*0.5, M_PI    );
-      cnv.arc({l+ radii.top_left,     t+ radii.top_left    }, radii.top_left,     M_PI,     M_PI*1.5);
-      cnv.arc({r- radii.top_right,    t+ radii.top_right   }, radii.top_right,    M_PI*1.5, 0       );
+      cnv.arc({r- radii.bottom_right, b- radii.bottom_right}, radii.bottom_right, 0,        cycfi::pi*0.5);
+      cnv.arc({l+ radii.bottom_left,  b- radii.bottom_left }, radii.bottom_left,  cycfi::pi*0.5, cycfi::pi    );
+      cnv.arc({l+ radii.top_left,     t+ radii.top_left    }, radii.top_left,     cycfi::pi,     cycfi::pi*1.5);
+      cnv.arc({r- radii.top_right,    t+ radii.top_right   }, radii.top_right,    cycfi::pi*1.5, 0       );
       cnv.close_path();
    }
 
@@ -336,7 +336,7 @@ namespace cycfi::elements
             cnv.stroke_style(c.level(theme.major_ticks_level));
          }
 
-         float angle = offset + (M_PI / 2) + (i * div);
+         float angle = offset + (cycfi::pi / 2) + (i * div);
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
          float to = cp.radius - (size / 2);
@@ -374,7 +374,7 @@ namespace cycfi::elements
 
       for (std::size_t i = 0; i != num_labels; ++i)
       {
-         float angle = offset + (M_PI / 2) + (i * div);
+         float angle = offset + (cycfi::pi / 2) + (i * div);
          float sin_ = std::sin(angle);
          float cos_ = std::cos(angle);
 

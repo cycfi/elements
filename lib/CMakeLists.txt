@@ -239,16 +239,17 @@ FetchContent_MakeAvailable(cycfi_infra)
 target_link_libraries(elements PUBLIC cycfi::infra)
 
 ###############################################################################
-# Fontconfig
+# Fontconfig + Freetype (host-side, not needed on Windows: the Win32 host uses
+# DirectWrite, Skia bundles its own freetype, and Artist links the vcpkg cairo
+# stack transitively for the Cairo backend).
 
-pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
+if (NOT WIN32)
+   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 
-###############################################################################
-# Freetype
-
-pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-target_link_libraries(elements PUBLIC PkgConfig::freetype2)
+   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
+endif()
 
 ###############################################################################
 # GTK3
@@ -340,6 +341,13 @@ endif()
 # Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
 if (WIN32)
    target_link_libraries(elements PUBLIC Shcore artist)
+endif()
+
+# The Win32 Skia host renders through WGL + Ganesh GL (lib/host/windows/
+# base_view.cpp), which needs opengl32/gdi32 — previously pulled in transitively
+# via the now-removed sk_app.
+if (WIN32 AND ELEMENTS_SKIA)
+   target_link_libraries(elements PUBLIC opengl32 gdi32)
 endif()
 
 # The macOS Skia host renders through a CAMetalLayer (see lib/host/macos/

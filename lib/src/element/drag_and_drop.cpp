@@ -35,7 +35,7 @@ namespace cycfi::elements
       proxy_base::prepare_subject(ctx);
       std::string id = address_to_string(this);
       if (_mime_types.find(id) == _mime_types.end())
-         _mime_types.insert(id);
+         _mime_types.insert(std::move(id));
    }
 
    void drop_receiver::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)

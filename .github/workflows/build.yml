@@ -62,7 +62,8 @@ jobs:
         # arm64), so the job never gets picked up. Seed x64-osx locally from an
         # Intel Mac with R2 write creds instead. Revisit if a runner appears.
         - name: "Ubuntu GCC x64"
-          os: ubuntu-latest
+          # 22.04 (glibc 2.35) sets the prebuilt-bundle floor — see SkiaPrebuilt.
+          os: ubuntu-22.04
           triplet: x64-linux
           pkg_config_path: "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
         # --- arm64 ---
@@ -74,7 +75,8 @@ jobs:
           triplet: arm64-osx
           pkg_config_path: "/opt/homebrew/lib/pkgconfig"
         - name: "Ubuntu GCC arm64"
-          os: ubuntu-24.04-arm
+          # 22.04 (glibc 2.35) sets the prebuilt-bundle floor — see SkiaPrebuilt.
+          os: ubuntu-22.04-arm
           triplet: arm64-linux
           pkg_config_path: "/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
     steps:

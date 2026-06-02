@@ -484,6 +484,56 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   template <concepts::Element Subject>
+   class vmax_size_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              vmax_size_element(float size, Subject subject);
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    prepare_subject(context& ctx) override;
+
+      void                    vmax_size(float size) { _size = size; }
+      float                   vmax_size() const { return _size; }
+
+   private:
+
+      float                   _size;
+   };
+
+   template <concepts::Element Subject>
+   inline vmax_size_element<Subject>::vmax_size_element(float size, Subject subject)
+    : base_type(std::move(subject))
+    , _size(size)
+   {}
+
+   template <concepts::Element Subject>
+   inline vmax_size_element<remove_cvref_t<Subject>>
+   vmax_size(float size, Subject&& subject)
+   {
+      return {size, std::forward<Subject>(subject)};
+   }
+
+   template <concepts::Element Subject>
+   inline view_limits vmax_size_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      float size_y = _size;
+      clamp(size_y, e_limits.min.y, e_limits.max.y);
+      return {{e_limits.min.x, e_limits.min.y}, {size_y, e_limits.max.y}};
+   }
+
+   template <concepts::Element Subject>
+   inline void vmax_size_element<Subject>::prepare_subject(context& ctx)
+   {
+      if (ctx.bounds.height() > _size)
+         ctx.bounds.height(_size);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Stretch elements
    ////////////////////////////////////////////////////////////////////////////
    template <concepts::Element Subject>

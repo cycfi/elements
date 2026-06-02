@@ -246,7 +246,7 @@ Step 4: Then finally, we place it in the `align_center_middle` element.
 TIP: If the element hierarchy gets a bit too deep, use the {cpp} `auto` to name
 sub-parts of the element composition to make it easier to understand.
 
-The `layer` element is a composite element that holds zero or more `child'
+The `layer` element is a composite element that holds zero or more `child`
 elements. Some of you might have noticed that we already mentioned the
 `layer` element before when we were discussing the view’s content in the
 link:#app-and-window[App and Window] section: ``The content of the `view`
@@ -269,16 +269,16 @@ have dealt with in the previous sections.
 ____
 
 Take note that this example is only for illustrative purposes. The library
-provides easier ways to make sliders. Elements has a gallery a collection of
+provides easier ways to make sliders. Elements has a collection of pre-made,
 reusable element compositions, just like what we do here, but more refined.
-That gallery is constantly growing. Composing elements is fun!
+That collection is constantly growing. Composing elements is fun!
 
 ____
 
 The `slider` has two parts: the `track` and the `thumb`. Here, we make a
 simple track using the same old box. We made it black. Then, we reused the
-same ``Dogs are my favorite people'' label for the thumb. The result looks
-silly, I should say :blush:, but hey, we are trying to make a point!
+same "Dogs are my favorite people" label for the thumb. The result looks
+silly, I should say, but hey, we are trying to make a point!
 
 [source,cpp]
 ----

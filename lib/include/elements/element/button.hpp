@@ -30,25 +30,68 @@ namespace cycfi::elements
       };
    }
 
+   /**
+    *  \struct button_state
+    *
+    *  \brief
+    *    A struct for maintaining and managing the state of a button.
+    *
+    *    This structure captures the various states that a button can have:
+    *    - `value`: The button's value; 0(off) or 1(on).
+    *    - `hilite`: True if the button is highlighted.
+    *    - `tracking`: True if the mouse button being pressed.
+    *    - `enabled`: True if the button is enabled.
+    */
    struct button_state
    {
-                        button_state()
-                         : value{false}
-                         , hilite{false}
-                         , tracking{false}
-                         , enabled{true}
-                        {}
-
-      bool              value : 1;
-      bool              hilite : 1;
-      bool              tracking : 1;
-      bool              enabled : 1;
+      bool              value : 1      = false;
+      bool              hilite : 1     = false;
+      bool              tracking : 1   = false;
+      bool              enabled : 1    = true;
    };
 
-   class basic_button
-    : public proxy_base
-    , public receiver<bool>
-    , public sender<bool>
+   /**
+    *  \class basic_button
+    *
+    *  \brief
+    *    A class that represents a basic GUI button, acting as a proxy which
+    *    delegates the rendering to a "button styler".
+    *
+    *    The `basic_button` class is a foundational class for creating a GUI
+    *    button. This class is a proxy which delegates the rendering of the
+    *    actual button to a button styler subject. This division of
+    *    responsibilities allows for more flexibility in dictating the
+    *    button's appearance and interaction. The `basic_button` class
+    *    handles user interactions, while the button styler manages the
+    *    button's visual presentation. With this pattern, different stylers
+    *    can be implemented for various visual representations, for instance,
+    *    plain buttons, radio buttons, slide switches, checkboxes, and more.
+    *
+    *    The communication with the button styler is done via the
+    *    `receiver<button_state>` or a `receiver<int>` APIs. These APIs
+    *    provide a means for the `basic_button` to update the button styler
+    *    about changes in button's state to allow the styler to adjust the
+    *    visual representation accordingly.
+    *
+    *    If the button styler follows a `receiver<int>` API, it will receive
+    *    in integer with these possible values:
+    *
+    *       0: value=`false`, hilite=`false`
+    *       1: value=`false`, hilite=`true`
+    *       2: value=`true`,  hilite=`false`
+    *       3: value=`true`,  hilite=`true`
+    *
+    *    If the button styler follows a `receiver<button_state>` API, it will
+    *    receive a `button_state` when the button's state changes. This has a
+    *    richer API compared to the former, allowing more nuanced button
+    *    rendering. See `button_state`.
+    *
+    *    Take note that the button styler is just an element and does not
+    *    have to follow the `receiver` API. If that's the case, then the
+    *    button rendering will be static, and not adjust to state changes.
+    *    This may still be useful in certain cases.
+    */
+   class basic_button : public proxy_base, public receiver<bool>
    {
    public:
 
@@ -64,13 +107,11 @@ namespace cycfi::elements
       bool              is_enabled() const override;
 
       void              value(bool val) override;
-      bool              value() const override  { return _state.value; }
-      bool              tracking() const        { return _state.tracking; }
-      bool              hilite() const          { return _state.hilite; }
+      bool              value() const override;
+      bool              tracking() const;
+      bool              hilite() const;
 
-      void              send(bool val) override;
       void              edit(view& view_, bool val) override;
-      void              on_send(callback_function f) override;
 
       button_function   on_click;
 
@@ -87,21 +128,94 @@ namespace cycfi::elements
       button_state      _state;
    };
 
-   inline void basic_button::edit(view& view_, bool val)
+   namespace concepts
    {
-      send(val);
-      receiver<bool>::notify_edit(view_);
+      template <typename T>
+      concept MomentaryButton = std::is_base_of_v<basic_button, std::decay_t<T>>;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Toggle Button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base>
-   class basic_toggle_button : public Base
+   /**
+    * \brief
+    *    A function template to create a stylable momentary button.
+    *
+    *    The `momentary_button` function template creates a proxy object for
+    *    a momentary button from a given styler.
+    *
+    *    The function uses two template parameters: `Base` and `Styler`. The
+    *    `Base` should be a momentary button that adheres to `
+    *    MomentaryButton` concept with `basic_button` as the default type.
+    *    The `Styler` should follow the `Element` concept.
+    *
+    * \param styler
+    *    An rvalue reference to the styler that will be used to render the
+    *    button.
+    *
+    * \returns
+    *    A proxy object that wraps the passed styler with momentary button
+    *    functionality, allowing for custom button styling.
+    */
+   template <
+      concepts::MomentaryButton Base = basic_button
+    , concepts::Element Styler
+   >
+   inline proxy<remove_cvref_t<Styler>, Base>
+   momentary_button(Styler&& styler)
+   {
+      return {std::forward<Styler>(styler)};
+   }
+
+   /**
+    * \brief
+    *    Get the value of the button
+    *
+    * \returns
+    *    `true` = ON, `false` = OPF.
+    */
+   inline bool basic_button::value() const
+   {
+      return _state.value;
+   }
+
+   /**
+    * \brief
+    *    Get the tracking state of the button
+    *
+    * \returns
+    *    `true` if user interaction is currently in ongoing, `false` otherwise.
+    */
+   inline bool basic_button::tracking() const
+   {
+      return _state.tracking;
+   }
+
+   /**
+    * \brief
+    *    Get the hilite state of the button
+    *
+    * \returns
+    *    `true` if the cursor is hovering over button, `false` otherwise.
+    */
+   inline bool basic_button::hilite() const
+   {
+      return _state.hilite;
+   }
+
+   /**
+    * \class basic_toggle_button
+    *
+    * \brief
+    *    A derived class from `basic_button` that provides toggle
+    *    functionality.
+    *
+    *    The `basic_toggle_button` class is derived from the `basic_button`
+    *    class and adds a stateful toggle feature that switches between an
+    *    active (pressed) and inactive (unpressed) state.
+    */
+   class basic_toggle_button : public basic_button
    {
    public:
 
-      using Base::Base;
+      using basic_button::basic_button;
 
       bool              click(context const& ctx, mouse_button btn) override;
       void              drag(context const& ctx, mouse_button btn) override;
@@ -111,148 +225,175 @@ namespace cycfi::elements
       bool              _current_state;
    };
 
-   template <typename Base>
-   inline bool basic_toggle_button<Base>::click(context const& ctx, mouse_button btn)
+   namespace concepts
    {
-      if (!ctx.enabled || !this->is_enabled())
-         return false;
-
-      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
-      {
-         this->tracking(false);
-         ctx.view.refresh(ctx);
-         return false;
-      }
-
-      if (btn.down)
-      {
-         this->tracking(true);
-         if (this->state(!this->value()))    // toggle the state
-         {
-            ctx.view.refresh(ctx);           // we need to save the current state, the state
-            _current_state = this->value();  // can change in the drag function and so we'll
-         }                                   // need it later when the button is finally released
-      }
-      else
-      {
-         this->tracking(false);
-         this->state(_current_state);
-         if (this->on_click)
-            this->on_click(this->value());
-         ctx.view.refresh(ctx);
-      }
-      return true;
+      template <typename T>
+      concept ToggleButton = std::is_base_of_v<basic_toggle_button, std::decay_t<T>>;
    }
 
-   template <typename Base>
-   inline void basic_toggle_button<Base>::drag(context const& ctx, mouse_button btn)
+   /**
+    * \brief
+    *    A function template to create a stylable toggle button.
+    *
+    *    The `toggle_button` function template creates a proxy object for a
+    *    toggle button from a given styler.
+    *
+    *    The function uses two template parameters: `Base` and `Styler`. The
+    *    `Base` should be a toggle button that adheres to ` ToggleButton`
+    *    concept with `basic_toggle_button` as the default type. The `Styler`
+    *    should follow the `Element` concept.
+    *
+    * \param styler
+    *    An rvalue reference to the styler that will be used to render the
+    *    button.
+    *
+    * \returns
+    *    A proxy object that wraps the passed styler with toggle button
+    *    functionality, allowing for custom button styling.
+    */
+   template <
+      concepts::ToggleButton Base = basic_toggle_button
+    , concepts::Element Styler
+   >
+   inline proxy<remove_cvref_t<Styler>, Base>
+   toggle_button(Styler&& styler)
    {
-      this->hilite(ctx.bounds.includes(btn.pos));
-      if (this->state(!_current_state ^ ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx);
+      return {std::forward<Styler>(styler)};
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Latching Button
-   ////////////////////////////////////////////////////////////////////////////
-   template <typename Base>
-   class basic_latching_button : public Base
+   /**
+    *  \class basic_latching_button
+    *
+    *  \brief
+    *    An extension of the `basic_button` class providing latching button
+    *    functionality.
+    *
+    *    The `basic_latching_button` class is derived from the `basic_button`
+    *    class. It enhances the basic button by introducing a latching
+    *    feature. A latching button maintains its state after being clicked
+    *    and holds this state indefinitely, until it is reset
+    *    programmatically.
+    */
+   class basic_latching_button : public basic_button
    {
    public:
 
-      using Base::Base;
+      using basic_button::basic_button;
 
       bool              click(context const& ctx, mouse_button btn) override;
    };
 
-   template <typename Base>
-   inline bool basic_latching_button<Base>::click(context const& ctx, mouse_button btn)
+   namespace concepts
    {
-      if (btn.down && this->value())
-         return false;
-
-      if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
-      {
-         this->tracking(false);
-         ctx.view.refresh(ctx);
-         return false;
-      }
-
-      if (btn.down)
-      {
-         this->tracking(true);
-         this->on_tracking(ctx, this->begin_tracking);
-      }
-      else
-      {
-         this->tracking(false);
-         this->on_tracking(ctx, this->end_tracking);
-         if (this->on_click)
-            this->on_click(true);
-         ctx.view.refresh(ctx);
-      }
-      if (btn.down && this->state(ctx.bounds.includes(btn.pos)))
-         ctx.view.refresh(ctx);
-      return true;
+      template <typename T>
+      concept LatchingButton = std::is_base_of_v<basic_latching_button, std::decay_t<T>>;
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Basic Choice
-   ////////////////////////////////////////////////////////////////////////////
-   struct basic_choice_base : public selectable
+   /**
+    * \brief
+    *    A function template to create a stylable latching button.
+    *
+    *    The `latching_button` function template creates a proxy object for a
+    *    latching button from a given styler.
+    *
+    *    The function uses two template parameters: `Base` and `Styler`. The
+    *    `Base` should be a latching button that adheres to `LatchingButton`
+    *    concept with `basic_latching_button` as the default type. The
+    *    `Styler` should follow the `Element` concept.
+    *
+    * \param styler
+    *    An rvalue reference to the styler that will be used to render the
+    *    button.
+    *
+    * \returns
+    *    A proxy object that wraps the passed styler with latching button
+    *    functionality, allowing for custom button styling.
+    */
+   template <
+      concepts::LatchingButton Base = basic_latching_button
+    , concepts::Element Styler
+   >
+   inline proxy<remove_cvref_t<Styler>, Base>
+   latching_button(Styler&& styler)
    {
-      virtual sender<bool>&   get_sender() = 0;
-      void                    do_click(context const& ctx);
-   };
+      return {std::forward<Styler>(styler)};
+   }
 
-   template <typename Base>
-   class basic_choice : public basic_latching_button<Base>, public basic_choice_base
+   /**
+    *  \class basic_choice
+    *
+    *  \brief
+    *    A class that represents a selectable latching button, typically in a
+    *    group, where one button is active at a given time. An example is the
+    *    radio button.
+    *
+    *    The `basic_choice` class inherits from both the `selectable` and
+    *    `basic_latching_button` classes. The `basic_latching_button` class
+    *    provides the latching functionality, while the `selectable`
+    *    interface enables elements to be selected or unselected.
+    */
+   class basic_choice : public basic_latching_button, public selectable
    {
    public:
 
-      using basic_latching_button<Base>::basic_latching_button;
+      using basic_latching_button::basic_latching_button;
 
       void              select(bool state) override;
       bool              is_selected() const override;
       bool              click(context const& ctx, mouse_button btn) override;
-      sender<bool>&     get_sender() override { return *this; }
    };
 
-   template <typename Base>
-   inline bool basic_choice<Base>::is_selected() const
+   /**
+    *  \brief
+    *    Get the current selection state of the button.
+    *
+    *    This function uses the `value()` method to get the current selection
+    *    state of the button.
+    *
+    * \return
+    *    The current selection state of the button: `true` if the button is
+    *    selected, and `false` otherwise.
+    */
+   inline bool basic_choice::is_selected() const
    {
       return this->value();
    }
 
-   template <typename Base>
-   inline void basic_choice<Base>::select(bool state)
+   /**
+    *  \brief
+    *    Set the selection state of the button.
+    *
+    *    This function uses the `value()` member function to set the new
+    *    state of the button.
+    *
+    * \param
+    *    state The desired selection state: `true` if the button should be
+    *    selected, and `false` otherwise.
+    */
+   inline void basic_choice::select(bool state)
    {
       if (state != is_selected())
          this->value(state);
    }
 
-   template <typename Base>
-   bool basic_choice<Base>::click(context const& ctx, mouse_button btn)
-   {
-      if (btn.state == mouse_button::left)
-      {
-         if (btn.down)
-         {
-            return basic_latching_button<Base>::click(ctx, btn);
-         }
-         else
-         {
-            auto r = basic_latching_button<Base>::click(ctx, btn);
-            if (this->value())
-               this->do_click(ctx);
-            return r;
-         }
-      }
-      return false;
-   }
-
+   /**
+    *  \brief
+    *    Function template to create a selectable latching button like a
+    *    radio button.
+    *
+    *    The `choice` function creates a proxy object for a selectable
+    *    latching button (like a radio button) from a given subject.
+    *
+    * \param subject
+    *    An rvalue reference to the subject that will be used as the subject
+    *    for the selectable button.
+    *
+    * \return
+    *    A proxy object that wraps the passed subject with selectable button
+    *    functionality.
+    */
    template <concepts::Element Subject>
-   inline basic_choice<proxy<Subject, basic_button>>
+   inline proxy<Subject, basic_choice>
    choice(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};

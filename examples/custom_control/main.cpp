@@ -197,7 +197,7 @@ public:
 private:
 
    constexpr static float default_value = my_custom_control::default_value;
-   using dial_ptr = std::shared_ptr<dial_base>;
+   using dial_ptr = std::shared_ptr<basic_dial>;
    using label_ptr = decltype(share(label("")));
 
    auto              make_control();

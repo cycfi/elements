@@ -142,7 +142,7 @@ namespace cycfi::elements
    // Additional declarations
    ////////////////////////////////////////////////////////////////////////////
 
-   // Type alisases
+   // Type aliases
    using element_ptr = std::shared_ptr<element>;
    using element_const_ptr = std::shared_ptr<element const>;
    using weak_element_ptr = std::weak_ptr<element>;
@@ -155,10 +155,9 @@ namespace cycfi::elements
 
    inline element empty();
 
-   ////////////////////////////////////////////////////////////////////////////
+   //--------------------------------------------------------------------------
    // Inlines
-   ////////////////////////////////////////////////////////////////////////////
-   namespace inlines {}
+   //--------------------------------------------------------------------------
 
    /**
     * \brief
@@ -184,11 +183,12 @@ namespace cycfi::elements
    }
 
    /**
-    * \brief Constructs an empty `element` instance.
+    * \brief
+    *    Constructs an empty `element` instance.
     *
-    * This function is used to create an instance of an `element` that is
-    * effectively empty. This can be useful for creating placeholder or
-    * default elements within a UI.
+    *    This function is used to create an instance of an `element` that is
+    *    effectively empty. This can be useful for creating placeholder or
+    *    default elements within a UI.
     *
     * \return
     *    An instance of an `element` that has no associated properties or

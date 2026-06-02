@@ -7,7 +7,7 @@
 
 ![alt Elements Sampler](https://cycfi.github.io/assets/img/elements/photon_sampler.jpg)
 
-Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++17 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C++, and therefore, there is no need for an external visual GUI editor or code generator.
+Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++20 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C++, and therefore, there is no need for an external visual GUI editor or code generator.
 
 Elements is embeddable, meaning you can embed it in any application, and it will play well with other GUI libraries and frameworks. This also implies that you can utilize it for the creation of plugins. It does not own the event loop and is able to co-exist with components within a plugin host, such as [VST](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) and [AU](https://en.wikipedia.org/wiki/Audio_Units). Porting to a new host target is straightforward, requiring the porting of only a few files.
 

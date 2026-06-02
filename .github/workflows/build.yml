@@ -57,19 +57,18 @@ jobs:
           os: windows-latest
           triplet: x64-windows
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        - name: "macOS Clang x64"
-          os: macos-13
-          triplet: x64-osx
-          pkg_config_path: "/usr/local/lib/pkgconfig"
+        # NOTE: macOS Intel (macos-13 / x64-osx) is deferred — GitHub is
+        # retiring Intel macOS runners (all current hosted macOS runners are
+        # arm64), so the job never gets picked up. Seed x64-osx locally from an
+        # Intel Mac with R2 write creds instead. Revisit if a runner appears.
         - name: "Ubuntu GCC x64"
           os: ubuntu-latest
           triplet: x64-linux
           pkg_config_path: "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
         # --- arm64 ---
-        - name: "Windows MSVC arm64"
-          os: windows-11-arm
-          triplet: arm64-windows
-          environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvarsarm64.bat"
+        # NOTE: windows-11-arm / arm64-windows is deferred — the VS ARM64
+        # toolchain on that runner needs a vswhere-based vcvars lookup (the
+        # hardcoded Enterprise path fails: CMAKE_C_COMPILER not set). Revisit.
         - name: "macOS Clang arm64"
           os: macos-latest
           triplet: arm64-osx

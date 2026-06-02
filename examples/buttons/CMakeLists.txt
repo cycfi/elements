@@ -25,8 +25,8 @@ set(ELEMENTS_APP_VERSION "1.0")
 set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 set(ELEMENTS_APP_RESOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/power_180x632.png
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/phase_180x632.png
-   ${CMAKE_CURRENT_SOURCE_DIR}/resources/mail_180x632.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/phase_180x790.png
+   ${CMAKE_CURRENT_SOURCE_DIR}/resources/mail_180x790.png
    ${CMAKE_CURRENT_SOURCE_DIR}/resources/transpo_180x632.png
 )
 

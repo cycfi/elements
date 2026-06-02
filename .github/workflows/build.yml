@@ -52,13 +52,32 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: "Windows MSVC"
+        # --- x86-64 ---
+        - name: "Windows MSVC x64"
           os: windows-latest
+          triplet: x64-windows
           environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        - name: "macOS Clang"
-          os: macos-latest
-        - name: "Ubuntu GCC"
+        - name: "macOS Clang x64"
+          os: macos-13
+          triplet: x64-osx
+          pkg_config_path: "/usr/local/lib/pkgconfig"
+        - name: "Ubuntu GCC x64"
           os: ubuntu-latest
+          triplet: x64-linux
+          pkg_config_path: "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
+        # --- arm64 ---
+        - name: "Windows MSVC arm64"
+          os: windows-11-arm
+          triplet: arm64-windows
+          environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvarsarm64.bat"
+        - name: "macOS Clang arm64"
+          os: macos-latest
+          triplet: arm64-osx
+          pkg_config_path: "/opt/homebrew/lib/pkgconfig"
+        - name: "Ubuntu GCC arm64"
+          os: ubuntu-24.04-arm
+          triplet: arm64-linux
+          pkg_config_path: "/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -86,12 +105,11 @@ jobs:
           autoconf \
           autoconf-archive \
           automake \
-          libtool \
-          mono-complete
+          libtool
 
     - name: Install dependencies (macOS)
       if: runner.os == 'macOS'
-      run: brew install fontconfig freetype harfbuzz ninja mono
+      run: brew install fontconfig freetype harfbuzz ninja
 
     - name: Install dependencies (Windows)
       if: runner.os == 'Windows'
@@ -106,30 +124,6 @@ jobs:
       if: runner.os == 'Windows'
       run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
       shell: cmd
-
-    - name: Setup vcpkg NuGet cache (Unix)
-      if: runner.os != 'Windows'
-      shell: bash
-      env:
-        TOKEN: ${{ secrets.VCPKG_NUGET_TOKEN }}
-      run: |
-        NUGET="$(lib/artist/lib/external/vcpkg/vcpkg fetch nuget | tail -n1)"
-        mono "$NUGET" sources add \
-          -Source "https://nuget.pkg.github.com/cycfi/index.json" \
-          -Name GitHubPackages -Username cycfi -Password "$TOKEN" \
-          -StorePasswordInClearText
-        mono "$NUGET" setapikey "$TOKEN" \
-          -Source "https://nuget.pkg.github.com/cycfi/index.json"
-
-    - name: Setup vcpkg NuGet cache (Windows)
-      if: runner.os == 'Windows'
-      shell: cmd
-      env:
-        TOKEN: ${{ secrets.VCPKG_NUGET_TOKEN }}
-      run: |
-        for /f "delims=" %%i in ('lib\artist\lib\external\vcpkg\vcpkg fetch nuget') do set NUGET=%%i
-        "%NUGET%" sources add -Source "https://nuget.pkg.github.com/cycfi/index.json" -Name GitHubPackages -Username cycfi -Password "%TOKEN%" -StorePasswordInClearText
-        "%NUGET%" setapikey "%TOKEN%" -Source "https://nuget.pkg.github.com/cycfi/index.json"
 
     - name: Configure
       shell: cmake -P {0}
@@ -149,25 +143,20 @@ jobs:
 
         set(vcpkg_toolchain
           "$ENV{GITHUB_WORKSPACE}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake")
+        # Triplet is pinned per matrix entry (the runner arch must match, or
+        # vcpkg picks a default that mislinks).
         set(extra_args
           -DELEMENTS_SKIA=ON
           -DCMAKE_TOOLCHAIN_FILE=${vcpkg_toolchain}
-          -DVCPKG_MANIFEST_DIR=$ENV{GITHUB_WORKSPACE}/lib/artist)
+          -DVCPKG_MANIFEST_DIR=$ENV{GITHUB_WORKSPACE}/lib/artist
+          -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }})
 
-        if ("${{ runner.os }}" STREQUAL "macOS")
-          # macos-latest is arm64; pin the triplet or vcpkg targets x64-osx.
-          # Expose Homebrew's pkg-config dir (vcpkg sanitizes the environment) so
-          # the host-side fontconfig/freetype2 and Artist's harfbuzz resolve.
-          set(ENV{PKG_CONFIG_PATH} "/opt/homebrew/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+        if (NOT "${{ runner.os }}" STREQUAL "Windows")
+          # vcpkg sanitizes the environment; pass the platform pkg-config dir
+          # through so GTK / OpenGL / fontconfig / freetype / harfbuzz resolve
+          # (Homebrew on macOS, system multiarch dir on Linux).
+          set(ENV{PKG_CONFIG_PATH} "${{ matrix.config.pkg_config_path }}:$ENV{PKG_CONFIG_PATH}")
           list(APPEND extra_args
-            -DVCPKG_TARGET_TRIPLET=arm64-osx
-            -DVCPKG_ENV_PASSTHROUGH_UNTRACKED=PKG_CONFIG_PATH)
-        elseif ("${{ runner.os }}" STREQUAL "Linux")
-          # vcpkg sanitizes the environment; pass system pkg-config through so
-          # GTK / OpenGL / fontconfig / system harfbuzz are found.
-          set(ENV{PKG_CONFIG_PATH} "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig")
-          list(APPEND extra_args
-            -DVCPKG_TARGET_TRIPLET=x64-linux
             -DVCPKG_ENV_PASSTHROUGH_UNTRACKED=PKG_CONFIG_PATH)
         endif()
 
@@ -215,17 +204,8 @@ jobs:
       inputs.job == 'all' ||
       inputs.job == 'cairo'
     runs-on: ${{ matrix.config.os }}
-    permissions:
-      packages: write
-      contents: read
-    env:
-      # See build-skia for the binary-cache rationale. Cairo only uses vcpkg on
-      # Windows, so the NuGet setup step below is Windows-only.
-      VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
-      AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
-      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: auto
+    # No binary cache: cairo + deps build fast from source on Windows, so they
+    # are deliberately left out of the R2/vcpkg binary cache (Skia-only).
     strategy:
       fail-fast: false
       matrix:
@@ -269,16 +249,6 @@ jobs:
       if: runner.os == 'Windows'
       run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
       shell: cmd
-
-    - name: Setup vcpkg NuGet cache (Windows)
-      if: runner.os == 'Windows'
-      shell: cmd
-      env:
-        TOKEN: ${{ secrets.VCPKG_NUGET_TOKEN }}
-      run: |
-        for /f "delims=" %%i in ('lib\artist\lib\external\vcpkg\vcpkg fetch nuget') do set NUGET=%%i
-        "%NUGET%" sources add -Source "https://nuget.pkg.github.com/cycfi/index.json" -Name GitHubPackages -Username cycfi -Password "%TOKEN%" -StorePasswordInClearText
-        "%NUGET%" setapikey "%TOKEN%" -Source "https://nuget.pkg.github.com/cycfi/index.json"
 
     - name: Configure
       shell: cmake -P {0}

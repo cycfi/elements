@@ -33,3 +33,8 @@ xcuserdata/
 /CMakeSettings.json
 /docs/antora/node_modules/
 /docs/antora/build/
+
+# AI/dev working notes moved to the private cycfi_ai_dev repo:
+#   https://github.com/cycfi/cycfi_ai_dev  (elements/ subdir)
+#   local clone: ~/dev/cycfi/cycfi_ai_dev/elements
+ai/

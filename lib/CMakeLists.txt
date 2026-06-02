@@ -14,7 +14,16 @@ include(FetchContent)
 set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
 set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
 
-if (ELEMENTS_QUARTZ_2D)
+if (ELEMENTS_CAIRO)
+   if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/artist/lib/impl/cairo/canvas.cpp")
+      message(FATAL_ERROR
+         "ELEMENTS_CAIRO=ON requires a Cairo-capable Artist checkout. "
+         "Update lib/artist to artist_2026_dev (or newer).")
+   endif()
+   set(ARTIST_CAIRO ON CACHE BOOL "Artist graphics backend option")
+   set(ARTIST_SKIA OFF CACHE BOOL "Artist graphics backend option")
+   set(ARTIST_QUARTZ_2D OFF CACHE BOOL "Artist graphics backend option")
+elseif (ELEMENTS_QUARTZ_2D)
    set(ARTIST_QUARTZ_2D ON CACHE BOOL "Artist graphics backend option")
 elseif (ELEMENTS_SKIA)
    set(ARTIST_SKIA ON CACHE BOOL "Artist graphics backend option")
@@ -331,6 +340,12 @@ endif()
 # Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
 if (WIN32)
    target_link_libraries(elements PUBLIC Shcore artist)
+endif()
+
+# The macOS Skia host renders through a CAMetalLayer (see lib/host/macos/
+# base_view.mm), which needs QuartzCore for CAMetalLayer / kCAGravityTopLeft.
+if (APPLE AND ELEMENTS_SKIA)
+   target_link_libraries(elements PUBLIC "-framework QuartzCore")
 endif()
 
 add_library(cycfi::elements ALIAS elements)

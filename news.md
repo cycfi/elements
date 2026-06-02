@@ -1,5 +1,12 @@
 # News
 
+**2026:**
+Following up on the March 2024 plan, the `artist_2026` branch delivers the completed Cairo backend port into the [Artist 2026](https://github.com/cycfi/artist/tree/artist_2026_dev) library. This is a major milestone: Cairo is now a first-class Artist backend alongside Skia and Quartz2D, with full feature parity and good performance across Linux, Windows, and macOS.
+
+The new backend adds HarfBuzz text shaping for correct Unicode and OpenType layout, proper HiDPI/Retina support, and correct shadow rendering via a software Gaussian blur. On macOS, the Cairo-Quartz surface and CG font paths are used for hardware-accelerated rendering. Shadow rendering now uses a per-context bitmap cache so unchanged shadows are composited directly without re-running the blur — cutting shadow cost from ~80% of frame time to near zero.
+
+The unification of backends is now well within reach.
+
 **March 28, 2024:**
 I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated (more on that below). The APIs of elements with Skia and Cairo-based backends are essentially in sync right now. There are some necessary API changes, but I made sure, as best as I could, to apply deprecation warnings so as not to cause too much disruption when upgrading to the latest code.
 

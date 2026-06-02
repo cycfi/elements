@@ -91,7 +91,7 @@
    * @param term
    * @return {{start: number, length: number}}
    */
-  function findTermPosition (lunr, term, text) {
+  function findTermPosition (term, text) {
     const str = text.toLowerCase();
     const index = str.indexOf(term);
 
@@ -137,7 +137,7 @@
     if (sectionTitle) {
       const text = sectionTitle.title ?? sectionTitle.text;
       const positions = getTermPosition(text, terms);
-      return buildHighlightedText(text, positions, snippetLength)
+      return buildHighlightedText(text, positions)
     }
     return []
   }
@@ -146,19 +146,19 @@
     const keyword = doc.keyword;
     if (keyword) {
       const positions = getTermPosition(keyword, terms);
-      return buildHighlightedText(keyword, positions, snippetLength)
+      return buildHighlightedText(keyword, positions)
     }
     return []
   }
 
-  function highlightText (text, terms) {
+  function highlightText (text, terms, title) {
     const positions = getTermPosition(text, terms);
-    return buildHighlightedText(text, positions, snippetLength)
+    return buildHighlightedText(text, positions, title ? undefined : snippetLength)
   }
 
   function getTermPosition (text, terms) {
     const positions = terms
-      .map((term) => findTermPosition(globalThis.lunr, term, text))
+      .map((term) => findTermPosition(term, text))
       .filter((position) => position.length > 0)
       .sort((p1, p2) => p1.start - p2.start);
 
@@ -177,7 +177,7 @@
       }
     }
     return {
-      pageTitleNodes: highlightText(doc.title, terms.title || []),
+      pageTitleNodes: highlightText(doc.title, terms.title || [], true),
       sectionTitleNodes: highlightSectionTitle(sectionTitle, terms.title || []),
       pageContentNodes: highlightText(
         sectionTitle?.title && sectionTitle.text ? sectionTitle.text : doc.text,
@@ -212,11 +212,11 @@
         searchResultDataset.appendChild(searchResultComponentHeader);
         currentComponent = componentVersion;
       }
-      searchResultDataset.appendChild(createSearchResultItem(doc, sectionTitle, item, highlightingResult));
+      searchResultDataset.appendChild(createSearchResultItem(doc, sectionTitle, highlightingResult));
     });
   }
 
-  function createSearchResultItem (doc, sectionTitle, item, highlightingResult) {
+  function createSearchResultItem (doc, sectionTitle, highlightingResult) {
     const documentTitle = document.createElement('div');
     documentTitle.classList.add('search-result-document-title');
     highlightingResult.pageTitleNodes.forEach(function (node) {
@@ -239,12 +239,12 @@
       const documentSectionTitle = document.createElement('div');
       documentSectionTitle.classList.add('search-result-section-title');
       documentHitLink.appendChild(documentSectionTitle);
-      highlightingResult.sectionTitleNodes.forEach((node) => createHighlightedText(node, documentSectionTitle));
+      highlightingResult.sectionTitleNodes.forEach(createHighlightedText.bind(null, documentSectionTitle));
     }
-    highlightingResult.pageContentNodes.forEach((node) => createHighlightedText(node, documentHitLink));
+    highlightingResult.pageContentNodes.forEach(createHighlightedText.bind(null, documentHitLink));
 
     // only show keyword when we got a hit on them
-    if (doc.keyword && highlightingResult.pageKeywordNodes.length > 1) {
+    if (doc.keyword && highlightingResult.pageKeywordNodes.length) {
       const documentKeywords = document.createElement('div');
       documentKeywords.classList.add('search-result-keywords');
       const documentKeywordsFieldLabel = document.createElement('span');
@@ -252,7 +252,7 @@
       documentKeywordsFieldLabel.innerText = 'keywords: ';
       const documentKeywordsList = document.createElement('span');
       documentKeywordsList.classList.add('search-result-keywords-list');
-      highlightingResult.pageKeywordNodes.forEach((node) => createHighlightedText(node, documentKeywordsList));
+      highlightingResult.pageKeywordNodes.forEach(createHighlightedText.bind(null, documentKeywordsList));
       documentKeywords.appendChild(documentKeywordsFieldLabel);
       documentKeywords.appendChild(documentKeywordsList);
       documentHitLink.appendChild(documentKeywords);
@@ -269,12 +269,12 @@
 
   /**
    * Creates an element from a highlightingResultNode and add it to the targetNode.
+   * @param {Node} targetNode
    * @param {Object} highlightingResultNode
    * @param {String} highlightingResultNode.type - type of the node
    * @param {String} highlightingResultNode.text
-   * @param {Node} targetNode
    */
-  function createHighlightedText (highlightingResultNode, targetNode) {
+  function createHighlightedText (targetNode, highlightingResultNode) {
     let element;
     if (highlightingResultNode.type === 'text') {
       element = document.createTextNode(highlightingResultNode.text);
@@ -430,11 +430,9 @@
     }
   }
 
-  function toggleFilter (e, index) {
+  function toggleFilter (_e, index) {
     searchInput.focus();
-    if (!isClosed()) {
-      executeSearch(index);
-    }
+    if (!isClosed()) executeSearch(index);
   }
 
   function initSearch (lunr, data) {

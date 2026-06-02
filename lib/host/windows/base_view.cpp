@@ -37,24 +37,48 @@
 
 #include <SDKDDKVer.h>
 #include <windows.h>
-#include <gl/gl.h>
 
 #include <ShellScalingAPI.h>
 #include <Windowsx.h>
 #include <chrono>
 #include <map>
 
-#if defined ELEMENTS_PRINT_FPS
-# include <iostream>
-#endif
+#if defined(ARTIST_SKIA)
+# include <gl/gl.h>
 
-#include <gl/GrGLInterface.h>
-#include <SkImage.h>
-#include <SkSurface.h>
-#include <SkCanvas.h>
-#include <tools/sk_app/DisplayParams.h>
-#include <tools/sk_app/WindowContext.h>
-#include <tools/sk_app/win/WindowContextFactory_win.h>
+// Windows' <GL/gl.h> is frozen at OpenGL 1.1, so tokens introduced in later
+// versions are absent. Define the few we need (constant args to glGetIntegerv /
+// Skia's GrGLFramebufferInfo) rather than pull in <GL/glext.h>.
+# ifndef GL_RGBA8
+#  define GL_RGBA8 0x8058
+# endif
+# ifndef GL_FRAMEBUFFER_BINDING
+#  define GL_FRAMEBUFFER_BINDING 0x8CA6
+# endif
+
+# include <SkImage.h>
+# include <SkColorSpace.h>
+# include <SkSurface.h>
+# include <SkCanvas.h>
+# include <ganesh/GrDirectContext.h>
+# include <ganesh/GrBackendSurface.h>
+# include <ganesh/SkSurfaceGanesh.h>
+# include <ganesh/gl/GrGLInterface.h>
+# include <ganesh/gl/GrGLDirectContext.h>
+# include <ganesh/gl/GrGLBackendSurface.h>
+# include <ganesh/gl/GrGLTypes.h>
+
+// WGL ARB context-creation bits (avoid depending on <GL/wglext.h>).
+# define WGL_CONTEXT_MAJOR_VERSION_ARB    0x2091
+# define WGL_CONTEXT_MINOR_VERSION_ARB    0x2092
+# define WGL_CONTEXT_PROFILE_MASK_ARB     0x9126
+# define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
+using PFNWGLCREATECONTEXTATTRIBSARBPROC =
+   HGLRC (WINAPI*)(HDC, HGLRC, const int*);
+#elif defined(ARTIST_CAIRO)
+# include <cairo.h>
+# include <cairo-win32.h>
+#endif
 
 #include "utils.hpp"
 
@@ -124,7 +148,6 @@ namespace cycfi::elements
       {
          using time_point = std::chrono::time_point<std::chrono::steady_clock>;
          using key_map = std::map<key_code, key_action>;
-         using skia_context = std::unique_ptr<sk_app::WindowContext>;
 
          base_view*     _vptr = nullptr;
          bool           _is_dragging = false;
@@ -136,7 +159,16 @@ namespace cycfi::elements
          double         _velocity = 0;
          point          _scroll_dir;
          key_map        _keys = {};
-         skia_context   _skia_context;
+
+#if defined(ARTIST_SKIA)
+         HDC                        _gl_dc = nullptr;   // device context for GL
+         HGLRC                      _gl_rc = nullptr;   // WGL OpenGL context
+         sk_sp<const GrGLInterface> _xface;             // Skia GL interface
+         sk_sp<GrDirectContext>     _ctx;               // Skia GL context
+         sk_sp<SkSurface>           _surface;           // Skia surface
+         int                        _surface_w = 0;
+         int                        _surface_h = 0;
+#endif
       };
 
       view_info* get_view_info(HWND hwnd)
@@ -145,54 +177,132 @@ namespace cycfi::elements
          return reinterpret_cast<view_info*>(param);
       }
 
+#if defined(ARTIST_SKIA)
+      // Create a WGL OpenGL context on the window's DC: a double-buffered RGBA
+      // pixel format, a legacy context, then an upgrade to a core-profile 3.3
+      // context via wglCreateContextAttribsARB when available. Mirrors
+      // lib/artist/examples/host/windows/skia_app.cpp.
+      void make_gl_context(HWND hwnd, view_info* info)
+      {
+         auto error = [](char const* msg){ throw std::runtime_error(msg); };
+
+         info->_gl_dc = GetDC(hwnd);
+         if (!info->_gl_dc)
+            error("Error: GetDC failed.");
+
+         PIXELFORMATDESCRIPTOR pfd = {};
+         pfd.nSize = sizeof(pfd);
+         pfd.nVersion = 1;
+         pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+         pfd.iPixelType = PFD_TYPE_RGBA;
+         pfd.cColorBits = 32;
+         pfd.cAlphaBits = 8;
+         pfd.cDepthBits = 24;
+         pfd.cStencilBits = 8;
+         pfd.iLayerType = PFD_MAIN_PLANE;
+
+         int pf = ChoosePixelFormat(info->_gl_dc, &pfd);
+         if (pf == 0 || !SetPixelFormat(info->_gl_dc, pf, &pfd))
+            error("Error: SetPixelFormat failed.");
+
+         HGLRC legacy = wglCreateContext(info->_gl_dc);
+         if (!legacy)
+            error("Error: wglCreateContext failed.");
+         wglMakeCurrent(info->_gl_dc, legacy);
+
+         auto wglCreateContextAttribsARB =
+            reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(
+               wglGetProcAddress("wglCreateContextAttribsARB"));
+
+         if (wglCreateContextAttribsARB)
+         {
+            const int attribs[] =
+            {
+               WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+               WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+               WGL_CONTEXT_PROFILE_MASK_ARB,  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+               0
+            };
+            if (HGLRC core = wglCreateContextAttribsARB(info->_gl_dc, nullptr, attribs))
+            {
+               wglMakeCurrent(info->_gl_dc, core);
+               wglDeleteContext(legacy);
+               info->_gl_rc = core;
+            }
+         }
+         if (!info->_gl_rc)
+            info->_gl_rc = legacy;   // fall back to the legacy context
+
+         if (info->_xface = GrGLMakeNativeInterface(); info->_xface == nullptr)
+            error("Error: GrGLMakeNativeInterface failed.");
+         if (info->_ctx = GrDirectContexts::MakeGL(info->_xface); info->_ctx == nullptr)
+            error("Error: GrDirectContexts::MakeGL failed.");
+      }
+#endif // ARTIST_SKIA
+
       LRESULT on_paint(HWND hwnd, view_info* info)
       {
          if (base_view* view = info->_vptr)
          {
-            RECT dirty;
-            GetUpdateRect(hwnd, &dirty, false);
-
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
             SetBkMode(hdc, TRANSPARENT);
 
-#if defined ELEMENTS_PRINT_FPS
-            auto start = std::chrono::high_resolution_clock::now();
-#endif
+            auto scale = get_scale_for_window(hwnd);
 
-            RECT r;
-            GetWindowRect(hwnd, &r);
-            auto win_width = r.right-r.left;
-            auto win_height = r.bottom-r.top;
-            auto const& _skia_context = info->_skia_context;
+#if defined(ARTIST_SKIA)
+            RECT cr;
+            GetClientRect(hwnd, &cr);
+            // GetClientRect already returns physical pixels (the process is
+            // per-monitor DPI aware), which is exactly the GL framebuffer size.
+            // Do NOT multiply by scale here (that double-counts DPI and makes
+            // the surface taller than the framebuffer, clipping the top under
+            // kBottomLeft). The canvas->scale(scale) below maps the view's
+            // logical coordinates onto these physical pixels.
+            int w = int(cr.right - cr.left);
+            int h = int(cr.bottom - cr.top);
 
-            if (_skia_context->width() != win_width || _skia_context->height() != win_height)
-               _skia_context->resize(win_width, win_height);
+            wglMakeCurrent(info->_gl_dc, info->_gl_rc);
 
-            auto surface = _skia_context->getBackbufferSurface();
-            if (surface)
+            if (info->_surface_w != w || info->_surface_h != h)
             {
-               auto draw =
-                  [&](auto& cnv_)
-                  {
-                     auto scale = get_scale_for_window(hwnd);
-                     cnv_->scale(scale, scale);
-                     auto cnv = canvas{cnv_};
-                     view->draw(cnv);
-                  };
-
-               SkCanvas* gpu_canvas = surface->getCanvas();
-               gpu_canvas->save();
-               draw(gpu_canvas);
-               gpu_canvas->restore();
-               surface->flush();
-               _skia_context->swapBuffers();
+               info->_surface.reset();
+               info->_surface_w = w;
+               info->_surface_h = h;
             }
-
-#if defined ELEMENTS_PRINT_FPS
-            auto stop = std::chrono::high_resolution_clock::now();
-            auto elapsed = std::chrono::duration<double>{stop - start}.count();
-            std::cout << (1.0/elapsed) << " fps" << std::endl;
+            if (!info->_surface && w > 0 && h > 0)
+            {
+               GrGLint buffer = 0;
+               glGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
+               GrGLFramebufferInfo fb;
+               fb.fFBOID = (GrGLuint) buffer;
+               fb.fFormat = GL_RGBA8;
+               auto target = GrBackendRenderTargets::MakeGL(w, h, 0, 8, fb);
+               info->_surface = SkSurfaces::WrapBackendRenderTarget(
+                  info->_ctx.get(), target, kBottomLeft_GrSurfaceOrigin,
+                  kRGBA_8888_SkColorType, nullptr, nullptr);
+            }
+            if (info->_surface)
+            {
+               SkCanvas* gpu_canvas = info->_surface->getCanvas();
+               gpu_canvas->save();
+               gpu_canvas->scale(scale, scale);
+               auto cnv = canvas{gpu_canvas};
+               view->draw(cnv);
+               gpu_canvas->restore();
+               info->_ctx->flushAndSubmit(info->_surface.get());
+               SwapBuffers(info->_gl_dc);
+            }
+#elif defined(ARTIST_CAIRO)
+            cairo_surface_t* surface = cairo_win32_surface_create(hdc);
+            cairo_t* context = cairo_create(surface);
+            cairo_scale(context, scale, scale);
+            {
+               auto cnv = canvas{context};
+               view->draw(cnv);
+            }
+            cairo_destroy(context);
+            cairo_surface_destroy(surface);
 #endif
             EndPaint(hwnd, &ps);
          }
@@ -583,12 +693,9 @@ namespace cycfi::elements
          view_info* info = new view_info{_this};
          SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
-         info->_skia_context = sk_app::window_context_factory::MakeGLForWin(hwnd, sk_app::DisplayParams());
-         if (info->_skia_context == nullptr)
-         {
-            // $$$ TODO $$$ Log a warning that a Skia GPU context is not available and we are switching to a raster context.
-            info->_skia_context = sk_app::window_context_factory::MakeRasterForWin(hwnd, sk_app::DisplayParams());
-         }
+#if defined(ARTIST_SKIA)
+         make_gl_context(hwnd, info);
+#endif
 
          // Create 1ms timer
          SetTimer(hwnd, IDT_TIMER1, 1, (TIMERPROC) nullptr);
@@ -623,6 +730,19 @@ namespace cycfi::elements
       auto info = get_view_info(_view);
       KillTimer(_view, IDT_TIMER1);
       RevokeDragDrop(_view);
+#if defined(ARTIST_SKIA)
+      if (info)
+      {
+         info->_surface.reset();
+         info->_ctx.reset();
+         info->_xface.reset();
+         wglMakeCurrent(nullptr, nullptr);
+         if (info->_gl_rc)
+            wglDeleteContext(info->_gl_rc);
+         if (info->_gl_dc)
+            ReleaseDC(_view, info->_gl_dc);
+      }
+#endif
       delete info;
       DeleteObject(_view);
    }
@@ -640,8 +760,17 @@ namespace cycfi::elements
    {
       float scale = get_scale_for_window(_view);
       RECT r;
-      GetWindowRect(_view, &r);
-      return {float(r.right-r.left) / scale, float(r.bottom-r.top) / scale};
+      // Client area, not GetWindowRect: the view is laid out to fill the same
+      // area the GL/Cairo surface covers (the window's client area). Using the
+      // window rect (caption + borders) made the layout taller than the
+      // framebuffer, shifting all drawing up by the caption height.
+      GetClientRect(_view, &r);
+      // Truncate to whole logical pixels. At fractional DPI scales (e.g. 1.25)
+      // physical/scale is fractional (1106/1.25 = 884.8); offscreen images
+      // store an integer-sized bitmap, so a fractional view size never equals
+      // image::size() and code like rain's `offscreen->size() != size` re-inits
+      // every frame. Integer logical sizes round-trip through the bitmap.
+      return {float(int((r.right-r.left) / scale)), float(int((r.bottom-r.top) / scale))};
    }
 
    void base_view::size(elements::extent p)

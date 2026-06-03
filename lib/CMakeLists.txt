@@ -160,6 +160,13 @@ elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
       host/gtk3/key.cpp
       host/gtk3/window.cpp
    )
+elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
+   set(ELEMENTS_HOST
+      host/x11/app.cpp
+      host/x11/base_view.cpp
+      host/x11/key.cpp
+      host/x11/window.cpp
+   )
 elseif (WIN32)
    set(ELEMENTS_HOST
       host/windows/utils.hpp
@@ -260,6 +267,22 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
 endif()
 
 ###############################################################################
+# X11 (native host, no GTK)
+
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
+   pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
+   target_link_libraries(elements PRIVATE PkgConfig::X11)
+   if (ELEMENTS_CAIRO)
+      pkg_check_modules(CAIRO_XLIB REQUIRED IMPORTED_TARGET cairo-xlib)
+      target_link_libraries(elements PRIVATE PkgConfig::CAIRO_XLIB)
+   else()
+      find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+      pkg_check_modules(EGL REQUIRED IMPORTED_TARGET egl)
+      target_link_libraries(elements PRIVATE PkgConfig::EGL OpenGL::GL)
+   endif()
+endif()
+
+###############################################################################
 # Asio headers
 
 FetchContent_Declare(
@@ -303,6 +326,11 @@ endif()
 
 if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
     target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_GTK)
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
+    if(APPLE OR WIN32)
+        message(FATAL_ERROR "ELEMENTS_HOST_UI_LIBRARY=x11 is Linux/Unix only")
+    endif()
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_X11)
 elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "cocoa")
     if(NOT APPLE)
         message(FATAL_ERROR "Only macOS supports ELEMENTS_HOST_UI_LIBRARY=cocoa")
@@ -322,7 +350,7 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         target_compile_definitions(elements PRIVATE _WIN32_WINNT=0x0A00)
     endif()
 else()
-    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, cocoa or win32.")
+    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, x11, cocoa or win32.")
 endif()
 
 ###############################################################################

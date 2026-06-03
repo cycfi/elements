@@ -12,6 +12,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xresource.h>
+#include <X11/Xatom.h>
+#include <X11/Xcursor/Xcursor.h>
 
 #if defined(ARTIST_SKIA)
 # error "X11 Skia host not yet implemented — build Elements with ELEMENTS_CAIRO=ON for now"
@@ -22,8 +25,15 @@
 
 #include <limits.h>
 #include <unistd.h>
+#include <locale.h>
 #include <memory>
 #include <string>
+#include <string_view>
+#include <map>
+#include <array>
+#include <algorithm>
+#include <cstdlib>
+#include <cstdint>
 
 namespace cycfi::artist
 {
@@ -67,18 +77,32 @@ namespace cycfi::artist
 
 namespace cycfi::elements
 {
-   // Defined in window.cpp
-   ::Window get_window(host_window& h);
+   // Defined in key.cpp
+   key_code translate_key(unsigned keysym);
 
+   ////////////////////////////////////////////////////////////////////////////
+   // host_view
+   ////////////////////////////////////////////////////////////////////////////
    struct host_view
    {
+      using key_map = std::map<key_code, key_action>;
+
       ::Window          window = 0;       // the X11 window we render into
       double            scale  = 1.0;     // HiDPI scale
       point             size;             // logical size
       point             cursor_position;
-      bool              opened = false;   // has on_open fired?
+      bool              opened = false;
+      ::Time            click_time = 0;   // last button-press time (double-click)
+      int               click_count = 0;
+      ::Time            scroll_time = 0;  // last scroll event (acceleration)
+      ::Pixmap          pixmap = 0;       // offscreen back buffer (no flicker)
+      GC                gc = nullptr;
+      int               pix_w = 0, pix_h = 0;
+      XIC               xic = nullptr;    // input context (UTF-8 text entry)
+      key_map           keys;
+      int               modifiers = 0;
 #if defined(ARTIST_CAIRO)
-      cairo_surface_t*  surface = nullptr;
+      cairo_surface_t*  surface = nullptr;  // Cairo surface on the pixmap
 #endif
       std::unique_ptr<drop_info> _drop_info;
    };
@@ -91,20 +115,278 @@ namespace cycfi::elements
       }
    };
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Platform layer — shared X11 state, lazily initialised on first use so it
+   // works with or without app/window (windowless plugin case).
+   ////////////////////////////////////////////////////////////////////////////
    namespace
    {
-      // Current window pixel size
+      struct platform
+      {
+         Display*  display = nullptr;
+         XIM       xim = nullptr;
+         Atom      wm_delete = 0;
+         Atom      a_clipboard = 0, a_utf8 = 0, a_targets = 0, a_clip_prop = 0;
+         ::Window  clip_window = 0;        // hidden selection-owner window
+         std::string clip_text;            // clipboard text we own
+
+         std::map<::Window, base_view*>            views;
+         std::map<::Window, std::function<void()>> closers;
+
+         std::map<cursor_type, Cursor> cursors;
+         ::Window  cursor_window = 0;       // window currently under the cursor
+         cursor_type cursor = cursor_type::arrow;
+
+         platform()
+         {
+            setlocale(LC_ALL, "");
+            XSetLocaleModifiers("");
+
+            display = XOpenDisplay(nullptr);
+            if (!display)
+               throw std::runtime_error("Failed to open X display");
+
+            wm_delete   = XInternAtom(display, "WM_DELETE_WINDOW", False);
+            a_clipboard = XInternAtom(display, "CLIPBOARD", False);
+            a_utf8      = XInternAtom(display, "UTF8_STRING", False);
+            a_targets   = XInternAtom(display, "TARGETS", False);
+            a_clip_prop = XInternAtom(display, "ELEMENTS_CLIPBOARD", False);
+
+            xim = XOpenIM(display, nullptr, nullptr, nullptr);
+
+            clip_window = XCreateSimpleWindow(
+               display, RootWindow(display, DefaultScreen(display)),
+               -10, -10, 1, 1, 0, 0, 0);
+         }
+      };
+
+      platform& plat()
+      {
+         static platform the_platform;   // lazy: no app required
+         return the_platform;
+      }
+   }
+
+   Display* get_display()        { return plat().display; }
+   Atom     get_wm_delete_atom() { return plat().wm_delete; }
+   XIM      get_xim()            { return plat().xim; }
+
+   double display_scale()
+   {
+      double scale = 1.0;
+      if (char* rms = XResourceManagerString(plat().display))
+      {
+         if (XrmDatabase db = XrmGetStringDatabase(rms))
+         {
+            XrmValue value;
+            char* type = nullptr;
+            if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value) && value.addr)
+               if (double dpi = std::atof(value.addr); dpi > 0)
+                  scale = dpi / 96.0;
+            XrmDestroyDatabase(db);
+         }
+      }
+      return scale;
+   }
+
+   void register_close(::Window w, std::function<void()> on_close)
+   {
+      plat().closers[w] = std::move(on_close);
+   }
+   void unregister_close(::Window w) { plat().closers.erase(w); }
+
+   namespace
+   {
+      void register_view(::Window w, base_view* view) { plat().views[w] = view; }
+      void unregister_view(::Window w)                { plat().views.erase(w); }
+      base_view* find_view(::Window w)
+      {
+         auto i = plat().views.find(w);
+         return i == plat().views.end() ? nullptr : i->second;
+      }
+
+      bool fire_close(::Window w)
+      {
+         auto i = plat().closers.find(w);
+         if (i == plat().closers.end())
+            return false;
+         if (i->second)
+            i->second();
+         return true;
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Cursor (themed, HiDPI via libXcursor)
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      char const* cursor_name(cursor_type type)
+      {
+         switch (type)
+         {
+            case cursor_type::arrow:      return "left_ptr";
+            case cursor_type::ibeam:      return "xterm";
+            case cursor_type::cross_hair: return "crosshair";
+            case cursor_type::hand:       return "hand2";
+            case cursor_type::h_resize:   return "sb_h_double_arrow";
+            case cursor_type::v_resize:   return "sb_v_double_arrow";
+         }
+         return "left_ptr";
+      }
+
+      // Load (and cache) a themed cursor; XcursorLibraryLoadCursor respects
+      // Xcursor.theme / Xcursor.size, so it comes out at the right HiDPI size.
+      Cursor load_cursor(cursor_type type)
+      {
+         auto& cache = plat().cursors;
+         if (auto i = cache.find(type); i != cache.end())
+            return i->second;
+         Cursor c = XcursorLibraryLoadCursor(plat().display, cursor_name(type));
+         cache[type] = c;
+         return c;
+      }
+
+      void apply_cursor(::Window w, cursor_type type)
+      {
+         if (w)
+            if (Cursor c = load_cursor(type))
+               XDefineCursor(plat().display, w, c);
+      }
+   }
+
+   void set_cursor(cursor_type type)
+   {
+      plat().cursor = type;
+      apply_cursor(plat().cursor_window, type);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Clipboard (CLIPBOARD selection)
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      void handle_selection_request(XSelectionRequestEvent& req)
+      {
+         auto& p = plat();
+         XSelectionEvent resp = {};
+         resp.type      = SelectionNotify;
+         resp.display   = req.display;
+         resp.requestor = req.requestor;
+         resp.selection = req.selection;
+         resp.target    = req.target;
+         resp.time      = req.time;
+         resp.property  = req.property;
+
+         if (req.target == p.a_targets)
+         {
+            Atom targets[] = {p.a_targets, p.a_utf8, XA_STRING};
+            XChangeProperty(p.display, req.requestor, req.property, XA_ATOM, 32,
+               PropModeReplace, (unsigned char*)targets,
+               int(sizeof(targets) / sizeof(targets[0])));
+         }
+         else if (req.target == p.a_utf8 || req.target == XA_STRING)
+         {
+            XChangeProperty(p.display, req.requestor, req.property, req.target, 8,
+               PropModeReplace, (unsigned char*)p.clip_text.data(),
+               int(p.clip_text.size()));
+         }
+         else
+         {
+            resp.property = None;
+         }
+
+         XSendEvent(p.display, req.requestor, False, 0, (XEvent*)&resp);
+         XFlush(p.display);
+      }
+   }
+
+   std::string clipboard()
+   {
+      auto& p = plat();
+      if (XGetSelectionOwner(p.display, p.a_clipboard) == p.clip_window)
+         return p.clip_text;   // we own it
+
+      XConvertSelection(p.display, p.a_clipboard, p.a_utf8, p.a_clip_prop,
+         p.clip_window, CurrentTime);
+      XFlush(p.display);
+
+      // Wait (bounded) for the SelectionNotify reply.
+      XEvent ev;
+      bool got = false;
+      for (int i = 0; i < 200 && !got; ++i)
+      {
+         if (XCheckTypedWindowEvent(p.display, p.clip_window, SelectionNotify, &ev))
+            got = true;
+         else
+            usleep(1000);
+      }
+      if (!got || ev.xselection.property == None)
+         return {};
+
+      Atom type; int fmt; unsigned long nitems, after; unsigned char* data = nullptr;
+      XGetWindowProperty(p.display, p.clip_window, p.a_clip_prop, 0, ~0L, True,
+         AnyPropertyType, &type, &fmt, &nitems, &after, &data);
+      std::string result;
+      if (data)
+      {
+         result.assign((char*)data, nitems);
+         XFree(data);
+      }
+      return result;
+   }
+
+   void clipboard(std::string_view text)
+   {
+      auto& p = plat();
+      p.clip_text.assign(text);
+      XSetSelectionOwner(p.display, p.a_clipboard, p.clip_window, CurrentTime);
+      XFlush(p.display);
+   }
+
+   point scroll_direction()
+   {
+      return {-1.0f, -1.0f};   // traditional; TODO read system setting
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Rendering
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
       void window_pixel_size(::Window w, int& width, int& height)
       {
          XWindowAttributes attr;
-         XGetWindowAttributes(get_display(), w, &attr);
+         XGetWindowAttributes(plat().display, w, &attr);
          width = attr.width;
          height = attr.height;
+      }
+
+      void create_backing(host_view* h, int w, int hgt)
+      {
+         Display* d = plat().display;
+         int screen = DefaultScreen(d);
+
+#if defined(ARTIST_CAIRO)
+         if (h->surface) { cairo_surface_destroy(h->surface); h->surface = nullptr; }
+#endif
+         if (h->pixmap)  { XFreePixmap(d, h->pixmap); h->pixmap = 0; }
+
+         h->pix_w = w;
+         h->pix_h = hgt;
+         h->pixmap = XCreatePixmap(d, h->window, w, hgt, DefaultDepth(d, screen));
+
+#if defined(ARTIST_CAIRO)
+         h->surface = cairo_xlib_surface_create(
+            d, h->pixmap, DefaultVisual(d, screen), w, hgt);
+         cairo_surface_set_device_scale(h->surface, h->scale, h->scale);
+#endif
       }
 
       void do_render(base_view& view)
       {
          auto* h = platform_access::get_host_view(view);
+         Display* d = plat().display;
 #if defined(ARTIST_CAIRO)
          if (!h->surface)
             return;
@@ -113,49 +395,312 @@ namespace cycfi::elements
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(h->surface);
-         XFlush(get_display());
 #endif
+         if (h->pixmap && h->gc)
+            XCopyArea(d, h->pixmap, h->window, h->gc, 0, 0, h->pix_w, h->pix_h, 0, 0);
+         XFlush(d);
       }
    }
 
-   // Called from the app event loop (declared in x11_host.hpp)
-   void handle_view_event(base_view& view, XEvent& ev)
+   ////////////////////////////////////////////////////////////////////////////
+   // Input helpers
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
    {
-      auto* h = platform_access::get_host_view(view);
+      constexpr ::Time double_click_ms = 250;
 
-      switch (ev.type)
+      int get_mods(unsigned state)
       {
-         case Expose:
-            if (ev.xexpose.count != 0)
-               break;
-            if (!h->opened)
-            {
-               int w = 0, hgt = 0;
-               window_pixel_size(h->window, w, hgt);
-               h->size = {float(w / h->scale), float(hgt / h->scale)};
-               h->opened = true;
-            }
-            do_render(view);
-            break;
+         int mods = 0;
+         if (state & ShiftMask)   mods |= mod_shift;
+         if (state & ControlMask) mods |= mod_control | mod_action;
+         if (state & Mod1Mask)    mods |= mod_alt;
+         if (state & Mod4Mask)    mods |= mod_super;
+         return mods;
+      }
 
-         case ConfigureNotify:
+      point logical_pos(host_view* h, int x, int y)
+      {
+         return {float(x / h->scale), float(y / h->scale)};
+      }
+
+      bool get_button(XButtonEvent& e, mouse_button& btn, host_view* h)
+      {
+         if (e.button < 1 || e.button > 3)
+            return false;
+
+         btn.modifiers = get_mods(e.state);
+         if (e.type == ButtonPress)
          {
-            int w = ev.xconfigure.width;
-            int hgt = ev.xconfigure.height;
-#if defined(ARTIST_CAIRO)
-            if (h->surface)
-               cairo_xlib_surface_set_size(h->surface, w, hgt);
-#endif
-            h->size = {float(w / h->scale), float(hgt / h->scale)};
-            break;
+            btn.down = true;
+            if ((e.time - h->click_time) < double_click_ms)
+               ++h->click_count;
+            else
+               h->click_count = 1;
+            h->click_time = e.time;
+         }
+         else
+         {
+            btn.down = false;
          }
 
-         // Input events handled in a later phase.
-         default:
-            break;
+         switch (e.button)
+         {
+            case 1: btn.state = mouse_button::left;   break;
+            case 2: btn.state = mouse_button::middle; break;
+            case 3: btn.state = mouse_button::right;  break;
+            default: return false;
+         }
+
+         btn.num_clicks = h->click_count;
+         btn.pos = logical_pos(h, e.x, e.y);
+         return true;
+      }
+
+      void handle_key(base_view& view, host_view::key_map& keys, key_info k)
+      {
+         bool repeated = false;
+         if (k.action == key_action::release)
+         {
+            keys.erase(k.key);
+            view.key(k);
+            return;
+         }
+         if (k.action == key_action::press && keys[k.key] == key_action::press)
+            repeated = true;
+         keys[k.key] = k.action;
+         if (repeated)
+            k.action = key_action::repeat;
+         view.key(k);
+      }
+
+      int next_codepoint(char const* s, int len, std::uint32_t& cp)
+      {
+         if (len <= 0)
+            return 0;
+         unsigned char c = (unsigned char)s[0];
+         if (c < 0x80)            { cp = c; return 1; }
+         else if ((c >> 5) == 0x6 && len >= 2)
+            { cp = ((c & 0x1F) << 6) | (s[1] & 0x3F); return 2; }
+         else if ((c >> 4) == 0xE && len >= 3)
+            { cp = ((c & 0x0F) << 12) | ((s[1] & 0x3F) << 6) | (s[2] & 0x3F); return 3; }
+         else if ((c >> 3) == 0x1E && len >= 4)
+            { cp = ((c & 0x07) << 18) | ((s[1] & 0x3F) << 12) |
+                   ((s[2] & 0x3F) << 6) | (s[3] & 0x3F); return 4; }
+         return 0;
       }
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Per-view event handling
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      void handle_view_event(base_view& view, XEvent& ev)
+      {
+         auto* h = platform_access::get_host_view(view);
+
+         switch (ev.type)
+         {
+            case Expose:
+               if (ev.xexpose.count != 0)
+                  break;
+               if (!h->opened)
+               {
+                  int w = 0, hgt = 0;
+                  window_pixel_size(h->window, w, hgt);
+                  h->size = {float(w / h->scale), float(hgt / h->scale)};
+                  h->opened = true;
+               }
+               do_render(view);
+               break;
+
+            case ConfigureNotify:
+            {
+               int w = ev.xconfigure.width;
+               int hgt = ev.xconfigure.height;
+               if (w != h->pix_w || hgt != h->pix_h)
+                  create_backing(h, w, hgt);
+               h->size = {float(w / h->scale), float(hgt / h->scale)};
+               break;
+            }
+
+            case ButtonPress:
+            case ButtonRelease:
+            {
+               unsigned b = ev.xbutton.button;
+               if (b >= 4 && b <= 7)
+               {
+                  if (ev.type != ButtonPress)
+                     break;
+                  // Time-based acceleration (mirrors the GTK host): faster
+                  // gestures send larger steps. elapsed clamped so step ≤ 10.
+                  auto elapsed = std::max<float>(10.0f, ev.xbutton.time - h->scroll_time);
+                  h->scroll_time = ev.xbutton.time;
+                  float step = 100.0f / elapsed;
+                  float dx = 0, dy = 0;
+                  switch (b)
+                  {
+                     case 4: dy = +step; break;
+                     case 5: dy = -step; break;
+                     case 6: dx = +step; break;
+                     case 7: dx = -step; break;
+                  }
+                  view.scroll({dx, dy}, logical_pos(h, ev.xbutton.x, ev.xbutton.y));
+                  break;
+               }
+
+               mouse_button btn;
+               if (get_button(ev.xbutton, btn, h))
+               {
+                  h->cursor_position = btn.pos;
+                  view.click(btn);
+               }
+               break;
+            }
+
+            case MotionNotify:
+            {
+               point pos = logical_pos(h, ev.xmotion.x, ev.xmotion.y);
+               h->cursor_position = pos;
+
+               mouse_button btn;
+               btn.modifiers = get_mods(ev.xmotion.state);
+               btn.num_clicks = h->click_count;
+               btn.pos = pos;
+
+               if (ev.xmotion.state & Button1Mask)
+                  { btn.down = true; btn.state = mouse_button::left;   view.drag(btn); }
+               else if (ev.xmotion.state & Button2Mask)
+                  { btn.down = true; btn.state = mouse_button::middle; view.drag(btn); }
+               else if (ev.xmotion.state & Button3Mask)
+                  { btn.down = true; btn.state = mouse_button::right;  view.drag(btn); }
+               else
+                  view.cursor(pos, cursor_tracking::hovering);
+               break;
+            }
+
+            case EnterNotify:
+               h->cursor_position = logical_pos(h, ev.xcrossing.x, ev.xcrossing.y);
+               plat().cursor_window = h->window;
+               apply_cursor(h->window, plat().cursor);
+               view.cursor(h->cursor_position, cursor_tracking::entering);
+               break;
+
+            case LeaveNotify:
+               h->cursor_position = logical_pos(h, ev.xcrossing.x, ev.xcrossing.y);
+               if (plat().cursor_window == h->window)
+                  plat().cursor_window = 0;
+               view.cursor(h->cursor_position, cursor_tracking::leaving);
+               break;
+
+            case FocusIn:
+               if (h->xic)
+                  XSetICFocus(h->xic);
+               view.begin_focus();
+               break;
+
+            case FocusOut:
+               if (h->xic)
+                  XUnsetICFocus(h->xic);
+               view.end_focus();
+               break;
+
+            case KeyPress:
+            {
+               h->modifiers = get_mods(ev.xkey.state);
+
+               char buf[64];
+               KeySym keysym = NoSymbol;
+               int len = 0;
+               Status status = XLookupNone;
+               if (h->xic)
+                  len = Xutf8LookupString(h->xic, &ev.xkey, buf, sizeof(buf), &keysym, &status);
+               else
+                  len = XLookupString(&ev.xkey, buf, sizeof(buf), &keysym, nullptr);
+
+               if (auto key = translate_key(keysym); key != key_code::unknown)
+                  handle_key(view, h->keys, {key, key_action::press, h->modifiers});
+
+               if (len > 0 && (status == XLookupChars || status == XLookupBoth || !h->xic))
+               {
+                  int i = 0;
+                  while (i < len)
+                  {
+                     std::uint32_t cp = 0;
+                     int n = next_codepoint(buf + i, len - i, cp);
+                     if (n == 0)
+                        break;
+                     i += n;
+                     if (cp >= 0x20 && cp != 0x7F)
+                        view.text({cp, h->modifiers});
+                  }
+               }
+               break;
+            }
+
+            case KeyRelease:
+            {
+               // Filter X11 auto-repeat (release immediately followed by a
+               // press of the same key is synthetic).
+               if (XPending(plat().display))
+               {
+                  XEvent next;
+                  XPeekEvent(plat().display, &next);
+                  if (next.type == KeyPress &&
+                      next.xkey.window == ev.xkey.window &&
+                      next.xkey.keycode == ev.xkey.keycode &&
+                      (next.xkey.time - ev.xkey.time) < 2)
+                     break;
+               }
+               h->modifiers = get_mods(ev.xkey.state);
+               KeySym keysym = XLookupKeysym(&ev.xkey, 0);
+               if (auto key = translate_key(keysym); key != key_code::unknown)
+                  handle_key(view, h->keys, {key, key_action::release, h->modifiers});
+               break;
+            }
+
+            default:
+               break;
+         }
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Event-pump entry points (used by app::run() or an external host loop)
+   ////////////////////////////////////////////////////////////////////////////
+   void dispatch_event(XEvent& ev)
+   {
+      // Clipboard selection traffic (targets the hidden clip window).
+      if (ev.type == SelectionRequest)
+      {
+         handle_selection_request(ev.xselectionrequest);
+         return;
+      }
+      if (ev.type == SelectionClear)
+         return;
+
+      // Window-close protocol.
+      if (ev.type == ClientMessage &&
+          Atom(ev.xclient.data.l[0]) == plat().wm_delete)
+      {
+         fire_close(ev.xclient.window);
+         return;
+      }
+
+      if (base_view* view = find_view(ev.xany.window))
+         handle_view_event(*view, ev);
+   }
+
+   void poll_views()
+   {
+      for (auto& [w, view] : plat().views)
+         view->poll();
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // base_view
+   ////////////////////////////////////////////////////////////////////////////
    base_view::base_view(extent /*size_*/)
     : _view(new host_view)
    {
@@ -175,37 +720,49 @@ namespace cycfi::elements
       _view->window = get_window(*h);
       _view->scale = display_scale();
 
+      if (XIM xim = get_xim())
+      {
+         _view->xic = XCreateIC(xim,
+            XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+            XNClientWindow, _view->window,
+            XNFocusWindow, _view->window,
+            nullptr);
+      }
+
       XSelectInput(d, _view->window,
          ExposureMask | StructureNotifyMask |
          ButtonPressMask | ButtonReleaseMask | PointerMotionMask |
          KeyPressMask | KeyReleaseMask |
-         EnterWindowMask | LeaveWindowMask);
+         EnterWindowMask | LeaveWindowMask | FocusChangeMask);
 
-#if defined(ARTIST_CAIRO)
-      int screen = DefaultScreen(d);
+      // Default themed arrow cursor (avoids the tiny core X cursor on enter).
+      apply_cursor(_view->window, cursor_type::arrow);
+
+      _view->gc = XCreateGC(d, _view->window, 0, nullptr);
       int w = 0, hgt = 0;
       window_pixel_size(_view->window, w, hgt);
-      _view->surface = cairo_xlib_surface_create(
-         d, _view->window, DefaultVisual(d, screen), w, hgt);
-      // Device scale lets draw() use logical coordinates while rendering at
-      // full physical resolution on HiDPI displays.
-      cairo_surface_set_device_scale(_view->surface, _view->scale, _view->scale);
-#endif
+      create_backing(_view, w, hgt);
 
       register_view(_view->window, this);
 
-      // Trigger an initial Expose now that input is selected.
       XClearArea(d, _view->window, 0, 0, 0, 0, True);
       XFlush(d);
    }
 
    base_view::~base_view()
    {
+      Display* d = get_display();
       unregister_view(_view->window);
+      if (_view->xic)
+         XDestroyIC(_view->xic);
 #if defined(ARTIST_CAIRO)
       if (_view->surface)
          cairo_surface_destroy(_view->surface);
 #endif
+      if (_view->pixmap)
+         XFreePixmap(d, _view->pixmap);
+      if (_view->gc)
+         XFreeGC(d, _view->gc);
       delete _view;
       _view = nullptr;
    }
@@ -222,55 +779,18 @@ namespace cycfi::elements
 
    void base_view::size(elements::extent p)
    {
-      Display* d = get_display();
-      XResizeWindow(d, _view->window,
+      XResizeWindow(get_display(), _view->window,
          (unsigned)(p.x * _view->scale), (unsigned)(p.y * _view->scale));
    }
 
    void base_view::refresh()
    {
-      Display* d = get_display();
-      XClearArea(d, _view->window, 0, 0, 0, 0, True);
-      XFlush(d);
+      // Render into the back buffer and blit — no window clear, so no flicker.
+      do_render(*this);
    }
 
-   void base_view::refresh(rect area)
+   void base_view::refresh(rect /*area*/)
    {
-      Display* d = get_display();
-      XClearArea(d, _view->window,
-         int(area.left * _view->scale), int(area.top * _view->scale),
-         (unsigned)std::max<float>(area.width() * _view->scale, 1),
-         (unsigned)std::max<float>(area.height() * _view->scale, 1),
-         True);
-      XFlush(d);
-   }
-
-   // -------------------------------------------------------------------------
-   // Clipboard / cursor / scroll — minimal stubs for Phase 1
-   std::string clipboard()
-   {
-      return {};   // TODO: X11 selection (PRIMARY/CLIPBOARD)
-   }
-
-   void clipboard(std::string_view /*text*/)
-   {
-      // TODO: X11 selection ownership
-   }
-
-   void set_cursor(cursor_type /*type*/)
-   {
-      // TODO (Phase 2): load themed cursors via libXcursor
-      // (XcursorLibraryLoadCursor) so they respect Xcursor.theme / Xcursor.size
-      // and come out at the correct HiDPI scale, then XDefineCursor on the view
-      // window. Without this, XWayland gives the window the tiny 1x core X
-      // cursor on enter instead of the scaled themed desktop cursor.
-      // Map cursor_type::arrow/ibeam/cross_hair/hand/h_resize/v_resize to the
-      // corresponding theme cursor names (left_ptr, xterm, crosshair, hand2,
-      // sb_h_double_arrow, sb_v_double_arrow).
-   }
-
-   point scroll_direction()
-   {
-      return {-1.0f, -1.0f};   // traditional; TODO read system setting
+      do_render(*this);
    }
 }

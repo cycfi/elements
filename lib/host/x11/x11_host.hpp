@@ -9,32 +9,32 @@
 #include <X11/Xlib.h>
 #include <functional>
 
+// The X11 host's shared platform layer lives in base_view.cpp (the
+// self-contained core, mirroring the Windows/macOS hosts). app.cpp and
+// window.cpp are thin conveniences on top; nothing here depends on either, so
+// the core works in the windowless/plugin case where neither exists.
+
 namespace cycfi::elements
 {
-   class base_view;
+   struct host_window;
 
-   // The shared X11 display connection (opened by the first app instance).
+   // Shared display + platform, opened lazily on first use (no app required).
    Display* get_display();
+   Atom     get_wm_delete_atom();
+   XIM      get_xim();
+   double   display_scale();
 
-   // HiDPI scale from the X resource manager (Xft.dpi / 96), display-wide.
-   double display_scale();
+   // The X11 Window backing a host_window (defined in window.cpp).
+   ::Window get_window(host_window& h);
 
-   // The WM_DELETE_WINDOW atom (interned once the display is open).
-   Atom get_wm_delete_atom();
-
-   // Window → base_view registry, for routing X events to the right view.
-   // (Defined in app.cpp; populated by base_view.cpp.)
-   void        register_view(::Window w, base_view* view);
-   void        unregister_view(::Window w);
-   base_view*  find_view(::Window w);
-
-   // Window-close hookup: window.cpp registers a callback fired on WM_DELETE.
+   // Window-close registry: window.cpp registers a callback fired on WM_DELETE.
    void register_close(::Window w, std::function<void()> on_close);
    void unregister_close(::Window w);
-   bool fire_close(::Window w);   // returns true if a handler ran
 
-   // Dispatch a single X event to the matching view (implemented in base_view.cpp).
-   void handle_view_event(base_view& view, XEvent& ev);
+   // Event-pump entry points — driven by app::run() in standalone mode, or by
+   // an external host loop (e.g. a plugin) in the windowless case.
+   void dispatch_event(XEvent& ev);   // route one X event
+   void poll_views();                 // drive each view's deferred io_context
 }
 
 #endif

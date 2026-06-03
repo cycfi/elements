@@ -4,84 +4,23 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
 #include <elements/app.hpp>
-#include <elements/base_view.hpp>
 #include "x11_host.hpp"
 
 #include <X11/Xlib.h>
-#include <X11/Xresource.h>
-#include <map>
-#include <stdexcept>
-#include <cstdlib>
+#include <sys/select.h>
+
+// Thin standalone event pump. All per-event handling and shared state live in
+// base_view.cpp (the self-contained core), so this file knows nothing about
+// views or windows — mirroring the Windows host's GetMessage loop. In the
+// windowless/plugin case this file is not used at all; the host drives the loop
+// and calls dispatch_event()/poll_views() directly.
 
 namespace cycfi::elements
 {
-   namespace
-   {
-      Display*                          the_display = nullptr;
-      Atom                              the_wm_delete = 0;
-      std::map<::Window, base_view*>    the_views;
-      std::map<::Window, std::function<void()>> the_closers;
-
-      struct init_display
-      {
-         init_display()
-         {
-            the_display = XOpenDisplay(nullptr);
-            if (!the_display)
-               throw std::runtime_error("Failed to open X display");
-            the_wm_delete = XInternAtom(the_display, "WM_DELETE_WINDOW", False);
-         }
-      };
-   }
-
-   Display* get_display()        { return the_display; }
-   Atom     get_wm_delete_atom() { return the_wm_delete; }
-
-   double display_scale()
-   {
-      double scale = 1.0;
-      if (char* rms = XResourceManagerString(the_display))
-      {
-         if (XrmDatabase db = XrmGetStringDatabase(rms))
-         {
-            XrmValue value;
-            char* type = nullptr;
-            if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value) && value.addr)
-               if (double dpi = std::atof(value.addr); dpi > 0)
-                  scale = dpi / 96.0;
-            XrmDestroyDatabase(db);
-         }
-      }
-      return scale;
-   }
-
-   void register_view(::Window w, base_view* view) { the_views[w] = view; }
-   void unregister_view(::Window w)                { the_views.erase(w); }
-   base_view* find_view(::Window w)
-   {
-      auto i = the_views.find(w);
-      return i == the_views.end() ? nullptr : i->second;
-   }
-
-   void register_close(::Window w, std::function<void()> on_close)
-   {
-      the_closers[w] = std::move(on_close);
-   }
-   void unregister_close(::Window w) { the_closers.erase(w); }
-   bool fire_close(::Window w)
-   {
-      auto i = the_closers.find(w);
-      if (i == the_closers.end())
-         return false;
-      if (i->second)
-         i->second();
-      return true;
-   }
-
    app::app(std::string name)
     : _app_name(std::move(name))
    {
-      static init_display init{};
+      get_display();   // ensure the platform layer is initialised
    }
 
    app::~app()
@@ -91,21 +30,29 @@ namespace cycfi::elements
    void app::run()
    {
       _running = true;
-      XEvent ev;
+      Display* d = get_display();
+      int fd = ConnectionNumber(d);
+
       while (_running)
       {
-         XNextEvent(the_display, &ev);
-
-         // Window-close protocol takes precedence over view dispatch.
-         if (ev.type == ClientMessage &&
-             Atom(ev.xclient.data.l[0]) == the_wm_delete)
+         while (XPending(d))
          {
-            fire_close(ev.xclient.window);
-            continue;
+            XEvent ev;
+            XNextEvent(d, &ev);
+            dispatch_event(ev);
          }
 
-         if (base_view* view = find_view(ev.xany.window))
-            handle_view_event(*view, ev);
+         // Drive each view's asio io_context (deferred refresh, animation).
+         poll_views();
+
+         // Block up to ~1ms for the next event so polling stays at ~1kHz.
+         fd_set rd;
+         FD_ZERO(&rd);
+         FD_SET(fd, &rd);
+         timeval tv;
+         tv.tv_sec = 0;
+         tv.tv_usec = 1000;
+         select(fd + 1, &rd, nullptr, nullptr, &tv);
       }
    }
 

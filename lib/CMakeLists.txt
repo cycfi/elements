@@ -167,6 +167,15 @@ elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
       host/x11/key.cpp
       host/x11/window.cpp
    )
+elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
+   set(ELEMENTS_HOST
+      host/wayland/app.cpp
+      host/wayland/base_view.cpp
+      host/wayland/key.cpp
+      host/wayland/window.cpp
+      ${CMAKE_CURRENT_BINARY_DIR}/wayland-gen/fractional-scale-v1-protocol.c
+      ${CMAKE_CURRENT_BINARY_DIR}/wayland-gen/viewporter-protocol.c
+   )
 elseif (WIN32)
    set(ELEMENTS_HOST
       host/windows/utils.hpp
@@ -285,6 +294,54 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
 endif()
 
 ###############################################################################
+# Wayland (native host, libdecor decorations)
+
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
+   pkg_check_modules(WL_CLIENT REQUIRED IMPORTED_TARGET wayland-client)
+   pkg_check_modules(WL_CURSOR REQUIRED IMPORTED_TARGET wayland-cursor)
+   pkg_check_modules(LIBDECOR REQUIRED IMPORTED_TARGET libdecor-0)
+   pkg_check_modules(XKBCOMMON REQUIRED IMPORTED_TARGET xkbcommon)
+   target_link_libraries(elements PRIVATE
+      PkgConfig::WL_CLIENT PkgConfig::WL_CURSOR PkgConfig::LIBDECOR PkgConfig::XKBCOMMON)
+   if (ELEMENTS_CAIRO)
+      pkg_check_modules(CAIRO_PKG REQUIRED IMPORTED_TARGET cairo)
+      target_link_libraries(elements PRIVATE PkgConfig::CAIRO_PKG)
+   else()
+      find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+      pkg_check_modules(EGL REQUIRED IMPORTED_TARGET egl)
+      pkg_check_modules(WL_EGL REQUIRED IMPORTED_TARGET wayland-egl)
+      target_link_libraries(elements PRIVATE PkgConfig::EGL PkgConfig::WL_EGL OpenGL::GL)
+   endif()
+
+   # Generate fractional-scale + viewporter protocol glue (for per-surface HiDPI).
+   find_program(WAYLAND_SCANNER wayland-scanner REQUIRED)
+   pkg_get_variable(WL_PROTOCOLS_DIR wayland-protocols pkgdatadir)
+   if (NOT WL_PROTOCOLS_DIR)
+      execute_process(COMMAND pkg-config --variable=pkgdatadir wayland-protocols
+         OUTPUT_VARIABLE WL_PROTOCOLS_DIR OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+   endif()
+   set(WL_GEN "${CMAKE_CURRENT_BINARY_DIR}/wayland-gen")
+   file(MAKE_DIRECTORY "${WL_GEN}")
+   foreach(spec
+      "fractional-scale-v1=${WL_PROTOCOLS_DIR}/staging/fractional-scale/fractional-scale-v1.xml"
+      "viewporter=${WL_PROTOCOLS_DIR}/stable/viewporter/viewporter.xml")
+      string(REPLACE "=" ";" parts "${spec}")
+      list(GET parts 0 nm)
+      list(GET parts 1 xml)
+      add_custom_command(OUTPUT "${WL_GEN}/${nm}-client-protocol.h"
+         COMMAND "${WAYLAND_SCANNER}" client-header "${xml}" "${WL_GEN}/${nm}-client-protocol.h"
+         DEPENDS "${xml}")
+      add_custom_command(OUTPUT "${WL_GEN}/${nm}-protocol.c"
+         COMMAND "${WAYLAND_SCANNER}" private-code "${xml}" "${WL_GEN}/${nm}-protocol.c"
+         DEPENDS "${xml}")
+   endforeach()
+   target_sources(elements PRIVATE
+      "${WL_GEN}/fractional-scale-v1-client-protocol.h"
+      "${WL_GEN}/viewporter-client-protocol.h")
+   target_include_directories(elements PRIVATE "${WL_GEN}")
+endif()
+
+###############################################################################
 # Asio headers
 
 FetchContent_Declare(
@@ -333,6 +390,11 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
         message(FATAL_ERROR "ELEMENTS_HOST_UI_LIBRARY=x11 is Linux/Unix only")
     endif()
     target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_X11)
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
+    if(APPLE OR WIN32)
+        message(FATAL_ERROR "ELEMENTS_HOST_UI_LIBRARY=wayland is Linux/Unix only")
+    endif()
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
 elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "cocoa")
     if(NOT APPLE)
         message(FATAL_ERROR "Only macOS supports ELEMENTS_HOST_UI_LIBRARY=cocoa")
@@ -352,7 +414,7 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         target_compile_definitions(elements PRIVATE _WIN32_WINNT=0x0A00)
     endif()
 else()
-    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, x11, cocoa or win32.")
+    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, x11, wayland, cocoa or win32.")
 endif()
 
 ###############################################################################

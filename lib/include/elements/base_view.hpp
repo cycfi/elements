@@ -328,7 +328,7 @@ namespace cycfi::elements
    public:
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_COCOA) || defined(ELEMENTS_HOST_UI_LIBRARY_GTK) \
-    || defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+    || defined(ELEMENTS_HOST_UI_LIBRARY_X11) || defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
                            base_view(host_view_handle h);
 #endif
                            base_view(extent size_);

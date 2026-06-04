@@ -43,6 +43,8 @@ namespace cycfi::elements
       bool  _running = true;
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_X11)
       bool  _running = true;
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
+      bool  _running = true;
 #endif
 
       std::string          _app_name;

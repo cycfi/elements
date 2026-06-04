@@ -12,6 +12,8 @@
 
 #include <wayland-client.h>
 #include <libdecor.h>
+#include <xkbcommon/xkbcommon.h>
+#include <linux/input-event-codes.h>
 #include "fractional-scale-v1-client-protocol.h"
 #include "viewporter-client-protocol.h"
 
@@ -72,6 +74,23 @@ namespace cycfi::elements
    key_code translate_key(unsigned keysym);
 
    ////////////////////////////////////////////////////////////////////////////
+   struct host_view;
+
+   // One double-buffered shm buffer.
+   struct shm_buffer
+   {
+      wl_buffer*        buffer = nullptr;
+      wl_shm_pool*      pool = nullptr;
+      void*             data = nullptr;
+      int               fd = -1;
+      size_t            size = 0;
+#if defined(ARTIST_CAIRO)
+      cairo_surface_t*  cairo = nullptr;
+#endif
+      host_view*        owner = nullptr;
+      bool              busy = false;          // attached, compositor may be using it
+   };
+
    struct host_view
    {
       wl_surface*       surface = nullptr;
@@ -79,22 +98,15 @@ namespace cycfi::elements
       double            scale = 1.0;          // fractional scale
       point             size;                 // logical size
       point             cursor_position;
+      base_view*        self = nullptr;       // back-pointer (for deferred render)
       bool              configured = false;
-      bool              buf_released = true;
+      bool              pending = false;       // a render was deferred (both busy)
 
       // wp_fractional_scale_v1 + wp_viewport (per-surface HiDPI)
       wp_fractional_scale_v1* frac_scale = nullptr;
       wp_viewport*            viewport = nullptr;
 
-      // shm backing
-      wl_shm_pool*      pool = nullptr;
-      wl_buffer*        buffer = nullptr;
-      void*             data = nullptr;
-      int               fd = -1;
-      size_t            data_size = 0;
-#if defined(ARTIST_CAIRO)
-      cairo_surface_t*  cairo = nullptr;
-#endif
+      shm_buffer        bufs[2];               // double-buffered shm
       std::unique_ptr<drop_info> _drop_info;
    };
 
@@ -128,27 +140,266 @@ namespace cycfi::elements
          wp_viewporter* viewporter = nullptr;
          libdecor*      decor = nullptr;
 
+         // Input (wl_seat + xkbcommon)
+         wl_seat*       seat = nullptr;
+         wl_pointer*    pointer = nullptr;
+         wl_keyboard*   keyboard = nullptr;
+         xkb_context*   xkb_ctx = nullptr;
+         xkb_keymap*    xkb_map = nullptr;
+         xkb_state*     xkb_st = nullptr;
+         base_view*     pointer_focus = nullptr;
+         base_view*     keyboard_focus = nullptr;
+         point          pointer_pos;
+         uint32_t       click_time = 0;
+         int            click_count = 0;
+         uint32_t       last_button = 0;
+         int            down_button = 0;   // 0=none,1=left,2=middle,3=right
+
          std::map<wl_surface*, base_view*> views;
 
+         // Ctor does NO roundtrips — just connect + registry + xkb context, so
+         // no Wayland listener fires before the singleton pointer is set.
          platform()
          {
             display = wl_display_connect(nullptr);
             if (!display)
                throw std::runtime_error("Failed to connect to Wayland display");
+            xkb_ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
             registry = wl_display_get_registry(display);
             wl_registry_add_listener(registry, &registry_listener, this);
+         }
+
+         // Roundtrips happen here, AFTER the singleton pointer is assigned, so
+         // listeners (seat_caps, kb_keymap, ...) calling plat() see a valid
+         // pointer instead of re-entering a still-initializing function-local
+         // static (which would throw recursive_init_error).
+         void init()
+         {
             wl_display_roundtrip(display);   // receive globals
             if (!compositor || !shm)
                throw std::runtime_error("Missing required Wayland globals");
+            wl_display_roundtrip(display);   // receive seat capabilities + keymap
             decor = libdecor_new(display, &decor_iface);
          }
       };
 
+      platform* g_platform = nullptr;
       platform& plat()
       {
-         static platform the_platform;
-         return the_platform;
+         if (!g_platform)
+         {
+            g_platform = new platform();   // pointer set BEFORE init() roundtrips
+            g_platform->init();
+         }
+         return *g_platform;
       }
+
+      ////////////////////////////////////////////////////////////////////////
+      // Input (wl_seat: pointer + keyboard via xkbcommon)
+      ////////////////////////////////////////////////////////////////////////
+      int get_mods()
+      {
+         auto& p = plat();
+         if (!p.xkb_st)
+            return 0;
+         int m = 0;
+         auto on = [&](const char* n)
+            { return xkb_state_mod_name_is_active(p.xkb_st, n, XKB_STATE_MODS_EFFECTIVE) > 0; };
+         if (on(XKB_MOD_NAME_SHIFT)) m |= mod_shift;
+         if (on(XKB_MOD_NAME_CTRL))  m |= mod_control | mod_action;
+         if (on(XKB_MOD_NAME_ALT))   m |= mod_alt;
+         if (on(XKB_MOD_NAME_LOGO))  m |= mod_super;
+         return m;
+      }
+
+      // --- pointer ---
+      void ptr_enter(void*, wl_pointer*, uint32_t, wl_surface* surf, wl_fixed_t x, wl_fixed_t y)
+      {
+         auto& p = plat();
+         auto i = p.views.find(surf);
+         p.pointer_focus = (i != p.views.end()) ? i->second : nullptr;
+         if (p.pointer_focus)
+         {
+            p.pointer_pos = {float(wl_fixed_to_double(x)), float(wl_fixed_to_double(y))};
+            platform_access::get_host_view(*p.pointer_focus)->cursor_position = p.pointer_pos;
+            p.pointer_focus->cursor(p.pointer_pos, cursor_tracking::entering);
+         }
+      }
+      void ptr_leave(void*, wl_pointer*, uint32_t, wl_surface*)
+      {
+         auto& p = plat();
+         if (p.pointer_focus)
+            p.pointer_focus->cursor(p.pointer_pos, cursor_tracking::leaving);
+         p.pointer_focus = nullptr;
+         p.down_button = 0;
+      }
+      void ptr_motion(void*, wl_pointer*, uint32_t, wl_fixed_t x, wl_fixed_t y)
+      {
+         auto& p = plat();
+         if (!p.pointer_focus)
+            return;
+         p.pointer_pos = {float(wl_fixed_to_double(x)), float(wl_fixed_to_double(y))};
+         platform_access::get_host_view(*p.pointer_focus)->cursor_position = p.pointer_pos;
+         if (p.down_button)
+         {
+            mouse_button btn;
+            btn.down = true;
+            btn.modifiers = get_mods();
+            btn.num_clicks = p.click_count;
+            btn.pos = p.pointer_pos;
+            btn.state = mouse_button::what(p.down_button - 1);  // left=0,middle=1,right=2
+            p.pointer_focus->drag(btn);
+         }
+         else
+         {
+            p.pointer_focus->cursor(p.pointer_pos, cursor_tracking::hovering);
+         }
+      }
+      void ptr_button(void*, wl_pointer*, uint32_t, uint32_t time, uint32_t button, uint32_t state)
+      {
+         auto& p = plat();
+         if (!p.pointer_focus)
+            return;
+         mouse_button::what w;
+         int idx;
+         switch (button)
+         {
+            case BTN_LEFT:   w = mouse_button::left;   idx = 1; break;
+            case BTN_MIDDLE: w = mouse_button::middle; idx = 2; break;
+            case BTN_RIGHT:  w = mouse_button::right;  idx = 3; break;
+            default: return;
+         }
+         mouse_button btn;
+         btn.modifiers = get_mods();
+         btn.pos = p.pointer_pos;
+         btn.state = w;
+         if (state == WL_POINTER_BUTTON_STATE_PRESSED)
+         {
+            btn.down = true;
+            if ((time - p.click_time) < 250 && button == p.last_button)
+               ++p.click_count;
+            else
+               p.click_count = 1;
+            p.click_time = time;
+            p.last_button = button;
+            p.down_button = idx;
+         }
+         else
+         {
+            btn.down = false;
+            p.down_button = 0;
+         }
+         btn.num_clicks = p.click_count;
+         p.pointer_focus->click(btn);
+      }
+      void ptr_axis(void*, wl_pointer*, uint32_t, uint32_t axis, wl_fixed_t value)
+      {
+         auto& p = plat();
+         if (!p.pointer_focus)
+            return;
+         float v = float(wl_fixed_to_double(value));
+         float dx = 0, dy = 0;
+         if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL)
+            dy = -v * 0.5f;
+         else
+            dx = -v * 0.5f;
+         p.pointer_focus->scroll({dx, dy}, p.pointer_pos);
+      }
+      void ptr_frame(void*, wl_pointer*) {}
+      void ptr_axis_source(void*, wl_pointer*, uint32_t) {}
+      void ptr_axis_stop(void*, wl_pointer*, uint32_t, uint32_t) {}
+      void ptr_axis_discrete(void*, wl_pointer*, uint32_t, int32_t) {}
+      void ptr_axis_value120(void*, wl_pointer*, uint32_t, int32_t) {}
+      void ptr_axis_dir(void*, wl_pointer*, uint32_t, uint32_t) {}
+      constexpr wl_pointer_listener pointer_listener = {
+         ptr_enter, ptr_leave, ptr_motion, ptr_button, ptr_axis, ptr_frame,
+         ptr_axis_source, ptr_axis_stop, ptr_axis_discrete, ptr_axis_value120,
+         ptr_axis_dir
+      };
+
+      // --- keyboard ---
+      void kb_keymap(void*, wl_keyboard*, uint32_t format, int32_t fd, uint32_t size)
+      {
+         auto& p = plat();
+         if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) { close(fd); return; }
+         char* str = static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0));
+         if (str != MAP_FAILED)
+         {
+            if (p.xkb_map) xkb_keymap_unref(p.xkb_map);
+            p.xkb_map = xkb_keymap_new_from_string(
+               p.xkb_ctx, str, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
+            munmap(str, size);
+            if (p.xkb_st) xkb_state_unref(p.xkb_st);
+            p.xkb_st = p.xkb_map ? xkb_state_new(p.xkb_map) : nullptr;
+         }
+         close(fd);
+      }
+      void kb_enter(void*, wl_keyboard*, uint32_t, wl_surface* surf, wl_array*)
+      {
+         auto& p = plat();
+         auto i = p.views.find(surf);
+         p.keyboard_focus = (i != p.views.end()) ? i->second : nullptr;
+         if (p.keyboard_focus)
+            p.keyboard_focus->begin_focus();
+      }
+      void kb_leave(void*, wl_keyboard*, uint32_t, wl_surface*)
+      {
+         auto& p = plat();
+         if (p.keyboard_focus)
+            p.keyboard_focus->end_focus();
+         p.keyboard_focus = nullptr;
+      }
+      void kb_key(void*, wl_keyboard*, uint32_t, uint32_t, uint32_t key, uint32_t state)
+      {
+         auto& p = plat();
+         if (!p.keyboard_focus || !p.xkb_st)
+            return;
+         uint32_t keycode = key + 8;   // evdev → xkb
+         xkb_keysym_t sym = xkb_state_key_get_one_sym(p.xkb_st, keycode);
+         bool pressed = (state == WL_KEYBOARD_KEY_STATE_PRESSED);
+         int mods = get_mods();
+
+         if (auto kc = translate_key(sym); kc != key_code::unknown)
+            p.keyboard_focus->key({kc, pressed ? key_action::press : key_action::release, mods});
+
+         if (pressed)
+         {
+            uint32_t cp = xkb_state_key_get_utf32(p.xkb_st, keycode);
+            if (cp >= 0x20 && cp != 0x7F)
+               p.keyboard_focus->text({cp, mods});
+         }
+      }
+      void kb_mods(void*, wl_keyboard*, uint32_t, uint32_t dep, uint32_t lat, uint32_t lock, uint32_t group)
+      {
+         auto& p = plat();
+         if (p.xkb_st)
+            xkb_state_update_mask(p.xkb_st, dep, lat, lock, 0, 0, group);
+      }
+      void kb_repeat(void*, wl_keyboard*, int32_t, int32_t) {}
+      constexpr wl_keyboard_listener keyboard_listener = {
+         kb_keymap, kb_enter, kb_leave, kb_key, kb_mods, kb_repeat
+      };
+
+      // --- seat ---
+      // Uses the passed platform* (not plat()) — this can fire during the
+      // platform's own construction (registry roundtrip), and calling plat()
+      // then would re-enter the still-initializing function-local static.
+      void seat_caps(void* data, wl_seat* seat, uint32_t caps)
+      {
+         auto& p = *static_cast<platform*>(data);
+         if ((caps & WL_SEAT_CAPABILITY_POINTER) && !p.pointer)
+         {
+            p.pointer = wl_seat_get_pointer(seat);
+            wl_pointer_add_listener(p.pointer, &pointer_listener, nullptr);
+         }
+         if ((caps & WL_SEAT_CAPABILITY_KEYBOARD) && !p.keyboard)
+         {
+            p.keyboard = wl_seat_get_keyboard(seat);
+            wl_keyboard_add_listener(p.keyboard, &keyboard_listener, nullptr);
+         }
+      }
+      void seat_name(void*, wl_seat*, const char*) {}
+      constexpr wl_seat_listener seat_listener = { seat_caps, seat_name };
 
       void registry_global(void* data, wl_registry* reg, uint32_t name,
                            const char* iface, uint32_t /*ver*/)
@@ -165,6 +416,11 @@ namespace cycfi::elements
          else if (!strcmp(iface, wp_viewporter_interface.name))
             p->viewporter = static_cast<wp_viewporter*>(
                wl_registry_bind(reg, name, &wp_viewporter_interface, 1));
+         else if (!strcmp(iface, wl_seat_interface.name))
+         {
+            p->seat = static_cast<wl_seat*>(wl_registry_bind(reg, name, &wl_seat_interface, 5));
+            wl_seat_add_listener(p->seat, &seat_listener, p);   // pass platform*, not plat()
+         }
       }
    }
 
@@ -178,61 +434,86 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    namespace
    {
+      void render(base_view& view);   // fwd
+
+      void destroy_buffer(shm_buffer& b)
+      {
+#if defined(ARTIST_CAIRO)
+         if (b.cairo)  { cairo_surface_destroy(b.cairo); b.cairo = nullptr; }
+#endif
+         if (b.buffer) { wl_buffer_destroy(b.buffer); b.buffer = nullptr; }
+         if (b.pool)   { wl_shm_pool_destroy(b.pool); b.pool = nullptr; }
+         if (b.data)   { munmap(b.data, b.size); b.data = nullptr; }
+         if (b.fd >= 0) { close(b.fd); b.fd = -1; }
+         b.busy = false;
+      }
+
       void buffer_release(void* data, wl_buffer*)
       {
-         static_cast<host_view*>(data)->buf_released = true;
+         auto* b = static_cast<shm_buffer*>(data);
+         b->busy = false;
+         if (b->owner && b->owner->pending && b->owner->self)
+            render(*b->owner->self);   // a deferred render can now proceed
       }
       constexpr wl_buffer_listener buffer_listener = { buffer_release };
+
+      void make_buffer(shm_buffer& b, host_view* h, int w, int hgt)
+      {
+         destroy_buffer(b);
+         b.owner = h;
+         int const stride = w * 4;
+         size_t const sz = size_t(stride) * hgt;
+         b.fd = memfd_create("elements-wl", MFD_CLOEXEC);
+         if (b.fd < 0 || ftruncate(b.fd, off_t(sz)) < 0)
+            throw std::runtime_error("shm alloc failed");
+         b.size = sz;
+         b.data = mmap(nullptr, sz, PROT_READ | PROT_WRITE, MAP_SHARED, b.fd, 0);
+         b.pool = wl_shm_create_pool(plat().shm, b.fd, int32_t(sz));
+         b.buffer = wl_shm_pool_create_buffer(b.pool, 0, w, hgt, stride, WL_SHM_FORMAT_ARGB8888);
+         wl_buffer_add_listener(b.buffer, &buffer_listener, &b);
+#if defined(ARTIST_CAIRO)
+         b.cairo = cairo_image_surface_create_for_data(
+            static_cast<unsigned char*>(b.data), CAIRO_FORMAT_ARGB32, w, hgt, stride);
+         cairo_surface_set_device_scale(b.cairo, h->scale, h->scale);
+#endif
+      }
 
       void create_buffer(host_view* h)
       {
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
-         int const stride = w * 4;
-         size_t const sz = size_t(stride) * hgt;
-
-         if (h->buffer) { wl_buffer_destroy(h->buffer); h->buffer = nullptr; }
-         if (h->pool)   { wl_shm_pool_destroy(h->pool); h->pool = nullptr; }
-#if defined(ARTIST_CAIRO)
-         if (h->cairo)  { cairo_surface_destroy(h->cairo); h->cairo = nullptr; }
-#endif
-         if (h->data)   { munmap(h->data, h->data_size); h->data = nullptr; }
-         if (h->fd >= 0) { close(h->fd); h->fd = -1; }
-
-         h->fd = memfd_create("elements-wl", MFD_CLOEXEC);
-         if (h->fd < 0 || ftruncate(h->fd, off_t(sz)) < 0)
-            throw std::runtime_error("shm alloc failed");
-         h->data_size = sz;
-         h->data = mmap(nullptr, sz, PROT_READ | PROT_WRITE, MAP_SHARED, h->fd, 0);
-         h->pool = wl_shm_create_pool(plat().shm, h->fd, int32_t(sz));
-         h->buffer = wl_shm_pool_create_buffer(h->pool, 0, w, hgt, stride, WL_SHM_FORMAT_ARGB8888);
-         wl_buffer_add_listener(h->buffer, &buffer_listener, h);
-         h->buf_released = true;
-#if defined(ARTIST_CAIRO)
-         h->cairo = cairo_image_surface_create_for_data(
-            static_cast<unsigned char*>(h->data), CAIRO_FORMAT_ARGB32, w, hgt, stride);
-         cairo_surface_set_device_scale(h->cairo, h->scale, h->scale);
-#endif
+         make_buffer(h->bufs[0], h, w, hgt);
+         make_buffer(h->bufs[1], h, w, hgt);
       }
 
       void render(base_view& view)
       {
          auto* h = platform_access::get_host_view(view);
-         if (!h->configured || !h->buffer)
+         if (!h->configured)
             return;
+         // Pick a free buffer; if both are still held by the compositor, defer
+         // and re-render on the next release (no tearing, no stall).
+         shm_buffer* b = !h->bufs[0].busy ? &h->bufs[0]
+                       : !h->bufs[1].busy ? &h->bufs[1] : nullptr;
+         if (!b || !b->buffer)
+         {
+            h->pending = true;
+            return;
+         }
+         h->pending = false;
 #if defined(ARTIST_CAIRO)
-         auto* cr = cairo_create(h->cairo);
+         auto* cr = cairo_create(b->cairo);
          auto cnv = canvas{cr};
          view.draw(cnv);
          cairo_destroy(cr);
-         cairo_surface_flush(h->cairo);
+         cairo_surface_flush(b->cairo);
 #endif
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
          if (h->viewport)
             wp_viewport_set_destination(h->viewport, int(h->size.x), int(h->size.y));
-         h->buf_released = false;
-         wl_surface_attach(h->surface, h->buffer, 0, 0);
+         b->busy = true;
+         wl_surface_attach(h->surface, b->buffer, 0, 0);
          wl_surface_damage_buffer(h->surface, 0, 0, w, hgt);
          wl_surface_commit(h->surface);
       }
@@ -313,6 +594,7 @@ namespace cycfi::elements
    base_view::base_view(host_window_handle h)
     : _view(new host_view)
    {
+      _view->self = this;
       _view->surface = get_surface(*h);
       _view->frame = get_frame(*h);
 
@@ -331,13 +613,8 @@ namespace cycfi::elements
    base_view::~base_view()
    {
       plat().views.erase(_view->surface);
-#if defined(ARTIST_CAIRO)
-      if (_view->cairo)  cairo_surface_destroy(_view->cairo);
-#endif
-      if (_view->buffer) wl_buffer_destroy(_view->buffer);
-      if (_view->pool)   wl_shm_pool_destroy(_view->pool);
-      if (_view->data)   munmap(_view->data, _view->data_size);
-      if (_view->fd >= 0) close(_view->fd);
+      destroy_buffer(_view->bufs[0]);
+      destroy_buffer(_view->bufs[1]);
       if (_view->viewport)   wp_viewport_destroy(_view->viewport);
       if (_view->frac_scale) wp_fractional_scale_v1_destroy(_view->frac_scale);
       delete _view;

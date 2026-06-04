@@ -18,7 +18,21 @@
 #include <X11/extensions/Xrandr.h>
 
 #if defined(ARTIST_SKIA)
-# error "X11 Skia host not yet implemented — build Elements with ELEMENTS_CAIRO=ON for now"
+# include <EGL/egl.h>
+# include <GL/gl.h>
+# include <SkImage.h>
+# include <SkColorSpace.h>
+# include <SkCanvas.h>
+# include <SkSurface.h>
+# include <ganesh/GrDirectContext.h>
+# include <ganesh/GrBackendSurface.h>
+# include <ganesh/SkSurfaceGanesh.h>
+# include <ganesh/gl/GrGLInterface.h>
+# include <ganesh/gl/GrGLDirectContext.h>
+# include <ganesh/gl/GrGLBackendSurface.h>
+# include <ganesh/gl/GrGLTypes.h>
+# include <ganesh/gl/egl/GrGLMakeEGLInterface.h>
+# include <vector>
 #elif defined(ARTIST_CAIRO)
 # include <cairo.h>
 # include <cairo-xlib.h>
@@ -104,6 +118,13 @@ namespace cycfi::elements
       int               modifiers = 0;
 #if defined(ARTIST_CAIRO)
       cairo_surface_t*  surface = nullptr;  // Cairo surface on the pixmap
+#elif defined(ARTIST_SKIA)
+      EGLDisplay        egl_display = EGL_NO_DISPLAY;
+      EGLContext        egl_context = EGL_NO_CONTEXT;
+      EGLSurface        egl_surface = EGL_NO_SURFACE;
+      sk_sp<const GrGLInterface> xface;
+      sk_sp<GrDirectContext>     ctx;
+      sk_sp<SkSurface>           skia_surface;
 #endif
       std::unique_ptr<drop_info> _drop_info;
    };
@@ -414,24 +435,96 @@ namespace cycfi::elements
          height = attr.height;
       }
 
+#if defined(ARTIST_SKIA)
+      // The window was already created (by window.cpp) with the default visual.
+      // For EGL we must pick a config whose native visual matches the window's,
+      // else eglCreateWindowSurface fails with BadMatch.
+      EGLConfig choose_egl_config(EGLDisplay dpy, VisualID vid)
+      {
+         EGLint attribs[] = {
+            EGL_SURFACE_TYPE,    EGL_WINDOW_BIT,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+            EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8,
+            EGL_NONE
+         };
+         EGLint n = 0;
+         eglChooseConfig(dpy, attribs, nullptr, 0, &n);
+         if (n <= 0)
+            return nullptr;
+         std::vector<EGLConfig> cfgs(n);
+         eglChooseConfig(dpy, attribs, cfgs.data(), n, &n);
+         for (auto c : cfgs)
+         {
+            EGLint cvid = 0;
+            eglGetConfigAttrib(dpy, c, EGL_NATIVE_VISUAL_ID, &cvid);
+            if (VisualID(cvid) == vid)
+               return c;
+         }
+         return cfgs[0];   // fallback
+      }
+
+      // Initialise EGL on the existing window + the Skia GL context.
+      void init_egl_skia(host_view* h)
+      {
+         Display* d = plat().display;
+         h->egl_display = eglGetDisplay((EGLNativeDisplayType)d);
+         if (h->egl_display == EGL_NO_DISPLAY || !eglInitialize(h->egl_display, nullptr, nullptr))
+            throw std::runtime_error("EGL init failed");
+         eglBindAPI(EGL_OPENGL_API);
+
+         XWindowAttributes attr;
+         XGetWindowAttributes(d, h->window, &attr);
+         EGLConfig cfg = choose_egl_config(h->egl_display, XVisualIDFromVisual(attr.visual));
+         if (!cfg)
+            throw std::runtime_error("No matching EGL config for window visual");
+
+         EGLint ctx_attribs[] = { EGL_NONE };
+         h->egl_context = eglCreateContext(h->egl_display, cfg, EGL_NO_CONTEXT, ctx_attribs);
+         h->egl_surface = eglCreateWindowSurface(
+            h->egl_display, cfg, (EGLNativeWindowType)h->window, nullptr);
+         if (h->egl_context == EGL_NO_CONTEXT || h->egl_surface == EGL_NO_SURFACE)
+            throw std::runtime_error("EGL context/surface creation failed");
+         if (!eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context))
+            throw std::runtime_error("eglMakeCurrent failed");
+
+         h->xface = GrGLMakeNativeInterface();
+         if (!h->xface)
+            h->xface = GrGLInterfaces::MakeEGL();
+         if (!h->xface)
+            throw std::runtime_error("GrGLMakeNativeInterface / MakeEGL failed");
+         h->ctx = GrDirectContexts::MakeGL(h->xface);
+         if (!h->ctx)
+            throw std::runtime_error("GrDirectContexts::MakeGL failed");
+      }
+#endif
+
       void create_backing(host_view* h, int w, int hgt)
       {
          Display* d = plat().display;
-         int screen = DefaultScreen(d);
-
-#if defined(ARTIST_CAIRO)
-         if (h->surface) { cairo_surface_destroy(h->surface); h->surface = nullptr; }
-#endif
-         if (h->pixmap)  { XFreePixmap(d, h->pixmap); h->pixmap = 0; }
-
          h->pix_w = w;
          h->pix_h = hgt;
-         h->pixmap = XCreatePixmap(d, h->window, w, hgt, DefaultDepth(d, screen));
 
 #if defined(ARTIST_CAIRO)
+         int screen = DefaultScreen(d);
+         if (h->surface) { cairo_surface_destroy(h->surface); h->surface = nullptr; }
+         if (h->pixmap)  { XFreePixmap(d, h->pixmap); h->pixmap = 0; }
+         h->pixmap = XCreatePixmap(d, h->window, w, hgt, DefaultDepth(d, screen));
          h->surface = cairo_xlib_surface_create(
             d, h->pixmap, DefaultVisual(d, screen), w, hgt);
          cairo_surface_set_device_scale(h->surface, h->scale, h->scale);
+#elif defined(ARTIST_SKIA)
+         // EGL renders directly into the window (double-buffered via swap), so
+         // no pixmap. Recreate the Skia render target wrapping the framebuffer.
+         (void)d;
+         h->skia_surface.reset();
+         eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context);
+         GrGLFramebufferInfo info;
+         info.fFBOID  = 0;
+         info.fFormat = GL_RGBA8;
+         auto target = GrBackendRenderTargets::MakeGL(w, hgt, 0, 8, info);
+         h->skia_surface = SkSurfaces::WrapBackendRenderTarget(
+            h->ctx.get(), target, kBottomLeft_GrSurfaceOrigin,
+            kRGBA_8888_SkColorType, nullptr, nullptr);
 #endif
       }
 
@@ -447,10 +540,22 @@ namespace cycfi::elements
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(h->surface);
-#endif
          if (h->pixmap && h->gc)
             XCopyArea(d, h->pixmap, h->window, h->gc, 0, 0, h->pix_w, h->pix_h, 0, 0);
          XFlush(d);
+#elif defined(ARTIST_SKIA)
+         (void)d;
+         if (!h->skia_surface)
+            return;
+         SkCanvas* gpu = h->skia_surface->getCanvas();
+         gpu->save();
+         gpu->scale(h->scale, h->scale);   // logical → physical
+         auto cnv = canvas{gpu};
+         view.draw(cnv);
+         gpu->restore();
+         h->ctx->flushAndSubmit(h->skia_surface.get());
+         eglSwapBuffers(h->egl_display, h->egl_surface);
+#endif
       }
    }
 
@@ -810,7 +915,11 @@ namespace cycfi::elements
       // Default themed arrow cursor (avoids the tiny core X cursor on enter).
       apply_cursor(_view->window, cursor_type::arrow);
 
+#if defined(ARTIST_CAIRO)
       _view->gc = XCreateGC(d, _view->window, 0, nullptr);
+#elif defined(ARTIST_SKIA)
+      init_egl_skia(_view);
+#endif
       int w = 0, hgt = 0;
       window_pixel_size(_view->window, w, hgt);
       _view->size = {float(w / _view->scale), float(hgt / _view->scale)};
@@ -831,11 +940,21 @@ namespace cycfi::elements
 #if defined(ARTIST_CAIRO)
       if (_view->surface)
          cairo_surface_destroy(_view->surface);
-#endif
       if (_view->pixmap)
          XFreePixmap(d, _view->pixmap);
       if (_view->gc)
          XFreeGC(d, _view->gc);
+#elif defined(ARTIST_SKIA)
+      _view->skia_surface.reset();
+      _view->ctx.reset();
+      _view->xface.reset();
+      if (_view->egl_surface != EGL_NO_SURFACE)
+         eglDestroySurface(_view->egl_display, _view->egl_surface);
+      if (_view->egl_context != EGL_NO_CONTEXT)
+         eglDestroyContext(_view->egl_display, _view->egl_context);
+      if (_view->egl_display != EGL_NO_DISPLAY)
+         eglTerminate(_view->egl_display);
+#endif
       delete _view;
       _view = nullptr;
    }

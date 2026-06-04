@@ -14,8 +14,6 @@
 #include <libdecor.h>
 #include <xkbcommon/xkbcommon.h>
 #include <linux/input-event-codes.h>
-#include "fractional-scale-v1-client-protocol.h"
-#include "viewporter-client-protocol.h"
 
 #if defined(ARTIST_SKIA)
 # error "Wayland Skia host not yet implemented — build with ELEMENTS_CAIRO=ON for now"
@@ -28,8 +26,12 @@
 #include <unistd.h>
 #include <limits.h>
 #include <cstring>
+#include <cstdio>
+#include <cstdlib>
 #include <cmath>
 #include <map>
+#include <set>
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -102,9 +104,9 @@ namespace cycfi::elements
       bool              configured = false;
       bool              pending = false;       // a render was deferred (both busy)
 
-      // wp_fractional_scale_v1 + wp_viewport (per-surface HiDPI)
-      wp_fractional_scale_v1* frac_scale = nullptr;
-      wp_viewport*            viewport = nullptr;
+      // Integer per-monitor HiDPI: the outputs the surface is on; scale = the
+      // max of their wl_output scales (set via wl_surface_set_buffer_scale).
+      std::set<wl_output*> outputs;
 
       shm_buffer        bufs[2];               // double-buffered shm
       std::unique_ptr<drop_info> _drop_info;
@@ -136,9 +138,8 @@ namespace cycfi::elements
          wl_registry*   registry = nullptr;
          wl_compositor* compositor = nullptr;
          wl_shm*        shm = nullptr;
-         wp_fractional_scale_manager_v1* frac_mgr = nullptr;
-         wp_viewporter* viewporter = nullptr;
          libdecor*      decor = nullptr;
+         std::map<wl_output*, int32_t> output_scale;
 
          // Input (wl_seat + xkbcommon)
          wl_seat*       seat = nullptr;
@@ -380,6 +381,17 @@ namespace cycfi::elements
          kb_keymap, kb_enter, kb_leave, kb_key, kb_mods, kb_repeat
       };
 
+      // --- output (per-monitor integer scale) ---
+      void out_geometry(void*, wl_output*, int32_t,int32_t,int32_t,int32_t,int32_t,const char*,const char*,int32_t) {}
+      void out_mode(void*, wl_output*, uint32_t,int32_t,int32_t,int32_t) {}
+      void out_done(void*, wl_output*) {}
+      void out_scale(void*, wl_output* o, int32_t factor) { plat().output_scale[o] = factor; }
+      void out_name(void*, wl_output*, const char*) {}
+      void out_description(void*, wl_output*, const char*) {}
+      constexpr wl_output_listener output_listener = {
+         out_geometry, out_mode, out_done, out_scale, out_name, out_description
+      };
+
       // --- seat ---
       // Uses the passed platform* (not plat()) — this can fire during the
       // platform's own construction (registry roundtrip), and calling plat()
@@ -410,12 +422,12 @@ namespace cycfi::elements
                wl_registry_bind(reg, name, &wl_compositor_interface, 4));
          else if (!strcmp(iface, wl_shm_interface.name))
             p->shm = static_cast<wl_shm*>(wl_registry_bind(reg, name, &wl_shm_interface, 1));
-         else if (!strcmp(iface, wp_fractional_scale_manager_v1_interface.name))
-            p->frac_mgr = static_cast<wp_fractional_scale_manager_v1*>(
-               wl_registry_bind(reg, name, &wp_fractional_scale_manager_v1_interface, 1));
-         else if (!strcmp(iface, wp_viewporter_interface.name))
-            p->viewporter = static_cast<wp_viewporter*>(
-               wl_registry_bind(reg, name, &wp_viewporter_interface, 1));
+         else if (!strcmp(iface, wl_output_interface.name))
+         {
+            auto* o = static_cast<wl_output*>(wl_registry_bind(reg, name, &wl_output_interface, 2));
+            p->output_scale[o] = 1;
+            wl_output_add_listener(o, &output_listener, nullptr);
+         }
          else if (!strcmp(iface, wl_seat_interface.name))
          {
             p->seat = static_cast<wl_seat*>(wl_registry_bind(reg, name, &wl_seat_interface, 5));
@@ -510,32 +522,56 @@ namespace cycfi::elements
 #endif
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
-         if (h->viewport)
-            wp_viewport_set_destination(h->viewport, int(h->size.x), int(h->size.y));
          b->busy = true;
          wl_surface_attach(h->surface, b->buffer, 0, 0);
          wl_surface_damage_buffer(h->surface, 0, 0, w, hgt);
          wl_surface_commit(h->surface);
       }
 
-      // wp_fractional_scale_v1: preferred_scale in 1/120ths.
-      void frac_preferred(void* data, wp_fractional_scale_v1*, uint32_t scale_120)
+      void update_view_scale(base_view* view)
       {
-         auto* view = static_cast<base_view*>(data);
          auto* h = platform_access::get_host_view(*view);
-         double s = double(scale_120) / 120.0;
-         if (s != h->scale && h->configured)
+         int sc = 1;
+         for (auto* o : h->outputs)
+            if (auto it = plat().output_scale.find(o); it != plat().output_scale.end())
+               sc = std::max(sc, it->second);
+         if (double(sc) != h->scale)
          {
-            h->scale = s;
-            create_buffer(h);
-            render(*view);
-         }
-         else
-         {
-            h->scale = s;
+            h->scale = sc;
+            wl_surface_set_buffer_scale(h->surface, sc);
+            if (h->configured)
+            {
+               // Preserve the LOGICAL size across the scale change. Otherwise
+               // libdecor keeps the buffer size and halves the logical size
+               // (e.g. 640 logical → 320 on a 1×→2× move). A client-initiated
+               // state commit (null configuration) tells libdecor the content
+               // is still h->size logical, so it doubles the buffer instead.
+               auto* st = libdecor_state_new(
+                  int(std::lround(h->size.x)), int(std::lround(h->size.y)));
+               libdecor_frame_commit(h->frame, st, nullptr);
+               libdecor_state_free(st);
+               create_buffer(h);
+               render(*view);
+            }
          }
       }
-      constexpr wp_fractional_scale_v1_listener frac_listener = { frac_preferred };
+      void surface_enter(void* data, wl_surface*, wl_output* output)
+      {
+         auto* view = static_cast<base_view*>(data);
+         platform_access::get_host_view(*view)->outputs.insert(output);
+         update_view_scale(view);
+      }
+      void surface_leave(void* data, wl_surface*, wl_output* output)
+      {
+         auto* view = static_cast<base_view*>(data);
+         platform_access::get_host_view(*view)->outputs.erase(output);
+         update_view_scale(view);
+      }
+      void surface_pref_scale(void*, wl_surface*, int32_t) {}
+      void surface_pref_transform(void*, wl_surface*, uint32_t) {}
+      constexpr wl_surface_listener surface_listener = {
+         surface_enter, surface_leave, surface_pref_scale, surface_pref_transform
+      };
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -554,6 +590,10 @@ namespace cycfi::elements
       auto* h = platform_access::get_host_view(*i->second);
       h->size = {float(content_w), float(content_h)};
       h->configured = true;
+      if (std::getenv("ELEMENTS_WL_DEBUG"))
+         std::fprintf(stderr, "[wl] configure content=%dx%d scale=%g buffer=%dx%d\n",
+            content_w, content_h, h->scale,
+            int(std::ceil(content_w * h->scale)), int(std::ceil(content_h * h->scale)));
       create_buffer(h);
    }
 
@@ -598,14 +638,7 @@ namespace cycfi::elements
       _view->surface = get_surface(*h);
       _view->frame = get_frame(*h);
 
-      // Per-surface fractional scale + viewport (HiDPI).
-      if (plat().frac_mgr && plat().viewporter)
-      {
-         _view->frac_scale = wp_fractional_scale_manager_v1_get_fractional_scale(
-            plat().frac_mgr, _view->surface);
-         wp_fractional_scale_v1_add_listener(_view->frac_scale, &frac_listener, this);
-         _view->viewport = wp_viewporter_get_viewport(plat().viewporter, _view->surface);
-      }
+      wl_surface_add_listener(_view->surface, &surface_listener, this);
 
       bind_view(*h, this);
    }
@@ -615,8 +648,6 @@ namespace cycfi::elements
       plat().views.erase(_view->surface);
       destroy_buffer(_view->bufs[0]);
       destroy_buffer(_view->bufs[1]);
-      if (_view->viewport)   wp_viewport_destroy(_view->viewport);
-      if (_view->frac_scale) wp_fractional_scale_v1_destroy(_view->frac_scale);
       delete _view;
       _view = nullptr;
    }

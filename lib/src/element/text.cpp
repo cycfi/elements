@@ -236,11 +236,22 @@ namespace cycfi::elements
 
             if (btn.num_clicks == 2)
             {
-               while (end < _size && !word_break(end))
+               // word_break(i) marks a UAX-29 word boundary AFTER character i.
+               // Select [start, end) for the word containing the click: extend
+               // end past the boundary (exclusive), and pull start back to the
+               // boundary at or before the click.  Uses the layout word breaks
+               // directly (not the line-break-augmented helper) so the first
+               // word is handled correctly.
+               auto word_brk = [this](int i)
+                  { return get_layout().word_break(i) == text_layout::allow_break; };
+               while (end < _size && !word_brk(end))
                   ++end;
-               while (start >= 0 && !word_break(start))
+               if (end < _size)
+                  ++end;
+               while (start > 0 && !word_brk(start - 1))
                   --start;
-               fixup();
+               _select_start = start;
+               _select_end = end;
             }
             else if (btn.num_clicks == 3)
             {
@@ -420,6 +431,11 @@ namespace cycfi::elements
             while (pos != size && word_break(pos))
                ++pos;
             while (pos != size && !word_break(pos))
+               ++pos;
+            // word_break marks the boundary AFTER the word's last character;
+            // step past it so the caret lands after the word (matching the
+            // symmetric adjustment in prev_word).
+            if (pos != size)
                ++pos;
             _select_end = pos;
          }

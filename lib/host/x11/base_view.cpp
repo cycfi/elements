@@ -49,6 +49,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdint>
+#include <cstdio>
+#include <chrono>
 
 namespace cycfi::artist
 {
@@ -127,6 +129,11 @@ namespace cycfi::elements
       sk_sp<SkSurface>           skia_surface;
 #endif
       std::unique_ptr<drop_info> _drop_info;
+
+      // XDND (drag-and-drop) state for the in-flight drag, if any.
+      ::Window          xdnd_source = 0;   // the drag source window
+      Atom              xdnd_type   = 0;   // matched target atom, or None
+      int               xdnd_version = 0;
    };
 
    struct platform_access
@@ -149,6 +156,10 @@ namespace cycfi::elements
          XIM       xim = nullptr;
          Atom      wm_delete = 0;
          Atom      a_clipboard = 0, a_utf8 = 0, a_targets = 0, a_clip_prop = 0;
+         Atom      a_xdnd_aware = 0, a_xdnd_enter = 0, a_xdnd_position = 0,
+                   a_xdnd_status = 0, a_xdnd_leave = 0, a_xdnd_drop = 0,
+                   a_xdnd_finished = 0, a_xdnd_selection = 0, a_xdnd_type_list = 0,
+                   a_xdnd_action_copy = 0, a_uri_list = 0, a_xdnd_prop = 0;
          ::Window  clip_window = 0;        // hidden selection-owner window
          std::string clip_text;            // clipboard text we own
 
@@ -173,6 +184,19 @@ namespace cycfi::elements
             a_utf8      = XInternAtom(display, "UTF8_STRING", False);
             a_targets   = XInternAtom(display, "TARGETS", False);
             a_clip_prop = XInternAtom(display, "ELEMENTS_CLIPBOARD", False);
+
+            a_xdnd_aware       = XInternAtom(display, "XdndAware", False);
+            a_xdnd_enter       = XInternAtom(display, "XdndEnter", False);
+            a_xdnd_position    = XInternAtom(display, "XdndPosition", False);
+            a_xdnd_status      = XInternAtom(display, "XdndStatus", False);
+            a_xdnd_leave       = XInternAtom(display, "XdndLeave", False);
+            a_xdnd_drop        = XInternAtom(display, "XdndDrop", False);
+            a_xdnd_finished    = XInternAtom(display, "XdndFinished", False);
+            a_xdnd_selection   = XInternAtom(display, "XdndSelection", False);
+            a_xdnd_type_list   = XInternAtom(display, "XdndTypeList", False);
+            a_xdnd_action_copy = XInternAtom(display, "XdndActionCopy", False);
+            a_uri_list         = XInternAtom(display, "text/uri-list", False);
+            a_xdnd_prop        = XInternAtom(display, "ELEMENTS_XDND", False);
 
             xim = XOpenIM(display, nullptr, nullptr, nullptr);
 
@@ -417,9 +441,47 @@ namespace cycfi::elements
       XFlush(p.display);
    }
 
+   namespace
+   {
+      std::string exec(char const* cmd)
+      {
+         std::array<char, 128> buffer;
+         std::string result;
+         std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+         if (!pipe)
+            return result;
+         while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+            result += buffer.data();
+         return result;
+      }
+
+      // Read the GNOME natural-scroll setting (mirrors the GTK host). +1 for
+      // natural scrolling, -1 for traditional (the default if unreadable).
+      point get_scroll_direction()
+      {
+         std::string output =
+            exec("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
+         output.erase(std::remove(output.begin(), output.end(), '\n'), output.end());
+         if (output == "true")
+            return {+1.0f, +1.0f};
+         return {-1.0f, -1.0f};
+      }
+   }
+
    point scroll_direction()
    {
-      return {-1.0f, -1.0f};   // traditional; TODO read system setting
+      using namespace std::chrono;
+      static auto last_call = steady_clock::now() - seconds(10);
+      static point dir = get_scroll_direction();
+
+      // Re-read at most every 10s in case the user changed the setting.
+      auto now = steady_clock::now();
+      if (duration_cast<seconds>(now - last_call) >= seconds(10))
+      {
+         dir = get_scroll_direction();
+         last_call = now;
+      }
+      return dir;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -649,6 +711,216 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Drag-and-drop (XDND target side) — mirrors the GTK host's drag-dest:
+   // accepts a text/uri-list drop and routes it to base_view::track_drop/drop.
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      constexpr long the_xdnd_version = 5;
+
+      std::string percent_decode(std::string_view s)
+      {
+         auto hex = [](char c) -> int
+         {
+            if (c >= '0' && c <= '9') return c - '0';
+            if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+            if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+            return -1;
+         };
+         std::string out;
+         out.reserve(s.size());
+         for (std::size_t i = 0; i < s.size(); ++i)
+         {
+            if (s[i] == '%' && i + 2 < s.size())
+            {
+               int hi = hex(s[i+1]), lo = hex(s[i+2]);
+               if (hi >= 0 && lo >= 0)
+               {
+                  out += char((hi << 4) | lo);
+                  i += 2;
+                  continue;
+               }
+            }
+            out += s[i];
+         }
+         return out;
+      }
+
+      // Convert a raw text/uri-list selection (CRLF lines, percent-encoded,
+      // possibly with '#' comment lines) into the '\n'-separated, decoded form
+      // the elements payload parser (get_filepaths) expects.
+      std::string normalize_uri_list(char const* data, unsigned long n)
+      {
+         std::string_view in(data, n);
+         std::string out;
+         std::size_t i = 0;
+         while (i < in.size())
+         {
+            std::size_t e = in.find('\n', i);
+            std::string_view line =
+               in.substr(i, e == std::string_view::npos ? std::string_view::npos : e - i);
+            i = (e == std::string_view::npos) ? in.size() : e + 1;
+            while (!line.empty() &&
+                   (line.back() == '\r' || line.back() == ' ' || line.back() == '\t'))
+               line.remove_suffix(1);
+            if (line.empty() || line.front() == '#')
+               continue;
+            if (!out.empty())
+               out += '\n';
+            out += percent_decode(line);
+         }
+         return out;
+      }
+
+      void send_xdnd(::Window target, Atom message,
+         long d0, long d1, long d2, long d3, long d4)
+      {
+         auto& p = plat();
+         XClientMessageEvent m = {};
+         m.type         = ClientMessage;
+         m.display      = p.display;
+         m.window       = target;
+         m.message_type = message;
+         m.format       = 32;
+         m.data.l[0] = d0; m.data.l[1] = d1; m.data.l[2] = d2;
+         m.data.l[3] = d3; m.data.l[4] = d4;
+         XSendEvent(p.display, target, False, NoEventMask, (XEvent*)&m);
+         XFlush(p.display);
+      }
+
+      // The offered types are inline in XdndEnter (≤3) or, if the low bit of
+      // data.l[1] is set, in the source's XdndTypeList property.
+      bool source_offers_uri_list(XClientMessageEvent& e)
+      {
+         auto& p = plat();
+         if (e.data.l[1] & 1)
+         {
+            Atom type; int fmt; unsigned long n, after; unsigned char* data = nullptr;
+            bool found = false;
+            if (XGetWindowProperty(p.display, e.data.l[0], p.a_xdnd_type_list, 0, 1024,
+                  False, XA_ATOM, &type, &fmt, &n, &after, &data) == Success && data)
+            {
+               Atom* atoms = reinterpret_cast<Atom*>(data);
+               for (unsigned long i = 0; i < n && !found; ++i)
+                  found = (atoms[i] == p.a_uri_list);
+               XFree(data);
+            }
+            return found;
+         }
+         return Atom(e.data.l[2]) == p.a_uri_list
+             || Atom(e.data.l[3]) == p.a_uri_list
+             || Atom(e.data.l[4]) == p.a_uri_list;
+      }
+
+      point xdnd_logical_pos(host_view* h, long packed_xy)
+      {
+         Display* d = plat().display;
+         int rx = int((packed_xy >> 16) & 0xffff);
+         int ry = int(packed_xy & 0xffff);
+         ::Window child;
+         int wx = 0, wy = 0;
+         XTranslateCoordinates(d, DefaultRootWindow(d), h->window, rx, ry, &wx, &wy, &child);
+         return logical_pos(h, wx, wy);
+      }
+
+      void handle_xdnd(base_view& view, host_view* h, XClientMessageEvent& e)
+      {
+         auto& p = plat();
+
+         if (e.message_type == p.a_xdnd_enter)
+         {
+            h->xdnd_source  = e.data.l[0];
+            h->xdnd_version = (e.data.l[1] >> 24) & 0xff;
+            h->xdnd_type    = source_offers_uri_list(e) ? p.a_uri_list : None;
+         }
+         else if (e.message_type == p.a_xdnd_position)
+         {
+            h->xdnd_source = e.data.l[0];
+            point pos = xdnd_logical_pos(h, e.data.l[2]);
+            h->cursor_position = pos;
+
+            if (h->xdnd_type != None)
+            {
+               if (!h->_drop_info)
+               {
+                  h->_drop_info = std::make_unique<drop_info>();
+                  h->_drop_info->data["text/uri-list"] = std::string{};
+                  h->_drop_info->where = pos;
+                  view.track_drop(*h->_drop_info, cursor_tracking::entering);
+               }
+               else
+               {
+                  h->_drop_info->where = pos;
+                  view.track_drop(*h->_drop_info, cursor_tracking::hovering);
+               }
+            }
+
+            // Accept (action copy) iff we matched a target; rect = 0 so the
+            // source keeps sending position updates for every move.
+            send_xdnd(h->xdnd_source, p.a_xdnd_status, long(h->window),
+               h->xdnd_type != None ? 1 : 0, 0, 0,
+               h->xdnd_type != None ? long(p.a_xdnd_action_copy) : long(None));
+         }
+         else if (e.message_type == p.a_xdnd_leave)
+         {
+            if (h->_drop_info)
+            {
+               view.track_drop(*h->_drop_info, cursor_tracking::leaving);
+               h->_drop_info.reset();
+            }
+            h->xdnd_source = 0;
+            h->xdnd_type   = None;
+         }
+         else if (e.message_type == p.a_xdnd_drop)
+         {
+            ::Window source = e.data.l[0];
+            ::Time   t = e.data.l[2] ? ::Time(e.data.l[2]) : CurrentTime;
+            bool success = false;
+
+            if (h->xdnd_type != None && h->_drop_info)
+            {
+               XConvertSelection(p.display, p.a_xdnd_selection, h->xdnd_type,
+                  p.a_xdnd_prop, h->window, t);
+               XFlush(p.display);
+
+               // Wait (bounded) for the conversion reply on our window.
+               XEvent ev;
+               bool got = false;
+               for (int i = 0; i < 500 && !got; ++i)
+               {
+                  if (XCheckTypedWindowEvent(p.display, h->window, SelectionNotify, &ev))
+                     got = true;
+                  else
+                     usleep(1000);
+               }
+               if (got && ev.xselection.property != None)
+               {
+                  Atom type; int fmt; unsigned long n, after; unsigned char* data = nullptr;
+                  XGetWindowProperty(p.display, h->window, p.a_xdnd_prop, 0, ~0L, True,
+                     AnyPropertyType, &type, &fmt, &n, &after, &data);
+                  if (data)
+                  {
+                     h->_drop_info->data["text/uri-list"] =
+                        normalize_uri_list(reinterpret_cast<char*>(data), n);
+                     XFree(data);
+                     success = view.drop(*h->_drop_info);
+                  }
+               }
+            }
+
+            // Tell the source the transfer is complete.
+            send_xdnd(source, p.a_xdnd_finished, long(h->window),
+               success ? 1 : 0,
+               success ? long(p.a_xdnd_action_copy) : long(None), 0, 0);
+
+            h->_drop_info.reset();
+            h->xdnd_source = 0;
+            h->xdnd_type   = None;
+         }
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Per-view event handling
    ////////////////////////////////////////////////////////////////////////////
    namespace
@@ -837,6 +1109,16 @@ namespace cycfi::elements
                break;
             }
 
+            case ClientMessage:
+            {
+               Atom mt = ev.xclient.message_type;
+               auto& p = plat();
+               if (mt == p.a_xdnd_enter || mt == p.a_xdnd_position ||
+                   mt == p.a_xdnd_leave || mt == p.a_xdnd_drop)
+                  handle_xdnd(view, h, ev.xclient);
+               break;
+            }
+
             default:
                break;
          }
@@ -911,6 +1193,13 @@ namespace cycfi::elements
          ButtonPressMask | ButtonReleaseMask | PointerMotionMask |
          KeyPressMask | KeyReleaseMask |
          EnterWindowMask | LeaveWindowMask | FocusChangeMask);
+
+      // Advertise XDND support so drag sources will target this window.
+      {
+         long version = the_xdnd_version;
+         XChangeProperty(d, _view->window, plat().a_xdnd_aware, XA_ATOM, 32,
+            PropModeReplace, (unsigned char*)&version, 1);
+      }
 
       // Default themed arrow cursor (avoids the tiny core X cursor on enter).
       apply_cursor(_view->window, cursor_type::arrow);

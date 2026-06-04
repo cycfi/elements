@@ -825,14 +825,12 @@ namespace cycfi::elements
 
    void base_view::refresh(rect area)
    {
-      GtkAllocation alloc;
-      gtk_widget_get_allocation(_view->_widget, &alloc);
-
       // Note: GTK uses int coordinates. Make sure area is not empty
-      // when converting from float to int.
+      // when converting from float to int.  Coordinates are widget-local
+      // (the drawing area is windowless), so no allocation offset is added.
       gtk_widget_queue_draw_area(_view->_widget,
-         std::floor(alloc.x + area.left),
-         std::floor(alloc.y + area.top),
+         std::floor(area.left),
+         std::floor(area.top),
          std::max<float>(area.width(), 1),
          std::max<float>(area.height(), 1)
       );

@@ -26,7 +26,9 @@ namespace cycfi::elements
       Display* d = get_display();
       int screen = DefaultScreen(d);
       ::Window root = RootWindow(d, screen);
-      double scale = display_scale();
+      // Scale of the monitor the window will open on (window not created yet).
+      double scale = monitor_scale(int(std::lround(bounds.left)),
+                                   int(std::lround(bounds.top)));
 
       int x = int(std::lround(bounds.left * scale));
       int y = int(std::lround(bounds.top * scale));
@@ -61,14 +63,14 @@ namespace cycfi::elements
       Display* d = get_display();
       XWindowAttributes attr;
       XGetWindowAttributes(d, _window->window, &attr);
-      double scale = display_scale();
+      double scale = window_scale(_window->window);
       return {float(attr.width / scale), float(attr.height / scale)};
    }
 
    void window::size(point const& p)
    {
       Display* d = get_display();
-      double scale = display_scale();
+      double scale = window_scale(_window->window);
       XResizeWindow(d, _window->window,
          (unsigned)std::lround(p.x * scale), (unsigned)std::lround(p.y * scale));
    }
@@ -76,7 +78,7 @@ namespace cycfi::elements
    void window::limits(view_limits limits_)
    {
       Display* d = get_display();
-      double scale = display_scale();
+      double scale = window_scale(_window->window);
       XSizeHints* hints = XAllocSizeHints();
       if (!hints)
          return;
@@ -97,14 +99,14 @@ namespace cycfi::elements
       int x = 0, y = 0;
       ::Window root = DefaultRootWindow(d);
       XTranslateCoordinates(d, _window->window, root, 0, 0, &x, &y, &child);
-      double scale = display_scale();
+      double scale = window_scale(_window->window);
       return {float(x / scale), float(y / scale)};
    }
 
    void window::position(point const& p)
    {
       Display* d = get_display();
-      double scale = display_scale();
+      double scale = window_scale(_window->window);
       XMoveWindow(d, _window->window,
          int(std::lround(p.x * scale)), int(std::lround(p.y * scale)));
    }

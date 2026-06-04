@@ -15,6 +15,7 @@
 #include <X11/Xresource.h>
 #include <X11/Xatom.h>
 #include <X11/Xcursor/Xcursor.h>
+#include <X11/extensions/Xrandr.h>
 
 #if defined(ARTIST_SKIA)
 # error "X11 Skia host not yet implemented — build Elements with ELEMENTS_CAIRO=ON for now"
@@ -187,6 +188,57 @@ namespace cycfi::elements
          }
       }
       return scale;
+   }
+
+   // Per-monitor scale via XRandR: find the CRTC containing the point, derive
+   // its DPI from physical size, round to an integer scale. Falls back to the
+   // global Xft.dpi scale if no monitor matches. This gives correct sizing on
+   // mixed-DPI multi-monitor setups (works on pure X11 and under XWayland,
+   // which presents X11 windows 1:1 in the shared X coordinate space).
+   double monitor_scale(int px, int py)
+   {
+      Display* d = plat().display;
+      ::Window root = DefaultRootWindow(d);
+      double scale = 0.0;
+
+      if (XRRScreenResources* res = XRRGetScreenResourcesCurrent(d, root))
+      {
+         for (int i = 0; i < res->ncrtc && scale == 0.0; ++i)
+         {
+            XRRCrtcInfo* c = XRRGetCrtcInfo(d, res, res->crtcs[i]);
+            if (!c)
+               continue;
+            if (c->width > 0 && c->noutput > 0 &&
+                px >= c->x && px < c->x + int(c->width) &&
+                py >= c->y && py < c->y + int(c->height))
+            {
+               if (XRROutputInfo* o = XRRGetOutputInfo(d, res, c->outputs[0]))
+               {
+                  if (o->mm_width > 0)
+                  {
+                     double dpi = c->width / (o->mm_width / 25.4);
+                     scale = std::max(1.0, std::round(dpi / 96.0));
+                  }
+                  XRRFreeOutputInfo(o);
+               }
+            }
+            XRRFreeCrtcInfo(c);
+         }
+         XRRFreeScreenResources(res);
+      }
+      return scale > 0.0 ? scale : std::max(1.0, display_scale());
+   }
+
+   // Scale of the monitor under a window's center.
+   double window_scale(::Window w)
+   {
+      Display* d = plat().display;
+      ::Window root = DefaultRootWindow(d), child;
+      int rx = 0, ry = 0;
+      XTranslateCoordinates(d, w, root, 0, 0, &rx, &ry, &child);
+      XWindowAttributes attr;
+      XGetWindowAttributes(d, w, &attr);
+      return monitor_scale(rx + attr.width / 2, ry + attr.height / 2);
    }
 
    void register_close(::Window w, std::function<void()> on_close)
@@ -517,11 +569,31 @@ namespace cycfi::elements
 
             case ConfigureNotify:
             {
-               int w = ev.xconfigure.width;
-               int hgt = ev.xconfigure.height;
-               if (w != h->pix_w || hgt != h->pix_h)
-                  create_backing(h, w, hgt);
-               h->size = {float(w / h->scale), float(hgt / h->scale)};
+               // Per-monitor HiDPI: if the window moved to a monitor with a
+               // different scale, keep the logical size and resize the X window
+               // to logical×scale (so it stays the right physical size). The
+               // resize triggers another ConfigureNotify at the same scale,
+               // which falls into the else-branch — no loop.
+               double new_scale = window_scale(h->window);
+               if (new_scale != h->scale)
+               {
+                  h->scale = new_scale;
+                  int pw = int(std::lround(h->size.x * new_scale));
+                  int ph = int(std::lround(h->size.y * new_scale));
+                  XResizeWindow(plat().display, h->window, pw, ph);
+                  create_backing(h, pw, ph);   // uses h->scale for device scale
+                  do_render(view);
+               }
+               else
+               {
+                  int w = ev.xconfigure.width;
+                  int hgt = ev.xconfigure.height;
+                  if (w != h->pix_w || hgt != h->pix_h)
+                  {
+                     create_backing(h, w, hgt);
+                     h->size = {float(w / h->scale), float(hgt / h->scale)};
+                  }
+               }
                break;
             }
 
@@ -718,7 +790,7 @@ namespace cycfi::elements
    {
       Display* d = get_display();
       _view->window = get_window(*h);
-      _view->scale = display_scale();
+      _view->scale = window_scale(_view->window);
 
       if (XIM xim = get_xim())
       {
@@ -741,6 +813,7 @@ namespace cycfi::elements
       _view->gc = XCreateGC(d, _view->window, 0, nullptr);
       int w = 0, hgt = 0;
       window_pixel_size(_view->window, w, hgt);
+      _view->size = {float(w / _view->scale), float(hgt / _view->scale)};
       create_backing(_view, w, hgt);
 
       register_view(_view->window, this);

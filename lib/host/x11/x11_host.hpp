@@ -22,7 +22,9 @@ namespace cycfi::elements
    Display* get_display();
    Atom     get_wm_delete_atom();
    XIM      get_xim();
-   double   display_scale();
+   double   display_scale();                  // global Xft.dpi/96 (fallback)
+   double   monitor_scale(int root_x, int root_y);  // per-monitor (XRandR)
+   double   window_scale(::Window w);         // scale of monitor under window center
 
    // The X11 Window backing a host_window (defined in window.cpp).
    ::Window get_window(host_window& h);

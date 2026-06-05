@@ -506,5 +506,25 @@ namespace cycfi::elements
          }
       }
    }
+
+   std::string drop_receiver::class_name() const
+   {
+      return "drop_receiver";
+   }
+
+   std::string drop_box_element::class_name() const
+   {
+      return "drop_box";
+   }
+
+   std::string drop_inserter_element::class_name() const
+   {
+      return "drop_inserter";
+   }
+
+   std::string draggable_element::class_name() const
+   {
+      return "draggable";
+   }
 }
 

@@ -39,6 +39,7 @@ namespace cycfi::elements
       bool                    is_open(view& view_) const;
       virtual void            open(view& view_);
       virtual  void           close(view& view_);
+      std::string             class_name() const override;
 
       cursor_function         on_cursor = [](auto, auto){};
    };
@@ -94,6 +95,7 @@ namespace cycfi::elements
 
       basic_button_menu*      menu_button();
       void                    menu_button(basic_button_menu* p);
+      std::string             class_name() const override;
 
    private:
 

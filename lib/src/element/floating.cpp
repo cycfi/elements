@@ -34,4 +34,9 @@ namespace cycfi::elements
       ctx.bounds = center(ctx.bounds, this->bounds());
       this->bounds(ctx.bounds);
    }
+
+   std::string floating_element::class_name() const
+   {
+      return "floating";
+   }
 }

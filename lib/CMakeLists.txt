@@ -35,6 +35,7 @@ add_subdirectory(artist)
 # Sources (and Resources)
 
 set(ELEMENTS_SOURCES
+   src/app.cpp
    src/element/button.cpp
    src/element/child_window.cpp
    src/element/composite.cpp
@@ -72,6 +73,9 @@ set(ELEMENTS_SOURCES
    src/element/tile.cpp
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
+   src/support/error_handler.cpp
+   src/support/log.cpp
+   src/support/trace.cpp
    src/support/payload.cpp
    src/support/receiver.cpp
    src/support/text_utils.cpp
@@ -137,7 +141,10 @@ set(ELEMENTS_HEADERS
    include/elements/support.hpp
    include/elements/support/context.hpp
    include/elements/support/draw_utils.hpp
+   include/elements/support/error_handler.hpp
    include/elements/support/icon_ids.hpp
+   include/elements/support/log.hpp
+   include/elements/support/trace.hpp
    include/elements/support/receiver.hpp
    include/elements/support/text_reader_writer.hpp
    include/elements/support/text_utils.hpp
@@ -271,6 +278,18 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(asio)
 
 target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
+
+###############################################################################
+# quill (logging) — no external deps; linked only by the elements target.
+
+FetchContent_Declare(
+  quill
+  GIT_REPOSITORY https://github.com/odygrd/quill.git
+  GIT_TAG v9.0.3
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(quill)
+target_link_libraries(elements PUBLIC quill::quill)
 
 ###############################################################################
 # Global options

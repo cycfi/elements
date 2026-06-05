@@ -74,6 +74,7 @@ namespace cycfi::elements
       double               value() const override;
       void                 value(double val) override;
       void                 edit(view& view_, double val) override;
+      std::string          class_name() const override;
 
       dial_function        on_change;
 

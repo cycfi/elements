@@ -66,6 +66,7 @@ namespace cycfi::elements
       color                   get_color() const          { return _color; }
       void                    set_font(font_descr f)     { _font = f; }
       font const&             get_font() const           { return _font; }
+      std::string             class_name() const override;
 
    private:
 
@@ -134,6 +135,7 @@ namespace cycfi::elements
       basic_text_box&&        enable()    { _enabled = true; return std::move(*this); }
       bool                    is_enabled() const override   { return _enabled; };
       void                    enable(bool e) override       { _enabled = e; };
+      std::string             class_name() const override;
 
    protected:
 
@@ -230,6 +232,7 @@ namespace cycfi::elements
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
       bool                    end_focus() override;
+      std::string             class_name() const override;
 
       text_function           on_text;
       enter_function          on_enter;

@@ -58,6 +58,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override = 0;
       void                    refresh(context const& ctx, element& element, int outward = 0) override;
       void                    in_context_do(context const& ctx, element& e, context_function f) override;
+      std::string             class_name() const override;
 
       using element::refresh;
 

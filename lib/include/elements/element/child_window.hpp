@@ -29,6 +29,7 @@ namespace cycfi::elements
       using floating_element::floating_element;
 
       bool                 click(context const& ctx, mouse_button btn) override;
+      std::string          class_name() const override;
    };
 
    /**
@@ -83,6 +84,7 @@ namespace cycfi::elements
       bool                 click(context const& ctx, mouse_button btn) override;
       void                 drag(context const& ctx, mouse_button btn) override;
       void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+      std::string          class_name() const override;
    };
 
    /**

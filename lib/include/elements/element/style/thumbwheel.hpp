@@ -59,6 +59,7 @@ namespace cycfi::elements
       void                 draw(context const& ctx) override;
       void                 align(double val) override;
       double               align() const override;
+      std::string          class_name() const override { return "vthumbwheel"; }
    };
 
    struct basic_hthumbwheel_element : hport_element, basic_thumbwheel_element
@@ -69,6 +70,7 @@ namespace cycfi::elements
       void                 draw(context const& ctx) override;
       void                 align(double val) override;
       double               align() const override;
+      std::string          class_name() const override { return "hthumbwheel"; }
    };
 
    template <concepts::Element Subject>

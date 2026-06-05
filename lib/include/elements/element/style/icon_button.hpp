@@ -22,6 +22,7 @@ namespace cycfi::elements
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
+      std::string             class_name() const override { return "icon_button"; }
 
       float                   _size;
    };

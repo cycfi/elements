@@ -88,6 +88,7 @@ namespace cycfi::elements
       bool              hilite() const;
 
       void              edit(view& view_, bool val) override;
+      std::string       class_name() const override;
 
       button_function   on_click;
 
@@ -193,6 +194,7 @@ namespace cycfi::elements
 
       bool              click(context const& ctx, mouse_button btn) override;
       void              drag(context const& ctx, mouse_button btn) override;
+      std::string       class_name() const override;
 
    private:
 
@@ -255,6 +257,7 @@ namespace cycfi::elements
       using basic_button::basic_button;
 
       bool              click(context const& ctx, mouse_button btn) override;
+      std::string       class_name() const override;
    };
 
    namespace concepts
@@ -315,6 +318,7 @@ namespace cycfi::elements
       void              select(bool state) override;
       bool              is_selected() const override;
       bool              click(context const& ctx, mouse_button btn) override;
+      std::string       class_name() const override;
    };
 
    /**

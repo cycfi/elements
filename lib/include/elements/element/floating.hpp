@@ -30,6 +30,7 @@ namespace cycfi::elements
 
       rect                    bounds() const;
       void                    bounds(rect bounds_);
+      std::string             class_name() const override;
 
    private:
 

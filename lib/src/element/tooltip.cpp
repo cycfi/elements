@@ -103,4 +103,9 @@ namespace cycfi::elements
          close_tip(ctx.view);
       return r;
    }
+
+   std::string tooltip_element::class_name() const
+   {
+      return "tooltip";
+   }
 }

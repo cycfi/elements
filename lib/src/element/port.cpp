@@ -675,4 +675,24 @@ namespace cycfi::elements
       }
       return handled;
    }
+
+   std::string port_element::class_name() const
+   {
+      return "port";
+   }
+
+   std::string vport_element::class_name() const
+   {
+      return "vport";
+   }
+
+   std::string hport_element::class_name() const
+   {
+      return "hport";
+   }
+
+   std::string scroller_base::class_name() const
+   {
+      return "scroller";
+   }
 }

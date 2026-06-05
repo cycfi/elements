@@ -80,4 +80,9 @@ namespace cycfi::elements
       using htile = range_composite<htile_element>;
       return std::make_shared<htile>(*this, first, last);
    }
+
+   std::string flow_element::class_name() const
+   {
+      return "flow";
+   }
 }

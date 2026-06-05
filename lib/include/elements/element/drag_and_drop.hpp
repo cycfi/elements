@@ -41,6 +41,7 @@ namespace cycfi::elements
       bool                    is_tracking() const     { return _is_tracking; }
       mime_types const&       get_mime_types() const  { return _mime_types; }
       mime_types&             get_mime_types()        { return _mime_types; }
+      std::string             class_name() const override;
 
    private:
 
@@ -78,6 +79,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      std::string             class_name() const override;
 
       on_drop_function        on_drop = [](drop_info const& /*info*/){ return false; };
    };
@@ -165,6 +167,7 @@ namespace cycfi::elements
       int                     insertion_pos() const { return _insertion_pos; }
       void                    move(indices_type const& indices);
       void                    erase(indices_type const& indices);
+      std::string             class_name() const override;
 
    public:
 
@@ -234,6 +237,7 @@ namespace cycfi::elements
 
       bool                    is_selected() const override;
       void                    select(bool state) override;
+      std::string             class_name() const override;
 
    private:
 

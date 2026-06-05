@@ -29,6 +29,7 @@ namespace cycfi::elements
       hit_info                hit_element(context const& ctx, point p, bool control) const override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
       bool                    reverse_index() const override { return true; }
+      std::string             class_name() const override;
 
       using composite_base::focus;
 
@@ -97,6 +98,7 @@ namespace cycfi::elements
 
       void                 select(std::size_t index);
       std::size_t          selected() const { return _selected_index; }
+      std::string          class_name() const override;
 
    private:
 

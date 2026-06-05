@@ -99,4 +99,9 @@ namespace cycfi::elements
       ctx.view.refresh(ctx);
       return true;
    }
+
+   std::string thumbwheel_base::class_name() const
+   {
+      return "thumbwheel";
+   }
 }

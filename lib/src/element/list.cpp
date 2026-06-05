@@ -496,6 +496,15 @@ namespace cycfi::elements
       return r;
    }
 
+   std::string list::class_name() const
+   {
+      return "list";
+   }
+
+   std::string hlist::class_name() const
+   {
+      return "hlist";
+   }
 }
 
 

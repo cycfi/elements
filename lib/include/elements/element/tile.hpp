@@ -24,6 +24,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
+      std::string             class_name() const override;
 
    private:
 
@@ -71,6 +72,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
+      std::string             class_name() const override;
 
    private:
 

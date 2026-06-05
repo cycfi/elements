@@ -52,6 +52,7 @@ namespace cycfi::elements
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
+      std::string             class_name() const override;
 
       menu_position           position() const;
       void                    position(menu_position pos);
@@ -248,6 +249,7 @@ namespace cycfi::elements
 
       bool                    is_selected() const override;
       void                    select(bool state) override;
+      std::string             class_name() const override;
 
    private:
 

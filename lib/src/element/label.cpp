@@ -70,5 +70,15 @@ namespace cycfi::elements
    {
       return _is_enabled;
    }
+
+   std::string default_label_styler::class_name() const
+   {
+      return "label";
+   }
+
+   std::string default_heading::class_name() const
+   {
+      return "heading";
+   }
 }
 

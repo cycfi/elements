@@ -63,4 +63,14 @@ namespace cycfi::elements
       if (_menu_button)
          _menu_button->value(0);
    }
+
+   std::string basic_popup_element::class_name() const
+   {
+      return "popup";
+   }
+
+   std::string basic_popup_menu_element::class_name() const
+   {
+      return "popup_menu";
+   }
 }

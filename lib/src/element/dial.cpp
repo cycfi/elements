@@ -103,4 +103,9 @@ namespace cycfi::elements
       ctx.view.refresh(ctx);
       return true;
    }
+
+   std::string basic_dial::class_name() const
+   {
+      return "dial";
+   }
 }

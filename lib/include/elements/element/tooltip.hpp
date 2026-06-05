@@ -40,6 +40,7 @@ namespace cycfi::elements
 
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    key(context const& ctx, key_info k) override;
+      std::string             class_name() const override;
 
       on_hover_function       on_hover = [](bool){};
 

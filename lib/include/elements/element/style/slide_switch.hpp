@@ -20,6 +20,7 @@ namespace cycfi::elements
       view_limits       limits(basic_context const& ctx) const override;
       void              draw(context const& ctx) override;
       bool              wants_control() const override;
+      std::string       class_name() const override { return "slide_switch"; }
 
    private:
 

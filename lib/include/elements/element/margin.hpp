@@ -51,6 +51,7 @@ namespace cycfi::elements
                               margin_element(Rect margin_, Subject subject);
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+      std::string             class_name() const override { return "margin"; }
 
    private:
 

@@ -333,4 +333,14 @@ namespace cycfi::elements
    {
       return true;
    }
+
+   std::string basic_button_menu::class_name() const
+   {
+      return "button_menu";
+   }
+
+   std::string basic_menu_item_element::class_name() const
+   {
+      return "menu_item";
+   }
 }

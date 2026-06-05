@@ -31,6 +31,7 @@ namespace cycfi::elements
    {
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
+      std::string             class_name() const override;
    };
 
    /**
@@ -77,6 +78,8 @@ namespace cycfi::elements
       virtual float           get_corner_radius_top_right() const;
       virtual float           get_corner_radius_bottom_left() const;
       virtual float           get_corner_radius_bottom_right() const;
+
+      std::string             class_name() const override;
    };
 
    namespace concepts

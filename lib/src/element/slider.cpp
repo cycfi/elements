@@ -196,4 +196,14 @@ namespace cycfi::elements
       if (on_change)
          on_change(val);
    }
+
+   std::string slider_base::class_name() const
+   {
+      return "slider";
+   }
+
+   std::string basic_selector_base::class_name() const
+   {
+      return "selector";
+   }
 }

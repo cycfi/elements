@@ -190,5 +190,15 @@ namespace cycfi::elements
          cnv.fill_text(codepoint_to_utf8(get_icon()).c_str(), {icon_pos, mid_y});
       }
    }
+
+   std::string button_styler_base::class_name() const
+   {
+      return "button_styler";
+   }
+
+   std::string default_button_styler::class_name() const
+   {
+      return "button";
+   }
 }
 

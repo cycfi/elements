@@ -6,6 +6,8 @@
 #include <elements/view.hpp>
 #include <elements/window.hpp>
 #include <elements/support/context.hpp>
+#include <elements/support/log.hpp>
+#include <elements/support/trace.hpp>
 
 namespace cycfi::elements
 {
@@ -135,6 +137,29 @@ namespace cycfi::elements
       refresh();
    }
 
+   void view::on_size_change(extent size_)
+   {
+      LOG_INFO(logger(log_cat::view),
+         "on_size_change {}x{}", size_.x, size_.y);
+   }
+
+   void view::on_scale_change(float scale_)
+   {
+      LOG_INFO(logger(log_cat::view),
+         "on_scale_change {}", scale_);
+   }
+
+   void view::on_open(extent size_, float scale)
+   {
+      LOG_INFO(logger(log_cat::view),
+         "on_open {}x{} scale={}", size_.x, size_.y, scale);
+   }
+
+   void view::on_close()
+   {
+      LOG_INFO(logger(log_cat::view), "on_close");
+   }
+
    void view::refresh()
    {
       // Allow refresh to be called from another thread
@@ -205,10 +230,13 @@ namespace cycfi::elements
       if (_content.empty())
          return;
 
+      trace_new_gesture("click");
+      bool handled = false;
       with_context_do(
-         [btn, this](auto const& ctx, auto& _main_element)
+         [btn, this, &handled](auto const& ctx, auto& _main_element)
          {
-            if (_main_element.click(ctx, btn))
+            handled = _main_element.click(ctx, btn);
+            if (handled)
                _is_focus = _main_element.focus();
             else if (btn.down)
                elements::relinquish_focus(_content, ctx);
@@ -216,6 +244,9 @@ namespace cycfi::elements
          },
          *this, _current_bounds
       );
+      LOG_DEBUG(logger(log_cat::input),
+         "click {},{} btn={} down={} clicks={} handled={}",
+         btn.pos.x, btn.pos.y, int(btn.state), btn.down, btn.num_clicks, handled);
    }
 
    void view::drag(mouse_button btn)
@@ -224,6 +255,7 @@ namespace cycfi::elements
       if (_content.empty())
          return;
 
+      trace_new_gesture("drag");
       with_context_do(
          [btn](auto const& ctx, auto& _main_element)
          {
@@ -260,6 +292,8 @@ namespace cycfi::elements
          },
          *this, _current_bounds
       );
+      LOG_DEBUG(logger(log_cat::input),
+         "scroll dir={},{} pos={},{}", dir.x, dir.y, p.x, p.y);
    }
 
    bool view::key(key_info const& k)
@@ -275,6 +309,9 @@ namespace cycfi::elements
          },
          *this, _current_bounds
       );
+      LOG_DEBUG(logger(log_cat::input),
+         "key code={} action={} handled={}",
+         int(k.key), int(k.action), handled);
       return handled;
    }
 

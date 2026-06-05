@@ -245,4 +245,24 @@ namespace cycfi::elements
       }
       return false;
    }
+
+   std::string basic_button::class_name() const
+   {
+      return "button";
+   }
+
+   std::string basic_toggle_button::class_name() const
+   {
+      return "toggle_button";
+   }
+
+   std::string basic_latching_button::class_name() const
+   {
+      return "latching_button";
+   }
+
+   std::string basic_choice::class_name() const
+   {
+      return "choice";
+   }
 }

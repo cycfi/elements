@@ -25,6 +25,8 @@ namespace cycfi::elements
 
                               size_element(point size, Subject subject);
 
+      std::string             class_name() const override { return "size"; }
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
@@ -78,6 +80,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               hsize_element(float width, Subject subject);
+
+      std::string             class_name() const override { return "hsize"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -135,6 +139,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               vsize_element(float height, Subject subject);
+
+      std::string             class_name() const override { return "vsize"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -195,6 +201,8 @@ namespace cycfi::elements
 
                               min_size_element(point size, Subject subject);
 
+      std::string             class_name() const override { return "min_size"; }
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
@@ -248,6 +256,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               hmin_size_element(float width, Subject subject);
+
+      std::string             class_name() const override { return "hmin_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -305,6 +315,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               hmin_element(Subject subject);
+
+      std::string             class_name() const override { return "hmin"; }
       view_limits             limits(basic_context const& ctx) const override;
    };
 
@@ -336,6 +348,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               vmin_size_element(float height, Subject subject);
+
+      std::string             class_name() const override { return "vmin_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -388,6 +402,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               max_size_element(point size, Subject subject);
+
+      std::string             class_name() const override { return "max_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -443,6 +459,8 @@ namespace cycfi::elements
 
                               hmax_size_element(float size, Subject subject);
 
+      std::string             class_name() const override { return "hmax_size"; }
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
 
@@ -492,6 +510,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               vmax_size_element(float size, Subject subject);
+
+      std::string             class_name() const override { return "vmax_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
@@ -545,6 +565,8 @@ namespace cycfi::elements
 
                               hstretch_element(float stretch, Subject subject);
 
+      std::string             class_name() const override { return "hstretch"; }
+
       view_stretch            stretch() const override;
 
       void                    hstretch(float stretch) { _stretch = stretch; }
@@ -590,6 +612,8 @@ namespace cycfi::elements
       using base_type = proxy<Subject>;
 
                               vstretch_element(float stretch, Subject subject);
+
+      std::string             class_name() const override { return "vstretch"; }
 
       view_stretch            stretch() const override;
 
@@ -641,6 +665,7 @@ namespace cycfi::elements
 
       unsigned                span() const override   { return _span; }
       void                    span(float span)        { _span = span; }
+      std::string             class_name() const override { return "span"; }
 
    private:
 
@@ -679,6 +704,7 @@ namespace cycfi::elements
 
       void                    limit(view_limits limits) { _limits = limits; }
       view_limits             limit() const { return _limits; }
+      std::string             class_name() const override { return "limit"; }
 
    private:
 
@@ -727,6 +753,7 @@ namespace cycfi::elements
 
       void                    scale(float scale_) { _scale = scale_; }
       float                   scale() const { return _scale; }
+      std::string             class_name() const override { return "scale"; }
 
    private:
 
@@ -796,6 +823,8 @@ namespace cycfi::elements
       using is_collapsed_function = std::function<bool()>;
 
                               hcollapsible_element(Subject subject);
+
+      std::string             class_name() const override { return "hcollapsible"; }
       view_limits             limits(basic_context const& ctx) const override;
       is_collapsed_function   is_collapsed = []{ return false; };
    };
@@ -831,6 +860,8 @@ namespace cycfi::elements
       using is_collapsed_function = std::function<bool()>;
 
                               vcollapsible_element(Subject subject);
+
+      std::string             class_name() const override { return "vcollapsible"; }
       view_limits             limits(basic_context const& ctx) const override;
       is_collapsed_function   is_collapsed = []{ return false; };
    };

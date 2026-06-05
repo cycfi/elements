@@ -6,6 +6,7 @@
 #include <elements/app.hpp>
 #include <infra/assert.hpp>
 #include <elements/base_view.hpp>
+#include <elements/support/error_handler.hpp>
 #include <elements/window.hpp>
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
@@ -194,7 +195,11 @@ namespace cycfi::elements
 #if defined(ARTIST_SKIA)
       void realize(GtkGLArea* area, gpointer user_data)
       {
-         auto error = [](char const* msg) { throw std::runtime_error(msg); };
+         auto error = [](char const* msg)
+         {
+            error_handler::get().on_render_error(error_id::graphics_context_failed, msg);
+            throw std::runtime_error(msg);
+         };
 
          gtk_gl_area_make_current(area);
          if (gtk_gl_area_get_error(area) != nullptr)
@@ -219,7 +224,11 @@ namespace cycfi::elements
       {
          auto& view = get(user_data);
          auto* host_view_h = platform_access::get_host_view(view);
-         auto error = [](char const* msg) { throw std::runtime_error(msg); };
+         auto error = [](char const* msg)
+         {
+            error_handler::get().on_render_error(error_id::render_surface_failed, msg);
+            throw std::runtime_error(msg);
+         };
 
          auto w = gtk_widget_get_allocated_width(host_view_h->_widget);
          auto h = gtk_widget_get_allocated_height(host_view_h->_widget);
@@ -624,6 +633,34 @@ namespace cycfi::elements
       gtk_drag_finish(context, success, false, time);
    }
 
+   void on_size_allocate(GtkWidget* /*widget*/, GdkRectangle* alloc, gpointer user_data)
+   {
+      get(user_data).on_size_change({float(alloc->width), float(alloc->height)});
+   }
+
+   void on_scale_factor(GObject* /*obj*/, GParamSpec* /*pspec*/, gpointer user_data)
+   {
+      auto& view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(view);
+      view.on_scale_change(get_scale(host_view_h->_widget));
+   }
+
+   gboolean on_delete(GtkWidget* /*widget*/, GdkEvent* /*event*/, gpointer user_data)
+   {
+      get(user_data).on_close();
+      return false; // let the default handler proceed with the close
+   }
+
+   gboolean fire_on_open(gpointer user_data)
+   {
+      auto& view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(view);
+      auto w = gtk_widget_get_allocated_width(host_view_h->_widget);
+      auto h = gtk_widget_get_allocated_height(host_view_h->_widget);
+      view.on_open({float(w), float(h)}, get_scale(host_view_h->_widget));
+      return G_SOURCE_REMOVE;
+   }
+
    GtkWidget* make_view(base_view& view, GtkWidget* parent)
    {
 #if defined(ARTIST_SKIA)
@@ -670,6 +707,11 @@ namespace cycfi::elements
       g_signal_connect(content_view, "drag-data-received",
          G_CALLBACK(on_drag_data_received), &view);
 
+      g_signal_connect(content_view, "size-allocate",
+         G_CALLBACK(on_size_allocate), &view);
+      g_signal_connect(content_view, "notify::scale-factor",
+         G_CALLBACK(on_scale_factor), &view);
+
       // Enable drag-and-drop for uri-list(s)
       static GtkTargetEntry target_entries[] =
       {
@@ -699,6 +741,8 @@ namespace cycfi::elements
          G_CALLBACK(on_focus), &view);
       g_signal_connect(parent, "focus-out-event",
          G_CALLBACK(on_focus), &view);
+      g_signal_connect(parent, "delete-event",
+         G_CALLBACK(on_delete), &view);
 
       gtk_widget_set_events(parent,
          gtk_widget_get_events(parent)
@@ -709,6 +753,8 @@ namespace cycfi::elements
       // Subscribe to text entry commit
       g_signal_connect(view.host()->_im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
+
+      g_idle_add(fire_on_open, &view);
 
       // Create 1ms timer
       g_timeout_add(1, poll_function, &view);

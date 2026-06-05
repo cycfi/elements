@@ -19,6 +19,7 @@ namespace cycfi::elements
       using toggle_selector::toggle_selector;
 
       void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "check_box"; }
    };
 
    inline auto check_box(std::string text)

@@ -216,4 +216,14 @@ namespace cycfi::elements
    {
       return compute_bounds_of<axis::x>(ctx.bounds, index, _tiles);
    }
+
+   std::string vtile_element::class_name() const
+   {
+      return "vtile";
+   }
+
+   std::string htile_element::class_name() const
+   {
+      return "htile";
+   }
 }

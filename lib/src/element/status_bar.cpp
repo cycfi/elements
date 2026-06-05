@@ -168,4 +168,14 @@ namespace cycfi::elements
          }
       );
    }
+
+   std::string status_bar_base::class_name() const
+   {
+      return "status_bar";
+   }
+
+   std::string busy_bar_base::class_name() const
+   {
+      return "busy_bar";
+   }
 }

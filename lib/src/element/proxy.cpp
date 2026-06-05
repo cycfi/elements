@@ -254,4 +254,9 @@ namespace cycfi::elements
       info.where = save;
       return r;
    }
+
+   std::string proxy_base::class_name() const
+   {
+      return "proxy";
+   }
 }

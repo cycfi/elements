@@ -1280,4 +1280,19 @@ namespace cycfi::elements
          }
       }
    }
+
+   std::string static_text_box::class_name() const
+   {
+      return "static_text_box";
+   }
+
+   std::string basic_text_box::class_name() const
+   {
+      return "text_box";
+   }
+
+   std::string basic_input_box::class_name() const
+   {
+      return "input_box";
+   }
 }

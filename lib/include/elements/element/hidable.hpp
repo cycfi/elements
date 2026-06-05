@@ -25,6 +25,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    wants_control() const override;
       bool                    wants_focus() const override;
+      std::string             class_name() const override { return "hidable"; }
       bool                    is_hidden = false;
    };
 

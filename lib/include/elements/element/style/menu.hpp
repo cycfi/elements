@@ -102,6 +102,7 @@ namespace cycfi::elements
    {
       view_limits          limits(basic_context const& ctx) const override;
       void                 draw(context const& ctx) override;
+      std::string          class_name() const override { return "menu_item_spacer"; }
    };
 
    inline auto menu_item_spacer()

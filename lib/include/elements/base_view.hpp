@@ -350,6 +350,11 @@ namespace cycfi::elements
       virtual void         refresh();
       virtual void         refresh(rect area);
 
+      virtual void         on_open(extent size_, float scale);
+      virtual void         on_size_change(extent size_);
+      virtual void         on_scale_change(float scale);
+      virtual void         on_close();
+
       point                cursor_pos() const;
       extent               size() const;
       void                 size(extent size_);
@@ -376,6 +381,10 @@ namespace cycfi::elements
       return false;
    }
    inline void base_view::poll() {}
+   inline void base_view::on_open(extent /* size_ */, float /* scale */) {}
+   inline void base_view::on_size_change(extent /* size_ */) {}
+   inline void base_view::on_scale_change(float /* scale */) {}
+   inline void base_view::on_close() {}
 
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard

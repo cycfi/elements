@@ -477,6 +477,8 @@ namespace cycfi::elements
                                   , bool reverse = false
                                  ) const override;
 
+      std::string                class_name() const override;
+
    protected:
 
       struct cell_info
@@ -561,6 +563,7 @@ namespace cycfi::elements
                                   : list(ptr, manage_externally)
                                  {}
       rect                       bounds_of(context const& ctx, std::size_t ix) const override;
+      std::string                class_name() const override;
 
    protected:
 

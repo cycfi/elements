@@ -35,6 +35,9 @@ namespace cycfi::elements
 
    private:
 
+      void                 on_start();
+      void                 on_stop();
+
 #if defined(ELEMENTS_HOST_UI_LIBRARY_COCOA)
       void* _menubar;
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_GTK)

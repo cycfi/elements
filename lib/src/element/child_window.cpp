@@ -99,4 +99,14 @@ namespace cycfi::elements
    {
       ctx.view.remove(fl->shared_from_this());
    }
+
+   std::string child_window_element::class_name() const
+   {
+      return "child_window";
+   }
+
+   std::string movable_base::class_name() const
+   {
+      return "movable";
+   }
 }

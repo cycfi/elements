@@ -95,7 +95,7 @@ namespace cycfi::elements
     : status_bar_base{init_value}
     , _start_pos{start_pos}
     , _animation_width{-0.2}
-    , _status{_status = -1 * _animation_width}
+    , _status{-1 * _animation_width}
     , _time{0ms}
    {
    }

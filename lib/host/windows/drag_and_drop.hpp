@@ -24,7 +24,7 @@ private:
    using point = cycfi::elements::point;
 
    DropTarget(base_view* vptr, HWND hwnd);
-   ~DropTarget();
+   virtual ~DropTarget();
 
    // IUnknown methods
    STDMETHOD(QueryInterface)(REFIID riid, void** pobj);

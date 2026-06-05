@@ -756,9 +756,13 @@ namespace cycfi::elements
 
    char32_t const* basic_text_box::caret_position(context const& ctx, point p)
    {
-      auto  m = get_font().metrics();
+      // The engine uses top-relative document coordinates: the top of the first
+      // line is at the box top (text is drawn with its baseline at top+ascent).
+      // Hit-test in that same space -- do NOT subtract ascent here, or every
+      // click is pushed up by one ascent into the line/paragraph above (most
+      // visible on the blank line between paragraphs).
       auto  x = ctx.bounds.left;
-      auto  y = ctx.bounds.top + m.ascent;
+      auto  y = ctx.bounds.top;
 
       auto  index = get_layout().caret_index(p.x-x, p.y-y); // relative to top-left
       if (index != get_layout().npos)

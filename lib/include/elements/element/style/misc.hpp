@@ -43,6 +43,7 @@ namespace cycfi::elements
    {
                box_element(color color_);
       void     draw(context const& ctx) override;
+      std::string class_name() const override { return "box"; }
 
       color    _color;
    };
@@ -89,6 +90,7 @@ namespace cycfi::elements
    {
                rbox_element(color color_, float radius = 4);
       void     draw(context const& ctx) override;
+      std::string class_name() const override { return "rbox"; }
 
       color    _color;
       float    _radius;
@@ -150,6 +152,7 @@ namespace cycfi::elements
 
             draw_element(F draw);
       void  draw(context const& ctx);
+      std::string class_name() const override { return "draw"; }
 
    private:
 
@@ -236,6 +239,7 @@ namespace cycfi::elements
 
             draw_value_element(F draw);
       void  draw(context const& ctx) override;
+      std::string class_name() const override { return "draw_value"; }
 
    private:
 
@@ -303,6 +307,7 @@ namespace cycfi::elements
    public:
                      panel(float opacity_ = get_theme().panel_color.alpha);
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "panel"; }
 
    private:
 
@@ -329,6 +334,7 @@ namespace cycfi::elements
    struct frame : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "frame"; }
    };
 
    /**
@@ -342,6 +348,7 @@ namespace cycfi::elements
    public:
 
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "title_bar"; }
    };
 
    inline void title_bar::draw(context const& ctx)
@@ -374,6 +381,7 @@ namespace cycfi::elements
 
       view_limits    limits(basic_context const& ctx) const override;
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "icon"; }
 
       std::uint32_t  _code;
       float          _size;

@@ -68,11 +68,13 @@ namespace cycfi::elements
       // Given this, we will not pass argc and argv anymore. If you need to process these, you can
       // do so somewhere in main.
 
+      on_start();
       g_application_run(G_APPLICATION(_app), 0, nullptr);
    }
 
    void app::stop()
    {
+      on_stop();
       g_application_release(G_APPLICATION(_app));
    }
 }

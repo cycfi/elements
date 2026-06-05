@@ -23,6 +23,7 @@ namespace cycfi::elements
                      {}
 
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "vgrid_lines"; }
 
    private:
 
@@ -43,6 +44,7 @@ namespace cycfi::elements
                      {}
 
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "hgrid_lines"; }
 
    private:
 

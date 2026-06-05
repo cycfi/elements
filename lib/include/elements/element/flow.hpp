@@ -70,6 +70,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    layout(context const& ctx) override;
+      std::string             class_name() const override;
 
    private:
 

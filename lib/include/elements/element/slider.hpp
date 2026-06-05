@@ -54,6 +54,8 @@ namespace cycfi::elements
       virtual element const&  track() const = 0;
       virtual element&        track() = 0;
 
+      std::string             class_name() const override;
+
    private:
 
       double                  _value;
@@ -127,6 +129,7 @@ namespace cycfi::elements
 
       selector_function       on_change;
       void                    select(size_t val);
+      std::string             class_name() const override;
    };
 
    template <size_t num_states>

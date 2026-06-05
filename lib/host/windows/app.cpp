@@ -33,6 +33,7 @@ namespace cycfi::elements
 
    void app::run()
    {
+      on_start();
       MSG messages;
       while (_running && GetMessage(&messages, nullptr, 0, 0) > 0)
       {
@@ -43,6 +44,7 @@ namespace cycfi::elements
 
    void app::stop()
    {
+      on_stop();
       _running = false;
       OleUninitialize();
    }

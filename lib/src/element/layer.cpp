@@ -165,4 +165,14 @@ namespace cycfi::elements
       if (index < size())
          _selected_index = index;
    }
+
+   std::string layer_element::class_name() const
+   {
+      return "layer";
+   }
+
+   std::string deck_element::class_name() const
+   {
+      return "deck";
+   }
 }

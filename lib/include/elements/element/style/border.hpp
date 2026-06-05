@@ -19,6 +19,7 @@ namespace cycfi::elements
    struct border : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border"; }
    };
 
    /**
@@ -31,6 +32,7 @@ namespace cycfi::elements
    struct border_left : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_left"; }
    };
 
    /**
@@ -43,6 +45,7 @@ namespace cycfi::elements
    struct border_right : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_right"; }
    };
 
    /**
@@ -55,6 +58,7 @@ namespace cycfi::elements
    struct border_top : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_top"; }
    };
 
    /**
@@ -67,6 +71,7 @@ namespace cycfi::elements
    struct border_bottom : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_bottom"; }
    };
 
    /**
@@ -79,6 +84,7 @@ namespace cycfi::elements
    struct border_top_bottom : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_top_bottom"; }
    };
 
    /**
@@ -91,6 +97,7 @@ namespace cycfi::elements
    struct border_left_right : public element
    {
       void           draw(context const& ctx) override;
+      std::string    class_name() const override { return "border_left_right"; }
    };
 }
 

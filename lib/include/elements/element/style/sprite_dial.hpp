@@ -36,6 +36,7 @@ namespace cycfi::elements
       using Base::Base;
 
       void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "sprite_dial"; }
    };
 
    template <concepts::SpriteSubject Styler>

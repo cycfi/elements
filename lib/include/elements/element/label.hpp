@@ -51,6 +51,8 @@ namespace cycfi::elements
       virtual color           get_font_color() const;
       virtual int             get_text_align() const;
 
+      std::string             class_name() const override;
+
    private:
 
       bool                    _is_enabled = true;
@@ -260,6 +262,7 @@ namespace cycfi::elements
       float                   get_default_font_size() const override;
       color                   get_font_color() const override;
       int                     get_text_align() const override;
+      std::string             class_name() const override;
    };
 
    using basic_heading = basic_label_styler_base<default_heading>;

@@ -69,6 +69,7 @@ namespace cycfi::elements
       void                    halign(double val) override;
       double                  valign() const override;
       void                    valign(double val) override;
+      std::string             class_name() const override;
 
    private:
 
@@ -106,6 +107,7 @@ namespace cycfi::elements
       void                    halign(double /*val*/) override  {}
       double                  valign() const override          { return _valign; }
       void                    valign(double val) override      { _valign = val; }
+      std::string             class_name() const override;
 
    private:
 
@@ -142,6 +144,7 @@ namespace cycfi::elements
       void                    halign(double val) override         { _halign = val; }
       double                  valign() const override             { return 0; }
       void                    valign(double /*val*/) override     {}
+      std::string             class_name() const override;
 
    private:
 
@@ -253,6 +256,7 @@ namespace cycfi::elements
 
       virtual void            draw_scroll_bar(context const& ctx, scrollbar_info const& info, point mp);
       virtual rect            scroll_bar_position(context const& ctx, scrollbar_info const& info);
+      std::string             class_name() const override;
 
    private:
 

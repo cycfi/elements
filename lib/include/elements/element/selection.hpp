@@ -58,6 +58,7 @@ namespace cycfi::elements
 
       void                    select_all();
       void                    select_none();
+      std::string             class_name() const override;
 
       on_select_function      on_select = [](int, int){};
 

@@ -37,12 +37,14 @@ namespace cycfi::elements
 
    void app::run()
    {
+      on_start();
       [NSApp activateIgnoringOtherApps : YES];
       [NSApp run];
    }
 
    void app::stop()
    {
+      on_stop();
       [NSApp terminate : nil];
    }
 }

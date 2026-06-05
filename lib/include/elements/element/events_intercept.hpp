@@ -26,6 +26,7 @@ namespace cycfi::elements
       bool           key(context const& ctx, key_info k) override;
       bool           wants_control() const override { return true; }
       bool           wants_focus() const override { return true; }
+      std::string    class_name() const override { return "key_intercept"; }
 
       using key_function = std::function<bool(key_info k)>;
 
@@ -62,6 +63,7 @@ namespace cycfi::elements
       bool           text(context const& ctx, text_info info) override;
       bool           wants_control() const override { return true; }
       bool           wants_focus() const override { return true; }
+      std::string    class_name() const override { return "text_intercept"; }
 
       using text_function = std::function<bool(text_info info)>;
 
@@ -98,6 +100,7 @@ namespace cycfi::elements
       bool           click(context const& ctx, mouse_button btn) override;
       bool           wants_control() const override { return true; }
       bool           wants_focus() const override { return true; }
+      std::string    class_name() const override { return "click_intercept"; }
 
       using click_function = std::function<bool(mouse_button btn)>;
 

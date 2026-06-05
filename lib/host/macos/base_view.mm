@@ -4,6 +4,7 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/base_view.hpp>
+#include <elements/support/error_handler.hpp>
 #include <artist/resources.hpp>
 #include <artist/font.hpp>
 #include <infra/assert.hpp>
@@ -70,7 +71,19 @@ namespace
       CYCFI_ASSERT(furl, "Error: Unexpected missing font.");
 
       CFErrorRef error = nullptr;
-      CTFontManagerRegisterFontsForURL((__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error);
+      if (!CTFontManagerRegisterFontsForURL(
+            (__bridge CFURLRef) furl, kCTFontManagerScopeProcess, &error))
+      {
+         // A false return for an already-registered font is benign (the font is
+         // available), not a load failure -- don't report it.
+         auto code = error ? CFErrorGetCode(error) : 0;
+         if (error)
+            CFRelease(error);
+         if (code != kCTFontManagerErrorAlreadyRegistered)
+            ph::error_handler::get().on_resource_error(
+               ph::error_id::font_load_failed,
+               "font registration failed: " + font_path.string());
+      }
    }
 
    void get_resource_path(char resource_path[])
@@ -251,7 +264,11 @@ namespace
    // Metal device and command queue.
    _device = MTLCreateSystemDefaultDevice();
    if (!_device)
+   {
+      ph::error_handler::get().on_render_error(
+         ph::error_id::no_gpu_device, "No Metal device found");
       throw std::runtime_error{"No Metal device found"};
+   }
    _queue = [_device newCommandQueue];
 
    // A render-on-demand CAMetalLayer added as a *sublayer*. The view itself
@@ -275,7 +292,12 @@ namespace
    backend.fQueue.retain((__bridge GrMTLHandle)_queue);
    _gr_context = GrDirectContexts::MakeMetal(backend);
    if (!_gr_context)
+   {
+      ph::error_handler::get().on_render_error(
+         ph::error_id::graphics_context_failed,
+         "Failed to create Skia Metal GrDirectContext");
       throw std::runtime_error{"Failed to create Skia Metal GrDirectContext"};
+   }
 #endif
 
    [self setPostsBoundsChangedNotifications : YES];
@@ -297,6 +319,30 @@ namespace
 {
    if (self.window)
       [[self window] makeFirstResponder : self];
+}
+
+- (void) setFrameSize : (NSSize) newSize
+{
+   [super setFrameSize : newSize];
+   if (_view)
+      _view->on_size_change({float(newSize.width), float(newSize.height)});
+}
+
+- (void) viewDidChangeBackingProperties
+{
+   [super viewDidChangeBackingProperties];
+   NSRect user = {{0, 0}, {100, 100}};
+   NSRect backing = [self convertRectToBacking : user];
+   float scale = backing.size.height / user.size.height;
+   if (scale != _scale)
+   {
+      _scale = scale;
+#if defined(ARTIST_SKIA)
+      _metal_layer.contentsScale = _scale;
+#endif
+      if (_view)
+         _view->on_scale_change(_scale);
+   }
 }
 
 - (float) hdpi_scale
@@ -327,6 +373,13 @@ namespace
            object : [self window]
    ];
 
+   [center
+      addObserver : self
+         selector : @selector(windowWillClose:)
+             name : NSWindowWillCloseNotification
+           object : [self window]
+   ];
+
 #if defined(ARTIST_SKIA)
    [center
       addObserver : self
@@ -348,6 +401,18 @@ namespace
 
    _last_screen = self.window.screen;
 #endif
+
+   // Deferred so on_open runs after construction (see logging docs).
+   __weak ElementsView* weak_self = self;
+   dispatch_async(dispatch_get_main_queue(), ^{
+      ElementsView* strong_self = weak_self;
+      if (strong_self && strong_self->_view)
+      {
+         auto b = [strong_self bounds].size;
+         strong_self->_view->on_open(
+            {float(b.width), float(b.height)}, strong_self->_scale);
+      }
+   });
 }
 
 #if defined(ARTIST_SKIA)
@@ -375,6 +440,12 @@ namespace
    [center
       removeObserver : self
                 name : NSWindowDidResignMainNotification
+              object : [self window]
+   ];
+
+   [center
+      removeObserver : self
+                name : NSWindowWillCloseNotification
               object : [self window]
    ];
 
@@ -764,6 +835,12 @@ namespace
    _view->end_focus();
 }
 
+-(void) windowWillClose : (NSNotification*) notification
+{
+   if (_view)
+      _view->on_close();
+}
+
 #if defined(ARTIST_SKIA)
 // Workaround SKIA flickering when the window is moved to a different screen in MacOS
 
@@ -875,12 +952,12 @@ namespace cycfi::elements
 
    base_view::base_view(host_window_handle h)
    {
+      NSWindow* window_ = (__bridge NSWindow*) h;
       ElementsView* content = [[ElementsView alloc] init];
       _view = (__bridge host_view_handle) content;
       content.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
       [content elements_init : this];
 
-      NSWindow* window_ = (__bridge NSWindow*) h;
       [window_ setContentView : content];
       [get_mac_view(host()) attach_notifications];
    }

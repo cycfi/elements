@@ -31,6 +31,7 @@ namespace cycfi::elements
 
       float          align() const;
       void           align(float align_);
+      std::string    class_name() const override { return "align"; }
 
    private:
 
@@ -81,6 +82,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+      std::string             class_name() const override { return "halign"; }
    };
 
    /**
@@ -226,6 +228,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+      std::string             class_name() const override { return "valign"; }
    };
 
    /**

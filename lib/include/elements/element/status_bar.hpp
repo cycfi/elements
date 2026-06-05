@@ -36,6 +36,8 @@ namespace cycfi::elements
       virtual element const&  foreground() const = 0;
       virtual element&        foreground() = 0;
 
+      std::string             class_name() const override;
+
    private:
 
       double                  _value;
@@ -110,6 +112,7 @@ namespace cycfi::elements
       bool                    is_stopped() const { return _time == _time.zero(); }
 
       rect                    foreground_bounds(context const& ctx) const override;
+      std::string             class_name() const override;
 
    private:
 

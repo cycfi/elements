@@ -53,6 +53,7 @@ namespace cycfi::elements
       void                    set_image(image_ptr img);
       void                    set_image(fs::path const& path);
       image_ptr               get_image() const { return _image; }
+      std::string             class_name() const override;
 
    private:
 
@@ -83,6 +84,7 @@ namespace cycfi::elements
       point                   size() const override;
 
       rect                    source_rect(context const& ctx) const override;
+      std::string             class_name() const override;
 
    private:
 

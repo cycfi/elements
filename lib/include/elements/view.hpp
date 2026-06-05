@@ -61,6 +61,11 @@ namespace cycfi::elements
       void                    refresh(element& element, int outward = 0);
       void                    refresh(context const& ctx, int outward = 0);
 
+      void                    on_open(extent size_, float scale) override;
+      void                    on_size_change(extent size_) override;
+      void                    on_scale_change(float scale) override;
+      void                    on_close() override;
+
       struct undo_redo_task
       {
          std::function<void()> undo;

@@ -27,6 +27,7 @@ namespace cycfi::elements
       view_limits             limits(basic_context const& ctx) const override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
+      std::string             class_name() const override { return "toggle_selector"; }
 
       std::string             _text;
    };

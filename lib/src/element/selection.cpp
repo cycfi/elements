@@ -428,5 +428,10 @@ namespace cycfi::elements
          on_select(_select_start, _select_end);
       }
    }
+
+   std::string selection_list_element::class_name() const
+   {
+      return "selection_list";
+   }
 }
 

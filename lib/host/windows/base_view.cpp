@@ -27,6 +27,7 @@
       distribution.
 =============================================================================*/
 #include <elements/base_view.hpp>
+#include <elements/support/error_handler.hpp>
 #include <artist/canvas.hpp>
 #include <artist/resources.hpp>
 #include "drag_and_drop.hpp"
@@ -142,6 +143,8 @@ namespace cycfi::elements
    namespace
    {
       constexpr unsigned IDT_TIMER1 = 100;
+
+      constexpr UINT WM_ELEMENTS_ON_OPEN = WM_APP + 1;
       HCURSOR current_cursor = nullptr;
 
       struct view_info
@@ -184,7 +187,11 @@ namespace cycfi::elements
       // lib/artist/examples/host/windows/skia_app.cpp.
       void make_gl_context(HWND hwnd, view_info* info)
       {
-         auto error = [](char const* msg){ throw std::runtime_error(msg); };
+         auto error = [](char const* msg)
+         {
+            error_handler::get().on_render_error(error_id::graphics_context_failed, msg);
+            throw std::runtime_error(msg);
+         };
 
          info->_gl_dc = GetDC(hwnd);
          if (!info->_gl_dc)
@@ -637,6 +644,36 @@ namespace cycfi::elements
                info->_vptr->end_focus();
                break;
 
+            case WM_SIZE:
+               if (info && info->_vptr)
+               {
+                  auto scale = get_scale_for_window(hwnd);
+                  info->_vptr->on_size_change(
+                     {LOWORD(lparam) / scale, HIWORD(lparam) / scale});
+               }
+               break;
+
+            case WM_DPICHANGED:
+               if (info && info->_vptr)
+                  info->_vptr->on_scale_change(get_scale_for_window(hwnd));
+               break;
+
+            case WM_ELEMENTS_ON_OPEN:
+               if (info && info->_vptr)
+               {
+                  RECT r;
+                  GetClientRect(hwnd, &r);
+                  auto scale = get_scale_for_window(hwnd);
+                  info->_vptr->on_open(
+                     {(r.right - r.left) / scale, (r.bottom - r.top) / scale}, scale);
+               }
+               break;
+
+            case WM_CLOSE:
+               if (info && info->_vptr)
+                  info->_vptr->on_close();
+               return DefWindowProcW(hwnd, message, wparam, lparam);
+
             default:
                return DefWindowProcW(hwnd, message, wparam, lparam);
          }
@@ -708,6 +745,8 @@ namespace cycfi::elements
          }
 
          SetFocus(hwnd);
+
+         PostMessageW(hwnd, WM_ELEMENTS_ON_OPEN, 0, 0);
          return hwnd;
       }
    }

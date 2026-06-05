@@ -27,6 +27,7 @@ namespace cycfi::elements
       virtual std::size_t     grid_size() const = 0;
       virtual float           grid_coord(std::size_t i) const = 0;
       virtual std::size_t     num_spans() const = 0;
+      std::string             class_name() const override;
    };
 
    /**
@@ -141,6 +142,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
       std::size_t             num_spans() const override { return _num_spans; }
+      std::string             class_name() const override;
 
    private:
 
@@ -257,6 +259,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       rect                    bounds_of(context const& ctx, std::size_t index) const override;
       std::size_t             num_spans() const override { return _num_spans; }
+      std::string             class_name() const override;
 
    private:
 

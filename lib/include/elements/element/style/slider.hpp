@@ -26,6 +26,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "thumb"; }
 
    private:
 
@@ -75,6 +76,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "track"; }
 
    private:
 
@@ -120,6 +122,7 @@ namespace cycfi::elements
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    prepare_subject(context& ctx) override;
+      std::string             class_name() const override { return "slider_styler"; }
    };
 
    template <int size, concepts::Element Subject>

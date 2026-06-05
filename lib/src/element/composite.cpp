@@ -7,10 +7,44 @@
 #include <elements/element/port.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
+#include <elements/support/trace.hpp>
 #include <elements/view.hpp>
+#include <sstream>
+#include <string>
 
 namespace cycfi::elements
 {
+   namespace
+   {
+      // Call-argument object (JSON) for a mouse_button.
+      std::string btn_args(mouse_button btn)
+      {
+         char const* w = (btn.state == mouse_button::left)  ? "left"
+                       : (btn.state == mouse_button::right) ? "right" : "middle";
+         std::ostringstream os;
+         os << "{\"pos\":[" << btn.pos.x << ',' << btn.pos.y << "]"
+            << ",\"button\":\"" << w << '"'
+            << ",\"down\":" << (btn.down ? "true" : "false")
+            << ",\"clicks\":" << btn.num_clicks
+            << ",\"mods\":" << btn.modifiers << '}';
+         return os.str();
+      }
+
+      // Name the actual leaf control reached via a tracked child `e` (the
+      // release/drag paths have no hit_element result). Resolves the leaf by
+      // hit-testing at the button position; only runs when tracing is on.
+      void trace_handled_leaf(
+         context const& ectx, element& e, mouse_button btn, char const* method,
+         bool has_ret, bool ret)
+      {
+         if (!trace_enabled() || dynamic_cast<composite_base*>(&e))
+            return;
+         element* leaf = e.hit_test(ectx, btn.pos, true, false);
+         context lctx{ectx, leaf ? leaf : &e, ectx.bounds};
+         trace_leaf(lctx, method, btn_args(btn), has_ret, ret);
+      }
+   }
+
    element* composite_base::hit_test(context const& ctx, point p, bool leaf, bool control)
    {
       if (!empty())
@@ -168,6 +202,7 @@ namespace cycfi::elements
 
    bool composite_base::click(context const& ctx, mouse_button btn)
    {
+      trace_scope _ts{ctx, "click", trace_enabled() ? btn_args(btn) : std::string{}};
       if (!empty())
       {
          if (btn.down) // button down
@@ -176,6 +211,7 @@ namespace cycfi::elements
             hit_info info = hit_element(ctx, btn.pos, true);
             if (info.element_ptr && info.leaf_element_ptr)
             {
+               _ts.child_index(info.index);
                bool leaf_wants_focus = info.leaf_element_ptr->wants_focus();
                bool process_click = true;
                if (_focus != info.index)
@@ -198,6 +234,15 @@ namespace cycfi::elements
                            _click_tracking = info.index;
                         if (!leaf_wants_focus)
                            relinquish_focus(*this, ctx);
+                        // At the deepest composite (hit child is not itself a
+                        // composite), name the actual leaf control that handled.
+                        if (trace_enabled()
+                           && !dynamic_cast<composite_base*>(info.element_ptr))
+                        {
+                           context lctx{ectx, info.leaf_element_ptr, info.bounds};
+                           trace_leaf(lctx, "click", btn_args(btn), true, true);
+                        }
+                        _ts.returns(true);
                         return true;
                      }
                   }
@@ -211,12 +256,15 @@ namespace cycfi::elements
          }
          else if (_click_tracking != -1 && _click_tracking < int(size())) // button up
          {
+            _ts.child_index(_click_tracking);
             rect  bounds = bounds_of(ctx, _click_tracking);
             auto& e = at(_click_tracking);
             context ectx{ctx, &e, bounds};
             if (e.click(ectx, btn))
             {
                _click_tracking = -1;
+               trace_handled_leaf(ectx, e, btn, "click", true, true);
+               _ts.returns(true);
                return true;
             }
          }
@@ -227,12 +275,15 @@ namespace cycfi::elements
 
    void composite_base::drag(context const& ctx, mouse_button btn)
    {
+      trace_scope _ts{ctx, "drag", trace_enabled() ? btn_args(btn) : std::string{}};
       if (_click_tracking != -1 && _click_tracking < int(size()))
       {
+         _ts.child_index(_click_tracking);
          rect  bounds = bounds_of(ctx, _click_tracking);
          auto& e = at(_click_tracking);
          context ectx{ctx, &e, bounds};
          e.drag(ectx, btn);
+         trace_handled_leaf(ectx, e, btn, "drag", /*has_ret*/ false, false);
       }
    }
 
@@ -702,5 +753,10 @@ namespace cycfi::elements
       _click_tracking = -1;
       _cursor_tracking = -1;
       _cursor_hovering.clear();
+   }
+
+   std::string composite_base::class_name() const
+   {
+      return "composite";
    }
 }

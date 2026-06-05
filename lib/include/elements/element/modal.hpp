@@ -44,6 +44,7 @@ namespace cycfi::elements
 
       bool           wants_focus() const override { return true; }
       bool           wants_control() const override { return true; }
+      std::string    class_name() const override { return "modal"; }
    };
 
    /**

@@ -96,6 +96,8 @@ namespace cycfi::elements
       virtual element const&     track() const = 0;
       virtual element&           track() = 0;
 
+      std::string                class_name() const override;
+
    private:
 
       state                      _state = state::idle_1;

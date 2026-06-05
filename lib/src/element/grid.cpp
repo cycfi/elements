@@ -153,4 +153,19 @@ namespace cycfi::elements
       auto bottom = ctx.bounds.bottom;
       return {_positions[index]+left, top, _positions[index+1]+left, bottom};
    }
+
+   std::string grid_base::class_name() const
+   {
+      return "grid";
+   }
+
+   std::string vgrid_element::class_name() const
+   {
+      return "vgrid";
+   }
+
+   std::string hgrid_element::class_name() const
+   {
+      return "hgrid";
+   }
 }

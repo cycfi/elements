@@ -26,9 +26,18 @@ namespace cycfi::elements
     , color color_
    )
     : _font{font_}
-    , _layout{font_, text}
+    , _layout{make_text_layout_ex(font_, to_utf32(text))}
     , _color{color_}
    {}
+
+   void static_text_box::sync_text() const
+   {
+      if (_text_dirty)
+      {
+         _text_cache = _layout.text();
+         _text_dirty = false;
+      }
+   }
 
    view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
@@ -52,7 +61,11 @@ namespace cycfi::elements
       _layout.flow(new_x);
 
       auto  m = _font.metrics();
-      auto  new_y = _layout.num_lines() * (m.ascent + m.descent + m.leading);
+      // The engine reports one line for an empty document (a caret line); the
+      // old single text_layout reported zero. Preserve the zero-height empty
+      // box here so empty static boxes don't claim a line of vertical space.
+      auto  lines = (_layout.size() == 0)? 0 : _layout.num_lines();
+      auto  new_y = lines * (m.ascent + m.descent + m.leading);
 
       // Refresh the union of the old and new bounds if the size has changed
       if (_current_size.x != new_x || _current_size.y != new_y)
@@ -81,7 +94,8 @@ namespace cycfi::elements
 
    void static_text_box::set_text(std::u32string_view text)
    {
-      _layout.text(text);
+      _layout.set_text(text);
+      _text_dirty = true;
       if (_current_size.x != -1)
          _layout.flow(_current_size.x);
    }
@@ -93,7 +107,7 @@ namespace cycfi::elements
 
    std::string static_text_box::get_utf8() const
    {
-      return to_utf8(_layout.text());
+      return to_utf8(get_text());
    }
 
    void static_text_box::value(std::u32string_view val)
@@ -103,29 +117,26 @@ namespace cycfi::elements
 
    std::size_t static_text_box::insert(std::size_t pos, std::string_view text)
    {
-      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
-      s.insert(pos, std::move(utf32));
-      set_text(s);
+      _layout.insert(pos, utf32);     // incremental: only touched paragraphs reflow
+      _text_dirty = true;
       return size;
    }
 
    std::size_t static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
    {
-      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
-      s.replace(pos, len, std::move(utf32));
-      set_text(s);
+      _layout.replace(pos, len, utf32);
+      _text_dirty = true;
       return size;
    }
 
    void static_text_box::erase(std::size_t pos, std::size_t len)
    {
-      std::u32string s{get_text().data(), get_text().size()};
-      s.erase(pos, len);
-      set_text(s);
+      _layout.erase(pos, len);
+      _text_dirty = true;
    }
 
    ////////////////////////////////////////////////////////////////////////////

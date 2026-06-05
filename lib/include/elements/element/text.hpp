@@ -10,7 +10,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
 #include <elements/support/text_reader_writer.hpp>
-#include <artist/text_layout.hpp>
+#include <artist/text_layout_ex.hpp>
 
 #include <string>
 #include <vector>
@@ -32,7 +32,7 @@ namespace cycfi::elements
    {
    public:
 
-      using text_layout_const = artist::text_layout const;
+      using text_layout_const = artist::text_layout_ex const;
 
                               static_text_box(
                                  std::string_view text
@@ -46,14 +46,14 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    draw(context const& ctx) override;
 
-      std::u32string_view     get_text() const override           { return _layout.text(); }
+      std::u32string_view     get_text() const override           { sync_text(); return _text_cache; }
       void                    set_text(std::u32string_view text) override;
       void                    set_text(std::string_view text);
 
       std::string             get_utf8() const;
       void                    set_utf8(std::string_view text)     { set_text(text); }
 
-      std::u32string_view     value() const override              { return _layout.text(); }
+      std::u32string_view     value() const override              { sync_text(); return _text_cache; }
       void                    value(std::u32string_view val) override;
 
       std::size_t             insert(std::size_t pos, std::string_view text);
@@ -70,12 +70,18 @@ namespace cycfi::elements
 
    private:
 
-      void                    sync() const;
+      // Materialize the rope buffer into _text_cache on demand. The engine
+      // (_layout) is the source of truth and is edited incrementally; the flat
+      // cache backs get_text()/value() views and is rebuilt only when an edit
+      // has marked it dirty -- a copy, not a reshape.
+      void                    sync_text() const;
 
       class font              _font;
-      artist::text_layout     _layout;
+      artist::text_layout_ex  _layout;
       color                   _color;
       point                   _current_size = {-1, -1};
+      mutable std::u32string  _text_cache;
+      mutable bool            _text_dirty = true;
    };
 
    ////////////////////////////////////////////////////////////////////////////

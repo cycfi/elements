@@ -15,7 +15,7 @@
 namespace cycfi::elements
 {
    using namespace std::chrono_literals;
-   using text_layout = artist::text_layout;
+   using text_run = artist::text_run;
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -26,9 +26,18 @@ namespace cycfi::elements
     , color color_
    )
     : _font{font_}
-    , _layout{font_, text}
+    , _layout{make_text_layout(font_, to_utf32(text))}
     , _color{color_}
    {}
+
+   void static_text_box::sync_text() const
+   {
+      if (_text_dirty)
+      {
+         _text_cache = _layout.text();
+         _text_dirty = false;
+      }
+   }
 
    view_limits static_text_box::limits(basic_context const& /* ctx */) const
    {
@@ -52,7 +61,11 @@ namespace cycfi::elements
       _layout.flow(new_x);
 
       auto  m = _font.metrics();
-      auto  new_y = _layout.num_lines() * (m.ascent + m.descent + m.leading);
+      // The engine reports one line for an empty document (a caret line); the
+      // old single text_run reported zero. Preserve the zero-height empty
+      // box here so empty static boxes don't claim a line of vertical space.
+      auto  lines = (_layout.size() == 0)? 0 : _layout.num_lines();
+      auto  new_y = lines * (m.ascent + m.descent + m.leading);
 
       // Refresh the union of the old and new bounds if the size has changed
       if (_current_size.x != new_x || _current_size.y != new_y)
@@ -81,7 +94,8 @@ namespace cycfi::elements
 
    void static_text_box::set_text(std::u32string_view text)
    {
-      _layout.text(text);
+      _layout.set_text(text);
+      _text_dirty = true;
       if (_current_size.x != -1)
          _layout.flow(_current_size.x);
    }
@@ -93,7 +107,7 @@ namespace cycfi::elements
 
    std::string static_text_box::get_utf8() const
    {
-      return to_utf8(_layout.text());
+      return to_utf8(get_text());
    }
 
    void static_text_box::value(std::u32string_view val)
@@ -103,29 +117,26 @@ namespace cycfi::elements
 
    std::size_t static_text_box::insert(std::size_t pos, std::string_view text)
    {
-      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
-      s.insert(pos, std::move(utf32));
-      set_text(s);
+      _layout.insert(pos, utf32);     // incremental: only touched paragraphs reflow
+      _text_dirty = true;
       return size;
    }
 
    std::size_t static_text_box::replace(std::size_t pos, std::size_t len, std::string_view text)
    {
-      std::u32string s{get_text().data(), get_text().size()};
       auto utf32 = to_utf32(text);
       auto size = utf32.size();
-      s.replace(pos, len, std::move(utf32));
-      set_text(s);
+      _layout.replace(pos, len, utf32);
+      _text_dirty = true;
       return size;
    }
 
    void static_text_box::erase(std::size_t pos, std::size_t len)
    {
-      std::u32string s{get_text().data(), get_text().size()};
-      s.erase(pos, len);
-      set_text(s);
+      _layout.erase(pos, len);
+      _text_dirty = true;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -243,7 +254,7 @@ namespace cycfi::elements
                // directly (not the line-break-augmented helper) so the first
                // word is handled correctly.
                auto word_brk = [this](int i)
-                  { return get_layout().word_break(i) == text_layout::allow_break; };
+                  { return get_layout().word_break(i) == text_run::allow_break; };
                while (end < _size && !word_brk(end))
                   ++end;
                if (end < _size)
@@ -745,9 +756,13 @@ namespace cycfi::elements
 
    char32_t const* basic_text_box::caret_position(context const& ctx, point p)
    {
-      auto  m = get_font().metrics();
+      // The engine uses top-relative document coordinates: the top of the first
+      // line is at the box top (text is drawn with its baseline at top+ascent).
+      // Hit-test in that same space -- do NOT subtract ascent here, or every
+      // click is pushed up by one ascent into the line/paragraph above (most
+      // visible on the blank line between paragraphs).
       auto  x = ctx.bounds.left;
-      auto  y = ctx.bounds.top + m.ascent;
+      auto  y = ctx.bounds.top;
 
       auto  index = get_layout().caret_index(p.x-x, p.y-y); // relative to top-left
       if (index != get_layout().npos)
@@ -961,12 +976,12 @@ namespace cycfi::elements
 
    bool basic_text_box::word_break(int index) const
    {
-      return get_layout().word_break(index) == text_layout::allow_break || line_break(index);
+      return get_layout().word_break(index) == text_run::allow_break || line_break(index);
    }
 
    bool basic_text_box::line_break(int index) const
    {
-      return index == 0 || get_layout().line_break(index) == text_layout::must_break;
+      return index == 0 || get_layout().line_break(index) == text_run::must_break;
    }
 
    ////////////////////////////////////////////////////////////////////////////

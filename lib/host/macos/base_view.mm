@@ -282,6 +282,16 @@ namespace
    _metal_layer.contentsGravity  = kCAGravityTopLeft;
    _metal_layer.contentsScale    = _scale;
    _metal_layer.frame            = self.bounds;
+   // Disable implicit CoreAnimation actions on the Metal sublayer: otherwise a
+   // frame/bounds/position change (done every drawRect to track the view) is
+   // animated over ~0.25s, so during live resize the layer lags the view and
+   // snaps into place -- the gap-below-titlebar rubber-band on the Skia backend.
+   _metal_layer.actions = @{
+      @"frame"    : [NSNull null],
+      @"bounds"   : [NSNull null],
+      @"position" : [NSNull null],
+      @"contents" : [NSNull null]
+   };
 
    self.wantsLayer = YES;
    [self.layer addSublayer : _metal_layer];

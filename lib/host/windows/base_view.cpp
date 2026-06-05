@@ -160,7 +160,7 @@ namespace cycfi::elements
          int            _click_count = 0;
          time_point     _scroll_start = {};
          double         _velocity = 0;
-         point          _scroll_dir;
+         point          _scroll_dir = {};
          key_map        _keys = {};
 
 #if defined(ARTIST_SKIA)
@@ -496,8 +496,8 @@ namespace cycfi::elements
 
          bool reset_accel =
             elapsed > std::chrono::milliseconds(250) ||
-            (info->_scroll_dir.x > 0 != dir.x > 0) ||
-            (info->_scroll_dir.y > 0 != dir.y > 0)
+            ((info->_scroll_dir.x > 0) != (dir.x > 0)) ||
+            ((info->_scroll_dir.y > 0) != (dir.y > 0))
             ;
          info->_scroll_dir = dir;
 

@@ -15,7 +15,7 @@
 namespace cycfi::elements
 {
    using namespace std::chrono_literals;
-   using text_layout = artist::text_layout;
+   using text_run = artist::text_run;
 
    ////////////////////////////////////////////////////////////////////////////
    // Static Text Box
@@ -26,7 +26,7 @@ namespace cycfi::elements
     , color color_
    )
     : _font{font_}
-    , _layout{make_text_layout_ex(font_, to_utf32(text))}
+    , _layout{make_text_layout(font_, to_utf32(text))}
     , _color{color_}
    {}
 
@@ -62,7 +62,7 @@ namespace cycfi::elements
 
       auto  m = _font.metrics();
       // The engine reports one line for an empty document (a caret line); the
-      // old single text_layout reported zero. Preserve the zero-height empty
+      // old single text_run reported zero. Preserve the zero-height empty
       // box here so empty static boxes don't claim a line of vertical space.
       auto  lines = (_layout.size() == 0)? 0 : _layout.num_lines();
       auto  new_y = lines * (m.ascent + m.descent + m.leading);
@@ -254,7 +254,7 @@ namespace cycfi::elements
                // directly (not the line-break-augmented helper) so the first
                // word is handled correctly.
                auto word_brk = [this](int i)
-                  { return get_layout().word_break(i) == text_layout::allow_break; };
+                  { return get_layout().word_break(i) == text_run::allow_break; };
                while (end < _size && !word_brk(end))
                   ++end;
                if (end < _size)
@@ -976,12 +976,12 @@ namespace cycfi::elements
 
    bool basic_text_box::word_break(int index) const
    {
-      return get_layout().word_break(index) == text_layout::allow_break || line_break(index);
+      return get_layout().word_break(index) == text_run::allow_break || line_break(index);
    }
 
    bool basic_text_box::line_break(int index) const
    {
-      return index == 0 || get_layout().line_break(index) == text_layout::must_break;
+      return index == 0 || get_layout().line_break(index) == text_run::must_break;
    }
 
    ////////////////////////////////////////////////////////////////////////////

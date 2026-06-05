@@ -10,7 +10,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
 #include <elements/support/text_reader_writer.hpp>
-#include <artist/text_layout_ex.hpp>
+#include <artist/text_layout.hpp>
 
 #include <string>
 #include <vector>
@@ -32,7 +32,7 @@ namespace cycfi::elements
    {
    public:
 
-      using text_layout_const = artist::text_layout_ex const;
+      using text_layout_const = artist::text_layout const;
 
                               static_text_box(
                                  std::string_view text
@@ -77,7 +77,7 @@ namespace cycfi::elements
       void                    sync_text() const;
 
       class font              _font;
-      artist::text_layout_ex  _layout;
+      artist::text_layout  _layout;
       color                   _color;
       point                   _current_size = {-1, -1};
       mutable std::u32string  _text_cache;

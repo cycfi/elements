@@ -25,7 +25,16 @@ jobs:
         execute_process(COMMAND sudo apt-get install wget)
     - name: Download Coverity Build Tool
       run: |
-        wget -q https://scan.coverity.com/download/linux64 --post-data "token=$TOKEN&project=cycfi%2Felements" -O cov-analysis-linux64.tar.gz
+        # -S prints the server's HTTP response headers so failures (bad token,
+        # quota exceeded, server error) are visible instead of a bare exit code.
+        wget -S https://scan.coverity.com/download/linux64 --post-data "token=$TOKEN&project=cycfi%2Felements" -O cov-analysis-linux64.tar.gz
+        # Coverity returns an HTML/text error page (HTTP 200) on a bad token, so
+        # verify we actually got a gzip archive before trying to unpack it.
+        if ! file cov-analysis-linux64.tar.gz | grep -q gzip; then
+          echo "::error::Coverity did not return a gzip archive. Server response:"
+          cat cov-analysis-linux64.tar.gz
+          exit 1
+        fi
         mkdir cov-analysis-linux64
         tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
       env:

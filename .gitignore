@@ -27,6 +27,7 @@ xcuserdata/
 /.vscode/
 /.idea/
 /build/
+/build-*/
 /cmake-build-debug/
 /cmake-build-release/
 /.vs/
@@ -34,3 +35,6 @@ xcuserdata/
 /docs/antora/node_modules/
 /docs/antora/build/
 /.cache/
+/vcpkg_installed/
+/lib/artist/
+/ai/

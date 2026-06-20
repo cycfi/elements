@@ -295,7 +295,7 @@ elseif (WIN32)
       BOOST_REGEX_NO_LIB
    )
 
-   if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+   if (CMAKE_BUILD_TYPE STREQUAL "Debug")
       set_property(TARGET elements PROPERTY
          MSVC_RUNTIME_LIBRARY "MultiThreadedDebug"
       )

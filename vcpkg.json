@@ -1,0 +1,6 @@
+{
+   "name": "elements",
+   "version-date": "2026-06-20",
+   "dependencies": ["pkgconf", "cairo", "fontconfig", "freetype", "libwebp"],
+   "builtin-baseline": "566f9496b7e00ee0cc00aca0ab90493d122d148a"
+}

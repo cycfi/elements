@@ -214,6 +214,7 @@ namespace
 {
    NSTimer*                         _task;
    NSTrackingArea*                  _tracking_area;
+   NSWindow*                        _notified_window;
    NSMutableAttributedString*       _marked_text;
    key_map                          _keys;
    bool                             _start;
@@ -318,6 +319,7 @@ namespace
 
 - (void) dealloc
 {
+   [[NSNotificationCenter defaultCenter] removeObserver : self];
    _task = nil;
    _view = nullptr;
 #if defined(ARTIST_SKIA)
@@ -328,7 +330,14 @@ namespace
 - (void) viewDidMoveToWindow
 {
    if (self.window)
+   {
+      [self attach_window_notifications];
       [[self window] makeFirstResponder : self];
+   }
+   else
+   {
+      [self detach_window_notifications];
+   }
 }
 
 - (void) setFrameSize : (NSSize) newSize
@@ -365,29 +374,39 @@ namespace
    _view->poll();
 }
 
-- (void) attach_notifications
+// The window notifications follow the window the view is in, which a view
+// made before it is parented (a plugin editor) does not have yet. They are
+// attached when the view lands in a window and detached when it leaves,
+// never with a nil window: that would mean every window, and a removal
+// later, naming the window, would not find them.
+- (void) attach_window_notifications
 {
+   auto* window_ = [self window];
+   if (!window_ || window_ == _notified_window)
+      return;
+   [self detach_window_notifications];
+
    auto* center = [NSNotificationCenter defaultCenter];
 
    [center
       addObserver : self
          selector : @selector(windowDidBecomeKey:)
              name : NSWindowDidBecomeKeyNotification
-           object : [self window]
+           object : window_
    ];
 
    [center
       addObserver : self
          selector : @selector(windowDidResignKey:)
              name : NSWindowDidResignMainNotification
-           object : [self window]
+           object : window_
    ];
 
    [center
       addObserver : self
          selector : @selector(windowWillClose:)
              name : NSWindowWillCloseNotification
-           object : [self window]
+           object : window_
    ];
 
 #if defined(ARTIST_SKIA)
@@ -395,9 +414,48 @@ namespace
       addObserver : self
          selector : @selector(windowDidMove:)
              name : NSWindowDidMoveNotification
-           object : [self window]
+           object : window_
    ];
+#endif
 
+   _notified_window = window_;
+}
+
+- (void) detach_window_notifications
+{
+   if (!_notified_window)
+      return;
+
+   auto* center = [NSNotificationCenter defaultCenter];
+   [center
+      removeObserver : self
+                name : NSWindowDidBecomeKeyNotification
+              object : _notified_window
+   ];
+   [center
+      removeObserver : self
+                name : NSWindowDidResignMainNotification
+              object : _notified_window
+   ];
+   [center
+      removeObserver : self
+                name : NSWindowWillCloseNotification
+              object : _notified_window
+   ];
+   [center
+      removeObserver : self
+                name : NSWindowDidMoveNotification
+              object : _notified_window
+   ];
+   _notified_window = nil;
+}
+
+- (void) attach_notifications
+{
+   [self attach_window_notifications];
+
+#if defined(ARTIST_SKIA)
+   auto* center = [NSNotificationCenter defaultCenter];
    // AppKit terminates by calling exit() without deallocating the view, so the
    // Skia GrDirectContext would otherwise be destroyed during C++ static
    // teardown with live GPU resources — tripping Skia's debug leak assert.
@@ -439,39 +497,9 @@ namespace
 
 - (void) detach_notifications
 {
-   auto* center = [NSNotificationCenter defaultCenter];
-
-   [center
-      removeObserver : self
-                name : NSWindowDidBecomeKeyNotification
-              object : [self window]
-   ];
-
-   [center
-      removeObserver : self
-                name : NSWindowDidResignMainNotification
-              object : [self window]
-   ];
-
-   [center
-      removeObserver : self
-                name : NSWindowWillCloseNotification
-              object : [self window]
-   ];
-
-   [center
-      removeObserver : self
-                name : NSWindowDidMoveNotification
-              object : [self window]
-   ];
-
-#if defined(ARTIST_SKIA)
-   [center
-      removeObserver : self
-                name : NSApplicationWillTerminateNotification
-              object : nil
-   ];
-#endif
+   [self detach_window_notifications];
+   // Whatever else was registered, gone with the view.
+   [[NSNotificationCenter defaultCenter] removeObserver : self];
 }
 
 - (void) detach_timer
@@ -837,12 +865,14 @@ namespace
 
 -(void) windowDidBecomeKey : (NSNotification*) notification
 {
-   _view->begin_focus();
+   if (_view)
+      _view->begin_focus();
 }
 
 -(void) windowDidResignKey : (NSNotification*) notification
 {
-   _view->end_focus();
+   if (_view)
+      _view->end_focus();
 }
 
 -(void) windowWillClose : (NSNotification*) notification

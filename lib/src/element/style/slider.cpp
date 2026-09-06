@@ -6,6 +6,7 @@
 #include <elements/element/style/slider.hpp>
 #include <elements/support/theme.hpp>
 #include <cmath>
+#include <cstdio>
 
 namespace cycfi::elements
 {
@@ -168,6 +169,89 @@ namespace cycfi::elements
             cnv.stroke();
          }
       }
+   }
+
+   void draw_slider_marks_db(
+      canvas& cnv, rect bounds, float size, db_scale const& scale, color c)
+   {
+      auto state = cnv.new_state();
+      auto const& theme = get_theme();
+      float inset = size / 6;
+      bool vertical = bounds.width() < bounds.height();
+
+      auto tick =
+         [&](double position, bool major)
+         {
+            cnv.line_width(
+               major ? theme.major_ticks_width : theme.minor_ticks_width);
+            cnv.stroke_style(c.level(
+               major ? theme.major_ticks_level : theme.minor_ticks_level));
+            float in = major ? 0 : inset;
+            if (vertical)
+            {
+               auto y = bounds.bottom - float(position) * bounds.height();
+               cnv.move_to({bounds.left + in, y});
+               cnv.line_to({bounds.right - in, y});
+            }
+            else
+            {
+               auto x = bounds.left + float(position) * bounds.width();
+               cnv.move_to({x, bounds.top + in});
+               cnv.line_to({x, bounds.bottom - in});
+            }
+            cnv.stroke();
+         };
+
+      double prev = 0;
+      bool have_prev = false;
+      for (auto m = db_marks; *m > -1000; ++m)
+      {
+         if (*m < scale.min() || *m > scale.max())
+            continue;
+         tick(scale.position(*m), true);
+         if (have_prev)
+            tick(scale.position((prev + *m) / 2), false);
+         prev = *m;
+         have_prev = true;
+      }
+      if (scale.min() < db_marks[8])   // silence below the last mark
+         tick(0, true);
+   }
+
+   void draw_slider_labels_db(
+      canvas& cnv, rect bounds, float size, float font_size
+    , db_scale const& scale)
+   {
+      bool reverse = size < 0;
+      bool vertical = bounds.width() < bounds.height();
+      auto state = cnv.new_state();
+      auto const& theme = get_theme();
+
+      cnv.font(
+         theme.label_font.size(theme.label_font._size * font_size)
+      );
+      cnv.text_align(cnv.middle | cnv.center);
+      cnv.fill_style(theme.label_font_color);
+
+      auto label =
+         [&](double db, double position)
+         {
+            point where = vertical?
+               point{reverse? bounds.left : bounds.right
+                , bounds.bottom - float(position) * bounds.height()} :
+               point{bounds.left + float(position) * bounds.width()
+                , reverse? bounds.top : bounds.bottom}
+               ;
+            char text[16];
+            db_mark_label(db, text, sizeof(text));
+            cnv.fill_text(text, where);
+         };
+
+      for (auto m = db_marks; *m > -1000; ++m)
+         if (*m >= scale.min() && *m <= scale.max())
+            label(*m, scale.position(*m));
+      if (scale.min() < db_marks[8])
+         label(-1000, 0);
    }
 
    void draw_slider_labels(

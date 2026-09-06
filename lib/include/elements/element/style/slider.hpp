@@ -7,6 +7,7 @@
 #define ELEMENTS_STYLE_SLIDER_AUGUST_29_2016
 
 #include <elements/element/slider.hpp>
+#include <elements/element/style/grid_lines.hpp>
 
 namespace cycfi::elements
 {
@@ -301,6 +302,106 @@ namespace cycfi::elements
    slider_marks_log(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Slider Marks on a decibel scale: a fader's ticks, major at the marks
+   // and minor halfway between, through the db_scale taper. See
+   // grid_lines.hpp for the marks and the taper.
+   ////////////////////////////////////////////////////////////////////////////
+   template <std::size_t _size, concepts::Element Subject>
+   class slider_marks_db_element : public slider_styler_base<_size, Subject>
+   {
+   public:
+
+      using base_type = slider_styler_base<_size, Subject>;
+
+                              slider_marks_db_element(
+                                 Subject subject, db_scale scale
+                              )
+                               : base_type(std::move(subject))
+                               , _scale(scale)
+                              {}
+
+      void                    draw(context const& ctx) override;
+
+   private:
+
+      db_scale                _scale;
+   };
+
+   void draw_slider_marks_db(
+      canvas& cnv, rect bounds, float size, db_scale const& scale, color c);
+
+   template <std::size_t _size, concepts::Element Subject>
+   inline void
+   slider_marks_db_element<_size, Subject>::draw(context const& ctx)
+   {
+      draw_slider_marks_db(
+         ctx.canvas, ctx.bounds, _size, _scale, colors::light_gray);
+
+      // Draw the subject
+      base_type::draw(ctx);
+   }
+
+   template <std::size_t _size, concepts::Element Subject>
+   inline slider_marks_db_element<_size, remove_cvref_t<Subject>>
+   slider_marks_db(Subject&& subject, db_scale scale = {})
+   {
+      return {std::forward<Subject>(subject), scale};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Slider Labels on a decibel scale, at the marks: magnitudes, the
+   // infinity sign at the bottom when the scale reaches silence. Negative
+   // size puts the labels on the other side, as with slider_labels.
+   ////////////////////////////////////////////////////////////////////////////
+   template <int _size, concepts::Element Subject>
+   class slider_labels_db_element
+    : public slider_styler_base<abs(_size), Subject>
+   {
+   public:
+
+      using base_type = slider_styler_base<abs(_size), Subject>;
+
+                              slider_labels_db_element(
+                                 Subject subject, float font_size
+                               , db_scale scale
+                              )
+                               : base_type(std::move(subject))
+                               , _font_size(font_size)
+                               , _scale(scale)
+                              {}
+
+      void                    draw(context const& ctx) override;
+
+   private:
+
+      float                   _font_size;
+      db_scale                _scale;
+   };
+
+   void draw_slider_labels_db(
+      canvas& cnv, rect bounds, float size, float font_size
+    , db_scale const& scale);
+
+   template <int size, concepts::Element Subject>
+   inline void
+   slider_labels_db_element<size, Subject>::draw(context const& ctx)
+   {
+      // Draw the subject
+      base_type::draw(ctx);
+
+      // Draw the labels
+      draw_slider_labels_db(
+         ctx.canvas, ctx.bounds, size, _font_size, _scale);
+   }
+
+   template <int size, concepts::Element Subject>
+   inline slider_labels_db_element<size, remove_cvref_t<Subject>>
+   slider_labels_db(Subject&& subject, float font_size, db_scale scale = {})
+   {
+      return {std::forward<Subject>(subject), font_size, scale};
    }
 
    ////////////////////////////////////////////////////////////////////////////

@@ -246,11 +246,13 @@ FetchContent_MakeAvailable(cycfi_infra)
 target_link_libraries(elements PUBLIC cycfi::infra)
 
 ###############################################################################
-# Fontconfig + Freetype (host-side, not needed on Windows: the Win32 host uses
-# DirectWrite, Skia bundles its own freetype, and Artist links the vcpkg cairo
-# stack transitively for the Cairo backend).
+# Fontconfig + Freetype, for the GTK host only. The Win32 host uses
+# DirectWrite and the macOS host uses CoreText, and the Cairo and Skia
+# backends bring their own through Artist. Linking them on macOS pulls in
+# Homebrew dylibs from /opt/homebrew, which App Sandboxed hosts such as
+# Logic Pro cannot load, so a plugin built with Elements fails to open.
 
-if (NOT WIN32)
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
    target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
 

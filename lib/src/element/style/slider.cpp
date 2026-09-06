@@ -214,7 +214,7 @@ namespace cycfi::elements
          prev = *m;
          have_prev = true;
       }
-      if (scale.min() < db_marks[8])   // silence below the last mark
+      if (db_scale_reaches_silence(scale))
          tick(0, true);
    }
 
@@ -250,7 +250,7 @@ namespace cycfi::elements
       for (auto m = db_marks; *m > -1000; ++m)
          if (*m >= scale.min() && *m <= scale.max())
             label(*m, scale.position(*m));
-      if (scale.min() < db_marks[8])
+      if (db_scale_reaches_silence(scale))
          label(-1000, 0);
    }
 

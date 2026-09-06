@@ -13,9 +13,12 @@ namespace cycfi::elements
 {
    namespace
    {
-      // The taper, as decibels against travel in arbitrary units
+      // The taper, as decibels against travel in arbitrary units. The
+      // bottom of the fader is silence, the 24 bit floor; everything below
+      // the last mark shares the sliver of travel under it, as on a
+      // console. A scale that stops higher just starts further up.
       constexpr double db_pts[] =
-         {-70, -60, -50, -40, -30, -20, -10, 0, 10};
+         {-144, -60, -50, -40, -30, -20, -10, 0, 10};
       constexpr double travel_pts[] =
          {0, 6.5, 13, 19.5, 32.5, 45.5, 58.5, 84.5, 110.5};
       constexpr std::size_t num_pts = 9;

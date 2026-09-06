@@ -19,7 +19,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    struct db_scale
    {
-                        db_scale(double min = -60, double max = 12)
+                        db_scale(double min = -144, double max = 10)
                          : _min(min), _max(max) {}
 
       double            position(double db) const;
@@ -120,6 +120,15 @@ namespace cycfi::elements
 
    // Labels are magnitudes, the infinity sign for silence.
    int db_mark_label(double db, char* text, std::size_t size);
+
+   // The lowest labelled mark, and whether a scale reaches past it, down
+   // to what a fader marks as silence.
+   constexpr double db_lowest_mark = -60;
+
+   inline bool db_scale_reaches_silence(db_scale const& scale)
+   {
+      return scale.min() < db_lowest_mark;
+   }
 }
 
 #endif

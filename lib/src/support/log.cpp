@@ -6,6 +6,7 @@
 #include <elements/support/log.hpp>
 #include <quill/Backend.h>
 #include <quill/sinks/RotatingFileSink.h>
+#include <quill/sinks/NullSink.h>
 
 #include <array>
 #include <cstdlib>
@@ -137,13 +138,56 @@ namespace cycfi::elements
       }
    }
 
+   namespace
+   {
+      void log_files(std::string const& name);
+
+      // Logging switched off: every category gets a null sink at level None,
+      // so the LOG_ macros stay valid and cost only the level check.
+      void log_off()
+      {
+         auto sink = log_frontend::create_or_get_sink<quill::NullSink>("null");
+         for (std::size_t i = 0; i < num_categories; ++i)
+         {
+            auto cat = static_cast<log_cat>(i);
+            auto lg = log_frontend::create_or_get_logger(category_name(cat), sink);
+            lg->set_log_level(quill::LogLevel::None);
+            the_loggers[i] = lg;
+         }
+      }
+   }
+
    void log_init(std::string_view app_name)
    {
       static std::once_flag once;
       std::call_once(once, [name = std::string{app_name}]
       {
-         quill::Backend::start();
+         // quill's singleton check takes a named POSIX semaphore, which an
+         // App Sandboxed host (Logic Pro, the AU hosting service) denies,
+         // and it refuses a second backend in one process (two plugins
+         // each with their own copy of quill). Skip the check, and should
+         // the backend still fail to start, just turn logging off.
+         try
+         {
+            quill::BackendOptions options;
+            options.check_backend_singleton_instance = false;
+            quill::Backend::start(options);
+            log_files(name);
+         }
+         catch (std::exception const&)
+         {
+            log_off();
+         }
+      });
+   }
 
+   namespace
+   {
+      // The rotating file sinks and the per-category loggers. Throws if a
+      // file cannot be opened or rotated, as when two processes race on the
+      // same file, and the caller then turns logging off.
+      void log_files(std::string const& name)
+      {
          fs::path dir = resolve_log_dir(name);
          the_log_dir = dir.string();
 
@@ -197,7 +241,7 @@ namespace cycfi::elements
 #endif
          LOG_INFO(the_loggers[static_cast<std::size_t>(log_cat::app)],
             "elements logging started: backend={} build={}", backend, build);
-      });
+      }
    }
 
    logger_type* logger(log_cat cat)

@@ -31,7 +31,8 @@
       .link {
         fill: none;
         stroke: #00a9c9;
-        stroke-miterlimit: 10;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
     </style>
     <marker id="tip" viewBox="0 0 8 8" refX="7" refY="4"
@@ -52,8 +53,9 @@
   <rect class="box" x="26.5" y="205.5" width="127" height="38" rx="3"/>
   <text class="label" x="90" y="229" text-anchor="middle">_value</text>
 
-  <path class="link" d="M 161 74.5 L 420 74.5 L 420 45
-    L 549.4 45 L 549.4 59.2"
+  <path class="link" d="M 161 74.5 L 402 74.5 Q 412 74.5 412 64.5
+    L 412 48 Q 412 38 422 38 L 539.4 38 Q 549.4 38 549.4 48
+    L 549.4 59.2"
     marker-end="url(#tip)"/>
   <text class="call" x="240" y="68" text-anchor="middle">attach</text>
 

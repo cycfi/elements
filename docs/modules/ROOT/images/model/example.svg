@@ -25,7 +25,7 @@
       .call {
         font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
         font-size: 17px;
-        fill: #00a9c9;
+        fill: #414042;
       }
 
       .link {

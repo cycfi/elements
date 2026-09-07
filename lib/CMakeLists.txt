@@ -222,6 +222,14 @@ target_compile_options(elements PRIVATE
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /wd4244 /wd4305 /wd4996 /wd4267 /wd4018 /wd4456 /utf-8>
 )
 
+# quill's logging macros are variadic, and MSVC's traditional
+# preprocessor mis-splits their arguments, so the format arguments land in
+# the metadata constructor. support/log.hpp is a public header, so this is
+# needed by anything that logs, not by Elements alone.
+target_compile_options(elements PUBLIC
+   $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+)
+
 if (MSVC)
    # Kinda silly to have to do this: https://bit.ly/2ZXjzzn
    STRING(REGEX REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

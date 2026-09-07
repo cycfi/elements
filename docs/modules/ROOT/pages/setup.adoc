@@ -37,17 +37,22 @@ Make sure you have https://cmake.org/[CMake] 3.15 or higher. Follow the https://
 
 === Required Libraries
 
-Here are Element's dependencies:
+What Elements needs depends on the graphics backend, and the backend
+depends on the platform.
+
+On MacOS, Elements draws with *Quartz2D*, which is part of the operating
+system. There are no libraries to install and no package manager to set
+up: a C{pp} compiler and CMake are enough.
+
+Elsewhere, Elements draws with *Cairo*, and needs it and its companions:
 
 . https://www.freedesktop.org/wiki/Software/pkg-config/[pkg-config]
 . https://cairographics.org/[Cairo]
 . https://www.freedesktop.org/wiki/Software/fontconfig/[fontconfig]
 . https://www.freetype.org/[freetype2]
-. https://www.sourceware.org/bzip2/[bzip2]
-. https://libexpat.github.io/[expat]
-. https://zlib.net/[zlib]
-. http://www.libpng.org/pub/png/libpng.html[libpng]
-. https://github.com/webmproject/libwebp[libwebp]
+. https://harfbuzz.github.io/[harfbuzz]
+
+On Linux, the GTK host additionally needs GTK3.
 
 Specific instructions are provided below for specific environments.
 
@@ -61,20 +66,20 @@ Infra provides some basic groundwork common to Cycfi libraries, including Elemen
 
 === Install required libraries
 
-Using https://brew.sh/[Homebrew]:
+There are none. Elements draws with Quartz2D on MacOS, which comes with
+the system, so nothing needs to be installed and pkg-config is not
+required.
+
+You do need the command line developer tools, for the compiler and the
+system headers. If `git` or `clang` is missing, this installs them:
 
 ----
-brew install pkg-config
-brew install cairo
-brew install fontconfig
-brew install bzip2
-brew install expat
-brew install zlib
-brew install libpng
-brew install webp
+xcode-select --install
 ----
 
 === Install CMake
+
+Using https://brew.sh/[Homebrew]:
 
 ----
 brew install cmake

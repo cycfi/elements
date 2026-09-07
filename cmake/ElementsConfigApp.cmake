@@ -58,19 +58,28 @@ if (NOT DEFINED ELEMENTS_ICON_FONT)
    set(ELEMENTS_ICON_FONT ${ELEMENTS_ROOT}/resources/fonts/elements_basic.ttf)
 endif()
 
+# Every font in the bundle is registered with the system when the first
+# view is made, whether or not anything draws with it, and each face costs
+# a few milliseconds. So the default is what the default theme actually
+# names: Open Sans for labels and text boxes, Roboto Medium for headings,
+# and the icon font. An app that draws with another face lists it:
+#
+#    list(APPEND ELEMENTS_FONTS
+#       ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Bold.ttf)
+#
+# before including this file. resources/fonts holds the rest: the Open Sans
+# and Roboto weights, and the Roboto Mono family the theme's monospaced
+# font names.
+if (NOT DEFINED ELEMENTS_FONTS)
+   set(ELEMENTS_FONTS
+      ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Regular.ttf
+      ${ELEMENTS_ROOT}/resources/fonts/Roboto-Medium.ttf
+   )
+endif()
+
 set(ELEMENTS_RESOURCES
    ${ELEMENTS_ICON_FONT}
-   ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Light.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Regular.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/OpenSans-SemiBold.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Bold.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/OpenSansCondensed-Light.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/Roboto-Light.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/Roboto-Regular.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/Roboto-Medium.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/Roboto-Bold.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/RobotoMono-Italic-VariableFont_wght.ttf
-   ${ELEMENTS_ROOT}/resources/fonts/RobotoMono-VariableFont_wght.ttf
+   ${ELEMENTS_FONTS}
 )
 
 source_group(Resources

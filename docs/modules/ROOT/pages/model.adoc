@@ -2,6 +2,8 @@
 
 include::common.adoc[]
 
+image::/model/example.svg[alt="the model example", width=790px, role=center]
+
 == Overview
 
 Building a user interface, you typically have to deal with three
@@ -32,7 +34,7 @@ with the model independently, unaware of each other's existence. The model
 serves as a central hub, facilitating and coordinating interactions between
 them:
 
-image::/model/decoupling.svg[alt="decoupling", width=430px, role=center]
+image::/model/decoupling.svg[alt="decoupling", width=860px, role=center]
 
 . The application is aware of the model, manages and interacts with it.
 . The GUI is also aware of the model and links to it.
@@ -130,7 +132,7 @@ not replace the one before it. Any number of elements may present the same
 value. A dial and a text box over the same float will both follow it, and
 neither displaces the other.
 
-image::/model/fan_out.svg[alt="fan out", width=402px, role=center]
+image::/model/fan_out.svg[alt="fan out", width=804px, role=center]
 
 The second is that it returns a `connection`. You can pass that to
 `disconnect` to take the update function off the model again:

@@ -25,18 +25,18 @@
       .call {
         font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
         font-size: 13px;
-        fill: #be1e2d;
+        fill: #e6007e;
       }
 
       .link {
         fill: none;
-        stroke: #be1e2d;
+        stroke: #e6007e;
         stroke-miterlimit: 10;
       }
     </style>
     <marker id="tip" viewBox="0 0 8 8" refX="7" refY="4"
       markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M 0 0 L 8 4 L 0 8 z" fill="#be1e2d"/>
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#e6007e"/>
     </marker>
   </defs>
 

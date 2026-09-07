@@ -43,13 +43,13 @@
    given, in the order they arrived, so any number of elements may show the
    same value. Here the dial and the text box both show `_value`.
 
-   An element is linked through a `model_binder` rather than by calling
-   `on_update` directly, because an observer outlives the element that
-   wanted it. A binder holds each element weakly and remembers the
-   connection its observer was given, so `clear()` takes them all off the
-   model again. An application that builds its user interface once may
-   ignore this; anything that rebuilds one, a plugin editor being opened a
-   second time for instance, would otherwise pile up dead observers.
+   An element is linked through the view's bindings rather than by
+   calling `on_update` directly, because an observer outlives the element
+   that wanted it. The view holds each linked element weakly and remembers
+   the connection its observer was given, and takes them all off the model
+   when the view goes. An application that builds its user interface once
+   never notices; anything that rebuilds one, a plugin editor being opened
+   a second time for instance, would otherwise pile up dead observers.
 
    The Model does not care about the GUI element types it is interacting
    with. It is an abstract data type that models its underlying data type
@@ -105,7 +105,7 @@
 
    In this example, we present a very simple model, comprising of a floating
    point value and a preset. As the GUI elements are being built, they attach
-   themselves to the model through a `model_binder` at different nodes
+   themselves to the model through the view's bindings at different nodes
    within the elements hierarchy. This illustrates the approach of designing
    the user interface based on models.
 =============================================================================*/
@@ -115,7 +115,6 @@ namespace icons = elements::icons;
 using elements::rgba;
 using elements::box;
 using elements::value_model;
-using elements::model_binder;
 using elements::dial;
 using elements::radial_marks;
 using elements::radial_labels;
@@ -150,23 +149,16 @@ struct my_model
 };
 
 // Create a dial and establish its connection with the model.
-auto make_dial(my_model& model, model_binder& binder, view& view_)
+auto make_dial(my_model& model, view& view_)
 {
    // Make a dial
-   auto dial_ptr =
-      share(
-         dial(
-            radial_marks<20>(basic_knob<80>()),
-            1.0
-         )
-      );
+   auto dial_ptr = share(dial(radial_marks<20>(basic_knob<80>())));
 
-   // The dial follows the value, and the binder gives it the value the
-   // model holds right now. What the user does to the dial comes here
-   // instead of straight to the model, because there is more to do than
-   // assign: the value is no longer one of the presets, so the preset is
-   // taken off as well.
-   binder.follow(model._value, dial_ptr, view_,
+   // The dial follows the value, and gets the value the model holds right
+   // now. What the user does to the dial comes here instead of straight
+   // to the model, because there is more to do than assign: the value is
+   // no longer one of the presets, so the preset is taken off as well.
+   view_.bindings().follow(model._value, dial_ptr,
       [&model](double val)
       {
          if (model._value != val)
@@ -188,7 +180,7 @@ auto make_dial(my_model& model, model_binder& binder, view& view_)
 }
 
 // Create a preset menu and establish its connection with the model.
-auto make_preset_menu(my_model& model, model_binder& binder, view& view_)
+auto make_preset_menu(my_model& model, view& view_)
 {
    // These are the menu labels
    static char const* preset_labels[] = {
@@ -247,25 +239,23 @@ auto make_preset_menu(my_model& model, model_binder& binder, view& view_)
          preset_labels
       );
 
-   // When a new preset is assigned to the model, we want to update the
-   // menu text and refresh the view. The menu shows the preset as text
-   // rather than through a value, which bind and follow cannot say, so
-   // this one is observed directly. The binder takes it off just the same.
-   binder.observe(model._preset,
-      [&view_, label = preset_menu.second](my_model::preset val)
+   // The menu shows the preset as text, which no value setter can say,
+   // so it is attached with a function that puts the preset into the
+   // label. The view is refreshed for us afterwards.
+   view_.bindings().attach(model._preset, preset_menu.second,
+      [](auto& label, my_model::preset val)
       {
          if (val == my_model::preset_none)
          {
             // Prepend '*' to the string to indicate that it is being edited.
-            auto text = label->get_text();
+            auto text = label.get_text();
             if (text[0] != '*')
-               label->set_text("*" + std::string{text});
+               label.set_text("*" + std::string{text});
          }
          else
          {
-            label->set_text(preset_labels[int(val)-1]);
+            label.set_text(preset_labels[int(val)-1]);
          }
-         view_.refresh(*label);
       }
    );
 
@@ -283,21 +273,20 @@ auto make_preset_menu(my_model& model, model_binder& binder, view& view_)
 }
 
 // Create an input text box and establish its connection with the model.
-auto make_input_box(my_model& model, model_binder& binder, view& view_)
+auto make_input_box(my_model& model, view& view_)
 {
    auto tbox = input_box("value");
 
-   // The text box shows the value as text, so it too is observed
-   // directly. Note that the dial is watching the same value: a model
-   // calls every observer it was given, in the order they arrived.
-   binder.observe(model._value,
-      [&view_, input = tbox.second](double val)
+   // The text box shows the value as text, so it too is attached with a
+   // function of its own. Note that the dial is showing the same value:
+   // a model updates every control it was given, in the order they came.
+   view_.bindings().attach(model._value, tbox.second,
+      [](auto& input, double val)
       {
          std::ostringstream stream;
          stream << std::fixed << std::setprecision(2) << val;
-         input->set_text(stream.str());
-         input->select_all();
-         view_.refresh(*input);
+         input.set_text(stream.str());
+         input.select_all();
       }
    );
 
@@ -373,7 +362,7 @@ auto make_input_box(my_model& model, model_binder& binder, view& view_)
 }
 
 // Finally, we have our main content.
-auto make_content(my_model& model, model_binder& binder, view& view_)
+auto make_content(my_model& model, view& view_)
 {
    static float const grid_coords[] = {0.1, 0.9, 1.0};
 
@@ -382,9 +371,9 @@ auto make_content(my_model& model, model_binder& binder, view& view_)
          group(
             margin({20, 20, 20, 20},
                vgrid(grid_coords,
-                  make_preset_menu(model, binder, view_),
-                  make_dial(model, binder, view_),
-                  make_input_box(model, binder, view_)
+                  make_preset_menu(model, view_),
+                  make_dial(model, view_),
+                  make_input_box(model, view_)
                )
             )
          )
@@ -399,14 +388,13 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   // Our simple model, and the binder that ties the user interface to
-   // it. The binder is declared after the model so that it goes first,
-   // taking its observers off while the model is still there.
+   // Our simple model. Note that it is declared after the view, and so
+   // goes after it: the view's bindings leave the model on their way out,
+   // and the model has to be there for that.
    my_model model;
-   model_binder binder;
 
    view_.content(
-      make_content(model, binder, view_),
+      make_content(model, view_),
       background
    );
 

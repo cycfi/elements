@@ -14,6 +14,7 @@
 #include <elements/element/size.hpp>
 #include <elements/element/indirect.hpp>
 #include <elements/support/context.hpp>
+#include <elements/model.hpp>
 
 #include <asio.hpp>
 #include <memory>
@@ -129,6 +130,13 @@ namespace cycfi::elements
       using context_function = element::context_function;
       void                    in_context_do(element& e, context_function f);
 
+      /**
+       * \brief
+       *    The links between this view's controls and the application's
+       *    models. They live as long as the view does, and leave the
+       *    models when it goes. See `model_binder`.
+       */
+      model_binder&           bindings() { return _bindings; }
 
    private:
 
@@ -155,6 +163,11 @@ namespace cycfi::elements
       using tracking_map = std::map<element*, time_point>;
 
       tracking_map            _tracking;
+
+      // Last, so it is destroyed first: the controls it refers to are
+      // still there as it disconnects, and so are the models, which must
+      // outlive the view.
+      model_binder            _bindings{[this](element& e) { refresh(e); }};
    };
 
    ////////////////////////////////////////////////////////////////////////////

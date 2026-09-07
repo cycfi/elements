@@ -178,6 +178,27 @@ elseif (WIN32)
    )
 endif()
 
+# The host layer carries the platform's view class, and on macOS its
+# Objective-C name has to be unique in the process, since the runtime keeps
+# one flat namespace for the whole of it. A library compiled once can only
+# give that class one name, which is fine for an application and not for a
+# plugin, which may sit in a host beside another Elements.
+#
+# With this on, the host layer stays out of the library and its paths are
+# published in ELEMENTS_HOST_SOURCES instead. A consumer compiles them into
+# each of its own binaries with its own ELEMENTS_CLASS_PREFIX. Nothing else
+# is needed: linking elements brings the include paths, the host UI
+# definition and the compile options along with it.
+option(ELEMENTS_HOST_IN_CONSUMER
+   "Leave the host layer out of the library for the consumer to compile" OFF)
+
+if (ELEMENTS_HOST_IN_CONSUMER)
+   list(TRANSFORM ELEMENTS_HOST PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
+   set(ELEMENTS_HOST_SOURCES ${ELEMENTS_HOST}
+      CACHE INTERNAL "The Elements host layer, for the consumer to compile")
+   set(ELEMENTS_HOST "")
+endif()
+
 source_group("Source Files\\elements"
    FILES
    ${ELEMENTS_SOURCES}

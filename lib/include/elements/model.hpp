@@ -6,6 +6,8 @@
 #if !defined(ELEMENTS_MODEL_DECEMBER_22_2023)
 #define ELEMENTS_MODEL_DECEMBER_22_2023
 
+#include <algorithm>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -13,8 +15,6 @@
 
 namespace cycfi::elements
 {
-   class element;
-
    /** \class model
     *
     * \brief
@@ -66,13 +66,24 @@ namespace cycfi::elements
       model&                  operator=(param_type val);
                               operator value_type() const;
 
+      // Identifies one observer, so it can be taken off again.
+      using connection = std::uint32_t;
+
       void                    update();
       void                    update(param_type val);
-      void                    on_update(update_function f);
+      connection              on_update(update_function f);
+      void                    disconnect(connection c);
 
    private:
 
-      update_function         _update;
+      struct observer
+      {
+         connection           id;
+         update_function      f;
+      };
+
+      std::vector<observer>   _observers;
+      connection              _next = 0;
    };
 
    /** \class value_model
@@ -280,8 +291,12 @@ namespace cycfi::elements
    template <typename T, typename Derived>
    inline void model<T, Derived>::update(param_type val)
    {
-      if (_update)
-         _update(val);
+      // By index, and re-reading the size each time: an observer may add
+      // or remove one while it runs. A removed observer is left empty
+      // here and cleared away by the next on_update.
+      for (std::size_t i = 0; i != _observers.size(); ++i)
+         if (auto const& f = _observers[i].f)
+            f(val);
    }
 
    /**
@@ -293,24 +308,40 @@ namespace cycfi::elements
     *
     * \param f
     *    The update function.
+    *
+    * \returns
+    *    A connection naming this observer, for disconnect. Ignoring it
+    *    leaves the observer in place for the life of the model, which is
+    *    what an application usually wants.
     */
    template <typename T, typename Derived>
-   inline void model<T, Derived>::on_update(update_function f)
+   inline typename model<T, Derived>::connection
+   model<T, Derived>::on_update(update_function f)
    {
-      if (_update)
-      {
-         // Chain call
-         _update =
-            [prev_f = _update, f](value_type val)
-            {
-               prev_f(val);
-               f(val);
-            };
-      }
-      else
-      {
-         _update = f;
-      }
+      // Clear away anything disconnected since the last time.
+      std::erase_if(_observers, [](observer const& o) { return !o.f; });
+
+      _observers.push_back({_next, std::move(f)});
+      return _next++;
+   }
+
+   /**
+    * \brief
+    *    Take an observer off the model, given the connection on_update
+    *    returned for it. An observer that outlives what it refers to has
+    *    to leave this way; nothing else removes one.
+    *
+    * \param c
+    *    The connection.
+    */
+   template <typename T, typename Derived>
+   inline void model<T, Derived>::disconnect(connection c)
+   {
+      // Emptied rather than erased: this may be called from inside an
+      // update, walking this very list.
+      for (auto& o : _observers)
+         if (o.id == c)
+            o.f = nullptr;
    }
 
    /**
@@ -547,15 +578,17 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Binds models to the controls that show them.
    //
-   // A model has a single on_update, and a control lives only as long as
-   // the view it is in, while the model may live for the whole program. A
-   // model_binder owns what sits between: the fan-out, so any number of
-   // controls can follow one model, and the weak references, so a control
-   // that is gone is skipped rather than touched. Clear it before the view
-   // goes away.
+   // A model outlives the controls that show it: the model belongs to the
+   // application, the controls to a view that comes and goes. A binder
+   // holds what sits between, so those controls can leave. It keeps each
+   // one weakly, and it keeps the connections its observers were given, so
+   // clear takes them off the model rather than leaving them behind to
+   // pile up the next time a view is built.
    //
    //    model_binder _binder;
    //    _binder.bind(model, share(slider(...)), view_);
+   //    ...
+   //    _binder.clear();   // before the view goes away
    //
    // A control is any element with a `value(v)` setter and an `on_change`
    // callback: the sliders, the dials, the selectors. The view is passed
@@ -600,20 +633,19 @@ namespace cycfi::elements
                                , ToControl to_control
                                , OnChange on_change);
 
-      void                    clear() { _entries.clear(); }
+      // Takes every observer off its model and forgets every control.
+      void                    clear();
+
+                              ~model_binder() { clear(); }
 
    private:
 
+      // One observer, and the means to take it off the model again. The
+      // model's type is gone by then, so disconnect is bound here.
       struct entry
       {
-         void const*             model;
-         std::weak_ptr<element>  control;
-         std::function<void()>   update;
+         std::function<void()>   disconnect;
       };
-
-                              template <typename Model>
-      void                    add(Model& model, std::weak_ptr<element> e
-                               , std::function<void()> update);
 
       std::vector<entry>      _entries;
    };
@@ -651,40 +683,29 @@ namespace cycfi::elements
       control->value(to_control(model.get()));
       control->on_change = [on_change](auto v) { on_change(v); };
 
-      add(model, control
-       , [&model, &view_, to_control
-        , weak = std::weak_ptr<Control>(control)]()
+      // The control is held weakly: it belongs to the view, which may go
+      // before the binder is cleared.
+      auto c = model.on_update(
+         [&model, &view_, to_control
+        , weak = std::weak_ptr<Control>(control)](auto)
          {
-            if (auto c = weak.lock())
+            if (auto ctrl = weak.lock())
             {
-               c->value(to_control(model.get()));
-               view_.refresh(*c);
+               ctrl->value(to_control(model.get()));
+               view_.refresh(*ctrl);
             }
          });
+
+      _entries.push_back({[&model, c]() { model.disconnect(c); }});
    }
 
-   // The first binding of a model installs its one on_update, which fans
-   // out to every entry for that model. A model's address is its identity.
-   template <typename Model>
-   inline void model_binder::add(Model& model, std::weak_ptr<element> e
-    , std::function<void()> update)
+   inline void model_binder::clear()
    {
-      bool first = true;
-      for (auto const& en : _entries)
-         if (en.model == &model)
-            first = false;
-
-      _entries.push_back({&model, std::move(e), std::move(update)});
-
-      if (first)
-         model.on_update(
-            [this, m = static_cast<void const*>(&model)](auto)
-            {
-               for (auto const& en : _entries)
-                  if (en.model == m)
-                     en.update();
-            });
+      for (auto const& e : _entries)
+         e.disconnect();
+      _entries.clear();
    }
+
 }
 
 #endif

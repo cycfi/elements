@@ -304,11 +304,18 @@ namespace cycfi::elements
       return {std::forward<Subject>(subject)};
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Slider Marks on a decibel scale: a fader's ticks, major at the marks
-   // and minor halfway between, through the db_scale taper. See
-   // grid_lines.hpp for the marks and the taper.
-   ////////////////////////////////////////////////////////////////////////////
+   /** \class slider_marks_db_element
+    *
+    * \brief
+    *    A fader's ticks on a decibel scale: major at the marks a console
+    *    is ticked at, minor halfway between, placed through the `db_scale`
+    *    taper so they line up with a control on the same scale. Make one
+    *    with `slider_marks_db`. See grid_lines.hpp for the marks and the
+    *    taper.
+    *
+    * \tparam _size
+    *    The length of a major tick, in pixels. Minor ticks are shorter.
+    */
    template <std::size_t _size, concepts::Element Subject>
    class slider_marks_db_element : public slider_styler_base<_size, Subject>
    {
@@ -344,6 +351,17 @@ namespace cycfi::elements
       base_type::draw(ctx);
    }
 
+   /**
+    * \brief
+    *    Put a fader's decibel ticks behind a slider.
+    *
+    * \param subject
+    *    The slider's track, which the ticks are drawn behind.
+    *
+    * \param scale
+    *    The decibel scale, which should be the one the slider is read
+    *    with.
+    */
    template <std::size_t _size, concepts::Element Subject>
    inline slider_marks_db_element<_size, remove_cvref_t<Subject>>
    slider_marks_db(Subject&& subject, db_scale scale = {})
@@ -351,11 +369,17 @@ namespace cycfi::elements
       return {std::forward<Subject>(subject), scale};
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Slider Labels on a decibel scale, at the marks: magnitudes, the
-   // infinity sign at the bottom when the scale reaches silence. Negative
-   // size puts the labels on the other side, as with slider_labels.
-   ////////////////////////////////////////////////////////////////////////////
+   /** \class slider_labels_db_element
+    *
+    * \brief
+    *    A fader's labels on a decibel scale, written at the marks: the
+    *    magnitude without a sign, and the infinity sign at the bottom when
+    *    the scale reaches silence. Make one with `slider_labels_db`.
+    *
+    * \tparam _size
+    *    How far the labels sit from the track, in pixels. A negative size
+    *    puts them on the other side, as with `slider_labels`.
+    */
    template <int _size, concepts::Element Subject>
    class slider_labels_db_element
     : public slider_styler_base<abs(_size), Subject>
@@ -397,6 +421,20 @@ namespace cycfi::elements
          ctx.canvas, ctx.bounds, size, _font_size, _scale);
    }
 
+   /**
+    * \brief
+    *    Put a fader's decibel labels beside a slider.
+    *
+    * \param subject
+    *    The slider, or its ticks, which the labels are written beside.
+    *
+    * \param font_size
+    *    The label font size, relative to the theme's.
+    *
+    * \param scale
+    *    The decibel scale, which should be the one the slider is read
+    *    with.
+    */
    template <int size, concepts::Element Subject>
    inline slider_labels_db_element<size, remove_cvref_t<Subject>>
    slider_labels_db(Subject&& subject, float font_size, db_scale scale = {})

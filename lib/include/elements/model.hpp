@@ -26,6 +26,23 @@ namespace cycfi::elements
     *    be linked to a `model` by supplying an `update_function` via the
     *    `on_update(f)` member function.\n\n
     *
+    *    A model may have any number of linked elements. `on_update` adds an
+    *    update function; it does not replace the one before it. All of them
+    *    are called, in the order they were added, whenever the model's value
+    *    is set. Two elements showing the same value, a dial and a text box
+    *    for instance, each link to the model and both follow it.\n\n
+    *
+    *    An update function may outlive the element it was written for, since
+    *    a model belongs to the application and elements belong to a view
+    *    that may be torn down and built again. `on_update` returns a
+    *    `connection` for this: pass it to `disconnect` to take the update
+    *    function off the model. An application that builds its user
+    *    interface once may ignore the connection, and the update function
+    *    stays for the life of the model. Anything that rebuilds its
+    *    interface should keep the connections and disconnect them, or dead
+    *    update functions accumulate. See `model_binder`, which does this
+    *    bookkeeping.\n\n
+    *
     *    The conversion operator may be used to get a model's value via the
     *    derived class's `get` member function. Example:
     *
@@ -575,31 +592,56 @@ namespace cycfi::elements
       assign(_ref, val, _id);
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   // Binds models to the controls that show them.
-   //
-   // A model outlives the controls that show it: the model belongs to the
-   // application, the controls to a view that comes and goes. A binder
-   // holds what sits between, so those controls can leave. It keeps each
-   // one weakly, and it keeps the connections its observers were given, so
-   // clear takes them off the model rather than leaving them behind to
-   // pile up the next time a view is built.
-   //
-   //    model_binder _binder;
-   //    _binder.bind(model, share(slider(...)), view_);
-   //    ...
-   //    _binder.clear();   // before the view goes away
-   //
-   // A control is any element with a `value(v)` setter and an `on_change`
-   // callback: the sliders, the dials, the selectors. The view is passed
-   // as a template type so this header stays free of the view.
-   ////////////////////////////////////////////////////////////////////////////
+   /** \class model_binder
+    *
+    * \brief
+    *    Links models to the controls that show them, and unlinks them
+    *    again.
+    *
+    *    A model outlives the controls that show it: the model belongs to
+    *    the application, the controls to a view that may be torn down and
+    *    built again. A `model_binder` holds what sits between, so those
+    *    controls can leave. It refers to each control weakly, so one that
+    *    is gone is skipped, and it keeps the `connection` each update
+    *    function was given, so `clear` takes them off the model instead of
+    *    leaving them to accumulate the next time a view is built.
+    *    Destroying the binder clears it.\n\n
+    *
+    *    Declare the binder after the model it binds, so that it is
+    *    destroyed first, while the model is still there to disconnect
+    *    from.
+    *
+    * @code
+    *    my_model model;
+    *    model_binder binder;
+    *    ...
+    *    binder.bind(model._value, share(slider(...)), view_);
+    * @endcode
+    *
+    *    A control, for `bind` and `follow`, is any element with a
+    *    `value(v)` setter and an `on_change` callback: the sliders, the
+    *    dials, the selectors. Anything else is linked with `observe`. The
+    *    view is a template parameter so that this header does not need it.
+    */
    class model_binder
    {
    public:
 
-      // Two way. The control shows the model and the model takes what the
-      // user does to the control, same value both sides.
+      /**
+       * \brief
+       *    Link a control to a model, both ways. The control is given the
+       *    model's value now and whenever it changes, and what the user
+       *    does to the control is assigned to the model.
+       *
+       * \param model
+       *    The model. It must outlive this binder.
+       *
+       * \param control
+       *    The control, held weakly.
+       *
+       * \param view_
+       *    The view holding the control, refreshed when it changes.
+       */
                               template <
                                  typename Model, typename Control
                                , typename View>
@@ -607,9 +649,18 @@ namespace cycfi::elements
                                , std::shared_ptr<Control> control
                                , View& view_);
 
-      // Two way through a pair of conversions: to_control(model value) is
-      // what the control shows, to_model(control value) is what the model
-      // takes. For a control whose travel is not the model's unit.
+      /**
+       * \brief
+       *    Link a control to a model, both ways, through a pair of
+       *    conversions. For a control whose travel is not the model's
+       *    unit: a fader in decibels over a linear gain, for instance.
+       *
+       * \param to_control
+       *    Called with the model's value; returns what the control shows.
+       *
+       * \param to_model
+       *    Called with the control's value; returns what the model takes.
+       */
                               template <
                                  typename Model, typename Control
                                , typename View
@@ -620,9 +671,32 @@ namespace cycfi::elements
                                , ToControl to_control
                                , ToModel to_model);
 
-      // One way. The control follows the model; what the user does to the
-      // control goes to on_change instead, and whoever handles it decides
-      // what reaches the model, or a host beyond it.
+      /**
+       * \brief
+       *    Link a control to a model, one way. The control follows the
+       *    model, but what the user does to the control is handed to
+       *    `on_change` rather than assigned, leaving the caller to decide
+       *    what reaches the model, or what lies beyond it.
+       *
+       * \param on_change
+       *    Called with the control's value when the user changes it.
+       */
+                              template <
+                                 typename Model, typename Control
+                               , typename View, typename OnChange>
+      void                    follow(Model& model
+                               , std::shared_ptr<Control> control
+                               , View& view_
+                               , OnChange on_change);
+
+      /**
+       * \brief
+       *    Link a control to a model, one way, through a conversion. For a
+       *    control whose travel is not the model's unit.
+       *
+       * \param to_control
+       *    Called with the model's value; returns what the control shows.
+       */
                               template <
                                  typename Model, typename Control
                                , typename View
@@ -633,15 +707,34 @@ namespace cycfi::elements
                                , ToControl to_control
                                , OnChange on_change);
 
-      // Takes every observer off its model and forgets every control.
+      /**
+       * \brief
+       *    Add an update function to a model and remember its connection,
+       *    for what `bind` and `follow` cannot say: an element that shows
+       *    the value some other way than through a value setter, a label's
+       *    text for one. `clear` takes it off like any other.
+       *
+       * \param f
+       *    The update function, called with the model's new value.
+       */
+                              template <typename Model, typename F>
+      void                    observe(Model& model, F f);
+
+      /**
+       * \brief
+       *    Take every update function off its model and forget every
+       *    control. Call this before the view holding the controls goes
+       *    away. The destructor calls it too.
+       */
       void                    clear();
 
                               ~model_binder() { clear(); }
 
    private:
 
-      // One observer, and the means to take it off the model again. The
-      // model's type is gone by then, so disconnect is bound here.
+      // One update function, and the means to take it off the model
+      // again. The model's type is gone by then, so disconnect is bound
+      // here.
       struct entry
       {
          std::function<void()>   disconnect;
@@ -685,7 +778,7 @@ namespace cycfi::elements
 
       // The control is held weakly: it belongs to the view, which may go
       // before the binder is cleared.
-      auto c = model.on_update(
+      observe(model,
          [&model, &view_, to_control
         , weak = std::weak_ptr<Control>(control)](auto)
          {
@@ -695,7 +788,22 @@ namespace cycfi::elements
                view_.refresh(*ctrl);
             }
          });
+   }
 
+   template <
+      typename Model, typename Control
+    , typename View, typename OnChange>
+   inline void model_binder::follow(Model& model
+    , std::shared_ptr<Control> control, View& view_, OnChange on_change)
+   {
+      follow(model, std::move(control), view_
+       , [](auto v) { return v; }, on_change);
+   }
+
+   template <typename Model, typename F>
+   inline void model_binder::observe(Model& model, F f)
+   {
+      auto c = model.on_update(f);
       _entries.push_back({[&model, c]() { model.disconnect(c); }});
    }
 

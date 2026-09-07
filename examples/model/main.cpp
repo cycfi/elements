@@ -39,7 +39,17 @@
    elements. The actual data is accessed and modified through the `get` and
    `set` member functions of the derived class. A user interface element can
    be linked to a `model` by supplying an `update_function` via the
-   `on_update(f)` member function.
+   `on_update(f)` member function. A model calls every function it was
+   given, in the order they arrived, so any number of elements may show the
+   same value. Here the dial and the text box both show `_value`.
+
+   An element is linked through a `model_binder` rather than by calling
+   `on_update` directly, because an observer outlives the element that
+   wanted it. A binder holds each element weakly and remembers the
+   connection its observer was given, so `clear()` takes them all off the
+   model again. An application that builds its user interface once may
+   ignore this; anything that rebuilds one, a plugin editor being opened a
+   second time for instance, would otherwise pile up dead observers.
 
    The Model does not care about the GUI element types it is interacting
    with. It is an abstract data type that models its underlying data type
@@ -95,9 +105,9 @@
 
    In this example, we present a very simple model, comprising of a floating
    point value and a preset. As the GUI elements are being built, they attach
-   themselves to the model by utilizing its on_update(f) member function at
-   different nodes within the elements hierarchy. This illustrates the
-   approach of designing the user interface based on models.
+   themselves to the model through a `model_binder` at different nodes
+   within the elements hierarchy. This illustrates the approach of designing
+   the user interface based on models.
 =============================================================================*/
 namespace elements = cycfi::elements;
 namespace icons = elements::icons;
@@ -105,6 +115,7 @@ namespace icons = elements::icons;
 using elements::rgba;
 using elements::box;
 using elements::value_model;
+using elements::model_binder;
 using elements::dial;
 using elements::radial_marks;
 using elements::radial_labels;
@@ -139,7 +150,7 @@ struct my_model
 };
 
 // Create a dial and establish its connection with the model.
-auto make_dial(my_model& model, view& view_)
+auto make_dial(my_model& model, model_binder& binder, view& view_)
 {
    // Make a dial
    auto dial_ptr =
@@ -150,9 +161,12 @@ auto make_dial(my_model& model, view& view_)
          )
       );
 
-   // When the user interacts with the dial, this will be called.
-   // We assign the new value to the model.
-   dial_ptr->on_change =
+   // The dial follows the value, and the binder gives it the value the
+   // model holds right now. What the user does to the dial comes here
+   // instead of straight to the model, because there is more to do than
+   // assign: the value is no longer one of the presets, so the preset is
+   // taken off as well.
+   binder.follow(model._value, dial_ptr, view_,
       [&model](double val)
       {
          if (model._value != val)
@@ -160,15 +174,6 @@ auto make_dial(my_model& model, view& view_)
             model._value = val;
             model._preset = my_model::preset_none;
          }
-      };
-
-   // When a new value is assigned to the model, we want to update
-   // the dial and refresh the view.
-   model._value.on_update(
-      [&view_, dial_ptr](double val)
-      {
-         dial_ptr->value(val);
-         view_.refresh(*dial_ptr);
       }
    );
 
@@ -183,7 +188,7 @@ auto make_dial(my_model& model, view& view_)
 }
 
 // Create a preset menu and establish its connection with the model.
-auto make_preset_menu(my_model& model, view& view_)
+auto make_preset_menu(my_model& model, model_binder& binder, view& view_)
 {
    // These are the menu labels
    static char const* preset_labels[] = {
@@ -242,10 +247,12 @@ auto make_preset_menu(my_model& model, view& view_)
          preset_labels
       );
 
-   // When a new preset is assigned to the model, we want to update
-   // the menu text and refresh the view.
-   model._preset.on_update(
-      [&view_, label = preset_menu.second, &model](my_model::preset val)
+   // When a new preset is assigned to the model, we want to update the
+   // menu text and refresh the view. The menu shows the preset as text
+   // rather than through a value, which bind and follow cannot say, so
+   // this one is observed directly. The binder takes it off just the same.
+   binder.observe(model._preset,
+      [&view_, label = preset_menu.second](my_model::preset val)
       {
          if (val == my_model::preset_none)
          {
@@ -276,13 +283,14 @@ auto make_preset_menu(my_model& model, view& view_)
 }
 
 // Create an input text box and establish its connection with the model.
-auto make_input_box(my_model& model, view& view_)
+auto make_input_box(my_model& model, model_binder& binder, view& view_)
 {
    auto tbox = input_box("value");
 
-   // When a new value is assigned to the model, we want to update
-   // the input text box and refresh the view.
-   model._value.on_update(
+   // The text box shows the value as text, so it too is observed
+   // directly. Note that the dial is watching the same value: a model
+   // calls every observer it was given, in the order they arrived.
+   binder.observe(model._value,
       [&view_, input = tbox.second](double val)
       {
          std::ostringstream stream;
@@ -365,7 +373,7 @@ auto make_input_box(my_model& model, view& view_)
 }
 
 // Finally, we have our main content.
-auto make_content(my_model& model, view& view_)
+auto make_content(my_model& model, model_binder& binder, view& view_)
 {
    static float const grid_coords[] = {0.1, 0.9, 1.0};
 
@@ -374,9 +382,9 @@ auto make_content(my_model& model, view& view_)
          group(
             margin({20, 20, 20, 20},
                vgrid(grid_coords,
-                  make_preset_menu(model, view_),
-                  make_dial(model, view_),
-                  make_input_box(model, view_)
+                  make_preset_menu(model, binder, view_),
+                  make_dial(model, binder, view_),
+                  make_input_box(model, binder, view_)
                )
             )
          )
@@ -391,11 +399,14 @@ int main(int argc, char* argv[])
 
    view view_(_win);
 
-   // Our simple model
+   // Our simple model, and the binder that ties the user interface to
+   // it. The binder is declared after the model so that it goes first,
+   // taking its observers off while the model is still there.
    my_model model;
+   model_binder binder;
 
    view_.content(
-      make_content(model, view_),
+      make_content(model, binder, view_),
       background
    );
 

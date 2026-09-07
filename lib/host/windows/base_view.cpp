@@ -30,6 +30,7 @@
 #include <elements/support/error_handler.hpp>
 #include <artist/canvas.hpp>
 #include <artist/resources.hpp>
+#include <system_error>
 #include "drag_and_drop.hpp"
 
 #ifndef UNICODE
@@ -87,18 +88,47 @@ namespace cycfi::artist
 {
    namespace
    {
+      // The module that holds this code: the executable for an
+      // application, its own library for a plugin. A null handle names
+      // the process executable instead, which for a plugin is the host.
+      fs::path module_path()
+      {
+         wchar_t path[MAX_PATH];
+         HMODULE hm = nullptr;
+         constexpr auto flags =
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+            GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
+
+         if (GetModuleHandleExW(flags, (LPCWSTR) &module_path, &hm))
+            if (GetModuleFileNameW(hm, path, MAX_PATH))
+               return path;
+         return {};
+      }
+
+      // Where the fonts and images sit, which differs with what is being
+      // built. An application keeps them beside itself. A plugin in a
+      // bundle, as the VST3 spec lays one out, keeps them beside the
+      // architecture directory holding the library. A plugin that is a
+      // bare library, as a CLAP is here, keeps them in a directory named
+      // after itself.
       fs::path find_resources()
       {
-         TCHAR exe_path[MAX_PATH];
-         GetModuleFileName(nullptr, exe_path, MAX_PATH);
+         auto const module = module_path();
+         if (!module.empty())
+         {
+            auto const dir = module.parent_path();
+            fs::path const candidates[] =
+            {
+               dir / "resources",
+               dir.parent_path() / "Resources",
+               dir / (module.stem().string() + " Resources")
+            };
 
-         fs::path const app_path = exe_path;
-         fs::path const app_dir = app_path.parent_path();
-
-         fs::path const app_resources_dir = app_dir / "resources";
-         if (fs::is_directory(app_resources_dir))
-            return app_resources_dir;
-
+            std::error_code ec;
+            for (auto const& path : candidates)
+               if (fs::is_directory(path, ec))
+                  return path;
+         }
          return fs::current_path() / "resources";
       }
    }

@@ -230,8 +230,15 @@ endif()
 
 ###############################################################################
 # PkgConfig
+#
+# Only the GTK host needs it here, for fontconfig, freetype and GTK itself
+# below. Artist asks for it separately, where a backend needs it. So a
+# macOS build with the Cocoa host and Quartz2D, or a Windows one with the
+# Win32 host, requires no pkg-config at all.
 
-find_package(PkgConfig REQUIRED)
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
+   find_package(PkgConfig REQUIRED)
+endif()
 
 ###############################################################################
 # Get rid of certain warnings, and make msvc support utf-8 without adding bom

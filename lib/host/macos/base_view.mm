@@ -208,7 +208,20 @@ namespace
 ///////////////////////////////////////////////////////////////////////////////
 // ElementsView Interface
 
-#define ELEMENTS_VIEW_CLASS ELEMENTS_CLASS_PREFIX##ElementsView
+// The Objective-C runtime keeps one flat namespace of class names for the
+// whole process, so a plugin's view class has to be named apart from any
+// other Elements in the host. ELEMENTS_CLASS_PREFIX supplies the name.
+//
+// It takes two steps to paste: ## suppresses expansion of its operands,
+// so pasting the prefix directly would name the class after the macro
+// rather than its value.
+#if !defined(ELEMENTS_CLASS_PREFIX)
+# define ELEMENTS_CLASS_PREFIX
+#endif
+
+#define ELEMENTS_PASTE_(a, b) a##b
+#define ELEMENTS_PASTE(a, b) ELEMENTS_PASTE_(a, b)
+#define ELEMENTS_VIEW_CLASS ELEMENTS_PASTE(ELEMENTS_CLASS_PREFIX, ElementsView)
 
 @interface ELEMENTS_VIEW_CLASS : NSView <NSTextInputClient>
 {

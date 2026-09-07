@@ -620,7 +620,9 @@ namespace cycfi::elements
     *    are the common case of a control with a `value(v)` setter and an
     *    `on_change` callback: the sliders, the dials, the selectors.
     *
-    *    The models a binder links to must outlive the view that owns it.
+    *    The models a binder links to must outlive the view that owns it,
+    *    so declare them before the view: what is declared first is
+    *    destroyed last.
     */
    class model_binder
    {

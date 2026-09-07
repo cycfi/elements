@@ -386,12 +386,12 @@ int main(int argc, char* argv[])
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 
-   view view_(_win);
-
-   // Our simple model. Note that it is declared after the view, and so
-   // goes after it: the view's bindings leave the model on their way out,
-   // and the model has to be there for that.
+   // Our simple model, declared before the view so that it is destroyed
+   // after it. The view's bindings leave the model on their way out, and
+   // the model has to still be there for that.
    my_model model;
+
+   view view_(_win);
 
    view_.content(
       make_content(model, view_),

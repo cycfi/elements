@@ -15,4 +15,5 @@
 ** xref:layout/layers.adoc[Layers]
 ** xref:layout/decks.adoc[Decks]
 ** xref:layout/flow.adoc[Flow]
+* xref:models.adoc[Models]
 

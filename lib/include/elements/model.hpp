@@ -607,7 +607,7 @@ namespace cycfi::elements
       struct entry
       {
          void const*             model;
-         std::weak_ptr<element>  element;
+         std::weak_ptr<element>  control;
          std::function<void()>   update;
       };
 

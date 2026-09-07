@@ -1,4 +1,4 @@
-= Models
+= Model
 
 include::common.adoc[]
 
@@ -32,9 +32,7 @@ with the model independently, unaware of each other's existence. The model
 serves as a central hub, facilitating and coordinating interactions between
 them:
 
-....
-application <----> model <----> GUI
-....
+image::/model/decoupling.svg[alt="decoupling", width=430px, role=center]
 
 . The application is aware of the model, manages and interacts with it.
 . The GUI is also aware of the model and links to it.
@@ -131,6 +129,8 @@ in a first-come, first-served order. It adds an update function; it does
 not replace the one before it. Any number of elements may present the same
 value. A dial and a text box over the same float will both follow it, and
 neither displaces the other.
+
+image::/model/fan_out.svg[alt="fan out", width=402px, role=center]
 
 The second is that it returns a `connection`. You can pass that to
 `disconnect` to take the update function off the model again:

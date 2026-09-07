@@ -18,13 +18,13 @@
 
       .label {
         font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
-        font-size: 13px;
+        font-size: 17px;
         fill: #414042;
       }
 
       .call {
         font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
-        font-size: 13px;
+        font-size: 17px;
         fill: #00a9c9;
       }
 

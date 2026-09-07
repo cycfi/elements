@@ -7,10 +7,14 @@
 #define ELEMENTS_MODEL_DECEMBER_22_2023
 
 #include <functional>
+#include <memory>
+#include <vector>
 #include <infra/support.hpp>
 
 namespace cycfi::elements
 {
+   class element;
+
    /** \class model
     *
     * \brief
@@ -538,6 +542,148 @@ namespace cycfi::elements
    inline void proxy_model<T, ID, Delegate>::proxy_model::keyed::set(param_type val)
    {
       assign(_ref, val, _id);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Binds models to the controls that show them.
+   //
+   // A model has a single on_update, and a control lives only as long as
+   // the view it is in, while the model may live for the whole program. A
+   // model_binder owns what sits between: the fan-out, so any number of
+   // controls can follow one model, and the weak references, so a control
+   // that is gone is skipped rather than touched. Clear it before the view
+   // goes away.
+   //
+   //    model_binder _binder;
+   //    _binder.bind(model, share(slider(...)), view_);
+   //
+   // A control is any element with a `value(v)` setter and an `on_change`
+   // callback: the sliders, the dials, the selectors. The view is passed
+   // as a template type so this header stays free of the view.
+   ////////////////////////////////////////////////////////////////////////////
+   class model_binder
+   {
+   public:
+
+      // Two way. The control shows the model and the model takes what the
+      // user does to the control, same value both sides.
+                              template <
+                                 typename Model, typename Control
+                               , typename View>
+      void                    bind(Model& model
+                               , std::shared_ptr<Control> control
+                               , View& view_);
+
+      // Two way through a pair of conversions: to_control(model value) is
+      // what the control shows, to_model(control value) is what the model
+      // takes. For a control whose travel is not the model's unit.
+                              template <
+                                 typename Model, typename Control
+                               , typename View
+                               , typename ToControl, typename ToModel>
+      void                    bind(Model& model
+                               , std::shared_ptr<Control> control
+                               , View& view_
+                               , ToControl to_control
+                               , ToModel to_model);
+
+      // One way. The control follows the model; what the user does to the
+      // control goes to on_change instead, and whoever handles it decides
+      // what reaches the model, or a host beyond it.
+                              template <
+                                 typename Model, typename Control
+                               , typename View
+                               , typename ToControl, typename OnChange>
+      void                    follow(Model& model
+                               , std::shared_ptr<Control> control
+                               , View& view_
+                               , ToControl to_control
+                               , OnChange on_change);
+
+      void                    clear() { _entries.clear(); }
+
+   private:
+
+      struct entry
+      {
+         void const*             model;
+         std::weak_ptr<element>  element;
+         std::function<void()>   update;
+      };
+
+                              template <typename Model>
+      void                    add(Model& model, std::weak_ptr<element> e
+                               , std::function<void()> update);
+
+      std::vector<entry>      _entries;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Inline implementation
+   ////////////////////////////////////////////////////////////////////////////
+   template <typename Model, typename Control, typename View>
+   inline void model_binder::bind(Model& model
+    , std::shared_ptr<Control> control, View& view_)
+   {
+      bind(model, std::move(control), view_
+       , [](auto v) { return v; }
+       , [](auto v) { return v; });
+   }
+
+   template <
+      typename Model, typename Control, typename View
+    , typename ToControl, typename ToModel>
+   inline void model_binder::bind(Model& model
+    , std::shared_ptr<Control> control, View& view_
+    , ToControl to_control, ToModel to_model)
+   {
+      follow(model, std::move(control), view_, to_control
+       , [&model, to_model](auto v) { model = to_model(v); });
+   }
+
+   template <
+      typename Model, typename Control, typename View
+    , typename ToControl, typename OnChange>
+   inline void model_binder::follow(Model& model
+    , std::shared_ptr<Control> control, View& view_
+    , ToControl to_control, OnChange on_change)
+   {
+      control->value(to_control(model.get()));
+      control->on_change = [on_change](auto v) { on_change(v); };
+
+      add(model, control
+       , [&model, &view_, to_control
+        , weak = std::weak_ptr<Control>(control)]()
+         {
+            if (auto c = weak.lock())
+            {
+               c->value(to_control(model.get()));
+               view_.refresh(*c);
+            }
+         });
+   }
+
+   // The first binding of a model installs its one on_update, which fans
+   // out to every entry for that model. A model's address is its identity.
+   template <typename Model>
+   inline void model_binder::add(Model& model, std::weak_ptr<element> e
+    , std::function<void()> update)
+   {
+      bool first = true;
+      for (auto const& en : _entries)
+         if (en.model == &model)
+            first = false;
+
+      _entries.push_back({&model, std::move(e), std::move(update)});
+
+      if (first)
+         model.on_update(
+            [this, m = static_cast<void const*>(&model)](auto)
+            {
+               for (auto const& en : _entries)
+                  if (en.model == m)
+                     en.update();
+            });
    }
 }
 

@@ -247,7 +247,14 @@ namespace
 
 @end
 
+// The rest of this file knows the class as ElementsView. With no prefix
+// that is its name already, and an alias of a name to itself is an error,
+// so the alias is only made when there is a prefix. Pasting the prefix
+// onto 1 gives the literal 1 only when the prefix is empty; any other
+// result is an identifier, which the preprocessor takes as 0.
+#if ELEMENTS_PASTE(ELEMENTS_CLASS_PREFIX, 1) != 1
 @compatibility_alias ElementsView ELEMENTS_VIEW_CLASS;
+#endif
 
 @implementation ElementsView
 

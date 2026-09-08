@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@antora/cli": "3.1.7",
-    "@antora/site-generator": "3.1.7"
+    "@antora/cli": "3.2.0",
+    "@antora/site-generator": "3.2.0"
   }
 }

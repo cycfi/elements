@@ -5,7 +5,7 @@ site:
 content:
   sources:
   - url: https://github.com/cycfi/elements.git
-    branches: [master, skia_2024]
+    branches: [master, v*]
     start_path: docs
 ui:
   supplemental_files: ./supplemental-ui

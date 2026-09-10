@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/support/draw_utils.hpp>
 #include <elements/support/theme.hpp>
+#include <algorithm>
 
 namespace cycfi::elements
 {
@@ -194,6 +195,52 @@ namespace cycfi::elements
       cnv.begin_path();
       cnv.add_round_rect(bounds, bounds.height()/5);
       cnv.fill();
+   }
+
+   // The round rect counterpart of draw_thumb below, drawn the same way:
+   // the body, a highlight from the top left, and the indicator inside it.
+   void draw_rect_thumb(
+      canvas& cnv, rect bounds, float radius, color c, color ic)
+   {
+      auto state = cnv.new_state();
+      auto const size = std::min(bounds.width(), bounds.height());
+
+      // Fill the body color
+      {
+         cnv.fill_style(c);
+         cnv.begin_path();
+         cnv.add_round_rect(bounds, radius);
+         cnv.fill();
+      }
+
+      // Draw some 3D highlight
+      {
+         auto hcp = point{bounds.left, bounds.top};
+         auto gradient = canvas::radial_gradient{
+            hcp, size*0.5f,
+            hcp, size*2
+         };
+
+         using cs = canvas::color_stop;
+         gradient.add_color_stop(cs{0.0f, {1.0f, 1.0f, 1.0f, 0.4f}});
+         gradient.add_color_stop(cs{1.0f, {0.6f, 0.6f, 0.6f, 0.0f}});
+
+         cnv.fill_style(gradient);
+         cnv.begin_path();
+         cnv.add_round_rect(bounds, radius);
+         cnv.fill();
+      }
+
+      // Draw the indicator, inset by the same proportion the round thumb
+      // uses, and with corners eased to match.
+      {
+         auto const inset = size * 0.275f;
+         auto const ind = bounds.inset(inset, inset);
+         cnv.fill_style(ic);
+         cnv.begin_path();
+         cnv.add_round_rect(ind, std::max(1.0f, radius - inset));
+         cnv.fill();
+      }
    }
 
    void draw_thumb(canvas& cnv, circle cp, color c, color ic)

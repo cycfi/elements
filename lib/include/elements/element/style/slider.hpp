@@ -60,6 +60,65 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Basic Rect Thumb: basic_thumb's shape changed and nothing else. A
+   // round rect of its own width and height, with the same body, the same
+   // highlight and the same indicator inside it, so a panel may mix the
+   // two without them looking like they came from different places.
+   ////////////////////////////////////////////////////////////////////////////
+   template <unsigned _width, unsigned _height, unsigned _radius = 4>
+   class basic_rect_thumb_styler : public element
+   {
+   public:
+
+      static unsigned const width = _width;
+      static unsigned const height = _height;
+      static unsigned const radius = _radius;
+
+                              basic_rect_thumb_styler(
+                                 color c = colors::black)
+                               : _color(c)
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "thumb"; }
+
+   private:
+
+      color                   _color;
+   };
+
+   template <unsigned width, unsigned height, unsigned radius>
+   inline view_limits basic_rect_thumb_styler<width, height, radius>
+      ::limits(basic_context const& /* ctx */) const
+   {
+      auto pt = point{float(width), float(height)};
+      return view_limits{pt, pt};
+   }
+
+   template <unsigned width, unsigned height, unsigned radius>
+   inline void basic_rect_thumb_styler<width, height, radius>
+      ::draw(context const& ctx)
+   {
+      auto& thm = get_theme();
+      auto& cnv = ctx.canvas;
+      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  c = center_point(ctx.bounds);
+      auto  bounds = rect{
+         c.x - (width/2.0f), c.y - (height/2.0f)
+       , c.x + (width/2.0f), c.y + (height/2.0f)};
+
+      draw_rect_thumb(cnv, bounds, float(radius), _color, indicator_color);
+   }
+
+   template <unsigned width, unsigned height, unsigned radius = 4>
+   inline basic_rect_thumb_styler<width, height, radius>
+   basic_rect_thumb(color c = colors::black)
+   {
+      return {c};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Basic Track (You can use this as the slider's track)
    ////////////////////////////////////////////////////////////////////////////
    template <unsigned _size, bool _vertical = false>

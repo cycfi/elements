@@ -778,6 +778,31 @@ namespace
       [[self nextResponder] keyUp : event];
 }
 
+// A key struck with Command is a key equivalent, and Cocoa offers it to
+// the key window's views and then to the menus before it would ever
+// arrive as keyDown. A view hosted in another application, a plugin in
+// a DAW say, never sees such a key through keyDown at all: the host's
+// own commands take it first. Claiming it here, the view is asked
+// first. Only a Command chord is looked at, and only one the view
+// handles is claimed; the rest go on to the host as before.
+- (BOOL) performKeyEquivalent : (NSEvent*) event
+{
+   if (!([event modifierFlags] & NSEventModifierFlagCommand))
+      return [super performKeyEquivalent : event];
+
+   auto key = ph::translate_key([event keyCode]);
+   auto mods = ph::translate_flags([event modifierFlags]);
+   if (handle_key(_keys, *_view, {key, ph::key_action::press, mods}))
+   {
+      // The release never comes as an event of its own, so it is
+      // recorded now, or the next press of the key would read as a
+      // repeat.
+      _keys[key] = ph::key_action::release;
+      return YES;
+   }
+   return [super performKeyEquivalent : event];
+}
+
 - (void) flagsChanged : (NSEvent*) event
 {
    auto const modifier_flags =

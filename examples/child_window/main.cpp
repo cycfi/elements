@@ -25,6 +25,10 @@ auto make_child_window(rect bounds, char const* title)
 int main(int argc, char* argv[])
 {
    app _app("Child Window");
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

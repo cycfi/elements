@@ -219,6 +219,10 @@ void link_controls(view& view_)
 int main(int argc, char* argv[])
 {
    app _app("Basic Sliders And Knobs");      // Make an app
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
    window _win(_app.name());                 // Make a window
    _win.on_close =                           // Set the app to stop when window is closed
       [&_app]()

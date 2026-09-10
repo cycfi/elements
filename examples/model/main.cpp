@@ -383,6 +383,10 @@ auto make_content(my_model& model, view& view_)
 int main(int argc, char* argv[])
 {
    app _app("Model");
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   cycfi::elements::init_resources();
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

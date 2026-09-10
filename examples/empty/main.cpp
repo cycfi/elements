@@ -15,6 +15,10 @@ auto background = box(bkd_color);
 int main(int argc, char* argv[])
 {
    app _app("Empty Starter");
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

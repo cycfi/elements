@@ -312,6 +312,10 @@ my_app::my_app(int argc, char* argv[])
  , _win{name()}
  , _view{_win}
 {
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
    _win.on_close = [this]() { stop(); };
 
    _view.content(

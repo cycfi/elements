@@ -232,6 +232,10 @@ auto make_elements(view& view_)
 int main(int argc, char* argv[])
 {
    app _app("Text and Icons");
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
    window _win(_app.name());
    _win.on_close = [&_app]() { _app.stop(); };
 

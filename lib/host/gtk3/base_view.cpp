@@ -889,6 +889,13 @@ namespace cycfi::elements
       return std::string(text);
    }
 
+   // Nothing to do here: this host finds its resources by path and needs
+   // no registration step. Declared for every platform so a plugin may
+   // call it at load time without knowing which one it is on.
+   void init_resources()
+   {
+   }
+
    void clipboard(std::string_view text)
    {
       GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);

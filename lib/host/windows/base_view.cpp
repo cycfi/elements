@@ -895,6 +895,13 @@ namespace cycfi::elements
       return utf8_encode(source);
    }
 
+   // Nothing to do here: this host finds its resources by path and needs
+   // no registration step. Declared for every platform so a plugin may
+   // call it at load time without knowing which one it is on.
+   void init_resources()
+   {
+   }
+
    void clipboard(std::string_view text)
    {
       auto len = MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), nullptr, 0);

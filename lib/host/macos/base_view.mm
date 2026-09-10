@@ -115,6 +115,14 @@ namespace
    };
 }
 
+namespace cycfi::elements
+{
+   void init_resources()
+   {
+      static resource_setter init_;
+   }
+}
+
 namespace cycfi::artist
 {
    void init_paths()
@@ -260,7 +268,7 @@ namespace
 
 - (void) elements_init : (ph::base_view*) view_
 {
-   static resource_setter init_resources;
+   cycfi::elements::init_resources();
 
    _view = view_;
    _start = true;

@@ -389,6 +389,16 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // The clipboard
    std::string clipboard();
+   // Set up the resources a view needs: the search path its images are
+   // found on, and the fonts it draws with, registered with the system.
+   // Done once per process, on the first view if nothing does it sooner.
+   //
+   // Registering a font is a round trip to the system's font service, and
+   // in some hosts a slow one: a plugin that calls this when it is loaded
+   // pays it there rather than when its window opens, which is the moment
+   // someone is waiting. Idempotent, and safe to call more than once.
+   void init_resources();
+
    void clipboard(std::string_view text);
 
    ////////////////////////////////////////////////////////////////////////////

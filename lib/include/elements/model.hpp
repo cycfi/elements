@@ -752,12 +752,103 @@ namespace cycfi::elements
       std::vector<entry>      _entries;
    };
 
+   /** \class bindable_proxy
+    *
+    * \brief
+    *    One value of a control that carries several, as a control of its
+    *    own that the binder can link to.
+    *
+    *    `bind` and `follow` take a control with one `value(v)` and one
+    *    `on_change`. An element that carries several values, an envelope
+    *    with its four stages, say, has neither in that form: it has a
+    *    setter and a callback per value. A proxy is one of those pairs,
+    *    given the two names the binder looks for. It is a forwarder and
+    *    nothing more: `value(v)` calls the setter it was given, and
+    *    `on_change` is a reference to the callback it was given, so what
+    *    the binder assigns there lands on the element. An element with
+    *    four values is bound four times, as four controls, each exactly
+    *    as a slider is.\n\n
+    *
+    *    The proxy is not in the element tree. It names the element it
+    *    forwards to through `refresh_target`, so the binder can refresh
+    *    that after an update.
+    *
+    * @code
+    *    auto attack = make_bindable_proxy(
+    *       env, &envelope::attack, env->on_attack_change);
+    *    view_.bindings().bind(model.attack, attack);
+    * @endcode
+    *
+    *    A control may also have a gesture callback per value, called with
+    *    true as a drag on that value begins and false as it ends. Passed
+    *    as well, it is reachable as `on_gesture`, so whatever binds the
+    *    proxy can bracket an edit. Left out, `on_gesture` is null.
+    *
+    *    The proxy holds the element weakly, as the binder holds every
+    *    control: the element belongs to the view, and may go first.
+    *    The references it carries go with it, so a proxy is not to be
+    *    used after its element is gone, only dropped.
+    */
+   template <typename Target, typename T>
+   class bindable_proxy
+   {
+   public:
+
+      using target_type = Target;
+      using value_type = T;
+      using setter_type = void (Target::*)(T);
+      using change_function = std::function<void(T)>;
+      using gesture_function = std::function<void(bool begin)>;
+
+                              bindable_proxy(
+                                 std::shared_ptr<Target> target
+                               , setter_type set
+                               , change_function& on_change_
+                               , gesture_function* on_gesture_ = nullptr
+                              );
+
+      void                    value(T v);
+      Target*                 refresh_target() const;
+
+      change_function&        on_change;
+      gesture_function*       on_gesture;
+
+   private:
+
+      std::weak_ptr<Target>   _target;
+      setter_type             _set;
+   };
+
+   template <typename Target, typename T>
+   std::shared_ptr<bindable_proxy<Target, T>>
+   make_bindable_proxy(
+      std::shared_ptr<Target> target
+    , void (Target::*set)(T)
+    , std::function<void(T)>& on_change
+    , std::function<void(bool)>* on_gesture = nullptr
+   );
+
    ////////////////////////////////////////////////////////////////////////////
    // Inline implementation
    ////////////////////////////////////////////////////////////////////////////
    inline model_binder::model_binder(refresh_function refresh)
     : _refresh(std::move(refresh))
    {}
+
+   namespace detail
+   {
+      // What to refresh after a control is updated: the control itself,
+      // unless it says otherwise. A bindable_proxy is not in the tree,
+      // so it names the element it forwards to, which may be gone.
+      template <typename Control>
+      inline element* refresh_target(Control& c)
+      {
+         if constexpr (requires { c.refresh_target(); })
+            return c.refresh_target();
+         else
+            return &c;
+      }
+   }
 
    template <typename Model, typename Control, typename Setter>
    inline void model_binder::attach(Model& model
@@ -773,7 +864,8 @@ namespace cycfi::elements
             if (auto c = weak.lock())
             {
                set(*c, model.get());
-               _refresh(*c);
+               if (auto e = detail::refresh_target(*c))
+                  _refresh(*e);
             }
          });
    }
@@ -830,6 +922,47 @@ namespace cycfi::elements
       for (auto const& e : _entries)
          e.disconnect();
       _entries.clear();
+   }
+
+   template <typename Target, typename T>
+   inline bindable_proxy<Target, T>::bindable_proxy(
+      std::shared_ptr<Target> target
+    , setter_type set
+    , change_function& on_change_
+    , gesture_function* on_gesture_
+   )
+    : on_change(on_change_)
+    , on_gesture(on_gesture_)
+    , _target(target)
+    , _set(set)
+   {}
+
+   template <typename Target, typename T>
+   inline void bindable_proxy<Target, T>::value(T v)
+   {
+      if (auto t = _target.lock())
+         ((*t).*_set)(v);
+   }
+
+   template <typename Target, typename T>
+   inline Target* bindable_proxy<Target, T>::refresh_target() const
+   {
+      if (auto t = _target.lock())
+         return t.get();
+      return nullptr;
+   }
+
+   template <typename Target, typename T>
+   inline std::shared_ptr<bindable_proxy<Target, T>>
+   make_bindable_proxy(
+      std::shared_ptr<Target> target
+    , void (Target::*set)(T)
+    , std::function<void(T)>& on_change
+    , std::function<void(bool)>* on_gesture
+   )
+   {
+      return std::make_shared<bindable_proxy<Target, T>>(
+         std::move(target), set, on_change, on_gesture);
    }
 }
 

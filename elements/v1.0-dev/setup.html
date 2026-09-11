@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Setup and Installation :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0-dev/setup.html">
     <meta name="generator" content="Antora 3.1.15">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -114,9 +115,6 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="model.html">Model</a>
-  </li>
 </ul>
   </li>
 </ul>
@@ -215,16 +213,7 @@
 <div class="sect2">
 <h3 id="_required_libraries"><a class="anchor" href="#_required_libraries"></a>Required Libraries</h3>
 <div class="paragraph">
-<p>What Elements needs depends on the graphics backend, and the backend
-depends on the platform.</p>
-</div>
-<div class="paragraph">
-<p>On MacOS, Elements draws with <strong>Quartz2D</strong>, which is part of the operating
-system. There are no libraries to install and no package manager to set
-up: a C&#43;&#43; compiler and CMake are enough.</p>
-</div>
-<div class="paragraph">
-<p>Elsewhere, Elements draws with <strong>Cairo</strong>, and needs it and its companions:</p>
+<p>Here are Element&#8217;s dependencies:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -241,12 +230,21 @@ up: a C&#43;&#43; compiler and CMake are enough.</p>
 <p><a href="https://www.freetype.org/">freetype2</a></p>
 </li>
 <li>
-<p><a href="https://harfbuzz.github.io/">harfbuzz</a></p>
+<p><a href="https://www.sourceware.org/bzip2/">bzip2</a></p>
+</li>
+<li>
+<p><a href="https://libexpat.github.io/">expat</a></p>
+</li>
+<li>
+<p><a href="https://zlib.net/">zlib</a></p>
+</li>
+<li>
+<p><a href="http://www.libpng.org/pub/png/libpng.html">libpng</a></p>
+</li>
+<li>
+<p><a href="https://github.com/webmproject/libwebp">libwebp</a></p>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>On Linux, the GTK host additionally needs GTK3.</p>
 </div>
 <div class="paragraph">
 <p>Specific instructions are provided below for specific environments.</p>
@@ -273,25 +271,23 @@ up: a C&#43;&#43; compiler and CMake are enough.</p>
 <div class="sect2">
 <h3 id="_install_required_libraries"><a class="anchor" href="#_install_required_libraries"></a>Install required libraries</h3>
 <div class="paragraph">
-<p>There are none. Elements draws with Quartz2D on MacOS, which comes with
-the system, so nothing needs to be installed and pkg-config is not
-required.</p>
-</div>
-<div class="paragraph">
-<p>You do need the command line developer tools, for the compiler and the
-system headers. If <code>git</code> or <code>clang</code> is missing, this installs them:</p>
+<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">xcode-select --install</code></pre>
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install pkg-config
+brew install cairo
+brew install fontconfig
+brew install bzip2
+brew install expat
+brew install zlib
+brew install libpng
+brew install webp</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_install_cmake"><a class="anchor" href="#_install_cmake"></a>Install CMake</h3>
-<div class="paragraph">
-<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install cmake</code></pre>

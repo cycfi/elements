@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Model :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Elements Library</a></li>
+    <li><a href="model.html">Model</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="model.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Model</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="_images/model/example.svg" alt="the model example" width="790px">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Building a user interface, you typically have to deal with three
+requirements. The user interface has to present the application&#8217;s data. It
+has to notice when the user edits it. And it has to notice when the
+application itself changes it, perhaps from somewhere else entirely.</p>
+</div>
+<div class="paragraph">
+<p>A typical approach involves holding the various GUI elements as private
+members within an application or GUI class. These elements are managed as
+shared pointers, created using the <code>share(e)</code> function and held in the
+element hierarchy using the <code>hold(p)</code> function. The GUI class oversees the
+interconnections and presents a higher-level view to the application
+through a well-defined API. That works, but the application and the user
+interface end up knowing a great deal about each other.</p>
+</div>
+<div class="paragraph">
+<p>Models present a more elegant way to structure an Elements application. The
+<code>model</code> (<code>elements/model.hpp</code>) serves as an abstraction for a data type that
+is linked to one or more user interface elements. The actual data is
+accessed and modified through the <code>get</code> and <code>set</code> member functions of the
+derived class.</p>
+</div>
+<div class="paragraph">
+<p>The Model does not care about the GUI element types it is interacting with.
+It is an abstract data type that models its underlying data type (e.g.
+float, int, enum, etc.). It looks and acts like a concrete type.</p>
+</div>
+<div class="paragraph">
+<p>Adopting the model paradigm, the application and the user interface engage
+with the model independently, unaware of each other&#8217;s existence. The model
+serves as a central hub, facilitating and coordinating interactions between
+them:</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/model/decoupling.svg" alt="decoupling" width="860px">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The application is aware of the model, manages and interacts with it.</p>
+</li>
+<li>
+<p>The GUI is also aware of the model and links to it.</p>
+</li>
+<li>
+<p>The model is unaware of the GUI.</p>
+</li>
+<li>
+<p>The model may be aware of the application, e.g. if it needs to get data
+from the application, but not necessarily, e.g. if it holds the data
+itself.</p>
+</li>
+<li>
+<p>The GUI and the application are both unaware of each other.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Number 5 is an important design principle known as "decoupling,"
+emphasizing the separation of concerns and promoting independence between
+the GUI and the application components. The advantages of decoupling in a
+software design context include modularity, scalability, reusability, and
+ease of maintenance.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+A complete program built this way can be found in this link:
+<a href="https://github.com/cycfi/elements/tree/master/examples/model" class="bare">https://github.com/cycfi/elements/tree/master/examples/model</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_value_model"><a class="anchor" href="#_value_model"></a>value_model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>value_model&lt;T&gt;</code> is a derived class of the template class <code>model</code>. It
+specifically addresses the typical scenario where the data is internally
+stored by value within the class. The class includes <code>get</code> and <code>set</code> member
+functions following the <code>Model</code> concept required by the <code>model</code> template,
+facilitating the retrieval and modification of data.</p>
+</div>
+<div class="paragraph">
+<p>For example, a <code>value_model&lt;float&gt;</code> acts just like a float. You can assign a
+value to it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">m = 1.0;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or extract its value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">float f = m;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assigning a value updates all the user interface elements linked to the
+model. That is the point of the exercise: the application sets a value, and
+the user interface follows, without the application naming a single element.</p>
+</div>
+<div class="paragraph">
+<p>In this example, we present a very simple model, comprising of a floating
+point value and a preset:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct my_model
+{
+   enum preset { preset_none, preset_full, preset_half };
+
+   value_model&lt;float&gt;   _value = 1.0;
+   value_model&lt;preset&gt;  _preset = preset_full;
+};</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+While the examples here utilize the <code>value_model</code>, you have the
+flexibility to create your custom subclass of the template class <code>model</code> to
+implement more tailored methods of accessing your data. That is how you
+model data that lives elsewhere: in a document, in a database, or in an
+audio engine running in another thread. The user interface links to it in
+exactly the same way and never knows the difference.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_updating"><a class="anchor" href="#_updating"></a>Updating</h3>
+<div class="paragraph">
+<p>Assignment updates the linked elements. Two more member functions are
+useful when the data changes behind the model&#8217;s back:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>update(val)</code></dt>
+<dd>
+<p>Update the linked elements with <code>val</code>, without setting the
+model. Use this when the underlying data has already been changed.</p>
+</dd>
+<dt class="hdlist1"><code>update()</code></dt>
+<dd>
+<p>Update the linked elements with the value the model currently
+holds. Use this to restore an element to its previous state, after
+rejecting an invalid edit, for instance.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linking"><a class="anchor" href="#_linking"></a>Linking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A user interface element is linked to a <code>model</code> by supplying an
+<code>update_function</code> via the <code>on_update(f)</code> member function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto c = m.on_update([](float val) { /* present val */ });</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two things worth knowing about <code>on_update</code>.</p>
+</div>
+<div class="paragraph">
+<p>The first is that this member function can be called multiple times, and
+each supplied update function will be called sequentially at update time,
+in a first-come, first-served order. It adds an update function; it does
+not replace the one before it. Any number of elements may present the same
+value. A dial and a text box over the same float will both follow it, and
+neither displaces the other.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="_images/model/fan_out.svg" alt="fan out" width="804px">
+</div>
+</div>
+<div class="paragraph">
+<p>The second is that it returns a <code>connection</code>. You can pass that to
+<code>disconnect</code> to take the update function off the model again:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">m.disconnect(c);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This matters because an update function outlives the element it was written
+for. A model belongs to the application and may live for as long as the
+program runs, while an element belongs to a view, which may be torn down
+and built again. An application that builds its user interface once may
+ignore the connection and let the update function stay for good. Anything
+that rebuilds one, a plugin editor being opened a second time for instance,
+has to disconnect, or dead update functions will accumulate on the model.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="💡 &#160;TIP"></i>
+</td>
+<td class="content">
+You will rarely need to call <code>on_update</code> or <code>disconnect</code> yourself. The
+view&#8217;s bindings, described below, do it for you and get the lifetime right.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_views_bindings"><a class="anchor" href="#_the_views_bindings"></a>The View&#8217;s Bindings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every <code>view</code> owns a <code>model_binder</code>, which you get through the <code>bindings()</code>
+member function. This is the recommended way to link elements to models,
+because it takes care of the three things that are easy to get wrong.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>It refers to each element weakly, so an element that is already gone is
+skipped rather than touched.</p>
+</li>
+<li>
+<p>It keeps the connections and takes them off the models when the view is
+destroyed. The bindings live for exactly as long as the view whose
+elements they serve.</p>
+</li>
+<li>
+<p>It refreshes the element after the model changes, so an update function
+never has to.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="📢 &#160;IMPORTANT"></i>
+</td>
+<td class="content">
+The models have to outlive the view. Declare them before it:
+what is declared first is destroyed last.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">my_model model;         // declared before the view
+view view_(_win);</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bind"><a class="anchor" href="#_bind"></a>bind</h3>
+<div class="paragraph">
+<p><code>bind</code> links a control to a model both ways. The control presents the
+model, and whatever the user does to the control is assigned to the model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto dial_ptr = share(dial(basic_knob&lt;80&gt;()));
+view_.bindings().bind(model._value, dial_ptr);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A control, here, is any element with a <code>value(v)</code> setter and an <code>on_change</code>
+callback: the sliders, the dials, and the selectors.</p>
+</div>
+<div class="paragraph">
+<p>If the control&#8217;s travel is not in the model&#8217;s unit, you can supply a pair
+of conversions. A fader marked in decibels over a linear gain, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.bindings().bind(model._gain, fader,
+   [](double gain) { return to_db(gain); },      // what the fader presents
+   [](double db)   { return from_db(db); }       // what the model takes
+);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_follow"><a class="anchor" href="#_follow"></a>follow</h3>
+<div class="paragraph">
+<p><code>follow</code> links a control to a model one way. The control presents the
+model, but whatever the user does to the control is handed to a callback
+instead of being assigned, leaving you to decide what reaches the model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.bindings().follow(model._value, dial_ptr,
+   [&amp;model](double val)
+   {
+      model._value = val;
+      model._preset = my_model::preset_none;   // no longer a preset
+   }
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use this when setting the value is not the whole story, as above, or when
+the change has to go somewhere else first, as when a plugin sends the edit
+to its host, and the host sets the parameter in turn.</p>
+</div>
+<div class="paragraph">
+<p><code>follow</code> also accepts a conversion, for a control whose travel is not in
+the model&#8217;s unit.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_attach"><a class="anchor" href="#_attach"></a>attach</h3>
+<div class="paragraph">
+<p>Not every element presents a value through a <code>value(v)</code> setter. A label
+presents it as text. <code>attach</code> is the general form. You give it a function
+that puts the model&#8217;s value into the element, and it is called immediately
+and whenever the value changes thereafter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.bindings().attach(model._value, input_box,
+   [](auto&amp; input, double val)
+   {
+      std::ostringstream stream;
+      stream &lt;&lt; std::fixed &lt;&lt; std::setprecision(2) &lt;&lt; val;
+      input.set_text(stream.str());
+   }
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The element is referred to weakly and refreshed for you, as with <code>bind</code> and
+<code>follow</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_observe"><a class="anchor" href="#_observe"></a>observe</h3>
+<div class="paragraph">
+<p><code>observe</code> adds a bare update function, for work that has no element behind
+it, and remembers the connection so that it leaves with the view:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.bindings().observe(model._value,
+   [](double val) { /* something that is not an element */ });</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_clear"><a class="anchor" href="#_clear"></a>clear</h3>
+<div class="paragraph">
+<p><code>clear</code> takes every update function off its model and forgets every
+element. The view does this when it is destroyed, so you will seldom need
+it. Call it yourself if you rebuild a view&#8217;s content in place.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

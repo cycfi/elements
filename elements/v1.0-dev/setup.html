@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Setup and Installation :: Elements Docs</title>
-    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0-dev/setup.html">
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/setup.html">
     <meta name="generator" content="Antora 3.1.15">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta name="og:title" content="Elements Docs Elements Library Documentation"/>
@@ -115,6 +115,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="model.html">Model</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -127,9 +130,12 @@
   </div>
   <ul class="components">
     <li class="component is-current">
-      <div class="title"><a href="index.html">Elements Library</a></div>
+      <div class="title"><a href="../v1.0/index.html">Elements Library</a></div>
       <ul class="versions">
-        <li class="version is-current is-latest">
+        <li class="version is-latest">
+          <a href="../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
           <a href="index.html">v1.0-dev</a>
         </li>
       </ul>
@@ -142,13 +148,20 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link"></a>
+  <a href="../v1.0/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Elements Library</a></li>
     <li><a href="setup.html">Setup and Installation</a></li>
   </ul>
 </nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version" href="../v1.0/setup.html">v1.0</a>
+    <a class="version is-current" href="setup.html">v1.0-dev</a>
+  </div>
+</div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -213,7 +226,16 @@
 <div class="sect2">
 <h3 id="_required_libraries"><a class="anchor" href="#_required_libraries"></a>Required Libraries</h3>
 <div class="paragraph">
-<p>Here are Element&#8217;s dependencies:</p>
+<p>What Elements needs depends on the graphics backend, and the backend
+depends on the platform.</p>
+</div>
+<div class="paragraph">
+<p>On MacOS, Elements draws with <strong>Quartz2D</strong>, which is part of the operating
+system. There are no libraries to install and no package manager to set
+up: a C&#43;&#43; compiler and CMake are enough.</p>
+</div>
+<div class="paragraph">
+<p>Elsewhere, Elements draws with <strong>Cairo</strong>, and needs it and its companions:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -230,21 +252,12 @@
 <p><a href="https://www.freetype.org/">freetype2</a></p>
 </li>
 <li>
-<p><a href="https://www.sourceware.org/bzip2/">bzip2</a></p>
-</li>
-<li>
-<p><a href="https://libexpat.github.io/">expat</a></p>
-</li>
-<li>
-<p><a href="https://zlib.net/">zlib</a></p>
-</li>
-<li>
-<p><a href="http://www.libpng.org/pub/png/libpng.html">libpng</a></p>
-</li>
-<li>
-<p><a href="https://github.com/webmproject/libwebp">libwebp</a></p>
+<p><a href="https://harfbuzz.github.io/">harfbuzz</a></p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>On Linux, the GTK host additionally needs GTK3.</p>
 </div>
 <div class="paragraph">
 <p>Specific instructions are provided below for specific environments.</p>
@@ -271,23 +284,25 @@
 <div class="sect2">
 <h3 id="_install_required_libraries"><a class="anchor" href="#_install_required_libraries"></a>Install required libraries</h3>
 <div class="paragraph">
-<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
+<p>There are none. Elements draws with Quartz2D on MacOS, which comes with
+the system, so nothing needs to be installed and pkg-config is not
+required.</p>
+</div>
+<div class="paragraph">
+<p>You do need the command line developer tools, for the compiler and the
+system headers. If <code>git</code> or <code>clang</code> is missing, this installs them:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install pkg-config
-brew install cairo
-brew install fontconfig
-brew install bzip2
-brew install expat
-brew install zlib
-brew install libpng
-brew install webp</code></pre>
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">xcode-select --install</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_install_cmake"><a class="anchor" href="#_install_cmake"></a>Install CMake</h3>
+<div class="paragraph">
+<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install cmake</code></pre>

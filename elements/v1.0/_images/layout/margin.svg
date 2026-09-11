@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 189 109">
+  <defs>
+    <style>
+      .d {
+        fill: none;
+      }
+
+      .d, .e {
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .f {
+        letter-spacing: .01em;
+      }
+
+      .g {
+        letter-spacing: 0em;
+      }
+
+      .h {
+        letter-spacing: 0em;
+      }
+
+      .i {
+        fill: #be1e2d;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .j {
+        letter-spacing: 0em;
+      }
+
+      .e {
+        fill: #e6e7e8;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="e" x="45" y="27.5" width="99" height="54"/>
+    <rect class="d" x="9" y=".5" width="171" height="108"/>
+    <text class="i" transform="translate(85.84 18.02)"><tspan class="g" x="0" y="0">t</tspan><tspan x="3.9" y="0">op</tspan></text>
+    <text class="i" transform="translate(75.56 99.02)"><tspan x="0" y="0">bot</tspan><tspan class="g" x="17.39" y="0">t</tspan><tspan x="21.29" y="0">om</tspan></text>
+    <text class="i" transform="translate(18.77 58.52)"><tspan x="0" y="0">le</tspan><tspan class="f" x="8.84" y="0">f</tspan><tspan x="12.48" y="0">t</tspan></text>
+    <text class="i" transform="translate(149.96 58.52)"><tspan class="h" x="0" y="0">r</tspan><tspan x="3.97" y="0">ig</tspan><tspan class="j" x="13.49" y="0">h</tspan><tspan x="20.1" y="0">t</tspan></text>
+  </g>
+</svg>

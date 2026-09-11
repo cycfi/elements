@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 99.26">
+  <defs>
+    <style>
+      .d {
+        stroke: #414042;
+      }
+
+      .d, .e, .f, .g, .h {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .e, .g {
+        stroke: #be1e2d;
+      }
+
+      .i {
+        fill: #a7a9ac;
+      }
+
+      .i, .j {
+        stroke-width: 0px;
+      }
+
+      .k {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .k, .j {
+        fill: #be1e2d;
+      }
+
+      .f {
+        stroke-dasharray: 0 0 6 6;
+      }
+
+      .f, .h {
+        stroke: #a7a9ac;
+      }
+
+      .g {
+        stroke-dasharray: 0 0 7 7;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="d" x=".5" y=".5" width="144" height="72"/>
+    <g>
+      <line class="h" x1=".5" y1="33.09" x2="3.5" y2="33.09"/>
+      <line class="f" x1="9.5" y1="33.09" x2="138.5" y2="33.09"/>
+      <line class="h" x1="141.5" y1="33.09" x2="144.5" y2="33.09"/>
+    </g>
+    <g>
+      <line class="h" x1="72.5" y1="63.64" x2="72.5" y2="45.36"/>
+      <polygon class="i" points="75.41 61.66 72.5 72.5 69.59 61.66 75.41 61.66"/>
+      <polygon class="i" points="75.41 47.34 72.5 36.5 69.59 47.34 75.41 47.34"/>
+    </g>
+    <g>
+      <line class="e" x1="144.5" y1="72.26" x2="144.5" y2="75.26"/>
+      <line class="g" x1="144.5" y1="82.26" x2="144.5" y2="92.76"/>
+      <line class="e" x1="144.5" y1="96.26" x2="144.5" y2="99.26"/>
+    </g>
+    <g>
+      <line class="e" x1=".5" y1="72.26" x2=".5" y2="75.26"/>
+      <line class="g" x1=".5" y1="82.26" x2=".5" y2="92.76"/>
+      <line class="e" x1=".5" y1="96.26" x2=".5" y2="99.26"/>
+    </g>
+    <text class="k" transform="translate(57.98 93.02)"><tspan x="0" y="0">width</tspan></text>
+    <g>
+      <line class="e" x1="45.5" y1="90.5" x2="9.36" y2="90.5"/>
+      <polygon class="j" points="11.34 87.59 .5 90.5 11.34 93.41 11.34 87.59"/>
+    </g>
+    <g>
+      <line class="e" x1="99.5" y1="90.5" x2="135.64" y2="90.5"/>
+      <polygon class="j" points="133.66 93.41 144.5 90.5 133.66 87.59 133.66 93.41"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 109">
+  <defs>
+    <style>
+      .d {
+        stroke: #414042;
+      }
+
+      .d, .e {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .e {
+        stroke: #1c75bc;
+      }
+
+      .f {
+        fill: #231f20;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .g {
+        fill: #1c75bc;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="d" x=".5" y=".5" width="144" height="18"/>
+    <rect class="d" x=".5" y="18.5" width="144" height="36"/>
+    <text class="f" transform="translate(65.1 13.02)"><tspan x="0" y="0">0.5</tspan></text>
+    <text class="f" transform="translate(65.1 40.02)"><tspan x="0" y="0">1.0</tspan></text>
+    <rect class="d" x=".5" y="54.5" width="144" height="54"/>
+    <text class="f" transform="translate(65.1 85.02)"><tspan x="0" y="0">1.5</tspan></text>
+    <g>
+      <line class="e" x1="27.5" y1="9.64" x2="27.5" y2=".5"/>
+      <polygon class="g" points="30.41 7.66 27.5 18.5 24.59 7.66 30.41 7.66"/>
+    </g>
+    <g>
+      <line class="e" x1="27.5" y1="45.64" x2="27.5" y2="18.5"/>
+      <polygon class="g" points="30.41 43.66 27.5 54.5 24.59 43.66 30.41 43.66"/>
+    </g>
+    <g>
+      <line class="e" x1="27.5" y1="99.64" x2="27.5" y2="54.5"/>
+      <polygon class="g" points="30.41 97.66 27.5 108.5 24.59 97.66 30.41 97.66"/>
+    </g>
+  </g>
+</svg>

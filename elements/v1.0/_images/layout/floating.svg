@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 123.02">
+  <defs>
+    <style>
+      .d, .e, .f {
+        fill: none;
+      }
+
+      .d, .e, .f, .g {
+        stroke-miterlimit: 10;
+      }
+
+      .d, .g {
+        stroke: #414042;
+      }
+
+      .e {
+        stroke: #be1e2d;
+      }
+
+      .h {
+        letter-spacing: .01em;
+      }
+
+      .i {
+        letter-spacing: 0em;
+      }
+
+      .j {
+        letter-spacing: 0em;
+      }
+
+      .k {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .k, .l {
+        fill: #be1e2d;
+      }
+
+      .f {
+        stroke: #1c75bc;
+      }
+
+      .m {
+        letter-spacing: 0em;
+      }
+
+      .g {
+        fill: #e6e7e8;
+      }
+
+      .l, .n {
+        stroke-width: 0px;
+      }
+
+      .n {
+        fill: #1c75bc;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="g" x="63" y="41.52" width="99" height="54"/>
+    <rect class="d" x="27" y="14.52" width="171" height="108"/>
+    <text class="k" transform="translate(121.34 37.54)"><tspan class="i" x="0" y="0">t</tspan><tspan x="3.9" y="0">op</tspan></text>
+    <text class="k" transform="translate(76.68 91.54)"><tspan x="0" y="0">bot</tspan><tspan class="i" x="17.39" y="0">t</tspan><tspan x="21.29" y="0">om</tspan></text>
+    <text class="k" transform="translate(43.27 83.04)"><tspan x="0" y="0">le</tspan><tspan class="h" x="8.84" y="0">f</tspan><tspan x="12.48" y="0">t</tspan></text>
+    <text class="k" transform="translate(208.39 73.25)"><tspan x="0" y="0">main view</tspan></text>
+    <g>
+      <path class="e" d="M243,77.52c-7.84,7.24-16.77,19.11-37.88,5.28"/>
+      <polygon class="l" points="208.48 81.54 198 77.52 205.07 86.24 208.48 81.54"/>
+    </g>
+    <g>
+      <line class="f" x1="144" y1="32.66" x2="144" y2="14.52"/>
+      <polygon class="n" points="146.91 30.68 144 41.52 141.09 30.68 146.91 30.68"/>
+    </g>
+    <g>
+      <line class="f" x1="72" y1="86.66" x2="72" y2="14.52"/>
+      <polygon class="n" points="74.91 84.68 72 95.52 69.09 84.68 74.91 84.68"/>
+    </g>
+    <g>
+      <line class="f" x1="54.14" y1="68.52" x2="27" y2="68.52"/>
+      <polygon class="n" points="52.16 65.62 63 68.52 52.16 71.43 52.16 65.62"/>
+    </g>
+    <g>
+      <line class="f" x1="153.14" y1="50.52" x2="27" y2="50.52"/>
+      <polygon class="n" points="151.16 47.62 162 50.52 151.16 53.43 151.16 47.62"/>
+    </g>
+    <text class="k" transform="translate(135.21 63.54)"><tspan class="j" x="0" y="0">r</tspan><tspan x="3.97" y="0">ig</tspan><tspan class="m" x="13.49" y="0">h</tspan><tspan x="20.1" y="0">t</tspan></text>
+    <text class="k" transform="translate(12.38 10.04)"><tspan x="0" y="0">{ 0, 0 }</tspan></text>
+  </g>
+</svg>

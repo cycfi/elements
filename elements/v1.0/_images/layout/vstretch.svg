@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198.5 73">
+  <defs>
+    <style>
+      .d {
+        letter-spacing: -.01em;
+      }
+
+      .e, .f, .g, .h, .i, .j {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .e, .i {
+        stroke: #414042;
+      }
+
+      .f, .h {
+        stroke: #be1e2d;
+      }
+
+      .k {
+        letter-spacing: 0em;
+      }
+
+      .l, .m {
+        fill: #a7a9ac;
+      }
+
+      .l, .n, .o {
+        stroke-width: 0px;
+      }
+
+      .p, .m {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .p, .n {
+        fill: #be1e2d;
+      }
+
+      .g {
+        stroke: #1c75bc;
+      }
+
+      .h {
+        stroke-dasharray: 0 6;
+      }
+
+      .i {
+        stroke-dasharray: 0 0 6 6;
+      }
+
+      .j {
+        stroke: #a7a9ac;
+      }
+
+      .o {
+        fill: #1c75bc;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <g>
+      <line class="e" x1=".5" y1="36.5" x2="3.5" y2="36.5"/>
+      <line class="i" x1="9.5" y1="36.5" x2="138.5" y2="36.5"/>
+      <line class="e" x1="141.5" y1="36.5" x2="144.5" y2="36.5"/>
+    </g>
+    <line class="e" x1="144.5" y1=".5" x2=".5" y2=".5"/>
+    <line class="e" x1=".5" y1="36.5" x2=".5" y2=".5"/>
+    <line class="e" x1="144.5" y1="36.5" x2="144.5" y2=".5"/>
+    <g>
+      <line class="e" x1="144.5" y1="72.5" x2="141.5" y2="72.5"/>
+      <line class="i" x1="135.5" y1="72.5" x2="6.5" y2="72.5"/>
+      <line class="e" x1="3.5" y1="72.5" x2=".5" y2="72.5"/>
+    </g>
+    <g>
+      <line class="e" x1=".5" y1="72.5" x2=".5" y2="69.5"/>
+      <line class="i" x1=".5" y1="63.5" x2=".5" y2="42.5"/>
+      <line class="e" x1=".5" y1="39.5" x2=".5" y2="36.5"/>
+    </g>
+    <g>
+      <line class="e" x1="144.5" y1="36.5" x2="144.5" y2="39.5"/>
+      <line class="i" x1="144.5" y1="45.5" x2="144.5" y2="66.5"/>
+      <line class="e" x1="144.5" y1="69.5" x2="144.5" y2="72.5"/>
+    </g>
+    <g>
+      <line class="g" x1="72.5" y1="63.64" x2="72.5" y2="36.5"/>
+      <polygon class="o" points="75.41 61.66 72.5 72.5 69.59 61.66 75.41 61.66"/>
+    </g>
+    <text class="m" transform="translate(74.1 22.02)"><tspan x="0" y="0">1.0</tspan></text>
+    <text class="p" transform="translate(154.26 40.52)"><tspan x="0" y="0">st</tspan><tspan class="d" x="8.72" y="0">r</tspan><tspan x="12.53" y="0">e</tspan><tspan class="k" x="18.54" y="0">t</tspan><tspan x="22.44" y="0">ch</tspan></text>
+    <g>
+      <line class="f" x1="171.5" y1="27.5" x2="171.5" y2="9.36"/>
+      <polygon class="n" points="174.41 11.34 171.5 .5 168.59 11.34 174.41 11.34"/>
+    </g>
+    <g>
+      <line class="f" x1="171.5" y1="45.5" x2="171.5" y2="63.64"/>
+      <polygon class="n" points="168.59 61.66 171.5 72.5 174.41 61.66 168.59 61.66"/>
+    </g>
+    <g>
+      <line class="j" x1="72.5" y1="27.64" x2="72.5" y2="18.5"/>
+      <polygon class="l" points="75.41 25.66 72.5 36.5 69.59 25.66 75.41 25.66"/>
+    </g>
+    <g>
+      <line class="j" x1="72.5" y1="9.36" x2="72.5" y2="18.5"/>
+      <polygon class="l" points="69.59 11.34 72.5 .5 75.41 11.34 69.59 11.34"/>
+    </g>
+    <line class="h" x1="144.5" y1=".5" x2="189.5" y2=".5"/>
+    <line class="h" x1="144.5" y1="72.5" x2="189.5" y2="72.5"/>
+  </g>
+</svg>

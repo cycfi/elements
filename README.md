@@ -32,10 +32,10 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 
 Documentation is work in progress. Stay tuned...
 
-1. [Gallery](https://cycfi.github.io/elements/elements/v1.0-dev/gallery.html)
-2. [Setup and Installation](https://cycfi.github.io/elements/elements/v1.0-dev/setup.html)
-3. [Design Aspects](https://cycfi.github.io/elements/elements/v1.0-dev/aspects.html)
-4. [Layout](https://cycfi.github.io/elements/elements/v1.0-dev/layout.html)
+1. [Gallery](https://cycfi.github.io/elements/elements/v1.0/gallery.html)
+2. [Setup and Installation](https://cycfi.github.io/elements/elements/v1.0/setup.html)
+3. [Design Aspects](https://cycfi.github.io/elements/elements/v1.0/aspects.html)
+4. [Layout](https://cycfi.github.io/elements/elements/v1.0/layout.html)
 
 ## <a name="jdeguzman"></a>About the Author
 

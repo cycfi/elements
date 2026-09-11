@@ -1,6 +1,6 @@
 name: elements
 title: Elements Library
-version: v1.0-dev
+version: v1.0
 start_page: index.adoc
 asciidoc:
   attributes:

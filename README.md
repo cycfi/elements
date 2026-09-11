@@ -20,7 +20,7 @@ Please take note that Elements is still very much in flux as we are inching clos
 ## News
 
 **June 20, 2026:**
-The `develop` branch is now a unified codebase built on the upgraded [Artist](https://github.com/cycfi/artist/tree/develop) backend, supporting **Skia, Quartz2D, and Cairo** — with HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Skia is the default backend on Windows/Linux and Quartz2D on macOS; build with `-DELEMENTS_CAIRO=ON` for the lightweight Cairo backend. Skia no longer needs a slow from-source build — prebuilt binaries are fetched automatically (see the [setup guide](http://cycfi.github.io/elements/elements/skia_2024/setup.html)). Follow [this link](news.md) for details.
+The `develop` branch is now a unified codebase built on the upgraded [Artist](https://github.com/cycfi/artist/tree/develop) backend, supporting **Skia, Quartz2D, and Cairo** — with HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Skia is the default backend on Windows/Linux and Quartz2D on macOS; build with `-DELEMENTS_CAIRO=ON` for the lightweight Cairo backend. Skia no longer needs a slow from-source build — prebuilt binaries are fetched automatically (see the [setup guide](https://cycfi.github.io/elements/elements/v1.0-dev/setup.html)). Follow [this link](news.md) for details.
 
 **March 28, 2024:**
 I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.
@@ -35,10 +35,10 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 
 Documentation is work in progress. Stay tuned...
 
-1. [Gallery](http://cycfi.github.io/elements/elements/skia_2024/gallery.html)
-2. [Setup and Installation](http://cycfi.github.io/elements/elements/skia_2024/setup.html)
-3. [Design Aspects](http://cycfi.github.io/elements/elements/skia_2024/aspects.html)
-4. [Layout](http://cycfi.github.io/elements/elements/skia_2024/layout.html)
+1. [Gallery](https://cycfi.github.io/elements/elements/v1.0-dev/gallery.html)
+2. [Setup and Installation](https://cycfi.github.io/elements/elements/v1.0-dev/setup.html)
+3. [Design Aspects](https://cycfi.github.io/elements/elements/v1.0-dev/aspects.html)
+4. [Layout](https://cycfi.github.io/elements/elements/v1.0-dev/layout.html)
 
 ## <a name="jdeguzman"></a>About the Author
 

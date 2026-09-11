@@ -572,6 +572,12 @@ namespace cycfi::elements
       LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
       {
          auto* info = get_view_info(hwnd);
+
+         // A window with no view: while CreateWindowW runs, before the view
+         // is stored, and after the view is gone. Nothing below can run then.
+         if (!info)
+            return DefWindowProcW(hwnd, message, wparam, lparam);
+
          switch (message)
          {
             case WM_PAINT:
@@ -796,7 +802,12 @@ namespace cycfi::elements
 
    base_view::~base_view()
    {
+      // Take the view off the window first, so whatever arrives while it is
+      // torn down, focus leaving, a paint, the mouse, finds no view rather
+      // than one that is gone. A plugin's editor is closed while its host
+      // carries on, so this happens every time, not only at exit.
       auto info = get_view_info(_view);
+      SetWindowLongPtrW(_view, GWLP_USERDATA, 0);
       KillTimer(_view, IDT_TIMER1);
       RevokeDragDrop(_view);
 #if defined(ARTIST_SKIA)
@@ -813,7 +824,7 @@ namespace cycfi::elements
       }
 #endif
       delete info;
-      DeleteObject(_view);
+      DestroyWindow(_view);
    }
 
    point base_view::cursor_pos() const

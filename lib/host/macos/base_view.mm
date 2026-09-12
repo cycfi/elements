@@ -13,12 +13,12 @@
 #include <memory>
 #include <map>
 #include <infra/filesystem.hpp>
+#include <elements/support/perf.hpp>
+#include <chrono>
 
 #if defined(ARTIST_SKIA)
 # import <Metal/Metal.h>
 # import <QuartzCore/CAMetalLayer.h>
-#include <elements/support/perf.hpp>
-#include <chrono>
 # include <SkColorSpace.h>
 # include <SkImage.h>
 # include <SkSurface.h>

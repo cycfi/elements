@@ -16,7 +16,22 @@
 #include <linux/input-event-codes.h>
 
 #if defined(ARTIST_SKIA)
-# error "Wayland Skia host not yet implemented — build with ELEMENTS_CAIRO=ON for now"
+# include <wayland-egl.h>
+# include <EGL/egl.h>
+# include <GL/gl.h>
+# include <SkImage.h>
+# include <SkColorSpace.h>
+# include <SkCanvas.h>
+# include <SkSurface.h>
+# include <ganesh/GrDirectContext.h>
+# include <ganesh/GrBackendSurface.h>
+# include <ganesh/SkSurfaceGanesh.h>
+# include <ganesh/gl/GrGLInterface.h>
+# include <ganesh/gl/GrGLDirectContext.h>
+# include <ganesh/gl/GrGLBackendSurface.h>
+# include <ganesh/gl/GrGLTypes.h>
+# include <ganesh/gl/egl/GrGLMakeEGLInterface.h>
+# include <vector>
 #elif defined(ARTIST_CAIRO)
 # include <cairo.h>
 #endif
@@ -29,6 +44,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <chrono>
 #include <map>
 #include <set>
 #include <algorithm>
@@ -78,7 +94,8 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    struct host_view;
 
-   // One double-buffered shm buffer.
+#if defined(ARTIST_CAIRO)
+   // One double-buffered shm buffer (software render path).
    struct shm_buffer
    {
       wl_buffer*        buffer = nullptr;
@@ -86,12 +103,11 @@ namespace cycfi::elements
       void*             data = nullptr;
       int               fd = -1;
       size_t            size = 0;
-#if defined(ARTIST_CAIRO)
       cairo_surface_t*  cairo = nullptr;
-#endif
       host_view*        owner = nullptr;
       bool              busy = false;          // attached, compositor may be using it
    };
+#endif
 
    struct host_view
    {
@@ -108,7 +124,27 @@ namespace cycfi::elements
       // max of their wl_output scales (set via wl_surface_set_buffer_scale).
       std::set<wl_output*> outputs;
 
+#if defined(ARTIST_CAIRO)
       shm_buffer        bufs[2];               // double-buffered shm
+#elif defined(ARTIST_SKIA)
+      // EGL swap-chain render path: a wl_egl_window backing an EGL window
+      // surface, drawn by Skia's Ganesh GL backend.
+      wl_egl_window*    egl_window = nullptr;
+      EGLDisplay        egl_display = EGL_NO_DISPLAY;
+      EGLContext        egl_context = EGL_NO_CONTEXT;
+      EGLSurface        egl_surface = EGL_NO_SURFACE;
+      sk_sp<const GrGLInterface> xface;
+      sk_sp<GrDirectContext>     ctx;
+      sk_sp<SkSurface>           skia_surface;
+      int               pix_w = 0, pix_h = 0;
+
+      // Frame-callback throttle: render at most once per compositor frame.
+      // A refresh while a frame is in flight sets needs_render, which the
+      // frame-done callback consumes, coalescing bursts into one render.
+      wl_callback*      frame_cb = nullptr;
+      bool              frame_pending = false;
+      bool              needs_render = false;
+#endif
       std::unique_ptr<drop_info> _drop_info;
    };
 
@@ -448,11 +484,10 @@ namespace cycfi::elements
    {
       void render(base_view& view);   // fwd
 
+#if defined(ARTIST_CAIRO)
       void destroy_buffer(shm_buffer& b)
       {
-#if defined(ARTIST_CAIRO)
          if (b.cairo)  { cairo_surface_destroy(b.cairo); b.cairo = nullptr; }
-#endif
          if (b.buffer) { wl_buffer_destroy(b.buffer); b.buffer = nullptr; }
          if (b.pool)   { wl_shm_pool_destroy(b.pool); b.pool = nullptr; }
          if (b.data)   { munmap(b.data, b.size); b.data = nullptr; }
@@ -498,13 +533,11 @@ namespace cycfi::elements
          make_buffer(h->bufs[1], h, w, hgt);
       }
 
-      void render(base_view& view)
+      // The shm software path renders into a free buffer, deferring if both are
+      // still held by the compositor (re-driven from buffer_release).
+      void render_cairo(base_view& view)
       {
          auto* h = platform_access::get_host_view(view);
-         if (!h->configured)
-            return;
-         // Pick a free buffer; if both are still held by the compositor, defer
-         // and re-render on the next release (no tearing, no stall).
          shm_buffer* b = !h->bufs[0].busy ? &h->bufs[0]
                        : !h->bufs[1].busy ? &h->bufs[1] : nullptr;
          if (!b || !b->buffer)
@@ -513,19 +546,172 @@ namespace cycfi::elements
             return;
          }
          h->pending = false;
-#if defined(ARTIST_CAIRO)
          auto* cr = cairo_create(b->cairo);
          auto cnv = canvas{cr};
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(b->cairo);
-#endif
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
          b->busy = true;
          wl_surface_attach(h->surface, b->buffer, 0, 0);
          wl_surface_damage_buffer(h->surface, 0, 0, w, hgt);
          wl_surface_commit(h->surface);
+      }
+#elif defined(ARTIST_SKIA)
+      // EGL + Ganesh GL swap-chain path. One wl_egl_window backs an EGL window
+      // surface; Skia wraps its default framebuffer and eglSwapBuffers presents.
+      void init_egl(host_view* h)
+      {
+         h->egl_display = eglGetDisplay((EGLNativeDisplayType)plat().display);
+         if (h->egl_display == EGL_NO_DISPLAY
+            || !eglInitialize(h->egl_display, nullptr, nullptr))
+            throw std::runtime_error("EGL init failed");
+         eglBindAPI(EGL_OPENGL_API);
+
+         EGLint attribs[] = {
+            EGL_SURFACE_TYPE,    EGL_WINDOW_BIT,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+            EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 8,
+            EGL_NONE
+         };
+         EGLConfig cfg = nullptr;
+         EGLint n = 0;
+         if (!eglChooseConfig(h->egl_display, attribs, &cfg, 1, &n) || n < 1)
+            throw std::runtime_error("No matching EGL config");
+
+         EGLint ctx_attribs[] = { EGL_NONE };
+         h->egl_context = eglCreateContext(h->egl_display, cfg, EGL_NO_CONTEXT, ctx_attribs);
+
+         int const pw = std::max(1, int(std::ceil(h->size.x * h->scale)));
+         int const ph = std::max(1, int(std::ceil(h->size.y * h->scale)));
+         h->egl_window = wl_egl_window_create(h->surface, pw, ph);
+         h->egl_surface = eglCreateWindowSurface(
+            h->egl_display, cfg, (EGLNativeWindowType)h->egl_window, nullptr);
+         if (h->egl_context == EGL_NO_CONTEXT || h->egl_surface == EGL_NO_SURFACE)
+            throw std::runtime_error("EGL context/surface creation failed");
+         if (!eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context))
+            throw std::runtime_error("eglMakeCurrent failed");
+         // Do not block the loop on vsync in the swap; the frame callback (see
+         // render_skia) throttles rendering to the compositor's cadence instead.
+         eglSwapInterval(h->egl_display, 0);
+
+         h->xface = GrGLMakeNativeInterface();
+         if (!h->xface)
+            h->xface = GrGLInterfaces::MakeEGL();
+         if (!h->xface)
+            throw std::runtime_error("GrGLMakeNativeInterface / MakeEGL failed");
+         h->ctx = GrDirectContexts::MakeGL(h->xface);
+         if (!h->ctx)
+            throw std::runtime_error("GrDirectContexts::MakeGL failed");
+
+         if (std::getenv("ELEMENTS_GL_INFO"))
+         {
+            auto s = [](GLenum e){ auto* p = glGetString(e); return p? (char const*)p : "?"; };
+            std::fprintf(stderr, "[gl] renderer=%s | vendor=%s | version=%s\n",
+               s(GL_RENDERER), s(GL_VENDOR), s(GL_VERSION));
+         }
+      }
+
+      // Resize the egl window to the physical size and rewrap the framebuffer.
+      void resize_backing(host_view* h)
+      {
+         int const pw = std::max(1, int(std::ceil(h->size.x * h->scale)));
+         int const ph = std::max(1, int(std::ceil(h->size.y * h->scale)));
+         h->pix_w = pw;
+         h->pix_h = ph;
+         wl_egl_window_resize(h->egl_window, pw, ph, 0, 0);
+         h->skia_surface.reset();
+         eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context);
+         GrGLFramebufferInfo info;
+         info.fFBOID  = 0;
+         info.fFormat = GL_RGBA8;
+         auto target = GrBackendRenderTargets::MakeGL(pw, ph, 0, 8, info);
+         h->skia_surface = SkSurfaces::WrapBackendRenderTarget(
+            h->ctx.get(), target, kBottomLeft_GrSurfaceOrigin,
+            kRGBA_8888_SkColorType, nullptr, nullptr);
+      }
+
+      void frame_done(void* data, wl_callback* cb, uint32_t);   // fwd
+      constexpr wl_callback_listener frame_listener = { frame_done };
+
+      void render_skia(base_view& view)
+      {
+         auto* h = platform_access::get_host_view(view);
+         if (!h->skia_surface)
+            return;
+
+         // Throttle: if a frame is still in flight, coalesce this request and
+         // let frame_done drive the next render. This is what keeps a burst of
+         // refreshes from firing a render (and a swap) on every loop iteration.
+         if (h->frame_pending)
+         {
+            h->needs_render = true;
+            return;
+         }
+
+         eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context);
+         SkCanvas* gpu = h->skia_surface->getCanvas();
+         gpu->save();
+         gpu->scale(h->scale, h->scale);   // logical → physical
+         auto cnv = canvas{gpu};
+         view.draw(cnv);
+         gpu->restore();
+         h->ctx->flushAndSubmit(h->skia_surface.get());
+
+         // Ask the compositor to tell us when this frame is on screen; the
+         // request is part of the surface state that eglSwapBuffers commits.
+         h->frame_cb = wl_surface_frame(h->surface);
+         wl_callback_add_listener(h->frame_cb, &frame_listener, h);
+         h->frame_pending = true;
+
+         eglSwapBuffers(h->egl_display, h->egl_surface);
+      }
+
+      // Compositor has shown the last frame; render again only if something
+      // asked to while we were waiting.
+      void frame_done(void* data, wl_callback* cb, uint32_t)
+      {
+         auto* h = static_cast<host_view*>(data);
+         if (cb)
+            wl_callback_destroy(cb);
+         h->frame_cb = nullptr;
+         h->frame_pending = false;
+         if (h->needs_render && h->self)
+         {
+            h->needs_render = false;
+            render(*h->self);
+         }
+      }
+
+      void destroy_skia(host_view* h)
+      {
+         if (h->frame_cb)
+            { wl_callback_destroy(h->frame_cb); h->frame_cb = nullptr; }
+         h->skia_surface.reset();
+         h->ctx.reset();
+         h->xface.reset();
+         if (h->egl_surface != EGL_NO_SURFACE)
+            eglDestroySurface(h->egl_display, h->egl_surface);
+         if (h->egl_window)
+            wl_egl_window_destroy(h->egl_window);
+         if (h->egl_context != EGL_NO_CONTEXT)
+            eglDestroyContext(h->egl_display, h->egl_context);
+         if (h->egl_display != EGL_NO_DISPLAY)
+            eglTerminate(h->egl_display);
+      }
+#endif
+
+      void render(base_view& view)
+      {
+         auto* h = platform_access::get_host_view(view);
+         if (!h->configured)
+            return;
+#if defined(ARTIST_CAIRO)
+         render_cairo(view);
+#elif defined(ARTIST_SKIA)
+         render_skia(view);
+#endif
       }
 
       void update_view_scale(base_view* view)
@@ -550,7 +736,11 @@ namespace cycfi::elements
                   int(std::lround(h->size.x)), int(std::lround(h->size.y)));
                libdecor_frame_commit(h->frame, st, nullptr);
                libdecor_state_free(st);
+#if defined(ARTIST_CAIRO)
                create_buffer(h);
+#elif defined(ARTIST_SKIA)
+               resize_backing(h);
+#endif
                render(*view);
             }
          }
@@ -594,7 +784,13 @@ namespace cycfi::elements
          std::fprintf(stderr, "[wl] configure content=%dx%d scale=%g buffer=%dx%d\n",
             content_w, content_h, h->scale,
             int(std::ceil(content_w * h->scale)), int(std::ceil(content_h * h->scale)));
+#if defined(ARTIST_CAIRO)
       create_buffer(h);
+#elif defined(ARTIST_SKIA)
+      if (!h->egl_window)
+         init_egl(h);
+      resize_backing(h);
+#endif
    }
 
    void view_render(host_window& w)
@@ -646,8 +842,12 @@ namespace cycfi::elements
    base_view::~base_view()
    {
       plat().views.erase(_view->surface);
+#if defined(ARTIST_CAIRO)
       destroy_buffer(_view->bufs[0]);
       destroy_buffer(_view->bufs[1]);
+#elif defined(ARTIST_SKIA)
+      destroy_skia(_view);
+#endif
       delete _view;
       _view = nullptr;
    }

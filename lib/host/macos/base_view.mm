@@ -635,10 +635,14 @@ namespace
    cairo_t* context = cairo_create(surface);
 
    auto cnv = canvas{context};
+   auto _perf_t0 = std::chrono::steady_clock::now();
    _view->draw(cnv);
 
    cairo_surface_destroy(surface);
    cairo_destroy(context);
+   cycfi::elements::perf::record(
+      std::chrono::duration<double, std::milli>(
+         std::chrono::steady_clock::now() - _perf_t0).count());
 #endif
 }
 

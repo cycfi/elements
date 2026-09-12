@@ -167,6 +167,25 @@ if (APPLE)
 endif()
 
 ###############################################################################
+# Copy the dependency DLLs (Windows)
+
+# Windows has no rpath: a DLL is found next to the executable or on PATH, so an
+# app linked against a shared dependency (libwebp via Artist's Direct2D
+# backend, Skia) dies at startup with 0xC0000135 unless its DLLs are beside it.
+# Copy whatever the linker actually pulled in, and skip the copy entirely when
+# there is nothing to copy, or the command would run with no files and fail.
+if (WIN32 AND NOT CMAKE_VERSION VERSION_LESS 3.21)
+   add_custom_command(
+      TARGET ${ELEMENTS_APP_PROJECT} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+         $<IF:$<BOOL:$<TARGET_RUNTIME_DLLS:${ELEMENTS_APP_PROJECT}>>,copy_if_different,true>
+         $<TARGET_RUNTIME_DLLS:${ELEMENTS_APP_PROJECT}>
+         $<TARGET_FILE_DIR:${ELEMENTS_APP_PROJECT}>
+      COMMAND_EXPAND_LISTS
+   )
+endif()
+
+###############################################################################
 # Copy the resources
 
 # Use a generator expression to get the proper destination directory at build time

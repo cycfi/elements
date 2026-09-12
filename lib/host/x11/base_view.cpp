@@ -8,6 +8,7 @@
 #include <infra/assert.hpp>
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
+#include <elements/support/perf.hpp>
 #include "x11_host.hpp"
 
 #include <X11/Xlib.h>
@@ -552,6 +553,11 @@ namespace cycfi::elements
          if (!eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context))
             throw std::runtime_error("eglMakeCurrent failed");
 
+         // For benchmarking, don't block the swap on vsync so the frame period
+         // reflects true render throughput rather than the display refresh.
+         if (perf::enabled())
+            eglSwapInterval(h->egl_display, 0);
+
          h->xface = GrGLMakeNativeInterface();
          if (!h->xface)
             h->xface = GrGLInterfaces::MakeEGL();
@@ -600,18 +606,24 @@ namespace cycfi::elements
 #if defined(ARTIST_CAIRO)
          if (!h->surface)
             return;
+         auto const t0 = std::chrono::steady_clock::now();
          auto* cr = cairo_create(h->surface);
          auto cnv = canvas{cr};
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(h->surface);
+         double const draw_flush_ms =
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - t0).count();
          if (h->pixmap && h->gc)
             XCopyArea(d, h->pixmap, h->window, h->gc, 0, 0, h->pix_w, h->pix_h, 0, 0);
          XFlush(d);
+         perf::record(draw_flush_ms);
 #elif defined(ARTIST_SKIA)
          (void)d;
          if (!h->skia_surface)
             return;
+         auto const t0 = std::chrono::steady_clock::now();
          SkCanvas* gpu = h->skia_surface->getCanvas();
          gpu->save();
          gpu->scale(h->scale, h->scale);   // logical → physical
@@ -619,7 +631,11 @@ namespace cycfi::elements
          view.draw(cnv);
          gpu->restore();
          h->ctx->flushAndSubmit(h->skia_surface.get());
+         double const draw_flush_ms =
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - t0).count();
          eglSwapBuffers(h->egl_display, h->egl_surface);
+         perf::record(draw_flush_ms);
 #endif
       }
    }
@@ -1158,7 +1174,11 @@ namespace cycfi::elements
    void poll_views()
    {
       for (auto& [w, view] : plat().views)
+      {
          view->poll();
+         if (perf::enabled())
+            do_render(*view);   // free-running render loop for benchmarking
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////

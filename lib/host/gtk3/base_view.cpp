@@ -10,6 +10,10 @@
 #include <elements/window.hpp>
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
+#include <elements/support/perf.hpp>
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
 
 #include <limits.h>
 #include <unistd.h>
@@ -168,7 +172,11 @@ namespace cycfi::elements
 
          auto cnv = canvas{cr};
 
+         auto _perf_t0 = std::chrono::steady_clock::now();
          view.draw(cnv);
+         cycfi::elements::perf::record(
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - _perf_t0).count());
 #endif // ARTIST_CAIRO
          return false;
       }
@@ -220,6 +228,21 @@ namespace cycfi::elements
             error("Error. GrDirectContexts::MakeGL failed");
       }
 
+      // Benchmarking free-runs the render stream: a GtkGLArea will not repaint
+      // from a queue issued inside its own render handler, so ask the main loop
+      // to queue the next render instead.
+      void _perf_queue_render(GtkWidget* widget)
+      {
+         if (!cycfi::elements::perf::enabled())
+            return;
+         auto again = [](gpointer d) -> gboolean
+         {
+            gtk_gl_area_queue_render(GTK_GL_AREA(d));
+            return G_SOURCE_REMOVE;
+         };
+         g_idle_add(again, widget);
+      }
+
       gboolean render(GtkGLArea* /*area*/, GdkGLContext* /*context*/, gpointer user_data)
       {
          auto& view = get(user_data);
@@ -266,6 +289,7 @@ namespace cycfi::elements
                error("Error: SkSurfaces::WrapBackendRenderTarget returned null");
 
             gtk_widget_draw(host_view_h->_widget, host_view_h->_cr);
+            _perf_queue_render(host_view_h->_widget);
             return true;
          }
 
@@ -277,9 +301,15 @@ namespace cycfi::elements
          gpu_canvas->scale(scale, scale);
          auto cnv = canvas{gpu_canvas};
 
+         auto _perf_t0 = std::chrono::steady_clock::now();
          view.draw(cnv);
          gpu_canvas->restore();
          host_view_h->_ctx->flushAndSubmit(host_view_h->_surface.get());
+         cycfi::elements::perf::record(
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - _perf_t0).count());
+
+         _perf_queue_render(host_view_h->_widget);
          return true;
       }
 #endif // ARTIST_SKIA

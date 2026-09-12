@@ -17,6 +17,8 @@
 #if defined(ARTIST_SKIA)
 # import <Metal/Metal.h>
 # import <QuartzCore/CAMetalLayer.h>
+#include <elements/support/perf.hpp>
+#include <chrono>
 # include <SkColorSpace.h>
 # include <SkImage.h>
 # include <SkSurface.h>
@@ -568,7 +570,11 @@ namespace
 
    auto context = NSGraphicsContext.currentContext.CGContext;
    auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
+   auto _perf_t0 = std::chrono::steady_clock::now();
    _view->draw(cnv);
+   cycfi::elements::perf::record(
+      std::chrono::duration<double, std::milli>(
+         std::chrono::steady_clock::now() - _perf_t0).count());
 
 #elif defined(ARTIST_SKIA)
 
@@ -584,6 +590,9 @@ namespace
        int(_metal_layer.drawableSize.height) != h)
       _metal_layer.drawableSize = CGSizeMake(w, h);
 
+   if (cycfi::elements::perf::enabled())
+      _metal_layer.displaySyncEnabled = NO;   // measure throughput, not refresh
+   auto _perf_t0 = std::chrono::steady_clock::now();
    id<CAMetalDrawable> drawable = [_metal_layer nextDrawable];
    if (drawable && _gr_context)
    {
@@ -606,10 +615,13 @@ namespace
          gpu_canvas->restore();
 
          _gr_context->flushAndSubmit(surface.get());
+         double _perf_ms = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - _perf_t0).count();
 
          id<MTLCommandBuffer> cmd = [_queue commandBuffer];
          [cmd presentDrawable : drawable];
          [cmd commit];
+         cycfi::elements::perf::record(_perf_ms);
       }
    }
 #elif defined(ARTIST_CAIRO)

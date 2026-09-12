@@ -80,6 +80,7 @@ set(ELEMENTS_SOURCES
    src/support/receiver.cpp
    src/support/text_utils.cpp
    src/support/theme.cpp
+   src/support/perf.cpp
    src/view.cpp
 )
 
@@ -149,6 +150,7 @@ set(ELEMENTS_HEADERS
    include/elements/support/text_reader_writer.hpp
    include/elements/support/text_utils.hpp
    include/elements/support/theme.hpp
+   include/elements/support/perf.hpp
    include/elements/view.hpp
    include/elements/window.hpp
 )

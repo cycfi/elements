@@ -286,10 +286,32 @@ namespace cycfi::elements
          if (!info->_gl_rc)
             info->_gl_rc = legacy;   // fall back to the legacy context
 
+         // For benchmarking, take vsync out of the picture. Left on, the driver
+         // applies back-pressure and the wait surfaces inside the flush, so the
+         // measured draw time absorbs it instead of reflecting render cost.
+         if (perf::enabled())
+         {
+            using PFNWGLSWAPINTERVALEXTPROC = BOOL (WINAPI*)(int);
+            if (auto swap_interval = reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(
+                  wglGetProcAddress("wglSwapIntervalEXT")))
+               swap_interval(0);
+         }
+
          if (info->_xface = GrGLMakeNativeInterface(); info->_xface == nullptr)
             error("Error: GrGLMakeNativeInterface failed.");
          if (info->_ctx = GrDirectContexts::MakeGL(info->_xface); info->_ctx == nullptr)
             error("Error: GrDirectContexts::MakeGL failed.");
+
+         if (std::getenv("ELEMENTS_GL_INFO"))
+         {
+            auto s = [](GLenum e)
+            {
+               auto* p = glGetString(e);
+               return p? reinterpret_cast<char const*>(p) : "?";
+            };
+            std::fprintf(stderr, "[gl] renderer=%s | vendor=%s | version=%s\n",
+               s(GL_RENDERER), s(GL_VENDOR), s(GL_VERSION));
+         }
       }
 #endif // ARTIST_SKIA
 

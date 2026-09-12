@@ -80,6 +80,10 @@ using PFNWGLCREATECONTEXTATTRIBSARBPROC =
 #elif defined(ARTIST_CAIRO)
 # include <cairo.h>
 # include <cairo-win32.h>
+#elif defined(ARTIST_DIRECT2D)
+// The backend's own header: it hands us d2d::context (the canvas_impl) and the
+// factory the HWND render target is created from.
+# include <context.hpp>
 #endif
 
 #include "utils.hpp"
@@ -217,6 +221,9 @@ namespace cycfi::elements
          sk_sp<SkSurface>           _surface;           // Skia surface
          int                        _surface_w = 0;
          int                        _surface_h = 0;
+#elif defined(ARTIST_DIRECT2D)
+         // Device-dependent, so it is dropped and rebuilt on device loss.
+         ID2D1HwndRenderTarget*     _target = nullptr;
 #endif
       };
 
@@ -386,6 +393,61 @@ namespace cycfi::elements
                std::chrono::steady_clock::now() - _perf_t0).count();
             cairo_surface_destroy(surface);
             cycfi::elements::perf::record(_perf_ms);
+#elif defined(ARTIST_DIRECT2D)
+            namespace d2d = cycfi::artist::d2d;
+
+            // Direct2D maps DIPs to pixels by DPI, so a render target DPI of
+            // 96 * scale makes one DIP one logical pixel and the view draws in
+            // logical coordinates. That is why there is no canvas scale here,
+            // unlike the Skia and Cairo paths above.
+            if (!info->_target)
+            {
+               RECT cr;
+               GetClientRect(hwnd, &cr);
+               auto px = D2D1::SizeU(cr.right - cr.left, cr.bottom - cr.top);
+               if (px.width != 0 && px.height != 0)
+               {
+                  auto props = D2D1::RenderTargetProperties(
+                     D2D1_RENDER_TARGET_TYPE_DEFAULT,
+                     D2D1::PixelFormat(
+                        DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+                     96.0f * scale, 96.0f * scale
+                  );
+                  // Benchmarking measures render cost, so it must not be
+                  // quantised by the vblank wait EndDraw does by default.
+                  // This is the Direct2D counterpart of the Skia host's
+                  // wglSwapIntervalEXT(0).
+                  auto present = perf::enabled()?
+                     D2D1_PRESENT_OPTIONS_IMMEDIATELY : D2D1_PRESENT_OPTIONS_NONE;
+
+                  d2d::get_factory().CreateHwndRenderTarget(
+                     props, D2D1::HwndRenderTargetProperties(hwnd, px, present),
+                     &info->_target);
+               }
+            }
+
+            if (info->_target)
+            {
+               info->_target->BeginDraw();
+               info->_target->SetTransform(D2D1::Matrix3x2F::Identity());
+
+               auto _perf_t0 = std::chrono::steady_clock::now();
+               {
+                  d2d::context ctx{info->_target};
+                  auto cnv = canvas{&ctx};
+                  view->draw(cnv);
+               }
+               auto hr = info->_target->EndDraw();
+               double _perf_ms = std::chrono::duration<double, std::milli>(
+                  std::chrono::steady_clock::now() - _perf_t0).count();
+
+               // Device loss: drop the device-dependent target. The next
+               // WM_PAINT recreates it and redraws from scratch.
+               if (hr == D2DERR_RECREATE_TARGET)
+                  d2d::release(info->_target);
+
+               cycfi::elements::perf::record(_perf_ms);
+            }
 #endif
             EndPaint(hwnd, &ps);
          }
@@ -730,6 +792,13 @@ namespace cycfi::elements
                if (info && info->_vptr)
                {
                   auto scale = get_scale_for_window(hwnd);
+#if defined(ARTIST_DIRECT2D)
+                  // Resize the back buffer to the new client size, or Direct2D
+                  // keeps the old one and bitmap-stretches it: blurry rather
+                  // than redrawn as vectors at the new resolution.
+                  if (info->_target)
+                     info->_target->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
+#endif
                   info->_vptr->on_size_change(
                      {LOWORD(lparam) / scale, HIWORD(lparam) / scale});
                }
@@ -737,7 +806,15 @@ namespace cycfi::elements
 
             case WM_DPICHANGED:
                if (info && info->_vptr)
-                  info->_vptr->on_scale_change(get_scale_for_window(hwnd));
+               {
+                  auto scale = get_scale_for_window(hwnd);
+#if defined(ARTIST_DIRECT2D)
+                  // Keep one DIP one logical pixel on the new monitor.
+                  if (info->_target)
+                     info->_target->SetDpi(96.0f * scale, 96.0f * scale);
+#endif
+                  info->_vptr->on_scale_change(scale);
+               }
                break;
 
             case WM_ELEMENTS_ON_OPEN:
@@ -868,6 +945,9 @@ namespace cycfi::elements
          if (info->_gl_dc)
             ReleaseDC(_view, info->_gl_dc);
       }
+#elif defined(ARTIST_DIRECT2D)
+      if (info)
+         cycfi::artist::d2d::release(info->_target);
 #endif
       delete info;
       DestroyWindow(_view);

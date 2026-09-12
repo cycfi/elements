@@ -44,6 +44,8 @@ namespace cycfi::elements
       GtkApplication* _app;
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
       bool  _running = true;
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_X11) || defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
+      bool  _running = true;
 #endif
 
       std::string          _app_name;

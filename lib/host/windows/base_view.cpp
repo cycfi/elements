@@ -86,6 +86,19 @@ using PFNWGLCREATECONTEXTATTRIBSARBPROC =
 
 #include <elements/support/perf.hpp>
 #include <chrono>
+#include <cstdio>
+#include <cstdlib>
+
+// On a hybrid-graphics laptop the driver picks the integrated GPU unless the
+// process asks for the discrete one. Exporting these two symbols is the
+// documented way to ask: NVIDIA Optimus and AMD PowerXpress both look them up
+// in the executable. Without this, a GPU backend quietly renders on the
+// integrated chip, which is several times slower.
+extern "C"
+{
+   __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
+   __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
 
 namespace cycfi::artist
 {

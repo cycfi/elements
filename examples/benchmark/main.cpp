@@ -10,6 +10,10 @@
    it, this is just a normal window you can look at.
 =============================================================================*/
 #include <elements.hpp>
+#include <elements/support/perf.hpp>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -38,6 +42,14 @@ namespace
          // these hosts, so requesting it from draw would recurse).
          auto& cnv = ctx.canvas;
          auto  b = ctx.bounds;
+
+         // The host has already applied the device scale to the canvas, so the
+         // transform tells us how many real pixels this logical area covers.
+         auto const xf = cnv.transform();
+         perf::set_pixel_size(
+            int(std::lround(b.width() * xf.a)),
+            int(std::lround(b.height() * xf.d)));
+
          float t = float(_frame % 180) / 180.0f;
          float x = b.left + t * b.width();
          cnv.fill_style(rgba(255, 255, 255, 30));
@@ -109,7 +121,22 @@ int main(int argc, char* argv[])
 {
    app _app("Elements Render Benchmark");
    init_resources();
-   window _win(_app.name());
+
+   // Render the same logical area everywhere, so platforms differ only by
+   // display scale and the numbers can be compared. ELEMENTS_PERF_SIZE=WxH
+   // overrides it, which is also how the fixed and per-pixel parts of the
+   // frame cost get separated.
+   float win_w = 1000, win_h = 700;
+   if (char const* s = std::getenv("ELEMENTS_PERF_SIZE"))
+   {
+      int w = 0, h = 0;
+      if (std::sscanf(s, "%dx%d", &w, &h) == 2 && w > 0 && h > 0)
+      {
+         win_w = float(w);
+         win_h = float(h);
+      }
+   }
+   window _win(_app.name(), window::standard, {50, 50, 50 + win_w, 50 + win_h});
    _win.on_close = [&_app]() { _app.stop(); };
 
    view view_(_win);

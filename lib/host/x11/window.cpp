@@ -40,6 +40,11 @@ namespace cycfi::elements
          BlackPixel(d, screen), WhitePixel(d, screen)
       );
 
+      // Don't let X paint the window background: the backing redraw already
+      // fills the whole window, and an X background clear on each resize step
+      // shows up as flicker (a white flash) behind the new frame.
+      XSetWindowBackgroundPixmap(d, _window->window, None);
+
       XStoreName(d, _window->window, name.c_str());
 
       // Window-close protocol → window::on_close

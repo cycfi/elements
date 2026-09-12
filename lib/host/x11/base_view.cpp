@@ -972,6 +972,7 @@ namespace cycfi::elements
                   {
                      create_backing(h, w, hgt);
                      h->size = {float(w / h->scale), float(hgt / h->scale)};
+                     do_render(view);   // repaint at the new size, no stale frame
                   }
                }
                break;

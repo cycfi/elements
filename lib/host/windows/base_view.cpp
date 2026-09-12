@@ -441,6 +441,13 @@ namespace cycfi::elements
                double _perf_ms = std::chrono::duration<double, std::milli>(
                   std::chrono::steady_clock::now() - _perf_t0).count();
 
+               // The DPI scale lives in the render target, not the canvas
+               // transform, so the view's own probe (which reads the
+               // transform, as fits Skia and Cairo) under-reports here.
+               // Overrule it with the target's pixel size after the draw.
+               auto px = info->_target->GetPixelSize();
+               perf::set_pixel_size(int(px.width), int(px.height));
+
                // Device loss: drop the device-dependent target. The next
                // WM_PAINT recreates it and redraws from scratch.
                if (hr == D2DERR_RECREATE_TARGET)

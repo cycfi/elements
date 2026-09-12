@@ -24,7 +24,7 @@ namespace cycfi { namespace elements { namespace perf
          return "cairo";
 #elif defined(ARTIST_QUARTZ_2D)
          return "quartz2d";
-#elif defined(ARTIST_DIRECT_2D)
+#elif defined(ARTIST_DIRECT2D)
          return "direct2d";
 #else
          return "unknown";

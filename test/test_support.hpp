@@ -69,8 +69,7 @@ namespace cycfi::elements::test
        : view_{size}
 #else
        // On a windowing host, go through window + view the way an
-       // application does: view{extent} asks for a parentless child window,
-       // which Windows will not create.
+       // application does. Not every host implements view{extent}.
        : win{"elements test", window::standard, {0, 0, size.x, size.y}}
        , view_{win}
 #endif

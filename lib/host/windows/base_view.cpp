@@ -889,7 +889,11 @@ namespace cycfi::elements
       HWND make_window(base_view* _this, host_window_handle parent, RECT bounds)
       {
          static init_view_class init;
-         auto style = WS_CHILD | WS_VISIBLE;
+
+         // A view on a window is its child. A view made with only a size has
+         // no window to be a child of, and Windows will not create a child
+         // without a parent, so it gets a hidden top-level window of its own.
+         auto style = parent? WS_CHILD | WS_VISIBLE : WS_POPUP;
 
          HWND hwnd = CreateWindowW(
             L"ElementsView",
@@ -937,8 +941,9 @@ namespace cycfi::elements
 
    base_view::base_view(extent size_)
    {
-	   RECT bounds = {0, 0, LONG(size_.x), LONG(size_.y)};
-	   _view = make_window(this, nullptr, bounds);
+      // Size is in logical units: size() applies the window's DPI scale.
+      _view = make_window(this, nullptr, {0, 0, 1, 1});
+      size(size_);
    }
 
    base_view::base_view(host_window_handle h)
@@ -1007,9 +1012,9 @@ namespace cycfi::elements
    void base_view::size(elements::extent p)
    {
       auto scale = get_scale_for_window(_view);
-      auto parent = GetParent(_view);
-      RECT bounds;
-      GetClientRect(parent, &bounds);
+      RECT bounds = {0, 0, 0, 0};
+      if (auto parent = GetParent(_view))
+         GetClientRect(parent, &bounds);
 
       MoveWindow(
          _view, bounds.left, bounds.top,

@@ -69,7 +69,7 @@ namespace cycfi::elements
 
    void range_slider_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view_bounds()))
+      if (intersects(ctx.bounds, ctx.visible_bounds()))
       {
          {
             context sctx {ctx, &track(), ctx.bounds};

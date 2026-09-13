@@ -14,6 +14,8 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
+#include <chrono>
 #include <string>
 #include <memory>
 #include <vector>
@@ -30,6 +32,11 @@ namespace
    // and the benchmark measures a continuous render stream.
    struct perf_driver : element
    {
+      // Full-window scenes redraw everything every frame, driven from here.
+      // The dirty and scroll scenes invalidate only a rect, from a timer, so
+      // there the driver must neither paint nor ask for a redraw.
+      explicit perf_driver(bool free_run) : _free_run(free_run) {}
+
       view_limits limits(basic_context const&) const override
       {
          return {{0, 0}, {full_extent, full_extent}};
@@ -37,10 +44,6 @@ namespace
 
       void draw(context const& ctx) override
       {
-         // A moving marker so successive frames differ (nothing is trivially
-         // cached). The continuous redraw is driven by the host loop in
-         // benchmark mode, not from here (refresh() renders synchronously on
-         // these hosts, so requesting it from draw would recurse).
          auto& cnv = ctx.canvas;
          auto  b = ctx.bounds;
 
@@ -51,6 +54,11 @@ namespace
             int(std::lround(b.width() * xf.a)),
             int(std::lround(b.height() * xf.d)));
 
+         if (!_free_run)
+            return;
+
+         // A moving marker so successive frames differ (nothing is trivially
+         // cached).
          float t = float(_frame % 180) / 180.0f;
          float x = b.left + t * b.width();
          cnv.fill_style(rgba(255, 255, 255, 30));
@@ -66,8 +74,15 @@ namespace
 #endif
       }
 
+      bool     _free_run;
       unsigned _frame = 0;
    };
+
+   // Handles the timer-driven scenes animate: one dial, one scroller.
+   std::function<void(double)>   set_dial;        // value in [0, 1]
+   std::function<void(double)>   set_scroll;      // alignment in [0, 1]
+   std::shared_ptr<element>      dial_element;
+   std::shared_ptr<element>      scroll_element;
 
    // One row: a label, a button, a horizontal slider and a dial. Text shaping
    // and widget drawing are the dominant per-frame costs, so we stack many.
@@ -81,6 +96,11 @@ namespace
       auto dl = share(dial(
          radial_marks<15>(basic_knob<28>()),
          (i % 5) * 0.2f));
+      if (!dial_element)
+      {
+         dial_element = dl;
+         set_dial = [dl](double v){ dl->value(v); };
+      }
 
       return margin({8, 4, 8, 4},
          htile(
@@ -97,7 +117,13 @@ namespace
       auto rows = share(vtile_composite{});
       for (int i = 0; i < 14; ++i)
          rows->push_back(share(make_row(i)));
-      return margin({10, 10, 10, 10}, vscroller(hold(rows)));
+      auto sc = share(vscroller(hold(rows)));
+      if (!scroll_element)
+      {
+         scroll_element = sc;
+         set_scroll = [sc](double v){ sc->valign(v); };
+      }
+      return margin({10, 10, 10, 10}, hold(sc));
    }
 
    // The widget scene: two side-by-side panels of rows. Text shaping and
@@ -123,14 +149,24 @@ namespace
    //   default   the widget scene: vector shapes and text at volume.
    //   image     a photo redrawn every frame: bitmap upload, scaling and
    //             filtering, which the other two never touch.
+   //   dirty     the widget scene, but only one dial changes per frame and
+   //             only its rect is invalidated: what an interaction costs.
+   //   scroll    the widget scene with one column scrolling continuously:
+   //             the whole viewport invalidated, every frame.
    //
    // Note that `minimal` is usually vsync-bound, so read draw_flush_ms there
    // and treat its fps as a property of the display.
+   std::string scene_name()
+   {
+      if (char const* s = std::getenv("ELEMENTS_PERF_SCENE"))
+         return s;
+      return "default";
+   }
+
    auto make_scene()
    {
-      std::string scene = "default";
-      if (char const* s = std::getenv("ELEMENTS_PERF_SCENE"))
-         scene = s;
+      auto scene = scene_name();
+      bool timed = scene == "dirty" || scene == "scroll";
 
       std::shared_ptr<element> content;
       if (scene == "minimal")
@@ -145,10 +181,39 @@ namespace
          content = share(make_widgets());
 
       return layer(
-         perf_driver{},
+         perf_driver{!timed},
          hold(content),
          box(bkd_color)
       );
+   }
+
+   // Drive the dirty and scroll scenes from a timer: change one thing, ask for
+   // a redraw of just that element, and let the host paint. Re-posted from
+   // its own callback so it runs as fast as the host paints.
+   void start_animation(view& v)
+   {
+      auto scene = scene_name();
+      if (scene != "dirty" && scene != "scroll")
+         return;
+
+      auto tick = std::make_shared<std::function<void()>>();
+      auto frame = std::make_shared<unsigned>(0);
+      *tick = [&v, tick, frame, scene]()
+      {
+         double t = double(++*frame % 240) / 240.0;
+         if (scene == "dirty" && set_dial && dial_element)
+         {
+            set_dial(t);
+            v.refresh(*dial_element);
+         }
+         else if (scene == "scroll" && set_scroll && scroll_element)
+         {
+            set_scroll(t);
+            v.refresh(*scroll_element);
+         }
+         v.post(std::chrono::milliseconds(1), *tick);
+      };
+      v.post(std::chrono::milliseconds(1), *tick);
    }
 }
 
@@ -176,6 +241,7 @@ int main(int argc, char* argv[])
 
    view view_(_win);
    view_.content(make_scene());
+   start_animation(view_);
 
    _app.run();
    return 0;

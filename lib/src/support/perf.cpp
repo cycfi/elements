@@ -43,6 +43,8 @@ namespace cycfi { namespace elements { namespace perf
          return "wayland";
 #elif defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
          return "win32";
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+         return "headless";
 #else
          return "unknown";
 #endif

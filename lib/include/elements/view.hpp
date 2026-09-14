@@ -34,6 +34,9 @@ namespace cycfi::elements
    public:
                               view(extent size_);
                               view(host_view_handle h);
+#if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+                              view(unsigned long parent);
+#endif
                               view(window& win);
                               ~view();
 

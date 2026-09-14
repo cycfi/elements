@@ -110,6 +110,7 @@ namespace cycfi::elements
       point             size;             // logical size
       point             cursor_position;
       bool              opened = false;
+      bool              owns_window = false;  // made here, so destroyed here
       ::Time            click_time = 0;   // last button-press time (double-click)
       int               click_count = 0;
       ::Time            scroll_time = 0;  // last scroll event (acceleration)
@@ -1254,35 +1255,25 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // base_view
    ////////////////////////////////////////////////////////////////////////////
-   base_view::base_view(extent /*size_*/)
-    : _view(new host_view)
+   namespace
    {
-      CYCFI_ASSERT(false, "Offscreen base_view unimplemented on X11");
-   }
+      // Everything a view needs from the window it renders into, whoever
+      // made that window: input, text entry, drag and drop, the cursor, the
+      // back buffer, and a place in the registry dispatch_event looks in.
+      void open_view(base_view* self, host_view* _view)
+      {
+         Display* d = get_display();
 
-   // Adopt an existing host_view (the embedding / custom-host entry point).
-   base_view::base_view(host_view_handle h)
-    : _view(h)
-   {
-   }
-
-   base_view::base_view(host_window_handle h)
-    : _view(new host_view)
-   {
-      Display* d = get_display();
-      _view->window = get_window(*h);
-      _view->scale = window_scale(_view->window);
-
-      if (XIM xim = get_xim())
+         if (XIM xim = get_xim())
       {
          _view->xic = XCreateIC(xim,
             XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
             XNClientWindow, _view->window,
             XNFocusWindow, _view->window,
             nullptr);
-      }
+         }
 
-      XSelectInput(d, _view->window,
+         XSelectInput(d, _view->window,
          ExposureMask | StructureNotifyMask |
          ButtonPressMask | ButtonReleaseMask | PointerMotionMask |
          KeyPressMask | KeyReleaseMask |
@@ -1308,9 +1299,62 @@ namespace cycfi::elements
       _view->size = {float(w / _view->scale), float(hgt / _view->scale)};
       create_backing(_view, w, hgt);
 
-      register_view(_view->window, this);
+      register_view(_view->window, self);
 
       XClearArea(d, _view->window, 0, 0, 0, 0, True);
+      XFlush(d);
+      }
+   }
+
+   base_view::base_view(extent /*size_*/)
+    : _view(new host_view)
+   {
+      CYCFI_ASSERT(false, "Offscreen base_view unimplemented on X11");
+   }
+
+   // Adopt a host_view already set up by whoever made it.
+   base_view::base_view(host_view_handle h)
+    : _view(h)
+   {
+   }
+
+   base_view::base_view(host_window_handle h)
+    : _view(new host_view)
+   {
+      _view->window = get_window(*h);
+      _view->scale = window_scale(_view->window);
+      open_view(this, _view);
+   }
+
+   // A view inside a window someone else owns, a plugin host's for instance:
+   // a child window filling the parent, set up as any view is, and destroyed
+   // with the view. The parent is an X11 Window.
+   base_view::base_view(unsigned long parent)
+    : _view(new host_view)
+   {
+      Display* d = get_display();
+      int w = 1, hgt = 1;
+      XWindowAttributes a;
+      if (XGetWindowAttributes(d, parent, &a))
+      {
+         w = a.width > 0 ? a.width : 1;
+         hgt = a.height > 0 ? a.height : 1;
+      }
+
+      _view->window = XCreateSimpleWindow(d, parent, 0, 0, w, hgt, 0, 0, 0);
+      _view->owns_window = true;
+      _view->scale = window_scale(_view->window);
+
+      // XEmbed: the protocol version spoken, and that the child is mapped.
+      {
+         Atom info = XInternAtom(d, "_XEMBED_INFO", False);
+         long data[2] = {0, 1};
+         XChangeProperty(d, _view->window, info, info, 32, PropModeReplace,
+            (unsigned char*)data, 2);
+      }
+
+      open_view(this, _view);
+      XMapWindow(d, _view->window);
       XFlush(d);
    }
 
@@ -1338,6 +1382,8 @@ namespace cycfi::elements
       if (_view->egl_display != EGL_NO_DISPLAY)
          eglTerminate(_view->egl_display);
 #endif
+      if (_view->owns_window)
+         XDestroyWindow(d, _view->window);
       delete _view;
       _view = nullptr;
    }

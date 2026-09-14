@@ -26,6 +26,14 @@ namespace cycfi::elements
     , _work(asio::make_work_guard(_io))
    {}
 
+#if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+   view::view(unsigned long parent)
+    : base_view(parent)
+    , _main_element(make_scaled_content())
+    , _work(asio::make_work_guard(_io))
+   {}
+#endif
+
    view::view(window& win)
     : base_view(win.host())
     , _main_element(make_scaled_content())

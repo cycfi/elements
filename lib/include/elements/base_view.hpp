@@ -332,6 +332,12 @@ namespace cycfi::elements
     || defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
                            base_view(host_view_handle h);
 #endif
+#if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+                           // A view inside a window someone else owns. The
+                           // parent is an X11 Window, spelled as its
+                           // underlying type to keep Xlib out of this header.
+                           base_view(unsigned long parent);
+#endif
                            base_view(extent size_);
                            base_view(host_window_handle h);
       virtual              ~base_view();

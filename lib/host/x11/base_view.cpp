@@ -41,6 +41,7 @@
 
 #include <limits.h>
 #include <unistd.h>
+#include <dlfcn.h>
 #include <locale.h>
 #include <memory>
 #include <string>
@@ -64,8 +65,40 @@ namespace cycfi::artist
          return std::string(result, (count > 0)? count : 0);
       }
 
+      // The shared object this code lives in: the executable for an
+      // application, and for a plugin its own module, not the host that
+      // loaded it.
+      fs::path module_path()
+      {
+         Dl_info info;
+         if (dladdr(reinterpret_cast<void*>(&module_path), &info)
+            && info.dli_fname && *info.dli_fname)
+            return info.dli_fname;
+         return {};
+      }
+
       fs::path find_resources()
       {
+         // A plugin keeps its resources beside its module: in a VST3 bundle
+         // beside the architecture directory holding the library, and for a
+         // bare CLAP in a directory named after it. The same places the
+         // Windows host looks.
+         fs::path const module = module_path();
+         if (!module.empty() && module != exe_path())
+         {
+            fs::path const dir = module.parent_path();
+            fs::path const candidates[] =
+            {
+               dir / "resources",
+               dir.parent_path() / "Resources",
+               dir / (module.stem().string() + " Resources")
+            };
+            std::error_code ec;
+            for (auto const& path : candidates)
+               if (fs::is_directory(path, ec))
+                  return path;
+         }
+
          fs::path const app_path = exe_path();
          fs::path const app_dir = app_path.parent_path();
 

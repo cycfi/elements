@@ -354,6 +354,8 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
    pkg_check_modules(XCURSOR REQUIRED IMPORTED_TARGET xcursor)
    pkg_check_modules(XRANDR REQUIRED IMPORTED_TARGET xrandr)
    target_link_libraries(elements PRIVATE PkgConfig::ELEM_X11 PkgConfig::XCURSOR PkgConfig::XRANDR)
+   # dladdr, to find the resources beside a plugin's own module
+   target_link_libraries(elements PRIVATE ${CMAKE_DL_LIBS})
    if (ELEMENTS_CAIRO)
       pkg_check_modules(CAIRO_XLIB REQUIRED IMPORTED_TARGET cairo-xlib)
       target_link_libraries(elements PRIVATE PkgConfig::CAIRO_XLIB)

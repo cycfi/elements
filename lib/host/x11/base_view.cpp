@@ -1431,10 +1431,17 @@ namespace cycfi::elements
       return {_view->size.x, _view->size.y};
    }
 
+   // The size is the view's as soon as it is asked for, not when the
+   // ConfigureNotify arrives: whoever asked reads it back first, and a plugin
+   // host sizes its own window from that answer.
    void base_view::size(elements::extent p)
    {
-      XResizeWindow(get_display(), _view->window,
-         (unsigned)(p.x * _view->scale), (unsigned)(p.y * _view->scale));
+      int const pw = int(std::lround(p.x * _view->scale));
+      int const ph = int(std::lround(p.y * _view->scale));
+      XResizeWindow(get_display(), _view->window, pw, ph);
+      _view->size = {p.x, p.y};
+      if (pw != _view->pix_w || ph != _view->pix_h)
+         create_backing(_view, pw, ph);
    }
 
    void base_view::refresh()

@@ -14,6 +14,7 @@ on:
           - skia
           - cairo
           - quartz2d
+          - tests
 env:
   BUILD_TYPE: Release
 jobs:
@@ -383,3 +384,135 @@ jobs:
 
     - name: Build
       run: cmake --build build-quartz2d
+
+  ###########################################################################
+  # Tests  (headless host + Artist recording backend: no display, any OS)
+  ###########################################################################
+  build-tests:
+    name: "Tests (headless, ${{ matrix.config.name }})"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'tests'
+    runs-on: ${{ matrix.config.os }}
+    env:
+      # The recording backend measures text with fontconfig, FreeType and
+      # HarfBuzz. On Windows they come from Artist's vcpkg manifest, which
+      # also pulls Skia; the ABI-exact R2 cache keeps that a cache hit.
+      VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
+      AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: "Windows MSVC"
+          os: windows-latest
+        - name: "macOS Clang"
+          os: macos-latest
+        - name: "Ubuntu GCC"
+          os: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Resolve MSVC environment (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        $vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+        echo "VCVARS64=$vcvars" >> $env:GITHUB_ENV
+
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libharfbuzz-dev \
+          pkg-config \
+          ninja-build
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install fontconfig freetype harfbuzz ninja
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja
+      shell: cmd
+
+    - name: Bootstrap vcpkg (Windows)
+      if: runner.os == 'Windows'
+      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      shell: cmd
+
+    - name: Configure
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND "$ENV{VCVARS64}" && set
+            OUTPUT_FILE environment_script_output.txt)
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+
+        set(extra_args
+          -DELEMENTS_HOST_UI_LIBRARY=headless
+          -DELEMENTS_RECORDING=ON
+          -DELEMENTS_BUILD_TESTS=ON
+          -DELEMENTS_BUILD_EXAMPLES=OFF)
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          list(APPEND extra_args
+            -DCMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/lib/artist/lib/external/vcpkg/scripts/buildsystems/vcpkg.cmake
+            -DVCPKG_MANIFEST_DIR=$ENV{GITHUB_WORKSPACE}/lib/artist)
+        endif()
+
+        execute_process(
+          COMMAND ${CMAKE_COMMAND}
+            -S . -B build-tests
+            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
+            ${extra_args}
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Configure failed: ${error_message} - ${result}")
+        endif()
+
+    - name: Build
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          execute_process(
+            COMMAND "$ENV{VCVARS64}" && set
+            OUTPUT_FILE environment_script_output.txt)
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} --build build-tests --target elements_test
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Build failed: ${error_message} - ${result}")
+        endif()
+
+    - name: Test
+      working-directory: build-tests/test
+      run: ctest --output-on-failure

@@ -27,6 +27,10 @@ if (ELEMENTS_DIRECT2D)
    set(ARTIST_SKIA OFF CACHE BOOL "Artist graphics backend option")
    set(ARTIST_CAIRO OFF CACHE BOOL "Artist graphics backend option")
    set(ARTIST_QUARTZ_2D OFF CACHE BOOL "Artist graphics backend option")
+elseif (ELEMENTS_RECORDING)
+   # Draws nothing: records a journal of what was drawn. For tests, with the
+   # headless host.
+   set(ARTIST_RECORDING ON CACHE BOOL "Artist graphics backend option")
 elseif (ELEMENTS_CAIRO)
    if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/artist/lib/impl/cairo/canvas.cpp")
       message(FATAL_ERROR
@@ -168,7 +172,13 @@ set(ELEMENTS_HEADERS
    include/elements/window.hpp
 )
 
-if (APPLE)
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "headless")
+   set(ELEMENTS_HOST
+      host/headless/app.cpp
+      host/headless/base_view.cpp
+      host/headless/window.cpp
+   )
+elseif (APPLE)
    set(ELEMENTS_HOST
       host/macos/app.mm
       host/macos/base_view.mm
@@ -431,7 +441,7 @@ target_link_libraries(elements PUBLIC quill::quill)
 ###############################################################################
 # Global options
 
-if (APPLE)
+if (APPLE AND NOT ELEMENTS_HOST_UI_LIBRARY STREQUAL "headless")
    target_compile_definitions(elements PRIVATE
       ELEMENTS_CLASS_PREFIX=${ELEMENTS_CLASS_PREFIX}
    )
@@ -455,7 +465,9 @@ elseif (WIN32)
 
 endif()
 
-if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
+if(ELEMENTS_HOST_UI_LIBRARY STREQUAL "headless")
+    target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "gtk")
     target_compile_definitions(elements PUBLIC ELEMENTS_HOST_UI_LIBRARY_GTK)
 elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
     if(NOT UNIX OR APPLE)
@@ -486,7 +498,7 @@ elseif(ELEMENTS_HOST_UI_LIBRARY STREQUAL "win32")
         target_compile_definitions(elements PRIVATE _WIN32_WINNT=0x0A00)
     endif()
 else()
-    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, x11, wayland, cocoa or win32.")
+    message(FATAL_ERROR "Invalid ELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}. Set gtk, x11, wayland, cocoa, win32 or headless.")
 endif()
 
 ###############################################################################

@@ -332,6 +332,21 @@ namespace cycfi::elements
 
             auto scale = get_scale_for_window(hwnd);
 
+            // Only the invalidated area is repainted. ps.rcPaint is in
+            // physical pixels; the canvas draws in logical units on every
+            // backend below (Skia and Cairo scale the canvas, Direct2D
+            // scales through the target's DPI), so convert once here. A
+            // refresh(rect) that redraws the whole window otherwise costs
+            // the same as a full-window redraw.
+            rect const dirty{
+               ps.rcPaint.left / scale, ps.rcPaint.top / scale,
+               ps.rcPaint.right / scale, ps.rcPaint.bottom / scale};
+            auto clip_to_dirty = [&dirty](canvas& cnv)
+            {
+               cnv.add_rect(dirty);
+               cnv.clip();
+            };
+
 #if defined(ARTIST_SKIA)
             RECT cr;
             GetClientRect(hwnd, &cr);
@@ -371,6 +386,7 @@ namespace cycfi::elements
                gpu_canvas->save();
                gpu_canvas->scale(scale, scale);
                auto cnv = canvas{gpu_canvas};
+               clip_to_dirty(cnv);
                view->draw(cnv);
                gpu_canvas->restore();
                info->_ctx->flushAndSubmit(info->_surface.get());
@@ -386,6 +402,7 @@ namespace cycfi::elements
             auto _perf_t0 = std::chrono::steady_clock::now();
             {
                auto cnv = canvas{context};
+               clip_to_dirty(cnv);
                view->draw(cnv);
             }
             cairo_destroy(context);
@@ -435,7 +452,8 @@ namespace cycfi::elements
                {
                   d2d::context ctx{info->_target};
                   auto cnv = canvas{&ctx};
-                  view->draw(cnv);
+                  clip_to_dirty(cnv);
+               view->draw(cnv);
                }
                auto hr = info->_target->EndDraw();
                double _perf_ms = std::chrono::duration<double, std::milli>(

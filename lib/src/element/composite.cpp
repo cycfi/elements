@@ -57,14 +57,24 @@ namespace cycfi::elements
 
    void composite_base::draw(context const& ctx)
    {
-      for_each_visible(ctx,
-         [&ctx](element& e, std::size_t /*ix*/, rect const& bounds)
+      // Cull against the canvas clip as well as the enclosing port, so a host
+      // that clips to the invalidated area pays only for what lies inside it.
+      // Only drawing may do this: an event context carries a 1x1 offscreen
+      // canvas (see view.cpp), whose clip would cull everything.
+      auto visible = intersection(get_port_bounds(ctx), ctx.canvas.clip_extent());
+      if (!intersects(ctx.bounds, visible))
+         return;
+
+      for (std::size_t ix = 0; ix != size(); ++ix)
+      {
+         rect bounds = bounds_of(ctx, ix);
+         if (intersects(bounds, visible))
          {
+            auto& e = at(ix);
             context ectx{ctx, &e, bounds};
             e.draw(ectx);
-            return false;
          }
-      );
+      }
    }
 
    /**

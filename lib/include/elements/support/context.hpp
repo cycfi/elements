@@ -59,6 +59,12 @@ namespace cycfi::elements
          return device_to_user(elements::view_bounds(view), canvas);
       }
 
+      // The part of the view that can be painted right now: the view bounds
+      // narrowed by the canvas clip, which a host sets to the invalidated
+      // area. Drawing code culls against this, so a refresh(rect) costs only
+      // what lies inside the rect.
+      rect visible_bounds() const;   // defined in view.hpp, where canvas is complete
+
       point cursor_pos() const
       {
          return device_to_user(elements::cursor_pos(view), canvas);

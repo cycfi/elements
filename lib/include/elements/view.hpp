@@ -196,6 +196,11 @@ namespace cycfi::elements
       return rect{0, 0, size.x, size.y};
    }
 
+   inline rect basic_context::visible_bounds() const
+   {
+      return artist::intersection(view_bounds(), canvas.clip_extent());
+   }
+
    inline bool view::has_undo()
    {
       return !_undo_stack.empty();

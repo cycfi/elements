@@ -45,7 +45,7 @@ namespace cycfi::elements
 
    void status_bar_base::draw(context const& ctx)
    {
-      if (intersects(ctx.bounds, ctx.view_bounds()))
+      if (intersects(ctx.bounds, ctx.visible_bounds()))
       {
          {
             context sctx {ctx, &background(), ctx.bounds};

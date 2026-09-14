@@ -24,6 +24,11 @@ namespace cycfi { namespace elements { namespace perf
 
    bool enabled();
    void record(double draw_flush_ms);
+
+   // The size actually rasterized, in device pixels. Reported alongside the
+   // timings: platforms differ in display scaling, so a frame time only means
+   // something next to the number of pixels it covered.
+   void set_pixel_size(int w, int h);
 }}}
 
 #endif

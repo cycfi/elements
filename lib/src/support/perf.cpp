@@ -101,6 +101,7 @@ namespace cycfi { namespace elements { namespace perf
       std::vector<double>  draw_samples;   // draw+flush ms (from caller)
       std::vector<double>  frame_samples;  // full frame period ms (measured here)
       int                  seen = 0;
+      int                  px_w = 0, px_h = 0;
       bool                 have_last = false;
       clock::time_point    last;
 
@@ -142,18 +143,25 @@ namespace cycfi { namespace elements { namespace perf
          double const fps_mean = (f_mean > 0)? 1000.0 / f_mean : 0;
 
          std::fprintf(stdout,
-            "ELEMENTS_PERF platform=%s host=%s backend=%s scene=%s samples=%zu warmup=%d "
+            "ELEMENTS_PERF platform=%s host=%s backend=%s scene=%s pixels=%dx%d "
+            "samples=%zu warmup=%d "
             "draw_flush_ms{median=%.3f,mean=%.3f,p95=%.3f,min=%.3f} "
             "frame_ms{median=%.3f,mean=%.3f,p95=%.3f,min=%.3f} "
             "fps{median=%.1f,mean=%.1f}\n",
             platform_name(), host_name(), backend_name(), cfg().scene.c_str(),
-            draw_samples.size(), cfg().warmup,
+            px_w, px_h, draw_samples.size(), cfg().warmup,
             d_med, d_mean, d_p95, d_min,
             f_med, f_mean, f_p95, f_min,
             fps_med, fps_mean);
          std::fflush(stdout);
          std::_Exit(0);
       }
+   }
+
+   void set_pixel_size(int w, int h)
+   {
+      px_w = w;
+      px_h = h;
    }
 
    bool enabled()

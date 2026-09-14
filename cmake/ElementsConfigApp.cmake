@@ -185,6 +185,18 @@ if (WIN32 AND NOT CMAKE_VERSION VERSION_LESS 3.21)
    )
 endif()
 
+# Artist's prebuilt Skia bundle ships DLLs that are not in TARGET_RUNTIME_DLLS
+# (see lib/artist/cmake/SkiaPrebuilt.cmake), so copy them too.
+get_property(skia_dlls GLOBAL PROPERTY ARTIST_SKIA_RUNTIME_DLLS)
+if (skia_dlls)
+   add_custom_command(
+      TARGET ${ELEMENTS_APP_PROJECT} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+         ${skia_dlls} $<TARGET_FILE_DIR:${ELEMENTS_APP_PROJECT}>
+      COMMAND_EXPAND_LISTS
+   )
+endif()
+
 ###############################################################################
 # Copy the resources
 

@@ -117,15 +117,13 @@ elseif (WIN32)
 
    if (MSVC)
 
-      if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-         set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
-            MSVC_RUNTIME_LIBRARY "MultiThreadedDebug"
-         )
-      else()
-         set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
-            MSVC_RUNTIME_LIBRARY "MultiThreaded"
-         )
-      endif()
+      # Follow the configuration being built. CMAKE_BUILD_TYPE is empty for
+      # multi-config generators, and keying off the compiler picked the debug
+      # CRT for clang-cl even in Release, which mismatched elements and artist
+      # on _ITERATOR_DEBUG_LEVEL and failed the link.
+      set_property(TARGET ${ELEMENTS_APP_PROJECT} PROPERTY
+         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+      )
 
       target_link_options(${ELEMENTS_APP_PROJECT} PRIVATE
          /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup shcore.lib

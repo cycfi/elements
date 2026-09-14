@@ -9,6 +9,7 @@
 #include <artist/font.hpp>
 #include <infra/assert.hpp>
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
 #include <dlfcn.h>
 #include <memory>
 #include <map>
@@ -250,6 +251,8 @@ namespace
    CAMetalLayer*                    _metal_layer;
    sk_sp<GrDirectContext>           _gr_context;
    NSScreen*                        _last_screen;
+#else
+   NSBitmapImageRep*                _perf_rep;
 #endif
 
    bool                             _text_inserted;
@@ -287,9 +290,12 @@ namespace
 
    _marked_text = [[NSMutableAttributedString alloc] init];
 
+   // Measuring (ELEMENTS_PERF) renders at 1x, so the pixel count matches a
+   // scale-1 display on the other machines.
    NSRect user = {{ 0, 0}, {100, 100}};
    NSRect backing_bounds = [self convertRectToBacking : user];
-   _scale = backing_bounds.size.height / user.size.height;
+   _scale = cycfi::elements::perf::enabled()?
+      1.0f : backing_bounds.size.height / user.size.height;
 
 #if defined(ARTIST_SKIA)
    // Metal device and command queue.
@@ -380,6 +386,8 @@ namespace
 - (void) viewDidChangeBackingProperties
 {
    [super viewDidChangeBackingProperties];
+   if (cycfi::elements::perf::enabled())
+      return;
    NSRect user = {{0, 0}, {100, 100}};
    NSRect backing = [self convertRectToBacking : user];
    float scale = backing.size.height / user.size.height;
@@ -572,9 +580,16 @@ namespace
    auto cnv = canvas{(cycfi::artist::canvas_impl*) context};
    auto _perf_t0 = std::chrono::steady_clock::now();
    _view->draw(cnv);
-   cycfi::elements::perf::record(
-      std::chrono::duration<double, std::milli>(
-         std::chrono::steady_clock::now() - _perf_t0).count());
+   CGContextFlush(context);
+   if (!cycfi::elements::perf::enabled())
+   {
+      auto const b = [self bounds];
+      cycfi::elements::perf::set_pixel_size(
+         int(b.size.width * _scale + 0.5f), int(b.size.height * _scale + 0.5f));
+      cycfi::elements::perf::record(
+         std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - _perf_t0).count());
+   }
 
 #elif defined(ARTIST_SKIA)
 
@@ -592,7 +607,6 @@ namespace
 
    if (cycfi::elements::perf::enabled())
       _metal_layer.displaySyncEnabled = NO;   // measure throughput, not refresh
-   auto _perf_t0 = std::chrono::steady_clock::now();
    id<CAMetalDrawable> drawable = [_metal_layer nextDrawable];
    if (drawable && _gr_context)
    {
@@ -607,6 +621,7 @@ namespace
 
       if (surface)
       {
+         auto _perf_t0 = std::chrono::steady_clock::now();
          SkCanvas* gpu_canvas = surface->getCanvas();
          gpu_canvas->save();
          gpu_canvas->scale(_scale, _scale);
@@ -614,13 +629,15 @@ namespace
          _view->draw(cnv);
          gpu_canvas->restore();
 
-         _gr_context->flushAndSubmit(surface.get());
+         _gr_context->flushAndSubmit(surface.get(),
+            cycfi::elements::perf::enabled()? GrSyncCpu::kYes : GrSyncCpu::kNo);
          double _perf_ms = std::chrono::duration<double, std::milli>(
             std::chrono::steady_clock::now() - _perf_t0).count();
 
          id<MTLCommandBuffer> cmd = [_queue commandBuffer];
          [cmd presentDrawable : drawable];
          [cmd commit];
+         cycfi::elements::perf::set_pixel_size(w, h);
          cycfi::elements::perf::record(_perf_ms);
       }
    }
@@ -637,12 +654,18 @@ namespace
    auto cnv = canvas{context};
    auto _perf_t0 = std::chrono::steady_clock::now();
    _view->draw(cnv);
+   cairo_surface_flush(surface);
+   CGContextFlush(context_ref);
+   double _perf_ms = std::chrono::duration<double, std::milli>(
+      std::chrono::steady_clock::now() - _perf_t0).count();
 
    cairo_surface_destroy(surface);
    cairo_destroy(context);
-   cycfi::elements::perf::record(
-      std::chrono::duration<double, std::milli>(
-         std::chrono::steady_clock::now() - _perf_t0).count());
+   if (!cycfi::elements::perf::enabled())
+   {
+      cycfi::elements::perf::set_pixel_size(int(w * _scale + 0.5f), int(h * _scale + 0.5f));
+      cycfi::elements::perf::record(_perf_ms);
+   }
 #endif
 }
 
@@ -1036,6 +1059,47 @@ namespace
       _view->track_drop(info, ph::cursor_tracking::leaving);
 }
 
+#if !defined(ARTIST_SKIA)
+// A benchmark frame for Quartz 2D and Cairo. AppKit records drawRect: drawing
+// and rasterizes it later, outside any time the view can take. So the view's
+// own drawing is rasterized into a bitmap now, which is the draw and flush
+// time, and the bitmap is presented after the timer stops. The bitmap is 1x,
+// so the pixel count matches a scale-1 display on the other machines.
+- (void) perf_frame
+{
+   auto const bounds = self.bounds;
+   if (!_perf_rep || _perf_rep.size.width != bounds.size.width
+      || _perf_rep.size.height != bounds.size.height)
+      _perf_rep = [[NSBitmapImageRep alloc]
+         initWithBitmapDataPlanes : nullptr
+                       pixelsWide : NSInteger(bounds.size.width)
+                       pixelsHigh : NSInteger(bounds.size.height)
+                    bitsPerSample : 8
+                  samplesPerPixel : 4
+                         hasAlpha : YES
+                         isPlanar : NO
+                   colorSpaceName : NSDeviceRGBColorSpace
+                      bytesPerRow : 0
+                     bitsPerPixel : 0
+      ];
+
+   auto t0 = std::chrono::steady_clock::now();
+   [self cacheDisplayInRect : bounds toBitmapImageRep : _perf_rep];
+   double ms = std::chrono::duration<double, std::milli>(
+      std::chrono::steady_clock::now() - t0).count();
+
+   self.wantsLayer = YES;
+   [CATransaction begin];
+   [CATransaction setDisableActions : YES];
+   self.layer.contents = (__bridge id) _perf_rep.CGImage;
+   [CATransaction commit];
+   [CATransaction flush];
+
+   cycfi::elements::perf::set_pixel_size(int(_perf_rep.pixelsWide), int(_perf_rep.pixelsHigh));
+   cycfi::elements::perf::record(ms);
+}
+#endif
+
 @end // @implementation ElementsView
 
 namespace cycfi::elements
@@ -1117,6 +1181,13 @@ namespace cycfi::elements
 
    void base_view::refresh()
    {
+#if !defined(ARTIST_SKIA)
+      if (perf::enabled())
+      {
+         [get_mac_view(host()) perf_frame];
+         return;
+      }
+#endif
       [get_mac_view(host()) setNeedsDisplay : YES];
    }
 

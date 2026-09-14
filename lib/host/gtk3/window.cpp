@@ -62,7 +62,7 @@ namespace cycfi::elements
             gtk_widget_show_all(win);
 
             position(bounds.top_left());
-            size(bounds.bottom_right());
+            size({bounds.width(), bounds.height()});
          };
 
       if (app_is_activated())

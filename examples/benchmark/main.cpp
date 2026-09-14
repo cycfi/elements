@@ -237,6 +237,19 @@ int main(int argc, char* argv[])
 
    view view_(_win);
    view_.content(make_scene());
+
+   // Hosts size a new window differently (some include the title bar), so
+   // once the view is open, correct the window to make the content area
+   // exactly win_w by win_h on every host.
+   view_.post(std::chrono::milliseconds(100),
+      [&]()
+      {
+         auto const vs = view_.size();
+         auto const ws = _win.size();
+         if (vs.x != win_w || vs.y != win_h)
+            _win.size({ws.x + win_w - vs.x, ws.y + win_h - vs.y});
+      }
+   );
    start_animation(view_);
 
    _app.run();

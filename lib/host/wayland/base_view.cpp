@@ -696,15 +696,16 @@ namespace cycfi::elements
             return;
          }
 
-         auto const t0 = std::chrono::steady_clock::now();
          eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context);
+         auto const t0 = std::chrono::steady_clock::now();
          SkCanvas* gpu = h->skia_surface->getCanvas();
          gpu->save();
          gpu->scale(h->scale, h->scale);   // logical → physical
          auto cnv = canvas{gpu};
          view.draw(cnv);
          gpu->restore();
-         h->ctx->flushAndSubmit(h->skia_surface.get());
+         h->ctx->flushAndSubmit(h->skia_surface.get(),
+            perf::enabled()? GrSyncCpu::kYes : GrSyncCpu::kNo);
          double const draw_flush_ms =
             std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - t0).count();

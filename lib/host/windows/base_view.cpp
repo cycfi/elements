@@ -389,10 +389,15 @@ namespace cycfi::elements
                clip_to_dirty(cnv);
                view->draw(cnv);
                gpu_canvas->restore();
-               info->_ctx->flushAndSubmit(info->_surface.get());
+               info->_ctx->flushAndSubmit(info->_surface.get(),
+                  perf::enabled()? GrSyncCpu::kYes : GrSyncCpu::kNo);
                double _perf_ms = std::chrono::duration<double, std::milli>(
                   std::chrono::steady_clock::now() - _perf_t0).count();
                SwapBuffers(info->_gl_dc);
+               RECT client;
+               GetClientRect(hwnd, &client);
+               perf::set_pixel_size(
+                  int(client.right - client.left), int(client.bottom - client.top));
                cycfi::elements::perf::record(_perf_ms);
             }
 #elif defined(ARTIST_CAIRO)
@@ -406,9 +411,14 @@ namespace cycfi::elements
                view->draw(cnv);
             }
             cairo_destroy(context);
+            cairo_surface_flush(surface);
             double _perf_ms = std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - _perf_t0).count();
             cairo_surface_destroy(surface);
+            RECT client;
+            GetClientRect(hwnd, &client);
+            perf::set_pixel_size(
+               int(client.right - client.left), int(client.bottom - client.top));
             cycfi::elements::perf::record(_perf_ms);
 #elif defined(ARTIST_DIRECT2D)
             namespace d2d = cycfi::artist::d2d;
@@ -455,9 +465,10 @@ namespace cycfi::elements
                   clip_to_dirty(cnv);
                view->draw(cnv);
                }
-               auto hr = info->_target->EndDraw();
+               info->_target->Flush();
                double _perf_ms = std::chrono::duration<double, std::milli>(
                   std::chrono::steady_clock::now() - _perf_t0).count();
+               auto hr = info->_target->EndDraw();
 
                // The DPI scale lives in the render target, not the canvas
                // transform, so the view's own probe (which reads the

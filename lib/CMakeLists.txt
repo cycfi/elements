@@ -526,9 +526,10 @@ if (WIN32 AND ELEMENTS_SKIA)
    target_link_libraries(elements PUBLIC opengl32 gdi32)
 endif()
 
-# The macOS Skia host renders through a CAMetalLayer (see lib/host/macos/
-# base_view.mm), which needs QuartzCore for CAMetalLayer / kCAGravityTopLeft.
-if (APPLE AND ELEMENTS_SKIA)
+# The macOS host needs QuartzCore: the Skia host renders through a
+# CAMetalLayer, and the Quartz 2D and Cairo hosts present benchmark frames as
+# layer contents (see lib/host/macos/base_view.mm).
+if (APPLE)
    target_link_libraries(elements PUBLIC "-framework QuartzCore")
 endif()
 

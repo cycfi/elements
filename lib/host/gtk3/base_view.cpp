@@ -174,6 +174,14 @@ namespace cycfi::elements
 
          auto _perf_t0 = std::chrono::steady_clock::now();
          view.draw(cnv);
+         cairo_surface_flush(cairo_get_target(cr));
+         {
+            auto* w = host_view_h->_widget;
+            auto const s = get_scale(w);
+            cycfi::elements::perf::set_pixel_size(
+               int(gtk_widget_get_allocated_width(w) * s + 0.5f),
+               int(gtk_widget_get_allocated_height(w) * s + 0.5f));
+         }
          cycfi::elements::perf::record(
             std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - _perf_t0).count());
@@ -304,7 +312,15 @@ namespace cycfi::elements
          auto _perf_t0 = std::chrono::steady_clock::now();
          view.draw(cnv);
          gpu_canvas->restore();
-         host_view_h->_ctx->flushAndSubmit(host_view_h->_surface.get());
+         host_view_h->_ctx->flushAndSubmit(host_view_h->_surface.get(),
+            cycfi::elements::perf::enabled()? GrSyncCpu::kYes : GrSyncCpu::kNo);
+         {
+            auto* w = host_view_h->_widget;
+            auto const s = get_scale(w);
+            cycfi::elements::perf::set_pixel_size(
+               int(gtk_widget_get_allocated_width(w) * s + 0.5f),
+               int(gtk_widget_get_allocated_height(w) * s + 0.5f));
+         }
          cycfi::elements::perf::record(
             std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - _perf_t0).count());

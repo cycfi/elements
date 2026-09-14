@@ -686,7 +686,8 @@ namespace cycfi::elements
          auto cnv = canvas{gpu};
          view.draw(cnv);
          gpu->restore();
-         h->ctx->flushAndSubmit(h->skia_surface.get());
+         h->ctx->flushAndSubmit(h->skia_surface.get(),
+            perf::enabled()? GrSyncCpu::kYes : GrSyncCpu::kNo);
          double const draw_flush_ms =
             std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - t0).count();

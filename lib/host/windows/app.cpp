@@ -4,6 +4,7 @@
    Distributed under the MIT License (https://opensource.org/licenses/MIT)
 =============================================================================*/
 #include <elements/app.hpp>
+#include <elements/support/perf.hpp>
 #include <infra/filesystem.hpp>
 #include <windows.h>
 #include <shlobj.h>
@@ -21,7 +22,10 @@ namespace cycfi::elements
       _app_name = name;
 
 #if !defined(ELEMENTS_HOST_ONLY_WIN7)
-      SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+      // Measuring (ELEMENTS_PERF) runs DPI-unaware, at 1x, so the pixel count
+      // matches a scale-1 display on the other machines.
+      SetProcessDpiAwareness(perf::enabled()?
+         PROCESS_DPI_UNAWARE : PROCESS_PER_MONITOR_DPI_AWARE);
 #endif
 
       OleInitialize(nullptr);

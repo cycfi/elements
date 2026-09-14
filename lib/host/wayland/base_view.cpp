@@ -8,6 +8,7 @@
 #include <infra/assert.hpp>
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
+#include <elements/support/perf.hpp>
 #include "wayland_host.hpp"
 
 #include <wayland-client.h>
@@ -546,17 +547,22 @@ namespace cycfi::elements
             return;
          }
          h->pending = false;
+         auto const t0 = std::chrono::steady_clock::now();
          auto* cr = cairo_create(b->cairo);
          auto cnv = canvas{cr};
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(b->cairo);
+         double const draw_flush_ms =
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - t0).count();
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
          b->busy = true;
          wl_surface_attach(h->surface, b->buffer, 0, 0);
          wl_surface_damage_buffer(h->surface, 0, 0, w, hgt);
          wl_surface_commit(h->surface);
+         perf::record(draw_flush_ms);
       }
 #elif defined(ARTIST_SKIA)
       // EGL + Ganesh GL swap-chain path. One wl_egl_window backs an EGL window
@@ -641,15 +647,20 @@ namespace cycfi::elements
          if (!h->skia_surface)
             return;
 
+         // Benchmarking renders back-to-back (no frame-callback throttle) so the
+         // frame period reflects true render throughput, not compositor cadence.
+         bool const bench = perf::enabled();
+
          // Throttle: if a frame is still in flight, coalesce this request and
          // let frame_done drive the next render. This is what keeps a burst of
          // refreshes from firing a render (and a swap) on every loop iteration.
-         if (h->frame_pending)
+         if (!bench && h->frame_pending)
          {
             h->needs_render = true;
             return;
          }
 
+         auto const t0 = std::chrono::steady_clock::now();
          eglMakeCurrent(h->egl_display, h->egl_surface, h->egl_surface, h->egl_context);
          SkCanvas* gpu = h->skia_surface->getCanvas();
          gpu->save();
@@ -658,14 +669,21 @@ namespace cycfi::elements
          view.draw(cnv);
          gpu->restore();
          h->ctx->flushAndSubmit(h->skia_surface.get());
+         double const draw_flush_ms =
+            std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - t0).count();
 
-         // Ask the compositor to tell us when this frame is on screen; the
-         // request is part of the surface state that eglSwapBuffers commits.
-         h->frame_cb = wl_surface_frame(h->surface);
-         wl_callback_add_listener(h->frame_cb, &frame_listener, h);
-         h->frame_pending = true;
+         if (!bench)
+         {
+            // Ask the compositor to tell us when this frame is on screen; the
+            // request is part of the surface state that eglSwapBuffers commits.
+            h->frame_cb = wl_surface_frame(h->surface);
+            wl_callback_add_listener(h->frame_cb, &frame_listener, h);
+            h->frame_pending = true;
+         }
 
          eglSwapBuffers(h->egl_display, h->egl_surface);
+         perf::record(draw_flush_ms);
       }
 
       // Compositor has shown the last frame; render again only if something
@@ -810,7 +828,11 @@ namespace cycfi::elements
    void poll_views()
    {
       for (auto& [s, view] : plat().views)
+      {
          view->poll();
+         if (perf::enabled())
+            render(*view);   // free-running render loop for benchmarking
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////

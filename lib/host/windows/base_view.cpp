@@ -84,6 +84,9 @@ using PFNWGLCREATECONTEXTATTRIBSARBPROC =
 
 #include "utils.hpp"
 
+#include <elements/support/perf.hpp>
+#include <chrono>
+
 namespace cycfi::artist
 {
    namespace
@@ -321,6 +324,7 @@ namespace cycfi::elements
             }
             if (info->_surface)
             {
+               auto _perf_t0 = std::chrono::steady_clock::now();
                SkCanvas* gpu_canvas = info->_surface->getCanvas();
                gpu_canvas->save();
                gpu_canvas->scale(scale, scale);
@@ -328,18 +332,25 @@ namespace cycfi::elements
                view->draw(cnv);
                gpu_canvas->restore();
                info->_ctx->flushAndSubmit(info->_surface.get());
+               double _perf_ms = std::chrono::duration<double, std::milli>(
+                  std::chrono::steady_clock::now() - _perf_t0).count();
                SwapBuffers(info->_gl_dc);
+               cycfi::elements::perf::record(_perf_ms);
             }
 #elif defined(ARTIST_CAIRO)
             cairo_surface_t* surface = cairo_win32_surface_create(hdc);
             cairo_t* context = cairo_create(surface);
             cairo_scale(context, scale, scale);
+            auto _perf_t0 = std::chrono::steady_clock::now();
             {
                auto cnv = canvas{context};
                view->draw(cnv);
             }
             cairo_destroy(context);
+            double _perf_ms = std::chrono::duration<double, std::milli>(
+               std::chrono::steady_clock::now() - _perf_t0).count();
             cairo_surface_destroy(surface);
+            cycfi::elements::perf::record(_perf_ms);
 #endif
             EndPaint(hwnd, &ps);
          }

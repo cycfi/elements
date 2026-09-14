@@ -14,7 +14,20 @@ include(FetchContent)
 set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
 set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
 
-if (ELEMENTS_CAIRO)
+if (ELEMENTS_DIRECT2D)
+   if (NOT WIN32)
+      message(FATAL_ERROR "ELEMENTS_DIRECT2D=ON is Windows only")
+   endif()
+   if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/artist/lib/impl/windows/direct2d/canvas.cpp")
+      message(FATAL_ERROR
+         "ELEMENTS_DIRECT2D=ON requires a Direct2D-capable Artist checkout. "
+         "Update lib/artist to develop (or newer).")
+   endif()
+   set(ARTIST_DIRECT2D ON CACHE BOOL "Artist graphics backend option")
+   set(ARTIST_SKIA OFF CACHE BOOL "Artist graphics backend option")
+   set(ARTIST_CAIRO OFF CACHE BOOL "Artist graphics backend option")
+   set(ARTIST_QUARTZ_2D OFF CACHE BOOL "Artist graphics backend option")
+elseif (ELEMENTS_CAIRO)
    if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/artist/lib/impl/cairo/canvas.cpp")
       message(FATAL_ERROR
          "ELEMENTS_CAIRO=ON requires a Cairo-capable Artist checkout. "

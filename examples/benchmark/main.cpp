@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <memory>
 #include <vector>
 
 using namespace cycfi::elements;
@@ -99,19 +100,53 @@ namespace
       return margin({10, 10, 10, 10}, vscroller(hold(rows)));
    }
 
+   // The widget scene: two side-by-side panels of rows. Text shaping and
+   // widget drawing dominate, and the sliders and dials contribute hundreds of
+   // small marks, so this is the vector-and-text workload.
+   auto make_widgets()
+   {
+      return margin({16, 16, 16, 16},
+         htile(
+            panel{}, // shadow/gradient panel behind the left column
+            make_column(),
+            make_column()
+         )
+      );
+   }
+
+   // ELEMENTS_PERF_SCENE picks what is measured. Each scene answers a
+   // different question, and the label is already reported on the perf line:
+   //
+   //   minimal   background and the driver only: the fixed per-frame cost of
+   //             the host (clear, present, vsync), with no content to speak
+   //             of. This is the floor every other scene builds on.
+   //   default   the widget scene: vector shapes and text at volume.
+   //   image     a photo redrawn every frame: bitmap upload, scaling and
+   //             filtering, which the other two never touch.
+   //
+   // Note that `minimal` is usually vsync-bound, so read draw_flush_ms there
+   // and treat its fps as a property of the display.
    auto make_scene()
    {
-      // Two side-by-side panels of widget rows, over a background, with the
-      // animation driver on top.
+      std::string scene = "default";
+      if (char const* s = std::getenv("ELEMENTS_PERF_SCENE"))
+         scene = s;
+
+      std::shared_ptr<element> content;
+      if (scene == "minimal")
+         content = share(element{});
+      else if (scene == "image")
+         // In a scroller, as hello_universe has it: a bare image reports its
+         // full size as a minimum and the window grows to the photo, which
+         // would measure a different number of pixels than the other scenes.
+         // Qualified because artist has an `image` too and this file uses both.
+         content = share(scroller(cycfi::elements::image{"space.jpg"}));
+      else
+         content = share(make_widgets());
+
       return layer(
          perf_driver{},
-         margin({16, 16, 16, 16},
-            htile(
-               panel{}, // shadow/gradient panel behind the left column
-               make_column(),
-               make_column()
-            )
-         ),
+         hold(content),
          box(bkd_color)
       );
    }

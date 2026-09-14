@@ -116,6 +116,9 @@ namespace cycfi::elements
       ::Pixmap          pixmap = 0;       // offscreen back buffer (no flicker)
       GC                gc = nullptr;
       int               pix_w = 0, pix_h = 0;
+      rect              dirty;               // logical area to repaint next
+      bool              has_dirty = false;
+      bool              needs_full = true;   // the backing store is blank
       XIC               xic = nullptr;    // input context (UTF-8 text entry)
       key_map           keys;
       int               modifiers = 0;
@@ -574,6 +577,7 @@ namespace cycfi::elements
          Display* d = plat().display;
          h->pix_w = w;
          h->pix_h = hgt;
+         h->needs_full = true;
 
 #if defined(ARTIST_CAIRO)
          int screen = DefaultScreen(d);
@@ -599,6 +603,41 @@ namespace cycfi::elements
 #endif
       }
 
+      // Add to the area the next render repaints, in logical coordinates.
+      void invalidate(host_view* h, rect area)
+      {
+         h->dirty = h->has_dirty? artist::union_(h->dirty, area) : area;
+         h->has_dirty = true;
+      }
+
+      // Take the area to repaint: what was invalidated since the last render,
+      // or the whole view when the backing store is new or nothing was.
+      rect take_dirty(host_view* h)
+      {
+         rect const all{0, 0, h->size.x, h->size.y};
+         rect const area = (h->needs_full || !h->has_dirty)?
+            all : artist::intersection(h->dirty, all);
+         h->needs_full = false;
+         h->has_dirty = false;
+         return area;
+      }
+
+      struct pixel_rect
+      {
+         int x, y, w, h;
+      };
+
+      // The device pixels covering a logical area, rounded outward and kept
+      // inside a max_w by max_h store.
+      pixel_rect pixel_bounds(double scale, rect area, int max_w, int max_h)
+      {
+         int const x1 = std::max(0, int(std::floor(area.left * scale)));
+         int const y1 = std::max(0, int(std::floor(area.top * scale)));
+         int const x2 = std::min(max_w, int(std::ceil(area.right * scale)));
+         int const y2 = std::min(max_h, int(std::ceil(area.bottom * scale)));
+         return {x1, y1, std::max(0, x2 - x1), std::max(0, y2 - y1)};
+      }
+
       void do_render(base_view& view)
       {
          auto* h = platform_access::get_host_view(view);
@@ -606,9 +645,18 @@ namespace cycfi::elements
 #if defined(ARTIST_CAIRO)
          if (!h->surface)
             return;
+
+         // The pixmap keeps the last frame, so only the invalidated area is
+         // drawn, through a clip, and only its pixels go to the window.
+         auto const area = take_dirty(h);
+         if (area.width() <= 0 || area.height() <= 0)
+            return;
+
          auto const t0 = std::chrono::steady_clock::now();
          auto* cr = cairo_create(h->surface);
          auto cnv = canvas{cr};
+         cnv.add_rect(area);
+         cnv.clip();
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(h->surface);
@@ -616,13 +664,21 @@ namespace cycfi::elements
             std::chrono::duration<double, std::milli>(
                std::chrono::steady_clock::now() - t0).count();
          if (h->pixmap && h->gc)
-            XCopyArea(d, h->pixmap, h->window, h->gc, 0, 0, h->pix_w, h->pix_h, 0, 0);
+         {
+            auto const px = pixel_bounds(h->scale, area, h->pix_w, h->pix_h);
+            XCopyArea(d, h->pixmap, h->window, h->gc,
+               px.x, px.y, px.w, px.h, px.x, px.y);
+         }
          XFlush(d);
          perf::record(draw_flush_ms);
 #elif defined(ARTIST_SKIA)
          (void)d;
          if (!h->skia_surface)
             return;
+
+         // EGL does not keep the back buffer across a swap, so every frame is
+         // drawn whole.
+         take_dirty(h);
          auto const t0 = std::chrono::steady_clock::now();
          SkCanvas* gpu = h->skia_surface->getCanvas();
          gpu->save();
@@ -951,6 +1007,20 @@ namespace cycfi::elements
          switch (ev.type)
          {
             case Expose:
+            {
+#if defined(ARTIST_CAIRO)
+               // Once the pixmap holds a frame, an exposed part only has to go
+               // back on the window: nothing is redrawn.
+               if (h->opened && h->pixmap && h->gc)
+               {
+                  auto const& e = ev.xexpose;
+                  XCopyArea(plat().display, h->pixmap, h->window, h->gc,
+                     e.x, e.y, e.width, e.height, e.x, e.y);
+                  if (e.count == 0)
+                     XFlush(plat().display);
+                  break;
+               }
+#endif
                if (ev.xexpose.count != 0)
                   break;
                if (!h->opened)
@@ -962,6 +1032,7 @@ namespace cycfi::elements
                }
                do_render(view);
                break;
+            }
 
             case ConfigureNotify:
             {
@@ -1176,8 +1247,6 @@ namespace cycfi::elements
       for (auto& [w, view] : plat().views)
       {
          view->poll();
-         if (perf::enabled())
-            do_render(*view);   // free-running render loop for benchmarking
       }
    }
 
@@ -1290,12 +1359,15 @@ namespace cycfi::elements
 
    void base_view::refresh()
    {
-      // Render into the back buffer and blit — no window clear, so no flicker.
+      // Render into the back buffer and blit, with no window clear, so no
+      // flicker.
+      invalidate(_view, {0, 0, _view->size.x, _view->size.y});
       do_render(*this);
    }
 
-   void base_view::refresh(rect /*area*/)
+   void base_view::refresh(rect area)
    {
+      invalidate(_view, area);
       do_render(*this);
    }
 }

@@ -107,6 +107,9 @@ namespace cycfi::elements
       cairo_surface_t*  cairo = nullptr;
       host_view*        owner = nullptr;
       bool              busy = false;          // attached, compositor may be using it
+      rect              damage;                // logical area it is behind by
+      bool              has_damage = false;
+      bool              stale = true;          // behind everywhere (new buffer)
    };
 #endif
 
@@ -509,6 +512,8 @@ namespace cycfi::elements
       {
          destroy_buffer(b);
          b.owner = h;
+         b.stale = true;
+         b.has_damage = false;
          int const stride = w * 4;
          size_t const sz = size_t(stride) * hgt;
          b.fd = memfd_create("elements-wl", MFD_CLOEXEC);
@@ -534,6 +539,22 @@ namespace cycfi::elements
          make_buffer(h->bufs[1], h, w, hgt);
       }
 
+      struct pixel_rect
+      {
+         int x, y, w, h;
+      };
+
+      // The buffer pixels covering a logical area, rounded outward and kept
+      // inside a max_w by max_h buffer.
+      pixel_rect pixel_bounds(double scale, rect area, int max_w, int max_h)
+      {
+         int const x1 = std::max(0, int(std::floor(area.left * scale)));
+         int const y1 = std::max(0, int(std::floor(area.top * scale)));
+         int const x2 = std::min(max_w, int(std::ceil(area.right * scale)));
+         int const y2 = std::min(max_h, int(std::ceil(area.bottom * scale)));
+         return {x1, y1, std::max(0, x2 - x1), std::max(0, y2 - y1)};
+      }
+
       // The shm software path renders into a free buffer, deferring if both are
       // still held by the compositor (re-driven from buffer_release).
       void render_cairo(base_view& view)
@@ -547,9 +568,23 @@ namespace cycfi::elements
             return;
          }
          h->pending = false;
+
+         // The two buffers alternate, so each carries the area it is behind
+         // by. Only that is drawn, through a clip, and only that is reported
+         // to the compositor as damaged.
+         rect const all{0, 0, h->size.x, h->size.y};
+         rect const area = (b->stale || !b->has_damage)?
+            all : artist::intersection(b->damage, all);
+         b->stale = false;
+         b->has_damage = false;
+         if (area.width() <= 0 || area.height() <= 0)
+            return;
+
          auto const t0 = std::chrono::steady_clock::now();
          auto* cr = cairo_create(b->cairo);
          auto cnv = canvas{cr};
+         cnv.add_rect(area);
+         cnv.clip();
          view.draw(cnv);
          cairo_destroy(cr);
          cairo_surface_flush(b->cairo);
@@ -558,9 +593,10 @@ namespace cycfi::elements
                std::chrono::steady_clock::now() - t0).count();
          int const w = int(std::ceil(h->size.x * h->scale));
          int const hgt = int(std::ceil(h->size.y * h->scale));
+         auto const px = pixel_bounds(h->scale, area, w, hgt);
          b->busy = true;
          wl_surface_attach(h->surface, b->buffer, 0, 0);
-         wl_surface_damage_buffer(h->surface, 0, 0, w, hgt);
+         wl_surface_damage_buffer(h->surface, px.x, px.y, px.w, px.h);
          wl_surface_commit(h->surface);
          perf::record(draw_flush_ms);
       }
@@ -720,6 +756,22 @@ namespace cycfi::elements
       }
 #endif
 
+      // Add to the area each buffer is behind by, in logical coordinates. The
+      // Skia path draws every frame whole, so it keeps no damage.
+      void invalidate(host_view* h, rect area)
+      {
+#if defined(ARTIST_CAIRO)
+         for (auto& b : h->bufs)
+         {
+            b.damage = b.has_damage? artist::union_(b.damage, area) : area;
+            b.has_damage = true;
+         }
+#else
+         (void)h;
+         (void)area;
+#endif
+      }
+
       void render(base_view& view)
       {
          auto* h = platform_access::get_host_view(view);
@@ -830,8 +882,6 @@ namespace cycfi::elements
       for (auto& [s, view] : plat().views)
       {
          view->poll();
-         if (perf::enabled())
-            render(*view);   // free-running render loop for benchmarking
       }
    }
 
@@ -882,11 +932,13 @@ namespace cycfi::elements
 
    void base_view::refresh()
    {
+      invalidate(_view, {0, 0, _view->size.x, _view->size.y});
       render(*this);
    }
 
-   void base_view::refresh(rect /*area*/)
+   void base_view::refresh(rect area)
    {
+      invalidate(_view, area);
       render(*this);
    }
 

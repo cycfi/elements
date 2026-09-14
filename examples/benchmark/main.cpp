@@ -65,13 +65,9 @@ namespace
          cnv.fill_rect({x, b.top, x + 50, b.bottom});
          ++_frame;
 
-#if !defined(ELEMENTS_HOST_UI_LIBRARY_X11) && !defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
-         // On these hosts refresh() is an async invalidate (setNeedsDisplay /
-         // InvalidateRect / queue_draw), so requesting it from draw safely
-         // drives the next frame. The x11/wayland hosts render synchronously,
-         // so there the benchmark free-runs from the host poll loop instead.
+         // view::refresh posts the request to the view's io_context, so asking
+         // for it from draw safely drives the next frame on every host.
          ctx.view.refresh();
-#endif
       }
 
       bool     _free_run;

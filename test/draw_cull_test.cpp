@@ -90,9 +90,13 @@ TEST_CASE("hit testing ignores the canvas clip", "[draw_cull]")
    CHECK(tv.view_.main_element().hit_test(ctx, p, true, false) == b.get());
 }
 
-// NOTE, found while writing these tests: `view{extent}` cannot work on
-// Windows. The host makes the view with WS_CHILD and passes no parent, and a
-// child window with no parent is not created at all, so the view is left with
-// an invalid handle and size() reports garbage. Applications go through
-// `window` + `view`, which is why this has gone unnoticed. On a windowing
-// host the tests use that path; the headless host uses `view{extent}`.
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS) \
+ || defined(ELEMENTS_HOST_UI_LIBRARY_WIN32)
+TEST_CASE("view: a view made with only a size has that size", "[view]")
+{
+   // On Windows this once made a child window with no parent, which Windows
+   // does not create, so the view had no window and size() was garbage.
+   view v{extent{320, 200}};
+   CHECK(v.size() == extent{320, 200});
+}
+#endif

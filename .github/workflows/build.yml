@@ -14,6 +14,7 @@ on:
           - skia
           - cairo
           - quartz2d
+          - direct2d
           - tests
 env:
   BUILD_TYPE: Release
@@ -361,6 +362,70 @@ jobs:
 
     - name: Build
       run: cmake --build build-quartz2d
+
+  ###########################################################################
+  # Direct2D  (Windows only; no vcpkg: system D2D/DirectWrite/WIC, and Artist
+  # builds libwebp's decoder itself)
+  ###########################################################################
+  build-direct2d:
+    name: "Direct2D (Windows MSVC x64)"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'direct2d'
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: choco install ninja
+      shell: cmd
+
+    - name: Configure and build
+      shell: cmake -P {0}
+      run: |
+        # Ask vswhere where Visual Studio is: the runner image moves between
+        # editions, and a hardcoded path silently leaves MSVC out of the
+        # environment, leaving CMake to pick the runner's MinGW instead.
+        execute_process(
+          COMMAND "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+            -property installationPath
+          OUTPUT_VARIABLE vs_path
+          OUTPUT_STRIP_TRAILING_WHITESPACE)
+        if (NOT vs_path)
+          message(FATAL_ERROR "vswhere found no Visual Studio with the x64 C++ toolset")
+        endif()
+        execute_process(
+          COMMAND "${vs_path}/VC/Auxiliary/Build/vcvars64.bat" && set
+          OUTPUT_FILE environment_script_output.txt)
+        file(STRINGS environment_script_output.txt output_lines)
+        foreach(line IN LISTS output_lines)
+          if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+            set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+          endif()
+        endforeach()
+
+        execute_process(
+          COMMAND ${CMAKE_COMMAND}
+            -S . -B build-direct2d
+            -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
+            -D ELEMENTS_DIRECT2D=ON
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Configure failed: ${error_message} - ${result}")
+        endif()
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} --build build-direct2d
+          RESULT_VARIABLE result ERROR_VARIABLE error_message)
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Build failed: ${error_message} - ${result}")
+        endif()
 
   ###########################################################################
   # Tests  (headless host + Artist recording backend: no display, any OS)

@@ -312,14 +312,11 @@ endif()
 ###############################################################################
 # Cycfi Infra
 
-FetchContent_Declare(
-  cycfi_infra
-  GIT_REPOSITORY https://github.com/cycfi/infra.git
-  GIT_TAG master
-  GIT_SUBMODULES_RECURSE ON
-)
-
-FetchContent_MakeAvailable(cycfi_infra)
+# Artist's own infra, so both use one copy. A parent project that already
+# added infra keeps its own.
+if (NOT TARGET cycfi::infra)
+   add_subdirectory(artist/lib/infra infra)
+endif()
 target_link_libraries(elements PUBLIC cycfi::infra)
 
 ###############################################################################

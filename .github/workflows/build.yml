@@ -120,7 +120,7 @@ jobs:
 
     - name: Install dependencies (macOS)
       if: runner.os == 'macOS'
-      run: brew install fontconfig freetype harfbuzz ninja
+      run: brew install fontconfig ninja
 
     - name: Install dependencies (Windows)
       if: runner.os == 'Windows'
@@ -129,11 +129,11 @@ jobs:
 
     - name: Bootstrap vcpkg (Unix)
       if: runner.os != 'Windows'
-      run: lib/artist/lib/external/vcpkg/bootstrap-vcpkg.sh -disableMetrics
+      run: git -C lib/artist submodule update --init --checkout lib/external/vcpkg && lib/artist/lib/external/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
     - name: Bootstrap vcpkg (Windows)
       if: runner.os == 'Windows'
-      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      run: git -C lib/artist submodule update --init --checkout lib/external/vcpkg && lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
       shell: cmd
 
     - name: Configure
@@ -274,7 +274,7 @@ jobs:
 
     - name: Bootstrap vcpkg (Windows)
       if: runner.os == 'Windows'
-      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      run: git -C lib/artist submodule update --init --checkout lib/external/vcpkg && lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
       shell: cmd
 
     - name: Configure
@@ -350,7 +350,7 @@ jobs:
         submodules: recursive
 
     - name: Install dependencies
-      run: brew install fontconfig freetype ninja
+      run: brew install ninja
 
     - name: Configure
       run: |
@@ -428,7 +428,7 @@ jobs:
 
     - name: Bootstrap vcpkg (Windows)
       if: runner.os == 'Windows'
-      run: lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+      run: git -C lib/artist submodule update --init --checkout lib/external/vcpkg && lib\artist\lib\external\vcpkg\bootstrap-vcpkg.bat -disableMetrics
       shell: cmd
 
     - name: Configure

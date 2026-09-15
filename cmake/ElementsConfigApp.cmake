@@ -48,7 +48,10 @@ endif()
 
 if (UNIX AND NOT APPLE)
    find_package(PkgConfig REQUIRED)
-   find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+   # Only Skia renders through OpenGL.
+   if (ARTIST_SKIA)
+      find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+   endif()
 endif()
 
 ###############################################################################

@@ -96,6 +96,12 @@ namespace cycfi::elements::icons
       unlink                        = 0xf127,
       folder_empty                  = 61716,
       folder_open_empty             = 61717,
+
+      // Drawn for Elements, not from a Fontello set: a window with a
+      // smaller one beside it and a diagonal arrow, for the buttons that
+      // scale a view up and down.
+      expand                        = 0xe84f,
+      shrink                        = 0xe850,
    };
 }
 

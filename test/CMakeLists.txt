@@ -20,9 +20,17 @@ add_executable(elements_test ${elements_test_sources})
 
 target_link_libraries(elements_test PRIVATE elements)
 
-# The Cocoa host needs AppKit, as the example applications link it.
-if (APPLE AND NOT ELEMENTS_HOST_UI_LIBRARY STREQUAL "headless")
-   target_link_options(elements_test PRIVATE -framework AppKit)
+# Artist's Quartz backend measures and draws text through Core Text and
+# AppKit whatever the host is. The Cocoa host brings those in itself; the
+# headless host brings in no windowing system at all, so the test names
+# them.
+if (APPLE)
+   # SHELL: keeps each -framework with the name that follows it.
+   target_link_options(elements_test PRIVATE
+      "SHELL:-framework AppKit"
+      "SHELL:-framework CoreFoundation"
+      "SHELL:-framework CoreText"
+   )
 endif()
 
 if (MSVC)

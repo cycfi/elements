@@ -14,6 +14,12 @@ namespace cycfi::elements
 
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
+         // Let go outside the button, or with another button: the press
+         // began tracking and this is where it ends. An unmatched begin
+         // leaves the view holding the element and anything watching for
+         // the end of the gesture waiting for it.
+         if (tracking())
+            on_tracking(ctx, end_tracking);
          tracking(false);
          ctx.view.refresh(ctx);
          return false;
@@ -27,9 +33,9 @@ namespace cycfi::elements
       else
       {
          tracking(false);
-         on_tracking(ctx, end_tracking);
          if (on_click)
             on_click(true);
+         on_tracking(ctx, end_tracking);
          ctx.view.refresh(ctx);
       }
 
@@ -140,6 +146,8 @@ namespace cycfi::elements
 
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
+         if (this->tracking())
+            this->on_tracking(ctx, this->end_tracking);
          this->tracking(false);
          ctx.view.refresh(ctx);
          return false;
@@ -148,6 +156,7 @@ namespace cycfi::elements
       if (btn.down)
       {
          this->tracking(true);
+         this->on_tracking(ctx, this->begin_tracking);
          if (this->set_value(!this->value()))   // toggle the state
          {
             ctx.view.refresh(ctx);              // we need to save the current state, the state
@@ -160,6 +169,7 @@ namespace cycfi::elements
          this->set_value(_current_state);
          if (this->on_click)
             this->on_click(this->value());
+         this->on_tracking(ctx, this->end_tracking);
          ctx.view.refresh(ctx);
       }
       return true;
@@ -179,6 +189,8 @@ namespace cycfi::elements
 
       if (btn.state != mouse_button::left || !ctx.bounds.includes(btn.pos))
       {
+         if (this->tracking())
+            this->on_tracking(ctx, this->end_tracking);
          this->tracking(false);
          ctx.view.refresh(ctx);
          return false;
@@ -192,9 +204,9 @@ namespace cycfi::elements
       else
       {
          this->tracking(false);
-         this->on_tracking(ctx, this->end_tracking);
          if (this->on_click)
             this->on_click(true);
+         this->on_tracking(ctx, this->end_tracking);
          ctx.view.refresh(ctx);
       }
       if (btn.down && this->set_value(ctx.bounds.includes(btn.pos)))

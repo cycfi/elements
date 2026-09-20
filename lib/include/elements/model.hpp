@@ -905,7 +905,13 @@ namespace cycfi::elements
     , std::shared_ptr<Control> control
     , ToControl to_control, OnChange on_change)
    {
-      control->on_change = [on_change](auto v) { on_change(v); };
+      // A button has no on_change: what the user does to it arrives as a
+      // click, carrying the state it was left in.
+      if constexpr (requires { control->on_click; })
+         control->on_click = [on_change](auto v) { on_change(v); };
+      else
+         control->on_change = [on_change](auto v) { on_change(v); };
+
       attach(model, std::move(control)
        , [to_control](Control& c, auto v) { c.value(to_control(v)); });
    }

@@ -13,6 +13,7 @@ set(elements_test_sources
    test_main.cpp
    draw_cull_test.cpp
    view_refresh_test.cpp
+   button_tracking_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})

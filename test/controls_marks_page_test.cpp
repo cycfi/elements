@@ -51,6 +51,11 @@ namespace
    }
 }
 
+// The cases below read the pixels a drawing left. The recording backend
+// keeps a journal of what was drawn and rasterizes nothing, so there are
+// no pixels to read there.
+#if !defined(ARTIST_RECORDING)
+
 namespace
 {
    // pixels() is premultiplied B, G, R, A on every backend.
@@ -166,6 +171,8 @@ TEST_CASE("marks page: a log decade's minor ticks start at 2", "[marks_page]")
    CHECK(nine.r > 0);
    CHECK(pixel_at(img, 106, 2).r == 0);   // and it does not reach the edge
 }
+
+#endif // !ARTIST_RECORDING
 
 TEST_CASE("marks page: slider marks figure", "[marks_page]")
 {

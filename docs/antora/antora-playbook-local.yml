@@ -1,0 +1,29 @@
+# Local preview playbook: builds the docs from the current worktree
+# (HEAD, including uncommitted changes) instead of the published branches,
+# so pages can be inspected before committing or pushing.
+#
+#    cd docs/antora
+#    npm install          # once
+#    npx antora antora-playbook-local.yml
+#    cd build/local && python3 -m http.server 8000
+#
+site:
+  title: Elements Docs (local preview)
+  start_page: elements::index.adoc
+  url: https://www.cycfi.com/
+content:
+  sources:
+  - url: ../..
+    branches: HEAD
+    start_path: docs
+ui:
+  supplemental_files: ./supplemental-ui
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+output:
+  dir: ./build/local
+  clean: true
+antora:
+  extensions:
+  - '@antora/lunr-extension'

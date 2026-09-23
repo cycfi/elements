@@ -126,11 +126,13 @@ namespace cycfi::elements
       float xmax = vertical? bounds.bottom : bounds.right;
       float major_step = (xmax-xmin)/major_divs;
 
-      std::vector<float> minor_offsets(minor_divs);
-      for (std::size_t i = 1; i != minor_divs; ++i)
-      {
-         minor_offsets[i-1] = std::log10(i)*major_step;
-      }
+      // A major interval spans a decade and its minor ticks fall at the
+      // logarithm of each digit inside it. The digit 1 opens the decade,
+      // where the major tick already is, so the minors run from 2.
+      std::vector<float> minor_offsets;
+      minor_offsets.reserve(minor_divs > 2? minor_divs - 2 : 0);
+      for (std::size_t i = 2; i < minor_divs; ++i)
+         minor_offsets.push_back(std::log10(i)*major_step);
 
       for (std::size_t i = 0; i != major_divs+1; ++i)
       {
@@ -153,9 +155,9 @@ namespace cycfi::elements
          if (i == major_divs) {break;}
          cnv.line_width(theme.minor_ticks_width);
          cnv.stroke_style(c.level(theme.minor_ticks_level));
-         for (std::size_t j = 1; j != minor_divs; ++j)
+         for (auto offset : minor_offsets)
          {
-            float minor_pos = pos + minor_offsets[j-1];
+            float minor_pos = pos + offset;
             if (vertical)
             {
                cnv.move_to({bounds.left + inset, minor_pos});

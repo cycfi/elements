@@ -12,6 +12,7 @@
    docs/modules/ROOT/images/controls/ to update the page.
 =============================================================================*/
 #include "test_support.hpp"
+#include <cmath>
 
 using namespace cycfi::elements;
 using namespace cycfi::elements::test;
@@ -129,6 +130,41 @@ TEST_CASE("marks page: a minor rule never covers a major one", "[marks_page]")
       CHECK(minor.b > minor.r * 2);
       CHECK(major.b < major.r * 2);
    }
+}
+
+TEST_CASE("marks page: a log decade's minor ticks start at 2", "[marks_page]")
+{
+   // A minor tick at log10(1) would sit on the major tick that opens the
+   // decade, so the page says the minors run from 2. An extra tick hidden
+   // under a major one barely shows, so the check is made where it does:
+   // the major ticks are put on pixel centres, where a 1.5 wide stroke
+   // fills one column exactly, and that column is sampled twice. Once near
+   // the top edge, which only major ticks reach, and once in the middle,
+   // where minor ticks draw as well. The two have to agree.
+   float const size = 30;                 // minor ticks are inset size/6
+   cycfi::artist::image img{220, 60, 1};
+   {
+      offscreen_image offscr{img};
+      canvas cnv{offscr.context()};
+      cnv.fill_style(colors::black);
+      cnv.fill_rect(0, 0, 220, 60);
+
+      // Two decades, with the major ticks at x 10.5, 110.5 and 210.5.
+      draw_slider_marks_log(
+         cnv, rect{10.5, 0, 210.5, 60}, size, 2, 10, colors::white);
+   }
+
+   auto outer = pixel_at(img, 110, 2);    // majors only
+   auto inset = pixel_at(img, 110, 30);   // majors and minors
+
+   CHECK(outer.r > 0);                    // the major tick really is there
+   CHECK(std::abs(inset.r - outer.r) <= 2);
+
+   // The nearest minor tick of the first decade is the digit 9, at
+   // log10(9) of the way along, well clear of the major at 110.5.
+   auto nine = pixel_at(img, 106, 30);
+   CHECK(nine.r > 0);
+   CHECK(pixel_at(img, 106, 2).r == 0);   // and it does not reach the edge
 }
 
 TEST_CASE("marks page: slider marks figure", "[marks_page]")

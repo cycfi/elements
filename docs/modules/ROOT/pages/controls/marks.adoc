@@ -152,8 +152,11 @@ same styler therefore serves both.
          already wrapped around it.
 `major_divs`:: The number of major intervals the travel is cut into. One
          more major tick than that is drawn, since both ends carry one.
-`minor_divs`:: The number of parts each major interval is cut into, so
-         `minor_divs` less one minor ticks are drawn inside it.
+`minor_divs`:: How finely each major interval is subdivided.
+         `slider_marks_lin` cuts it into `minor_divs` equal parts and ticks
+         the `minor_divs` less one boundaries inside it;
+         `slider_marks_log` reads it as the base and ticks the digits from
+         2 up to `minor_divs` less one.
 `font_size`:: A `float` multiplier on the theme's label font size.
 `s\...`:: The label strings, in order.
 
@@ -187,10 +190,10 @@ sixth of `size` at each end, and take `theme.minor_ticks_width` and
 `theme.major_ticks_width` and `theme.major_ticks_level`.
 
 In `slider_marks_log` each major interval spans one decade, and a minor
-tick sits at `log10(j)` of the way along it for each `j` from 1 to
-`minor_divs` less one. With the default `minor_divs` of 10 that puts the
-ticks for 2 through 9 at 30%, 48%, 60%, 70%, 78%, 85%, 90% and 95%, and the
-tick for 1 on the major tick itself, since `log10(1)` is zero.
+tick sits at `log10(j)` of the way along it for each digit `j` from 2 up to
+`minor_divs` less one. The digit 1 opens the decade, where the major tick
+already is. With the default `minor_divs` of 10 that puts the ticks for 2
+through 9 at 30%, 48%, 60%, 70%, 78%, 85%, 90% and 95% of the way along.
 
 image::/controls/slider_marks.png[alt="the linear and logarithmic tick layouts on the same track", width=560px, role=center, link={imagesdir}/controls/slider_marks.png]
 

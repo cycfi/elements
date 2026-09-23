@@ -293,7 +293,10 @@ jobs:
           endforeach()
         endif()
 
-        set(extra_args -DELEMENTS_CAIRO=ON)
+        # The libraries come from the system here (brew, apt) or from vcpkg
+        # on Windows, so this job keeps testing that path; Artist's prebuilt
+        # bundle is what a plain local build uses.
+        set(extra_args -DELEMENTS_CAIRO=ON -DARTIST_CAIRO_PREBUILT=OFF)
         if ("${{ runner.os }}" STREQUAL "Windows")
           # cairo (and its deps) come from the vcpkg manifest on Windows.
           list(APPEND extra_args
@@ -511,9 +514,12 @@ jobs:
           endforeach()
         endif()
 
+        # freetype, fontconfig and harfbuzz come from the system here (brew,
+        # apt) or from vcpkg on Windows, not from Artist's prebuilt bundle.
         set(extra_args
           -DELEMENTS_HOST_UI_LIBRARY=headless
           -DELEMENTS_RECORDING=ON
+          -DARTIST_CAIRO_PREBUILT=OFF
           -DELEMENTS_BUILD_TESTS=ON
           -DELEMENTS_BUILD_EXAMPLES=OFF)
         if ("${{ runner.os }}" STREQUAL "Windows")

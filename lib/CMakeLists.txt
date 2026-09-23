@@ -14,6 +14,20 @@ include(FetchContent)
 set(ARTIST_BUILD_EXAMPLES OFF CACHE BOOL "Artist build examples")
 set(ARTIST_BUILD_TESTS OFF CACHE BOOL "Artist build tests")
 
+# With no backend chosen, here or directly on Artist, use the platform's
+# native one: Direct2D on Windows, Quartz 2D on macOS, Cairo elsewhere.
+if (NOT (ELEMENTS_DIRECT2D OR ELEMENTS_RECORDING OR ELEMENTS_CAIRO
+      OR ELEMENTS_QUARTZ_2D OR ELEMENTS_SKIA OR ARTIST_DIRECT2D
+      OR ARTIST_RECORDING OR ARTIST_CAIRO OR ARTIST_QUARTZ_2D OR ARTIST_SKIA))
+   if (WIN32)
+      set(ELEMENTS_DIRECT2D ON)
+   elseif (APPLE)
+      set(ELEMENTS_QUARTZ_2D ON)
+   else()
+      set(ELEMENTS_CAIRO ON)
+   endif()
+endif()
+
 if (ELEMENTS_DIRECT2D)
    if (NOT WIN32)
       message(FATAL_ERROR "ELEMENTS_DIRECT2D=ON is Windows only")

@@ -86,7 +86,9 @@ and never constrain it.
 
 The `v` and `h` name the axis that is divided, not the direction the lines
 run. `vgrid_lines` divides the vertical extent, so the rules it draws are
-horizontal.
+horizontal:
+
+image::/controls/grid_lines.png[alt="vgrid_lines and hgrid_lines side by side", width=560px, role=center, link={imagesdir}/controls/grid_lines.png]
 
 Divisions are counted across the element's whole extent and a rule is drawn
 at every boundary, both edges included, so a `major_divisions` of 10 gives
@@ -97,7 +99,9 @@ edge is passed.
 Major rules take `theme.major_grid_color` and `theme.major_grid_width`,
 minor rules `theme.minor_grid_color` and `theme.minor_grid_width`. All the
 major rules are drawn first and the minor rules over them, so where a minor
-division falls on a major one the minor rule is drawn on top.
+division falls on a major one the minor rule covers it. That is every major
+division when the counts are multiples of one another, as they are in the
+figure above: the four major rules there are the ones under a minor rule.
 
 === Example
 
@@ -191,6 +195,8 @@ tick sits at `log10(j)` of the way along it for each `j` from 1 to
 ticks for 2 through 9 at 30%, 48%, 60%, 70%, 78%, 85%, 90% and 95%, and the
 tick for 1 on the major tick itself, since `log10(1)` is zero.
 
+image::/controls/slider_marks.png[alt="the linear and logarithmic tick layouts on the same track", width=560px, role=center, link={imagesdir}/controls/slider_marks.png]
+
 Labels are spread evenly over the whole travel, which is a different thing
 from the ticks: the first string sits at one end, the last at the other,
 and the rest at equal steps between. On a vertical slider the first string
@@ -216,6 +222,8 @@ slider(
    0.5                                             // initial value
 )
 ```
+
+image::/controls/slider_example.png[alt="a horizontal slider with linear marks and six labels", width=560px, role=center, link={imagesdir}/controls/slider_example.png]
 
 == Radial Marks and Labels
 
@@ -285,6 +293,8 @@ radial_labels<15>(                     // labels in a 15px ring
    "0", "5", "10"
 )
 ```
+
+image::/controls/radial_example.png[alt="a dial with radial marks, and the same dial with labels around it", width=560px, role=center, link={imagesdir}/controls/radial_example.png]
 
 == The Decibel Scale
 
@@ -476,6 +486,12 @@ auto fader = share(
    )
 );
 ```
+
+image::/controls/db_fader.png[alt="the same fader over two decibel ranges, and the matching grid", width=560px, role=center, link={imagesdir}/controls/db_fader.png]
+
+The wider range reaches silence, so it carries the infinity mark at the
+bottom of its travel. Both faders show the taper: the marks crowd together
+as the scale falls away from unity.
 
 Read it back through the same scale:
 

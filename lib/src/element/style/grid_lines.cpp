@@ -139,37 +139,59 @@ namespace cycfi::elements
          });
    }
 
+   namespace
+   {
+      // Step from `start` to `end` in `divisions` equal parts, handing
+      // every boundary to f, both edges included.
+      template <typename F>
+      void for_each_division(float start, float end, float divisions, F&& f)
+      {
+         float incr = (end - start) / divisions;
+         for (float pos = start; pos <= end + 1; pos += incr)
+            f(pos);
+      }
+
+      // Whether a minor rule at pos falls on a major division, within half
+      // a pixel. One that does is left undrawn: the major rule is what the
+      // reader is meant to see there, and both grid colors are
+      // translucent, so drawing one over the other would blend them into a
+      // third.
+      bool on_a_major(float pos, float start, float end, float major_divisions)
+      {
+         float incr = (end - start) / major_divisions;
+         if (!(incr > 0))
+            return false;
+         float n = (pos - start) / incr;
+         return std::abs(n - std::round(n)) * incr < 0.5f;
+      }
+   }
+
    void vgrid_lines::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
       auto&          canvas_ = ctx.canvas;
       auto const&    bounds = ctx.bounds;
 
-      float pos = bounds.top;
-      float incr = bounds.height() / _major_divisions;
-
-      canvas_.stroke_style(theme_.major_grid_color);
-      canvas_.line_width(theme_.major_grid_width);
-      while (pos <= bounds.bottom+1)
-      {
-         canvas_.move_to({bounds.left, pos});
-         canvas_.line_to({bounds.right, pos});
-         canvas_.stroke();
-         pos += incr;
-      }
-
-      pos = bounds.top;
-      incr = bounds.height() / _minor_divisions;
+      auto rule =
+         [&](float y)
+         {
+            canvas_.move_to({bounds.left, y});
+            canvas_.line_to({bounds.right, y});
+            canvas_.stroke();
+         };
 
       canvas_.stroke_style(theme_.minor_grid_color);
       canvas_.line_width(theme_.minor_grid_width);
-      while (pos <= bounds.bottom+1)
-      {
-         canvas_.move_to({bounds.left, pos});
-         canvas_.line_to({bounds.right, pos});
-         canvas_.stroke();
-         pos += incr;
-      }
+      for_each_division(bounds.top, bounds.bottom, _minor_divisions,
+         [&](float y)
+         {
+            if (!on_a_major(y, bounds.top, bounds.bottom, _major_divisions))
+               rule(y);
+         });
+
+      canvas_.stroke_style(theme_.major_grid_color);
+      canvas_.line_width(theme_.major_grid_width);
+      for_each_division(bounds.top, bounds.bottom, _major_divisions, rule);
    }
 
    void hgrid_lines::draw(context const& ctx)
@@ -178,31 +200,26 @@ namespace cycfi::elements
       auto& canvas_ = ctx.canvas;
       auto const& bounds = ctx.bounds;
 
-      float pos = bounds.left;
-      float incr = bounds.width() / _major_divisions;
-
-      canvas_.stroke_style(theme_.major_grid_color);
-      canvas_.line_width(theme_.major_grid_width);
-      while (pos <= bounds.right + 1)
-      {
-         canvas_.move_to({pos, bounds.top});
-         canvas_.line_to({pos, bounds.bottom});
-         canvas_.stroke();
-         pos += incr;
-      }
-
-      pos = bounds.left;
-      incr = bounds.width() / _minor_divisions;
+      auto rule =
+         [&](float x)
+         {
+            canvas_.move_to({x, bounds.top});
+            canvas_.line_to({x, bounds.bottom});
+            canvas_.stroke();
+         };
 
       canvas_.stroke_style(theme_.minor_grid_color);
       canvas_.line_width(theme_.minor_grid_width);
-      while (pos <= bounds.right + 1)
-      {
-         canvas_.move_to({pos, bounds.top});
-         canvas_.line_to({pos, bounds.bottom});
-         canvas_.stroke();
-         pos += incr;
-      }
+      for_each_division(bounds.left, bounds.right, _minor_divisions,
+         [&](float x)
+         {
+            if (!on_a_major(x, bounds.left, bounds.right, _major_divisions))
+               rule(x);
+         });
+
+      canvas_.stroke_style(theme_.major_grid_color);
+      canvas_.line_width(theme_.major_grid_width);
+      for_each_division(bounds.left, bounds.right, _major_divisions, rule);
    }
 }
 

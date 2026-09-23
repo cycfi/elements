@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 
-   Draws the figures of docs/modules/ROOT/pages/controls/marks.adoc. Each
-   case builds the element the page shows, lays it out in a view and saves
-   what it drew, so the picture on the page and the code on the page cannot
-   drift apart.
+   Asserts the claims of docs/modules/ROOT/pages/controls/marks.adoc and
+   draws its figures. Each figure case builds the element the page shows,
+   lays it out in a view and saves what it drew, so the picture on the page
+   and the code on the page cannot drift apart.
 
    Figures land in the build's results directory. Copy them to
    docs/modules/ROOT/images/controls/ to update the page.
@@ -50,19 +50,85 @@ namespace
    }
 }
 
-TEST_CASE("marks page: grid lines figure", "[marks_page]")
+namespace
 {
-   // images/controls/grid_lines.png: the v and h name the axis that is
-   // divided, not the direction the rules run.
-   figure(560, 220, "controls_grid_lines.png",
-      margin({20, 16, 20, 16},
-         htile(
-            vtile(vgrid_lines{4, 20}, caption("vgrid_lines{4, 20}")),
-            hspace(30),
-            vtile(hgrid_lines{4, 20}, caption("hgrid_lines{4, 20}"))
-         )
-      )
-   );
+   // pixels() is premultiplied B, G, R, A on every backend.
+   struct rgba8 { int r, g, b, a; };
+
+   rgba8 pixel_at(cycfi::artist::image const& img, int x, int y)
+   {
+      auto p = reinterpret_cast<std::uint8_t const*>(img.pixels());
+      p += 4 * (y * int(img.bitmap_size().x) + x);
+      return {p[2], p[1], p[0], p[3]};
+   }
+
+   // The ink in one column over the three rows centred on y. A rule half a
+   // pixel wide lands faintly on two rows, so one row alone says little;
+   // the ratio between the channels over the three says which color drew
+   // there.
+   rgba8 ink_at(cycfi::artist::image const& img, int x, int y)
+   {
+      rgba8 sum{0, 0, 0, 0};
+      for (int i = y - 1; i <= y + 1; ++i)
+      {
+         auto p = pixel_at(img, x, i);
+         sum.r += p.r; sum.g += p.g; sum.b += p.b; sum.a += p.a;
+      }
+      return sum;
+   }
+
+   // Draw `e` over black in a 200 by 200 image and hand back the pixels.
+   template <typename Element>
+   cycfi::artist::image grid_render(Element&& e)
+   {
+      test_view tv{extent{200, 200}};
+      cycfi::artist::image img{200, 200, 1};
+      {
+         offscreen_image offscr{img};
+         canvas cnv{offscr.context()};
+         cnv.fill_style(colors::black);
+         cnv.fill_rect(0, 0, 200, 200);
+         context ctx{tv.view_, cnv, &e, rect{0, 0, 200, 200}};
+         e.draw(ctx);
+      }
+      return img;
+   }
+}
+
+TEST_CASE("marks page: a minor rule never covers a major one", "[marks_page]")
+{
+   // The page says a minor division that lands on a major one is not
+   // drawn, so the major rule is what shows there. The theme's major grid
+   // color is a neutral grey and its minor color is blue, which is what
+   // tells the two apart in the pixels.
+   //
+   // With four major and twenty minor divisions over 200 pixels, the
+   // majors fall every 50 and the minors every 10, so y 100 carries both
+   // and y 110 carries only a minor.
+   {
+      auto img = grid_render(vgrid_lines{4, 20});
+
+      auto major = ink_at(img, 100, 100);
+      auto minor = ink_at(img, 100, 110);
+
+      CHECK(major.a > 0);                          // a rule is there
+      CHECK(minor.a > 0);
+      CHECK(minor.b > minor.r * 2);                // the minor rule is blue
+      CHECK(major.b < major.r * 2);                // the major one is not
+   }
+
+   // The same across the other axis.
+   {
+      auto img = grid_render(hgrid_lines{4, 20});
+
+      auto major = ink_at(img, 100, 100);          // sampled by column
+      auto minor = ink_at(img, 110, 100);
+
+      CHECK(major.a > 0);
+      CHECK(minor.a > 0);
+      CHECK(minor.b > minor.r * 2);
+      CHECK(major.b < major.r * 2);
+   }
 }
 
 TEST_CASE("marks page: slider marks figure", "[marks_page]")

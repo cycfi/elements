@@ -86,9 +86,7 @@ and never constrain it.
 
 The `v` and `h` name the axis that is divided, not the direction the lines
 run. `vgrid_lines` divides the vertical extent, so the rules it draws are
-horizontal:
-
-image::/controls/grid_lines.png[alt="vgrid_lines and hgrid_lines side by side", width=560px, role=center, link={imagesdir}/controls/grid_lines.png]
+horizontal.
 
 Divisions are counted across the element's whole extent and a rule is drawn
 at every boundary, both edges included, so a `major_divisions` of 10 gives
@@ -97,11 +95,10 @@ is the extent over the count, taken from the top or left edge until the far
 edge is passed.
 
 Major rules take `theme.major_grid_color` and `theme.major_grid_width`,
-minor rules `theme.minor_grid_color` and `theme.minor_grid_width`. All the
-major rules are drawn first and the minor rules over them, so where a minor
-division falls on a major one the minor rule covers it. That is every major
-division when the counts are multiples of one another, as they are in the
-figure above: the four major rules there are the ones under a minor rule.
+minor rules `theme.minor_grid_color` and `theme.minor_grid_width`. A minor
+division that falls on a major one is not ruled twice: the major rule is
+the one drawn there. That matters because the counts are usually multiples
+of one another, so every major division is also a minor one.
 
 === Example
 

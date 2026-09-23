@@ -14,6 +14,7 @@ set(elements_test_sources
    draw_cull_test.cpp
    view_refresh_test.cpp
    button_tracking_test.cpp
+   controls_marks_page_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})
@@ -50,6 +51,12 @@ if (MSVC)
       )
    endif()
 endif()
+
+# Where the documentation page tests write their figures.
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/results)
+target_compile_definitions(elements_test PRIVATE
+   RESULTS_PATH="${CMAKE_CURRENT_BINARY_DIR}/results/"
+)
 
 # The fonts and images the widgets ask for at startup.
 file(

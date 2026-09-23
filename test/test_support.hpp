@@ -64,7 +64,9 @@ namespace cycfi::elements::test
    // test needs.
    struct test_view
    {
-      explicit test_view(extent size = {400, 300})
+      // `scale` is the offscreen image's pixel density: 1 for a test that
+      // samples pixels, 2 for a figure that has to stay crisp.
+      explicit test_view(extent size = {400, 300}, float scale = 1)
 #if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
        : view_{size}
 #else
@@ -73,7 +75,7 @@ namespace cycfi::elements::test
        : win{"elements test", window::standard, {0, 0, size.x, size.y}}
        , view_{win}
 #endif
-       , img{size.x, size.y, 1}
+       , img{size.x, size.y, scale}
        , offscr{img}
        , cnv{offscr.context()}
       {}

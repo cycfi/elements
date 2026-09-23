@@ -111,7 +111,7 @@ auto make_dial(int index)
 {
    dials[index] = share(               // Use `share` to make shared elements.
       dial(
-         radial_marks<20>(             // Place radial markers with 20 tick marks
+         radial_marks<20>(             // Place radial markers in a 20px ring
             basic_knob<50>()           // Make a basic knob 50px in diameter
          ),
          (index + 1) * 0.25            // The default slider value

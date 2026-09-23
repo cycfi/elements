@@ -20,17 +20,20 @@ namespace cycfi::elements
     *    the room to be read and played, and compresses the quiet end, where
     *    a decibel matters less. The taper here is a console's: ten decibels
     *    take the same travel from +10 down to -10, half that from -10 to
-    *    -40, and a quarter of it below, reaching silence at -70.\n\n
+    *    -40, and a quarter of it from -40 to -60. Everything below -60,
+    *    down to the scale's minimum, shares the sliver of travel left
+    *    under it, so the bottom of the scale is silence.\n\n
     *
     *    `position` takes decibels to travel, 0 at the bottom of the scale
     *    and 1 at the top; `value` takes travel back to decibels. Both are
     *    monotonic over the scale's range, so a control may be driven either
     *    way.\n\n
     *
-    *    A scale whose minimum reaches to or below -70 dB has silence at the
-    *    bottom, which a fader marks with the infinity sign rather than a
-    *    number. See `db_scale_reaches_silence`. The default range runs from
-    *    -144 dB, below the noise floor of 24 bit audio, up to +10 dB.
+    *    A scale whose minimum reaches below the lowest labelled mark, -60
+    *    dB, has silence at the bottom, which a fader marks with the
+    *    infinity sign rather than a number. See
+    *    `db_scale_reaches_silence`. The default range runs from -144 dB,
+    *    below the noise floor of 24 bit audio, up to +10 dB.
     *
     * @code
     *    db_scale scale{-144, 10};

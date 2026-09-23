@@ -1,0 +1,489 @@
+= Marks and Scales
+
+include::../common.adoc[]
+
+== Overview
+
+A control is easier to read when there is something drawn behind or around
+it to read it against. Elements has three families of these graduations:
+
+* Grid lines, plain elements that rule whatever space they are given. They
+  go at the back of a {Layers}, with the content in front.
+* Slider marks and labels, proxies that wrap a slider's track, reserve a
+  band beside it, and draw ticks or text in that band.
+* Radial marks and labels, the same idea for a dial, laid out around the
+  knob.
+
+There is also `db_scale`, the taper of a console fader, and a decibel
+variant of each family built on it. A fader is not linear in decibels, so
+its marks are not evenly spaced; the scale is what places them.
+
+NOTE: All of this is decoration. Marks and labels draw, and nothing more.
+They report no position, and a slider wrapped in them behaves exactly as it
+did without them. Colours and widths come from the
+xref:aspects.adoc[theme], not from the element.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+The individual headers, if you would rather name them:
+
+```c++
+#include <elements/element/style/grid_lines.hpp>   // grid lines, db_scale
+#include <elements/element/style/slider.hpp>       // slider marks, labels
+#include <elements/element/style/dial.hpp>         // radial marks, labels
+```
+
+== Grid Lines
+
+`vgrid_lines` and `hgrid_lines` rule the space they are given. They take
+the default `full_limits`, so they stretch to whatever the layout allocates
+and never constrain it.
+
+=== Declaration
+
+```c++
+   class vgrid_lines : public element
+   {
+   public:
+      vgrid_lines(float major_divisions, float minor_divisions);
+
+      void           draw(context const& ctx) override;
+      std::string    class_name() const override;
+   };
+
+   class hgrid_lines : public element
+   {
+   public:
+      hgrid_lines(float major_divisions, float minor_divisions);
+
+      void           draw(context const& ctx) override;
+      std::string    class_name() const override;
+   };
+```
+
+=== Notation
+
+`major_divisions`, `minor_divisions`:: `float` counts of divisions.
+
+=== Expressions
+
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `vgrid_lines(major_divisions,
+   minor_divisions)`             | An element that divides its height into
+                                   `major_divisions` equal parts and again
+                                   into `minor_divisions` equal parts,
+                                   ruling every boundary of both.
+| `hgrid_lines(major_divisions,
+   minor_divisions)`             | The same across its width.
+|===
+
+The `v` and `h` name the axis that is divided, not the direction the lines
+run. `vgrid_lines` divides the vertical extent, so the rules it draws are
+horizontal.
+
+Divisions are counted across the element's whole extent and a rule is drawn
+at every boundary, both edges included, so a `major_divisions` of 10 gives
+eleven major rules. The counts are floats and need not be whole: the step
+is the extent over the count, taken from the top or left edge until the far
+edge is passed.
+
+Major rules take `theme.major_grid_color` and `theme.major_grid_width`,
+minor rules `theme.minor_grid_color` and `theme.minor_grid_width`. All the
+major rules are drawn first and the minor rules over them, so where a minor
+division falls on a major one the minor rule is drawn on top.
+
+=== Example
+
+```c++
+layer(
+   content,                   // whatever is being read against the grid
+   vgrid_lines{10, 50}        // ten major divisions, fifty minor
+)
+```
+
+== Slider Marks and Labels
+
+These are proxies over a slider's track. Each reserves a band across the
+slider, `size` pixels wide, centres the track in what is left, and draws
+into the band. Marks are drawn behind the track; labels are drawn after it,
+at the outer edge of the band.
+
+Orientation is not given, it is measured: an element taller than it is wide
+is treated as vertical, and one wider than it is tall as horizontal. The
+same styler therefore serves both.
+
+=== Declaration
+
+```c++
+   template <
+      std::size_t size, std::size_t major_divs = 10
+    , std::size_t minor_divs = 5, concepts::Element Subject>
+   slider_marks_lin_styler<
+      size, major_divs, minor_divs, remove_cvref_t<Subject>>
+   slider_marks_lin(Subject&& subject);
+
+   template <
+      std::size_t size, std::size_t major_divs = 5
+    , std::size_t minor_divs = 10, concepts::Element Subject>
+   slider_marks_log_element<
+      size, major_divs, minor_divs, remove_cvref_t<Subject>>
+   slider_marks_log(Subject&& subject);
+
+   template <int size, concepts::Element Subject, typename... S>
+   slider_labels_styler<size, remove_cvref_t<Subject>, sizeof...(S)>
+   slider_labels(Subject&& subject, float font_size, S&&... s);
+```
+
+=== Notation
+
+`size`:: A non-type template argument: the width of the reserved band, in
+         pixels. For `slider_labels` it may be negative, which puts the
+         labels on the other side of the slider; the band is as wide
+         either way.
+`subject`:: Instance of `Element`: the slider's track, or another styler
+         already wrapped around it.
+`major_divs`:: The number of major intervals the travel is cut into. One
+         more major tick than that is drawn, since both ends carry one.
+`minor_divs`:: The number of parts each major interval is cut into, so
+         `minor_divs` less one minor ticks are drawn inside it.
+`font_size`:: A `float` multiplier on the theme's label font size.
+`s\...`:: The label strings, in order.
+
+=== Expressions
+
+[cols="1,1"]
+|===
+| Expression                                      | Semantics
+
+| `slider_marks_lin<size, major_divs,
+   minor_divs>(subject)`                          | Evenly spaced ticks
+                                                    behind `subject`.
+| `slider_marks_log<size, major_divs,
+   minor_divs>(subject)`                          | Ticks whose major
+                                                    intervals are even and
+                                                    whose minor ticks fall
+                                                    logarithmically inside
+                                                    each one.
+| `slider_labels<size>(subject, font_size,
+   s\...)`                                         | Evenly spaced labels
+                                                    beside `subject`.
+|===
+
+Each returns a proxy holding `subject`, so they nest: the usual arrangement
+is labels around marks around the track, and the whole thing handed to
+`slider` as its track.
+
+Major ticks span the full width of the band. Minor ticks are inset by a
+sixth of `size` at each end, and take `theme.minor_ticks_width` and
+`theme.minor_ticks_level` against the major ticks'
+`theme.major_ticks_width` and `theme.major_ticks_level`.
+
+In `slider_marks_log` each major interval spans one decade, and a minor
+tick sits at `log10(j)` of the way along it for each `j` from 1 to
+`minor_divs` less one. With the default `minor_divs` of 10 that puts the
+ticks for 2 through 9 at 30%, 48%, 60%, 70%, 78%, 85%, 90% and 95%, and the
+tick for 1 on the major tick itself, since `log10(1)` is zero.
+
+Labels are spread evenly over the whole travel, which is a different thing
+from the ticks: the first string sits at one end, the last at the other,
+and the rest at equal steps between. On a vertical slider the first string
+is the one at the bottom. A positive `size` puts them to the right of a
+vertical slider and below a horizontal one; a negative `size` puts them on
+the other side.
+
+NOTE: `slider_marks<size, num_divs, major_divs>` is deprecated. It counts
+total divisions and promotes every `num_divs / major_divs` of them to a
+major tick. Use `slider_marks_lin`, which counts major intervals and the
+subdivisions within each.
+
+=== Example
+
+```c++
+slider(
+   basic_thumb<25>(),                              // a 25px thumb
+   slider_labels<10>(                              // labels 10px out
+      slider_marks_lin<40>(basic_track<5, false>()),
+      0.8,                                         // label font size
+      "0", "1", "2", "3", "4", "5"
+   ),
+   0.5                                             // initial value
+)
+```
+
+== Radial Marks and Labels
+
+The dial equivalents. `radial_styler_base` reserves a band `size` pixels
+wide all the way around, insets the knob by half of it on every side, and
+draws in the ring that is left. Both are laid out on the dial's sweep,
+which runs 298.8 degrees from the lower left round to the lower right,
+leaving a gap of 61.2 degrees at the bottom.
+
+=== Declaration
+
+```c++
+   template <std::size_t size, concepts::Element Subject>
+   radial_marks_styler<size, remove_cvref_t<Subject>>
+   radial_marks(Subject&& subject);
+
+   template <std::size_t size, concepts::Element Subject, typename... S>
+   radial_labels_styler<size, remove_cvref_t<Subject>, sizeof...(S)>
+   radial_labels(Subject&& subject, float font_size, S&&... s);
+```
+
+=== Notation
+
+`size`:: A non-type template argument: the width of the reserved ring, in
+         pixels.
+`subject`:: Instance of `Element`: the knob, or the dial around it.
+`font_size`:: A `float` multiplier on the theme's label font size.
+`s\...`:: The label strings, in order, the first at the start of the
+         sweep.
+
+=== Expressions
+
+[cols="1,1"]
+|===
+| Expression                              | Semantics
+
+| `radial_marks<size>(subject)`           | Ticks around `subject`, drawn
+                                            after it.
+| `radial_labels<size>(subject,
+   font_size, s\...)`                       | Labels around `subject`, set
+                                            on the circle at the outer
+                                            edge of the ring.
+|===
+
+`radial_marks` draws a fixed fifty one ticks over the sweep, every fifth
+one major, and takes no division counts. `size` sets how long they are and
+nothing else: a major tick runs half of `size` inward from the rim and a
+minor tick a quarter of it, the two ending together.
+
+`radial_labels` spreads its strings evenly over the same sweep. Two or more
+are needed; one is ignored, since a single label has no interval to sit on.
+
+The examples put `radial_marks` inside the dial, around the knob, and
+`radial_labels` outside it, around the whole dial.
+
+=== Example
+
+```c++
+radial_labels<15>(                     // labels in a 15px ring
+   dial(
+      radial_marks<20>(                // ticks in a 20px ring
+         basic_knob<50>()              // a 50px knob
+      ),
+      0.5                              // initial value
+   ),
+   0.7,                                // label font size
+   "0", "5", "10"
+)
+```
+
+== The Decibel Scale
+
+`db_scale` maps decibels to a control's travel and back. A fader is not
+linear in decibels: it gives the range around unity the room to be read and
+played, and compresses the quiet end, where a decibel matters less.
+
+=== Declaration
+
+```c++
+   struct db_scale
+   {
+      db_scale(double min = -144, double max = 10);
+
+      double            position(double db) const;
+      double            value(double position) const;
+
+      double            min() const;
+      double            max() const;
+   };
+
+   constexpr double db_marks[] =
+      {10, 5, 0, -5, -10, -20, -30, -40, -50, -60, -1000};
+
+   constexpr double db_lowest_mark = -60;
+
+   int  db_mark_label(double db, char* text, std::size_t size);
+   bool db_scale_reaches_silence(db_scale const& scale);
+```
+
+=== Notation
+
+`scale`:: Object of type `db_scale`.
+`min`, `max`:: `double` decibels at the bottom and the top of the travel.
+`db`:: A `double` number of decibels.
+`position`:: A `double` travel, 0 at the bottom of the control and 1 at the
+         top.
+
+=== Expressions
+
+[cols="1,1,1"]
+|===
+| Expression                | Semantics                     | Return Type
+
+| `db_scale(min, max)`      | A scale over a decibel range. | `db_scale`
+| `db_scale()`              | The same over the default
+                              range, -144 dB to +10 dB.     | `db_scale`
+| `scale.position(db)`      | The travel at which `db`
+                              sits.                         | `double`
+| `scale.value(position)`   | The decibels at `position`,
+                              the inverse of `position()`.  | `double`
+| `scale.min()`             | The decibels at the bottom.   | `double`
+| `scale.max()`             | The decibels at the top.      | `double`
+|===
+
+Both mappings are monotonic over the scale's range, so a control may be
+driven either way. Both clamp: `position` clamps its argument to the range
+and its result to 0 and 1, and `value` does the reverse.
+
+The taper is a console's. Travel runs linearly in decibels between the
+breakpoints, and the rates are these: ten decibels take a given travel from
++10 down to -10, half of it from -10 down to -40, a quarter of it from -40
+down to -60, and everything below -60 shares the sliver that is left. The
+default bottom of -144 dB is below the noise floor of 24 bit audio. Above
++10 the taper carries on at the rate it had.
+
+`db_marks` holds the decibels a console fader is ticked and labelled at,
+ending in a sentinel below any scale. On the default range they land here:
+
+[cols="1,1,1"]
+|===
+| Decibels | Label | Travel
+
+| +10      | `10`  | 1.000
+| +5       | `5`   | 0.882
+| 0        | `0`   | 0.765
+| -5       | `5`   | 0.647
+| -10      | `10`  | 0.529
+| -20      | `20`  | 0.412
+| -30      | `30`  | 0.294
+| -40      | `40`  | 0.176
+| -50      | `50`  | 0.118
+| -60      | `60`  | 0.059
+| silence  | `∞`   | 0.000
+|===
+
+Labels carry the magnitude and no sign, so 10 appears twice, once above
+unity and once below, exactly as it does on a console. `db_mark_label`
+writes one into a buffer and returns the character count `snprintf`
+reports; it writes the infinity sign for the sentinel.
+
+The bottom row is not one of `db_marks`. `db_lowest_mark` is the lowest
+decibel value that carries a label, and `db_scale_reaches_silence(scale)`
+is true when a scale reaches below it. Such a scale has silence at the
+bottom of its travel, which a fader marks with the infinity sign rather
+than a number. A scale that stops higher, `db_scale(-60, 10)` for one,
+drops the marks that fall outside it and has no silence row.
+
+== Decibel Marks, Labels and Grids
+
+Each of the three families has a decibel variant. They place their major
+ticks on the `db_marks` that fall inside the scale, put a minor tick at the
+decibel halfway between each neighbouring pair, and run all of it through
+the taper, so they line up with a control read on the same scale.
+
+=== Declaration
+
+```c++
+   class vgrid_lines_db : public element
+   {
+   public:
+      vgrid_lines_db(db_scale scale = {});
+      // ...
+   };
+
+   class hgrid_lines_db : public element
+   {
+   public:
+      hgrid_lines_db(db_scale scale = {});
+      // ...
+   };
+
+   template <std::size_t size, concepts::Element Subject>
+   slider_marks_db_element<size, remove_cvref_t<Subject>>
+   slider_marks_db(Subject&& subject, db_scale scale = {});
+
+   template <int size, concepts::Element Subject>
+   slider_labels_db_element<size, remove_cvref_t<Subject>>
+   slider_labels_db(
+      Subject&& subject, float font_size, db_scale scale = {});
+```
+
+=== Notation
+
+`scale`:: Object of type `db_scale`, which should be the one the control is
+         read with.
+`size`:: As for the plain marks and labels: the width of the reserved band,
+         in pixels, negative to put `slider_labels_db` on the other side.
+`subject`:: Instance of `Element`.
+`font_size`:: A `float` multiplier on the theme's label font size.
+
+=== Expressions
+
+[cols="1,1"]
+|===
+| Expression                              | Semantics
+
+| `vgrid_lines_db(scale)`                 | Horizontal rules at the marks,
+                                            with the top of the element at
+                                            the scale's maximum.
+| `hgrid_lines_db(scale)`                 | The same across the width, with
+                                            the right at the maximum.
+| `slider_marks_db<size>(subject,
+   scale)`                                 | A fader's ticks behind
+                                            `subject`.
+| `slider_labels_db<size>(subject,
+   font_size, scale)`                      | A fader's labels beside
+                                            `subject`.
+|===
+
+Where the scale reaches silence, `slider_marks_db` adds a major tick at the
+bottom of the travel and `slider_labels_db` writes the infinity sign there.
+The grid variants do not: they rule the marks and stop.
+
+Unlike the plain `slider_labels`, these are not spread evenly. Every label
+sits at the travel its own decibel value maps to, which is the point of
+using the scale.
+
+=== Example
+
+A vertical fader, marked and labelled from -60 dB to +10 dB, starting at
+unity:
+
+```c++
+db_scale scale{-60, 10};
+
+auto fader = share(
+   slider(
+      basic_thumb<25>(),                  // a 25px thumb
+      slider_labels_db<10>(               // labels 10px out
+         slider_marks_db<20>(             // ticks in a 20px band
+            basic_track<5, true>(),       // a vertical 5px track
+            scale
+         ),
+         0.8,                             // label font size
+         scale
+      ),
+      scale.position(0)                   // start at unity
+   )
+);
+```
+
+Read it back through the same scale:
+
+```c++
+double db = scale.value(fader->value());
+```
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

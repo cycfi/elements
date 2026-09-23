@@ -1,0 +1,18 @@
+= Controls
+
+include::common.adoc[]
+
+== Overview
+
+The controls are the elements a user works: the buttons, sliders, dials,
+text boxes, menus and lists, together with the stylers that decide how each
+of them looks. This section documents them one family at a time.
+
+* xref:controls/marks.adoc[Marks and Scales] covers the graduations drawn
+  behind and around a control to read it against, and `db_scale`, the
+  console fader taper that places them for a decibel control.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

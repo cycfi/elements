@@ -22,3 +22,7 @@
 :Layers: xref:layout/layers.adoc[Layers]
 :Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
 :decks: xref:layout/decks.adoc[Decks]
+
+:controls: xref:controls.adoc[Controls]
+:marks_and_scales: xref:controls/marks.adoc[Marks and Scales]
+:db_scale: xref:controls/marks.adoc#_the_decibel_scale[db_scale]

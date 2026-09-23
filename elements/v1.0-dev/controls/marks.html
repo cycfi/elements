@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Marks and Scales :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../controls.html">Controls</a></li>
+    <li><a href="marks.html">Marks and Scales</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="marks.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Marks and Scales</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A control is easier to read when there is something drawn behind or around
+it to read it against. Elements has three families of these graduations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Grid lines, plain elements that rule whatever space they are given. They
+go at the back of a <a href="../layout/layers.html" class="xref page">Layers</a>, with the content in front.</p>
+</li>
+<li>
+<p>Slider marks and labels, proxies that wrap a slider&#8217;s track, reserve a
+band beside it, and draw ticks or text in that band.</p>
+</li>
+<li>
+<p>Radial marks and labels, the same idea for a dial, laid out around the
+knob.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is also <code>db_scale</code>, the taper of a console fader, and a decibel
+variant of each family built on it. A fader is not linear in decibels, so
+its marks are not evenly spaced; the scale is what places them.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+All of this is decoration. Marks and labels draw, and nothing more.
+They report no position, and a slider wrapped in them behaves exactly as it
+did without them. Colours and widths come from the
+<a href="../aspects.html" class="xref page">theme</a>, not from the element.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The individual headers, if you would rather name them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/grid_lines.hpp&gt;   // grid lines, db_scale
+#include &lt;elements/element/style/slider.hpp&gt;       // slider marks, labels
+#include &lt;elements/element/style/dial.hpp&gt;         // radial marks, labels</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grid_lines"><a class="anchor" href="#_grid_lines"></a>Grid Lines</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>vgrid_lines</code> and <code>hgrid_lines</code> rule the space they are given. They take
+the default <code>full_limits</code>, so they stretch to whatever the layout allocates
+and never constrain it.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   class vgrid_lines : public element
+   {
+   public:
+      vgrid_lines(float major_divisions, float minor_divisions);
+
+      void           draw(context const&amp; ctx) override;
+      std::string    class_name() const override;
+   };
+
+   class hgrid_lines : public element
+   {
+   public:
+      hgrid_lines(float major_divisions, float minor_divisions);
+
+      void           draw(context const&amp; ctx) override;
+      std::string    class_name() const override;
+   };</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>major_divisions</code>, <code>minor_divisions</code></dt>
+<dd>
+<p><code>float</code> counts of divisions.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vgrid_lines(major_divisions,
+   minor_divisions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An element that divides its height into
+                                   <code>major_divisions</code> equal parts and again
+                                   into <code>minor_divisions</code> equal parts,
+                                   ruling every boundary of both.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hgrid_lines(major_divisions,
+   minor_divisions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same across its width.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>v</code> and <code>h</code> name the axis that is divided, not the direction the lines
+run. <code>vgrid_lines</code> divides the vertical extent, so the rules it draws are
+horizontal.</p>
+</div>
+<div class="paragraph">
+<p>Divisions are counted across the element&#8217;s whole extent and a rule is drawn
+at every boundary, both edges included, so a <code>major_divisions</code> of 10 gives
+eleven major rules. The counts are floats and need not be whole: the step
+is the extent over the count, taken from the top or left edge until the far
+edge is passed.</p>
+</div>
+<div class="paragraph">
+<p>Major rules take <code>theme.major_grid_color</code> and <code>theme.major_grid_width</code>,
+minor rules <code>theme.minor_grid_color</code> and <code>theme.minor_grid_width</code>. A minor
+division that falls on a major one is not ruled twice: the major rule is
+the one drawn there. That matters because the counts are usually multiples
+of one another, so every major division is also a minor one.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">layer(
+   content,                   // whatever is being read against the grid
+   vgrid_lines{10, 50}        // ten major divisions, fifty minor
+)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_slider_marks_and_labels"><a class="anchor" href="#_slider_marks_and_labels"></a>Slider Marks and Labels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These are proxies over a slider&#8217;s track. Each reserves a band across the
+slider, <code>size</code> pixels wide, centres the track in what is left, and draws
+into the band. Marks are drawn behind the track; labels are drawn after it,
+at the outer edge of the band.</p>
+</div>
+<div class="paragraph">
+<p>Orientation is not given, it is measured: an element taller than it is wide
+is treated as vertical, and one wider than it is tall as horizontal. The
+same styler therefore serves both.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_2"><a class="anchor" href="#_declaration_2"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   template &lt;
+      std::size_t size, std::size_t major_divs = 10
+    , std::size_t minor_divs = 5, concepts::Element Subject&gt;
+   slider_marks_lin_styler&lt;
+      size, major_divs, minor_divs, remove_cvref_t&lt;Subject&gt;&gt;
+   slider_marks_lin(Subject&amp;&amp; subject);
+
+   template &lt;
+      std::size_t size, std::size_t major_divs = 5
+    , std::size_t minor_divs = 10, concepts::Element Subject&gt;
+   slider_marks_log_element&lt;
+      size, major_divs, minor_divs, remove_cvref_t&lt;Subject&gt;&gt;
+   slider_marks_log(Subject&amp;&amp; subject);
+
+   template &lt;int size, concepts::Element Subject, typename... S&gt;
+   slider_labels_styler&lt;size, remove_cvref_t&lt;Subject&gt;, sizeof...(S)&gt;
+   slider_labels(Subject&amp;&amp; subject, float font_size, S&amp;&amp;... s);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>size</code></dt>
+<dd>
+<p>A non-type template argument: the width of the reserved band, in
+pixels. For <code>slider_labels</code> it may be negative, which puts the
+labels on the other side of the slider; the band is as wide
+either way.</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code>: the slider&#8217;s track, or another styler
+already wrapped around it.</p>
+</dd>
+<dt class="hdlist1"><code>major_divs</code></dt>
+<dd>
+<p>The number of major intervals the travel is cut into. One
+more major tick than that is drawn, since both ends carry one.</p>
+</dd>
+<dt class="hdlist1"><code>minor_divs</code></dt>
+<dd>
+<p>How finely each major interval is subdivided.
+<code>slider_marks_lin</code> cuts it into <code>minor_divs</code> equal parts and ticks
+the <code>minor_divs</code> less one boundaries inside it;
+<code>slider_marks_log</code> reads it as the base and ticks the digits from
+2 up to <code>minor_divs</code> less one.</p>
+</dd>
+<dt class="hdlist1"><code>font_size</code></dt>
+<dd>
+<p>A <code>float</code> multiplier on the theme&#8217;s label font size.</p>
+</dd>
+<dt class="hdlist1"><code>s...</code></dt>
+<dd>
+<p>The label strings, in order.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_marks_lin&lt;size, major_divs,
+   minor_divs&gt;(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evenly spaced ticks
+                                                    behind <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_marks_log&lt;size, major_divs,
+   minor_divs&gt;(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticks whose major
+                                                    intervals are even and
+                                                    whose minor ticks fall
+                                                    logarithmically inside
+                                                    each one.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_labels&lt;size&gt;(subject, font_size,
+   s...)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evenly spaced labels
+                                                    beside <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each returns a proxy holding <code>subject</code>, so they nest: the usual arrangement
+is labels around marks around the track, and the whole thing handed to
+<code>slider</code> as its track.</p>
+</div>
+<div class="paragraph">
+<p>Major ticks span the full width of the band. Minor ticks are inset by a
+sixth of <code>size</code> at each end, and take <code>theme.minor_ticks_width</code> and
+<code>theme.minor_ticks_level</code> against the major ticks'
+<code>theme.major_ticks_width</code> and <code>theme.major_ticks_level</code>.</p>
+</div>
+<div class="paragraph">
+<p>In <code>slider_marks_log</code> each major interval spans one decade, and a minor
+tick sits at <code>log10(j)</code> of the way along it for each digit <code>j</code> from 2 up to
+<code>minor_divs</code> less one. The digit 1 opens the decade, where the major tick
+already is. With the default <code>minor_divs</code> of 10 that puts the ticks for 2
+through 9 at 30%, 48%, 60%, 70%, 78%, 85%, 90% and 95% of the way along.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<a class="image" href="../_images/controls/slider_marks.png"><img src="../_images/controls/slider_marks.png" alt="the linear and logarithmic tick layouts on the same track" width="560px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Labels are spread evenly over the whole travel, which is a different thing
+from the ticks: the first string sits at one end, the last at the other,
+and the rest at equal steps between. On a vertical slider the first string
+is the one at the bottom. A positive <code>size</code> puts them to the right of a
+vertical slider and below a horizontal one; a negative <code>size</code> puts them on
+the other side.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<code>slider_marks&lt;size, num_divs, major_divs&gt;</code> is deprecated. It counts
+total divisions and promotes every <code>num_divs / major_divs</code> of them to a
+major tick. Use <code>slider_marks_lin</code>, which counts major intervals and the
+subdivisions within each.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_2"><a class="anchor" href="#_example_2"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">slider(
+   basic_thumb&lt;25&gt;(),                              // a 25px thumb
+   slider_labels&lt;10&gt;(                              // labels 10px out
+      slider_marks_lin&lt;40&gt;(basic_track&lt;5, false&gt;()),
+      0.8,                                         // label font size
+      "0", "1", "2", "3", "4", "5"
+   ),
+   0.5                                             // initial value
+)</code></pre>
+</div>
+</div>
+<div class="imageblock center">
+<div class="content">
+<a class="image" href="../_images/controls/slider_example.png"><img src="../_images/controls/slider_example.png" alt="a horizontal slider with linear marks and six labels" width="560px"></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_radial_marks_and_labels"><a class="anchor" href="#_radial_marks_and_labels"></a>Radial Marks and Labels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The dial equivalents. <code>radial_styler_base</code> reserves a band <code>size</code> pixels
+wide all the way around, insets the knob by half of it on every side, and
+draws in the ring that is left. Both are laid out on the dial&#8217;s sweep,
+which runs 298.8 degrees from the lower left round to the lower right,
+leaving a gap of 61.2 degrees at the bottom.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_3"><a class="anchor" href="#_declaration_3"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   template &lt;std::size_t size, concepts::Element Subject&gt;
+   radial_marks_styler&lt;size, remove_cvref_t&lt;Subject&gt;&gt;
+   radial_marks(Subject&amp;&amp; subject);
+
+   template &lt;std::size_t size, concepts::Element Subject, typename... S&gt;
+   radial_labels_styler&lt;size, remove_cvref_t&lt;Subject&gt;, sizeof...(S)&gt;
+   radial_labels(Subject&amp;&amp; subject, float font_size, S&amp;&amp;... s);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>size</code></dt>
+<dd>
+<p>A non-type template argument: the width of the reserved ring, in
+pixels.</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code>: the knob, or the dial around it.</p>
+</dd>
+<dt class="hdlist1"><code>font_size</code></dt>
+<dd>
+<p>A <code>float</code> multiplier on the theme&#8217;s label font size.</p>
+</dd>
+<dt class="hdlist1"><code>s...</code></dt>
+<dd>
+<p>The label strings, in order, the first at the start of the
+sweep.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>radial_marks&lt;size&gt;(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticks around <code>subject</code>, drawn
+                                            after it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>radial_labels&lt;size&gt;(subject,
+   font_size, s...)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Labels around <code>subject</code>, set
+                                            on the circle at the outer
+                                            edge of the ring.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>radial_marks</code> draws a fixed fifty one ticks over the sweep, every fifth
+one major, and takes no division counts. <code>size</code> sets how long they are and
+nothing else: a major tick runs half of <code>size</code> inward from the rim and a
+minor tick a quarter of it, the two ending together.</p>
+</div>
+<div class="paragraph">
+<p><code>radial_labels</code> spreads its strings evenly over the same sweep. Two or more
+are needed; one is ignored, since a single label has no interval to sit on.</p>
+</div>
+<div class="paragraph">
+<p>The examples put <code>radial_marks</code> inside the dial, around the knob, and
+<code>radial_labels</code> outside it, around the whole dial.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_3"><a class="anchor" href="#_example_3"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">radial_labels&lt;15&gt;(                     // labels in a 15px ring
+   dial(
+      radial_marks&lt;20&gt;(                // ticks in a 20px ring
+         basic_knob&lt;50&gt;()              // a 50px knob
+      ),
+      0.5                              // initial value
+   ),
+   0.7,                                // label font size
+   "0", "5", "10"
+)</code></pre>
+</div>
+</div>
+<div class="imageblock center">
+<div class="content">
+<a class="image" href="../_images/controls/radial_example.png"><img src="../_images/controls/radial_example.png" alt="a dial with radial marks, and the same dial with labels around it" width="560px"></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_decibel_scale"><a class="anchor" href="#_the_decibel_scale"></a>The Decibel Scale</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>db_scale</code> maps decibels to a control&#8217;s travel and back. A fader is not
+linear in decibels: it gives the range around unity the room to be read and
+played, and compresses the quiet end, where a decibel matters less.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_4"><a class="anchor" href="#_declaration_4"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   struct db_scale
+   {
+      db_scale(double min = -144, double max = 10);
+
+      double            position(double db) const;
+      double            value(double position) const;
+
+      double            min() const;
+      double            max() const;
+   };
+
+   constexpr double db_marks[] =
+      {10, 5, 0, -5, -10, -20, -30, -40, -50, -60, -1000};
+
+   constexpr double db_lowest_mark = -60;
+
+   int  db_mark_label(double db, char* text, std::size_t size);
+   bool db_scale_reaches_silence(db_scale const&amp; scale);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>scale</code></dt>
+<dd>
+<p>Object of type <code>db_scale</code>.</p>
+</dd>
+<dt class="hdlist1"><code>min</code>, <code>max</code></dt>
+<dd>
+<p><code>double</code> decibels at the bottom and the top of the travel.</p>
+</dd>
+<dt class="hdlist1"><code>db</code></dt>
+<dd>
+<p>A <code>double</code> number of decibels.</p>
+</dd>
+<dt class="hdlist1"><code>position</code></dt>
+<dd>
+<p>A <code>double</code> travel, 0 at the bottom of the control and 1 at the
+top.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>db_scale(min, max)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A scale over a decibel range.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>db_scale</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>db_scale()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same over the default
+                              range, -144 dB to +10 dB.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>db_scale</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale.position(db)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The travel at which <code>db</code>
+                              sits.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale.value(position)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The decibels at <code>position</code>,
+                              the inverse of <code>position()</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale.min()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The decibels at the bottom.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale.max()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The decibels at the top.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Both mappings are monotonic over the scale&#8217;s range, so a control may be
+driven either way. Both clamp: <code>position</code> clamps its argument to the range
+and its result to 0 and 1, and <code>value</code> does the reverse.</p>
+</div>
+<div class="paragraph">
+<p>The taper is a console&#8217;s. Travel runs linearly in decibels between the
+breakpoints, and the rates are these: ten decibels take a given travel from
++10 down to -10, half of it from -10 down to -40, a quarter of it from -40
+down to -60, and everything below -60 shares the sliver that is left. The
+default bottom of -144 dB is below the noise floor of 24 bit audio. Above
++10 the taper carries on at the rate it had.</p>
+</div>
+<div class="paragraph">
+<p><code>db_marks</code> holds the decibels a console fader is ticked and labelled at,
+ending in a sentinel below any scale. On the default range they land here:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Decibels</th>
+<th class="tableblock halign-left valign-top">Label</th>
+<th class="tableblock halign-left valign-top">Travel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.882</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.765</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.647</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.529</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>20</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.412</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.294</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-40</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>40</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.176</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-50</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>50</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.118</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.059</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">silence</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>∞</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.000</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Labels carry the magnitude and no sign, so 10 appears twice, once above
+unity and once below, exactly as it does on a console. <code>db_mark_label</code>
+writes one into a buffer and returns the character count <code>snprintf</code>
+reports; it writes the infinity sign for the sentinel.</p>
+</div>
+<div class="paragraph">
+<p>The bottom row is not one of <code>db_marks</code>. <code>db_lowest_mark</code> is the lowest
+decibel value that carries a label, and <code>db_scale_reaches_silence(scale)</code>
+is true when a scale reaches below it. Such a scale has silence at the
+bottom of its travel, which a fader marks with the infinity sign rather
+than a number. A scale that stops higher, <code>db_scale(-60, 10)</code> for one,
+drops the marks that fall outside it and has no silence row.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_decibel_marks_labels_and_grids"><a class="anchor" href="#_decibel_marks_labels_and_grids"></a>Decibel Marks, Labels and Grids</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each of the three families has a decibel variant. They place their major
+ticks on the <code>db_marks</code> that fall inside the scale, put a minor tick at the
+decibel halfway between each neighbouring pair, and run all of it through
+the taper, so they line up with a control read on the same scale.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_5"><a class="anchor" href="#_declaration_5"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   class vgrid_lines_db : public element
+   {
+   public:
+      vgrid_lines_db(db_scale scale = {});
+      // ...
+   };
+
+   class hgrid_lines_db : public element
+   {
+   public:
+      hgrid_lines_db(db_scale scale = {});
+      // ...
+   };
+
+   template &lt;std::size_t size, concepts::Element Subject&gt;
+   slider_marks_db_element&lt;size, remove_cvref_t&lt;Subject&gt;&gt;
+   slider_marks_db(Subject&amp;&amp; subject, db_scale scale = {});
+
+   template &lt;int size, concepts::Element Subject&gt;
+   slider_labels_db_element&lt;size, remove_cvref_t&lt;Subject&gt;&gt;
+   slider_labels_db(
+      Subject&amp;&amp; subject, float font_size, db_scale scale = {});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notation_5"><a class="anchor" href="#_notation_5"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>scale</code></dt>
+<dd>
+<p>Object of type <code>db_scale</code>, which should be the one the control is
+read with.</p>
+</dd>
+<dt class="hdlist1"><code>size</code></dt>
+<dd>
+<p>As for the plain marks and labels: the width of the reserved band,
+in pixels, negative to put <code>slider_labels_db</code> on the other side.</p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code>.</p>
+</dd>
+<dt class="hdlist1"><code>font_size</code></dt>
+<dd>
+<p>A <code>float</code> multiplier on the theme&#8217;s label font size.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vgrid_lines_db(scale)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Horizontal rules at the marks,
+                                            with the top of the element at
+                                            the scale&#8217;s maximum.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hgrid_lines_db(scale)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same across the width, with
+                                            the right at the maximum.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_marks_db&lt;size&gt;(subject,
+   scale)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A fader&#8217;s ticks behind
+                                            <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_labels_db&lt;size&gt;(subject,
+   font_size, scale)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A fader&#8217;s labels beside
+                                            <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Where the scale reaches silence, <code>slider_marks_db</code> adds a major tick at the
+bottom of the travel and <code>slider_labels_db</code> writes the infinity sign there.
+The grid variants do not: they rule the marks and stop.</p>
+</div>
+<div class="paragraph">
+<p>Unlike the plain <code>slider_labels</code>, these are not spread evenly. Every label
+sits at the travel its own decibel value maps to, which is the point of
+using the scale.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_4"><a class="anchor" href="#_example_4"></a>Example</h3>
+<div class="paragraph">
+<p>A vertical fader, marked and labelled from -60 dB to +10 dB, starting at
+unity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">db_scale scale{-60, 10};
+
+auto fader = share(
+   slider(
+      basic_thumb&lt;25&gt;(),                  // a 25px thumb
+      slider_labels_db&lt;10&gt;(               // labels 10px out
+         slider_marks_db&lt;20&gt;(             // ticks in a 20px band
+            basic_track&lt;5, true&gt;(),       // a vertical 5px track
+            scale
+         ),
+         0.8,                             // label font size
+         scale
+      ),
+      scale.position(0)                   // start at unity
+   )
+);</code></pre>
+</div>
+</div>
+<div class="imageblock center">
+<div class="content">
+<a class="image" href="../_images/controls/db_fader.png"><img src="../_images/controls/db_fader.png" alt="the same fader over two decibel ranges, and the matching grid" width="560px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The wider range reaches silence, so it carries the infinity mark at the
+bottom of its travel. Both faders show the taper: the marks crowd together
+as the scale falls away from unity.</p>
+</div>
+<div class="paragraph">
+<p>Read it back through the same scale:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">double db = scale.value(fader-&gt;value());</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

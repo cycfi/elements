@@ -5,6 +5,40 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-01 -- curve shapes, image fill, button faces (develop)
+
+**TL;DR:** The last drawing in the QPlug Dexter editor moved into
+Elements: curve lines that bend and carry guides, an image that fills its
+space, button faces made of any elements, and a frame of a given color.
+Dexter now draws nothing itself.
+
+- `d209ada9` `frame(color, width, radius)`: a plain rounded outline of the
+  given color, line width and corner radius. The default `frame` is the
+  theme's, as before.
+- `af8bb8a1` `button_body`: a button's body alone, drawn by the button's
+  state, with no size of its own, to layer content of any kind on (a
+  picture on a button). `button_face(off, on)`: one element drawn while
+  the button is off, the other while it is on (a flat box with a grey
+  edge and one with a blue edge, each with its label). The text styler
+  could not serve: its maximum height is its text's, and every size
+  wrapper clamps to the subject's limits. Tests in
+  `test/button_body_test.cpp`.
+- `ac8c5012` `curve_lines`: `shape(segment, t)` bends a segment (the DX7's
+  exponential keyboard scaling), sampled `steps` times; guides across at
+  `horizontal_guides` heights (the floor, at 0, by default, so existing
+  users draw as before) and down through `vertical_guides` points, in the
+  floor's color; a transparent fill draws none; `min_size` replaces the
+  fixed 120 by 60. `basic_curve_editor::fit_width` spreads the points
+  across the plot, for a preview of a curve whose span varies.
+- `6c1270d7` `image::fill`: the whole image scaled into the space given, each
+  direction on its own (CSS `object-fit: fill`; `fit` is `contain`).
+  Named `fill` because `stretch` would hide every element's layout
+  `stretch()`.
+- `386f5be1` `image_grid_cell` has no minimum size, as a fitted image has
+  none; it was 32 by 32, which held a wave picture on a button too tall.
+
+Suite 47 of 47.
+
 ## 2026-10-01 -- image_grid_menu (develop)
 
 **TL;DR:** One image divided into equal cells is a choice: a menu of all

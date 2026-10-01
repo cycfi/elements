@@ -127,6 +127,11 @@ namespace cycfi::elements
       float                   reach = 12.0f;    // to take hold of a point
       float                   inset = 8.0f;
 
+      // Spread the points across the plot's width: x scaled so the
+      // farthest point reaches the right edge, for a preview of a curve
+      // whose span varies.
+      bool                    fit_width = false;
+
       element*                hit_test(
                                  context const& ctx, point p
                                , bool leaf, bool control) override;
@@ -146,6 +151,7 @@ namespace cycfi::elements
    private:
 
       int                     pick(context const& ctx, point p) const;
+      float                   x_scale() const;
       void                    move(std::size_t i, point to);
       void                    end_gesture(std::size_t i);
       bool                    double_click(context const& ctx, point p);

@@ -128,14 +128,31 @@ namespace cycfi::elements
       return ctx.bounds.inset(inset, inset);
    }
 
+   // With fit_width, the points' span is the plot's width
+   float basic_curve_editor::x_scale() const
+   {
+      if (!fit_width)
+         return 1.0f;
+      auto span = 0.0f;
+      for (auto const& p : positions())
+         span = std::max(span, p.x);
+      return span > 0.0f? 1.0f / span : 1.0f;
+   }
+
    point basic_curve_editor::to_screen(point p, rect b) const
    {
-      return {b.left + p.x * b.width(), b.bottom - p.y * b.height()};
+      return {
+         b.left + p.x * x_scale() * b.width()
+       , b.bottom - p.y * b.height()
+      };
    }
 
    point basic_curve_editor::from_screen(point p, rect b) const
    {
-      return {(p.x - b.left) / b.width(), (b.bottom - p.y) / b.height()};
+      return {
+         (p.x - b.left) / (b.width() * x_scale())
+       , (b.bottom - p.y) / b.height()
+      };
    }
 
    // The nearest movable point within reach. Points that coincide, within

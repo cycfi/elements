@@ -8,6 +8,8 @@
 
 #include <elements/element/curve_editor.hpp>
 #include <elements/support/theme.hpp>
+#include <functional>
+#include <vector>
 
 namespace cycfi::elements
 {
@@ -15,12 +17,23 @@ namespace cycfi::elements
     * \struct curve_lines
     *
     * \brief
-    *    The default line styler of a curve_editor: straight lines from
-    *    point to point, filled down to the floor, and the floor itself.
-    *    The colors default to the theme's indicator color.
+    *    The default line styler of a curve_editor: lines from point to
+    *    point, filled down to the floor, and the floor itself. The colors
+    *    default to the theme's indicator color.
+    *
+    *    A segment is straight unless `shape` bends it: given the segment
+    *    (0 from the first point to the second) and how far along it is,
+    *    0 to 1, it says how far the height has gone from the segment's
+    *    start to its end, 0 to 1. Guides are drawn in the floor's color:
+    *    a line across at each of `horizontal_guides`, heights in the unit
+    *    square (the floor is the first, at 0), and a line down through
+    *    each point in `vertical_guides`. A transparent fill draws none.
     */
    struct curve_lines : element
    {
+      using shape_function =
+         std::function<float(std::size_t segment, float t)>;
+
                               curve_lines();
                               curve_lines(color line, color fill);
 
@@ -31,6 +44,13 @@ namespace cycfi::elements
       color                   fill_color;
       color                   floor_color;
       float                   line_width = 2.0f;
+      point                   min_size = {120, 60};
+
+      shape_function          shape;
+      int                     steps = 32;    // per bent segment
+      std::vector<float>      horizontal_guides = {0.0f};
+      std::vector<std::size_t>
+                              vertical_guides;
    };
 
    /**

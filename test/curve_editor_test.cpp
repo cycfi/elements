@@ -308,3 +308,42 @@ TEST_CASE("curve_editor: on_change reports the drag, not a callback's reset")
    CHECK(seen.y == Approx(0.9f).margin(eps));
    CHECK(v.editor->y(0) == Approx(0.5f).margin(eps));
 }
+
+TEST_CASE("curve_lines: a shape bends each segment, sampled along it")
+{
+   editor_view v{{cp{{0.0f, 0.0f}}, cp{{0.5f, 1.0f}}, cp{{1.0f, 0.5f}}}};
+   auto& lines = v.editor->actual_subject();
+   std::vector<std::pair<std::size_t, float>> asked;
+   lines.steps = 4;
+   lines.shape = [&](std::size_t segment, float t)
+   {
+      asked.push_back({segment, t});
+      return t * t;
+   };
+
+   // Drawn once for the fill and once for the line
+   v.draw();
+   REQUIRE(asked.size() == 2 * 2 * 3);
+   for (auto [segment, t] : asked)
+   {
+      CHECK(segment < 2);
+      CHECK(t > 0.0f);
+      CHECK(t < 1.0f);
+   }
+
+   // A transparent fill draws none, so the line alone asks
+   asked.clear();
+   lines.fill_color = lines.fill_color.opacity(0);
+   v.draw();
+   CHECK(asked.size() == 2 * 3);
+}
+
+TEST_CASE("curve_editor: fit_width spreads the points across the plot")
+{
+   editor_view v{{cp{{0.0f, 0.0f}}, cp{{0.25f, 1.0f}}, cp{{0.5f, 0.5f}}}};
+   v.editor->fit_width = true;
+   auto const right = v.editor->to_screen({0.5f, 0.5f}, v.square);
+   CHECK(right.x == Approx(v.square.right).margin(eps));
+   auto const back = v.editor->from_screen(right, v.square);
+   CHECK(back.x == Approx(0.5f).margin(eps));
+}

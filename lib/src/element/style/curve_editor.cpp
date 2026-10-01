@@ -26,7 +26,7 @@ namespace cycfi::elements
 
    view_limits curve_lines::limits(basic_context const& /*ctx*/) const
    {
-      return {{120, 60}, {full_extent, full_extent}};
+      return {min_size, {full_extent, full_extent}};
    }
 
    void curve_lines::draw(context const& ctx)
@@ -38,32 +38,63 @@ namespace cycfi::elements
       auto& cnv = ctx.canvas;
       auto state = cnv.new_state();
       auto const b = e->plot(ctx);
+      auto const pts = e->positions();
+      auto at = [&](point p) { return e->to_screen(p, b); };
 
+      // The guides: across at each height, down through each point
       cnv.line_width(1);
       cnv.stroke_style(floor_color);
       cnv.begin_path();
-      cnv.move_to({ctx.bounds.left, b.bottom});
-      cnv.line_to({ctx.bounds.right, b.bottom});
+      for (auto y : horizontal_guides)
+      {
+         auto const sy = at({0, y}).y;
+         cnv.move_to({ctx.bounds.left, sy});
+         cnv.line_to({ctx.bounds.right, sy});
+      }
+      for (auto i : vertical_guides)
+      {
+         if (i >= pts.size())
+            continue;
+         auto const sx = at(pts[i]).x;
+         cnv.move_to({sx, b.top});
+         cnv.line_to({sx, b.bottom});
+      }
       cnv.stroke();
 
-      auto at = [&](std::size_t i) { return e->to_screen(e->position(i), b); };
-      cnv.begin_path();
-      cnv.move_to(at(0));
-      for (std::size_t i = 1; i != e->size(); ++i)
-         cnv.line_to(at(i));
+      // The curve from the first point, each segment straight or bent
+      auto trace = [&]()
+      {
+         cnv.move_to(at(pts[0]));
+         for (std::size_t i = 1; i != pts.size(); ++i)
+         {
+            auto const p0 = pts[i - 1];
+            auto const p1 = pts[i];
+            if (shape)
+            {
+               for (int k = 1; k < steps; ++k)
+               {
+                  auto const t = float(k) / steps;
+                  auto const y = p0.y + (p1.y - p0.y) * shape(i - 1, t);
+                  cnv.line_to(at({p0.x + (p1.x - p0.x) * t, y}));
+               }
+            }
+            cnv.line_to(at(p1));
+         }
+      };
 
-      auto const first = at(0);
-      auto const last = at(e->size() - 1);
-      cnv.line_to({last.x, b.bottom});
-      cnv.line_to({first.x, b.bottom});
-      cnv.close_path();
-      cnv.fill_style(fill_color);
-      cnv.fill();
+      if (fill_color.alpha > 0)
+      {
+         cnv.begin_path();
+         trace();
+         cnv.line_to({at(pts.back()).x, b.bottom});
+         cnv.line_to({at(pts.front()).x, b.bottom});
+         cnv.close_path();
+         cnv.fill_style(fill_color);
+         cnv.fill();
+      }
 
       cnv.begin_path();
-      cnv.move_to(first);
-      for (std::size_t i = 1; i != e->size(); ++i)
-         cnv.line_to(at(i));
+      trace();
       cnv.line_width(line_width);
       cnv.stroke_style(line_color);
       cnv.stroke();

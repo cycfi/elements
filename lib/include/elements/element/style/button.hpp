@@ -11,9 +11,11 @@
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/tile.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/theme.hpp>
 #include <infra/support.hpp>
 #include <infra/string_view.hpp>
+#include <algorithm>
 #include <utility>
 
 namespace cycfi::elements
@@ -564,6 +566,66 @@ namespace cycfi::elements
    using basic_button_styler = basic_button_styler_base<default_button_styler>;
    using button_styler = button_styler_gen<basic_button_styler>;
 
+   /**
+    * \struct button_body
+    *
+    * \brief
+    *    A button's body alone, drawn as the button's state says, the active
+    *    color while it is on, and free to take any size: the face of a
+    *    button whose content is something other than text, layered under
+    *    it, as an image or a small picture with parts.
+    */
+   struct button_body : button_styler_base
+   {
+                              button_body(
+                                 color active = get_theme().default_button_color
+                               , color body = get_theme().default_button_color);
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+
+      color                   body_color;
+      color                   active_body_color;
+      float                   corner_radius = get_theme().button_corner_radius;
+   };
+
+   /**
+    * \class button_face_element
+    *
+    * \brief
+    *    A button's look made of two elements: one drawn while the button
+    *    is off, the other while it is on. Each can be anything: a fill and
+    *    an outline, a label in another color, an image.
+    */
+   template <concepts::Element Off, concepts::Element On>
+   class button_face_element : public element
+   {
+   public:
+
+                              button_face_element(Off off, On on)
+                               : _off(std::move(off))
+                               , _on(std::move(on))
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      void                    draw(context const& ctx) override;
+      std::string             class_name() const override
+                              { return "button_face"; }
+
+   private:
+
+      Off                     _off;
+      On                      _on;
+   };
+
+   template <concepts::Element Off, concepts::Element On>
+   inline button_face_element<remove_cvref_t<Off>, remove_cvref_t<On>>
+   button_face(Off&& off, On&& on)
+   {
+      return {std::forward<Off>(off), std::forward<On>(on)};
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Make a momentary button with label
    ////////////////////////////////////////////////////////////////////////////
@@ -737,6 +799,39 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // Inlines
    ////////////////////////////////////////////////////////////////////////////
+
+   // Room for either look
+   template <concepts::Element Off, concepts::Element On>
+   inline view_limits
+   button_face_element<Off, On>::limits(basic_context const& ctx) const
+   {
+      auto l = _off.limits(ctx);
+      auto const r = _on.limits(ctx);
+      l.min.x = std::max(l.min.x, r.min.x);
+      l.min.y = std::max(l.min.y, r.min.y);
+      l.max.x = std::max(std::min(l.max.x, r.max.x), l.min.x);
+      l.max.y = std::max(std::min(l.max.y, r.max.y), l.min.y);
+      return l;
+   }
+
+   template <concepts::Element Off, concepts::Element On>
+   inline void button_face_element<Off, On>::layout(context const& ctx)
+   {
+      _off.layout(context{ctx, &_off, ctx.bounds});
+      _on.layout(context{ctx, &_on, ctx.bounds});
+   }
+
+   // The look for the button's state, found as a button styler finds it
+   template <concepts::Element Off, concepts::Element On>
+   inline void button_face_element<Off, On>::draw(context const& ctx)
+   {
+      auto btn = find_parent<basic_button*>(ctx);
+      if (btn && btn->value())
+         _on.draw(context{ctx, &_on, ctx.bounds});
+      else
+         _off.draw(context{ctx, &_off, ctx.bounds});
+   }
+
    inline float default_button_styler::get_size() const
    {
       return 1.0f;

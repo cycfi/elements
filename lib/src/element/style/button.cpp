@@ -24,6 +24,33 @@ namespace cycfi::elements
       return true;
    }
 
+   button_body::button_body(color active, color body)
+    : body_color(body)
+    , active_body_color(active)
+   {}
+
+   view_limits button_body::limits(basic_context const& /*ctx*/) const
+   {
+      return full_limits;
+   }
+
+   // The body as the default button styler draws it, with no text
+   void button_body::draw(context const& ctx)
+   {
+      auto btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+
+      auto const value = btn->value();
+      auto bounds = ctx.bounds;
+      if (value)
+         bounds = bounds.move(1, 1);
+      draw_button_base(ctx, bounds
+       , value? active_body_color.opacity(0.7) : body_color.level(0.9)
+       , ctx.enabled
+       , {corner_radius, corner_radius, corner_radius, corner_radius});
+   }
+
    view_limits default_button_styler::limits(basic_context const& ctx) const
    {
       auto const& theme = get_theme();

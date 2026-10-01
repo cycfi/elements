@@ -329,12 +329,27 @@ namespace cycfi::elements
    /**
     * \struct frame
     * \brief
-    *    A frame element that renders a frame.
+    *    A frame element that renders a frame: the theme's, or given a
+    *    color, a plain rounded outline of that color, line width and
+    *    corner radius.
     */
    struct frame : public element
    {
+                     frame() = default;
+                     frame(
+                        color color_
+                      , float width = get_theme().frame_stroke_width
+                      , float radius = get_theme().frame_corner_radius);
+
       void           draw(context const& ctx) override;
       std::string    class_name() const override { return "frame"; }
+
+   private:
+
+      bool           _custom = false;
+      color          _color;
+      float          _width = 1.0f;
+      float          _radius = 0.0f;
    };
 
    /**

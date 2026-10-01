@@ -20,11 +20,28 @@ namespace cycfi::elements
       );
    }
 
+   frame::frame(color color_, float width, float radius)
+    : _custom(true)
+    , _color(color_)
+    , _width(width)
+    , _radius(radius)
+   {}
+
    void frame::draw(context const& ctx)
    {
       auto const&    theme_ = get_theme();
       auto&          canvas_ = ctx.canvas;
       auto const&    bounds = ctx.bounds;
+
+      // A given color: one outline, inside the bounds
+      if (_custom)
+      {
+         auto const half = _width / 2;
+         canvas_.line_width(_width);
+         canvas_.stroke_style(_color);
+         canvas_.stroke_round_rect(bounds.inset(half, half), _radius);
+         return;
+      }
 
       canvas_.line_width(theme_.frame_stroke_width);
       canvas_.stroke_style(colors::black.opacity(0.4));

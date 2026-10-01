@@ -5,6 +5,25 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-01 -- refresh batching and the on-button opacity (develop)
+
+**TL;DR:** Element refreshes requested together are drawn as one, which
+made loading a preset in a 150-parameter plugin editor fast, and an "on"
+button is drawn at 0.7 opacity instead of 0.5.
+
+- `463b3c27` `view::refresh(element)` gathers the elements asked for until
+  the next poll, dropping duplicates. Up to 4 are refreshed where they
+  are; more than that, the whole view is refreshed once. Each element
+  refresh searches the tree for the element, computing layout on the way,
+  about 5 ms per search in a Debug build of the QPlug Dexter editor, so a
+  preset load (about 450 refreshes) beachballed for seconds. The threshold
+  of 4 keeps a drag redrawing only its control and its readout. Refresh
+  may be called off the main thread, so the gathering is locked.
+- `d199511b` the default button styler draws an "on" button's body at 0.7
+  opacity, up from 0.5, at which a latched or toggled button was hard to
+  tell from one that is off (Joel's choice, compared side by side in the
+  buttons example). Elements test suite: 1 of 1.
+
 ## 2026-06-09 to 06-14 -- master hotfixes
 
 **TL;DR:** Three master-only CI/build fixes on top of the 2025-09 line.

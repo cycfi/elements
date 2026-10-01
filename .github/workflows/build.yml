@@ -44,6 +44,11 @@ jobs:
       # run, fork, and clone restores anonymously over http. (NuGet and the
       # removed x-gha backend are no longer used.)
       VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
+      # vcpkg asset cache: source archives from Cycfi's R2 mirror first,
+      # then their origins, and mirrored on the way (.github/scripts/
+      # vcpkg_asset.cmake). A new runner compiler misses the binary cache
+      # and fetches sources again; SourceForge has failed those fetches.
+      X_VCPKG_ASSET_SOURCES: "clear;x-script,cmake \"-DURL={url}\" \"-DSHA512={sha512}\" \"-DDST={dst}\" -P ${{ github.workspace }}/.github/scripts/vcpkg_asset.cmake"
       # R2 (S3-compatible) credentials for the x-aws write layer. Withheld from
       # fork PR runs by GitHub; x-aws write then no-ops and http read still works.
       AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
@@ -222,6 +227,11 @@ jobs:
       # cache it on the ABI-exact R2 vcpkg cache. No-op on the Unix cairo jobs
       # (they never invoke vcpkg).
       VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
+      # vcpkg asset cache: source archives from Cycfi's R2 mirror first,
+      # then their origins, and mirrored on the way (.github/scripts/
+      # vcpkg_asset.cmake). A new runner compiler misses the binary cache
+      # and fetches sources again; SourceForge has failed those fetches.
+      X_VCPKG_ASSET_SOURCES: "clear;x-script,cmake \"-DURL={url}\" \"-DSHA512={sha512}\" \"-DDST={dst}\" -P ${{ github.workspace }}/.github/scripts/vcpkg_asset.cmake"
       AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
       AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -445,6 +455,11 @@ jobs:
       # HarfBuzz. On Windows they come from Artist's vcpkg manifest, which
       # also pulls Skia; the ABI-exact R2 cache keeps that a cache hit.
       VCPKG_BINARY_SOURCES: "clear;http,https://media.cycfi.com/vcpkg-cache/{sha}.zip,read;x-aws,s3://cycfi-media/vcpkg-cache/,write"
+      # vcpkg asset cache: source archives from Cycfi's R2 mirror first,
+      # then their origins, and mirrored on the way (.github/scripts/
+      # vcpkg_asset.cmake). A new runner compiler misses the binary cache
+      # and fetches sources again; SourceForge has failed those fetches.
+      X_VCPKG_ASSET_SOURCES: "clear;x-script,cmake \"-DURL={url}\" \"-DSHA512={sha512}\" \"-DDST={dst}\" -P ${{ github.workspace }}/.github/scripts/vcpkg_asset.cmake"
       AWS_ENDPOINT_URL: "https://24c350f8d000d722e6bcc12e3b03469a.r2.cloudflarestorage.com"
       AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}

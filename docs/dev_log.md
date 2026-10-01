@@ -5,6 +5,34 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-01 -- curve_editor (develop)
+
+**TL;DR:** A general control of draggable points, `curve_editor`,
+replaces the custom envelope trackers in QPlug's Anna and Dexter examples
+and serves any curve made of points: EQ bands, transfer curves, LFO
+shapes, automation lanes, an XY pad.
+
+- `d6ab1277` `basic_curve_editor`, a `tracker<proxy_base>` over N
+  `curve_point`s in a unit square with y up; a point may hold its x as a
+  distance from the point before it (`relative_x`), so envelope segments
+  are durations. Where a point may go is one client function,
+  `constrain(pts, i, to) -> point`, with `in_unit_square`,
+  `between_neighbors` and `default_constraint` to compose; `movable(i)`
+  says which points can be taken hold of. Each axis of each point is a
+  control of its own for a model binder, `x_of(editor, i)` and
+  `y_of(editor, i)` (a `curve_value`: `value`, `on_change`, `on_gesture`,
+  `refresh_target`); a point that follows another is bound to the same
+  model. A gesture on an axis begins the first time a drag changes it,
+  and the callbacks report where the drag put the point, since a model
+  binding may set it again meanwhile. `on_change(i, pos)` for code that
+  binds nothing; `on_insert` and `on_erase` let a double click add or
+  remove a point. The proxy's subject draws the curve (`curve_lines`) and
+  a handle styler each point (`curve_handle`); both find the editor with
+  `find_parent`. Points that coincide go to the one last dragged. Twelve
+  cases in `test/curve_editor_test.cpp`, driven through the headless
+  view; suite 29 of 29. Replaced a first design with a per-point motion
+  enum and ranges, on Joel's suggestion: one function says it all.
+
 ## 2026-10-01 -- refresh batching and the on-button opacity (develop)
 
 **TL;DR:** Element refreshes requested together are drawn as one, which

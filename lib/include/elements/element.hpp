@@ -12,6 +12,7 @@
 #include <elements/element/collapsable.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/curve_editor.hpp>
+#include <elements/element/image_grid.hpp>
 #include <elements/element/dial.hpp>
 #include <elements/element/drag_and_drop.hpp>
 #include <elements/element/list.hpp>

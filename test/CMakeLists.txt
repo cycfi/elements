@@ -16,6 +16,7 @@ set(elements_test_sources
    button_tracking_test.cpp
    controls_marks_page_test.cpp
    curve_editor_test.cpp
+   image_grid_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})

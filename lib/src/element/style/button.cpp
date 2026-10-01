@@ -70,7 +70,7 @@ namespace cycfi::elements
       auto hilite = btn->hilite();
       auto enabled = ctx.enabled;
       auto body_color = value?
-         get_active_body_color().opacity(0.5) :
+         get_active_body_color().opacity(0.7) :
          get_body_color().level(0.9)
          ;
 

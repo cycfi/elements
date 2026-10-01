@@ -8,6 +8,7 @@
 #include <elements/support/context.hpp>
 #include <elements/support/log.hpp>
 #include <elements/support/trace.hpp>
+#include <algorithm>
 
 namespace cycfi::elements
 {
@@ -202,18 +203,53 @@ namespace cycfi::elements
       if (_current_bounds.is_empty())
          return;
 
-      asio::post(_io,
-         [this, &element, outward]()
-         {
-            with_context_do(
-               [&element, outward](auto const& ctx, auto& _main_element)
-               {
-                  _main_element.refresh(ctx, element, outward);
-               },
-               *this, _current_bounds
-            );
-         }
-      );
+      // Gathered, and refreshed together at the next poll. Refresh may
+      // be called from another thread, hence the lock.
+      bool first = false;
+      {
+         std::lock_guard<std::mutex> lock(_pending_mutex);
+         first = _pending.empty();
+         pending_refresh const entry{&element, outward};
+         if (std::find(_pending.begin(), _pending.end(), entry)
+            == _pending.end())
+            _pending.push_back(entry);
+      }
+      if (first)
+         asio::post(_io, [this]() { refresh_pending(); });
+   }
+
+   // Refreshing an element searches the tree for it, computing the
+   // layout on the way down, so each one costs as much as the tree is
+   // big: about 5 ms in a Debug build of a 150 parameter plugin editor.
+   // A few are refreshed where they are, which keeps a drag redrawing
+   // only its control and its readout; past that, the whole view is
+   // refreshed once, and drawn once.
+   void view::refresh_pending()
+   {
+      constexpr std::size_t max_searches = 4;
+
+      std::vector<pending_refresh> pending;
+      {
+         std::lock_guard<std::mutex> lock(_pending_mutex);
+         pending.swap(_pending);
+      }
+
+      if (pending.size() > max_searches)
+      {
+         base_view::refresh();
+         return;
+      }
+
+      for (auto [e, outward] : pending)
+      {
+         with_context_do(
+            [e, outward](auto const& ctx, auto& _main_element)
+            {
+               _main_element.refresh(ctx, *e, outward);
+            },
+            *this, _current_bounds
+         );
+      }
    }
 
    void view::refresh(context const& ctx, int outward)

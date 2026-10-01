@@ -22,6 +22,9 @@
 #include <chrono>
 #include <stack>
 #include <map>
+#include <mutex>
+#include <utility>
+#include <vector>
 
 namespace cycfi::elements
 {
@@ -149,6 +152,16 @@ namespace cycfi::elements
       scaled_content          _main_element;
 
       void                    set_limits();
+      void                    refresh_pending();
+
+      // Elements to refresh, gathered until the next poll, so that a
+      // burst of them (every control of a preset, loaded at once) costs
+      // one refresh rather than a search of the tree for each. See
+      // refresh_pending.
+      using pending_refresh = std::pair<element*, int>;
+      std::vector<pending_refresh>
+                              _pending;
+      std::mutex              _pending_mutex;
 
       rect                    _current_bounds;
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};

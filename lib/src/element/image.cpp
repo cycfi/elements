@@ -48,12 +48,24 @@ namespace cycfi::elements
    {
    }
 
+   image::image(fs::path const& path, fill_enum)
+    : image{path, -1}
+   {
+      _fill = true;
+   }
+
+   image::image(image_ptr image_, fill_enum)
+    : image{image_, -1}
+   {
+      _fill = true;
+   }
+
    point image::size() const
    {
       auto s = _image->size();
       if (_scale > 0)
          return {s.x * _scale, s.y * _scale};
-      else // fit
+      else // fit or fill
          return {-1, -1}; // We do not know the actual size
    }
 
@@ -63,7 +75,7 @@ namespace cycfi::elements
       {
          return {0, 0, ctx.bounds.width() / _scale, ctx.bounds.height() / _scale};
       }
-      else // fit
+      else // fit or fill
       {
          auto s = _image->size();
          return {0, 0, s.x, s.y};
@@ -77,7 +89,7 @@ namespace cycfi::elements
          auto size_ = size();
          return {{size_.x, size_.y}, {size_.x, size_.y}};
       }
-      else // fit
+      else // fit or fill
       {
          return full_limits;
       }
@@ -86,7 +98,7 @@ namespace cycfi::elements
    void image::draw(context const& ctx)
    {
       auto src = source_rect(ctx);
-      if (_scale > 0)
+      if (_scale > 0 || _fill)
       {
          ctx.canvas.draw(*get_image().get(), src, ctx.bounds);
       }

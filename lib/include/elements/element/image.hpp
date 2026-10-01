@@ -28,21 +28,32 @@ namespace cycfi::elements
     *    source. The image source can be either an `image_ptr` (a pointer to
     *    an image) or a filesystem path to an image file (`fs::path`). JPEG,
     *    PNG and WEBP images are supported.
+    *
+    *    An image is drawn at a fixed scale, or with `fit`, as large as the
+    *    space allows, its proportions kept, or with `fill`, filling the
+    *    space it is given, scaled in each direction on its own.
     */
    class image : public element
    {
    public:
 
       struct fit_enum{};
+      struct fill_enum{};
 
       // Use `fit` as constructor param to allow the image to fit available
       // space while keeping source image aspect ratio.
       static constexpr auto fit = fit_enum{};
 
+      // Use `fill` as constructor param to fill the available space,
+      // the image scaled in each direction on its own.
+      static constexpr auto fill = fill_enum{};
+
                               image(fs::path const& path, float scale = 1);
                               image(image_ptr img, float scale = 1);
                               image(fs::path const& path, fit_enum);
                               image(image_ptr pixmap_, fit_enum);
+                              image(fs::path const& path, fill_enum);
+                              image(image_ptr pixmap_, fill_enum);
 
       virtual point           size() const;
       float                   scale() const { return _scale; }
@@ -59,6 +70,7 @@ namespace cycfi::elements
 
       image_ptr               _image;
       float                   _scale;
+      bool                    _fill = false;
    };
 
    /**

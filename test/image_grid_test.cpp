@@ -235,3 +235,26 @@ TEST_CASE("image_grid_highlight: a label for each cell, where asked")
    std::vector<int> const expect = {0, 1, 2, 3, 4, 5, 6, 7};
    CHECK(labeled == expect);
 }
+
+TEST_CASE("image: filled, the whole image fills the space given")
+{
+   test_view tv{{100, 60}};
+   auto img = share(image{make_image(), image::fill});
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+   headless::open(tv.view_);
+#endif
+   tv.view_.content(hold(img));
+   tv.view_.layout();
+   tv.draw();
+
+   rect src, bounds;
+   tv.view_.in_context_do(*img, [&](context const& ctx)
+   {
+      src = img->source_rect(ctx);
+      bounds = ctx.bounds;
+   });
+   CHECK(src.width() == Approx(80));        // all of the image
+   CHECK(src.height() == Approx(40));
+   CHECK(bounds.width() == Approx(100));    // into all of the space
+   CHECK(bounds.height() == Approx(60));
+}

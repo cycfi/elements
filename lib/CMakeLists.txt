@@ -70,6 +70,7 @@ set(ELEMENTS_SOURCES
    src/element/button.cpp
    src/element/child_window.cpp
    src/element/composite.cpp
+   src/element/curve_editor.cpp
    src/element/dial.cpp
    src/element/drag_and_drop.cpp
    src/element/element.cpp
@@ -91,6 +92,7 @@ set(ELEMENTS_SOURCES
    src/element/style/border.cpp
    src/element/style/button.cpp
    src/element/style/check_box.cpp
+   src/element/style/curve_editor.cpp
    src/element/style/grid_lines.cpp
    src/element/style/icon_button.cpp
    src/element/style/menu.cpp
@@ -124,6 +126,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/button.hpp
    include/elements/element/collapsable.hpp
    include/elements/element/composite.hpp
+   include/elements/element/curve_editor.hpp
    include/elements/element/dial.hpp
    include/elements/element/drag_and_drop.hpp
    include/elements/element/element.hpp
@@ -153,6 +156,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/style/button.hpp
    include/elements/element/style/caption.hpp
    include/elements/element/style/check_box.hpp
+   include/elements/element/style/curve_editor.hpp
    include/elements/element/style/dialog.hpp
    include/elements/element/style/grid_lines.hpp
    include/elements/element/style/group.hpp

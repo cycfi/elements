@@ -184,9 +184,10 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // basic_image_grid_cell
    ////////////////////////////////////////////////////////////////////////////
+   // A picture fitted to the space it is given has no size of its own.
    view_limits basic_image_grid_cell::limits(basic_context const&) const
    {
-      return {{32, 32}, {full_extent, full_extent}};
+      return full_limits;
    }
 
    // The current cell, as large as fits, its proportions kept, centered

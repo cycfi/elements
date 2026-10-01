@@ -5,6 +5,33 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-01 -- image_grid_menu (develop)
+
+**TL;DR:** One image divided into equal cells is a choice: a menu of all
+its cells, or one cell shown alone, with stylers drawn over each cell.
+It replaced the 430 lines of drawing behind the QPlug Dexter example's
+algorithm menu and chart.
+
+- `bb10cb87` `basic_image_grid`, a `proxy_base` over any image and a number of
+  columns and rows; cells are numbered left to right, then top to
+  bottom. Its current cell is a value of its own, `value(i)` and
+  `on_change`, so a model binder binds it like any control. The proxy's
+  subject is a cell styler, drawn over each cell shown; it finds the grid
+  with `find_parent` and asks `drawing()` and `state(i)` (normal, hot,
+  current), as `curve_editor`'s handle styler does.
+  `basic_image_grid_menu` (`image_grid_menu`) lays every cell out at a
+  given scale; the cell under the cursor is hot, and a press and a
+  release on the same cell pick it and close an enclosing popup.
+  `basic_image_grid_cell` (`image_grid_cell`) shows the current cell
+  alone, fitted, its proportions kept. Stylers: `image_grid_highlight`,
+  the default, tints the hot cell, frames the current one and, given a
+  `label` function, labels each cell; `image_regions` takes rects per
+  cell in the cell's unit square and a state function, and frames a lit
+  region or shades a dimmed one, for a picture with parts (Dexter's
+  chart: the operator being edited, the switched-off ones). Eight cases
+  in `test/image_grid_test.cpp` on an offscreen image; suite 41 of 41.
+  Joel's design; images are PNG for now, SVG when Elements can load it.
+
 ## 2026-10-01 -- curve_editor (develop)
 
 **TL;DR:** A general control of draggable points, `curve_editor`,

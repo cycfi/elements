@@ -22,14 +22,15 @@ namespace cycfi::elements
     * \brief
     *    One point of a curve_editor, in a unit square with y up.
     *
-    *    A point with `relative_x` holds its x as a distance from the point
-    *    before it, so dragging it moves every point after it: an envelope's
-    *    segments, held as durations.
+    *    A point with `offset_x` holds its x as an offset from the x of the
+    *    point before it, so dragging it moves every point after it: an
+    *    envelope's segments, held as durations. An offset may be negative;
+    *    the default constraint keeps the points in order.
     */
    struct curve_point
    {
       point          pos;
-      bool           relative_x = false;
+      bool           offset_x = false;
    };
 
    /**
@@ -40,20 +41,24 @@ namespace cycfi::elements
     *    transfer curve, an automation lane, an XY pad.
     *
     *    The proxy's subject draws the curve, the line styler, and a handle
-    *    styler draws each point. Both find the editor with find_parent, the
-    *    handle styler asking which point it is drawing with drawing(), and
-    *    that point's state.
+    *    styler draws each point. Both find the editor with find_parent; the
+    *    handle styler gets the point it is drawing from drawing(), and that
+    *    point's state from state().
     *
     *    Where a point may go is the client's rule: `constrain` is given the
     *    points, which one is being dragged and where to, and returns where
-    *    it lands. The default keeps a point in the unit square and between
-    *    its neighbors. `movable` says which points may be taken hold of.
+    *    it lands. All of these are places in the unit square, offsets
+    *    summed; the editor turns the result back into an offset for an
+    *    offset point. The default keeps a point in the unit square and
+    *    between its neighbors. `movable` says which points may be dragged.
     *
     *    Each point is a node with its own callbacks, one per axis, which
     *    x_of and y_of hand out as controls of their own, for a model binder.
-    *    on_change says which point the user moved, for code that binds
-    *    nothing. Points may be inserted and erased, by code or, where
-    *    on_insert and on_erase allow it, by a double click.
+    *    on_change gives the point the user moved and its new value, for
+    *    code that binds nothing. Both give x as the point holds it: an
+    *    offset for an offset point. Points may be inserted and erased, by
+    *    code or, where on_insert and on_erase allow it, by a double click,
+    *    on_insert given the place in the unit square.
     */
    class basic_curve_editor : public tracker<proxy_base>
    {
@@ -93,11 +98,11 @@ namespace cycfi::elements
       node const&             operator[](std::size_t i) const;
       node_ptr                node_at(std::size_t i) const;
 
-      // A point's place in the unit square, its x summed if relative
+      // A point's place in the unit square, offsets summed
       point                   position(std::size_t i) const;
       points_type             positions() const;
 
-      // An axis as the point holds it: a relative x is a distance. Set
+      // An axis as the point holds it: an offset x is the offset. Set
       // as given; no callback is called.
       float                   x(std::size_t i) const;
       void                    x(std::size_t i, float v);

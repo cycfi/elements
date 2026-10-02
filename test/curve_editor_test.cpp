@@ -133,7 +133,7 @@ TEST_CASE("curve_editor: by default a point stays between its neighbors")
    CHECK(v.editor->x(1) == Approx(0.2f).margin(eps));
 }
 
-TEST_CASE("curve_editor: a relative point moves the points after it")
+TEST_CASE("curve_editor: an offset point moves the points after it")
 {
    cp start{{0.0f, 0.0f}};
    cp a{{0.2f, 1.0f}, true};
@@ -252,7 +252,7 @@ TEST_CASE("curve_editor: a double click inserts or erases, where allowed")
    CHECK(v.editor->position(0).x == Approx(0.5f).margin(eps));
 }
 
-TEST_CASE("curve_editor: inserting and erasing keeps relative points in place")
+TEST_CASE("curve_editor: inserting and erasing keeps offset points in place")
 {
    cp start{{0.0f, 0.0f}};
    cp a{{0.4f, 1.0f}, true};
@@ -260,7 +260,7 @@ TEST_CASE("curve_editor: inserting and erasing keeps relative points in place")
    editor_view v{{start, a, b}};
    REQUIRE(v.editor->position(2).x == Approx(0.8f).margin(eps));
 
-   // A relative point inserted at 0.2 splits the first segment
+   // An offset point inserted at 0.2 splits the first segment
    cp mid{{0.2f, 0.5f}, true};
    v.editor->insert(1, mid);
    CHECK(v.editor->position(1).x == Approx(0.2f).margin(eps));

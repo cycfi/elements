@@ -36,7 +36,7 @@ namespace cycfi::elements
    point basic_curve_editor::position(std::size_t i) const
    {
       auto const& s = _nodes[i]->spec;
-      if (s.relative_x && i > 0)
+      if (s.offset_x && i > 0)
          return {position(i - 1).x + s.pos.x, s.pos.y};
       return s.pos;
    }
@@ -49,7 +49,7 @@ namespace cycfi::elements
       for (auto const& n : _nodes)
       {
          auto const& s = n->spec;
-         x = s.relative_x && !pts.empty()? x + s.pos.x : s.pos.x;
+         x = s.offset_x && !pts.empty()? x + s.pos.x : s.pos.x;
          pts.push_back({x, s.pos.y});
       }
       return pts;
@@ -75,16 +75,16 @@ namespace cycfi::elements
       _nodes[i]->spec.pos.y = v;
    }
 
-   // A relative point inserted splits the segment it lands in, and one
+   // An offset point inserted splits the segment it lands in, and one
    // erased merges two, so the points after it stay where they were.
    bool basic_curve_editor::insert(std::size_t i, curve_point p)
    {
       if (i > _nodes.size())
          return false;
-      if (p.relative_x && i > 0)
+      if (p.offset_x && i > 0)
       {
          auto const at = position(i - 1).x + p.pos.x;
-         if (i < _nodes.size() && _nodes[i]->spec.relative_x)
+         if (i < _nodes.size() && _nodes[i]->spec.offset_x)
             _nodes[i]->spec.pos.x = position(i).x - at;
       }
       _nodes.insert(_nodes.begin() + i, make_node(p));
@@ -95,8 +95,8 @@ namespace cycfi::elements
    {
       if (i >= _nodes.size())
          return false;
-      if (i + 1 < _nodes.size() && _nodes[i + 1]->spec.relative_x
-         && _nodes[i]->spec.relative_x)
+      if (i + 1 < _nodes.size() && _nodes[i + 1]->spec.offset_x
+         && _nodes[i]->spec.offset_x)
          _nodes[i + 1]->spec.pos.x += _nodes[i]->spec.pos.x;
       auto const* n = _nodes[i].get();
       if (_hot == n)
@@ -198,7 +198,7 @@ namespace cycfi::elements
 
       auto& n = *_nodes[i];
       auto const old = n.spec.pos;
-      n.spec.pos.x = n.spec.relative_x && i > 0?
+      n.spec.pos.x = n.spec.offset_x && i > 0?
          at.x - pts[i - 1].x : at.x;
       n.spec.pos.y = at.y;
       auto const now = n.spec.pos;
@@ -252,12 +252,12 @@ namespace cycfi::elements
       while (i != _nodes.size() && position(i).x <= u.x)
          ++i;
 
-      // Relative if the point after it is, so the segment is split
-      auto relative = i < _nodes.size() && i > 0
-         && _nodes[i]->spec.relative_x;
+      // An offset if the point after it is one, so the segment is split
+      auto offset = i < _nodes.size() && i > 0
+         && _nodes[i]->spec.offset_x;
       curve_point np;
-      np.relative_x = relative;
-      np.pos = {relative? u.x - position(i - 1).x : u.x, u.y};
+      np.offset_x = offset;
+      np.pos = {offset? u.x - position(i - 1).x : u.x, u.y};
       if (!on_insert(i, {u.x, u.y}))
          return false;
       return insert(i, np);

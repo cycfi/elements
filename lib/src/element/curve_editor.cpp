@@ -187,10 +187,11 @@ namespace cycfi::elements
       return best;
    }
 
-   // Move a point toward `to`, as the constraint allows, and say what
+   // Move a point toward `to`, as the constraint allows, and report what
    // changed. A drag is a gesture on each axis it moves the point along,
    // begun the first time that axis changes. The callbacks report where
-   // the drag put the point, which a callback may set again meanwhile.
+   // the drag put the point, which a callback may set again meanwhile:
+   // the axis callbacks as the point holds it, on_change in the square.
    void basic_curve_editor::move(std::size_t i, point to)
    {
       auto const pts = positions();
@@ -220,7 +221,7 @@ namespace cycfi::elements
             n.on_y_change(now.y);
       }
       if ((now.x != old.x || now.y != old.y) && on_change)
-         on_change(i, now);
+         on_change(i, at);
    }
 
    void basic_curve_editor::end_gesture(std::size_t i)

@@ -309,6 +309,20 @@ TEST_CASE("curve_editor: on_change reports the drag, not a callback's reset")
    CHECK(v.editor->y(0) == Approx(0.5f).margin(eps));
 }
 
+TEST_CASE("curve_editor: on_change reports an offset point in the square")
+{
+   cp start{{0.0f, 0.0f}};
+   cp a{{0.2f, 1.0f}, true};
+   cp b{{0.3f, 0.5f}, true};
+   editor_view v{{start, a, b}};
+   point seen{-1, -1};
+   v.editor->on_change = [&](std::size_t, point pos) { seen = pos; };
+
+   v.drag({0.5f, 0.5f}, {0.6f, 0.5f});
+   CHECK(seen.x == Approx(0.6f).margin(eps));             // a place
+   CHECK(v.editor->x(2) == Approx(0.4f).margin(eps));     // a distance
+}
+
 TEST_CASE("curve_lines: a shape bends each segment, sampled along it")
 {
    editor_view v{{cp{{0.0f, 0.0f}}, cp{{0.5f, 1.0f}}, cp{{1.0f, 0.5f}}}};

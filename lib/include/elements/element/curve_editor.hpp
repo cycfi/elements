@@ -54,11 +54,12 @@ namespace cycfi::elements
     *
     *    Each point is a node with its own callbacks, one per axis, which
     *    x_of and y_of hand out as controls of their own, for a model binder.
-    *    on_change gives the point the user moved and its new value, for
-    *    code that binds nothing. Both give x as the point holds it: an
-    *    offset for an offset point. Points may be inserted and erased, by
-    *    code or, where on_insert and on_erase allow it, by a double click,
-    *    on_insert given the place in the unit square.
+    *    Those give x as the point holds it: an offset for an offset
+    *    point. on_change gives the point the user moved and its place in
+    *    the unit square, for code that binds nothing. Points may be
+    *    inserted and erased, by code or, where on_insert and on_erase
+    *    allow it, by a double click, on_insert also given the place in
+    *    the unit square.
     */
    class basic_curve_editor : public tracker<proxy_base>
    {

@@ -726,7 +726,6 @@ namespace cycfi::elements
 #if defined(ARTIST_SKIA)
       // Skia renders into a GtkGLArea via Ganesh GL.
       auto* content_view = gtk_gl_area_new();
-      gtk_container_add(GTK_CONTAINER(parent), content_view);
 
       g_signal_connect(content_view, "render",
          G_CALLBACK(render), &view);
@@ -738,7 +737,6 @@ namespace cycfi::elements
       // Cairo renders directly into the widget's cairo_t on the "draw" signal,
       // backed by an offscreen surface recreated on "configure-event".
       auto* content_view = gtk_drawing_area_new();
-      gtk_container_add(GTK_CONTAINER(parent), content_view);
 
       g_signal_connect(content_view, "configure-event",
          G_CALLBACK(on_configure), &view);
@@ -781,9 +779,10 @@ namespace cycfi::elements
       gtk_drag_dest_set(content_view, GTK_DEST_DEFAULT_ALL,
          target_entries, G_N_ELEMENTS(target_entries), GDK_ACTION_COPY);
 
-      gtk_widget_set_events(content_view,
-         gtk_widget_get_events(content_view)
-         | GDK_BUTTON_PRESS_MASK
+      // Add to the event masks rather than set them: the window may be
+      // realized already, and GTK refuses a new mask on a realized widget.
+      gtk_widget_add_events(content_view,
+         GDK_BUTTON_PRESS_MASK
          | GDK_BUTTON_RELEASE_MASK
          | GDK_POINTER_MOTION_MASK
          | GDK_SCROLL_MASK
@@ -804,9 +803,8 @@ namespace cycfi::elements
       g_signal_connect(parent, "delete-event",
          G_CALLBACK(on_delete), &view);
 
-      gtk_widget_set_events(parent,
-         gtk_widget_get_events(parent)
-         | GDK_KEY_PRESS_MASK
+      gtk_widget_add_events(parent,
+         GDK_KEY_PRESS_MASK
          | GDK_FOCUS_CHANGE_MASK
       );
 
@@ -825,6 +823,13 @@ namespace cycfi::elements
          , reinterpret_cast<gpointer*>(&host_view_h->_parent));
       g_object_add_weak_pointer(G_OBJECT(content_view)
          , reinterpret_cast<gpointer*>(&host_view_h->_widget));
+
+      // Add the view to its window last. A window made once the app is
+      // running is realized and shown already: adding a child realizes it
+      // at once, before any later "realize" handler, and leaves it hidden
+      // until shown itself.
+      gtk_container_add(GTK_CONTAINER(parent), content_view);
+      gtk_widget_show(content_view);
 
       // $$$ TODO: do this $$$
       // host_view_h->_scale = gdk_window_get_scale_factor(w);

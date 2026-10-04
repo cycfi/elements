@@ -816,17 +816,30 @@ namespace cycfi::elements
             }
          }
       }
-      void surface_enter(void* data, wl_surface*, wl_output* output)
+      // The surface is the window's and outlives a view destroyed before
+      // it, so the view is found through the registry, which the view's
+      // destructor leaves, rather than the listener's data.
+      base_view* view_of(wl_surface* surface)
       {
-         auto* view = static_cast<base_view*>(data);
-         platform_access::get_host_view(*view)->outputs.insert(output);
-         update_view_scale(view);
+         auto i = plat().views.find(surface);
+         return i == plat().views.end()? nullptr : i->second;
       }
-      void surface_leave(void* data, wl_surface*, wl_output* output)
+
+      void surface_enter(void*, wl_surface* surface, wl_output* output)
       {
-         auto* view = static_cast<base_view*>(data);
-         platform_access::get_host_view(*view)->outputs.erase(output);
-         update_view_scale(view);
+         if (auto* view = view_of(surface))
+         {
+            platform_access::get_host_view(*view)->outputs.insert(output);
+            update_view_scale(view);
+         }
+      }
+      void surface_leave(void*, wl_surface* surface, wl_output* output)
+      {
+         if (auto* view = view_of(surface))
+         {
+            platform_access::get_host_view(*view)->outputs.erase(output);
+            update_view_scale(view);
+         }
       }
       void surface_pref_scale(void*, wl_surface*, int32_t) {}
       void surface_pref_transform(void*, wl_surface*, uint32_t) {}

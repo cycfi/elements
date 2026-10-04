@@ -6,6 +6,7 @@
 #include <elements/window.hpp>
 #include <elements/support.hpp>
 #include <functional>
+#include <memory>
 #include <vector>
 #include <gtk/gtk.h>
 
@@ -17,6 +18,10 @@ namespace cycfi::elements
    {
       GtkWidget* host = nullptr;
       std::vector<std::function<void()>> on_activate;
+
+      // Work deferred until the app activates holds a weak reference to
+      // this, and skips itself if the window is gone by then.
+      std::shared_ptr<bool> alive = std::make_shared<bool>(true);
    };
 
    extern std::vector<std::function<void()>> on_activate;
@@ -49,8 +54,10 @@ namespace cycfi::elements
       // immediately.
 
       auto make_window =
-         [this, name, bounds]()
+         [this, name, bounds, alive = std::weak_ptr<bool>{_window->alive}]()
          {
+            if (alive.expired())
+               return;
             GtkWidget* win = gtk_application_window_new(get_app());
             g_object_ref(win);
             gtk_window_set_title(GTK_WINDOW(win), name.c_str());
@@ -73,7 +80,8 @@ namespace cycfi::elements
 
    window::~window()
    {
-      g_object_unref(_window->host);
+      if (_window->host)
+         g_object_unref(_window->host);
       delete _window;
    }
 
@@ -94,8 +102,10 @@ namespace cycfi::elements
    void window::limits(view_limits limits_)
    {
       auto set_limits =
-         [this, limits_]()
+         [this, limits_, alive = std::weak_ptr<bool>{_window->alive}]()
          {
+            if (alive.expired())
+               return;
             constexpr float max = 10E6;
             auto win = GTK_WINDOW(_window->host);
             GdkGeometry hints;
@@ -148,8 +158,10 @@ namespace cycfi::elements
    void window::position(point const& p)
    {
       auto set_position =
-         [this, p]()
+         [this, p, alive = std::weak_ptr<bool>{_window->alive}]()
          {
+            if (alive.expired())
+               return;
             auto win = GTK_WINDOW(_window->host);
             auto scale = get_scale(_window->host);
             gtk_window_move(win, p.x / scale, p.y / scale);

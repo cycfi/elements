@@ -14,6 +14,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <memory>
 
 #include <limits.h>
 #include <unistd.h>
@@ -112,6 +113,18 @@ namespace cycfi::elements
       cairo_t*                   _cr;                 // The current cairo context
 
       std::unique_ptr<drop_info> _drop_info;          // For drag and drop
+
+      // What holds the base_view, cut when it goes: the idle on_open, the
+      // poll timer, and the signals on the widget and its parent. Both
+      // widgets may outlive the view (a plugin's host window does); GTK
+      // clears these pointers if it destroys them first.
+      guint                      _on_open_source = 0;
+      guint                      _poll_source = 0;
+      GtkWidget*                 _parent = nullptr;
+
+      // make_view deferred until the app activates skips itself if the
+      // view is gone by then.
+      std::shared_ptr<bool>      _alive = std::make_shared<bool>(true);
    };
 
    struct platform_access
@@ -703,6 +716,7 @@ namespace cycfi::elements
       auto* host_view_h = platform_access::get_host_view(view);
       auto w = gtk_widget_get_allocated_width(host_view_h->_widget);
       auto h = gtk_widget_get_allocated_height(host_view_h->_widget);
+      host_view_h->_on_open_source = 0;
       view.on_open({float(w), float(h)}, get_scale(host_view_h->_widget));
       return G_SOURCE_REMOVE;
    }
@@ -800,10 +814,17 @@ namespace cycfi::elements
       g_signal_connect(view.host()->_im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
 
-      g_idle_add(fire_on_open, &view);
+      auto* host_view_h = view.host();
+      host_view_h->_on_open_source = g_idle_add(fire_on_open, &view);
 
       // Create 1ms timer
-      g_timeout_add(1, poll_function, &view);
+      host_view_h->_poll_source = g_timeout_add(1, poll_function, &view);
+
+      host_view_h->_parent = parent;
+      g_object_add_weak_pointer(G_OBJECT(parent)
+         , reinterpret_cast<gpointer*>(&host_view_h->_parent));
+      g_object_add_weak_pointer(G_OBJECT(content_view)
+         , reinterpret_cast<gpointer*>(&host_view_h->_widget));
 
       // $$$ TODO: do this $$$
       // host_view_h->_scale = gdk_window_get_scale_factor(w);
@@ -873,8 +894,10 @@ namespace cycfi::elements
     : base_view(new host_view)
    {
       auto make_view =
-         [this, h]()
+         [this, h, alive = std::weak_ptr<bool>{_view->_alive}]()
          {
+            if (alive.expired())
+               return;
             _view->_widget = elements::make_view(*this, get_window(*h));
          };
 
@@ -888,6 +911,28 @@ namespace cycfi::elements
    {
       if (host_view_under_cursor == _view)
          host_view_under_cursor = nullptr;
+
+      if (_view->_on_open_source)
+         g_source_remove(_view->_on_open_source);
+      if (_view->_poll_source)
+         g_source_remove(_view->_poll_source);
+
+      if (_view->_widget)
+      {
+         g_signal_handlers_disconnect_by_data(_view->_widget, this);
+         g_object_remove_weak_pointer(G_OBJECT(_view->_widget)
+            , reinterpret_cast<gpointer*>(&_view->_widget));
+         gtk_widget_destroy(_view->_widget);   // out of the parent, as on macOS
+      }
+      if (_view->_parent)
+      {
+         g_signal_handlers_disconnect_by_data(_view->_parent, this);
+         g_object_remove_weak_pointer(G_OBJECT(_view->_parent)
+            , reinterpret_cast<gpointer*>(&_view->_parent));
+      }
+      g_signal_handlers_disconnect_by_data(_view->_im_context, this);
+      g_object_unref(_view->_im_context);
+
       delete _view;
       _view = nullptr;
    }

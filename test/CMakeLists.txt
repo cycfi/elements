@@ -18,9 +18,15 @@ set(elements_test_sources
    curve_editor_test.cpp
    image_grid_test.cpp
    button_body_test.cpp
+   view_teardown_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})
+if (APPLE)
+   # It runs the AppKit loop itself, to stop it without ending the process.
+   set_source_files_properties(view_teardown_test.cpp PROPERTIES
+      COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
+endif()
 
 target_link_libraries(elements_test PRIVATE elements)
 

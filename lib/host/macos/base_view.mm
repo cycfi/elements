@@ -545,6 +545,15 @@ namespace
    [_task invalidate];
 }
 
+// The C++ view is gone. A host may keep this NSView alive past it, and the
+// deferred on_open, queued in attach_notifications, may still run; it
+// checks _view. The rest stop with the C++ view: the timer is invalidated,
+// and a view out of its window gets no drawing or events.
+- (void) elements_detach
+{
+   _view = nullptr;
+}
+
 - (BOOL) canBecomeKeyView
 {
    return YES;
@@ -1154,6 +1163,7 @@ namespace cycfi::elements
    base_view::~base_view()
    {
       auto ns_view = get_mac_view(host());
+      [ns_view elements_detach];
       [ns_view detach_notifications];
       [ns_view detach_timer];
       [ns_view removeFromSuperview];

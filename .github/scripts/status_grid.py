@@ -4,9 +4,10 @@
 #
 #  Distributed under the MIT License (https://opensource.org/licenses/MIT)
 ###############################################################################
-# Draws a workflow run's jobs as a status grid, an SVG: a title bar, then a
-# cell per job, its name beside a green "pass" or a red "fail". The jobs come
-# as JSON lines of {"name": ..., "conclusion": ...}, as `gh api` lists them:
+# Draws a workflow run's jobs as a status grid, an SVG: a cell per job, its
+# name beside a green "pass" or a red "fail". The title is the image's label
+# and tooltip, and is not drawn. The jobs come as JSON lines of
+# {"name": ..., "conclusion": ...}, as `gh api` lists them:
 #
 #   gh api repos/$REPO/actions/runs/$RUN/jobs --paginate \
 #      --jq '.jobs[] | {name, conclusion}' > jobs.jsonl
@@ -24,16 +25,14 @@ import re
 LABEL_BG = '#555'
 PASS_BG = '#4c1'
 FAIL_BG = '#e05d44'
-TITLE_BG = '#444'
+GRID_BG = '#444'
 TEXT = '#fff'
 
 FONT = 'Verdana,DejaVu Sans,Geneva,sans-serif'
 SCALE = 0.8           # of a 10 px label font; one knob for the whole grid
 FONT_PX = 10 * SCALE
-TITLE_PX = 12 * SCALE
 CHAR_W = 0.6 * FONT_PX  # average Verdana glyph width
 CELL_H = 18 * SCALE
-TITLE_H = 22 * SCALE
 PAD = 6 * SCALE
 GAP = 1
 
@@ -73,23 +72,21 @@ def render(title, entries, columns):
         label_ws.append(max([text_width(n) for n in names] + [60 * SCALE]))
         xs.append(x)
         x += label_ws[-1] + value_w + GAP
-    width = round(max(x - GAP, text_width(title)))
-    height = round(TITLE_H + rows * (CELL_H + GAP))
+    width = round(x - GAP)
+    height = round(rows * (CELL_H + GAP) - GAP)
 
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
         f'height="{height}" role="img" aria-label="{html.escape(title)}">',
         f'<title>{html.escape(title)}</title>',
-        f'<rect width="{width}" height="{height}" rx="3" fill="{TITLE_BG}"/>',
+        f'<rect width="{width}" height="{height}" rx="3" fill="{GRID_BG}"/>',
         f'<g fill="{TEXT}" font-family="{FONT}" text-anchor="middle">',
-        f'<text x="{width / 2}" y="{TITLE_H / 2 + TITLE_PX / 3}" '
-        f'font-size="{TITLE_PX}" font-weight="bold">{html.escape(title)}</text>',
     ]
 
     for i, (name, ok) in enumerate(entries):
         label_w = label_ws[i // rows]
         x = xs[i // rows]
-        y = TITLE_H + (i % rows) * (CELL_H + GAP)
+        y = (i % rows) * (CELL_H + GAP)
         out += [
             f'<rect x="{x}" y="{y}" width="{label_w}" height="{CELL_H}" '
             f'fill="{LABEL_BG}"/>',

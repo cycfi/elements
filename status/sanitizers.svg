@@ -1,75 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="439" height="279" role="img" aria-label="Elements sanitizers">
+<svg xmlns="http://www.w3.org/2000/svg" width="511" height="252" role="img" aria-label="Elements sanitizers">
 <title>Elements sanitizers</title>
-<rect width="439" height="279" rx="4" fill="#444"/>
+<rect width="511" height="252" rx="4" fill="#444"/>
 <g fill="#fff" font-family="Verdana,DejaVu Sans,Geneva,sans-serif" text-anchor="middle">
-<text x="219.5" y="25.0" font-size="18" font-weight="bold">Elements sanitizers</text>
-<rect x="0" y="36" width="171" height="26" fill="#555"/>
-<rect x="171" y="36" width="48" height="26" fill="#4c1"/>
-<text x="161" y="53" font-size="12" text-anchor="end">ASan Linux GTK Cairo</text>
-<text x="195.0" y="53" font-size="12">pass</text>
-<rect x="0" y="63" width="171" height="26" fill="#555"/>
-<rect x="171" y="63" width="48" height="26" fill="#4c1"/>
-<text x="161" y="80" font-size="12" text-anchor="end">ASan Linux GTK Skia</text>
-<text x="195.0" y="80" font-size="12">pass</text>
-<rect x="0" y="90" width="171" height="26" fill="#555"/>
-<rect x="171" y="90" width="48" height="26" fill="#4c1"/>
-<text x="161" y="107" font-size="12" text-anchor="end">ASan Linux X11 Cairo</text>
-<text x="195.0" y="107" font-size="12">pass</text>
-<rect x="0" y="117" width="171" height="26" fill="#555"/>
-<rect x="171" y="117" width="48" height="26" fill="#4c1"/>
-<text x="161" y="134" font-size="12" text-anchor="end">ASan Linux X11 Skia</text>
-<text x="195.0" y="134" font-size="12">pass</text>
-<rect x="0" y="144" width="171" height="26" fill="#555"/>
-<rect x="171" y="144" width="48" height="26" fill="#4c1"/>
-<text x="161" y="161" font-size="12" text-anchor="end">ASan Windows Cairo</text>
-<text x="195.0" y="161" font-size="12">pass</text>
-<rect x="0" y="171" width="171" height="26" fill="#555"/>
-<rect x="171" y="171" width="48" height="26" fill="#4c1"/>
-<text x="161" y="188" font-size="12" text-anchor="end">ASan Windows Direct2D</text>
-<text x="195.0" y="188" font-size="12">pass</text>
-<rect x="0" y="198" width="171" height="26" fill="#555"/>
-<rect x="171" y="198" width="48" height="26" fill="#e05d44"/>
-<text x="161" y="215" font-size="12" text-anchor="end">ASan Windows Skia</text>
-<text x="195.0" y="215" font-size="12">fail</text>
-<rect x="0" y="225" width="171" height="26" fill="#555"/>
-<rect x="171" y="225" width="48" height="26" fill="#4c1"/>
-<text x="161" y="242" font-size="12" text-anchor="end">ASan macOS Cairo</text>
-<text x="195.0" y="242" font-size="12">pass</text>
-<rect x="0" y="252" width="171" height="26" fill="#555"/>
-<rect x="171" y="252" width="48" height="26" fill="#4c1"/>
-<text x="161" y="269" font-size="12" text-anchor="end">ASan macOS Quartz 2D</text>
-<text x="195.0" y="269" font-size="12">pass</text>
-<rect x="220" y="36" width="171" height="26" fill="#555"/>
-<rect x="391" y="36" width="48" height="26" fill="#4c1"/>
-<text x="381" y="53" font-size="12" text-anchor="end">ASan macOS Skia</text>
-<text x="415.0" y="53" font-size="12">pass</text>
-<rect x="220" y="63" width="171" height="26" fill="#555"/>
-<rect x="391" y="63" width="48" height="26" fill="#4c1"/>
-<text x="381" y="80" font-size="12" text-anchor="end">TSan Linux GTK Cairo</text>
-<text x="415.0" y="80" font-size="12">pass</text>
-<rect x="220" y="90" width="171" height="26" fill="#555"/>
-<rect x="391" y="90" width="48" height="26" fill="#e05d44"/>
-<text x="381" y="107" font-size="12" text-anchor="end">TSan Linux GTK Skia</text>
-<text x="415.0" y="107" font-size="12">fail</text>
-<rect x="220" y="117" width="171" height="26" fill="#555"/>
-<rect x="391" y="117" width="48" height="26" fill="#4c1"/>
-<text x="381" y="134" font-size="12" text-anchor="end">TSan Linux X11 Cairo</text>
-<text x="415.0" y="134" font-size="12">pass</text>
-<rect x="220" y="144" width="171" height="26" fill="#555"/>
-<rect x="391" y="144" width="48" height="26" fill="#4c1"/>
-<text x="381" y="161" font-size="12" text-anchor="end">TSan Linux X11 Skia</text>
-<text x="415.0" y="161" font-size="12">pass</text>
-<rect x="220" y="171" width="171" height="26" fill="#555"/>
-<rect x="391" y="171" width="48" height="26" fill="#4c1"/>
-<text x="381" y="188" font-size="12" text-anchor="end">TSan macOS Cairo</text>
-<text x="415.0" y="188" font-size="12">pass</text>
-<rect x="220" y="198" width="171" height="26" fill="#555"/>
-<rect x="391" y="198" width="48" height="26" fill="#4c1"/>
-<text x="381" y="215" font-size="12" text-anchor="end">TSan macOS Quartz 2D</text>
-<text x="415.0" y="215" font-size="12">pass</text>
-<rect x="220" y="225" width="171" height="26" fill="#555"/>
-<rect x="391" y="225" width="48" height="26" fill="#4c1"/>
-<text x="381" y="242" font-size="12" text-anchor="end">TSan macOS Skia</text>
-<text x="415.0" y="242" font-size="12">pass</text>
+<text x="255.5" y="25.0" font-size="18" font-weight="bold">Elements sanitizers</text>
+<rect x="0" y="36" width="207" height="26" fill="#555"/>
+<rect x="207" y="36" width="48" height="26" fill="#4c1"/>
+<text x="197" y="53" font-size="12" text-anchor="end">ASan Linux GTK Cairo</text>
+<text x="231.0" y="53" font-size="12">pass</text>
+<rect x="0" y="63" width="207" height="26" fill="#555"/>
+<rect x="207" y="63" width="48" height="26" fill="#4c1"/>
+<text x="197" y="80" font-size="12" text-anchor="end">ASan Linux X11 Cairo</text>
+<text x="231.0" y="80" font-size="12">pass</text>
+<rect x="0" y="90" width="207" height="26" fill="#555"/>
+<rect x="207" y="90" width="48" height="26" fill="#4c1"/>
+<text x="197" y="107" font-size="12" text-anchor="end">ASan Windows Cairo</text>
+<text x="231.0" y="107" font-size="12">pass</text>
+<rect x="0" y="117" width="207" height="26" fill="#555"/>
+<rect x="207" y="117" width="48" height="26" fill="#4c1"/>
+<text x="197" y="134" font-size="12" text-anchor="end">ASan Windows Direct2D</text>
+<text x="231.0" y="134" font-size="12">pass</text>
+<rect x="0" y="144" width="207" height="26" fill="#555"/>
+<rect x="207" y="144" width="48" height="26" fill="#4c1"/>
+<text x="197" y="161" font-size="12" text-anchor="end">ASan macOS Cairo</text>
+<text x="231.0" y="161" font-size="12">pass</text>
+<rect x="0" y="171" width="207" height="26" fill="#555"/>
+<rect x="207" y="171" width="48" height="26" fill="#4c1"/>
+<text x="197" y="188" font-size="12" text-anchor="end">ASan macOS Quartz 2D</text>
+<text x="231.0" y="188" font-size="12">pass</text>
+<rect x="0" y="198" width="207" height="26" fill="#555"/>
+<rect x="207" y="198" width="48" height="26" fill="#4c1"/>
+<text x="197" y="215" font-size="12" text-anchor="end">TSan Linux GTK Cairo</text>
+<text x="231.0" y="215" font-size="12">pass</text>
+<rect x="0" y="225" width="207" height="26" fill="#555"/>
+<rect x="207" y="225" width="48" height="26" fill="#4c1"/>
+<text x="197" y="242" font-size="12" text-anchor="end">TSan Linux X11 Cairo</text>
+<text x="231.0" y="242" font-size="12">pass</text>
+<rect x="256" y="36" width="207" height="26" fill="#555"/>
+<rect x="463" y="36" width="48" height="26" fill="#4c1"/>
+<text x="453" y="53" font-size="12" text-anchor="end">TSan macOS Cairo</text>
+<text x="487.0" y="53" font-size="12">pass</text>
+<rect x="256" y="63" width="207" height="26" fill="#555"/>
+<rect x="463" y="63" width="48" height="26" fill="#4c1"/>
+<text x="453" y="80" font-size="12" text-anchor="end">TSan macOS Quartz 2D</text>
+<text x="487.0" y="80" font-size="12">pass</text>
+<rect x="256" y="90" width="207" height="26" fill="#555"/>
+<rect x="463" y="90" width="48" height="26" fill="#4c1"/>
+<text x="453" y="107" font-size="12" text-anchor="end">TSan macOS Skia</text>
+<text x="487.0" y="107" font-size="12">pass</text>
+<rect x="256" y="117" width="207" height="26" fill="#555"/>
+<rect x="463" y="117" width="48" height="26" fill="#4c1"/>
+<text x="453" y="134" font-size="12" text-anchor="end">UBSan Linux GTK Skia</text>
+<text x="487.0" y="134" font-size="12">pass</text>
+<rect x="256" y="144" width="207" height="26" fill="#555"/>
+<rect x="463" y="144" width="48" height="26" fill="#4c1"/>
+<text x="453" y="161" font-size="12" text-anchor="end">UBSan Linux X11 Skia</text>
+<text x="487.0" y="161" font-size="12">pass</text>
+<rect x="256" y="171" width="207" height="26" fill="#555"/>
+<rect x="463" y="171" width="48" height="26" fill="#4c1"/>
+<text x="453" y="188" font-size="12" text-anchor="end">UBSan macOS Skia</text>
+<text x="487.0" y="188" font-size="12">pass</text>
+<rect x="256" y="198" width="207" height="26" fill="#555"/>
+<rect x="463" y="198" width="48" height="26" fill="#4c1"/>
+<text x="453" y="215" font-size="12" text-anchor="end">Windows Skia, no sanitizer</text>
+<text x="487.0" y="215" font-size="12">pass</text>
 </g>
 </svg>

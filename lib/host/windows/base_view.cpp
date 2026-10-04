@@ -977,6 +977,11 @@ namespace cycfi::elements
 #if defined(ARTIST_SKIA)
       if (info)
       {
+         // Skia frees its GPU objects through the context that is current,
+         // which with several views open may be another view's; make it
+         // this view's own first.
+         if (info->_gl_dc && info->_gl_rc)
+            wglMakeCurrent(info->_gl_dc, info->_gl_rc);
          info->_surface.reset();
          info->_ctx.reset();
          info->_xface.reset();

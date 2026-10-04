@@ -27,13 +27,13 @@
 <text x="343.0" y="12.333333333333334" font-size="10.0" text-anchor="end">Linux gtk (skia)</text>
 <text x="367.0" y="12.333333333333334" font-size="10.0">pass</text>
 <rect x="211.0" y="19.0" width="138.0" height="18.0" fill="#555"/>
-<rect x="349.0" y="19.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="349.0" y="19.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="343.0" y="31.333333333333332" font-size="10.0" text-anchor="end">Linux wayland (cairo)</text>
-<text x="367.0" y="31.333333333333332" font-size="10.0">fail</text>
+<text x="367.0" y="31.333333333333332" font-size="10.0">pass</text>
 <rect x="211.0" y="38.0" width="138.0" height="18.0" fill="#555"/>
-<rect x="349.0" y="38.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="349.0" y="38.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="343.0" y="50.333333333333336" font-size="10.0" text-anchor="end">Linux wayland (skia)</text>
-<text x="367.0" y="50.333333333333336" font-size="10.0">fail</text>
+<text x="367.0" y="50.333333333333336" font-size="10.0">pass</text>
 <rect x="211.0" y="57.0" width="138.0" height="18.0" fill="#555"/>
 <rect x="349.0" y="57.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="343.0" y="69.33333333333333" font-size="10.0" text-anchor="end">Linux x11 (cairo)</text>

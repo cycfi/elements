@@ -6,8 +6,10 @@
 # Runs the Elements tests under the sanitizers, on every windowing host and
 # drawing backend: AddressSanitizer with UndefinedBehaviorSanitizer (MSVC has
 # no UBSan, so Windows runs ASan alone), and ThreadSanitizer on macOS and
-# Linux. Builds are RelWithDebInfo: on macOS the debug Skia bundle aborts
-# under ASan (see Artist's TODO). The jobs are long, so this runs weekly
+# Linux. Skia runs UBSan, not ASan: ASan changes the layout of Skia's types
+# (TArray gains a member), so ASan-built code disagrees with the prebuilt
+# Skia. With neither on MSVC, Windows Skia runs its windowed tests plain, on
+# Mesa's software OpenGL, as the runner has no GPU. Builds are RelWithDebInfo. The jobs are long, so this runs weekly
 # (GitHub schedules only the default branch, which then tests develop), by
 # hand, and when this file changes. The results go to status/sanitizers.svg
 # on the www branch.
@@ -35,14 +37,14 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        # --- AddressSanitizer + UndefinedBehaviorSanitizer ---
+        # --- AddressSanitizer + UndefinedBehaviorSanitizer (UBSan alone on Skia) ---
         - name: "ASan macOS Quartz 2D"
           os: macos-latest
           sanitizer: address
           cmake: -DELEMENTS_QUARTZ_2D=ON
-        - name: "ASan macOS Skia"
+        - name: "UBSan macOS Skia"
           os: macos-latest
-          sanitizer: address
+          sanitizer: undefined
           cmake: -DELEMENTS_SKIA=ON
         - name: "ASan macOS Cairo"
           os: macos-latest
@@ -52,9 +54,9 @@ jobs:
           os: windows-latest
           sanitizer: address
           cmake: -DELEMENTS_DIRECT2D=ON
-        - name: "ASan Windows Skia"
+        - name: "Windows Skia, no sanitizer"
           os: windows-latest
-          sanitizer: address
+          sanitizer: none
           cmake: -DELEMENTS_SKIA=ON
         - name: "ASan Windows Cairo"
           os: windows-latest
@@ -64,17 +66,17 @@ jobs:
           os: ubuntu-latest
           sanitizer: address
           cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_CAIRO=ON
-        - name: "ASan Linux GTK Skia"
+        - name: "UBSan Linux GTK Skia"
           os: ubuntu-latest
-          sanitizer: address
+          sanitizer: undefined
           cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_SKIA=ON
         - name: "ASan Linux X11 Cairo"
           os: ubuntu-latest
           sanitizer: address
           cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_CAIRO=ON
-        - name: "ASan Linux X11 Skia"
+        - name: "UBSan Linux X11 Skia"
           os: ubuntu-latest
-          sanitizer: address
+          sanitizer: undefined
           cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_SKIA=ON
         # --- ThreadSanitizer ---
         - name: "TSan macOS Quartz 2D"
@@ -146,15 +148,16 @@ jobs:
     - name: Sanitizer flags (macOS, Linux)
       if: runner.os != 'Windows'
       run: |
-        if [ "${{ matrix.config.sanitizer }}" = "address" ]; then
-          # vptr checks need RTTI, which the prebuilt Skia is built without.
-          flags="-fsanitize=address,undefined -fno-sanitize=vptr -fno-sanitize-recover=undefined"
-        else
-          flags="-fsanitize=thread"
-        fi
-        flags="$flags -fno-omit-frame-pointer"
+        # vptr checks need RTTI, which the prebuilt Skia is built without.
+        ub="-fno-sanitize=vptr -fno-sanitize-recover=undefined"
+        case "${{ matrix.config.sanitizer }}" in
+          address)   san="address,undefined"; extra="$ub" ;;
+          undefined) san="undefined";         extra="$ub" ;;
+          thread)    san="thread";            extra="" ;;
+        esac
+        flags="-fsanitize=$san $extra -fno-omit-frame-pointer"
         for v in CFLAGS CXXFLAGS OBJCXXFLAGS; do echo "$v=$flags" >> $GITHUB_ENV; done
-        echo "LDFLAGS=-fsanitize=${{ matrix.config.sanitizer }}$([ "${{ matrix.config.sanitizer }}" = "address" ] && echo ",undefined")" >> $GITHUB_ENV
+        echo "LDFLAGS=-fsanitize=$san" >> $GITHUB_ENV
 
     - name: Build and test (macOS, Linux)
       if: runner.os != 'Windows'
@@ -174,16 +177,29 @@ jobs:
           ./elements_test
         fi
 
+    - name: Mesa software OpenGL (Windows Skia)
+      # The runner has no GPU. Mesa's opengl32.dll beside the test takes the
+      # place of the system's, and draws with llvmpipe.
+      if: runner.os == 'Windows' && contains(matrix.config.cmake, 'SKIA')
+      shell: bash
+      run: |
+        curl -sSL -o mesa.7z https://github.com/pal1000/mesa-dist-win/releases/download/26.2.4/mesa3d-26.2.4-release-msvc.7z
+        7z x -omesa mesa.7z x64 > /dev/null
+        ls mesa/x64
+
     - name: Build and test (Windows)
       if: runner.os == 'Windows'
       shell: cmd
       run: |
         rem The ASan runtime DLL is found on the PATH vcvars sets.
         call "%VCVARS64%" || exit /b 1
-        set CFLAGS=/fsanitize=address
-        set CXXFLAGS=/fsanitize=address
+        if "${{ matrix.config.sanitizer }}"=="address" (
+          set CFLAGS=/fsanitize=address
+          set CXXFLAGS=/fsanitize=address
+        )
         cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DELEMENTS_BUILD_TESTS=ON -DELEMENTS_BUILD_EXAMPLES=OFF ${{ matrix.config.cmake }} || exit /b 1
         cmake --build build --target elements_test || exit /b 1
+        if exist mesa\x64 copy /y mesa\x64\*.dll build\test\ >nul
         cd build\test && elements_test.exe
 
   status:

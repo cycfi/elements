@@ -14,3 +14,5 @@ race:libfontconfig.so
 race:libpangoft2-1.0.so
 mutex:libgtk-3.so
 mutex:libglib-2.0.so
+called_from_lib:libgallium
+race:libgallium

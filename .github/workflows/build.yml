@@ -581,12 +581,72 @@ jobs:
       run: ctest --output-on-failure
 
   ###########################################################################
+  # Linux hosts: Elements' tests on each windowing host (GTK, X11, Wayland)
+  # and backend (Cairo, Skia), under Xvfb or a headless weston. Mesa's
+  # llvmpipe draws for Skia, as the runners have no GPU.
+  ###########################################################################
+  build-linux-hosts:
+    name: "Linux ${{ matrix.host }} (${{ matrix.backend }})"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'tests'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host:    [gtk, x11, wayland]
+        backend: [cairo, skia]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          ninja-build pkg-config xvfb weston \
+          libgtk-3-dev libcairo2-dev \
+          libx11-dev libxcursor-dev libxrandr-dev \
+          libwayland-dev wayland-protocols libdecor-0-dev libxkbcommon-dev \
+          libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev \
+          libharfbuzz-dev libfontconfig1-dev libfreetype6-dev libwebp-dev
+
+    - name: Build
+      run: |
+        cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DELEMENTS_HOST_UI_LIBRARY=${{ matrix.host }} \
+          -DELEMENTS_$(echo ${{ matrix.backend }} | tr a-z A-Z)=ON \
+          -DELEMENTS_BUILD_TESTS=ON -DELEMENTS_BUILD_EXAMPLES=OFF
+        cmake --build build --target elements_test
+
+    - name: Test
+      working-directory: build/test
+      env:
+        LIBGL_ALWAYS_SOFTWARE: 1
+        GALLIUM_DRIVER: llvmpipe
+      run: |
+        if [ "${{ matrix.host }}" = "wayland" ]; then
+          export XDG_RUNTIME_DIR=$RUNNER_TEMP/xdg
+          mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+          weston --backend=headless-backend.so --socket=ci-wayland \
+                 --no-config --idle-time=0 &
+          sleep 1
+          WAYLAND_DISPLAY=ci-wayland ./elements_test
+        else
+          xvfb-run -a ./elements_test
+        fi
+
+  ###########################################################################
   # Status: draws this run's jobs, pass or fail, as status/build.svg on the
   # www branch, for develop's pushes.
   ###########################################################################
   status:
     name: Status
-    needs: [build-skia, build-cairo, build-quartz2d, build-direct2d, build-tests]
+    needs: [build-skia, build-cairo, build-quartz2d, build-direct2d, build-tests,
+            build-linux-hosts]
     if: >
       always() &&
       github.event_name == 'push' && github.ref == 'refs/heads/develop'

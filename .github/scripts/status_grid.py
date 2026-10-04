@@ -29,7 +29,7 @@ GRID_BG = '#444'
 TEXT = '#fff'
 
 FONT = 'Verdana,DejaVu Sans,Geneva,sans-serif'
-SCALE = 0.8           # of a 10 px label font; one knob for the whole grid
+SCALE = 1.0           # of a 10 px label font; one knob for the whole grid
 FONT_PX = 10 * SCALE
 CHAR_W = 0.6 * FONT_PX  # average Verdana glyph width
 CELL_H = 18 * SCALE

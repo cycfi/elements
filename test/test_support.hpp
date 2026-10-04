@@ -28,6 +28,12 @@
 # include <elements/headless.hpp>
 #endif
 
+#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
+# include <chrono>
+// From GLib, which the GTK host links; the tests have no GTK include path.
+extern "C" int g_main_context_iteration(void* context, int may_block);
+#endif
+
 namespace cycfi::elements::test
 {
    using artist::canvas;
@@ -80,7 +86,17 @@ namespace cycfi::elements::test
        , img{size.x, size.y, scale}
        , offscr{img}
        , cnv{offscr.context()}
-      {}
+      {
+#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
+         // GTK sizes a view from its main loop, which the tests do not run.
+         // Run it until the view has its size, as a window appearing would.
+         auto const until = std::chrono::steady_clock::now()
+            + std::chrono::seconds{2};
+         while (view_.size().x < size.x
+            && std::chrono::steady_clock::now() < until)
+            g_main_context_iteration(nullptr, 0);
+#endif
+      }
 
       // Draw the content once, optionally through a clip, the way a host
       // repainting only an invalidated area does.

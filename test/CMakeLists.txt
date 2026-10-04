@@ -59,6 +59,20 @@ if (MSVC)
          COMMAND_EXPAND_LISTS
       )
    endif()
+
+   # Artist's prebuilt Skia and Cairo are DLLs that TARGET_RUNTIME_DLLS does
+   # not list; copy them as ElementsConfigApp does for an app.
+   get_property(prebuilt_dlls GLOBAL PROPERTY ARTIST_SKIA_RUNTIME_DLLS)
+   get_property(cairo_dlls GLOBAL PROPERTY ARTIST_CAIRO_RUNTIME_DLLS)
+   list(APPEND prebuilt_dlls ${cairo_dlls})
+   if (prebuilt_dlls)
+      add_custom_command(
+         TARGET elements_test POST_BUILD
+         COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${prebuilt_dlls} $<TARGET_FILE_DIR:elements_test>
+         COMMAND_EXPAND_LISTS
+      )
+   endif()
 endif()
 
 # Where the documentation page tests write their figures.
@@ -67,9 +81,12 @@ target_compile_definitions(elements_test PRIVATE
    RESULTS_PATH="${CMAKE_CURRENT_BINARY_DIR}/results/"
 )
 
-# The fonts and images the widgets ask for at startup.
+# The fonts the widgets ask for at startup, laid out flat in resources/ as
+# an application's are: on Windows and macOS, the font scan does not go into
+# subdirectories.
+file(GLOB ELEMENTS_TEST_FONTS ${CMAKE_CURRENT_LIST_DIR}/../resources/fonts/*)
 file(
-   COPY ${CMAKE_CURRENT_LIST_DIR}/../resources/fonts
+   COPY ${ELEMENTS_TEST_FONTS}
    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources
 )
 

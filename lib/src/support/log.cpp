@@ -9,6 +9,7 @@
 #include <quill/sinks/NullSink.h>
 
 #include <array>
+#include <atomic>
 #include <cstdlib>
 #include <filesystem>
 #include <mutex>
@@ -157,21 +158,34 @@ namespace cycfi::elements
       }
    }
 
+   namespace
+   {
+      // quill's singleton check takes a named POSIX semaphore, which an App
+      // Sandboxed host (Logic Pro, the AU hosting service) denies, and it
+      // refuses a second backend in one process (two plugins each with
+      // their own copy of quill). Skip the check.
+      quill::BackendOptions backend_options()
+      {
+         quill::BackendOptions options;
+         options.check_backend_singleton_instance = false;
+         return options;
+      }
+
+      bool backend_started = false;          // set once, by log_init
+      std::atomic<bool> backend_stopped = false;
+      std::mutex backend_mutex;
+   }
+
    void log_init(std::string_view app_name)
    {
       static std::once_flag once;
       std::call_once(once, [name = std::string{app_name}]
       {
-         // quill's singleton check takes a named POSIX semaphore, which an
-         // App Sandboxed host (Logic Pro, the AU hosting service) denies,
-         // and it refuses a second backend in one process (two plugins
-         // each with their own copy of quill). Skip the check, and should
-         // the backend still fail to start, just turn logging off.
+         // Should the backend fail to start, just turn logging off.
          try
          {
-            quill::BackendOptions options;
-            options.check_backend_singleton_instance = false;
-            quill::Backend::start(options);
+            quill::Backend::start(backend_options());
+            backend_started = true;
             log_files(name);
          }
          catch (std::exception const&)
@@ -179,6 +193,24 @@ namespace cycfi::elements
             log_off();
          }
       });
+
+      // Started again after a log_shutdown, for a plugin instance created
+      // after the last one was destroyed.
+      if (backend_stopped.load(std::memory_order_acquire))
+      {
+         std::lock_guard lock{backend_mutex};
+         if (backend_stopped.load(std::memory_order_relaxed))
+         {
+            try
+            {
+               quill::Backend::start(backend_options());
+            }
+            catch (std::exception const&)
+            {
+            }
+            backend_stopped.store(false, std::memory_order_release);
+         }
+      }
    }
 
    namespace
@@ -258,6 +290,11 @@ namespace cycfi::elements
 
    void log_shutdown()
    {
-      quill::Backend::stop();
+      std::lock_guard lock{backend_mutex};
+      if (backend_started && !backend_stopped.load(std::memory_order_relaxed))
+      {
+         quill::Backend::stop();
+         backend_stopped.store(true, std::memory_order_release);
+      }
    }
 }

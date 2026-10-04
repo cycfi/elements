@@ -74,10 +74,12 @@ namespace cycfi::elements
    void           log_init(std::string_view app_name = "elements");
 
    // Stops the logging backend and flushes what it holds. A plugin calls it
-   // from its entry deinit. On Windows, a process that exits without it can
-   // hang: the OS ends the backend thread before the plugin's static
-   // destructors run, and quill's destructor then waits on locks that
-   // thread held.
+   // when its last instance is destroyed, and from its entry deinit; the
+   // next log_init, or a logger() call, starts it again. A process that
+   // exits with the backend running drains it in a static destructor: on
+   // Windows, after the OS has ended the backend thread and whatever locks
+   // it held, so it can hang; elsewhere, slowly, with the host still
+   // tearing down.
    void           log_shutdown();
 
    // Accessor for a category's named logger. Calls log_init() on first use.

@@ -579,3 +579,33 @@ jobs:
     - name: Test
       working-directory: build-tests/test
       run: ctest --output-on-failure
+
+  ###########################################################################
+  # Status: draws this run's jobs, pass or fail, as status/build.svg on the
+  # www branch, for develop's pushes.
+  ###########################################################################
+  status:
+    name: Status
+    needs: [build-skia, build-cairo, build-quartz2d, build-direct2d, build-tests]
+    if: >
+      always() &&
+      github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: .github/scripts
+
+    - name: Draw and publish the build grid
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs \
+          --paginate --jq '.jobs[] | {name, conclusion}' > jobs.jsonl
+        python3 .github/scripts/status_grid.py --title "Elements build" \
+          --exclude '^Status$' --out build.svg jobs.jsonl
+        bash .github/scripts/publish_status.sh build.svg

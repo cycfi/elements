@@ -14,6 +14,14 @@ jobs:
       run: npm i antora @antora/lunr-extension
     - name: Generate Site
       run: npx antora docs/antora/antora-playbook.yml
+    - name: Keep the status grids
+      # The deploy below replaces the www branch's files; carry status/,
+      # which the build and sanitize workflows publish there, across.
+      if: ${{ github.event_name != 'pull_request' }}
+      run: |
+        git fetch --depth 1 origin www
+        git archive FETCH_HEAD status | tar -x -C docs/antora/build/site \
+          || echo "No status grids yet"
     - name: Publish to GitHub Pages
       if: ${{ github.event_name != 'pull_request' }}
       uses: peaceiris/actions-gh-pages@v3

@@ -171,6 +171,8 @@ jobs:
         cmake --build build --target elements_test
         cd build/test
         if [ "${{ runner.os }}" = "Linux" ]; then
+          # Mesa's llvmpipe hangs under TSan; softpipe, without LLVM, does not.
+          [ "${{ matrix.config.sanitizer }}" = "thread" ] && export GALLIUM_DRIVER=softpipe
           xvfb-run -a ./elements_test
         else
           ./elements_test

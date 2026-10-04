@@ -28,10 +28,13 @@ TITLE_BG = '#444'
 TEXT = '#fff'
 
 FONT = 'Verdana,DejaVu Sans,Geneva,sans-serif'
-CHAR_W = 7.2          # average glyph width at 12 px Verdana
-CELL_H = 26
-TITLE_H = 36
-PAD = 10
+SCALE = 0.8           # of a 10 px label font; one knob for the whole grid
+FONT_PX = 10 * SCALE
+TITLE_PX = 12 * SCALE
+CHAR_W = 0.6 * FONT_PX  # average Verdana glyph width
+CELL_H = 18 * SCALE
+TITLE_H = 22 * SCALE
+PAD = 6 * SCALE
 GAP = 1
 
 NO_RESULT = {None, 'skipped', 'cancelled', 'neutral'}
@@ -61,34 +64,43 @@ def load(path, exclude):
 def render(title, entries, columns):
     columns = max(1, min(columns, len(entries)))
     rows = (len(entries) + columns - 1) // columns
-    label_w = max([text_width(n) for n, _ in entries] + [60])
     value_w = text_width('fail')
-    col_w = label_w + value_w
-    width = max(columns * col_w + (columns - 1) * GAP, text_width(title))
-    height = TITLE_H + rows * (CELL_H + GAP)
+
+    # Each column as wide as its own longest label, and where it starts.
+    label_ws, xs, x = [], [], 0
+    for c in range(columns):
+        names = [n for n, _ in entries[c * rows:(c + 1) * rows]]
+        label_ws.append(max([text_width(n) for n in names] + [60 * SCALE]))
+        xs.append(x)
+        x += label_ws[-1] + value_w + GAP
+    width = round(max(x - GAP, text_width(title)))
+    height = round(TITLE_H + rows * (CELL_H + GAP))
 
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
         f'height="{height}" role="img" aria-label="{html.escape(title)}">',
         f'<title>{html.escape(title)}</title>',
-        f'<rect width="{width}" height="{height}" rx="4" fill="{TITLE_BG}"/>',
+        f'<rect width="{width}" height="{height}" rx="3" fill="{TITLE_BG}"/>',
         f'<g fill="{TEXT}" font-family="{FONT}" text-anchor="middle">',
-        f'<text x="{width / 2}" y="{TITLE_H / 2 + 7}" font-size="18" '
-        f'font-weight="bold">{html.escape(title)}</text>',
+        f'<text x="{width / 2}" y="{TITLE_H / 2 + TITLE_PX / 3}" '
+        f'font-size="{TITLE_PX}" font-weight="bold">{html.escape(title)}</text>',
     ]
 
     for i, (name, ok) in enumerate(entries):
-        x = (i // rows) * (col_w + GAP)
+        label_w = label_ws[i // rows]
+        x = xs[i // rows]
         y = TITLE_H + (i % rows) * (CELL_H + GAP)
         out += [
             f'<rect x="{x}" y="{y}" width="{label_w}" height="{CELL_H}" '
             f'fill="{LABEL_BG}"/>',
             f'<rect x="{x + label_w}" y="{y}" width="{value_w}" '
             f'height="{CELL_H}" fill="{PASS_BG if ok else FAIL_BG}"/>',
-            f'<text x="{x + label_w - PAD}" y="{y + 17}" font-size="12" '
+            f'<text x="{x + label_w - PAD}" y="{y + CELL_H / 2 + FONT_PX / 3}" '
+            f'font-size="{FONT_PX}" '
             f'text-anchor="end">{html.escape(name)}</text>',
-            f'<text x="{x + label_w + value_w / 2}" y="{y + 17}" '
-            f'font-size="12">{"pass" if ok else "fail"}</text>',
+            f'<text x="{x + label_w + value_w / 2}" '
+            f'y="{y + CELL_H / 2 + FONT_PX / 3}" font-size="{FONT_PX}">'
+            f'{"pass" if ok else "fail"}</text>',
         ]
 
     out += ['</g>', '</svg>']
@@ -98,7 +110,7 @@ def render(title, entries, columns):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--title', required=True)
-    ap.add_argument('--columns', type=int, default=2)
+    ap.add_argument('--columns', type=int, default=4)
     ap.add_argument('--exclude', help='leave out jobs whose name matches')
     ap.add_argument('--out', required=True)
     ap.add_argument('jobs', help='JSON lines of {name, conclusion}')

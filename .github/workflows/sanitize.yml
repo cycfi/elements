@@ -11,8 +11,7 @@
 # Skia. With neither on MSVC, Windows Skia runs its windowed tests plain, on
 # Mesa's software OpenGL, as the runner has no GPU. Builds are RelWithDebInfo. The jobs are long, so this runs weekly
 # (GitHub schedules only the default branch, which then tests develop), by
-# hand, and when this file changes. The results go to status/sanitizers.svg
-# on the www branch.
+# hand, and when this file changes.
 
 name: Sanitize
 
@@ -201,29 +200,3 @@ jobs:
         cmake --build build --target elements_test || exit /b 1
         if exist mesa\x64 copy /y mesa\x64\*.dll build\test\ >nul
         cd build\test && elements_test.exe
-
-  status:
-    name: Status
-    needs: sanitize
-    if: >
-      always() &&
-      (github.ref == 'refs/heads/develop' || github.event_name == 'schedule')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: .github/scripts
-
-    - name: Draw and publish the sanitizer grid
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs \
-          --paginate --jq '.jobs[] | {name, conclusion}' > jobs.jsonl
-        python3 .github/scripts/status_grid.py --title "Elements sanitizers" \
-          --exclude '^Status$' --out sanitizers.svg jobs.jsonl
-        bash .github/scripts/publish_status.sh sanitizers.svg

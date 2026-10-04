@@ -73,6 +73,13 @@ namespace cycfi::elements
    // CYCFI_LOG_DIR environment variable.
    void           log_init(std::string_view app_name = "elements");
 
+   // Stops the logging backend and flushes what it holds. A plugin calls it
+   // from its entry deinit. On Windows, a process that exits without it can
+   // hang: the OS ends the backend thread before the plugin's static
+   // destructors run, and quill's destructor then waits on locks that
+   // thread held.
+   void           log_shutdown();
+
    // Accessor for a category's named logger. Calls log_init() on first use.
    logger_type*   logger(log_cat cat);
 

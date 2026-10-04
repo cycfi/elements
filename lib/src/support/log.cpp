@@ -255,4 +255,9 @@ namespace cycfi::elements
       log_init();
       return the_log_dir;
    }
+
+   void log_shutdown()
+   {
+      quill::Backend::stop();
+   }
 }

@@ -32,6 +32,12 @@
 # include <chrono>
 // From GLib, which the GTK host links; the tests have no GTK include path.
 extern "C" int g_main_context_iteration(void* context, int may_block);
+#elif defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
+# include <chrono>
+// From libdecor, which the Wayland host links, and the host's own context.
+struct libdecor;
+extern "C" int libdecor_dispatch(libdecor* context, int timeout);
+namespace cycfi::elements { libdecor* get_libdecor(); }
 #endif
 
 namespace cycfi::elements::test
@@ -87,14 +93,22 @@ namespace cycfi::elements::test
        , offscr{img}
        , cnv{offscr.context()}
       {
-#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
-         // GTK sizes a view from its main loop, which the tests do not run.
-         // Run it until the view has its size, as a window appearing would.
+#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK) \
+   || defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
+         // GTK and Wayland size a view from their event loop, which the tests
+         // do not run. Run it until the view has its size, as a window
+         // appearing would.
          auto const until = std::chrono::steady_clock::now()
             + std::chrono::seconds{2};
          while (view_.size().x < size.x
             && std::chrono::steady_clock::now() < until)
+         {
+# if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
             g_main_context_iteration(nullptr, 0);
+# else
+            libdecor_dispatch(get_libdecor(), 10);
+# endif
+         }
 #endif
       }
 

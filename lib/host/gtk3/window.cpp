@@ -44,7 +44,7 @@ namespace cycfi::elements
       return gdk_window_get_scale_factor(gdk_win);
    }
 
-   window::window(std::string const& name, int /*style_*/, rect const& bounds)
+   window::window(std::string const& name, int style_, rect const& bounds)
     :  _window(new host_window)
    {
       // Chicken and egg. GTK wants us to create windows only
@@ -54,13 +54,18 @@ namespace cycfi::elements
       // immediately.
 
       auto make_window =
-         [this, name, bounds, alive = std::weak_ptr<bool>{_window->alive}]()
+         [this, name, style_, bounds, alive = std::weak_ptr<bool>{_window->alive}]()
          {
             if (alive.expired())
                return;
             GtkWidget* win = gtk_application_window_new(get_app());
             g_object_ref(win);
             gtk_window_set_title(GTK_WINDOW(win), name.c_str());
+
+            // No title, no decorations: a bare window is the size asked for,
+            // with no frame or title bar, and none of their minimum size.
+            if (!(style_ & with_title))
+               gtk_window_set_decorated(GTK_WINDOW(win), false);
             _window->host = win;
 
             for (auto f : _window->on_activate)

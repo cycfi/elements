@@ -143,9 +143,12 @@ namespace cycfi::elements
 
    void window::limits(view_limits limits_)
    {
-      auto minx = std::max<float>(150, limits_.min.x);
-      auto miny = std::max<float>(100, limits_.min.y);
+      // A titled window keeps a usable minimum size. A bare one is the size
+      // asked for, as on the other hosts.
       id const window_ = (__bridge id) _window;
+      bool const titled = [window_ styleMask] & NSWindowStyleMaskTitled;
+      auto minx = titled? std::max<float>(150, limits_.min.x) : limits_.min.x;
+      auto miny = titled? std::max<float>(100, limits_.min.y) : limits_.min.y;
       [window_ setContentMinSize : NSSize{minx, miny}];
       [window_ setContentMaxSize : NSSize{limits_.max.x, limits_.max.y}];
 

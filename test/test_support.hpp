@@ -72,7 +72,9 @@ namespace cycfi::elements::test
 #else
        // On a windowing host, go through window + view the way an
        // application does. Not every host implements view{extent}.
-       : win{"elements test", window::standard, {0, 0, size.x, size.y}}
+       // A bare window: with no title bar or frame, its size is the view's
+       // on every host, and no system minimum for a framed window applies.
+       : win{"elements test", window::bare, {0, 0, size.x, size.y}}
        , view_{win}
 #endif
        , img{size.x, size.y, scale}

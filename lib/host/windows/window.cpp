@@ -175,10 +175,14 @@ namespace cycfi::elements
       auto scale = GetDpiForSystem() / 96.0f;
       #endif
 
+      // Without a title, a bare window: no frame at all, as on macOS.
+      DWORD const win_style =
+         (style_ & with_title)? WS_OVERLAPPEDWINDOW : WS_POPUP;
+
       _window = CreateWindowW(
          L"ElementsWindow",
          wname.c_str(),
-         WS_OVERLAPPEDWINDOW,
+         win_style,
          bounds.left * scale, bounds.top * scale,
          bounds.width() * scale, bounds.height() * scale,
          nullptr, nullptr, nullptr,
@@ -188,12 +192,15 @@ namespace cycfi::elements
       auto* info = new window_info{this};
       SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
-      if (!(style_ & closable))
-         disable_close(_window);
-      if (!(style_ & miniaturizable))
-         disable_minimize(_window);
-      if (!(style_ & resizable))
-         disable_resize(_window);
+      if (style_ & with_title)
+      {
+         if (!(style_ & closable))
+            disable_close(_window);
+         if (!(style_ & miniaturizable))
+            disable_minimize(_window);
+         if (!(style_ & resizable))
+            disable_resize(_window);
+      }
 
       // Sets the app icon for the window to show on the titlebar.
       // The IDI_ELEMENTS_APP_ICON icon id should be defined in a resource file.

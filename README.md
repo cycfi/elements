@@ -2,6 +2,9 @@
 
 [![CMake Build Matrix](https://github.com/cycfi/elements/workflows/Build/badge.svg)](https://github.com/cycfi/elements/actions?query=workflow%3ABuild)
 
+[![Build, by platform and backend](https://cycfi.github.io/elements/status/build.svg)](https://github.com/cycfi/elements/actions/workflows/build.yml)
+[![Sanitizers, by platform and backend](https://cycfi.github.io/elements/status/sanitizers.svg)](https://github.com/cycfi/elements/actions/workflows/sanitize.yml)
+
 
 ## Introduction
 

@@ -1,0 +1,16 @@
+# ThreadSanitizer suppressions for the system libraries a windowing host
+# loads. They are not built with TSan, so it cannot see their own locking and
+# reports races inside them that are not there. Elements' code is not listed.
+called_from_lib:libglib-2.0.so
+called_from_lib:libgio-2.0.so
+called_from_lib:libgobject-2.0.so
+called_from_lib:libglycin-2.so
+race:libglib-2.0.so
+race:libgio-2.0.so
+race:libgobject-2.0.so
+race:libglycin-2.so
+race:libgtk-3.so
+race:libfontconfig.so
+race:libpangoft2-1.0.so
+mutex:libgtk-3.so
+mutex:libglib-2.0.so

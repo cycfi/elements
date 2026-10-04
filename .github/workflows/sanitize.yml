@@ -1,0 +1,213 @@
+###############################################################################
+#  Copyright (c) 2016-2026 Joel de Guzman
+#
+#  Distributed under the MIT License (https://opensource.org/licenses/MIT)
+###############################################################################
+# Runs the Elements tests under the sanitizers, on every windowing host and
+# drawing backend: AddressSanitizer with UndefinedBehaviorSanitizer (MSVC has
+# no UBSan, so Windows runs ASan alone), and ThreadSanitizer on macOS and
+# Linux. Builds are RelWithDebInfo: on macOS the debug Skia bundle aborts
+# under ASan (see Artist's TODO). The jobs are long, so this runs weekly
+# (GitHub schedules only the default branch, which then tests develop), by
+# hand, and when this file changes. The results go to status/sanitizers.svg
+# on the www branch.
+
+name: Sanitize
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/sanitize.yml'
+
+concurrency:
+  group: sanitize-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sanitize:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        # --- AddressSanitizer + UndefinedBehaviorSanitizer ---
+        - name: "ASan macOS Quartz 2D"
+          os: macos-latest
+          sanitizer: address
+          cmake: -DELEMENTS_QUARTZ_2D=ON
+        - name: "ASan macOS Skia"
+          os: macos-latest
+          sanitizer: address
+          cmake: -DELEMENTS_SKIA=ON
+        - name: "ASan macOS Cairo"
+          os: macos-latest
+          sanitizer: address
+          cmake: -DELEMENTS_CAIRO=ON
+        - name: "ASan Windows Direct2D"
+          os: windows-latest
+          sanitizer: address
+          cmake: -DELEMENTS_DIRECT2D=ON
+        - name: "ASan Windows Skia"
+          os: windows-latest
+          sanitizer: address
+          cmake: -DELEMENTS_SKIA=ON
+        - name: "ASan Windows Cairo"
+          os: windows-latest
+          sanitizer: address
+          cmake: -DELEMENTS_CAIRO=ON
+        - name: "ASan Linux GTK Cairo"
+          os: ubuntu-latest
+          sanitizer: address
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_CAIRO=ON
+        - name: "ASan Linux GTK Skia"
+          os: ubuntu-latest
+          sanitizer: address
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_SKIA=ON
+        - name: "ASan Linux X11 Cairo"
+          os: ubuntu-latest
+          sanitizer: address
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_CAIRO=ON
+        - name: "ASan Linux X11 Skia"
+          os: ubuntu-latest
+          sanitizer: address
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_SKIA=ON
+        # --- ThreadSanitizer ---
+        - name: "TSan macOS Quartz 2D"
+          os: macos-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_QUARTZ_2D=ON
+        - name: "TSan macOS Skia"
+          os: macos-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_SKIA=ON
+        - name: "TSan macOS Cairo"
+          os: macos-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_CAIRO=ON
+        - name: "TSan Linux GTK Cairo"
+          os: ubuntu-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_CAIRO=ON
+        - name: "TSan Linux GTK Skia"
+          os: ubuntu-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=gtk -DELEMENTS_SKIA=ON
+        - name: "TSan Linux X11 Cairo"
+          os: ubuntu-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_CAIRO=ON
+        - name: "TSan Linux X11 Skia"
+          os: ubuntu-latest
+          sanitizer: thread
+          cmake: -DELEMENTS_HOST_UI_LIBRARY=x11 -DELEMENTS_SKIA=ON
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        # A scheduled run starts from the default branch; test develop.
+        ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
+        submodules: recursive
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install ninja
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja
+      shell: cmd
+
+    - name: Resolve MSVC environment (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        $vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+        echo "VCVARS64=$vcvars" >> $env:GITHUB_ENV
+
+    - name: Install dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          ninja-build pkg-config xvfb \
+          libgtk-3-dev libcairo2-dev \
+          libx11-dev libxcursor-dev libxrandr-dev \
+          libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev \
+          libharfbuzz-dev libfontconfig1-dev libfreetype6-dev libwebp-dev
+
+    - name: Sanitizer flags (macOS, Linux)
+      if: runner.os != 'Windows'
+      run: |
+        if [ "${{ matrix.config.sanitizer }}" = "address" ]; then
+          # vptr checks need RTTI, which the prebuilt Skia is built without.
+          flags="-fsanitize=address,undefined -fno-sanitize=vptr -fno-sanitize-recover=undefined"
+        else
+          flags="-fsanitize=thread"
+        fi
+        flags="$flags -fno-omit-frame-pointer"
+        for v in CFLAGS CXXFLAGS OBJCXXFLAGS; do echo "$v=$flags" >> $GITHUB_ENV; done
+        echo "LDFLAGS=-fsanitize=${{ matrix.config.sanitizer }}$([ "${{ matrix.config.sanitizer }}" = "address" ] && echo ",undefined")" >> $GITHUB_ENV
+
+    - name: Build and test (macOS, Linux)
+      if: runner.os != 'Windows'
+      env:
+        ASAN_OPTIONS: detect_leaks=0
+        UBSAN_OPTIONS: print_stacktrace=1
+        TSAN_OPTIONS: suppressions=${{ github.workspace }}/test/tsan_suppressions.txt
+      run: |
+        cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DELEMENTS_BUILD_TESTS=ON -DELEMENTS_BUILD_EXAMPLES=OFF \
+          ${{ matrix.config.cmake }}
+        cmake --build build --target elements_test
+        cd build/test
+        if [ "${{ runner.os }}" = "Linux" ]; then
+          xvfb-run -a ./elements_test
+        else
+          ./elements_test
+        fi
+
+    - name: Build and test (Windows)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        rem The ASan runtime DLL is found on the PATH vcvars sets.
+        call "%VCVARS64%" || exit /b 1
+        set CFLAGS=/fsanitize=address
+        set CXXFLAGS=/fsanitize=address
+        cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DELEMENTS_BUILD_TESTS=ON -DELEMENTS_BUILD_EXAMPLES=OFF ${{ matrix.config.cmake }} || exit /b 1
+        cmake --build build --target elements_test || exit /b 1
+        cd build\test && elements_test.exe
+
+  status:
+    name: Status
+    needs: sanitize
+    if: >
+      always() &&
+      (github.ref == 'refs/heads/develop' || github.event_name == 'schedule')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: .github/scripts
+
+    - name: Draw and publish the sanitizer grid
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs \
+          --paginate --jq '.jobs[] | {name, conclusion}' > jobs.jsonl
+        python3 .github/scripts/status_grid.py --title "Elements sanitizers" \
+          --exclude '^Status$' --out sanitizers.svg jobs.jsonl
+        bash .github/scripts/publish_status.sh sanitizers.svg

@@ -160,3 +160,24 @@ TEST_CASE("The gesture names the button that was pressed")
    REQUIRE(v.log.who.size() == 2);
    CHECK(v.log.who[0] == v.log.who[1]);
 }
+
+TEST_CASE("Bound, a button follows the model and its click reaches back")
+{
+   // A button has no on_change, so the binder takes its click instead.
+   // Together with the gesture above, that is a bound button: the model
+   // shows in it, and what the user does to it lands where follow says.
+   auto button = share(toggle_button("toggle", 1.0));
+   model_binder binder{[](element&) {}};
+
+   value_model<bool> model = false;
+   bool got = false;
+   binder.follow(model, button, [&got](bool v) { got = v; });
+
+   CHECK(button->value() == false);
+
+   model = true;
+   CHECK(button->value() == true);
+
+   button->on_click(false);      // what the button does on mouse up
+   CHECK(got == false);
+}

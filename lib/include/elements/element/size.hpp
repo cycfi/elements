@@ -10,6 +10,7 @@
 #include <elements/element/proxy.hpp>
 #include <infra/support.hpp>
 #include <memory>
+#include <optional>
 
 namespace cycfi::elements
 {
@@ -757,7 +758,13 @@ namespace cycfi::elements
 
    private:
 
+      // The canvas state is pushed in prepare_subject and popped in
+      // restore_subject, so the scope spans the two calls and the element
+      // has to hold it in between. canvas::state is move-only, which makes
+      // scale_element move-only too.
       float                   _scale;
+      std::optional<canvas::state>
+                              _state;
    };
 
    template <concepts::Element Subject>
@@ -793,7 +800,7 @@ namespace cycfi::elements
    inline void scale_element<Subject>::prepare_subject(context& ctx)
    {
       auto& canvas_ = ctx.canvas;
-      canvas_.save();
+      _state.emplace(canvas_);
       canvas_.scale({_scale, _scale});
       ctx.bounds = device_to_user(ctx.bounds, ctx.canvas);
    }
@@ -806,9 +813,9 @@ namespace cycfi::elements
    }
 
    template <concepts::Element Subject>
-   inline void scale_element<Subject>::restore_subject(context& ctx)
+   inline void scale_element<Subject>::restore_subject(context& /*ctx*/)
    {
-      ctx.canvas.restore();
+      _state.reset();
    }
 
    ////////////////////////////////////////////////////////////////////////////

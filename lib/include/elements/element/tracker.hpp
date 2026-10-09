@@ -117,6 +117,13 @@ namespace cycfi::elements
          this->on_tracking(ctx, element::begin_tracking);
          begin_tracking(ctx, *state);
          processed = state->processed;
+         if (!processed)
+         {
+            // A declined press gets no release, so the state would
+            // otherwise linger until the next press.
+            this->on_tracking(ctx, element::end_tracking);
+            state.reset();
+         }
       }
       else if (state)
       {

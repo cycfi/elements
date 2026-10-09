@@ -50,6 +50,7 @@ namespace cycfi::elements
       virtual float           get_default_font_size() const;
       virtual color           get_font_color() const;
       virtual int             get_text_align() const;
+      virtual int             get_default_text_align() const;
 
       std::string             class_name() const override;
 
@@ -190,7 +191,7 @@ namespace cycfi::elements
                               {}
 
       int                     get_text_align() const override;
-      void                    text_align(int align);
+      void                    set_text_align(int align);
 
    private:
 
@@ -262,11 +263,37 @@ namespace cycfi::elements
       float                   get_default_font_size() const override;
       color                   get_font_color() const override;
       int                     get_text_align() const override;
+      int                     get_default_text_align() const override;
       std::string             class_name() const override;
    };
 
    using basic_heading = basic_label_styler_base<default_heading>;
-   using heading = label_styler_gen<basic_heading>;
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Heading levels, heading1 the largest: the heading font, at the size
+   // scaled by the theme's heading_scale for the level.
+   ////////////////////////////////////////////////////////////////////////////
+   template <std::size_t Level>
+   struct default_heading_level : default_heading
+   {
+      static_assert(Level >= 1 && Level <= 5, "Heading levels are 1 to 5");
+
+      using base_type = default_heading_level<Level>;
+
+      float                   get_font_size() const override;
+      float                   get_default_font_size() const override;
+      std::string             class_name() const override;
+   };
+
+   template <std::size_t Level>
+   using basic_heading_level = basic_label_styler_base<default_heading_level<Level>>;
+
+   using heading1 = label_styler_gen<basic_heading_level<1>>;
+   using heading2 = label_styler_gen<basic_heading_level<2>>;
+   using heading3 = label_styler_gen<basic_heading_level<3>>;
+   using heading4 = label_styler_gen<basic_heading_level<4>>;
+   using heading5 = label_styler_gen<basic_heading_level<5>>;
+   using heading = heading5;
 
    /**
     * \class as_label_element
@@ -373,6 +400,11 @@ namespace cycfi::elements
       return get_theme().label_text_align;
    }
 
+   inline int default_label_styler::get_default_text_align() const
+   {
+      return get_theme().label_text_align;
+   }
+
    /**
     * \brief
     *    Get the font of headings from the theme.
@@ -431,6 +463,31 @@ namespace cycfi::elements
    inline int default_heading::get_text_align() const
    {
       return get_theme().heading_text_align;
+   }
+
+   inline int default_heading::get_default_text_align() const
+   {
+      return get_theme().heading_text_align;
+   }
+
+   template <std::size_t Level>
+   inline float default_heading_level<Level>::get_font_size() const
+   {
+      auto const& thm = get_theme();
+      return thm.heading_font._size * thm.heading_scale[Level - 1];
+   }
+
+   template <std::size_t Level>
+   inline float default_heading_level<Level>::get_default_font_size() const
+   {
+      // Qualified: a size layer above overrides get_font_size.
+      return default_heading_level<Level>::get_font_size();
+   }
+
+   template <std::size_t Level>
+   inline std::string default_heading_level<Level>::class_name() const
+   {
+      return "heading" + std::to_string(Level);
    }
 
    /**
@@ -810,7 +867,7 @@ namespace cycfi::elements
     *    The text alignment to be set.
     */
    template <concepts::LabelStyler Base>
-   inline void label_with_text_align<Base>::text_align(int align)
+   inline void label_with_text_align<Base>::set_text_align(int align)
    {
       _align = align;
    }

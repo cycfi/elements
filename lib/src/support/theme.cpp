@@ -52,6 +52,7 @@ namespace cycfi::elements
     , heading_font_color         {basic_font_color}
     , heading_font               {font_descr{"Roboto", 15.0}.medium()}
     , heading_text_align         {canvas::middle | canvas::center}
+    , heading_scale              {2.074f, 1.728f, 1.44f, 1.2f, 1.0f}
 
     , label_font_color           {basic_font_color}
     , label_font                 {font_descr{"Open Sans", 14.0}}

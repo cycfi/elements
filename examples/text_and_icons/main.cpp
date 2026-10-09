@@ -187,7 +187,16 @@ auto make_basic_text(view& view_)
                   label("highly modular C++ GUI library.")
                      .text_align(canvas::right),
                   label("Based on a GUI framework written in the mid 90s named Pica."),
-                  label("Now, Joel rewrote my code using modern C++17.")
+                  label("Now, Joel rewrote my code using modern C++20.")
+               )
+            ),
+            make_label(
+               vtile(
+                  heading1("Heading 1"),
+                  heading2("Heading 2"),
+                  heading3("Heading 3"),
+                  heading4("Heading 4"),
+                  heading5("Heading 5")
                )
             )
          )))
@@ -217,7 +226,7 @@ auto make_basic_text2()
 auto make_elements(view& view_)
 {
    return
-      max_size({1280, 640},
+      max_size({1280, 720},
          margin({20, 10, 20, 10},
             htile(
                margin({20, 20, 20, 20}, make_basic_text(view_)),

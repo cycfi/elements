@@ -7,6 +7,7 @@
 #define ELEMENTS_THEME_APRIL_15_2016
 
 #include <elements/support.hpp>
+#include <array>
 
 namespace cycfi::elements
 {
@@ -55,6 +56,7 @@ namespace cycfi::elements
       color                heading_font_color;
       font_descr           heading_font;
       int                  heading_text_align;
+      std::array<float, 5> heading_scale;        // heading1 .. heading5, times heading_font's size
 
       color                label_font_color;
       font_descr           label_font;
@@ -117,7 +119,7 @@ namespace cycfi::elements
        scoped_theme_override(scoped_theme_override&& rhs)
        : _thm(rhs._thm)
        , _pmem(rhs._pmem)
-       , _save(rhs._thm.*_pmem)
+       , _save(rhs._save)
       {
          rhs._pmem = nullptr;
       }

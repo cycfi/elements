@@ -20,9 +20,9 @@ namespace cycfi::elements
       auto  state = canvas_.new_state();
       auto  align = get_text_align();
 
-      // default should reflect the theme's vertical label_text_align
+      // Without a vertical part, take the style's default one.
       if ((align & 0x1C) == 0)
-         align |= get_theme().label_text_align & 0x1C;
+         align |= get_default_text_align() & 0x1C;
 
       auto text_c = get_font_color();
       if (!ctx.enabled || !is_enabled())

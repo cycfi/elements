@@ -908,7 +908,12 @@ namespace cycfi::elements
       // A button has no on_change: what the user does to it arrives as a
       // click, carrying the state it was left in.
       if constexpr (requires { control->on_click; })
+      {
+         static_assert(Control::holds_state,
+            "A momentary button is a trigger, not a state: bind a toggle "
+            "or a latching button instead.");
          control->on_click = [on_change](auto v) { on_change(v); };
+      }
       else
          control->on_change = [on_change](auto v) { on_change(v); };
 

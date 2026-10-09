@@ -182,6 +182,15 @@ namespace cycfi::elements
          ctx.view.refresh(ctx);
    }
 
+   // A toggle's and a latching button's value is a state, so an edit sets
+   // it, as a slider's does. A momentary button's value is "pressed", which
+   // an edit leaves alone.
+   void basic_toggle_button::edit(view& view_, bool val)
+   {
+      set_value(val);
+      basic_button::edit(view_, val);
+   }
+
    bool basic_latching_button::click(context const& ctx, mouse_button btn)
    {
       if (btn.down && this->value())
@@ -212,6 +221,12 @@ namespace cycfi::elements
       if (btn.down && this->set_value(ctx.bounds.includes(btn.pos)))
          ctx.view.refresh(ctx);
       return true;
+   }
+
+   void basic_latching_button::edit(view& view_, bool val)
+   {
+      set_value(val);
+      basic_button::edit(view_, val);
    }
 
    bool basic_choice::click(context const& ctx, mouse_button btn)

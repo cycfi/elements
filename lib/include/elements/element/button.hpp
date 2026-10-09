@@ -71,6 +71,11 @@ namespace cycfi::elements
    {
    public:
 
+      // A momentary button is a trigger: its value is "pressed", held only
+      // while the mouse is down. Buttons with a value worth a model's
+      // holding say so, and model_binder binds only those.
+      static constexpr bool   holds_state = false;
+
       using button_function = std::function<void(bool)>;
 
       bool              wants_control() const override;
@@ -191,9 +196,11 @@ namespace cycfi::elements
    public:
 
       using basic_button::basic_button;
+      static constexpr bool   holds_state = true;
 
       bool              click(context const& ctx, mouse_button btn) override;
       void              drag(context const& ctx, mouse_button btn) override;
+      void              edit(view& view_, bool val) override;
       std::string       class_name() const override;
 
    private:
@@ -255,8 +262,10 @@ namespace cycfi::elements
    public:
 
       using basic_button::basic_button;
+      static constexpr bool   holds_state = true;
 
       bool              click(context const& ctx, mouse_button btn) override;
+      void              edit(view& view_, bool val) override;
       std::string       class_name() const override;
    };
 

@@ -95,7 +95,7 @@ namespace cycfi::elements
       using param_type = typename receiver<T>::param_type;
 
       void                 value(param_type val) override;
-      T                    value() const override;
+      getter_type          value() const override;
 
    private:
 
@@ -127,7 +127,8 @@ namespace cycfi::elements
     *    The value of the receiver.
     */
    template <typename T>
-   inline T basic_receiver<T>::value() const
+   inline typename basic_receiver<T>::getter_type
+   basic_receiver<T>::value() const
    {
       return _val;
    }

@@ -174,8 +174,8 @@ namespace cycfi::elements
     *
     * \param outward
     *    Determines the extent of outward refreshing for the view. An outward
-    *    parameter of 0 will refresh only the element. An outward of 1 (the
-    *    default) will include the element and its parent.
+    *    parameter of 0 (the default) will refresh only the element. An
+    *    outward of 1 will include the element and its parent.
     */
    inline void element::refresh(context const& ctx, int outward)
    {

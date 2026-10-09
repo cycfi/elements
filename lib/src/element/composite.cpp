@@ -197,7 +197,7 @@ namespace cycfi::elements
                context ectx{ctx, &ce, bounds};
                if (&e == &ce)
                {
-                  f(ctx);
+                  f(ectx);
                   return true; // break the for loop
                }
                else
@@ -357,7 +357,13 @@ namespace cycfi::elements
       {
          bool focus_yields = true;
          auto next_focus = _focus;
-         bool reverse = (k.modifiers & mod_shift) ^ reverse_index();
+
+         // The walk follows the children's order, reversed for a layer;
+         // the request a child gets follows the key alone, so a layer's
+         // child still takes its first element on tab.
+         bool backward = k.modifiers & mod_shift;
+         bool reverse = backward ^ reverse_index();
+         auto req = backward ? from_bottom : from_top;
          if (next_focus == -1 && reverse)
             next_focus = size();
 
@@ -365,7 +371,7 @@ namespace cycfi::elements
          {
             while (++next_focus != static_cast<int>(size()))
             {
-               if (try_focus(next_focus, from_top, focus_yields))
+               if (try_focus(next_focus, req, focus_yields))
                   return true;
                if (!focus_yields) // Return as if key was handled if focus
                   return true;    // does not want to yield
@@ -376,7 +382,7 @@ namespace cycfi::elements
          {
             while (--next_focus >= 0)
             {
-               if (try_focus(next_focus, from_bottom, focus_yields))
+               if (try_focus(next_focus, req, focus_yields))
                   return true;
                if (!focus_yields) // Return as if key was handled if focus
                   return true;    // does not want to yield

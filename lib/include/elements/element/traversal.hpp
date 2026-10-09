@@ -90,11 +90,12 @@ namespace cycfi::elements
    // If successful, returns a pointer to the composite base and pointer
    // to its context.
    ////////////////////////////////////////////////////////////////////////////
-   std::pair<composite_base*, context const*>
-   inline find_composite(context const& ctx)
+   using composite_info = std::pair<composite_base*, context const*>;
+
+   inline composite_info find_composite(context const& ctx)
    {
       element* this_ = ctx.element;
-      std::pair<composite_base*, context const*> result = {nullptr, nullptr};
+      composite_info result = {nullptr, nullptr};
       auto p = ctx.parent;
       while (p)
       {

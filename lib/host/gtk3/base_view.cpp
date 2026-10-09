@@ -673,13 +673,25 @@ namespace cycfi::elements
 
          if (info == 0)
          {
+            // The URIs come percent-encoded ("My%20File.wav"). Hand over
+            // the paths as the file system has them, as the other hosts
+            // do, so get_filepaths need not decode. A URI that is not a
+            // local file is passed as is.
             std::string paths;
             gchar** uris = gtk_selection_data_get_uris(data);
             for (gchar** i = uris; i && *i; ++i)
             {
                if (!paths.empty())
                   paths += "\n";
-               paths += *i;
+               if (gchar* path = g_filename_from_uri(*i, nullptr, nullptr))
+               {
+                  paths += std::string("file://") + path;
+                  g_free(path);
+               }
+               else
+               {
+                  paths += *i;
+               }
             }
 
             host_view_h->_drop_info->data["text/uri-list"] = paths;

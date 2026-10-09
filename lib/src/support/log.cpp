@@ -250,13 +250,12 @@ namespace cycfi::elements
                        category_name(cat), trace_sink,
                        quill::PatternFormatterOptions{"%(message)"})
                   : log_frontend::create_or_get_logger(category_name(cat), sink);
-            lg->set_log_level(default_level(cat));
             the_loggers[i] = lg;
          }
 
-         apply_env_overrides();
-
-         // Startup banner so every captured log self-identifies.
+         // Startup banner so every captured log self-identifies. Logged
+         // before the levels are set: app's default is warning, which would
+         // drop it.
 #if defined(ARTIST_SKIA)
          constexpr char const* backend = "skia";
 #elif defined(ARTIST_CAIRO)
@@ -273,6 +272,10 @@ namespace cycfi::elements
 #endif
          LOG_INFO(the_loggers[static_cast<std::size_t>(log_cat::app)],
             "elements logging started: backend={} build={}", backend, build);
+
+         for (std::size_t i = 0; i < num_categories; ++i)
+            the_loggers[i]->set_log_level(default_level(static_cast<log_cat>(i)));
+         apply_env_overrides();
       }
    }
 

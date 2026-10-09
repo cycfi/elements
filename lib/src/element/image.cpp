@@ -14,16 +14,31 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // image implementation
    ////////////////////////////////////////////////////////////////////////////
-   image::image(fs::path const& path, float scale)
-    : _image(std::make_shared<artist::image>(path))
-    , _scale(scale)
+   namespace
    {
-      if (!_image->impl())
+      // Artist throws on a file it cannot find or decode. Report it as a
+      // resource error first, so the application's handler sees the path.
+      image_ptr load(fs::path const& path)
       {
+         try
+         {
+            auto img = std::make_shared<artist::image>(path);
+            if (img->impl())
+               return img;
+         }
+         catch (std::exception const&)
+         {
+         }
          error_handler::get().on_resource_error(
             error_id::image_load_failed, "invalid image: " + path.string());
-         throw std::runtime_error{"Error: Invalid image."};
+         throw std::runtime_error{"Error: Invalid image: " + path.string()};
       }
+   }
+
+   image::image(fs::path const& path, float scale)
+    : _image(load(path))
+    , _scale(scale)
+   {
    }
 
    image::image(image_ptr image_, float scale)

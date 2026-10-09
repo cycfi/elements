@@ -994,7 +994,11 @@ namespace cycfi::elements
    {
       GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
       gchar* text = gtk_clipboard_wait_for_text(clip);
-      return std::string(text);
+      if (!text)                    // empty, or not text
+         return {};
+      std::string result{text};
+      g_free(text);
+      return result;
    }
 
    // Nothing to do here: this host finds its resources by path and needs

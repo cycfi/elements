@@ -875,6 +875,23 @@ namespace cycfi::elements
          return 0;
       }
 
+      // The module that holds this code: the executable for an application,
+      // its own library for a plugin.
+      HINSTANCE this_module()
+      {
+         HMODULE hm = nullptr;
+         GetModuleHandleExW(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+            GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (LPCWSTR) &WndProc, &hm
+         );
+         return hm;
+      }
+
+      // Windows keys a window class by name and module. Registering it under
+      // this module, not the process executable, gives each plugin loaded in
+      // one host a class of its own, with its own WndProc. A plugin library
+      // can be unloaded and loaded again, so the class goes with it.
       struct init_view_class
       {
          init_view_class()
@@ -882,7 +899,7 @@ namespace cycfi::elements
             WNDCLASSW windowClass = {};
             windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-            windowClass.hInstance = GetModuleHandleW(nullptr);
+            windowClass.hInstance = module;
             windowClass.lpfnWndProc = WndProc;
             windowClass.lpszClassName = L"ElementsView";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -892,6 +909,13 @@ namespace cycfi::elements
             auto pwd = fs::current_path();
             artist::add_search_path(pwd / "resources");
          }
+
+         ~init_view_class()
+         {
+            UnregisterClassW(L"ElementsView", module);
+         }
+
+         HINSTANCE module = this_module();
       };
    }
 
@@ -913,7 +937,7 @@ namespace cycfi::elements
             CW_USEDEFAULT, CW_USEDEFAULT, // position x, y
             1, 1,                         // width, height
             parent, nullptr,              // parent window, menu
-            nullptr, nullptr              // instance, param
+            init.module, nullptr          // instance, param
          );
 
          auto dpi = GetDpiForWindow(hwnd);

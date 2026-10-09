@@ -147,20 +147,36 @@ namespace cycfi::elements
          return 0;
       }
 
+      // Registered under the module that holds this code, as the view's
+      // class is (see base_view.cpp), so each library that links Elements
+      // into one process gets its own class.
       struct init_window_class
       {
          init_window_class()
          {
+            GetModuleHandleExW(
+               GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+               GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+               (LPCWSTR) &handle_event, &module
+            );
+
             WNDCLASSW windowClass = {};
             windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); ;
             windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-            windowClass.hInstance = GetModuleHandleW(nullptr);
+            windowClass.hInstance = module;
             windowClass.lpfnWndProc = handle_event;
             windowClass.lpszClassName = L"ElementsWindow";
             windowClass.style = CS_HREDRAW | CS_VREDRAW;
             if (!RegisterClassW(&windowClass))
                MessageBoxW(nullptr, L"Could not register class", L"Error", MB_OK);
          }
+
+         ~init_window_class()
+         {
+            UnregisterClassW(L"ElementsWindow", module);
+         }
+
+         HMODULE module = nullptr;
       };
    }
 
@@ -185,7 +201,7 @@ namespace cycfi::elements
          win_style,
          bounds.left * scale, bounds.top * scale,
          bounds.width() * scale, bounds.height() * scale,
-         nullptr, nullptr, nullptr,
+         nullptr, nullptr, init.module,
          nullptr
       );
 

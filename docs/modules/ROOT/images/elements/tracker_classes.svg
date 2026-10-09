@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="327"
+     viewBox="0 0 750 327"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="212.871" y="14" width="121.359" height="44" rx="4" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="273.551" y="39.9" text-anchor="middle" fill="#1a1a1a">Base : element</text>
+
+  <rect x="174.949" y="88" width="197.203" height="141" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="273.551" y="113.9" text-anchor="middle" fill="#1a1a1a">tracker&lt;Base, TrackerInfo&gt;</text>
+  <line x1="174.949" y1="123.9" x2="372.152" y2="123.9" stroke="#1565c0" stroke-width="1"/>
+  <text x="181.949" y="138.8" fill="#1a1a1a">click(ctx, btn)</text>
+  <text x="181.949" y="155.8" fill="#1a1a1a">drag(ctx, btn)</text>
+  <text x="181.949" y="172.8" fill="#1a1a1a">begin_tracking(ctx, info)</text>
+  <text x="181.949" y="189.8" fill="#1a1a1a">keep_tracking(ctx, info)</text>
+  <text x="181.949" y="206.8" fill="#1a1a1a">end_tracking(ctx, info)</text>
+
+  <rect x="482.152" y="105" width="171.859" height="107" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="568.082" y="130.9" text-anchor="middle" fill="#1a1a1a">tracker_info</text>
+  <line x1="482.152" y1="140.9" x2="654.012" y2="140.9" stroke="#1565c0" stroke-width="1"/>
+  <text x="489.152" y="155.8" fill="#1a1a1a">start, current, previous</text>
+  <text x="489.152" y="172.8" fill="#1a1a1a">offset, modifiers</text>
+  <text x="489.152" y="189.8" fill="#1a1a1a">distance(), movement()</text>
+
+  <rect x="95.9883" y="269" width="99.5625" height="44" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="145.77" y="294.9" text-anchor="middle" fill="#1a1a1a">slider_base</text>
+
+  <rect x="225.551" y="269" width="96" height="44" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="273.551" y="294.9" text-anchor="middle" fill="#1a1a1a">basic_dial</text>
+
+  <rect x="351.551" y="269" width="119.016" height="44" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="411.059" y="294.9" text-anchor="middle" fill="#1a1a1a">movable_base</text>
+
+  <line x1="273.551" y1="88" x2="273.551" y2="69" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="273.551" y1="251" x2="273.551" y2="240" stroke="#5d5d5d" stroke-width="1.4"/>
+  <path d="M 145.77 269 L 145.77 259 Q 145.77 251 153.77 251 L 273.55 251" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="273.551" y1="269" x2="273.551" y2="240" stroke="#5d5d5d" stroke-width="1.4"/>
+  <path d="M 411.06 269 L 411.06 259 Q 411.06 251 403.06 251 L 273.55 251" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="386.152" y1="158.5" x2="482.152" y2="158.5" stroke="#5d5d5d" stroke-width="1.4"/>
+
+  <text x="434.152" y="152.5" text-anchor="middle" fill="#1a1a1a">state</text>
+  <text x="568.082" y="97" text-anchor="middle" fill="#5d5d5d">TrackerInfo</text>
+  <polygon points="273.551,58 279.551,69 267.551,69" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="273.551,229 279.551,240 267.551,240" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="372.152,158.5 379.152,163.5 386.152,158.5 379.152,153.5" fill="#5d5d5d"/>
+</svg>

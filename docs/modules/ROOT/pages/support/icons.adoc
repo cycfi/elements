@@ -1,0 +1,1247 @@
+= Icons
+
+include::../common.adoc[]
+
+== Overview
+
+Elements draws its icons from a font, `elements_basic.ttf` in
+`resources/fonts`, built with https://fontello.com[Fontello]. Each icon is
+a glyph at a code point in the font's private use area, and
+`support/icon_ids.hpp` names them: `icons::ok`, `icons::cancel`,
+`icons::cog` and so on, 265 in all.
+
+=== Arrows
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe800;</span>]
+| `icons::left`
+| `0xe800`
+
+| pass:[<span class="ei">&#xe801;</span>]
+| `icons::right`
+| `0xe801`
+
+| pass:[<span class="ei">&#xe802;</span>]
+| `icons::up`
+| `0xe802`
+
+| pass:[<span class="ei">&#xe803;</span>]
+| `icons::down`
+| `0xe803`
+
+| pass:[<span class="ei">&#xe804;</span>]
+| `icons::left_dir`
+| `0xe804`
+
+| pass:[<span class="ei">&#xe805;</span>]
+| `icons::right_dir`
+| `0xe805`
+
+| pass:[<span class="ei">&#xe806;</span>]
+| `icons::up_dir`
+| `0xe806`
+
+| pass:[<span class="ei">&#xe807;</span>]
+| `icons::down_dir`
+| `0xe807`
+
+| pass:[<span class="ei">&#xe808;</span>]
+| `icons::left_circled`
+| `0xe808`
+
+| pass:[<span class="ei">&#xe809;</span>]
+| `icons::right_circled`
+| `0xe809`
+
+| pass:[<span class="ei">&#xe80a;</span>]
+| `icons::up_circled`
+| `0xe80a`
+
+| pass:[<span class="ei">&#xe80b;</span>]
+| `icons::down_circled`
+| `0xe80b`
+
+| pass:[<span class="ei">&#xe80c;</span>]
+| `icons::left_open`
+| `0xe80c`
+
+| pass:[<span class="ei">&#xe80d;</span>]
+| `icons::right_open`
+| `0xe80d`
+
+| pass:[<span class="ei">&#xe80e;</span>]
+| `icons::up_open`
+| `0xe80e`
+
+| pass:[<span class="ei">&#xe80f;</span>]
+| `icons::down_open`
+| `0xe80f`
+
+| pass:[<span class="ei">&#xe810;</span>]
+| `icons::angle_left`
+| `0xe810`
+
+| pass:[<span class="ei">&#xe811;</span>]
+| `icons::angle_right`
+| `0xe811`
+
+| pass:[<span class="ei">&#xe812;</span>]
+| `icons::angle_up`
+| `0xe812`
+
+| pass:[<span class="ei">&#xe813;</span>]
+| `icons::angle_down`
+| `0xe813`
+
+| pass:[<span class="ei">&#xe814;</span>]
+| `icons::angle_double_left`
+| `0xe814`
+
+| pass:[<span class="ei">&#xe815;</span>]
+| `icons::angle_double_right`
+| `0xe815`
+
+| pass:[<span class="ei">&#xe816;</span>]
+| `icons::angle_double_up`
+| `0xe816`
+
+| pass:[<span class="ei">&#xe817;</span>]
+| `icons::angle_double_down`
+| `0xe817`
+
+| pass:[<span class="ei">&#xe818;</span>]
+| `icons::angle_circled_left`
+| `0xe818`
+
+| pass:[<span class="ei">&#xe819;</span>]
+| `icons::angle_circled_right`
+| `0xe819`
+
+| pass:[<span class="ei">&#xe81a;</span>]
+| `icons::angle_circled_up`
+| `0xe81a`
+
+| pass:[<span class="ei">&#xe81b;</span>]
+| `icons::angle_circled_down`
+| `0xe81b`
+
+| pass:[<span class="ei">&#xe8a5;</span>]
+| `icons::long_arrow_left`
+| `0xe8a5`
+
+| pass:[<span class="ei">&#xe8a6;</span>]
+| `icons::long_arrow_right`
+| `0xe8a6`
+
+| pass:[<span class="ei">&#xe8a7;</span>]
+| `icons::long_arrow_up`
+| `0xe8a7`
+
+| pass:[<span class="ei">&#xe8a8;</span>]
+| `icons::long_arrow_down`
+| `0xe8a8`
+
+| pass:[<span class="ei">&#xe8a3;</span>]
+| `icons::caret_square_left`
+| `0xe8a3`
+
+| pass:[<span class="ei">&#xe8a4;</span>]
+| `icons::caret_square_right`
+| `0xe8a4`
+
+| pass:[<span class="ei">&#xe82f;</span>]
+| `icons::level_up`
+| `0xe82f`
+
+| pass:[<span class="ei">&#xe830;</span>]
+| `icons::level_down`
+| `0xe830`
+
+| pass:[<span class="ei">&#xe832;</span>]
+| `icons::exchange`
+| `0xe832`
+
+| pass:[<span class="ei">&#xe82e;</span>]
+| `icons::cycle`
+| `0xe82e`
+
+| pass:[<span class="ei">&#xe82c;</span>]
+| `icons::cw`
+| `0xe82c`
+
+| pass:[<span class="ei">&#xe82d;</span>]
+| `icons::ccw`
+| `0xe82d`
+
+| pass:[<span class="ei">&#xe831;</span>]
+| `icons::shuffle`
+| `0xe831`
+
+|===
+
+=== Navigation
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe8a0;</span>]
+| `icons::home`
+| `0xe8a0`
+
+| pass:[<span class="ei">&#xe8a1;</span>]
+| `icons::dots`
+| `0xe8a1`
+
+| pass:[<span class="ei">&#xe8a2;</span>]
+| `icons::dots_vertical`
+| `0xe8a2`
+
+| pass:[<span class="ei">&#xe8aa;</span>]
+| `icons::reply`
+| `0xe8aa`
+
+| pass:[<span class="ei">&#xe8ab;</span>]
+| `icons::share`
+| `0xe8ab`
+
+| pass:[<span class="ei">&#xe8ac;</span>]
+| `icons::retweet`
+| `0xe8ac`
+
+| pass:[<span class="ei">&#xe8ad;</span>]
+| `icons::location`
+| `0xe8ad`
+
+| pass:[<span class="ei">&#xe8ae;</span>]
+| `icons::compass`
+| `0xe8ae`
+
+| pass:[<span class="ei">&#xe8af;</span>]
+| `icons::map`
+| `0xe8af`
+
+| pass:[<span class="ei">&#xe8b0;</span>]
+| `icons::crosshairs`
+| `0xe8b0`
+
+| pass:[<span class="ei">&#xe8eb;</span>]
+| `icons::sign_out`
+| `0xe8eb`
+
+| pass:[<span class="ei">&#xe8e9;</span>]
+| `icons::history`
+| `0xe8e9`
+
+| pass:[<span class="ei">&#xe84e;</span>]
+| `icons::link`
+| `0xe84e`
+
+| pass:[<span class="ei">&#xf127;</span>]
+| `icons::unlink`
+| `0xf127`
+
+| pass:[<span class="ei">&#xe8a9;</span>]
+| `icons::external_link_square`
+| `0xe8a9`
+
+|===
+
+=== Files
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe844;</span>]
+| `icons::doc`
+| `0xe844`
+
+| pass:[<span class="ei">&#xe845;</span>]
+| `icons::docs`
+| `0xe845`
+
+| pass:[<span class="ei">&#xe848;</span>]
+| `icons::floppy`
+| `0xe848`
+
+| pass:[<span class="ei">&#xe851;</span>]
+| `icons::file_text`
+| `0xe851`
+
+| pass:[<span class="ei">&#xe852;</span>]
+| `icons::file_image`
+| `0xe852`
+
+| pass:[<span class="ei">&#xe853;</span>]
+| `icons::file_audio`
+| `0xe853`
+
+| pass:[<span class="ei">&#xe854;</span>]
+| `icons::file_code`
+| `0xe854`
+
+| pass:[<span class="ei">&#xe855;</span>]
+| `icons::file_archive`
+| `0xe855`
+
+| pass:[<span class="ei">&#xe856;</span>]
+| `icons::file_pdf`
+| `0xe856`
+
+| pass:[<span class="ei">&#xe857;</span>]
+| `icons::upload`
+| `0xe857`
+
+| pass:[<span class="ei">&#xe858;</span>]
+| `icons::download`
+| `0xe858`
+
+| pass:[<span class="ei">&#xe859;</span>]
+| `icons::export_file`
+| `0xe859`
+
+| pass:[<span class="ei">&#xe85a;</span>]
+| `icons::import`
+| `0xe85a`
+
+| pass:[<span class="ei">&#xe85b;</span>]
+| `icons::archive`
+| `0xe85b`
+
+| pass:[<span class="ei">&#xe85c;</span>]
+| `icons::database`
+| `0xe85c`
+
+| pass:[<span class="ei">&#xe85d;</span>]
+| `icons::hdd`
+| `0xe85d`
+
+| pass:[<span class="ei">&#xe8c2;</span>]
+| `icons::cloud`
+| `0xe8c2`
+
+| pass:[<span class="ei">&#xe8c3;</span>]
+| `icons::cloud_upload`
+| `0xe8c3`
+
+| pass:[<span class="ei">&#xe8c4;</span>]
+| `icons::cloud_download`
+| `0xe8c4`
+
+|===
+
+=== Editing
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe81e;</span>]
+| `icons::pencil`
+| `0xe81e`
+
+| pass:[<span class="ei">&#xe861;</span>]
+| `icons::edit`
+| `0xe861`
+
+| pass:[<span class="ei">&#xe862;</span>]
+| `icons::eraser`
+| `0xe862`
+
+| pass:[<span class="ei">&#xe863;</span>]
+| `icons::crop`
+| `0xe863`
+
+| pass:[<span class="ei">&#xe864;</span>]
+| `icons::paint_brush`
+| `0xe864`
+
+| pass:[<span class="ei">&#xe865;</span>]
+| `icons::eyedropper`
+| `0xe865`
+
+| pass:[<span class="ei">&#xe85f;</span>]
+| `icons::cut`
+| `0xe85f`
+
+| pass:[<span class="ei">&#xe85e;</span>]
+| `icons::paste`
+| `0xe85e`
+
+| pass:[<span class="ei">&#xe860;</span>]
+| `icons::duplicate`
+| `0xe860`
+
+| pass:[<span class="ei">&#xe866;</span>]
+| `icons::text_height`
+| `0xe866`
+
+| pass:[<span class="ei">&#xe867;</span>]
+| `icons::text_width`
+| `0xe867`
+
+| pass:[<span class="ei">&#xe868;</span>]
+| `icons::bold`
+| `0xe868`
+
+| pass:[<span class="ei">&#xe869;</span>]
+| `icons::italic`
+| `0xe869`
+
+| pass:[<span class="ei">&#xe86a;</span>]
+| `icons::underline`
+| `0xe86a`
+
+| pass:[<span class="ei">&#xe86b;</span>]
+| `icons::align_left`
+| `0xe86b`
+
+| pass:[<span class="ei">&#xe86c;</span>]
+| `icons::align_center`
+| `0xe86c`
+
+| pass:[<span class="ei">&#xe86d;</span>]
+| `icons::align_right`
+| `0xe86d`
+
+| pass:[<span class="ei">&#xe86e;</span>]
+| `icons::align_justify`
+| `0xe86e`
+
+| pass:[<span class="ei">&#xe86f;</span>]
+| `icons::indent`
+| `0xe86f`
+
+| pass:[<span class="ei">&#xe870;</span>]
+| `icons::outdent`
+| `0xe870`
+
+| pass:[<span class="ei">&#xe871;</span>]
+| `icons::list_ul`
+| `0xe871`
+
+| pass:[<span class="ei">&#xe872;</span>]
+| `icons::list_ol`
+| `0xe872`
+
+| pass:[<span class="ei">&#xe873;</span>]
+| `icons::table`
+| `0xe873`
+
+| pass:[<span class="ei">&#xe874;</span>]
+| `icons::font`
+| `0xe874`
+
+| pass:[<span class="ei">&#xe875;</span>]
+| `icons::paragraph`
+| `0xe875`
+
+| pass:[<span class="ei">&#xe876;</span>]
+| `icons::code`
+| `0xe876`
+
+| pass:[<span class="ei">&#xe83d;</span>]
+| `icons::trash`
+| `0xe83d`
+
+| pass:[<span class="ei">&#xe83e;</span>]
+| `icons::trash_empty`
+| `0xe83e`
+
+| pass:[<span class="ei">&#xe841;</span>]
+| `icons::plus`
+| `0xe841`
+
+| pass:[<span class="ei">&#xe842;</span>]
+| `icons::minus`
+| `0xe842`
+
+|===
+
+=== Views and Windows
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe826;</span>]
+| `icons::magnifying_glass`
+| `0xe826`
+
+| pass:[<span class="ei">&#xe827;</span>]
+| `icons::zoom_in`
+| `0xe827`
+
+| pass:[<span class="ei">&#xe828;</span>]
+| `icons::zoom_out`
+| `0xe828`
+
+| pass:[<span class="ei">&#xe820;</span>]
+| `icons::resize_vertical`
+| `0xe820`
+
+| pass:[<span class="ei">&#xe821;</span>]
+| `icons::resize_horizontal`
+| `0xe821`
+
+| pass:[<span class="ei">&#xe822;</span>]
+| `icons::move`
+| `0xe822`
+
+| pass:[<span class="ei">&#xe823;</span>]
+| `icons::resize_full_alt`
+| `0xe823`
+
+| pass:[<span class="ei">&#xe824;</span>]
+| `icons::resize_full`
+| `0xe824`
+
+| pass:[<span class="ei">&#xe825;</span>]
+| `icons::resize_small`
+| `0xe825`
+
+| pass:[<span class="ei">&#xe84f;</span>]
+| `icons::expand`
+| `0xe84f`
+
+| pass:[<span class="ei">&#xe850;</span>]
+| `icons::shrink`
+| `0xe850`
+
+| pass:[<span class="ei">&#xe877;</span>]
+| `icons::eye`
+| `0xe877`
+
+| pass:[<span class="ei">&#xe878;</span>]
+| `icons::eye_off`
+| `0xe878`
+
+| pass:[<span class="ei">&#xe879;</span>]
+| `icons::filter`
+| `0xe879`
+
+| pass:[<span class="ei">&#xe87a;</span>]
+| `icons::list`
+| `0xe87a`
+
+| pass:[<span class="ei">&#xe87b;</span>]
+| `icons::grid`
+| `0xe87b`
+
+| pass:[<span class="ei">&#xe87c;</span>]
+| `icons::grid_large`
+| `0xe87c`
+
+| pass:[<span class="ei">&#xe87d;</span>]
+| `icons::window`
+| `0xe87d`
+
+| pass:[<span class="ei">&#xe87e;</span>]
+| `icons::window_restore`
+| `0xe87e`
+
+| pass:[<span class="ei">&#xe87f;</span>]
+| `icons::window_minimize`
+| `0xe87f`
+
+| pass:[<span class="ei">&#xe880;</span>]
+| `icons::window_close`
+| `0xe880`
+
+| pass:[<span class="ei">&#xe881;</span>]
+| `icons::columns`
+| `0xe881`
+
+| pass:[<span class="ei">&#xe882;</span>]
+| `icons::sort`
+| `0xe882`
+
+| pass:[<span class="ei">&#xe883;</span>]
+| `icons::sort_up`
+| `0xe883`
+
+| pass:[<span class="ei">&#xe884;</span>]
+| `icons::sort_down`
+| `0xe884`
+
+| pass:[<span class="ei">&#xe885;</span>]
+| `icons::sitemap`
+| `0xe885`
+
+| pass:[<span class="ei">&#xf0c9;</span>]
+| `icons::menu`
+| `0xf0c9`
+
+| pass:[<span class="ei">&#xf1de;</span>]
+| `icons::sliders`
+| `0xf1de`
+
+| pass:[<span class="ei">&#xf1de;</span>]
+| `icons::mixer`
+| `0xf1de`
+
+|===
+
+=== Status
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe83f;</span>]
+| `icons::ok`
+| `0xe83f`
+
+| pass:[<span class="ei">&#xe840;</span>]
+| `icons::cancel`
+| `0xe840`
+
+| pass:[<span class="ei">&#xe81d;</span>]
+| `icons::block`
+| `0xe81d`
+
+| pass:[<span class="ei">&#xe81c;</span>]
+| `icons::exclamation`
+| `0xe81c`
+
+| pass:[<span class="ei">&#xe849;</span>]
+| `icons::attention`
+| `0xe849`
+
+| pass:[<span class="ei">&#xe84a;</span>]
+| `icons::info`
+| `0xe84a`
+
+| pass:[<span class="ei">&#xe84b;</span>]
+| `icons::error`
+| `0xe84b`
+
+| pass:[<span class="ei">&#xe84c;</span>]
+| `icons::question`
+| `0xe84c`
+
+| pass:[<span class="ei">&#xe886;</span>]
+| `icons::check_circle`
+| `0xe886`
+
+| pass:[<span class="ei">&#xe887;</span>]
+| `icons::check_circle_o`
+| `0xe887`
+
+| pass:[<span class="ei">&#xe888;</span>]
+| `icons::times_circle`
+| `0xe888`
+
+| pass:[<span class="ei">&#xe889;</span>]
+| `icons::warning_circle`
+| `0xe889`
+
+| pass:[<span class="ei">&#xe88a;</span>]
+| `icons::clock`
+| `0xe88a`
+
+| pass:[<span class="ei">&#xe88b;</span>]
+| `icons::hourglass`
+| `0xe88b`
+
+| pass:[<span class="ei">&#xe88c;</span>]
+| `icons::spinner`
+| `0xe88c`
+
+| pass:[<span class="ei">&#xe88d;</span>]
+| `icons::circle_notch`
+| `0xe88d`
+
+| pass:[<span class="ei">&#xe88e;</span>]
+| `icons::star`
+| `0xe88e`
+
+| pass:[<span class="ei">&#xe88f;</span>]
+| `icons::star_empty`
+| `0xe88f`
+
+| pass:[<span class="ei">&#xe890;</span>]
+| `icons::star_half`
+| `0xe890`
+
+| pass:[<span class="ei">&#xe891;</span>]
+| `icons::heart`
+| `0xe891`
+
+| pass:[<span class="ei">&#xe892;</span>]
+| `icons::heart_empty`
+| `0xe892`
+
+| pass:[<span class="ei">&#xe893;</span>]
+| `icons::bookmark`
+| `0xe893`
+
+| pass:[<span class="ei">&#xe894;</span>]
+| `icons::bookmark_empty`
+| `0xe894`
+
+| pass:[<span class="ei">&#xe895;</span>]
+| `icons::tag`
+| `0xe895`
+
+| pass:[<span class="ei">&#xe896;</span>]
+| `icons::tags`
+| `0xe896`
+
+| pass:[<span class="ei">&#xe897;</span>]
+| `icons::flag`
+| `0xe897`
+
+| pass:[<span class="ei">&#xe898;</span>]
+| `icons::flag_empty`
+| `0xe898`
+
+| pass:[<span class="ei">&#xe899;</span>]
+| `icons::thumbs_up`
+| `0xe899`
+
+| pass:[<span class="ei">&#xe89a;</span>]
+| `icons::thumbs_down`
+| `0xe89a`
+
+| pass:[<span class="ei">&#xe89b;</span>]
+| `icons::bug`
+| `0xe89b`
+
+| pass:[<span class="ei">&#xe89c;</span>]
+| `icons::shield`
+| `0xe89c`
+
+| pass:[<span class="ei">&#xe89d;</span>]
+| `icons::battery_full`
+| `0xe89d`
+
+| pass:[<span class="ei">&#xe89e;</span>]
+| `icons::battery_half`
+| `0xe89e`
+
+| pass:[<span class="ei">&#xe89f;</span>]
+| `icons::battery_empty`
+| `0xe89f`
+
+| pass:[<span class="ei">&#xf0eb;</span>]
+| `icons::lightbulb`
+| `0xf0eb`
+
+|===
+
+=== Transport and Audio
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe834;</span>]
+| `icons::play`
+| `0xe834`
+
+| pass:[<span class="ei">&#xe835;</span>]
+| `icons::stop`
+| `0xe835`
+
+| pass:[<span class="ei">&#xe836;</span>]
+| `icons::pause`
+| `0xe836`
+
+| pass:[<span class="ei">&#xe837;</span>]
+| `icons::record`
+| `0xe837`
+
+| pass:[<span class="ei">&#xe838;</span>]
+| `icons::to_end`
+| `0xe838`
+
+| pass:[<span class="ei">&#xe839;</span>]
+| `icons::to_start`
+| `0xe839`
+
+| pass:[<span class="ei">&#xe83a;</span>]
+| `icons::fast_forward`
+| `0xe83a`
+
+| pass:[<span class="ei">&#xe83b;</span>]
+| `icons::fast_backward`
+| `0xe83b`
+
+| pass:[<span class="ei">&#xe8fc;</span>]
+| `icons::step_backward`
+| `0xe8fc`
+
+| pass:[<span class="ei">&#xe8fd;</span>]
+| `icons::step_forward`
+| `0xe8fd`
+
+| pass:[<span class="ei">&#xe902;</span>]
+| `icons::play_circle`
+| `0xe902`
+
+| pass:[<span class="ei">&#xe903;</span>]
+| `icons::pause_circle`
+| `0xe903`
+
+| pass:[<span class="ei">&#xe901;</span>]
+| `icons::stop_circle`
+| `0xe901`
+
+| pass:[<span class="ei">&#xe8f6;</span>]
+| `icons::eject`
+| `0xe8f6`
+
+| pass:[<span class="ei">&#xe829;</span>]
+| `icons::volume_off`
+| `0xe829`
+
+| pass:[<span class="ei">&#xe82a;</span>]
+| `icons::volume_down`
+| `0xe82a`
+
+| pass:[<span class="ei">&#xe82b;</span>]
+| `icons::volume_up`
+| `0xe82b`
+
+| pass:[<span class="ei">&#xe8f2;</span>]
+| `icons::music`
+| `0xe8f2`
+
+| pass:[<span class="ei">&#xe8f3;</span>]
+| `icons::headphones`
+| `0xe8f3`
+
+| pass:[<span class="ei">&#xe8f4;</span>]
+| `icons::microphone`
+| `0xe8f4`
+
+| pass:[<span class="ei">&#xe8f5;</span>]
+| `icons::microphone_off`
+| `0xe8f5`
+
+| pass:[<span class="ei">&#xe8f7;</span>]
+| `icons::signal`
+| `0xe8f7`
+
+| pass:[<span class="ei">&#xe8f8;</span>]
+| `icons::tachometer`
+| `0xe8f8`
+
+| pass:[<span class="ei">&#xe8f9;</span>]
+| `icons::dot_circled`
+| `0xe8f9`
+
+| pass:[<span class="ei">&#xe8fa;</span>]
+| `icons::circle_empty`
+| `0xe8fa`
+
+| pass:[<span class="ei">&#xe8fe;</span>]
+| `icons::circle`
+| `0xe8fe`
+
+| pass:[<span class="ei">&#xe8ff;</span>]
+| `icons::square`
+| `0xe8ff`
+
+| pass:[<span class="ei">&#xe900;</span>]
+| `icons::adjust`
+| `0xe900`
+
+| pass:[<span class="ei">&#xe8fb;</span>]
+| `icons::bullseye`
+| `0xe8fb`
+
+|===
+
+=== Devices and Objects
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe833;</span>]
+| `icons::power`
+| `0xe833`
+
+| pass:[<span class="ei">&#xe843;</span>]
+| `icons::cog`
+| `0xe843`
+
+| pass:[<span class="ei">&#xe8df;</span>]
+| `icons::cogs`
+| `0xe8df`
+
+| pass:[<span class="ei">&#xe83c;</span>]
+| `icons::wrench`
+| `0xe83c`
+
+| pass:[<span class="ei">&#xe847;</span>]
+| `icons::lock`
+| `0xe847`
+
+| pass:[<span class="ei">&#xe846;</span>]
+| `icons::lock_open`
+| `0xe846`
+
+| pass:[<span class="ei">&#xe8cd;</span>]
+| `icons::key`
+| `0xe8cd`
+
+| pass:[<span class="ei">&#xe81f;</span>]
+| `icons::pin`
+| `0xe81f`
+
+| pass:[<span class="ei">&#xf256;</span>]
+| `icons::hand`
+| `0xf256`
+
+| pass:[<span class="ei">&#xe8bc;</span>]
+| `icons::hand_pointer`
+| `0xe8bc`
+
+| pass:[<span class="ei">&#xe8bb;</span>]
+| `icons::mouse`
+| `0xe8bb`
+
+| pass:[<span class="ei">&#xe8ba;</span>]
+| `icons::keyboard`
+| `0xe8ba`
+
+| pass:[<span class="ei">&#xe8d8;</span>]
+| `icons::desktop`
+| `0xe8d8`
+
+| pass:[<span class="ei">&#xe8d9;</span>]
+| `icons::laptop`
+| `0xe8d9`
+
+| pass:[<span class="ei">&#xe8da;</span>]
+| `icons::tablet`
+| `0xe8da`
+
+| pass:[<span class="ei">&#xe8db;</span>]
+| `icons::mobile`
+| `0xe8db`
+
+| pass:[<span class="ei">&#xe8dc;</span>]
+| `icons::server`
+| `0xe8dc`
+
+| pass:[<span class="ei">&#xe8dd;</span>]
+| `icons::microchip`
+| `0xe8dd`
+
+| pass:[<span class="ei">&#xe8de;</span>]
+| `icons::terminal`
+| `0xe8de`
+
+| pass:[<span class="ei">&#xe8c8;</span>]
+| `icons::plug`
+| `0xe8c8`
+
+| pass:[<span class="ei">&#xe8c9;</span>]
+| `icons::bolt`
+| `0xe8c9`
+
+| pass:[<span class="ei">&#xe8ca;</span>]
+| `icons::magic`
+| `0xe8ca`
+
+| pass:[<span class="ei">&#xe8c6;</span>]
+| `icons::usb`
+| `0xe8c6`
+
+| pass:[<span class="ei">&#xe8c5;</span>]
+| `icons::bluetooth`
+| `0xe8c5`
+
+| pass:[<span class="ei">&#xe8c7;</span>]
+| `icons::wifi`
+| `0xe8c7`
+
+| pass:[<span class="ei">&#xe8be;</span>]
+| `icons::camera`
+| `0xe8be`
+
+| pass:[<span class="ei">&#xe8bf;</span>]
+| `icons::video`
+| `0xe8bf`
+
+| pass:[<span class="ei">&#xe8c0;</span>]
+| `icons::picture`
+| `0xe8c0`
+
+| pass:[<span class="ei">&#xe8bd;</span>]
+| `icons::print`
+| `0xe8bd`
+
+| pass:[<span class="ei">&#xe8c1;</span>]
+| `icons::globe`
+| `0xe8c1`
+
+| pass:[<span class="ei">&#xe8cb;</span>]
+| `icons::toggle_on`
+| `0xe8cb`
+
+| pass:[<span class="ei">&#xe8cc;</span>]
+| `icons::toggle_off`
+| `0xe8cc`
+
+| pass:[<span class="ei">&#xe8e5;</span>]
+| `icons::calculator`
+| `0xe8e5`
+
+| pass:[<span class="ei">&#xe8e3;</span>]
+| `icons::gamepad`
+| `0xe8e3`
+
+| pass:[<span class="ei">&#xe8e4;</span>]
+| `icons::television`
+| `0xe8e4`
+
+| pass:[<span class="ei">&#xe8e1;</span>]
+| `icons::rocket`
+| `0xe8e1`
+
+| pass:[<span class="ei">&#xe8e2;</span>]
+| `icons::flask`
+| `0xe8e2`
+
+| pass:[<span class="ei">&#xe8e0;</span>]
+| `icons::puzzle`
+| `0xe8e0`
+
+| pass:[<span class="ei">&#xe8ec;</span>]
+| `icons::qrcode`
+| `0xe8ec`
+
+| pass:[<span class="ei">&#xe8ed;</span>]
+| `icons::barcode`
+| `0xe8ed`
+
+|===
+
+=== People and Communication
+
+[.icons, cols="1,4,2", options="header"]
+|===
+| Icon | Name | Code
+
+| pass:[<span class="ei">&#xe8b1;</span>]
+| `icons::user`
+| `0xe8b1`
+
+| pass:[<span class="ei">&#xe8b2;</span>]
+| `icons::users`
+| `0xe8b2`
+
+| pass:[<span class="ei">&#xe8b3;</span>]
+| `icons::user_plus`
+| `0xe8b3`
+
+| pass:[<span class="ei">&#xe8b4;</span>]
+| `icons::user_circle`
+| `0xe8b4`
+
+| pass:[<span class="ei">&#xe8ce;</span>]
+| `icons::envelope`
+| `0xe8ce`
+
+| pass:[<span class="ei">&#xe8cf;</span>]
+| `icons::comment`
+| `0xe8cf`
+
+| pass:[<span class="ei">&#xe8d0;</span>]
+| `icons::comments`
+| `0xe8d0`
+
+| pass:[<span class="ei">&#xe8b7;</span>]
+| `icons::bell`
+| `0xe8b7`
+
+| pass:[<span class="ei">&#xe8b8;</span>]
+| `icons::bell_off`
+| `0xe8b8`
+
+| pass:[<span class="ei">&#xe8b9;</span>]
+| `icons::help`
+| `0xe8b9`
+
+| pass:[<span class="ei">&#xe8b5;</span>]
+| `icons::calendar`
+| `0xe8b5`
+
+| pass:[<span class="ei">&#xe8b6;</span>]
+| `icons::calendar_check`
+| `0xe8b6`
+
+| pass:[<span class="ei">&#xe8d1;</span>]
+| `icons::paperclip`
+| `0xe8d1`
+
+| pass:[<span class="ei">&#xe8d2;</span>]
+| `icons::book`
+| `0xe8d2`
+
+| pass:[<span class="ei">&#xe8d3;</span>]
+| `icons::briefcase`
+| `0xe8d3`
+
+| pass:[<span class="ei">&#xe8d4;</span>]
+| `icons::shopping_cart`
+| `0xe8d4`
+
+| pass:[<span class="ei">&#xe8d5;</span>]
+| `icons::credit_card`
+| `0xe8d5`
+
+| pass:[<span class="ei">&#xe8d6;</span>]
+| `icons::gift`
+| `0xe8d6`
+
+| pass:[<span class="ei">&#xe8d7;</span>]
+| `icons::trophy`
+| `0xe8d7`
+
+| pass:[<span class="ei">&#xe8e6;</span>]
+| `icons::language`
+| `0xe8e6`
+
+| pass:[<span class="ei">&#xe8e7;</span>]
+| `icons::sun`
+| `0xe8e7`
+
+| pass:[<span class="ei">&#xe8e8;</span>]
+| `icons::moon`
+| `0xe8e8`
+
+| pass:[<span class="ei">&#xe8ea;</span>]
+| `icons::recycle`
+| `0xe8ea`
+
+| pass:[<span class="ei">&#xe8ee;</span>]
+| `icons::chart_bar`
+| `0xe8ee`
+
+| pass:[<span class="ei">&#xe8ef;</span>]
+| `icons::chart_line`
+| `0xe8ef`
+
+| pass:[<span class="ei">&#xe8f0;</span>]
+| `icons::chart_pie`
+| `0xe8f0`
+
+| pass:[<span class="ei">&#xe8f1;</span>]
+| `icons::chart_area`
+| `0xe8f1`
+
+|===
+
+An icon code goes wherever an element takes one:
+
+* `icon(code, size)`, an element that is just the icon, `size` a
+  multiplier on the theme's icon size.
+* `icon_button(code, size)` and `plain_icon_button(code, size)`, buttons
+  whose face is an icon.
+* `button(code, label)` and `button(label, code)`, a button with an icon
+  before or after its label.
+* `draw_icon` and `measure_icon`, for a custom styler. See
+  xref:support/text_utils.adoc[Text Utilities].
+
+The font and its size come from the theme: `icon_font` and
+`icon_color`. See xref:support/theme.adoc[Theme].
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements::icons
+{
+   enum
+   {
+      left     = 0xe800,
+      right    = 0xe801,
+      up       = 0xe802,
+      down     = 0xe803,
+      // ... every name in the table, in the same order ...
+      expand   = 0xe84f,
+      shrink   = 0xe850,
+      // ... and the icons added later, from 0xe851 ...
+   };
+}
+```
+
+The names are an anonymous enum, so a code converts to the
+`std::uint32_t` the icon functions take. Most codes run from `0xe800`;
+five early icons (`sliders`, `lightbulb`, `hand`, `menu`, `unlink`) came
+from Font Awesome and keep its code points, and the many added since
+from the same set take codes in sequence from `0xe851`. `mixer` is another name for
+`sliders`: the same glyph.
+
+== Adding Icons
+
+The 265 icons are a starting set. An application adds its own by building
+a new icon font with Fontello and shipping it in place of Elements':
+
+. Go to https://fontello.com[fontello.com] and drop
+  `resources/fonts/config.json` on the page. The 267 glyphs load with
+  their names and codes, so everything Elements draws keeps working.
+. Add your icons: pick from Fontello's font sets, or drag in your own
+  SVG files.
+. Give each new glyph a code point from `0xf800`: click the glyph,
+  then its code.
++
+WARNING: Codes below `0xf800` are reserved. `0xe800` to `0xefff` are
+Elements' own icons, and `0xf000` to `0xf2ff` are glyphs Fontello imports
+from other fonts, which keep their own codes. An application's icons go
+in `0xf800` to `0xf8ff` (256 codes), so they never collide with icons
+Elements adds later.
+. Download the webfont. In the archive, `font/elements_basic.ttf` is the
+  new font and `config.json` the new configuration; keep the latter with
+  the font, so the next addition starts from it.
+. Before including `ElementsConfigApp.cmake`, point the build at the
+  new font:
++
+```cmake
+set(ELEMENTS_ICON_FONT ${CMAKE_CURRENT_LIST_DIR}/resources/my_icons.ttf)
+```
++
+The font keeps the family name `elements_basic`, which the theme's
+`icon_font` names, so nothing else changes.
+. Name your codes in an enum of your own:
++
+```c++
+namespace my_icons
+{
+   enum
+   {
+      waveform  = 0xf800,
+      midi_plug = 0xf801
+   };
+}
+
+auto b = icon_button(my_icons::waveform);
+```
+
+== Example
+
+```c++
+auto settings = icon_button(icons::cog);
+auto warning = icon(icons::attention, 1.5);
+auto save = button("Save", icons::floppy);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -1,0 +1,132 @@
+= Indirection
+
+include::../common.adoc[]
+
+== Overview
+
+Elements are always held by value (value semantics). A `margin` owns
+its subject and a tile owns its children; a factory call moves its
+argument in, so `margin(label("x"))` holds its own label. The tree is
+one object graph, each node with one owner, and nothing outside it
+refers to a node.
+
+There are cases where value semantics is not suitable: an element that
+appears in two places, or an element the application keeps a handle to
+after it is in the view, to read or change it. These need a reference.
+An `indirect` is an element that owns no element and delegates the whole
+element protocol to one it refers to. Three ways to make one:
+
+* `hold(ptr)` takes a `std::shared_ptr` and keeps it, so the element
+  lives as long as the view, or any other holder, does. This is the usual
+  way: `auto s = share(slider(...))`, then `hold(s)` in the tree and `s`
+  in the code.
+* `link(e)` takes a reference, and the caller keeps `e` alive.
+* `hold_any(ptr)` is `hold` for a `std::shared_ptr<element>`, when the
+  element's type is not known at the point of use.
+
+image::elements/indirect_classes.svg[alt="indirect_base derives from element and has get(); reference holds an Element by reference and shared_element by shared_ptr; indirect<Base> derives from either and forwards the protocol to get()", width=750px, align="center"]
+
+`indirect_base` names the element delegated to, through `get()`;
+`reference` and `shared_element` are the two ways of reaching it;
+`indirect<Base>` derives from one of them and forwards the whole element
+protocol to `get()`.
+
+An indirect is transparent to the protocol and to the finders on the
+xref:elements/traversal.adoc[Traversal] page: a `find_subject` through a
+`hold` reaches the held element. It differs from a
+xref:elements/proxies.adoc[proxy] in two ways: it does not own what it
+delegates to, and it changes nothing on the way.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   template <concepts::Element Base>
+   class indirect : public Base
+   {
+      // The whole element protocol, forwarded to get()
+   };
+
+   struct indirect_base : element
+   {
+      virtual element&        get() = 0;
+      virtual element const&  get() const = 0;
+   };
+
+   template <concepts::Element Element>
+   class reference : public indirect_base { ... };
+
+   template <concepts::Element Element>
+   class shared_element : public indirect_base { ... };
+
+                                       template <concepts::Element Element>
+   indirect<reference<Element>>        link(Element& rhs);
+
+                                       template <concepts::Element Element>
+   indirect<shared_element<Element>>   hold(std::shared_ptr<Element> rhs);
+
+   indirect<shared_element<element>>   hold_any(std::shared_ptr<element> rhs);
+}
+```
+
+`reference<Element>` and `shared_element<Element>` are what `link` and
+`hold` make; each has a `get()` returning the element. They are seldom
+named: the factory functions deduce them. `hold` keeps the element's
+own type, so `get()` on what it makes returns a `slider&` when `s` is a
+slider; `hold_any` keeps only `element`.
+
+== Expressions
+
+=== Notation
+
+`ptr`:: A `std::shared_ptr` to an element.
+`e`:: An element.
+`i`:: An `indirect`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `hold(ptr)`
+| An element delegating to `*ptr`, sharing ownership of it.
+
+| `link(e)`
+| An element delegating to `e`, not owning it.
+
+| `hold_any(ptr)`
+| `hold` for a `std::shared_ptr<element>`.
+
+| `i.get()`
+| The element delegated to.
+|===
+
+== Example
+
+One slider in two places, and reached from code:
+
+```c++
+auto vol = share(slider(basic_thumb<20>(), basic_track<5, false>(), 0.5));
+
+view_.content(
+   vtile(
+      hold(vol),                       // here
+      margin({20, 20, 20, 20}, hold(vol))   // and here, inset
+   )
+);
+
+vol->value(0.75);                       // both show 0.75
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

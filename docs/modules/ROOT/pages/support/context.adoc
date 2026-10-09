@@ -1,0 +1,210 @@
+= Context
+
+include::../common.adoc[]
+
+== Overview
+
+An element has no position of its own. Whoever lays it out, draws it, or
+sends it an event hands it a context for that one call, and the context
+says where the element is and what it is being drawn into: the `view`, the
+`canvas`, the element's `bounds`, and the context of the element that
+contains it.
+
+Contexts come in two kinds:
+
+* `basic_context` is the view and the canvas, and nothing else. It is what
+  an element gets when it is asked for its size, before anyone knows where
+  it will go.
+* `context` adds the element, its bounds, its parent's context and whether
+  the element is enabled. Drawing, layout and events all receive one.
+
+A container makes its children's contexts as it walks them, each from its
+own context, the child and the bounds it worked out for that child:
+
+image::support/context_chain.svg[alt="The view and the canvas feed the top context, which feeds each child context in turn", width=750px, align="center"]
+
+* The top context is made from the view and the canvas.
+* Each container makes its child's context from its own; here a `vtile`
+  holds a `margin`, which holds a `slider`.
+* Every context shares the one view and the one canvas, and its `parent`
+  points back to the context above it.
+* The chain lasts only as long as the call that walks it.
+
+NOTE: A context is made on the stack for one call. Do not keep one, or a
+pointer to one, beyond the call it was passed to. To act on an element
+later, keep the element and ask the view for a fresh context with
+`in_context_do` (see {element}).
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   struct basic_context
+   {
+                           basic_context(view& view_, canvas& cnv);
+                           basic_context(basic_context const&) = default;
+      basic_context&       operator=(basic_context const&) = delete;
+
+      rect                 view_bounds() const;
+      rect                 visible_bounds() const;
+      point                cursor_pos() const;
+
+      elements::view&      view;
+      elements::canvas&    canvas;
+   };
+
+   class context : public basic_context
+   {
+   public:
+                           context(view& view_, canvas& canvas_,
+                              element* element_, rect bounds_);
+                           context(context const& parent_,
+                              element* element_, rect bounds_);
+                           context(context const& rhs, rect bounds_);
+                           context(context const&) = default;
+      context&             operator=(context const&) = delete;
+
+      context              sub_context() const;
+
+      elements::element*   element;
+      context const*       parent;
+      elements::rect       bounds;
+      bool                 enabled;
+   };
+}
+```
+
+== Expressions
+
+=== Notation
+
+`v`:: A `view`.
+`cnv`:: A `canvas`.
+`bctx`:: A `basic_context`.
+`ctx`, `pctx`:: A `context`; `pctx` the context of a container.
+`e`:: An `element*`.
+`r`:: A `rect`, in user coordinates.
+
+=== basic_context
+
+[cols="1,1,1"]
+|===
+| Expression | Semantics | Return Type
+
+| `basic_context{v, cnv}`
+| Make a basic context for drawing `v` into `cnv`.
+| `basic_context`
+
+| `bctx.view`
+| The view.
+| `view&`
+
+| `bctx.canvas`
+| The canvas.
+| `canvas&`
+
+| `bctx.view_bounds()`
+| The view's bounds, mapped into the canvas's current user coordinates.
+| `rect`
+
+| `bctx.visible_bounds()`
+| `bctx.view_bounds()` narrowed by the canvas clip: the part of the view
+  that can be painted now. A host clips to the area it is repainting, so
+  drawing code that culls against this pays only for what will show.
+| `rect`
+
+| `bctx.cursor_pos()`
+| The mouse cursor's position in the view, in the canvas's current user
+  coordinates.
+| `point`
+|===
+
+=== context
+
+[cols="1,1,1"]
+|===
+| Expression | Semantics | Return Type
+
+| `context{v, cnv, e, r}`
+| The context of a top-level element `e` at `r`: `parent` is null, and
+  `enabled` is whether `e` is enabled.
+| `context`
+
+| `context{pctx, e, r}`
+| The context of `e`, a child of the element `pctx` belongs to, at `r`:
+  `parent` is `&pctx`, and `enabled` is true only if both the parent
+  context and `e` are enabled.
+| `context`
+
+| `context{ctx, r}`
+| The same element in the same parent, at `r` instead: everything but
+  `bounds` is copied from `ctx`.
+| `context`
+
+| `ctx.sub_context()`
+| A copy of `ctx` whose `parent` is `ctx` itself. An element uses it to
+  hand its own subject a context one level down, at the same bounds.
+| `context`
+
+| `ctx.element`
+| The element the context is for. May be null.
+| `element*`
+
+| `ctx.parent`
+| The context of the enclosing element, or null at the top.
+| `context const*`
+
+| `ctx.bounds`
+| Where the element is, in the canvas's user coordinates.
+| `rect`
+
+| `ctx.enabled`
+| Whether the element and every element above it are enabled.
+| `bool`
+|===
+
+Both kinds can be copied, which copies the references to the view and the
+canvas, but not assigned: a context always refers to the view and canvas
+it was made with.
+
+== Example
+
+A container that shows one child in its right half makes the child's
+context from its own, and passes it to every call:
+
+```c++
+class right_half : public element
+{
+public:
+
+   explicit right_half(element& child)
+    : _child{child}
+   {}
+
+   void draw(context const& ctx) override
+   {
+      auto r = ctx.bounds;
+      r.left = (r.left + r.right) / 2;
+      _child.draw(context{ctx, &_child, r});
+   }
+
+private:
+
+   element& _child;
+};
+```
+
+The child sees `ctx.bounds` as the right half, `ctx.parent` as the
+container's context, and is drawn disabled if the container is.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

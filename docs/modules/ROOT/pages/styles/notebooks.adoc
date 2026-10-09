@@ -1,0 +1,14 @@
+= Notebooks and Tabs
+
+include::../common.adoc[]
+
+== Overview
+
+Covers `element/style/notebook.hpp`, `element/style/tab.hpp`.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

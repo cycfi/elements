@@ -1,0 +1,112 @@
+= Collapsible
+
+include::../common.adoc[]
+
+== Overview
+
+A collapsible element folds its enclosed element (`subject`) away on one
+axis when a predicate says so, and brings it back when the predicate
+changes its mind: the subject's {limits} on that axis are both set to
+zero, so the tile or grid it sits in gives it no room and what follows
+moves up, or over, to take its place; it is not drawn, and takes neither
+the mouse nor the keyboard. The subject is still there, and returns at
+its own size as soon as the predicate is false again. A section of a
+panel that folds under its header, or a sidebar that slides out of the
+way, is built this way.
+
+image::layout/collapsible.png[alt="A section open, with its body shown under its header, and the same section collapsed, the body gone and the text that follows moved up", width=440px, link={imagesdir}/layout/collapsible.png]
+
+The predicate is read when the enclosing element lays out. After
+changing what it returns, call the view's `layout()` so the tree is laid
+out again.
+
+== vcollapsible
+
+Collapses the height of an enclosed element (`subject`).
+
+=== Notation
+
+`subject`:: Instance of `Element`
+`pred`:: A callable returning `bool`, `bool()`
+
+=== Expression
+
+[,c++]
+----
+vcollapsible(subject)
+vcollapsible(subject).is_collapsed = pred
+----
+
+=== Semantics
+
+. While `pred()` returns `true`, the `min` and `max` height of the
+subject's {limits} are zero; its width is untouched. The subject is not
+drawn, and `wants_control` and `wants_focus` return `false`.
+. While `pred()` returns `false`, the subject's {limits} are its own,
+and it is drawn and takes events as usual.
+. `is_collapsed` is a public member holding `pred`; its default returns
+`false`.
+. Returns instance of `Proxy`.
+
+== hcollapsible
+
+Collapses the width of an enclosed element (`subject`).
+
+=== Notation
+
+`subject`:: Instance of `Element`
+`pred`:: A callable returning `bool`, `bool()`
+
+=== Expression
+
+[,c++]
+----
+hcollapsible(subject)
+hcollapsible(subject).is_collapsed = pred
+----
+
+=== Semantics
+
+. While `pred()` returns `true`, the `min` and `max` width of the
+subject's {limits} are zero; its height is untouched. The subject is not
+drawn, and `wants_control` and `wants_focus` return `false`.
+. While `pred()` returns `false`, the subject's {limits} are its own,
+and it is drawn and takes events as usual.
+. `is_collapsed` is a public member holding `pred`; its default returns
+`false`.
+. Returns instance of `Proxy`.
+
+== Example
+
+A section of a panel: a header, a body on its own background that folds under it,
+and what follows:
+
+[,c++]
+----
+struct section
+{
+   bool open = true;
+
+   auto make()
+   {
+      auto body = vcollapsible(
+         layer(
+            margin({10, 10, 10, 10}, align_left(label("Collapsible section"))),
+            rbox(rgba(50, 70, 100, 255))
+         ));
+      body.is_collapsed = [this]{ return !open; };
+      return vtile(
+         align_left(label("A section").font_size(16)),
+         margin_top(6, std::move(body)),
+         margin_top(8, align_left(label("What follows the section")))
+      );
+   }
+};
+----
+
+To fold it, set `open` to `false` and call `view_.layout()`.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

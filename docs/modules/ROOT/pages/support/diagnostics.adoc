@@ -1,0 +1,246 @@
+= Logging and Diagnostics
+
+include::../common.adoc[]
+
+== Overview
+
+Four headers serve the diagnosis of an application in the field, where
+there is no console: a plugin in a host, an app on a user's machine.
+
+* `support/log.hpp`: an always-on event log, written to a file in the
+  user's log directory, by category, with the level of each category set
+  at run time through an environment variable.
+* `support/error_handler.hpp`: the hooks the library calls when a
+  graphics context, a render surface, a font or an image fails. By
+  default each writes to the log; an application can replace them.
+* `support/trace.hpp`: element traversal tracing, off by default, which
+  records the path a click or drag takes down the element tree as JSON
+  lines, for `tools/trace_graph.py` to turn into a call tree.
+* `support/perf.hpp`: frame timing, off by default, which an application
+  turns on from the environment to measure and report its draw rate.
+
+The log is built on https://github.com/odygrd/quill[quill], and there is
+no wrapper around it: a call site uses quill's `LOG_*` macros with a
+category logger. Logging is asynchronous, on a bounded queue that drops
+rather than blocks, so a burst of messages never stalls the UI or an
+audio thread.
+
+== Include
+
+These headers are not part of `elements.hpp`; include the one you use:
+
+```c++
+#include <elements/support/log.hpp>
+#include <elements/support/error_handler.hpp>
+#include <elements/support/trace.hpp>
+#include <elements/support/perf.hpp>
+```
+
+== The Log
+
+=== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class log_cat
+   {
+      app, window, view, render, input, resource, layout, error, trace
+   };
+
+   void           log_init(std::string_view app_name = "elements");
+   void           log_shutdown();
+   logger_type*   logger(log_cat cat);
+   std::string    log_dir();
+}
+```
+
+=== Categories
+
+Each category is a named quill logger with its own level. Messages below
+the level are discarded at the call site, at the cost of one comparison.
+
+[cols="1,3,1"]
+|===
+| Category | Covers | Default level
+
+| `app` | Start and stop, the run loop, the startup banner | warning
+| `window` | Host window creation, size, position, focus | warning
+| `view` | Views: creation, attach and detach, size and scale | warning
+| `render` | The drawing backend: context creation, drawable size | warning
+| `input` | Mouse, keyboard, scroll, drag and drop | off
+| `resource` | Fonts, search paths, resource resolution | warning
+| `layout` | Element layout and limits | off
+| `error` | Assertion failures, exceptions, unexpected states | error
+| `trace` | Element traversal tracing, to its own file | off
+|===
+
+=== Run time control
+
+`CYCFI_LOG` sets levels per category, as `category=level` pairs
+separated by commas:
+
+```bash
+CYCFI_LOG=view=debug,render=debug,input=off ./my_app
+```
+
+The levels are `trace`, `debug`, `info`, `notice`, `warn`, `error` and
+`off`. A category not named keeps its default. The variable is read once,
+when the log starts.
+
+=== Where the log goes
+
+`log_init(app_name)` names the log directory and the files in it,
+`<app_name>.log` and `<app_name>-trace.jsonl`. The directory is the
+platform's, for the user:
+
+[cols="1,3"]
+|===
+| Platform | Directory
+
+| macOS | `~/Library/Logs/<app_name>`
+| Windows | `%LOCALAPPDATA%\<app_name>\Logs`
+| Linux | `$XDG_STATE_HOME/<app_name>`, else `~/.local/state/<app_name>`
+|===
+
+`CYCFI_LOG_DIR` overrides it on any platform. `log_dir()` returns the
+directory in use. The log file rotates at 5 MB, keeping three backups,
+and is appended to across sessions, so one file holds a history a user
+can send.
+
+=== Expressions
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `log_init(name)`
+| Start the log under `name`. Call it once, before anything logs, to
+  name the files; otherwise the first `logger` call starts the log as
+  `elements`. Further calls do nothing, except after a `log_shutdown`,
+  when it starts the backend again.
+
+| `logger(cat)`
+| The logger for `cat`, for quill's macros: `LOG_INFO(logger(cat), fmt,
+  args...)`, and likewise `LOG_DEBUG`, `LOG_WARNING`, `LOG_ERROR`.
+
+| `log_shutdown()`
+| Stop the backend, flushing what it holds. A plugin calls it when its
+  last instance goes; an application need not.
+
+| `log_dir()`
+| The directory the log files are in.
+|===
+
+=== Example
+
+```c++
+#include <elements/support/log.hpp>
+
+log_init("my_app");          // ~/Library/Logs/my_app/my_app.log on macOS
+
+LOG_INFO(logger(log_cat::view), "resize {}x{}", w, h);
+LOG_DEBUG(logger(log_cat::render), "drawable {}x{} scale={}", w, h, scale);
+LOG_ERROR(logger(log_cat::error), "no GPU device");
+```
+
+== Error Handlers
+
+=== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class error_id
+   {
+      no_gpu_device,
+      graphics_context_failed,
+      render_surface_failed,
+      font_load_failed,
+      image_load_failed
+   };
+
+   class error_handler
+   {
+   public:
+      static error_handler&   get();
+
+      using handler = std::function<void(error_id id, std::string_view msg)>;
+
+      handler                 on_error;
+      handler                 on_render_error;
+      handler                 on_resource_error;
+   };
+}
+```
+
+The library reports a failure it cannot recover from by calling one of
+the three handlers with an `error_id` and a message: `on_render_error`
+for a GPU device, graphics context or render surface that could not be
+made, `on_resource_error` for a font that could not be registered or an
+image that could not be loaded, `on_error` for the rest. The default
+handlers write the message to the log, under `render`, `resource` and
+`error`. An application replaces a handler to show the failure, or to
+stop:
+
+```c++
+error_handler::get().on_resource_error =
+   [](error_id id, std::string_view msg)
+   {
+      show_alert(std::string{msg});
+   };
+```
+
+An image that cannot be loaded is reported, and then `image` throws
+`std::runtime_error`, so the element is never made.
+
+== Tracing
+
+With `CYCFI_LOG=trace=debug`, every click and drag the view receives is
+traced down the element tree: a record when a composite's `click` or
+`drag` is entered and left, with the element's class, bounds and
+arguments, and one for the control that handled it. Records are JSON
+lines in `<app_name>-trace.jsonl`. `tools/trace_graph.py` reads the file
+and prints the call tree of each gesture, or a Mermaid flowchart:
+
+```bash
+python3 tools/trace_graph.py ~/Library/Logs/my_app/my_app-trace.jsonl
+```
+
+`trace.hpp` declares what the library's composites call to write the
+records: `trace_scope`, `trace_leaf` and `trace_new_gesture`, plus
+`trace_enabled()`, true when the `trace` category is at `info` or
+below. A custom composite that routes events itself can use them the way
+`composite_base` does.
+
+== Frame Timing
+
+`perf.hpp` times the frames the platform layer presents, for
+benchmarking: the Cocoa, Win32, GTK, X11 or Wayland code under the view,
+which renders each frame. It is off unless `ELEMENTS_PERF` is set:
+
+[cols="1,2"]
+|===
+| Variable | Meaning
+
+| `ELEMENTS_PERF` | Set to enable; a positive value is the number of frames to sample (default 600).
+| `ELEMENTS_PERF_WARMUP` | Frames discarded before sampling (default 60).
+| `ELEMENTS_PERF_SCENE` | A label for the report line.
+|===
+
+The platform layer calls `perf::record` once per frame with its draw
+and flush time; `perf` measures the frame period itself. When the samples are in,
+it prints one line to standard output and exits the process:
+
+```
+ELEMENTS_PERF platform=macos host=cocoa backend=skia scene=default pixels=2000x1400 samples=600 warmup=60 draw_flush_ms{median=...} frame_ms{median=...} fps{median=...,mean=...}
+```
+
+`perf::enabled()` says whether it is on; the platform layer renders
+differently when measured (vsync off, synchronous GPU submit). Every
+platform layer calls it; an application does not need to.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

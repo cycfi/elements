@@ -1,0 +1,19 @@
+= Elements
+
+include::common.adoc[]
+
+== Overview
+
+Every visible thing in a view, and every container that arranges them, is an
+element. This section documents the vocabulary the rest of the
+documentation is written in: the base class and its protocol, and the
+building blocks every control and container is made from.
+
+* xref:elements/element.adoc[Element] covers the `element` base class: how
+  an element sizes, draws and refreshes itself, and how the mouse,
+  keyboard, focus and drag and drop events reach it.
+
+'''
+
+_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

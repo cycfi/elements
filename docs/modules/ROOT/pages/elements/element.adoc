@@ -1,0 +1,505 @@
+= Element
+
+include::../common.adoc[]
+
+== Overview
+
+Everything in a view is an `element`: a label, a slider, a tile of other
+elements, the window's content as a whole. `element` is the base class they
+share, and this page documents the protocol it declares, which every other
+page in this documentation builds on.
+
+An element has no position. It does not know where it is or how big it is.
+Whoever draws it or sends it an event hands it a {context}, and the context
+carries the element's `bounds` for that call, along with the `view` and the
+`canvas`. A container works out each child's bounds when it needs them and
+passes them down, so one element can appear in more than one place, or in
+more than one view. See xref:support/context.adoc[Context].
+
+The protocol is a set of virtual member functions, each with a default that
+does nothing or declines. A new element overrides the ones it needs:
+
+* Layout: how much room the element wants (`limits`), how readily it takes
+  more (`stretch`), and how many grid cells it covers (`span`).
+* Drawing and refresh: `draw`, and `refresh` to have it drawn again.
+* Control: the mouse, keyboard, cursor and scroll events. An element that
+  wants any of them says so with `wants_control`.
+* Focus: which element receives the keyboard.
+* Drag and drop: files and data dragged over the element.
+
+NOTE: The context an event handler receives carries a one pixel offscreen
+canvas, not the window's. Anything drawn there is lost. To change what the
+element looks like, change its state and call `refresh`; the view then
+calls `draw` with a real canvas.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+or, for this header alone:
+
+```c++
+#include <elements/element/element.hpp>
+```
+
+== Declaration
+
+```c++
+   class element : public std::enable_shared_from_this<element>
+   {
+   public:
+                              element() {}
+                              virtual ~element() = default;
+
+   // Display
+
+      virtual view_limits     limits(basic_context const& ctx) const;
+      virtual view_stretch    stretch() const;
+      virtual unsigned        span() const;
+      virtual element*        hit_test(context const& ctx, point p, bool leaf, bool control);
+      virtual void            draw(context const& ctx);
+      virtual void            layout(context const& ctx);
+      virtual void            refresh(context const& ctx, element& e, int outward = 0);
+      void                    refresh(context const& ctx, int outward = 0);
+
+      using context_function = std::function<void(context const& ctx)>;
+      virtual void            in_context_do(context const& ctx, element& e, context_function f);
+
+   // Control
+
+      virtual bool            wants_control() const;
+      virtual bool            click(context const& ctx, mouse_button btn);
+      virtual void            drag(context const& ctx, mouse_button btn);
+      virtual bool            key(context const& ctx, key_info k);
+      virtual bool            text(context const& ctx, text_info info);
+      virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
+      virtual bool            scroll(context const& ctx, point dir, point p);
+      virtual void            enable(bool state = true);
+      virtual bool            is_enabled() const;
+
+      enum focus_request { from_top, from_bottom, restore_previous };
+
+      virtual bool            wants_focus() const;
+      virtual void            begin_focus(focus_request req);
+      virtual bool            end_focus();
+      virtual element const*  focus() const;
+      virtual element*        focus();
+
+      friend void             relinquish_focus(context const& ctx);
+
+      virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
+      virtual bool            drop(context const& ctx, drop_info const& info);
+
+      enum tracking { none, begin_tracking, while_tracking, end_tracking };
+
+      virtual std::string     class_name() const;
+
+   protected:
+
+      void                    on_tracking(context const& ctx, tracking state);
+      void                    on_tracking(view& view_, tracking state);
+   };
+```
+
+The concepts, type aliases and free functions declared with it:
+
+```c++
+   namespace concepts
+   {
+      template <typename T>
+      concept Element = std::is_base_of_v<element, std::decay_t<T>>;
+
+      template <typename T>
+      concept ElementPtr = requires(T p)
+      {
+         { *p } -> std::convertible_to<element&>;
+      };
+   }
+
+   using element_ptr = std::shared_ptr<element>;
+   using element_const_ptr = std::shared_ptr<element const>;
+   using weak_element_ptr = std::weak_ptr<element>;
+   using weak_element_const_ptr = std::weak_ptr<element const>;
+
+   void relinquish_focus(context const& ctx);
+
+   using cycfi::share;
+   using cycfi::get;
+
+   element empty();
+```
+
+== Expressions
+
+=== Notation
+
+`e`:: Instance of a type derived from `element`.
+`bctx`:: A {basic_context}: the view and a canvas, with no bounds.
+`ctx`:: A {context} for `e`: a `basic_context` plus the element, its
+        `bounds`, the enclosing element's context (`parent`) and whether
+        `e` and everything enclosing it is `enabled`.
+`p`:: A `point` in view coordinates.
+`leaf`, `control`, `state`:: `bool` values.
+`target`:: An `element&` somewhere in the hierarchy under `e`.
+`outward`:: An `int`, 0 or more.
+`f`:: A `context_function`, called as `f(ctx)`.
+`btn`:: A `mouse_button`: which button, whether it is `down`, the click
+        count, the modifiers and the position, `pos`.
+`k`:: A `key_info`: the key code, the action (press, release or repeat)
+      and the modifiers.
+`info`:: A `text_info`: a Unicode code point and the modifiers.
+`status`:: A `cursor_tracking`: `entering`, `hovering` or `leaving`.
+`dir`:: A `point` giving the scroll distance in x and y. It can be
+        fractional.
+`req`:: A `focus_request`.
+`d`:: A `drop_info`: the dragged payload, keyed by MIME type, and the
+      point `where` it is.
+`x`:: An object of a type derived from `element`.
+`ptr`:: A `std::shared_ptr` to an element.
+
+=== Layout
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                             | Return Type
+
+| `e.limits(bctx)`                  | The smallest and largest size `e`
+                                      will take. The default is
+                                      `full_limits`: no minimum and
+                                      no practical maximum.                 | `view_limits`
+| `e.stretch()`                     | How readily `e` takes extra space
+                                      beside its siblings in a tile. The
+                                      default is 1 on both axes.            | `view_stretch`
+| `e.span()`                        | How many grid cells `e` covers. The
+                                      default is 1.                         | `unsigned`
+| `e.layout(ctx)`                   | Prepare to draw within `ctx.bounds`.
+                                      The view calls it before `draw`
+                                      whenever its size changes, and when
+                                      asked to lay out again. The default
+                                      does nothing; a container places its
+                                      children here.                        | `void`
+|===
+
+xref:layout/limits.adoc[Limits], xref:layout/stretch.adoc[Stretch] and
+xref:layout/span.adoc[Span] cover how containers use the first three.
+
+=== Drawing and Refresh
+
+[cols="1,1,1"]
+|===
+| Expression                         | Semantics                  | Return Type
+
+| `e.draw(ctx)`                      | Draw `e` within
+                                       `ctx.bounds`, on
+                                       `ctx.canvas`. The default
+                                       draws nothing. Only the
+                                       view, or a container
+                                       drawing its children,
+                                       calls it.                  | `void`
+| `e.refresh(ctx, outward)`          | Have the view redraw
+                                       `e`. With an `outward` of
+                                       0, the default, the area
+                                       redrawn is `ctx.bounds`;
+                                       each step outward takes
+                                       the bounds of the next
+                                       enclosing element
+                                       instead.                   | `void`
+| `e.refresh(ctx, target, outward)`  | Redraw `target`, found
+                                       under `e`. The default
+                                       acts only when `target`
+                                       is `e`; a container
+                                       searches its children.     | `void`
+| `e.in_context_do(ctx, target, f)`  | Find `target` under `e`
+                                       and call `f` with the
+                                       context of `target`.
+                                       The default calls `f`
+                                       only when `target` is
+                                       `e`.                       | `void`
+|===
+
+A redraw is not immediate. `refresh` marks the area and returns, and the
+view draws it when the host next paints.
+
+`in_context_do` is how code that holds an element, but no context for it,
+gets one: the view's own `in_context_do(target, f)` walks down from the top
+and hands `f` the context `target` would be drawn with.
+
+=== Hit Testing
+
+[cols="1,1,1"]
+|===
+| Expression                           | Semantics                 | Return Type
+
+| `e.hit_test(ctx, p, leaf, control)`  | The element at `p`, or
+                                         `nullptr`. The default
+                                         returns `&e` when
+                                         `ctx.bounds` contains
+                                         `p`. For a container,
+                                         `leaf` asks for the
+                                         innermost element at `p`
+                                         rather than the child
+                                         containing it, and
+                                         `control` considers only
+                                         children that want
+                                         control.                  | `element*`
+|===
+
+=== Control
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                 | Return Type
+
+| `e.wants_control()`               | Whether `e` takes mouse,
+                                      cursor and scroll
+                                      events. The default is
+                                      `false`. A container
+                                      wants control if any
+                                      child does.               | `bool`
+| `e.click(ctx, btn)`               | A button went down or
+                                      up over `e`. Return
+                                      `true` if handled. The
+                                      default returns `false`.  | `bool`
+| `e.drag(ctx, btn)`                | The mouse moved with the
+                                      button still down. The
+                                      default does nothing.     | `void`
+| `e.key(ctx, k)`                   | A key was pressed,
+                                      released or repeated
+                                      while `e` has the focus.
+                                      Return `true` if
+                                      handled. The default
+                                      returns `false`.          | `bool`
+| `e.text(ctx, info)`               | A character was typed
+                                      while `e` has the focus:
+                                      the text the keys made,
+                                      after the platform's
+                                      input processing. Return
+                                      `true` if handled. The
+                                      default returns `false`.  | `bool`
+| `e.cursor(ctx, p, status)`        | The cursor entered,
+                                      moved over or left `e`.
+                                      Return `true` to keep
+                                      the cursor shape `e`
+                                      set; if no element does,
+                                      the view sets the arrow.
+                                      The default returns
+                                      `false`.                  | `bool`
+| `e.scroll(ctx, dir, p)`           | A scroll wheel or
+                                      gesture at `p`. Return
+                                      `true` if handled. The
+                                      default returns `false`.  | `bool`
+|===
+
+A container hands a mouse event to the child under the pointer, and
+considers only the children that want control; the others are passed over
+as if absent. `click` comes twice for each press, once with `btn.down` set
+and once without. The child that returns `true` for the press is the one
+that receives every `drag` that follows and the release, wherever the
+pointer has moved by then. A child that returns `false` for the press
+receives neither.
+
+`key` and `text` do not go by position. They go to the focus.
+
+=== Enabling
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                | Return Type
+
+| `e.enable(state)`                 | Enable or disable `e`.
+                                      The default does
+                                      nothing.                 | `void`
+| `e.is_enabled()`                  | Whether `e` is enabled.
+                                      The default is `true`.   | `bool`
+|===
+
+The base class keeps no enabled state: an element that can be disabled
+overrides both. Nothing in the dispatch enforces it either. A disabled
+element is still sent its events; `ctx.enabled` is `false` for it, and for
+everything inside it, and it is up to the element to consult that and
+decline, and to draw itself dimmed.
+
+=== Focus
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                    | Return Type
+
+| `e.wants_focus()`                 | Whether `e` takes the
+                                      keyboard. The default is
+                                      `false`. A container
+                                      wants focus if any child
+                                      does.                        | `bool`
+| `e.begin_focus(req)`              | `e` is becoming the
+                                      focus. `req` says from
+                                      which end a container
+                                      picks its child: the
+                                      first that wants focus
+                                      (`from_top`), the last
+                                      (`from_bottom`), or the
+                                      one that had it before
+                                      (`restore_previous`). The
+                                      default does nothing.        | `void`
+| `e.end_focus()`                   | `e` is losing the focus.
+                                      Return `false` to refuse,
+                                      and keep it. The default
+                                      returns `true`.              | `bool`
+| `e.focus()`                       | The element that has the
+                                      focus. The default is
+                                      `&e`; a container
+                                      returns its focused
+                                      child, or `nullptr`.         | `element*`, or
+                                                                     `element const*`
+                                                                     for a `const` `e`
+| `relinquish_focus(ctx)`           | Give up the focus held
+                                      in the container
+                                      enclosing the element of
+                                      `ctx`, and in each
+                                      container above it.          | `void`
+|===
+
+A click on a child that wants focus gives it the focus. Within a container,
+the Tab key moves the focus to the next child that wants it, and Shift-Tab
+to the previous one; the focused child sees the key first, and the move
+happens only if it declines.
+
+=== Drag and Drop
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                | Return Type
+
+| `e.track_drop(ctx, d, status)`    | Something is being
+                                      dragged over `e`. The
+                                      default does nothing.    | `void`
+| `e.drop(ctx, d)`                  | It was let go over `e`.
+                                      Return `true` if taken.
+                                      The default returns
+                                      `false`.                 | `bool`
+|===
+
+=== Tracking
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                 | Return Type
+
+| `on_tracking(ctx, state)`         | Protected. Tell the view
+                                      that a gesture on `e`
+                                      has begun, continues or
+                                      has ended.                | `void`
+| `on_tracking(view, state)`        | The same, for a caller
+                                      with the view but no
+                                      context.                  | `void`
+|===
+
+A control calls these as the user works it, and the view passes each on to
+its `on_tracking` callback. That is how a plug-in host learns when to record
+automation: the press is `begin_tracking`, each movement `while_tracking`,
+the release `end_tracking`. A `while_tracking` that arrives with no
+`begin_tracking` before it is preceded by one the view supplies.
+
+=== Diagnostics
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics               | Return Type
+
+| `e.class_name()`                  | A name for the type of
+                                      `e`, for debugging. The
+                                      default is the
+                                      demangled type name,
+                                      which varies by
+                                      compiler.               | `std::string`
+|===
+
+=== Free Functions
+
+[cols="1,1,1"]
+|===
+| Expression                        | Semantics                 | Return Type
+
+| `empty()`                         | An element that draws
+                                      nothing and takes no
+                                      events, with
+                                      `full_limits`. A
+                                      placeholder.              | `element`
+| `share(x)`                        | `x`, moved or copied
+                                      into a new
+                                      `std::shared_ptr`, ready
+                                      for `hold`.               | `std::shared_ptr` to the type of `x`
+| `get(ptr)`                        | A `std::weak_ptr` to
+                                      what `ptr` owns.          | `std::weak_ptr` to the same type
+|===
+
+`concepts::Element` is satisfied by any type derived from `element`, and
+`concepts::ElementPtr` by anything that dereferences to one. The factory
+functions in this documentation are constrained on them.
+
+== Example
+
+A square that turns gold when clicked, and back when clicked again. It asks
+for a fixed 60 by 60 pixels, takes clicks, and on each press flips its state
+and refreshes itself; `draw` does the rest.
+
+```c++
+class swatch : public element
+{
+public:
+
+   view_limits limits(basic_context const& /* ctx */) const override
+   {
+      return {{60, 60}, {60, 60}};
+   }
+
+   void draw(context const& ctx) override
+   {
+      auto& cnv = ctx.canvas;
+      cnv.fill_style(_on? colors::gold : colors::slate_gray);
+      cnv.add_round_rect(ctx.bounds.inset(4), 8);
+      cnv.fill();
+   }
+
+   bool wants_control() const override
+   {
+      return true;
+   }
+
+   bool click(context const& ctx, mouse_button btn) override
+   {
+      if (btn.down)
+      {
+         _on = !_on;
+         refresh(ctx);
+      }
+      return true;
+   }
+
+private:
+
+   bool _on = false;
+};
+```
+
+Three of them in a row, the middle one clicked:
+
+```c++
+view_.content(
+   align_center_middle(htile(swatch{}, swatch{}, swatch{})),
+   box(bkd_color)
+);
+```
+
+image::elements/swatches.png[alt="three rounded squares in a row, the middle one gold and the others grey", width=560px, align="center", link={imagesdir}/elements/swatches.png]
+
+Returning `true` for the press is what brings the release back to the
+swatch, and any drag in between. The release needs nothing done, so the
+swatch acts on the press alone.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_
+

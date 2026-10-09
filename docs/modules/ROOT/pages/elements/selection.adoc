@@ -1,0 +1,180 @@
+= Selection
+
+include::../common.adoc[]
+
+== Overview
+
+A list the user picks from, a menu, a group of choices: each is a
+composite whose children can be selected. `selection.hpp` provides the
+two halves of that. `selectable` is the interface a child implements,
+two functions, `is_selected` and `select`; it keeps no state of its own,
+so an item draws itself selected however it likes. `selection_list` is a
+proxy around a composite of such items that turns the user's clicks and
+keys into a selection: a click selects one item; Shift-click extends the
+selection to it; Cmd-click (Ctrl-click on Windows and Linux) toggles it;
+Up and Down move the selection, with Shift extending it; Cmd-A selects
+all. Single selection is an option, which keeps the one item and ignores
+the extensions. The keys reach the list while it has the keyboard focus,
+which it takes on Tab, or on a click when the item clicked wants focus.
+
+image::elements/selection.svg[alt="A selection_list proxy over a vscroller over a vtile of five selectable items, three of them selected: clicks and keys come in at the proxy, find_subject reaches the composite past the scroller, select(true) goes to the items, and on_select(1, 3) goes out to the application", width=750px, align="center"]
+
+The list reports every change through `on_select(start, end)`, with the
+indices the selection was last made from and to, and the selection can
+be read and set from code: `get_selection`, `set_selection`,
+`select_all`, `select_none`.
+
+The proxy finds the composite with `find_subject`, so anything may sit
+between: a `vscroller`, a `margin`. Items that are not `selectable` are
+skipped. The xref:elements/lists.adoc[lists] and
+xref:elements/menus.adoc[menus] are built on it.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class selectable
+   {
+   public:
+      virtual bool            is_selected() const = 0;
+      virtual void            select(bool state) = 0;
+   };
+
+   class selection_list_element : public proxy_base
+   {
+   public:
+      using indices_type = std::vector<std::size_t>;
+      using on_select_function = std::function<void(int select_start, int select_end)>;
+
+                              selection_list_element(bool multi_select = true);
+
+      indices_type            get_selection() const;
+      void                    set_selection(indices_type const& selection);
+      void                    update_selection(int start, int end);
+      int                     get_select_start() const;
+      int                     get_select_end() const;
+
+      void                    select_all();
+      void                    select_none();
+
+      on_select_function      on_select;
+   };
+
+                                       template <concepts::Element Subject>
+   proxy<Subject, selection_list_element>
+                                       selection_list(Subject&& subject, bool multi_select = true);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`s`:: A `selectable`.
+`l`:: A `selection_list_element`.
+`subject`:: An element containing a composite of selectable items.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `s.is_selected()`
+| Whether `s` is selected.
+
+| `s.select(state)`
+| Select or deselect `s`. Called by the list; `s` only records it and
+  draws accordingly.
+
+| `selection_list(subject, multi)`
+| A proxy over `subject` that manages the selection of the composite in
+  it; with `multi` false, one item at a time.
+
+| `l.get_selection()`
+| The indices of the selected items, ascending.
+
+| `l.set_selection(indices)`
+| Select exactly those items. Does not call `on_select`.
+
+| `l.get_select_start()`, `l.get_select_end()`
+| The anchor and the end of the last selection made, as indices; `-1`
+  when nothing is selected. A Shift-click or a Shift-arrow extends from
+  the anchor.
+
+| `l.select_all()`, `l.select_none()`
+| Select every item, or none, and call `on_select`. `select_all` does
+  nothing in single selection.
+
+| `l.update_selection(start, end)`
+| Set the anchor and the end without touching the items, for code that
+  selected them itself.
+
+| `l.on_select`
+| Called as `on_select(start, end)` after the user changes the
+  selection, with the anchor and the end.
+|===
+
+== Example
+
+An item that is selectable, drawn highlighted when it is, and five of
+them under a selection list:
+
+```c++
+struct item : element, selectable
+{
+   item(std::string text = "") : _text{std::move(text)} {}
+
+   view_limits limits(basic_context const&) const override
+   {
+      return {{40, 22}, {full_extent, 22}};
+   }
+
+   void draw(context const& ctx) override
+   {
+      auto& cnv = ctx.canvas;
+      auto const& thm = get_theme();
+      if (_selected)
+      {
+         cnv.fill_style(thm.indicator_color.opacity(0.6));
+         cnv.add_rect(ctx.bounds);
+         cnv.fill();
+      }
+      cnv.fill_style(thm.label_font_color);
+      cnv.font(thm.label_font);
+      cnv.text_align(cnv.left | cnv.middle);
+      cnv.fill_text(_text, {ctx.bounds.left + 8, center_point(ctx.bounds).y});
+   }
+
+   bool wants_control() const override { return true; }
+   bool is_selected() const override   { return _selected; }
+   void select(bool state) override    { _selected = state; }
+
+   std::string _text;
+   bool _selected = false;
+};
+
+auto list = share(selection_list(
+   vtile(item{"Alpha"}, item{"Bravo"}, item{"Charlie"}, item{"Delta"}, item{"Echo"})));
+
+list->on_select = [](int start, int end)
+{
+   // the selection changed; list->get_selection() has it
+};
+
+view_.content(vscroller(hold(list)), background);
+```
+
+image::elements/selection_example.png[alt="Five items in a list, Bravo and Charlie highlighted", width=200px, link={imagesdir}/elements/selection_example.png]
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

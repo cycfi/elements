@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="384"
+     viewBox="0 0 750 384"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="352.883" y="14" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="40.9" text-anchor="middle" fill="#1a1a1a">htile</text>
+
+  <rect x="352.883" y="92" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="118.9" text-anchor="middle" fill="#1a1a1a">margin</text>
+
+  <rect x="352.883" y="170" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="196.9" text-anchor="middle" fill="#1a1a1a">align_center</text>
+
+  <rect x="352.883" y="248" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="274.9" text-anchor="middle" fill="#1a1a1a">hold</text>
+
+  <rect x="352.883" y="326" width="104.234" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="405" y="352.9" text-anchor="middle" fill="#1a1a1a">slider</text>
+
+  <rect x="517.117" y="92" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="569.234" y="118.9" text-anchor="middle" fill="#1a1a1a">label</text>
+
+  <path d="M 405 58 L 405 67 Q 405 75 413 75 L 561.23 75 Q 569.23 75 569.23 83 L 569.23 92" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <path d="M 405 75 L 405 92" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="405" y1="136" x2="405" y2="170" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="405" y1="214" x2="405" y2="248" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="405" y1="292" x2="405" y2="326" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="302.883" y1="114" x2="302.883" y2="348" stroke="#1565c0" stroke-width="1.4"/>
+
+  <text x="577.234" y="71" fill="#1a1a1a">children</text>
+  <text x="413" y="158" fill="#1a1a1a">subject</text>
+  <text x="294.883" y="119" text-anchor="end" fill="#1a1a1a">find_subject&lt;slider*&gt;(&amp;margin)</text>
+
+  <polygon points="569.234,92 565.234,83 573.234,83" fill="#5d5d5d"/>
+  <polygon points="405,92 401,83 409,83" fill="#5d5d5d"/>
+  <polygon points="405,170 401,161 409,161" fill="#1565c0"/>
+  <polygon points="405,248 401,239 409,239" fill="#1565c0"/>
+  <polygon points="405,326 401,317 409,317" fill="#1565c0"/>
+  <polygon points="302.883,348 298.883,339 306.883,339" fill="#1565c0"/>
+</svg>

@@ -1,0 +1,14 @@
+= Check Boxes, Radio Buttons and Switches
+
+include::../common.adoc[]
+
+== Overview
+
+Covers `element/style/check_box.hpp`, `element/style/radio_button.hpp`, `element/style/slide_switch.hpp`, `element/style/toggle_selector.hpp`.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

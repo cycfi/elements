@@ -1,0 +1,230 @@
+= Buttons
+
+include::../common.adoc[]
+
+== Overview
+
+A button is a proxy over a styler. `basic_button` and its three
+variants hold the state and handle the mouse; the styler, any element,
+draws the button from that state. The split lets one behavior carry
+many looks, a labelled button, a check box, a radio button, a slide
+switch, an icon, a tab, and one look serve several behaviors. The
+stylers are on the xref:styles/buttons.adoc[Styles] pages; this page is
+the behavior.
+
+image::elements/buttons.png[alt="A momentary button, a toggle button shown on, a latching button shown on, and two radio buttons, the first selected", width=200px, link={imagesdir}/elements/buttons.png]
+
+Four kinds of button, each a class and a factory taking a styler:
+
+[cols="1,1,3"]
+|===
+| Kind | Factory | Value
+
+| `basic_button`
+| `momentary_button(styler)`
+| "Pressed": `true` while the mouse is down on it, `false` otherwise.
+  The press is reported on release, as `on_click(true)`.
+
+| `basic_toggle_button`
+| `toggle_button(styler)`
+| On or off. Flips on the press, and the release confirms it with
+  `on_click(value)`.
+
+| `basic_latching_button`
+| `latching_button(styler)`
+| On, and stays on. Once on, the button takes no further clicks until
+  code sets it off with `value(false)`.
+
+| `basic_choice`
+| `choice(styler)`
+| One of a group: a latching button that is also
+  xref:elements/selection.adoc[`selectable`]. Selecting one deselects
+  the others in the composite that holds them. A radio button, a tab.
+|===
+
+NOTE: A momentary button is a trigger, not a state. Its value is back
+to `false` by the time `on_click` is called, so there is nothing for a
+model to hold, and a model updated to `true` would set the button
+pressed and leave it so. `model_binder` therefore refuses to bind one,
+at compile time; bind a toggle or a latching button.
+
+The state a styler draws from is `button_state`: `value`, `hilite` (the
+cursor is over the button), `tracking` (the mouse is down on it) and
+`enabled`. A styler reaches its button with
+`find_parent<basic_button*>(ctx)`, as the example below does; see
+xref:styles.adoc[Styles].
+
+=== Interaction
+
+A click is a press and a release on the button. Between them the pointer
+may wander: a momentary button's value, and a toggle's, follow it off
+the button and back, and a release outside the button cancels the
+click, with no `on_click`. A disabled button ignores the mouse. The
+press and release are reported to the view's `on_tracking` as
+`begin_tracking` and `end_tracking`, so a host sees each click as one
+gesture; see xref:support/receivers.adoc[Receivers].
+
+A button is a `receiver<bool>`: `value()` reads it, `value(v)` sets it
+without a callback, `edit(view, v)` sets it as the user would, calling
+`on_click(v)` and reporting the gesture. For a momentary button `edit`
+calls `on_click` and leaves the value alone, since its value is only
+"pressed".
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   struct button_state
+   {
+      bool              value : 1      = false;
+      bool              hilite : 1     = false;
+      bool              tracking : 1   = false;
+      bool              enabled : 1    = true;
+   };
+
+   class basic_button : public proxy_base, public receiver<bool>
+   {
+   public:
+
+      static constexpr bool   holds_state = false;
+      using button_function = std::function<void(bool)>;
+
+      void              enable(bool state = true) override;
+      bool              is_enabled() const override;
+
+      void              value(bool val) override;
+      bool              value() const override;
+      bool              tracking() const;
+      bool              hilite() const;
+      void              edit(view& view_, bool val) override;
+
+      button_function   on_click;
+   };
+
+   class basic_toggle_button : public basic_button
+   {
+   public:
+      static constexpr bool   holds_state = true;
+   };
+
+   class basic_latching_button : public basic_button
+   {
+   public:
+      static constexpr bool   holds_state = true;
+   };
+
+   class basic_choice : public basic_latching_button, public selectable
+   {
+   public:
+      void              select(bool state) override;
+      bool              is_selected() const override;
+   };
+
+                                       template <concepts::MomentaryButton Base = basic_button, concepts::Element Styler>
+   proxy<Styler, Base>                 momentary_button(Styler&& styler);
+
+                                       template <concepts::ToggleButton Base = basic_toggle_button, concepts::Element Styler>
+   proxy<Styler, Base>                 toggle_button(Styler&& styler);
+
+                                       template <concepts::LatchingButton Base = basic_latching_button, concepts::Element Styler>
+   proxy<Styler, Base>                 latching_button(Styler&& styler);
+
+                                       template <concepts::Element Subject>
+   proxy<Subject, basic_choice>        choice(Subject&& subject);
+}
+```
+
+`holds_state` says whether the value is a state worth a model's holding:
+`false` for the momentary button, `true` for the others. The concepts
+`MomentaryButton`, `ToggleButton` and `LatchingButton` are satisfied by
+a class derived from the respective base, so a factory can be given a
+subclass with more behavior as its `Base`.
+
+== Expressions
+
+=== Notation
+
+`b`:: A `basic_button`, or a class derived from it.
+`v`:: A `bool`.
+`view_`:: A `view`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `b.value()`
+| The value: pressed, on, or selected, by kind.
+
+| `b.value(v)`
+| Set the value. Nothing is called.
+
+| `b.edit(view_, v)`
+| Set the value as the user would: `on_click(v)` is called and the
+  gesture reported. A momentary button's value is left alone.
+
+| `b.on_click = f`
+| `f(v)` is called on each click, with the value the click left.
+
+| `b.hilite()`
+| Whether the cursor is over the button.
+
+| `b.tracking()`
+| Whether the mouse is down on the button.
+
+| `b.enable(v)`, `b.is_enabled()`
+| Enable or disable the button. Disabled, it ignores the mouse and does
+  not highlight; `ctx.enabled` is `false` for its styler.
+
+| `c.select(v)`, `c.is_selected()`
+| For a `basic_choice` `c`: its value, under the `selectable` names.
+|===
+
+== Example
+
+A styler that draws a plain rounded button from its button's state, and
+a toggle built on it:
+
+```c++
+struct plain_styler : button_styler_base
+{
+   view_limits limits(basic_context const&) const override
+   {
+      return {{80, 24}, {full_extent, 24}};
+   }
+
+   void draw(context const& ctx) override
+   {
+      auto* btn = find_parent<basic_button*>(ctx);
+      if (!btn)
+         return;
+      auto& cnv = ctx.canvas;
+      auto body = btn->value() ? colors::gold : colors::dim_gray;
+      if (btn->hilite())
+         body = body.level(1.2);
+      if (!ctx.enabled)
+         body = body.opacity(0.4);
+      cnv.fill_style(body);
+      cnv.add_round_rect(ctx.bounds, 6);
+      cnv.fill();
+   }
+};
+
+auto play = share(toggle_button(plain_styler{}));
+play->on_click = [](bool on) { transport.playing(on); };
+```
+
+image::elements/buttons_example.png[alt="Two plain styler toggles, grey off and gold on", width=220px, link={imagesdir}/elements/buttons_example.png]
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

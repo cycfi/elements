@@ -1,0 +1,14 @@
+= Advanced Builds
+
+include::common.adoc[]
+
+== Overview
+
+Build options: drawing backends, host UI libraries, prebuilt bundles, sanitizers and LTO.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

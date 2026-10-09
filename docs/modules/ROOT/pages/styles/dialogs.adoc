@@ -1,0 +1,14 @@
+= Child Windows and Dialogs
+
+include::../common.adoc[]
+
+== Overview
+
+Covers `element/style/child_window.hpp`, `element/style/dialog.hpp`, `element/style/message_box.hpp`.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

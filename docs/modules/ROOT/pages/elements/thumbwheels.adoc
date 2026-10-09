@@ -1,0 +1,118 @@
+= Thumbwheels
+
+include::../common.adoc[]
+
+== Overview
+
+A thumbwheel holds a point, x and y, each from 0.0 to 1.0, that the user
+moves with the mouse. Like the other controls, it is a
+xref:elements/proxies.adoc[proxy] over a styler: `thumbwheel_base` holds
+the value and handles the mouse, and the styler, any element, draws the
+thumbwheel from that value. One behavior thus carries many looks: a
+port that scrolls its content, a list that shows one item, a pad with a
+dot. `thumbwheel_base` is also a xref:elements/trackers.adoc[tracker]
+over a `receiver<point>` (see xref:support/receivers.adoc[Receivers]).
+
+image::elements/thumbwheels.png[alt="A pad showing a dot at its point value, and a thumbwheel over a list showing one item", width=320px, link={imagesdir}/elements/thumbwheels.png]
+
+Dragging right increases x; dragging up increases y. Each changes by the
+distance moved divided by the theme's `dial_linear_range`, 200 pixels by
+default. Shift makes the movement five times finer. The scroll wheel
+changes the value by 0.005 per unit. Each coordinate is clamped to 0.0
+to 1.0. Every change the user makes calls `on_change`. `value(p)` sets
+the value from code without a callback; `edit(view, p)` sets it as the
+user would, with the callback. The view's `on_tracking` receives the
+gesture, as it does from any tracker.
+
+A styler may read the value from the thumbwheel, or receive it: if the
+styler is a receiver, the thumbwheel passes it the value, `y` to a
+`receiver<double>` and the whole point to a `receiver<point>`. See
+xref:styles.adoc[Styles].
+
+The stock stylers, documented under the
+xref:styles/sliders.adoc[Sliders, Dials and Thumbwheels] styles, are
+receivers over a port. `vthumbwheel(n, compose)` places a list of
+`n` items in one, and settles on the nearest item when the value comes to
+rest between two.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class thumbwheel_base : public tracker<proxy_base>, public receiver<point>
+   {
+   public:
+      using thumbwheel_function = std::function<void(point)>;
+
+                           thumbwheel_base(point init = {0.0f, 0.0f});
+
+      point                value() const override;
+      void                 value(point val) override;
+      void                 edit(view& view_, point val) override;
+
+      thumbwheel_function  on_change;
+   };
+
+                                       template <concepts::Element Subject>
+   proxy<Subject, thumbwheel_base>     thumbwheel(Subject&& subject, point init = {0.0f, 0.0f});
+}
+```
+
+`dial_linear_range` is a member of the xref:support/theme.adoc[theme].
+
+== Expressions
+
+=== Notation
+
+`t`:: A `thumbwheel_base`.
+`p`:: A `point`, each coordinate 0.0 to 1.0.
+`view_`:: A `view`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `t.value()`
+| The value, a `point`.
+
+| `t.value(p)`
+| Set the value, each coordinate clamped, and pass it to the styler if
+  the styler is a receiver. No callback.
+
+| `t.edit(view_, p)`
+| Set the value as the user would: `on_change` is called and the gesture
+  reported.
+
+| `t.on_change = f`
+| `f(p)` is called on each change the user makes.
+|===
+
+== Example
+
+A thumbwheel that shows a frequency. Its styler is a label that
+receives `y`, so dragging up raises the frequency:
+
+```c++
+auto hz = share(thumbwheel(
+   as_label<double>(
+      [](double v) { return std::to_string(int(20 + v * 1000)) + " Hz"; },
+      heading("").font_size(24)),
+   {0, 0.5f}));
+hz->on_change = [](point p) { set_frequency(20 + p.y * 1000); };
+```
+
+image::elements/thumbwheels_example.png[alt="The thumbwheel's label showing 520 Hz", width=200px, link={imagesdir}/elements/thumbwheels_example.png]
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

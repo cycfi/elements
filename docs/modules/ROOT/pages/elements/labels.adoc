@@ -1,0 +1,338 @@
+= Labels
+
+include::../common.adoc[]
+
+== Overview
+
+A label is a single line of text. `label("text")` draws it in the
+theme's label font, size, colour and alignment; `heading("text")` uses
+the theme's heading settings instead, and `heading1` to `heading5` are
+headings in five sizes. Each setting can be changed by a
+modifier, which returns a new label with the change and every earlier
+setting kept, so modifiers chain:
+
+```c++
+label("Volume").font_size(18).font_color(colors::gold)
+```
+
+image::elements/labels.png[alt="The same text as a label, a heading, at size 22, in gold, in italic, and as a note label of a style of its own", width=440px, link={imagesdir}/elements/labels.png]
+
+A label's {limits} are the size of its text in its font, as both the
+minimum and the maximum, so a label never stretches. The text is
+placed by `text_align` when the label is given more room than that: a
+tile gives every child its full width across the tile, so labels in a
+`vtile` align against the widest of them.
+
+A label holds its text and implements `text_reader_u8` and
+`text_writer_u8` (see xref:support/text_utils.adoc[Text Utilities]), so
+the text can be read and replaced through a proxy without naming the
+label's type. When the new text has a different size, call the view's
+`layout()` so the label's new limits take effect.
+
+A disabled label, or a label drawn in a disabled element, is drawn at
+the theme's `disabled_opacity`.
+
+=== Changing a Live Label
+
+A label is changed in one of two ways:
+
+* *Modifiers* build a label. Each returns a label of a new type, which
+  cannot be assigned back to the original.
+* *Setters* change a label already in a view, in place:
+** `set_font`
+** `set_font_size` and `set_relative_font_size`
+** `set_font_color`
+** `set_text_align`
+
+Each setter exists only for a setting the label was built with: a label
+made with `font_color(c)` has `set_font_color`, and a plain
+`label("text")` has none. After a change, refresh the label; after a
+change of font or size, lay the view out again.
+
+=== Heading Levels
+
+`heading1` to `heading5` are headings in five sizes, `heading1` the
+largest. Each draws in the theme's heading font, colour and alignment,
+at the font's size times the theme's `heading_scale` for its level.
+`heading` is `heading5`, the smallest, at the heading font's own size.
+A theme changes the whole hierarchy through the one array.
+
+NOTE: The default levels follow a minor-third modular scale: each is
+1.2 times the one below, so `heading_scale` is 1.2 raised to the powers
+4, 3, 2, 1 and 0. A ratio of 1.125 to 1.2 is common for application
+interfaces, 1.25 to 1.333 for documents. With the default 15 point
+heading font, the levels are 31.1, 25.9, 21.6, 18 and 15 points, and the
+smallest stays above the 14 point label. To keep a modular scale with
+another ratio `r`, set `heading_scale` to `r` raised to the same powers.
+
+
+image::elements/heading_levels.png[alt="The same text as heading1 to heading5, from the largest to the smallest", width=360px, link={imagesdir}/elements/heading_levels.png]
+
+=== Label Styles
+
+`label` and `heading` are one class template over different defaults.
+The defaults come from a styler class derived from
+`default_label_styler`, which reads them from the
+xref:support/theme.adoc[theme] through six virtual functions:
+
+* `get_font`
+* `get_font_size` and `get_default_font_size`
+* `get_font_color`
+* `get_text_align` and `get_default_text_align`
+
+`default_heading` overrides them with the heading settings, and
+`default_heading_level` scales the heading size for its level. A class
+of your own that overrides some of them is a label style of its own,
+with the same modifiers; see the example below.
+
+=== as_label
+
+`as_label<T>(f, subject)` makes a label show a value. It is a proxy and
+a `receiver<T>` (see xref:support/receivers.adoc[Receivers]): each
+`value(v)` stores `v`, converts it to text with `f(v)`, and writes the
+text into the first text writer it finds in its subject. The control
+that feeds it, a xref:elements/thumbwheels.adoc[thumbwheel] for
+instance, then needs to know nothing of text.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   struct default_label_styler : element, text_reader_u8
+   {
+      virtual font_descr      get_font() const;
+      virtual float           get_font_size() const;
+      virtual float           get_default_font_size() const;
+      virtual color           get_font_color() const;
+      virtual int             get_text_align() const;
+      virtual int             get_default_text_align() const;
+   };
+
+   struct default_heading : default_label_styler
+   {
+      // The same six, from the theme's heading settings
+   };
+
+   template <std::size_t Level>
+   struct default_heading_level : default_heading
+   {
+      // The size: heading_font's size times heading_scale[Level - 1]
+      float                   get_font_size() const override;
+      float                   get_default_font_size() const override;
+   };
+
+   template <concepts::LabelStyler Base>
+   struct basic_label_styler_base : Base, text_writer_u8
+   {
+                              basic_label_styler_base(std::string text);
+
+      std::string_view        get_text() const override;
+      void                    set_text(string_view text) override;
+   };
+
+   template <concepts::LabelStyler Base>
+   struct label_styler_with_font : Base
+   {
+      void                    set_font(font_descr font_);
+   };
+
+   template <concepts::LabelStyler Base>
+   struct label_styler_with_font_size : Base
+   {
+      void                    set_font_size(float size);
+      void                    set_relative_font_size(float size);
+   };
+
+   template <concepts::LabelStyler Base>
+   struct label_styler_with_font_color : Base
+   {
+      void                    set_font_color(color color_);
+   };
+
+   template <concepts::LabelStyler Base>
+   struct label_with_text_align : Base
+   {
+      void                    set_text_align(int align);
+   };
+
+   template <concepts::LabelStyler Base>
+   struct label_styler_gen : Base
+   {
+      gen_font                font(font_descr font_) const;
+      gen_font_size           font_size(float size) const;
+      gen_font_size           relative_font_size(float size) const;
+      gen_font_color          font_color(color color_) const;
+      gen_text_align          text_align(int align) const;
+   };
+
+   template <std::size_t Level>
+   using basic_heading_level = basic_label_styler_base<default_heading_level<Level>>;
+
+   using label = label_styler_gen<basic_label_styler_base<default_label_styler>>;
+   using heading1 = label_styler_gen<basic_heading_level<1>>;
+   using heading2 = label_styler_gen<basic_heading_level<2>>;
+   using heading3 = label_styler_gen<basic_heading_level<3>>;
+   using heading4 = label_styler_gen<basic_heading_level<4>>;
+   using heading5 = label_styler_gen<basic_heading_level<5>>;
+   using heading = heading5;
+
+   template <typename T, concepts::Element Subject, typename F>
+   as_label_element<Subject, T, F>  as_label(F&& as_string, Subject&& subject);
+}
+```
+
+`concepts::LabelStyler` is satisfied by a class derived from
+`default_label_styler`. Each `gen_` type is a `label_styler_gen` over
+the label with one more layer, which holds the setting and its setter:
+
+* `font` adds a `label_styler_with_font`.
+* `font_size` and `relative_font_size` add a
+  `label_styler_with_font_size`.
+* `font_color` adds a `label_styler_with_font_color`.
+* `text_align` adds a `label_with_text_align`.
+
+== Expressions
+
+=== Notation
+
+`l`:: A `label`, a heading of any level, or a label of another style.
+`s`:: A `std::string`.
+`f`:: A `font_descr`.
+`z`:: A `float`, a font size in points or a factor.
+`c`:: A `color`.
+`a`:: An `int`: a horizontal alignment, `canvas::left`, `canvas::center`
+or `canvas::right`, optionally or'ed with a vertical one,
+`canvas::top`, `canvas::middle`, `canvas::bottom` or `canvas::baseline`.
+`v`:: A value of type `T`.
+`conv`:: A function from `T` to `std::string`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `label(s)`
+| A label of `s`, in the theme's label settings.
+
+| `heading1(s)` to `heading5(s)`
+| A label of `s`, in the theme's heading settings, at the heading
+  font's size times `heading_scale[0]` to `heading_scale[4]`.
+
+| `heading(s)`
+| `heading5(s)`: the heading font at its own size.
+
+| `l.font(f)`
+| A copy of `l` in font `f`.
+
+| `l.font_size(z)`
+| A copy of `l` at size `z`.
+
+| `l.relative_font_size(z)`
+| A copy of `l` at `z` times the style's default size.
+
+| `l.font_color(c)`
+| A copy of `l` in colour `c`.
+
+| `l.text_align(a)`
+| A copy of `l` with the text aligned by `a` within the label's bounds.
+  Without a vertical part, the style's default alignment supplies it:
+  the theme's `label_text_align` for a label, `heading_text_align` for
+  a heading.
+
+| `l.get_text()`, `l.set_text(s)`
+| Read and replace the text.
+
+| `l.set_font(f)`
+| Change the font of `l` in place. `l` was built with `font`.
+
+| `l.set_font_size(z)`, `l.set_relative_font_size(z)`
+| Change the size of `l` in place, in points or as a factor of the
+  style's default. `l` was built with `font_size` or
+  `relative_font_size`.
+
+| `l.set_font_color(c)`
+| Change the colour of `l` in place. `l` was built with `font_color`.
+
+| `l.set_text_align(a)`
+| Change the alignment of `l` in place. `l` was built with
+  `text_align`.
+
+| `l.enable(false)`
+| Draw `l` at the theme's `disabled_opacity`.
+
+| `as_label<T>(conv, l)`
+| A proxy over `l` and a `receiver<T>`. `value(v)` stores `v` and sets
+  the text of `l` to `conv(v)`; `value()` returns the stored value.
+|===
+
+== Example
+
+A title, three lines aligned against a longer one, and a label that
+shows a value:
+
+```c++
+auto title = label("Hello, Universe.")
+   .font(font_descr{"Open Sans"}.semi_bold())
+   .font_size(18)
+   .font_color(colors::antique_white);
+
+auto lines = vtile(
+   label("Elements: a C++ GUI library"),
+   label("left").text_align(canvas::left),
+   label("centre").text_align(canvas::center),
+   label("right").text_align(canvas::right));
+
+auto level = share(as_label<double>(
+   [](double v) { return std::to_string(int(v * 100)) + "%"; },
+   label("0%")));
+level->value(0.42);
+```
+
+image::elements/labels_example.png[alt="The title in bold, the three short lines aligned left, centre and right below a longer line, and 42%", width=260px, link={imagesdir}/elements/labels_example.png]
+
+A readout that turns gold while the signal clips. It is built with
+`font_color`, so it has `set_font_color`:
+
+```c++
+auto peak = share(label("0 dB").font_color(colors::gray[60]));
+
+// When the clipping state changes:
+peak->set_font_color(clipping ? colors::gold : colors::gray[60]);
+view_.refresh(*peak);
+```
+
+image::elements/labels_readout.png[alt="The readout in grey, and in gold while clipping", width=200px, link={imagesdir}/elements/labels_readout.png]
+
+A label style of its own: a smaller, dimmer note, left aligned. It
+overrides the defaults it changes and keeps the theme's font. Its
+`base_type` names the style itself, the class the modifiers build on:
+
+```c++
+struct note_styler : default_label_styler
+{
+   using base_type = note_styler;
+
+   float get_font_size() const override         { return 11; }
+   float get_default_font_size() const override { return 11; }
+   color get_font_color() const override        { return colors::gray[60]; }
+   int   get_text_align() const override        { return canvas::left | canvas::middle; }
+};
+
+using note_label = label_styler_gen<basic_label_styler_base<note_styler>>;
+
+auto gain = note_label("Gain");
+auto warning = note_label("Clipping").font_color(colors::gold);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

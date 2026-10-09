@@ -1,0 +1,14 @@
+= Images
+
+include::../common.adoc[]
+
+== Overview
+
+Covers `element/image.hpp`, `element/image_grid.hpp`.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

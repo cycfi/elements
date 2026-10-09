@@ -1,0 +1,154 @@
+= Traversal
+
+include::../common.adoc[]
+
+== Overview
+
+An element knows nothing of its neighbors. It has no parent pointer,
+since one element can sit in several places, and it holds its subject or
+its children as plain members. A tree is built by composing factory
+calls, `margin(align_center(hold(s)))`, whose result is a nested type no
+one names, and the one pointer the code keeps is to the control it
+shares. Two needs follow, and neither the element nor its context meets
+them on its own:
+
+* Code outside the tree has a handle to a decorated element and wants
+  what is inside the decoration: the styler under a button, the label
+  under a margin, to change its text or color.
+* An element handling an event has only its own {context} and wants an
+  element above it: the popup a menu item sits in, to close it; the list
+  an item belongs to, to select itself; the port around a control, to
+  scroll into view.
+
+Keeping pointers to everything would tie the application to the shape of
+its tree. The finders in `element/traversal.hpp` walk it instead, on
+demand, in the two directions the structure allows: down from an element
+through its subjects, and up from a context through its parents. Each
+takes the pointer type sought and returns a pointer of that type, or
+`nullptr`.
+
+* Down from an element, through its subjects. `find_subject<T*>(e)`
+  walks the subjects of `e`, a proxy, and returns the first that is a
+  `T`; `find_element<T*>(e)` does the same but tries `e` itself first. A
+  button styler is found under its button this way, and a label's text
+  under whatever decorates the label. Indirects (`hold`, `link`) are
+  looked through.
++
+image::elements/traversal_down.svg[alt="A branch of a tree, htile over margin, align_center, hold and slider, with a label beside: find_subject walks down the subjects from the margin to the slider", width=750px, align="center"]
+* Up from a context, through its parents. `find_parent<T*>(ctx)` walks
+  the parent contexts and returns the first element that is a `T`;
+  `find_parent_context<T*>(ctx)` returns that context instead;
+  `find_composite(ctx)` returns the nearest enclosing composite, with its
+  context. A control uses these to reach the list, port or window it sits
+  in.
++
+image::elements/traversal_up.svg[alt="The same branch: find_parent and find_composite walk up the parent contexts from the slider's context to the htile", width=750px, align="center"]
+
+NOTE: A walk down follows subjects only, so it stops at a composite: a
+proxy has one subject, an indirect one element, and the walk is a line;
+a composite has any number of children, and a finder has no way to choose among
+them. A walk up follows the chain of parent
+contexts, which the current call built on its way down, so it retraces
+that call's path from the element to the top of the view, one context
+per enclosing element.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+                  template <typename Ptr>
+   Ptr            find_subject(element* e);
+
+                  template <typename Ptr>
+   Ptr            find_subject(element const* e);
+
+                  template <typename Ptr>
+   Ptr            find_element(element* e);
+
+                  template <typename Ptr>
+   Ptr            find_parent(context const& ctx);
+
+                  template <typename Ptr>
+   context const* find_parent_context(context const& ctx);
+
+   using composite_info = std::pair<composite_base*, context const*>;
+
+   composite_info find_composite(context const& ctx);
+}
+```
+
+`Ptr` is a pointer type, `T*` or `T const*`; a `const` pointer is what
+the `element const*` overload returns.
+
+== Expressions
+
+=== Notation
+
+`e`:: An `element*`.
+`ctx`:: A {context}.
+`T`:: An element type.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `find_subject<T*>(e)`
+| The first subject of `e` (a proxy) that is a `T`, through any proxies
+  and indirects between; `nullptr` if none, or if `e` is not a proxy.
+
+| `find_element<T*>(e)`
+| `e` itself if it is a `T`, else `find_subject<T*>(e)`.
+
+| `find_parent<T*>(ctx)`
+| The nearest element above `ctx` that is a `T`, or `nullptr`.
+
+| `find_parent_context<T*>(ctx)`
+| The context of that element, or `nullptr`.
+
+| `find_composite(ctx)`
+| The nearest composite above `ctx`, with the context it was found in:
+  that of the composite, or of the proxy or indirect holding it, as a
+  `composite_info` pair. `{nullptr, nullptr}` if none.
+|===
+
+The contexts the finders return point into the chain of the current
+call: use them within it, not after.
+
+
+== Example
+
+A custom control that, when clicked, asks the list it sits in to select
+it, found by walking up from its own context:
+
+```c++
+bool item::click(context const& ctx, mouse_button btn)
+{
+   if (btn.down)
+      if (auto* list = find_parent<selection_list_element*>(ctx))
+         list->select(*this);
+   return true;
+}
+```
+
+And the text of a label, found from outside, down through whatever
+decorates it:
+
+```c++
+auto lbl = share(margin({10, 10, 10, 10}, label("Before")));
+if (auto* w = find_subject<text_writer_u8*>(lbl.get()))
+   w->set_text("After");
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

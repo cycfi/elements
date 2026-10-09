@@ -1,0 +1,240 @@
+= Sliders
+
+include::../common.adoc[]
+
+== Overview
+
+A slider is a value from 0.0 to 1.0, set by dragging a thumb along a
+track. The thumb and the track are elements the slider is given, so a
+slider's look is whatever those two draw. The slider places them from
+its value (see xref:styles.adoc#_placement[Styles]). The stock ones are
+documented under the xref:styles/sliders.adoc[Sliders, Dials and
+Thumbwheels] styles. This page is the behavior, in three forms:
+
+* `slider`, one thumb, a continuous value.
+* `selector<N>`, one thumb and `N` positions: the value snaps to the
+  nearest, and the callback gets its index. The pointed thumb,
+  `basic_tri_thumb<size, direction>`, suits it: it points at the
+  position's mark.
+* `range_slider`, two thumbs, a pair of values that do not cross.
+
+image::elements/sliders.png[alt="A slider, a four-way selector and a range slider, each with marks and labels, and a vertical slider", width=420px, link={imagesdir}/elements/sliders.png]
+
+A slider is horizontal or vertical by its track: horizontal when the
+track's limits are wider than tall, vertical otherwise. Along a
+horizontal track the value runs from 0.0 at the left to 1.0 at the
+right; along a vertical one from 0.0 at the bottom to 1.0 at the top.
+The thumb's centre travels the track less the thumb's own width, so a
+thumb at 0.0 or 1.0 sits wholly inside the slider.
+
+=== Interaction
+
+A slider is a xref:elements/trackers.adoc[tracker] over a
+xref:support/receivers.adoc[receiver]. A press on the thumb takes hold
+of it where it was pressed, so it does not jump under the pointer; a
+press elsewhere on the track moves the thumb there on the first
+movement. Each movement sets the value from the pointer's position and
+calls `on_change`; the release sets it one last time. The wheel moves
+the value by 0.005 per unit scrolled, along the track's axis; a
+selector ignores the wheel. The gesture is reported to the view's
+`on_tracking` as a tracker's is.
+
+`value(v)` sets the value from code, clamped to 0.0 to 1.0, without a
+callback; `edit(view, v)` sets it as the user would, calling `on_change`
+and reporting the gesture. Bound through `model_binder`, a slider
+follows its model and the model follows the slider.
+
+A range slider holds `double_range`, a `std::pair<double, double>`: the
+first thumb's value and the second's. Each thumb drags on its own, and
+stops a thumb's width short of the other; Shift-drag moves both,
+keeping their distance; Alt-click when the thumbs overlap picks the
+other one. The two callbacks are `on_change.first` and
+`on_change.second`. The optional `offset_from_center` lets the thumbs
+come closer than their width, for thumbs drawn asymmetrically.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class slider_base : public tracker<>, public receiver<double>
+   {
+   public:
+                              slider_base(double init_value);
+
+      double                  value() const override;
+      void                    value(double val) override;
+      void                    edit(view& view_, double val) override;
+
+      rect                    track_bounds(context const& ctx) const;
+      rect                    thumb_bounds(context const& ctx) const;
+      virtual double          value_from_point(context const& ctx, point p);
+
+      virtual element&        thumb() = 0;
+      virtual element&        track() = 0;
+   };
+
+   class basic_slider_base : public slider_base
+   {
+   public:
+      using slider_function = std::function<void(double pos)>;
+      slider_function         on_change;
+   };
+
+   template <typename Thumb, typename Track, typename Base = basic_slider_base>
+   class basic_slider : public Base { ... };
+
+   template <typename Thumb, typename Track>
+   basic_slider<Thumb, Track, basic_slider_base>
+   slider(Thumb&& thumb, Track&& track, double init_value = 0.0);
+
+   class basic_selector_base : public slider_base
+   {
+   public:
+      using selector_function = std::function<void(size_t pos)>;
+      selector_function       on_change;
+   };
+
+   template <size_t num_states>
+   class selector_base : public basic_selector_base { ... };
+
+   template <size_t num_states, typename Thumb, typename Track>
+   basic_slider<Thumb, Track, selector_base<num_states>>
+   selector(Thumb&& thumb, Track&& track, double init_value = 0.0);
+
+   using double_range = std::pair<double, double>;
+
+   class range_slider_base : public tracker<>, public receiver<double_range>
+   {
+   public:
+                              range_slider_base(double_range init_value);
+
+      double_range            value() const override;
+      void                    value(double_range val) override;
+      double                  value_first() const;
+      double                  value_second() const;
+      void                    value_first(double val);
+      void                    value_second(double val);
+      void                    edit(view& view_, double_range val) override;
+   };
+
+   class basic_range_slider_base : public range_slider_base
+   {
+   public:
+      using slider_function = std::function<void(double pos)>;
+      using slider_function_pair = std::pair<slider_function, slider_function>;
+      slider_function_pair    on_change;
+   };
+
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
+   basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_base>
+   range_slider(Thumb1&& thumb_min, Thumb2&& thumb_max, Track&& track
+    , double_range init_value = {0.0, 1.0});
+
+   template <concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track>
+   basic_range_slider<Thumb1, Thumb2, Track, basic_range_slider_offset_base>
+   range_slider(Thumb1&& thumb_min, Thumb2&& thumb_max, Track&& track
+    , double_range init_value, float offset_from_center);
+}
+```
+
+`basic_slider<Thumb, Track, Base>` holds the thumb and the track by
+value and hands them to `Base` through `thumb()` and `track()`. The
+`Base` is `basic_slider_base` for a slider and `selector_base<N>` for a
+selector; a class derived from `slider_base` that overrides
+`value_from_point` can be given as `Base` for a slider whose travel is
+not linear.
+
+== Expressions
+
+=== Notation
+
+`s`:: A `slider_base`, or a class derived from it: a slider or a
+  selector.
+`r`:: A `range_slider_base`, or a class derived from it.
+`v`:: A `double`.
+`ctx`:: A {context} for the slider.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `s.value()`
+| The value, 0.0 to 1.0.
+
+| `s.value(v)`
+| Set the value, clamped to 0.0 to 1.0. No callback. On a selector the
+  value snaps to the nearest position and `on_change` gets its index.
+
+| `s.edit(view_, v)`
+| Set the value as the user would: `on_change` is called and the gesture
+  reported.
+
+| `s.on_change = f`
+| `f(v)` is called on each change the user makes. On a selector, `f(i)`
+  with the position's index.
+
+| `s.thumb_bounds(ctx)`, `s.track_bounds(ctx)`
+| Where the thumb and the track are, within `ctx.bounds`, for a styler
+  or a subclass drawing around them.
+
+| `s.value_from_point(ctx, p)`
+| The value for the pointer at `p`: the position of the thumb's centre
+  along its travel, clamped. Virtual, for a non-linear travel.
+
+| `r.value()`, `r.value(range)`
+| Both values, as a `double_range`; set them, each clamped.
+
+| `r.value_first()`, `r.value_second()`, and their setters
+| One thumb's value.
+
+| `r.on_change.first = f`, `r.on_change.second = f`
+| `f(v)` is called when the respective thumb moves.
+|===
+
+== Example
+
+A slider bound to a model, with a label following it:
+
+```c++
+value_model<double> volume = 0.5;
+
+auto vol = share(slider(basic_thumb<20>(), basic_track<5, false>()));
+auto readout = share(label("50%"));
+
+model_binder binder{[&view_](element& e) { view_.refresh(e); }};
+binder.bind(volume, vol);
+binder.observe(volume,
+   [readout, &view_](double v)
+   {
+      readout->set_text(std::to_string(int(v * 100)) + "%");
+      view_.refresh(*readout);
+   });
+```
+
+image::elements/sliders_example.png[alt="The bound slider at 0.75 with its readout showing 75%", width=240px, link={imagesdir}/elements/sliders_example.png]
+
+A four-way selector, and a range slider from 20% to 80%:
+
+```c++
+auto mode = selector<4>(basic_tri_thumb<28, direction::down>(), basic_track<5, false>());
+mode.on_change = [](std::size_t i) { set_mode(i); };
+
+auto band = range_slider(
+   basic_thumb<20>(), basic_thumb<20>(), basic_track<5, false>(), {0.2, 0.8});
+band.on_change.first = [](double lo) { set_low(lo); };
+band.on_change.second = [](double hi) { set_high(hi); };
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

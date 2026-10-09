@@ -23,6 +23,13 @@
 :Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
 :decks: xref:layout/decks.adoc[Decks]
 
-:controls: xref:controls.adoc[Controls]
-:marks_and_scales: xref:controls/marks.adoc[Marks and Scales]
-:db_scale: xref:controls/marks.adoc#_the_decibel_scale[db_scale]
+:core_elements: xref:elements.adoc[Elements]
+:element: xref:elements/element.adoc[element]
+:context: xref:support/context.adoc[context]
+:basic_context: xref:support/context.adoc[basic_context]
+:theme: xref:support/theme.adoc[theme]
+:receiver: xref:support/receivers.adoc[receiver]
+
+:styles: xref:styles.adoc[Styles]
+:marks_and_scales: xref:styles/marks.adoc[Marks and Scales]
+:db_scale: xref:styles/marks.adoc#_the_decibel_scale[db_scale]

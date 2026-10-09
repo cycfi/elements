@@ -1,0 +1,172 @@
+= Proxies
+
+include::../common.adoc[]
+
+== Overview
+
+A proxy is an element that holds one other element, its subject, and
+delegates the whole element protocol to it, but may augment or totally
+override its behavior. It is composition of a single element as an alternative to
+inheritance: what a subclass would add or change, a proxy adds or changes
+from outside, for any subject, and proxies stack where subclasses cannot.
+Most elements in a view are proxies: a margin, an alignment, a border, a
+port, a button over its styler. `proxy_base` does the forwarding; a proxy
+class overrides what it changes.
+
+image::elements/proxy_classes.svg[alt="proxy_base derives from element and names a subject, an element; proxy holds the subject by value; the library's proxies derive from proxy", width=750px, align="center"]
+
+NOTE: The Gang of Four split this structure, one subject behind the same
+interface, by intent: a Proxy controls access to its subject, a Decorator
+adds responsibilities to it, and the book notes the two can be
+implemented alike. Elements' proxies do both. A margin or a styler adds;
+a `hidable`, a disabled proxy or a drop box filtering by MIME type
+controls what reaches the subject. Elements calls the whole family
+proxies, in the common meaning of the word: a wrapper with the subject's
+interface that forwards to it and may add logic on the way (see
+https://en.wikipedia.org/wiki/Proxy_pattern[Proxy pattern]).
+
+A proxy forwards each call by making the subject's own {context} from its
+own, with the subject as the element and, to begin with, the same bounds.
+Two hooks let a proxy adjust that context before the subject sees it and
+undo the adjustment after: `prepare_subject` and `restore_subject`. A
+margin shrinks the bounds in `prepare_subject`; an alignment moves them;
+a port offsets them by the scroll position; `scale` scales the canvas
+in `prepare_subject`, maps the bounds and the point into the scaled
+space, and puts the canvas back in `restore_subject`.
+
+image::elements/proxy_draw.svg[alt="A proxy forwarding draw: it makes the subject's context, calls prepare_subject, draws the subject with it, then calls restore_subject", width=750px, align="center"]
+
+The same bracket surrounds `draw`, `layout`, `hit_test`, `refresh`,
+`in_context_do`, and every event: `click`, `drag`, `key`, `text`,
+`cursor`, `scroll`, `track_drop` and `drop`. The calls that take a point
+(`hit_test`, `click`, `drag`, `cursor`, `scroll`) use the
+`prepare_subject(ctx, p)` overload, so a proxy that moves its subject can
+move the point too. The calls that need no context (`limits`, `stretch`,
+`span`, the focus and enabling group, `wants_control`) go straight to
+the subject.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class proxy_base : public element
+   {
+   public:
+      // The whole element protocol, forwarded to subject()
+      ...
+      virtual void            prepare_subject(context& ctx);
+      virtual void            prepare_subject(context& ctx, point& p);
+      virtual void            restore_subject(context& ctx);
+
+      virtual element const&  subject() const = 0;
+      virtual element&        subject() = 0;
+   };
+
+   template <concepts::ProxySubject Subject, concepts::Proxy Base = proxy_base>
+   class proxy : public Base
+   {
+   public:
+      using subject_type = Subject;
+
+                              template <typename... T>
+                              proxy(Subject subject_, T&&... args);
+
+      void                    subject(Subject&& subject_);
+      void                    subject(Subject const& subject_);
+      element const&          subject() const override;
+      element&                subject() override;
+      Subject const&          actual_subject() const;
+      Subject&                actual_subject();
+   };
+
+}
+```
+
+`proxy<Subject, Base>` holds its subject by value and implements
+`subject()` over it; `Base` is `proxy_base` or a class derived from it,
+so a proxy's behavior can be written once, against `proxy_base`, and
+given any subject type. `concepts::Proxy` is satisfied by a type derived
+from `proxy_base`, `concepts::ProxySubject` by a non-const, non-reference
+element type.
+
+
+== Expressions
+
+=== Notation
+
+`p`:: A `proxy<Subject, Base>`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `p.subject()`
+| The subject, as an `element&`.
+
+| `p.actual_subject()`
+| The subject, as a `Subject&`.
+
+| `p.subject(s)`
+| Replace the subject with `s`, moved or copied.
+
+| `p.prepare_subject(ctx)`
+| Called with the subject's context before each forwarded call; a proxy
+  overrides it to adjust `ctx.bounds`, the canvas, or anything else the
+  subject should see. The default does nothing.
+
+| `p.prepare_subject(ctx, pt)`
+| The same, for the calls that carry a point; `pt` may be adjusted too.
+  The default calls `prepare_subject(ctx)`.
+
+| `p.restore_subject(ctx)`
+| Called after each forwarded call, to undo what `prepare_subject` did to
+  anything outside `ctx` (a canvas clip, for instance). The default does
+  nothing.
+
+|===
+
+== Example
+
+A proxy that insets its subject by a fixed amount, the way `margin`
+does. It adds the inset to the limits, shrinks the bounds in
+`prepare_subject`, and needs nothing restored:
+
+```c++
+template <typename Subject>
+struct inset_by : proxy<Subject>
+{
+   using base_type = proxy<Subject>;
+
+   inset_by(Subject subject, float amount)
+    : base_type{std::move(subject)}, _amount{amount}
+   {}
+
+   view_limits limits(basic_context const& ctx) const override
+   {
+      auto l = this->subject().limits(ctx);
+      l.min.x += 2 * _amount; l.min.y += 2 * _amount;
+      return l;
+   }
+
+   void prepare_subject(context& ctx) override
+   {
+      ctx.bounds = ctx.bounds.inset(_amount, _amount);
+   }
+
+   float _amount;
+};
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

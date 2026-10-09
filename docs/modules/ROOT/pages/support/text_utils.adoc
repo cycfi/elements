@@ -1,0 +1,146 @@
+= Text Utilities
+
+include::../common.adoc[]
+
+== Overview
+
+Two small headers serve the elements that draw or hold text.
+
+`support/text_utils.hpp` has the functions a styler calls to size and
+draw text and icons: `measure_text` and `measure_icon` give the extent a
+string or an icon will take in a font, which `limits` needs before
+anything is drawn, and `draw_icon` draws one glyph of the icon font
+centered in a rectangle. It also defines `_as_char`, a literal suffix
+that turns a `u8"..."` literal into plain `char` text, so a UTF-8 string
+can be written as it reads and still go into a `std::string`.
+
+image::support/text_utils_icons.png[alt="Five icons drawn with draw_icon: a check mark, a cross, a cog and a speaker in the theme's icon color, and a warning sign in gold", width=300px, link={imagesdir}/support/text_utils_icons.png]
+
+`support/text_reader_writer.hpp` has four interfaces an element with text
+implements, so code that holds only an `element` can still read or
+change its text: `text_reader_u8` and `text_writer_u8` for UTF-8 (labels
+and buttons), `text_reader_u32` and `text_writer_u32` for UTF-32 (text
+boxes). They are found through `find_subject`, which looks down a proxy
+chain for the element implementing one, the way
+xref:elements/labels.adoc[`as_label`] sets its label's text and a menu
+reads its items' text.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   void     draw_icon(canvas& cnv, rect bounds, uint32_t code, float size);
+   void     draw_icon(canvas& cnv, rect bounds, uint32_t code, float size, color c);
+   point    measure_icon(canvas& cnv, uint32_t cp, float size);
+   point    measure_text(canvas& cnv, std::string_view text, font_descr font_);
+
+   constexpr auto& operator""_as_char();      // u8"..."_as_char
+
+   class text_reader_u8
+   {
+   public:
+      virtual std::string_view      get_text() const = 0;
+   };
+
+   class text_writer_u8
+   {
+   public:
+      virtual void                  set_text(std::string_view text) = 0;
+   };
+
+   class text_reader_u32
+   {
+   public:
+      virtual std::u32string_view   get_text() const = 0;
+   };
+
+   class text_writer_u32
+   {
+   public:
+      virtual void                  set_text(std::u32string_view text) = 0;
+   };
+}
+```
+
+== Expressions
+
+=== Notation
+
+`cnv`:: An `artist::canvas`.
+`b`:: An `artist::rect`.
+`code`:: An icon code point, from xref:support/icons.adoc[`icons`].
+`f`:: An `artist::font_descr`.
+`e`:: A pointer to an `element` (`element*`).
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `measure_text(cnv, text, f)`
+| The size `text` takes in font `f`: the width of the text, and the
+  height of the font (ascent, descent and leading), which does not depend
+  on the text.
+
+| `measure_icon(cnv, code, size)`
+| The size the icon `code` takes in the theme's icon font at `size`.
+
+| `draw_icon(cnv, b, code, size)`
+| Draw the icon `code` at `size`, centered in `b`, in the theme's
+  `icon_color`.
+
+| `draw_icon(cnv, b, code, size, c)`
+| The same, in color `c`.
+
+| `u8"..."_as_char`
+| The UTF-8 literal as `char const` text, byte for byte.
+
+| `find_subject<text_reader_u8*>(e)`
+| The element under `e` that holds UTF-8 text, or `nullptr`. Likewise
+  `text_writer_u8*`, `text_reader_u32*` and `text_writer_u32*`.
+
+| `r->get_text()`
+| The text, as a `std::string_view` or a `std::u32string_view`.
+
+| `w->set_text(text)`
+| Replace the text.
+|===
+
+== Example
+
+A label's text, found inside a proxy and changed through the
+interfaces, without naming the styler that holds it:
+
+```c++
+auto lbl = share(margin({10, 10, 10, 10}, label("Before").font_size(18)));
+
+auto reader = find_subject<text_reader_u8*>(lbl.get());
+auto writer = find_subject<text_writer_u8*>(lbl.get());
+
+std::string_view before = reader->get_text();   // "Before"
+writer->set_text("After");
+std::string_view after = reader->get_text();    // "After"
+```
+
+The icons in the figure above:
+
+```c++
+draw_icon(cnv, {10, 10, 60, 50}, icons::ok, 16);
+draw_icon(cnv, {70, 10, 120, 50}, icons::cancel, 16);
+draw_icon(cnv, {130, 10, 180, 50}, icons::cog, 24);
+draw_icon(cnv, {190, 10, 240, 50}, icons::volume_up, 24);
+draw_icon(cnv, {250, 10, 300, 50}, icons::attention, 24, colors::gold);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

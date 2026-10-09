@@ -1,0 +1,254 @@
+= Theme
+
+include::../common.adoc[]
+
+== Overview
+
+Elements draws its controls from one global `theme`: the colors, fonts,
+sizes and radii every label, button, slider and frame is drawn with.
+Change the theme and every control changes with it, without touching the
+controls themselves.
+
+[cols="1,1", frame=none, grid=none]
+|===
+a| image::support/theme_default.png[alt="A label, slider, button and check box in the default theme", width=160px, link={imagesdir}/support/theme_default.png]
+a| image::support/theme_custom.png[alt="The same controls with amber text and a green indicator", width=160px, link={imagesdir}/support/theme_custom.png]
+|===
+
+* Left, the default theme.
+* Right, the same controls with `label_font_color` amber and
+  `indicator_color`, with its two derived shades, green.
+* Nothing else differs: the controls are built the same way in both.
+
+Most of the theme is read each time a control draws, so a change shows at
+the next redraw; call `refresh` on the view to have it redrawn at once.
+Some values are taken when a control is made instead, as the default of a
+constructor argument: the body color of buttons, icon buttons and menus,
+`button_corner_radius`, the fonts of text boxes and menu items, the pane
+opacity, the active tab color, and the sizes and OK color of dialogs and
+message boxes. A control made before a theme change keeps those. Set the
+theme before building the view, and it applies to everything.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class theme
+   {
+   public:
+                           theme();
+
+      // The members, listed under Members below.
+   };
+
+   theme const&            get_theme();
+   void                    set_theme(theme const& thm);
+
+   template <typename T>
+   class scoped_theme_override;
+
+   template <typename T>
+   scoped_theme_override<T>
+                           override_theme(T theme::*pmem, T val);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`t`:: A `theme`.
+`pmem`:: A pointer to a `theme` member of type `T`, such as
+         `&theme::label_font_color`.
+`val`:: A value of type `T`.
+
+=== Semantics
+
+[cols="1,1,1"]
+|===
+| Expression | Semantics | Return Type
+
+| `theme{}`
+| A theme with the default values, listed under Members.
+| `theme`
+
+| `get_theme()`
+| The global theme.
+| `theme const&`
+
+| `set_theme(t)`
+| Replace the global theme with `t`.
+| `void`
+
+| `override_theme(pmem, val)`
+| Set one member of the global theme to `val` until the returned object
+  goes out of scope, then put back the value it had.
+| `scoped_theme_override<T>`
+|===
+
+== Members
+
+The defaults are what `theme{}` sets; colors are `rgba` with alpha last.
+Read by lists the elements and support code that use a member.
+
+=== Panels and Frames
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `panel_color` | `rgba(28, 30, 34, 192)` | pane, decorations (`misc`), curve editor, image grid
+| `frame_color` | `rgba(220, 220, 220, 80)` | border, decorations, check box, radio button, menu, port
+| `frame_hilite_color` | `rgba(220, 220, 220, 160)` | check box, radio button
+| `frame_corner_radius` | `3` | decorations (`misc`)
+| `frame_stroke_width` | `1` | border, decorations
+| `scrollbar_color` | `rgba(80, 80, 80, 80)` | port (scroll bars)
+| `scrollbar_width` | `10` | port (scroll bars)
+| `element_background_opacity` | `32 / 255` | check box, drawing utilities
+| `disabled_opacity` | `0.45` | button, icon button, check box, radio button, slide switch, label, text
+|===
+
+=== Buttons
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `default_button_color` | `rgba(0, 0, 0, 50)` | button, icon button, menu
+| `button_margin` | `{10, 5, 10, 5}` | button, menu
+| `button_corner_radius` | `4` | button
+| `button_text_icon_space` | `8` | button
+| `slide_button_size` | `{30, 16}` | slide switch
+| `slide_button_on_color` | `rgba(0, 127, 255, 200)` | slide switch
+| `slide_button_base_color` | `rgba(127, 127, 127, 100)` | slide switch
+| `slide_button_thumb_color` | `rgba(240, 240, 240, 200)` | slide switch
+| `active_tab_color` | `colors::gray[50]` | tab
+|===
+
+=== Controls and Indicators
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `controls_frame_stroke_width` | `1.5` | check box, radio button
+| `indicator_color` | `rgba(0, 127, 255, 200)` | slider, dial, menu, dialog, message box, drag and drop, curve editor, image grid
+| `indicator_bright_color` | `indicator_color` at level 1.5 | check box, radio button
+| `indicator_hilite_color` | `indicator_color` at level 2 | check box, radio button, image grid
+| `dial_mode` | `dial_mode_enum::linear` | dial
+| `dial_linear_range` | `200` | dial, thumbwheel
+|===
+
+The two derived indicator shades are worked out once, when the theme is
+made. A theme that changes `indicator_color` should set them again, as the
+figure's does.
+
+=== Text
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `system_font` | Lucida Grande (macOS), Segoe UI Symbol (Windows),
+  DejaVu Sans (Linux) | menu
+| `heading_font_color` | `rgba(220, 220, 220, 200)` | label (headings)
+| `heading_font` | Roboto 15, medium | label (headings)
+| `heading_text_align` | middle, center | label (headings)
+| `heading_scale` | 2.074, 1.728, 1.44, 1.2, 1.0 | label (`heading1` to `heading5`, times the heading font's size)
+| `label_font_color` | `rgba(220, 220, 220, 200)` | label, button, check box, radio button, slider, image grid, drawing utilities
+| `label_font` | Open Sans 14 | label, button, check box, radio button, slider, menu, toggle selector, image grid, drawing utilities
+| `label_text_align` | middle, center | label
+| `inactive_font_color` | `rgba(127, 127, 127, 150)` | text
+|===
+
+=== Icons
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `icon_color` | `rgba(220, 220, 220, 200)` | button, icon button, text utilities
+| `icon_font` | elements_basic 16 | button, icon button, decorations, text utilities
+|===
+
+=== Text Boxes
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `text_box_font_color` | `rgba(220, 220, 220, 200)` | text
+| `text_box_font` | Open Sans 14 | text, text entry
+| `text_box_hilite_color` | `rgba(0, 127, 255, 100)` | text
+| `text_box_caret_color` | `rgba(0, 190, 255, 255)` | text
+| `text_box_caret_width` | `1.2` | text
+| `input_box_text_limit` | `1024` | text
+|===
+
+=== Ticks and Grids
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `ticks_color` | `rgba(127, 127, 127, 150)` | slider, curve editor, drawing utilities
+| `major_ticks_level` | `0.5` | slider, drawing utilities
+| `major_ticks_width` | `1.5` | slider, drawing utilities
+| `minor_ticks_level` | `0.4` | slider, drawing utilities
+| `minor_ticks_width` | `0.7` | slider, drawing utilities
+| `major_grid_color` | `frame_color` | grid lines
+| `major_grid_width` | `0.5` | grid lines
+| `minor_grid_color` | `indicator_color` | grid lines
+| `minor_grid_width` | `0.4` | grid lines
+|===
+
+See {marks_and_scales} for where the ticks and grids are drawn.
+
+=== Dialogs and Child Windows
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `dialog_button_size` | `100` | dialog
+| `message_textbox_size` | `{300, 120}` | message box
+| `child_window_title_size` | `1` | child window
+| `child_window_opacity` | `0.95` | child window
+|===
+
+== Example
+
+Set a theme once, before the view is made, to style the whole
+application. The right-hand figure above was drawn after this:
+
+```c++
+theme t;
+t.indicator_color = rgba(67, 160, 71, 230);
+t.indicator_bright_color = t.indicator_color.level(1.5);
+t.indicator_hilite_color = t.indicator_color.level(2.0);
+t.label_font_color = rgba(255, 200, 80, 230);
+set_theme(t);
+```
+
+To change one member for a while, override it and let the override go
+out of scope:
+
+```c++
+{
+   auto larger = override_theme(&theme::frame_corner_radius, 12.0f);
+   // Frames drawn here have 12 unit corners.
+}
+// Back to the previous radius.
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

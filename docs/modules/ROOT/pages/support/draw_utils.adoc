@@ -1,0 +1,192 @@
+= Drawing Utilities
+
+include::../common.adoc[]
+
+== Overview
+
+The drawing utilities are the primitives the default stylers draw with: a
+panel, a button face, a slider's track and thumb, a dial's knob, marks
+and labels. Each is a free function taking a `canvas` and drawing one
+thing at a given place; the stylers compose them. A custom styler can
+draw with them too, so it looks like the stock controls, or use one of
+them as a starting point.
+
+image::support/draw_utils_gallery.png[alt="Each drawing utility drawn once: a panel, a gradient box, an enabled and a disabled button, a track and thumb, a rectangular thumb, an indicator, a round rect, a knob with its indicator, radial marks and radial labels", width=580px, link={imagesdir}/support/draw_utils_gallery.png]
+
+Top row: `draw_panel`, `draw_box_vgradient`, `draw_button` enabled and
+disabled. Middle: `draw_track` with `draw_thumb`, `draw_rect_thumb`,
+`draw_tri_thumb`, `draw_indicator`, `draw_round_rect` with two rounded
+corners. Bottom:
+`draw_knob` with `draw_radial_indicator`, `draw_radial_marks`,
+`draw_radial_labels`.
+
+The functions take their colors as arguments, except where the theme
+decides: `draw_button` reads the theme's opacities, `draw_radial_marks`
+its tick widths and levels, and `draw_radial_labels` its label font and
+color. See xref:support/theme.adoc[Theme].
+
+NOTE: The simplest way to draw a custom element is to copy the primitive
+nearest to what it needs, from `lib/src/support/draw_utils.cpp`, into the
+element's own code, and change it there. Each is a few dozen lines of
+canvas calls with no dependencies beyond the theme, so it is a starting
+point rather than an API to extend.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   namespace radial_consts
+   {
+      constexpr double _2pi = 2 * cycfi::pi;
+      constexpr double travel = 0.83;
+      constexpr double range = _2pi * travel;
+      constexpr double start_angle = _2pi * (1 - travel) / 2;
+      constexpr double offset = start_angle;
+   }
+
+   enum class direction { up, down, left, right };
+
+   struct corner_radii
+   {
+      float top_left, top_right, bottom_right, bottom_left;
+      corner_radii operator+(float v) const;
+      corner_radii operator-(float v) const;
+   };
+
+   void  draw_box_vgradient(canvas& cnv, rect bounds, float corner_radius = 4.0);
+   void  draw_panel(canvas& cnv, rect bounds, color c, float shadow, float corner_radius = 4.0);
+   void  draw_button(canvas& cnv, rect bounds, color c, bool enabled, corner_radii corner_radii = {4, 4, 4, 4});
+   void  draw_round_rect(canvas& cnv, rect bounds, corner_radii);
+   void  draw_knob(canvas& cnv, circle cp, color c);
+   void  draw_indicator(canvas& cnv, rect bounds, color c);
+   void  draw_thumb(canvas& cnv, circle cp, color c, color ic);
+   void  draw_rect_thumb(canvas& cnv, rect bounds, float radius, color c, color ic);
+   void  draw_tri_thumb(canvas& cnv, rect bounds, direction dir, color c, color ic);
+   void  draw_track(canvas& cnv, rect bounds);
+
+   void  draw_radial_indicator(canvas& cnv, circle cp, float val, color c);
+   void  draw_radial_marks(canvas& cnv, circle cp, float size, color c);
+   void  draw_radial_labels(
+            canvas& cnv, circle cp, float font_size
+          , std::string const labels[], std::size_t num_labels
+         );
+}
+```
+
+`radial_consts` describes a dial's travel: 83% of a full turn, leaving a
+gap at the bottom. `start_angle` (and `offset`, the same value) is half
+that gap, measured from the bottom; `range` is the travel in radians. The
+dial, the radial indicator, marks and labels all use it, so they agree
+on where a value lies.
+
+`corner_radii` names the four corner radii of a rounded rectangle, in
+clockwise order from the top left. `+` and `-` grow or shrink all four
+at once, for drawing an inset outline that keeps its corners concentric.
+
+== Expressions
+
+=== Notation
+
+`cnv`:: An `artist::canvas`.
+`b`:: An `artist::rect`.
+`cp`:: An `artist::circle`: a center and a radius.
+`c`, `ic`:: An `artist::color`: a body color and an indicator color.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `draw_panel(cnv, b, c, shadow, r)`
+| A rounded rectangle filled with `c`, corner radius `r`, with a drop
+  shadow of the given size when `shadow > 0`.
+
+| `draw_box_vgradient(cnv, b, r)`
+| A rounded rectangle with a faint vertical gradient, light at the top
+  and dark at the bottom, and a dark line along its bottom edge. Drawn
+  over whatever is there: a backdrop's shading.
+
+| `draw_button(cnv, b, c, enabled, radii)`
+| A button face: `c`, shaded light to dark from top to bottom, with a
+  dark outline and the given corner radii. Disabled, it is drawn at the
+  theme's `disabled_opacity`.
+
+| `draw_round_rect(cnv, b, radii)`
+| Builds the path of a rounded rectangle with the given corner radii,
+  each clamped to half the smaller side. Nothing is drawn: the caller
+  fills or strokes it.
+
+| `draw_knob(cnv, cp, c)`
+| A dial's knob: a bevelled disc of `c` with a highlight and a rim.
+
+| `draw_indicator(cnv, b, c)`
+| A pill of `c` filling `b`: the mark on a knob or a thumb.
+
+| `draw_radial_indicator(cnv, cp, val, c)`
+| The indicator of a knob at `cp`, at the angle of `val` (0 to 1) along
+  `radial_consts::range`.
+
+| `draw_thumb(cnv, cp, c, ic)`
+| A slider's round thumb: a disc of `c` with a highlight and a bevel, and
+  a dot of `ic` at its center.
+
+| `draw_rect_thumb(cnv, b, radius, c, ic)`
+| The rounded rectangle counterpart of `draw_thumb`, with an inset
+  rectangle of `ic`.
+
+| `draw_tri_thumb(cnv, b, dir, c, ic)`
+| The pointed counterpart: a triangle with rounded corners filling `b`,
+  its point in direction `dir` (`up`, `down`, `left` or `right`), with a
+  smaller triangle of `ic` inset from it. A selector's pointer.
+
+| `draw_track(cnv, b)`
+| A slider's track: a black groove filling `b`, with rounded ends
+  extending past it by its half width, and a faint highlight.
+
+| `draw_radial_marks(cnv, cp, size, c)`
+| Fifty ticks of `c` around a dial's travel, just inside `cp`, every
+  fifth one major. `size` is the length of a major tick; widths and
+  levels come from the theme.
+
+| `draw_radial_labels(cnv, cp, font_size, labels, n)`
+| `n` labels spread evenly along a dial's travel, on the circle `cp`, in
+  the theme's label font scaled by `font_size`. Fewer than two labels
+  draws nothing.
+|===
+
+== Example
+
+A custom styler for a slider's thumb, drawn with `draw_thumb` in the
+control's colors so it matches the stock one, but larger:
+
+```c++
+struct big_thumb : element
+{
+   view_limits limits(basic_context const&) const override
+   {
+      return {{32, 32}, {32, 32}};
+   }
+
+   void draw(context const& ctx) override
+   {
+      auto const& thm = get_theme();
+      draw_thumb(ctx.canvas, circle{center_point(ctx.bounds), 16}
+       , thm.default_button_color, thm.indicator_color);
+   }
+};
+
+auto s = slider(big_thumb{}, basic_track<5, false>(), 0.5);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

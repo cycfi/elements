@@ -1,0 +1,14 @@
+= Testing Elements
+
+include::common.adoc[]
+
+== Overview
+
+Running the test suite: the headless host and the recording backend, figures, and CI.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

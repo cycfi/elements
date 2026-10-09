@@ -1,0 +1,129 @@
+= Dials
+
+include::../common.adoc[]
+
+== Overview
+
+A dial holds a value from 0.0 to 1.0 that the user turns with the mouse.
+It is a xref:elements/proxies.adoc[proxy] over a styler, which draws it,
+and a xref:elements/trackers.adoc[tracker] over a `receiver<double>`
+(see xref:support/receivers.adoc[Receivers]). The stock knob and its
+radial marks and labels are documented under the
+xref:styles/sliders.adoc[Sliders, Dials and Thumbwheels] styles. The
+styler reads the value from the dial (see xref:styles.adoc[Styles]).
+
+image::elements/dials.png[alt="A dial with a knob, radial marks and labels 0 to 10", width=200px, link={imagesdir}/elements/dials.png]
+
+The theme's `dial_mode` selects one of two modes:
+
+* `linear`, the default: the value follows the pointer's movement.
+  Moving up or right increases it; moving down or left decreases it. The
+  change is `(dx - dy)` divided by the theme's `dial_linear_range`, 200
+  pixels by default. Shift makes the movement five times finer. The
+  pointer may leave the knob.
+* `radial`: the value follows the pointer's angle around the knob's
+  centre, over a travel of 83% of a turn from the bottom left to the
+  bottom right (see `radial_consts` in
+  xref:support/draw_utils.adoc[Drawing Utilities]). A movement that lands
+  more than 0.6 from the current value is ignored, so the pointer cannot
+  cross the gap at the bottom.
+
+The scroll wheel changes the value by 0.005 per unit. Every change the
+user makes calls `on_change`. `value(v)` sets the value from code,
+clamped, without a callback; `edit(view, v)` sets it as the user would,
+with the callback. The view's `on_tracking` receives the gesture, as it
+does from any tracker.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class dial_mode_enum : int { linear, radial };
+
+   class basic_dial : public tracker<proxy_base>, public receiver<double>
+   {
+   public:
+      using dial_function = std::function<void(double pos)>;
+
+                           basic_dial(double init_value = 0.0);
+
+      double               value() const override;
+      void                 value(double val) override;
+      void                 edit(view& view_, double val) override;
+
+      dial_function        on_change;
+   };
+
+                                       template <concepts::Element Styler>
+   proxy<Styler, basic_dial>           dial(Styler&& styler, double init_value = 0.0);
+}
+```
+
+`dial_mode` and `dial_linear_range` are members of the
+xref:support/theme.adoc[theme].
+
+== Expressions
+
+=== Notation
+
+`d`:: A `basic_dial`.
+`v`:: A `double`, 0.0 to 1.0.
+`view_`:: A `view`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `d.value()`
+| The value.
+
+| `d.value(v)`
+| Set the value, clamped. No callback.
+
+| `d.edit(view_, v)`
+| Set the value as the user would: `on_change` is called.
+
+| `d.on_change = f`
+| `f(v)` is called on each change the user makes.
+|===
+
+== Example
+
+A dial with marks and labels, bound to a model, and a label that
+follows its value:
+
+```c++
+value_model<double> cutoff = 0.5;
+
+auto knob = share(dial(radial_marks<20>(basic_knob<50>())));
+auto cutoff_dial = radial_labels<15>(hold(knob), 0.7,
+   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+auto readout = share(label("5.0"));
+
+model_binder binder{[&view_](element& e) { view_.refresh(e); }};
+binder.bind(cutoff, knob);
+binder.observe(cutoff,
+   [readout, &view_](double v)
+   {
+      char buf[8];
+      std::snprintf(buf, sizeof buf, "%.1f", v * 10);
+      readout->set_text(buf);
+      view_.refresh(*readout);
+   });
+```
+
+image::elements/dials_example.png[alt="The bound dial at 0.7 with its readout showing 7.0", width=200px, link={imagesdir}/elements/dials_example.png]
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

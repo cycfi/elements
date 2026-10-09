@@ -1,0 +1,14 @@
+= Building Outside the Project
+
+include::common.adoc[]
+
+== Overview
+
+Using Elements from a project of your own: fetching or adding it, and the CMake an application needs.
+
+// To be written.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

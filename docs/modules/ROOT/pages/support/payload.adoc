@@ -1,0 +1,126 @@
+= Payload
+
+include::../common.adoc[]
+
+== Overview
+
+A `payload` is the data a drag and drop carries. It is a `std::map` from
+a MIME type, such as `"text/plain"` or `"text/uri-list"`, to the data in
+that format: a `std::string` for text, a `std::vector<std::byte>` for
+anything else. One payload can hold the same data in several formats, and
+a receiving element says which it accepts by naming the MIME types it
+takes.
+
+A drop arrives as a `drop_info`: the payload and where it is. The host
+fills it in from the system's drag and drop; a drop of files from the
+desktop comes as `"text/uri-list"`, one `file://` URI per line.
+`contains_filepaths` and `get_filepaths` read that entry, so an element
+that takes files need not parse it. See
+xref:elements/drag_and_drop.adoc[Drag and Drop] for the elements that
+receive and start drags.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   using payload_data = std::variant<std::string, std::vector<std::byte>>;
+
+   struct payload : std::map<std::string, payload_data>
+   {
+      using base_type = std::map<std::string, payload_data>;
+      using base_type::base_type;
+      using base_type::operator=;
+   };
+
+   bool                    contains_filepaths(payload const& data);
+   std::vector<fs::path>   get_filepaths(payload const& data);
+
+   struct drop_info
+   {
+      payload           data;
+      mutable point     where;
+   };
+}
+```
+
+`payload` is a `std::map` with nothing added, so it is built, looked up
+and iterated as one. `drop_info` is declared in `base_view.hpp`; its
+`where` is in the view's coordinates, and is `mutable` because each
+container on the way to the receiving element translates it into that
+element's coordinates and back.
+
+== Expressions
+
+=== Notation
+
+`pl`:: A `payload`.
+`mime`:: A `std::string`, a MIME type.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `pl[mime] = text`
+| Store a `std::string` under `mime`.
+
+| `pl[mime] = bytes`
+| Store a `std::vector<std::byte>` under `mime`.
+
+| `pl.find(mime)`
+| The entry for `mime`, or `pl.end()`. The data is
+  `std::get<std::string>(i->second)` or
+  `std::get<std::vector<std::byte>>(i->second)`.
+
+| `contains_filepaths(pl)`
+| `true` if `pl` has a `"text/uri-list"` entry whose text starts with
+  `file://`.
+
+| `get_filepaths(pl)`
+| The file paths in the `"text/uri-list"` entry, one per line, each with
+  its `file://` prefix removed. Lines that are not `file://` URIs are
+  skipped. Empty when there is no such entry.
+|===
+
+The hosts write the `"text/uri-list"` entry with the paths as the file
+system has them, separated by `\n`, so `get_filepaths` returns them
+directly as `fs::path`.
+
+== Example
+
+A drop box that takes files from the desktop:
+
+```c++
+auto box_ = share(drop_box(
+   align_center_middle(label("Drop files here")), {"text/uri-list"}));
+
+box_->on_drop = [](drop_info const& info)
+{
+   if (!contains_filepaths(info.data))
+      return false;                          // not files: refuse the drop
+   for (auto const& path : get_filepaths(info.data))
+      open_file(path);
+   return true;
+};
+```
+
+A payload built by hand, as a test or a drag source does:
+
+```c++
+payload pl;
+pl["text/plain"] = std::string{"hello"};
+pl["application/octet-stream"] = std::vector<std::byte>{std::byte{1}, std::byte{2}};
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

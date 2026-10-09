@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="567"
+     viewBox="0 0 750 567"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="95.1875" y="14" width="55.2188" height="44" rx="8" fill="#fdeaf2" stroke="#d81b60" stroke-width="1.5"/>
+  <text x="122.797" y="40.9" text-anchor="middle" fill="#1a1a1a">user</text>
+
+  <rect x="209.828" y="14" width="61.6875" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="240.672" y="40.9" text-anchor="middle" fill="#1a1a1a">slider</text>
+
+  <rect x="342.242" y="14" width="66.8906" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="375.688" y="40.9" text-anchor="middle" fill="#1a1a1a">model</text>
+
+  <rect x="447.133" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="475.25" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="553.719" y="14" width="101.094" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="604.266" y="40.9" text-anchor="middle" fill="#1a1a1a">on_tracking</text>
+
+  <line x1="122.797" y1="96" x2="240.672" y2="96" stroke="#d81b60" stroke-width="1.4"/>
+  <line x1="240.672" y1="134" x2="475.25" y2="134" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="475.25" y1="172" x2="604.266" y2="172" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="122.797" y1="210" x2="240.672" y2="210" stroke="#d81b60" stroke-width="1.4"/>
+  <path d="M 240.67 248 L 268.67 248 Q 276.67 248 276.67 256 L 276.67 260 Q 276.67 268 268.67 268 L 240.67 268" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="240.672" y1="306" x2="375.688" y2="306" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="375.688" y1="344" x2="240.672" y2="344" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="240.672" y1="382" x2="475.25" y2="382" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="475.25" y1="420" x2="604.266" y2="420" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="122.797" y1="458" x2="240.672" y2="458" stroke="#d81b60" stroke-width="1.4"/>
+  <line x1="240.672" y1="496" x2="475.25" y2="496" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="475.25" y1="534" x2="604.266" y2="534" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="122.797" y1="58" x2="122.797" y2="553" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="240.672" y1="58" x2="240.672" y2="553" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="375.688" y1="58" x2="375.688" y2="553" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="475.25" y1="58" x2="475.25" y2="553" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="604.266" y1="58" x2="604.266" y2="553" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="181.734" y="89" text-anchor="middle" fill="#1a1a1a">mouse down</text>
+  <text x="308.18" y="127" text-anchor="middle" fill="#1a1a1a">begin_tracking</text>
+  <text x="539.758" y="165" text-anchor="middle" fill="#1a1a1a">begin_tracking</text>
+  <text x="181.734" y="203" text-anchor="middle" fill="#1a1a1a">drag</text>
+  <text x="284.672" y="262.9" fill="#1a1a1a">value(0.6)</text>
+  <text x="308.18" y="299" text-anchor="middle" fill="#1a1a1a">on_change(0.6)</text>
+  <text x="308.18" y="337" text-anchor="middle" fill="#1a1a1a">value(0.6)</text>
+  <text x="308.18" y="375" text-anchor="middle" fill="#1a1a1a">while_tracking</text>
+  <text x="539.758" y="413" text-anchor="middle" fill="#1a1a1a">while_tracking</text>
+  <text x="181.734" y="451" text-anchor="middle" fill="#1a1a1a">mouse up</text>
+  <text x="308.18" y="489" text-anchor="middle" fill="#1a1a1a">end_tracking</text>
+  <text x="539.758" y="527" text-anchor="middle" fill="#1a1a1a">end_tracking</text>
+
+  <polygon points="240.672,96 231.672,100 231.672,92" fill="#d81b60"/>
+  <polygon points="475.25,134 466.25,138 466.25,130" fill="#1565c0"/>
+  <polygon points="604.266,172 595.266,176 595.266,168" fill="#43a047"/>
+  <polygon points="240.672,210 231.672,214 231.672,206" fill="#d81b60"/>
+  <polygon points="240.672,268 249.672,264 249.672,272" fill="#1565c0"/>
+  <polygon points="375.688,306 366.688,310 366.688,302" fill="#1565c0"/>
+  <polygon points="240.672,344 249.672,340 249.672,348" fill="#1565c0"/>
+  <polygon points="475.25,382 466.25,386 466.25,378" fill="#1565c0"/>
+  <polygon points="604.266,420 595.266,424 595.266,416" fill="#43a047"/>
+  <polygon points="240.672,458 231.672,462 231.672,454" fill="#d81b60"/>
+  <polygon points="475.25,496 466.25,500 466.25,492" fill="#1565c0"/>
+  <polygon points="604.266,534 595.266,538 595.266,530" fill="#43a047"/>
+</svg>

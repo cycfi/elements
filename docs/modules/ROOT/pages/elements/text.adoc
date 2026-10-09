@@ -56,7 +56,7 @@ The mouse:
 
 The keyboard, where Action is Command on macOS and Control elsewhere,
 and Word is Option on macOS and Control elsewhere (the key codes and
-modifiers are on the xref:application/view.adoc[View] page):
+modifiers are on the xref:view.adoc[View] page):
 
 [cols="1,2"]
 |===

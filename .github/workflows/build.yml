@@ -16,6 +16,7 @@ on:
           - quartz2d
           - direct2d
           - tests
+          - embed
 env:
   BUILD_TYPE: Release
 jobs:
@@ -640,13 +641,103 @@ jobs:
         fi
 
   ###########################################################################
+  # Embedded: two libraries, each with its own copy of Elements, embedding
+  # views in one process, as two plugins in a host (test/embed). For the
+  # hosts that embed a view in another program's window: Cocoa, Win32 and
+  # X11, on each of their backends.
+  ###########################################################################
+  build-embed:
+    name: "Embedded (${{ matrix.config.name }})"
+    if: >
+      github.event_name != 'workflow_dispatch' ||
+      inputs.job == 'all' ||
+      inputs.job == 'embed'
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - { name: "macOS Quartz2D",   os: macos-latest,   backend: "" }
+        - { name: "macOS Skia",       os: macos-latest,   backend: ELEMENTS_SKIA }
+        - { name: "macOS Cairo",      os: macos-latest,   backend: ELEMENTS_CAIRO }
+        - { name: "Windows Direct2D", os: windows-latest, backend: "" }
+        - { name: "Windows Skia",     os: windows-latest, backend: ELEMENTS_SKIA }
+        - { name: "Windows Cairo",    os: windows-latest, backend: ELEMENTS_CAIRO }
+        - { name: "Linux X11 Cairo",  os: ubuntu-latest,  backend: ELEMENTS_CAIRO }
+        - { name: "Linux X11 Skia",   os: ubuntu-latest,  backend: ELEMENTS_SKIA }
+    env:
+      BACKEND: ${{ matrix.config.backend && format('-D{0}=ON', matrix.config.backend) || '' }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install pkg-config ninja
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        choco install ninja
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        $vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+        echo "VCVARS64=$vcvars" >> $env:GITHUB_ENV
+
+    - name: Install dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          ninja-build pkg-config xvfb \
+          libcairo2-dev libx11-dev libxcursor-dev libxrandr-dev \
+          libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev \
+          libharfbuzz-dev libfontconfig1-dev libfreetype6-dev libwebp-dev
+
+    # The runner has no GPU, and Windows' own OpenGL is 1.1, too old for
+    # Skia. Mesa's opengl32.dll beside the test draws with llvmpipe.
+    - name: Mesa software OpenGL (Windows Skia)
+      if: runner.os == 'Windows' && matrix.config.backend == 'ELEMENTS_SKIA'
+      shell: bash
+      run: |
+        curl -sSL -o mesa.7z https://github.com/pal1000/mesa-dist-win/releases/download/26.2.4/mesa3d-26.2.4-release-msvc.7z
+        7z x -omesa mesa.7z x64 > /dev/null
+
+    - name: Build and Test (macOS, Linux)
+      if: runner.os != 'Windows'
+      env:
+        LIBGL_ALWAYS_SOFTWARE: 1
+        GALLIUM_DRIVER: llvmpipe
+      run: |
+        cmake -S test/embed -B build-embed -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE $BACKEND
+        cmake --build build-embed
+        if [ "${{ runner.os }}" = "Linux" ]; then
+          xvfb-run -a ctest --test-dir build-embed --output-on-failure
+        else
+          ctest --test-dir build-embed --output-on-failure
+        fi
+
+    - name: Build and Test (Windows)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        call "%VCVARS64%" || exit /b 1
+        cmake -S test/embed -B build-embed -G Ninja -DCMAKE_BUILD_TYPE=%BUILD_TYPE% %BACKEND% || exit /b 1
+        cmake --build build-embed || exit /b 1
+        if exist mesa\x64 copy /y mesa\x64\*.dll build-embed\ >nul
+        ctest --test-dir build-embed --output-on-failure || exit /b 1
+
+  ###########################################################################
   # Status: draws this run's jobs, pass or fail, as status/build.svg on the
   # www branch, for develop's pushes.
   ###########################################################################
   status:
     name: Status
     needs: [build-skia, build-cairo, build-quartz2d, build-direct2d, build-tests,
-            build-linux-hosts]
+            build-linux-hosts, build-embed]
     if: >
       always() &&
       github.event_name == 'push' && github.ref == 'refs/heads/develop'

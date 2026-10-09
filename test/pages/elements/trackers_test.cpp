@@ -20,7 +20,7 @@ namespace
    {
       view_limits limits(basic_context const&) const override
       {
-         return {{full_extent, full_extent}, {full_extent, full_extent}};
+         return {{0, 0}, {full_extent, full_extent}};
       }
 
       void draw(context const& ctx) override

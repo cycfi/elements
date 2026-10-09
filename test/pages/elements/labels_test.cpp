@@ -253,8 +253,10 @@ TEST_CASE("labels page: example figure", "[labels_page]")
       label("centre").text_align(canvas::center),
       label("right").text_align(canvas::right));
 
+   // The converter as a function pointer (the leading +): MSVC cannot
+   // instantiate hold() over a type named after a lambda.
    auto level = share(as_label<double>(
-      [](double v) { return std::to_string(int(v * 100)) + "%"; },
+      +[](double v) { return std::to_string(int(v * 100)) + "%"; },
       label("0%")));
    level->value(0.42);
 

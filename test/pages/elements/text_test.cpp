@@ -171,15 +171,19 @@ TEST_CASE("text page: clipboard and undo", "[text_page]")
    auto& tb = *tv.e;
    tb.begin_focus(element::from_top);
 
+   bool const clip = clipboard_works();
    tb.select_start(0);
    tb.select_end(4);
    tv.press(key_code::c, mod_action);
-   CHECK(clipboard() == "cut ");
+   if (clip)
+      CHECK(clipboard() == "cut ");
 
    tv.press(key_code::x, mod_action);
    CHECK(tb.get_utf8() == "here");
 
    tb.end();
+   if (!clip)
+      return;
    tv.press(key_code::v, mod_action);
    CHECK(tb.get_utf8() == "herecut ");
 
@@ -214,9 +218,11 @@ TEST_CASE("text page: read only and disabled", "[text_page]")
 
    tv.type(U"x");
    CHECK(tb.get_utf8() == "fixed");               // typing is ignored
+   bool const clip = clipboard_works();
    tb.select_all();
    tv.press(key_code::c, mod_action);
-   CHECK(clipboard() == "fixed");                // copying is not
+   if (clip)
+      CHECK(clipboard() == "fixed");             // copying is not
 
    tb.read_only(false);
    CHECK(tb.editable());
@@ -260,11 +266,14 @@ TEST_CASE("text page: input box", "[text_page]")
    CHECK(!tv.press(key_code::up));
 
    // Paste stops at the first newline.
-   clipboard("first\nsecond");
-   in.select_all();
-   tv.press(key_code::v, mod_action);
-   CHECK(in.get_utf8() == "first");
-   CHECK(texts.back() == "first");
+   if (clipboard_works())
+   {
+      clipboard("first\nsecond");
+      in.select_all();
+      tv.press(key_code::v, mod_action);
+      CHECK(in.get_utf8() == "first");
+      CHECK(texts.back() == "first");
+   }
 }
 
 TEST_CASE("text page: on_end_focus can keep the focus", "[text_page]")
@@ -323,11 +332,13 @@ TEST_CASE("text page: cut reports through on_text", "[text_page]")
 
    std::string last;
    in.on_text = [&](std::string_view t) { last = t; };
+   bool const clip = clipboard_works();
    in.select_all();
    tv.press(key_code::x, mod_action);
    CHECK(in.get_utf8().empty());
    CHECK(last.empty());
-   CHECK(clipboard() == "abc");
+   if (clip)
+      CHECK(clipboard() == "abc");
 }
 
 TEST_CASE("text page: on_enter decides the focus", "[text_page]")

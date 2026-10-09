@@ -50,11 +50,14 @@ namespace
    };
 
    // What a clipboard holds: plain text, line breaks, an emoji, a long run,
-   // the empty string, and invalid or truncated UTF-8.
+   // the empty string, and, in the headless host's own clipboard, invalid
+   // or truncated UTF-8. A system clipboard holds text only.
    std::vector<std::string> const clips = {
       "x", "hello world", "two\nlines", "crlf\r\nend", "\xF0\x9F\x98\x80",
-      std::string(300, 'q') + " tail", "", "\n", "  ", "\xff\xfe broken",
-      "cut \xF0\x9F"
+      std::string(300, 'q') + " tail", "", "\n", "  ",
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+      "\xff\xfe broken", "cut \xF0\x9F"
+#endif
    };
 
    int const word_mods[] = {mod_alt, mod_control};
@@ -555,6 +558,7 @@ TEST_CASE("text box: long text", "[text_stress]")
    tv.draw();
    focus(tv, box);
    REQUIRE(box->is_focus());
+   bool const clip = clipboard_works();     // the cut is pasted back
 
    auto size = int(box->get_text().size());
    for (int pos : {0, size / 2, size})
@@ -569,7 +573,8 @@ TEST_CASE("text box: long text", "[text_stress]")
       tv.view_.layout();
       tv.draw();
    }
-   CHECK(int(box->get_text().size()) == size + 3);
+   if (clip)
+      CHECK(int(box->get_text().size()) == size + 3);
 
    box->select_all();
    tv.view_.key(key_info{key_code::backspace, key_action::press, 0});

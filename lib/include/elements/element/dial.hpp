@@ -54,10 +54,8 @@ namespace cycfi::elements
     *   With this pattern, different stylers can be implemented for various
     *   visual representations.
     *
-    *   Communication with the dial styler is done via the `receiver<double>`
-    *   API. This API allows the `basic_dial` to broadcast changes in the
-    *   dial's value to the dial styler. Consequently, the styler can update
-    *   the visual representation in response to these changes.
+    *   The styler reads the value from the dial it is drawn in, found with
+    *   `find_parent<basic_dial*>(ctx)`.
     */
    class basic_dial : public tracker<proxy_base>, public receiver<double>
    {

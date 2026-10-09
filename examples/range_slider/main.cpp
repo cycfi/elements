@@ -314,14 +314,8 @@ auto make_default_range_slider(view& _view)
 {
    auto track = basic_track<5, false>(colors::black);
    auto _range_slider = share(range_slider(
-      fixed_size(
-         {8, 27},
-         rbox(colors::light_gray, 2)
-      ),
-      fixed_size(
-         {8, 27},
-         rbox(colors::light_gray, 2)
-      ),
+      basic_rect_thumb<8, 27, 2>(colors::light_gray),
+      basic_rect_thumb<8, 27, 2>(colors::light_gray),
       slider_labels<11>(
          slider_marks_lin<20, 10, 5>(track), 0.8, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
       ),
@@ -337,14 +331,8 @@ auto make_overlapping_range_slider(view& _view)
 {
    auto track = basic_track<5, false>(colors::black);
    auto _range_slider = share(range_slider(
-      fixed_size(
-         {8, 27},
-         rbox(colors::lime_green.level(0.8), 2)
-      ),
-      fixed_size(
-         {8, 27},
-         rbox(colors::orange_red.level(0.8), 2)
-      ),
+      basic_rect_thumb<8, 27, 2>(colors::lime_green.level(0.8)),
+      basic_rect_thumb<8, 27, 2>(colors::orange_red.level(0.8)),
       slider_labels<11>(
          slider_marks_lin<20, 5, 10>(track), 0.8, "0", "2", "4", "6", "8", "10"
       ),

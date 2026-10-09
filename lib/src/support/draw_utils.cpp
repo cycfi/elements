@@ -243,6 +243,128 @@ namespace cycfi::elements
       }
    }
 
+   // The pointed counterpart of draw_thumb: a triangle with rounded
+   // corners pointing in `dir`, drawn the same way, the body, a highlight
+   // from the top left, and the indicator as a smaller triangle inset
+   // from it.
+   void draw_tri_thumb(
+      canvas& cnv, rect bounds, direction dir, color c, color ic)
+   {
+      auto state = cnv.new_state();
+      auto const size = std::min(bounds.width(), bounds.height());
+      auto const r = size * 0.12f;           // the corner radius
+      auto const cx = bounds.left + bounds.width() / 2;
+      auto const cy = bounds.top + bounds.height() / 2;
+      auto const hw = bounds.width() / 2, hh = bounds.height() / 2;
+
+      // The three corners, point first, then the base, clockwise.
+      point tip, b1, b2;
+      switch (dir)
+      {
+         case direction::up:
+            tip = {cx, cy - hh}; b1 = {cx + hw, cy + hh}; b2 = {cx - hw, cy + hh};
+            break;
+         case direction::down:
+            tip = {cx, cy + hh}; b1 = {cx - hw, cy - hh}; b2 = {cx + hw, cy - hh};
+            break;
+         case direction::left:
+            tip = {cx - hw, cy}; b1 = {cx + hw, cy - hh}; b2 = {cx + hw, cy + hh};
+            break;
+         case direction::right:
+         default:
+            tip = {cx + hw, cy}; b1 = {cx - hw, cy + hh}; b2 = {cx - hw, cy - hh};
+            break;
+      }
+
+      // The triangle, or a smaller one of the same shape about its centre,
+      // with its corners rounded to a radius in proportion.
+      auto triangle = [&](float scale)
+      {
+         auto centre = point{(tip.x + b1.x + b2.x) / 3, (tip.y + b1.y + b2.y) / 3};
+         auto at = [&](point p)
+         {
+            return point{centre.x + (p.x - centre.x) * scale
+                       , centre.y + (p.y - centre.y) * scale};
+         };
+         auto t = at(tip), p1 = at(b1), p2 = at(b2);
+         // Start mid-way along one edge so every corner is an arc_to.
+         auto mid = point{(p2.x + t.x) / 2, (p2.y + t.y) / 2};
+         cnv.begin_path();
+         cnv.move_to(mid);
+         cnv.arc_to(t, p1, r * scale);
+         cnv.arc_to(p1, p2, r * scale);
+         cnv.arc_to(p2, t, r * scale);
+         cnv.close_path();
+      };
+
+      // Fill the body color
+      cnv.fill_style(c);
+      triangle(1.0f);
+      cnv.fill();
+
+      // A soft highlight from the top left, fading well before the far
+      // edge, then a light stroke just inside the outline, so the body
+      // keeps its color and the edges catch the light.
+      {
+         auto hcp = point{bounds.left, bounds.top};
+         auto gradient = canvas::radial_gradient{
+            hcp, size*0.3f,
+            hcp, size*1.2f
+         };
+         using cs = canvas::color_stop;
+         gradient.add_color_stop(cs{0.0f, {1.0f, 1.0f, 1.0f, 0.25f}});
+         gradient.add_color_stop(cs{1.0f, {0.6f, 0.6f, 0.6f, 0.0f}});
+         cnv.fill_style(gradient);
+         triangle(1.0f);
+         cnv.fill();
+
+      }
+
+      // Draw the indicator: the same triangle, inset, as draw_thumb's
+      // inner disc is.
+      {
+         cnv.fill_style(ic);
+         triangle(0.4f);
+         cnv.fill();
+      }
+
+      // Add some outer bevel, as draw_thumb does: a thin rim, lit from
+      // the top, in shadow at the bottom.
+      {
+         auto gradient = canvas::linear_gradient{
+            {cx, bounds.top}, {cx, bounds.bottom}
+         };
+         gradient.add_color_stop({0.0, colors::white.opacity(0.3)});
+         gradient.add_color_stop({0.5, colors::black.opacity(0.5)});
+
+         // The rim: the triangle less a slightly smaller one.
+         auto centre = point{(tip.x + b1.x + b2.x) / 3, (tip.y + b1.y + b2.y) / 3};
+         auto at = [&](point p, float scale)
+         {
+            return point{centre.x + (p.x - centre.x) * scale
+                       , centre.y + (p.y - centre.y) * scale};
+         };
+         cnv.begin_path();
+         for (float scale : {1.0f, 0.93f})
+         {
+            auto t = at(tip, scale), p1 = at(b1, scale), p2 = at(b2, scale);
+            auto mid = point{(p2.x + t.x) / 2, (p2.y + t.y) / 2};
+            cnv.move_to(mid);
+            cnv.arc_to(t, p1, r * scale);
+            cnv.arc_to(p1, p2, r * scale);
+            cnv.arc_to(p2, t, r * scale);
+            cnv.close_path();
+         }
+         cnv.fill_rule(artist::path::fill_odd_even);
+         cnv.clip();
+
+         cnv.fill_style(gradient);
+         cnv.begin_path();
+         cnv.add_rect(bounds);
+         cnv.fill();
+      }
+   }
+
    void draw_thumb(canvas& cnv, circle cp, color c, color ic)
    {
       auto state = cnv.new_state();

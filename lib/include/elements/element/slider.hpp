@@ -140,6 +140,7 @@ namespace cycfi::elements
       static_assert(num_states > 1, "Error: not enough states.");
 
       using basic_selector_base::basic_selector_base;
+      using basic_selector_base::value;
 
       bool                 scroll(context const& ctx, point dir, point p) override;
       void                 value(double val) override;

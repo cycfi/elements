@@ -11,6 +11,11 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    // basic_thumbwheel_element
    ////////////////////////////////////////////////////////////////////////////
+   double basic_thumbwheel_element::value() const
+   {
+      return align();
+   }
+
    void basic_thumbwheel_element::value(double val)
    {
       if (_quantize > 0 && _aligner)

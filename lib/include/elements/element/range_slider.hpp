@@ -103,6 +103,7 @@ namespace cycfi::elements
       state                      _state = state::idle_1;
       double_range               _value;
       mutable bool               _is_horiz = false;
+      point                      _scroll_start = {};   // where the wheel last chose a thumb
 
       void                       move_first(context const& ctx, tracker_info& track_info);
       void                       move_second(context const& ctx, tracker_info& track_info);

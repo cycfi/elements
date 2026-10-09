@@ -139,7 +139,6 @@ namespace cycfi::elements
    //    iib. if not, we assume it is a new separate scroll action and go back to 1.
    bool range_slider_base::scroll(context const& ctx, point dir, point p)
    {
-      static point start_p = p;
       auto th_bounds = thumb_bounds(ctx);
 
       auto scroll_thumb1 = [this, &ctx, &dir, &p]()
@@ -163,7 +162,7 @@ namespace cycfi::elements
       };
 
       // check if mouse has moved too far
-      if (81 < std::pow(start_p.x - p.x, 2) + std::pow(start_p.y - p.y, 2))
+      if (81 < std::pow(_scroll_start.x - p.x, 2) + std::pow(_scroll_start.y - p.y, 2))
       {
          switch (_state)
          {
@@ -194,7 +193,7 @@ namespace cycfi::elements
 
          default:
          {
-            start_p = p;
+            _scroll_start = p;
             auto& th1 = th_bounds.first;
             auto& th2 = th_bounds.second;
             auto th1_w = th1.width()*0.5f;

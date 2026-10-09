@@ -25,7 +25,7 @@ namespace cycfi::elements
    //    example, a quantize value of 0.25 will quantize the possible values
    //    to 0.0, 0.25, 0.5, 0.75 and 1.0.
    ////////////////////////////////////////////////////////////////////////////
-   class basic_thumbwheel_element : public basic_receiver<double>
+   class basic_thumbwheel_element : public receiver<double>
    {
    public:
 
@@ -35,6 +35,7 @@ namespace cycfi::elements
 
       virtual void         align(double val) = 0;
       virtual double       align() const = 0;
+      double               value() const override;
       void                 value(double val) override;
 
    protected:

@@ -119,6 +119,62 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
+   // Basic Triangular Thumb: a pointer, for a selector pointing at its
+   // marks. `dir` is where the point goes.
+   ////////////////////////////////////////////////////////////////////////////
+   template <unsigned _size, direction _dir>
+   class basic_tri_thumb_styler : public element
+   {
+   public:
+
+      static constexpr unsigned  size = _size;
+      static constexpr direction dir = _dir;
+
+                              basic_tri_thumb_styler(
+                                 color c = colors::black)
+                               : _color(c)
+                              {}
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      std::string             class_name() const override { return "thumb"; }
+
+   private:
+
+      color                   _color;
+   };
+
+   template <unsigned size, direction dir>
+   inline view_limits basic_tri_thumb_styler<size, dir>
+      ::limits(basic_context const& /* ctx */) const
+   {
+      auto pt = point{float(size), float(size)};
+      return view_limits{pt, pt};
+   }
+
+   template <unsigned size, direction dir>
+   inline void basic_tri_thumb_styler<size, dir>
+      ::draw(context const& ctx)
+   {
+      auto& thm = get_theme();
+      auto& cnv = ctx.canvas;
+      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  c = center_point(ctx.bounds);
+      auto  bounds = rect{
+         c.x - (size/2.0f), c.y - (size/2.0f)
+       , c.x + (size/2.0f), c.y + (size/2.0f)};
+
+      draw_tri_thumb(cnv, bounds, dir, _color, indicator_color);
+   }
+
+   template <unsigned size, direction dir = direction::up>
+   inline basic_tri_thumb_styler<size, dir>
+   basic_tri_thumb(color c = colors::black)
+   {
+      return {c};
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
    // Basic Track (You can use this as the slider's track)
    ////////////////////////////////////////////////////////////////////////////
    template <unsigned _size, bool _vertical = false>

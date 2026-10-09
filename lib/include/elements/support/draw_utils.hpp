@@ -28,6 +28,8 @@ namespace cycfi::elements
       constexpr double offset = (2 * cycfi::pi) * (1 - travel) / 2;
    }
 
+   enum class direction { up, down, left, right };
+
    struct corner_radii
    {
       float top_left, top_right, bottom_right, bottom_left;
@@ -44,6 +46,8 @@ namespace cycfi::elements
    void  draw_thumb(canvas& cnv, circle cp, color c, color ic);
    void  draw_rect_thumb(
             canvas& cnv, rect bounds, float radius, color c, color ic);
+   void  draw_tri_thumb(
+            canvas& cnv, rect bounds, direction dir, color c, color ic);
    void  draw_track(canvas& cnv, rect bounds);
 
    void  draw_radial_indicator(canvas& cnv, circle cp, float val, color c);
